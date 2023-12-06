@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Html;
+﻿using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Nop.Web.Framework.Extensions;
 
@@ -45,8 +41,7 @@ namespace Nop.Web.Framework.TagHelpers
         /// <returns>Collection of key/string value pairs</returns>
         public static async Task<IDictionary<string, string>> GetAttributeDictionaryAsync(this TagHelperOutput output)
         {
-            if (output is null)
-                throw new ArgumentNullException(nameof(output));
+            ArgumentNullException.ThrowIfNull(output);
 
             var result = new Dictionary<string, string>();
 

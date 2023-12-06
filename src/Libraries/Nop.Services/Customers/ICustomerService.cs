@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
@@ -240,6 +237,16 @@ namespace Nop.Services.Customers
         /// The task result contains the number of deleted customers
         /// </returns>
         Task<int> DeleteGuestCustomersAsync(DateTime? createdFromUtc, DateTime? createdToUtc, bool onlyWithoutShoppingCart);
+
+        /// <summary>
+        /// Gets a tax display type for the customer
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the tax display type
+        /// </returns>
+        Task<TaxDisplayType> GetCustomerTaxDisplayTypeAsync(Customer customer);
 
         /// <summary>
         /// Gets a default tax display type (if configured)

@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Domain;
 
 namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
@@ -9,17 +8,6 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
     /// </summary>
     public interface IShippingByWeightByTotalService
     {
-        /// <summary>
-        /// Get all shipping by weight records
-        /// </summary>
-        /// <param name="pageIndex">Page index</param>
-        /// <param name="pageSize">Page size</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the list of the shipping by weight record
-        /// </returns>
-        Task<IPagedList<ShippingByWeightByTotalRecord>> GetAllAsync(int pageIndex = 0, int pageSize = int.MaxValue);
-
         /// <summary>
         /// Get a shipping by weight record by passed parameters
         /// </summary>
@@ -35,7 +23,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         /// A task that represents the asynchronous operation
         /// The task result contains the shipping by weight record
         /// </returns>
-        Task<ShippingByWeightByTotalRecord> FindRecordsAsync(int shippingMethodId, int storeId, int warehouseId,  
+        Task<ShippingByWeightByTotalRecord> FindRecordsAsync(int shippingMethodId, int storeId, int warehouseId,
             int countryId, int stateProvinceId, string zip, decimal weight, decimal orderSubtotal);
 
         /// <summary>

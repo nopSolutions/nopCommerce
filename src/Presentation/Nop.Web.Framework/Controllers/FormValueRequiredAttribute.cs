@@ -1,10 +1,8 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.AspNetCore.Routing;
+using Nop.Core.Http.Extensions;
 
 namespace Nop.Web.Framework.Controllers
 {
@@ -21,7 +19,7 @@ namespace Nop.Web.Framework.Controllers
         /// Ctor
         /// </summary>
         /// <param name="submitButtonNames">Submit button names</param>
-        public FormValueRequiredAttribute(params string[] submitButtonNames):
+        public FormValueRequiredAttribute(params string[] submitButtonNames) :
             this(FormValueRequirement.Equal, submitButtonNames)
         {
         }
@@ -30,7 +28,7 @@ namespace Nop.Web.Framework.Controllers
         /// </summary>
         /// <param name="requirement">Requirement</param>
         /// <param name="submitButtonNames">Submit button names</param>
-        public FormValueRequiredAttribute(FormValueRequirement requirement, params string[] submitButtonNames):
+        public FormValueRequiredAttribute(FormValueRequirement requirement, params string[] submitButtonNames) :
             this(requirement, true, submitButtonNames)
         {
         }
@@ -57,8 +55,10 @@ namespace Nop.Web.Framework.Controllers
         /// <returns>Result</returns>
         public override bool IsValidForRequest(RouteContext routeContext, ActionDescriptor action)
         {
-            if (routeContext.HttpContext.Request.Method != WebRequestMethods.Http.Post)
+            if (!routeContext.HttpContext.Request.IsPostRequest())
                 return false;
+
+            var form = routeContext.HttpContext.Request.ReadFormAsync().Result;
 
             foreach (var buttonName in _submitButtonNames)
             {
@@ -71,14 +71,14 @@ namespace Nop.Web.Framework.Controllers
                                 if (_validateNameOnly)
                                 {
                                     //"name" only
-                                    if (routeContext.HttpContext.Request.Form.Keys.Any(x => x.Equals(buttonName, StringComparison.InvariantCultureIgnoreCase)))
+                                    if (form.Keys.Any(x => x.Equals(buttonName, StringComparison.InvariantCultureIgnoreCase)))
                                         return true;
                                 }
                                 else
                                 {
                                     //validate "value"
                                     //do not iterate because "Invalid request" exception can be thrown
-                                    string value = routeContext.HttpContext.Request.Form[buttonName];
+                                    string value = form[buttonName];
                                     if (!string.IsNullOrEmpty(value))
                                         return true;
                                 }
@@ -89,16 +89,16 @@ namespace Nop.Web.Framework.Controllers
                                 if (_validateNameOnly)
                                 {
                                     //"name" only
-                                    if (routeContext.HttpContext.Request.Form.Keys.Any(x => x.StartsWith(buttonName, StringComparison.InvariantCultureIgnoreCase)))
+                                    if (form.Keys.Any(x => x.StartsWith(buttonName, StringComparison.InvariantCultureIgnoreCase)))
                                         return true;
                                 }
                                 else
                                 {
                                     //validate "value"
-                                    foreach (var formValue in routeContext.HttpContext.Request.Form.Keys)
+                                    foreach (var formValue in form.Keys)
                                         if (formValue.StartsWith(buttonName, StringComparison.InvariantCultureIgnoreCase))
-                                        { 
-                                            var value = routeContext.HttpContext.Request.Form[formValue];
+                                        {
+                                            var value = form[formValue];
                                             if (!string.IsNullOrEmpty(value))
                                                 return true;
                                         }
@@ -107,10 +107,9 @@ namespace Nop.Web.Framework.Controllers
                             break;
                     }
                 }
-                catch (Exception exc)
+                catch
                 {
                     //try-catch to ensure that no exception is throw
-                    Debug.WriteLine(exc.Message);
                 }
             }
             return false;

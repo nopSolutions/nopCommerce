@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Html;
+﻿using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -17,46 +15,15 @@ namespace Nop.Web.Framework.TagHelpers.Admin
     {
         #region Constants
 
-        private const string BUTTON_ID_ATTRIBUTE_NAME = "asp-button-id";
-        private const string ACTION_ATTRIBUTE_NAME = "asp-action";
-        private const string ADDITIONAL_CONFIRM_TEXT = "asp-additional-confirm";
-
-        #endregion
-
-        #region Properties
-
-        protected IHtmlGenerator Generator { get; set; }
-
-        /// <summary>
-        /// Button identifier
-        /// </summary>
-        [HtmlAttributeName(BUTTON_ID_ATTRIBUTE_NAME)]
-        public string ButtonId { get; set; }
-
-        /// <summary>
-        /// Delete action name
-        /// </summary>
-        [HtmlAttributeName(ACTION_ATTRIBUTE_NAME)]
-        public string Action { get; set; }
-
-        /// <summary>
-        /// Additional confirm text
-        /// </summary>
-        [HtmlAttributeName(ADDITIONAL_CONFIRM_TEXT)]
-        public string ConfirmText { get; set; }
-
-        /// <summary>
-        /// ViewContext
-        /// </summary>
-        [HtmlAttributeNotBound]
-        [ViewContext]
-        public ViewContext ViewContext { get; set; }
+        protected const string BUTTON_ID_ATTRIBUTE_NAME = "asp-button-id";
+        protected const string ACTION_ATTRIBUTE_NAME = "asp-action";
+        protected const string ADDITIONAL_CONFIRM_TEXT = "asp-additional-confirm";
 
         #endregion
 
         #region Fields
 
-        private readonly IHtmlHelper _htmlHelper;
+        protected readonly IHtmlHelper _htmlHelper;
 
         #endregion
 
@@ -80,11 +47,8 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
-
-            if (output == null)
-                throw new ArgumentNullException(nameof(output));
+            ArgumentNullException.ThrowIfNull(context);
+            ArgumentNullException.ThrowIfNull(output);
 
             //contextualize IHtmlHelper
             var viewContextAware = _htmlHelper as IViewContextAware;
@@ -128,6 +92,37 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             var scriptTag = await script.RenderHtmlContentAsync();
             output.PostContent.SetHtmlContent(scriptTag);
         }
+
+        #endregion
+
+        #region Properties
+
+        protected IHtmlGenerator Generator { get; set; }
+
+        /// <summary>
+        /// Button identifier
+        /// </summary>
+        [HtmlAttributeName(BUTTON_ID_ATTRIBUTE_NAME)]
+        public string ButtonId { get; set; }
+
+        /// <summary>
+        /// Delete action name
+        /// </summary>
+        [HtmlAttributeName(ACTION_ATTRIBUTE_NAME)]
+        public string Action { get; set; }
+
+        /// <summary>
+        /// Additional confirm text
+        /// </summary>
+        [HtmlAttributeName(ADDITIONAL_CONFIRM_TEXT)]
+        public string ConfirmText { get; set; }
+
+        /// <summary>
+        /// ViewContext
+        /// </summary>
+        [HtmlAttributeNotBound]
+        [ViewContext]
+        public ViewContext ViewContext { get; set; }
 
         #endregion
     }

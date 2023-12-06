@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Orders;
@@ -19,13 +16,13 @@ namespace Nop.Services.Affiliates
     {
         #region Fields
 
-        private readonly IAddressService _addressService;
-        private readonly IRepository<Address> _addressRepository;
-        private readonly IRepository<Affiliate> _affiliateRepository;
-        private readonly IRepository<Order> _orderRepository;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IWebHelper _webHelper;
-        private readonly SeoSettings _seoSettings;
+        protected readonly IAddressService _addressService;
+        protected readonly IRepository<Address> _addressRepository;
+        protected readonly IRepository<Affiliate> _affiliateRepository;
+        protected readonly IRepository<Order> _orderRepository;
+        protected readonly IUrlRecordService _urlRecordService;
+        protected readonly IWebHelper _webHelper;
+        protected readonly SeoSettings _seoSettings;
 
         #endregion
 
@@ -62,7 +59,7 @@ namespace Nop.Services.Affiliates
         /// </returns>
         public virtual async Task<Affiliate> GetAffiliateByIdAsync(int affiliateId)
         {
-            return await _affiliateRepository.GetByIdAsync(affiliateId, cache => default);
+            return await _affiliateRepository.GetByIdAsync(affiliateId, cache => default, useShortTermCache: true);
         }
 
         /// <summary>
@@ -127,15 +124,15 @@ namespace Nop.Services.Affiliates
 
                 if (!string.IsNullOrWhiteSpace(firstName))
                     query = from aff in query
-                        join addr in _addressRepository.Table on aff.AddressId equals addr.Id
-                        where addr.FirstName.Contains(firstName)
-                        select aff;
+                            join addr in _addressRepository.Table on aff.AddressId equals addr.Id
+                            where addr.FirstName.Contains(firstName)
+                            select aff;
 
                 if (!string.IsNullOrWhiteSpace(lastName))
                     query = from aff in query
-                        join addr in _addressRepository.Table on aff.AddressId equals addr.Id
-                        where addr.LastName.Contains(lastName)
-                        select aff;
+                            join addr in _addressRepository.Table on aff.AddressId equals addr.Id
+                            where addr.LastName.Contains(lastName)
+                            select aff;
 
                 if (!showHidden)
                     query = query.Where(a => a.Active);
@@ -151,8 +148,8 @@ namespace Nop.Services.Affiliates
                     ordersQuery = ordersQuery.Where(o => !o.Deleted);
 
                     query = from a in query
-                        join o in ordersQuery on a.Id equals o.AffiliateId
-                        select a;
+                            join o in ordersQuery on a.Id equals o.AffiliateId
+                            select a;
                 }
 
                 query = query.Distinct().OrderByDescending(a => a.Id);
@@ -191,8 +188,7 @@ namespace Nop.Services.Affiliates
         /// </returns>
         public virtual async Task<string> GetAffiliateFullNameAsync(Affiliate affiliate)
         {
-            if (affiliate == null)
-                throw new ArgumentNullException(nameof(affiliate));
+            ArgumentNullException.ThrowIfNull(affiliate);
 
             var affiliateAddress = await _addressService.GetAddressByIdAsync(affiliate.AddressId);
 
@@ -214,8 +210,7 @@ namespace Nop.Services.Affiliates
         /// </returns>
         public virtual Task<string> GenerateUrlAsync(Affiliate affiliate)
         {
-            if (affiliate == null)
-                throw new ArgumentNullException(nameof(affiliate));
+            ArgumentNullException.ThrowIfNull(affiliate);
 
             var storeUrl = _webHelper.GetStoreLocation();
             var url = !string.IsNullOrEmpty(affiliate.FriendlyUrlName) ?
@@ -238,8 +233,7 @@ namespace Nop.Services.Affiliates
         /// </returns>
         public virtual async Task<string> ValidateFriendlyUrlNameAsync(Affiliate affiliate, string friendlyUrlName)
         {
-            if (affiliate == null)
-                throw new ArgumentNullException(nameof(affiliate));
+            ArgumentNullException.ThrowIfNull(affiliate);
 
             //ensure we have only valid chars
             friendlyUrlName = await _urlRecordService.GetSeNameAsync(friendlyUrlName, _seoSettings.ConvertNonWesternChars, _seoSettings.AllowUnicodeCharsInUrls);

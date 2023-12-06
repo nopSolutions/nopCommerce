@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
@@ -27,17 +22,18 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly ICountryService _countryService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly ILocalizationService _localizationService;
-        private readonly INotificationService _notificationService;
-        private readonly IPaymentModelFactory _paymentModelFactory;
-        private readonly IPaymentPluginManager _paymentPluginManager;
-        private readonly IPermissionService _permissionService;
-        private readonly ISettingService _settingService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IWorkContext _workContext;
-        private readonly PaymentSettings _paymentSettings;
+        protected readonly ICountryService _countryService;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IPaymentModelFactory _paymentModelFactory;
+        protected readonly IPaymentPluginManager _paymentPluginManager;
+        protected readonly IPermissionService _permissionService;
+        protected readonly ISettingService _settingService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IWorkContext _workContext;
+        protected readonly PaymentSettings _paymentSettings;
+        private static readonly char[] _separator = [','];
 
         #endregion
 
@@ -178,8 +174,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 var formKey = "restrict_" + pm.PluginDescriptor.SystemName;
                 var countryIdsToRestrict = (!StringValues.IsNullOrEmpty(form[formKey])
-                        ? form[formKey].ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList()
-                        : new List<string>())
+                        ? form[formKey].ToString().Split(_separator, StringSplitOptions.RemoveEmptyEntries).ToList()
+                        : [])
                     .Select(x => Convert.ToInt32(x)).ToList();
 
                 var newCountryIds = new List<int>();
@@ -195,7 +191,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Payment.MethodRestrictions.Updated"));
-            
+
             return RedirectToAction("MethodRestrictions");
         }
 

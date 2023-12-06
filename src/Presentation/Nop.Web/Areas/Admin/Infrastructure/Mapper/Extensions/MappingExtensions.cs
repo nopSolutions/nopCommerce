@@ -1,5 +1,4 @@
-﻿using System;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure.Mapper;
 using Nop.Services.Plugins;
@@ -54,8 +53,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions
         /// <returns>Mapped model</returns>
         public static TModel ToModel<TModel>(this BaseEntity entity) where TModel : BaseNopEntityModel
         {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
             return entity.Map<TModel>();
         }
@@ -71,11 +69,9 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions
         public static TModel ToModel<TEntity, TModel>(this TEntity entity, TModel model)
             where TEntity : BaseEntity where TModel : BaseNopEntityModel
         {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
             return entity.MapTo(model);
         }
@@ -88,8 +84,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions
         /// <returns>Mapped entity</returns>
         public static TEntity ToEntity<TEntity>(this BaseNopEntityModel model) where TEntity : BaseEntity
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
             return model.Map<TEntity>();
         }
@@ -105,11 +100,9 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions
         public static TEntity ToEntity<TEntity, TModel>(this TModel model, TEntity entity)
             where TEntity : BaseEntity where TModel : BaseNopEntityModel
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
             return model.MapTo(entity);
         }
@@ -126,8 +119,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions
         /// <returns>Mapped model</returns>
         public static TModel ToSettingsModel<TModel>(this ISettings settings) where TModel : BaseNopModel, ISettingsModel
         {
-            if (settings == null)
-                throw new ArgumentNullException(nameof(settings));
+            ArgumentNullException.ThrowIfNull(settings);
 
             return settings.Map<TModel>();
         }
@@ -143,11 +135,9 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions
         public static TSettings ToSettings<TSettings, TModel>(this TModel model, TSettings settings)
             where TSettings : class, ISettings where TModel : BaseNopModel, ISettingsModel
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
-            if (settings == null)
-                throw new ArgumentNullException(nameof(settings));
+            ArgumentNullException.ThrowIfNull(settings);
 
             return model.MapTo(settings);
         }
@@ -164,8 +154,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions
         /// <returns>Mapped model</returns>
         public static TModel ToConfigModel<TModel>(this IConfig config) where TModel : BaseNopModel, IConfigModel
         {
-            if (config == null)
-                throw new ArgumentNullException(nameof(config));
+            ArgumentNullException.ThrowIfNull(config);
 
             return config.Map<TModel>();
         }
@@ -181,11 +170,9 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions
         public static TConfig ToConfig<TConfig, TModel>(this TModel model, TConfig config)
             where TConfig : class, IConfig where TModel : BaseNopModel, IConfigModel
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
-            if (config == null)
-                throw new ArgumentNullException(nameof(config));
+            ArgumentNullException.ThrowIfNull(config);
 
             return model.MapTo(config);
         }
@@ -202,8 +189,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions
         /// <returns>Mapped model</returns>
         public static TModel ToPluginModel<TModel>(this IPlugin plugin) where TModel : BaseNopModel, IPluginModel
         {
-            if (plugin == null)
-                throw new ArgumentNullException(nameof(plugin));
+            ArgumentNullException.ThrowIfNull(plugin);
 
             return plugin.Map<TModel>();
         }
@@ -218,8 +204,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions
         public static TModel ToPluginModel<TModel>(this PluginDescriptor pluginDescriptor, TModel model = null)
             where TModel : BaseNopModel, IPluginModel
         {
-            if (pluginDescriptor == null)
-                throw new ArgumentNullException(nameof(pluginDescriptor));
+            ArgumentNullException.ThrowIfNull(pluginDescriptor);
 
             return model == null ? pluginDescriptor.Map<TModel>() : pluginDescriptor.MapTo(model);
         }

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Home
 {
@@ -12,7 +11,7 @@ namespace Nop.Web.Areas.Admin.Models.Home
 
         public NopCommerceNewsModel()
         {
-            Items = new List<NopCommerceNewsDetailsModel>();
+            Items = [];
         }
 
         #endregion

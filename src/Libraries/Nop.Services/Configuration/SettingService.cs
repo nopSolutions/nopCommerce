@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
@@ -20,8 +16,8 @@ namespace Nop.Services.Configuration
     {
         #region Fields
 
-        private readonly IRepository<Setting> _settingRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IRepository<Setting> _settingRepository;
+        protected readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
@@ -62,7 +58,7 @@ namespace Nop.Services.Configuration
                         Value = s.Value,
                         StoreId = s.StoreId
                     };
-                    if (!dictionary.ContainsKey(resourceName))
+                    if (!dictionary.TryGetValue(resourceName, out var value))
                         //first setting
                         dictionary.Add(resourceName, new List<Setting>
                         {
@@ -71,7 +67,7 @@ namespace Nop.Services.Configuration
                     else
                         //already added
                         //most probably it's the setting with the same name but for some certain store (storeId > 0)
-                        dictionary[resourceName].Add(settingForCaching);
+                        value.Add(settingForCaching);
                 }
 
                 return dictionary;
@@ -101,7 +97,7 @@ namespace Nop.Services.Configuration
                         Value = s.Value,
                         StoreId = s.StoreId
                     };
-                    if (!dictionary.ContainsKey(resourceName))
+                    if (!dictionary.TryGetValue(resourceName, out var value))
                         //first setting
                         dictionary.Add(resourceName, new List<Setting>
                         {
@@ -110,7 +106,7 @@ namespace Nop.Services.Configuration
                     else
                         //already added
                         //most probably it's the setting with the same name but for some certain store (storeId > 0)
-                        dictionary[resourceName].Add(settingForCaching);
+                        value.Add(settingForCaching);
                 }
 
                 return dictionary;
@@ -128,14 +124,13 @@ namespace Nop.Services.Configuration
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task SetSettingAsync(Type type, string key, object value, int storeId = 0, bool clearCache = true)
         {
-            if (key == null)
-                throw new ArgumentNullException(nameof(key));
+            ArgumentNullException.ThrowIfNull(key);
             key = key.Trim().ToLowerInvariant();
             var valueStr = TypeDescriptor.GetConverter(type).ConvertToInvariantString(value);
 
             var allSettings = await GetAllSettingsDictionaryAsync();
-            var settingForCaching = allSettings.ContainsKey(key) ?
-                allSettings[key].FirstOrDefault(x => x.StoreId == storeId) : null;
+            var settingForCaching = allSettings.TryGetValue(key, out var settings) ?
+                settings.FirstOrDefault(x => x.StoreId == storeId) : null;
             if (settingForCaching != null)
             {
                 //update
@@ -166,14 +161,13 @@ namespace Nop.Services.Configuration
         /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
         protected virtual void SetSetting(Type type, string key, object value, int storeId = 0, bool clearCache = true)
         {
-            if (key == null)
-                throw new ArgumentNullException(nameof(key));
+            ArgumentNullException.ThrowIfNull(key);
             key = key.Trim().ToLowerInvariant();
             var valueStr = TypeDescriptor.GetConverter(type).ConvertToInvariantString(value);
 
             var allSettings = GetAllSettingsDictionary();
-            var settingForCaching = allSettings.ContainsKey(key) ?
-                allSettings[key].FirstOrDefault(x => x.StoreId == storeId) : null;
+            var settingForCaching = allSettings.TryGetValue(key, out var settings) ?
+                settings.FirstOrDefault(x => x.StoreId == storeId) : null;
             if (settingForCaching != null)
             {
                 //update
@@ -235,8 +229,7 @@ namespace Nop.Services.Configuration
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateSettingAsync(Setting setting, bool clearCache = true)
         {
-            if (setting == null)
-                throw new ArgumentNullException(nameof(setting));
+            ArgumentNullException.ThrowIfNull(setting);
 
             await _settingRepository.UpdateAsync(setting);
 
@@ -252,8 +245,7 @@ namespace Nop.Services.Configuration
         /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
         public virtual void UpdateSetting(Setting setting, bool clearCache = true)
         {
-            if (setting == null)
-                throw new ArgumentNullException(nameof(setting));
+            ArgumentNullException.ThrowIfNull(setting);
 
             _settingRepository.Update(setting);
 
@@ -342,10 +334,10 @@ namespace Nop.Services.Configuration
 
             var settings = await GetAllSettingsDictionaryAsync();
             key = key.Trim().ToLowerInvariant();
-            if (!settings.ContainsKey(key)) 
+            if (!settings.TryGetValue(key, out var value))
                 return null;
 
-            var settingsByKey = settings[key];
+            var settingsByKey = value;
             var setting = settingsByKey.FirstOrDefault(x => x.StoreId == storeId);
 
             //load shared value?
@@ -371,10 +363,10 @@ namespace Nop.Services.Configuration
 
             var settings = GetAllSettingsDictionary();
             key = key.Trim().ToLowerInvariant();
-            if (!settings.ContainsKey(key))
+            if (!settings.TryGetValue(key, out var value))
                 return null;
 
-            var settingsByKey = settings[key];
+            var settingsByKey = value;
             var setting = settingsByKey.FirstOrDefault(x => x.StoreId == storeId);
 
             //load shared value?
@@ -404,10 +396,10 @@ namespace Nop.Services.Configuration
 
             var settings = await GetAllSettingsDictionaryAsync();
             key = key.Trim().ToLowerInvariant();
-            if (!settings.ContainsKey(key)) 
+            if (!settings.TryGetValue(key, out var value))
                 return defaultValue;
 
-            var settingsByKey = settings[key];
+            var settingsByKey = value;
             var setting = settingsByKey.FirstOrDefault(x => x.StoreId == storeId);
 
             //load shared value?
@@ -436,10 +428,10 @@ namespace Nop.Services.Configuration
 
             var settings = GetAllSettingsDictionary();
             key = key.Trim().ToLowerInvariant();
-            if (!settings.ContainsKey(key))
+            if (!settings.TryGetValue(key, out var value))
                 return defaultValue;
 
-            var settingsByKey = settings[key];
+            var settingsByKey = value;
             var setting = settingsByKey.FirstOrDefault(x => x.StoreId == storeId);
 
             //load shared value?
@@ -489,9 +481,9 @@ namespace Nop.Services.Configuration
             {
                 return from s in query
                        orderby s.Name, s.StoreId
-                    select s;
+                       select s;
             }, cache => default);
-            
+
             return settings;
         }
 
@@ -504,8 +496,8 @@ namespace Nop.Services.Configuration
         public virtual IList<Setting> GetAllSettings()
         {
             var settings = _settingRepository.GetAll(query => from s in query
-                orderby s.Name, s.StoreId
-                select s, cache => default);
+                                                              orderby s.Name, s.StoreId
+                                                              select s, cache => default);
 
             return settings;
         }
@@ -552,7 +544,7 @@ namespace Nop.Services.Configuration
             var setting = GetSettingByKey<string>(key, storeId: storeId);
             return setting != null;
         }
-        
+
         /// <summary>
         /// Load settings
         /// </summary>
@@ -733,12 +725,11 @@ namespace Nop.Services.Configuration
             Expression<Func<T, TPropType>> keySelector,
             int storeId = 0, bool clearCache = true) where T : ISettings, new()
         {
-            if (keySelector.Body is not MemberExpression member) 
+            if (keySelector.Body is not MemberExpression member)
                 throw new ArgumentException($"Expression '{keySelector}' refers to a method, not a property.");
 
-            var propInfo = member.Member as PropertyInfo;
-            if (propInfo == null) 
-                throw new ArgumentException($"Expression '{keySelector}' refers to a field, not a property.");
+            var propInfo = member.Member as PropertyInfo
+                ?? throw new ArgumentException($"Expression '{keySelector}' refers to a field, not a property.");
 
             var key = GetSettingKey(settings, keySelector);
             var value = (TPropType)propInfo.GetValue(settings, null);
@@ -764,9 +755,8 @@ namespace Nop.Services.Configuration
             if (keySelector.Body is not MemberExpression member)
                 throw new ArgumentException($"Expression '{keySelector}' refers to a method, not a property.");
 
-            var propInfo = member.Member as PropertyInfo;
-            if (propInfo == null)
-                throw new ArgumentException($"Expression '{keySelector}' refers to a field, not a property.");
+            var propInfo = member.Member as PropertyInfo
+                ?? throw new ArgumentException($"Expression '{keySelector}' refers to a field, not a property.");
 
             var key = GetSettingKey(settings, keySelector);
             var value = (TPropType)propInfo.GetValue(settings, null);
@@ -831,9 +821,9 @@ namespace Nop.Services.Configuration
             key = key.Trim().ToLowerInvariant();
 
             var allSettings = await GetAllSettingsDictionaryAsync();
-            var settingForCaching = allSettings.ContainsKey(key) ?
-                allSettings[key].FirstOrDefault(x => x.StoreId == storeId) : null;
-            if (settingForCaching == null) 
+            var settingForCaching = allSettings.TryGetValue(key, out var settings_) ?
+                settings_.FirstOrDefault(x => x.StoreId == storeId) : null;
+            if (settingForCaching == null)
                 return;
 
             //update
@@ -876,7 +866,7 @@ namespace Nop.Services.Configuration
                 throw new ArgumentException($"Expression '{keySelector}' refers to a field, not a property.");
 
             var key = $"{typeof(TSettings).Name}.{propInfo.Name}";
-            
+
             return key;
         }
         #endregion

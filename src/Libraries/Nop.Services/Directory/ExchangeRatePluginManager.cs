@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Customers;
+﻿using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Customers;
 using Nop.Services.Plugins;
@@ -14,7 +12,7 @@ namespace Nop.Services.Directory
     {
         #region Fields
 
-        private readonly CurrencySettings _currencySettings;
+        protected readonly CurrencySettings _currencySettings;
 
         #endregion
 
@@ -52,7 +50,7 @@ namespace Nop.Services.Directory
         /// <returns>Result</returns>
         public virtual bool IsPluginActive(IExchangeRateProvider exchangeRateProvider)
         {
-            return IsPluginActive(exchangeRateProvider, new List<string> { _currencySettings.ActiveExchangeRateProviderSystemName });
+            return IsPluginActive(exchangeRateProvider, [_currencySettings.ActiveExchangeRateProviderSystemName]);
         }
 
         #endregion

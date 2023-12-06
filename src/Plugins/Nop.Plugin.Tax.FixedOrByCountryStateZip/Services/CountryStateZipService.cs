@@ -1,6 +1,5 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Data;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Domain;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache;
@@ -14,15 +13,18 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
     {
         #region Fields
 
-        private readonly IRepository<TaxRate> _taxRateRepository;
+        protected readonly IRepository<TaxRate> _taxRateRepository;
+        protected readonly IShortTermCacheManager _shortTermCacheManager;
 
         #endregion
 
         #region Ctor
 
-        public CountryStateZipService(IRepository<TaxRate> taxRateRepository)
+        public CountryStateZipService(IRepository<TaxRate> taxRateRepository,
+            IShortTermCacheManager shortTermCacheManager)
         {
             _taxRateRepository = taxRateRepository;
+            _shortTermCacheManager = shortTermCacheManager;
         }
 
         #endregion
@@ -48,12 +50,9 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
         /// </returns>
         public virtual async Task<IPagedList<TaxRate>> GetAllTaxRatesAsync(int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var rez = await _taxRateRepository.GetAllAsync(query =>
-            {
-                return from tr in query
-                    orderby tr.StoreId, tr.CountryId, tr.StateProvinceId, tr.Zip, tr.TaxCategoryId
-                    select tr;
-            }, cache => cache.PrepareKeyForShortTermCache(ModelCacheEventConsumer.TAXRATE_ALL_KEY));
+            var rez = await _shortTermCacheManager.GetAsync(async () => await _taxRateRepository.GetAllAsync(query => from tr in query
+                orderby tr.StoreId, tr.CountryId, tr.StateProvinceId, tr.Zip, tr.TaxCategoryId
+                select tr), ModelCacheEventConsumer.TAXRATE_ALL_KEY);
 
             var records = new PagedList<TaxRate>(rez, pageIndex, pageSize);
 

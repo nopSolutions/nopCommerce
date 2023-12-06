@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Nop.Core.Domain.Logging
+﻿namespace Nop.Core.Domain.Logging
 {
     /// <summary>
     /// Represents an activity log record
@@ -36,7 +34,7 @@ namespace Nop.Core.Domain.Logging
         /// Gets or sets the date and time of instance creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the IP address
         /// </summary>

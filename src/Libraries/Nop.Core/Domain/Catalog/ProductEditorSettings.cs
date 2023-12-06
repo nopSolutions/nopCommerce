@@ -163,11 +163,6 @@ namespace Nop.Core.Domain.Catalog
         public bool DeliveryDate { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether 'Telecommunications, broadcasting and electronic services' field is shown
-        /// </summary>
-        public bool TelecommunicationsBroadcastingElectronicServices { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether 'Product availability range' field is shown
         /// </summary>
         public bool ProductAvailabilityRange { get; set; }
@@ -233,6 +228,11 @@ namespace Nop.Core.Domain.Catalog
         public bool AllowAddingOnlyExistingAttributeCombinations { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to display attribute combination images only
+        /// </summary>
+        public bool DisplayAttributeCombinationImagesOnly { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether 'Not returnable' field is shown
         /// </summary>
         public bool NotReturnable { get; set; }
@@ -266,7 +266,7 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether 'Published' field is shown
         /// </summary>
         public bool Published { get; set; }
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether 'Related products' block is shown
         /// </summary>
@@ -286,7 +286,7 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether 'Purchased with orders' tab is shown
         /// </summary>
         public bool PurchasedWithOrders { get; set; }
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether 'Product attributes' tab is shown
         /// </summary>

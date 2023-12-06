@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
@@ -20,15 +16,15 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly IAclService _aclService;
-        private readonly ICustomerService _customerService;
-        private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<ProductProductTagMapping> _productProductTagMappingRepository;
-        private readonly IRepository<ProductTag> _productTagRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IWorkContext _workContext;
+        protected readonly IAclService _aclService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IRepository<Product> _productRepository;
+        protected readonly IRepository<ProductProductTagMapping> _productProductTagMappingRepository;
+        protected readonly IRepository<ProductTag> _productTagRepository;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly IUrlRecordService _urlRecordService;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 
@@ -69,10 +65,8 @@ namespace Nop.Services.Catalog
         protected virtual async Task DeleteProductProductTagMappingAsync(int productId, int productTagId)
         {
             var mappingRecord = await _productProductTagMappingRepository.Table
-                .FirstOrDefaultAsync(pptm => pptm.ProductId == productId && pptm.ProductTagId == productTagId);
-
-            if (mappingRecord is null)
-                throw new Exception("Mapping record not found");
+                .FirstOrDefaultAsync(pptm => pptm.ProductId == productId && pptm.ProductTagId == productTagId)
+                ?? throw new Exception("Mapping record not found");
 
             await _productProductTagMappingRepository.DeleteAsync(mappingRecord);
         }
@@ -88,8 +82,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         protected virtual async Task<bool> ProductTagExistsAsync(Product product, int productTagId)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             return await _productProductTagMappingRepository.Table
                 .AnyAsync(pptm => pptm.ProductId == product.Id && pptm.ProductTagId == productTagId);
@@ -106,8 +99,8 @@ namespace Nop.Services.Catalog
         protected virtual async Task<ProductTag> GetProductTagByNameAsync(string name)
         {
             var query = from pt in _productTagRepository.Table
-                where pt.Name == name
-                select pt;
+                        where pt.Name == name
+                        select pt;
 
             var productTag = await query.FirstOrDefaultAsync();
             return productTag;
@@ -144,8 +137,7 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteProductTagsAsync(IList<ProductTag> productTags)
         {
-            if (productTags == null)
-                throw new ArgumentNullException(nameof(productTags));
+            ArgumentNullException.ThrowIfNull(productTags);
 
             foreach (var productTag in productTags)
                 await DeleteProductTagAsync(productTag);
@@ -218,7 +210,7 @@ namespace Nop.Services.Catalog
         {
             return await _productTagRepository.GetByIdsAsync(productTagIds);
         }
-        
+
         /// <summary>
         /// Inserts a product-product tag mapping
         /// </summary>
@@ -228,7 +220,7 @@ namespace Nop.Services.Catalog
         {
             await _productProductTagMappingRepository.InsertAsync(tagMapping);
         }
-        
+
         /// <summary>
         /// Updates the product tag
         /// </summary>
@@ -236,8 +228,7 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateProductTagAsync(ProductTag productTag)
         {
-            if (productTag == null)
-                throw new ArgumentNullException(nameof(productTag));
+            ArgumentNullException.ThrowIfNull(productTag);
 
             await _productTagRepository.UpdateAsync(productTag);
 
@@ -258,8 +249,8 @@ namespace Nop.Services.Catalog
         public virtual async Task<int> GetProductCountByProductTagIdAsync(int productTagId, int storeId, bool showHidden = false)
         {
             var dictionary = await GetProductCountAsync(storeId, showHidden);
-            if (dictionary.ContainsKey(productTagId))
-                return dictionary[productTagId];
+            if (dictionary.TryGetValue(productTagId, out var value))
+                return value;
 
             return 0;
         }
@@ -283,13 +274,19 @@ namespace Nop.Services.Catalog
             return await _staticCacheManager.GetAsync(key, async () =>
             {
                 var query = _productProductTagMappingRepository.Table;
+                var productsQuery = _productRepository.Table;
+
+                if (!showHidden || storeId > 0)
+                {
+                    //apply store mapping constraints
+                    productsQuery = await _storeMappingService.ApplyStoreMapping(productsQuery, storeId);
+
+                    query = query.Where(pc => productsQuery.Any(p => !p.Deleted && pc.ProductId == p.Id));
+                }
 
                 if (!showHidden)
                 {
-                    var productsQuery = _productRepository.Table.Where(p => p.Published);
-
-                    //apply store mapping constraints
-                    productsQuery = await _storeMappingService.ApplyStoreMapping(productsQuery, storeId);
+                    productsQuery = productsQuery.Where(p => p.Published);
 
                     //apply ACL constraints
                     productsQuery = await _aclService.ApplyAcl(productsQuery, customerRoleIds);
@@ -309,7 +306,7 @@ namespace Nop.Services.Catalog
                 return pTagCount.ToDictionary(item => item.ProductTagId, item => item.ProductCount);
             });
         }
-        
+
         /// <summary>
         /// Update product tags
         /// </summary>
@@ -318,8 +315,7 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateProductTagsAsync(Product product, string[] productTags)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             //product tags
             var existingProductTags = await GetAllProductTagsByProductIdAsync(product.Id);

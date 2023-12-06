@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core.Events;
+using Nop.Core.Http.Extensions;
 using Nop.Web.Framework.Events;
 using Nop.Web.Framework.Models;
 
@@ -26,7 +22,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         public PublishModelEventsAttribute(bool ignore = false) : base(typeof(PublishModelEventsFilter))
         {
             IgnoreFilter = ignore;
-            Arguments = new object[] { ignore };
+            Arguments = [ignore];
         }
 
         #endregion
@@ -50,8 +46,8 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Fields
 
-            private readonly bool _ignoreFilter;
-            private readonly IEventPublisher _eventPublisher;
+            protected readonly bool _ignoreFilter;
+            protected readonly IEventPublisher _eventPublisher;
 
             #endregion
 
@@ -110,11 +106,10 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <returns>A task that represents the asynchronous operation</returns>
             private async Task PublishModelReceivedEventAsync(ActionExecutingContext context)
             {
-                if (context == null)
-                    throw new ArgumentNullException(nameof(context));
+                ArgumentNullException.ThrowIfNull(context);
 
                 //only in POST requests
-                if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Post, StringComparison.InvariantCultureIgnoreCase))
+                if (!context.HttpContext.Request.IsPostRequest())
                     return;
 
                 if (IgnoreFilter(context))
@@ -136,8 +131,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <returns>A task that represents the asynchronous operation</returns>
             private async Task PublishModelPreparedEventAsync(ActionExecutingContext context)
             {
-                if (context == null)
-                    throw new ArgumentNullException(nameof(context));
+                ArgumentNullException.ThrowIfNull(context);
 
                 if (IgnoreFilter(context))
                     return;
@@ -171,8 +165,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <returns>A task that represents the asynchronous operation</returns>
             public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
             {
-                if (context == null)
-                    throw new ArgumentNullException(nameof(context));
+                ArgumentNullException.ThrowIfNull(context);
 
                 if (IgnoreFilter(context))
                     return;

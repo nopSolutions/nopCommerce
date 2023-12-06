@@ -1,7 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Common;
-using Nop.Services.Common;
+﻿using Nop.Core.Domain.Common;
+using Nop.Services.Attributes;
 using Nop.Web.Areas.Admin.Models.Common;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -13,20 +11,20 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
-        private readonly IAddressAttributeModelFactory _addressAttributeModelFactory;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        protected readonly IAddressAttributeModelFactory _addressAttributeModelFactory;
+        protected readonly IAttributeFormatter<AddressAttribute, AddressAttributeValue> _addressAttributeFormatter;
+        protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
 
         #endregion
 
         #region Ctor
 
-        public AddressModelFactory(IAddressAttributeFormatter addressAttributeFormatter,
-            IAddressAttributeModelFactory addressAttributeModelFactory,
+        public AddressModelFactory(IAddressAttributeModelFactory addressAttributeModelFactory,
+            IAttributeFormatter<AddressAttribute, AddressAttributeValue> addressAttributeFormatter,
             IBaseAdminModelFactory baseAdminModelFactory)
         {
-            _addressAttributeFormatter = addressAttributeFormatter;
             _addressAttributeModelFactory = addressAttributeModelFactory;
+            _addressAttributeFormatter = addressAttributeFormatter;
             _baseAdminModelFactory = baseAdminModelFactory;
         }
 
@@ -42,8 +40,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareAddressModelAsync(AddressModel model, Address address = null)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
             //prepare available countries
             await _baseAdminModelFactory.PrepareCountriesAsync(model.AvailableCountries);

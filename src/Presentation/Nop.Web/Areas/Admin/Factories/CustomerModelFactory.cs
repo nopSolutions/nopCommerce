@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -15,6 +10,7 @@ using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Affiliates;
+using Nop.Services.Attributes;
 using Nop.Services.Authentication.External;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -45,44 +41,46 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly AddressSettings _addressSettings;
-        private readonly CustomerSettings _customerSettings;
-        private readonly DateTimeSettings _dateTimeSettings;
-        private readonly GdprSettings _gdprSettings;
-        private readonly ForumSettings _forumSettings;
-        private readonly IAclSupportedModelFactory _aclSupportedModelFactory;
-        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
-        private readonly IAddressModelFactory _addressModelFactory;
-        private readonly IAffiliateService _affiliateService;
-        private readonly IAuthenticationPluginManager _authenticationPluginManager;
-        private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ICountryService _countryService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICustomerAttributeParser _customerAttributeParser;
-        private readonly ICustomerAttributeService _customerAttributeService;
-        private readonly ICustomerService _customerService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IExternalAuthenticationService _externalAuthenticationService;
-        private readonly IGdprService _gdprService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IGeoLookupService _geoLookupService;
-        private readonly ILocalizationService _localizationService;
-        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        private readonly IOrderService _orderService;
-        private readonly IPictureService _pictureService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IProductAttributeFormatter _productAttributeFormatter;
-        private readonly IProductService _productService;
-        private readonly IRewardPointService _rewardPointService;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreService _storeService;
-        private readonly ITaxService _taxService;
-        private readonly MediaSettings _mediaSettings;
-        private readonly RewardPointsSettings _rewardPointsSettings;
-        private readonly TaxSettings _taxSettings;
+        protected readonly AddressSettings _addressSettings;
+        protected readonly CustomerSettings _customerSettings;
+        protected readonly DateTimeSettings _dateTimeSettings;
+        protected readonly GdprSettings _gdprSettings;
+        protected readonly ForumSettings _forumSettings;
+        protected readonly IAclSupportedModelFactory _aclSupportedModelFactory;
+        protected readonly IAddressModelFactory _addressModelFactory;
+        protected readonly IAddressService _addressService;
+        protected readonly IAffiliateService _affiliateService;
+        protected readonly IAttributeFormatter<AddressAttribute, AddressAttributeValue> _addressAttributeFormatter;
+        protected readonly IAttributeParser<CustomerAttribute, CustomerAttributeValue> _customerAttributeParser;
+        protected readonly IAttributeService<CustomerAttribute, CustomerAttributeValue> _customerAttributeService;
+        protected readonly IAuthenticationPluginManager _authenticationPluginManager;
+        protected readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
+        protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        protected readonly ICountryService _countryService;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly IExternalAuthenticationService _externalAuthenticationService;
+        protected readonly IGdprService _gdprService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IGeoLookupService _geoLookupService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+        protected readonly IOrderService _orderService;
+        protected readonly IPictureService _pictureService;
+        protected readonly IPriceFormatter _priceFormatter;
+        protected readonly IProductAttributeFormatter _productAttributeFormatter;
+        protected readonly IProductService _productService;
+        protected readonly IRewardPointService _rewardPointService;
+        protected readonly IShoppingCartService _shoppingCartService;
+        protected readonly IStateProvinceService _stateProvinceService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreService _storeService;
+        protected readonly ITaxService _taxService;
+        protected readonly IWorkContext _workContext;
+        protected readonly MediaSettings _mediaSettings;
+        protected readonly RewardPointsSettings _rewardPointsSettings;
+        protected readonly TaxSettings _taxSettings;
 
         #endregion
 
@@ -94,16 +92,17 @@ namespace Nop.Web.Areas.Admin.Factories
             GdprSettings gdprSettings,
             ForumSettings forumSettings,
             IAclSupportedModelFactory aclSupportedModelFactory,
-            IAddressAttributeFormatter addressAttributeFormatter,
             IAddressModelFactory addressModelFactory,
+            IAddressService addressService,
             IAffiliateService affiliateService,
+            IAttributeFormatter<AddressAttribute, AddressAttributeValue> addressAttributeFormatter,
+            IAttributeParser<CustomerAttribute, CustomerAttributeValue> customerAttributeParser,
+            IAttributeService<CustomerAttribute, CustomerAttributeValue> customerAttributeService,
             IAuthenticationPluginManager authenticationPluginManager,
             IBackInStockSubscriptionService backInStockSubscriptionService,
             IBaseAdminModelFactory baseAdminModelFactory,
             ICountryService countryService,
             ICustomerActivityService customerActivityService,
-            ICustomerAttributeParser customerAttributeParser,
-            ICustomerAttributeService customerAttributeService,
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             IExternalAuthenticationService externalAuthenticationService,
@@ -123,6 +122,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IStoreContext storeContext,
             IStoreService storeService,
             ITaxService taxService,
+            IWorkContext workContext,
             MediaSettings mediaSettings,
             RewardPointsSettings rewardPointsSettings,
             TaxSettings taxSettings)
@@ -133,16 +133,17 @@ namespace Nop.Web.Areas.Admin.Factories
             _gdprSettings = gdprSettings;
             _forumSettings = forumSettings;
             _aclSupportedModelFactory = aclSupportedModelFactory;
-            _addressAttributeFormatter = addressAttributeFormatter;
             _addressModelFactory = addressModelFactory;
+            _addressService = addressService;
             _affiliateService = affiliateService;
+            _addressAttributeFormatter = addressAttributeFormatter;
+            _customerAttributeParser = customerAttributeParser;
+            _customerAttributeService = customerAttributeService;
             _authenticationPluginManager = authenticationPluginManager;
             _backInStockSubscriptionService = backInStockSubscriptionService;
             _baseAdminModelFactory = baseAdminModelFactory;
             _countryService = countryService;
             _customerActivityService = customerActivityService;
-            _customerAttributeParser = customerAttributeParser;
-            _customerAttributeService = customerAttributeService;
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
             _externalAuthenticationService = externalAuthenticationService;
@@ -162,6 +163,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _storeContext = storeContext;
             _storeService = storeService;
             _taxService = taxService;
+            _workContext = workContext;
             _mediaSettings = mediaSettings;
             _rewardPointsSettings = rewardPointsSettings;
             _taxSettings = taxSettings;
@@ -178,8 +180,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareAddRewardPointsToCustomerModelAsync(AddRewardPointsToCustomerModel model)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
             var store = await _storeContext.GetCurrentStoreAsync();
 
@@ -199,11 +200,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareAssociatedExternalAuthModelsAsync(IList<CustomerAssociatedExternalAuthModel> models, Customer customer)
         {
-            if (models == null)
-                throw new ArgumentNullException(nameof(models));
+            ArgumentNullException.ThrowIfNull(models);
 
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             foreach (var record in await _externalAuthenticationService.GetCustomerExternalAuthenticationRecordsAsync(customer))
             {
@@ -230,11 +229,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareCustomerAttributeModelsAsync(IList<CustomerModel.CustomerAttributeModel> models, Customer customer)
         {
-            if (models == null)
-                throw new ArgumentNullException(nameof(models));
+            ArgumentNullException.ThrowIfNull(models);
 
             //get available customer attributes
-            var customerAttributes = await _customerAttributeService.GetAllCustomerAttributesAsync();
+            var customerAttributes = await _customerAttributeService.GetAllAttributesAsync();
             foreach (var attribute in customerAttributes)
             {
                 var attributeModel = new CustomerModel.CustomerAttributeModel
@@ -245,10 +243,10 @@ namespace Nop.Web.Areas.Admin.Factories
                     AttributeControlType = attribute.AttributeControlType
                 };
 
-                if (attribute.ShouldHaveValues())
+                if (attribute.ShouldHaveValues)
                 {
                     //values
-                    var attributeValues = await _customerAttributeService.GetCustomerAttributeValuesAsync(attribute.Id);
+                    var attributeValues = await _customerAttributeService.GetAttributeValuesAsync(attribute.Id);
                     foreach (var attributeValue in attributeValues)
                     {
                         var attributeValueModel = new CustomerModel.CustomerAttributeValueModel
@@ -278,7 +276,7 @@ namespace Nop.Web.Areas.Admin.Factories
                                         item.IsPreSelected = false;
 
                                     //select new values
-                                    var selectedValues = await _customerAttributeParser.ParseCustomerAttributeValuesAsync(selectedCustomerAttributes);
+                                    var selectedValues = await _customerAttributeParser.ParseAttributeValuesAsync(selectedCustomerAttributes);
                                     foreach (var attributeValue in selectedValues)
                                         foreach (var item in attributeModel.Values)
                                             if (attributeValue.Id == item.Id)
@@ -325,40 +323,19 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareModelAddressHtmlAsync(AddressModel model, Address address)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
+            var separator = "<br />";
             var addressHtmlSb = new StringBuilder("<div>");
-
-            if (_addressSettings.CompanyEnabled && !string.IsNullOrEmpty(model.Company))
-                addressHtmlSb.AppendFormat("{0}<br />", WebUtility.HtmlEncode(model.Company));
-
-            if (_addressSettings.StreetAddressEnabled && !string.IsNullOrEmpty(model.Address1))
-                addressHtmlSb.AppendFormat("{0}<br />", WebUtility.HtmlEncode(model.Address1));
-
-            if (_addressSettings.StreetAddress2Enabled && !string.IsNullOrEmpty(model.Address2))
-                addressHtmlSb.AppendFormat("{0}<br />", WebUtility.HtmlEncode(model.Address2));
-
-            if (_addressSettings.CityEnabled && !string.IsNullOrEmpty(model.City))
-                addressHtmlSb.AppendFormat("{0},", WebUtility.HtmlEncode(model.City));
-
-            if (_addressSettings.CountyEnabled && !string.IsNullOrEmpty(model.County))
-                addressHtmlSb.AppendFormat("{0},", WebUtility.HtmlEncode(model.County));
-
-            if (_addressSettings.StateProvinceEnabled && !string.IsNullOrEmpty(model.StateProvinceName))
-                addressHtmlSb.AppendFormat("{0},", WebUtility.HtmlEncode(model.StateProvinceName));
-
-            if (_addressSettings.ZipPostalCodeEnabled && !string.IsNullOrEmpty(model.ZipPostalCode))
-                addressHtmlSb.AppendFormat("{0}<br />", WebUtility.HtmlEncode(model.ZipPostalCode));
-
-            if (_addressSettings.CountryEnabled && !string.IsNullOrEmpty(model.CountryName))
-                addressHtmlSb.AppendFormat("{0}", WebUtility.HtmlEncode(model.CountryName));
+            var languageId = (await _workContext.GetWorkingLanguageAsync()).Id;
+            var (addressLine, _) = await _addressService.FormatAddressAsync(address, languageId, separator, true);
+            addressHtmlSb.Append(addressLine);
 
             var customAttributesFormatted = await _addressAttributeFormatter.FormatAttributesAsync(address?.CustomAttributes);
             if (!string.IsNullOrEmpty(customAttributesFormatted))
             {
                 //already encoded
-                addressHtmlSb.AppendFormat("<br />{0}", customAttributesFormatted);
+                addressHtmlSb.AppendFormat($"{separator}{customAttributesFormatted}");
             }
 
             addressHtmlSb.Append("</div>");
@@ -374,11 +351,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Reward points search model</returns>
         protected virtual CustomerRewardPointsSearchModel PrepareRewardPointsSearchModel(CustomerRewardPointsSearchModel searchModel, Customer customer)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             searchModel.CustomerId = customer.Id;
 
@@ -396,11 +371,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Customer address search model</returns>
         protected virtual CustomerAddressSearchModel PrepareCustomerAddressSearchModel(CustomerAddressSearchModel searchModel, Customer customer)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             searchModel.CustomerId = customer.Id;
 
@@ -418,11 +391,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Customer order search model</returns>
         protected virtual CustomerOrderSearchModel PrepareCustomerOrderSearchModel(CustomerOrderSearchModel searchModel, Customer customer)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             searchModel.CustomerId = customer.Id;
 
@@ -444,11 +415,9 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual async Task<CustomerShoppingCartSearchModel> PrepareCustomerShoppingCartSearchModelAsync(CustomerShoppingCartSearchModel searchModel,
             Customer customer)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             searchModel.CustomerId = customer.Id;
 
@@ -470,11 +439,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Customer activity log search model</returns>
         protected virtual CustomerActivityLogSearchModel PrepareCustomerActivityLogSearchModel(CustomerActivityLogSearchModel searchModel, Customer customer)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             searchModel.CustomerId = customer.Id;
 
@@ -493,11 +460,9 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual CustomerBackInStockSubscriptionSearchModel PrepareCustomerBackInStockSubscriptionSearchModel(
             CustomerBackInStockSubscriptionSearchModel searchModel, Customer customer)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             searchModel.CustomerId = customer.Id;
 
@@ -519,11 +484,9 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual async Task<CustomerAssociatedExternalAuthRecordsSearchModel> PrepareCustomerAssociatedExternalAuthRecordsSearchModelAsync(
             CustomerAssociatedExternalAuthRecordsSearchModel searchModel, Customer customer)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             searchModel.CustomerId = customer.Id;
 
@@ -549,8 +512,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<CustomerSearchModel> PrepareCustomerSearchModelAsync(CustomerSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             searchModel.UsernamesEnabled = _customerSettings.UsernamesEnabled;
             searchModel.AvatarEnabled = _customerSettings.AllowCustomersToUploadAvatars;
@@ -585,8 +547,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<CustomerListModel> PrepareCustomerListModelAsync(CustomerSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get parameters to filter customers
             _ = int.TryParse(searchModel.SearchDayOfBirth, out var dayOfBirth);
@@ -618,7 +579,7 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             //get customers
-            var customers = await _customerService.GetAllCustomersAsync(customerRoleIds: searchModel.SelectedCustomerRoleIds.ToArray(),
+            var customers = await _customerService.GetAllCustomersAsync(customerRoleIds: [.. searchModel.SelectedCustomerRoleIds],
                 email: searchModel.SearchEmail,
                 username: searchModel.SearchUsername,
                 firstName: searchModel.SearchFirstName,
@@ -632,7 +593,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 lastActivityToUtc: lastActivityToUtc,
                 phone: searchModel.SearchPhone,
                 zipPostalCode: searchModel.SearchZipPostalCode,
-                ipAddress: searchModel.SearchIpAddress?.Trim(),
+                ipAddress: searchModel.SearchIpAddress,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
@@ -785,6 +746,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.FirstNameEnabled = _customerSettings.FirstNameEnabled;
             model.LastNameEnabled = _customerSettings.LastNameEnabled;
             model.GenderEnabled = _customerSettings.GenderEnabled;
+            model.NeutralGenderEnabled = _customerSettings.NeutralGenderEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
             model.CompanyEnabled = _customerSettings.CompanyEnabled;
             model.StreetAddressEnabled = _customerSettings.StreetAddressEnabled;
@@ -847,11 +809,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<CustomerRewardPointsListModel> PrepareRewardPointsListModelAsync(CustomerRewardPointsSearchModel searchModel, Customer customer)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             //get reward points history
             var rewardPoints = await _rewardPointService.GetRewardPointsHistoryAsync(customer.Id,
@@ -898,11 +858,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<CustomerAddressListModel> PrepareCustomerAddressListModelAsync(CustomerAddressSearchModel searchModel, Customer customer)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             //get customer addresses
             var addresses = (await _customerService.GetAddressesByCustomerIdAsync(customer.Id))
@@ -944,8 +902,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<CustomerAddressModel> PrepareCustomerAddressModelAsync(CustomerAddressModel model,
             Customer customer, Address address, bool excludeProperties = false)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             if (address != null)
             {
@@ -987,11 +944,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<CustomerOrderListModel> PrepareCustomerOrderListModelAsync(CustomerOrderSearchModel searchModel, Customer customer)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             //get customer orders
             var orders = await _orderService.SearchOrdersAsync(customerId: customer.Id,
@@ -1034,11 +989,9 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<CustomerShoppingCartListModel> PrepareCustomerShoppingCartListModelAsync(CustomerShoppingCartSearchModel searchModel,
             Customer customer)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             //get customer shopping cart
             var shoppingCart = (await _shoppingCartService.GetShoppingCartAsync(customer, (ShoppingCartType)searchModel.ShoppingCartTypeId))
@@ -1086,11 +1039,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<CustomerActivityLogListModel> PrepareCustomerActivityLogListModelAsync(CustomerActivityLogSearchModel searchModel, Customer customer)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             //get customer activity log
             var activityLog = await _customerActivityService.GetAllActivitiesAsync(customerId: customer.Id,
@@ -1129,11 +1080,9 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<CustomerBackInStockSubscriptionListModel> PrepareCustomerBackInStockSubscriptionListModelAsync(
             CustomerBackInStockSubscriptionSearchModel searchModel, Customer customer)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             //get customer back in stock subscriptions
             var subscriptions = await _backInStockSubscriptionService.GetAllSubscriptionsByCustomerIdAsync(customer.Id,
@@ -1172,8 +1121,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual Task<OnlineCustomerSearchModel> PrepareOnlineCustomerSearchModelAsync(OnlineCustomerSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -1191,8 +1139,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<OnlineCustomerListModel> PrepareOnlineCustomerListModelAsync(OnlineCustomerSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get parameters to filter customers
             var lastActivityFrom = DateTime.UtcNow.AddMinutes(-_customerSettings.OnlineCustomerMinutes);
@@ -1242,8 +1189,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<GdprLogSearchModel> PrepareGdprLogSearchModelAsync(GdprLogSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare request types
             await _baseAdminModelFactory.PrepareGdprRequestTypesAsync(searchModel.AvailableRequestTypes);
@@ -1264,8 +1210,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<GdprLogListModel> PrepareGdprLogListModelAsync(GdprLogSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             var customerId = 0;
             var customerInfo = "";

@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
+﻿using System.Globalization;
 using System.IO.Compression;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -23,9 +18,9 @@ namespace Nop.Services.Plugins
     {
         #region Fields
 
-        private readonly INopFileProvider _fileProvider;
-        private readonly IStoreContext _storeContext;
-        private readonly IThemeProvider _themeProvider;
+        protected readonly INopFileProvider _fileProvider;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IThemeProvider _themeProvider;
 
         #endregion
 
@@ -318,8 +313,7 @@ namespace Nop.Services.Plugins
         /// </returns>
         public virtual async Task<IList<IDescriptor>> UploadPluginsAndThemesAsync(IFormFile archivefile)
         {
-            if (archivefile == null)
-                throw new ArgumentNullException(nameof(archivefile));
+            ArgumentNullException.ThrowIfNull(archivefile);
 
             var zipFilePath = string.Empty;
             var descriptors = new List<IDescriptor>();
@@ -366,8 +360,7 @@ namespace Nop.Services.Plugins
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UploadIconsArchiveAsync(IFormFile archivefile)
         {
-            if (archivefile == null)
-                throw new ArgumentNullException(nameof(archivefile));
+            ArgumentNullException.ThrowIfNull(archivefile);
 
             var zipFilePath = string.Empty;
             try
@@ -402,8 +395,7 @@ namespace Nop.Services.Plugins
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UploadFaviconAsync(IFormFile favicon)
         {
-            if (favicon == null)
-                throw new ArgumentNullException(nameof(favicon));
+            ArgumentNullException.ThrowIfNull(favicon);
 
             //only icons are supported
             if (!_fileProvider.GetFileExtension(favicon.FileName)?.Equals(".ico", StringComparison.InvariantCultureIgnoreCase) ?? true)

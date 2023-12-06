@@ -15,11 +15,11 @@ namespace Nop.Web.Areas.Admin.Validators.Catalog
             RuleFor(x => x.Name)
                 .NotEmpty()
                 .WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.Products.Fields.Name.Required"));
-            
+
             RuleFor(x => x.SeName)
                 .Length(0, NopSeoDefaults.SearchEngineNameLength)
                 .WithMessageAwait(localizationService.GetResourceAsync("Admin.SEO.SeName.MaxLengthValidation"), NopSeoDefaults.SearchEngineNameLength);
-            
+
             RuleFor(x => x.RentalPriceLength)
                 .GreaterThan(0)
                 .WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.Products.Fields.RentalPriceLength.ShouldBeGreaterThanZero"))

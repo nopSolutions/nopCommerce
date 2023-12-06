@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Customers;
+﻿using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Payments;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
@@ -17,8 +13,8 @@ namespace Nop.Services.Payments
     {
         #region Fields
 
-        private readonly ISettingService _settingService;
-        private readonly PaymentSettings _paymentSettings;
+        protected readonly ISettingService _settingService;
+        protected readonly PaymentSettings _paymentSettings;
 
         #endregion
 
@@ -95,12 +91,11 @@ namespace Nop.Services.Payments
         /// </returns>
         public virtual async Task<IList<int>> GetRestrictedCountryIdsAsync(IPaymentMethod paymentMethod)
         {
-            if (paymentMethod == null)
-                throw new ArgumentNullException(nameof(paymentMethod));
+            ArgumentNullException.ThrowIfNull(paymentMethod);
 
             var settingKey = string.Format(NopPaymentDefaults.RestrictedCountriesSettingName, paymentMethod.PluginDescriptor.SystemName);
 
-            return await _settingService.GetSettingByKeyAsync<List<int>>(settingKey) ?? new List<int>();
+            return await _settingService.GetSettingByKeyAsync<List<int>>(settingKey) ?? [];
         }
 
         /// <summary>
@@ -111,8 +106,7 @@ namespace Nop.Services.Payments
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task SaveRestrictedCountriesAsync(IPaymentMethod paymentMethod, IList<int> countryIds)
         {
-            if (paymentMethod == null)
-                throw new ArgumentNullException(nameof(paymentMethod));
+            ArgumentNullException.ThrowIfNull(paymentMethod);
 
             var settingKey = string.Format(NopPaymentDefaults.RestrictedCountriesSettingName, paymentMethod.PluginDescriptor.SystemName);
 

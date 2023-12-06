@@ -1,12 +1,10 @@
-﻿using System;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
+﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Http.Extensions;
 using Nop.Data;
 using Nop.Services.Common;
 
@@ -37,11 +35,11 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Fields
 
-            private readonly CustomerSettings _customerSettings;
-            private readonly IGenericAttributeService _genericAttributeService;
-            private readonly IRepository<GenericAttribute> _genericAttributeRepository;
-            private readonly IWebHelper _webHelper;
-            private readonly IWorkContext _workContext;
+            protected readonly CustomerSettings _customerSettings;
+            protected readonly IGenericAttributeService _genericAttributeService;
+            protected readonly IRepository<GenericAttribute> _genericAttributeRepository;
+            protected readonly IWebHelper _webHelper;
+            protected readonly IWorkContext _workContext;
 
             #endregion
 
@@ -71,14 +69,10 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <returns>A task that represents the asynchronous operation</returns>
             private async Task SaveLastVisitedPageAsync(ActionExecutingContext context)
             {
-                if (context == null)
-                    throw new ArgumentNullException(nameof(context));
-
-                if (context.HttpContext.Request == null)
-                    return;
+                ArgumentNullException.ThrowIfNull(context);
 
                 //only in GET requests
-                if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
+                if (!context.HttpContext.Request.IsGetRequest())
                     return;
 
                 if (!DataSettingsManager.IsDatabaseInstalled())

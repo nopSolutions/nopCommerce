@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Nop.Core.Domain.Discounts;
+﻿using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 
@@ -15,11 +13,9 @@ namespace Nop.Services.Orders
 
         public UpdateOrderParameters(Order updatedOrder, OrderItem updatedOrderItem)
         {
-            if (updatedOrder is null)
-                throw new ArgumentNullException(nameof(updatedOrder));
+            ArgumentNullException.ThrowIfNull(updatedOrder);
 
-            if (updatedOrderItem is null)
-                throw new ArgumentNullException(nameof(updatedOrderItem));
+            ArgumentNullException.ThrowIfNull(updatedOrderItem);
 
             UpdatedOrder = updatedOrder;
             UpdatedOrderItem = updatedOrderItem;
@@ -75,12 +71,12 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Warnings
         /// </summary>
-        public List<string> Warnings { get; } = new List<string>();
+        public List<string> Warnings { get; } = [];
 
         /// <summary>
         /// Applied discounts
         /// </summary>
-        public List<Discount> AppliedDiscounts { get; } = new List<Discount>();
+        public List<Discount> AppliedDiscounts { get; } = [];
 
         /// <summary>
         /// Pickup point

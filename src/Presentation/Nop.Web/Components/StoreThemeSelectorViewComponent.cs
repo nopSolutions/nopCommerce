@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Components;
@@ -8,8 +7,8 @@ namespace Nop.Web.Components
 {
     public partial class StoreThemeSelectorViewComponent : NopViewComponent
     {
-        private readonly ICommonModelFactory _commonModelFactory;
-        private readonly StoreInformationSettings _storeInformationSettings;
+        protected readonly ICommonModelFactory _commonModelFactory;
+        protected readonly StoreInformationSettings _storeInformationSettings;
 
         public StoreThemeSelectorViewComponent(ICommonModelFactory commonModelFactory,
             StoreInformationSettings storeInformationSettings)

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
+﻿using System.Globalization;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using ClosedXML.Excel;
 using Nop.Core;
@@ -20,10 +15,12 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
+using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
+using Nop.Services.Attributes;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -54,48 +51,49 @@ namespace Nop.Services.ExportImport
     {
         #region Fields
 
-        private readonly AddressSettings _addressSettings;
-        private readonly CatalogSettings _catalogSettings;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly CustomerSettings _customerSettings;
-        private readonly DateTimeSettings _dateTimeSettings;
-        private readonly ForumSettings _forumSettings;
-        private readonly IAddressService _addressService;
-        private readonly ICategoryService _categoryService;
-        private readonly ICountryService _countryService;
-        private readonly ICurrencyService _currencyService;
-        private readonly ICustomerAttributeFormatter _customerAttributeFormatter;
-        private readonly ICustomerService _customerService;
-        private readonly IDateRangeService _dateRangeService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IDiscountService _discountService;
-        private readonly IForumService _forumService;
-        private readonly IGdprService _gdprService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedEntityService _localizedEntityService;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly IMeasureService _measureService;
-        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        private readonly IOrderService _orderService;
-        private readonly IPictureService _pictureService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IProductAttributeService _productAttributeService;
-        private readonly IProductService _productService;
-        private readonly IProductTagService _productTagService;
-        private readonly IProductTemplateService _productTemplateService;
-        private readonly IShipmentService _shipmentService;
-        private readonly ISpecificationAttributeService _specificationAttributeService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IStoreService _storeService;
-        private readonly ITaxCategoryService _taxCategoryService;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IVendorService _vendorService;
-        private readonly IWorkContext _workContext;
-        private readonly OrderSettings _orderSettings;
-        private readonly ProductEditorSettings _productEditorSettings;
+        protected readonly AddressSettings _addressSettings;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly SecuritySettings _securitySettings;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly CustomerSettings _customerSettings;
+        protected readonly DateTimeSettings _dateTimeSettings;
+        protected readonly ForumSettings _forumSettings;
+        protected readonly IAddressService _addressService;
+        protected readonly ICategoryService _categoryService;
+        protected readonly ICountryService _countryService;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly IAttributeFormatter<CustomerAttribute, CustomerAttributeValue> _customerAttributeFormatter;
+        protected readonly ICustomerService _customerService;
+        protected readonly IDateRangeService _dateRangeService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly IDiscountService _discountService;
+        protected readonly IForumService _forumService;
+        protected readonly IGdprService _gdprService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly ILanguageService _languageService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ILocalizedEntityService _localizedEntityService;
+        protected readonly IManufacturerService _manufacturerService;
+        protected readonly IMeasureService _measureService;
+        protected readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+        protected readonly IOrderService _orderService;
+        protected readonly IPictureService _pictureService;
+        protected readonly IPriceFormatter _priceFormatter;
+        protected readonly IProductAttributeService _productAttributeService;
+        protected readonly IProductService _productService;
+        protected readonly IProductTagService _productTagService;
+        protected readonly IProductTemplateService _productTemplateService;
+        protected readonly IShipmentService _shipmentService;
+        protected readonly ISpecificationAttributeService _specificationAttributeService;
+        protected readonly IStateProvinceService _stateProvinceService;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly IStoreService _storeService;
+        protected readonly ITaxCategoryService _taxCategoryService;
+        protected readonly IUrlRecordService _urlRecordService;
+        protected readonly IVendorService _vendorService;
+        protected readonly IWorkContext _workContext;
+        protected readonly OrderSettings _orderSettings;
+        protected readonly ProductEditorSettings _productEditorSettings;
 
         #endregion
 
@@ -103,15 +101,16 @@ namespace Nop.Services.ExportImport
 
         public ExportManager(AddressSettings addressSettings,
             CatalogSettings catalogSettings,
-            ICustomerActivityService customerActivityService,
+            SecuritySettings securitySettings,
             CustomerSettings customerSettings,
             DateTimeSettings dateTimeSettings,
             ForumSettings forumSettings,
             IAddressService addressService,
+            IAttributeFormatter<CustomerAttribute, CustomerAttributeValue> customerAttributeFormatter,
             ICategoryService categoryService,
             ICountryService countryService,
             ICurrencyService currencyService,
-            ICustomerAttributeFormatter customerAttributeFormatter,
+            ICustomerActivityService customerActivityService,
             ICustomerService customerService,
             IDateRangeService dateRangeService,
             IDateTimeHelper dateTimeHelper,
@@ -146,15 +145,16 @@ namespace Nop.Services.ExportImport
         {
             _addressSettings = addressSettings;
             _catalogSettings = catalogSettings;
-            _customerActivityService = customerActivityService;
+            _securitySettings = securitySettings;
             _customerSettings = customerSettings;
             _dateTimeSettings = dateTimeSettings;
             _addressService = addressService;
+            _customerAttributeFormatter = customerAttributeFormatter;
             _forumSettings = forumSettings;
             _categoryService = categoryService;
             _countryService = countryService;
             _currencyService = currencyService;
-            _customerAttributeFormatter = customerAttributeFormatter;
+            _customerActivityService = customerActivityService;
             _customerService = customerService;
             _dateRangeService = dateRangeService;
             _dateTimeHelper = dateTimeHelper;
@@ -456,17 +456,17 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<TProperty> GetLocalizedAsync<TEntity, TProperty>(TEntity entity, Expression<Func<TEntity, TProperty>> keySelector,
+        protected virtual async Task<TProperty> GetLocalizedAsync<TEntity, TProperty>(TEntity entity, Expression<Func<TEntity, TProperty>> keySelector,
             Language language) where TEntity : BaseEntity, ILocalizedEntity
         {
             if (entity == null)
-                return default(TProperty);
+                return default;
 
             return await _localizationService.GetLocalizedAsync(entity, keySelector, language.Id, false);
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<PropertyManager<ExportProductAttribute, Language>> GetProductAttributeManagerAsync(IList<Language> languages)
+        protected virtual async Task<PropertyManager<ExportProductAttribute, Language>> GetProductAttributeManagerAsync(IList<Language> languages)
         {
             var attributeProperties = new[]
             {
@@ -490,6 +490,7 @@ namespace Nop.Services.ExportImport
                 {
                     DropDownElements = await AttributeValueType.Simple.ToSelectListAsync(useLocalization: false)
                 },
+
                 new PropertyByName<ExportProductAttribute, Language>("AssociatedProductId", (p, l) => p.AssociatedProductId),
                 new PropertyByName<ExportProductAttribute, Language>("ColorSquaresRgb", (p, l) => p.ColorSquaresRgb),
                 new PropertyByName<ExportProductAttribute, Language>("ImageSquaresPictureId", (p, l) => p.ImageSquaresPictureId),
@@ -501,7 +502,8 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<ExportProductAttribute, Language>("Quantity", (p, l) => p.Quantity),
                 new PropertyByName<ExportProductAttribute, Language>("IsPreSelected", (p, l) => p.IsPreSelected),
                 new PropertyByName<ExportProductAttribute, Language>("DisplayOrder", (p, l) => p.DisplayOrder),
-                new PropertyByName<ExportProductAttribute, Language>("PictureId", (p, l) => p.PictureId)
+                new PropertyByName<ExportProductAttribute, Language>("PictureIds", async (p, l) => string.Join(",",
+                                    (await _productAttributeService.GetProductAttributeValuePicturesAsync(p.Id)).Select(vp => vp.PictureId)))
             };
 
             var localizedProperties = new[]
@@ -518,7 +520,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<PropertyManager<ExportSpecificationAttribute, Language>> GetSpecificationAttributeManagerAsync(IList<Language> languages)
+        protected virtual async Task<PropertyManager<ExportSpecificationAttribute, Language>> GetSpecificationAttributeManagerAsync(IList<Language> languages)
         {
             var attributeProperties = new[]
             {
@@ -547,7 +549,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<byte[]> ExportProductsToXlsxWithAttributesAsync(PropertyByName<Product, Language>[] properties, PropertyByName<Product, Language>[] localizedProperties, IEnumerable<Product> itemsToExport, IList<Language> languages)
+        protected virtual async Task<byte[]> ExportProductsToXlsxWithAttributesAsync(PropertyByName<Product, Language>[] properties, PropertyByName<Product, Language>[] localizedProperties, IEnumerable<Product> itemsToExport, IList<Language> languages)
         {
             var productAttributeManager = await GetProductAttributeManagerAsync(languages);
             var specificationAttributeManager = await GetSpecificationAttributeManagerAsync(languages);
@@ -611,7 +613,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<int> ExportProductAttributesAsync(Product item, PropertyManager<ExportProductAttribute, Language> attributeManager,
+        protected virtual async Task<int> ExportProductAttributesAsync(Product item, PropertyManager<ExportProductAttribute, Language> attributeManager,
             IXLWorksheet worksheet, IList<(Language Language, IXLWorksheet Worksheet)> localizedWorksheets, int row, IXLWorksheet faWorksheet)
         {
             var attributes = await (await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(item.Id))
@@ -622,7 +624,8 @@ namespace Nop.Services.ExportImport
                     var values = await _productAttributeService.GetProductAttributeValuesAsync(pam.Id);
 
                     if (values?.Any() ?? false)
-                        return values.Select(pav =>
+                    {
+                        IEnumerable<ExportProductAttribute> productAttributes = await values.SelectAwait(async pav =>
                             new ExportProductAttribute
                             {
                                 AttributeId = productAttribute.Id,
@@ -646,8 +649,12 @@ namespace Nop.Services.ExportImport
                                 Quantity = pav.Quantity,
                                 IsPreSelected = pav.IsPreSelected,
                                 DisplayOrder = pav.DisplayOrder,
-                                PictureId = pav.PictureId
-                            });
+                                PictureIds = string.Join(";",
+                                    (await _productAttributeService.GetProductAttributeValuePicturesAsync(pav.Id)).Select(vp => vp.PictureId))
+                            }).ToListAsync();
+
+                        return productAttributes;
+                    }
 
                     var attribute = new ExportProductAttribute
                     {
@@ -674,7 +681,7 @@ namespace Nop.Services.ExportImport
                     };
                 }).ToListAsync();
 
-            if (!attributes.Any())
+            if (attributes.Count == 0)
                 return row;
 
             attributeManager.WriteDefaultCaption(worksheet, row, ExportProductAttribute.ProductAttributeCellOffset);
@@ -709,14 +716,14 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<int> ExportSpecificationAttributesAsync(Product item, PropertyManager<ExportSpecificationAttribute, Language> attributeManager,
+        protected virtual async Task<int> ExportSpecificationAttributesAsync(Product item, PropertyManager<ExportSpecificationAttribute, Language> attributeManager,
             IXLWorksheet worksheet, IList<(Language Language, IXLWorksheet Worksheet)> localizedWorksheets, int row, IXLWorksheet faWorksheet)
         {
             var attributes = await (await _specificationAttributeService
                 .GetProductSpecificationAttributesAsync(item.Id)).SelectAwait(
                 async psa => await ExportSpecificationAttribute.CreateAsync(psa, _specificationAttributeService)).ToListAsync();
 
-            if (!attributes.Any())
+            if (attributes.Count == 0)
                 return row;
 
             attributeManager.WriteDefaultCaption(worksheet, row, ExportProductAttribute.ProductAttributeCellOffset);
@@ -751,7 +758,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<byte[]> ExportOrderToXlsxWithProductsAsync(PropertyByName<Order, Language>[] properties, IEnumerable<Order> itemsToExport)
+        protected virtual async Task<byte[]> ExportOrderToXlsxWithProductsAsync(PropertyByName<Order, Language>[] properties, IEnumerable<Order> itemsToExport)
         {
             var orderItemProperties = new[]
             {
@@ -822,21 +829,20 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<object> GetCustomCustomerAttributesAsync(Customer customer)
+        protected virtual async Task<object> GetCustomCustomerAttributesAsync(Customer customer)
         {
             return await _customerAttributeFormatter.FormatAttributesAsync(customer.CustomCustomerAttributesXML, ";");
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task WriteLocalizedPropertyXmlAsync<TEntity, TPropType>(TEntity entity, Expression<Func<TEntity, TPropType>> keySelector,
+        protected virtual async Task WriteLocalizedPropertyXmlAsync<TEntity, TPropType>(TEntity entity, Expression<Func<TEntity, TPropType>> keySelector,
             XmlWriter xmlWriter, IList<Language> languages, bool ignore = false, string overriddenNodeName = null)
             where TEntity : BaseEntity, ILocalizedEntity
         {
             if (ignore)
                 return;
 
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
             if (keySelector.Body is not MemberExpression member)
                 throw new ArgumentException($"Expression '{keySelector}' refers to a method, not a property.");
@@ -870,15 +876,14 @@ namespace Nop.Services.ExportImport
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task WriteLocalizedSeNameXmlAsync<TEntity>(TEntity entity, XmlWriter xmlWriter, IList<Language> languages,
+        protected virtual async Task WriteLocalizedSeNameXmlAsync<TEntity>(TEntity entity, XmlWriter xmlWriter, IList<Language> languages,
             bool ignore = false, string overriddenNodeName = null)
             where TEntity : BaseEntity, ISlugSupported
         {
             if (ignore)
                 return;
 
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
             var nodeName = "SEName";
             if (!string.IsNullOrWhiteSpace(overriddenNodeName))
@@ -1219,7 +1224,6 @@ namespace Nop.Services.ExportImport
                 await xmlWriter.WriteStringAsync("DeliveryDateId", product.DeliveryDateId, await IgnoreExportProductPropertyAsync(p => p.DeliveryDate));
                 await xmlWriter.WriteStringAsync("IsTaxExempt", product.IsTaxExempt);
                 await xmlWriter.WriteStringAsync("TaxCategoryId", product.TaxCategoryId);
-                await xmlWriter.WriteStringAsync("IsTelecommunicationsOrBroadcastingOrElectronicServices", product.IsTelecommunicationsOrBroadcastingOrElectronicServices, await IgnoreExportProductPropertyAsync(p => p.TelecommunicationsBroadcastingElectronicServices));
                 await xmlWriter.WriteStringAsync("ManageInventoryMethodId", product.ManageInventoryMethodId);
                 await xmlWriter.WriteStringAsync("ProductAvailabilityRangeId", product.ProductAvailabilityRangeId, await IgnoreExportProductPropertyAsync(p => p.ProductAvailabilityRange));
                 await xmlWriter.WriteStringAsync("UseMultipleWarehouses", product.UseMultipleWarehouses, await IgnoreExportProductPropertyAsync(p => p.UseMultipleWarehouses));
@@ -1367,7 +1371,8 @@ namespace Nop.Services.ExportImport
                             await xmlWriter.WriteStringAsync("Quantity", productAttributeValue.Quantity);
                             await xmlWriter.WriteStringAsync("IsPreSelected", productAttributeValue.IsPreSelected);
                             await xmlWriter.WriteStringAsync("DisplayOrder", productAttributeValue.DisplayOrder);
-                            await xmlWriter.WriteStringAsync("PictureId", productAttributeValue.PictureId);
+                            await xmlWriter.WriteStringAsync("PictureIds", string.Join(",",
+                                (await _productAttributeService.GetProductAttributeValuePicturesAsync(productAttributeValue.Id)).Select(vp => vp.PictureId)));
                             await xmlWriter.WriteEndElementAsync();
                         }
 
@@ -1584,7 +1589,6 @@ namespace Nop.Services.ExportImport
                     DropDownElements = (await _taxCategoryService.GetAllTaxCategoriesAsync()).Select(tc => tc as BaseEntity).ToSelectList(p => (p as TaxCategory)?.Name ?? string.Empty),
                     AllowBlank = true
                 },
-                new PropertyByName<Product, Language>("IsTelecommunicationsOrBroadcastingOrElectronicServices", (p, l) => p.IsTelecommunicationsOrBroadcastingOrElectronicServices, await IgnoreExportProductPropertyAsync(p => p.TelecommunicationsBroadcastingElectronicServices)),
                 new PropertyByName<Product, Language>("ManageInventoryMethod", (p, l) => p.ManageInventoryMethodId)
                 {
                     DropDownElements = await ManageInventoryMethod.DontManageStock.ToSelectListAsync(useLocalization: false)
@@ -1651,6 +1655,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product, Language>("ProductTags", async (p, l) =>  await GetProductTagsAsync(p), await IgnoreExportProductPropertyAsync(p => p.ProductTags)),
                 new PropertyByName<Product, Language>("IsLimitedToStores", (p, l) => p.LimitedToStores, await IgnoreExportLimitedToStoreAsync()),
                 new PropertyByName<Product, Language>("LimitedToStores",async (p, l) =>  await GetLimitedToStoresAsync(p), await IgnoreExportLimitedToStoreAsync()),
+                new PropertyByName<Product, Language>("DisplayAttributeCombinationImagesOnly",(p, l) =>  p.DisplayAttributeCombinationImagesOnly, !_productEditorSettings.DisplayAttributeCombinationImagesOnly),
                 new PropertyByName<Product, Language>("Picture1", async (p, l) => await GetPictureAsync(p, 0)),
                 new PropertyByName<Product, Language>("Picture2", async (p, l) => await GetPictureAsync(p, 1)),
                 new PropertyByName<Product, Language>("Picture3", async (p, l) => await GetPictureAsync(p, 2))
@@ -1793,7 +1798,7 @@ namespace Nop.Services.ExportImport
 
                 //shipments
                 var shipments = (await _shipmentService.GetShipmentsByOrderIdAsync(order.Id)).OrderBy(x => x.CreatedOnUtc).ToList();
-                if (shipments.Any())
+                if (shipments.Count != 0)
                 {
                     await xmlWriter.WriteStartElementAsync("Shipments");
                     foreach (var shipment in shipments)
@@ -1998,7 +2003,6 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Customer, Language>("Phone", (p, l) => p.Phone, !_customerSettings.PhoneEnabled),
                 new PropertyByName<Customer, Language>("Fax", (p, l) => p.Fax, !_customerSettings.FaxEnabled),
                 new PropertyByName<Customer, Language>("VatNumber", (p, l) => p.VatNumber),
-                new PropertyByName<Customer, Language>("VatNumberStatusId", (p, l) => p.VatNumberStatusId),
                 new PropertyByName<Customer, Language>("VatNumberStatus", (p, l) => p.VatNumberStatusId)
                 {
                     DropDownElements = await VatNumberStatus.Unknown.ToSelectListAsync(useLocalization: false)
@@ -2007,7 +2011,40 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Customer, Language>("AvatarPictureId", async (p, l) => await _genericAttributeService.GetAttributeAsync<int>(p, NopCustomerDefaults.AvatarPictureIdAttribute), !_customerSettings.AllowCustomersToUploadAvatars),
                 new PropertyByName<Customer, Language>("ForumPostCount", async (p, l) => await _genericAttributeService.GetAttributeAsync<int>(p, NopCustomerDefaults.ForumPostCountAttribute)),
                 new PropertyByName<Customer, Language>("Signature", async (p, l) => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.SignatureAttribute)),
-                new PropertyByName<Customer, Language>("CustomCustomerAttributes", async (p, l) => await GetCustomCustomerAttributesAsync(p))
+                new PropertyByName<Customer, Language>("CustomCustomerAttributes", async (p, l) => await GetCustomCustomerAttributesAsync(p)),
+                new PropertyByName<Customer, Language>("CustomCustomerAttributesXML", (p, l) => p.CustomCustomerAttributesXML),
+                new PropertyByName<Customer, Language>("Password", async (p, l) =>
+                {
+                    if (!_securitySettings.AllowStoreOwnerExportImportCustomersWithHashedPassword)
+                        return string.Empty;
+
+                    var password = await _customerService.GetCurrentPasswordAsync(p.Id);
+
+                    if(password == null)
+                        return string.Empty;
+
+                    if (password.PasswordFormat == PasswordFormat.Hashed)
+                        return password.Password;
+
+                    return string.Empty;
+                },  !_securitySettings.AllowStoreOwnerExportImportCustomersWithHashedPassword),
+                new PropertyByName<Customer, Language>("PasswordSalt", async (p, l) =>
+                {
+                    if (!_securitySettings.AllowStoreOwnerExportImportCustomersWithHashedPassword)
+                        return string.Empty;
+
+                    var password = await _customerService.GetCurrentPasswordAsync(p.Id);
+
+                    if(password == null)
+                        return string.Empty;
+
+                    if (password.PasswordFormat == PasswordFormat.Hashed)
+                        return password.PasswordSalt;
+
+                    return string.Empty;
+
+                }, !_securitySettings.AllowStoreOwnerExportImportCustomersWithHashedPassword),
+
             }, _catalogSettings);
 
             //activity log
@@ -2119,8 +2156,7 @@ namespace Nop.Services.ExportImport
         /// </returns>
         public virtual async Task<string> ExportNewsletterSubscribersToTxtAsync(IList<NewsLetterSubscription> subscriptions)
         {
-            if (subscriptions == null)
-                throw new ArgumentNullException(nameof(subscriptions));
+            ArgumentNullException.ThrowIfNull(subscriptions);
 
             const char separator = ',';
             var sb = new StringBuilder();
@@ -2159,8 +2195,7 @@ namespace Nop.Services.ExportImport
         /// </returns>
         public virtual async Task<string> ExportStatesToTxtAsync(IList<StateProvince> states)
         {
-            if (states == null)
-                throw new ArgumentNullException(nameof(states));
+            ArgumentNullException.ThrowIfNull(states);
 
             const char separator = ',';
             var sb = new StringBuilder();
@@ -2196,8 +2231,7 @@ namespace Nop.Services.ExportImport
         /// </returns>
         public virtual async Task<byte[]> ExportCustomerGdprInfoToXlsxAsync(Customer customer, int storeId)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             //lambda expressions for choosing correct order address
             async Task<Address> orderAddress(Order o) => await _addressService.GetAddressByIdAsync((o.PickupInStore ? o.PickupAddressId : o.ShippingAddressId) ?? 0);
@@ -2307,7 +2341,7 @@ namespace Nop.Services.ExportImport
             List<PrivateMessage> pmList = null;
             if (_forumSettings.AllowPrivateMessages)
             {
-                pmList = (await _forumService.GetAllPrivateMessagesAsync(storeId, customer.Id, 0, null, null, null, null)).ToList();
+                pmList = [.. (await _forumService.GetAllPrivateMessagesAsync(storeId, customer.Id, 0, null, null, null, null))];
                 pmList.AddRange((await _forumService.GetAllPrivateMessagesAsync(storeId, 0, customer.Id, null, null, null, null)).ToList());
             }
 

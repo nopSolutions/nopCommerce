@@ -189,23 +189,16 @@
                                 <nop-select asp-for="SelectedCustomerRoleIds" asp-items="@Model.AvailableCustomerRoles" asp-multiple="true" />
                                 <script>
                                 $(document).ready(function() {
-                                    var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
-                                    rolesIdsInput.setOptions({
-                                        autoClose: false,
-                                        filter: 'contains'
+                                    var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').select2({
+                                        closeOnSelect: false,
+                                        @if (!Model.AvailableCustomerRoles.Any())
+                                        {
+                                            <text>
+                                            disabled: true,
+                                            placeholder: 'No customer roles available',
+                                            </text>
+                                        }
                                     });
-
-                                    @if (!Model.AvailableCustomerRoles.Any())
-                                    {
-                                        <text>
-                                            rolesIdsInput.setOptions({
-                                                enable: false,
-                                                placeholder: 'No customer roles available'
-                                            });
-                                            rolesIdsInput._placeholder();
-                                            rolesIdsInput._enable();
-                                        </text>
-                                    }
                                 });
                                 </script>
                             </div>

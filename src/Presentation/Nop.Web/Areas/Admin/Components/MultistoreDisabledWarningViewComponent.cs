@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Stores;
@@ -9,9 +8,9 @@ namespace Nop.Web.Areas.Admin.Components
 {
     public partial class MultistoreDisabledWarningViewComponent : NopViewComponent
     {
-        private readonly CatalogSettings _catalogSettings;
-        private readonly ISettingService _settingService;
-        private readonly IStoreService _storeService;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly ISettingService _settingService;
+        protected readonly IStoreService _storeService;
 
         public MultistoreDisabledWarningViewComponent(CatalogSettings catalogSettings,
             ISettingService settingService,

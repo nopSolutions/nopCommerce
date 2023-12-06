@@ -45,6 +45,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool ShowOnNewsCommentPage { get; set; }
         public bool ShowOnNewsCommentPage_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnNewsletterPage")]
+        public bool ShowOnNewsletterPage { get; set; }
+        public bool ShowOnNewsletterPage_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnProductReviewPage")]
         public bool ShowOnProductReviewPage { get; set; }
         public bool ShowOnProductReviewPage_OverrideForStore { get; set; }

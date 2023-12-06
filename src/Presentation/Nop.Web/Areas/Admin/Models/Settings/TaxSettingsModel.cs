@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Areas.Admin.Models.Common;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
@@ -29,6 +28,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Tax.PricesIncludeTax")]
         public bool PricesIncludeTax { get; set; }
         public bool PricesIncludeTax_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Tax.AutomaticallyDetectCountry")]
+        public bool AutomaticallyDetectCountry { get; set; }
+        public bool AutomaticallyDetectCountry_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Tax.AllowCustomersToSelectTaxDisplayType")]
         public bool AllowCustomersToSelectTaxDisplayType { get; set; }
@@ -75,7 +78,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         public AddressModel DefaultTaxAddress { get; set; }
         public bool DefaultTaxAddress_OverrideForStore { get; set; }
-       
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Tax.ShippingIsTaxable")]
         public bool ShippingIsTaxable { get; set; }
         public bool ShippingIsTaxable_OverrideForStore { get; set; }

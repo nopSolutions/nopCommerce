@@ -1,7 +1,4 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Customers;
@@ -22,13 +19,13 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ICustomerService _customerService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IOrderProcessingService _orderProcessingService;
-        private readonly IOrderService _orderService;
-        private readonly IPaymentService _paymentService;
-        private readonly IWorkContext _workContext;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly ICustomerService _customerService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IOrderProcessingService _orderProcessingService;
+        protected readonly IOrderService _orderService;
+        protected readonly IPaymentService _paymentService;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 
@@ -64,11 +61,9 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual RecurringPaymentHistorySearchModel PrepareRecurringPaymentHistorySearchModel(RecurringPaymentHistorySearchModel searchModel,
             RecurringPayment recurringPayment)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (recurringPayment == null)
-                throw new ArgumentNullException(nameof(recurringPayment));
+            ArgumentNullException.ThrowIfNull(recurringPayment);
 
             searchModel.RecurringPaymentId = recurringPayment.Id;
 
@@ -92,8 +87,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual Task<RecurringPaymentSearchModel> PrepareRecurringPaymentSearchModelAsync(RecurringPaymentSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -111,8 +105,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<RecurringPaymentListModel> PrepareRecurringPaymentListModelAsync(RecurringPaymentSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get recurringPayments
             var recurringPayments = await _orderService.SearchRecurringPaymentsAsync(showHidden: true,
@@ -214,11 +207,9 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<RecurringPaymentHistoryListModel> PrepareRecurringPaymentHistoryListModelAsync(RecurringPaymentHistorySearchModel searchModel,
             RecurringPayment recurringPayment)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (recurringPayment == null)
-                throw new ArgumentNullException(nameof(recurringPayment));
+            ArgumentNullException.ThrowIfNull(recurringPayment);
 
             //get recurring payments history
             var recurringPayments = (await _orderService.GetRecurringPaymentHistoryAsync(recurringPayment))

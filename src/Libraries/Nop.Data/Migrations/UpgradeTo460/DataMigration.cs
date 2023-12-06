@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using FluentMigrator;
 using Nop.Core;
 using Nop.Core.Domain.Common;
@@ -17,10 +14,10 @@ using Nop.Core.Domain.Shipping;
 
 namespace Nop.Data.Migrations.UpgradeTo460
 {
-    [NopMigration("2022-07-20 00:00:10", "4.60.0", UpdateMigrationType.Data, MigrationProcessType.Update)]
-    public class DataMigration : Migration 
+    [NopUpdateMigration("2023-07-26 14:00:00", "4.60", UpdateMigrationType.Data)]
+    public class DataMigration : Migration
     {
-        private readonly INopDataProvider _dataProvider;
+        protected readonly INopDataProvider _dataProvider;
 
         public DataMigration(INopDataProvider dataProvider)
         {
@@ -32,13 +29,16 @@ namespace Nop.Data.Migrations.UpgradeTo460
         /// </summary>
         public override void Up()
         {
+            //#6789 GenericAttribute was previously named CustomCustomerAttributes and not CustomCustomerAttributesXML
+            var customCustomerAttributeName = "CustomCustomerAttributes";
+
             //#4601 customer attribute values to customer table column values
             var attributeKeys = new[] { nameof(Customer.FirstName), nameof(Customer.LastName), nameof(Customer.Gender),
                 nameof(Customer.Company), nameof(Customer.StreetAddress), nameof(Customer.StreetAddress2), nameof(Customer.ZipPostalCode),
                 nameof(Customer.City), nameof(Customer.County), nameof(Customer.Phone), nameof(Customer.Fax), nameof(Customer.VatNumber),
-                nameof(Customer.TimeZoneId), nameof(Customer.CustomCustomerAttributesXML), nameof(Customer.CountryId),
+                nameof(Customer.TimeZoneId), nameof(Customer.CountryId),
                 nameof(Customer.StateProvinceId), nameof(Customer.VatNumberStatusId), nameof(Customer.CurrencyId), nameof(Customer.LanguageId),
-                nameof(Customer.TaxDisplayTypeId), nameof(Customer.DateOfBirth)};
+                nameof(Customer.TaxDisplayTypeId), nameof(Customer.DateOfBirth), customCustomerAttributeName };
 
             var languages = _dataProvider.GetTable<Language>().ToList();
             var currencies = _dataProvider.GetTable<Currency>().ToList();
@@ -90,13 +90,13 @@ namespace Nop.Data.Migrations.UpgradeTo460
                 var genericAttributes = _dataProvider.GetTable<GenericAttribute>()
                     .Where(ga => ga.KeyGroup == nameof(Customer) && customerIds.Contains(ga.EntityId) && attributeKeys.Contains(ga.Key)).ToList();
 
-                if (!genericAttributes.Any())
+                if (genericAttributes.Count == 0)
                     continue;
 
                 foreach (var customer in customers)
                 {
                     var customerAttributes = genericAttributes.Where(ga => ga.EntityId == customer.Id).ToList();
-                    if (!customerAttributes.Any())
+                    if (customerAttributes.Count == 0)
                         continue;
 
                     customer.FirstName = getAttributeValue(customerAttributes, nameof(Customer.FirstName), castToString);
@@ -112,7 +112,6 @@ namespace Nop.Data.Migrations.UpgradeTo460
                     customer.Fax = getAttributeValue(customerAttributes, nameof(Customer.Fax), castToString);
                     customer.VatNumber = getAttributeValue(customerAttributes, nameof(Customer.VatNumber), castToString);
                     customer.TimeZoneId = getAttributeValue(customerAttributes, nameof(Customer.TimeZoneId), castToString);
-                    customer.CustomCustomerAttributesXML = getAttributeValue(customerAttributes, nameof(Customer.CustomCustomerAttributesXML), castToString, int.MaxValue);
                     customer.CountryId = getAttributeValue(customerAttributes, nameof(Customer.CountryId), castToInt);
                     customer.StateProvinceId = getAttributeValue(customerAttributes, nameof(Customer.StateProvinceId), castToInt);
                     customer.VatNumberStatusId = getAttributeValue(customerAttributes, nameof(Customer.VatNumberStatusId), castToInt);
@@ -120,6 +119,10 @@ namespace Nop.Data.Migrations.UpgradeTo460
                     customer.LanguageId = languages.FirstOrDefault(l => l.Id == getAttributeValue(customerAttributes, nameof(Customer.LanguageId), castToInt))?.Id;
                     customer.TaxDisplayTypeId = getAttributeValue(customerAttributes, nameof(Customer.TaxDisplayTypeId), castToInt);
                     customer.DateOfBirth = getAttributeValue(customerAttributes, nameof(Customer.DateOfBirth), castToDateTime);
+
+                    //#6789
+                    if (string.IsNullOrEmpty(customer.CustomCustomerAttributesXML))
+                        customer.CustomCustomerAttributesXML = getAttributeValue(customerAttributes, customCustomerAttributeName, castToString, int.MaxValue);
                 }
 
                 _dataProvider.UpdateEntities(customers);
@@ -274,12 +277,12 @@ namespace Nop.Data.Migrations.UpgradeTo460
             }
 
             //#3651
-            if (!_dataProvider.GetTable<MessageTemplate>().Any(mt => string.Compare(mt.Name, MessageTemplateSystemNames.OrderProcessingCustomerNotification, StringComparison.InvariantCultureIgnoreCase) == 0))
+            if (!_dataProvider.GetTable<MessageTemplate>().Any(mt => string.Compare(mt.Name, MessageTemplateSystemNames.ORDER_PROCESSING_CUSTOMER_NOTIFICATION, StringComparison.InvariantCultureIgnoreCase) == 0))
             {
                 var _ = _dataProvider.InsertEntity(
                     new MessageTemplate
                     {
-                        Name = MessageTemplateSystemNames.OrderProcessingCustomerNotification,
+                        Name = MessageTemplateSystemNames.ORDER_PROCESSING_CUSTOMER_NOTIFICATION,
                         Subject = "%Store.Name%. Your order is processing",
                         Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Hello %Order.CustomerFullName%,{Environment.NewLine}<br />{Environment.NewLine}Your order is processing. Below is the summary of the order.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Order Number: %Order.OrderNumber%{Environment.NewLine}<br />{Environment.NewLine}Order Details: <a target=\"_blank\" href=\"%Order.OrderURLForCustomer%\">%Order.OrderURLForCustomer%</a>{Environment.NewLine}<br />{Environment.NewLine}Date Ordered: %Order.CreatedOn%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Billing Address{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingFirstName% %Order.BillingLastName%{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingAddress1%{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingAddress2%{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingCity% %Order.BillingZipPostalCode%{Environment.NewLine}<br />{Environment.NewLine}%Order.BillingStateProvince% %Order.BillingCountry%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%if (%Order.Shippable%) Shipping Address{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingFirstName% %Order.ShippingLastName%{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingAddress1%{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingAddress2%{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingCity% %Order.ShippingZipPostalCode%{Environment.NewLine}<br />{Environment.NewLine}%Order.ShippingStateProvince% %Order.ShippingCountry%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Shipping Method: %Order.ShippingMethod%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine} endif% %Order.Product(s)%{Environment.NewLine}</p>{Environment.NewLine}",
                         IsActive = false,

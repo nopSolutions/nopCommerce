@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Events;
@@ -17,11 +14,11 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IRepository<Customer> _customerRepository;
-        private readonly IRepository<CustomerCustomerRoleMapping> _customerCustomerRoleMappingRepository;
-        private readonly IRepository<NewsLetterSubscription> _subscriptionRepository;
+        protected readonly ICustomerService _customerService;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly IRepository<Customer> _customerRepository;
+        protected readonly IRepository<CustomerCustomerRoleMapping> _customerCustomerRoleMappingRepository;
+        protected readonly IRepository<NewsLetterSubscription> _subscriptionRepository;
 
         #endregion
 
@@ -51,9 +48,9 @@ namespace Nop.Services.Messages
         /// <param name="isSubscribe">if set to <c>true</c> [is subscribe].</param>
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task PublishSubscriptionEventAsync(NewsLetterSubscription subscription, bool isSubscribe, bool publishSubscriptionEvents)
+        protected virtual async Task PublishSubscriptionEventAsync(NewsLetterSubscription subscription, bool isSubscribe, bool publishSubscriptionEvents)
         {
-            if (!publishSubscriptionEvents) 
+            if (!publishSubscriptionEvents)
                 return;
 
             if (isSubscribe)
@@ -78,19 +75,16 @@ namespace Nop.Services.Messages
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertNewsLetterSubscriptionAsync(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true)
         {
-            if (newsLetterSubscription == null)
-            {
-                throw new ArgumentNullException(nameof(newsLetterSubscription));
-            }
+            ArgumentNullException.ThrowIfNull(newsLetterSubscription);
 
             //Handle e-mail
             newsLetterSubscription.Email = CommonHelper.EnsureSubscriberEmailOrThrow(newsLetterSubscription.Email);
 
             //Persist
             await _subscriptionRepository.InsertAsync(newsLetterSubscription);
-            
+
             //Publish the subscription event 
-            if (newsLetterSubscription.Active) 
+            if (newsLetterSubscription.Active)
                 await PublishSubscriptionEventAsync(newsLetterSubscription, true, publishSubscriptionEvents);
         }
 
@@ -102,10 +96,7 @@ namespace Nop.Services.Messages
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateNewsLetterSubscriptionAsync(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true)
         {
-            if (newsLetterSubscription == null)
-            {
-                throw new ArgumentNullException(nameof(newsLetterSubscription));
-            }
+            ArgumentNullException.ThrowIfNull(newsLetterSubscription);
 
             //Handle e-mail
             newsLetterSubscription.Email = CommonHelper.EnsureSubscriberEmailOrThrow(newsLetterSubscription.Email);
@@ -115,7 +106,7 @@ namespace Nop.Services.Messages
 
             //Persist
             await _subscriptionRepository.UpdateAsync(newsLetterSubscription);
-            
+
             //Publish the subscription event 
             if ((originalSubscription.Active == false && newsLetterSubscription.Active) ||
                 (newsLetterSubscription.Active && originalSubscription.Email != newsLetterSubscription.Email))
@@ -144,11 +135,10 @@ namespace Nop.Services.Messages
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteNewsLetterSubscriptionAsync(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true)
         {
-            if (newsLetterSubscription == null) 
-                throw new ArgumentNullException(nameof(newsLetterSubscription));
+            ArgumentNullException.ThrowIfNull(newsLetterSubscription);
 
             await _subscriptionRepository.DeleteAsync(newsLetterSubscription);
-            
+
             //Publish the unsubscribe event 
             await PublishSubscriptionEventAsync(newsLetterSubscription, false, publishSubscriptionEvents);
         }
@@ -163,7 +153,7 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<NewsLetterSubscription> GetNewsLetterSubscriptionByIdAsync(int newsLetterSubscriptionId)
         {
-            return await _subscriptionRepository.GetByIdAsync(newsLetterSubscriptionId, cache => default);
+            return await _subscriptionRepository.GetByIdAsync(newsLetterSubscriptionId, cache => default, useShortTermCache: true);
         }
 
         /// <summary>
@@ -176,7 +166,8 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<NewsLetterSubscription> GetNewsLetterSubscriptionByGuidAsync(Guid newsLetterSubscriptionGuid)
         {
-            if (newsLetterSubscriptionGuid == Guid.Empty) return null;
+            if (newsLetterSubscriptionGuid == Guid.Empty)
+                return null;
 
             var newsLetterSubscriptions = from nls in _subscriptionRepository.Table
                                           where nls.NewsLetterSubscriptionGuid == newsLetterSubscriptionGuid
@@ -254,9 +245,8 @@ namespace Nop.Services.Messages
             }
 
             //filter by customer role
-            var guestRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GuestsRoleName);
-            if (guestRole == null)
-                throw new NopException("'Guests' role could not be loaded");
+            var guestRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GuestsRoleName)
+                ?? throw new NopException("'Guests' role could not be loaded");
 
             if (guestRole.Id == customerRoleId)
             {
@@ -289,7 +279,7 @@ namespace Nop.Services.Messages
                     var joindQuery = query.Join(_customerRepository.Table,
                         nls => nls.Email,
                         c => c.Email,
-                        (nls, c) => new {NewsletterSubscribers = nls, Customer = c});
+                        (nls, c) => new { NewsletterSubscribers = nls, Customer = c });
 
                     joindQuery = joindQuery.Where(x => _customerCustomerRoleMappingRepository.Table.Any(ccrm =>
                         ccrm.CustomerId == x.Customer.Id && ccrm.CustomerRoleId == customerRoleId));

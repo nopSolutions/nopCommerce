@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Nop.Web.Framework.Security.Captcha
 {
@@ -13,7 +11,7 @@ namespace Nop.Web.Framework.Security.Captcha
 
         public CaptchaResponse()
         {
-            Errors = new List<string>();
+            Errors = [];
         }
 
         #endregion

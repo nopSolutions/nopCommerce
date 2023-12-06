@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Xml;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 using Nop.Core;
 using Nop.Core.Http;
@@ -20,11 +16,11 @@ namespace Nop.Web.Infrastructure.Installation
     {
         #region Fields
 
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly INopFileProvider _fileProvider;
-        private readonly IWebHelper _webHelper;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly INopFileProvider _fileProvider;
+        protected readonly IWebHelper _webHelper;
 
-        private IList<InstallationLanguage> _availableLanguages;
+        protected IList<InstallationLanguage> _availableLanguages;
 
         #endregion
 

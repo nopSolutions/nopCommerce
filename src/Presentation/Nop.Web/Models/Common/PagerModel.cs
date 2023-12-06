@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using Nop.Services.Localization;
+﻿using Nop.Services.Localization;
+using Nop.Web.Infrastructure;
 
 namespace Nop.Web.Models.Common
 {
@@ -7,21 +7,115 @@ namespace Nop.Web.Models.Common
     {
         #region Fields
 
-        private readonly ILocalizationService _localizationService;
+        protected readonly ILocalizationService _localizationService;
 
-        private int _individualPagesDisplayedCount;
-        private int _pageIndex = -2;
-        private int _pageSize;
+        protected int _individualPagesDisplayedCount;
+        protected int _pageIndex = -2;
+        protected int _pageSize;
 
-        private bool? _showFirst;
-        private bool? _showIndividualPages;
-        private bool? _showLast;
-        private bool? _showNext;
-        private bool? _showPagerItems;
-        private bool? _showPrevious;
-        private bool? _showTotalSummary;
+        protected bool? _showFirst;
+        protected bool? _showIndividualPages;
+        protected bool? _showLast;
+        protected bool? _showNext;
+        protected bool? _showPagerItems;
+        protected bool? _showPrevious;
+        protected bool? _showTotalSummary;
 
         #endregion Fields
+
+        #region Ctor
+
+        public PagerModel(ILocalizationService localizationService)
+        {
+            _localizationService = localizationService;
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Gets the first button text
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task<string> GetFirstButtonTextAsync()
+        {
+            return await _localizationService.GetResourceAsync("Pager.First");
+        }
+
+        /// <summary>
+        /// Gets the last button text
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task<string> GetLastButtonTextAsync()
+        {
+            return await _localizationService.GetResourceAsync("Pager.Last");
+        }
+
+        /// <summary>
+        /// Gets the next button text
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task<string> GetNextButtonTextAsync()
+        {
+            return await _localizationService.GetResourceAsync("Pager.Next");
+        }
+
+        /// <summary>
+        /// Gets the previous button text
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task<string> GetPreviousButtonTextAsync()
+        {
+            return await _localizationService.GetResourceAsync("Pager.Previous");
+        }
+
+        /// <summary>
+        /// Gets or sets the current page text
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task<string> GetCurrentPageTextAsync()
+        {
+            return await _localizationService.GetResourceAsync("Pager.CurrentPage");
+        }
+
+        /// <summary>
+        /// Gets first individual page index
+        /// </summary>
+        /// <returns>Page index</returns>
+        public int GetFirstIndividualPageIndex()
+        {
+            if ((TotalPages < IndividualPagesDisplayedCount) ||
+                ((PageIndex - (IndividualPagesDisplayedCount / 2)) < 0))
+                return 0;
+
+            if ((PageIndex + (IndividualPagesDisplayedCount / 2)) >= TotalPages) 
+                return (TotalPages - IndividualPagesDisplayedCount);
+
+            return (PageIndex - (IndividualPagesDisplayedCount / 2));
+        }
+
+        /// <summary>
+        /// Get last individual page index
+        /// </summary>
+        /// <returns>Page index</returns>
+        public int GetLastIndividualPageIndex()
+        {
+            var num = IndividualPagesDisplayedCount / 2;
+            if ((IndividualPagesDisplayedCount % 2) == 0) 
+                num--;
+
+            if ((TotalPages < IndividualPagesDisplayedCount) ||
+                ((PageIndex + num) >= TotalPages))
+                return (TotalPages - 1);
+
+            if ((PageIndex - (IndividualPagesDisplayedCount / 2)) < 0) 
+                return (IndividualPagesDisplayedCount - 1);
+
+            return PageIndex + num;
+        }
+
+        #endregion Methods
 
         #region Properties
 
@@ -133,12 +227,12 @@ namespace Nop.Web.Models.Common
         {
             get
             {
-                if (TotalRecords == 0 || PageSize == 0) 
+                if (TotalRecords == 0 || PageSize == 0)
                     return 0;
 
                 var num = TotalRecords / PageSize;
 
-                if ((TotalRecords % PageSize) > 0) 
+                if ((TotalRecords % PageSize) > 0)
                     num++;
 
                 return num;
@@ -168,176 +262,5 @@ namespace Nop.Web.Models.Common
         public IRouteValues RouteValues { get; set; }
 
         #endregion Properties
-
-        #region Ctor
-
-        public PagerModel(ILocalizationService localizationService)
-        {
-            _localizationService = localizationService;
-        }
-
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// Gets the first button text
-        /// </summary>
-        /// <returns>A task that represents the asynchronous operation</returns>
-        public async Task<string> GetFirstButtonTextAsync()
-        {
-            return await _localizationService.GetResourceAsync("Pager.First");
-        }
-
-        /// <summary>
-        /// Gets the last button text
-        /// </summary>
-        /// <returns>A task that represents the asynchronous operation</returns>
-        public async Task<string> GetLastButtonTextAsync()
-        {
-            return await _localizationService.GetResourceAsync("Pager.Last");
-        }
-
-        /// <summary>
-        /// Gets the next button text
-        /// </summary>
-        /// <returns>A task that represents the asynchronous operation</returns>
-        public async Task<string> GetNextButtonTextAsync()
-        {
-            return await _localizationService.GetResourceAsync("Pager.Next");
-        }
-
-        /// <summary>
-        /// Gets the previous button text
-        /// </summary>
-        /// <returns>A task that represents the asynchronous operation</returns>
-        public async Task<string> GetPreviousButtonTextAsync()
-        {
-            return await _localizationService.GetResourceAsync("Pager.Previous");
-        }
-
-        /// <summary>
-        /// Gets or sets the current page text
-        /// </summary>
-        /// <returns>A task that represents the asynchronous operation</returns>
-        public async Task<string> GetCurrentPageTextAsync()
-        {
-            return await _localizationService.GetResourceAsync("Pager.CurrentPage");
-        }
-
-        /// <summary>
-        /// Gets first individual page index
-        /// </summary>
-        /// <returns>Page index</returns>
-        public int GetFirstIndividualPageIndex()
-        {
-            if ((TotalPages < IndividualPagesDisplayedCount) ||
-                ((PageIndex - (IndividualPagesDisplayedCount / 2)) < 0))
-                return 0;
-
-            if ((PageIndex + (IndividualPagesDisplayedCount / 2)) >= TotalPages) 
-                return (TotalPages - IndividualPagesDisplayedCount);
-
-            return (PageIndex - (IndividualPagesDisplayedCount / 2));
-        }
-
-        /// <summary>
-        /// Get last individual page index
-        /// </summary>
-        /// <returns>Page index</returns>
-        public int GetLastIndividualPageIndex()
-        {
-            var num = IndividualPagesDisplayedCount / 2;
-            if ((IndividualPagesDisplayedCount % 2) == 0) 
-                num--;
-
-            if ((TotalPages < IndividualPagesDisplayedCount) ||
-                ((PageIndex + num) >= TotalPages))
-                return (TotalPages - 1);
-
-            if ((PageIndex - (IndividualPagesDisplayedCount / 2)) < 0) 
-                return (IndividualPagesDisplayedCount - 1);
-
-            return PageIndex + num;
-        }
-
-        #endregion Methods
     }
-
-    #region Classes
-
-    /// <summary>
-    /// Interface for custom RouteValues objects
-    /// </summary>
-    public partial interface IRouteValues
-    {
-        int PageNumber { get; set; }
-    }
-
-    /// <summary>
-    /// record that has a slug and page for route values. Used for Topic (posts) and 
-    /// Forum (topics) pagination
-    /// </summary>
-    public partial record RouteValues : IRouteValues
-    {
-        public int Id { get; set; }
-        public string Slug { get; set; }
-        public int PageNumber { get; set; }
-    }
-
-    /// <summary>
-    /// record that has search options for route values. Used for Search result pagination
-    /// </summary>
-    public partial record ForumSearchRouteValues : IRouteValues
-    {
-        public string Searchterms { get; set; }
-        public string Advs { get; set; }
-        public string ForumId { get; set; }
-        public string Within { get; set; }
-        public string LimitDays { get; set; }
-        public int PageNumber { get; set; }
-    }
-
-    /// <summary>
-    /// record that has a slug and page for route values. Used for Private Messages pagination
-    /// </summary>
-    public partial record PrivateMessageRouteValues : IRouteValues
-    {
-        public string Tab { get; set; }
-        public int PageNumber { get; set; }
-    }
-
-    /// <summary>
-    /// record that has only page for route value. Used for Active Discussions (forums) pagination
-    /// </summary>
-    public partial record ForumActiveDiscussionsRouteValues : IRouteValues
-    {
-        public int PageNumber { get; set; }
-    }
-
-    /// <summary>
-    /// record that has only page for route value. Used for (My Account) Forum Subscriptions pagination
-    /// </summary>
-    public partial record ForumSubscriptionsRouteValues : IRouteValues
-    {
-        public int PageNumber { get; set; }
-    }
-
-    /// <summary>
-    /// record that has only page for route value. Used for (My Account) Back in stock subscriptions pagination
-    /// </summary>
-    public partial record BackInStockSubscriptionsRouteValues : IRouteValues
-    {
-        public int PageNumber { get; set; }
-    }
-
-    /// <summary>
-    /// record that has only page for route value. Used for (My Account) Reward Points pagination
-    /// </summary>
-    public partial record RewardPointsRouteValues : IRouteValues
-    {
-        public int PageNumber { get; set; }
-    }
-
-    #endregion Classes
 }

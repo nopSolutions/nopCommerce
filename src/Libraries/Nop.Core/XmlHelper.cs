@@ -1,8 +1,5 @@
-﻿using System;
-using System.IO;
-using System.Text;
+﻿using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -28,7 +25,7 @@ namespace Nop.Core
             if (str == null)
                 return null;
             str = Regex.Replace(str, @"[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD]", string.Empty, RegexOptions.Compiled);
-            
+
             return await XmlEncodeAsIsAsync(str);
         }
 
@@ -58,7 +55,7 @@ namespace Nop.Core
 
             return sw.ToString();
         }
-        
+
         /// <summary>
         /// Decodes an attribute
         /// </summary>
@@ -67,7 +64,7 @@ namespace Nop.Core
         public static string XmlDecode(string str)
         {
             var sb = new StringBuilder(str);
-            
+
             var rez = sb.Replace("&quot;", "\"").Replace("&apos;", "'").Replace("&lt;", "<").Replace("&gt;", ">").Replace("&amp;", "&").ToString();
 
             return rez;

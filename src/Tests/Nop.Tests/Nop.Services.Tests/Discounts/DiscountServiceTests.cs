@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Services.Discounts;
@@ -51,7 +48,7 @@ namespace Nop.Tests.Nop.Services.Tests.Discounts
             var discount = CreateDiscount();
             var customer = CreateCustomer();
 
-            var result = await _discountService.ValidateDiscountAsync(discount, customer, new[] { "CouponCode 1" });
+            var result = await _discountService.ValidateDiscountAsync(discount, customer, ["CouponCode 1"]);
             result.IsValid.Should().BeTrue();
         }
 
@@ -90,7 +87,7 @@ namespace Nop.Tests.Nop.Services.Tests.Discounts
             var discount = CreateDiscount();
             var customer = CreateCustomer();
 
-            var result = await _discountService.ValidateDiscountAsync(discount, customer, new[] { "CouponCode 2" });
+            var result = await _discountService.ValidateDiscountAsync(discount, customer, ["CouponCode 2"]);
             result.IsValid.Should().BeFalse();
         }
 
@@ -159,6 +156,67 @@ namespace Nop.Tests.Nop.Services.Tests.Discounts
             discount.DiscountPercentage = 1;
             discount.GetDiscountAmount(200).Should().Be(2);
         }
+
+        [TestCase(RequirementGroupInteractionType.And)]
+        [TestCase(RequirementGroupInteractionType.Or)]
+        [TestCase(RequirementGroupInteractionType.And, true)]
+        [TestCase(RequirementGroupInteractionType.Or, true)]
+        [Test]
+        public async Task CanCheckRequirements(RequirementGroupInteractionType interactionType, bool checkFalse = false)
+        {
+            var discount = CreateDiscount();
+            discount.RequiresCouponCode = false;
+            var customer = CreateCustomer();
+
+            await _discountService.InsertDiscountAsync(discount);
+
+            var groupRequirement = new DiscountRequirement
+            {
+                DiscountId = discount.Id,
+                IsGroup = true,
+                DiscountRequirementRuleSystemName = "TestDiscountRequirementRule",
+                InteractionType = interactionType
+            };
+
+            await _discountService.InsertDiscountRequirementAsync(groupRequirement);
+
+            var requirement1 = new DiscountRequirement
+            {
+                DiscountId = discount.Id,
+                DiscountRequirementRuleSystemName = "TestDiscountRequirementRule",
+                ParentId = groupRequirement.Id
+            };
+
+            var requirement2 = new DiscountRequirement
+            {
+                DiscountId = discount.Id,
+                DiscountRequirementRuleSystemName = "TestDiscountRequirementRule",
+                ParentId = groupRequirement.Id
+            };
+
+            if (interactionType == RequirementGroupInteractionType.Or || checkFalse)
+            {
+                requirement1.InteractionType = RequirementGroupInteractionType.And;
+
+                if (interactionType == RequirementGroupInteractionType.Or && checkFalse)
+                    requirement2.InteractionType = RequirementGroupInteractionType.Or;
+            }
+
+            await _discountService.InsertDiscountRequirementAsync(requirement1);
+            await _discountService.InsertDiscountRequirementAsync(requirement2);
+
+            try
+            {
+                var result = await _discountService.ValidateDiscountAsync(discount, customer, null);
+                result.IsValid.Should().Be(!checkFalse);
+
+            }
+            finally
+            {
+                await _discountService.DeleteDiscountRequirementAsync(groupRequirement, true);
+                await _discountService.DeleteDiscountAsync(discount);
+            }
+        }
     }
 
     public static class DiscountExtensions
@@ -168,13 +226,12 @@ namespace Nop.Tests.Nop.Services.Tests.Discounts
         static DiscountExtensions()
         {
             _discountService = new DiscountService(null, null,
-                null, null, null, null, null, null, null, null);
+                null, null, null, null, null, null, null, null, null);
         }
 
         public static decimal GetDiscountAmount(this Discount discount, decimal amount)
         {
-            if (discount == null)
-                throw new ArgumentNullException(nameof(discount));
+            ArgumentNullException.ThrowIfNull(discount);
 
             return _discountService.GetDiscountAmount(discount, amount);
 

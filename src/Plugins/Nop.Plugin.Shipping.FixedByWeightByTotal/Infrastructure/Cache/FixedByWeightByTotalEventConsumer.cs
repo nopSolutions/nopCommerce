@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Core.Domain.Shipping;
+﻿using Nop.Core.Domain.Shipping;
 using Nop.Core.Events;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
@@ -12,8 +11,8 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Infrastructure.Cache
     public class FixedByWeightByTotalEventConsumer : IConsumer<EntityDeletedEvent<ShippingMethod>>
     {
         #region Fields
-        
-        private readonly ISettingService _settingService;
+
+        protected readonly ISettingService _settingService;
 
         #endregion
 
@@ -40,7 +39,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Infrastructure.Cache
                 return;
 
             //delete saved fixed rate if exists
-            var setting = await _settingService.GetSettingAsync(string.Format(FixedByWeightByTotalDefaults.FixedRateSettingsKey, shippingMethod.Id));
+            var setting = await _settingService.GetSettingAsync(string.Format(FixedByWeightByTotalDefaults.FIXED_RATE_SETTINGS_KEY, shippingMethod.Id));
             if (setting != null)
                 await _settingService.DeleteSettingAsync(setting);
         }

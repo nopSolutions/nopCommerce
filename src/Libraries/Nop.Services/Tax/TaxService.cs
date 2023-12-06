@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
@@ -30,6 +25,7 @@ namespace Nop.Services.Tax
         protected readonly AddressSettings _addressSettings;
         protected readonly CustomerSettings _customerSettings;
         protected readonly IAddressService _addressService;
+        protected readonly ICheckVatService _checkVatService;
         protected readonly ICountryService _countryService;
         protected readonly ICustomerService _customerService;
         protected readonly IEventPublisher _eventPublisher;
@@ -51,6 +47,7 @@ namespace Nop.Services.Tax
         public TaxService(AddressSettings addressSettings,
             CustomerSettings customerSettings,
             IAddressService addressService,
+            ICheckVatService checkVatService,
             ICountryService countryService,
             ICustomerService customerService,
             IEventPublisher eventPublisher,
@@ -68,6 +65,7 @@ namespace Nop.Services.Tax
             _addressSettings = addressSettings;
             _customerSettings = customerSettings;
             _addressService = addressService;
+            _checkVatService = checkVatService;
             _countryService = countryService;
             _customerService = customerService;
             _eventPublisher = eventPublisher;
@@ -85,55 +83,7 @@ namespace Nop.Services.Tax
 
         #endregion
 
-        #region Utilities
-
-        /// <summary>
-        /// Get a value indicating whether a customer is consumer (a person, not a company) located in Europe Union
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the result
-        /// </returns>
-        protected virtual async Task<bool> IsEuConsumerAsync(Customer customer)
-        {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
-
-            Country country = null;
-
-            //get country from billing address
-            if (_addressSettings.CountryEnabled && await _customerService.GetCustomerShippingAddressAsync(customer) is Address billingAddress)
-                country = await _countryService.GetCountryByAddressAsync(billingAddress);
-
-            //get country specified during registration?
-            if (country == null && _customerSettings.CountryEnabled)
-                country = await _countryService.GetCountryByIdAsync(customer.CountryId);
-
-            //get country by IP address
-            if (country == null)
-            {
-                var ipAddress = _webHelper.GetCurrentIpAddress();
-                var countryIsoCode = _geoLookupService.LookupCountryIsoCode(ipAddress);
-                country = await _countryService.GetCountryByTwoLetterIsoCodeAsync(countryIsoCode);
-            }
-
-            //we cannot detect country
-            if (country == null)
-                return false;
-
-            //outside EU
-            if (!country.SubjectToVat)
-                return false;
-
-            //company (business) or consumer?
-            var customerVatStatus = (VatNumberStatus)customer.VatNumberStatusId;
-            if (customerVatStatus == VatNumberStatus.Valid)
-                return false;
-
-            //consumer
-            return true;
-        }
+        #region Utilities               
 
         /// <summary>
         /// Gets a default tax address
@@ -159,8 +109,7 @@ namespace Nop.Services.Tax
         /// </returns>
         protected virtual async Task<Address> LoadPickupPointTaxAddressAsync(PickupPoint pickupPoint)
         {
-            if (pickupPoint == null)
-                throw new ArgumentNullException(nameof(pickupPoint));
+            ArgumentNullException.ThrowIfNull(pickupPoint);
 
             var country = await _countryService.GetCountryByTwoLetterIsoCodeAsync(pickupPoint.CountryCode);
             var state = await _stateProvinceService.GetStateProvinceByAbbreviationAsync(pickupPoint.StateAbbreviation, country?.Id);
@@ -189,8 +138,7 @@ namespace Nop.Services.Tax
         /// </returns>
         protected virtual async Task<TaxRateRequest> PrepareTaxRateRequestAsync(Product product, int taxCategoryId, Customer customer, decimal price)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             var store = await _storeContext.GetCurrentStoreAsync();
             var taxRateRequest = new TaxRateRequest
@@ -204,25 +152,8 @@ namespace Nop.Services.Tax
 
             var basedOn = _taxSettings.TaxBasedOn;
 
-            //new EU VAT rules starting January 1st 2015
-            //find more info at http://ec.europa.eu/taxation_customs/taxation/vat/how_vat_works/telecom/index_en.htm#new_rules
-            var overriddenBasedOn =
-                //EU VAT enabled?
-                _taxSettings.EuVatEnabled &&
-                //telecommunications, broadcasting and electronic services?
-                product != null && product.IsTelecommunicationsOrBroadcastingOrElectronicServices &&
-                //January 1st 2015 passed? Yes, not required anymore
-                //DateTime.UtcNow > new DateTime(2015, 1, 1, 0, 0, 0, DateTimeKind.Utc) &&
-                //Europe Union consumer?
-                await IsEuConsumerAsync(customer);
-            if (overriddenBasedOn)
-            {
-                //We must charge VAT in the EU country where the customer belongs (not where the business is based)
-                basedOn = TaxBasedOn.BillingAddress;
-            }
-
             //tax is based on pickup point address
-            if (!overriddenBasedOn && _taxSettings.TaxBasedOnPickupPointAddress && _shippingSettings.AllowPickupInStore)
+            if (_taxSettings.TaxBasedOnPickupPointAddress && _shippingSettings.AllowPickupInStore)
             {
                 var pickupPoint = await _genericAttributeService.GetAttributeAsync<PickupPoint>(customer,
                     NopCustomerDefaults.SelectedPickupPointAttribute, store.Id);
@@ -233,25 +164,39 @@ namespace Nop.Services.Tax
                 }
             }
 
+            var autodetectedCountry = false;
+            var detectedAddress = new Address
+            {
+                CreatedOnUtc = DateTime.UtcNow
+            };
+
             if (basedOn == TaxBasedOn.BillingAddress && customer.BillingAddressId == null ||
                 basedOn == TaxBasedOn.ShippingAddress && customer.ShippingAddressId == null)
-                basedOn = TaxBasedOn.DefaultAddress;
-
-            switch (basedOn)
             {
-                case TaxBasedOn.BillingAddress:
-                    var billingAddress = await _customerService.GetCustomerBillingAddressAsync(customer);
-                    taxRateRequest.Address = billingAddress;
-                    break;
-                case TaxBasedOn.ShippingAddress:
-                    var shippingAddress = await _customerService.GetCustomerShippingAddressAsync(customer);
-                    taxRateRequest.Address = shippingAddress;
-                    break;
-                case TaxBasedOn.DefaultAddress:
-                default:
-                    taxRateRequest.Address = await LoadDefaultTaxAddressAsync();
-                    break;
+                if (_taxSettings.AutomaticallyDetectCountry)
+                {
+                    var ipAddress = _webHelper.GetCurrentIpAddress();
+                    var countryIsoCode = _geoLookupService.LookupCountryIsoCode(ipAddress);
+                    var country = await _countryService.GetCountryByTwoLetterIsoCodeAsync(countryIsoCode);
+
+                    if (country != null)
+                    {
+                        detectedAddress.CountryId = country.Id;
+                        autodetectedCountry = true;
+                    }
+                    else
+                        basedOn = TaxBasedOn.DefaultAddress;
+                }
+                else
+                    basedOn = TaxBasedOn.DefaultAddress;
             }
+
+            taxRateRequest.Address = basedOn switch
+            {
+                TaxBasedOn.BillingAddress => autodetectedCountry ? detectedAddress : await _customerService.GetCustomerBillingAddressAsync(customer),
+                TaxBasedOn.ShippingAddress => autodetectedCountry ? detectedAddress : await _customerService.GetCustomerShippingAddressAsync(customer),
+                _ => await LoadDefaultTaxAddressAsync(),
+            };
 
             return taxRateRequest;
         }
@@ -376,40 +321,19 @@ namespace Nop.Services.Tax
         /// </returns>
         protected virtual async Task<(VatNumberStatus vatNumberStatus, string name, string address, Exception exception)> DoVatCheckAsync(string twoLetterIsoCode, string vatNumber)
         {
-            if (vatNumber == null)
-                vatNumber = string.Empty;
+            vatNumber ??= string.Empty;
             vatNumber = vatNumber.Trim().Replace(" ", string.Empty);
 
-            if (twoLetterIsoCode == null)
-                twoLetterIsoCode = string.Empty;
-            if (!string.IsNullOrEmpty(twoLetterIsoCode))
-                //The service returns INVALID_INPUT for country codes that are not uppercase.
-                twoLetterIsoCode = twoLetterIsoCode.ToUpperInvariant();
-
-            string name;
-            string address;
+            twoLetterIsoCode ??= string.Empty;
 
             try
             {
-                var s = new EuropaCheckVatService.checkVatPortTypeClient();
-                var result = await s.checkVatAsync(new EuropaCheckVatService.checkVatRequest
-                {
-                    vatNumber = vatNumber,
-                    countryCode = twoLetterIsoCode
-                });
-
-                var valid = result.valid;
-                name = result.name;
-                address = result.address;
-
-                return (valid ? VatNumberStatus.Valid : VatNumberStatus.Invalid, name, address, null);
+                var (status, name, address) = await _checkVatService.CheckVatAsync(twoLetterIsoCode, vatNumber);
+                return (status, name, address, null);
             }
             catch (Exception ex)
             {
-                name = address = string.Empty;
-                var exception = ex;
-
-                return (VatNumberStatus.Unknown, name, address, exception);
+                return (VatNumberStatus.Unknown, string.Empty, string.Empty, ex);
             }
         }
 
@@ -525,7 +449,7 @@ namespace Nop.Services.Tax
             var taxRate = decimal.Zero;
 
             //no need to calculate tax rate if passed "price" is 0
-            if (price == decimal.Zero) 
+            if (price == decimal.Zero)
                 return (price, taxRate);
 
             bool isTaxable;
@@ -668,7 +592,7 @@ namespace Nop.Services.Tax
         public virtual async Task<(decimal price, decimal taxRate)> GetPaymentMethodAdditionalFeeAsync(decimal price, Customer customer)
         {
             var includingTax = await _workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
-            
+
             return await GetPaymentMethodAdditionalFeeAsync(price, includingTax, customer);
         }
 
@@ -747,13 +671,12 @@ namespace Nop.Services.Tax
         public virtual async Task<(decimal price, decimal taxRate)> GetCheckoutAttributePriceAsync(CheckoutAttribute ca, CheckoutAttributeValue cav,
             bool includingTax, Customer customer)
         {
-            if (cav == null)
-                throw new ArgumentNullException(nameof(cav));
+            ArgumentNullException.ThrowIfNull(cav);
 
             var taxRate = decimal.Zero;
 
             var price = cav.PriceAdjustment;
-            if (ca.IsTaxExempt) 
+            if (ca.IsTaxExempt)
                 return (price, taxRate);
 
             var priceIncludesTax = _taxSettings.PricesIncludeTax;
@@ -765,11 +688,11 @@ namespace Nop.Services.Tax
         #endregion
 
         #region VAT
-        
+
         /// <summary>
         /// Gets VAT Number status
         /// </summary>
-        /// <param name="fullVatNumber">Two letter ISO code of a country and VAT number (e.g. GB 111 1111 111)</param>
+        /// <param name="fullVatNumber">Two letter ISO code of a country and VAT number (e.g. DE 111 1111 111)</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the vAT Number status. Name (if received). Address (if received)
@@ -783,12 +706,11 @@ namespace Nop.Services.Tax
                 return (VatNumberStatus.Empty, name, address);
             fullVatNumber = fullVatNumber.Trim();
 
-            //GB 111 1111 111 or GB 1111111111
-            //more advanced regex - http://codeigniter.com/wiki/European_Vat_Checker
+            //DE 111 1111 111 or DE 1111111111
             var r = new Regex(@"^(\w{2})(.*)");
             var match = r.Match(fullVatNumber);
             if (!match.Success)
-                return (VatNumberStatus.Invalid, name, address); 
+                return (VatNumberStatus.Invalid, name, address);
 
             var twoLetterIsoCode = match.Groups[1].Value;
             var vatNumber = match.Groups[2].Value;

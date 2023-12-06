@@ -9,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     public partial record PluginConfigModel : BaseNopModel, IConfigModel
     {
         #region Properties
-        
+
         [NopResourceDisplayName("Admin.Configuration.AppSettings.Plugin.UseUnsafeLoadAssembly")]
         public bool UseUnsafeLoadAssembly { get; set; }
 

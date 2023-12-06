@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Catalog;
+﻿using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
@@ -18,10 +15,10 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedModelFactory _localizedModelFactory;
-        private readonly IProductAttributeService _productAttributeService;
-        private readonly IProductService _productService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ILocalizedModelFactory _localizedModelFactory;
+        protected readonly IProductAttributeService _productAttributeService;
+        protected readonly IProductService _productService;
 
         #endregion
 
@@ -41,7 +38,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #endregion
 
         #region Utilities
-        
+
         /// <summary>
         /// Prepare predefined product attribute value search model
         /// </summary>
@@ -51,11 +48,9 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual PredefinedProductAttributeValueSearchModel PreparePredefinedProductAttributeValueSearchModel(
             PredefinedProductAttributeValueSearchModel searchModel, ProductAttribute productAttribute)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (productAttribute == null)
-                throw new ArgumentNullException(nameof(productAttribute));
+            ArgumentNullException.ThrowIfNull(productAttribute);
 
             searchModel.ProductAttributeId = productAttribute.Id;
 
@@ -74,11 +69,9 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual ProductAttributeProductSearchModel PrepareProductAttributeProductSearchModel(ProductAttributeProductSearchModel searchModel,
             ProductAttribute productAttribute)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (productAttribute == null)
-                throw new ArgumentNullException(nameof(productAttribute));
+            ArgumentNullException.ThrowIfNull(productAttribute);
 
             searchModel.ProductAttributeId = productAttribute.Id;
 
@@ -102,8 +95,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual Task<ProductAttributeSearchModel> PrepareProductAttributeSearchModelAsync(ProductAttributeSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -121,8 +113,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<ProductAttributeListModel> PrepareProductAttributeListModelAsync(ProductAttributeSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get product attributes
             var productAttributes = await _productAttributeService
@@ -133,7 +124,7 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 //fill in model values from the entity
                 return productAttributes.Select(attribute => attribute.ToModel<ProductAttributeModel>());
-                
+
             });
 
             return model;
@@ -190,11 +181,9 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<PredefinedProductAttributeValueListModel> PreparePredefinedProductAttributeValueListModelAsync(
             PredefinedProductAttributeValueSearchModel searchModel, ProductAttribute productAttribute)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (productAttribute == null)
-                throw new ArgumentNullException(nameof(productAttribute));
+            ArgumentNullException.ThrowIfNull(productAttribute);
 
             //get predefined product attribute values
             var values = (await _productAttributeService.GetPredefinedProductAttributeValuesAsync(productAttribute.Id)).ToPagedList(searchModel);
@@ -233,15 +222,14 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<PredefinedProductAttributeValueModel> PreparePredefinedProductAttributeValueModelAsync(PredefinedProductAttributeValueModel model,
             ProductAttribute productAttribute, PredefinedProductAttributeValue productAttributeValue, bool excludeProperties = false)
         {
-            if (productAttribute == null)
-                throw new ArgumentNullException(nameof(productAttribute));
+            ArgumentNullException.ThrowIfNull(productAttribute);
 
             Func<PredefinedProductAttributeValueLocalizedModel, int, Task> localizedModelConfiguration = null;
 
             if (productAttributeValue != null)
             {
                 //fill in model values from the entity
-                if (model == null) 
+                if (model == null)
                 {
                     model = productAttributeValue.ToModel<PredefinedProductAttributeValueModel>();
                 }
@@ -274,11 +262,9 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<ProductAttributeProductListModel> PrepareProductAttributeProductListModelAsync(ProductAttributeProductSearchModel searchModel,
             ProductAttribute productAttribute)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (productAttribute == null)
-                throw new ArgumentNullException(nameof(productAttribute));
+            ArgumentNullException.ThrowIfNull(productAttribute);
 
             //get products
             var products = await _productService.GetProductsByProductAttributeIdAsync(productAttributeId: productAttribute.Id,

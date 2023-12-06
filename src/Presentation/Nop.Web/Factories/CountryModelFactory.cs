@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Web.Models.Directory;
@@ -16,10 +12,10 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly ICountryService _countryService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IWorkContext _workContext;
+        protected readonly ICountryService _countryService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IStateProvinceService _stateProvinceService;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 
@@ -89,7 +85,7 @@ namespace Nop.Web.Factories
             else
             {
                 //some country is selected
-                if (!result.Any())
+                if (result.Count == 0)
                 {
                     //country does not have states
                     result.Insert(0, new StateProvinceModel

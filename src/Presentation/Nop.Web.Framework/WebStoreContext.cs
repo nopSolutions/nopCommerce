@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
@@ -20,13 +17,13 @@ namespace Nop.Web.Framework
     {
         #region Fields
 
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IRepository<Store> _storeRepository;
-        private readonly IStoreService _storeService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly IRepository<Store> _storeRepository;
+        protected readonly IStoreService _storeService;
 
-        private Store _cachedStore;
-        private int? _cachedActiveStoreScopeConfiguration;
+        protected Store _cachedStore;
+        protected int? _cachedActiveStoreScopeConfiguration;
 
         #endregion
 
@@ -67,11 +64,7 @@ namespace Nop.Web.Framework
             string host = _httpContextAccessor.HttpContext?.Request.Headers[HeaderNames.Host];
 
             var allStores = await _storeService.GetAllStoresAsync();
-            var store = allStores.FirstOrDefault(s => _storeService.ContainsHostValue(s, host));
-
-            if (store == null)
-                //load the first found store
-                store = allStores.FirstOrDefault();
+            var store = allStores.FirstOrDefault(s => _storeService.ContainsHostValue(s, host)) ?? allStores.FirstOrDefault();
 
             _cachedStore = store ?? throw new Exception("No store could be loaded");
 
@@ -94,12 +87,8 @@ namespace Nop.Web.Framework
             {
                 return from s in query orderby s.DisplayOrder, s.Id select s;
             }, _ => default, includeDeleted: false);
-            
-            var store = allStores.FirstOrDefault(s => _storeService.ContainsHostValue(s, host));
 
-            if (store == null)
-                //load the first found store
-                store = allStores.FirstOrDefault();
+            var store = allStores.FirstOrDefault(s => _storeService.ContainsHostValue(s, host)) ?? allStores.FirstOrDefault();
 
             _cachedStore = store ?? throw new Exception("No store could be loaded");
 

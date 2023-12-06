@@ -1,5 +1,3 @@
-using System;
-
 namespace Nop.Core.Domain.Directory
 {
     /// <summary>
@@ -15,7 +13,7 @@ namespace Nop.Core.Domain.Directory
             CurrencyCode = string.Empty;
             Rate = 1.0m;
         }
-        
+
         /// <summary>
         /// The three letter ISO code for the Exchange Rate, e.g. USD
         /// </summary>
@@ -30,7 +28,7 @@ namespace Nop.Core.Domain.Directory
         /// When was this exchange rate updated from the data source (the data XML feed)
         /// </summary>
         public DateTime UpdatedOn { get; set; }
-        
+
         /// <summary>
         /// Format the rate into a string with the currency code, e.g. "USD 0.72543"
         /// </summary>

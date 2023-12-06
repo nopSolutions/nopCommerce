@@ -1,6 +1,4 @@
-using System;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using Nop.Services.Localization;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
@@ -14,6 +12,7 @@ namespace Nop.Services.Common.Pdf
     /// </summary>
     public class InvoiceDocument : PdfDocument<InvoiceSource>
     {
+
         #region Ctor
 
         public InvoiceDocument(InvoiceSource invoiceSource, ILocalizationService localizationService) : base(invoiceSource, localizationService)
@@ -22,7 +21,7 @@ namespace Nop.Services.Common.Pdf
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
         /// <summary>
         /// Compose the invoice
@@ -120,7 +119,7 @@ namespace Nop.Services.Common.Pdf
 
                 var logoContainer = row.ConstantItem(65).Height(65);
 
-                if (Source.LogoData is not null)
+                if (Source.LogoData is not null && Source.LogoData.Length != 0)
                     logoContainer.Image(Source.LogoData, ImageScaling.FitArea);
             });
         }
@@ -147,19 +146,19 @@ namespace Nop.Services.Common.Pdf
 
                 table.Header(header =>
                 {
-                    header.Cell().Element(CellStyle).Text(t => ComposeLabel<ProductItem>(t, x => x.Name));
+                    header.Cell().Element(cellStyle).Text(t => ComposeLabel<ProductItem>(t, x => x.Name));
 
                     if (Source.ShowSkuInProductList)
-                        header.Cell().Element(CellStyle).Text(t => ComposeLabel<ProductItem>(t, x => x.Sku));
+                        header.Cell().Element(cellStyle).Text(t => ComposeLabel<ProductItem>(t, x => x.Sku));
 
                     if (Source.ShowVendorInProductList)
-                        header.Cell().Element(CellStyle).Text(t => ComposeLabel<ProductItem>(t, x => x.VendorName));
+                        header.Cell().Element(cellStyle).Text(t => ComposeLabel<ProductItem>(t, x => x.VendorName));
 
-                    header.Cell().Element(CellStyle).AlignRight().Text(t => ComposeLabel<ProductItem>(t, x => x.Price));
-                    header.Cell().Element(CellStyle).AlignRight().Text(t => ComposeLabel<ProductItem>(t, x => x.Quantity));
-                    header.Cell().Element(CellStyle).AlignRight().Text(t => ComposeLabel<ProductItem>(t, x => x.Total));
+                    header.Cell().Element(cellStyle).AlignRight().Text(t => ComposeLabel<ProductItem>(t, x => x.Price));
+                    header.Cell().Element(cellStyle).AlignRight().Text(t => ComposeLabel<ProductItem>(t, x => x.Quantity));
+                    header.Cell().Element(cellStyle).AlignRight().Text(t => ComposeLabel<ProductItem>(t, x => x.Total));
 
-                    static IContainer CellStyle(IContainer container)
+                    static IContainer cellStyle(IContainer container)
                     {
                         return container.DefaultTextStyle(x => x.SemiBold()).PaddingVertical(5).BorderBottom(1).BorderColor(Colors.Black);
                     }
@@ -167,7 +166,7 @@ namespace Nop.Services.Common.Pdf
 
                 foreach (var product in Source.Products)
                 {
-                    table.Cell().Element(CellStyle).Element(productContainer =>
+                    table.Cell().Element(cellStyle).Element(productContainer =>
                     {
                         productContainer.Column(pColumn =>
                         {
@@ -179,16 +178,16 @@ namespace Nop.Services.Common.Pdf
                     });
 
                     if (Source.ShowSkuInProductList)
-                        table.Cell().Element(CellStyle).Text(product.Sku);
+                        table.Cell().Element(cellStyle).Text(product.Sku);
                     if (Source.ShowVendorInProductList)
-                        table.Cell().Element(CellStyle).Text(product.VendorName);
-                    table.Cell().Element(CellStyle).AlignRight().Text(product.Price);
-                    table.Cell().Element(CellStyle).AlignRight().Text(product.Quantity);
-                    table.Cell().Element(CellStyle).AlignRight().Text(product.Total);
+                        table.Cell().Element(cellStyle).Text(product.VendorName);
+                    table.Cell().Element(cellStyle).AlignRight().Text(product.Price);
+                    table.Cell().Element(cellStyle).AlignRight().Text(product.Quantity);
+                    table.Cell().Element(cellStyle).AlignRight().Text(product.Total);
 
-                    static IContainer CellStyle(IContainer container)
+                    static IContainer cellStyle(IContainer container)
                     {
-                        return container.BorderBottom(1).BorderColor(Colors.Grey.Lighten2).PaddingVertical(5);
+                        return container.BorderBottom(1).BorderColor(Colors.Grey.Lighten2).PaddingVertical(5).ShowEntire();
                     }
                 }
             });
@@ -203,11 +202,8 @@ namespace Nop.Services.Common.Pdf
             column.Item().Text(t => ComposeField(t, address, x => x.Company, delimiter: ": "));
             column.Item().Text(t => ComposeField(t, address, x => x.Name, delimiter: ": "));
             column.Item().Text(t => ComposeField(t, address, x => x.Phone, delimiter: ": "));
-            column.Item().Text(t => ComposeField(t, address, x => x.Address, delimiter: ": "));
-            column.Item().Text(t => ComposeField(t, address, x => x.Address2, delimiter: ": "));
-            column.Item().Text(address.AddressLine);
+            column.Item().Text(t => ComposeField(t, address, x => x.AddressLine, delimiter: ": "));
             column.Item().Text(t => ComposeField(t, address, x => x.VATNumber));
-            column.Item().Text(address.Country);
 
             foreach (var attribute in address.AddressAttributes)
                 column.Item().Text(attribute);

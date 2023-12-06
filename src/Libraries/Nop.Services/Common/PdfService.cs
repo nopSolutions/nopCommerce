@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.IO.Compression;
+using System.Net;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -16,6 +12,7 @@ using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Infrastructure;
+using Nop.Services.Attributes;
 using Nop.Services.Catalog;
 using Nop.Services.Common.Pdf;
 using Nop.Services.Configuration;
@@ -41,37 +38,37 @@ namespace Nop.Services.Common
     {
         #region Fields
 
-        private readonly AddressSettings _addressSettings;
-        private readonly CatalogSettings _catalogSettings;
-        private readonly CurrencySettings _currencySettings;
-        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
-        private readonly IAddressService _addressService;
-        private readonly ICountryService _countryService;
-        private readonly ICurrencyService _currencyService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IGiftCardService _giftCardService;
-        private readonly IHtmlFormatter _htmlFormatter;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IMeasureService _measureService;
-        private readonly INopFileProvider _fileProvider;
-        private readonly IOrderService _orderService;
-        private readonly IPaymentPluginManager _paymentPluginManager;
-        private readonly IPaymentService _paymentService;
-        private readonly IPictureService _pictureService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IProductService _productService;
-        private readonly IRewardPointService _rewardPointService;
-        private readonly ISettingService _settingService;
-        private readonly IShipmentService _shipmentService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreService _storeService;
-        private readonly IVendorService _vendorService;
-        private readonly IWorkContext _workContext;
-        private readonly MeasureSettings _measureSettings;
-        private readonly TaxSettings _taxSettings;
-        private readonly VendorSettings _vendorSettings;
+        protected readonly AddressSettings _addressSettings;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly CurrencySettings _currencySettings;
+        protected readonly IAddressService _addressService;
+        protected readonly IAttributeFormatter<AddressAttribute, AddressAttributeValue> _addressAttributeFormatter;
+        protected readonly ICountryService _countryService;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly IGiftCardService _giftCardService;
+        protected readonly IHtmlFormatter _htmlFormatter;
+        protected readonly ILanguageService _languageService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IMeasureService _measureService;
+        protected readonly INopFileProvider _fileProvider;
+        protected readonly IOrderService _orderService;
+        protected readonly IPaymentPluginManager _paymentPluginManager;
+        protected readonly IPaymentService _paymentService;
+        protected readonly IPictureService _pictureService;
+        protected readonly IPriceFormatter _priceFormatter;
+        protected readonly IProductService _productService;
+        protected readonly IRewardPointService _rewardPointService;
+        protected readonly ISettingService _settingService;
+        protected readonly IShipmentService _shipmentService;
+        protected readonly IStateProvinceService _stateProvinceService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreService _storeService;
+        protected readonly IVendorService _vendorService;
+        protected readonly IWorkContext _workContext;
+        protected readonly MeasureSettings _measureSettings;
+        protected readonly TaxSettings _taxSettings;
+        protected readonly VendorSettings _vendorSettings;
 
         #endregion
 
@@ -80,8 +77,8 @@ namespace Nop.Services.Common
         public PdfService(AddressSettings addressSettings,
             CatalogSettings catalogSettings,
             CurrencySettings currencySettings,
-            IAddressAttributeFormatter addressAttributeFormatter,
             IAddressService addressService,
+            IAttributeFormatter<AddressAttribute, AddressAttributeValue> addressAttributeFormatter,
             ICountryService countryService,
             ICurrencyService currencyService,
             IDateTimeHelper dateTimeHelper,
@@ -110,11 +107,11 @@ namespace Nop.Services.Common
             VendorSettings vendorSettings)
         {
             _addressSettings = addressSettings;
-            _addressService = addressService;
             _catalogSettings = catalogSettings;
-            _countryService = countryService;
             _currencySettings = currencySettings;
+            _addressService = addressService;
             _addressAttributeFormatter = addressAttributeFormatter;
+            _countryService = countryService;
             _currencyService = currencyService;
             _dateTimeHelper = dateTimeHelper;
             _giftCardService = giftCardService;
@@ -144,7 +141,7 @@ namespace Nop.Services.Common
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
         /// <summary>
         /// Get billing address
@@ -176,18 +173,23 @@ namespace Nop.Services.Common
             if (_addressSettings.StreetAddress2Enabled && !string.IsNullOrEmpty(billingAddress.Address2))
                 addressResult.Address2 = billingAddress.Address2;
 
-            if (_addressSettings.CityEnabled || _addressSettings.StateProvinceEnabled ||
-                _addressSettings.CountyEnabled || _addressSettings.ZipPostalCodeEnabled)
-            {
-                addressResult.AddressLine =
-                    $"{billingAddress.City}, " +
-                    $"{(!string.IsNullOrEmpty(billingAddress.County) ? $"{billingAddress.County}, " : string.Empty)}" +
-                    $"{(await _stateProvinceService.GetStateProvinceByAddressAsync(billingAddress) is StateProvince stateProvince ? await _localizationService.GetLocalizedAsync(stateProvince, x => x.Name, lang.Id) : string.Empty)} " +
-                    $"{billingAddress.ZipPostalCode}";
-            }
+            if (_addressSettings.CityEnabled && !string.IsNullOrEmpty(billingAddress.City))
+                addressResult.City = billingAddress.City;
+
+            if (_addressSettings.CountyEnabled && !string.IsNullOrEmpty(billingAddress.County))
+                addressResult.County = billingAddress.County;
+
+            if (_addressSettings.ZipPostalCodeEnabled && !string.IsNullOrEmpty(billingAddress.ZipPostalCode))
+                addressResult.ZipPostalCode = billingAddress.ZipPostalCode;
+
+            var stateProvince = await _stateProvinceService.GetStateProvinceByAddressAsync(billingAddress);
+            addressResult.StateProvinceName = stateProvince != null ? await _localizationService.GetLocalizedAsync(stateProvince, x => x.Name, lang.Id) : string.Empty;
 
             if (_addressSettings.CountryEnabled && await _countryService.GetCountryByAddressAsync(billingAddress) is Country country)
                 addressResult.Country = await _localizationService.GetLocalizedAsync(country, x => x.Name, lang.Id);
+
+            var (addressLine, _) = await _addressService.FormatAddressAsync(billingAddress, lang.Id);
+            addressResult.AddressLine = addressLine;
 
             //VAT number
             if (!string.IsNullOrEmpty(order.VatNumber))
@@ -200,7 +202,7 @@ namespace Nop.Services.Common
             if (!string.IsNullOrEmpty(customBillingAddressAttributes))
             {
                 var text = _htmlFormatter.ConvertHtmlToPlainText(customBillingAddressAttributes, true, true);
-                addressResult.AddressAttributes = text.Split('\n').ToList();
+                addressResult.AddressAttributes = [.. text.Split('\n')];
             }
 
             //vendors payment details
@@ -259,19 +261,25 @@ namespace Nop.Services.Common
                     if (_addressSettings.StreetAddress2Enabled && !string.IsNullOrEmpty(shippingAddress.Address2))
                         addressResult.Address2 = shippingAddress.Address2;
 
-                    if (_addressSettings.CityEnabled || _addressSettings.StateProvinceEnabled ||
-                        _addressSettings.CountyEnabled || _addressSettings.ZipPostalCodeEnabled)
-                    {
-                        addressResult.AddressLine = $"{shippingAddress.City}, " +
-                            $"{(!string.IsNullOrEmpty(shippingAddress.County) ? $"{shippingAddress.County}, " : string.Empty)}" +
-                            $"{(await _stateProvinceService.GetStateProvinceByAddressAsync(shippingAddress) is StateProvince stateProvince ? await _localizationService.GetLocalizedAsync(stateProvince, x => x.Name, lang.Id) : string.Empty)} " +
-                            $"{shippingAddress.ZipPostalCode}";
-                    }
+                    if (_addressSettings.CityEnabled && !string.IsNullOrEmpty(shippingAddress.City))
+                        addressResult.City = shippingAddress.City;
+
+                    if (_addressSettings.CountyEnabled && !string.IsNullOrEmpty(shippingAddress.County))
+                        addressResult.County = shippingAddress.County;
+
+                    if (_addressSettings.ZipPostalCodeEnabled && !string.IsNullOrEmpty(shippingAddress.ZipPostalCode))
+                        addressResult.ZipPostalCode = shippingAddress.ZipPostalCode;
+
+                    var stateProvince = await _stateProvinceService.GetStateProvinceByAddressAsync(shippingAddress);
+                    addressResult.StateProvinceName = stateProvince != null ? await _localizationService.GetLocalizedAsync(stateProvince, x => x.Name, lang.Id) : string.Empty;
 
                     if (_addressSettings.CountryEnabled && await _countryService.GetCountryByAddressAsync(shippingAddress) is Country country)
                     {
                         addressResult.Country = await _localizationService.GetLocalizedAsync(country, x => x.Name, lang.Id);
                     }
+
+                    var (addressLine, _) = await _addressService.FormatAddressAsync(shippingAddress, lang.Id);
+                    addressResult.AddressLine = addressLine;
 
                     //custom attributes
                     var customShippingAddressAttributes = await _addressAttributeFormatter
@@ -279,7 +287,7 @@ namespace Nop.Services.Common
                     if (!string.IsNullOrEmpty(customShippingAddressAttributes))
                     {
                         var text = _htmlFormatter.ConvertHtmlToPlainText(customShippingAddressAttributes, true, true);
-                        addressResult.AddressAttributes = text.Split('\n').ToList();
+                        addressResult.AddressAttributes = [.. text.Split('\n')];
                     }
                 }
                 else if (order.PickupAddressId.HasValue && await _addressService.GetAddressByIdAsync(order.PickupAddressId.Value) is Address pickupAddress)
@@ -287,14 +295,23 @@ namespace Nop.Services.Common
                     if (!string.IsNullOrEmpty(pickupAddress.Address1))
                         addressResult.Address = pickupAddress.Address1;
 
-                    if (_addressSettings.CityEnabled || _addressSettings.StateProvinceEnabled ||
-                        _addressSettings.CountyEnabled || _addressSettings.ZipPostalCodeEnabled)
-                    {
-                        addressResult.AddressLine = $"{pickupAddress.City}, " +
-                            $"{(!string.IsNullOrEmpty(pickupAddress.County) ? $"{pickupAddress.County}, " : string.Empty)}" +
-                            $"{(await _stateProvinceService.GetStateProvinceByAddressAsync(pickupAddress) is StateProvince stateProvince ? await _localizationService.GetLocalizedAsync(stateProvince, x => x.Name, lang.Id) : string.Empty)} " +
-                            $"{pickupAddress.ZipPostalCode}";
-                    }
+                    if (_addressSettings.StreetAddress2Enabled && !string.IsNullOrEmpty(pickupAddress.Address2))
+                        addressResult.Address2 = pickupAddress.Address2;
+
+                    if (_addressSettings.CityEnabled && !string.IsNullOrEmpty(pickupAddress.City))
+                        addressResult.City = pickupAddress.City;
+
+                    if (_addressSettings.CountyEnabled && !string.IsNullOrEmpty(pickupAddress.County))
+                        addressResult.County = pickupAddress.County;
+
+                    if (_addressSettings.ZipPostalCodeEnabled && !string.IsNullOrEmpty(pickupAddress.ZipPostalCode))
+                        addressResult.ZipPostalCode = pickupAddress.ZipPostalCode;
+
+                    var (addressLine, _) = await _addressService.FormatAddressAsync(pickupAddress, lang.Id);
+                    addressResult.AddressLine = addressLine;
+
+                    var stateProvince = await _stateProvinceService.GetStateProvinceByAddressAsync(pickupAddress);
+                    addressResult.StateProvinceName = stateProvince != null ? await _localizationService.GetLocalizedAsync(stateProvince, x => x.Name, lang.Id) : string.Empty;
 
                     if (await _countryService.GetCountryByAddressAsync(pickupAddress) is Country country)
                         addressResult.Country = await _localizationService.GetLocalizedAsync(country, x => x.Name, lang.Id);
@@ -324,7 +341,7 @@ namespace Nop.Services.Common
                 .OrderByDescending(on => on.CreatedOnUtc)
                 .ToList();
 
-            if (!orderNotes.Any())
+            if (orderNotes.Count == 0)
                 return notesResult;
 
             foreach (var orderNote in orderNotes)
@@ -367,7 +384,7 @@ namespace Nop.Services.Common
                 if (!string.IsNullOrEmpty(oi.AttributeDescription))
                 {
                     var attributes = _htmlFormatter.ConvertHtmlToPlainText(oi.AttributeDescription, true, true);
-                    productItem.ProductAttributes = attributes.Split('\n').ToList();
+                    productItem.ProductAttributes = [.. attributes.Split('\n')];
                 }
 
                 //SKU
@@ -401,7 +418,7 @@ namespace Nop.Services.Common
 
                 //qty
                 productItem.Quantity = shipmentItems is null ?
-                    oi.Quantity.ToString() : 
+                    oi.Quantity.ToString() :
                     shipmentItems.FirstOrDefault(x => x.OrderItemId == oi.Id).Quantity.ToString();
 
                 //total
@@ -546,7 +563,7 @@ namespace Nop.Services.Common
                 {
                     taxRates = _orderService.ParseTaxRates(order, order.TaxRates);
 
-                    displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Any();
+                    displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Count != 0;
                     displayTax = !displayTaxRates;
 
                     var orderTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTax, order.CurrencyRate);
@@ -632,8 +649,7 @@ namespace Nop.Services.Common
         /// </returns>
         public virtual async Task PrintOrderToPdfAsync(Stream stream, Order order, Language language = null, Store store = null, Vendor vendor = null)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             //store info
             store ??= await _storeContext.GetCurrentStoreAsync();
@@ -674,13 +690,13 @@ namespace Nop.Services.Common
             var orderItems = await _orderService.GetOrderItemsAsync(order.Id, vendorId: vendor?.Id ?? 0);
 
             var column1Lines = string.IsNullOrEmpty(pdfSettingsByStore.InvoiceFooterTextColumn1) ?
-                new List<string>()
+                []
                 : pdfSettingsByStore.InvoiceFooterTextColumn1
                     .Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
                     .ToList();
 
             var column2Lines = string.IsNullOrEmpty(pdfSettingsByStore.InvoiceFooterTextColumn2) ?
-                new List<string>()
+                []
                 : pdfSettingsByStore.InvoiceFooterTextColumn2
                     .Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
                     .ToList();
@@ -699,7 +715,7 @@ namespace Nop.Services.Common
                 Products = await GetOrderProductItemsAsync(order, orderItems, language),
                 ShowSkuInProductList = _catalogSettings.ShowSkuOnProductDetailsPage,
                 ShowVendorInProductList = _vendorSettings.ShowVendorOnOrderDetailsPage,
-                CheckoutAttributes = vendor is null ? order.CheckoutAttributeDescription : string.Empty, //vendors cannot see checkout attributes
+                CheckoutAttributes = vendor is null ? _htmlFormatter.ConvertHtmlToPlainText(order.CheckoutAttributeDescription, true, true) : string.Empty, //vendors cannot see checkout attributes
                 Totals = vendor is null ? await GetTotalsAsync(language, order) : new(), //vendors cannot see totals
                 OrderNotes = await GetOrderNotesAsync(pdfSettingsByStore, order, language),
                 FooterTextColumn1 = column1Lines,
@@ -724,11 +740,9 @@ namespace Nop.Services.Common
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrintOrdersToPdfAsync(Stream stream, IList<Order> orders, Language language = null, Vendor vendor = null)
         {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
+            ArgumentNullException.ThrowIfNull(stream);
 
-            if (orders == null)
-                throw new ArgumentNullException(nameof(orders));
+            ArgumentNullException.ThrowIfNull(orders);
 
             var currentStore = await _storeContext.GetCurrentStoreAsync();
 
@@ -755,11 +769,9 @@ namespace Nop.Services.Common
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrintPackagingSlipsToPdfAsync(Stream stream, IList<Shipment> shipments, Language language = null)
         {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
+            ArgumentNullException.ThrowIfNull(stream);
 
-            if (shipments == null)
-                throw new ArgumentNullException(nameof(shipments));
+            ArgumentNullException.ThrowIfNull(shipments);
 
             using var archive = new ZipArchive(stream, ZipArchiveMode.Create, true);
 
@@ -785,11 +797,9 @@ namespace Nop.Services.Common
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrintPackagingSlipToPdfAsync(Stream stream, Shipment shipment, Language language = null)
         {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
+            ArgumentNullException.ThrowIfNull(stream);
 
-            if (shipment == null)
-                throw new ArgumentNullException(nameof(shipment));
+            ArgumentNullException.ThrowIfNull(shipment);
 
             var order = await _orderService.GetOrderByIdAsync(shipment.OrderId);
 
@@ -842,11 +852,9 @@ namespace Nop.Services.Common
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrintProductsToPdfAsync(Stream stream, IList<Product> products)
         {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
+            ArgumentNullException.ThrowIfNull(stream);
 
-            if (products == null)
-                throw new ArgumentNullException(nameof(products));
+            ArgumentNullException.ThrowIfNull(products);
 
             var currentStore = await _storeContext.GetCurrentStoreAsync();
             var pdfSettingsByStore = await _settingService.LoadSettingAsync<PdfSettings>(currentStore.Id);

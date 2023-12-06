@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Media;
 
@@ -20,7 +18,7 @@ namespace Nop.Web.Models.Order
             ShippingAddress = new AddressModel();
             PickupAddress = new AddressModel();
 
-            CustomValues = new Dictionary<string, object>();
+            CustomValues = [];
         }
 
         public bool PrintMode { get; set; }
@@ -35,7 +33,7 @@ namespace Nop.Web.Models.Order
         public bool IsReOrderAllowed { get; set; }
 
         public bool IsReturnRequestAllowed { get; set; }
-        
+
         public bool IsShippable { get; set; }
         public bool PickupInStore { get; set; }
         public AddressModel PickupAddress { get; set; }
@@ -76,12 +74,12 @@ namespace Nop.Web.Models.Order
         public string RedeemedRewardPointsAmount { get; set; }
         public string OrderTotal { get; set; }
         public decimal OrderTotalValue { get; set; }
-        
+
         public IList<GiftCard> GiftCards { get; set; }
 
         public bool ShowSku { get; set; }
         public IList<OrderItemModel> Items { get; set; }
-        
+
         public IList<OrderNote> OrderNotes { get; set; }
 
         public bool ShowVendorName { get; set; }
@@ -145,6 +143,6 @@ namespace Nop.Web.Models.Order
             public DateTime? DeliveryDate { get; set; }
         }
 
-		#endregion
+        #endregion
     }
 }

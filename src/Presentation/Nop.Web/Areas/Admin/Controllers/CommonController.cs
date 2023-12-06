@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.Http.Extensions;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Common;
@@ -26,28 +23,28 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Const
 
-        private const string EXPORT_IMPORT_PATH = @"files\exportimport";
+        protected const string EXPORT_IMPORT_PATH = @"files\exportimport";
 
         #endregion
 
         #region Fields
 
-        private readonly ICommonModelFactory _commonModelFactory;
-        private readonly ICustomerService _customerService;
-        private readonly INopDataProvider _dataProvider;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IMaintenanceService _maintenanceService;
-        private readonly INopFileProvider _fileProvider;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IQueuedEmailService _queuedEmailService;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
+        protected readonly ICommonModelFactory _commonModelFactory;
+        protected readonly ICustomerService _customerService;
+        protected readonly INopDataProvider _dataProvider;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly ILanguageService _languageService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IMaintenanceService _maintenanceService;
+        protected readonly INopFileProvider _fileProvider;
+        protected readonly INotificationService _notificationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IQueuedEmailService _queuedEmailService;
+        protected readonly IShoppingCartService _shoppingCartService;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IUrlRecordService _urlRecordService;
+        protected readonly IWebHelper _webHelper;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 
@@ -290,9 +287,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
-            var action = Request.Form["action"];
+            var action = await Request.GetFormValueAsync("action");
 
-            var fileName = Request.Form["backupFileName"];
+            var fileName = await Request.GetFormValueAsync("backupFileName");
             fileName = _fileProvider.GetFileName(_fileProvider.GetAbsolutePath(fileName));
 
             var backupPath = _maintenanceService.GetBackupPath(fileName);
@@ -352,11 +349,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //home page
             if (string.IsNullOrEmpty(returnUrl))
-                returnUrl = Url.Action("Index", "Home", new { area = AreaNames.Admin });
+                returnUrl = Url.Action("Index", "Home", new { area = AreaNames.ADMIN });
 
             //prevent open redirection attack
             if (!Url.IsLocalUrl(returnUrl))
-                return RedirectToAction("Index", "Home", new { area = AreaNames.Admin });
+                return RedirectToAction("Index", "Home", new { area = AreaNames.ADMIN });
 
             return Redirect(returnUrl);
         }
@@ -371,11 +368,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //home page
             if (string.IsNullOrEmpty(returnUrl))
-                return RedirectToAction("Index", "Home", new { area = AreaNames.Admin });
+                return RedirectToAction("Index", "Home", new { area = AreaNames.ADMIN });
 
             //prevent open redirection attack
             if (!Url.IsLocalUrl(returnUrl))
-                return RedirectToAction("Index", "Home", new { area = AreaNames.Admin });
+                return RedirectToAction("Index", "Home", new { area = AreaNames.ADMIN });
 
             return Redirect(returnUrl);
         }
@@ -388,11 +385,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //home page
             if (string.IsNullOrEmpty(returnUrl))
-                returnUrl = Url.Action("Index", "Home", new { area = AreaNames.Admin });
+                returnUrl = Url.Action("Index", "Home", new { area = AreaNames.ADMIN });
 
             //prevent open redirection attack
             if (!Url.IsLocalUrl(returnUrl))
-                returnUrl = Url.Action("Index", "Home", new { area = AreaNames.Admin });
+                returnUrl = Url.Action("Index", "Home", new { area = AreaNames.ADMIN });
 
             return View("RestartApplication", returnUrl);
         }
@@ -444,7 +441,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
-            await _urlRecordService.DeleteUrlRecordsAsync(await _urlRecordService.GetUrlRecordsByIdsAsync(selectedIds.ToArray()));
+            await _urlRecordService.DeleteUrlRecordsAsync(await _urlRecordService.GetUrlRecordsByIdsAsync([.. selectedIds]));
 
             return Json(new { Result = true });
         }

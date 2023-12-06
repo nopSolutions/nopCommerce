@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using System.Net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 using Nop.Core;
@@ -21,14 +17,14 @@ namespace Nop.Services.Common
     {
         #region Fields
 
-        private readonly AdminAreaSettings _adminAreaSettings;
-        private readonly EmailAccountSettings _emailAccountSettings;
-        private readonly HttpClient _httpClient;
-        private readonly IEmailAccountService _emailAccountService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILanguageService _languageService;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
+        protected readonly AdminAreaSettings _adminAreaSettings;
+        protected readonly EmailAccountSettings _emailAccountSettings;
+        protected readonly HttpClient _httpClient;
+        protected readonly IEmailAccountService _emailAccountService;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly ILanguageService _languageService;
+        protected readonly IWebHelper _webHelper;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 
@@ -151,6 +147,24 @@ namespace Nop.Services.Common
             _httpClient.Timeout = TimeSpan.FromSeconds(30);
 
             return await _httpClient.GetStringAsync(url);
+        }
+
+        /// <summary>
+        /// Subscribe to nopCommerce newsletters during installation
+        /// </summary>
+        /// <param name="email">Admin email</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the asynchronous task whose result contains the result string
+        /// </returns>
+        public virtual async Task<HttpResponseMessage> SubscribeNewslettersAsync(string email)
+        {
+            //prepare URL to request
+            var url = string.Format(NopCommonDefaults.NopSubscribeNewslettersPath,
+                WebUtility.UrlEncode(email))
+                .ToLowerInvariant();
+
+            return await _httpClient.GetAsync(url);
         }
 
         /// <summary>

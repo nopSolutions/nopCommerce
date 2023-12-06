@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Data;
@@ -16,17 +12,20 @@ namespace Nop.Services.Common
     {
         #region Fields
 
-        private readonly IRepository<GenericAttribute> _genericAttributeRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IRepository<GenericAttribute> _genericAttributeRepository;
+        protected readonly IShortTermCacheManager _shortTermCacheManager;
+        protected readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
         #region Ctor
 
         public GenericAttributeService(IRepository<GenericAttribute> genericAttributeRepository,
+            IShortTermCacheManager shortTermCacheManager,
             IStaticCacheManager staticCacheManager)
         {
             _genericAttributeRepository = genericAttributeRepository;
+            _shortTermCacheManager = shortTermCacheManager;
             _staticCacheManager = staticCacheManager;
         }
 
@@ -53,7 +52,7 @@ namespace Nop.Services.Common
         {
             await _genericAttributeRepository.DeleteAsync(attributes);
         }
-        
+
         /// <summary>
         /// Inserts an attribute
         /// </summary>
@@ -61,8 +60,7 @@ namespace Nop.Services.Common
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertAttributeAsync(GenericAttribute attribute)
         {
-            if (attribute == null)
-                throw new ArgumentNullException(nameof(attribute));
+            ArgumentNullException.ThrowIfNull(attribute);
 
             attribute.CreatedOrUpdatedDateUTC = DateTime.UtcNow;
 
@@ -76,8 +74,7 @@ namespace Nop.Services.Common
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateAttributeAsync(GenericAttribute attribute)
         {
-            if (attribute == null)
-                throw new ArgumentNullException(nameof(attribute));
+            ArgumentNullException.ThrowIfNull(attribute);
 
             attribute.CreatedOrUpdatedDateUTC = DateTime.UtcNow;
 
@@ -95,13 +92,11 @@ namespace Nop.Services.Common
         /// </returns>
         public virtual async Task<IList<GenericAttribute>> GetAttributesForEntityAsync(int entityId, string keyGroup)
         {
-            var key = _staticCacheManager.PrepareKeyForShortTermCache(NopCommonDefaults.GenericAttributeCacheKey, entityId, keyGroup);
-            
             var query = from ga in _genericAttributeRepository.Table
-                where ga.EntityId == entityId &&
-                      ga.KeyGroup == keyGroup
-                select ga;
-            var attributes = await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
+                        where ga.EntityId == entityId &&
+                              ga.KeyGroup == keyGroup
+                        select ga;
+            var attributes = await _shortTermCacheManager.GetAsync(async () => await query.ToListAsync(), NopCommonDefaults.GenericAttributeCacheKey, entityId, keyGroup);
 
             return attributes;
         }
@@ -117,11 +112,9 @@ namespace Nop.Services.Common
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task SaveAttributeAsync<TPropType>(BaseEntity entity, string key, TPropType value, int storeId = 0)
         {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
-            if (key == null)
-                throw new ArgumentNullException(nameof(key));
+            ArgumentNullException.ThrowIfNull(key);
 
             var keyGroup = entity.GetType().Name;
 
@@ -147,7 +140,7 @@ namespace Nop.Services.Common
             }
             else
             {
-                if (string.IsNullOrWhiteSpace(valueStr)) 
+                if (string.IsNullOrWhiteSpace(valueStr))
                     return;
 
                 //insert
@@ -178,8 +171,7 @@ namespace Nop.Services.Common
         /// </returns>
         public virtual async Task<TPropType> GetAttributeAsync<TPropType>(BaseEntity entity, string key, int storeId = 0, TPropType defaultValue = default)
         {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
             var keyGroup = entity.GetType().Name;
 

@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace Nop.Services.Tax
+﻿namespace Nop.Services.Tax
 {
     /// <summary>
     /// Represents a result of tax total calculation
@@ -12,7 +9,7 @@ namespace Nop.Services.Tax
 
         public TaxTotalResult()
         {
-            TaxRates = new SortedDictionary<decimal, decimal>();
+            TaxRates = [];
             Errors = new List<string>();
         }
 

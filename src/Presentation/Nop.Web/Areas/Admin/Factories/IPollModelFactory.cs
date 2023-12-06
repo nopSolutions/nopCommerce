@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Core.Domain.Polls;
+﻿using Nop.Core.Domain.Polls;
 using Nop.Web.Areas.Admin.Models.Polls;
 
 namespace Nop.Web.Areas.Admin.Factories

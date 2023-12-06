@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Routing;
+﻿using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Services.Common;
 using Nop.Services.Plugins;
@@ -17,8 +15,8 @@ namespace Nop.Plugin.Misc.WebApi.Frontend
     {
         #region Fields
 
-        private readonly IPermissionService _permissionService;
-        private readonly IWebHelper _webHelper;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IWebHelper _webHelper;
 
         #endregion
 
@@ -48,7 +46,7 @@ namespace Nop.Plugin.Misc.WebApi.Frontend
         /// </summary>
         /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task InstallAsync()
-        {            
+        {
             await base.InstallAsync();
         }
 
@@ -79,7 +77,7 @@ namespace Nop.Plugin.Misc.WebApi.Frontend
                 ActionName = "Configure",
                 IconClass = "far fa-dot-circle",
                 Visible = true,
-                RouteValues = new RouteValueDictionary { { "area", AreaNames.Admin } }
+                RouteValues = new RouteValueDictionary { { "area", AreaNames.ADMIN } }
             });
         }
 

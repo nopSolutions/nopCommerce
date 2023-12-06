@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using FluentMigrator.Expressions;
+﻿using FluentMigrator.Expressions;
 using FluentMigrator.Model;
 using FluentMigrator.Runner.Conventions;
 
@@ -12,7 +11,7 @@ namespace Nop.Data.Migrations
     {
         #region Fields
 
-        private readonly INopDataProvider _dataProvider;
+        protected readonly INopDataProvider _dataProvider;
 
         #endregion
 
@@ -25,14 +24,14 @@ namespace Nop.Data.Migrations
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
         /// <summary>
         /// Gets the default name of an index
         /// </summary>
         /// <param name="index">The index definition</param>
         /// <returns>Name of an index</returns>
-        private string GetIndexName(IndexDefinition index)
+        protected virtual string GetIndexName(IndexDefinition index)
         {
             return _dataProvider.GetIndexName(index.TableName, string.Join('_', index.Columns.Select(c => c.Name)));
         }

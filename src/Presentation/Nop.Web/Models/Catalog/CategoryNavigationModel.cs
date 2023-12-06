@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Catalog
 {
@@ -7,7 +6,7 @@ namespace Nop.Web.Models.Catalog
     {
         public CategoryNavigationModel()
         {
-            Categories = new List<CategorySimpleModel>();
+            Categories = [];
         }
 
         public int CurrentCategoryId { get; set; }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
 
@@ -15,7 +11,7 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly IRepository<EmailAccount> _emailAccountRepository;
+        protected readonly IRepository<EmailAccount> _emailAccountRepository;
 
         #endregion
 
@@ -37,8 +33,7 @@ namespace Nop.Services.Messages
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertEmailAccountAsync(EmailAccount emailAccount)
         {
-            if (emailAccount == null)
-                throw new ArgumentNullException(nameof(emailAccount));
+            ArgumentNullException.ThrowIfNull(emailAccount);
 
             emailAccount.Email = CommonHelper.EnsureNotNull(emailAccount.Email);
             emailAccount.DisplayName = CommonHelper.EnsureNotNull(emailAccount.DisplayName);
@@ -68,8 +63,7 @@ namespace Nop.Services.Messages
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateEmailAccountAsync(EmailAccount emailAccount)
         {
-            if (emailAccount == null)
-                throw new ArgumentNullException(nameof(emailAccount));
+            ArgumentNullException.ThrowIfNull(emailAccount);
 
             emailAccount.Email = CommonHelper.EnsureNotNull(emailAccount.Email);
             emailAccount.DisplayName = CommonHelper.EnsureNotNull(emailAccount.DisplayName);
@@ -99,8 +93,7 @@ namespace Nop.Services.Messages
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteEmailAccountAsync(EmailAccount emailAccount)
         {
-            if (emailAccount == null)
-                throw new ArgumentNullException(nameof(emailAccount));
+            ArgumentNullException.ThrowIfNull(emailAccount);
 
             if ((await GetAllEmailAccountsAsync()).Count == 1)
                 throw new NopException("You cannot delete this email account. At least one account is required.");
@@ -133,8 +126,8 @@ namespace Nop.Services.Messages
             var emailAccounts = await _emailAccountRepository.GetAllAsync(query =>
             {
                 return from ea in query
-                    orderby ea.Id
-                    select ea;
+                       orderby ea.Id
+                       select ea;
             }, cache => default);
 
             return emailAccounts;

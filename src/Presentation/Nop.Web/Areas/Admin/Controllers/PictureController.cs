@@ -1,6 +1,5 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Nop.Core.Http.Extensions;
 using Nop.Services.Media;
 
 namespace Nop.Web.Areas.Admin.Controllers
@@ -9,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly IPictureService _pictureService;
+        protected readonly IPictureService _pictureService;
 
         #endregion
 
@@ -32,14 +31,14 @@ namespace Nop.Web.Areas.Admin.Controllers
             //if (!await _permissionService.Authorize(StandardPermissionProvider.UploadPictures))
             //    return Json(new { success = false, error = "You do not have required permissions" }, "text/plain");
 
-            var httpPostedFile = Request.Form.Files.FirstOrDefault();
+            var httpPostedFile = await Request.GetFirstOrDefaultFileAsync();
             if (httpPostedFile == null)
                 return Json(new { success = false, message = "No file uploaded" });
 
             const string qqFileNameParameter = "qqfilename";
 
-            var qqFileName = Request.Form.ContainsKey(qqFileNameParameter)
-                ? Request.Form[qqFileNameParameter].ToString()
+            var qqFileName = await Request.IsFormKeyExistsAsync(qqFileNameParameter)
+                ? (await Request.GetFormValueAsync(qqFileNameParameter)).ToString()
                 : string.Empty;
 
             var picture = await _pictureService.InsertPictureAsync(httpPostedFile, qqFileName);

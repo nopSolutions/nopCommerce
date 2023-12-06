@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Nop.Core.Http.Extensions;
 
 namespace Nop.Web.Framework.Mvc.ModelBinding.Binders
 {
@@ -11,24 +8,23 @@ namespace Nop.Web.Framework.Mvc.ModelBinding.Binders
     /// </summary>
     public class CustomPropertiesModelBinder : IModelBinder
     {
-        Task IModelBinder.BindModelAsync(ModelBindingContext bindingContext)
+        async Task IModelBinder.BindModelAsync(ModelBindingContext bindingContext)
         {
-            if (bindingContext == null)
-                throw new ArgumentNullException(nameof(bindingContext));
+            ArgumentNullException.ThrowIfNull(bindingContext);
 
             var modelName = bindingContext.ModelName;
 
             var result = new Dictionary<string, string>();
-            if (bindingContext.HttpContext.Request.Method == "POST")
-            {
-                var keys = bindingContext.HttpContext.Request.Form.Keys
-                    .Where(x => x.IndexOf(modelName, StringComparison.Ordinal) == 0).ToList();
+            var request = bindingContext.HttpContext.Request;
 
-                foreach (var key in keys)
+            if (request.IsPostRequest() && request.HasFormContentType )
+            {
+                var form = await request.ReadFormAsync();
+
+                foreach (var item in form.Where(x => x.Key.IndexOf(modelName, StringComparison.Ordinal) == 0))
                 {
-                    var dicKey = key.Replace(modelName + "[", "").Replace("]", "");
-                    bindingContext.HttpContext.Request.Form.TryGetValue(key, out var value);
-                    result.Add(dicKey, value.ToString());
+                    var dicKey = item.Key.Replace(modelName + "[", "").Replace("]", "");
+                    result.Add(dicKey, item.Value.ToString());
                 }
             }
 
@@ -41,8 +37,8 @@ namespace Nop.Web.Framework.Mvc.ModelBinding.Binders
 
                     foreach (var key in keys)
                     {
-                        var dicKey = key[(key.IndexOf("[", StringComparison.Ordinal) + 1)..key.IndexOf("]", StringComparison.Ordinal)];
-                        var value = key[(key.IndexOf("=", StringComparison.Ordinal) + 1)..];
+                        var dicKey = key[(key.IndexOf('[') + 1)..key.IndexOf(']')];
+                        var value = key[(key.IndexOf('=') + 1)..];
 
                         result.Add(dicKey, value);
                     }
@@ -50,8 +46,6 @@ namespace Nop.Web.Framework.Mvc.ModelBinding.Binders
             }
 
             bindingContext.Result = ModelBindingResult.Success(result);
-            
-            return Task.CompletedTask;
         }
     }
 }

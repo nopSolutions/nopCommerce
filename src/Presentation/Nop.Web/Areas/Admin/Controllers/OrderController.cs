@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
+﻿using System.Globalization;
 using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Events;
+using Nop.Services.Attributes;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -19,7 +15,6 @@ using Nop.Services.ExportImport;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
-using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
@@ -39,48 +34,47 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly IAddressAttributeParser _addressAttributeParser;
-        private readonly IAddressService _addressService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICustomerService _customerService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IDownloadService _downloadService;
-        private readonly IEncryptionService _encryptionService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IExportManager _exportManager;
-        private readonly IGiftCardService _giftCardService;
-        private readonly IImportManager _importManager;
-        private readonly ILocalizationService _localizationService;
-        private readonly INotificationService _notificationService;
-        private readonly IOrderModelFactory _orderModelFactory;
-        private readonly IOrderProcessingService _orderProcessingService;
-        private readonly IOrderService _orderService;
-        private readonly IPaymentService _paymentService;
-        private readonly IPdfService _pdfService;
-        private readonly IPermissionService _permissionService;
-        private readonly IPriceCalculationService _priceCalculationService;
-        private readonly IProductAttributeFormatter _productAttributeFormatter;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IProductAttributeService _productAttributeService;
-        private readonly IProductService _productService;
-        private readonly IShipmentService _shipmentService;
-        private readonly IShippingService _shippingService;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly IStoreContext _storeContext;
-        private readonly IWorkContext _workContext;
-        private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly OrderSettings _orderSettings;
+        protected readonly IAddressService _addressService;
+        protected readonly IAttributeParser<AddressAttribute, AddressAttributeValue> _addressAttributeParser;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly IEncryptionService _encryptionService;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly IExportManager _exportManager;
+        protected readonly IGiftCardService _giftCardService;
+        protected readonly IImportManager _importManager;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IOrderModelFactory _orderModelFactory;
+        protected readonly IOrderProcessingService _orderProcessingService;
+        protected readonly IOrderService _orderService;
+        protected readonly IPaymentService _paymentService;
+        protected readonly IPdfService _pdfService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IPriceCalculationService _priceCalculationService;
+        protected readonly IProductAttributeFormatter _productAttributeFormatter;
+        protected readonly IProductAttributeParser _productAttributeParser;
+        protected readonly IProductAttributeService _productAttributeService;
+        protected readonly IProductService _productService;
+        protected readonly IShipmentService _shipmentService;
+        protected readonly IShippingService _shippingService;
+        protected readonly IShoppingCartService _shoppingCartService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IWorkContext _workContext;
+        protected readonly IWorkflowMessageService _workflowMessageService;
+        protected readonly OrderSettings _orderSettings;
+        private static readonly char[] _separator = [','];
 
         #endregion
 
         #region Ctor
 
-        public OrderController(IAddressAttributeParser addressAttributeParser,
-            IAddressService addressService,
+        public OrderController(IAddressService addressService,
+            IAttributeParser<AddressAttribute, AddressAttributeValue> addressAttributeParser,
             ICustomerActivityService customerActivityService,
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
-            IDownloadService downloadService,
             IEncryptionService encryptionService,
             IEventPublisher eventPublisher,
             IExportManager exportManager,
@@ -107,12 +101,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             IWorkflowMessageService workflowMessageService,
             OrderSettings orderSettings)
         {
-            _addressAttributeParser = addressAttributeParser;
             _addressService = addressService;
+            _addressAttributeParser = addressAttributeParser;
             _customerActivityService = customerActivityService;
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
-            _downloadService = downloadService;
             _encryptionService = encryptionService;
             _eventPublisher = eventPublisher;
             _exportManager = exportManager;
@@ -182,8 +175,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         protected virtual async ValueTask<bool> HasAccessToShipmentAsync(Shipment shipment)
         {
-            if (shipment == null)
-                throw new ArgumentNullException(nameof(shipment));
+            ArgumentNullException.ThrowIfNull(shipment);
 
             if (await _workContext.GetCurrentVendorAsync() == null)
                 //not a vendor; has access
@@ -346,7 +338,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds != null)
             {
                 var ids = selectedIds
-                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Split(_separator, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
                 orders.AddRange(await (await _orderService.GetOrdersByIdsAsync(ids))
@@ -446,7 +438,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds != null)
             {
                 var ids = selectedIds
-                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Split(_separator, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
                 orders.AddRange(await (await _orderService.GetOrdersByIdsAsync(ids)).WhereAwait(HasAccessToOrderAsync).ToListAsync());
@@ -791,13 +783,13 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 var errors = new List<string>();
                 if (online)
-                    errors = (await _orderProcessingService.PartiallyRefundAsync(order, amountToRefund)).ToList();
+                    errors = [.. (await _orderProcessingService.PartiallyRefundAsync(order, amountToRefund))];
                 else
                     await _orderProcessingService.PartiallyRefundOfflineAsync(order, amountToRefund);
 
                 await LogEditOrderAsync(order.Id);
 
-                if (!errors.Any())
+                if (errors.Count == 0)
                 {
                     //success
                     ViewBag.RefreshPage = true;
@@ -942,7 +934,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             await _pdfService.PrintOrderToPdfAsync(stream, order, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? null : await _workContext.GetWorkingLanguageAsync(), store: null, vendor: currentVendor);
             bytes = stream.ToArray();
 
-            return File(bytes, MimeTypes.ApplicationPdf, $"order_{order.CustomOrderNumber}.pdf");
+            return File(bytes, MimeTypes.ApplicationPdf, string.Format(await _localizationService.GetResourceAsync("PDFInvoice.FileName"), order.CustomOrderNumber) + ".pdf");
         }
 
         [HttpPost, ActionName("PdfInvoice")]
@@ -1032,7 +1024,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds != null)
             {
                 var ids = selectedIds
-                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Split(_separator, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
                 orders.AddRange(await _orderService.GetOrdersByIdsAsync(ids));
@@ -1097,7 +1089,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 enabledattributemappingids = enabledAttributeMappingIds.ToArray(),
                 disabledattributemappingids = disabledAttributeMappingIds.ToArray(),
-                message = errors.Any() ? errors.ToArray() : null
+                message = errors.Count != 0 ? errors.ToArray() : null
             });
         }
 
@@ -1676,7 +1668,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             warnings.AddRange(await _shoppingCartService.GetShoppingCartItemAttributeWarningsAsync(customer, ShoppingCartType.ShoppingCart, product, quantity, attributesXml));
             warnings.AddRange(await _shoppingCartService.GetShoppingCartItemGiftCardWarningsAsync(ShoppingCartType.ShoppingCart, product, attributesXml));
             warnings.AddRange(await _shoppingCartService.GetRentalProductWarningsAsync(product, rentalStartDate, rentalEndDate));
-            if (!warnings.Any())
+            if (warnings.Count == 0)
             {
                 //no errors
                 var currentStore = await _storeContext.GetCurrentStoreAsync();
@@ -1832,7 +1824,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No address found with the specified id");
 
             //custom address attributes
-            var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(form);
+            var customAttributes = await _addressAttributeParser.ParseCustomAttributesAsync(form, NopCommonDefaults.AddressAttributeControlName);
             var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
@@ -2064,7 +2056,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //if we have at least one item in the shipment, then save it
-            if (shipmentItems.Any())
+            if (shipmentItems.Count != 0)
             {
                 shipment.TotalWeight = totalWeight;
                 await _shipmentService.InsertShipmentAsync(shipment);
@@ -2503,7 +2495,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds != null)
             {
                 var ids = selectedIds
-                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Split(_separator, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
                 shipments.AddRange(await _shipmentService.GetShipmentsByIdsAsync(ids));
@@ -2523,7 +2515,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     bytes = stream.ToArray();
                 }
 
-                return File(bytes, MimeTypes.ApplicationPdf, "packagingslips.pdf");
+                return File(bytes, "application/zip", "packagingslips.zip");
             }
             catch (Exception exc)
             {
@@ -2541,7 +2533,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
-            var shipments = await _shipmentService.GetShipmentsByIdsAsync(selectedIds.ToArray());
+            var shipments = await _shipmentService.GetShipmentsByIdsAsync([.. selectedIds]);
 
             //a vendor should have access only to his products
             if (await _workContext.GetCurrentVendorAsync() != null)
@@ -2570,10 +2562,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
-            if (selectedIds == null || selectedIds.Count() == 0)
+            if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
-            var shipments = await _shipmentService.GetShipmentsByIdsAsync(selectedIds.ToArray());
+            var shipments = await _shipmentService.GetShipmentsByIdsAsync([.. selectedIds]);
 
             //a vendor should have access only to his products
             if (await _workContext.GetCurrentVendorAsync() != null)
@@ -2605,7 +2597,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
-            var shipments = await _shipmentService.GetShipmentsByIdsAsync(selectedIds.ToArray());
+            var shipments = await _shipmentService.GetShipmentsByIdsAsync([.. selectedIds]);
 
             //a vendor should have access only to his products
             if (await _workContext.GetCurrentVendorAsync() != null)

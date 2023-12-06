@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Nop.Core.Domain.Orders
+﻿namespace Nop.Core.Domain.Orders
 {
     /// <summary>
     /// Represents a return request
@@ -66,7 +64,7 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the return status identifier
         /// </summary>
         public int ReturnRequestStatusId { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the date and time of entity creation
         /// </summary>
@@ -76,7 +74,7 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the date and time of entity update
         /// </summary>
         public DateTime UpdatedOnUtc { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the return status
         /// </summary>

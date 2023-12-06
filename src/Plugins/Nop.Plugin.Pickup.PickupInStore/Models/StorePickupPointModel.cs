@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Plugin.Pickup.PickupInStore.Models
 {
@@ -11,7 +10,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Models
         public StorePickupPointModel()
         {
             Address = new AddressModel();
-            AvailableStores = new List<SelectListItem>();
+            AvailableStores = [];
         }
 
         public AddressModel Address { get; set; }

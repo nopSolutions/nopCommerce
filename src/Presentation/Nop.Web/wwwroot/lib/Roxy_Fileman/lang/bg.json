@@ -74,7 +74,7 @@
 "Copy":"Копирай",
 "Paste":"Постави",
 "E_CopyFile":"Грешка при копиране на файла",
-"E_CopyFileInvalisPath":"Файлът не може да бъде копиран - несъществуващ път",
+"E_CopyFileInvalidPath":"Файлът не може да бъде копиран - несъществуващ път",
 "E_CopyDirInvalidPath":"Папката не може да бъде копирана - несъществуващ път",
 "E_CreateArchive":"Error creating zip archive.",
 "E_UploadingFile":"грешка"

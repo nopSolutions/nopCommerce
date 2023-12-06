@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Catalog;
+﻿using Nop.Core.Domain.Catalog;
 
 namespace Nop.Services.Catalog
 {
@@ -69,7 +67,7 @@ namespace Nop.Services.Catalog
         /// <param name="tagMapping">Product-product tag mapping</param>
         /// <returns>A task that represents the asynchronous operation</returns>
         Task InsertProductProductTagMappingAsync(ProductProductTagMapping tagMapping);
-        
+
         /// <summary>
         /// Updates the product tag
         /// </summary>
@@ -99,7 +97,7 @@ namespace Nop.Services.Catalog
         /// The task result contains the dictionary of "product tag ID : product count"
         /// </returns>
         Task<Dictionary<int, int>> GetProductCountAsync(int storeId, bool showHidden = false);
-        
+
         /// <summary>
         /// Update product tags
         /// </summary>

@@ -1,10 +1,9 @@
-﻿using System;
-using System.Net;
-using System.Threading.Tasks;
+﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
 using Nop.Core.Domain.Seo;
+using Nop.Core.Http.Extensions;
 using Nop.Data;
 
 namespace Nop.Web.Framework.Mvc.Filters
@@ -34,8 +33,8 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Fields
 
-            private readonly IWebHelper _webHelper;
-            private readonly SeoSettings _seoSettings;
+            protected readonly IWebHelper _webHelper;
+            protected readonly SeoSettings _seoSettings;
 
             #endregion
 
@@ -86,11 +85,10 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <param name="context">Authorization filter context</param>
             private void CheckWwwRequirement(AuthorizationFilterContext context)
             {
-                if (context == null)
-                    throw new ArgumentNullException(nameof(context));
+                ArgumentNullException.ThrowIfNull(context);
 
                 //only in GET requests, otherwise the browser might not propagate the verb and request body correctly.
-                if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
+                if (!context.HttpContext.Request.IsGetRequest())
                     return;
 
                 if (!DataSettingsManager.IsDatabaseInstalled())

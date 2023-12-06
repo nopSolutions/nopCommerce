@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Nop.Core.Configuration;
+﻿using Nop.Core.Configuration;
 
 namespace Nop.Core.Domain.Catalog
 {
@@ -10,8 +9,8 @@ namespace Nop.Core.Domain.Catalog
     {
         public CatalogSettings()
         {
-            ProductSortingEnumDisabled = new List<int>();
-            ProductSortingEnumDisplayOrder = new Dictionary<int, int>();
+            ProductSortingEnumDisabled = [];
+            ProductSortingEnumDisplayOrder = [];
         }
 
         /// <summary>
@@ -101,7 +100,7 @@ namespace Nop.Core.Domain.Catalog
         public bool ShowShareButton { get; set; }
 
         /// <summary>
-        /// Gets or sets a share code (e.g. AddThis button code)
+        /// Gets or sets a share code (e.g. ShareThis button code)
         /// </summary>
         public string PageShareCode { get; set; }
 

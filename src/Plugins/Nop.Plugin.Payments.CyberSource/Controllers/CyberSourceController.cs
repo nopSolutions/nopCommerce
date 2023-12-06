@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Plugin.Payments.CyberSource.Domain;
 using Nop.Plugin.Payments.CyberSource.Models;
@@ -15,19 +13,19 @@ using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.Payments.CyberSource.Controllers
 {
-    [Area(AreaNames.Admin)]
+    [Area(AreaNames.ADMIN)]
     [AuthorizeAdmin]
     [AutoValidateAntiforgeryToken]
     public class CyberSourceController : BasePluginController
     {
         #region Fields
 
-        private readonly ILocalizationService _localizationService;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IScheduleTaskService _scheduleTaskService;
-        private readonly ISettingService _settingService;
-        private readonly IStoreContext _storeContext;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IScheduleTaskService _scheduleTaskService;
+        protected readonly ISettingService _settingService;
+        protected readonly IStoreContext _storeContext;
 
         #endregion
 

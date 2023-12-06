@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Nop.Core.Domain.Orders
+﻿namespace Nop.Core.Domain.Orders
 {
     /// <summary>
     /// Represents an order item
@@ -71,7 +69,7 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the product attributes in XML format
         /// </summary>
         public string AttributesXml { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the download count
         /// </summary>

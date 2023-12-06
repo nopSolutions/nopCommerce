@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
@@ -17,10 +13,10 @@ namespace Nop.Services.Logging
     {
         #region Fields
 
-        private readonly CommonSettings _commonSettings;
-        
-        private readonly IRepository<Log> _logRepository;
-        private readonly IWebHelper _webHelper;
+        protected readonly CommonSettings _commonSettings;
+
+        protected readonly IRepository<Log> _logRepository;
+        protected readonly IWebHelper _webHelper;
 
         #endregion
 
@@ -46,7 +42,7 @@ namespace Nop.Services.Logging
         /// <returns>Result</returns>
         protected virtual bool IgnoreLog(string message)
         {
-            if (!_commonSettings.IgnoreLogWordlist.Any())
+            if (_commonSettings.IgnoreLogWordlist.Count == 0)
                 return false;
 
             if (string.IsNullOrWhiteSpace(message))
@@ -82,8 +78,7 @@ namespace Nop.Services.Logging
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteLogAsync(Log log)
         {
-            if (log == null)
-                throw new ArgumentNullException(nameof(log));
+            ArgumentNullException.ThrowIfNull(log);
 
             await _logRepository.DeleteAsync(log, false);
         }
@@ -105,7 +100,7 @@ namespace Nop.Services.Logging
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task ClearLogAsync(DateTime? olderThan = null)
         {
-            if(olderThan == null)
+            if (olderThan == null)
                 await _logRepository.TruncateAsync();
             else
                 await _logRepository.DeleteAsync(p => p.CreatedOnUtc < olderThan.Value);

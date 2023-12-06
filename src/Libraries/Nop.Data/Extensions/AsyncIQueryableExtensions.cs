@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 using LinqToDB;
 using Nop.Core;
 
@@ -628,6 +626,20 @@ namespace System.Linq
         public static Task<List<TSource>> ToListAsync<TSource>(this IQueryable<TSource> source)
         {
             return AsyncExtensions.ToListAsync(source);
+        }
+
+        /// <summary>
+        /// Asynchronously loads data from query to an array
+        /// </summary>
+        /// <typeparam name="TSource">Query element type</typeparam>
+        /// <param name="source">Source query</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the array with query results
+        /// </returns>
+        public static Task<TSource[]> ToArrayAsync<TSource>(this IQueryable<TSource> source)
+        {
+            return AsyncExtensions.ToArrayAsync(source);
         }
 
         /// <summary>

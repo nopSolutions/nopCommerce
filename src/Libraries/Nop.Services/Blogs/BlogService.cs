@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Blogs;
 using Nop.Data;
@@ -17,10 +13,11 @@ namespace Nop.Services.Blogs
     {
         #region Fields
 
-        private readonly IRepository<BlogComment> _blogCommentRepository;
-        private readonly IRepository<BlogPost> _blogPostRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreMappingService _storeMappingService;
+        protected readonly IRepository<BlogComment> _blogCommentRepository;
+        protected readonly IRepository<BlogPost> _blogPostRepository;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreMappingService _storeMappingService;
+        private static readonly char[] _separator = [','];
 
         #endregion
 
@@ -64,7 +61,7 @@ namespace Nop.Services.Blogs
         /// </returns>
         public virtual async Task<BlogPost> GetBlogPostByIdAsync(int blogPostId)
         {
-            return await _blogPostRepository.GetByIdAsync(blogPostId, cache => default);
+            return await _blogPostRepository.GetByIdAsync(blogPostId, cache => default, useShortTermCache: true);
         }
 
         /// <summary>
@@ -100,13 +97,16 @@ namespace Nop.Services.Blogs
                 if (!string.IsNullOrEmpty(title))
                     query = query.Where(b => b.Title.Contains(title));
 
+                if (!showHidden || storeId > 0)
+                {
+                    //apply store mapping constraints
+                    query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+                }
+
                 if (!showHidden)
                 {
                     query = query.Where(b => !b.StartDateUtc.HasValue || b.StartDateUtc <= DateTime.UtcNow);
                     query = query.Where(b => !b.EndDateUtc.HasValue || b.EndDateUtc >= DateTime.UtcNow);
-
-                    //apply store mapping constraints
-                    query = await _storeMappingService.ApplyStoreMapping(query, storeId);
                 }
 
                 query = query.OrderByDescending(b => b.StartDateUtc ?? b.CreatedOnUtc);
@@ -228,8 +228,7 @@ namespace Nop.Services.Blogs
         /// </returns>
         public virtual async Task<IList<BlogPost>> GetPostsByDateAsync(IList<BlogPost> blogPosts, DateTime dateFrom, DateTime dateTo)
         {
-            if (blogPosts == null)
-                throw new ArgumentNullException(nameof(blogPosts));
+            ArgumentNullException.ThrowIfNull(blogPosts);
 
             var rez = await blogPosts
                 .Where(p => dateFrom.Date <= (p.StartDateUtc ?? p.CreatedOnUtc) && (p.StartDateUtc ?? p.CreatedOnUtc).Date <= dateTo)
@@ -248,13 +247,12 @@ namespace Nop.Services.Blogs
         /// </returns>
         public virtual async Task<IList<string>> ParseTagsAsync(BlogPost blogPost)
         {
-            if (blogPost == null)
-                throw new ArgumentNullException(nameof(blogPost));
+            ArgumentNullException.ThrowIfNull(blogPost);
 
             if (blogPost.Tags == null)
                 return new List<string>();
 
-            var tags = await blogPost.Tags.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+            var tags = await blogPost.Tags.Split(_separator, StringSplitOptions.RemoveEmptyEntries)
                 .Select(tag => tag.Trim())
                 .Where(tag => !string.IsNullOrEmpty(tag))
                 .ToListAsync();
@@ -270,8 +268,7 @@ namespace Nop.Services.Blogs
         /// <returns>Result</returns>
         public virtual bool BlogPostIsAvailable(BlogPost blogPost, DateTime? dateTime = null)
         {
-            if (blogPost == null)
-                throw new ArgumentNullException(nameof(blogPost));
+            ArgumentNullException.ThrowIfNull(blogPost);
 
             if (blogPost.StartDateUtc.HasValue && blogPost.StartDateUtc.Value >= (dateTime ?? DateTime.UtcNow))
                 return false;
@@ -342,7 +339,7 @@ namespace Nop.Services.Blogs
         /// </returns>
         public virtual async Task<BlogComment> GetBlogCommentByIdAsync(int blogCommentId)
         {
-            return await _blogCommentRepository.GetByIdAsync(blogCommentId, cache => default);
+            return await _blogCommentRepository.GetByIdAsync(blogCommentId, cache => default, useShortTermCache: true);
         }
 
         /// <summary>

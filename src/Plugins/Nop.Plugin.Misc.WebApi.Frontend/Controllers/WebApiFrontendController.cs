@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Security;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
@@ -9,12 +8,12 @@ namespace Nop.Plugin.Misc.WebApi.Frontend.Controllers
 {
     [AutoValidateAntiforgeryToken]
     [AuthorizeAdmin]
-    [Area(AreaNames.Admin)]
+    [Area(AreaNames.ADMIN)]
     public class WebApiFrontendController : BasePluginController
     {
         #region Fields
 
-        private readonly IPermissionService _permissionService;
+        protected readonly IPermissionService _permissionService;
 
         #endregion
 

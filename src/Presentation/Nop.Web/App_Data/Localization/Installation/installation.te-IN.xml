@@ -132,6 +132,9 @@
   <LocaleResource Name="StoreInformation">
     <Value>సమాచారాన్ని నిల్వ చేయండి</Value>
   </LocaleResource>
+  <LocaleResource Name="SubscribeNewsletters">
+    <Value>Subscribe to nopCommerce newsletter</Value>
+  </LocaleResource>
   <LocaleResource Name="Title">
     <Value>nopCommerce సంస్థాపన</Value>
   </LocaleResource>

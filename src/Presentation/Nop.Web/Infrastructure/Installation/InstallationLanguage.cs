@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Nop.Web.Infrastructure.Installation
+﻿namespace Nop.Web.Infrastructure.Installation
 {
     /// <summary>
     /// Language class for installation process
@@ -9,7 +7,7 @@ namespace Nop.Web.Infrastructure.Installation
     {
         public InstallationLanguage()
         {
-            Resources = new List<InstallationLocaleResource>();
+            Resources = [];
         }
         public string Name { get; set; }
         public string Code { get; set; }

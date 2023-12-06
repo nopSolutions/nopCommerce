@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Linq.Dynamic.Core;
+﻿using System.Linq.Dynamic.Core;
 using FluentValidation;
 using Nop.Core;
 using Nop.Core.Infrastructure;
@@ -42,8 +40,7 @@ namespace Nop.Web.Framework.Validators
         protected virtual void SetDatabaseValidationRules<TEntity>(IMappingEntityAccessor mappingEntityAccessor, params string[] filterStringPropertyNames)
             where TEntity : BaseEntity
         {
-            if (mappingEntityAccessor is null)
-                throw new ArgumentNullException(nameof(mappingEntityAccessor));
+            ArgumentNullException.ThrowIfNull(mappingEntityAccessor);
 
             var entityDescriptor = mappingEntityAccessor.GetEntityDescriptor(typeof(TEntity));
 

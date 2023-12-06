@@ -40,8 +40,6 @@
         NopHtml.AppendHeadCustomParts(seoSettings.CustomHeadTags);
     }
 
-    var displayMiniProfiler = appSettings.Get<CommonConfig>().MiniProfilerEnabled && await permissionService.AuthorizeAsync(StandardPermissionProvider.AccessProfiling);
-
     //event
     await eventPublisher.PublishAsync(new PageRenderingEvent(NopHtml));
 
@@ -70,10 +68,6 @@
     @await Component.InvokeAsync(typeof(BlogRssHeaderLinkViewComponent))
     @*Insert favicon and app icons head code*@
     @await Component.InvokeAsync(typeof(FaviconViewComponent))
-    @if (displayMiniProfiler)
-    {
-        <mini-profiler />
-    }
     @NopHtml.GenerateScripts(ResourceLocation.Head)
     @NopHtml.GenerateInlineScripts(ResourceLocation.Head)
     <!--Powered by nopCommerce - https://www.nopCommerce.com-->

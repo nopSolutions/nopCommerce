@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using FluentMigrator;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Infrastructure;
@@ -15,7 +13,7 @@ namespace Nop.Web.Framework.Extensions
         /// Get language data
         /// </summary>
         /// <returns>Default language identifier and all languages</returns>
-        public static (int? defaultLanguageId, IList<Language> allLanguages) GetLanguageData(this IMigration _, ILanguageService languageService=null)
+        public static (int? defaultLanguageId, IList<Language> allLanguages) GetLanguageData(this IMigration _, ILanguageService languageService = null)
         {
             languageService ??= EngineContext.Current.Resolve<ILanguageService>();
 
@@ -33,7 +31,7 @@ namespace Nop.Web.Framework.Extensions
         /// <param name="localesToRename">Locales to rename. Key - old name, Value - new name</param>
         /// <param name="allLanguages">All languages</param>
         /// <param name="localizationService">Localization service</param>
-        public static void RenameLocales(this IMigration _,Dictionary<string, string> localesToRename, IList<Language> allLanguages, ILocalizationService localizationService)
+        public static void RenameLocales(this IMigration _, Dictionary<string, string> localesToRename, IList<Language> allLanguages, ILocalizationService localizationService)
         {
             foreach (var lang in allLanguages)
             {

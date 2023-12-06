@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Services.Authentication.MultiFactor;
+﻿using Nop.Services.Authentication.MultiFactor;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.MultiFactorAuthentication;
 using Nop.Web.Framework.Models.Extensions;
@@ -15,7 +12,7 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
+        protected readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
 
         #endregion
 
@@ -38,8 +35,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual MultiFactorAuthenticationMethodSearchModel PrepareMultiFactorAuthenticationMethodSearchModel(
             MultiFactorAuthenticationMethodSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -58,8 +54,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<MultiFactorAuthenticationMethodListModel>
             PrepareMultiFactorAuthenticationMethodListModelAsync(MultiFactorAuthenticationMethodSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get multi-factor authentication methods
             var multiFactorAuthenticationMethods = (await _multiFactorAuthenticationPluginManager.LoadAllPluginsAsync()).ToPagedList(searchModel);

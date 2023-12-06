@@ -25,7 +25,7 @@ namespace Nop.Web.Framework.Infrastructure
             //add distributed cache
             services.AddDistributedCache();
 
-            //add HTTP sesion state feature
+            //add HTTP session state feature
             services.AddHttpSession();
 
             //add default HTTP clients

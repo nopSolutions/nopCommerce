@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Nop.Core.Domain.Customers
+﻿namespace Nop.Core.Domain.Customers
 {
     /// <summary>
     /// Customer extensions
@@ -14,8 +12,7 @@ namespace Nop.Core.Domain.Customers
         /// <returns>Result</returns>
         public static bool IsSearchEngineAccount(this Customer customer)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             if (!customer.IsSystemAccount || string.IsNullOrEmpty(customer.SystemName))
                 return false;
@@ -32,8 +29,7 @@ namespace Nop.Core.Domain.Customers
         /// <returns>Result</returns>
         public static bool IsBackgroundTaskAccount(this Customer customer)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             if (!customer.IsSystemAccount || string.IsNullOrEmpty(customer.SystemName))
                 return false;

@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Catalog;
+﻿using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Web.Models.Catalog;
 
 namespace Nop.Web.Factories
 {
-
     /// <summary>
     /// Represents the interface of the product model factory
     /// </summary>
@@ -65,13 +62,12 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the product reviews model
         /// </summary>
-        /// <param name="model">Product reviews model</param>
         /// <param name="product">Product</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the product reviews model
         /// </returns>
-        Task<ProductReviewsModel> PrepareProductReviewsModelAsync(ProductReviewsModel model, Product product);
+        Task<ProductReviewsModel> PrepareProductReviewsModelAsync(Product product);
 
         /// <summary>
         /// Prepare the customer product reviews model

@@ -1,9 +1,6 @@
-﻿using System;
-using System.IO;
-using System.Net;
+﻿using System.Net;
 using System.Text;
 using System.Text.Encodings.Web;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -98,9 +95,8 @@ namespace Nop.Web.Framework.Extensions
             foreach (var locale in helper.ViewData.Model.Locales)
             {
                 //languages
-                var language = await languageService.GetLanguageByIdAsync(locale.LanguageId);
-                if (language == null)
-                    throw new Exception("Language cannot be loaded");
+                var language = await languageService.GetLanguageByIdAsync(locale.LanguageId) 
+                    ?? throw new Exception("Language cannot be loaded");
 
                 var localizedTabName = $"{name}-{language.Id}-tab";
                 tabStrip.AppendLine(string.Format("<li class=\"nav-item\">"));
@@ -123,9 +119,8 @@ namespace Nop.Web.Framework.Extensions
             for (var i = 0; i < helper.ViewData.Model.Locales.Count; i++)
             {
                 //languages
-                var language = await languageService.GetLanguageByIdAsync(helper.ViewData.Model.Locales[i].LanguageId);
-                if (language == null)
-                    throw new Exception("Language cannot be loaded");
+                var language = await languageService.GetLanguageByIdAsync(helper.ViewData.Model.Locales[i].LanguageId) 
+                    ?? throw new Exception("Language cannot be loaded");
 
                 var localizedTabName = $"{name}-{language.Id}-tab";
                 tabStrip.AppendLine(string.Format("<div class=\"tab-pane fade{0}\" id=\"{1}\" role=\"tabpanel\">", localizedTabName == tabNameToSelect ? " show active" : null, localizedTabName));
@@ -164,8 +159,8 @@ namespace Nop.Web.Framework.Extensions
             if (helper.ViewData.ContainsKey(dataKey))
                 cardName = helper.ViewData[dataKey].ToString();
 
-            if (helper.ViewContext.TempData.ContainsKey(dataKey))
-                cardName = helper.ViewContext.TempData[dataKey].ToString();
+            if (helper.ViewContext.TempData.TryGetValue(dataKey, out var value))
+                cardName = value.ToString();
 
             return cardName;
         }
@@ -188,8 +183,8 @@ namespace Nop.Web.Framework.Extensions
             if (helper.ViewData.ContainsKey(dataKey))
                 tabName = helper.ViewData[dataKey].ToString();
 
-            if (helper.ViewContext.TempData.ContainsKey(dataKey))
-                tabName = helper.ViewContext.TempData[dataKey].ToString();
+            if (helper.ViewContext.TempData.TryGetValue(dataKey, out var value))
+                tabName = value.ToString();
 
             return tabName;
         }

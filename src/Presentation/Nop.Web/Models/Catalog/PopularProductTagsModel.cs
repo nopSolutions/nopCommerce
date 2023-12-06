@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Catalog
 {
@@ -8,7 +6,7 @@ namespace Nop.Web.Models.Catalog
     {
         public PopularProductTagsModel()
         {
-            Tags = new List<ProductTagModel>();
+            Tags = [];
         }
 
         #region Utilities

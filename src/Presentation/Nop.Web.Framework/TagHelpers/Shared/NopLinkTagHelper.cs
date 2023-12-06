@@ -1,6 +1,4 @@
-﻿using System;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
+﻿using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Mvc.Razor.TagHelpers;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -16,14 +14,14 @@ namespace Nop.Web.Framework.TagHelpers.Shared
     {
         #region Constants
 
-        private const string LINK_TAG_NAME = "link";
-        private const string EXCLUDE_FROM_BUNDLE_ATTRIBUTE_NAME = "asp-exclude-from-bundle";
-        private const string HREF_ATTRIBUTE_NAME = "href";
+        protected const string LINK_TAG_NAME = "link";
+        protected const string EXCLUDE_FROM_BUNDLE_ATTRIBUTE_NAME = "asp-exclude-from-bundle";
+        protected const string HREF_ATTRIBUTE_NAME = "href";
 
         #endregion
 
         #region Fields
-        private readonly INopHtmlHelper _nopHtmlHelper;
+        protected readonly INopHtmlHelper _nopHtmlHelper;
 
         #endregion
 
@@ -42,11 +40,9 @@ namespace Nop.Web.Framework.TagHelpers.Shared
 
         public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
-            if (context is null)
-                throw new ArgumentNullException(nameof(context));
+            ArgumentNullException.ThrowIfNull(context);
 
-            if (output == null)
-                throw new ArgumentNullException(nameof(output));
+            ArgumentNullException.ThrowIfNull(output);
 
             _nopHtmlHelper.AddCssFileParts(Href, string.Empty, ExcludeFromBundle);
 

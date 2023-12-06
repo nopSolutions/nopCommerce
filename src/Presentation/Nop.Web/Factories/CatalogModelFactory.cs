@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Xml;
+﻿using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using System.Xml.XPath;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Blogs;
@@ -16,6 +11,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
 using Nop.Services.Catalog;
@@ -39,35 +35,38 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly BlogSettings _blogSettings;
-        private readonly CatalogSettings _catalogSettings;
-        private readonly DisplayDefaultMenuItemSettings _displayDefaultMenuItemSettings;
-        private readonly ForumSettings _forumSettings;
-        private readonly ICategoryService _categoryService;
-        private readonly ICategoryTemplateService _categoryTemplateService;
-        private readonly ICurrencyService _currencyService;
-        private readonly ICustomerService _customerService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILocalizationService _localizationService;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly IManufacturerTemplateService _manufacturerTemplateService;
-        private readonly INopUrlHelper _nopUrlHelper;
-        private readonly IPictureService _pictureService;
-        private readonly IProductModelFactory _productModelFactory;
-        private readonly IProductService _productService;
-        private readonly IProductTagService _productTagService;
-        private readonly ISearchTermService _searchTermService;
-        private readonly ISpecificationAttributeService _specificationAttributeService;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreContext _storeContext;
-        private readonly ITopicService _topicService;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IVendorService _vendorService;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
-        private readonly MediaSettings _mediaSettings;
-        private readonly VendorSettings _vendorSettings;
+        protected readonly BlogSettings _blogSettings;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly DisplayDefaultMenuItemSettings _displayDefaultMenuItemSettings;
+        protected readonly ForumSettings _forumSettings;
+        protected readonly ICategoryService _categoryService;
+        protected readonly ICategoryTemplateService _categoryTemplateService;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly IJsonLdModelFactory _jsonLdModelFactory;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IManufacturerService _manufacturerService;
+        protected readonly IManufacturerTemplateService _manufacturerTemplateService;
+        protected readonly INopUrlHelper _nopUrlHelper;
+        protected readonly IPictureService _pictureService;
+        protected readonly IProductModelFactory _productModelFactory;
+        protected readonly IProductService _productService;
+        protected readonly IProductTagService _productTagService;
+        protected readonly ISearchTermService _searchTermService;
+        protected readonly ISpecificationAttributeService _specificationAttributeService;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreContext _storeContext;
+        protected readonly ITopicService _topicService;
+        protected readonly IUrlRecordService _urlRecordService;
+        protected readonly IVendorService _vendorService;
+        protected readonly IWebHelper _webHelper;
+        protected readonly IWorkContext _workContext;
+        protected readonly MediaSettings _mediaSettings;
+        protected readonly SeoSettings _seoSettings;
+        protected readonly VendorSettings _vendorSettings;
+        private static readonly char[] _separator = [',', ' '];
 
         #endregion
 
@@ -83,6 +82,7 @@ namespace Nop.Web.Factories
             ICustomerService customerService,
             IEventPublisher eventPublisher,
             IHttpContextAccessor httpContextAccessor,
+            IJsonLdModelFactory jsonLdModelFactory,
             ILocalizationService localizationService,
             IManufacturerService manufacturerService,
             IManufacturerTemplateService manufacturerTemplateService,
@@ -101,6 +101,7 @@ namespace Nop.Web.Factories
             IWebHelper webHelper,
             IWorkContext workContext,
             MediaSettings mediaSettings,
+            SeoSettings seoSettings,
             VendorSettings vendorSettings)
         {
             _blogSettings = blogSettings;
@@ -113,6 +114,7 @@ namespace Nop.Web.Factories
             _customerService = customerService;
             _eventPublisher = eventPublisher;
             _httpContextAccessor = httpContextAccessor;
+            _jsonLdModelFactory = jsonLdModelFactory;
             _localizationService = localizationService;
             _manufacturerService = manufacturerService;
             _manufacturerTemplateService = manufacturerTemplateService;
@@ -131,6 +133,7 @@ namespace Nop.Web.Factories
             _webHelper = webHelper;
             _workContext = workContext;
             _mediaSettings = mediaSettings;
+            _seoSettings = seoSettings;
             _vendorSettings = vendorSettings;
         }
 
@@ -138,6 +141,11 @@ namespace Nop.Web.Factories
 
         #region Utilities
 
+        /// <summary>
+        /// Gets the category simple model
+        /// </summary>
+        /// <param name="elem">Category (simple) xml</param>
+        /// <returns>Category simple model</returns>
         protected virtual CategorySimpleModel GetCategorySimpleModel(XElement elem)
         {
             var model = new CategorySimpleModel
@@ -173,7 +181,7 @@ namespace Nop.Web.Factories
             if (string.IsNullOrWhiteSpace(command.Price))
                 return result;
 
-            var fromTo = command.Price.Trim().Split(new[] { '-' });
+            var fromTo = command.Price.Trim().Split(['-']);
             if (fromTo.Length == 2)
             {
                 var rawFromPrice = fromTo[0]?.Trim();
@@ -375,11 +383,9 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<CategoryModel> PrepareCategoryModelAsync(Category category, CatalogProductsCommand command)
         {
-            if (category == null)
-                throw new ArgumentNullException(nameof(category));
+            ArgumentNullException.ThrowIfNull(category);
 
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
+            ArgumentNullException.ThrowIfNull(command);
 
             var model = new CategoryModel
             {
@@ -405,6 +411,14 @@ namespace Nop.Web.Factories
                         Name = await _localizationService.GetLocalizedAsync(catBr, x => x.Name),
                         SeName = await _urlRecordService.GetSeNameAsync(catBr)
                     }).ToListAsync();
+
+                if (_seoSettings.MicrodataEnabled)
+                {
+                    var categoryBreadcrumb = model.CategoryBreadcrumb.Select(c => new CategorySimpleModel { Id = c.Id, Name = c.Name, SeName = c.SeName }).ToList();
+                    var jsonLdModel = await _jsonLdModelFactory.PrepareJsonLdCategoryBreadcrumbAsync(categoryBreadcrumb);
+                    model.JsonLd = JsonConvert
+                        .SerializeObject(jsonLdModel, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                }
             }
 
             var currentStore = await _storeContext.GetCurrentStoreAsync();
@@ -472,11 +486,8 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<string> PrepareCategoryTemplateViewPathAsync(int templateId)
         {
-            var template = await _categoryTemplateService.GetCategoryTemplateByIdAsync(templateId) ??
-                           (await _categoryTemplateService.GetAllCategoryTemplatesAsync()).FirstOrDefault();
-
-            if (template == null)
-                throw new Exception("No default template could be loaded");
+            var template = (await _categoryTemplateService.GetCategoryTemplateByIdAsync(templateId) ??
+                           (await _categoryTemplateService.GetAllCategoryTemplatesAsync()).FirstOrDefault()) ?? throw new Exception("No default template could be loaded");
 
             return template.ViewPath;
         }
@@ -675,11 +686,9 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<CatalogProductsModel> PrepareCategoryProductsModelAsync(Category category, CatalogProductsCommand command)
         {
-            if (category == null)
-                throw new ArgumentNullException(nameof(category));
+            ArgumentNullException.ThrowIfNull(category);
 
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
+            ArgumentNullException.ThrowIfNull(command);
 
             var model = new CatalogProductsModel
             {
@@ -944,11 +953,9 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<ManufacturerModel> PrepareManufacturerModelAsync(Manufacturer manufacturer, CatalogProductsCommand command)
         {
-            if (manufacturer == null)
-                throw new ArgumentNullException(nameof(manufacturer));
+            ArgumentNullException.ThrowIfNull(manufacturer);
 
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
+            ArgumentNullException.ThrowIfNull(command);
 
             var model = new ManufacturerModel
             {
@@ -986,11 +993,9 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<CatalogProductsModel> PrepareManufacturerProductsModelAsync(Manufacturer manufacturer, CatalogProductsCommand command)
         {
-            if (manufacturer == null)
-                throw new ArgumentNullException(nameof(manufacturer));
+            ArgumentNullException.ThrowIfNull(manufacturer);
 
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
+            ArgumentNullException.ThrowIfNull(command);
 
             var model = new CatalogProductsModel
             {
@@ -1087,11 +1092,8 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<string> PrepareManufacturerTemplateViewPathAsync(int templateId)
         {
-            var template = await _manufacturerTemplateService.GetManufacturerTemplateByIdAsync(templateId) ??
-                           (await _manufacturerTemplateService.GetAllManufacturerTemplatesAsync()).FirstOrDefault();
-
-            if (template == null)
-                throw new Exception("No default template could be loaded");
+            var template = (await _manufacturerTemplateService.GetManufacturerTemplateByIdAsync(templateId) ??
+                           (await _manufacturerTemplateService.GetAllManufacturerTemplatesAsync()).FirstOrDefault()) ?? throw new Exception("No default template could be loaded");
 
             return template.ViewPath;
         }
@@ -1212,11 +1214,9 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<VendorModel> PrepareVendorModelAsync(Vendor vendor, CatalogProductsCommand command)
         {
-            if (vendor == null)
-                throw new ArgumentNullException(nameof(vendor));
+            ArgumentNullException.ThrowIfNull(vendor);
 
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
+            ArgumentNullException.ThrowIfNull(command);
 
             var model = new VendorModel
             {
@@ -1245,11 +1245,9 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<CatalogProductsModel> PrepareVendorProductsModelAsync(Vendor vendor, CatalogProductsCommand command)
         {
-            if (vendor == null)
-                throw new ArgumentNullException(nameof(vendor));
+            ArgumentNullException.ThrowIfNull(vendor);
 
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
+            ArgumentNullException.ThrowIfNull(command);
 
             var model = new CatalogProductsModel
             {
@@ -1463,11 +1461,9 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<ProductsByTagModel> PrepareProductsByTagModelAsync(ProductTag productTag, CatalogProductsCommand command)
         {
-            if (productTag == null)
-                throw new ArgumentNullException(nameof(productTag));
+            ArgumentNullException.ThrowIfNull(productTag);
 
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
+            ArgumentNullException.ThrowIfNull(command);
 
             var model = new ProductsByTagModel
             {
@@ -1491,11 +1487,9 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<CatalogProductsModel> PrepareTagProductsModelAsync(ProductTag productTag, CatalogProductsCommand command)
         {
-            if (productTag == null)
-                throw new ArgumentNullException(nameof(productTag));
+            ArgumentNullException.ThrowIfNull(productTag);
 
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
+            ArgumentNullException.ThrowIfNull(command);
 
             var model = new CatalogProductsModel
             {
@@ -1580,8 +1574,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<CatalogProductsModel> PrepareNewProductsModelAsync(CatalogProductsCommand command)
         {
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
+            ArgumentNullException.ThrowIfNull(command);
 
             var model = new CatalogProductsModel
             {
@@ -1619,11 +1612,9 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<SearchModel> PrepareSearchModelAsync(SearchModel model, CatalogProductsCommand command)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
+            ArgumentNullException.ThrowIfNull(command);
 
             var currentStore = await _storeContext.GetCurrentStoreAsync();
             var categoriesModels = new List<SearchModel.CategoryModel>();
@@ -1648,7 +1639,7 @@ namespace Nop.Web.Factories
                 });
             }
 
-            if (categoriesModels.Any())
+            if (categoriesModels.Count != 0)
             {
                 //first empty entry
                 model.AvailableCategories.Add(new SelectListItem
@@ -1722,8 +1713,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<CatalogProductsModel> PrepareSearchProductsModelAsync(SearchModel searchModel, CatalogProductsCommand command)
         {
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
+            ArgumentNullException.ThrowIfNull(command);
 
             var model = new CatalogProductsModel
             {
@@ -2006,7 +1996,7 @@ namespace Nop.Web.Factories
             model.AllowCustomersToSelectPageSize = false;
             if (allowCustomersToSelectPageSize && pageSizeOptions != null)
             {
-                var pageSizes = pageSizeOptions.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                var pageSizes = pageSizeOptions.Split(_separator, StringSplitOptions.RemoveEmptyEntries);
 
                 if (pageSizes.Any())
                 {

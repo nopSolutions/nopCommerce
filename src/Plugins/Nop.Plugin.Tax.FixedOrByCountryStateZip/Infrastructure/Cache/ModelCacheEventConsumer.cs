@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core.Caching;
+﻿using Nop.Core.Caching;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Events;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Domain;
@@ -13,7 +11,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache
     /// <summary>
     /// Model cache event consumer (used for caching of presentation layer models)
     /// </summary>
-    public class ModelCacheEventConsumer : 
+    public class ModelCacheEventConsumer :
         //tax rates
         IConsumer<EntityInsertedEvent<TaxRate>>,
         IConsumer<EntityUpdatedEvent<TaxRate>>,
@@ -28,16 +26,16 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache
         /// </summary>
         public static CacheKey ALL_TAX_RATES_MODEL_KEY = new("Nop.plugins.tax.fixedorbycountrystateziptaxrate.all", TAXRATE_PATTERN_KEY);
         public static CacheKey TAXRATE_ALL_KEY = new("Nop.plugins.tax.fixedorbycountrystateziptaxrate.taxrate.all", TAXRATE_PATTERN_KEY);
-        
+
         public const string TAXRATE_PATTERN_KEY = "Nop.plugins.tax.fixedorbycountrystateziptaxrate.";
 
         #endregion
 
         #region Fields
 
-        private readonly ICountryStateZipService _taxRateService;
-        private readonly ISettingService _settingService;
-        private readonly IStaticCacheManager _staticCacheManager;
+        protected readonly ICountryStateZipService _taxRateService;
+        protected readonly ISettingService _settingService;
+        protected readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
@@ -108,7 +106,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache
             }
 
             //delete saved fixed rate if exists
-            var setting = await _settingService.GetSettingAsync(string.Format(FixedOrByCountryStateZipDefaults.FixedRateSettingsKey, taxCategory.Id));
+            var setting = await _settingService.GetSettingAsync(string.Format(FixedOrByCountryStateZipDefaults.FIXED_RATE_SETTINGS_KEY, taxCategory.Id));
             if (setting != null)
                 await _settingService.DeleteSettingAsync(setting);
         }

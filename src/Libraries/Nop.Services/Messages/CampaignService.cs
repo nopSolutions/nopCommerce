@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
 using Nop.Services.Customers;
@@ -16,13 +12,13 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly IEmailSender _emailSender;
-        private readonly IMessageTokenProvider _messageTokenProvider;
-        private readonly IQueuedEmailService _queuedEmailService;
-        private readonly IRepository<Campaign> _campaignRepository;
-        private readonly IStoreContext _storeContext;
-        private readonly ITokenizer _tokenizer;
+        protected readonly ICustomerService _customerService;
+        protected readonly IEmailSender _emailSender;
+        protected readonly IMessageTokenProvider _messageTokenProvider;
+        protected readonly IQueuedEmailService _queuedEmailService;
+        protected readonly IRepository<Campaign> _campaignRepository;
+        protected readonly IStoreContext _storeContext;
+        protected readonly ITokenizer _tokenizer;
 
         #endregion
 
@@ -104,7 +100,7 @@ namespace Nop.Services.Messages
         {
             var campaigns = await _campaignRepository.GetAllAsync(query =>
             {
-                if (storeId > 0) 
+                if (storeId > 0)
                     query = query.Where(c => c.StoreId == storeId);
 
                 query = query.OrderBy(c => c.CreatedOnUtc);
@@ -128,11 +124,9 @@ namespace Nop.Services.Messages
         public virtual async Task<int> SendCampaignAsync(Campaign campaign, EmailAccount emailAccount,
             IEnumerable<NewsLetterSubscription> subscriptions)
         {
-            if (campaign == null)
-                throw new ArgumentNullException(nameof(campaign));
+            ArgumentNullException.ThrowIfNull(campaign);
 
-            if (emailAccount == null)
-                throw new ArgumentNullException(nameof(emailAccount));
+            ArgumentNullException.ThrowIfNull(emailAccount);
 
             var totalEmailsSent = 0;
 
@@ -180,11 +174,9 @@ namespace Nop.Services.Messages
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task SendCampaignAsync(Campaign campaign, EmailAccount emailAccount, string email)
         {
-            if (campaign == null)
-                throw new ArgumentNullException(nameof(campaign));
+            ArgumentNullException.ThrowIfNull(campaign);
 
-            if (emailAccount == null)
-                throw new ArgumentNullException(nameof(emailAccount));
+            ArgumentNullException.ThrowIfNull(emailAccount);
 
             var tokens = new List<Token>();
             await _messageTokenProvider.AddStoreTokensAsync(tokens, await _storeContext.GetCurrentStoreAsync(), emailAccount);

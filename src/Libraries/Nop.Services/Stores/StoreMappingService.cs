@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Stores;
@@ -17,10 +13,10 @@ namespace Nop.Services.Stores
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IRepository<StoreMapping> _storeMappingRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreContext _storeContext;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly IRepository<StoreMapping> _storeMappingRepository;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreContext _storeContext;
 
         #endregion
 
@@ -88,8 +84,7 @@ namespace Nop.Services.Stores
         public virtual async Task<IQueryable<TEntity>> ApplyStoreMapping<TEntity>(IQueryable<TEntity> query, int storeId)
             where TEntity : BaseEntity, IStoreMappingSupported
         {
-            if (query is null)
-                throw new ArgumentNullException(nameof(query));
+            ArgumentNullException.ThrowIfNull(query);
 
             if (storeId == 0 || _catalogSettings.IgnoreStoreLimitations || !await IsEntityMappingExistsAsync<TEntity>())
                 return query;
@@ -121,8 +116,7 @@ namespace Nop.Services.Stores
         /// </returns>
         public virtual async Task<IList<StoreMapping>> GetStoreMappingsAsync<TEntity>(TEntity entity) where TEntity : BaseEntity, IStoreMappingSupported
         {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
             var entityId = entity.Id;
             var entityName = entity.GetType().Name;
@@ -148,8 +142,7 @@ namespace Nop.Services.Stores
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertStoreMappingAsync<TEntity>(TEntity entity, int storeId) where TEntity : BaseEntity, IStoreMappingSupported
         {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
             if (storeId == 0)
                 throw new ArgumentOutOfRangeException(nameof(storeId));
@@ -178,8 +171,7 @@ namespace Nop.Services.Stores
         /// </returns>
         public virtual async Task<int[]> GetStoresIdsWithAccessAsync<TEntity>(TEntity entity) where TEntity : BaseEntity, IStoreMappingSupported
         {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
             var entityId = entity.Id;
             var entityName = entity.GetType().Name;
@@ -204,8 +196,7 @@ namespace Nop.Services.Stores
         /// </returns>
         public virtual int[] GetStoresIdsWithAccess<TEntity>(TEntity entity) where TEntity : BaseEntity, IStoreMappingSupported
         {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
             var entityId = entity.Id;
             var entityName = entity.GetType().Name;
@@ -213,9 +204,9 @@ namespace Nop.Services.Stores
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopStoreDefaults.StoreMappingIdsCacheKey, entityId, entityName);
 
             var query = from sm in _storeMappingRepository.Table
-                where sm.EntityId == entityId &&
-                      sm.EntityName == entityName
-                select sm.StoreId;
+                        where sm.EntityId == entityId &&
+                              sm.EntityName == entityName
+                        select sm.StoreId;
 
             return _staticCacheManager.Get(key, () => query.ToArray());
         }

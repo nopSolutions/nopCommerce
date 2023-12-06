@@ -1,10 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Blogs;
+﻿using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
-using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
@@ -146,7 +143,7 @@ namespace Nop.Services.Messages
         /// <param name="newsComment">News comment</param>
         /// <returns>A task that represents the asynchronous operation</returns>
         Task AddNewsCommentTokensAsync(IList<Token> tokens, NewsComment newsComment);
-        
+
         /// <summary>
         /// Add product tokens
         /// </summary>

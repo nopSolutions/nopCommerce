@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Data;
 using Nop.Plugin.Pickup.PickupInStore.Domain;
@@ -20,15 +18,16 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
         /// <remarks>
         /// {0} : current store ID
         /// </remarks>
-        private readonly CacheKey _pickupPointAllKey = new("Nop.pickuppoint.all-{0}", PICKUP_POINT_PATTERN_KEY);
-        private const string PICKUP_POINT_PATTERN_KEY = "Nop.pickuppoint.";
+        protected readonly CacheKey _pickupPointAllKey = new("Nop.pickuppoint.all-{0}", PICKUP_POINT_PATTERN_KEY);
+        protected const string PICKUP_POINT_PATTERN_KEY = "Nop.pickuppoint.";
 
         #endregion
 
         #region Fields
 
-        private readonly IRepository<StorePickupPoint> _storePickupPointRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IRepository<StorePickupPoint> _storePickupPointRepository;
+        protected readonly IShortTermCacheManager _shortTermCacheManager;
+        protected readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
@@ -38,11 +37,14 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
         /// Ctor
         /// </summary>
         /// <param name="storePickupPointRepository">Store pickup point repository</param>
+        /// <param name="shortTermCacheManager">Short term cache manager</param>
         /// <param name="staticCacheManager">Cache manager</param>
         public StorePickupPointService(IRepository<StorePickupPoint> storePickupPointRepository,
+            IShortTermCacheManager shortTermCacheManager,
             IStaticCacheManager staticCacheManager)
         {
             _storePickupPointRepository = storePickupPointRepository;
+            _shortTermCacheManager = shortTermCacheManager;
             _staticCacheManager = staticCacheManager;
         }
 
@@ -62,14 +64,14 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
         /// </returns>
         public virtual async Task<IPagedList<StorePickupPoint>> GetAllStorePickupPointsAsync(int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var rez = await _storePickupPointRepository.GetAllAsync(query =>
+            var rez = await _shortTermCacheManager.GetAsync(async () => await _storePickupPointRepository.GetAllAsync(query =>
             {
                 if (storeId > 0)
                     query = query.Where(point => point.StoreId == storeId || point.StoreId == 0);
                 query = query.OrderBy(point => point.DisplayOrder).ThenBy(point => point.Name);
 
                 return query;
-            }, cache => cache.PrepareKeyForShortTermCache(_pickupPointAllKey, storeId));
+            }), _pickupPointAllKey, storeId);
 
             return new PagedList<StorePickupPoint>(rez, pageIndex, pageSize);
         }

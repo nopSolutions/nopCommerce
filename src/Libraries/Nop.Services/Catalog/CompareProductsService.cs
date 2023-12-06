@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Http;
@@ -17,11 +13,12 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly CookieSettings _cookieSettings;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IProductService _productService;
-        private readonly IWebHelper _webHelper;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly CookieSettings _cookieSettings;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly IProductService _productService;
+        protected readonly IWebHelper _webHelper;
+        private static readonly char[] _separator = [','];
 
         #endregion
 
@@ -52,15 +49,15 @@ namespace Nop.Services.Catalog
         {
             var httpContext = _httpContextAccessor.HttpContext;
             if (httpContext?.Request == null)
-                return new List<int>();
+                return [];
 
             //try to get cookie
             var cookieName = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.ComparedProductsCookie}";
             if (!httpContext.Request.Cookies.TryGetValue(cookieName, out var productIdsCookie) || string.IsNullOrEmpty(productIdsCookie))
-                return new List<int>();
+                return [];
 
             //get array of string product identifiers from cookie
-            var productIds = productIdsCookie.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            var productIds = productIdsCookie.Split(_separator, StringSplitOptions.RemoveEmptyEntries);
 
             //return list of int product identifiers
             return productIds.Select(int.Parse).Distinct().ToList();
@@ -85,7 +82,7 @@ namespace Nop.Services.Catalog
             {
                 Expires = DateTime.Now.AddHours(cookieExpires),
                 HttpOnly = true,
-                Secure =  _webHelper.IsCurrentConnectionSecured()
+                Secure = _webHelper.IsCurrentConnectionSecured()
             };
 
             //add cookie
@@ -122,7 +119,7 @@ namespace Nop.Services.Catalog
             var productIds = GetComparedProductIds();
 
             //return list of product
-            return (await _productService.GetProductsByIdsAsync(productIds.ToArray()))
+            return (await _productService.GetProductsByIdsAsync([.. productIds]))
                 .Where(product => product.Published && !product.Deleted).ToList();
         }
 

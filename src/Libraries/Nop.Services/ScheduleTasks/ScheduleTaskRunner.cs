@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.ScheduleTasks;
 using Nop.Core.Infrastructure;
@@ -47,15 +44,13 @@ namespace Nop.Services.ScheduleTasks
         /// <summary>
         /// Initialize and execute task
         /// </summary>
-        protected async Task PerformTaskAsync(ScheduleTask scheduleTask)
+        protected virtual async Task PerformTaskAsync(ScheduleTask scheduleTask)
         {
-            var type = Type.GetType(scheduleTask.Type) ??
+            var type = (Type.GetType(scheduleTask.Type) ??
                        //ensure that it works fine when only the type name is specified (do not require fully qualified names)
                        AppDomain.CurrentDomain.GetAssemblies()
                            .Select(a => a.GetType(scheduleTask.Type))
-                           .FirstOrDefault(t => t != null);
-            if (type == null)
-                throw new Exception($"Schedule task ({scheduleTask.Type}) cannot by instantiated");
+                           .FirstOrDefault(t => t != null)) ?? throw new Exception($"Schedule task ({scheduleTask.Type}) cannot by instantiated");
 
             object instance = null;
 
@@ -151,7 +146,7 @@ namespace Nop.Services.ScheduleTasks
 
                 var scheduleTaskUrl = $"{store.Url}{NopTaskDefaults.ScheduleTaskPath}";
 
-                scheduleTask.Enabled = !scheduleTask.StopOnError;
+                scheduleTask.Enabled = scheduleTask.Enabled && !scheduleTask.StopOnError;
                 scheduleTask.LastEndUtc = DateTime.UtcNow;
                 await _scheduleTaskService.UpdateTaskAsync(scheduleTask);
 

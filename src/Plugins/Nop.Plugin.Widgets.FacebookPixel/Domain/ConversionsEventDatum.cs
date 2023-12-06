@@ -27,7 +27,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Domain
         /// </summary>
         [JsonProperty(PropertyName = "action_source")]
         public string ActionSource { get; set; }
-        
+
         /// <summary>
         /// Gets or sets a store identifier
         /// </summary>

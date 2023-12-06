@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -16,14 +14,14 @@ namespace Nop.Web.Components
 {
     public partial class ProductsAlsoPurchasedViewComponent : NopViewComponent
     {
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IAclService _aclService;
-        private readonly IOrderReportService _orderReportService;
-        private readonly IProductModelFactory _productModelFactory;
-        private readonly IProductService _productService;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreMappingService _storeMappingService;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly IAclService _aclService;
+        protected readonly IOrderReportService _orderReportService;
+        protected readonly IProductModelFactory _productModelFactory;
+        protected readonly IProductService _productService;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreMappingService _storeMappingService;
 
         public ProductsAlsoPurchasedViewComponent(CatalogSettings catalogSettings,
             IAclService aclService,
@@ -62,7 +60,7 @@ namespace Nop.Web.Components
             //availability dates
             .Where(p => _productService.ProductIsAvailable(p)).ToListAsync();
 
-            if (!products.Any())
+            if (products.Count == 0)
                 return Content("");
 
             var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, true, true, productThumbPictureSize)).ToList();

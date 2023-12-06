@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Media;
 using Nop.Data;
 
 namespace Nop.Services.Catalog
@@ -16,32 +13,44 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly IRepository<PredefinedProductAttributeValue> _predefinedProductAttributeValueRepository;
-        private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<ProductAttribute> _productAttributeRepository;
-        private readonly IRepository<ProductAttributeCombination> _productAttributeCombinationRepository;
-        private readonly IRepository<ProductAttributeMapping> _productAttributeMappingRepository;
-        private readonly IRepository<ProductAttributeValue> _productAttributeValueRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IRepository<Picture> _pictureRepository;
+        protected readonly IRepository<PredefinedProductAttributeValue> _predefinedProductAttributeValueRepository;
+        protected readonly IRepository<Product> _productRepository;
+        protected readonly IRepository<ProductAttribute> _productAttributeRepository;
+        protected readonly IRepository<ProductAttributeCombination> _productAttributeCombinationRepository;
+        protected readonly IRepository<ProductAttributeCombinationPicture> _productAttributeCombinationPictureRepository;
+        protected readonly IRepository<ProductAttributeMapping> _productAttributeMappingRepository;
+        protected readonly IRepository<ProductAttributeValue> _productAttributeValueRepository;
+        protected readonly IRepository<ProductAttributeValuePicture> _productAttributeValuePictureRepository;
+        protected readonly IRepository<ProductPicture> _productPictureRepository;
+        protected readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
         #region Ctor
 
-        public ProductAttributeService(IRepository<PredefinedProductAttributeValue> predefinedProductAttributeValueRepository,
+        public ProductAttributeService(IRepository<Picture> pictureRepository,
+            IRepository<PredefinedProductAttributeValue> predefinedProductAttributeValueRepository,
             IRepository<Product> productRepository,
             IRepository<ProductAttribute> productAttributeRepository,
             IRepository<ProductAttributeCombination> productAttributeCombinationRepository,
+            IRepository<ProductAttributeCombinationPicture> productAttributeCombinationPictureRepository,
             IRepository<ProductAttributeMapping> productAttributeMappingRepository,
             IRepository<ProductAttributeValue> productAttributeValueRepository,
+            IRepository<ProductAttributeValuePicture> productAttributeValuePictureRepository,
+            IRepository<ProductPicture> productPictureRepository,
             IStaticCacheManager staticCacheManager)
         {
+            _pictureRepository = pictureRepository;
             _predefinedProductAttributeValueRepository = predefinedProductAttributeValueRepository;
             _productRepository = productRepository;
             _productAttributeRepository = productAttributeRepository;
             _productAttributeCombinationRepository = productAttributeCombinationRepository;
+            _productAttributeCombinationPictureRepository = productAttributeCombinationPictureRepository;
             _productAttributeMappingRepository = productAttributeMappingRepository;
             _productAttributeValueRepository = productAttributeValueRepository;
+            _productAttributeValuePictureRepository = productAttributeValuePictureRepository;
+            _productPictureRepository = productPictureRepository;
             _staticCacheManager = staticCacheManager;
         }
 
@@ -68,10 +77,9 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteProductAttributesAsync(IList<ProductAttribute> productAttributes)
         {
-            if (productAttributes == null)
-                throw new ArgumentNullException(nameof(productAttributes));
+            ArgumentNullException.ThrowIfNull(productAttributes);
 
-            foreach (var productAttribute in productAttributes) 
+            foreach (var productAttribute in productAttributes)
                 await DeleteProductAttributeAsync(productAttribute);
         }
 
@@ -90,8 +98,8 @@ namespace Nop.Services.Catalog
             var productAttributes = await _productAttributeRepository.GetAllPagedAsync(query =>
             {
                 return from pa in query
-                    orderby pa.Name
-                    select pa;
+                       orderby pa.Name
+                       select pa;
             }, pageIndex, pageSize);
 
             return productAttributes;
@@ -153,15 +161,14 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<int[]> GetNotExistingAttributesAsync(int[] attributeId)
         {
-            if (attributeId == null)
-                throw new ArgumentNullException(nameof(attributeId));
+            ArgumentNullException.ThrowIfNull(attributeId);
 
             var query = _productAttributeRepository.Table;
             var queryFilter = attributeId.Distinct().ToArray();
             var filter = await query.Select(a => a.Id)
                 .Where(m => queryFilter.Contains(m))
                 .ToListAsync();
-            
+
             return queryFilter.Except(filter).ToArray();
         }
 
@@ -192,11 +199,11 @@ namespace Nop.Services.Catalog
             var allCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductAttributeMappingsByProductCacheKey, productId);
 
             var query = from pam in _productAttributeMappingRepository.Table
-                orderby pam.DisplayOrder, pam.Id
-                where pam.ProductId == productId
-                select pam;
+                        orderby pam.DisplayOrder, pam.Id
+                        where pam.ProductId == productId
+                        select pam;
 
-            var attributes = await _staticCacheManager.GetAsync(allCacheKey, async () => await query.ToListAsync()) ?? new List<ProductAttributeMapping>();
+            var attributes = await _staticCacheManager.GetAsync(allCacheKey, async () => await query.ToListAsync()) ?? [];
 
             return attributes;
         }
@@ -261,9 +268,9 @@ namespace Nop.Services.Catalog
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductAttributeValuesByAttributeCacheKey, productAttributeMappingId);
 
             var query = from pav in _productAttributeValueRepository.Table
-                orderby pav.DisplayOrder, pav.Id
-                where pav.ProductAttributeMappingId == productAttributeMappingId
-                select pav;
+                        orderby pav.DisplayOrder, pav.Id
+                        where pav.ProductAttributeMappingId == productAttributeMappingId
+                        select pav;
             var productAttributeValues = await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
 
             return productAttributeValues;
@@ -300,6 +307,81 @@ namespace Nop.Services.Catalog
         public virtual async Task UpdateProductAttributeValueAsync(ProductAttributeValue productAttributeValue)
         {
             await _productAttributeValueRepository.UpdateAsync(productAttributeValue);
+        }
+
+        #endregion
+
+        #region Product attribute value pictures
+
+        /// <summary>
+        /// Deletes a product attribute value picture
+        /// </summary>
+        /// <param name="value">Product attribute value picture</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task DeleteProductAttributeValuePictureAsync(ProductAttributeValuePicture valuePicture)
+        {
+            await _productAttributeValuePictureRepository.DeleteAsync(valuePicture);
+        }
+
+        /// <summary>
+        /// Inserts a product attribute value picture
+        /// </summary>
+        /// <param name="value">Product attribute value picture</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task InsertProductAttributeValuePictureAsync(ProductAttributeValuePicture valuePicture)
+        {
+            await _productAttributeValuePictureRepository.InsertAsync(valuePicture);
+        }
+
+        /// <summary>
+        /// Updates a product attribute value picture
+        /// </summary>
+        /// <param name="value">Product attribute value picture</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task UpdateProductAttributeValuePictureAsync(ProductAttributeValuePicture valuePicture)
+        {
+            await _productAttributeValuePictureRepository.UpdateAsync(valuePicture);
+        }
+
+        /// <summary>
+        /// Get product attribute value pictures
+        /// </summary>
+        /// <param name="valueId">Value id</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product attribute value pictures
+        /// </returns>
+        public virtual async Task<IList<ProductAttributeValuePicture>> GetProductAttributeValuePicturesAsync(int valueId)
+        {
+            var allCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductAttributeValuePicturesByValueCacheKey, valueId);
+
+            var query = from pacp in _productAttributeValuePictureRepository.Table
+                        join p in _pictureRepository.Table on pacp.PictureId equals p.Id
+                        join pp in _productPictureRepository.Table on p.Id equals pp.PictureId
+                        where pacp.ProductAttributeValueId == valueId
+                        orderby pp.DisplayOrder, pacp.PictureId
+                        select pacp;
+
+            var valuePictures = await _staticCacheManager.GetAsync(allCacheKey, async () => await query.ToListAsync())
+                ?? [];
+
+            return valuePictures;
+        }
+
+        /// <summary>
+        /// Returns a ProductAttributeValuePicture that has the specified values
+        /// </summary>
+        /// <param name="source">Source</param>
+        /// <param name="valueId">Product attribute value identifier</param>
+        /// <param name="pictureId">Picture identifier</param>
+        /// <returns>A ProductAttributeValuePicture that has the specified values; otherwise null</returns>
+        public virtual ProductAttributeValuePicture FindProductAttributeValuePicture(IList<ProductAttributeValuePicture> source, int valueId, int pictureId)
+        {
+            foreach (var valuePicture in source)
+                if (valuePicture.ProductAttributeValueId == valueId && valuePicture.PictureId == pictureId)
+                    return valuePicture;
+
+            return null;
         }
 
         #endregion
@@ -402,8 +484,8 @@ namespace Nop.Services.Catalog
             {
                 return from c in query
                        orderby c.Id
-                    where c.ProductId == productId
-                    select c;
+                       where c.ProductId == productId
+                       select c;
             }, cache => cache.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductAttributeCombinationsByProductCacheKey, productId));
 
             return combinations;
@@ -465,6 +547,81 @@ namespace Nop.Services.Catalog
         public virtual async Task UpdateProductAttributeCombinationAsync(ProductAttributeCombination combination)
         {
             await _productAttributeCombinationRepository.UpdateAsync(combination);
+        }
+
+        #endregion
+
+        #region Product attribute combination pictures
+
+        /// <summary>
+        /// Deletes a product attribute combination picture
+        /// </summary>
+        /// <param name="combination">Product attribute combination picture</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task DeleteProductAttributeCombinationPictureAsync(ProductAttributeCombinationPicture combinationPicture)
+        {
+            await _productAttributeCombinationPictureRepository.DeleteAsync(combinationPicture);
+        }
+
+        /// <summary>
+        /// Inserts a product attribute combination picture
+        /// </summary>
+        /// <param name="combination">Product attribute combination picture</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task InsertProductAttributeCombinationPictureAsync(ProductAttributeCombinationPicture combinationPicture)
+        {
+            await _productAttributeCombinationPictureRepository.InsertAsync(combinationPicture);
+        }
+
+        /// <summary>
+        /// Updates a product attribute combination picture
+        /// </summary>
+        /// <param name="combination">Product attribute combination picture</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task UpdateProductAttributeCombinationPictureAsync(ProductAttributeCombinationPicture combinationPicture)
+        {
+            await _productAttributeCombinationPictureRepository.UpdateAsync(combinationPicture);
+        }
+
+        /// <summary>
+        /// Get product attribute combination pictures
+        /// </summary>
+        /// <param name="combinationId">Combination id</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product attribute combination pictures
+        /// </returns>
+        public virtual async Task<IList<ProductAttributeCombinationPicture>> GetProductAttributeCombinationPicturesAsync(int combinationId)
+        {
+            var allCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductAttributeCombinationPicturesByCombinationCacheKey, combinationId);
+
+            var query = from pacp in _productAttributeCombinationPictureRepository.Table
+                        join p in _pictureRepository.Table on pacp.PictureId equals p.Id
+                        join pp in _productPictureRepository.Table on p.Id equals pp.PictureId
+                        where pacp.ProductAttributeCombinationId == combinationId
+                        orderby pp.DisplayOrder, pacp.PictureId
+                        select pacp;
+
+            var combinationPictures = await _staticCacheManager.GetAsync(allCacheKey, async () => await query.ToListAsync()) 
+                ?? [];
+
+            return combinationPictures;
+        }
+
+        /// <summary>
+        /// Returns a ProductAttributeCombinationPicture that has the specified values
+        /// </summary>
+        /// <param name="source">Source</param>
+        /// <param name="combinationId">Product attribute combination identifier</param>
+        /// <param name="pictureId">Picture identifier</param>
+        /// <returns>A ProductAttributeCombinationPicture that has the specified values; otherwise null</returns>
+        public virtual ProductAttributeCombinationPicture FindProductAttributeCombinationPicture(IList<ProductAttributeCombinationPicture> source, int combinationId, int pictureId)
+        {
+            foreach (var combinationPicture in source)
+                if (combinationPicture.ProductAttributeCombinationId == combinationId && combinationPicture.PictureId == pictureId)
+                    return combinationPicture;
+
+            return null;
         }
 
         #endregion

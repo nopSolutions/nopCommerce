@@ -10,27 +10,27 @@
         /// <summary>
         /// Represents system name of notification about new registration
         /// </summary>
-        public const string CustomerRegisteredStoreOwnerNotification = "NewCustomer.Notification";
+        public const string CUSTOMER_REGISTERED_STORE_OWNER_NOTIFICATION = "NewCustomer.Notification";
 
         /// <summary>
         /// Represents system name of customer welcome message
         /// </summary>
-        public const string CustomerWelcomeMessage = "Customer.WelcomeMessage";
+        public const string CUSTOMER_WELCOME_MESSAGE = "Customer.WelcomeMessage";
 
         /// <summary>
         /// Represents system name of email validation message
         /// </summary>
-        public const string CustomerEmailValidationMessage = "Customer.EmailValidationMessage";
+        public const string CUSTOMER_EMAIL_VALIDATION_MESSAGE = "Customer.EmailValidationMessage";
 
         /// <summary>
         /// Represents system name of email revalidation message
         /// </summary>
-        public const string CustomerEmailRevalidationMessage = "Customer.EmailRevalidationMessage";
+        public const string CUSTOMER_EMAIL_REVALIDATION_MESSAGE = "Customer.EmailRevalidationMessage";
 
         /// <summary>
         /// Represents system name of password recovery message
         /// </summary>
-        public const string CustomerPasswordRecoveryMessage = "Customer.PasswordRecovery";
+        public const string CUSTOMER_PASSWORD_RECOVERY_MESSAGE = "Customer.PasswordRecovery";
 
         #endregion
 
@@ -39,102 +39,102 @@
         /// <summary>
         /// Represents system name of notification vendor about placed order
         /// </summary>
-        public const string OrderPlacedVendorNotification = "OrderPlaced.VendorNotification";
+        public const string ORDER_PLACED_VENDOR_NOTIFICATION = "OrderPlaced.VendorNotification";
 
         /// <summary>
         /// Represents system name of notification store owner about placed order
         /// </summary>
-        public const string OrderPlacedStoreOwnerNotification = "OrderPlaced.StoreOwnerNotification";
+        public const string ORDER_PLACED_STORE_OWNER_NOTIFICATION = "OrderPlaced.StoreOwnerNotification";
 
         /// <summary>
         /// Represents system name of notification affiliate about placed order
         /// </summary>
-        public const string OrderPlacedAffiliateNotification = "OrderPlaced.AffiliateNotification";
+        public const string ORDER_PLACED_AFFILIATE_NOTIFICATION = "OrderPlaced.AffiliateNotification";
 
         /// <summary>
         /// Represents system name of notification store owner about paid order
         /// </summary>
-        public const string OrderPaidStoreOwnerNotification = "OrderPaid.StoreOwnerNotification";
+        public const string ORDER_PAID_STORE_OWNER_NOTIFICATION = "OrderPaid.StoreOwnerNotification";
 
         /// <summary>
         /// Represents system name of notification customer about paid order
         /// </summary>
-        public const string OrderPaidCustomerNotification = "OrderPaid.CustomerNotification";
+        public const string ORDER_PAID_CUSTOMER_NOTIFICATION = "OrderPaid.CustomerNotification";
 
         /// <summary>
         /// Represents system name of notification vendor about paid order
         /// </summary>
-        public const string OrderPaidVendorNotification = "OrderPaid.VendorNotification";
+        public const string ORDER_PAID_VENDOR_NOTIFICATION = "OrderPaid.VendorNotification";
 
         /// <summary>
         /// Represents system name of notification affiliate about paid order
         /// </summary>
-        public const string OrderPaidAffiliateNotification = "OrderPaid.AffiliateNotification";
+        public const string ORDER_PAID_AFFILIATE_NOTIFICATION = "OrderPaid.AffiliateNotification";
 
         /// <summary>
         /// Represents system name of notification customer about placed order
         /// </summary>
-        public const string OrderPlacedCustomerNotification = "OrderPlaced.CustomerNotification";
+        public const string ORDER_PLACED_CUSTOMER_NOTIFICATION = "OrderPlaced.CustomerNotification";
 
         /// <summary>
         /// Represents system name of notification customer about sent shipment
         /// </summary>
-        public const string ShipmentSentCustomerNotification = "ShipmentSent.CustomerNotification";
+        public const string SHIPMENT_SENT_CUSTOMER_NOTIFICATION = "ShipmentSent.CustomerNotification";
 
         /// <summary>
         /// Represents system name of notification customer about ready for pickup shipment
         /// </summary>
-        public const string ShipmentReadyForPickupCustomerNotification = "ShipmentReadyForPickup.CustomerNotification";
+        public const string SHIPMENT_READY_FOR_PICKUP_CUSTOMER_NOTIFICATION = "ShipmentReadyForPickup.CustomerNotification";
 
         /// <summary>
         /// Represents system name of notification customer about delivered shipment
         /// </summary>
-        public const string ShipmentDeliveredCustomerNotification = "ShipmentDelivered.CustomerNotification";
+        public const string SHIPMENT_DELIVERED_CUSTOMER_NOTIFICATION = "ShipmentDelivered.CustomerNotification";
 
         /// <summary>
         /// Represents system name of notification customer about processing order
         /// </summary>
-        public const string OrderProcessingCustomerNotification = "OrderProcessing.CustomerNotification";
+        public const string ORDER_PROCESSING_CUSTOMER_NOTIFICATION = "OrderProcessing.CustomerNotification";
 
         /// <summary>
         /// Represents system name of notification customer about completed order
         /// </summary>
-        public const string OrderCompletedCustomerNotification = "OrderCompleted.CustomerNotification";
+        public const string ORDER_COMPLETED_CUSTOMER_NOTIFICATION = "OrderCompleted.CustomerNotification";
 
         /// <summary>
         /// Represents system name of notification customer about cancelled order
         /// </summary>
-        public const string OrderCancelledCustomerNotification = "OrderCancelled.CustomerNotification";
+        public const string ORDER_CANCELLED_CUSTOMER_NOTIFICATION = "OrderCancelled.CustomerNotification";
 
         /// <summary>
         /// Represents system name of notification store owner about refunded order
         /// </summary>
-        public const string OrderRefundedStoreOwnerNotification = "OrderRefunded.StoreOwnerNotification";
+        public const string ORDER_REFUNDED_STORE_OWNER_NOTIFICATION = "OrderRefunded.StoreOwnerNotification";
 
         /// <summary>
         /// Represents system name of notification customer about refunded order
         /// </summary>
-        public const string OrderRefundedCustomerNotification = "OrderRefunded.CustomerNotification";
+        public const string ORDER_REFUNDED_CUSTOMER_NOTIFICATION = "OrderRefunded.CustomerNotification";
 
         /// <summary>
         /// Represents system name of notification customer about new order note
         /// </summary>
-        public const string NewOrderNoteAddedCustomerNotification = "Customer.NewOrderNote";
+        public const string NEW_ORDER_NOTE_ADDED_CUSTOMER_NOTIFICATION = "Customer.NewOrderNote";
 
         /// <summary>
         /// Represents system name of notification store owner about cancelled recurring order
         /// </summary>
-        public const string RecurringPaymentCancelledStoreOwnerNotification = "RecurringPaymentCancelled.StoreOwnerNotification";
+        public const string RECURRING_PAYMENT_CANCELLED_STORE_OWNER_NOTIFICATION = "RecurringPaymentCancelled.StoreOwnerNotification";
 
         /// <summary>
         /// Represents system name of notification customer about cancelled recurring order
         /// </summary>
-        public const string RecurringPaymentCancelledCustomerNotification = "RecurringPaymentCancelled.CustomerNotification";
+        public const string RECURRING_PAYMENT_CANCELLED_CUSTOMER_NOTIFICATION = "RecurringPaymentCancelled.CustomerNotification";
 
         /// <summary>
         /// Represents system name of notification customer about failed payment for the recurring payments
         /// </summary>
-        public const string RecurringPaymentFailedCustomerNotification = "RecurringPaymentFailed.CustomerNotification";
+        public const string RECURRING_PAYMENT_FAILED_CUSTOMER_NOTIFICATION = "RecurringPaymentFailed.CustomerNotification";
 
         #endregion
 
@@ -143,12 +143,12 @@
         /// <summary>
         /// Represents system name of subscription activation message
         /// </summary>
-        public const string NewsletterSubscriptionActivationMessage = "NewsLetterSubscription.ActivationMessage";
+        public const string NEWSLETTER_SUBSCRIPTION_ACTIVATION_MESSAGE = "NewsLetterSubscription.ActivationMessage";
 
         /// <summary>
         /// Represents system name of subscription deactivation message
         /// </summary>
-        public const string NewsletterSubscriptionDeactivationMessage = "NewsLetterSubscription.DeactivationMessage";
+        public const string NEWSLETTER_SUBSCRIPTION_DEACTIVATION_MESSAGE = "NewsLetterSubscription.DeactivationMessage";
 
         #endregion
 
@@ -157,12 +157,12 @@
         /// <summary>
         /// Represents system name of 'Email a friend' message
         /// </summary>
-        public const string EmailAFriendMessage = "Service.EmailAFriend";
+        public const string EMAIL_A_FRIEND_MESSAGE = "Service.EmailAFriend";
 
         /// <summary>
         /// Represents system name of 'Email a friend' message with wishlist
         /// </summary>
-        public const string WishlistToFriendMessage = "Wishlist.EmailAFriend";
+        public const string WISHLIST_TO_FRIEND_MESSAGE = "Wishlist.EmailAFriend";
 
         #endregion
 
@@ -171,17 +171,17 @@
         /// <summary>
         /// Represents system name of notification store owner about new return request
         /// </summary>
-        public const string NewReturnRequestStoreOwnerNotification = "NewReturnRequest.StoreOwnerNotification";
+        public const string NEW_RETURN_REQUEST_STORE_OWNER_NOTIFICATION = "NewReturnRequest.StoreOwnerNotification";
 
         /// <summary>
         /// Represents system name of notification customer about new return request
         /// </summary>
-        public const string NewReturnRequestCustomerNotification = "NewReturnRequest.CustomerNotification";
+        public const string NEW_RETURN_REQUEST_CUSTOMER_NOTIFICATION = "NewReturnRequest.CustomerNotification";
 
         /// <summary>
         /// Represents system name of notification customer about changing return request status
         /// </summary>
-        public const string ReturnRequestStatusChangedCustomerNotification = "ReturnRequestStatusChanged.CustomerNotification";
+        public const string RETURN_REQUEST_STATUS_CHANGED_CUSTOMER_NOTIFICATION = "ReturnRequestStatusChanged.CustomerNotification";
 
         #endregion
 
@@ -190,17 +190,17 @@
         /// <summary>
         /// Represents system name of notification about new forum topic
         /// </summary>
-        public const string NewForumTopicMessage = "Forums.NewForumTopic";
+        public const string NEW_FORUM_TOPIC_MESSAGE = "Forums.NewForumTopic";
 
         /// <summary>
         /// Represents system name of notification about new forum post
         /// </summary>
-        public const string NewForumPostMessage = "Forums.NewForumPost";
+        public const string NEW_FORUM_POST_MESSAGE = "Forums.NewForumPost";
 
         /// <summary>
         /// Represents system name of notification about new private message
         /// </summary>
-        public const string PrivateMessageNotification = "Customer.NewPM";
+        public const string PRIVATE_MESSAGE_NOTIFICATION = "Customer.NewPM";
 
         #endregion
 
@@ -209,67 +209,67 @@
         /// <summary>
         /// Represents system name of notification store owner about applying new vendor account
         /// </summary>
-        public const string NewVendorAccountApplyStoreOwnerNotification = "VendorAccountApply.StoreOwnerNotification";
+        public const string NEW_VENDOR_ACCOUNT_APPLY_STORE_OWNER_NOTIFICATION = "VendorAccountApply.StoreOwnerNotification";
 
         /// <summary>
         /// Represents system name of notification vendor about changing information
         /// </summary>
-        public const string VendorInformationChangeStoreOwnerNotification = "VendorInformationChange.StoreOwnerNotification";
+        public const string VENDOR_INFORMATION_CHANGE_STORE_OWNER_NOTIFICATION = "VendorInformationChange.StoreOwnerNotification";
 
         /// <summary>
         /// Represents system name of notification about gift card
         /// </summary>
-        public const string GiftCardNotification = "GiftCard.Notification";
+        public const string GIFT_CARD_NOTIFICATION = "GiftCard.Notification";
 
         /// <summary>
         /// Represents system name of notification store owner about new product review
         /// </summary>
-        public const string ProductReviewStoreOwnerNotification = "Product.ProductReview";
+        public const string PRODUCT_REVIEW_STORE_OWNER_NOTIFICATION = "Product.ProductReview";
 
         /// <summary>
         /// Represents system name of notification customer about product review reply
         /// </summary>
-        public const string ProductReviewReplyCustomerNotification = "ProductReview.Reply.CustomerNotification";
+        public const string PRODUCT_REVIEW_REPLY_CUSTOMER_NOTIFICATION = "ProductReview.Reply.CustomerNotification";
 
         /// <summary>
         /// Represents system name of notification store owner about below quantity of product
         /// </summary>
-        public const string QuantityBelowStoreOwnerNotification = "QuantityBelow.StoreOwnerNotification";
+        public const string QUANTITY_BELOW_STORE_OWNER_NOTIFICATION = "QuantityBelow.StoreOwnerNotification";
 
         /// <summary>
         /// Represents system name of notification store owner about below quantity of product attribute combination
         /// </summary>
-        public const string QuantityBelowAttributeCombinationStoreOwnerNotification = "QuantityBelow.AttributeCombination.StoreOwnerNotification";
+        public const string QUANTITY_BELOW_ATTRIBUTE_COMBINATION_STORE_OWNER_NOTIFICATION = "QuantityBelow.AttributeCombination.StoreOwnerNotification";
 
         /// <summary>
         /// Represents system name of notification store owner about submitting new VAT
         /// </summary>
-        public const string NewVatSubmittedStoreOwnerNotification = "NewVATSubmitted.StoreOwnerNotification";
+        public const string NEW_VAT_SUBMITTED_STORE_OWNER_NOTIFICATION = "NewVATSubmitted.StoreOwnerNotification";
 
         /// <summary>
         /// Represents system name of notification store owner about new blog comment
         /// </summary>
-        public const string BlogCommentStoreOwnerNotification = "Blog.BlogComment";
+        public const string BLOG_COMMENT_STORE_OWNER_NOTIFICATION = "Blog.BlogComment";
 
         /// <summary>
         /// Represents system name of notification store owner about new news comment
         /// </summary>
-        public const string NewsCommentStoreOwnerNotification = "News.NewsComment";
+        public const string NEWS_COMMENT_STORE_OWNER_NOTIFICATION = "News.NewsComment";
 
         /// <summary>
         /// Represents system name of notification customer about product receipt
         /// </summary>
-        public const string BackInStockNotification = "Customer.BackInStock";
+        public const string BACK_IN_STOCK_NOTIFICATION = "Customer.BackInStock";
 
         /// <summary>
         /// Represents system name of 'Contact us' message
         /// </summary>
-        public const string ContactUsMessage = "Service.ContactUs";
+        public const string CONTACT_US_MESSAGE = "Service.ContactUs";
 
         /// <summary>
         /// Represents system name of 'Contact vendor' message
         /// </summary>
-        public const string ContactVendorMessage = "Service.ContactVendor";
+        public const string CONTACT_VENDOR_MESSAGE = "Service.ContactVendor";
 
         #endregion
     }

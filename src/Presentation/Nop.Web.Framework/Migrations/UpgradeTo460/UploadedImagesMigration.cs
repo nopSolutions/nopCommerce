@@ -1,7 +1,4 @@
-﻿using System.IO;
-using System.Linq;
-using System.Threading;
-using FluentMigrator;
+﻿using FluentMigrator;
 using Nop.Core.Domain.Media;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -15,9 +12,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
     {
         #region Fields
 
-        private readonly IPictureService _pictureService;
-        private readonly IRepository<Picture> _pictureRepository;
-        private readonly IRoxyFilemanFileProvider _roxyFilemanFileProvider;
+        protected readonly IPictureService _pictureService;
+        protected readonly IRepository<Picture> _pictureRepository;
+        protected readonly IRoxyFilemanFileProvider _roxyFilemanFileProvider;
 
         #endregion
 

@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Messages
 {
@@ -8,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Messages
     {
         public TestMessageTemplateModel()
         {
-            Tokens = new List<string>();
+            Tokens = [];
         }
 
         public int LanguageId { get; set; }

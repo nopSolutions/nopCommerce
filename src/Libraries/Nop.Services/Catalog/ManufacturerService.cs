@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
@@ -22,19 +18,19 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IAclService _aclService;
-        private readonly ICategoryService _categoryService;
-        private readonly ICustomerService _customerService;
-        private readonly IRepository<DiscountManufacturerMapping> _discountManufacturerMappingRepository;
-        private readonly IRepository<Manufacturer> _manufacturerRepository;
-        private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<ProductManufacturer> _productManufacturerRepository;
-        private readonly IRepository<ProductCategory> _productCategoryRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IWorkContext _workContext;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly IAclService _aclService;
+        protected readonly ICategoryService _categoryService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IRepository<DiscountManufacturerMapping> _discountManufacturerMappingRepository;
+        protected readonly IRepository<Manufacturer> _manufacturerRepository;
+        protected readonly IRepository<Product> _productRepository;
+        protected readonly IRepository<ProductManufacturer> _productManufacturerRepository;
+        protected readonly IRepository<ProductCategory> _productCategoryRepository;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 
@@ -80,8 +76,7 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task ClearDiscountManufacturerMappingAsync(Discount discount)
         {
-            if (discount is null)
-                throw new ArgumentNullException(nameof(discount));
+            ArgumentNullException.ThrowIfNull(discount);
 
             var mappings = _discountManufacturerMappingRepository.Table.Where(dcm => dcm.DiscountId == discount.Id);
 
@@ -139,11 +134,14 @@ namespace Nop.Services.Catalog
                 else if (overridePublished.HasValue)
                     query = query.Where(m => m.Published == overridePublished.Value);
 
-                if (!showHidden)
+                if (!showHidden || storeId > 0)
                 {
                     //apply store mapping constraints
                     query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+                }
 
+                if (!showHidden)
+                {
                     //apply ACL constraints
                     var customer = await _workContext.GetCurrentCustomerAsync();
                     query = await _aclService.ApplyAcl(query, customer);
@@ -169,8 +167,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<IList<int>> GetAppliedManufacturerIdsAsync(Discount discount, Customer customer)
         {
-            if (discount == null)
-                throw new ArgumentNullException(nameof(discount));
+            ArgumentNullException.ThrowIfNull(discount);
 
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopDiscountDefaults.ManufacturerIdsByDiscountCacheKey,
                 discount,
@@ -477,18 +474,17 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<string[]> GetNotExistingManufacturersAsync(string[] manufacturerIdsNames)
         {
-            if (manufacturerIdsNames == null)
-                throw new ArgumentNullException(nameof(manufacturerIdsNames));
+            ArgumentNullException.ThrowIfNull(manufacturerIdsNames);
 
-            var query = _manufacturerRepository.Table;
+            var query = _manufacturerRepository.Table;//.Where(m => !m.Deleted);
             var queryFilter = manufacturerIdsNames.Distinct().ToArray();
             //filtering by name
             var filter = query.Select(m => m.Name).Where(m => queryFilter.Contains(m)).ToList();
             queryFilter = queryFilter.Except(filter).ToArray();
 
             //if some names not found
-            if (!queryFilter.Any())
-                return queryFilter.ToArray();
+            if (queryFilter.Length == 0)
+                return [.. queryFilter];
 
             //filtering by IDs
             filter = await query.Select(c => c.Id.ToString())

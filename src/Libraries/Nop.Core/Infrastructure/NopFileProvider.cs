@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.Versioning;
+﻿using System.Runtime.Versioning;
 using System.Security.AccessControl;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.FileProviders;
 
@@ -17,21 +11,29 @@ namespace Nop.Core.Infrastructure
     /// </summary>
     public partial class NopFileProvider : PhysicalFileProvider, INopFileProvider
     {
+        #region Ctor
+
         /// <summary>
         /// Initializes a new instance of a NopFileProvider
         /// </summary>
         /// <param name="webHostEnvironment">Hosting environment</param>
         public NopFileProvider(IWebHostEnvironment webHostEnvironment)
-            : base(File.Exists(webHostEnvironment.ContentRootPath) ? Path.GetDirectoryName(webHostEnvironment.ContentRootPath) : webHostEnvironment.ContentRootPath)
+            : base(File.Exists(webHostEnvironment.ContentRootPath) ? Path.GetDirectoryName(webHostEnvironment.ContentRootPath)! : webHostEnvironment.ContentRootPath)
         {
             WebRootPath = File.Exists(webHostEnvironment.WebRootPath)
                 ? Path.GetDirectoryName(webHostEnvironment.WebRootPath)
                 : webHostEnvironment.WebRootPath;
         }
 
+        #endregion
+
         #region Utilities
 
-        private static void DeleteDirectoryRecursive(string path)
+        /// <summary>
+        /// Depth-first recursive delete
+        /// </summary>
+        /// <param name="path"></param>
+        protected virtual void DeleteDirectoryRecursive(string path)
         {
             Directory.Delete(path, true);
             const int maxIterationToWait = 10;
@@ -44,8 +46,10 @@ namespace Nop.Core.Infrastructure
             while (Directory.Exists(path))
             {
                 curIteration += 1;
+
                 if (curIteration > maxIterationToWait)
                     return;
+
                 Thread.Sleep(100);
             }
         }
@@ -73,7 +77,7 @@ namespace Nop.Core.Infrastructure
         /// <returns>The combined paths</returns>
         public virtual string Combine(params string[] paths)
         {
-            var path = Path.Combine(paths.SelectMany(p => IsUncPath(p) ? new[] { p } : p.Split('\\', '/')).ToArray());
+            var path = Path.Combine(paths.SelectMany(p => IsUncPath(p) ? [p] : p.Split('\\', '/')).ToArray());
 
             if (Environment.OSVersion.Platform == PlatformID.Unix && !IsUncPath(path))
                 //add leading slash to correctly form path in the UNIX system
@@ -260,12 +264,12 @@ namespace Nop.Core.Infrastructure
         {
             var allPaths = new List<string>();
 
-            if (paths.Any() && !paths[0].Contains(WebRootPath, StringComparison.InvariantCulture))
+            if (paths.Length != 0 && !paths[0].Contains(WebRootPath, StringComparison.InvariantCulture))
                 allPaths.Add(WebRootPath);
 
             allPaths.AddRange(paths);
 
-            return Combine(allPaths.ToArray());
+            return Combine([.. allPaths]);
         }
 
         /// <summary>
@@ -521,7 +525,7 @@ namespace Nop.Core.Infrastructure
         /// </returns>
         public virtual async Task<byte[]> ReadAllBytesAsync(string filePath)
         {
-            return File.Exists(filePath) ? await File.ReadAllBytesAsync(filePath) : Array.Empty<byte>();
+            return File.Exists(filePath) ? await File.ReadAllBytesAsync(filePath) : [];
         }
 
         /// <summary>
@@ -594,7 +598,7 @@ namespace Nop.Core.Infrastructure
         /// <summary>Locate a file at the given path.</summary>
         /// <param name="subpath">Relative path that identifies the file.</param>
         /// <returns>The file information. Caller must check Exists property.</returns>
-        public virtual new IFileInfo GetFileInfo(string subpath)
+        public new virtual IFileInfo GetFileInfo(string subpath)
         {
             subpath = subpath.Replace(Root, string.Empty);
 

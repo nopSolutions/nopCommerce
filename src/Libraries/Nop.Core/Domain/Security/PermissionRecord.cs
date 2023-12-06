@@ -14,7 +14,7 @@
         /// Gets or sets the permission system name
         /// </summary>
         public string SystemName { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the permission category
         /// </summary>

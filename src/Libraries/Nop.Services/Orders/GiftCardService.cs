@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Events;
@@ -18,11 +14,11 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IRepository<GiftCard> _giftCardRepository;
-        private readonly IRepository<GiftCardUsageHistory> _giftCardUsageHistoryRepository;
-        private readonly IRepository<OrderItem> _orderItemRepository;
+        protected readonly ICustomerService _customerService;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly IRepository<GiftCard> _giftCardRepository;
+        protected readonly IRepository<GiftCardUsageHistory> _giftCardUsageHistoryRepository;
+        protected readonly IRepository<OrderItem> _orderItemRepository;
         #endregion
 
         #region Ctor
@@ -94,16 +90,16 @@ namespace Nop.Services.Orders
                 if (purchasedWithOrderId.HasValue)
                 {
                     query = from gc in query
-                        join oi in _orderItemRepository.Table on gc.PurchasedWithOrderItemId equals oi.Id
-                        where oi.OrderId == purchasedWithOrderId.Value
-                        select gc;
+                            join oi in _orderItemRepository.Table on gc.PurchasedWithOrderItemId equals oi.Id
+                            where oi.OrderId == purchasedWithOrderId.Value
+                            select gc;
                 }
 
                 if (usedWithOrderId.HasValue)
                     query = from gc in query
-                        join gcuh in _giftCardUsageHistoryRepository.Table on gc.Id equals gcuh.GiftCardId
-                        where gcuh.UsedWithOrderId == usedWithOrderId
-                        select gc;
+                            join gcuh in _giftCardUsageHistoryRepository.Table on gc.Id equals gcuh.GiftCardId
+                            where gcuh.UsedWithOrderId == usedWithOrderId
+                            select gc;
 
                 if (createdFromUtc.HasValue)
                     query = query.Where(gc => createdFromUtc.Value <= gc.CreatedOnUtc);
@@ -221,7 +217,7 @@ namespace Nop.Services.Orders
             var giftCards = await query.Where(bp => giftCardIds.Contains(bp.Id)).ToListAsync();
 
             //event notification
-            foreach (var giftCard in giftCards) 
+            foreach (var giftCard in giftCards)
                 await _eventPublisher.EntityUpdatedAsync(giftCard);
         }
 
@@ -234,8 +230,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<decimal> GetGiftCardRemainingAmountAsync(GiftCard giftCard)
         {
-            if (giftCard == null)
-                throw new ArgumentNullException(nameof(giftCard));
+            ArgumentNullException.ThrowIfNull(giftCard);
 
             var result = giftCard.Amount;
 
@@ -258,8 +253,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<IList<GiftCardUsageHistory>> GetGiftCardUsageHistoryAsync(GiftCard giftCard)
         {
-            if (giftCard is null)
-                throw new ArgumentNullException(nameof(giftCard));
+            ArgumentNullException.ThrowIfNull(giftCard);
 
             return await _giftCardUsageHistoryRepository.Table
                 .Where(gcuh => gcuh.GiftCardId == giftCard.Id)
@@ -276,8 +270,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<IList<GiftCardUsageHistory>> GetGiftCardUsageHistoryAsync(Order order)
         {
-            if (order is null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             return await _giftCardUsageHistoryRepository.Table
                 .Where(gcuh => gcuh.UsedWithOrderId == order.Id)
@@ -304,8 +297,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<bool> IsGiftCardValidAsync(GiftCard giftCard)
         {
-            if (giftCard == null)
-                throw new ArgumentNullException(nameof(giftCard));
+            ArgumentNullException.ThrowIfNull(giftCard);
 
             if (!giftCard.IsGiftCardActivated)
                 return false;

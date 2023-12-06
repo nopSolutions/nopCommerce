@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
@@ -14,14 +12,14 @@ namespace Nop.Web.Components
 {
     public partial class CrossSellProductsViewComponent : NopViewComponent
     {
-        private readonly IAclService _aclService;
-        private readonly IProductModelFactory _productModelFactory;
-        private readonly IProductService _productService;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IWorkContext _workContext;
-        private readonly ShoppingCartSettings _shoppingCartSettings;
+        protected readonly IAclService _aclService;
+        protected readonly IProductModelFactory _productModelFactory;
+        protected readonly IProductService _productService;
+        protected readonly IShoppingCartService _shoppingCartService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly IWorkContext _workContext;
+        protected readonly ShoppingCartSettings _shoppingCartSettings;
 
         public CrossSellProductsViewComponent(IAclService aclService,
             IProductModelFactory productModelFactory,
@@ -55,7 +53,7 @@ namespace Nop.Web.Components
             //visible individually
             .Where(p => p.VisibleIndividually).ToListAsync();
 
-            if (!products.Any())
+            if (products.Count == 0)
                 return Content("");
 
             //Cross-sell products are displayed on the shopping cart page.

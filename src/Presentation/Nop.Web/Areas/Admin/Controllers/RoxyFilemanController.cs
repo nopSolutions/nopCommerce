@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Newtonsoft.Json;
 using Nop.Core;
@@ -20,9 +16,9 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly IPermissionService _permissionService;
-        private readonly IRoxyFilemanService _roxyFilemanService;
-        private readonly IWebHelper _webHelper;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IRoxyFilemanService _roxyFilemanService;
+        protected readonly IWebHelper _webHelper;
 
         #endregion
 
@@ -37,7 +33,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
         protected virtual JsonResult JsonOk()
         {
@@ -312,17 +308,19 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [IgnoreAntiforgeryToken]
         [HttpPost]
-        public virtual async Task<IActionResult> UploadFiles([FromForm]RoxyFilemanUploadModel uploadModel)
+        public virtual async Task<IActionResult> UploadFiles([FromForm] RoxyFilemanUploadModel uploadModel)
         {
             try
             {
                 if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures))
                     throw new Exception("You don't have required permission");
 
-                if (HttpContext.Request.Form.Files.Count == 0)
+                var form = await HttpContext.Request.ReadFormAsync();
+
+                if (form.Files.Count == 0)
                     throw new RoxyFilemanException("E_UploadNoFiles");
 
-                await _roxyFilemanService.UploadFilesAsync(uploadModel.D, HttpContext.Request.Form.Files);
+                await _roxyFilemanService.UploadFilesAsync(uploadModel.D, form.Files);
 
                 return JsonOk();
             }

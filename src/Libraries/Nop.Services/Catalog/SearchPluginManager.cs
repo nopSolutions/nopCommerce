@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Catalog;
+﻿﻿using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Customers;
 using Nop.Services.Plugins;
@@ -15,7 +12,7 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
+        protected readonly CatalogSettings _catalogSettings;
 
         #endregion
 
@@ -55,7 +52,7 @@ namespace Nop.Services.Catalog
         /// <returns>Result</returns>
         public virtual bool IsPluginActive(ISearchProvider searchProvider)
         {
-            return IsPluginActive(searchProvider, new List<string> { _catalogSettings.ActiveSearchProviderSystemName });
+            return IsPluginActive(searchProvider, [_catalogSettings.ActiveSearchProviderSystemName]);
         }
 
         /// <summary>

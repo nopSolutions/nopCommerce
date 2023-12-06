@@ -1,6 +1,5 @@
 ﻿using Nop.Core.Domain.Security;
 using Nop.Services.Caching;
-using System.Threading.Tasks;
 
 namespace Nop.Services.Security.Caching
 {

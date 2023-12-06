@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
+﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -13,7 +9,9 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Stores;
+using Nop.Core.Events;
 using Nop.Data;
+using Nop.Services.Attributes;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -35,34 +33,36 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IAclService _aclService;
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly ICheckoutAttributeParser _checkoutAttributeParser;
-        private readonly ICheckoutAttributeService _checkoutAttributeService;
-        private readonly ICurrencyService _currencyService;
-        private readonly ICustomerService _customerService;
-        private readonly IDateRangeService _dateRangeService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IPriceCalculationService _priceCalculationService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IProductAttributeService _productAttributeService;
-        private readonly IProductService _productService;
-        private readonly IRepository<ShoppingCartItem> _sciRepository;
-        private readonly IShippingService _shippingService;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreService _storeService;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IWorkContext _workContext;
-        private readonly OrderSettings _orderSettings;
-        private readonly ShoppingCartSettings _shoppingCartSettings;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly IAclService _aclService;
+        protected readonly IActionContextAccessor _actionContextAccessor;
+        protected readonly IAttributeParser<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeParser;
+        protected readonly IAttributeService<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeService;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IDateRangeService _dateRangeService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IPriceCalculationService _priceCalculationService;
+        protected readonly IPriceFormatter _priceFormatter;
+        protected readonly IProductAttributeParser _productAttributeParser;
+        protected readonly IProductAttributeService _productAttributeService;
+        protected readonly IProductService _productService;
+        protected readonly IRepository<ShoppingCartItem> _sciRepository;
+        protected readonly IShippingService _shippingService;
+        protected readonly IShortTermCacheManager _shortTermCacheManager;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreService _storeService;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly IUrlHelperFactory _urlHelperFactory;
+        protected readonly IUrlRecordService _urlRecordService;
+        protected readonly IWorkContext _workContext;
+        protected readonly OrderSettings _orderSettings;
+        protected readonly ShoppingCartSettings _shoppingCartSettings;
 
         #endregion
 
@@ -71,12 +71,13 @@ namespace Nop.Services.Orders
         public ShoppingCartService(CatalogSettings catalogSettings,
             IAclService aclService,
             IActionContextAccessor actionContextAccessor,
-            ICheckoutAttributeParser checkoutAttributeParser,
-            ICheckoutAttributeService checkoutAttributeService,
+            IAttributeParser<CheckoutAttribute, CheckoutAttributeValue> checkoutAttributeParser,
+            IAttributeService<CheckoutAttribute, CheckoutAttributeValue> checkoutAttributeService,
             ICurrencyService currencyService,
             ICustomerService customerService,
             IDateRangeService dateRangeService,
             IDateTimeHelper dateTimeHelper,
+            IEventPublisher eventPublisher,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IPermissionService permissionService,
@@ -87,6 +88,7 @@ namespace Nop.Services.Orders
             IProductService productService,
             IRepository<ShoppingCartItem> sciRepository,
             IShippingService shippingService,
+            IShortTermCacheManager shortTermCacheManager,
             IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
             IStoreService storeService,
@@ -106,6 +108,7 @@ namespace Nop.Services.Orders
             _customerService = customerService;
             _dateRangeService = dateRangeService;
             _dateTimeHelper = dateTimeHelper;
+            _eventPublisher = eventPublisher;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
             _permissionService = permissionService;
@@ -116,6 +119,7 @@ namespace Nop.Services.Orders
             _productService = productService;
             _sciRepository = sciRepository;
             _shippingService = shippingService;
+            _shortTermCacheManager = shortTermCacheManager;
             _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
             _storeService = storeService;
@@ -217,11 +221,9 @@ namespace Nop.Services.Orders
         protected virtual async Task<IList<string>> GetRequiredProductWarningsAsync(Customer customer, ShoppingCartType shoppingCartType, Product product,
             int storeId, int quantity, bool addRequiredProducts, int shoppingCartItemId)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             var warnings = new List<string>();
 
@@ -319,11 +321,9 @@ namespace Nop.Services.Orders
         protected virtual async Task<IList<string>> GetStandardWarningsAsync(Customer customer, ShoppingCartType shoppingCartType, Product product,
             string attributesXml, decimal customerEnteredPrice, int quantity, int shoppingCartItemId, int storeId)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             var warnings = new List<string>();
 
@@ -428,7 +428,7 @@ namespace Nop.Services.Orders
 
                             warnings.AddRange(await GetQuantityProductWarningsAsync(product, quantity, maximumQuantityCanBeAdded));
 
-                            if (warnings.Any())
+                            if (warnings.Count != 0)
                                 return warnings;
 
                             //validate product quantity with non combinable product attributes
@@ -460,7 +460,7 @@ namespace Nop.Services.Orders
                                 }
                             }
 
-                            if (warnings.Any())
+                            if (warnings.Count != 0)
                                 return warnings;
 
                             //validate product quantity and product quantity into bundles
@@ -552,8 +552,7 @@ namespace Nop.Services.Orders
         /// </returns>
         protected virtual async Task<IList<string>> GetQuantityProductWarningsAsync(Product product, int quantity, int maximumQuantityCanBeAdded)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             var warnings = new List<string>();
 
@@ -588,8 +587,7 @@ namespace Nop.Services.Orders
         public virtual async Task DeleteShoppingCartItemAsync(ShoppingCartItem shoppingCartItem, bool resetCheckoutData = true,
             bool ensureOnlyActiveCheckoutAttributes = false)
         {
-            if (shoppingCartItem == null)
-                throw new ArgumentNullException(nameof(shoppingCartItem));
+            ArgumentNullException.ThrowIfNull(shoppingCartItem);
 
             var customer = await _customerService.GetCustomerByIdAsync(shoppingCartItem.CustomerId);
             var storeId = shoppingCartItem.StoreId;
@@ -602,8 +600,12 @@ namespace Nop.Services.Orders
             await _sciRepository.DeleteAsync(shoppingCartItem);
 
             //reset "HasShoppingCartItems" property used for performance optimization
-            customer.HasShoppingCartItems = !IsCustomerShoppingCartEmpty(customer);
-            await _customerService.UpdateCustomerAsync(customer);
+            var hasShoppingCartItems = !IsCustomerShoppingCartEmpty(customer);
+            if (hasShoppingCartItems != customer.HasShoppingCartItems)
+            {
+                customer.HasShoppingCartItems = hasShoppingCartItems;
+                await _customerService.UpdateCustomerAsync(customer);
+            }
 
             //validate checkout attributes
             if (ensureOnlyActiveCheckoutAttributes &&
@@ -643,6 +645,31 @@ namespace Nop.Services.Orders
                 await UpdateShoppingCartItemAsync(customer, cartItem.Id, cartItem.AttributesXml, cartItem.CustomerEnteredPrice,
                     quantity: cartItem.Quantity - shoppingCartItem.Quantity * requiredProductQuantity,
                     resetCheckoutData: false);
+            }
+        }
+
+        /// <summary>
+        /// Clear shopping cart
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="storeId">Store ID</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task ClearShoppingCartAsync(Customer customer, int storeId)
+        {
+            ArgumentNullException.ThrowIfNull(customer);
+
+            var cart = await GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, storeId);
+
+            //delete items
+            await _sciRepository.DeleteAsync(cart, publishEvent: false);
+            await _eventPublisher.PublishAsync(new ClearShoppingCartEvent(cart));
+
+            //reset "HasShoppingCartItems" property used for performance optimization
+            var hasShoppingCartItems = !IsCustomerShoppingCartEmpty(customer);
+            if (hasShoppingCartItems != customer.HasShoppingCartItems)
+            {
+                customer.HasShoppingCartItems = hasShoppingCartItems;
+                await _customerService.UpdateCustomerAsync(customer);
             }
         }
 
@@ -694,11 +721,9 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<IList<Product>> GetProductsRequiringProductAsync(IList<ShoppingCartItem> cart, Product product)
         {
-            if (cart is null)
-                throw new ArgumentNullException(nameof(cart));
+            ArgumentNullException.ThrowIfNull(cart);
 
-            if (product is null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             if (cart.Count == 0)
                 return new List<Product>();
@@ -728,8 +753,7 @@ namespace Nop.Services.Orders
         public virtual async Task<IList<ShoppingCartItem>> GetShoppingCartAsync(Customer customer, ShoppingCartType? shoppingCartType = null,
             int storeId = 0, int? productId = null, DateTime? createdFromUtc = null, DateTime? createdToUtc = null)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             var items = _sciRepository.Table.Where(sci => sci.CustomerId == customer.Id);
 
@@ -751,9 +775,7 @@ namespace Nop.Services.Orders
             if (createdToUtc.HasValue)
                 items = items.Where(item => createdToUtc.Value >= item.CreatedOnUtc);
 
-            var key = _staticCacheManager.PrepareKeyForShortTermCache(NopOrderDefaults.ShoppingCartItemsAllCacheKey, customer, shoppingCartType, storeId, productId, createdFromUtc, createdToUtc);
-
-            return await _staticCacheManager.GetAsync(key, async () => await items.ToListAsync());
+            return await _shortTermCacheManager.GetAsync(async () => await items.ToListAsync(), NopOrderDefaults.ShoppingCartItemsAllCacheKey, customer, shoppingCartType, storeId, productId, createdFromUtc, createdToUtc);
         }
 
         /// <summary>
@@ -782,8 +804,7 @@ namespace Nop.Services.Orders
             bool ignoreBundledProducts = false,
             int shoppingCartItemId = 0)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             var warnings = new List<string>();
 
@@ -925,7 +946,7 @@ namespace Nop.Services.Orders
                 }
             }
 
-            if (warnings.Any() || ignoreBundledProducts)
+            if (warnings.Count != 0 || ignoreBundledProducts)
                 return warnings;
 
             //validate bundled products
@@ -983,8 +1004,7 @@ namespace Nop.Services.Orders
         public virtual async Task<IList<string>> GetShoppingCartItemGiftCardWarningsAsync(ShoppingCartType shoppingCartType,
             Product product, string attributesXml)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             var warnings = new List<string>();
 
@@ -1030,8 +1050,7 @@ namespace Nop.Services.Orders
         public virtual async Task<IList<string>> GetRentalProductWarningsAsync(Product product,
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             var warnings = new List<string>();
 
@@ -1107,8 +1126,7 @@ namespace Nop.Services.Orders
             bool getGiftCardWarnings = true, bool getRequiredProductWarnings = true,
             bool getRentalWarnings = true)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             var warnings = new List<string>();
 
@@ -1153,7 +1171,7 @@ namespace Nop.Services.Orders
             if (shoppingCart.Count > _shoppingCartSettings.MaximumShoppingCartItems)
                 warnings.Add(string.Format(await _localizationService.GetResourceAsync("ShoppingCart.MaximumShoppingCartItems"), _shoppingCartSettings.MaximumShoppingCartItems));
 
-            var hasStandartProducts = false;
+            var hasStandardProducts = false;
             var hasRecurringProducts = false;
 
             foreach (var sci in shoppingCart)
@@ -1168,11 +1186,11 @@ namespace Nop.Services.Orders
                 if (product.IsRecurring)
                     hasRecurringProducts = true;
                 else
-                    hasStandartProducts = true;
+                    hasStandardProducts = true;
             }
 
             //don't mix standard and recurring products
-            if (hasStandartProducts && hasRecurringProducts)
+            if (hasStandardProducts && hasRecurringProducts)
                 warnings.Add(await _localizationService.GetResourceAsync("ShoppingCart.CannotMixStandardAndAutoshipProducts"));
 
             //recurring cart validation
@@ -1191,17 +1209,17 @@ namespace Nop.Services.Orders
                 return warnings;
 
             //selected attributes
-            var attributes1 = await _checkoutAttributeParser.ParseCheckoutAttributesAsync(checkoutAttributesXml);
+            var attributes1 = await _checkoutAttributeParser.ParseAttributesAsync(checkoutAttributesXml);
 
             //existing checkout attributes
             var excludeShippableAttributes = !await ShoppingCartRequiresShippingAsync(shoppingCart);
             var store = await _storeContext.GetCurrentStoreAsync();
-            var attributes2 = await _checkoutAttributeService.GetAllCheckoutAttributesAsync(store.Id, excludeShippableAttributes);
+            var attributes2 = await _checkoutAttributeService.GetAllAttributesAsync(_staticCacheManager, _storeMappingService, store.Id, excludeShippableAttributes);
 
             //validate conditional attributes only (if specified)
             attributes2 = await attributes2.WhereAwait(async x =>
             {
-                var conditionMet = await _checkoutAttributeParser.IsConditionMetAsync(x, checkoutAttributesXml);
+                var conditionMet = await _checkoutAttributeParser.IsConditionMetAsync(x.ConditionAttributeXml, checkoutAttributesXml);
                 return !conditionMet.HasValue || conditionMet.Value;
             }).ToListAsync();
 
@@ -1287,8 +1305,7 @@ namespace Nop.Services.Orders
         public virtual async Task<(decimal subTotal, decimal discountAmount, List<Discount> appliedDiscounts, int? maximumDiscountQty)> GetSubTotalAsync(ShoppingCartItem shoppingCartItem,
             bool includeDiscounts)
         {
-            if (shoppingCartItem == null)
-                throw new ArgumentNullException(nameof(shoppingCartItem));
+            ArgumentNullException.ThrowIfNull(shoppingCartItem);
 
             decimal subTotal;
             int? maximumDiscountQty = null;
@@ -1297,7 +1314,7 @@ namespace Nop.Services.Orders
             var (unitPrice, discountAmount, appliedDiscounts) = await GetUnitPriceAsync(shoppingCartItem, includeDiscounts);
 
             //discount
-            if (appliedDiscounts.Any())
+            if (appliedDiscounts.Count != 0)
             {
                 //we can properly use "MaximumDiscountedQuantity" property only for one discount (not cumulative ones)
                 Discount oneAndOnlyDiscount = null;
@@ -1348,8 +1365,7 @@ namespace Nop.Services.Orders
         public virtual async Task<(decimal unitPrice, decimal discountAmount, List<Discount> appliedDiscounts)> GetUnitPriceAsync(ShoppingCartItem shoppingCartItem,
             bool includeDiscounts)
         {
-            if (shoppingCartItem == null)
-                throw new ArgumentNullException(nameof(shoppingCartItem));
+            ArgumentNullException.ThrowIfNull(shoppingCartItem);
 
             var customer = await _customerService.GetCustomerByIdAsync(shoppingCartItem.CustomerId);
             var product = await _productService.GetProductByIdAsync(shoppingCartItem.ProductId);
@@ -1394,11 +1410,9 @@ namespace Nop.Services.Orders
             DateTime? rentalStartDate, DateTime? rentalEndDate,
             bool includeDiscounts)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             var discountAmount = decimal.Zero;
             var appliedDiscounts = new List<Discount>();
@@ -1501,11 +1515,9 @@ namespace Nop.Services.Orders
             DateTime? rentalStartDate = null,
             DateTime? rentalEndDate = null)
         {
-            if (shoppingCart == null)
-                throw new ArgumentNullException(nameof(shoppingCart));
+            ArgumentNullException.ThrowIfNull(shoppingCart);
 
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             return await shoppingCart.Where(sci => sci.ShoppingCartType == shoppingCartType)
                 .FirstOrDefaultAwaitAsync(async sci => await ShoppingCartItemIsEqualAsync(sci, product, attributesXml, customerEnteredPrice, rentalStartDate, rentalEndDate));
@@ -1534,11 +1546,9 @@ namespace Nop.Services.Orders
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
             int quantity = 1, bool addRequiredProducts = true)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             var warnings = new List<string>();
             if (shoppingCartType == ShoppingCartType.ShoppingCart && !await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableShoppingCart, customer))
@@ -1578,17 +1588,18 @@ namespace Nop.Services.Orders
             {
                 //update existing shopping cart item
                 var newQuantity = shoppingCartItem.Quantity + quantity;
+
+                await addRequiredProductsToCartAsync(newQuantity);
+
+                if (warnings.Count != 0)
+                    return warnings;
+
                 warnings.AddRange(await GetShoppingCartItemWarningsAsync(customer, shoppingCartType, product,
                     storeId, attributesXml,
                     customerEnteredPrice, rentalStartDate, rentalEndDate,
                     newQuantity, addRequiredProducts, shoppingCartItem.Id));
 
-                if (warnings.Any())
-                    return warnings;
-
-                await addRequiredProductsToCartAsync();
-
-                if (warnings.Any())
+                if (warnings.Count != 0)
                     return warnings;
 
                 shoppingCartItem.AttributesXml = attributesXml;
@@ -1605,12 +1616,12 @@ namespace Nop.Services.Orders
                     rentalStartDate, rentalEndDate,
                     quantity, addRequiredProducts));
 
-                if (warnings.Any())
+                if (warnings.Count != 0)
                     return warnings;
 
                 await addRequiredProductsToCartAsync();
 
-                if (warnings.Any())
+                if (warnings.Count != 0)
                     return warnings;
 
                 //maximum items validation
@@ -1655,14 +1666,17 @@ namespace Nop.Services.Orders
                 await _sciRepository.InsertAsync(shoppingCartItem);
 
                 //updated "HasShoppingCartItems" property used for performance optimization
-                customer.HasShoppingCartItems = !IsCustomerShoppingCartEmpty(customer);
-
-                await _customerService.UpdateCustomerAsync(customer);
+                var hasShoppingCartItems = !IsCustomerShoppingCartEmpty(customer);
+                if (hasShoppingCartItems != customer.HasShoppingCartItems)
+                {
+                    customer.HasShoppingCartItems = hasShoppingCartItems;
+                    await _customerService.UpdateCustomerAsync(customer);
+                }
             }
 
             return warnings;
 
-            async Task addRequiredProductsToCartAsync()
+            async Task addRequiredProductsToCartAsync(int qty = 0)
             {
                 //get these required products
                 var requiredProducts = await _productService.GetProductsByIdsAsync(_productService.ParseRequiredProductIds(product));
@@ -1674,7 +1688,7 @@ namespace Nop.Services.Orders
                     var productsRequiringRequiredProduct = await GetProductsRequiringProductAsync(cart, requiredProduct);
 
                     //get the required quantity of the required product
-                    var requiredProductRequiredQuantity = quantity +
+                    var requiredProductRequiredQuantity = (qty > 0 ? qty : quantity) +
                         cart.Where(ci => productsRequiringRequiredProduct.Any(p => p.Id == ci.ProductId))
                             .Where(item => item.Id != (shoppingCartItem?.Id ?? 0))
                             .Sum(item => item.Quantity);
@@ -1721,8 +1735,7 @@ namespace Nop.Services.Orders
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
             int quantity = 1, bool resetCheckoutData = true)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             var warnings = new List<string>();
 
@@ -1746,7 +1759,7 @@ namespace Nop.Services.Orders
                     product, shoppingCartItem.StoreId,
                     attributesXml, customerEnteredPrice,
                     rentalStartDate, rentalEndDate, quantity, false, shoppingCartItemId));
-                if (warnings.Any())
+                if (warnings.Count != 0)
                     return warnings;
 
                 //if everything is OK, then update a shopping cart item
@@ -1758,14 +1771,13 @@ namespace Nop.Services.Orders
                 shoppingCartItem.UpdatedOnUtc = DateTime.UtcNow;
 
                 await _sciRepository.UpdateAsync(shoppingCartItem);
-                await _customerService.UpdateCustomerAsync(customer);
             }
             else
             {
                 //check warnings for required products
                 warnings.AddRange(await GetRequiredProductWarningsAsync(customer, shoppingCartItem.ShoppingCartType,
                     product, shoppingCartItem.StoreId, quantity, false, shoppingCartItemId));
-                if (warnings.Any())
+                if (warnings.Count != 0)
                     return warnings;
 
                 //delete a shopping cart item
@@ -1784,10 +1796,8 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task MigrateShoppingCartAsync(Customer fromCustomer, Customer toCustomer, bool includeCouponCodes)
         {
-            if (fromCustomer == null)
-                throw new ArgumentNullException(nameof(fromCustomer));
-            if (toCustomer == null)
-                throw new ArgumentNullException(nameof(toCustomer));
+            ArgumentNullException.ThrowIfNull(fromCustomer);
+            ArgumentNullException.ThrowIfNull(toCustomer);
 
             if (fromCustomer.Id == toCustomer.Id)
                 return; //the same customer
@@ -1821,9 +1831,6 @@ namespace Nop.Services.Orders
                 //gift card
                 foreach (var code in await _customerService.ParseAppliedGiftCardCouponCodesAsync(fromCustomer))
                     await _customerService.ApplyGiftCardCouponCodeAsync(toCustomer, code);
-
-                //save customer
-                await _customerService.UpdateCustomerAsync(toCustomer);
             }
 
             //move selected checkout attributes
@@ -1855,8 +1862,7 @@ namespace Nop.Services.Orders
         /// </returns>
         public virtual async Task<bool> ShoppingCartIsRecurringAsync(IList<ShoppingCartItem> shoppingCart)
         {
-            if (shoppingCart is null)
-                throw new ArgumentNullException(nameof(shoppingCart));
+            ArgumentNullException.ThrowIfNull(shoppingCart);
 
             if (!shoppingCart.Any())
                 return false;
@@ -1882,18 +1888,14 @@ namespace Nop.Services.Orders
             RecurringProductCyclePeriod? cyclePeriod = null;
             int? totalCycles = null;
 
+            var conflictError = await _localizationService.GetResourceAsync("ShoppingCart.ConflictingShipmentSchedules");
+
             foreach (var sci in shoppingCart)
             {
-                var product = await _productService.GetProductByIdAsync(sci.ProductId);
-                if (product == null)
-                {
-                    throw new NopException($"Product (Id={sci.ProductId}) cannot be loaded");
-                }
+                var product = await _productService.GetProductByIdAsync(sci.ProductId) ?? throw new NopException($"Product (Id={sci.ProductId}) cannot be loaded");
 
                 if (!product.IsRecurring)
                     continue;
-
-                var conflictError = await _localizationService.GetResourceAsync("ShoppingCart.ConflictingShipmentSchedules");
 
                 //cycle length
                 if (cycleLength.HasValue && cycleLength.Value != product.RecurringCycleLength)

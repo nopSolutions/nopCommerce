@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 
 namespace Nop.Web.Framework.Models.Extensions
 {
@@ -55,8 +51,7 @@ namespace Nop.Web.Framework.Models.Extensions
             where TListModel : BasePagedListModel<TModel>
             where TModel : BaseNopModel
         {
-            if (listModel == null)
-                throw new ArgumentNullException(nameof(listModel));
+            ArgumentNullException.ThrowIfNull(listModel);
 
             listModel.Data = dataFillFunction?.Invoke();
             listModel.Draw = searchModel?.Draw;
@@ -85,8 +80,7 @@ namespace Nop.Web.Framework.Models.Extensions
             where TListModel : BasePagedListModel<TModel>
             where TModel : BaseNopModel
         {
-            if (listModel == null)
-                throw new ArgumentNullException(nameof(listModel));
+            ArgumentNullException.ThrowIfNull(listModel);
 
             listModel.Data = await (dataFillFunction?.Invoke()).ToListAsync();
             listModel.Draw = searchModel?.Draw;

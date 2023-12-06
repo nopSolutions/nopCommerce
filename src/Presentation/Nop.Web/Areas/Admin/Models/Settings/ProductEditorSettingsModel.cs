@@ -1,5 +1,5 @@
-﻿using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
@@ -105,9 +105,6 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.DeliveryDate")]
         public bool DeliveryDate { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.TelecommunicationsBroadcastingElectronicServices")]
-        public bool TelecommunicationsBroadcastingElectronicServices { get; set; }
-
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.ProductAvailabilityRange")]
         public bool ProductAvailabilityRange { get; set; }
 
@@ -147,6 +144,9 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.AllowAddingOnlyExistingAttributeCombinations")]
         public bool AllowAddingOnlyExistingAttributeCombinations { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.DisplayAttributeCombinationImagesOnly")]
+        public bool DisplayAttributeCombinationImagesOnly { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.NotReturnable")]
         public bool NotReturnable { get; set; }
 
@@ -167,7 +167,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.Published")]
         public bool Published { get; set; }
-        
+
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.RelatedProducts")]
         public bool RelatedProducts { get; set; }
 
@@ -179,7 +179,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.PurchasedWithOrders")]
         public bool PurchasedWithOrders { get; set; }
-       
+
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.ProductAttributes")]
         public bool ProductAttributes { get; set; }
 

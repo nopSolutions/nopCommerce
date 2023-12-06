@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
 using Nop.Data;
@@ -23,7 +20,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         public ValidateVendorAttribute(bool ignore = false) : base(typeof(ValidateVendorFilter))
         {
             IgnoreFilter = ignore;
-            Arguments = new object[] { ignore };
+            Arguments = [ignore];
         }
 
         #endregion
@@ -46,9 +43,9 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Fields
 
-            private readonly bool _ignoreFilter;
-            private readonly ICustomerService _customerService;
-            private readonly IWorkContext _workContext;
+            protected readonly bool _ignoreFilter;
+            protected readonly ICustomerService _customerService;
+            protected readonly IWorkContext _workContext;
 
             #endregion
 
@@ -72,8 +69,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <returns>A task that represents the asynchronous operation</returns>
             private async Task ValidateVendorAsync(AuthorizationFilterContext context)
             {
-                if (context == null)
-                    throw new ArgumentNullException(nameof(context));
+                ArgumentNullException.ThrowIfNull(context);
 
                 if (!DataSettingsManager.IsDatabaseInstalled())
                     return;

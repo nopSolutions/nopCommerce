@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Customers
 {
@@ -27,7 +25,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
             AvailableCountries = new List<SelectListItem>();
             AvailableStates = new List<SelectListItem>();
             AvailableVendors = new List<SelectListItem>();
-            CustomerAttributes = new List<CustomerAttributeModel>();
+            CustomerAttributes = [];
             AvailableNewsletterSubscriptionStores = new List<SelectListItem>();
             SelectedNewsletterSubscriptionStoreIds = new List<int>();
             AddRewardPoints = new AddRewardPointsToCustomerModel();
@@ -67,6 +65,8 @@ namespace Nop.Web.Areas.Admin.Models.Customers
 
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Gender")]
         public string Gender { get; set; }
+
+        public bool NeutralGenderEnabled { get; set; }
 
         public bool FirstNameEnabled { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.FirstName")]
@@ -237,7 +237,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
 
         //GDPR enabled
         public bool GdprEnabled { get; set; }
-        
+
         public string AvatarUrl { get; internal set; }
 
         public CustomerAddressSearchModel CustomerAddressSearchModel { get; set; }

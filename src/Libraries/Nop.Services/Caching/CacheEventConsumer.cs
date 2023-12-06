@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Events;
 using Nop.Core.Infrastructure;
@@ -19,6 +18,7 @@ namespace Nop.Services.Caching
     {
         #region Fields
 
+        protected readonly IShortTermCacheManager _shortTermCacheManager;
         protected readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
@@ -27,6 +27,7 @@ namespace Nop.Services.Caching
 
         protected CacheEventConsumer()
         {
+            _shortTermCacheManager = EngineContext.Current.Resolve<IShortTermCacheManager>();
             _staticCacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
         }
 
@@ -69,6 +70,7 @@ namespace Nop.Services.Caching
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task RemoveByPrefixAsync(string prefix, params object[] prefixParameters)
         {
+            _shortTermCacheManager.RemoveByPrefix(prefix, prefixParameters);
             await _staticCacheManager.RemoveByPrefixAsync(prefix, prefixParameters);
         }
 
@@ -80,6 +82,7 @@ namespace Nop.Services.Caching
         /// <returns>A task that represents the asynchronous operation</returns>
         public async Task RemoveAsync(CacheKey cacheKey, params object[] cacheKeyParameters)
         {
+            _shortTermCacheManager.Remove(cacheKey.Key, cacheKeyParameters);
             await _staticCacheManager.RemoveAsync(cacheKey, cacheKeyParameters);
         }
 

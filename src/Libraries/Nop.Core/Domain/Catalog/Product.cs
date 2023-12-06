@@ -1,5 +1,4 @@
-﻿using System;
-using Nop.Core.Domain.Common;
+﻿using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
@@ -278,12 +277,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the tax category identifier
         /// </summary>
-        public int TaxCategoryId { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the product is telecommunications or broadcasting or electronic services
-        /// </summary>
-        public bool IsTelecommunicationsOrBroadcastingOrElectronicServices { get; set; }
+        public int TaxCategoryId { get; set; }        
 
         /// <summary>
         /// Gets or sets a value indicating how to manage inventory
@@ -365,6 +359,11 @@ namespace Nop.Core.Domain.Catalog
         /// This option is used only when we have "manage inventory" set to "track inventory by product attributes"
         /// </summary>
         public bool AllowAddingOnlyExistingAttributeCombinations { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to display attribute combination images only
+        /// </summary>
+        public bool DisplayAttributeCombinationImagesOnly { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this product is returnable (a customer is allowed to submit return request with this product)

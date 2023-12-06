@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Nop.Core.Domain.Polls
+﻿namespace Nop.Core.Domain.Polls
 {
     /// <summary>
     /// Represents a poll voting record

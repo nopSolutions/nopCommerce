@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
@@ -17,6 +13,7 @@ using Nop.Services.Html;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Web.Framework.Extensions;
+using Nop.Web.Infrastructure;
 using Nop.Web.Models.Boards;
 using Nop.Web.Models.Common;
 
@@ -29,19 +26,19 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly CaptchaSettings _captchaSettings;
-        private readonly CustomerSettings _customerSettings;
-        private readonly ForumSettings _forumSettings;
-        private readonly IBBCodeHelper _bbCodeHelper;
-        private readonly ICountryService _countryService;
-        private readonly ICustomerService _customerService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IForumService _forumService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPictureService _pictureService;
-        private readonly IWorkContext _workContext;
-        private readonly MediaSettings _mediaSettings;
+        protected readonly CaptchaSettings _captchaSettings;
+        protected readonly CustomerSettings _customerSettings;
+        protected readonly ForumSettings _forumSettings;
+        protected readonly IBBCodeHelper _bbCodeHelper;
+        protected readonly ICountryService _countryService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly IForumService _forumService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IPictureService _pictureService;
+        protected readonly IWorkContext _workContext;
+        protected readonly MediaSettings _mediaSettings;
 
         #endregion
 
@@ -91,20 +88,17 @@ namespace Nop.Web.Factories
         {
             var list = new List<SelectListItem>
             {
-                new SelectListItem
-                {
+                new() {
                     Text = await _localizationService.GetResourceAsync("Forum.Normal"),
                     Value = ((int)ForumTopicType.Normal).ToString()
                 },
 
-                new SelectListItem
-                {
+                new() {
                     Text = await _localizationService.GetResourceAsync("Forum.Sticky"),
                     Value = ((int)ForumTopicType.Sticky).ToString()
                 },
 
-                new SelectListItem
-                {
+                new() {
                     Text = await _localizationService.GetResourceAsync("Forum.Announcement"),
                     Value = ((int)ForumTopicType.Announcement).ToString()
                 }
@@ -140,7 +134,7 @@ namespace Nop.Web.Factories
 
             return forumsList;
         }
-        
+
         #endregion
 
         #region Methods
@@ -155,8 +149,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<ForumGroupModel> PrepareForumGroupModelAsync(ForumGroup forumGroup)
         {
-            if (forumGroup == null)
-                throw new ArgumentNullException(nameof(forumGroup));
+            ArgumentNullException.ThrowIfNull(forumGroup);
 
             var forumGroupModel = new ForumGroupModel
             {
@@ -266,8 +259,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<ForumPageModel> PrepareForumPageModelAsync(Forum forum, int page)
         {
-            if (forum == null)
-                throw new ArgumentNullException(nameof(forum));
+            ArgumentNullException.ThrowIfNull(forum);
 
             var model = new ForumPageModel
             {
@@ -320,8 +312,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<ForumTopicPageModel> PrepareForumTopicPageModelAsync(ForumTopic forumTopic, int page)
         {
-            if (forumTopic == null)
-                throw new ArgumentNullException(nameof(forumTopic));
+            ArgumentNullException.ThrowIfNull(forumTopic);
 
             //load posts
             var posts = await _forumService.GetAllPostsAsync(forumTopic.Id, 0, string.Empty,
@@ -432,12 +423,11 @@ namespace Nop.Web.Factories
         /// <param name="forumTopic">Forum topic</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the opic move model
+        /// The task result contains the topic move model
         /// </returns>
         public virtual async Task<TopicMoveModel> PrepareTopicMoveAsync(ForumTopic forumTopic)
         {
-            if (forumTopic == null)
-                throw new ArgumentNullException(nameof(forumTopic));
+            ArgumentNullException.ThrowIfNull(forumTopic);
 
             var model = new TopicMoveModel
             {
@@ -458,11 +448,9 @@ namespace Nop.Web.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareTopicCreateModelAsync(Forum forum, EditForumTopicModel model)
         {
-            if (forum == null)
-                throw new ArgumentNullException(nameof(forum));
+            ArgumentNullException.ThrowIfNull(forum);
 
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
             var customer = await _workContext.GetCurrentCustomerAsync();
             model.IsEdit = false;
@@ -485,15 +473,11 @@ namespace Nop.Web.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareTopicEditModelAsync(ForumTopic forumTopic, EditForumTopicModel model, bool excludeProperties)
         {
-            if (forumTopic == null)
-                throw new ArgumentNullException(nameof(forumTopic));
+            ArgumentNullException.ThrowIfNull(forumTopic);
 
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
-            var forum = await _forumService.GetForumByIdAsync(forumTopic.ForumId);
-            if (forum == null)
-                throw new ArgumentException("forum cannot be loaded");
+            var forum = await _forumService.GetForumByIdAsync(forumTopic.ForumId) ?? throw new ArgumentException("forum cannot be loaded");
 
             var customer = await _workContext.GetCurrentCustomerAsync();
             model.IsEdit = true;
@@ -534,12 +518,9 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<EditForumPostModel> PreparePostCreateModelAsync(ForumTopic forumTopic, int? quote, bool excludeProperties)
         {
-            if (forumTopic == null)
-                throw new ArgumentNullException(nameof(forumTopic));
+            ArgumentNullException.ThrowIfNull(forumTopic);
 
-            var forum = await _forumService.GetForumByIdAsync(forumTopic.ForumId);
-            if (forum == null)
-                throw new ArgumentException("forum cannot be loaded");
+            var forum = await _forumService.GetForumByIdAsync(forumTopic.ForumId) ?? throw new ArgumentException("forum cannot be loaded");
 
             var currentCustomer = await _workContext.GetCurrentCustomerAsync();
             var model = new EditForumPostModel
@@ -569,7 +550,7 @@ namespace Nop.Web.Factories
                 if (quote.HasValue)
                 {
                     var quotePost = await _forumService.GetPostByIdAsync(quote.Value);
-                    
+
                     if (quotePost != null && quotePost.TopicId == forumTopic.Id)
                     {
                         var customer = await _customerService.GetCustomerByIdAsync(quotePost.CustomerId);
@@ -604,16 +585,11 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<EditForumPostModel> PreparePostEditModelAsync(ForumPost forumPost, bool excludeProperties)
         {
-            if (forumPost == null)
-                throw new ArgumentNullException(nameof(forumPost));
+            ArgumentNullException.ThrowIfNull(forumPost);
 
-            var forumTopic = await _forumService.GetTopicByIdAsync(forumPost.TopicId);
-            if (forumTopic == null)
-                throw new ArgumentException("forum topic cannot be loaded");
+            var forumTopic = await _forumService.GetTopicByIdAsync(forumPost.TopicId) ?? throw new ArgumentException("forum topic cannot be loaded");
 
-            var forum = await _forumService.GetForumByIdAsync(forumTopic.ForumId);
-            if (forum == null)
-                throw new ArgumentException("forum cannot be loaded");
+            var forum = await _forumService.GetForumByIdAsync(forumTopic.ForumId) ?? throw new ArgumentException("forum cannot be loaded");
 
             var customer = await _workContext.GetCurrentCustomerAsync();
             var model = new EditForumPostModel
@@ -666,43 +642,35 @@ namespace Nop.Web.Factories
             // Create the values for the "Limit results to previous" select list
             var limitList = new List<SelectListItem>
             {
-                new SelectListItem
-                {
+                new() {
                     Text = await _localizationService.GetResourceAsync("Forum.Search.LimitResultsToPrevious.AllResults"),
                     Value = "0"
                 },
-                new SelectListItem
-                {
+                new() {
                     Text = await _localizationService.GetResourceAsync("Forum.Search.LimitResultsToPrevious.1day"),
                     Value = "1"
                 },
-                new SelectListItem
-                {
+                new() {
                     Text = await _localizationService.GetResourceAsync("Forum.Search.LimitResultsToPrevious.7days"),
                     Value = "7"
                 },
-                new SelectListItem
-                {
+                new() {
                     Text = await _localizationService.GetResourceAsync("Forum.Search.LimitResultsToPrevious.2weeks"),
                     Value = "14"
                 },
-                new SelectListItem
-                {
+                new() {
                     Text = await _localizationService.GetResourceAsync("Forum.Search.LimitResultsToPrevious.1month"),
                     Value = "30"
                 },
-                new SelectListItem
-                {
+                new() {
                     Text = await _localizationService.GetResourceAsync("Forum.Search.LimitResultsToPrevious.3months"),
                     Value = "92"
                 },
-                new SelectListItem
-                {
+                new() {
                     Text = await _localizationService.GetResourceAsync("Forum.Search.LimitResultsToPrevious.6months"),
                     Value = "183"
                 },
-                new SelectListItem
-                {
+                new() {
                     Text = await _localizationService.GetResourceAsync("Forum.Search.LimitResultsToPrevious.1year"),
                     Value = "365"
                 }
@@ -712,8 +680,7 @@ namespace Nop.Web.Factories
             // Create the values for the "Search in forum" select list
             var forumsSelectList = new List<SelectListItem>
             {
-                new SelectListItem
-                {
+                new() {
                     Text = await _localizationService.GetResourceAsync("Forum.Search.SearchInForum.All"),
                     Value = "0",
                     Selected = true,
@@ -743,18 +710,15 @@ namespace Nop.Web.Factories
             // Create the values for "Search within" select list            
             var withinList = new List<SelectListItem>
             {
-                new SelectListItem
-                {
+                new() {
                     Value = ((int) ForumSearchType.All).ToString(),
                     Text = await _localizationService.GetResourceAsync("Forum.Search.SearchWithin.All")
                 },
-                new SelectListItem
-                {
+                new() {
                     Value = ((int) ForumSearchType.TopicTitlesOnly).ToString(),
                     Text = await _localizationService.GetResourceAsync("Forum.Search.SearchWithin.TopicTitlesOnly")
                 },
-                new SelectListItem
-                {
+                new() {
                     Value = ((int) ForumSearchType.PostTextOnly).ToString(),
                     Text = await _localizationService.GetResourceAsync("Forum.Search.SearchWithin.PostTextOnly")
                 }
@@ -1015,10 +979,10 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<ForumTopicRowModel> PrepareForumTopicRowModelAsync(ForumTopic topic)
         {
-            if (topic == null)
-                throw new ArgumentNullException(nameof(topic));
+            ArgumentNullException.ThrowIfNull(topic);
 
             var customer = await _customerService.GetCustomerByIdAsync(topic.CustomerId);
+            var firstPost = await _forumService.GetFirstPostAsync(topic);
 
             var topicModel = new ForumTopicRowModel
             {
@@ -1032,14 +996,10 @@ namespace Nop.Web.Factories
                 ForumTopicType = topic.ForumTopicType,
                 CustomerId = topic.CustomerId,
                 AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !await _customerService.IsGuestAsync(customer),
-                CustomerName = await _customerService.FormatUsernameAsync(customer)
+                CustomerName = await _customerService.FormatUsernameAsync(customer),
+                TotalPostPages = (topic.NumPosts / _forumSettings.PostsPageSize) + 1,
+                Votes = firstPost?.VoteCount ?? 0
             };
-
-            var forumPosts = await _forumService.GetAllPostsAsync(topic.Id, 0, string.Empty, 1, _forumSettings.PostsPageSize);
-            topicModel.TotalPostPages = forumPosts.TotalPages;
-
-            var firstPost = await _forumService.GetFirstPostAsync(topic);
-            topicModel.Votes = firstPost != null ? firstPost.VoteCount : 0;
 
             return topicModel;
         }
@@ -1054,8 +1014,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<ForumRowModel> PrepareForumRowModelAsync(Forum forum)
         {
-            if (forum == null)
-                throw new ArgumentNullException(nameof(forum));
+            ArgumentNullException.ThrowIfNull(forum);
 
             var forumModel = new ForumRowModel
             {
@@ -1069,6 +1028,36 @@ namespace Nop.Web.Factories
             };
 
             return forumModel;
+        }
+
+        #endregion
+
+        #region Nested class
+
+        /// <summary>
+        /// record that has only page for route value. Used for (My Account) Forum Subscriptions pagination
+        /// </summary>
+        public partial record ForumSubscriptionsRouteValues : BaseRouteValues
+        {
+        }
+
+        /// <summary>
+        /// record that has search options for route values. Used for Search result pagination
+        /// </summary>
+        public partial record ForumSearchRouteValues : BaseRouteValues
+        {
+            public string Searchterms { get; set; }
+            public string Advs { get; set; }
+            public string ForumId { get; set; }
+            public string Within { get; set; }
+            public string LimitDays { get; set; }
+        }
+
+        /// <summary>
+        /// record that has only page for route value. Used for Active Discussions (forums) pagination
+        /// </summary>
+        public partial record ForumActiveDiscussionsRouteValues : BaseRouteValues
+        {
         }
 
         #endregion

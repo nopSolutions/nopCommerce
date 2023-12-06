@@ -1,18 +1,12 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using System.Data.Common;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using LinqToDB;
 using LinqToDB.Common;
 using LinqToDB.Data;
 using LinqToDB.DataProvider;
 using LinqToDB.SqlQuery;
 using Nop.Core;
-using Nop.Core.Infrastructure;
 using Nop.Data.DataProviders.LinqToDB;
-using Nop.Data.Migrations;
 using Npgsql;
 
 namespace Nop.Data.DataProviders
@@ -21,11 +15,11 @@ namespace Nop.Data.DataProviders
     {
         #region Fields
 
-        private static readonly Lazy<IDataProvider> _dataProvider = new(() => new LinqToDBPostgreSQLDataProvider(), true);
+        protected static readonly Lazy<IDataProvider> _dataProvider = new(() => new LinqToDBPostgreSQLDataProvider(), true);
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
         /// <summary>
         /// Creates the database connection by the current data configuration
@@ -40,6 +34,10 @@ namespace Nop.Data.DataProviders
             return dataContext;
         }
 
+        /// <summary>
+        /// Gets the connection string builder
+        /// </summary>
+        /// <returns>The connection string builder</returns>
         protected static NpgsqlConnectionStringBuilder GetConnectionStringBuilder()
         {
             return new NpgsqlConnectionStringBuilder(GetCurrentConnectionString());
@@ -52,10 +50,9 @@ namespace Nop.Data.DataProviders
         /// <returns>Connection to a database</returns>
         protected override DbConnection GetInternalDbConnection(string connectionString)
         {
-            if (string.IsNullOrEmpty(connectionString))
-                throw new ArgumentNullException(nameof(connectionString));
-
-            return new NpgsqlConnection(connectionString);
+            return string.IsNullOrEmpty(connectionString)
+                ? throw new ArgumentNullException(nameof(connectionString))
+                : (DbConnection)new NpgsqlConnection(connectionString);
         }
 
         /// <summary>
@@ -64,15 +61,12 @@ namespace Nop.Data.DataProviders
         /// <param name="dataConnection">A database connection object</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
         /// <returns>Returns the name of the sequence, or NULL if no sequence is associated with the column</returns>
-        private string GetSequenceName<TEntity>(DataConnection dataConnection) where TEntity : BaseEntity
+        protected virtual string GetSequenceName<TEntity>(DataConnection dataConnection) where TEntity : BaseEntity
         {
-            if (dataConnection is null)
-                throw new ArgumentNullException(nameof(dataConnection));
+            ArgumentNullException.ThrowIfNull(dataConnection);
 
-            var descriptor = GetEntityDescriptor(typeof(TEntity));
-
-            if (descriptor is null)
-                throw new NopException($"Mapped entity descriptor is not found: {typeof(TEntity).Name}");
+            var descriptor = GetEntityDescriptor(typeof(TEntity)) 
+                ?? throw new NopException($"Mapped entity descriptor is not found: {typeof(TEntity).Name}");
 
             var tableName = descriptor.EntityName;
             var columnName = descriptor.Fields.FirstOrDefault(x => x.IsIdentity && x.IsPrimaryKey)?.Name;
@@ -195,7 +189,7 @@ namespace Nop.Data.DataProviders
                 return false;
             }
         }
-        
+
         /// <summary>
         /// Get the current identity value
         /// </summary>
@@ -258,7 +252,7 @@ namespace Nop.Data.DataProviders
                 entity.Id = dataContext.InsertWithInt32Identity(entity);
             }
             // Ignore when we try insert foreign entity via InsertWithInt32IdentityAsync method
-            catch (global::LinqToDB.SqlQuery.SqlException ex) when (ex.Message.StartsWith("Identity field must be defined for"))
+            catch (SqlException ex) when (ex.Message.StartsWith("Identity field must be defined for"))
             {
                 dataContext.Insert(entity);
             }
@@ -283,7 +277,7 @@ namespace Nop.Data.DataProviders
                 entity.Id = await dataContext.InsertWithInt32IdentityAsync(entity);
             }
             // Ignore when we try insert foreign entity via InsertWithInt32IdentityAsync method
-            catch (global::LinqToDB.SqlQuery.SqlException ex) when (ex.Message.StartsWith("Identity field must be defined for"))
+            catch (SqlException ex) when (ex.Message.StartsWith("Identity field must be defined for"))
             {
                 await dataContext.InsertAsync(entity);
             }
@@ -318,8 +312,7 @@ namespace Nop.Data.DataProviders
         /// <returns>Connection string</returns>
         public virtual string BuildConnectionString(INopConnectionStringInfo nopConnectionString)
         {
-            if (nopConnectionString is null)
-                throw new ArgumentNullException(nameof(nopConnectionString));
+            ArgumentNullException.ThrowIfNull(nopConnectionString);
 
             if (nopConnectionString.IntegratedSecurity)
                 throw new NopException("Data provider supports connection only with login and password");

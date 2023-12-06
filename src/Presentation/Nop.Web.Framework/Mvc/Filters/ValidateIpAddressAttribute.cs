@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
@@ -35,8 +32,8 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Fields
 
-            private readonly IWebHelper _webHelper;
-            private readonly SecuritySettings _securitySettings;
+            protected readonly IWebHelper _webHelper;
+            protected readonly SecuritySettings _securitySettings;
 
             #endregion
 
@@ -59,8 +56,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <param name="context">A context for action filters</param>
             private void ValidateIpAddress(ActionExecutingContext context)
             {
-                if (context == null)
-                    throw new ArgumentNullException(nameof(context));
+                ArgumentNullException.ThrowIfNull(context);
 
                 if (context.HttpContext.Request == null)
                     return;
@@ -87,7 +83,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 var ipAddresses = _securitySettings.AdminAreaAllowedIpAddresses;
 
                 //there are no restrictions
-                if (ipAddresses == null || !ipAddresses.Any())
+                if (ipAddresses == null || ipAddresses.Count == 0)
                     return;
 
                 //whether current IP is allowed

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
@@ -26,7 +23,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         public CheckAccessClosedStoreAttribute(bool ignore = false) : base(typeof(CheckAccessClosedStoreFilter))
         {
             IgnoreFilter = ignore;
-            Arguments = new object[] { ignore };
+            Arguments = [ignore];
         }
 
         #endregion
@@ -49,11 +46,11 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Fields
 
-            private readonly bool _ignoreFilter;
-            private readonly IPermissionService _permissionService;
-            private readonly IStoreContext _storeContext;
-            private readonly ITopicService _topicService;
-            private readonly StoreInformationSettings _storeInformationSettings;
+            protected readonly bool _ignoreFilter;
+            protected readonly IPermissionService _permissionService;
+            protected readonly IStoreContext _storeContext;
+            protected readonly ITopicService _topicService;
+            protected readonly StoreInformationSettings _storeInformationSettings;
 
             #endregion
 
@@ -83,8 +80,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <returns>A task that represents the asynchronous operation</returns>
             private async Task CheckAccessClosedStoreAsync(ActionExecutingContext context)
             {
-                if (context == null)
-                    throw new ArgumentNullException(nameof(context));
+                ArgumentNullException.ThrowIfNull(context);
 
                 if (!DataSettingsManager.IsDatabaseInstalled())
                     return;

@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
+using Nop.Services.Attributes;
 using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
@@ -22,29 +19,32 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly AddressSettings _addressSettings;
-        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
-        private readonly IAddressAttributeParser _addressAttributeParser;
-        private readonly IAddressAttributeService _addressAttributeService;
-        private readonly ICountryService _countryService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IWorkContext _workContext;
+        protected readonly AddressSettings _addressSettings;
+        protected readonly IAddressService _addressService;
+        protected readonly IAttributeFormatter<AddressAttribute, AddressAttributeValue> _addressAttributeFormatter;
+        protected readonly IAttributeParser<AddressAttribute, AddressAttributeValue> _addressAttributeParser;
+        protected readonly IAttributeService<AddressAttribute, AddressAttributeValue> _addressAttributeService;
+        protected readonly ICountryService _countryService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IStateProvinceService _stateProvinceService;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 
         #region Ctor
 
         public AddressModelFactory(AddressSettings addressSettings,
-            IAddressAttributeFormatter addressAttributeFormatter,
-            IAddressAttributeParser addressAttributeParser,
-            IAddressAttributeService addressAttributeService,
+            IAddressService addressService,
+            IAttributeFormatter<AddressAttribute, AddressAttributeValue> addressAttributeFormatter,
+            IAttributeParser<AddressAttribute, AddressAttributeValue> addressAttributeParser,
+            IAttributeService<AddressAttribute, AddressAttributeValue> addressAttributeService,
             ICountryService countryService,
             ILocalizationService localizationService,
             IStateProvinceService stateProvinceService,
             IWorkContext workContext)
         {
             _addressSettings = addressSettings;
+            _addressService = addressService;
             _addressAttributeFormatter = addressAttributeFormatter;
             _addressAttributeParser = addressAttributeParser;
             _addressAttributeService = addressAttributeService;
@@ -68,7 +68,7 @@ namespace Nop.Web.Factories
         protected virtual async Task PrepareCustomAddressAttributesAsync(AddressModel model,
             Address address, string overrideAttributesXml = "")
         {
-            var attributes = await _addressAttributeService.GetAllAddressAttributesAsync();
+            var attributes = await _addressAttributeService.GetAllAttributesAsync();
             foreach (var attribute in attributes)
             {
                 var attributeModel = new AddressAttributeModel
@@ -80,10 +80,10 @@ namespace Nop.Web.Factories
                     AttributeControlType = attribute.AttributeControlType,
                 };
 
-                if (attribute.ShouldHaveValues())
+                if (attribute.ShouldHaveValues)
                 {
                     //values
-                    var attributeValues = await _addressAttributeService.GetAddressAttributeValuesAsync(attribute.Id);
+                    var attributeValues = await _addressAttributeService.GetAttributeValuesAsync(attribute.Id);
                     foreach (var attributeValue in attributeValues)
                     {
                         var attributeValueModel = new AddressAttributeValueModel
@@ -113,7 +113,7 @@ namespace Nop.Web.Factories
                                     item.IsPreSelected = false;
 
                                 //select new values
-                                var selectedValues = await _addressAttributeParser.ParseAddressAttributeValuesAsync(selectedAddressAttributes);
+                                var selectedValues = await _addressAttributeParser.ParseAttributeValuesAsync(selectedAddressAttributes);
                                 foreach (var attributeValue in selectedValues)
                                     foreach (var item in attributeModel.Values)
                                         if (attributeValue.Id == item.Id)
@@ -175,11 +175,11 @@ namespace Nop.Web.Factories
             Customer customer = null,
             string overrideAttributesXml = "")
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
-            if (addressSettings == null)
-                throw new ArgumentNullException(nameof(addressSettings));
+            ArgumentNullException.ThrowIfNull(addressSettings);
+
+            var languageId = customer != null ? (customer?.LanguageId ?? 0) : (await _workContext.GetWorkingLanguageAsync()).Id;
 
             if (!excludeProperties && address != null)
             {
@@ -232,6 +232,9 @@ namespace Nop.Web.Factories
                     model.AvailableCountries.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectCountry"), Value = "0" });
                 }
 
+                if (addressSettings.DefaultCountryId != null)
+                    model.CountryId = model.CountryId ?? addressSettings.DefaultCountryId;
+
                 foreach (var c in countries)
                 {
                     model.AvailableCountries.Add(new SelectListItem
@@ -244,11 +247,10 @@ namespace Nop.Web.Factories
 
                 if (addressSettings.StateProvinceEnabled)
                 {
-                    var languageId = (await _workContext.GetWorkingLanguageAsync()).Id;
                     var states = (await _stateProvinceService
                         .GetStateProvincesByCountryIdAsync(model.CountryId ?? 0, languageId))
                         .ToList();
-                    if (states.Any())
+                    if (states.Count != 0)
                     {
                         model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectState"), Value = "0" });
 
@@ -293,6 +295,7 @@ namespace Nop.Web.Factories
             model.PhoneRequired = addressSettings.PhoneRequired;
             model.FaxEnabled = addressSettings.FaxEnabled;
             model.FaxRequired = addressSettings.FaxRequired;
+            model.DefaultCountryId = addressSettings.DefaultCountryId;
 
             //customer attribute services
             if (_addressAttributeService != null && _addressAttributeParser != null)
@@ -303,6 +306,8 @@ namespace Nop.Web.Factories
             {
                 model.FormattedCustomAddressAttributes = await _addressAttributeFormatter.FormatAttributesAsync(address.CustomAttributes);
             }
+
+            (model.AddressLine, model.AddressFields) = await _addressService.FormatAddressAsync(address, languageId);
         }
 
         #endregion

@@ -62,18 +62,18 @@
                                     </div>
                                     <div class="form-group row" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
                                         <div class="col-md-4">
-                                            <nop-label asp-for="OrderStatusId" />
+                                            <nop-label asp-for="OrderStatusIds" />
                                         </div>
                                         <div class="col-md-8">
-                                            <nop-select asp-for="OrderStatusId" asp-items="Model.AvailableOrderStatuses" />
+                                            <nop-select asp-for="OrderStatusIds" asp-items="Model.AvailableOrderStatuses" asp-multiple="true" />
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <div class="col-md-4">
-                                            <nop-label asp-for="PaymentStatusId" />
+                                            <nop-label asp-for="PaymentStatusIds" />
                                         </div>
                                         <div class="col-md-8">
-                                            <nop-select asp-for="PaymentStatusId" asp-items="Model.AvailablePaymentStatuses" />
+                                            <nop-select asp-for="PaymentStatusIds" asp-items="Model.AvailablePaymentStatuses" asp-multiple="true" />
                                         </div>
                                     </div>
                                 </div>
@@ -183,8 +183,8 @@
                                 new FilterParameter(nameof(Model.StartDate), typeof(DateTime?)),
                                 new FilterParameter(nameof(Model.EndDate), typeof(DateTime?)),
                                 new FilterParameter(nameof(Model.StoreId)),
-                                new FilterParameter(nameof(Model.OrderStatusId)),
-                                new FilterParameter(nameof(Model.PaymentStatusId)),
+                                new FilterParameter(nameof(Model.OrderStatusIds)),
+                                new FilterParameter(nameof(Model.PaymentStatusIds)),
                                 new FilterParameter(nameof(Model.CategoryId)),
                                 new FilterParameter(nameof(Model.ManufacturerId)),
                                 new FilterParameter(nameof(Model.BillingCountryId)),

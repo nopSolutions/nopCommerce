@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Plugin.Payments.CyberSource.Services;
@@ -17,14 +15,14 @@ namespace Nop.Plugin.Payments.CyberSource.Controllers
     {
         #region Fields
 
-        private readonly CustomerTokenService _customerTokenService;
-        private readonly CyberSourceService _cyberSourceService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILogger _logger;
-        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly IStoreContext _storeContext;
-        private readonly IWorkContext _workContext;
+        protected readonly CustomerTokenService _customerTokenService;
+        protected readonly CyberSourceService _cyberSourceService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ILogger _logger;
+        protected readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        protected readonly IShoppingCartService _shoppingCartService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 
@@ -105,7 +103,7 @@ namespace Nop.Plugin.Payments.CyberSource.Controllers
                 var message = $"Payer authentication enrollment failed. {result?.ErrorInformation?.Message}";
                 await _logger.ErrorAsync($"{CyberSourceDefaults.SystemName} error: {Environment.NewLine}{message}", customer: customer);
 
-                if (result?.ConsumerAuthenticationInformation is not null && 
+                if (result?.ConsumerAuthenticationInformation is not null &&
                     result.ErrorInformation?.Reason == CyberSourceDefaults.PayerAuthenticationErrorReason.ConsumerAuthenticationRequired)
                 {
                     return Json(new

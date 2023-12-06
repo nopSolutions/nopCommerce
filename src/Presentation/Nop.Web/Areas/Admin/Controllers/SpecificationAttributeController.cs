@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
@@ -21,13 +17,13 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedEntityService _localizedEntityService;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly ISpecificationAttributeModelFactory _specificationAttributeModelFactory;
-        private readonly ISpecificationAttributeService _specificationAttributeService;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ILocalizedEntityService _localizedEntityService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly ISpecificationAttributeModelFactory _specificationAttributeModelFactory;
+        protected readonly ISpecificationAttributeService _specificationAttributeService;
 
         #endregion Fields
 
@@ -204,7 +200,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-                
+
                 return RedirectToAction("EditSpecificationAttribute", new { id = specificationAttribute.Id });
             }
 
@@ -303,7 +299,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-                
+
                 return RedirectToAction("EditSpecificationAttribute", new { id = specificationAttribute.Id });
             }
 
@@ -364,7 +360,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
-            var specificationAttributes = await _specificationAttributeService.GetSpecificationAttributeByIdsAsync(selectedIds.ToArray());
+            var specificationAttributes = await _specificationAttributeService.GetSpecificationAttributeByIdsAsync([.. selectedIds]);
             await _specificationAttributeService.DeleteSpecificationAttributesAsync(specificationAttributes);
 
             foreach (var specificationAttribute in specificationAttributes)

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Stores;
+﻿using Nop.Core.Domain.Stores;
 using Nop.Services.Localization;
 using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
@@ -18,10 +15,10 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedModelFactory _localizedModelFactory;
-        private readonly IStoreService _storeService;
+        protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ILocalizedModelFactory _localizedModelFactory;
+        protected readonly IStoreService _storeService;
 
         #endregion
 
@@ -39,7 +36,7 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         #endregion
-        
+
         #region Methods
 
         /// <summary>
@@ -52,8 +49,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual Task<StoreSearchModel> PrepareStoreSearchModelAsync(StoreSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -71,8 +67,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<StoreListModel> PrepareStoreListModelAsync(StoreSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get stores
             var stores = (await _storeService.GetAllStoresAsync()).ToPagedList(searchModel);
@@ -119,7 +114,7 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             //prepare available languages
-            await _baseAdminModelFactory.PrepareLanguagesAsync(model.AvailableLanguages, 
+            await _baseAdminModelFactory.PrepareLanguagesAsync(model.AvailableLanguages,
                 defaultItemText: await _localizationService.GetResourceAsync("Admin.Common.EmptyItemText"));
 
             //prepare localized models

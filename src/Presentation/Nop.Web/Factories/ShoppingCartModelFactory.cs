@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Globalization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -18,6 +13,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Http.Extensions;
+using Nop.Services.Attributes;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -48,54 +44,55 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly AddressSettings _addressSettings;
-        private readonly CaptchaSettings _captchaSettings;
-        private readonly CatalogSettings _catalogSettings;
-        private readonly CommonSettings _commonSettings;
-        private readonly CustomerSettings _customerSettings;
-        private readonly IAddressModelFactory _addressModelFactory;
-        private readonly ICheckoutAttributeFormatter _checkoutAttributeFormatter;
-        private readonly ICheckoutAttributeParser _checkoutAttributeParser;
-        private readonly ICheckoutAttributeService _checkoutAttributeService;
-        private readonly ICountryService _countryService;
-        private readonly ICurrencyService _currencyService;
-        private readonly ICustomerService _customerService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IDiscountService _discountService;
-        private readonly IDownloadService _downloadService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IGiftCardService _giftCardService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILocalizationService _localizationService;
-        private readonly IOrderProcessingService _orderProcessingService;
-        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
-        private readonly IPaymentPluginManager _paymentPluginManager;
-        private readonly IPaymentService _paymentService;
-        private readonly IPermissionService _permissionService;
-        private readonly IPictureService _pictureService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IProductAttributeFormatter _productAttributeFormatter;
-        private readonly IProductService _productService;
-        private readonly IShippingService _shippingService;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly ITaxService _taxService;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IVendorService _vendorService;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
-        private readonly MediaSettings _mediaSettings;
-        private readonly OrderSettings _orderSettings;
-        private readonly RewardPointsSettings _rewardPointsSettings;
-        private readonly ShippingSettings _shippingSettings;
-        private readonly ShoppingCartSettings _shoppingCartSettings;
-        private readonly TaxSettings _taxSettings;
-        private readonly VendorSettings _vendorSettings;
-        //customization
-        //private readonly IProductModelFactory _productModelFactory;
+        protected readonly AddressSettings _addressSettings;
+        protected readonly CaptchaSettings _captchaSettings;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly CommonSettings _commonSettings;
+        protected readonly CustomerSettings _customerSettings;
+        protected readonly IAddressModelFactory _addressModelFactory;
+        protected readonly IAddressService _addressService;
+        protected readonly IAttributeParser<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeParser;
+        protected readonly IAttributeService<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeService;
+        protected readonly ICheckoutAttributeFormatter _checkoutAttributeFormatter;
+        protected readonly ICountryService _countryService;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly IDiscountService _discountService;
+        protected readonly IDownloadService _downloadService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IGiftCardService _giftCardService;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IOrderProcessingService _orderProcessingService;
+        protected readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        protected readonly IPaymentPluginManager _paymentPluginManager;
+        protected readonly IPaymentService _paymentService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IPictureService _pictureService;
+        protected readonly IPriceFormatter _priceFormatter;
+        protected readonly IProductAttributeFormatter _productAttributeFormatter;
+        protected readonly IProductService _productService;
+        protected readonly IShippingService _shippingService;
+        protected readonly IShoppingCartService _shoppingCartService;
+        protected readonly IShortTermCacheManager _shortTermCacheManager;
+        protected readonly IStateProvinceService _stateProvinceService;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly ITaxService _taxService;
+        protected readonly IUrlRecordService _urlRecordService;
+        protected readonly IVendorService _vendorService;
+        protected readonly IWebHelper _webHelper;
+        protected readonly IWorkContext _workContext;
+        protected readonly MediaSettings _mediaSettings;
+        protected readonly OrderSettings _orderSettings;
+        protected readonly RewardPointsSettings _rewardPointsSettings;
+        protected readonly ShippingSettings _shippingSettings;
+        protected readonly ShoppingCartSettings _shoppingCartSettings;
+        protected readonly TaxSettings _taxSettings;
+        protected readonly VendorSettings _vendorSettings;
+        private static readonly char[] _separator = [','];
 
         #endregion
 
@@ -107,9 +104,10 @@ namespace Nop.Web.Factories
             CommonSettings commonSettings,
             CustomerSettings customerSettings,
             IAddressModelFactory addressModelFactory,
+            IAddressService addressService,
+            IAttributeParser<CheckoutAttribute, CheckoutAttributeValue> checkoutAttributeParser,
+            IAttributeService<CheckoutAttribute, CheckoutAttributeValue> checkoutAttributeService,
             ICheckoutAttributeFormatter checkoutAttributeFormatter,
-            ICheckoutAttributeParser checkoutAttributeParser,
-            ICheckoutAttributeService checkoutAttributeService,
             ICountryService countryService,
             ICurrencyService currencyService,
             ICustomerService customerService,
@@ -131,6 +129,7 @@ namespace Nop.Web.Factories
             IProductService productService,
             IShippingService shippingService,
             IShoppingCartService shoppingCartService,
+            IShortTermCacheManager shortTermCacheManager,
             IStateProvinceService stateProvinceService,
             IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
@@ -152,14 +151,15 @@ namespace Nop.Web.Factories
             )
         {
             _addressSettings = addressSettings;
+            _addressService = addressService;
             _captchaSettings = captchaSettings;
             _catalogSettings = catalogSettings;
             _commonSettings = commonSettings;
             _customerSettings = customerSettings;
             _addressModelFactory = addressModelFactory;
-            _checkoutAttributeFormatter = checkoutAttributeFormatter;
             _checkoutAttributeParser = checkoutAttributeParser;
             _checkoutAttributeService = checkoutAttributeService;
+            _checkoutAttributeFormatter = checkoutAttributeFormatter;
             _countryService = countryService;
             _currencyService = currencyService;
             _customerService = customerService;
@@ -181,6 +181,7 @@ namespace Nop.Web.Factories
             _productService = productService;
             _shippingService = shippingService;
             _shoppingCartService = shoppingCartService;
+            _shortTermCacheManager = shortTermCacheManager;
             _stateProvinceService = stateProvinceService;
             _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
@@ -216,15 +217,13 @@ namespace Nop.Web.Factories
         protected virtual async Task<IList<ShoppingCartModel.CheckoutAttributeModel>> PrepareCheckoutAttributeModelsAsync(
             IList<ShoppingCartItem> cart)
         {
-            if (cart == null)
-                throw new ArgumentNullException(nameof(cart));
+            ArgumentNullException.ThrowIfNull(cart);
 
             var model = new List<ShoppingCartModel.CheckoutAttributeModel>();
             var store = await _storeContext.GetCurrentStoreAsync();
             var excludeShippableAttributes = !await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart);
             var checkoutAttributes =
-                await _checkoutAttributeService.GetAllCheckoutAttributesAsync(store.Id,
-                    excludeShippableAttributes);
+                await _checkoutAttributeService.GetAllAttributesAsync(_staticCacheManager, _storeMappingService, store.Id, excludeShippableAttributes);
             foreach (var attribute in checkoutAttributes)
             {
                 var attributeModel = new ShoppingCartModel.CheckoutAttributeModel
@@ -239,14 +238,14 @@ namespace Nop.Web.Factories
                 if (!string.IsNullOrEmpty(attribute.ValidationFileAllowedExtensions))
                 {
                     attributeModel.AllowedFileExtensions = attribute.ValidationFileAllowedExtensions
-                        .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                        .Split(_separator, StringSplitOptions.RemoveEmptyEntries)
                         .ToList();
                 }
 
-                if (attribute.ShouldHaveValues())
+                if (attribute.ShouldHaveValues)
                 {
                     //values
-                    var attributeValues = await _checkoutAttributeService.GetCheckoutAttributeValuesAsync(attribute.Id);
+                    var attributeValues = await _checkoutAttributeService.GetAttributeValuesAsync(attribute.Id);
                     foreach (var attributeValue in attributeValues)
                     {
                         var attributeValueModel = new ShoppingCartModel.CheckoutAttributeValueModel
@@ -286,75 +285,75 @@ namespace Nop.Web.Factories
                     case AttributeControlType.Checkboxes:
                     case AttributeControlType.ColorSquares:
                     case AttributeControlType.ImageSquares:
-                    {
-                        if (!string.IsNullOrEmpty(selectedCheckoutAttributes))
                         {
-                            //clear default selection
-                            foreach (var item in attributeModel.Values)
-                                item.IsPreSelected = false;
-
-                            //select new values
-                            var selectedValues =
-                                _checkoutAttributeParser.ParseCheckoutAttributeValues(selectedCheckoutAttributes);
-                            foreach (var attributeValue in await selectedValues.SelectMany(x => x.values).ToListAsync())
+                            if (!string.IsNullOrEmpty(selectedCheckoutAttributes))
+                            {
+                                //clear default selection
                                 foreach (var item in attributeModel.Values)
-                                    if (attributeValue.Id == item.Id)
-                                        item.IsPreSelected = true;
+                                    item.IsPreSelected = false;
+
+                                //select new values
+                                var selectedValues =
+                                    _checkoutAttributeParser.ParseAttributeValues(selectedCheckoutAttributes);
+                                foreach (var attributeValue in await selectedValues.SelectMany(x => x.values).ToListAsync())
+                                    foreach (var item in attributeModel.Values)
+                                        if (attributeValue.Id == item.Id)
+                                            item.IsPreSelected = true;
+                            }
                         }
-                    }
 
                         break;
                     case AttributeControlType.ReadonlyCheckboxes:
-                    {
-                        //do nothing
-                        //values are already pre-set
-                    }
+                        {
+                            //do nothing
+                            //values are already pre-set
+                        }
 
                         break;
                     case AttributeControlType.TextBox:
                     case AttributeControlType.MultilineTextbox:
-                    {
-                        if (!string.IsNullOrEmpty(selectedCheckoutAttributes))
                         {
-                            var enteredText =
-                                _checkoutAttributeParser.ParseValues(selectedCheckoutAttributes, attribute.Id);
-                            if (enteredText.Any())
-                                attributeModel.DefaultValue = enteredText[0];
+                            if (!string.IsNullOrEmpty(selectedCheckoutAttributes))
+                            {
+                                var enteredText =
+                                    _checkoutAttributeParser.ParseValues(selectedCheckoutAttributes, attribute.Id);
+                                if (enteredText.Any())
+                                    attributeModel.DefaultValue = enteredText[0];
+                            }
                         }
-                    }
 
                         break;
                     case AttributeControlType.Datepicker:
-                    {
-                        //keep in mind my that the code below works only in the current culture
-                        var selectedDateStr =
-                            _checkoutAttributeParser.ParseValues(selectedCheckoutAttributes, attribute.Id);
-                        if (selectedDateStr.Any())
                         {
-                            if (DateTime.TryParseExact(selectedDateStr[0], "D", CultureInfo.CurrentCulture,
-                                DateTimeStyles.None, out var selectedDate))
+                            //keep in mind my that the code below works only in the current culture
+                            var selectedDateStr =
+                                _checkoutAttributeParser.ParseValues(selectedCheckoutAttributes, attribute.Id);
+                            if (selectedDateStr.Any())
                             {
-                                //successfully parsed
-                                attributeModel.SelectedDay = selectedDate.Day;
-                                attributeModel.SelectedMonth = selectedDate.Month;
-                                attributeModel.SelectedYear = selectedDate.Year;
+                                if (DateTime.TryParseExact(selectedDateStr[0], "D", CultureInfo.CurrentCulture,
+                                    DateTimeStyles.None, out var selectedDate))
+                                {
+                                    //successfully parsed
+                                    attributeModel.SelectedDay = selectedDate.Day;
+                                    attributeModel.SelectedMonth = selectedDate.Month;
+                                    attributeModel.SelectedYear = selectedDate.Year;
+                                }
                             }
                         }
-                    }
 
                         break;
                     case AttributeControlType.FileUpload:
-                    {
-                        if (!string.IsNullOrEmpty(selectedCheckoutAttributes))
                         {
-                            var downloadGuidStr = _checkoutAttributeParser
-                                .ParseValues(selectedCheckoutAttributes, attribute.Id).FirstOrDefault();
-                            _ = Guid.TryParse(downloadGuidStr, out var downloadGuid);
-                            var download = await _downloadService.GetDownloadByGuidAsync(downloadGuid);
-                            if (download != null)
-                                attributeModel.DefaultValue = download.DownloadGuid.ToString();
+                            if (!string.IsNullOrEmpty(selectedCheckoutAttributes))
+                            {
+                                var downloadGuidStr = _checkoutAttributeParser
+                                    .ParseValues(selectedCheckoutAttributes, attribute.Id).FirstOrDefault();
+                                _ = Guid.TryParse(downloadGuidStr, out var downloadGuid);
+                                var download = await _downloadService.GetDownloadByGuidAsync(downloadGuid);
+                                if (download != null)
+                                    attributeModel.DefaultValue = download.DownloadGuid.ToString();
+                            }
                         }
-                    }
 
                         break;
                     default:
@@ -378,11 +377,9 @@ namespace Nop.Web.Factories
         /// </returns>
         protected virtual async Task<ShoppingCartModel.ShoppingCartItemModel> PrepareShoppingCartItemModelAsync(IList<ShoppingCartItem> cart, ShoppingCartItem sci)
         {
-            if (cart == null)
-                throw new ArgumentNullException(nameof(cart));
+            ArgumentNullException.ThrowIfNull(cart);
 
-            if (sci == null)
-                throw new ArgumentNullException(nameof(sci));
+            ArgumentNullException.ThrowIfNull(sci);
 
             var product = await _productService.GetProductByIdAsync(sci.ProductId);
 
@@ -527,8 +524,7 @@ namespace Nop.Web.Factories
         /// </returns>
         protected virtual async Task<WishlistModel.ShoppingCartItemModel> PrepareWishlistItemModelAsync(ShoppingCartItem sci)
         {
-            if (sci == null)
-                throw new ArgumentNullException(nameof(sci));
+            ArgumentNullException.ThrowIfNull(sci);
 
             var product = await _productService.GetProductByIdAsync(sci.ProductId);
 
@@ -668,8 +664,7 @@ namespace Nop.Web.Factories
         /// </returns>
         protected virtual async Task<ShoppingCartModel.OrderReviewDataModel> PrepareOrderReviewDataModelAsync(IList<ShoppingCartItem> cart)
         {
-            if (cart == null)
-                throw new ArgumentNullException(nameof(cart));
+            ArgumentNullException.ThrowIfNull(cart);
 
             var model = new ShoppingCartModel.OrderReviewDataModel
             {
@@ -718,8 +713,25 @@ namespace Nop.Web.Factories
                         County = pickupPoint.County,
                         CountryName = country?.Name ?? string.Empty,
                         StateProvinceName = state?.Name ?? string.Empty,
-                        ZipPostalCode = pickupPoint.ZipPostalCode
+                        ZipPostalCode = pickupPoint.ZipPostalCode,
+                        CountryId = country?.Id,
+                        StateProvinceId = state?.Id
                     };
+
+                    var address = new Address
+                    {
+                        CountryId = model.PickupAddress.CountryId,
+                        StateProvinceId = model.PickupAddress.StateProvinceId,
+                        City = model.PickupAddress.City,
+                        County = model.PickupAddress.County,
+                        Address1 = model.PickupAddress.Address1,
+
+                        ZipPostalCode = model.PickupAddress.ZipPostalCode
+                    };
+                    var languageId = (await _workContext.GetWorkingLanguageAsync()).Id;
+                    var (_, addressFields) = await _addressService.FormatAddressAsync(address, languageId);
+
+                    model.PickupAddress.AddressFields = addressFields;
                 }
 
                 //selected shipping method
@@ -738,13 +750,13 @@ namespace Nop.Web.Factories
                 : string.Empty;
 
             //custom values
-            var processPaymentRequest = _httpContextAccessor.HttpContext?.Session?.Get<ProcessPaymentRequest>("OrderPaymentInfo");
-            if (processPaymentRequest != null)
-                model.CustomValues = processPaymentRequest.CustomValues;
+            var processPaymentRequestTask = _httpContextAccessor.HttpContext?.Session?.GetAsync<ProcessPaymentRequest>("OrderPaymentInfo");
+            if (processPaymentRequestTask != null)
+                model.CustomValues = (await processPaymentRequestTask)?.CustomValues;
 
             return model;
         }
-        
+
         #endregion
 
         #region Methods
@@ -760,8 +772,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<EstimateShippingModel> PrepareEstimateShippingModelAsync(IList<ShoppingCartItem> cart, bool setEstimateShippingDefaultAddress = true)
         {
-            if (cart == null)
-                throw new ArgumentNullException(nameof(cart));
+            ArgumentNullException.ThrowIfNull(cart);
 
             var model = new EstimateShippingModel
             {
@@ -772,13 +783,9 @@ namespace Nop.Web.Factories
             if (model.Enabled)
             {
                 var customer = await _workContext.GetCurrentCustomerAsync();
-                var shippingAddress = await _customerService.GetCustomerShippingAddressAsync(customer);
-                if (shippingAddress == null)
-                {
-                    shippingAddress = await (await _customerService.GetAddressesByCustomerIdAsync(customer.Id))
+                var shippingAddress = await _customerService.GetCustomerShippingAddressAsync(customer) ?? await (await _customerService.GetAddressesByCustomerIdAsync(customer.Id))
                     //enabled for the current store
                     .FirstOrDefaultAwaitAsync(async a => a.CountryId == null || await _storeMappingService.AuthorizeAsync(await _countryService.GetCountryByAddressAsync(a)));
-                }
 
                 //countries
                 var defaultEstimateCountryId = (setEstimateShippingDefaultAddress && shippingAddress != null)
@@ -805,8 +812,8 @@ namespace Nop.Web.Factories
                     : model.StateProvinceId;
                 var states = defaultEstimateCountryId.HasValue
                     ? (await _stateProvinceService.GetStateProvincesByCountryIdAsync(defaultEstimateCountryId.Value, currentLanguage.Id)).ToList()
-                    : new List<StateProvince>();
-                if (states.Any())
+                    : [];
+                if (states.Count != 0)
                 {
                     foreach (var s in states)
                     {
@@ -856,11 +863,9 @@ namespace Nop.Web.Factories
             bool validateCheckoutAttributes = false,
             bool prepareAndDisplayOrderReviewData = false)
         {
-            if (cart == null)
-                throw new ArgumentNullException(nameof(cart));
+            ArgumentNullException.ThrowIfNull(cart);
 
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
             //simple properties
             model.OnePageCheckoutEnabled = _orderSettings.OnePageCheckoutEnabled;
@@ -891,10 +896,11 @@ namespace Nop.Web.Factories
             //discount and gift card boxes
             model.DiscountBox.Display = _shoppingCartSettings.ShowDiscountBox;
             var discountCouponCodes = await _customerService.ParseAppliedDiscountCouponCodesAsync(customer);
+
             foreach (var couponCode in discountCouponCodes)
             {
                 var discount = await (await _discountService.GetAllDiscountsAsync(couponCode: couponCode))
-                    .FirstOrDefaultAwaitAsync(async d => d.RequiresCouponCode && (await _discountService.ValidateDiscountAsync(d, customer)).IsValid);
+                    .FirstOrDefaultAwaitAsync(async d => d.RequiresCouponCode && (await _discountService.ValidateDiscountAsync(d, customer, discountCouponCodes)).IsValid);
 
                 if (discount != null)
                 {
@@ -945,7 +951,7 @@ namespace Nop.Web.Factories
                 model.ButtonPaymentMethodViewComponents.Add(viewComponent);
             }
             //hide "Checkout" button if we have only "Button" payment methods
-            model.HideCheckoutButton = !nonButtonPaymentMethods.Any() && model.ButtonPaymentMethodViewComponents.Any();
+            model.HideCheckoutButton = nonButtonPaymentMethods.Count == 0 && model.ButtonPaymentMethodViewComponents.Any();
 
             //order review data
             if (prepareAndDisplayOrderReviewData)
@@ -968,11 +974,9 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<WishlistModel> PrepareWishlistModelAsync(WishlistModel model, IList<ShoppingCartItem> cart, bool isEditable = true)
         {
-            if (cart == null)
-                throw new ArgumentNullException(nameof(cart));
+            ArgumentNullException.ThrowIfNull(cart);
 
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
             model.EmailWishlistEnabled = _shoppingCartSettings.EmailWishlistEnabled;
             model.IsEditable = isEditable;
@@ -1049,7 +1053,7 @@ namespace Nop.Web.Factories
                     //2. min order sub-total is OK
                     //3. we have at least one checkout attribute
                     var checkoutAttributesExist = (await _checkoutAttributeService
-                        .GetAllCheckoutAttributesAsync(store.Id, !requiresShipping))
+                        .GetAllAttributesAsync(_staticCacheManager, _storeMappingService, store.Id, !requiresShipping))
                         .Any();
 
                     var minOrderSubtotalAmountOk = await _orderProcessingService.ValidateMinOrderSubtotalAmountAsync(cart);
@@ -1218,7 +1222,7 @@ namespace Nop.Web.Factories
                     }
                     else
                     {
-                        displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Any();
+                        displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Count != 0;
                         displayTax = !displayTaxRates;
 
                         model.Tax = await _priceFormatter.FormatPriceAsync(shoppingCartTax, true, false);
@@ -1252,7 +1256,7 @@ namespace Nop.Web.Factories
                 }
 
                 //gift cards
-                if (appliedGiftCards != null && appliedGiftCards.Any())
+                if (appliedGiftCards != null && appliedGiftCards.Count != 0)
                 {
                     foreach (var appliedGiftCard in appliedGiftCards)
                     {
@@ -1309,8 +1313,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<EstimateShippingResultModel> PrepareEstimateShippingResultModelAsync(IList<ShoppingCartItem> cart, EstimateShippingModel request, bool cacheShippingOptions)
         {
-            if (request is null)
-                throw new ArgumentNullException(nameof(request));
+            ArgumentNullException.ThrowIfNull(request);
 
             var model = new EstimateShippingResultModel();
 
@@ -1396,7 +1399,7 @@ namespace Nop.Web.Factories
                             NopCustomerDefaults.SelectedShippingOptionAttribute, store.Id);
                 }
 
-                if (rawShippingOptions.Any())
+                if (rawShippingOptions.Count != 0)
                 {
                     foreach (var option in rawShippingOptions)
                     {
@@ -1466,8 +1469,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<WishlistEmailAFriendModel> PrepareWishlistEmailAFriendModelAsync(WishlistEmailAFriendModel model, bool excludeProperties)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnEmailWishlistToFriendPage;
             if (!excludeProperties)
@@ -1492,10 +1494,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<PictureModel> PrepareCartItemPictureModelAsync(ShoppingCartItem sci, int pictureSize, bool showDefaultPicture, string productName)
         {
-            var pictureCacheKey = _staticCacheManager.PrepareKeyForShortTermCache(NopModelCacheDefaults.CartPictureModelKey
-                , sci, pictureSize, true, await _workContext.GetWorkingLanguageAsync(), _webHelper.IsCurrentConnectionSecured(), await _storeContext.GetCurrentStoreAsync());
-
-            var model = await _staticCacheManager.GetAsync(pictureCacheKey, async () =>
+            var model = await _shortTermCacheManager.GetAsync(async () =>
             {
                 var product = await _productService.GetProductByIdAsync(sci.ProductId);
 
@@ -1505,10 +1504,11 @@ namespace Nop.Web.Factories
                 return new PictureModel
                 {
                     ImageUrl = (await _pictureService.GetPictureUrlAsync(sciPicture, pictureSize, showDefaultPicture)).Url,
+                    FullSizeImageUrl = (await _pictureService.GetPictureUrlAsync(sciPicture)).Url,
                     Title = string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageLinkTitleFormat"), productName),
                     AlternateText = string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageAlternateTextFormat"), productName),
                 };
-            });
+            }, NopModelCacheDefaults.CartPictureModelKey, sci, pictureSize, true, await _workContext.GetWorkingLanguageAsync(), _webHelper.IsCurrentConnectionSecured(), await _storeContext.GetCurrentStoreAsync());
 
             return model;
         }

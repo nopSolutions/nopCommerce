@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
@@ -19,11 +15,11 @@ namespace Nop.Services.Security
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly ICustomerService _customerService;
-        private readonly IRepository<AclRecord> _aclRecordRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IWorkContext _workContext;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly ICustomerService _customerService;
+        protected readonly IRepository<AclRecord> _aclRecordRepository;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 
@@ -93,11 +89,9 @@ namespace Nop.Services.Security
         public virtual async Task<IQueryable<TEntity>> ApplyAcl<TEntity>(IQueryable<TEntity> query, Customer customer)
             where TEntity : BaseEntity, IAclSupported
         {
-            if (query is null)
-                throw new ArgumentNullException(nameof(query));
+            ArgumentNullException.ThrowIfNull(query);
 
-            if (customer is null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
             return await ApplyAcl(query, customerRoleIds);
@@ -116,13 +110,11 @@ namespace Nop.Services.Security
         public virtual async Task<IQueryable<TEntity>> ApplyAcl<TEntity>(IQueryable<TEntity> query, int[] customerRoleIds)
             where TEntity : BaseEntity, IAclSupported
         {
-            if (query is null)
-                throw new ArgumentNullException(nameof(query));
+            ArgumentNullException.ThrowIfNull(query);
 
-            if (customerRoleIds is null)
-                throw new ArgumentNullException(nameof(customerRoleIds));
+            ArgumentNullException.ThrowIfNull(customerRoleIds);
 
-            if (!customerRoleIds.Any() || _catalogSettings.IgnoreAcl || !await IsEntityAclMappingExistAsync<TEntity>())
+            if (customerRoleIds.Length == 0 || _catalogSettings.IgnoreAcl || !await IsEntityAclMappingExistAsync<TEntity>())
                 return query;
 
             return from entity in query
@@ -152,8 +144,7 @@ namespace Nop.Services.Security
         /// </returns>
         public virtual async Task<IList<AclRecord>> GetAclRecordsAsync<TEntity>(TEntity entity) where TEntity : BaseEntity, IAclSupported
         {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
             var entityId = entity.Id;
             var entityName = entity.GetType().Name;
@@ -176,8 +167,7 @@ namespace Nop.Services.Security
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertAclRecordAsync<TEntity>(TEntity entity, int customerRoleId) where TEntity : BaseEntity, IAclSupported
         {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
             if (customerRoleId == 0)
                 throw new ArgumentOutOfRangeException(nameof(customerRoleId));
@@ -206,8 +196,7 @@ namespace Nop.Services.Security
         /// </returns>
         public virtual async Task<int[]> GetCustomerRoleIdsWithAccessAsync<TEntity>(TEntity entity) where TEntity : BaseEntity, IAclSupported
         {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
             var entityId = entity.Id;
             var entityName = entity.GetType().Name;

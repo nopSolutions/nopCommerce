@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Shipping;
+﻿using Nop.Core.Domain.Shipping;
 using Nop.Services.Plugins;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Tracking;
@@ -22,22 +20,21 @@ namespace Nop.Tests.Nop.Services.Tests.Shipping
         /// <returns>Represents a response of getting shipping rate options</returns>
         public Task<GetShippingOptionResponse> GetShippingOptionsAsync(GetShippingOptionRequest getShippingOptionRequest)
         {
-            if (getShippingOptionRequest == null)
-                throw new ArgumentNullException(nameof(getShippingOptionRequest));
+            ArgumentNullException.ThrowIfNull(getShippingOptionRequest);
 
             var response = new GetShippingOptionResponse();
             response.ShippingOptions.Add(new ShippingOption
-                {
-                    Name = "Shipping option 1",
-                    Description = string.Empty,
-                    Rate = GetRate()
-                }); 
+            {
+                Name = "Shipping option 1",
+                Description = string.Empty,
+                Rate = GetRate()
+            });
             response.ShippingOptions.Add(new ShippingOption
-                {
-                    Name = "Shipping option 2",
-                    Description = string.Empty,
-                    Rate = GetRate()
-                });
+            {
+                Name = "Shipping option 2",
+                Description = string.Empty,
+                Rate = GetRate()
+            });
 
             return Task.FromResult(response);
         }
@@ -49,8 +46,7 @@ namespace Nop.Tests.Nop.Services.Tests.Shipping
         /// <returns>Fixed shipping rate; or null in case there's no fixed shipping rate</returns>
         public Task<decimal?> GetFixedRateAsync(GetShippingOptionRequest getShippingOptionRequest)
         {
-            if (getShippingOptionRequest == null)
-                throw new ArgumentNullException(nameof(getShippingOptionRequest));
+            ArgumentNullException.ThrowIfNull(getShippingOptionRequest);
 
             return Task.FromResult<decimal?>(GetRate());
         }

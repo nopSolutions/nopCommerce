@@ -1,10 +1,6 @@
 ﻿//code from Telerik MVC Extensions
 
-using System;
-using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core.Infrastructure;
@@ -23,6 +19,7 @@ namespace Nop.Web.Framework.Menu
         protected readonly ILocalizationService _localizationService;
         protected readonly INopFileProvider _fileProvider;
         protected readonly IPermissionService _permissionService;
+        private static readonly char[] _separator = [','];
 
         #endregion
 
@@ -80,9 +77,9 @@ namespace Nop.Web.Framework.Menu
                 siteMapNode.ActionName = actionName;
 
                 //apply admin area as described here - https://www.nopcommerce.com/boards/topic/20478/broken-menus-in-admin-area-whilst-trying-to-make-a-plugin-admin-page
-                siteMapNode.RouteValues = new RouteValueDictionary { { "area", AreaNames.Admin } };
+                siteMapNode.RouteValues = new RouteValueDictionary { { "area", AreaNames.ADMIN } };
             }
-            else if (!string.IsNullOrEmpty(url)) 
+            else if (!string.IsNullOrEmpty(url))
                 siteMapNode.Url = url;
 
             //image URL
@@ -91,18 +88,18 @@ namespace Nop.Web.Framework.Menu
             //permission name
             var permissionNames = GetStringValueFromAttribute(xmlNode, "PermissionNames");
             if (!string.IsNullOrEmpty(permissionNames))
-                siteMapNode.Visible = await permissionNames.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                siteMapNode.Visible = await permissionNames.Split(_separator, StringSplitOptions.RemoveEmptyEntries)
                     .AnyAwaitAsync(async permissionName => await _permissionService.AuthorizeAsync(permissionName.Trim()));
             else
                 siteMapNode.Visible = true;
 
             // Open URL in new tab
             var openUrlInNewTabValue = GetStringValueFromAttribute(xmlNode, "OpenUrlInNewTab");
-            if (!string.IsNullOrWhiteSpace(openUrlInNewTabValue) && bool.TryParse(openUrlInNewTabValue, out var booleanResult)) 
+            if (!string.IsNullOrWhiteSpace(openUrlInNewTabValue) && bool.TryParse(openUrlInNewTabValue, out var booleanResult))
                 siteMapNode.OpenUrlInNewTab = booleanResult;
         }
 
-        private static string GetStringValueFromAttribute(XmlNode node, string attributeName)
+        protected static string GetStringValueFromAttribute(XmlNode node, string attributeName)
         {
             string value = null;
 
@@ -110,7 +107,7 @@ namespace Nop.Web.Framework.Menu
             {
                 var attribute = node.Attributes[attributeName];
 
-                if (attribute != null) 
+                if (attribute != null)
                     value = attribute.Value;
             }
 
@@ -118,7 +115,7 @@ namespace Nop.Web.Framework.Menu
         }
 
         #endregion
-        
+
         #region Methods
 
         /// <summary>

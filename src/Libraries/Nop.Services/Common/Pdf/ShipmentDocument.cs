@@ -1,5 +1,4 @@
-using System;
-using Nop.Services.Localization;
+﻿using Nop.Services.Localization;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
@@ -10,17 +9,17 @@ namespace Nop.Services.Common.Pdf
     /// <summary>
     /// Represents the shipment document
     /// </summary>
-    public class ShipmentDocument: PdfDocument<ShipmentSource>
+    public class ShipmentDocument : PdfDocument<ShipmentSource>
     {
         #region Ctor
 
-        public ShipmentDocument(ShipmentSource shipmentSource, ILocalizationService localizationService): base(shipmentSource, localizationService)
+        public ShipmentDocument(ShipmentSource shipmentSource, ILocalizationService localizationService) : base(shipmentSource, localizationService)
         {
         }
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
         /// <summary>
         /// Compose the shipment
@@ -71,14 +70,14 @@ namespace Nop.Services.Common.Pdf
 
                 table.Header(header =>
                 {
-                    header.Cell().Element(CellHeaderStyle).Text(t => ComposeLabel<ProductItem>(t, x => x.Name));
-                    header.Cell().Element(CellHeaderStyle).Text(t => ComposeLabel<ProductItem>(t, x => x.Sku));
-                    header.Cell().Element(CellHeaderStyle).AlignRight().Text(t => ComposeLabel<ProductItem>(t, x => x.Quantity));
+                    header.Cell().Element(cellHeaderStyle).Text(t => ComposeLabel<ProductItem>(t, x => x.Name));
+                    header.Cell().Element(cellHeaderStyle).Text(t => ComposeLabel<ProductItem>(t, x => x.Sku));
+                    header.Cell().Element(cellHeaderStyle).AlignRight().Text(t => ComposeLabel<ProductItem>(t, x => x.Quantity));
                 });
 
                 foreach (var product in Source.Products)
                 {
-                    table.Cell().Element(CellContentStyle).Element(productContainer =>
+                    table.Cell().Element(cellContentStyle).Element(productContainer =>
                     {
                         productContainer.Column(pColumn =>
                         {
@@ -89,16 +88,16 @@ namespace Nop.Services.Common.Pdf
                         });
                     });
 
-                    table.Cell().Element(CellContentStyle).Text(product.Sku);
-                    table.Cell().Element(CellContentStyle).AlignRight().Text(product.Quantity);
+                    table.Cell().Element(cellContentStyle).Text(product.Sku);
+                    table.Cell().Element(cellContentStyle).AlignRight().Text(product.Quantity);
                 }
 
-                static IContainer CellHeaderStyle(IContainer container)
+                static IContainer cellHeaderStyle(IContainer container)
                 {
                     return container.DefaultTextStyle(x => x.SemiBold()).PaddingVertical(5).BorderBottom(1).BorderColor(Colors.Black);
                 }
 
-                static IContainer CellContentStyle(IContainer container)
+                static IContainer cellContentStyle(IContainer container)
                 {
                     return container.BorderBottom(1).BorderColor(Colors.Grey.Lighten2).PaddingVertical(5);
                 }
@@ -122,11 +121,8 @@ namespace Nop.Services.Common.Pdf
                 column.Item().Text(t => ComposeField(t, Source.Address, x => x.Company, delimiter: ": "));
                 column.Item().Text(t => ComposeField(t, Source.Address, x => x.Name, delimiter: ": "));
                 column.Item().Text(t => ComposeField(t, Source.Address, x => x.Phone, delimiter: ": "));
-                column.Item().Text(t => ComposeField(t, Source.Address, x => x.Address, delimiter: ": "));
-                column.Item().Text(t => ComposeField(t, Source.Address, x => x.Address2, delimiter: ": "));
-                column.Item().Text(Source.Address.AddressLine);
+                column.Item().Text(t => ComposeField(t, Source.Address, x => x.AddressLine, delimiter: ": "));
                 column.Item().Text(t => ComposeField(t, Source.Address, x => x.VATNumber, delimiter: ": "));
-                column.Item().Text(Source.Address.Country);
 
                 foreach (var attribute in Source.Address.AddressAttributes)
                     column.Item().Text(attribute);

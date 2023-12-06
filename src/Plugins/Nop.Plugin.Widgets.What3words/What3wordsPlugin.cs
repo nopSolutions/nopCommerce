@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core.Domain.Cms;
@@ -21,11 +18,11 @@ namespace Nop.Plugin.Widgets.What3words
     {
         #region Fields
 
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly ILocalizationService _localizationService;
-        private readonly ISettingService _settingService;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly WidgetSettings _widgetSettings;
+        protected readonly IActionContextAccessor _actionContextAccessor;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ISettingService _settingService;
+        protected readonly IUrlHelperFactory _urlHelperFactory;
+        protected readonly WidgetSettings _widgetSettings;
 
         #endregion
 
@@ -85,8 +82,7 @@ namespace Nop.Plugin.Widgets.What3words
         /// <returns>View component type</returns>
         public Type GetWidgetViewComponent(string widgetZone)
         {
-            if (widgetZone is null)
-                throw new ArgumentNullException(nameof(widgetZone));
+            ArgumentNullException.ThrowIfNull(widgetZone);
 
             if (widgetZone.Equals(PublicWidgetZones.OrderSummaryBillingAddress) ||
                 widgetZone.Equals(PublicWidgetZones.OrderSummaryShippingAddress) ||

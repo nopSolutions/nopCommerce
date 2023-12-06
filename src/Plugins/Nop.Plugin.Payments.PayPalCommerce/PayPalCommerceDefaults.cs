@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Nop.Core;
+﻿using Nop.Core;
 
 namespace Nop.Plugin.Payments.PayPalCommerce
 {
@@ -66,8 +65,8 @@ namespace Nop.Plugin.Payments.PayPalCommerce
         /// <summary>
         /// Gets webhook event names to subscribe
         /// </summary>
-        public static List<string> WebhookEventNames => new()
-        {
+        public static List<string> WebhookEventNames =>
+        [
             "CHECKOUT.ORDER.APPROVED",
             "CHECKOUT.ORDER.COMPLETED",
             "PAYMENT.AUTHORIZATION.CREATED",
@@ -76,13 +75,13 @@ namespace Nop.Plugin.Payments.PayPalCommerce
             "PAYMENT.CAPTURE.DENIED",
             "PAYMENT.CAPTURE.PENDING",
             "PAYMENT.CAPTURE.REFUNDED"
-        };
+        ];
 
         /// <summary>
         /// Gets a list of currencies that do not support decimals. 
         /// Refer to https://developer.paypal.com/docs/integration/direct/rest/currency-codes/ for more information 
         /// </summary>
-        public static List<string> CurrenciesWithoutDecimals => new() { "HUF", "JPY", "TWD" };
+        public static List<string> CurrenciesWithoutDecimals => ["HUF", "JPY", "TWD"];
 
         #region Onboarding
 

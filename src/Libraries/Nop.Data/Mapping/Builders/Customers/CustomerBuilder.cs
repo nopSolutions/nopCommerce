@@ -41,6 +41,7 @@ namespace Nop.Data.Mapping.Builders.Customers
                 .WithColumn(nameof(Customer.CustomCustomerAttributesXML)).AsString(int.MaxValue).Nullable()
                 .WithColumn(nameof(Customer.DateOfBirth)).AsDateTime2().Nullable()
                 .WithColumn(nameof(Customer.SystemName)).AsString(400).Nullable()
+                .WithColumn(nameof(Customer.LastIpAddress)).AsString(100).Nullable()
                 //customization
                 .WithColumn(nameof(Customer.CustomerProfileTypeId)).AsInt32().Nullable()
                 .WithColumn(nameof(Customer.CurrencyId)).AsInt32().ForeignKey<Currency>(onDelete: Rule.SetNull).Nullable()

@@ -1,10 +1,7 @@
-﻿using System;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Nop.Core.Http.Extensions;
 using Nop.Data;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Models;
@@ -38,7 +35,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Fields
 
-            private readonly ILocalizationService _localizationService;
+            protected readonly ILocalizationService _localizationService;
 
             #endregion
 
@@ -60,14 +57,10 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <returns>A task that represents the asynchronous operation</returns>
             private async Task CheckNotNullValidationAsync(ActionExecutingContext context)
             {
-                if (context == null)
-                    throw new ArgumentNullException(nameof(context));
-
-                if (context.HttpContext.Request == null)
-                    return;
+                ArgumentNullException.ThrowIfNull(context);
 
                 //only in POST requests
-                if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Post, StringComparison.InvariantCultureIgnoreCase))
+                if (!context.HttpContext.Request.IsPostRequest())
                     return;
 
                 if (!DataSettingsManager.IsDatabaseInstalled())
@@ -81,7 +74,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                     .Where(modelState => modelState.Value.ValidationState == ModelValidationState.Invalid
                         && modelState.Value.Errors.Any(error => error.ErrorMessage.Equals(NopValidationDefaults.NotNullValidationLocaleName)))
                     .ToList();
-                if (!nullModelValues.Any())
+                if (nullModelValues.Count == 0)
                     return;
 
                 //get model passed to the action

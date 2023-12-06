@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using Humanizer;
 using Humanizer.Localisation;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -21,8 +18,7 @@ namespace Nop.Web.Framework.Extensions
         /// <returns>A value indicating whether real selection is not possible</returns>
         public static bool SelectionIsNotPossible(this IList<SelectListItem> items, bool ignoreZeroValue = true)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             //we ignore items with "0" value? Usually it's something like "Select All", "etc
             return items.Count(x => !ignoreZeroValue || !x.Value.ToString().Equals("0")) < 2;

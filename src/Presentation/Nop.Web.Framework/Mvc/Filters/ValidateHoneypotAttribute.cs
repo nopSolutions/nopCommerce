@@ -1,10 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Primitives;
 using Nop.Core;
 using Nop.Core.Domain.Security;
+using Nop.Core.Http.Extensions;
 using Nop.Data;
 using Nop.Services.Logging;
 
@@ -35,9 +34,9 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Fields
 
-            private readonly ILogger _logger;
-            private readonly IWebHelper _webHelper;
-            private readonly SecuritySettings _securitySettings;
+            protected readonly ILogger _logger;
+            protected readonly IWebHelper _webHelper;
+            protected readonly SecuritySettings _securitySettings;
 
             #endregion
 
@@ -63,11 +62,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <returns>A task that represents the asynchronous operation</returns>
             private async Task ValidateHoneypotAsync(AuthorizationFilterContext context)
             {
-                if (context == null)
-                    throw new ArgumentNullException(nameof(context));
-
-                if (context.HttpContext.Request == null)
-                    return;
+                ArgumentNullException.ThrowIfNull(context);
 
                 if (!DataSettingsManager.IsDatabaseInstalled())
                     return;
@@ -77,7 +72,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
 
                 //try get honeypot input value 
-                var inputValue = context.HttpContext.Request.Form[_securitySettings.HoneypotInputName];
+                var inputValue = await context.HttpContext.Request.GetFormValueAsync(_securitySettings.HoneypotInputName);
 
                 //if exists, bot is caught
                 if (!StringValues.IsNullOrEmpty(inputValue))

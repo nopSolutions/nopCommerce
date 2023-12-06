@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace Nop.Services.Common.Pdf
@@ -12,8 +11,8 @@ namespace Nop.Services.Common.Pdf
 
         public InvoiceTotals()
         {
-            GiftCards = new();
-            TaxRates = new();
+            GiftCards = [];
+            TaxRates = [];
         }
 
         #endregion

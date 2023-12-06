@@ -1,7 +1,5 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Nop.Web.Areas.Admin.Factories;
+﻿using Microsoft.AspNetCore.Mvc;
+using Nop.Web.Framework.Factories;
 using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Areas.Admin.Components
@@ -13,7 +11,7 @@ namespace Nop.Web.Areas.Admin.Components
     {
         #region Fields
 
-        private readonly IWidgetModelFactory _widgetModelFactory;
+        protected readonly IWidgetModelFactory _widgetModelFactory;
 
         #endregion
 
@@ -40,10 +38,10 @@ namespace Nop.Web.Areas.Admin.Components
         public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData = null)
         {
             //prepare model
-            var models = await _widgetModelFactory.PrepareRenderWidgetModelsAsync(widgetZone, additionalData);
+            var models = await _widgetModelFactory.PrepareRenderWidgetModelAsync(widgetZone, additionalData, false);
 
             //no data?
-            if (!models.Any())
+            if (models.Count == 0)
                 return Content(string.Empty);
 
             return View(models);

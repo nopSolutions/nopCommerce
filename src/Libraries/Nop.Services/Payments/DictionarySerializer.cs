@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -13,7 +11,7 @@ namespace Nop.Services.Payments
     {
         public DictionarySerializer()
         {
-            Dictionary = new Dictionary<string, object>();
+            Dictionary = [];
         }
 
         /// <summary>
@@ -31,7 +29,7 @@ namespace Nop.Services.Payments
         /// <param name="writer">Writer</param>
         public void WriteXml(XmlWriter writer)
         {
-            if (!Dictionary.Any())
+            if (Dictionary.Count == 0)
                 return;
 
             foreach (var key in Dictionary.Keys)

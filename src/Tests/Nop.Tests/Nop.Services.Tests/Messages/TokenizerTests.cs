@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Configuration;
 using Nop.Services.Messages;
@@ -38,7 +36,7 @@ namespace Nop.Tests.Nop.Services.Tests.Messages
         {
             var tokens = new List<Token>
             {
-                new Token("Token1", "Value1")
+                new("Token1", "Value1")
             };
             //correct case
             _tokenizer
@@ -60,7 +58,7 @@ namespace Nop.Tests.Nop.Services.Tests.Messages
 
             var tokens = new List<Token>
             {
-                new Token("Token1", "Value1")
+                new("Token1", "Value1")
             };
             tokenizer
                 .Replace("Some text %TOKEn1%", tokens, false)
@@ -72,7 +70,7 @@ namespace Nop.Tests.Nop.Services.Tests.Messages
         {
             var tokens = new List<Token>
             {
-                new Token("Token1", "<Value1>")
+                new("Token1", "<Value1>")
             };
 
             _tokenizer
@@ -85,7 +83,7 @@ namespace Nop.Tests.Nop.Services.Tests.Messages
         {
             var tokens = new List<Token>
             {
-                new Token("Token1", "<Value1>", true)
+                new("Token1", "<Value1>", true)
             };
 
             _tokenizer
@@ -98,11 +96,11 @@ namespace Nop.Tests.Nop.Services.Tests.Messages
         {
             var tokens = new List<Token>
             {
-                new Token("ConditionToken", true),
-                new Token("ConditionToken2", 2),
-                new Token("ThenToken", "value"),
-                new Token("ThenToken2", "value2"),
-                new Token("SomeValueToken", 10),
+                new("ConditionToken", true),
+                new("ConditionToken2", 2),
+                new("ThenToken", "value"),
+                new("ThenToken2", "value2"),
+                new("SomeValueToken", 10),
             };
 
             //simple condition
@@ -135,9 +133,9 @@ namespace Nop.Tests.Nop.Services.Tests.Messages
         {
             var tokens = new List<Token>
             {
-                new Token("Token1", true),
-                new Token("Token2", 1),
-                new Token("Token3", "value")
+                new("Token1", true),
+                new("Token2", 1),
+                new("Token3", "value")
             };
 
             _tokenizer.Replace("Some text %Token1%, %Token2%, %Token3%", tokens, true)

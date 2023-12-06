@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Plugin.Widgets.NivoSlider.Infrastructure.Cache;
@@ -13,15 +11,15 @@ namespace Nop.Plugin.Widgets.NivoSlider.Components
 {
     public class WidgetsNivoSliderViewComponent : NopViewComponent
     {
-        private readonly IStoreContext _storeContext;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly ISettingService _settingService;
-        private readonly IPictureService _pictureService;
-        private readonly IWebHelper _webHelper;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly ISettingService _settingService;
+        protected readonly IPictureService _pictureService;
+        protected readonly IWebHelper _webHelper;
 
-        public WidgetsNivoSliderViewComponent(IStoreContext storeContext, 
-            IStaticCacheManager staticCacheManager, 
-            ISettingService settingService, 
+        public WidgetsNivoSliderViewComponent(IStoreContext storeContext,
+            IStaticCacheManager staticCacheManager,
+            ISettingService settingService,
             IPictureService pictureService,
             IWebHelper webHelper)
         {
@@ -78,7 +76,7 @@ namespace Nop.Plugin.Widgets.NivoSlider.Components
         /// <returns>A task that represents the asynchronous operation</returns>
         protected async Task<string> GetPictureUrlAsync(int pictureId)
         {
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(ModelCacheEventConsumer.PICTURE_URL_MODEL_KEY, 
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(ModelCacheEventConsumer.PICTURE_URL_MODEL_KEY,
                 pictureId, _webHelper.IsCurrentConnectionSecured() ? Uri.UriSchemeHttps : Uri.UriSchemeHttp);
 
             return await _staticCacheManager.GetAsync(cacheKey, async () =>

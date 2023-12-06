@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Nop.Core.Domain.Blogs
+﻿namespace Nop.Core.Domain.Blogs
 {
     /// <summary>
     /// Represents a blog comment

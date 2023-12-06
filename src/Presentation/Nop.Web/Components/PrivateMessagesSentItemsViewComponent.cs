@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Components;
 
@@ -7,7 +6,7 @@ namespace Nop.Web.Components
 {
     public partial class PrivateMessagesSentItemsViewComponent : NopViewComponent
     {
-        private readonly IPrivateMessagesModelFactory _privateMessagesModelFactory;
+        protected readonly IPrivateMessagesModelFactory _privateMessagesModelFactory;
 
         public PrivateMessagesSentItemsViewComponent(IPrivateMessagesModelFactory privateMessagesModelFactory)
         {

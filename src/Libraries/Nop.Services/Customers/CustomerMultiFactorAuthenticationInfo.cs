@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Nop.Services.Customers
+﻿namespace Nop.Services.Customers
 {
     /// <summary>
     /// Customer multi-factor authentication info
@@ -9,7 +7,7 @@ namespace Nop.Services.Customers
     {
         public CustomerMultiFactorAuthenticationInfo()
         {
-            CustomValues = new Dictionary<string, object>();
+            CustomValues = [];
         }
         public string UserName { get; set; }
 

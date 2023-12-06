@@ -1,6 +1,4 @@
-﻿using System;
-using System.Globalization;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
@@ -17,13 +15,13 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly CurrencySettings _currencySettings;
-        private readonly ICurrencyService _currencyService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IMeasureService _measureService;
-        private readonly IPriceCalculationService _priceCalculationService;
-        private readonly IWorkContext _workContext;
-        private readonly TaxSettings _taxSettings;
+        protected readonly CurrencySettings _currencySettings;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IMeasureService _measureService;
+        protected readonly IPriceCalculationService _priceCalculationService;
+        protected readonly IWorkContext _workContext;
+        protected readonly TaxSettings _taxSettings;
 
         #endregion
 
@@ -60,8 +58,7 @@ namespace Nop.Services.Catalog
         protected virtual string GetCurrencyString(decimal amount,
             bool showCurrency, Currency targetCurrency)
         {
-            if (targetCurrency == null)
-                throw new ArgumentNullException(nameof(targetCurrency));
+            ArgumentNullException.ThrowIfNull(targetCurrency);
 
             string result;
             if (!string.IsNullOrEmpty(targetCurrency.CustomFormatting))
@@ -328,8 +325,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<string> FormatRentalProductPeriodAsync(Product product, string price)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             if (!product.IsRental)
                 return price;
@@ -486,8 +482,7 @@ namespace Nop.Services.Catalog
         /// </returns>
         public virtual async Task<string> FormatBasePriceAsync(Product product, decimal? productPrice, decimal? totalWeight = null)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             if (!product.BasepriceEnabled)
                 return null;

@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
+﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Primitives;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Http.Extensions;
 using Nop.Data;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
@@ -41,11 +38,11 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Fields
 
-            private readonly ICustomerService _customerService;
-            private readonly IDiscountService _discountService;
-            private readonly ILocalizationService _localizationService;
-            private readonly INotificationService _notificationService;
-            private readonly IWorkContext _workContext;
+            protected readonly ICustomerService _customerService;
+            protected readonly IDiscountService _discountService;
+            protected readonly ILocalizationService _localizationService;
+            protected readonly INotificationService _notificationService;
+            protected readonly IWorkContext _workContext;
 
             #endregion
 
@@ -75,15 +72,14 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <returns>A task that represents the asynchronous operation</returns>
             private async Task CheckDiscountCouponAsync(ActionExecutingContext context)
             {
-                if (context == null)
-                    throw new ArgumentNullException(nameof(context));
+                ArgumentNullException.ThrowIfNull(context);
 
                 //check request query parameters
-                if (!context.HttpContext.Request?.Query?.Any() ?? true)
+                if (context.HttpContext.Request.Query.Count == 0)
                     return;
 
                 //only in GET requests
-                if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
+                if (!context.HttpContext.Request.IsGetRequest())
                     return;
 
                 if (!DataSettingsManager.IsDatabaseInstalled())
@@ -110,7 +106,7 @@ namespace Nop.Web.Framework.Mvc.Filters
 
                 foreach (var discount in discounts)
                 {
-                    var result = await _discountService.ValidateDiscountAsync(discount, customer, couponCodes.ToArray());
+                    var result = await _discountService.ValidateDiscountAsync(discount, customer, [.. couponCodes]);
                     if (!result.IsValid)
                         continue;
 

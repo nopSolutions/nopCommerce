@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Common;
@@ -24,25 +21,26 @@ using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.Tax.Avalara.Controllers
 {
-    [Area(AreaNames.Admin)]
+    [Area(AreaNames.ADMIN)]
     [AuthorizeAdmin]
     [AutoValidateAntiforgeryToken]
     public class AvalaraController : BasePluginController
     {
         #region Fields
 
-        private readonly IAclSupportedModelFactory _aclSupportedModelFactory;
-        private readonly AvalaraTaxManager _avalaraTaxManager;
-        private readonly AvalaraTaxSettings _avalaraTaxSettings;
-        private readonly CurrencySettings _currencySettings;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ICurrencyService _currencyService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ILocalizationService _localizationService;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly ISettingService _settingService;
-        private readonly IWorkContext _workContext;
+        protected readonly IAclSupportedModelFactory _aclSupportedModelFactory;
+        protected readonly AvalaraTaxManager _avalaraTaxManager;
+        protected readonly AvalaraTaxSettings _avalaraTaxSettings;
+        protected readonly CurrencySettings _currencySettings;
+        protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        protected readonly ICountryService _countryService;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly ISettingService _settingService;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 
@@ -53,6 +51,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             AvalaraTaxSettings avalaraTaxSettings,
             CurrencySettings currencySettings,
             IBaseAdminModelFactory baseAdminModelFactory,
+            ICountryService countryService,
             ICurrencyService currencyService,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
@@ -66,6 +65,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             _avalaraTaxSettings = avalaraTaxSettings;
             _currencySettings = currencySettings;
             _baseAdminModelFactory = baseAdminModelFactory;
+            _countryService = countryService;
             _currencyService = currencyService;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
@@ -92,6 +92,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
                 LicenseKey = _avalaraTaxSettings.LicenseKey,
                 CompanyCode = _avalaraTaxSettings.CompanyCode,
                 UseSandbox = _avalaraTaxSettings.UseSandbox,
+                UseItemClassification = _avalaraTaxSettings.UseItemClassification,
                 CommitTransactions = _avalaraTaxSettings.CommitTransactions,
                 ValidateAddress = _avalaraTaxSettings.ValidateAddress,
                 TaxOriginAddressTypeId = (int)_avalaraTaxSettings.TaxOriginAddressType,
@@ -103,16 +104,30 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
                 AllowEditCustomer = _avalaraTaxSettings.AllowEditCustomer,
                 DisplayNoValidCertificatesMessage = _avalaraTaxSettings.DisplayNoValidCertificatesMessage,
                 SelectedCustomerRoleIds = _avalaraTaxSettings.CustomerRoleIds,
+                SelectedCountryIds = _avalaraTaxSettings.SelectedCountryIds,
                 TestTaxResult = testTaxResult
             };
             model.IsConfigured = !string.IsNullOrEmpty(_avalaraTaxSettings.AccountId) && !string.IsNullOrEmpty(_avalaraTaxSettings.LicenseKey);
             model.TaxOriginAddressTypes = (await TaxOriginAddressType.DefaultTaxAddress.ToSelectListAsync(false))
                 .Select(type => new SelectListItem(type.Text, type.Value)).ToList();
             model.HideGeneralBlock = await _genericAttributeService.GetAttributeAsync<bool>(customer, AvalaraTaxDefaults.HideGeneralBlock);
+            model.HideItemClassificationBlock = await _genericAttributeService.GetAttributeAsync<bool>(customer, AvalaraTaxDefaults.HideItemClassificationBlock);
             model.HideLogBlock = await _genericAttributeService.GetAttributeAsync<bool>(customer, AvalaraTaxDefaults.HideLogBlock);
 
             //prepare model customer roles
             await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(model);
+
+            //prepare available of item classification countries (for sync)
+            await _baseAdminModelFactory.PrepareCountriesAsync(model.AvailableCountries, false);
+
+            //prepare item classification search model
+            model.ItemClassificationSearchModel.AvailableCountries = (await _countryService
+                .GetCountriesByIdsAsync(_avalaraTaxSettings.SelectedCountryIds?.ToArray()))
+                .Select(country => new SelectListItem(country.Name, country.Id.ToString()))
+                .ToList();
+            model.ItemClassificationSearchModel.AvailableCountries.Insert(0, new SelectListItem { Text = "*", Value = "0" });
+
+            model.ItemClassificationSearchModel.SetGridPageSize();
 
             //prepare address model
             await _baseAdminModelFactory.PrepareCountriesAsync(model.TestAddress.AvailableCountries);
@@ -186,7 +201,26 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             _avalaraTaxSettings.AutoValidateCertificate = model.AutoValidateCertificate;
             _avalaraTaxSettings.AllowEditCustomer = model.AllowEditCustomer;
             _avalaraTaxSettings.DisplayNoValidCertificatesMessage = model.DisplayNoValidCertificatesMessage;
-            _avalaraTaxSettings.CustomerRoleIds = model.SelectedCustomerRoleIds.ToList();
+            _avalaraTaxSettings.CustomerRoleIds = [.. model.SelectedCustomerRoleIds];
+            await _settingService.SaveSettingAsync(_avalaraTaxSettings);
+
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
+
+            return await Configure();
+        }
+
+        [HttpPost, ActionName("Configure")]
+        [FormValueRequired("saveIC")]
+        public async Task<IActionResult> SaveItemClassification(ConfigurationModel model)
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
+                return AccessDeniedView();
+
+            if (!ModelState.IsValid)
+                return await Configure();
+
+            _avalaraTaxSettings.SelectedCountryIds = [.. model.SelectedCountryIds];
+            _avalaraTaxSettings.UseItemClassification = model.UseItemClassification;
             await _settingService.SaveSettingAsync(_avalaraTaxSettings);
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));

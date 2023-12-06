@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Web.Areas.Admin.Models.Tax;
+﻿using Nop.Web.Areas.Admin.Models.Tax;
 
 namespace Nop.Web.Areas.Admin.Factories
 {

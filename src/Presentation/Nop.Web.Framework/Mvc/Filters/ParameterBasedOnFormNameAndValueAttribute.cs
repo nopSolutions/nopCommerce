@@ -1,7 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Nop.Core.Http.Extensions;
 
 namespace Nop.Web.Framework.Mvc.Filters
 {
@@ -21,7 +20,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         public ParameterBasedOnFormNameAndValueAttribute(string formKeyName, string formValue, string actionParameterName)
             : base(typeof(ParameterBasedOnFormNameAndValueFilter))
         {
-            Arguments = new object[] { formKeyName, formValue, actionParameterName };
+            Arguments = [formKeyName, formValue, actionParameterName];
         }
 
         #endregion
@@ -35,9 +34,9 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Fields
 
-            private readonly string _formKeyName;
-            private readonly string _formValue;
-            private readonly string _actionParameterName;
+            protected readonly string _formKeyName;
+            protected readonly string _formValue;
+            protected readonly string _actionParameterName;
 
             #endregion
 
@@ -59,20 +58,14 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// </summary>
             /// <param name="context">A context for action filters</param>
             /// <returns>A task that represents the asynchronous operation</returns>
-            private Task CheckParameterBasedOnFormNameAndValueAsync(ActionExecutingContext context)
+            private async Task CheckParameterBasedOnFormNameAndValueAsync(ActionExecutingContext context)
             {
-                if (context == null)
-                    throw new ArgumentNullException(nameof(context));
-
-                if (context.HttpContext.Request == null)
-                    return Task.CompletedTask;
+                ArgumentNullException.ThrowIfNull(context);
 
                 //if form key with '_formKeyName' exists and value of this form parameter equals passed '_formValue', 
                 //then set specified '_actionParameterName' to true
-                var formValue = context.HttpContext.Request.Form[_formKeyName];
+                var formValue = await context.HttpContext.Request.GetFormValueAsync(_formKeyName);
                 context.ActionArguments[_actionParameterName] = !string.IsNullOrEmpty(formValue) && formValue.Equals(_formValue);
-
-                return Task.CompletedTask;
             }
 
             #endregion

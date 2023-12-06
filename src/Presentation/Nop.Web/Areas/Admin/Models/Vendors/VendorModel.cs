@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Nop.Core.Domain.Catalog;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Framework.Models;
@@ -20,7 +19,7 @@ namespace Nop.Web.Areas.Admin.Models.Vendors
                 PageSize = 5;
 
             Address = new AddressModel();
-            VendorAttributes = new List<VendorAttributeModel>();
+            VendorAttributes = [];
             Locales = new List<VendorLocalizedModel>();
             AssociatedCustomers = new List<VendorAssociatedCustomerModel>();
             VendorNoteSearchModel = new VendorNoteSearchModel();
@@ -53,7 +52,7 @@ namespace Nop.Web.Areas.Admin.Models.Vendors
         public bool Active { get; set; }
 
         [NopResourceDisplayName("Admin.Vendors.Fields.DisplayOrder")]
-        public int DisplayOrder { get; set; }        
+        public int DisplayOrder { get; set; }
 
         [NopResourceDisplayName("Admin.Vendors.Fields.MetaKeywords")]
         public string MetaKeywords { get; set; }

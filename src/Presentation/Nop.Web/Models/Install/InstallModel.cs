@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Data;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Models.Install
 {
@@ -9,15 +9,17 @@ namespace Nop.Web.Models.Install
     {
         public InstallModel()
         {
-            AvailableLanguages = new List<SelectListItem>();
-            AvailableDataProviders = new List<SelectListItem>();
-            AvailableCountries = new List<SelectListItem>();
+            AvailableLanguages = [];
+            AvailableDataProviders = [];
+            AvailableCountries = [];
         }
 
         [DataType(DataType.EmailAddress)]
         public string AdminEmail { get; set; }
+        [NoTrim]
         [DataType(DataType.Password)]
         public string AdminPassword { get; set; }
+        [NoTrim]
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
         public bool UseCustomCollation { get; set; }
@@ -30,6 +32,7 @@ namespace Nop.Web.Models.Install
         public bool ConnectionStringRaw { get; set; }
 
         public bool InstallRegionalResources { get; set; }
+        public bool SubscribeNewsletters { get; set; }
 
         public string DatabaseName { get; set; }
         public string ServerName { get; set; }
@@ -37,6 +40,7 @@ namespace Nop.Web.Models.Install
         public bool IntegratedSecurity { get; set; }
 
         public string Username { get; set; }
+        [NoTrim]
         [DataType(DataType.Password)]
         public string Password { get; set; }
         public string ConnectionString { get; set; }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
@@ -28,28 +24,28 @@ using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.Misc.Zettle.Controllers
 {
-    [Area(AreaNames.Admin)]
+    [Area(AreaNames.ADMIN)]
     [AuthorizeAdmin]
     [AutoValidateAntiforgeryToken]
     public class ZettleAdminController : BasePluginController
     {
         #region Fields
 
-        private readonly CurrencySettings _currencySettings;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ICurrencyService _currencyService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ILocalizationService _localizationService;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IProductService _productService;
-        private readonly IScheduleTaskService _scheduleTaskService;
-        private readonly ISettingService _settingService;
-        private readonly IStoreContext _storeContext;
-        private readonly TaxSettings _taxSettings;
-        private readonly ZettleRecordService _zettleRecordService;
-        private readonly ZettleService _zettleService;
-        private readonly ZettleSettings _zettleSettings;
+        protected readonly CurrencySettings _currencySettings;
+        protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IProductService _productService;
+        protected readonly IScheduleTaskService _scheduleTaskService;
+        protected readonly ISettingService _settingService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly TaxSettings _taxSettings;
+        protected readonly ZettleRecordService _zettleRecordService;
+        protected readonly ZettleService _zettleService;
+        protected readonly ZettleSettings _zettleSettings;
 
         #endregion
 
@@ -242,7 +238,7 @@ namespace Nop.Plugin.Misc.Zettle.Controllers
                 _zettleSettings.WebhookUrl = string.Empty;
                 _zettleSettings.WebhookKey = string.Empty;
                 _zettleSettings.ImportId = string.Empty;
-                _zettleSettings.InventoryTrackingIds = new();
+                _zettleSettings.InventoryTrackingIds = [];
 
                 if (ZettleService.IsConfigured(_zettleSettings))
                 {
@@ -328,7 +324,7 @@ namespace Nop.Plugin.Misc.Zettle.Controllers
             _zettleSettings.WebhookUrl = string.Empty;
             _zettleSettings.WebhookKey = string.Empty;
             _zettleSettings.ImportId = string.Empty;
-            _zettleSettings.InventoryTrackingIds = new();
+            _zettleSettings.InventoryTrackingIds = [];
             await _settingService.SaveSettingAsync(_zettleSettings);
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Misc.Zettle.Credentials.AccessRevoked"));

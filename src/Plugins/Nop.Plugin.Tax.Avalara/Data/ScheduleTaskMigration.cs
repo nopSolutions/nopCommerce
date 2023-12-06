@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using FluentMigrator;
+﻿using FluentMigrator;
 using Nop.Core.Domain.ScheduleTasks;
 using Nop.Data;
 using Nop.Data.Mapping;
@@ -17,11 +15,11 @@ namespace Nop.Plugin.Tax.Avalara.Data
     {
         #region Fields
 
-        private readonly AvalaraTaxSettings _avalaraTaxSettings;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IScheduleTaskService _scheduleTaskService;
-        private readonly ISettingService _settingService;
+        protected readonly AvalaraTaxSettings _avalaraTaxSettings;
+        protected readonly ILanguageService _languageService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IScheduleTaskService _scheduleTaskService;
+        protected readonly ISettingService _settingService;
 
         #endregion
 

@@ -1,5 +1,4 @@
-﻿using System;
-using Nop.Services.Logging;
+﻿﻿using Nop.Services.Logging;
 using Nop.Services.ScheduleTasks;
 
 namespace Nop.Services.Messages
@@ -11,10 +10,11 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly IEmailAccountService _emailAccountService;
-        private readonly IEmailSender _emailSender;
-        private readonly ILogger _logger;
-        private readonly IQueuedEmailService _queuedEmailService;
+        protected readonly IEmailAccountService _emailAccountService;
+        protected readonly IEmailSender _emailSender;
+        protected readonly ILogger _logger;
+        protected readonly IQueuedEmailService _queuedEmailService;
+        private static readonly char[] _separator = [';'];
 
         #endregion
 
@@ -38,7 +38,7 @@ namespace Nop.Services.Messages
         /// <summary>
         /// Executes a task
         /// </summary>
-        public virtual async System.Threading.Tasks.Task ExecuteAsync()
+        public virtual async Task ExecuteAsync()
         {
             var maxTries = 3;
             var queuedEmails = await _queuedEmailService.SearchEmailsAsync(null, null, null, null,
@@ -47,10 +47,10 @@ namespace Nop.Services.Messages
             {
                 var bcc = string.IsNullOrWhiteSpace(queuedEmail.Bcc)
                             ? null
-                            : queuedEmail.Bcc.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                            : queuedEmail.Bcc.Split(_separator, StringSplitOptions.RemoveEmptyEntries);
                 var cc = string.IsNullOrWhiteSpace(queuedEmail.CC)
                             ? null
-                            : queuedEmail.CC.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                            : queuedEmail.CC.Split(_separator, StringSplitOptions.RemoveEmptyEntries);
 
                 try
                 {

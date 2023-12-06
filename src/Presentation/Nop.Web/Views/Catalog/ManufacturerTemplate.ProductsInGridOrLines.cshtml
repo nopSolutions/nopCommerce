@@ -66,7 +66,7 @@
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ManufacturerDetailsBeforeProductList, additionalData = Model })
         @{
             var catalogProductsViewData = new ViewDataDictionary(ViewData);
-            catalogProductsViewData["fetchUrl"] = Html.Raw(Url.Action("GetManufacturerProducts", "Catalog", new { manufacturerId = Model.Id }));
+            catalogProductsViewData["fetchUrl"] = Html.Raw(Url.RouteUrl("GetManufacturerProducts", new { manufacturerId = Model.Id }));
         }
         @await Html.PartialAsync("_CatalogProducts", Model.CatalogProductsModel, catalogProductsViewData)
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ManufacturerDetailsBottom, additionalData = Model })

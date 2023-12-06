@@ -1,6 +1,4 @@
-﻿using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Plugin.Widgets.FacebookPixel.Domain;
@@ -14,7 +12,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
     {
         #region Fields
 
-        private readonly HttpClient _httpClient;
+        protected readonly HttpClient _httpClient;
 
         #endregion
 
@@ -40,17 +38,17 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// </returns>
         public async Task<string> SendEventAsync(FacebookPixelConfiguration facebookPixelConfiguration, ConversionsEvent conversionsEvent)
         {
-            var urlString = string.Join($"/", new string[] {
-                        FacebookPixelDefaults.FbConversionsApiBaseAddress,
-                        FacebookPixelDefaults.FbConversionsApiVersion,
-                        facebookPixelConfiguration.PixelId,
-                        FacebookPixelDefaults.FbConversionsApiEventEndpoint
-                    }) + $"?access_token=" + facebookPixelConfiguration.AccessToken;
+            var urlString = string.Join($"/",
+            [
+                FacebookPixelDefaults.FbConversionsApiBaseAddress,
+                FacebookPixelDefaults.FbConversionsApiVersion,
+                facebookPixelConfiguration.PixelId,
+                FacebookPixelDefaults.FbConversionsApiEventEndpoint
+            ]) + $"?access_token=" + facebookPixelConfiguration.AccessToken;
 
             var jsonString = JsonConvert.SerializeObject(conversionsEvent, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             var requestContent = new StringContent(jsonString, Encoding.UTF8, MimeTypes.ApplicationJson);
-            var result = await _httpClient.PostAsync(urlString, requestContent);
-            var response = result.EnsureSuccessStatusCode();
+            var response = await _httpClient.PostAsync(urlString, requestContent);
 
             return await response.Content.ReadAsStringAsync();
         }

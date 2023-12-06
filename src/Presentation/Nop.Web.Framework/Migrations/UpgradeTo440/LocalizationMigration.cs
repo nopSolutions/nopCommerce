@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using FluentMigrator;
+﻿using FluentMigrator;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -8,7 +7,7 @@ using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo440
 {
-    [NopMigration("2020-06-10 00:00:00", "4.40.0", UpdateMigrationType.Localization, MigrationProcessType.Update)]
+    [NopUpdateMigration("2020-06-10 00:00:00", "4.40", UpdateMigrationType.Localization)]
     public class LocalizationMigration : MigrationBase
     {
         /// <summary>Collect the UP migration expressions</summary>
@@ -314,6 +313,8 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Configuration.AppSettings.DistributedCache.SchemaName.Hint"] = "Specify the schema name (by default it is dbo)",
                 ["Admin.Configuration.AppSettings.DistributedCache.TableName"] = "Table name",
                 ["Admin.Configuration.AppSettings.DistributedCache.TableName.Hint"] = "Specify the table name",
+                ["Admin.Configuration.AppSettings.DistributedCache.InstanceName"] = "Instance name",
+                ["Admin.Configuration.AppSettings.DistributedCache.InstanceName.Hint"] = "Specify the instance name (by default \"nopCommerce\")",
                 ["Admin.Configuration.Settings.GeneralCommon.LoadAllLocaleRecordsOnStartup.Warning"] = "It seems that you use distributed cache, keep in mind that enabling this setting creates a lot of traffic between the distributed cache server and the application because of the large number of locales",
 
                 //configuration steps tour
@@ -708,7 +709,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Configuration.Settings.Catalog.ProductsByTagManuallyPriceRange"] = "'Products by tag' page. Enter price range manually",
                 ["Admin.Configuration.Settings.Catalog.ProductsByTagManuallyPriceRange.Hint"] = "Check to enter price range manually, otherwise the automatic calculation of price range is enabled on the 'Products by tag' page (based on prices of available products). Set price range manually if you have complex discount rules.",
             }, languageId);
-            
+
             // rename locales
             this.RenameLocales(new Dictionary<string, string>
             {
@@ -741,7 +742,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts"] = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.UsedByProducts",
                 ["Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts.Product"] = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.UsedByProducts.Product",
                 ["Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts.Published"] = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.UsedByProducts.Published",
-                
+
                 //#475
                 ["Admin.Configuration.ExternalAuthenticationMethods.Fields.DisplayOrder"] = "Admin.Configuration.Authentication.ExternalMethods.Fields.DisplayOrder",
                 ["Admin.Configuration.ExternalAuthenticationMethods.Fields.FriendlyName"] = "Admin.Configuration.Authentication.ExternalMethods.Fields.FriendlyName",
@@ -751,7 +752,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Configuration.ExternalAuthenticationMethods.Configure"] = "Admin.Configuration.Authentication.ExternalMethods.Configure",
                 ["Admin.Configuration.ExternalAuthenticationMethods"] = "Admin.Configuration.Authentication.ExternalMethods",
                 ["Permission.ManageExternalAuthenticationMethods"] = "Permission.Authentication.ManageExternalMethods",
-                
+
                 //#4564
                 ["Nop.Web.Framework.Validators.MaxDecimal"] = "Admin.Common.Validation.Decimal.Max",
 

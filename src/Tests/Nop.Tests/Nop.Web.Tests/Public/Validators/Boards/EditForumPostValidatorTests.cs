@@ -9,13 +9,13 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Boards
     public class EditForumPostValidatorTests : BaseNopTest
     {
         private EditForumPostValidator _validator;
-        
+
         [OneTimeSetUp]
         public void Setup()
         {
             _validator = GetService<EditForumPostValidator>();
         }
-        
+
         [Test]
         public void ShouldHaveErrorWhenTextIsNullOrEmpty()
         {

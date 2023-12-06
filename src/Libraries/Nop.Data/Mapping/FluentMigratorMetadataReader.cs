@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Linq;
+﻿using System.Collections.Concurrent;
 using System.Reflection;
 using FluentMigrator.Expressions;
 using LinqToDB.Mapping;
 using LinqToDB.Metadata;
-using LinqToDB.SqlQuery;
 using Nop.Core;
 
 namespace Nop.Data.Mapping
@@ -17,7 +14,7 @@ namespace Nop.Data.Mapping
     {
         #region Fields
 
-        private readonly IMappingEntityAccessor _mappingEntityAccessor;
+        protected readonly IMappingEntityAccessor _mappingEntityAccessor;
 
         #endregion
 
@@ -30,8 +27,15 @@ namespace Nop.Data.Mapping
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
+        /// <summary>
+        /// Gets attributes of specified type, associated with specified type member
+        /// </summary>
+        /// <typeparam name="T">Attribute type</typeparam>
+        /// <param name="type">Attributes owner type</param>
+        /// <param name="memberInfo">Attributes owner member</param>
+        /// <returns>Attribute of specified type</returns>
         protected T GetAttribute<T>(Type type, MemberInfo memberInfo) where T : Attribute
         {
             var attribute = Types.GetOrAdd((type, memberInfo), _ =>
@@ -47,6 +51,9 @@ namespace Nop.Data.Mapping
                 var entityField = entityDescriptor.Fields.SingleOrDefault(cd => cd.Name.Equals(NameCompatibilityManager.GetColumnName(type, memberInfo.Name), StringComparison.OrdinalIgnoreCase));
 
                 if (entityField is null)
+                    return null;
+
+                if (!(memberInfo as PropertyInfo)?.CanWrite ?? false)
                     return null;
 
                 var columnSystemType = (memberInfo as PropertyInfo)?.PropertyType ?? typeof(string);
@@ -69,15 +76,23 @@ namespace Nop.Data.Mapping
             return (T)attribute;
         }
 
+        /// <summary>
+        /// Gets attributes of specified type, associated with specified type
+        /// </summary>
+        /// <typeparam name="T">Attribute type</typeparam>
+        /// <param name="type">Attributes owner type</param>
+        /// <param name="attributeType">Attribute type</param>
+        /// <param name="memberInfo">Attributes owner member</param>
+        /// <returns>Attributes of specified type</returns>
         protected T[] GetAttributes<T>(Type type, Type attributeType, MemberInfo memberInfo = null)
             where T : Attribute
         {
             if (type.IsSubclassOf(typeof(BaseEntity)) && typeof(T) == attributeType && GetAttribute<T>(type, memberInfo) is T attr)
             {
-                return new[] { attr };
+                return [attr];
             }
 
-            return Array.Empty<T>();
+            return [];
         }
 
         #endregion
@@ -116,7 +131,7 @@ namespace Nop.Data.Mapping
         /// <returns>All dynamic columns defined on given type</returns>
         public MemberInfo[] GetDynamicColumns(Type type)
         {
-            return Array.Empty<MemberInfo>();
+            return [];
         }
 
         #endregion

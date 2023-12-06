@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
@@ -28,8 +27,8 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
     {
         #region Fields
 
-        private readonly FacebookPixelService _facebookPixelService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly FacebookPixelService _facebookPixelService;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
 
         #endregion
 
@@ -90,7 +89,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
             if (routeName == FacebookPixelDefaults.CheckoutRouteName || routeName == FacebookPixelDefaults.CheckoutOnePageRouteName)
                 await _facebookPixelService.SendInitiateCheckoutEventAsync();
 
-            if (_httpContextAccessor.HttpContext.GetRouteValue("area") is not string area || area != AreaNames.Admin)
+            if (_httpContextAccessor.HttpContext.GetRouteValue("area") is not string area || area != AreaNames.ADMIN)
                 await _facebookPixelService.SendPageViewEventAsync();
         }
 
@@ -112,7 +111,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(MessageTokensAddedEvent<Token> eventMessage)
         {
-            if (eventMessage?.Message?.Name == MessageTemplateSystemNames.ContactUsMessage)
+            if (eventMessage?.Message?.Name == MessageTemplateSystemNames.CONTACT_US_MESSAGE)
                 await _facebookPixelService.SendContactEventAsync();
         }
 

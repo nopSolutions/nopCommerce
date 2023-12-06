@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
+﻿using System.Net;
 using Nop.Core;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
@@ -32,24 +28,24 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly CommonSettings _commonSettings;
-        private readonly EmailAccountSettings _emailAccountSettings;
-        private readonly IAddressService _addressService;
-        private readonly IAffiliateService _affiliateService;
-        private readonly ICustomerService _customerService;
-        private readonly IEmailAccountService _emailAccountService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IMessageTemplateService _messageTemplateService;
-        private readonly IMessageTokenProvider _messageTokenProvider;
-        private readonly IOrderService _orderService;
-        private readonly IProductService _productService;
-        private readonly IQueuedEmailService _queuedEmailService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreService _storeService;
-        private readonly ITokenizer _tokenizer;
-        private readonly MessagesSettings _messagesSettings;
+        protected readonly CommonSettings _commonSettings;
+        protected readonly EmailAccountSettings _emailAccountSettings;
+        protected readonly IAddressService _addressService;
+        protected readonly IAffiliateService _affiliateService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IEmailAccountService _emailAccountService;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly ILanguageService _languageService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IMessageTemplateService _messageTemplateService;
+        protected readonly IMessageTokenProvider _messageTokenProvider;
+        protected readonly IOrderService _orderService;
+        protected readonly IProductService _productService;
+        protected readonly IQueuedEmailService _queuedEmailService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreService _storeService;
+        protected readonly ITokenizer _tokenizer;
+        protected readonly MessagesSettings _messagesSettings;
 
         #endregion
 
@@ -182,10 +178,48 @@ namespace Nop.Services.Messages
         /// <returns>Email address and name to send email fore store owner</returns>
         protected virtual async Task<(string email, string name)> GetStoreOwnerNameAndEmailAsync(EmailAccount messageTemplateEmailAccount)
         {
-            var storeOwnerEmailAccount = _messagesSettings.UseDefaultEmailAccountForSendStoreOwnerEmails ?  await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId) : null;
+            var storeOwnerEmailAccount = _messagesSettings.UseDefaultEmailAccountForSendStoreOwnerEmails ? await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId) : null;
             storeOwnerEmailAccount ??= messageTemplateEmailAccount;
 
             return (storeOwnerEmailAccount.Email, storeOwnerEmailAccount.DisplayName);
+        }
+
+        /// <summary>
+        /// Get email and name to set ReplyTo property of email from customer 
+        /// </summary>
+        /// <param name="messageTemplate">Message template</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Email address and name when reply to email</returns>
+        protected virtual async Task<(string email, string name)> GetCustomerReplyToNameAndEmailAsync(MessageTemplate messageTemplate, Customer customer)
+        {
+            if (!messageTemplate.AllowDirectReply)
+                return (null, null);
+
+            var replyToEmail = await _customerService.IsGuestAsync(customer)
+                ? string.Empty
+                : customer.Email;
+
+            var replyToName = await _customerService.IsGuestAsync(customer)
+                ? string.Empty
+                : await _customerService.GetCustomerFullNameAsync(customer);
+
+            return (replyToEmail, replyToName);
+        }
+
+        /// <summary>
+        /// Get email and name to set ReplyTo property of email from order
+        /// </summary>
+        /// <param name="messageTemplate">Message template</param>
+        /// <param name="order">Order</param>
+        /// <returns>Email address and name when reply to email</returns>
+        protected virtual async Task<(string email, string name)> GetCustomerReplyToNameAndEmailAsync(MessageTemplate messageTemplate, Order order)
+        {
+            if (!messageTemplate.AllowDirectReply)
+                return (null, null);
+
+            var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
+
+            return (billingAddress.Email, $"{billingAddress.FirstName} {billingAddress.LastName}");
         }
 
         #endregion
@@ -205,13 +239,12 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendCustomerRegisteredStoreOwnerNotificationMessageAsync(Customer customer, int languageId)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             var store = await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.CustomerRegisteredStoreOwnerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.CUSTOMER_REGISTERED_STORE_OWNER_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -230,9 +263,12 @@ namespace Nop.Services.Messages
                 //event notification
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var (toEmail,toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
+                var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
 
-                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+                var (replyToEmail, replyToName) = await GetCustomerReplyToNameAndEmailAsync(messageTemplate, customer);
+
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                    replyToEmailAddress: replyToEmail, replyToName: replyToName);
             }).ToListAsync();
         }
 
@@ -247,13 +283,12 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendCustomerWelcomeMessageAsync(Customer customer, int languageId)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             var store = await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.CustomerWelcomeMessage, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.CUSTOMER_WELCOME_MESSAGE, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -290,13 +325,12 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendCustomerEmailValidationMessageAsync(Customer customer, int languageId)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             var store = await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.CustomerEmailValidationMessage, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.CUSTOMER_EMAIL_VALIDATION_MESSAGE, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -333,13 +367,12 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendCustomerEmailRevalidationMessageAsync(Customer customer, int languageId)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             var store = await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.CustomerEmailRevalidationMessage, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.CUSTOMER_EMAIL_REVALIDATION_MESSAGE, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -377,13 +410,12 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendCustomerPasswordRecoveryMessageAsync(Customer customer, int languageId)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             var store = await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.CustomerPasswordRecoveryMessage, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.CUSTOMER_PASSWORD_RECOVERY_MESSAGE, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -459,16 +491,14 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendOrderPlacedVendorNotificationAsync(Order order, Vendor vendor, int languageId)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
-            if (vendor == null)
-                throw new ArgumentNullException(nameof(vendor));
+            ArgumentNullException.ThrowIfNull(vendor);
 
             var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderPlacedVendorNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ORDER_PLACED_VENDOR_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -506,13 +536,12 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendOrderPlacedStoreOwnerNotificationAsync(Order order, int languageId)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderPlacedStoreOwnerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ORDER_PLACED_STORE_OWNER_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -533,8 +562,10 @@ namespace Nop.Services.Messages
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
+                var (replyToEmail, replyToName) = await GetCustomerReplyToNameAndEmailAsync(messageTemplate, order);
 
-                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                    replyToEmailAddress: replyToEmail, replyToName: replyToName);
             }).ToListAsync();
         }
 
@@ -549,8 +580,7 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendOrderPlacedAffiliateNotificationAsync(Order order, int languageId)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             var affiliate = await _affiliateService.GetAffiliateByIdAsync(order.AffiliateId);
 
@@ -560,7 +590,7 @@ namespace Nop.Services.Messages
             var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderPlacedAffiliateNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ORDER_PLACED_AFFILIATE_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -599,13 +629,12 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendOrderPaidStoreOwnerNotificationAsync(Order order, int languageId)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderPaidStoreOwnerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ORDER_PAID_STORE_OWNER_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -626,8 +655,10 @@ namespace Nop.Services.Messages
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
+                var (replyToEmail, replyToName) = await GetCustomerReplyToNameAndEmailAsync(messageTemplate, order);
 
-                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                    replyToEmailAddress: replyToEmail, replyToName: replyToName);
             }).ToListAsync();
         }
 
@@ -642,8 +673,7 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendOrderPaidAffiliateNotificationAsync(Order order, int languageId)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             var affiliate = await _affiliateService.GetAffiliateByIdAsync(order.AffiliateId);
 
@@ -653,7 +683,7 @@ namespace Nop.Services.Messages
             var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderPaidAffiliateNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ORDER_PAID_AFFILIATE_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -695,13 +725,12 @@ namespace Nop.Services.Messages
         public virtual async Task<IList<int>> SendOrderPaidCustomerNotificationAsync(Order order, int languageId,
             string attachmentFilePath = null, string attachmentFileName = null)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderPaidCustomerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ORDER_PAID_CUSTOMER_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -743,16 +772,14 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendOrderPaidVendorNotificationAsync(Order order, Vendor vendor, int languageId)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
-            if (vendor == null)
-                throw new ArgumentNullException(nameof(vendor));
+            ArgumentNullException.ThrowIfNull(vendor);
 
             var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderPaidVendorNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ORDER_PAID_VENDOR_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -793,13 +820,12 @@ namespace Nop.Services.Messages
         public virtual async Task<IList<int>> SendOrderPlacedCustomerNotificationAsync(Order order, int languageId,
             string attachmentFilePath = null, string attachmentFileName = null)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderPlacedCustomerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ORDER_PLACED_CUSTOMER_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -840,17 +866,14 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendShipmentSentCustomerNotificationAsync(Shipment shipment, int languageId)
         {
-            if (shipment == null)
-                throw new ArgumentNullException(nameof(shipment));
+            ArgumentNullException.ThrowIfNull(shipment);
 
-            var order = await _orderService.GetOrderByIdAsync(shipment.OrderId);
-            if (order == null)
-                throw new Exception("Order cannot be loaded");
+            var order = await _orderService.GetOrderByIdAsync(shipment.OrderId) ?? throw new Exception("Order cannot be loaded");
 
             var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ShipmentSentCustomerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.SHIPMENT_SENT_CUSTOMER_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -891,14 +914,12 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendShipmentReadyForPickupNotificationAsync(Shipment shipment, int languageId)
         {
-            var order = await _orderService.GetOrderByIdAsync(shipment.OrderId);
-            if (order == null)
-                throw new Exception("Order cannot be loaded");
+            var order = await _orderService.GetOrderByIdAsync(shipment.OrderId) ?? throw new Exception("Order cannot be loaded");
 
             var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ShipmentReadyForPickupCustomerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.SHIPMENT_READY_FOR_PICKUP_CUSTOMER_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -939,18 +960,14 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendShipmentDeliveredCustomerNotificationAsync(Shipment shipment, int languageId)
         {
-            if (shipment == null)
-                throw new ArgumentNullException(nameof(shipment));
+            ArgumentNullException.ThrowIfNull(shipment);
 
-            var order = await _orderService.GetOrderByIdAsync(shipment.OrderId);
-
-            if (order == null)
-                throw new Exception("Order cannot be loaded");
+            var order = await _orderService.GetOrderByIdAsync(shipment.OrderId) ?? throw new Exception("Order cannot be loaded");
 
             var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ShipmentDeliveredCustomerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.SHIPMENT_DELIVERED_CUSTOMER_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -994,13 +1011,12 @@ namespace Nop.Services.Messages
         public virtual async Task<IList<int>> SendOrderProcessingCustomerNotificationAsync(Order order, int languageId,
             string attachmentFilePath = null, string attachmentFileName = null)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderProcessingCustomerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ORDER_PROCESSING_CUSTOMER_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -1044,13 +1060,12 @@ namespace Nop.Services.Messages
         public virtual async Task<IList<int>> SendOrderCompletedCustomerNotificationAsync(Order order, int languageId,
             string attachmentFilePath = null, string attachmentFileName = null)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderCompletedCustomerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ORDER_COMPLETED_CUSTOMER_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -1091,13 +1106,12 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendOrderCancelledCustomerNotificationAsync(Order order, int languageId)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderCancelledCustomerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ORDER_CANCELLED_CUSTOMER_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -1138,13 +1152,12 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendOrderRefundedStoreOwnerNotificationAsync(Order order, decimal refundedAmount, int languageId)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderRefundedStoreOwnerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ORDER_REFUNDED_STORE_OWNER_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -1166,8 +1179,10 @@ namespace Nop.Services.Messages
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
+                var (replyToEmail, replyToName) = await GetCustomerReplyToNameAndEmailAsync(messageTemplate, order);
 
-                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                    replyToEmailAddress: replyToEmail, replyToName: replyToName);
             }).ToListAsync();
         }
 
@@ -1183,13 +1198,12 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendOrderRefundedCustomerNotificationAsync(Order order, decimal refundedAmount, int languageId)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderRefundedCustomerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ORDER_REFUNDED_CUSTOMER_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -1230,18 +1244,14 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendNewOrderNoteAddedCustomerNotificationAsync(OrderNote orderNote, int languageId)
         {
-            if (orderNote == null)
-                throw new ArgumentNullException(nameof(orderNote));
+            ArgumentNullException.ThrowIfNull(orderNote);
 
-            var order = await _orderService.GetOrderByIdAsync(orderNote.OrderId);
-
-            if (order == null)
-                throw new Exception("Order cannot be loaded");
+            var order = await _orderService.GetOrderByIdAsync(orderNote.OrderId) ?? throw new Exception("Order cannot be loaded");
 
             var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NewOrderNoteAddedCustomerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NEW_ORDER_NOTE_ADDED_CUSTOMER_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -1282,18 +1292,14 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendRecurringPaymentCancelledStoreOwnerNotificationAsync(RecurringPayment recurringPayment, int languageId)
         {
-            if (recurringPayment == null)
-                throw new ArgumentNullException(nameof(recurringPayment));
+            ArgumentNullException.ThrowIfNull(recurringPayment);
 
-            var order = await _orderService.GetOrderByIdAsync(recurringPayment.InitialOrderId);
-
-            if (order == null)
-                throw new Exception("Order cannot be loaded");
+            var order = await _orderService.GetOrderByIdAsync(recurringPayment.InitialOrderId) ?? throw new Exception("Order cannot be loaded");
 
             var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.RecurringPaymentCancelledStoreOwnerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.RECURRING_PAYMENT_CANCELLED_STORE_OWNER_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -1315,8 +1321,10 @@ namespace Nop.Services.Messages
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
+                var (replyToEmail, replyToName) = await GetCustomerReplyToNameAndEmailAsync(messageTemplate, order);
 
-                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                    replyToEmailAddress: replyToEmail, replyToName: replyToName);
             }).ToListAsync();
         }
 
@@ -1331,18 +1339,14 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendRecurringPaymentCancelledCustomerNotificationAsync(RecurringPayment recurringPayment, int languageId)
         {
-            if (recurringPayment == null)
-                throw new ArgumentNullException(nameof(recurringPayment));
+            ArgumentNullException.ThrowIfNull(recurringPayment);
 
-            var order = await _orderService.GetOrderByIdAsync(recurringPayment.InitialOrderId);
-
-            if (order == null)
-                throw new Exception("Order cannot be loaded");
+            var order = await _orderService.GetOrderByIdAsync(recurringPayment.InitialOrderId) ?? throw new Exception("Order cannot be loaded");
 
             var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.RecurringPaymentCancelledCustomerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.RECURRING_PAYMENT_CANCELLED_CUSTOMER_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -1383,18 +1387,14 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendRecurringPaymentFailedCustomerNotificationAsync(RecurringPayment recurringPayment, int languageId)
         {
-            if (recurringPayment == null)
-                throw new ArgumentNullException(nameof(recurringPayment));
+            ArgumentNullException.ThrowIfNull(recurringPayment);
 
-            var order = await _orderService.GetOrderByIdAsync(recurringPayment.InitialOrderId);
-
-            if (order == null)
-                throw new Exception("Order cannot be loaded");
+            var order = await _orderService.GetOrderByIdAsync(recurringPayment.InitialOrderId) ?? throw new Exception("Order cannot be loaded");
 
             var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.RecurringPaymentFailedCustomerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.RECURRING_PAYMENT_FAILED_CUSTOMER_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -1439,13 +1439,12 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendNewsLetterSubscriptionActivationMessageAsync(NewsLetterSubscription subscription, int languageId)
         {
-            if (subscription == null)
-                throw new ArgumentNullException(nameof(subscription));
+            ArgumentNullException.ThrowIfNull(subscription);
 
             var store = await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NewsletterSubscriptionActivationMessage, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NEWSLETTER_SUBSCRIPTION_ACTIVATION_MESSAGE, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -1479,13 +1478,12 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendNewsLetterSubscriptionDeactivationMessageAsync(NewsLetterSubscription subscription, int languageId)
         {
-            if (subscription == null)
-                throw new ArgumentNullException(nameof(subscription));
+            ArgumentNullException.ThrowIfNull(subscription);
 
             var store = await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NewsletterSubscriptionDeactivationMessage, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NEWSLETTER_SUBSCRIPTION_DEACTIVATION_MESSAGE, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -1528,16 +1526,14 @@ namespace Nop.Services.Messages
         public virtual async Task<IList<int>> SendProductEmailAFriendMessageAsync(Customer customer, int languageId,
             Product product, string customerEmail, string friendsEmail, string personalMessage)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             var store = await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.EmailAFriendMessage, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.EMAIL_A_FRIEND_MESSAGE, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -1578,13 +1574,12 @@ namespace Nop.Services.Messages
         public virtual async Task<IList<int>> SendWishlistEmailAFriendMessageAsync(Customer customer, int languageId,
              string customerEmail, string friendsEmail, string personalMessage)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             var store = await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.WishlistToFriendMessage, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.WISHLIST_TO_FRIEND_MESSAGE, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -1626,19 +1621,16 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendNewReturnRequestStoreOwnerNotificationAsync(ReturnRequest returnRequest, OrderItem orderItem, Order order, int languageId)
         {
-            if (returnRequest == null)
-                throw new ArgumentNullException(nameof(returnRequest));
+            ArgumentNullException.ThrowIfNull(returnRequest);
 
-            if (orderItem == null)
-                throw new ArgumentNullException(nameof(orderItem));
+            ArgumentNullException.ThrowIfNull(orderItem);
 
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NewReturnRequestStoreOwnerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NEW_RETURN_REQUEST_STORE_OWNER_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -1660,8 +1652,10 @@ namespace Nop.Services.Messages
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
+                var (replyToEmail, replyToName) = await GetCustomerReplyToNameAndEmailAsync(messageTemplate, order);
 
-                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                    replyToEmailAddress: replyToEmail, replyToName: replyToName);
             }).ToListAsync();
         }
 
@@ -1677,19 +1671,16 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendNewReturnRequestCustomerNotificationAsync(ReturnRequest returnRequest, OrderItem orderItem, Order order)
         {
-            if (returnRequest == null)
-                throw new ArgumentNullException(nameof(returnRequest));
+            ArgumentNullException.ThrowIfNull(returnRequest);
 
-            if (orderItem == null)
-                throw new ArgumentNullException(nameof(orderItem));
+            ArgumentNullException.ThrowIfNull(orderItem);
 
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
             var languageId = await EnsureLanguageIsActiveAsync(order.CustomerLanguageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NewReturnRequestCustomerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NEW_RETURN_REQUEST_CUSTOMER_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -1737,19 +1728,16 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendReturnRequestStatusChangedCustomerNotificationAsync(ReturnRequest returnRequest, OrderItem orderItem, Order order)
         {
-            if (returnRequest == null)
-                throw new ArgumentNullException(nameof(returnRequest));
+            ArgumentNullException.ThrowIfNull(returnRequest);
 
-            if (orderItem == null)
-                throw new ArgumentNullException(nameof(orderItem));
+            ArgumentNullException.ThrowIfNull(orderItem);
 
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
             var languageId = await EnsureLanguageIsActiveAsync(order.CustomerLanguageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ReturnRequestStatusChangedCustomerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.RETURN_REQUEST_STATUS_CHANGED_CUSTOMER_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -1802,12 +1790,11 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendNewForumTopicMessageAsync(Customer customer, ForumTopic forumTopic, Forum forum, int languageId)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             var store = await _storeContext.GetCurrentStoreAsync();
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NewForumTopicMessage, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NEW_FORUM_TOPIC_MESSAGE, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -1851,12 +1838,11 @@ namespace Nop.Services.Messages
         public virtual async Task<IList<int>> SendNewForumPostMessageAsync(Customer customer, ForumPost forumPost, ForumTopic forumTopic,
             Forum forum, int friendlyForumTopicPageIndex, int languageId)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             var store = await _storeContext.GetCurrentStoreAsync();
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NewForumPostMessage, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NEW_FORUM_POST_MESSAGE, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -1896,12 +1882,11 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendPrivateMessageNotificationAsync(PrivateMessage privateMessage, int languageId)
         {
-            if (privateMessage == null)
-                throw new ArgumentNullException(nameof(privateMessage));
+            ArgumentNullException.ThrowIfNull(privateMessage);
 
             var store = await _storeService.GetStoreByIdAsync(privateMessage.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.PrivateMessageNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.PRIVATE_MESSAGE_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -1945,16 +1930,14 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendNewVendorAccountApplyStoreOwnerNotificationAsync(Customer customer, Vendor vendor, int languageId)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
-            if (vendor == null)
-                throw new ArgumentNullException(nameof(vendor));
+            ArgumentNullException.ThrowIfNull(vendor);
 
             var store = await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NewVendorAccountApplyStoreOwnerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NEW_VENDOR_ACCOUNT_APPLY_STORE_OWNER_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -1976,7 +1959,12 @@ namespace Nop.Services.Messages
 
                 var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
 
-                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+                var vendorAddress = await _addressService.GetAddressByIdAsync(vendor.AddressId);
+                var replyToEmail = messageTemplate.AllowDirectReply ? vendorAddress.Email : "";
+                var replyToName = messageTemplate.AllowDirectReply ? $"{vendorAddress.FirstName} {vendorAddress.LastName}" : "";
+
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                    replyToEmailAddress: replyToEmail, replyToName: replyToName);
             }).ToListAsync();
         }
 
@@ -1991,13 +1979,12 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendVendorInformationChangeStoreOwnerNotificationAsync(Vendor vendor, int languageId)
         {
-            if (vendor == null)
-                throw new ArgumentNullException(nameof(vendor));
+            ArgumentNullException.ThrowIfNull(vendor);
 
             var store = await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.VendorInformationChangeStoreOwnerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.VENDOR_INFORMATION_CHANGE_STORE_OWNER_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -2018,7 +2005,12 @@ namespace Nop.Services.Messages
 
                 var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
 
-                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+                var vendorAddress = await _addressService.GetAddressByIdAsync(vendor.AddressId);
+                var replyToEmail = messageTemplate.AllowDirectReply ? vendorAddress.Email : "";
+                var replyToName = messageTemplate.AllowDirectReply ? $"{vendorAddress.FirstName} {vendorAddress.LastName}" : "";
+
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                    replyToEmailAddress: replyToEmail, replyToName: replyToName);
             }).ToListAsync();
         }
 
@@ -2033,8 +2025,7 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendGiftCardNotificationAsync(GiftCard giftCard, int languageId)
         {
-            if (giftCard == null)
-                throw new ArgumentNullException(nameof(giftCard));
+            ArgumentNullException.ThrowIfNull(giftCard);
 
             var order = await _orderService.GetOrderByOrderItemAsync(giftCard.PurchasedWithOrderItemId ?? 0);
             var currentStore = await _storeContext.GetCurrentStoreAsync();
@@ -2042,7 +2033,7 @@ namespace Nop.Services.Messages
 
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.GiftCardNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.GIFT_CARD_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -2079,13 +2070,12 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendProductReviewStoreOwnerNotificationMessageAsync(ProductReview productReview, int languageId)
         {
-            if (productReview == null)
-                throw new ArgumentNullException(nameof(productReview));
+            ArgumentNullException.ThrowIfNull(productReview);
 
             var store = await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ProductReviewStoreOwnerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.PRODUCT_REVIEW_STORE_OWNER_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -2105,9 +2095,13 @@ namespace Nop.Services.Messages
                 //event notification
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
+                var customer = await _customerService.GetCustomerByIdAsync(productReview.CustomerId);
+                var (replyToEmail, replyToName) = await GetCustomerReplyToNameAndEmailAsync(messageTemplate, customer);
+
                 var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
 
-                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                     replyToEmailAddress: replyToEmail, replyToName: replyToName);
             }).ToListAsync();
         }
 
@@ -2122,13 +2116,12 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendProductReviewReplyCustomerNotificationMessageAsync(ProductReview productReview, int languageId)
         {
-            if (productReview == null)
-                throw new ArgumentNullException(nameof(productReview));
+            ArgumentNullException.ThrowIfNull(productReview);
 
             var store = await _storeService.GetStoreByIdAsync(productReview.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ProductReviewReplyCustomerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.PRODUCT_REVIEW_REPLY_CUSTOMER_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -2176,13 +2169,12 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendQuantityBelowStoreOwnerNotificationAsync(Product product, int languageId)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             var store = await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.QuantityBelowStoreOwnerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.QUANTITY_BELOW_STORE_OWNER_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -2217,13 +2209,12 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendQuantityBelowStoreOwnerNotificationAsync(ProductAttributeCombination combination, int languageId)
         {
-            if (combination == null)
-                throw new ArgumentNullException(nameof(combination));
+            ArgumentNullException.ThrowIfNull(combination);
 
             var store = await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.QuantityBelowAttributeCombinationStoreOwnerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.QUANTITY_BELOW_ATTRIBUTE_COMBINATION_STORE_OWNER_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -2264,21 +2255,20 @@ namespace Nop.Services.Messages
         public virtual async Task<IList<int>> SendNewVatSubmittedStoreOwnerNotificationAsync(Customer customer,
             string vatName, string vatAddress, int languageId)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             var store = await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NewVatSubmittedStoreOwnerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NEW_VAT_SUBMITTED_STORE_OWNER_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
             await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
-            commonTokens.Add(new Token("VatValidatio.Name", vatName));
-            commonTokens.Add(new Token("VatValidatio.Address", vatAddress));
+            commonTokens.Add(new Token("VatValidationResult.Name", vatName));
+            commonTokens.Add(new Token("VatValidationResult.Address", vatAddress));
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -2291,8 +2281,10 @@ namespace Nop.Services.Messages
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
+                var (replyToEmail, replyToName) = await GetCustomerReplyToNameAndEmailAsync(messageTemplate, customer);
 
-                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                     replyToEmailAddress: replyToEmail, replyToName: replyToName);
             }).ToListAsync();
         }
 
@@ -2307,15 +2299,16 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendBlogCommentStoreOwnerNotificationMessageAsync(BlogComment blogComment, int languageId)
         {
-            if (blogComment == null)
-                throw new ArgumentNullException(nameof(blogComment));
+            ArgumentNullException.ThrowIfNull(blogComment);
 
             var store = await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.BlogCommentStoreOwnerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.BLOG_COMMENT_STORE_OWNER_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
+
+            var customer = await _customerService.GetCustomerByIdAsync(blogComment.CustomerId);
 
             //tokens
             var commonTokens = new List<Token>();
@@ -2334,8 +2327,10 @@ namespace Nop.Services.Messages
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
+                var (replyToEmail, replyToName) = await GetCustomerReplyToNameAndEmailAsync(messageTemplate, customer);
 
-                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                     replyToEmailAddress: replyToEmail, replyToName: replyToName);
             }).ToListAsync();
         }
 
@@ -2350,15 +2345,16 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendNewsCommentStoreOwnerNotificationMessageAsync(NewsComment newsComment, int languageId)
         {
-            if (newsComment == null)
-                throw new ArgumentNullException(nameof(newsComment));
+            ArgumentNullException.ThrowIfNull(newsComment);
 
             var store = await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NewsCommentStoreOwnerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NEWS_COMMENT_STORE_OWNER_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
+
+            var customer = await _customerService.GetCustomerByIdAsync(newsComment.CustomerId);
 
             //tokens
             var commonTokens = new List<Token>();
@@ -2377,8 +2373,10 @@ namespace Nop.Services.Messages
                 await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
+                var (replyToEmail, replyToName) = await GetCustomerReplyToNameAndEmailAsync(messageTemplate, customer);
 
-                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                      replyToEmailAddress: replyToEmail, replyToName: replyToName);
             }).ToListAsync();
         }
 
@@ -2393,8 +2391,7 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<IList<int>> SendBackInStockNotificationAsync(BackInStockSubscription subscription, int languageId)
         {
-            if (subscription == null)
-                throw new ArgumentNullException(nameof(subscription));
+            ArgumentNullException.ThrowIfNull(subscription);
 
             var customer = await _customerService.GetCustomerByIdAsync(subscription.CustomerId);
 
@@ -2408,7 +2405,7 @@ namespace Nop.Services.Messages
             var store = await _storeService.GetStoreByIdAsync(subscription.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.BackInStockNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.BACK_IN_STOCK_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -2453,15 +2450,15 @@ namespace Nop.Services.Messages
             var store = await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ContactUsMessage, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.CONTACT_US_MESSAGE, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>
             {
-                new Token("ContactUs.SenderEmail", senderEmail),
-                new Token("ContactUs.SenderName", senderName)
+                new("ContactUs.SenderEmail", senderEmail),
+                new("ContactUs.SenderName", senderName)
             };
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
@@ -2520,22 +2517,21 @@ namespace Nop.Services.Messages
         public virtual async Task<IList<int>> SendContactVendorMessageAsync(Vendor vendor, int languageId, string senderEmail,
             string senderName, string subject, string body)
         {
-            if (vendor == null)
-                throw new ArgumentNullException(nameof(vendor));
+            ArgumentNullException.ThrowIfNull(vendor);
 
             var store = await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ContactVendorMessage, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.CONTACT_VENDOR_MESSAGE, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>
             {
-                new Token("ContactUs.SenderEmail", senderEmail),
-                new Token("ContactUs.SenderName", senderName),
-                new Token("ContactUs.Body", body, true)
+                new("ContactUs.SenderEmail", senderEmail),
+                new("ContactUs.SenderName", senderName),
+                new("ContactUs.Body", body, true)
             };
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
@@ -2589,9 +2585,7 @@ namespace Nop.Services.Messages
         /// </returns>
         public virtual async Task<int> SendTestEmailAsync(int messageTemplateId, string sendToEmail, List<Token> tokens, int languageId)
         {
-            var messageTemplate = await _messageTemplateService.GetMessageTemplateByIdAsync(messageTemplateId);
-            if (messageTemplate == null)
-                throw new ArgumentException("Template cannot be loaded");
+            var messageTemplate = await _messageTemplateService.GetMessageTemplateByIdAsync(messageTemplateId) ?? throw new ArgumentException("Template cannot be loaded");
 
             //email account
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
@@ -2636,11 +2630,9 @@ namespace Nop.Services.Messages
             string replyToEmailAddress = null, string replyToName = null,
             string fromEmail = null, string fromName = null, string subject = null)
         {
-            if (messageTemplate == null)
-                throw new ArgumentNullException(nameof(messageTemplate));
+            ArgumentNullException.ThrowIfNull(messageTemplate);
 
-            if (emailAccount == null)
-                throw new ArgumentNullException(nameof(emailAccount));
+            ArgumentNullException.ThrowIfNull(emailAccount);
 
             //retrieve localized message template data
             var bcc = await _localizationService.GetLocalizedAsync(messageTemplate, mt => mt.BccEmailAddresses, languageId);

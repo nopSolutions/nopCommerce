@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Encodings.Web;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
@@ -36,29 +32,29 @@ namespace Nop.Web.Framework.UI
     {
         #region Fields
 
-        private readonly AppSettings _appSettings;
-        private readonly HtmlEncoder _htmlEncoder;
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly IAssetPipeline _assetPipeline;
-        private readonly Lazy<ILocalizationService> _localizationService;
-        private readonly IStoreContext _storeContext;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly SeoSettings _seoSettings;
+        protected readonly AppSettings _appSettings;
+        protected readonly HtmlEncoder _htmlEncoder;
+        protected readonly IActionContextAccessor _actionContextAccessor;
+        protected readonly IAssetPipeline _assetPipeline;
+        protected readonly Lazy<ILocalizationService> _localizationService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IUrlHelperFactory _urlHelperFactory;
+        protected readonly IWebHostEnvironment _webHostEnvironment;
+        protected readonly SeoSettings _seoSettings;
 
-        private readonly Dictionary<ResourceLocation, List<ScriptReferenceMeta>> _scriptParts = new();
-        private readonly Dictionary<ResourceLocation, List<string>> _inlineScriptParts = new();
-        private readonly List<CssReferenceMeta> _cssParts = new();
+        protected readonly Dictionary<ResourceLocation, List<ScriptReferenceMeta>> _scriptParts = [];
+        protected readonly Dictionary<ResourceLocation, List<string>> _inlineScriptParts = [];
+        protected readonly List<CssReferenceMeta> _cssParts = [];
 
-        private readonly List<string> _canonicalUrlParts = new();
-        private readonly List<string> _headCustomParts = new();
-        private readonly List<string> _metaDescriptionParts = new();
-        private readonly List<string> _metaKeywordParts = new();
-        private readonly List<string> _pageCssClassParts = new();
-        private readonly List<string> _titleParts = new();
+        protected readonly List<string> _canonicalUrlParts = [];
+        protected readonly List<string> _headCustomParts = [];
+        protected readonly List<string> _metaDescriptionParts = [];
+        protected readonly List<string> _metaKeywordParts = [];
+        protected readonly List<string> _pageCssClassParts = [];
+        protected readonly List<string> _titleParts = [];
 
-        private string _activeAdminMenuSystemName;
-        private string _editPageUrl;
+        protected string _activeAdminMenuSystemName;
+        protected string _editPageUrl;
 
         #endregion
 
@@ -87,9 +83,9 @@ namespace Nop.Web.Framework.UI
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
-        private IAsset CreateCssAsset(string bundleKey, string[] assetFiles)
+        protected IAsset CreateCssAsset(string bundleKey, string[] assetFiles)
         {
             var asset = _assetPipeline.AddBundle(bundleKey, $"{MimeTypes.TextCss}; charset=UTF-8", assetFiles)
                 .EnforceFileExtensions(".css")
@@ -104,7 +100,7 @@ namespace Nop.Web.Framework.UI
             return asset;
         }
 
-        private IAsset CreateJavaScriptAsset(string bundleKey, string[] assetFiles)
+        protected IAsset CreateJavaScriptAsset(string bundleKey, string[] assetFiles)
         {
             var asset = _assetPipeline.AddBundle(bundleKey, $"{MimeTypes.TextJavascript}; charset=UTF-8", assetFiles)
                         .EnforceFileExtensions(".js", ".es5", ".es6")
@@ -118,15 +114,13 @@ namespace Nop.Web.Framework.UI
             return asset;
         }
 
-        private static string GetAssetKey(string[] keys, string suffix)
+        protected static string GetAssetKey(string[] keys, string suffix)
         {
             if (keys is null || keys.Length == 0)
                 throw new ArgumentNullException(nameof(keys));
 
             var hashInput = string.Join(',', keys);
-
-            using var sha = MD5.Create();
-            var input = sha.ComputeHash(Encoding.Unicode.GetBytes(hashInput));
+            var input = MD5.HashData(Encoding.Unicode.GetBytes(hashInput));
 
             var key = string.Concat(WebEncoders.Base64UrlEncode(input));
 
@@ -143,16 +137,15 @@ namespace Nop.Web.Framework.UI
         /// <param name="createAsset">The function which creates a bundle</param>
         /// <param name="sourceFiles">Relative file names of the sources to optimize; if not specified, will use <paramref name="bundlePath"/></param>
         /// <returns>The bundle</returns>
-        private IAsset GetOrCreateBundle(string bundlePath, Func<string, string[], IAsset> createAsset, params string[] sourceFiles)
+        protected IAsset GetOrCreateBundle(string bundlePath, Func<string, string[], IAsset> createAsset, params string[] sourceFiles)
         {
             if (string.IsNullOrEmpty(bundlePath))
                 throw new ArgumentNullException(nameof(bundlePath));
 
-            if (createAsset is null)
-                throw new ArgumentNullException(nameof(createAsset));
+            ArgumentNullException.ThrowIfNull(createAsset);
 
             if (sourceFiles.Length == 0)
-                sourceFiles = new[] { bundlePath };
+                sourceFiles = [bundlePath];
 
             //remove the base path from the generated URL if exists
             var pathBase = _actionContextAccessor.ActionContext?.HttpContext.Request.PathBase ?? PathString.Empty;
@@ -199,7 +192,7 @@ namespace Nop.Web.Framework.UI
 
             _titleParts.Insert(0, part);
         }
-        
+
         /// <summary>
         /// Generate all title parts
         /// </summary>
@@ -340,7 +333,7 @@ namespace Nop.Web.Framework.UI
         public virtual void AddScriptParts(ResourceLocation location, string src, string debugSrc = "", bool excludeFromBundle = false)
         {
             if (!_scriptParts.ContainsKey(location))
-                _scriptParts.Add(location, new List<ScriptReferenceMeta>());
+                _scriptParts.Add(location, []);
 
             if (string.IsNullOrEmpty(src))
                 return;
@@ -371,7 +364,7 @@ namespace Nop.Web.Framework.UI
         public virtual void AppendScriptParts(ResourceLocation location, string src, string debugSrc = "", bool excludeFromBundle = false)
         {
             if (!_scriptParts.ContainsKey(location))
-                _scriptParts.Add(location, new List<ScriptReferenceMeta>());
+                _scriptParts.Add(location, []);
 
             if (string.IsNullOrEmpty(src))
                 return;
@@ -399,10 +392,10 @@ namespace Nop.Web.Framework.UI
         /// <returns>Generated HTML string</returns>
         public virtual IHtmlContent GenerateScripts(ResourceLocation location)
         {
-            if (!_scriptParts.ContainsKey(location) || _scriptParts[location] == null)
+            if (!_scriptParts.TryGetValue(location, out var value) || value == null)
                 return HtmlString.Empty;
 
-            if (!_scriptParts.Any())
+            if (_scriptParts.Count == 0)
                 return HtmlString.Empty;
 
             var result = new StringBuilder();
@@ -410,10 +403,9 @@ namespace Nop.Web.Framework.UI
 
             var httpContext = _actionContextAccessor.ActionContext.HttpContext;
 
-            if (woConfig.EnableJavaScriptBundling && _scriptParts[location].Any(item => !item.ExcludeFromBundle))
+            if (woConfig.EnableJavaScriptBundling && value.Any(item => !item.ExcludeFromBundle))
             {
-                var sources = _scriptParts[location]
-                   .Where(item => !item.ExcludeFromBundle && item.IsLocal)
+                var sources = value.Where(item => !item.ExcludeFromBundle && item.IsLocal)
                    .Select(item => item.Src)
                    .Distinct().ToArray();
 
@@ -426,8 +418,7 @@ namespace Nop.Web.Framework.UI
                     MimeTypes.TextJavascript, pathBase, bundleAsset.Route, bundleAsset.GenerateCacheKey(httpContext, woConfig));
             }
 
-            var scripts = _scriptParts[location]
-                .Where(item => !woConfig.EnableJavaScriptBundling || item.ExcludeFromBundle || !item.IsLocal)
+            var scripts = value.Where(item => !woConfig.EnableJavaScriptBundling || item.ExcludeFromBundle || !item.IsLocal)
                 .Distinct();
 
             foreach (var item in scripts)
@@ -458,7 +449,7 @@ namespace Nop.Web.Framework.UI
         public virtual void AddInlineScriptParts(ResourceLocation location, string script)
         {
             if (!_inlineScriptParts.ContainsKey(location))
-                _inlineScriptParts.Add(location, new());
+                _inlineScriptParts.Add(location, []);
 
             if (string.IsNullOrEmpty(script))
                 return;
@@ -477,7 +468,7 @@ namespace Nop.Web.Framework.UI
         public virtual void AppendInlineScriptParts(ResourceLocation location, string script)
         {
             if (!_inlineScriptParts.ContainsKey(location))
-                _inlineScriptParts.Add(location, new());
+                _inlineScriptParts.Add(location, []);
 
             if (string.IsNullOrEmpty(script))
                 return;
@@ -495,14 +486,14 @@ namespace Nop.Web.Framework.UI
         /// <returns>Generated HTML string</returns>
         public virtual IHtmlContent GenerateInlineScripts(ResourceLocation location)
         {
-            if (!_inlineScriptParts.ContainsKey(location) || _inlineScriptParts[location] == null)
+            if (!_inlineScriptParts.TryGetValue(location, out var value) || value == null)
                 return HtmlString.Empty;
 
-            if (!_inlineScriptParts.Any())
+            if (_inlineScriptParts.Count == 0)
                 return HtmlString.Empty;
 
             var result = new StringBuilder();
-            foreach (var item in _inlineScriptParts[location])
+            foreach (var item in value)
             {
                 result.Append(item);
                 result.Append(Environment.NewLine);
@@ -573,6 +564,9 @@ namespace Nop.Web.Framework.UI
             if (_cssParts.Count == 0)
                 return HtmlString.Empty;
 
+            if (_actionContextAccessor.ActionContext == null)
+                throw new ArgumentNullException(nameof(_actionContextAccessor.ActionContext));
+
             var result = new StringBuilder();
 
             var woConfig = _appSettings.Get<WebOptimizerConfig>();
@@ -603,9 +597,6 @@ namespace Nop.Web.Framework.UI
             var styles = _cssParts
                     .Where(item => !woConfig.EnableCssBundling || item.ExcludeFromBundle || !item.IsLocal)
                     .Distinct();
-
-            if (_actionContextAccessor.ActionContext == null)
-                throw new ArgumentNullException(nameof(_actionContextAccessor.ActionContext));
 
             foreach (var item in styles)
             {
@@ -706,7 +697,7 @@ namespace Nop.Web.Framework.UI
         {
             //use only distinct rows
             var distinctParts = _headCustomParts.Distinct().ToList();
-            if (!distinctParts.Any())
+            if (distinctParts.Count == 0)
                 return HtmlString.Empty;
 
             var result = new StringBuilder();
@@ -837,7 +828,7 @@ namespace Nop.Web.Framework.UI
         /// <summary>
         /// JS file meta data
         /// </summary>
-        private partial record ScriptReferenceMeta
+        protected partial record ScriptReferenceMeta
         {
             /// <summary>
             /// A value indicating whether to exclude the script from bundling
@@ -858,7 +849,7 @@ namespace Nop.Web.Framework.UI
         /// <summary>
         /// CSS file meta data
         /// </summary>
-        private partial record CssReferenceMeta
+        protected partial record CssReferenceMeta
         {
             /// <summary>
             /// A value indicating whether to exclude the script from bundling

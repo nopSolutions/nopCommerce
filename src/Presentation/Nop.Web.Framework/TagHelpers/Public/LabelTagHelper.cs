@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
+﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Nop.Web.Framework.TagHelpers.Public
@@ -13,18 +11,8 @@ namespace Nop.Web.Framework.TagHelpers.Public
     {
         #region Constants
 
-        private const string FOR_ATTRIBUTE_NAME = "asp-for";
-        private const string POSTFIX_ATTRIBUTE_NAME = "asp-postfix";
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Indicates whether the input is disabled
-        /// </summary>
-        [HtmlAttributeName(POSTFIX_ATTRIBUTE_NAME)]
-        public string Postfix { get; set; }
+        protected const string FOR_ATTRIBUTE_NAME = "asp-for";
+        protected const string POSTFIX_ATTRIBUTE_NAME = "asp-postfix";
 
         #endregion
 
@@ -46,16 +34,24 @@ namespace Nop.Web.Framework.TagHelpers.Public
         /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
+            ArgumentNullException.ThrowIfNull(context);
 
-            if (output == null)
-                throw new ArgumentNullException(nameof(output));
+            ArgumentNullException.ThrowIfNull(output);
 
             output.Content.Append(Postfix);
 
             await base.ProcessAsync(context, output);
         }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Indicates whether the input is disabled
+        /// </summary>
+        [HtmlAttributeName(POSTFIX_ATTRIBUTE_NAME)]
+        public string Postfix { get; set; }
 
         #endregion
     }

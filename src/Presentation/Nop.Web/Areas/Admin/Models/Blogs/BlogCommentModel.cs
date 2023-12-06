@@ -1,6 +1,5 @@
-﻿using System;
+﻿using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Blogs
 {
@@ -22,7 +21,7 @@ namespace Nop.Web.Areas.Admin.Models.Blogs
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.Comments.Fields.Customer")]
         public string CustomerInfo { get; set; }
-        
+
         [NopResourceDisplayName("Admin.ContentManagement.Blog.Comments.Fields.Comment")]
         public string Comment { get; set; }
 

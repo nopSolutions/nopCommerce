@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Plugin.Widgets.NivoSlider.Components;
 using Nop.Services.Cms;
@@ -18,11 +15,11 @@ namespace Nop.Plugin.Widgets.NivoSlider
     /// </summary>
     public class NivoSliderPlugin : BasePlugin, IWidgetPlugin
     {
-        private readonly ILocalizationService _localizationService;
-        private readonly IPictureService _pictureService;
-        private readonly ISettingService _settingService;
-        private readonly IWebHelper _webHelper;
-        private readonly INopFileProvider _fileProvider;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IPictureService _pictureService;
+        protected readonly ISettingService _settingService;
+        protected readonly IWebHelper _webHelper;
+        protected readonly INopFileProvider _fileProvider;
 
         public NivoSliderPlugin(ILocalizationService localizationService,
             IPictureService pictureService,

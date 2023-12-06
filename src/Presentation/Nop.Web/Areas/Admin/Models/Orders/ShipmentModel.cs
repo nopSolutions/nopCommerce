@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Orders
 {
@@ -15,7 +13,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
         public ShipmentModel()
         {
             ShipmentStatusEvents = new List<ShipmentStatusEventModel>();
-            Items = new List<ShipmentItemModel>();
+            Items = [];
         }
 
         #endregion

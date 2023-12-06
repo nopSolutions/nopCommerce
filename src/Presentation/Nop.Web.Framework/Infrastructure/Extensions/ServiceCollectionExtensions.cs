@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using Azure.Identity;
 using Azure.Storage.Blobs;
 using FluentValidation;
@@ -25,7 +23,6 @@ using Nop.Data;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
 using Nop.Services.Common;
-using Nop.Services.Security;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.ModelBinding.Binders;
 using Nop.Web.Framework.Mvc.Routing;
@@ -33,8 +30,7 @@ using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.Validators;
 using Nop.Web.Framework.WebOptimizer;
-using StackExchange.Profiling.Storage;
-using WebMarkupMin.AspNetCore7;
+using WebMarkupMin.AspNetCore8;
 using WebMarkupMin.Core;
 using WebMarkupMin.NUglify;
 
@@ -71,7 +67,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 .Select(configType => (IConfig)Activator.CreateInstance(configType))
                 .ToList();
 
-            foreach (var config in configurations) 
+            foreach (var config in configurations)
                 builder.Configuration.GetSection(config.Name).Bind(config, options => options.BindNonPublicProperties = true);
 
             var appSettings = AppSettingsHelper.SaveAppSettings(configurations, CommonHelper.DefaultFileProvider, false);
@@ -94,7 +90,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             var pluginConfig = new PluginConfig();
             builder.Configuration.GetSection(nameof(PluginConfig)).Bind(pluginConfig, options => options.BindNonPublicProperties = true);
             mvcCoreBuilder.PartManager.InitializePlugins(pluginConfig);
-            
+
             //create engine and configure service provider
             var engine = EngineContext.Create();
 
@@ -185,6 +181,15 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     services.AddStackExchangeRedisCache(options =>
                     {
                         options.Configuration = distributedCacheConfig.ConnectionString;
+                        options.InstanceName = distributedCacheConfig.InstanceName ?? string.Empty;
+                    });
+                    break;
+
+                case DistributedCacheType.RedisSynchronizedMemory:
+                    services.AddStackExchangeRedisCache(options =>
+                    {
+                        options.Configuration = distributedCacheConfig.ConnectionString;
+                        options.InstanceName = distributedCacheConfig.InstanceName ?? string.Empty;
                     });
                     break;
             }
@@ -304,9 +309,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //set some options
             mvcBuilder.AddMvcOptions(options =>
             {
-                //we'll use this until https://github.com/dotnet/aspnetcore/issues/6566 is solved 
-                options.ModelBinderProviders.Insert(0, new InvariantNumberModelBinderProvider());
-                options.ModelBinderProviders.Insert(1, new CustomPropertiesModelBinderProvider());
+                options.ModelBinderProviders.Insert(1, new NopModelBinderProvider());
                 //add custom display metadata provider 
                 options.ModelMetadataDetailsProviders.Add(new NopMetadataProvider());
 
@@ -339,30 +342,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         {
             //we use custom redirect executor as a workaround to allow using non-ASCII characters in redirect URLs
             services.AddScoped<IActionResultExecutor<RedirectResult>, NopRedirectResultExecutor>();
-        }
-
-        /// <summary>
-        /// Add and configure MiniProfiler service
-        /// </summary>
-        /// <param name="services">Collection of service descriptors</param>
-        public static void AddNopMiniProfiler(this IServiceCollection services)
-        {
-            //whether database is already installed
-            if (!DataSettingsManager.IsDatabaseInstalled())
-                return;
-
-            var appSettings = Singleton<AppSettings>.Instance;
-            if (appSettings.Get<CommonConfig>().MiniProfilerEnabled)
-            {
-                services.AddMiniProfiler(miniProfilerOptions =>
-                {
-                    //use memory cache provider for storing each result
-                    ((MemoryCacheStorage)miniProfilerOptions.Storage).CacheDuration = TimeSpan.FromMinutes(appSettings.Get<CacheConfig>().DefaultCacheTime);
-
-                    //determine who can access the MiniProfiler results
-                    miniProfilerOptions.ResultsAuthorize = request => EngineContext.Current.Resolve<IPermissionService>().AuthorizeAsync(StandardPermissionProvider.AccessProfiling).Result;
-                });
-            }
         }
 
         /// <summary>

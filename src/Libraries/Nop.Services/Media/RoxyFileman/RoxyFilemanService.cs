@@ -1,22 +1,16 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Infrastructure;
 
 namespace Nop.Services.Media.RoxyFileman
 {
-    public class RoxyFilemanService : IRoxyFilemanService
+    public partial class RoxyFilemanService : IRoxyFilemanService
     {
         #region Fields
 
         protected readonly IRoxyFilemanFileProvider _fileProvider;
-        private readonly IWorkContext _workContext;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 
@@ -32,7 +26,7 @@ namespace Nop.Services.Media.RoxyFileman
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
         /// <summary>
         /// Check whether there are any restrictions on handling the file
@@ -52,14 +46,17 @@ namespace Nop.Services.Media.RoxyFileman
             var forbiddenUploads = roxyConfig.FORBIDDEN_UPLOADS.Trim().ToLowerInvariant();
 
             if (!string.IsNullOrEmpty(forbiddenUploads))
-                result = !Regex.Split(forbiddenUploads, "\\s+").Contains(fileExtension);
+                result = !WhiteSpaceRegex().Split(forbiddenUploads).Contains(fileExtension);
 
             var allowedUploads = roxyConfig.ALLOWED_UPLOADS.Trim().ToLowerInvariant();
             if (string.IsNullOrEmpty(allowedUploads))
                 return result;
 
-            return Regex.Split(allowedUploads, "\\s+").Contains(fileExtension);
+            return WhiteSpaceRegex().Split(allowedUploads).Contains(fileExtension);
         }
+
+        [GeneratedRegex("\\s+")]
+        private static partial Regex WhiteSpaceRegex();
 
         #endregion
 
@@ -273,7 +270,7 @@ namespace Nop.Services.Media.RoxyFileman
                 throw new RoxyFilemanException("E_FileExtensionForbidden");
 
             _fileProvider.RenameFile(sourcePath, newName);
-        }
+        }        
 
         #endregion
     }

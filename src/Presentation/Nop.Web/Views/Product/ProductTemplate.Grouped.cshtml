@@ -62,7 +62,9 @@
         <form asp-route="Product" asp-route-sename="@Model.SeName" method="post" id="product-details-form">
             @if (seoSettings.MicrodataEnabled)
             {
-                @await Html.PartialAsync("_Microdata", Model)
+                <script type="application/ld+json">
+                    @Html.Raw(Model.JsonLd)
+                </script>
             }
             <div data-productid="@Model.Id">
                 <div class="product-essential">
@@ -205,6 +207,7 @@
                 @await Component.InvokeAsync(typeof(RelatedProductsViewComponent), new { productId = Model.Id })
             </div>
         </form>
+        @await Html.PartialAsync("_ProductReviews", Model.ProductReviews)
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductDetailsBottom, additionalData = Model })
     </div>
 </div>

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Nop.Core;
 using Nop.Core.Domain.Common;
@@ -33,23 +28,24 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly IAddressService _addressService;
-        private readonly ICountryService _countryService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly IDateRangeService _dateRangeService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILocalizedEntityService _localizedEntityService;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IPickupPluginManager _pickupPluginManager;
-        private readonly ISettingService _settingService;
-        private readonly IShippingModelFactory _shippingModelFactory;
-        private readonly IShippingPluginManager _shippingPluginManager;
-        private readonly IShippingService _shippingService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IWorkContext _workContext;
-        private readonly ShippingSettings _shippingSettings;
+        protected readonly IAddressService _addressService;
+        protected readonly ICountryService _countryService;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly IDateRangeService _dateRangeService;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly ILocalizedEntityService _localizedEntityService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IPickupPluginManager _pickupPluginManager;
+        protected readonly ISettingService _settingService;
+        protected readonly IShippingModelFactory _shippingModelFactory;
+        protected readonly IShippingPluginManager _shippingPluginManager;
+        protected readonly IShippingService _shippingService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IWorkContext _workContext;
+        protected readonly ShippingSettings _shippingSettings;
+        private static readonly char[] _separator = [','];
 
         #endregion
 
@@ -832,10 +828,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 var formKey = "restrict_" + shippingMethod.Id;
                 var countryIdsToRestrict = !StringValues.IsNullOrEmpty(form[formKey])
-                    ? form[formKey].ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    ? form[formKey].ToString().Split(_separator, StringSplitOptions.RemoveEmptyEntries)
                     .Select(int.Parse)
                     .ToList()
-                    : new List<int>();
+                    : [];
 
                 foreach (var country in countries)
                 {
@@ -848,7 +844,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         if (shippingMethodCountryMappings.Any())
                             continue;
 
-                        await _shippingService.InsertShippingMethodCountryMappingAsync(new ShippingMethodCountryMapping { CountryId = country.Id, ShippingMethodId = shippingMethod.Id});
+                        await _shippingService.InsertShippingMethodCountryMappingAsync(new ShippingMethodCountryMapping { CountryId = country.Id, ShippingMethodId = shippingMethod.Id });
                         await _shippingService.UpdateShippingMethodAsync(shippingMethod);
                     }
                     else

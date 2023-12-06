@@ -9,8 +9,8 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.UpgradeTo460
 {
-    [NopMigration("2022-07-20 00:00:10", "SchemaMigration for 4.60.0", MigrationProcessType.Update)]
-    public class SchemaMigration : Migration 
+    [NopSchemaMigration("2022-07-20 00:00:10", "SchemaMigration for 4.60.0")]
+    public class SchemaMigration : ForwardOnlyMigration
     {
         /// <summary>
         /// Collect the UP migration expressions
@@ -157,11 +157,6 @@ namespace Nop.Data.Migrations.UpgradeTo460
                 Alter.Table(discountTableName)
                     .AddColumn(isActiveDiscountColumnName).AsBoolean().NotNullable().SetExistingRowsTo(true);
             }
-        }
-
-        public override void Down()
-        {
-            //add the downgrade logic if necessary 
         }
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
 using Nop.Services.Messages;
@@ -11,7 +7,7 @@ using NUnit.Framework;
 namespace Nop.Tests.Nop.Services.Tests.Messages
 {
     [TestFixture]
-    public class QueuedEmailServiceTests:BaseNopTest
+    public class QueuedEmailServiceTests : BaseNopTest
     {
         private IQueuedEmailService _queuedEmailService;
         private IRepository<QueuedEmail> _queuedEmailRepository;
@@ -37,14 +33,14 @@ namespace Nop.Tests.Nop.Services.Tests.Messages
         [SetUp]
         public async Task SetUp()
         {
-            _emails = new List<QueuedEmail>
-            {
+            _emails =
+            [
                 new() {From = NopTestsDefaults.AdminEmail, To = _testEmail, EmailAccountId = 1, SentTries = 5},
                 new() {From = NopTestsDefaults.AdminEmail, To = _testEmail, EmailAccountId = 1},
                 new() {From = NopTestsDefaults.AdminEmail, To = _testEmail, EmailAccountId = 1},
                 new() {From = NopTestsDefaults.AdminEmail, To = _testEmail, EmailAccountId = 1, SentOnUtc = DateTime.UtcNow},
                 new() {From = NopTestsDefaults.AdminEmail, To = _testEmail, EmailAccountId = 1, SentOnUtc = DateTime.UtcNow}
-            };
+            ];
 
             foreach (var queuedEmail in _emails)
                 await _queuedEmailService.InsertQueuedEmailAsync(queuedEmail);
@@ -77,7 +73,7 @@ namespace Nop.Tests.Nop.Services.Tests.Messages
             queuedEmails = await _queuedEmailRepository.GetAllAsync(query => query);
             queuedEmails.Count.Should().Be(0);
         }
-        
+
 
         [Test]
         public async Task CanGetQueuedEmailsByIds()
@@ -120,7 +116,7 @@ namespace Nop.Tests.Nop.Services.Tests.Messages
         {
             await _queuedEmailService.DeleteAlreadySentEmailsAsync(null, null);
             var queuedEmails = await _queuedEmailRepository.GetAllAsync(query => query);
-            queuedEmails.Count.Should().Be(_emails.Count(e=>!e.SentOnUtc.HasValue));
+            queuedEmails.Count.Should().Be(_emails.Count(e => !e.SentOnUtc.HasValue));
         }
     }
 }

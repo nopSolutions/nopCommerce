@@ -19,7 +19,7 @@ namespace Nop.Tests {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Connections {
@@ -60,21 +60,27 @@ namespace Nop.Tests {
             }
         }
         
-
+        /// <summary>
+        ///   Looks up a localized string similar to server=127.0.0.1;database=nopcommerce;allowuservariables=True;user id=root;password=!pass@word123.
+        /// </summary>
         internal static string MySql_server_connection_string {
             get {
                 return ResourceManager.GetString("MySql server connection string", resourceCulture);
             }
         }
         
-
+        /// <summary>
+        ///   Looks up a localized string similar to Host=127.0.0.1;Database=nopcommerce;Username=postgres;Password=!pass@word123.
+        /// </summary>
         internal static string PostgreSql_server_connection_string {
             get {
                 return ResourceManager.GetString("PostgreSql server connection string", resourceCulture);
             }
         }
         
-
+        /// <summary>
+        ///   Looks up a localized string similar to Data Source=.\dev;Initial Catalog=nop_460;Integrated Security=False;Persist Security Info=False;User ID=sa;Password=!pass@word123;Trust Server Certificate=True.
+        /// </summary>
         internal static string sql_server_connection_string {
             get {
                 return ResourceManager.GetString("sql server connection string", resourceCulture);

@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Configuration;
@@ -59,29 +53,30 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly AppSettings _appSettings;
-        private readonly IAddressService _addressService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICustomerService _customerService;
-        private readonly INopDataProvider _dataProvider;
-        private readonly IEncryptionService _encryptionService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IGdprService _gdprService;
-        private readonly ILocalizedEntityService _localizedEntityService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
-        private readonly INopFileProvider _fileProvider;
-        private readonly INotificationService _notificationService;
-        private readonly IOrderService _orderService;
-        private readonly IPermissionService _permissionService;
-        private readonly IPictureService _pictureService;
-        private readonly ISettingModelFactory _settingModelFactory;
-        private readonly ISettingService _settingService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreService _storeService;
-        private readonly IWorkContext _workContext;
-        private readonly IUploadService _uploadService;
+        protected readonly AppSettings _appSettings;
+        protected readonly IAddressService _addressService;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly ICustomerService _customerService;
+        protected readonly INopDataProvider _dataProvider;
+        protected readonly IEncryptionService _encryptionService;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IGdprService _gdprService;
+        protected readonly ILocalizedEntityService _localizedEntityService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
+        protected readonly INopFileProvider _fileProvider;
+        protected readonly INotificationService _notificationService;
+        protected readonly IOrderService _orderService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IPictureService _pictureService;
+        protected readonly ISettingModelFactory _settingModelFactory;
+        protected readonly ISettingService _settingService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreService _storeService;
+        protected readonly IWorkContext _workContext;
+        protected readonly IUploadService _uploadService;
+        private static readonly char[] _separator = [','];
 
         #endregion
 
@@ -171,11 +166,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //home page
             if (string.IsNullOrEmpty(returnUrl))
-                returnUrl = Url.Action("Index", "Home", new { area = AreaNames.Admin });
+                returnUrl = Url.Action("Index", "Home", new { area = AreaNames.ADMIN });
 
             //prevent open redirection attack
             if (!Url.IsLocalUrl(returnUrl))
-                return RedirectToAction("Index", "Home", new { area = AreaNames.Admin });
+                return RedirectToAction("Index", "Home", new { area = AreaNames.ADMIN });
 
             return Redirect(returnUrl);
         }
@@ -222,7 +217,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _notificationService.SuccessNotification(
                     await _localizationService.GetResourceAsync("Admin.Configuration.Updated"));
 
-                var returnUrl = Url.Action("AppSettings", "Setting", new { area = AreaNames.Admin });
+                var returnUrl = Url.Action("AppSettings", "Setting", new { area = AreaNames.ADMIN });
                 return View("RestartApplication", returnUrl);
             }
 
@@ -584,6 +579,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //we do not clear cache after each setting update.
                 //this behavior can increase performance because cached settings will not be cleared 
                 //and loaded from database after each update
+                await _settingService.SaveSettingOverridablePerStoreAsync(taxSettings, x => x.AutomaticallyDetectCountry, model.AutomaticallyDetectCountry_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(taxSettings, x => x.PricesIncludeTax, model.PricesIncludeTax_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(taxSettings, x => x.AllowCustomersToSelectTaxDisplayType, model.AllowCustomersToSelectTaxDisplayType_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(taxSettings, x => x.TaxDisplayType, model.TaxDisplayType_OverrideForStore, storeScope, false);
@@ -1544,11 +1540,10 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 //security settings
                 var securitySettings = await _settingService.LoadSettingAsync<SecuritySettings>(storeScope);
-                if (securitySettings.AdminAreaAllowedIpAddresses == null)
-                    securitySettings.AdminAreaAllowedIpAddresses = new List<string>();
+                securitySettings.AdminAreaAllowedIpAddresses ??= [];
                 securitySettings.AdminAreaAllowedIpAddresses.Clear();
                 if (!string.IsNullOrEmpty(model.SecuritySettings.AdminAreaAllowedIpAddresses))
-                    foreach (var s in model.SecuritySettings.AdminAreaAllowedIpAddresses.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                    foreach (var s in model.SecuritySettings.AdminAreaAllowedIpAddresses.Split(_separator, StringSplitOptions.RemoveEmptyEntries))
                         if (!string.IsNullOrWhiteSpace(s))
                             securitySettings.AdminAreaAllowedIpAddresses.Add(s.Trim());
                 securitySettings.HoneypotEnabled = model.SecuritySettings.HoneypotEnabled;
@@ -1558,7 +1553,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var robotsTxtSettings = await _settingService.LoadSettingAsync<RobotsTxtSettings>(storeScope);
                 robotsTxtSettings.AllowSitemapXml = model.RobotsTxtSettings.AllowSitemapXml;
                 robotsTxtSettings.AdditionsRules = model.RobotsTxtSettings.AdditionsRules?.Split(Environment.NewLine).ToList();
-                robotsTxtSettings.DisallowLanguages = model.RobotsTxtSettings.DisallowLanguages?.ToList() ?? new List<int>(); 
+                robotsTxtSettings.DisallowLanguages = model.RobotsTxtSettings.DisallowLanguages?.ToList() ?? [];
                 robotsTxtSettings.DisallowPaths = model.RobotsTxtSettings.DisallowPaths?.Split(Environment.NewLine).ToList();
                 robotsTxtSettings.LocalizableDisallowPaths = model.RobotsTxtSettings.LocalizableDisallowPaths?.Split(Environment.NewLine).ToList();
 
@@ -1584,6 +1579,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 captchaSettings.ShowOnEmailProductToFriendPage = model.CaptchaSettings.ShowOnEmailProductToFriendPage;
                 captchaSettings.ShowOnBlogCommentPage = model.CaptchaSettings.ShowOnBlogCommentPage;
                 captchaSettings.ShowOnNewsCommentPage = model.CaptchaSettings.ShowOnNewsCommentPage;
+                captchaSettings.ShowOnNewsletterPage = model.CaptchaSettings.ShowOnNewsletterPage;
                 captchaSettings.ShowOnProductReviewPage = model.CaptchaSettings.ShowOnProductReviewPage;
                 captchaSettings.ShowOnForgotPasswordPage = model.CaptchaSettings.ShowOnForgotPasswordPage;
                 captchaSettings.ShowOnApplyVendorPage = model.CaptchaSettings.ShowOnApplyVendorPage;
@@ -1605,6 +1601,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await _settingService.SaveSettingOverridablePerStoreAsync(captchaSettings, x => x.ShowOnEmailProductToFriendPage, model.CaptchaSettings.ShowOnEmailProductToFriendPage_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(captchaSettings, x => x.ShowOnBlogCommentPage, model.CaptchaSettings.ShowOnBlogCommentPage_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(captchaSettings, x => x.ShowOnNewsCommentPage, model.CaptchaSettings.ShowOnNewsCommentPage_OverrideForStore, storeScope, false);
+                await _settingService.SaveSettingOverridablePerStoreAsync(captchaSettings, x => x.ShowOnNewsletterPage, model.CaptchaSettings.ShowOnNewsletterPage_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(captchaSettings, x => x.ShowOnProductReviewPage, model.CaptchaSettings.ShowOnProductReviewPage_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(captchaSettings, x => x.ShowOnApplyVendorPage, model.CaptchaSettings.ShowOnApplyVendorPage_OverrideForStore, storeScope, false);
                 await _settingService.SaveSettingOverridablePerStoreAsync(captchaSettings, x => x.ShowOnForgotPasswordPage, model.CaptchaSettings.ShowOnForgotPasswordPage_OverrideForStore, storeScope, false);
@@ -1768,8 +1765,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (model.SecuritySettings.EncryptionKey == null)
                     model.SecuritySettings.EncryptionKey = string.Empty;
 
-                model.SecuritySettings.EncryptionKey = model.SecuritySettings.EncryptionKey.Trim();
-
                 var newEncryptionPrivateKey = model.SecuritySettings.EncryptionKey;
                 if (string.IsNullOrEmpty(newEncryptionPrivateKey) || newEncryptionPrivateKey.Length != 16)
                     throw new NopException(await _localizationService.GetResourceAsync("Admin.Configuration.Settings.GeneralCommon.EncryptionKey.TooShort"));
@@ -1822,6 +1817,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 securitySettings.EncryptionKey = newEncryptionPrivateKey;
                 await _settingService.SaveSettingAsync(securitySettings);
+                await _eventPublisher.PublishAsync(new SecuritySettingsChangedEvent(securitySettings, oldEncryptionPrivateKey));
 
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Settings.GeneralCommon.EncryptionKey.Changed"));
             }
@@ -1945,10 +1941,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (model.Name != null)
-                model.Name = model.Name.Trim();
+                model.Name = model.Name;
 
             if (model.Value != null)
-                model.Value = model.Value.Trim();
+                model.Value = model.Value;
 
             if (!ModelState.IsValid)
                 return ErrorJson(ModelState.SerializeErrors());
@@ -1978,10 +1974,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (model.Name != null)
-                model.Name = model.Name.Trim();
+                model.Name = model.Name;
 
             if (model.Value != null)
-                model.Value = model.Value.Trim();
+                model.Value = model.Value;
 
             if (!ModelState.IsValid)
                 return ErrorJson(ModelState.SerializeErrors());

@@ -3,11 +3,11 @@ using Nop.Core.Domain.Stores;
 
 namespace Nop.Data.Migrations.UpgradeTo460
 {
-    [NopMigration("2022-12-06 15:09:01", "Added new fields to store table", MigrationProcessType.NoDependencies)]
+    [NopSchemaMigration("2022-12-06 15:09:01", "Added new fields to store table")]
     public class StoreMigration : ForwardOnlyMigration
     {
         public override void Up()
-        {   
+        {
             if (!Schema.Table(nameof(Store)).Column(nameof(Store.Deleted)).Exists())
             {
                 //add new column

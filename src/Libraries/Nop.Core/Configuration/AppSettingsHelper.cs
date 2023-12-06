@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Nop.Core.Infrastructure;
@@ -15,7 +12,7 @@ namespace Nop.Core.Configuration
     {
         #region Fields
 
-        private static Dictionary<string, int> _configurationOrder;
+        protected static Dictionary<string, int> _configurationOrder;
 
         #endregion
 
@@ -30,11 +27,9 @@ namespace Nop.Core.Configuration
         /// <returns>App settings</returns>
         public static AppSettings SaveAppSettings(IList<IConfig> configurations, INopFileProvider fileProvider, bool overwrite = true)
         {
-            if (configurations is null)
-                throw new ArgumentNullException(nameof(configurations));
+            ArgumentNullException.ThrowIfNull(configurations);
 
-            if (_configurationOrder is null)
-                _configurationOrder = configurations.ToDictionary(config => config.Name, config => config.GetOrder());
+            _configurationOrder ??= configurations.ToDictionary(config => config.Name, config => config.GetOrder());
 
             //create app settings
             var appSettings = Singleton<AppSettings>.Instance ?? new AppSettings();
@@ -49,7 +44,7 @@ namespace Nop.Core.Configuration
             //get raw configuration parameters
             var configuration = JsonConvert.DeserializeObject<AppSettings>(fileProvider.ReadAllText(filePath, Encoding.UTF8))
                 ?.Configuration
-                ?? new();
+                ?? [];
             foreach (var config in configurations)
             {
                 configuration[config.Name] = JToken.FromObject(config);

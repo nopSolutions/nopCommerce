@@ -47,9 +47,8 @@
                 new ColumnProperty(nameof(ProductAttributeValueModel.PictureThumbnailUrl))
                 {
                     Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Picture").Text,
-                    Width = "200",
                     ClassName = NopColumnClassDefaults.CenterAll,
-                    Render = new RenderPicture()
+                    Render = new RenderPicture(width: 200)
                 },
                 new ColumnProperty(nameof(ProductAttributeValueModel.DisplayOrder))
                 {

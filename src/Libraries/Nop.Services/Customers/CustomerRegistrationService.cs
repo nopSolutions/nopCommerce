@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
@@ -27,27 +24,27 @@ namespace Nop.Services.Customers
     {
         #region Fields
 
-        private readonly CustomerSettings _customerSettings;
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly IAuthenticationService _authenticationService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICustomerService _customerService;
-        private readonly IEncryptionService _encryptionService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
-        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IRewardPointService _rewardPointService;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreService _storeService;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly IWorkContext _workContext;
-        private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly RewardPointsSettings _rewardPointsSettings;
+        protected readonly CustomerSettings _customerSettings;
+        protected readonly IActionContextAccessor _actionContextAccessor;
+        protected readonly IAuthenticationService _authenticationService;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IEncryptionService _encryptionService;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
+        protected readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IRewardPointService _rewardPointService;
+        protected readonly IShoppingCartService _shoppingCartService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IStoreService _storeService;
+        protected readonly IUrlHelperFactory _urlHelperFactory;
+        protected readonly IWorkContext _workContext;
+        protected readonly IWorkflowMessageService _workflowMessageService;
+        protected readonly RewardPointsSettings _rewardPointsSettings;
 
         #endregion
 
@@ -214,8 +211,7 @@ namespace Nop.Services.Customers
         /// </returns>
         public virtual async Task<CustomerRegistrationResult> RegisterCustomerAsync(CustomerRegistrationRequest request)
         {
-            if (request == null)
-                throw new ArgumentNullException(nameof(request));
+            ArgumentNullException.ThrowIfNull(request);
 
             if (request.Customer == null)
                 throw new ArgumentException("Can't load current customer");
@@ -306,9 +302,7 @@ namespace Nop.Services.Customers
             request.Customer.Active = request.IsApproved;
 
             //add to 'Registered' role
-            var registeredRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.RegisteredRoleName);
-            if (registeredRole == null)
-                throw new NopException("'Registered' role could not be loaded");
+            var registeredRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.RegisteredRoleName) ?? throw new NopException("'Registered' role could not be loaded");
 
             await _customerService.AddCustomerRoleMappingAsync(new CustomerCustomerRoleMapping { CustomerId = request.Customer.Id, CustomerRoleId = registeredRole.Id });
             
@@ -346,8 +340,7 @@ namespace Nop.Services.Customers
         /// </returns>
         public virtual async Task<ChangePasswordResult> ChangePasswordAsync(ChangePasswordRequest request)
         {
-            if (request == null)
-                throw new ArgumentNullException(nameof(request));
+            ArgumentNullException.ThrowIfNull(request);
 
             var result = new ChangePasswordResult();
             if (string.IsNullOrWhiteSpace(request.Email))
@@ -436,6 +429,11 @@ namespace Nop.Services.Customers
             var currentCustomer = await _workContext.GetCurrentCustomerAsync();
             if (currentCustomer?.Id != customer.Id)
             {
+                if (currentCustomer.AffiliateId != 0)
+                {
+                    customer.AffiliateId = currentCustomer.AffiliateId;
+                    await _customerService.UpdateCustomerAsync(customer);
+                }
                 //migrate shopping cart
                 await _shoppingCartService.MigrateShoppingCartAsync(currentCustomer, customer, true);
 
@@ -470,8 +468,7 @@ namespace Nop.Services.Customers
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task SetEmailAsync(Customer customer, string newEmail, bool requireValidation)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             if (newEmail == null)
                 throw new NopException("Email cannot be null");
@@ -529,8 +526,7 @@ namespace Nop.Services.Customers
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task SetUsernameAsync(Customer customer, string newUsername)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             if (!_customerSettings.UsernamesEnabled)
                 throw new NopException("Usernames are disabled");

@@ -1,18 +1,15 @@
-﻿using System;
-using System.Linq;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
-using Nop.Core.Domain.Media;
 using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Affiliates;
+using Nop.Services.Attributes;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
 using Nop.Services.Authentication.MultiFactor;
@@ -54,10 +51,12 @@ using Nop.Services.Tax;
 using Nop.Services.Themes;
 using Nop.Services.Topics;
 using Nop.Services.Vendors;
+using Nop.Web.Framework.Factories;
 using Nop.Web.Framework.Menu;
 using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.UI;
+using TaskScheduler = Nop.Services.ScheduleTasks.TaskScheduler;
 
 namespace Nop.Web.Framework.Infrastructure
 {
@@ -89,28 +88,44 @@ namespace Nop.Web.Framework.Infrastructure
             //static cache manager
             var appSettings = Singleton<AppSettings>.Instance;
             var distributedCacheConfig = appSettings.Get<DistributedCacheConfig>();
+
+            services.AddTransient(typeof(IConcurrentCollection<>), typeof(ConcurrentTrie<>));
+
+            services.AddSingleton<ICacheKeyManager, CacheKeyManager>();
+            services.AddScoped<IShortTermCacheManager, PerRequestCacheManager>();
+
             if (distributedCacheConfig.Enabled)
             {
                 switch (distributedCacheConfig.DistributedCacheType)
                 {
                     case DistributedCacheType.Memory:
-                        services.AddScoped<ILocker, MemoryDistributedCacheManager>();
                         services.AddScoped<IStaticCacheManager, MemoryDistributedCacheManager>();
+                        services.AddScoped<ICacheKeyService, MemoryDistributedCacheManager>();
                         break;
                     case DistributedCacheType.SqlServer:
-                        services.AddScoped<ILocker, MsSqlServerCacheManager>();
                         services.AddScoped<IStaticCacheManager, MsSqlServerCacheManager>();
+                        services.AddScoped<ICacheKeyService, MsSqlServerCacheManager>();
                         break;
                     case DistributedCacheType.Redis:
-                        services.AddScoped<ILocker, RedisCacheManager>();
+                        services.AddSingleton<IRedisConnectionWrapper, RedisConnectionWrapper>();
                         services.AddScoped<IStaticCacheManager, RedisCacheManager>();
+                        services.AddScoped<ICacheKeyService, RedisCacheManager>();
+                        break;
+                    case DistributedCacheType.RedisSynchronizedMemory:
+                        services.AddSingleton<IRedisConnectionWrapper, RedisConnectionWrapper>();
+                        services.AddSingleton<ISynchronizedMemoryCache, RedisSynchronizedMemoryCache>();
+                        services.AddSingleton<IStaticCacheManager, SynchronizedMemoryCacheManager>();
+                        services.AddScoped<ICacheKeyService, SynchronizedMemoryCacheManager>();
                         break;
                 }
+
+                services.AddSingleton<ILocker, DistributedCacheLocker>();
             }
             else
             {
-                services.AddSingleton<ILocker, MemoryCacheManager>();
+                services.AddSingleton<ILocker, MemoryCacheLocker>();
                 services.AddSingleton<IStaticCacheManager, MemoryCacheManager>();
+                services.AddScoped<ICacheKeyService, MemoryCacheManager>();
             }
 
             //work context
@@ -137,21 +152,12 @@ namespace Nop.Web.Framework.Infrastructure
             services.AddScoped<IManufacturerTemplateService, ManufacturerTemplateService>();
             services.AddScoped<ITopicTemplateService, TopicTemplateService>();
             services.AddScoped<IProductTagService, ProductTagService>();
-            services.AddScoped<IAddressAttributeFormatter, AddressAttributeFormatter>();
-            services.AddScoped<IAddressAttributeParser, AddressAttributeParser>();
-            services.AddScoped<IAddressAttributeService, AddressAttributeService>();
             services.AddScoped<IAddressService, AddressService>();
             services.AddScoped<IAffiliateService, AffiliateService>();
             services.AddScoped<IVendorService, VendorService>();
-            services.AddScoped<IVendorAttributeFormatter, VendorAttributeFormatter>();
-            services.AddScoped<IVendorAttributeParser, VendorAttributeParser>();
-            services.AddScoped<IVendorAttributeService, VendorAttributeService>();
             services.AddScoped<ISearchTermService, SearchTermService>();
             services.AddScoped<IGenericAttributeService, GenericAttributeService>();
             services.AddScoped<IMaintenanceService, MaintenanceService>();
-            services.AddScoped<ICustomerAttributeFormatter, CustomerAttributeFormatter>();
-            services.AddScoped<ICustomerAttributeParser, CustomerAttributeParser>();
-            services.AddScoped<ICustomerAttributeService, CustomerAttributeService>();
             services.AddScoped<ICustomerService, CustomerService>();
             services.AddScoped<ICustomerRegistrationService, CustomerRegistrationService>();
             services.AddScoped<ICustomerReportService, CustomerReportService>();
@@ -182,8 +188,6 @@ namespace Nop.Web.Framework.Infrastructure
             services.AddScoped<ISmtpBuilder, SmtpBuilder>();
             services.AddScoped<IEmailSender, EmailSender>();
             services.AddScoped<ICheckoutAttributeFormatter, CheckoutAttributeFormatter>();
-            services.AddScoped<ICheckoutAttributeParser, CheckoutAttributeParser>();
-            services.AddScoped<ICheckoutAttributeService, CheckoutAttributeService>();
             services.AddScoped<IGiftCardService, GiftCardService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IOrderReportService, OrderReportService>();
@@ -201,6 +205,7 @@ namespace Nop.Web.Framework.Infrastructure
             services.AddScoped<IShippingService, ShippingService>();
             services.AddScoped<IDateRangeService, DateRangeService>();
             services.AddScoped<ITaxCategoryService, TaxCategoryService>();
+            services.AddScoped<ICheckVatService, CheckVatService>();
             services.AddScoped<ITaxService, TaxService>();
             services.AddScoped<ILogger, DefaultLogger>();
             services.AddScoped<ICustomerActivityService, CustomerActivityService>();
@@ -228,6 +233,16 @@ namespace Nop.Web.Framework.Infrastructure
             services.AddScoped<IHtmlFormatter, HtmlFormatter>();
             services.AddScoped<IVideoService, VideoService>();
             services.AddScoped<INopUrlHelper, NopUrlHelper>();
+            services.AddScoped<IWidgetModelFactory, WidgetModelFactory>();
+
+            //attribute services
+            services.AddScoped(typeof(IAttributeService<,>), typeof(AttributeService<,>));
+
+            //attribute parsers
+            services.AddScoped(typeof(IAttributeParser<,>), typeof(Services.Attributes.AttributeParser<,>));
+
+            //attribute formatter
+            services.AddScoped(typeof(IAttributeFormatter<,>), typeof(AttributeFormatter<,>));
 
             //plugin managers
             services.AddScoped(typeof(IPluginManager<>), typeof(PluginManager<>));

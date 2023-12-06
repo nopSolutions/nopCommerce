@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Localization;
 using Nop.Data;
@@ -18,11 +14,11 @@ namespace Nop.Services.Localization
     {
         #region Fields
 
-        private readonly IRepository<Language> _languageRepository;
-        private readonly ISettingService _settingService;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly LocalizationSettings _localizationSettings;
+        protected readonly IRepository<Language> _languageRepository;
+        protected readonly ISettingService _settingService;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly LocalizationSettings _localizationSettings;
 
         #endregion
 
@@ -52,14 +48,13 @@ namespace Nop.Services.Localization
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteLanguageAsync(Language language)
         {
-            if (language == null)
-                throw new ArgumentNullException(nameof(language));
-            
+            ArgumentNullException.ThrowIfNull(language);
+
             //update default admin area language (if required)
             if (_localizationSettings.DefaultAdminLanguageId == language.Id)
                 foreach (var activeLanguage in await GetAllLanguagesAsync())
                 {
-                    if (activeLanguage.Id == language.Id) 
+                    if (activeLanguage.Id == language.Id)
                         continue;
 
                     _localizationSettings.DefaultAdminLanguageId = activeLanguage.Id;
@@ -83,7 +78,7 @@ namespace Nop.Services.Localization
         {
             //cacheable copy
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopLocalizationDefaults.LanguagesAllCacheKey, storeId, showHidden);
-            
+
             var languages = await _staticCacheManager.GetAsync(key, async () =>
             {
                 var allLanguages = await _languageRepository.GetAllAsync(query =>
@@ -184,8 +179,7 @@ namespace Nop.Services.Localization
         /// <returns>ISO language code</returns>
         public virtual string GetTwoLetterIsoLanguageName(Language language)
         {
-            if (language == null)
-                throw new ArgumentNullException(nameof(language));
+            ArgumentNullException.ThrowIfNull(language);
 
             if (string.IsNullOrEmpty(language.LanguageCulture))
                 return "en";

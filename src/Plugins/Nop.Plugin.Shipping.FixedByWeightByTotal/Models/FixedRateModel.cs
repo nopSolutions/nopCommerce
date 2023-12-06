@@ -1,6 +1,6 @@
-﻿using Nop.Web.Framework.Mvc.ModelBinding;
+﻿using System.ComponentModel.DataAnnotations;
 using Nop.Web.Framework.Models;
-using System.ComponentModel.DataAnnotations;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Models
 {

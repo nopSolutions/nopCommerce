@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Nop.Core;
@@ -11,6 +7,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Vendors;
+using Nop.Services.Attributes;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Html;
@@ -31,28 +28,31 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly CaptchaSettings _captchaSettings;
-        private readonly ICustomerService _customerService;
-        private readonly IDownloadService _downloadService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IHtmlFormatter _htmlFormatter;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPictureService _pictureService;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IVendorAttributeParser _vendorAttributeParser;
-        private readonly IVendorAttributeService _vendorAttributeService;
-        private readonly IVendorModelFactory _vendorModelFactory;
-        private readonly IVendorService _vendorService;
-        private readonly IWorkContext _workContext;
-        private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly LocalizationSettings _localizationSettings;
-        private readonly VendorSettings _vendorSettings;
+        protected readonly CaptchaSettings _captchaSettings;
+        protected readonly IAttributeParser<VendorAttribute, VendorAttributeValue> _vendorAttributeParser;
+        protected readonly IAttributeService<VendorAttribute, VendorAttributeValue> _vendorAttributeService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IDownloadService _downloadService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IHtmlFormatter _htmlFormatter;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IPictureService _pictureService;
+        protected readonly IUrlRecordService _urlRecordService;
+        protected readonly IVendorModelFactory _vendorModelFactory;
+        protected readonly IVendorService _vendorService;
+        protected readonly IWorkContext _workContext;
+        protected readonly IWorkflowMessageService _workflowMessageService;
+        protected readonly LocalizationSettings _localizationSettings;
+        protected readonly VendorSettings _vendorSettings;
+        private static readonly char[] _separator = [','];
 
         #endregion
 
         #region Ctor
 
         public VendorController(CaptchaSettings captchaSettings,
+            IAttributeParser<VendorAttribute, VendorAttributeValue> vendorAttributeParser,
+            IAttributeService<VendorAttribute, VendorAttributeValue> vendorAttributeService,
             ICustomerService customerService,
             IDownloadService downloadService,
             IGenericAttributeService genericAttributeService,
@@ -60,8 +60,6 @@ namespace Nop.Web.Controllers
             ILocalizationService localizationService,
             IPictureService pictureService,
             IUrlRecordService urlRecordService,
-            IVendorAttributeParser vendorAttributeParser,
-            IVendorAttributeService vendorAttributeService,
             IVendorModelFactory vendorModelFactory,
             IVendorService vendorService,
             IWorkContext workContext,
@@ -70,6 +68,8 @@ namespace Nop.Web.Controllers
             VendorSettings vendorSettings)
         {
             _captchaSettings = captchaSettings;
+            _vendorAttributeParser = vendorAttributeParser;
+            _vendorAttributeService = vendorAttributeService;
             _customerService = customerService;
             _downloadService = downloadService;
             _genericAttributeService = genericAttributeService;
@@ -77,8 +77,6 @@ namespace Nop.Web.Controllers
             _localizationService = localizationService;
             _pictureService = pictureService;
             _urlRecordService = urlRecordService;
-            _vendorAttributeParser = vendorAttributeParser;
-            _vendorAttributeService = vendorAttributeService;
             _vendorModelFactory = vendorModelFactory;
             _vendorService = vendorService;
             _workContext = workContext;
@@ -100,11 +98,10 @@ namespace Nop.Web.Controllers
 
         protected virtual async Task<string> ParseVendorAttributesAsync(IFormCollection form)
         {
-            if (form == null)
-                throw new ArgumentNullException(nameof(form));
+            ArgumentNullException.ThrowIfNull(form);
 
             var attributesXml = "";
-            var attributes = await _vendorAttributeService.GetAllVendorAttributesAsync();
+            var attributes = await _vendorAttributeService.GetAllAttributesAsync();
             foreach (var attribute in attributes)
             {
                 var controlId = $"{NopVendorDefaults.VendorAttributePrefix}{attribute.Id}";
@@ -118,7 +115,7 @@ namespace Nop.Web.Controllers
                             {
                                 var selectedAttributeId = int.Parse(ctrlAttributes);
                                 if (selectedAttributeId > 0)
-                                    attributesXml = _vendorAttributeParser.AddVendorAttribute(attributesXml,
+                                    attributesXml = _vendorAttributeParser.AddAttribute(attributesXml,
                                         attribute, selectedAttributeId.ToString());
                             }
                         }
@@ -128,12 +125,12 @@ namespace Nop.Web.Controllers
                             var cblAttributes = form[controlId];
                             if (!StringValues.IsNullOrEmpty(cblAttributes))
                             {
-                                foreach (var item in cblAttributes.ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                foreach (var item in cblAttributes.ToString().Split(_separator, StringSplitOptions.RemoveEmptyEntries)
                                 )
                                 {
                                     var selectedAttributeId = int.Parse(item);
                                     if (selectedAttributeId > 0)
-                                        attributesXml = _vendorAttributeParser.AddVendorAttribute(attributesXml,
+                                        attributesXml = _vendorAttributeParser.AddAttribute(attributesXml,
                                             attribute, selectedAttributeId.ToString());
                                 }
                             }
@@ -142,13 +139,13 @@ namespace Nop.Web.Controllers
                     case AttributeControlType.ReadonlyCheckboxes:
                         {
                             //load read-only (already server-side selected) values
-                            var attributeValues = await _vendorAttributeService.GetVendorAttributeValuesAsync(attribute.Id);
+                            var attributeValues = await _vendorAttributeService.GetAttributeValuesAsync(attribute.Id);
                             foreach (var selectedAttributeId in attributeValues
                                 .Where(v => v.IsPreSelected)
                                 .Select(v => v.Id)
                                 .ToList())
                             {
-                                attributesXml = _vendorAttributeParser.AddVendorAttribute(attributesXml,
+                                attributesXml = _vendorAttributeParser.AddAttribute(attributesXml,
                                     attribute, selectedAttributeId.ToString());
                             }
                         }
@@ -160,7 +157,7 @@ namespace Nop.Web.Controllers
                             if (!StringValues.IsNullOrEmpty(ctrlAttributes))
                             {
                                 var enteredText = ctrlAttributes.ToString().Trim();
-                                attributesXml = _vendorAttributeParser.AddVendorAttribute(attributesXml,
+                                attributesXml = _vendorAttributeParser.AddAttribute(attributesXml,
                                     attribute, enteredText);
                             }
                         }
@@ -223,7 +220,7 @@ namespace Nop.Web.Controllers
                 {
                     var contentType = uploadedFile.ContentType.ToLowerInvariant();
 
-                    if(!contentType.StartsWith("image/") || contentType.StartsWith("image/svg"))
+                    if (!contentType.StartsWith("image/") || contentType.StartsWith("image/svg"))
                         ModelState.AddModelError("", await _localizationService.GetResourceAsync("Vendors.ApplyAccount.Picture.ErrorMessage"));
                     else
                     {
@@ -243,7 +240,7 @@ namespace Nop.Web.Controllers
             //vendor attributes
             var vendorAttributesXml = await ParseVendorAttributesAsync(form);
             var warnings = (await _vendorAttributeParser.GetAttributeWarningsAsync(vendorAttributesXml)).ToList();
-            foreach(var warning in warnings)
+            foreach (var warning in warnings)
             {
                 ModelState.AddModelError(string.Empty, warning);
             }
@@ -261,7 +258,7 @@ namespace Nop.Web.Controllers
                     AllowCustomersToSelectPageSize = true,
                     PageSizeOptions = _vendorSettings.DefaultVendorPageSizeOptions,
                     PictureId = pictureId,
-                    Description = WebUtility.HtmlEncode(description) 
+                    Description = WebUtility.HtmlEncode(description)
                 };
                 await _vendorService.InsertVendorAsync(vendor);
                 //search engine name (the same as vendor name)

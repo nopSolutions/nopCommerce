@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
@@ -34,9 +32,9 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Fields
 
-            private readonly ICustomerService _customerService;
-            private readonly IWebHelper _webHelper;
-            private readonly IWorkContext _workContext;
+            protected readonly ICustomerService _customerService;
+            protected readonly IWebHelper _webHelper;
+            protected readonly IWorkContext _workContext;
 
             #endregion
 
@@ -62,8 +60,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <returns>A task that represents the asynchronous operation</returns>
             private async Task ValidatePasswordAsync(ActionExecutingContext context)
             {
-                if (context == null)
-                    throw new ArgumentNullException(nameof(context));
+                ArgumentNullException.ThrowIfNull(context);
 
                 if (context.HttpContext.Request == null)
                     return;

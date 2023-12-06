@@ -1,5 +1,4 @@
-﻿using System;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 
 namespace Nop.Core
 {
@@ -10,8 +9,8 @@ namespace Nop.Core
     {
         #region Field
 
-        private bool _disposed = false;
-        private readonly RandomNumberGenerator _rng;
+        protected bool _disposed;
+        protected readonly RandomNumberGenerator _rng;
 
         #endregion
 
@@ -40,10 +39,7 @@ namespace Nop.Core
 
         public int Next(int minValue, int maxValue)
         {
-            if (minValue > maxValue)
-            {
-                throw new ArgumentOutOfRangeException();
-            }
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(minValue, maxValue);
             return (int)Math.Floor(minValue + ((double)maxValue - minValue) * NextDouble());
         }
 

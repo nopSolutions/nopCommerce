@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Infrastructure;
@@ -18,11 +13,20 @@ namespace Nop.Services.Plugins
     {
         #region Fields
 
-        private const string OBSOLETE_FIELD = "Obsolete field, using only for compatibility";
-        private List<string> _installedPluginNames = new();
-        private IList<PluginDescriptorBaseInfo> _installedPlugins = new List<PluginDescriptorBaseInfo>();
+        protected const string OBSOLETE_FIELD = "Obsolete field, using only for compatibility";
+        protected List<string> _installedPluginNames = [];
+        protected IList<PluginDescriptorBaseInfo> _installedPlugins = new List<PluginDescriptorBaseInfo>();
 
         protected readonly INopFileProvider _fileProvider;
+
+        #endregion
+
+        #region Ctor
+
+        public PluginsInfo(INopFileProvider fileProvider)
+        {
+            _fileProvider = fileProvider ?? CommonHelper.DefaultFileProvider;
+        }
 
         #endregion
 
@@ -148,18 +152,9 @@ namespace Nop.Services.Plugins
 
             //sort list by display order. NOTE: Lowest DisplayOrder will be first i.e 0 , 1, 1, 1, 5, 10
             //it's required: https://www.nopcommerce.com/boards/topic/17455/load-plugins-based-on-their-displayorder-on-startup
-            result = result.OrderBy(item => item.PluginDescriptor.DisplayOrder).ToList();
+            result = [.. result.OrderBy(item => item.PluginDescriptor.DisplayOrder)];
 
             return result;
-        }
-
-        #endregion
-
-        #region Ctor
-        
-        public PluginsInfo(INopFileProvider fileProvider)
-        {
-            _fileProvider = fileProvider ?? CommonHelper.DefaultFileProvider;
         }
 
         #endregion
@@ -182,7 +177,7 @@ namespace Nop.Services.Plugins
                 _installedPluginNames.AddRange(GetObsoleteInstalledPluginNames());
 
                 //and save info into a new file if need
-                if (_installedPluginNames.Any())
+                if (_installedPluginNames.Count != 0)
                     Save();
             }
 
@@ -194,7 +189,7 @@ namespace Nop.Services.Plugins
             DeserializePluginInfo(text);
 
             var pluginDescriptors = new List<(PluginDescriptor pluginDescriptor, bool needToDeploy)>();
-            var incompatiblePlugins = new Dictionary<string, string>();
+            var incompatiblePlugins = new Dictionary<string, PluginIncompatibleType>();
 
             //ensure plugins directory is created
             var pluginsDirectory = _fileProvider.MapPath(NopPluginDefaults.Path);
@@ -213,7 +208,7 @@ namespace Nop.Services.Plugins
                 //ensure that plugin is compatible with the current version
                 if (!pluginDescriptor.SupportedVersions.Contains(NopVersion.CURRENT_VERSION, StringComparer.InvariantCultureIgnoreCase))
                 {
-                    incompatiblePlugins.Add(pluginDescriptor.SystemName, "The plugin isn't compatible with the current version. Hence this plugin can't be loaded.");
+                    incompatiblePlugins.Add(pluginDescriptor.SystemName, PluginIncompatibleType.NotCompatibleWithCurrentVersion);
                     continue;
                 }
 
@@ -251,7 +246,7 @@ namespace Nop.Services.Plugins
                     if (mainPluginFile == null)
                     {
                         //so plugin is incompatible
-                        incompatiblePlugins.Add(pluginDescriptor.SystemName, "The main assembly isn't found. Hence this plugin can't be loaded.");
+                        incompatiblePlugins.Add(pluginDescriptor.SystemName, PluginIncompatibleType.MainAssemblyNotFound);
                         continue;
                     }
 
@@ -321,11 +316,11 @@ namespace Nop.Services.Plugins
         /// <param name="pluginsInfo">Plugins info</param>
         public virtual void CopyFrom(IPluginsInfo pluginsInfo)
         {
-            InstalledPlugins = pluginsInfo.InstalledPlugins?.ToList() ?? new List<PluginDescriptorBaseInfo>();
-            PluginNamesToUninstall = pluginsInfo.PluginNamesToUninstall?.ToList() ?? new List<string>();
-            PluginNamesToDelete = pluginsInfo.PluginNamesToDelete?.ToList() ?? new List<string>();
+            InstalledPlugins = pluginsInfo.InstalledPlugins?.ToList() ?? [];
+            PluginNamesToUninstall = pluginsInfo.PluginNamesToUninstall?.ToList() ?? [];
+            PluginNamesToDelete = pluginsInfo.PluginNamesToDelete?.ToList() ?? [];
             PluginNamesToInstall = pluginsInfo.PluginNamesToInstall?.ToList() ??
-                                   new List<(string SystemName, Guid? CustomerGuid)>();
+                                   [];
             AssemblyLoadedCollision = pluginsInfo.AssemblyLoadedCollision?.ToList();
             PluginDescriptors = pluginsInfo.PluginDescriptors;
             IncompatiblePlugins = pluginsInfo.IncompatiblePlugins?.ToDictionary(item => item.Key, item => item.Value);
@@ -345,12 +340,12 @@ namespace Nop.Services.Plugins
                 if (_installedPlugins.Any())
                     _installedPluginNames.Clear();
 
-                return _installedPluginNames.Any() ? _installedPluginNames : new List<string> { OBSOLETE_FIELD };
+                return _installedPluginNames.Count != 0 ? _installedPluginNames : [OBSOLETE_FIELD];
             }
             set
             {
                 if (value?.Any() ?? false)
-                    _installedPluginNames = value.ToList();
+                    _installedPluginNames = [.. value];
             }
         }
 
@@ -361,7 +356,7 @@ namespace Nop.Services.Plugins
         {
             get
             {
-                if ((_installedPlugins?.Any() ?? false) || !_installedPluginNames.Any())
+                if ((_installedPlugins?.Any() ?? false) || _installedPluginNames.Count == 0)
                     return _installedPlugins;
 
                 if (PluginDescriptors?.Any() ?? false)
@@ -404,7 +399,7 @@ namespace Nop.Services.Plugins
         /// Value - the reason of incompatibility.
         /// </remarks>
         [JsonIgnore]
-        public virtual IDictionary<string, string> IncompatiblePlugins { get; set; }
+        public virtual IDictionary<string, PluginIncompatibleType> IncompatiblePlugins { get; set; }
 
         /// <summary>
         /// Gets or sets the list of assembly loaded collisions

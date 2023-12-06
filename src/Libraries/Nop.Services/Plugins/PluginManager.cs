@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Customers;
+﻿using Nop.Core.Domain.Customers;
 using Nop.Services.Customers;
 
 namespace Nop.Services.Plugins
@@ -15,10 +11,10 @@ namespace Nop.Services.Plugins
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly IPluginService _pluginService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IPluginService _pluginService;
 
-        private readonly Dictionary<string, IList<TPlugin>> _plugins = new();
+        protected readonly Dictionary<string, IList<TPlugin>> _plugins = [];
 
         #endregion
 
@@ -109,8 +105,8 @@ namespace Nop.Services.Plugins
 
             //try to get already loaded plugin
             var key = await GetKeyAsync(customer, storeId, systemName);
-            if (_plugins.ContainsKey(key))
-                return _plugins[key].FirstOrDefault();
+            if (_plugins.TryGetValue(key, out var value))
+                return value.FirstOrDefault();
 
             //or get it from list of all loaded plugins or load it for the first time
             var pluginBySystemName = _plugins.TryGetValue(await GetKeyAsync(customer, storeId), out var plugins)
@@ -123,7 +119,7 @@ namespace Nop.Services.Plugins
 
             return pluginBySystemName;
         }
-        
+
         /// <summary>
         /// Load active plugins
         /// </summary>

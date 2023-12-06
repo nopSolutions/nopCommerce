@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading;
-
-namespace Nop.Core.ComponentModel
+﻿namespace Nop.Core.ComponentModel
 {
     /// <summary>
     /// Provides a convenience methodology for implementing locked access to resources. 
@@ -11,9 +8,15 @@ namespace Nop.Core.ComponentModel
     /// </remarks>
     public partial class ReaderWriteLockDisposable : IDisposable
     {
-        private bool _disposed = false;
-        private readonly ReaderWriterLockSlim _rwLock;
-        private readonly ReaderWriteLockType _readerWriteLockType;
+        #region Fields
+
+        protected bool _disposed;
+        protected readonly ReaderWriterLockSlim _rwLock;
+        protected readonly ReaderWriteLockType _readerWriteLockType;
+
+        #endregion
+
+        #region Ctor
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ReaderWriteLockDisposable"/> class.
@@ -39,14 +42,14 @@ namespace Nop.Core.ComponentModel
             }
         }
 
-        // Public implementation of Dispose pattern callable by consumers.
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+        #endregion
 
-        // Protected implementation of Dispose pattern.
+        #region Utilities
+
+        /// <summary>
+        /// Protected implementation of Dispose pattern.
+        /// </summary>
+        /// <param name="disposing">Specifies whether to disposing resources</param>
         protected virtual void Dispose(bool disposing)
         {
             if (_disposed)
@@ -67,7 +70,23 @@ namespace Nop.Core.ComponentModel
                         break;
                 }
             }
+
             _disposed = true;
         }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Public implementation of Dispose pattern callable by consumers.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        #endregion
     }
 }

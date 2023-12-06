@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Vendors;
@@ -18,11 +14,11 @@ namespace Nop.Services.Vendors
     {
         #region Fields
 
-        private readonly IHtmlFormatter _htmlFormatter;
-        private readonly IRepository<Customer> _customerRepository;
-        private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<Vendor> _vendorRepository;
-        private readonly IRepository<VendorNote> _vendorNoteRepository;
+        protected readonly IHtmlFormatter _htmlFormatter;
+        protected readonly IRepository<Customer> _customerRepository;
+        protected readonly IRepository<Product> _productRepository;
+        protected readonly IRepository<Vendor> _vendorRepository;
+        protected readonly IRepository<VendorNote> _vendorNoteRepository;
 
         #endregion
 
@@ -72,9 +68,9 @@ namespace Nop.Services.Vendors
                 return null;
 
             return await (from v in _vendorRepository.Table
-                    join p in _productRepository.Table on v.Id equals p.VendorId
-                    where p.Id == productId
-                    select v).FirstOrDefaultAsync();
+                          join p in _productRepository.Table on v.Id equals p.VendorId
+                          where p.Id == productId
+                          select v).FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -87,13 +83,12 @@ namespace Nop.Services.Vendors
         /// </returns>
         public virtual async Task<IList<Vendor>> GetVendorsByProductIdsAsync(int[] productIds)
         {
-            if (productIds is null)
-                throw new ArgumentNullException(nameof(productIds));
+            ArgumentNullException.ThrowIfNull(productIds);
 
             return await (from v in _vendorRepository.Table
-                    join p in _productRepository.Table on v.Id equals p.VendorId
-                    where productIds.Contains(p.Id) && !v.Deleted && v.Active
-                    select v).Distinct().ToListAsync();
+                          join p in _productRepository.Table on v.Id equals p.VendorId
+                          where productIds.Contains(p.Id) && !v.Deleted && v.Active
+                          select v).Distinct().ToListAsync();
         }
 
         /// <summary>
@@ -106,13 +101,12 @@ namespace Nop.Services.Vendors
         /// </returns>
         public virtual async Task<IList<Vendor>> GetVendorsByCustomerIdsAsync(int[] customerIds)
         {
-            if (customerIds is null)
-                throw new ArgumentNullException(nameof(customerIds));
+            ArgumentNullException.ThrowIfNull(customerIds);
 
             return await (from v in _vendorRepository.Table
-                join c in _customerRepository.Table on v.Id equals c.VendorId
-                where customerIds.Contains(c.Id) && !v.Deleted && v.Active
-                select v).Distinct().ToListAsync();
+                          join c in _customerRepository.Table on v.Id equals c.VendorId
+                          where customerIds.Contains(c.Id) && !v.Deleted && v.Active
+                          select v).Distinct().ToListAsync();
         }
 
         /// <summary>
@@ -238,8 +232,7 @@ namespace Nop.Services.Vendors
         /// <returns>Formatted text</returns>
         public virtual string FormatVendorNoteText(VendorNote vendorNote)
         {
-            if (vendorNote == null)
-                throw new ArgumentNullException(nameof(vendorNote));
+            ArgumentNullException.ThrowIfNull(vendorNote);
 
             var text = vendorNote.Note;
 

@@ -1,23 +1,32 @@
-﻿using System;
-using System.Threading.Tasks;
-using Nop.Services.Discounts;
+﻿using Nop.Services.Discounts;
 using Nop.Services.Plugins;
 
 namespace Nop.Tests.Nop.Services.Tests.Discounts
 {
     public partial class TestDiscountRequirementRule : BasePlugin, IDiscountRequirementRule
     {
+        private IDiscountService _discountService;
+
+        public TestDiscountRequirementRule(IDiscountService discountService)
+        {
+            _discountService = discountService;
+        }
+
         /// <summary>
         /// Check discount requirement
         /// </summary>
         /// <param name="request">Object that contains all information required to check the requirement (Current customer, discount, etc)</param>
         /// <returns>Result</returns>
-        public Task<DiscountRequirementValidationResult> CheckRequirementAsync(DiscountRequirementValidationRequest request)
+        public async Task<DiscountRequirementValidationResult> CheckRequirementAsync(DiscountRequirementValidationRequest request)
         {
-            return Task.FromResult(new DiscountRequirementValidationResult
+            var dr = await _discountService.GetDiscountRequirementByIdAsync(request.DiscountRequirementId);
+            var valid = !dr.IsGroup;
+            valid = valid && !dr.InteractionTypeId.HasValue;
+            
+            return new DiscountRequirementValidationResult
             {
-                IsValid = true
-            });
+                IsValid = valid
+            };
         }
 
         /// <summary>

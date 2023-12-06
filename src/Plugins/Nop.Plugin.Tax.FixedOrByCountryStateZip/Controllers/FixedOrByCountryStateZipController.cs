@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
@@ -24,24 +21,24 @@ using Nop.Web.Framework.Mvc.Filters;
 namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
 {
     [AuthorizeAdmin]
-    [Area(AreaNames.Admin)]
+    [Area(AreaNames.ADMIN)]
     [AutoValidateAntiforgeryToken]
     public class FixedOrByCountryStateZipController : BasePluginController
     {
         #region Fields
 
-        private readonly FixedOrByCountryStateZipTaxSettings _countryStateZipSettings;
-        private readonly ICountryService _countryService;
-        private readonly ICountryStateZipService _taxRateService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
-        private readonly ISettingService _settingService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStoreService _storeService;
-        private readonly ITaxCategoryService _taxCategoryService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IWorkContext _workContext;
-        
+        protected readonly FixedOrByCountryStateZipTaxSettings _countryStateZipSettings;
+        protected readonly ICountryService _countryService;
+        protected readonly ICountryStateZipService _taxRateService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly ISettingService _settingService;
+        protected readonly IStateProvinceService _stateProvinceService;
+        protected readonly IStoreService _storeService;
+        protected readonly ITaxCategoryService _taxCategoryService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IWorkContext _workContext;
+
         #endregion
 
         #region Ctor
@@ -98,7 +95,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
             }
 
             var model = new ConfigurationModel { CountryStateZipEnabled = _countryStateZipSettings.CountryStateZipEnabled };
-            
+
             //stores
             model.AvailableStores.Add(new SelectListItem { Text = "*", Value = "0" });
             var stores = await _storeService.GetAllStoresAsync();
@@ -166,7 +163,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
                     TaxCategoryName = taxCategory.Name,
 
                     Rate = await _settingService
-                        .GetSettingByKeyAsync<decimal>(string.Format(FixedOrByCountryStateZipDefaults.FixedRateSettingsKey, taxCategory.Id))
+                        .GetSettingByKeyAsync<decimal>(string.Format(FixedOrByCountryStateZipDefaults.FIXED_RATE_SETTINGS_KEY, taxCategory.Id))
                 });
             });
 
@@ -179,7 +176,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return Content("Access denied");
 
-            await _settingService.SetSettingAsync(string.Format(FixedOrByCountryStateZipDefaults.FixedRateSettingsKey, model.TaxCategoryId), model.Rate);
+            await _settingService.SetSettingAsync(string.Format(FixedOrByCountryStateZipDefaults.FIXED_RATE_SETTINGS_KEY, model.TaxCategoryId), model.Rate);
 
             return new NullJsonResult();
         }

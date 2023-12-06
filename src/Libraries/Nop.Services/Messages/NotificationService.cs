@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Newtonsoft.Json;
 using Nop.Core;
@@ -16,10 +13,10 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILogger _logger;
-        private readonly ITempDataDictionaryFactory _tempDataDictionaryFactory;
-        private readonly IWorkContext _workContext;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly ILogger _logger;
+        protected readonly ITempDataDictionaryFactory _tempDataDictionaryFactory;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 
@@ -52,8 +49,8 @@ namespace Nop.Services.Messages
             var tempData = _tempDataDictionaryFactory.GetTempData(context);
 
             //Messages have stored in a serialized list
-            var messages = tempData.ContainsKey(NopMessageDefaults.NotificationListKey)
-                ? JsonConvert.DeserializeObject<IList<NotifyData>>(tempData[NopMessageDefaults.NotificationListKey].ToString())
+            var messages = tempData.TryGetValue(NopMessageDefaults.NotificationListKey, out var value) 
+                ? JsonConvert.DeserializeObject<IList<NotifyData>>(value.ToString())
                 : new List<NotifyData>();
 
             messages.Add(new NotifyData

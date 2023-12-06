@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
@@ -22,13 +19,13 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly CurrencySettings _currencySettings;
-        private readonly ICurrencyService _currencyService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IGiftCardService _giftCardService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IOrderService _orderService;
-        private readonly IPriceFormatter _priceFormatter;
+        protected readonly CurrencySettings _currencySettings;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly IGiftCardService _giftCardService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IOrderService _orderService;
+        protected readonly IPriceFormatter _priceFormatter;
 
         #endregion
 
@@ -64,11 +61,9 @@ namespace Nop.Web.Areas.Admin.Factories
         protected virtual GiftCardUsageHistorySearchModel PrepareGiftCardUsageHistorySearchModel(GiftCardUsageHistorySearchModel searchModel,
             GiftCard giftCard)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (giftCard == null)
-                throw new ArgumentNullException(nameof(giftCard));
+            ArgumentNullException.ThrowIfNull(giftCard);
 
             searchModel.GiftCardId = giftCard.Id;
 
@@ -92,8 +87,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<GiftCardSearchModel> PrepareGiftCardSearchModelAsync(GiftCardSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //prepare "activated" filter (0 - all; 1 - activated only; 2 - deactivated only)
             searchModel.ActivatedList.Add(new SelectListItem
@@ -128,8 +122,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<GiftCardListModel> PrepareGiftCardListModelAsync(GiftCardSearchModel searchModel)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
             //get parameters to filter gift cards
             var isActivatedOnly = searchModel.ActivatedId == 0 ? null : searchModel.ActivatedId == 1 ? true : (bool?)false;
@@ -209,11 +202,9 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<GiftCardUsageHistoryListModel> PrepareGiftCardUsageHistoryListModelAsync(GiftCardUsageHistorySearchModel searchModel,
             GiftCard giftCard)
         {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
+            ArgumentNullException.ThrowIfNull(searchModel);
 
-            if (giftCard == null)
-                throw new ArgumentNullException(nameof(giftCard));
+            ArgumentNullException.ThrowIfNull(giftCard);
 
             //get gift card usage history
             var usageHistory = (await _giftCardService.GetGiftCardUsageHistoryAsync(giftCard))

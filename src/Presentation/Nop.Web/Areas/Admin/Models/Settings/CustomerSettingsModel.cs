@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
@@ -9,6 +10,15 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// </summary>
     public partial record CustomerSettingsModel : BaseNopModel, ISettingsModel
     {
+        #region Ctor
+
+        public CustomerSettingsModel()
+        {
+            AvailableCountries = new List<SelectListItem>();
+        }
+
+        #endregion
+
         #region Properties
 
         public int ActiveStoreScopeConfiguration { get; set; }
@@ -29,7 +39,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool UsernameValidationUseRegex { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.UsernameValidationRule")]
-        public string UsernameValidationRule { get; set; }       
+        public string UsernameValidationRule { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.UserRegistrationType")]
         public int UserRegistrationType { get; set; }
@@ -69,6 +79,9 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.PasswordMinLength")]
         public int PasswordMinLength { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.PasswordMaxLength")]
+        public int PasswordMaxLength { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.PasswordRequireLowercase")]
         public bool PasswordRequireLowercase { get; set; }
@@ -119,10 +132,13 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool StoreIpAddresses { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.EnteringEmailTwice")]
-        public bool EnteringEmailTwice { get; set; }        
+        public bool EnteringEmailTwice { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.GenderEnabled")]
         public bool GenderEnabled { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.NeutralGenderEnabled")]
+        public bool NeutralGenderEnabled { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.FirstNameEnabled")]
         public bool FirstNameEnabled { get; set; }
@@ -187,6 +203,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.CountryRequired")]
         public bool CountryRequired { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.DefaultCountry")]
+        public int? DefaultCountryId { get; set; }
+        public IList<SelectListItem> AvailableCountries { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.StateProvinceEnabled")]
         public bool StateProvinceEnabled { get; set; }

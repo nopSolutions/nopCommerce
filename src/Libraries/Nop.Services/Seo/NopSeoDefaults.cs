@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Nop.Core.Caching;
+﻿using Nop.Core.Caching;
 
 namespace Nop.Services.Seo
 {
@@ -27,8 +26,8 @@ namespace Nop.Services.Seo
         /// <summary>
         /// Gets a default list of slugs (seName) reserved for some other needs
         /// </summary>
-        public static List<string> ReservedUrlRecordSlugs => new()
-        {
+        public static List<string> ReservedUrlRecordSlugs =>
+        [
             //routes that redirected customers to the specific actions
             "admin",
             "blog",
@@ -56,7 +55,7 @@ namespace Nop.Services.Seo
             "sitemap",
             "storeclosed",
             "wishlist",
-        };
+        ];
 
         #region Sitemap
 
@@ -106,6 +105,19 @@ namespace Nop.Services.Seo
         /// {0} : slug
         /// </remarks>
         public static CacheKey UrlRecordBySlugCacheKey => new("Nop.urlrecord.byslug.{0}");
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        public static CacheKey UrlRecordSlugLookupCacheKey => new("Nop.urlrecord.sluglookup");
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : language ID
+        /// </remarks>
+        public static CacheKey UrlRecordEntityIdLookupCacheKey => new("Nop.urlrecord.entityidlookup.{0}");
 
         #endregion
     }

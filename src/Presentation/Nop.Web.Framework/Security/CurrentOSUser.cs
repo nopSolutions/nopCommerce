@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Runtime.Versioning;
 using System.Security.Principal;
 
@@ -31,7 +28,7 @@ namespace Nop.Web.Framework.Security
                     break;
                 default:
                     UserId = Name;
-                    Groups = new List<string>();
+                    Groups = [];
                     break;
             }
         }
@@ -75,7 +72,7 @@ namespace Nop.Web.Framework.Security
             var respars = res.Split("\n");
 
             UserId = respars[0];
-            Groups = respars[1].Split(" ").ToList();
+            Groups = [.. respars[1].Split(" ")];
         }
 
         #endregion

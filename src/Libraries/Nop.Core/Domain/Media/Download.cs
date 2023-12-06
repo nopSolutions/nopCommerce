@@ -1,5 +1,3 @@
-using System;
-
 namespace Nop.Core.Domain.Media
 {
     /// <summary>

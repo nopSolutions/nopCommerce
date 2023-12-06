@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using System.Text;
 using Nop.Core.Configuration;
 
@@ -9,17 +7,8 @@ namespace Nop.Core.Caching
     /// <summary>
     /// Represents the default cache key service implementation
     /// </summary>
-    public abstract partial class CacheKeyService
+    public abstract partial class CacheKeyService : ICacheKeyService
     {
-        #region Constants
-
-        /// <summary>
-        /// Gets an algorithm used to create the hash value of identifiers need to cache
-        /// </summary>
-        private string HashAlgorithm => "SHA1";
-
-        #endregion
-
         #region Fields
 
         protected readonly AppSettings _appSettings;
@@ -58,7 +47,7 @@ namespace Nop.Core.Caching
         {
             var identifiers = ids.ToList();
 
-            if (!identifiers.Any())
+            if (identifiers.Count == 0)
                 return string.Empty;
 
             var identifiersString = string.Join(", ", identifiers.OrderBy(id => id));
@@ -112,21 +101,15 @@ namespace Nop.Core.Caching
 
             return key;
         }
+        
+        #endregion
+
+        #region Properties
 
         /// <summary>
-        /// Create a copy of cache key using the short cache time and fills it by passed parameters
+        /// Gets an algorithm used to create the hash value of identifiers need to cache
         /// </summary>
-        /// <param name="cacheKey">Initial cache key</param>
-        /// <param name="cacheKeyParameters">Parameters to create cache key</param>
-        /// <returns>Cache key</returns>
-        public virtual CacheKey PrepareKeyForShortTermCache(CacheKey cacheKey, params object[] cacheKeyParameters)
-        {
-            var key = cacheKey.Create(CreateCacheKeyParameters, cacheKeyParameters);
-
-            key.CacheTime = _appSettings.Get<CacheConfig>().ShortTermCacheTime;
-
-            return key;
-        }
+        protected string HashAlgorithm => "SHA1";
 
         #endregion
     }

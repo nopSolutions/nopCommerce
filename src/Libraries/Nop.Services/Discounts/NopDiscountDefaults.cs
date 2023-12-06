@@ -27,6 +27,14 @@ namespace Nop.Services.Discounts
         /// Key for caching
         /// </summary>
         /// <remarks>
+        /// {0} : parent id
+        /// </remarks>
+        public static CacheKey DiscountRequirementsByParentCacheKey => new("Nop.discountrequirement.byparent.{0}");
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
         /// {0} : show hidden records?
         /// {1} : coupon code
         /// {2} : discount name

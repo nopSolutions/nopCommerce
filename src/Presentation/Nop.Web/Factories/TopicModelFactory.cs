@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Topics;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
@@ -17,11 +14,11 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly ILocalizationService _localizationService;
-        private readonly IStoreContext _storeContext;
-        private readonly ITopicService _topicService;
-        private readonly ITopicTemplateService _topicTemplateService;
-        private readonly IUrlRecordService _urlRecordService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly ITopicService _topicService;
+        protected readonly ITopicTemplateService _topicTemplateService;
+        protected readonly IUrlRecordService _urlRecordService;
 
         #endregion
 
@@ -50,12 +47,11 @@ namespace Nop.Web.Factories
         /// <param name="topic">Topic</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the opic model
+        /// The task result contains the topic model
         /// </returns>
         public virtual async Task<TopicModel> PrepareTopicModelAsync(Topic topic)
         {
-            if (topic == null)
-                throw new ArgumentNullException(nameof(topic));
+            ArgumentNullException.ThrowIfNull(topic);
 
             return new TopicModel
             {
@@ -79,7 +75,7 @@ namespace Nop.Web.Factories
         /// <param name="systemName">Topic system name</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the opic model
+        /// The task result contains the topic model
         /// </returns>
         public virtual async Task<TopicModel> PrepareTopicModelBySystemNameAsync(string systemName)
         {
@@ -102,11 +98,8 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<string> PrepareTemplateViewPathAsync(int topicTemplateId)
         {
-            var template = await _topicTemplateService.GetTopicTemplateByIdAsync(topicTemplateId) ??
-                           (await _topicTemplateService.GetAllTopicTemplatesAsync()).FirstOrDefault();
-
-            if (template == null)
-                throw new Exception("No default template could be loaded");
+            var template = (await _topicTemplateService.GetTopicTemplateByIdAsync(topicTemplateId) ??
+                           (await _topicTemplateService.GetAllTopicTemplatesAsync()).FirstOrDefault()) ?? throw new Exception("No default template could be loaded");
 
             return template.ViewPath;
         }

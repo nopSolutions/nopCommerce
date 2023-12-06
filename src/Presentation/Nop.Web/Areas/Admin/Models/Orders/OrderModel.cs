@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Nop.Core.Domain.Tax;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Framework.Models;
@@ -17,7 +15,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
         public OrderModel()
         {
-            CustomValues = new Dictionary<string, object>();
+            CustomValues = [];
             TaxRates = new List<TaxRate>();
             GiftCards = new List<GiftCard>();
             Items = new List<OrderItemModel>();
@@ -41,7 +39,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
         public Guid OrderGuid { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.CustomOrderNumber")]
         public string CustomOrderNumber { get; set; }
-        
+
         //store
         [NopResourceDisplayName("Admin.Orders.Fields.Store")]
         public string StoreName { get; set; }
@@ -195,7 +193,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
         public AddressModel BillingAddress { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.VatNumber")]
         public string VatNumber { get; set; }
-        
+
         //gift cards
         public IList<GiftCard> GiftCards { get; set; }
 
@@ -256,9 +254,9 @@ namespace Nop.Web.Areas.Admin.Models.Orders
             [NopResourceDisplayName("Admin.Orders.Fields.GiftCardInfo")]
             public string CouponCode { get; set; }
             public string Amount { get; set; }
-        }               
-        
-        public partial record UsedDiscountModel:BaseNopModel
+        }
+
+        public partial record UsedDiscountModel : BaseNopModel
         {
             public int DiscountId { get; set; }
             public string DiscountName { get; set; }
@@ -270,9 +268,9 @@ namespace Nop.Web.Areas.Admin.Models.Orders
     public partial record OrderAggreratorModel : BaseNopModel
     {
         //aggergator properties
-        public string aggregatorprofit { get; set; }
-        public string aggregatorshipping { get; set; }
-        public string aggregatortax { get; set; }
-        public string aggregatortotal { get; set; }
+        public string AggregatorProfit { get; set; }
+        public string AggregatorShipping { get; set; }
+        public string AggregatorTax { get; set; }
+        public string AggregatorTotal { get; set; }
     }
 }

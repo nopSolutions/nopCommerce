@@ -27,7 +27,7 @@ namespace Nop.Web.Models.Boards
 
         public bool Subscribed { get; set; }
 
-        public bool DisplayCaptcha { get; set; } 
+        public bool DisplayCaptcha { get; set; }
 
         #endregion
     }

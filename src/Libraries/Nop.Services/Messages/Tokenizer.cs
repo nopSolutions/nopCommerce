@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Dynamic.Core;
+﻿using System.Linq.Dynamic.Core;
 using System.Net;
 using System.Text.RegularExpressions;
 using Nop.Core.Domain.Messages;
@@ -15,7 +12,7 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly MessageTemplatesSettings _messageTemplatesSettings;
+        protected readonly MessageTemplatesSettings _messageTemplatesSettings;
 
         #endregion
 
@@ -122,7 +119,7 @@ namespace Nop.Services.Messages
                     Condition = regexCondition.Match(capture.Value).Value
                 })).ToList();
 
-            if (!conditionalStatements.Any())
+            if (conditionalStatements.Count == 0)
                 return template;
 
             //replace conditional statements
@@ -168,8 +165,7 @@ namespace Nop.Services.Messages
             if (string.IsNullOrWhiteSpace(template))
                 throw new ArgumentNullException(nameof(template));
 
-            if (tokens == null)
-                throw new ArgumentNullException(nameof(tokens));
+            ArgumentNullException.ThrowIfNull(tokens);
 
             //replace conditional statements
             template = ReplaceConditionalStatements(template, tokens);

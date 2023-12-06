@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Data;
 
@@ -13,7 +11,7 @@ namespace Nop.Services.Common
     {
         #region Fields
 
-        private readonly RequestDelegate _next;
+        protected readonly RequestDelegate _next;
 
         #endregion
 

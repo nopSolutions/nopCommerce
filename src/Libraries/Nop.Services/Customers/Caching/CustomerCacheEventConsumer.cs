@@ -1,5 +1,4 @@
-﻿﻿using System.Threading.Tasks;
-using Nop.Core.Domain.Customers;
+﻿using Nop.Core.Domain.Customers;
 using Nop.Services.Caching;
 using Nop.Services.Events;
 using Nop.Services.Orders;

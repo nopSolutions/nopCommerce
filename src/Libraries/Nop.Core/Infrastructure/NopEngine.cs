@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿﻿using System.Diagnostics;
 using System.Reflection;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
@@ -47,6 +45,7 @@ namespace Nop.Core.Infrastructure
             //otherwise, DbContext initializers won't run and a plugin installation won't work
             var instances = startupTasks
                 .Select(startupTask => (IStartupTask)Activator.CreateInstance(startupTask))
+                .Where(startupTask => startupTask != null)
                 .OrderBy(startupTask => startupTask.Order);
 
             //execute tasks
@@ -66,15 +65,14 @@ namespace Nop.Core.Infrastructure
             //create and sort instances of mapper configurations
             var instances = mapperConfigurations
                 .Select(mapperConfiguration => (IOrderedMapperProfile)Activator.CreateInstance(mapperConfiguration))
+                .Where(mapperConfiguration => mapperConfiguration != null)
                 .OrderBy(mapperConfiguration => mapperConfiguration.Order);
 
             //create AutoMapper configuration
             var config = new MapperConfiguration(cfg =>
             {
-                foreach (var instance in instances)
-                {
+                foreach (var instance in instances) 
                     cfg.AddProfile(instance.GetType());
-                }
             });
 
             //register
@@ -83,15 +81,18 @@ namespace Nop.Core.Infrastructure
 
         protected virtual Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
+            var assemblyFullName = args.Name;
+
             //check for assembly already loaded
-            var assembly = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.FullName == args.Name);
+            var assembly = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.FullName == assemblyFullName);
             if (assembly != null)
                 return assembly;
 
             //get assembly from TypeFinder
             var typeFinder = Singleton<ITypeFinder>.Instance;
-            assembly = typeFinder?.GetAssemblies().FirstOrDefault(a => a.FullName == args.Name);
-            return assembly;
+            assembly = typeFinder?.GetAssemblies().FirstOrDefault(a => a.FullName == assemblyFullName);
+
+            return assembly ?? AssemblyResolver.GetAssemblyByFullName(assemblyFullName);
         }
 
         #endregion
@@ -115,6 +116,7 @@ namespace Nop.Core.Infrastructure
             //create and sort instances of startup configurations
             var instances = startupConfigurations
                 .Select(startup => (INopStartup)Activator.CreateInstance(startup))
+                .Where(startup => startup != null)
                 .OrderBy(startup => startup.Order);
 
             //configure services
@@ -148,6 +150,7 @@ namespace Nop.Core.Infrastructure
             //create and sort instances of startup configurations
             var instances = startupConfigurations
                 .Select(startup => (INopStartup)Activator.CreateInstance(startup))
+                .Where(startup => startup != null)
                 .OrderBy(startup => startup.Order);
 
             //configure request pipeline
@@ -196,15 +199,12 @@ namespace Nop.Core.Infrastructure
         {
             Exception innerException = null;
             foreach (var constructor in type.GetConstructors())
-            {
                 try
                 {
                     //try to resolve constructor parameters
                     var parameters = constructor.GetParameters().Select(parameter =>
                     {
-                        var service = Resolve(parameter.ParameterType);
-                        if (service == null)
-                            throw new NopException("Unknown dependency");
+                        var service = Resolve(parameter.ParameterType) ?? throw new NopException("Unknown dependency");
                         return service;
                     });
 
@@ -215,7 +215,6 @@ namespace Nop.Core.Infrastructure
                 {
                     innerException = ex;
                 }
-            }
 
             throw new NopException("No constructor was found that had all the dependencies satisfied.", innerException);
         }
@@ -228,6 +227,74 @@ namespace Nop.Core.Infrastructure
         /// Service provider
         /// </summary>
         public virtual IServiceProvider ServiceProvider { get; protected set; }
+
+        #endregion
+
+        #region Nested class
+
+        protected static class AssemblyResolver
+        {
+            private static readonly Dictionary<string, IDictionary<string, Assembly>> _assemblies = new(StringComparer.InvariantCultureIgnoreCase);
+
+            public static Assembly GetAssemblyByFullName(string assemblyFullName)
+            {
+                Assembly getAssembly(string fullName)
+                {
+                    var name = new AssemblyName(fullName);
+
+                    if (string.IsNullOrEmpty(name.Name))
+                        return null;
+
+                    if (!_assemblies.TryGetValue(name.Name, out var value))
+                        return null;
+
+                    var assemblies = value;
+
+                    if (!assemblies.Any())
+                        return null;
+                    
+                    assemblies.TryGetValue(assemblyFullName, out var assembly);
+
+                    return assembly ?? assemblies.Values.First();
+                }
+
+                void addAssembly(Assembly assembly)
+                {
+                    var name = assembly.GetName();
+
+                    if (string.IsNullOrEmpty(name.Name))
+                        return;
+
+                    if (!_assemblies.TryGetValue(name.Name, out var assemblies))
+                    {
+                        assemblies = new Dictionary<string, Assembly>();
+                        _assemblies.Add(name.Name, assemblies);
+                    }
+
+                    assemblies.TryAdd(name.FullName, assembly);
+                }
+
+                if (_assemblies.Count != 0)
+                    return getAssembly(assemblyFullName);
+                
+                var fileProvider = CommonHelper.DefaultFileProvider;
+
+                foreach (var dll in AppDomain.CurrentDomain.GetAssemblies())
+                    addAssembly(dll);
+
+                foreach (var dllPath in fileProvider.GetFiles(AppContext.BaseDirectory, "*.dll"))
+                    try
+                    {
+                        addAssembly(Assembly.LoadFrom(dllPath));
+                    }
+                    catch (Exception ex)
+                    {
+                        Trace.TraceError(ex.ToString());
+                    }
+
+                return getAssembly(assemblyFullName);
+            }
+        }
 
         #endregion
     }

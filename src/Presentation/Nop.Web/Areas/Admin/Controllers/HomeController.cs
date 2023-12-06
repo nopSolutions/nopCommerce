@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -12,6 +10,7 @@ using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Home;
+using Nop.Web.Framework.Models.DataTables;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -19,15 +18,15 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly AdminAreaSettings _adminAreaSettings;
-        private readonly ICommonModelFactory _commonModelFactory;
-        private readonly IHomeModelFactory _homeModelFactory;
-        private readonly ILocalizationService _localizationService;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly ISettingService _settingService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IWorkContext _workContext;
+        protected readonly AdminAreaSettings _adminAreaSettings;
+        protected readonly ICommonModelFactory _commonModelFactory;
+        protected readonly IHomeModelFactory _homeModelFactory;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly ISettingService _settingService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 
@@ -98,6 +97,48 @@ namespace Nop.Web.Areas.Admin.Controllers
             await _settingService.SaveSettingAsync(_adminAreaSettings);
 
             return Content("Setting changed");
+        }
+
+        public virtual async Task<IActionResult> GetPopularSearchTerm()
+        {
+            var model = new DataTablesModel();
+            model = await _homeModelFactory.PreparePopularSearchTermReportModelAsync(model);
+            return PartialView("Table", model);
+        }
+
+        public virtual async Task<IActionResult> GetBestsellersBriefReportByAmount()
+        {
+            var model = new DataTablesModel();
+            model = await _homeModelFactory.PrepareBestsellersBriefReportByAmountModelAsync(model);
+            return PartialView("Table", model);
+        }
+
+        public virtual async Task<IActionResult> GetBestsellersBriefReportByQuantity()
+        {
+            var model = new DataTablesModel();
+            model = await _homeModelFactory.PrepareBestsellersBriefReportByQuantityModelAsync(model);
+            return PartialView("Table", model);
+        }
+
+        public virtual async Task<IActionResult> GetLatestOrders()
+        {
+            var model = new DataTablesModel();
+            model = await _homeModelFactory.PrepareLatestOrdersModelAsync(model);
+            return PartialView("Table", model);
+        }
+
+        public virtual async Task<IActionResult> GetOrderIncomplete()
+        {
+            var model = new DataTablesModel();
+            model = await _homeModelFactory.PrepareOrderIncompleteModelAsync(model);
+            return PartialView("Table", model);
+        }
+
+        public virtual async Task<IActionResult> GetOrderAverage()
+        {
+            var model = new DataTablesModel();
+            model = await _homeModelFactory.PrepareOrderAverageModelAsync(model);
+            return PartialView("Table", model);
         }
 
         #endregion

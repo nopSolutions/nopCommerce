@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Nop.Core.Configuration;
+﻿using Nop.Core.Configuration;
 
 namespace Nop.Core.Domain.Customers
 {
@@ -13,7 +12,7 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public ExternalAuthenticationSettings()
         {
-            ActiveAuthenticationMethodSystemNames = new List<string>();
+            ActiveAuthenticationMethodSystemNames = [];
         }
 
         /// <summary>

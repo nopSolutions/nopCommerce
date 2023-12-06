@@ -1,6 +1,6 @@
 ﻿using FluentMigrator;
-using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
@@ -15,7 +15,7 @@ using Nop.Services.Seo;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo440
 {
-    [NopMigration("2020-06-10 00:00:00", "4.40.0", UpdateMigrationType.Settings, MigrationProcessType.Update)]
+    [NopUpdateMigration("2020-06-10 00:00:00", "4.40", UpdateMigrationType.Settings)]
     public class SettingMigration : MigrationBase
     {
         /// <summary>Collect the UP migration expressions</summary>
@@ -63,14 +63,14 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                     seoSettings.ReservedUrlRecordSlugs.Add(slug);
             }
             settingService.SaveSetting(seoSettings, settings => seoSettings.ReservedUrlRecordSlugs);
-            
+
             //#3015
             var homepageTitleKey = $"{nameof(SeoSettings)}.HomepageTitle".ToLower();
-            if (settingService.GetSettingByKey<string>(homepageTitleKey) == null) 
+            if (settingService.GetSettingByKey<string>(homepageTitleKey) == null)
                 settingService.SetSetting(homepageTitleKey, settingService.GetSettingByKey<string>($"{nameof(SeoSettings)}.DefaultTitle"));
 
             var homepageDescriptionKey = $"{nameof(SeoSettings)}.HomepageDescription".ToLower();
-            if (settingService.GetSettingByKey<string>(homepageDescriptionKey) == null) 
+            if (settingService.GetSettingByKey<string>(homepageDescriptionKey) == null)
                 settingService.SetSetting(homepageDescriptionKey, "Your home page description");
 
             //#5210

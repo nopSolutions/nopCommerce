@@ -135,7 +135,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Common
             validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Company);
             model.Company = string.Empty;
             validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Company);
-            
+
             //not required
             validator = new AddressValidator(_localizationService, _stateProvinceService,
                 new AddressSettings
@@ -273,7 +273,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Common
             validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.ZipPostalCode);
             model.ZipPostalCode = string.Empty;
             validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.ZipPostalCode);
-            
+
             //not required
             validator = new AddressValidator(_localizationService, _stateProvinceService,
                 new AddressSettings
@@ -319,7 +319,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Common
             validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.City);
             model.City = string.Empty;
             validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.City);
-            
+
             //not required
             validator = new AddressValidator(_localizationService, _stateProvinceService,
                 new AddressSettings
@@ -411,7 +411,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Common
             validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.FaxNumber);
             model.FaxNumber = string.Empty;
             validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.FaxNumber);
-            
+
             //not required
             validator = new AddressValidator(_localizationService, _stateProvinceService,
                 new AddressSettings

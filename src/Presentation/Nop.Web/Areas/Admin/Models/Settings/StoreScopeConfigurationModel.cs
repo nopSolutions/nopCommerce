@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Nop.Web.Areas.Admin.Models.Stores;
+﻿using Nop.Web.Areas.Admin.Models.Stores;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Settings

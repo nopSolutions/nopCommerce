@@ -68,6 +68,11 @@ namespace Nop.Core.Domain.Customers
         public int PasswordMinLength { get; set; }
 
         /// <summary>
+        /// Gets or sets a maximum password length
+        /// </summary>
+        public int PasswordMaxLength { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether password are have least one lowercase
         /// </summary>
         public bool PasswordRequireLowercase { get; set; }
@@ -81,7 +86,7 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets a value indicating whether password are have least one non alphanumeric character
         /// </summary>
         public bool PasswordRequireNonAlphanumeric { get; set; }
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether password are have least one digit
         /// </summary>
@@ -111,6 +116,11 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets a number of minutes to lockout users (for login failures).
         /// </summary>
         public int FailedPasswordLockoutMinutes { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether customers are required to re-login after password changing
+        /// </summary>
+        public bool RequiredReLoginAfterPasswordChange { get; set; }
 
         /// <summary>
         /// User registration type
@@ -235,7 +245,7 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets interval (in minutes) with which the Delete Guest Task runs
         /// </summary>
-        public int DeleteGuestTaskOlderThanMinutes { get; set; }        
+        public int DeleteGuestTaskOlderThanMinutes { get; set; }
 
         #region Form fields
 
@@ -263,6 +273,11 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets a value indicating whether 'Gender' is enabled
         /// </summary>
         public bool GenderEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Neutral Gender' is enabled
+        /// </summary>
+        public bool NeutralGenderEnabled { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Date of Birth' is enabled
@@ -348,6 +363,11 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets a value indicating whether 'Country' is required
         /// </summary>
         public bool CountryRequired { get; set; }
+
+        /// <summary>
+        /// Gets or sets a Default Country
+        /// </summary>
+        public int? DefaultCountryId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'State / province' is enabled

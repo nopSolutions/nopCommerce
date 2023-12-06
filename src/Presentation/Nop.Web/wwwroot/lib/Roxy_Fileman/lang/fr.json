@@ -74,7 +74,7 @@
 "Copy":"Copie",
 "Paste":"Coller",
 "E_CopyFile":"De copie de fichiers d'erreur",
-"E_CopyFileInvalisPath":"Vous ne pouvez pas copier le fichier - chemin n'existe pas",
+"E_CopyFileInvalidPath":"Vous ne pouvez pas copier le fichier - chemin n'existe pas",
 "E_CopyDirInvalidPath":"Vous ne pouvez pas copier le répertoire - chemin n'existe pas",
 "E_CreateArchive":"Error creating zip archive.",
 "E_UploadingFile":"erreur"

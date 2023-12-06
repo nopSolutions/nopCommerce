@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Nop.Core.Configuration;
+﻿using Nop.Core.Configuration;
 
 namespace Nop.Core.Domain.Cms
 {
@@ -10,7 +9,7 @@ namespace Nop.Core.Domain.Cms
     {
         public WidgetSettings()
         {
-            ActiveWidgetSystemNames = new List<string>();
+            ActiveWidgetSystemNames = [];
         }
 
         /// <summary>

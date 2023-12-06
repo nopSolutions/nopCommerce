@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Nop.Web.Framework.Models
 {
@@ -15,14 +15,14 @@ namespace Nop.Web.Framework.Models
         /// </summary>
         public BaseNopModel()
         {
-            CustomProperties = new Dictionary<string, string>();
+            CustomProperties = [];
             PostInitialize();
         }
 
         #endregion
 
         #region Methods
-        
+
         /// <summary>
         /// Perform additional actions for the model initialization
         /// </summary>
@@ -34,11 +34,12 @@ namespace Nop.Web.Framework.Models
         #endregion
 
         #region Properties
-        
+
         /// <summary>
         /// Gets or sets property to store any custom values for models 
         /// </summary>
         [XmlIgnore]
+        [JsonIgnore]
         public Dictionary<string, string> CustomProperties { get; set; }
 
         #endregion

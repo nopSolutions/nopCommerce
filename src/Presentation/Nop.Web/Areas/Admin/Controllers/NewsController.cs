@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.News;
 using Nop.Core.Events;
 using Nop.Services.Localization;
@@ -24,16 +20,16 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly ILocalizationService _localizationService;
-        private readonly INewsModelFactory _newsModelFactory;
-        private readonly INewsService _newsService;
-        private readonly INotificationService _notificationService;
-        private readonly IPermissionService _permissionService;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IStoreService _storeService;
-        private readonly IUrlRecordService _urlRecordService;
+        protected readonly ICustomerActivityService _customerActivityService;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INewsModelFactory _newsModelFactory;
+        protected readonly INewsService _newsService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly IStoreService _storeService;
+        protected readonly IUrlRecordService _urlRecordService;
 
         #endregion
 
@@ -342,7 +338,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds == null || selectedIds.Count == 0)
                 return NoContent();
 
-            var comments = await _newsService.GetNewsCommentsByIdsAsync(selectedIds.ToArray());
+            var comments = await _newsService.GetNewsCommentsByIdsAsync([.. selectedIds]);
 
             await _newsService.DeleteNewsCommentsAsync(comments);
 
@@ -366,7 +362,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return NoContent();
 
             //filter not approved comments
-            var newsComments = (await _newsService.GetNewsCommentsByIdsAsync(selectedIds.ToArray())).Where(comment => !comment.IsApproved);
+            var newsComments = (await _newsService.GetNewsCommentsByIdsAsync([.. selectedIds])).Where(comment => !comment.IsApproved);
 
             foreach (var newsComment in newsComments)
             {
@@ -395,7 +391,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return NoContent();
 
             //filter approved comments
-            var newsComments = (await _newsService.GetNewsCommentsByIdsAsync(selectedIds.ToArray())).Where(comment => comment.IsApproved);
+            var newsComments = (await _newsService.GetNewsCommentsByIdsAsync([.. selectedIds])).Where(comment => comment.IsApproved);
 
             foreach (var newsComment in newsComments)
             {

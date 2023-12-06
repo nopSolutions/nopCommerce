@@ -1,10 +1,6 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using System.Data.Common;
-using System.Linq;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider;
@@ -20,11 +16,11 @@ namespace Nop.Data.DataProviders
         #region Fields
 
         //it's quite fast hash (to cheaply distinguish between objects)
-        private const string HASH_ALGORITHM = "SHA1";
+        protected const string HASH_ALGORITHM = "SHA1";
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
         /// <summary>
         /// Creates the database connection
@@ -39,14 +35,14 @@ namespace Nop.Data.DataProviders
             return dataContext;
         }
 
+        /// <summary>
+        /// Gets the connection string builder
+        /// </summary>
+        /// <returns>The connection string builder</returns>
         protected static MySqlConnectionStringBuilder GetConnectionStringBuilder()
         {
             return new MySqlConnectionStringBuilder(GetCurrentConnectionString());
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         /// Gets a connection to the database for a current data provider
@@ -60,6 +56,10 @@ namespace Nop.Data.DataProviders
 
             return new MySqlConnection(connectionString);
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Creates the database by using the loaded connection string
@@ -155,7 +155,7 @@ namespace Nop.Data.DataProviders
                 return false;
             }
         }
-        
+
         /// <summary>
         /// Get the current identity value
         /// </summary>
@@ -259,8 +259,7 @@ namespace Nop.Data.DataProviders
         /// <returns>Connection string</returns>
         public virtual string BuildConnectionString(INopConnectionStringInfo nopConnectionString)
         {
-            if (nopConnectionString is null)
-                throw new ArgumentNullException(nameof(nopConnectionString));
+            ArgumentNullException.ThrowIfNull(nopConnectionString);
 
             if (nopConnectionString.IntegratedSecurity)
                 throw new NopException("Data provider supports connection only with login and password");
@@ -273,6 +272,7 @@ namespace Nop.Data.DataProviders
                 AllowUserVariables = true,
                 UserID = nopConnectionString.Username,
                 Password = nopConnectionString.Password,
+                UseXaTransactions = false
             };
 
             return builder.ConnectionString;

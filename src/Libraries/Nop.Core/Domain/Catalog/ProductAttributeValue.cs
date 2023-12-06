@@ -1,4 +1,6 @@
-﻿using Nop.Core.Domain.Localization;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
+using Nop.Core.Domain.Localization;
 
 namespace Nop.Core.Domain.Catalog
 {
@@ -78,11 +80,6 @@ namespace Nop.Core.Domain.Catalog
         public int DisplayOrder { get; set; }
 
         /// <summary>
-        /// Gets or sets the picture (identifier) associated with this value. This picture should replace a product main picture once clicked (selected).
-        /// </summary>
-        public int PictureId { get; set; }
-
-        /// <summary>
         /// Gets or sets the attribute value type
         /// </summary>
         public AttributeValueType AttributeValueType
@@ -90,5 +87,14 @@ namespace Nop.Core.Domain.Catalog
             get => (AttributeValueType)AttributeValueTypeId;
             set => AttributeValueTypeId = (int)value;
         }
+
+        /// <summary>
+        /// The field is not used since 4.70 and is left only for the update process
+        /// use the <see cref="ProductAttributeValuePicture"/> instead
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [Browsable(false)]
+        [Obsolete("The field is not used since 4.70 and is left only for the update process use the ProductAttributeValuePicture instead")]
+        public int? PictureId { get; set; }
     }
 }

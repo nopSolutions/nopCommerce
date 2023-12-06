@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
 using Nop.Core.Domain.Affiliates;
@@ -44,9 +41,9 @@ namespace Nop.Web.Framework.Mvc.Filters
 
             #region Fields
 
-            private readonly IAffiliateService _affiliateService;
-            private readonly ICustomerService _customerService;
-            private readonly IWorkContext _workContext;
+            protected readonly IAffiliateService _affiliateService;
+            protected readonly ICustomerService _customerService;
+            protected readonly IWorkContext _workContext;
 
             #endregion
 
@@ -79,8 +76,8 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (affiliate.Id == customer.AffiliateId)
                     return;
 
-                //ignore search engines
-                if (customer.IsSearchEngineAccount())
+                //ignore system accounts
+                if (customer.IsSystemAccount)
                     return;
 
                 //update affiliate identifier
@@ -95,12 +92,11 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <returns>A task that represents the asynchronous operation</returns>
             private async Task CheckAffiliateAsync(ActionExecutingContext context)
             {
-                if (context == null)
-                    throw new ArgumentNullException(nameof(context));
+                ArgumentNullException.ThrowIfNull(context);
 
                 //check request query parameters
                 var request = context.HttpContext.Request;
-                if (request?.Query == null || !request.Query.Any())
+                if (request?.Query == null || request.Query.Count == 0)
                     return;
 
                 if (!DataSettingsManager.IsDatabaseInstalled())

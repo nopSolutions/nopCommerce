@@ -1,4 +1,3 @@
-using System.Linq;
 using Nop.Services.Localization;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
@@ -18,7 +17,7 @@ namespace Nop.Services.Common.Pdf
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
         /// <summary>
         /// Compose the catalog

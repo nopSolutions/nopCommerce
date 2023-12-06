@@ -5,7 +5,7 @@
         public string NameField { get; set; }
 
         public string Username { get; set; }
-       
+
         public string CreditCard { get; set; }
 
         public string Password { get; set; }

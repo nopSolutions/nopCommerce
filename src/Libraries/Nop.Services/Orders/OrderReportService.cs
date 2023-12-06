@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -25,20 +21,20 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
-        private readonly CurrencySettings _currencySettings;
-        private readonly ICurrencyService _currencyService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IRepository<Address> _addressRepository;
-        private readonly IRepository<Order> _orderRepository;
-        private readonly IRepository<OrderItem> _orderItemRepository;
-        private readonly IRepository<OrderNote> _orderNoteRepository;
-        private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<ProductCategory> _productCategoryRepository;
-        private readonly IRepository<ProductManufacturer> _productManufacturerRepository;
-        private readonly IRepository<ProductWarehouseInventory> _productWarehouseInventoryRepository;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IWorkContext _workContext;
+        protected readonly CurrencySettings _currencySettings;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly IPriceFormatter _priceFormatter;
+        protected readonly IRepository<Address> _addressRepository;
+        protected readonly IRepository<Order> _orderRepository;
+        protected readonly IRepository<OrderItem> _orderItemRepository;
+        protected readonly IRepository<OrderNote> _orderNoteRepository;
+        protected readonly IRepository<Product> _productRepository;
+        protected readonly IRepository<ProductCategory> _productCategoryRepository;
+        protected readonly IRepository<ProductManufacturer> _productManufacturerRepository;
+        protected readonly IRepository<ProductWarehouseInventory> _productWarehouseInventoryRepository;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 
@@ -78,7 +74,7 @@ namespace Nop.Services.Orders
 
         #endregion
 
-        #region Utils
+        #region Utilities
 
         /// <summary>
         /// Search order items
@@ -95,7 +91,7 @@ namespace Nop.Services.Orders
         /// <param name="billingCountryId">Billing country identifier; 0 to load all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Result query</returns>
-        private IQueryable<OrderItem> SearchOrderItems(
+        protected virtual IQueryable<OrderItem> SearchOrderItems(
             int categoryId = 0,
             int manufacturerId = 0,
             int storeId = 0,
@@ -121,41 +117,41 @@ namespace Nop.Services.Orders
                 shippingStatusId = (int)ss.Value;
 
             var orderItems = from orderItem in _orderItemRepository.Table
-                    join o in _orderRepository.Table on orderItem.OrderId equals o.Id
-                    join p in _productRepository.Table on orderItem.ProductId equals p.Id
-                    join oba in _addressRepository.Table on o.BillingAddressId equals oba.Id
-                    where (storeId == 0 || storeId == o.StoreId) &&
-                        (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
-                        (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
-                        (!orderStatusId.HasValue || orderStatusId == o.OrderStatusId) &&
-                        (!paymentStatusId.HasValue || paymentStatusId == o.PaymentStatusId) &&
-                        (!shippingStatusId.HasValue || shippingStatusId == o.ShippingStatusId) &&
-                        !o.Deleted && !p.Deleted &&
-                        (vendorId == 0 || p.VendorId == vendorId) &&
-                        (billingCountryId == 0 || oba.CountryId == billingCountryId) &&
-                        (showHidden || p.Published)
-                    select orderItem;
+                             join o in _orderRepository.Table on orderItem.OrderId equals o.Id
+                             join p in _productRepository.Table on orderItem.ProductId equals p.Id
+                             join oba in _addressRepository.Table on o.BillingAddressId equals oba.Id
+                             where (storeId == 0 || storeId == o.StoreId) &&
+                                 (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
+                                 (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
+                                 (!orderStatusId.HasValue || orderStatusId == o.OrderStatusId) &&
+                                 (!paymentStatusId.HasValue || paymentStatusId == o.PaymentStatusId) &&
+                                 (!shippingStatusId.HasValue || shippingStatusId == o.ShippingStatusId) &&
+                                 !o.Deleted && !p.Deleted &&
+                                 (vendorId == 0 || p.VendorId == vendorId) &&
+                                 (billingCountryId == 0 || oba.CountryId == billingCountryId) &&
+                                 (showHidden || p.Published)
+                             select orderItem;
 
             if (categoryId > 0)
             {
                 orderItems = from orderItem in orderItems
-                    join p in _productRepository.Table on orderItem.ProductId equals p.Id
-                    join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId
-                    into p_pc
-                    from pc in p_pc.DefaultIfEmpty()
-                    where pc.CategoryId == categoryId
-                    select orderItem;
+                             join p in _productRepository.Table on orderItem.ProductId equals p.Id
+                             join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId
+                             into p_pc
+                             from pc in p_pc.DefaultIfEmpty()
+                             where pc.CategoryId == categoryId
+                             select orderItem;
             }
 
             if (manufacturerId > 0)
             {
                 orderItems = from orderItem in orderItems
-                    join p in _productRepository.Table on orderItem.ProductId equals p.Id
-                    join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId
-                    into p_pm
-                    from pm in p_pm.DefaultIfEmpty()
-                    where pm.ManufacturerId == manufacturerId
-                    select orderItem;
+                             join p in _productRepository.Table on orderItem.ProductId equals p.Id
+                             join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId
+                             into p_pm
+                             from pm in p_pm.DefaultIfEmpty()
+                             where pm.ManufacturerId == manufacturerId
+                             select orderItem;
             }
 
             return orderItems;
@@ -209,15 +205,15 @@ namespace Nop.Services.Orders
                 query = query.Where(o => endTimeUtc.Value >= o.CreatedOnUtc);
 
             var report = await (from oq in query
-                          join a in _addressRepository.Table on oq.BillingAddressId equals a.Id
-                          group oq by a.CountryId
+                                join a in _addressRepository.Table on oq.BillingAddressId equals a.Id
+                                group oq by a.CountryId
                           into result
-                          select new
-                          {
-                              CountryId = result.Key,
-                              TotalOrders = result.Count(),
-                              SumOrders = result.Sum(o => o.OrderTotal)
-                          })
+                                select new
+                                {
+                                    CountryId = result.Key,
+                                    TotalOrders = result.Count(),
+                                    SumOrders = result.Sum(o => o.OrderTotal)
+                                })
                 .OrderByDescending(x => x.SumOrders)
                 .Select(r => new OrderByCountryReportLine
                 {
@@ -271,10 +267,10 @@ namespace Nop.Services.Orders
             if (vendorId > 0)
             {
                 query = from o in query
-                    join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
-                    join p in _productRepository.Table on oi.ProductId equals p.Id
-                    where p.VendorId == vendorId
-                    select o;
+                        join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
+                        join p in _productRepository.Table on oi.ProductId equals p.Id
+                        where p.VendorId == vendorId
+                        select o;
 
                 query = query.Distinct();
             }
@@ -282,9 +278,9 @@ namespace Nop.Services.Orders
             if (productId > 0)
             {
                 query = from o in query
-                    join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
-                    where oi.ProductId == productId
-                    select o;
+                        join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
+                        where oi.ProductId == productId
+                        select o;
 
                 query = query.Distinct();
             }
@@ -294,40 +290,40 @@ namespace Nop.Services.Orders
                 var manageStockInventoryMethodId = (int)ManageInventoryMethod.ManageStock;
 
                 query = from o in query
-                    join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
-                    join p in _productRepository.Table on oi.ProductId equals p.Id
-                    join pwi in _productWarehouseInventoryRepository.Table on p.Id equals pwi.ProductId
-                    where
-                        //"Use multiple warehouses" enabled
-                        //we search in each warehouse
-                        (p.ManageInventoryMethodId == manageStockInventoryMethodId && p.UseMultipleWarehouses && pwi.WarehouseId == warehouseId) ||
-                        //"Use multiple warehouses" disabled
-                        //we use standard "warehouse" property
-                        ((p.ManageInventoryMethodId != manageStockInventoryMethodId || !p.UseMultipleWarehouses) && p.WarehouseId == warehouseId)
-                    select o;
+                        join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
+                        join p in _productRepository.Table on oi.ProductId equals p.Id
+                        join pwi in _productWarehouseInventoryRepository.Table on p.Id equals pwi.ProductId
+                        where
+                            //"Use multiple warehouses" enabled
+                            //we search in each warehouse
+                            (p.ManageInventoryMethodId == manageStockInventoryMethodId && p.UseMultipleWarehouses && pwi.WarehouseId == warehouseId) ||
+                            //"Use multiple warehouses" disabled
+                            //we use standard "warehouse" property
+                            ((p.ManageInventoryMethodId != manageStockInventoryMethodId || !p.UseMultipleWarehouses) && p.WarehouseId == warehouseId)
+                        select o;
 
                 query = query.Distinct();
             }
 
             query = from o in query
-                join oba in _addressRepository.Table on o.BillingAddressId equals oba.Id
-                where
-                    (billingCountryId <= 0 || (oba.CountryId == billingCountryId)) &&
-                    (string.IsNullOrEmpty(billingPhone) || (!string.IsNullOrEmpty(oba.PhoneNumber) && oba.PhoneNumber.Contains(billingPhone))) &&
-                    (string.IsNullOrEmpty(billingEmail) || (!string.IsNullOrEmpty(oba.Email) && oba.Email.Contains(billingEmail))) &&
-                    (string.IsNullOrEmpty(billingLastName) || (!string.IsNullOrEmpty(oba.LastName) && oba.LastName.Contains(billingLastName)))
-                select o;
+                    join oba in _addressRepository.Table on o.BillingAddressId equals oba.Id
+                    where
+                        (billingCountryId <= 0 || (oba.CountryId == billingCountryId)) &&
+                        (string.IsNullOrEmpty(billingPhone) || (!string.IsNullOrEmpty(oba.PhoneNumber) && oba.PhoneNumber.Contains(billingPhone))) &&
+                        (string.IsNullOrEmpty(billingEmail) || (!string.IsNullOrEmpty(oba.Email) && oba.Email.Contains(billingEmail))) &&
+                        (string.IsNullOrEmpty(billingLastName) || (!string.IsNullOrEmpty(oba.LastName) && oba.LastName.Contains(billingLastName)))
+                    select o;
 
             if (!string.IsNullOrEmpty(paymentMethodSystemName))
                 query = query.Where(o => o.PaymentMethodSystemName == paymentMethodSystemName);
 
-            if (osIds != null && osIds.Any())
+            if (osIds != null && osIds.Count != 0)
                 query = query.Where(o => osIds.Contains(o.OrderStatusId));
 
-            if (psIds != null && psIds.Any())
+            if (psIds != null && psIds.Count != 0)
                 query = query.Where(o => psIds.Contains(o.PaymentStatusId));
 
-            if (ssIds != null && ssIds.Any())
+            if (ssIds != null && ssIds.Count != 0)
                 query = query.Where(o => ssIds.Contains(o.ShippingStatusId));
 
             if (startTimeUtc.HasValue)
@@ -339,33 +335,33 @@ namespace Nop.Services.Orders
             if (!string.IsNullOrEmpty(orderNotes))
             {
                 query = from o in query
-                    join n in _orderNoteRepository.Table on o.Id equals n.OrderId
-                    where n.Note.Contains(orderNotes)
-                    select o;
+                        join n in _orderNoteRepository.Table on o.Id equals n.OrderId
+                        where n.Note.Contains(orderNotes)
+                        select o;
 
                 query.Distinct();
             }
 
             var item = await (from oq in query
-                group oq by 1
+                              group oq by 1
                 into result
-                select new
-                {
-                    OrderCount = result.Count(),
-                    OrderShippingExclTaxSum = result.Sum(o => o.OrderShippingExclTax),
-                    OrderPaymentFeeExclTaxSum = result.Sum(o => o.PaymentMethodAdditionalFeeExclTax),
-                    OrderTaxSum = result.Sum(o => o.OrderTax),
-                    OrderTotalSum = result.Sum(o => o.OrderTotal),
-                    OrederRefundedAmountSum = result.Sum(o => o.RefundedAmount),
-                }).Select(r => new OrderAverageReportLine
-                {
-                    CountOrders = r.OrderCount,
-                    SumShippingExclTax = r.OrderShippingExclTaxSum,
-                    OrderPaymentFeeExclTaxSum = r.OrderPaymentFeeExclTaxSum,
-                    SumTax = r.OrderTaxSum,
-                    SumOrders = r.OrderTotalSum,
-                    SumRefundedAmount = r.OrederRefundedAmountSum
-                })
+                              select new
+                              {
+                                  OrderCount = result.Count(),
+                                  OrderShippingExclTaxSum = result.Sum(o => o.OrderShippingExclTax),
+                                  OrderPaymentFeeExclTaxSum = result.Sum(o => o.PaymentMethodAdditionalFeeExclTax),
+                                  OrderTaxSum = result.Sum(o => o.OrderTax),
+                                  OrderTotalSum = result.Sum(o => o.OrderTotal),
+                                  OrederRefundedAmountSum = result.Sum(o => o.RefundedAmount),
+                              }).Select(r => new OrderAverageReportLine
+                              {
+                                  CountOrders = r.OrderCount,
+                                  SumShippingExclTax = r.OrderShippingExclTaxSum,
+                                  OrderPaymentFeeExclTaxSum = r.OrderPaymentFeeExclTaxSum,
+                                  SumTax = r.OrderTaxSum,
+                                  SumOrders = r.OrderTotalSum,
+                                  SumRefundedAmount = r.OrederRefundedAmountSum
+                              })
                 .FirstOrDefaultAsync();
 
             item ??= new OrderAverageReportLine
@@ -455,8 +451,8 @@ namespace Nop.Services.Orders
         /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="createdFromUtc">Order created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Order created date to (UTC); null to load all records</param>
-        /// <param name="os">Order status; null to load all records</param>
-        /// <param name="ps">Order payment status; null to load all records</param>
+        /// <param name="osIds">Order status identifiers; null to load all orders</param>
+        /// <param name="psIds">Payment status identifiers; null to load all orders</param>
         /// <param name="billingCountryId">Billing country identifier; 0 to load all records</param>
         /// <param name="groupBy">0 - group by day, 1 - group by week, 2 - group by total month</param>
         /// <param name="pageIndex">Page index</param>
@@ -473,21 +469,13 @@ namespace Nop.Services.Orders
             int vendorId = 0,
             DateTime? createdFromUtc = null,
             DateTime? createdToUtc = null,
-            OrderStatus? os = null,
-            PaymentStatus? ps = null,
+            List<int> osIds = null,
+            List<int> psIds = null,
             int billingCountryId = 0,
             GroupByOptions groupBy = GroupByOptions.Day,
             int pageIndex = 0,
             int pageSize = int.MaxValue)
         {
-            int? orderStatusId = null;
-            if (os.HasValue)
-                orderStatusId = (int)os.Value;
-
-            int? paymentStatusId = null;
-            if (ps.HasValue)
-                paymentStatusId = (int)ps.Value;
-
             //var orderItems = SearchOrderItems(categoryId, manufacturerId, storeId, vendorId, createdFromUtc, createdToUtc, os, ps, null, billingCountryId);
 
             var query = _orderRepository.Table;
@@ -501,45 +489,61 @@ namespace Nop.Services.Orders
                 query = query.Where(o => createdToUtc.Value >= o.CreatedOnUtc);
 
             //filter by order status
-            if (orderStatusId.HasValue)
-                query = query.Where(o => o.OrderStatusId == orderStatusId);
+            if (osIds != null && osIds.Count != 0)
+                query = query.Where(o => osIds.Contains(o.OrderStatusId));
 
             //filter by payment status
-            if (paymentStatusId.HasValue)
-                query = query.Where(o => o.PaymentStatusId == paymentStatusId);
+            if (psIds != null && psIds.Count != 0)
+                query = query.Where(o => psIds.Contains(o.PaymentStatusId));
 
             //filter by category
             if (categoryId > 0)
+            {
                 query = from o in query
-                    join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
-                    join p in _productRepository.Table on oi.ProductId equals p.Id
-                    join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId
-                    where pc.CategoryId == categoryId
-                    select o;
+                        join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
+                        join p in _productRepository.Table on oi.ProductId equals p.Id
+                        join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId
+                        where pc.CategoryId == categoryId
+                        select o;
+
+                query = query.Distinct();
+            }
 
             //filter by manufacturer
             if (manufacturerId > 0)
+            {
                 query = from o in query
-                    join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
-                    join p in _productRepository.Table on oi.ProductId equals p.Id
-                    join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId
-                    where pm.ManufacturerId == manufacturerId
-                    select o;
+                        join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
+                        join p in _productRepository.Table on oi.ProductId equals p.Id
+                        join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId
+                        where pm.ManufacturerId == manufacturerId
+                        select o;
+
+                query = query.Distinct();
+            }
 
             //filter by country
             if (billingCountryId > 0)
+            {
                 query = from o in query
-                    join oba in _addressRepository.Table on o.BillingAddressId equals oba.Id
-                    where
-                        billingCountryId <= 0 || oba.CountryId == billingCountryId
-                    select o;
+                        join oba in _addressRepository.Table on o.BillingAddressId equals oba.Id
+                        where
+                            billingCountryId <= 0 || oba.CountryId == billingCountryId
+                        select o;
+
+                query = query.Distinct();
+            }
 
             //filter by product
             if (productId > 0)
+            {
                 query = from o in query
                         join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
                         where oi.ProductId == productId
                         select o;
+
+                query = query.Distinct();
+            }
 
             //filter by store
             if (storeId > 0)
@@ -552,6 +556,8 @@ namespace Nop.Services.Orders
                         join p in _productRepository.Table on oi.ProductId equals p.Id
                         where p.VendorId == vendorId
                         select o;
+
+                query = query.Distinct();
             }
 
             var primaryStoreCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
@@ -562,7 +568,7 @@ namespace Nop.Services.Orders
             {
                 GroupByOptions.Day => from oq in query
                                       group oq by oq.CreatedOnUtc.AddMinutes(utcOffsetInMinutes).Date into result
-                                      let orderItems = _orderItemRepository.Table.Where(oi => oi.OrderId == result.FirstOrDefault().Id)
+                                      let orderItems = _orderItemRepository.Table.Where(oi => result.Any(x => x.Id == oi.OrderId))
                                       select new
                                       {
                                           SummaryDate = result.Key,
@@ -576,8 +582,8 @@ namespace Nop.Services.Orders
                                           OrderTotalCost = orderItems.Sum(oi => (decimal?)oi.OriginalProductCost * oi.Quantity)
                                       },
                 GroupByOptions.Week => from oq in query
-                                       group oq by oq.CreatedOnUtc.AddMinutes(utcOffsetInMinutes).AddDays(- (int)oq.CreatedOnUtc.AddMinutes(utcOffsetInMinutes).DayOfWeek).Date into result
-                                       let orderItems = _orderItemRepository.Table.Where(oi => oi.OrderId == result.FirstOrDefault().Id)
+                                       group oq by oq.CreatedOnUtc.AddMinutes(utcOffsetInMinutes).AddDays(-(int)oq.CreatedOnUtc.AddMinutes(utcOffsetInMinutes).DayOfWeek).Date into result
+                                       let orderItems = _orderItemRepository.Table.Where(oi => result.Any(x => x.Id == oi.OrderId))
                                        select new
                                        {
                                            SummaryDate = result.Key,
@@ -592,7 +598,7 @@ namespace Nop.Services.Orders
                                        },
                 GroupByOptions.Month => from oq in query
                                         group oq by oq.CreatedOnUtc.AddMinutes(utcOffsetInMinutes).AddDays(1 - oq.CreatedOnUtc.AddMinutes(utcOffsetInMinutes).Day).Date into result
-                                        let orderItems = _orderItemRepository.Table.Where(oi => oi.OrderId == result.FirstOrDefault().Id)
+                                        let orderItems = _orderItemRepository.Table.Where(oi => result.Any(x => x.Id == oi.OrderId))
                                         select new
                                         {
                                             SummaryDate = result.Key,
@@ -707,14 +713,14 @@ namespace Nop.Services.Orders
                 };
 
             bsReport = from item in bsReport
-                join p in _productRepository.Table on item.ProductId equals p.Id
-                select new BestsellersReportLine
-                {
-                    ProductId = item.ProductId,
-                    TotalAmount = item.TotalAmount,
-                    TotalQuantity = item.TotalQuantity,
-                    ProductName = p.Name
-                };
+                       join p in _productRepository.Table on item.ProductId equals p.Id
+                       select new BestsellersReportLine
+                       {
+                           ProductId = item.ProductId,
+                           TotalAmount = item.TotalAmount,
+                           TotalQuantity = item.TotalQuantity,
+                           ProductName = p.Name
+                       };
 
             bsReport = orderBy switch
             {
@@ -816,7 +822,7 @@ namespace Nop.Services.Orders
             foreach (var reportLine in report)
                 ids.Add(reportLine.ProductId);
 
-            return ids.ToArray();
+            return [.. ids];
         }
 
         /// <summary>
@@ -927,51 +933,51 @@ namespace Nop.Services.Orders
             var dontSearchPaymentMethods = string.IsNullOrEmpty(paymentMethodSystemName);
 
             var orders = _orderRepository.Table;
-            if (osIds != null && osIds.Any())
+            if (osIds != null && osIds.Count != 0)
                 orders = orders.Where(o => osIds.Contains(o.OrderStatusId));
-            if (psIds != null && psIds.Any())
+            if (psIds != null && psIds.Count != 0)
                 orders = orders.Where(o => psIds.Contains(o.PaymentStatusId));
-            if (ssIds != null && ssIds.Any())
+            if (ssIds != null && ssIds.Count != 0)
                 orders = orders.Where(o => ssIds.Contains(o.ShippingStatusId));
 
             var manageStockInventoryMethodId = (int)ManageInventoryMethod.ManageStock;
 
             var query = from orderItem in _orderItemRepository.Table
-                join o in orders on orderItem.OrderId equals o.Id
-                join p in _productRepository.Table on orderItem.ProductId equals p.Id
-                join oba in _addressRepository.Table on o.BillingAddressId equals oba.Id
-                where (storeId == 0 || storeId == o.StoreId) &&
-                      (orderId == 0 || orderId == o.Id) &&
-                      (billingCountryId == 0 || (oba.CountryId == billingCountryId)) &&
-                      (dontSearchPaymentMethods || paymentMethodSystemName == o.PaymentMethodSystemName) &&
-                      (!startTimeUtc.HasValue || startTimeUtc.Value <= o.CreatedOnUtc) &&
-                      (!endTimeUtc.HasValue || endTimeUtc.Value >= o.CreatedOnUtc) &&
-                      !o.Deleted &&
-                      (vendorId == 0 || p.VendorId == vendorId) &&
-                      (productId == 0 || orderItem.ProductId == productId) &&
-                      (warehouseId == 0 ||
-                          //"Use multiple warehouses" enabled
-                          //we search in each warehouse
-                          p.ManageInventoryMethodId == manageStockInventoryMethodId &&
-                          p.UseMultipleWarehouses &&
-                          _productWarehouseInventoryRepository.Table.Any(pwi =>
-                              pwi.ProductId == orderItem.ProductId && pwi.WarehouseId == warehouseId)
-                          ||
-                          //"Use multiple warehouses" disabled
-                          //we use standard "warehouse" property
-                          (p.ManageInventoryMethodId != manageStockInventoryMethodId ||
-                           !p.UseMultipleWarehouses) &&
-                          p.WarehouseId == warehouseId) &&
-                      //we do not ignore deleted products when calculating order reports
-                      //(!p.Deleted)
-                      (dontSearchPhone || (!string.IsNullOrEmpty(oba.PhoneNumber) &&
-                                           oba.PhoneNumber.Contains(billingPhone))) &&
-                      (dontSearchEmail || (!string.IsNullOrEmpty(oba.Email) && oba.Email.Contains(billingEmail))) &&
-                      (dontSearchLastName ||
-                      (!string.IsNullOrEmpty(oba.LastName) && oba.LastName.Contains(billingLastName))) &&
-                      (dontSearchOrderNotes || _orderNoteRepository.Table.Any(oNote =>
-                           oNote.OrderId == o.Id && oNote.Note.Contains(orderNotes)))
-                select orderItem;
+                        join o in orders on orderItem.OrderId equals o.Id
+                        join p in _productRepository.Table on orderItem.ProductId equals p.Id
+                        join oba in _addressRepository.Table on o.BillingAddressId equals oba.Id
+                        where (storeId == 0 || storeId == o.StoreId) &&
+                              (orderId == 0 || orderId == o.Id) &&
+                              (billingCountryId == 0 || (oba.CountryId == billingCountryId)) &&
+                              (dontSearchPaymentMethods || paymentMethodSystemName == o.PaymentMethodSystemName) &&
+                              (!startTimeUtc.HasValue || startTimeUtc.Value <= o.CreatedOnUtc) &&
+                              (!endTimeUtc.HasValue || endTimeUtc.Value >= o.CreatedOnUtc) &&
+                              !o.Deleted &&
+                              (vendorId == 0 || p.VendorId == vendorId) &&
+                              (productId == 0 || orderItem.ProductId == productId) &&
+                              (warehouseId == 0 ||
+                                  //"Use multiple warehouses" enabled
+                                  //we search in each warehouse
+                                  p.ManageInventoryMethodId == manageStockInventoryMethodId &&
+                                  p.UseMultipleWarehouses &&
+                                  _productWarehouseInventoryRepository.Table.Any(pwi =>
+                                      pwi.ProductId == orderItem.ProductId && pwi.WarehouseId == warehouseId)
+                                  ||
+                                  //"Use multiple warehouses" disabled
+                                  //we use standard "warehouse" property
+                                  (p.ManageInventoryMethodId != manageStockInventoryMethodId ||
+                                   !p.UseMultipleWarehouses) &&
+                                  p.WarehouseId == warehouseId) &&
+                              //we do not ignore deleted products when calculating order reports
+                              //(!p.Deleted)
+                              (dontSearchPhone || (!string.IsNullOrEmpty(oba.PhoneNumber) &&
+                                                   oba.PhoneNumber.Contains(billingPhone))) &&
+                              (dontSearchEmail || (!string.IsNullOrEmpty(oba.Email) && oba.Email.Contains(billingEmail))) &&
+                              (dontSearchLastName ||
+                              (!string.IsNullOrEmpty(oba.LastName) && oba.LastName.Contains(billingLastName))) &&
+                              (dontSearchOrderNotes || _orderNoteRepository.Table.Any(oNote =>
+                                   oNote.OrderId == o.Id && oNote.Note.Contains(orderNotes)))
+                        select orderItem;
 
             var productCost = Convert.ToDecimal(await query.SumAsync(orderItem => (decimal?)orderItem.OriginalProductCost * orderItem.Quantity));
 

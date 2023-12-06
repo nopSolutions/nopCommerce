@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Http.Extensions;
@@ -17,13 +16,13 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
     {
         #region Fields
 
-        private readonly CustomerSettings _customerSettings;
-        private readonly GoogleAuthenticatorService _googleAuthenticatorService;
-        private readonly ICustomerRegistrationService _customerRegistrationService;
-        private readonly ICustomerService _customerService;
-        private readonly ILocalizationService _localizationService;
-        private readonly INotificationService _notificationService;
-        private readonly IWorkContext _workContext;
+        protected readonly CustomerSettings _customerSettings;
+        protected readonly GoogleAuthenticatorService _googleAuthenticatorService;
+        protected readonly ICustomerRegistrationService _customerRegistrationService;
+        protected readonly ICustomerService _customerService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INotificationService _notificationService;
+        protected readonly IWorkContext _workContext;
 
         #endregion
 
@@ -74,14 +73,14 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
                 _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Plugins.MultiFactorAuth.GoogleAuthenticator.Token.Unsuccessful"));
                 return RedirectToRoute("CustomerMultiFactorAuthenticationProviderConfig", new { providerSysName = GoogleAuthenticatorDefaults.SystemName });
             }
-            
+
             return RedirectToRoute("MultiFactorAuthenticationSettings");
         }
 
         [HttpPost]
         public async Task<IActionResult> VerifyGoogleAuthenticator(TokenModel model)
         {
-            var customerMultiFactorAuthenticationInfo = HttpContext.Session.Get<CustomerMultiFactorAuthenticationInfo>(NopCustomerDefaults.CustomerMultiFactorAuthenticationInfo);
+            var customerMultiFactorAuthenticationInfo = await HttpContext.Session.GetAsync<CustomerMultiFactorAuthenticationInfo>(NopCustomerDefaults.CustomerMultiFactorAuthenticationInfo);
             var username = customerMultiFactorAuthenticationInfo.UserName;
             var returnUrl = customerMultiFactorAuthenticationInfo.ReturnUrl;
             var isPersist = customerMultiFactorAuthenticationInfo.RememberMe;
@@ -96,7 +95,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
                 var isValidToken = _googleAuthenticatorService.ValidateTwoFactorToken(record.SecretKey, model.Token);
                 if (isValidToken)
                 {
-                    HttpContext.Session.Set<CustomerMultiFactorAuthenticationInfo>(NopCustomerDefaults.CustomerMultiFactorAuthenticationInfo, null);
+                    await HttpContext.Session.SetAsync<CustomerMultiFactorAuthenticationInfo>(NopCustomerDefaults.CustomerMultiFactorAuthenticationInfo, null);
 
                     return await _customerRegistrationService.SignInCustomerAsync(customer, returnUrl, isPersist);
                 }
@@ -114,6 +113,5 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
         }
 
         #endregion
-
     }
 }

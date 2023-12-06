@@ -1,5 +1,4 @@
-﻿using System;
-using Nop.Core.Domain.Catalog;
+﻿using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 
 namespace Nop.Core.Domain.Orders
@@ -53,7 +52,7 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the date and time of payment creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the cycle period
         /// </summary>
@@ -61,6 +60,6 @@ namespace Nop.Core.Domain.Orders
         {
             get => (RecurringProductCyclePeriod)CyclePeriodId;
             set => CyclePeriodId = (int)value;
-        }       
+        }
     }
 }

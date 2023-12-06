@@ -1,10 +1,9 @@
-﻿using System.Threading.Tasks;
-using Nop.Services.ScheduleTasks;
+﻿using Nop.Services.ScheduleTasks;
 
 namespace Nop.Tests.Nop.Services.Tests.ScheduleTasks
 {
     public class TestScheduleTask : IScheduleTask
-    {        
+    {
         public TestScheduleTask()
         {
             IsInit = true;

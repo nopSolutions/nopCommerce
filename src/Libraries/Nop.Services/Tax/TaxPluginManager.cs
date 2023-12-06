@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Customers;
+﻿using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Customers;
 using Nop.Services.Plugins;
@@ -14,7 +12,7 @@ namespace Nop.Services.Tax
     {
         #region Fields
 
-        private readonly TaxSettings _taxSettings;
+        protected readonly TaxSettings _taxSettings;
 
         #endregion
 
@@ -52,7 +50,7 @@ namespace Nop.Services.Tax
         /// <returns>Result</returns>
         public virtual bool IsPluginActive(ITaxProvider taxProvider)
         {
-            return IsPluginActive(taxProvider, new List<string> { _taxSettings.ActiveTaxProviderSystemName });
+            return IsPluginActive(taxProvider, [_taxSettings.ActiveTaxProviderSystemName]);
         }
 
         /// <summary>

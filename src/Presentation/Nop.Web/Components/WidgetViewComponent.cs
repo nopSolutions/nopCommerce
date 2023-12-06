@@ -1,14 +1,12 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Nop.Web.Factories;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Web.Framework.Components;
+using Nop.Web.Framework.Factories;
 
 namespace Nop.Web.Components
 {
     public partial class WidgetViewComponent : NopViewComponent
     {
-        private readonly IWidgetModelFactory _widgetModelFactory;
+        protected readonly IWidgetModelFactory _widgetModelFactory;
 
         public WidgetViewComponent(IWidgetModelFactory widgetModelFactory)
         {
@@ -20,7 +18,7 @@ namespace Nop.Web.Components
             var model = await _widgetModelFactory.PrepareRenderWidgetModelAsync(widgetZone, additionalData);
 
             //no data?
-            if (!model.Any())
+            if (model.Count == 0)
                 return Content("");
 
             return View(model);

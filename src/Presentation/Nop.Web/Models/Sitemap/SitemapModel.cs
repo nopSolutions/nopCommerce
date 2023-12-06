@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Sitemap
 {
@@ -9,7 +8,7 @@ namespace Nop.Web.Models.Sitemap
 
         public SitemapModel()
         {
-            Items = new List<SitemapItemModel>();
+            Items = [];
             PageModel = new SitemapPageModel();
         }
 

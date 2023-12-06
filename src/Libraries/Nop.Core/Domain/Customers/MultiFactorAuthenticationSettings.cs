@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Nop.Core.Configuration;
+﻿using Nop.Core.Configuration;
 
 namespace Nop.Core.Domain.Customers
 {
@@ -12,7 +11,7 @@ namespace Nop.Core.Domain.Customers
 
         public MultiFactorAuthenticationSettings()
         {
-            ActiveAuthenticationMethodSystemNames = new List<string>();
+            ActiveAuthenticationMethodSystemNames = [];
         }
 
         #endregion

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Nop.Core.Configuration;
+﻿using Nop.Core.Configuration;
 
 namespace Nop.Core.Domain.Shipping
 {
@@ -10,8 +9,8 @@ namespace Nop.Core.Domain.Shipping
     {
         public ShippingSettings()
         {
-            ActiveShippingRateComputationMethodSystemNames = new List<string>();
-            ActivePickupPointProviderSystemNames = new List<string>();
+            ActiveShippingRateComputationMethodSystemNames = [];
+            ActivePickupPointProviderSystemNames = [];
         }
 
         /// <summary>

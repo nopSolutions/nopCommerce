@@ -10,7 +10,7 @@
 
 @if (!string.IsNullOrEmpty(Model.Token))
 {    
-    var scriptUrl = avalaraTaxSettings.UseSandbox ? AvalaraTaxDefaults.CertificatesSandboxScriptUrl : AvalaraTaxDefaults.CertificatesScriptUrl;
+    var scriptUrl = avalaraTaxSettings.UseSandbox ? AvalaraTaxDefaults.CertificatesScriptUrl.Sandbox : AvalaraTaxDefaults.CertificatesScriptUrl.Live;
     <script asp-location="Head" asp-exclude-from-bundle="true" src="@scriptUrl"></script>
 }
 

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Discounts;
@@ -19,17 +15,17 @@ using Nop.Web.Framework.Mvc.Filters;
 namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
 {
     [AuthorizeAdmin]
-    [Area(AreaNames.Admin)]
+    [Area(AreaNames.ADMIN)]
     [AutoValidateAntiforgeryToken]
     public class DiscountRulesCustomerRolesController : BasePluginController
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly IDiscountService _discountService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
-        private readonly ISettingService _settingService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IDiscountService _discountService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IPermissionService _permissionService;
+        protected readonly ISettingService _settingService;
 
         #endregion
 
@@ -50,6 +46,20 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
 
         #endregion
 
+        #region Utilities
+
+        /// <summary>
+        /// Get errors message from model state
+        /// </summary>
+        /// <param name="modelState">Model state</param>
+        /// <returns>Errors message</returns>
+        protected IEnumerable<string> GetErrorsFromModelState(ModelStateDictionary modelState)
+        {
+            return ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage));
+        }
+
+        #endregion
+
         #region Methods
 
         public async Task<IActionResult> Configure(int discountId, int? discountRequirementId)
@@ -58,9 +68,8 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
                 return Content("Access denied");
 
             //load the discount
-            var discount = await _discountService.GetDiscountByIdAsync(discountId);
-            if (discount == null)
-                throw new ArgumentException("Discount could not be loaded");
+            var discount = await _discountService.GetDiscountByIdAsync(discountId)
+                ?? throw new ArgumentException("Discount could not be loaded");
 
             //check whether the discount requirement exists
             if (discountRequirementId.HasValue && await _discountService.GetDiscountRequirementByIdAsync(discountRequirementId.Value) is null)
@@ -73,16 +82,15 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
             {
                 RequirementId = discountRequirementId ?? 0,
                 DiscountId = discountId,
-                CustomerRoleId = restrictedRoleId
+                CustomerRoleId = restrictedRoleId,
+                //set available customer roles
+                AvailableCustomerRoles = (await _customerService.GetAllCustomerRolesAsync(true)).Select(role => new SelectListItem
+                {
+                    Text = role.Name,
+                    Value = role.Id.ToString(),
+                    Selected = role.Id == restrictedRoleId
+                }).ToList()
             };
-
-            //set available customer roles
-            model.AvailableCustomerRoles = (await _customerService.GetAllCustomerRolesAsync(true)).Select(role => new SelectListItem
-            {
-                Text = role.Name,
-                Value = role.Id.ToString(),
-                Selected = role.Id == restrictedRoleId
-            }).ToList();
             model.AvailableCustomerRoles.Insert(0, new SelectListItem
             {
                 Text = await _localizationService.GetResourceAsync("Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole.Select"),
@@ -95,7 +103,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
             return View("~/Plugins/DiscountRules.CustomerRoles/Views/Configure.cshtml", model);
         }
 
-        [HttpPost]        
+        [HttpPost]
         public async Task<IActionResult> Configure(RequirementModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
@@ -110,7 +118,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
 
                 //get the discount requirement
                 var discountRequirement = await _discountService.GetDiscountRequirementByIdAsync(model.RequirementId);
-                
+
                 //the discount requirement does not exist, so create a new one
                 if (discountRequirement == null)
                 {
@@ -130,15 +138,6 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
             }
 
             return Ok(new { Errors = GetErrorsFromModelState(ModelState) });
-        }
-
-        #endregion
-
-        #region Utilities
-
-        private IEnumerable<string> GetErrorsFromModelState(ModelStateDictionary modelState)
-        {
-            return ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage));
         }
 
         #endregion

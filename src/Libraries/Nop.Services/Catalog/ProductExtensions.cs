@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Nop.Core.Domain.Catalog;
+﻿using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Localization;
 using Nop.Data;
 
@@ -24,16 +23,16 @@ namespace Nop.Services.Catalog
             if (orderBy == ProductSortingEnum.NameAsc || orderBy == ProductSortingEnum.NameDesc)
             {
                 var currentLanguageId = currentLanguage.Id;
-                
+
                 var query =
                     from product in productsQuery
                     join localizedProperty in localizedPropertyRepository.Table on new
-                        {
-                            product.Id,
-                            languageId = currentLanguageId,
-                            keyGroup = nameof(Product),
-                            key = nameof(Product.Name)
-                        }
+                    {
+                        product.Id,
+                        languageId = currentLanguageId,
+                        keyGroup = nameof(Product),
+                        key = nameof(Product.Name)
+                    }
                         equals new
                         {
                             Id = localizedProperty.EntityId,
@@ -42,20 +41,24 @@ namespace Nop.Services.Catalog
                             key = localizedProperty.LocaleKey
                         } into localizedProperties
                     from localizedProperty in localizedProperties.DefaultIfEmpty(new LocalizedProperty { LocaleValue = product.Name })
-                    select new { localizedProperty, product };
+                    select new 
+                    {
+                        sortName = localizedProperty == null ? product.Name : localizedProperty.LocaleValue,
+                        product
+                    };
 
                 if (orderBy == ProductSortingEnum.NameAsc)
                     productsQuery = from item in query
-                        orderby item.localizedProperty.LocaleValue, item.product.Name
+                        orderby item.sortName
                         select item.product;
                 else
                     productsQuery = from item in query
-                        orderby item.localizedProperty.LocaleValue descending, item.product.Name descending
+                        orderby item.sortName descending
                         select item.product;
 
                 return productsQuery;
             }
-            
+
             return orderBy switch
             {
                 ProductSortingEnum.PriceAsc => productsQuery.OrderBy(p => p.Price),

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core.Domain.Cms;
@@ -27,15 +23,15 @@ namespace Nop.Plugin.Tax.Avalara
     {
         #region Fields
 
-        private readonly AvalaraTaxManager _avalaraTaxManager;
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly ILocalizationService _localizationService;
-        private readonly IScheduleTaskService _scheduleTaskService;
-        private readonly ISettingService _settingService;
-        private readonly ITaxPluginManager _taxPluginManager;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly TaxSettings _taxSettings;
-        private readonly WidgetSettings _widgetSettings;
+        protected readonly AvalaraTaxManager _avalaraTaxManager;
+        protected readonly IActionContextAccessor _actionContextAccessor;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IScheduleTaskService _scheduleTaskService;
+        protected readonly ISettingService _settingService;
+        protected readonly ITaxPluginManager _taxPluginManager;
+        protected readonly IUrlHelperFactory _urlHelperFactory;
+        protected readonly TaxSettings _taxSettings;
+        protected readonly WidgetSettings _widgetSettings;
 
         #endregion
 
@@ -114,14 +110,14 @@ namespace Nop.Plugin.Tax.Avalara
                     .Select(summary => new { Rate = summary.rate.Value * 100, Value = summary.tax.Value })
                     .ToList();
 
-                foreach(var taxRate in taxRates)
+                foreach (var taxRate in taxRates)
                 {
                     if (taxTotalResult.TaxRates.ContainsKey(taxRate.Rate))
                         taxTotalResult.TaxRates[taxRate.Rate] += taxRate.Value;
                     else
                         taxTotalResult.TaxRates.Add(taxRate.Rate, taxRate.Value);
                 }
-                
+
                 _actionContextAccessor.ActionContext.HttpContext.Items.TryAdd(key, taxTotalResult);
             }
 
@@ -199,7 +195,8 @@ namespace Nop.Plugin.Tax.Avalara
                 TaxRateByAddressCacheTime = 480,
                 AutoValidateCertificate = true,
                 AllowEditCustomer = true,
-                DisplayNoValidCertificatesMessage = true
+                DisplayNoValidCertificatesMessage = true,
+                UseItemClassification = false,
             });
 
             if (!_widgetSettings.ActiveWidgetSystemNames.Contains(AvalaraTaxDefaults.SystemName))
@@ -278,6 +275,9 @@ namespace Nop.Plugin.Tax.Avalara
                 ["Plugins.Tax.Avalara.Fields.Company.Currency.Warning"] = "The default currency used by '{0}' company ({1}) does not match the primary store currency ({2})",
                 ["Plugins.Tax.Avalara.Fields.Company.Hint"] = "Choose a company that was previously added to the Avalara account.",
                 ["Plugins.Tax.Avalara.Fields.Company.NotExist"] = "There are no active companies",
+                ["Plugins.Tax.Avalara.Fields.Countries"] = "Country of destination to HS classify",
+                ["Plugins.Tax.Avalara.Fields.Countries.Hint"] = "Add a countries where you collect tax.",
+                ["Plugins.Tax.Avalara.Fields.Countries.Required"] = "Country of destination to HS classify is required",
                 ["Plugins.Tax.Avalara.Fields.CustomerRoles"] = "Limited to customer roles",
                 ["Plugins.Tax.Avalara.Fields.CustomerRoles.Hint"] = "Select customer roles for which exemption certificates will be available. Leave empty if you want this feature to be available to all customers.",
                 ["Plugins.Tax.Avalara.Fields.DisplayNoValidCertificatesMessage"] = "Display 'No valid certificates' message",
@@ -302,12 +302,34 @@ namespace Nop.Plugin.Tax.Avalara
                 ["Plugins.Tax.Avalara.Fields.TaxOriginAddressType.DefaultTaxAddress.Warning"] = "Ensure that you have correctly filled in the 'Default tax address' under <a href=\"{0}\" target=\"_blank\">Tax settings</a>",
                 ["Plugins.Tax.Avalara.Fields.TaxOriginAddressType.Hint"] = "Choose which address will be used as the origin for tax requests to Avalara services.",
                 ["Plugins.Tax.Avalara.Fields.TaxOriginAddressType.ShippingOrigin.Warning"] = "Ensure that you have correctly filled in the 'Shipping origin' under <a href=\"{0}\" target=\"_blank\">Shipping settings</a>",
+                ["Plugins.Tax.Avalara.Fields.UseItemClassification"] = "Use item classification",
+                ["Plugins.Tax.Avalara.Fields.UseItemClassification.Hint"] = "Item classification is when a harmonized system (HS) code is assigned to a product based on its physical properties. Avalara assigns HS codes to customer products through its item classification service.",
                 ["Plugins.Tax.Avalara.Fields.UseSandbox"] = "Use sandbox",
                 ["Plugins.Tax.Avalara.Fields.UseSandbox.Hint"] = "Determine whether to use sandbox (testing environment).",
                 ["Plugins.Tax.Avalara.Fields.UseTaxRateTables"] = "Use tax rate tables to estimate ",
                 ["Plugins.Tax.Avalara.Fields.UseTaxRateTables.Hint"] = "Determine whether to use tax rate tables to estimate. This will be used as a default tax calculation for catalog pages and will be adjusted and reconciled to the final transaction tax during checkout. Tax rates are looked up by zip code (US only) in a file that will be periodically updated from the Avalara (see Schedule tasks).",
                 ["Plugins.Tax.Avalara.Fields.ValidateAddress"] = "Validate address",
                 ["Plugins.Tax.Avalara.Fields.ValidateAddress.Hint"] = "Determine whether to validate entered by customer addresses before the tax calculation.",
+                ["Plugins.Tax.Avalara.ItemClassification"] = "Item Classification",
+                ["Plugins.Tax.Avalara.ItemClassification.AddProduct"] = "Add product",
+                ["Plugins.Tax.Avalara.ItemClassification.Product"] = "Product",
+                ["Plugins.Tax.Avalara.ItemClassification.Country"] = "Country",
+                ["Plugins.Tax.Avalara.ItemClassification.Deleted"] = "The item classification entry has been deleted successfully.",
+                ["Plugins.Tax.Avalara.ItemClassification.HSClassificationRequestId"] = "HS classification Id",
+                ["Plugins.Tax.Avalara.ItemClassification.HSCode"] = "HS Code",
+                ["Plugins.Tax.Avalara.ItemClassification.UpdatedDate"] = "Updated on",
+                ["Plugins.Tax.Avalara.ItemClassification.Search.Country"] = "Country",
+                ["Plugins.Tax.Avalara.ItemClassification.Search.Country.Hint"] = "If an asterisk is selected, then this will apply to all products, regardless of the country.",
+                ["Plugins.Tax.Avalara.ItemClassification.Sync"] = "Synchronization",
+                ["Plugins.Tax.Avalara.ItemClassification.Sync.Confirm"] = @"
+                    <p>
+                        You want to start classification products with the connected account.
+                    </p>
+                    <p>
+                        Classification may take some time.
+                    </p>",
+                ["Plugins.Tax.Avalara.ItemClassification.Sync.Success"] = "The launch of the product classification procedure was successful.",
+                ["Plugins.Tax.Avalara.ItemClassification.Sync.Button"] = "Sync now",
                 ["Plugins.Tax.Avalara.Items.Export"] = "Export to Avalara (selected)",
                 ["Plugins.Tax.Avalara.Items.Export.AlreadyExported"] = "Selected products have already been exported",
                 ["Plugins.Tax.Avalara.Items.Export.Error"] = "An error has occurred on export products",

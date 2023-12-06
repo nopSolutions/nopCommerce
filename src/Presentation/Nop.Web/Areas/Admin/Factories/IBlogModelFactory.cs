@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Core.Domain.Blogs;
+﻿using Nop.Core.Domain.Blogs;
 using Nop.Web.Areas.Admin.Models.Blogs;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -63,7 +62,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// The task result contains the blog comment list model
         /// </returns>
         Task<BlogCommentListModel> PrepareBlogCommentListModelAsync(BlogCommentSearchModel searchModel, int? blogPostId);
-        
+
         /// <summary>
         /// Prepare blog post search model
         /// </summary>

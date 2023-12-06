@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Xml;
+﻿using System.Xml;
 using System.Xml.Serialization;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
@@ -22,12 +17,12 @@ namespace Nop.Services.Payments
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IPaymentPluginManager _paymentPluginManager;
-        private readonly IPriceCalculationService _priceCalculationService;
-        private readonly PaymentSettings _paymentSettings;
-        private readonly ShoppingCartSettings _shoppingCartSettings;
+        protected readonly ICustomerService _customerService;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly IPaymentPluginManager _paymentPluginManager;
+        protected readonly IPriceCalculationService _priceCalculationService;
+        protected readonly PaymentSettings _paymentSettings;
+        protected readonly ShoppingCartSettings _shoppingCartSettings;
 
         #endregion
 
@@ -115,8 +110,7 @@ namespace Nop.Services.Payments
         /// </returns>
         public virtual async Task<bool> CanRePostProcessPaymentAsync(Order order)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             if (!_paymentSettings.AllowRePostingPayments)
                 return false;
@@ -369,7 +363,7 @@ namespace Nop.Services.Payments
 
             return maskedChars + last4;
         }
-        
+
         /// <summary>
         /// Serialize CustomValues of ProcessPaymentRequest
         /// </summary>
@@ -377,10 +371,9 @@ namespace Nop.Services.Payments
         /// <returns>Serialized CustomValues</returns>
         public virtual string SerializeCustomValues(ProcessPaymentRequest request)
         {
-            if (request == null)
-                throw new ArgumentNullException(nameof(request));
+            ArgumentNullException.ThrowIfNull(request);
 
-            if (!request.CustomValues.Any())
+            if (request.CustomValues.Count == 0)
                 return null;
 
             //XmlSerializer won't serialize objects that implement IDictionary by default.
@@ -408,11 +401,10 @@ namespace Nop.Services.Payments
         /// <returns>Serialized CustomValues CustomValues</returns>
         public virtual Dictionary<string, object> DeserializeCustomValues(Order order)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             if (string.IsNullOrWhiteSpace(order.CustomValuesXml))
-                return new Dictionary<string, object>();
+                return [];
 
             var serializer = new XmlSerializer(typeof(DictionarySerializer));
 
@@ -420,14 +412,14 @@ namespace Nop.Services.Payments
             using var xmlReader = XmlReader.Create(textReader);
             if (serializer.Deserialize(xmlReader) is DictionarySerializer ds)
                 return ds.Dictionary;
-            return new Dictionary<string, object>();
+            return [];
         }
 
         /// <summary>
         /// Generate an order GUID
         /// </summary>
         /// <param name="processPaymentRequest">Process payment request</param>
-        public virtual void GenerateOrderGuid(ProcessPaymentRequest processPaymentRequest)
+        public virtual async Task GenerateOrderGuidAsync(ProcessPaymentRequest processPaymentRequest)
         {
             if (processPaymentRequest == null)
                 return;
@@ -435,7 +427,7 @@ namespace Nop.Services.Payments
             //we should use the same GUID for multiple payment attempts
             //this way a payment gateway can prevent security issues such as credit card brute-force attacks
             //in order to avoid any possible limitations by payment gateway we reset GUID periodically
-            var previousPaymentRequest = _httpContextAccessor.HttpContext.Session.Get<ProcessPaymentRequest>("OrderPaymentInfo");
+            var previousPaymentRequest = await _httpContextAccessor.HttpContext.Session.GetAsync<ProcessPaymentRequest>("OrderPaymentInfo");
             if (_paymentSettings.RegenerateOrderGuidInterval > 0 &&
                 previousPaymentRequest != null &&
                 previousPaymentRequest.OrderGuidGeneratedOnUtc.HasValue)

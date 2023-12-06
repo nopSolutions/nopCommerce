@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Directory;
+﻿using Nop.Core.Domain.Directory;
 
 namespace Nop.Services.Directory
 {
@@ -106,7 +104,7 @@ namespace Nop.Services.Directory
         /// The task result contains the converted value
         /// </returns>
         Task<decimal> ConvertFromPrimaryStoreCurrencyAsync(decimal amount, Currency targetCurrencyCode);
-        
+
         /// <summary>
         /// Converts currency
         /// </summary>

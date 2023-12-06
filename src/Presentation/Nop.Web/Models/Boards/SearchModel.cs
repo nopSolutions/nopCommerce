@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Boards
@@ -8,9 +7,9 @@ namespace Nop.Web.Models.Boards
     {
         public SearchModel()
         {
-            LimitList = new List<SelectListItem>();
-            ForumList = new List<SelectListItem>();
-            WithinList = new List<SelectListItem>();
+            LimitList = [];
+            ForumList = [];
+            WithinList = [];
             ForumTopics = new List<ForumTopicRowModel>();
         }
 
@@ -28,7 +27,7 @@ namespace Nop.Web.Models.Boards
         public int TopicPageSize { get; set; }
         public int TopicTotalRecords { get; set; }
         public int TopicPageIndex { get; set; }
-        
+
         public List<SelectListItem> LimitList { get; set; }
 
         public List<SelectListItem> ForumList { get; set; }

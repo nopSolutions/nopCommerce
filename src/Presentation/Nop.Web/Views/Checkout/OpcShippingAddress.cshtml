@@ -1,5 +1,10 @@
 ﻿@model CheckoutShippingAddressModel
+@using Nop.Core;
+@inject IWebHelper webHelper
 
+@{
+    var storeLocation = webHelper.GetStoreLocation();
+}
 <div class="checkout-data">
     @if (Model.DisplayPickupInStore && Model.PickupPointsModel.AllowPickupInStore)
     {
@@ -8,10 +13,13 @@
             $(document).ready(function () {
                 $(document).unbind('checkout_toggle_pickup_in_store');
                 $(document).on('checkout_toggle_pickup_in_store', function (e) {
-                    if (e.checked)
+                    if (e.checked) {
                         $('#shipping-addresses-form').hide();
-                    else
+                        $('#edit-shipping-address-buttons').hide();
+                    } else {
                         $('#shipping-addresses-form').show();
+                        $('#edit-shipping-address-buttons').show();
+                    }
                 });
             });
         </script>
@@ -30,7 +38,7 @@
                             @string.Format(T("Checkout.Addresses.Invalid").Text, Model.InvalidExistingAddresses.Count)
                         </label>
                     }
-                    <div>
+                    <div class="opc-select-address-container">
                         <select name="shipping_address_id" id="shipping-address-select" class="address-select"
                                 title="" onchange="Shipping.newAddress(this.value, @Model.SelectedBillingAddress)">
                             @foreach (var address in Model.ExistingAddresses)
@@ -38,35 +46,16 @@
                                 var addressLine = "";
                                 addressLine += address.FirstName;
                                 addressLine += " " + address.LastName;
-                                if (address.StreetAddressEnabled && !string.IsNullOrEmpty(address.Address1))
-                                {
-                                    addressLine += ", " + address.Address1;
-                                }
-                                if (address.CityEnabled && !string.IsNullOrEmpty(address.City))
-                                {
-                                    addressLine += ", " + address.City;
-                                }
-                                if (address.CountyEnabled && !string.IsNullOrEmpty(address.County))
-                                {
-                                    addressLine += ", " + address.County;
-                                }
-                                if (address.StateProvinceEnabled && !string.IsNullOrEmpty(address.StateProvinceName))
-                                {
-                                    addressLine += ", " + address.StateProvinceName;
-                                }
-                                if (address.ZipPostalCodeEnabled && !string.IsNullOrEmpty(address.ZipPostalCode))
-                                {
-                                    addressLine += " " + address.ZipPostalCode;
-                                }
-                                if (address.CountryEnabled && !string.IsNullOrWhiteSpace(address.CountryName))
-                                {
-                                    addressLine += ", " + address.CountryName;
-                                }
+                                addressLine += ", " + address.AddressLine;
                                 //how should we render "FormattedCustomAddressAttributes" here?
                                 <option value="@(address.Id)">@(addressLine)</option>
                             }
                             <option value="" selected="@Model.NewAddressPreselected">@T("Checkout.NewAddress")</option>
                         </select>
+
+                        <button id="edit-shipping-address-button" type="button" class="button-1" style="display: none" onclick="Shipping.editAddress('@(storeLocation)checkout/GetAddressById/'); return false;">@T("Common.Edit")</button>
+
+                        <button id="delete-shipping-address-button" type="button" class="button-1" style="display: none" onclick="Shipping.deleteAddress('@(storeLocation)checkout/DeleteEditShippingAddress/'); return false;">@T("Common.Delete")</button>
                     </div>
                 </div>
             }

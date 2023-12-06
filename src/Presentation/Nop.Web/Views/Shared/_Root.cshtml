@@ -4,7 +4,6 @@
 @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BodyStartHtmlTagAfter })
 @{ await Html.RenderPartialAsync("_Notifications"); }
 @{ await Html.RenderPartialAsync("_JavaScriptDisabledWarning"); }
-@{ await Html.RenderPartialAsync("_OldInternetExplorerWarning"); }
 <div class="master-wrapper-page">
     @await Component.InvokeAsync(typeof(AdminHeaderLinksViewComponent))
     @{ await Html.RenderPartialAsync("_Header"); }
@@ -17,7 +16,7 @@
     <div class="header-menu">
         @await Component.InvokeAsync(typeof(TopMenuViewComponent))
     </div>
-    <div class="master-wrapper-content">
+    <div class="master-wrapper-content" id="main" role="main">
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ContentBefore })
 
         @if (IsSectionDefined("Breadcrumb"))

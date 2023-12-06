@@ -1,5 +1,5 @@
 # create the build instance 
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
 WORKDIR /src                                                                    
 COPY ./src ./
@@ -19,8 +19,8 @@ WORKDIR /src/Plugins/Nop.Plugin.ExchangeRate.EcbExchange
 RUN dotnet build Nop.Plugin.ExchangeRate.EcbExchange.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.ExternalAuth.Facebook
 RUN dotnet build Nop.Plugin.ExternalAuth.Facebook.csproj -c Release
-WORKDIR /src/Plugins/Nop.Plugin.Misc.Sendinblue
-RUN dotnet build Nop.Plugin.Misc.Sendinblue.csproj -c Release
+WORKDIR /src/Plugins/Nop.Plugin.Misc.Brevo
+RUN dotnet build Nop.Plugin.Misc.Brevo.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Misc.WebApi.Frontend
 RUN dotnet build Nop.Plugin.Misc.WebApi.Frontend.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Misc.Zettle
@@ -45,8 +45,6 @@ WORKDIR /src/Plugins/Nop.Plugin.Tax.Avalara
 RUN dotnet build Nop.Plugin.Tax.Avalara.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Tax.FixedOrByCountryStateZip
 RUN dotnet build Nop.Plugin.Tax.FixedOrByCountryStateZip.csproj -c Release
-WORKDIR /src/Plugins/Nop.Plugin.Widgets.AccessiBe
-RUN dotnet build Nop.Plugin.Widgets.AccessiBe.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Widgets.FacebookPixel
 RUN dotnet build Nop.Plugin.Widgets.FacebookPixel.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Widgets.GoogleAnalytics
@@ -79,10 +77,10 @@ RUN chmod 775 wwwroot/images/thumbs
 RUN chmod 775 wwwroot/images/uploaded
 
 # create the runtime instance 
-FROM mcr.microsoft.com/dotnet/aspnet:7.0-alpine AS runtime 
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS runtime 
 
 # add globalization support
-RUN apk add --no-cache icu-libs
+RUN apk add --no-cache icu-libs icu-data-full
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 
 # installs required packages

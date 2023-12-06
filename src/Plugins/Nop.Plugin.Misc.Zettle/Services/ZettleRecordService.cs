@@ -1,11 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
 using Nop.Plugin.Misc.Zettle.Domain;
-using Nop.Services.Catalog;
 
 namespace Nop.Plugin.Misc.Zettle.Services
 {
@@ -16,12 +12,12 @@ namespace Nop.Plugin.Misc.Zettle.Services
     {
         #region Fields
 
-        private readonly IRepository<Category> _categoryRepository;
-        private readonly IRepository<ProductAttributeCombination> _productAttributeCombinationRepository;
-        private readonly IRepository<ProductCategory> _productCategoryRepository;
-        private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<ZettleRecord> _repository;
-        private readonly ZettleSettings _zettleSettings;
+        protected readonly IRepository<Category> _categoryRepository;
+        protected readonly IRepository<ProductAttributeCombination> _productAttributeCombinationRepository;
+        protected readonly IRepository<ProductCategory> _productCategoryRepository;
+        protected readonly IRepository<Product> _productRepository;
+        protected readonly IRepository<ZettleRecord> _repository;
+        protected readonly ZettleSettings _zettleSettings;
 
         #endregion
 
@@ -54,7 +50,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
         /// A task that represents the asynchronous operation
         /// The task result contains the prepared records; the number of products that were not added
         /// </returns>
-        private async Task<(List<ZettleRecord> Records, int InvalidProducts)> PrepareRecordsToAddAsync(List<int> productIds)
+        protected async Task<(List<ZettleRecord> Records, int InvalidProducts)> PrepareRecordsToAddAsync(List<int> productIds)
         {
             var products = await _productRepository.GetByIdsAsync(productIds, null, false);
             var productsWithSku = products.Where(product => !string.IsNullOrEmpty(product.Sku)).ToList();
@@ -253,14 +249,13 @@ namespace Nop.Plugin.Misc.Zettle.Services
                 if (!_zettleSettings.AutoAddRecordsEnabled)
                     return;
 
-                if (attributeCombinationId == 0)
+                if (attributeCombinationId == 0 || _repository.Table.FirstOrDefault(record => record.ProductId == productId) is not ZettleRecord productRecord)
                 {
-                    var (records, _) = await PrepareRecordsToAddAsync(new List<int> { productId });
+                    var (records, _) = await PrepareRecordsToAddAsync([productId]);
                     await InsertRecordsAsync(records);
                 }
                 else
                 {
-                    var productRecord = _repository.Table.FirstOrDefault(record => record.ProductId == productId);
                     await InsertRecordAsync(new()
                     {
                         Active = _zettleSettings.SyncEnabled,
@@ -323,7 +318,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
                 return null;
 
             var newProductIds = productIds.Except(_repository.Table.Select(record => record.ProductId)).ToList();
-            if (!newProductIds.Any())
+            if (newProductIds.Count == 0)
                 return null;
 
             var (records, invalidProducts) = await PrepareRecordsToAddAsync(newProductIds);
@@ -363,6 +358,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
                     Sku = item.Product.Sku,
                     Description = item.Product.ShortDescription,
                     Price = item.Product.Price,
+                    ProductCost = item.Product.ProductCost,
                     CategoryName = item.Category.Name,
                     ImageUrl = item.Record.ImageUrl,
                     ImageSyncEnabled = item.Record.ImageSyncEnabled,
@@ -380,6 +376,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
                     Sku = group.FirstOrDefault().Sku,
                     Description = group.FirstOrDefault().Description,
                     Price = group.FirstOrDefault().Price,
+                    ProductCost = group.FirstOrDefault().ProductCost,
                     CategoryName = group
                         .OrderBy(item => item.ProductCategoryDisplayOrder)
                         .ThenBy(item => item.ProductCategoryId)

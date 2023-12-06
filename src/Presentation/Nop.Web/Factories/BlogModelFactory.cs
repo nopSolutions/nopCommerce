@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Customers;
@@ -26,19 +22,19 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly BlogSettings _blogSettings;
-        private readonly CaptchaSettings _captchaSettings;
-        private readonly CustomerSettings _customerSettings;
-        private readonly IBlogService _blogService;
-        private readonly ICustomerService _customerService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IPictureService _pictureService;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreContext _storeContext;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IWorkContext _workContext;
-        private readonly MediaSettings _mediaSettings;
+        protected readonly BlogSettings _blogSettings;
+        protected readonly CaptchaSettings _captchaSettings;
+        protected readonly CustomerSettings _customerSettings;
+        protected readonly IBlogService _blogService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IPictureService _pictureService;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IUrlRecordService _urlRecordService;
+        protected readonly IWorkContext _workContext;
+        protected readonly MediaSettings _mediaSettings;
 
         #endregion
 
@@ -74,7 +70,7 @@ namespace Nop.Web.Factories
         }
 
         #endregion
-        
+
         #region Methods
 
         /// <summary>
@@ -86,11 +82,9 @@ namespace Nop.Web.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareBlogPostModelAsync(BlogPostModel model, BlogPost blogPost, bool prepareComments)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
-            if (blogPost == null)
-                throw new ArgumentNullException(nameof(blogPost));
+            ArgumentNullException.ThrowIfNull(blogPost);
 
             model.Id = blogPost.Id;
             model.MetaTitle = blogPost.MetaTitle;
@@ -141,8 +135,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<BlogPostListModel> PrepareBlogPostListModelAsync(BlogPagingFilteringModel command)
         {
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
+            ArgumentNullException.ThrowIfNull(command);
 
             if (command.PageSize <= 0)
                 command.PageSize = _blogSettings.PostsPageSize;
@@ -247,7 +240,7 @@ namespace Nop.Web.Factories
                         if (current == 0)
                             current = date.Year;
 
-                        if (date.Year > current || !model.Any())
+                        if (date.Year > current || model.Count == 0)
                         {
                             var yearModel = new BlogPostYearModel
                             {
@@ -271,7 +264,7 @@ namespace Nop.Web.Factories
 
             return cachedModel;
         }
-        
+
         /// <summary>
         /// Prepare blog comment model
         /// </summary>
@@ -282,8 +275,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<BlogCommentModel> PrepareBlogPostCommentModelAsync(BlogComment blogComment)
         {
-            if (blogComment == null)
-                throw new ArgumentNullException(nameof(blogComment));
+            ArgumentNullException.ThrowIfNull(blogComment);
 
             var customer = await _customerService.GetCustomerByIdAsync(blogComment.CustomerId);
 

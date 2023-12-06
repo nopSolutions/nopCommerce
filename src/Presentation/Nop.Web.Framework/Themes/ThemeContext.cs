@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Common;
@@ -16,13 +13,13 @@ namespace Nop.Web.Framework.Themes
     {
         #region Fields
 
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IStoreContext _storeContext;
-        private readonly IThemeProvider _themeProvider;
-        private readonly IWorkContext _workContext;
-        private readonly StoreInformationSettings _storeInformationSettings;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IThemeProvider _themeProvider;
+        protected readonly IWorkContext _workContext;
+        protected readonly StoreInformationSettings _storeInformationSettings;
 
-        private string _cachedThemeName;
+        protected string _cachedThemeName;
 
         #endregion
 

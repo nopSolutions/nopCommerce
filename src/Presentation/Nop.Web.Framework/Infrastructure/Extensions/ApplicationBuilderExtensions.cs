@@ -1,11 +1,7 @@
-﻿using System;
-using System.Globalization;
-using System.IO;
-using System.Linq;
+﻿using System.Globalization;
 using System.Net;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
-using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
@@ -19,6 +15,7 @@ using Microsoft.Net.Http.Headers;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Data;
@@ -36,8 +33,9 @@ using Nop.Services.Seo;
 using Nop.Web.Framework.Globalization;
 using Nop.Web.Framework.Mvc.Routing;
 using QuestPDF.Drawing;
-using WebMarkupMin.AspNetCore7;
+using WebMarkupMin.AspNetCore8;
 using WebOptimizer;
+using IPNetwork = Microsoft.AspNetCore.HttpOverrides.IPNetwork;
 
 namespace Nop.Web.Framework.Infrastructure.Extensions
 {
@@ -55,7 +53,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             EngineContext.Current.ConfigureRequestPipeline(application);
         }
 
-        public static void StartEngine(this IApplicationBuilder application)
+        public static async Task StartEngineAsync(this IApplicationBuilder _)
         {
             var engine = EngineContext.Current;
 
@@ -63,12 +61,12 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             if (DataSettingsManager.IsDatabaseInstalled())
             {
                 //log application start
-                engine.Resolve<ILogger>().Information("Application started");
+                await engine.Resolve<ILogger>().InformationAsync("Application started");
 
                 //install and update plugins
                 var pluginService = engine.Resolve<IPluginService>();
-                pluginService.InstallPluginsAsync().Wait();
-                pluginService.UpdatePluginsAsync().Wait();
+                await pluginService.InstallPluginsAsync();
+                await pluginService.UpdatePluginsAsync();
 
                 //update nopCommerce core and db
                 var migrationManager = engine.Resolve<IMigrationManager>();
@@ -78,7 +76,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 migrationManager.ApplyUpMigrations(assembly, MigrationProcessType.Update);
 
                 var taskScheduler = engine.Resolve<ITaskScheduler>();
-                taskScheduler.InitializeAsync().Wait();
+                await taskScheduler.InitializeAsync();
                 taskScheduler.StartScheduler();
             }
         }
@@ -224,8 +222,8 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
             var webHostEnvironment = EngineContext.Current.Resolve<IWebHostEnvironment>();
 
-            application.UseWebOptimizer(webHostEnvironment, new[]
-            {
+            application.UseWebOptimizer(webHostEnvironment,
+            [
                 new FileProviderOptions
                 {
                     RequestPath =  new PathString("/Plugins"),
@@ -236,7 +234,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     RequestPath =  new PathString("/Themes"),
                     FileProvider = new PhysicalFileProvider(fileProvider.MapPath(@"Themes"))
                 }
-            });
+            ]);
         }
 
         /// <summary>
@@ -397,8 +395,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <summary>
         /// Configure PDF
         /// </summary>
-        /// <param name="application">Builder for configuring an application's request pipeline</param>
-        public static void UseNopPdf(this IApplicationBuilder application)
+        public static void UseNopPdf(this IApplicationBuilder _)
         {
             if (!DataSettingsManager.IsDatabaseInstalled())
                 return;
@@ -421,18 +418,23 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseNopRequestLocalization(this IApplicationBuilder application)
         {
-            application.UseRequestLocalization(async options =>
+            application.UseRequestLocalization(options =>
             {
                 if (!DataSettingsManager.IsDatabaseInstalled())
                     return;
 
+                var languageService = EngineContext.Current.Resolve<ILanguageService>();
+                var localizationSettings = EngineContext.Current.Resolve<LocalizationSettings>();
+
                 //prepare supported cultures
-                var cultures = (await EngineContext.Current.Resolve<ILanguageService>().GetAllLanguagesAsync())
+                var cultures = languageService
+                    .GetAllLanguages()
                     .OrderBy(language => language.DisplayOrder)
-                    .Select(language => new CultureInfo(language.LanguageCulture)).ToList();
+                    .Select(language => new CultureInfo(language.LanguageCulture))
+                    .ToList();
                 options.SupportedCultures = cultures;
                 options.SupportedUICultures = cultures;
-                options.DefaultRequestCulture = new RequestCulture(cultures.FirstOrDefault());
+                options.DefaultRequestCulture = new RequestCulture(cultures.FirstOrDefault() ?? new CultureInfo(NopCommonDefaults.DefaultLanguageCulture));
                 options.ApplyCurrentCultureToResponseHeaders = true;
 
                 //configure culture providers
@@ -440,6 +442,15 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 var cookieRequestCultureProvider = options.RequestCultureProviders.OfType<CookieRequestCultureProvider>().FirstOrDefault();
                 if (cookieRequestCultureProvider is not null)
                     cookieRequestCultureProvider.CookieName = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.CultureCookie}";
+                if (!localizationSettings.AutomaticallyDetectLanguage)
+                {
+                    var headerRequestCultureProvider = options
+                        .RequestCultureProviders
+                        .OfType<AcceptLanguageHeaderRequestCultureProvider>()
+                        .FirstOrDefault();
+                    if (headerRequestCultureProvider is not null)
+                        options.RequestCultureProviders.Remove(headerRequestCultureProvider);
+                }
             });
         }
 
@@ -488,10 +499,23 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                         if (IPAddress.TryParse(strIp, out var ip))
                             options.KnownProxies.Add(ip);
                     }
-
-                    if (options.KnownProxies.Count > 1)
-                        options.ForwardLimit = null; //disable the limit, because KnownProxies is configured
                 }
+
+                if (!string.IsNullOrEmpty(appSettings.Get<HostingConfig>().KnownNetworks))
+                {
+                    foreach (var strIpNet in appSettings.Get<HostingConfig>().KnownNetworks.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList())
+                    {
+                        var ipNetParts = strIpNet.Split("/");
+                        if (ipNetParts.Length == 2)
+                        {
+                            if (IPAddress.TryParse(ipNetParts[0], out var ip) && int.TryParse(ipNetParts[1], out var length))
+                                options.KnownNetworks.Add(new IPNetwork(ip, length));
+                        }
+                    }
+                }
+
+                if (options.KnownProxies.Count > 1 || options.KnownNetworks.Count > 1)
+                    options.ForwardLimit = null; //disable the limit, because KnownProxies is configured
 
                 //configure forwarding
                 application.UseForwardedHeaders(options);

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -37,22 +33,22 @@ namespace Nop.Plugin.Payments.CyberSource
     {
         #region Fields
 
-        private readonly CustomerTokenService _customerTokenService;
-        private readonly CyberSourceService _cyberSourceService;
-        private readonly CyberSourceSettings _cyberSourceSettings;
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly ICustomerService _customerService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILocalizationService _localizationService;
-        private readonly IPaymentService _paymentService;
-        private readonly IScheduleTaskService _scheduleTaskService;
-        private readonly ISettingService _settingService;
-        private readonly IStoreContext _storeContext;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly IWorkContext _workContext;
-        private readonly PaymentSettings _paymentSettings;
-        private readonly WidgetSettings _widgetSettings;
+        protected readonly CustomerTokenService _customerTokenService;
+        protected readonly CyberSourceService _cyberSourceService;
+        protected readonly CyberSourceSettings _cyberSourceSettings;
+        protected readonly IActionContextAccessor _actionContextAccessor;
+        protected readonly ICustomerService _customerService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IPaymentService _paymentService;
+        protected readonly IScheduleTaskService _scheduleTaskService;
+        protected readonly ISettingService _settingService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IUrlHelperFactory _urlHelperFactory;
+        protected readonly IWorkContext _workContext;
+        protected readonly PaymentSettings _paymentSettings;
+        protected readonly WidgetSettings _widgetSettings;
 
         #endregion
 
@@ -107,8 +103,7 @@ namespace Nop.Plugin.Payments.CyberSource
         /// </returns>
         public async Task<ProcessPaymentResult> ProcessPaymentAsync(ProcessPaymentRequest processPaymentRequest)
         {
-            if (processPaymentRequest is null)
-                throw new ArgumentNullException(nameof(processPaymentRequest));
+            ArgumentNullException.ThrowIfNull(processPaymentRequest);
 
             var result = new ProcessPaymentResult();
             var customer = await _customerService.GetCustomerByIdAsync(processPaymentRequest.CustomerId);
@@ -181,7 +176,7 @@ namespace Nop.Plugin.Payments.CyberSource
                     if (!string.IsNullOrEmpty(processPaymentRequest.CreditCardNumber))
                     {
                         firstSixDigitOfCard = processPaymentRequest.CreditCardNumber.Length >= 6
-                            ? processPaymentRequest.CreditCardNumber.Substring(0, 6)
+                            ? processPaymentRequest.CreditCardNumber[..6]
                             : string.Empty;
                         lastFourDigitOfCard = processPaymentRequest.CreditCardNumber.Length >= 4
                             ? processPaymentRequest.CreditCardNumber[^4..]
@@ -264,7 +259,7 @@ namespace Nop.Plugin.Payments.CyberSource
                     var paymentStatus = result.NewPaymentStatus;
                     result.NewPaymentStatus = PaymentStatus.Pending;
                     var key = string.Format(CyberSourceDefaults.OrderStatusesSessionKey, processPaymentRequest.OrderGuid);
-                    _httpContextAccessor.HttpContext.Session.Set(key, (orderStatus, paymentStatus));
+                    await _httpContextAccessor.HttpContext.Session.SetAsync(key, (orderStatus, paymentStatus));
                 }
             }
 
@@ -380,7 +375,7 @@ namespace Nop.Plugin.Payments.CyberSource
             //request succeeded
             var refundIds = await _genericAttributeService
                 .GetAttributeAsync<List<string>>(refundPaymentRequest.Order, CyberSourceDefaults.RefundIdAttributeName)
-                ?? new List<string>();
+                ?? [];
             if (!refundIds.Contains(refundId))
                 refundIds.Add(refundId);
             await _genericAttributeService.SaveAttributeAsync(refundPaymentRequest.Order, CyberSourceDefaults.RefundIdAttributeName, refundIds);
@@ -457,8 +452,7 @@ namespace Nop.Plugin.Payments.CyberSource
         /// </returns>
         public Task<bool> CanRePostProcessPaymentAsync(Order order)
         {
-            if (order is null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
 
             return Task.FromResult(false);
         }
@@ -473,8 +467,7 @@ namespace Nop.Plugin.Payments.CyberSource
         /// </returns>
         public async Task<IList<string>> ValidatePaymentFormAsync(IFormCollection form)
         {
-            if (form is null)
-                throw new ArgumentNullException(nameof(form));
+            ArgumentNullException.ThrowIfNull(form);
 
             var warnings = new List<string>();
 
@@ -509,8 +502,7 @@ namespace Nop.Plugin.Payments.CyberSource
         /// </returns>
         public async Task<ProcessPaymentRequest> GetPaymentInfoAsync(IFormCollection form)
         {
-            if (form is null)
-                throw new ArgumentNullException(nameof(form));
+            ArgumentNullException.ThrowIfNull(form);
 
             var processPaymentRequest = new ProcessPaymentRequest();
             var customer = await _workContext.GetCurrentCustomerAsync();
@@ -588,8 +580,7 @@ namespace Nop.Plugin.Payments.CyberSource
         /// <returns>View component type</returns>
         public Type GetWidgetViewComponent(string widgetZone)
         {
-            if (widgetZone is null)
-                throw new ArgumentNullException(nameof(widgetZone));
+            ArgumentNullException.ThrowIfNull(widgetZone);
 
             if (widgetZone.Equals(PublicWidgetZones.BodyStartHtmlTagAfter))
                 return typeof(PayerAuthenticationViewComponent);

@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Catalog;
+﻿using Nop.Core.Domain.Catalog;
 using Nop.Data;
 
 namespace Nop.Services.Catalog
@@ -13,7 +10,7 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly IRepository<CategoryTemplate> _categoryTemplateRepository;
+        protected readonly IRepository<CategoryTemplate> _categoryTemplateRepository;
 
         #endregion
 
@@ -50,8 +47,8 @@ namespace Nop.Services.Catalog
             var templates = await _categoryTemplateRepository.GetAllAsync(query =>
             {
                 return from pt in query
-                    orderby pt.DisplayOrder, pt.Id
-                    select pt;
+                       orderby pt.DisplayOrder, pt.Id
+                       select pt;
             }, cache => default);
 
             return templates;

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Nop.Core.Configuration;
+﻿using Nop.Core.Configuration;
 
 namespace Nop.Plugin.Misc.Zettle
 {
@@ -119,7 +118,7 @@ namespace Nop.Plugin.Misc.Zettle
         /// <summary>
         /// Gets or sets the list of inventory balance changes unique identifiers as UUID version 1
         /// </summary>
-        public List<string> InventoryTrackingIds { get; set; } = new();
+        public List<string> InventoryTrackingIds { get; set; } = [];
 
         #endregion
     }

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Nop.Core.Configuration;
+﻿using Nop.Core.Configuration;
 
 namespace Nop.Core.Domain.Security
 {
@@ -11,22 +10,22 @@ namespace Nop.Core.Domain.Security
         /// <summary>
         /// Disallow paths
         /// </summary>
-        public List<string> DisallowPaths { get; set; } = new();
+        public List<string> DisallowPaths { get; set; } = [];
 
         /// <summary>
         /// Localizable disallow paths
         /// </summary>
-        public List<string> LocalizableDisallowPaths { get; set; } = new();
+        public List<string> LocalizableDisallowPaths { get; set; } = [];
 
         /// <summary>
         /// Disallow languages
         /// </summary>
-        public List<int> DisallowLanguages { get; set; } = new();
+        public List<int> DisallowLanguages { get; set; } = [];
 
         /// <summary>
         /// Additions rules
         /// </summary>
-        public List<string> AdditionsRules { get; set; } = new();
+        public List<string> AdditionsRules { get; set; } = [];
 
         /// <summary>
         /// Is sitemap.xml allow

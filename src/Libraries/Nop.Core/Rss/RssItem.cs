@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 
 namespace Nop.Core.Rss
 {
@@ -113,7 +111,7 @@ namespace Nop.Core.Rss
         /// <summary>
         /// Element extensions
         /// </summary>
-        public List<XElement> ElementExtensions { get; } = new List<XElement>();
+        public List<XElement> ElementExtensions { get; } = [];
 
         #endregion
     }

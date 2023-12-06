@@ -1,6 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Nop.Core.Domain.Catalog;
 using Nop.Services.Customers;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Components;
@@ -9,8 +8,8 @@ namespace Nop.Web.Components
 {
     public partial class ProfileInfoViewComponent : NopViewComponent
     {
-        private readonly ICustomerService _customerService;
-        private readonly IProfileModelFactory _profileModelFactory;
+        protected readonly ICustomerService _customerService;
+        protected readonly IProfileModelFactory _profileModelFactory;
 
         public ProfileInfoViewComponent(ICustomerService customerService, IProfileModelFactory profileModelFactory)
         {
@@ -21,8 +20,7 @@ namespace Nop.Web.Components
         public async Task<IViewComponentResult> InvokeAsync(int customerProfileId)
         {
             var customer = await _customerService.GetCustomerByIdAsync(customerProfileId);
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             var model = await _profileModelFactory.PrepareProfileInfoModelAsync(customer);
             return View(model);

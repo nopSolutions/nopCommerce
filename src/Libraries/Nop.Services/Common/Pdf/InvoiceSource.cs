@@ -1,6 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 namespace Nop.Services.Common.Pdf
 {
@@ -13,10 +11,10 @@ namespace Nop.Services.Common.Pdf
 
         public InvoiceSource()
         {
-            Products = new();
+            Products = [];
             Totals = new();
-            FooterTextColumn1 = new();
-            FooterTextColumn2 = new();
+            FooterTextColumn1 = [];
+            FooterTextColumn2 = [];
         }
 
         #endregion

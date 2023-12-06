@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nop.Core.Domain.Affiliates;
+﻿using Nop.Core.Domain.Affiliates;
 using Nop.Web.Areas.Admin.Models.Affiliates;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -61,7 +60,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the affiliated customer list model
         /// </returns>
-        Task<AffiliatedCustomerListModel> PrepareAffiliatedCustomerListModelAsync(AffiliatedCustomerSearchModel searchModel, 
+        Task<AffiliatedCustomerListModel> PrepareAffiliatedCustomerListModelAsync(AffiliatedCustomerSearchModel searchModel,
             Affiliate affiliate);
     }
 }

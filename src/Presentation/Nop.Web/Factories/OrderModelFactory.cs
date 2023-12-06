@@ -1,7 +1,4 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -24,6 +21,7 @@ using Nop.Services.Payments;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Vendors;
+using Nop.Web.Infrastructure;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Media;
@@ -38,40 +36,41 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly AddressSettings _addressSettings;
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IAddressModelFactory _addressModelFactory;
-        private readonly IAddressService _addressService;
-        private readonly ICountryService _countryService;
-        private readonly ICurrencyService _currencyService;
-        private readonly ICustomerService _customerService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IGiftCardService _giftCardService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IOrderProcessingService _orderProcessingService;
-        private readonly IOrderService _orderService;
-        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
-        private readonly IPaymentPluginManager _paymentPluginManager;
-        private readonly IPaymentService _paymentService;
-        private readonly IPictureService _pictureService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IProductService _productService;
-        private readonly IRewardPointService _rewardPointService;
-        private readonly IShipmentService _shipmentService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreContext _storeContext;
-        private readonly IUrlRecordService _urlRecordService;
-        private readonly IVendorService _vendorService;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
-        private readonly MediaSettings _mediaSettings;
-        private readonly OrderSettings _orderSettings;
-        private readonly PdfSettings _pdfSettings;
-        private readonly RewardPointsSettings _rewardPointsSettings;
-        private readonly ShippingSettings _shippingSettings;
-        private readonly TaxSettings _taxSettings;
-        private readonly VendorSettings _vendorSettings;
+        protected readonly AddressSettings _addressSettings;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly IAddressModelFactory _addressModelFactory;
+        protected readonly IAddressService _addressService;
+        protected readonly ICountryService _countryService;
+        protected readonly ICurrencyService _currencyService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IDateTimeHelper _dateTimeHelper;
+        protected readonly IGiftCardService _giftCardService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IOrderProcessingService _orderProcessingService;
+        protected readonly IOrderService _orderService;
+        protected readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        protected readonly IPaymentPluginManager _paymentPluginManager;
+        protected readonly IPaymentService _paymentService;
+        protected readonly IPictureService _pictureService;
+        protected readonly IPriceFormatter _priceFormatter;
+        protected readonly IProductService _productService;
+        protected readonly IRewardPointService _rewardPointService;
+        protected readonly IShipmentService _shipmentService;
+        protected readonly IShortTermCacheManager _shortTermCacheManager;
+        protected readonly IStateProvinceService _stateProvinceService;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreContext _storeContext;
+        protected readonly IUrlRecordService _urlRecordService;
+        protected readonly IVendorService _vendorService;
+        protected readonly IWebHelper _webHelper;
+        protected readonly IWorkContext _workContext;
+        protected readonly MediaSettings _mediaSettings;
+        protected readonly OrderSettings _orderSettings;
+        protected readonly PdfSettings _pdfSettings;
+        protected readonly RewardPointsSettings _rewardPointsSettings;
+        protected readonly ShippingSettings _shippingSettings;
+        protected readonly TaxSettings _taxSettings;
+        protected readonly VendorSettings _vendorSettings;
 
         #endregion
 
@@ -97,6 +96,7 @@ namespace Nop.Web.Factories
             IProductService productService,
             IRewardPointService rewardPointService,
             IShipmentService shipmentService,
+            IShortTermCacheManager shortTermCacheManager,
             IStateProvinceService stateProvinceService,
             IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
@@ -132,6 +132,7 @@ namespace Nop.Web.Factories
             _productService = productService;
             _rewardPointService = rewardPointService;
             _shipmentService = shipmentService;
+            _shortTermCacheManager = shortTermCacheManager;
             _stateProvinceService = stateProvinceService;
             _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
@@ -167,10 +168,8 @@ namespace Nop.Web.Factories
         {
             var language = await _workContext.GetWorkingLanguageAsync();
             var store = await _storeContext.GetCurrentStoreAsync();
-            var pictureCacheKey = _staticCacheManager.PrepareKeyForShortTermCache(NopModelCacheDefaults.OrderPictureModelKey,
-                orderItem, pictureSize, showDefaultPicture, language, _webHelper.IsCurrentConnectionSecured(), store);
 
-            var model = await _staticCacheManager.GetAsync(pictureCacheKey, async () =>
+            var model = await _shortTermCacheManager.GetAsync(async () =>
             {
                 var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
 
@@ -183,7 +182,7 @@ namespace Nop.Web.Factories
                     Title = string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageLinkTitleFormat"), productName),
                     AlternateText = string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageAlternateTextFormat"), productName),
                 };
-            });
+            }, NopModelCacheDefaults.OrderPictureModelKey, orderItem, pictureSize, showDefaultPicture, language, _webHelper.IsCurrentConnectionSecured(), store);
 
             return model;
         }
@@ -261,8 +260,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<OrderDetailsModel> PrepareOrderDetailsModelAsync(Order order)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
+            ArgumentNullException.ThrowIfNull(order);
             var model = new OrderDetailsModel
             {
                 Id = order.Id,
@@ -276,6 +274,9 @@ namespace Nop.Web.Factories
                 //shipping info
                 ShippingStatus = await _localizationService.GetLocalizedEnumAsync(order.ShippingStatus)
             };
+
+            var languageId = (await _workContext.GetWorkingLanguageAsync()).Id;
+
             if (order.ShippingStatus != ShippingStatus.ShippingNotRequired)
             {
                 model.IsShippable = true;
@@ -291,6 +292,7 @@ namespace Nop.Web.Factories
                 }
                 else if (order.PickupAddressId.HasValue && await _addressService.GetAddressByIdAsync(order.PickupAddressId.Value) is Address pickupAddress)
                 {
+                    var (addressLine, addressFields) = await _addressService.FormatAddressAsync(pickupAddress, languageId);
                     model.PickupAddress = new AddressModel
                     {
                         Address1 = pickupAddress.Address1,
@@ -302,7 +304,9 @@ namespace Nop.Web.Factories
                         CountryName = await _countryService.GetCountryByAddressAsync(pickupAddress) is Country country
                             ? await _localizationService.GetLocalizedAsync(country, entity => entity.Name)
                             : string.Empty,
-                        ZipPostalCode = pickupAddress.ZipPostalCode
+                        ZipPostalCode = pickupAddress.ZipPostalCode,
+                        AddressFields = addressFields,
+                        AddressLine = addressLine
                     };
                 }
 
@@ -337,8 +341,6 @@ namespace Nop.Web.Factories
 
             //VAT number
             model.VatNumber = order.VatNumber;
-
-            var languageId = (await _workContext.GetWorkingLanguageAsync()).Id;
 
             //payment method
             var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
@@ -435,7 +437,7 @@ namespace Nop.Web.Factories
                 else
                 {
                     var taxRates = _orderService.ParseTaxRates(order, order.TaxRates);
-                    displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Any();
+                    displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Count != 0;
                     displayTax = !displayTaxRates;
 
                     var orderTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTax, order.CurrencyRate);
@@ -520,7 +522,7 @@ namespace Nop.Web.Factories
                     OrderItemGuid = orderItem.OrderItemGuid,
                     Sku = await _productService.FormatSkuAsync(product, orderItem.AttributesXml),
                     VendorName = (await _vendorService.GetVendorByIdAsync(product.VendorId))?.Name ?? string.Empty,
-                    ProductId = product.Id,
+                    ProductId = (product.ParentGroupedProductId > 0 && !product.VisibleIndividually) ? product.ParentGroupedProductId : product.Id,
                     ProductName = await _localizationService.GetLocalizedAsync(product, x => x.Name),
                     ProductSeName = await _urlRecordService.GetSeNameAsync(product),
                     Quantity = orderItem.Quantity,
@@ -587,13 +589,9 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<ShipmentDetailsModel> PrepareShipmentDetailsModelAsync(Shipment shipment)
         {
-            if (shipment == null)
-                throw new ArgumentNullException(nameof(shipment));
+            ArgumentNullException.ThrowIfNull(shipment);
 
-            var order = await _orderService.GetOrderByIdAsync(shipment.OrderId);
-
-            if (order == null)
-                throw new Exception("order cannot be loaded");
+            var order = await _orderService.GetOrderByIdAsync(shipment.OrderId) ?? throw new Exception("order cannot be loaded");
             var model = new ShipmentDetailsModel
             {
                 Id = shipment.Id
@@ -737,6 +735,17 @@ namespace Nop.Web.Factories
             model.MinimumRewardPointsAmount = await _priceFormatter.FormatPriceAsync(minimumRewardPointsAmount, true, false);
 
             return model;
+        }
+
+        #endregion
+
+        #region nested class
+
+        /// <summary>
+        /// record that has only page for route value. Used for (My Account) Reward Points pagination
+        /// </summary>
+        public partial record RewardPointsRouteValues : BaseRouteValues
+        {
         }
 
         #endregion

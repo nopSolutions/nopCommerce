@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
+﻿using System.Net;
 using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Infrastructure;
@@ -13,6 +10,8 @@ namespace Nop.Services.Localization
     /// </summary>
     public static class LocalizedUrlExtensions
     {
+        private static readonly char[] _separator = ['/'];
+
         /// <summary>
         /// Get a value indicating whether URL is localized (contains SEO code)
         /// </summary>
@@ -33,7 +32,7 @@ namespace Nop.Services.Localization
                 url = url.RemoveApplicationPathFromRawUrl(pathBase);
 
             //get first segment of passed URL
-            var firstSegment = url.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault() ?? string.Empty;
+            var firstSegment = url.Split(_separator, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault() ?? string.Empty;
             if (string.IsNullOrEmpty(firstSegment))
                 return (false, null);
 
@@ -95,8 +94,7 @@ namespace Nop.Services.Localization
         /// <returns>Result</returns>
         public static string AddLanguageSeoCodeToUrl(this string url, PathString pathBase, bool isRawPath, Language language)
         {
-            if (language == null)
-                throw new ArgumentNullException(nameof(language));
+            ArgumentNullException.ThrowIfNull(language);
 
             //null validation is not required
             //if (string.IsNullOrEmpty(url))

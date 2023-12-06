@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Humanizer;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Events;
@@ -41,10 +37,10 @@ namespace Nop.Tests.Nop.Services.Tests.Localization
             await _localizationService.DeleteLocaleResourcesAsync(PREFIX);
         }
 
-        protected IQueryable<LocaleStringResource> filter(Dictionary<string, string> resources, IQueryable<LocaleStringResource> query)
+        protected IQueryable<LocaleStringResource> Filter(Dictionary<string, string> resources, IQueryable<LocaleStringResource> query)
         {
             query = query.Where(p =>
-                resources.Keys.Select(k=>k.ToLowerInvariant()).Contains(p.ResourceName));
+                resources.Keys.Select(k => k.ToLowerInvariant()).Contains(p.ResourceName));
 
             return query;
         }
@@ -52,13 +48,13 @@ namespace Nop.Tests.Nop.Services.Tests.Localization
         [Test]
         public async Task CanAddOrUpdateLocaleResource()
         {
-            var localeStringResources = await _lsrRepository.GetAllAsync(query=> filter(_resources, query));
+            var localeStringResources = await _lsrRepository.GetAllAsync(query => Filter(_resources, query));
 
             localeStringResources.Any().Should().BeFalse();
 
             await _localizationService.AddOrUpdateLocaleResourceAsync(_resources);
 
-            localeStringResources = await _lsrRepository.GetAllAsync(query => filter(_resources, query));
+            localeStringResources = await _lsrRepository.GetAllAsync(query => Filter(_resources, query));
 
             localeStringResources.Any().Should().BeTrue();
             localeStringResources.Count.Should().Be(3);
@@ -68,7 +64,7 @@ namespace Nop.Tests.Nop.Services.Tests.Localization
         public async Task AddOrUpdateLocaleResourceShouldIgnoreKeyCase()
         {
             await _localizationService.AddOrUpdateLocaleResourceAsync(_resources);
-            await _localizationService.AddOrUpdateLocaleResourceAsync(_resources.ToDictionary(p=>p.Key.ToUpperInvariant(), p=>p.Value));
+            await _localizationService.AddOrUpdateLocaleResourceAsync(_resources.ToDictionary(p => p.Key.ToUpperInvariant(), p => p.Value));
             await _localizationService.AddOrUpdateLocaleResourceAsync(_resources.ToDictionary(p => p.Key.ToLowerInvariant(), p => p.Value));
             await _localizationService.AddOrUpdateLocaleResourceAsync(_resources.ToDictionary(p => p.Key.Camelize(), p => p.Value));
             await _localizationService.AddOrUpdateLocaleResourceAsync(_resources.ToDictionary(p => p.Key.Pascalize(), p => p.Value));
@@ -86,7 +82,7 @@ namespace Nop.Tests.Nop.Services.Tests.Localization
 
             var rez = _lsrRepository.Table
                 .Where(p => p.ResourceName.StartsWith(PREFIX, StringComparison.InvariantCultureIgnoreCase)).ToList();
-            
+
             rez.Count.Should().Be(3);
             rez.Count(p => p.ResourceValue == p.ResourceValue.ToUpperInvariant()).Should().Be(0);
 
@@ -94,8 +90,7 @@ namespace Nop.Tests.Nop.Services.Tests.Localization
 
             await _localizationService.AddOrUpdateLocaleResourceAsync(_resources.ToDictionary(p => p.Key.ToUpperInvariant(), p => p.Value.ToUpperInvariant()));
 
-            rez = _lsrRepository.Table
-                .Where(p => p.ResourceName.StartsWith(PREFIX, StringComparison.InvariantCultureIgnoreCase)).ToList();
+            rez = [.. _lsrRepository.Table.Where(p => p.ResourceName.StartsWith(PREFIX, StringComparison.InvariantCultureIgnoreCase))];
 
             rez.Count.Should().Be(3);
             rez.Count(p => p.ResourceValue == p.ResourceValue.ToUpperInvariant()).Should().Be(3);
@@ -149,8 +144,7 @@ namespace Nop.Tests.Nop.Services.Tests.Localization
 
             await _localizationService.DeleteLocaleResourcesAsync(PREFIX);
 
-            rez = _lsrRepository.Table
-                .Where(p => p.ResourceName.StartsWith(PREFIX, StringComparison.InvariantCultureIgnoreCase)).ToList();
+            rez = [.. _lsrRepository.Table.Where(p => p.ResourceName.StartsWith(PREFIX, StringComparison.InvariantCultureIgnoreCase))];
 
             rez.Count.Should().Be(0);
         }
@@ -167,8 +161,7 @@ namespace Nop.Tests.Nop.Services.Tests.Localization
 
             await _localizationService.DeleteLocaleResourcesAsync(PREFIX.ToUpperInvariant());
 
-            rez = _lsrRepository.Table
-                .Where(p => p.ResourceName.StartsWith(PREFIX, StringComparison.InvariantCultureIgnoreCase)).ToList();
+            rez = [.. _lsrRepository.Table.Where(p => p.ResourceName.StartsWith(PREFIX, StringComparison.InvariantCultureIgnoreCase))];
 
             rez.Count.Should().Be(0);
         }
@@ -176,7 +169,7 @@ namespace Nop.Tests.Nop.Services.Tests.Localization
         public class LocaleResourceConsumer : IConsumer<EntityUpdatedEvent<LocaleStringResource>>
         {
             public static int UpdateCount { get; set; }
-            
+
             public Task HandleEventAsync(EntityUpdatedEvent<LocaleStringResource> eventMessage)
             {
                 UpdateCount += 1;

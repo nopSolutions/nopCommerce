@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Areas.Admin.Models.Settings;
 using Nop.Web.Framework.Models;
@@ -11,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents a product model
     /// </summary>
-    public partial record ProductModel : BaseNopEntityModel, 
+    public partial record ProductModel : BaseNopEntityModel,
         IAclSupportedModel, IDiscountSupportedModel, ILocalizedModel<ProductLocalizedModel>, IStoreMappingSupportedModel
     {
         #region Ctor
@@ -35,7 +33,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
             AvailableDeliveryDates = new List<SelectListItem>();
             AvailableProductAvailabilityRanges = new List<SelectListItem>();
             AvailableWarehouses = new List<SelectListItem>();
-            ProductsTypesSupportedByProductTemplates = new Dictionary<int, IList<SelectListItem>>();
+            ProductsTypesSupportedByProductTemplates = [];
 
             AvailableVendors = new List<SelectListItem>();
 
@@ -54,6 +52,9 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
             SelectedDiscountIds = new List<int>();
             AvailableDiscounts = new List<SelectListItem>();
 
+            AvailableProductTags = new List<SelectListItem>();
+            SelectedProductTags = new List<string>();
+
             RelatedProductSearchModel = new RelatedProductSearchModel();
             CrossSellProductSearchModel = new CrossSellProductSearchModel();
             AssociatedProductSearchModel = new AssociatedProductSearchModel();
@@ -70,7 +71,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         #endregion
 
         #region Properties
-        
+
         //picture thumbnail
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.PictureThumbnailUrl")]
         public string PictureThumbnailUrl { get; set; }
@@ -127,10 +128,10 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.AllowCustomerReviews")]
         public bool AllowCustomerReviews { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ProductTags")]
-        public string ProductTags { get; set; }
+        public IList<SelectListItem> AvailableProductTags { get; set; }
 
-        public string InitialProductTags { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ProductTags")]
+        public IList<string> SelectedProductTags { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Sku")]
         public string Sku { get; set; }
@@ -237,9 +238,6 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         public int TaxCategoryId { get; set; }
         public IList<SelectListItem> AvailableTaxCategories { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.IsTelecommunicationsOrBroadcastingOrElectronicServices")]
-        public bool IsTelecommunicationsOrBroadcastingOrElectronicServices { get; set; }
-
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.ManageInventoryMethod")]
         public int ManageInventoryMethodId { get; set; }
 
@@ -294,6 +292,9 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.AllowAddingOnlyExistingAttributeCombinations")]
         public bool AllowAddingOnlyExistingAttributeCombinations { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.DisplayAttributeCombinationImagesOnly")]
+        public bool DisplayAttributeCombinationImagesOnly { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.NotReturnable")]
         public bool NotReturnable { get; set; }

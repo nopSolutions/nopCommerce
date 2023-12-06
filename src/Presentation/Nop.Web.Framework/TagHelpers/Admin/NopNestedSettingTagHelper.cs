@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Nop.Core;
@@ -16,40 +14,9 @@ namespace Nop.Web.Framework.TagHelpers.Admin
     {
         #region Constants
 
-        private const string FOR_ATTRIBUTE_NAME = "asp-for";
-        private const string IS_CONDITION_INVERT = "is-condition-invert";
-        private const string DISABLE_AUTOGENERATION = "disable-auto-generation";
-
-        #endregion
-
-        #region Properties
-
-        protected IHtmlGenerator Generator { get; set; }
-
-        /// <summary>
-        /// An expression to be evaluated against the current model
-        /// </summary>
-        [HtmlAttributeName(FOR_ATTRIBUTE_NAME)]
-        public ModelExpression For { get; set; }
-
-        /// <summary>
-        /// Is condition inverted
-        /// </summary>
-        [HtmlAttributeName(IS_CONDITION_INVERT)]
-        public bool IsConditionInvert { get; set; }
-
-        /// <summary>
-        /// Disable auto-generation js script
-        /// </summary>
-        [HtmlAttributeName(DISABLE_AUTOGENERATION)]
-        public bool DisableAutoGeneration { get; set; }
-
-        /// <summary>
-        /// ViewContext
-        /// </summary>
-        [HtmlAttributeNotBound]
-        [ViewContext]
-        public ViewContext ViewContext { get; set; }
+        protected const string FOR_ATTRIBUTE_NAME = "asp-for";
+        protected const string IS_CONDITION_INVERT = "is-condition-invert";
+        protected const string DISABLE_AUTOGENERATION = "disable-auto-generation";
 
         #endregion
 
@@ -72,11 +39,9 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
+            ArgumentNullException.ThrowIfNull(context);
 
-            if (output == null)
-                throw new ArgumentNullException(nameof(output));
+            ArgumentNullException.ThrowIfNull(output);
 
             var parentSettingName = For.Name;
             var jsConsistentParentSettingName = parentSettingName.Replace('.', '_');
@@ -126,6 +91,37 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             var scriptTag = await script.RenderHtmlContentAsync();
             output.PreContent.SetHtmlContent(scriptTag);
         }
+
+        #endregion
+
+        #region Properties
+
+        protected IHtmlGenerator Generator { get; set; }
+
+        /// <summary>
+        /// An expression to be evaluated against the current model
+        /// </summary>
+        [HtmlAttributeName(FOR_ATTRIBUTE_NAME)]
+        public ModelExpression For { get; set; }
+
+        /// <summary>
+        /// Is condition inverted
+        /// </summary>
+        [HtmlAttributeName(IS_CONDITION_INVERT)]
+        public bool IsConditionInvert { get; set; }
+
+        /// <summary>
+        /// Disable auto-generation js script
+        /// </summary>
+        [HtmlAttributeName(DISABLE_AUTOGENERATION)]
+        public bool DisableAutoGeneration { get; set; }
+
+        /// <summary>
+        /// ViewContext
+        /// </summary>
+        [HtmlAttributeNotBound]
+        [ViewContext]
+        public ViewContext ViewContext { get; set; }
 
         #endregion
     }

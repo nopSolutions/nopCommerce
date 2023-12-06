@@ -1,6 +1,5 @@
 ﻿using Nop.Core.Domain.Localization;
 using Nop.Services.Caching;
-using System.Threading.Tasks;
 
 namespace Nop.Services.Localization.Caching
 {
@@ -18,6 +17,7 @@ namespace Nop.Services.Localization.Caching
         {
             await RemoveAsync(NopLocalizationDefaults.LocalizedPropertyCacheKey, entity.LanguageId, entity.EntityId, entity.LocaleKeyGroup, entity.LocaleKey);
             await RemoveAsync(NopLocalizationDefaults.LocalizedPropertiesCacheKey, entity.EntityId, entity.LocaleKeyGroup, entity.LocaleKey);
+            await RemoveAsync(NopLocalizationDefaults.LocalizedPropertyLookupCacheKey, entity.LanguageId);
         }
     }
 }

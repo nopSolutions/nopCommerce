@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.News;
 using Nop.Data;
@@ -17,10 +13,10 @@ namespace Nop.Services.News
     {
         #region Fields
 
-        private readonly IRepository<NewsComment> _newsCommentRepository;
-        private readonly IRepository<NewsItem> _newsItemRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IStoreMappingService _storeMappingService;
+        protected readonly IRepository<NewsComment> _newsCommentRepository;
+        protected readonly IRepository<NewsItem> _newsItemRepository;
+        protected readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreMappingService _storeMappingService;
 
         #endregion
 
@@ -92,15 +88,18 @@ namespace Nop.Services.News
                 if (!string.IsNullOrEmpty(title))
                     query = query.Where(n => n.Title.Contains(title));
 
+                if (!showHidden || storeId > 0)
+                {
+                    //apply store mapping constraints
+                    query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+                }
+
                 if (!showHidden)
                 {
                     var utcNow = DateTime.UtcNow;
                     query = query.Where(n => n.Published);
                     query = query.Where(n => !n.StartDateUtc.HasValue || n.StartDateUtc <= utcNow);
                     query = query.Where(n => !n.EndDateUtc.HasValue || n.EndDateUtc >= utcNow);
-
-                    //apply store mapping constraints
-                    query = await _storeMappingService.ApplyStoreMapping(query, storeId);
                 }
 
                 return query.OrderByDescending(n => n.StartDateUtc ?? n.CreatedOnUtc);
@@ -137,8 +136,7 @@ namespace Nop.Services.News
         /// <returns>Result</returns>
         public virtual bool IsNewsAvailable(NewsItem newsItem, DateTime? dateTime = null)
         {
-            if (newsItem == null)
-                throw new ArgumentNullException(nameof(newsItem));
+            ArgumentNullException.ThrowIfNull(newsItem);
 
             if (newsItem.StartDateUtc.HasValue && newsItem.StartDateUtc.Value >= dateTime)
                 return false;
@@ -209,7 +207,7 @@ namespace Nop.Services.News
         /// </returns>
         public virtual async Task<NewsComment> GetNewsCommentByIdAsync(int newsCommentId)
         {
-            return await _newsCommentRepository.GetByIdAsync(newsCommentId, cache => default);
+            return await _newsCommentRepository.GetByIdAsync(newsCommentId, cache => default, useShortTermCache: true);
         }
 
         /// <summary>
@@ -267,8 +265,7 @@ namespace Nop.Services.News
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteNewsCommentsAsync(IList<NewsComment> newsComments)
         {
-            if (newsComments == null)
-                throw new ArgumentNullException(nameof(newsComments));
+            ArgumentNullException.ThrowIfNull(newsComments);
 
             foreach (var newsComment in newsComments)
                 await DeleteNewsCommentAsync(newsComment);

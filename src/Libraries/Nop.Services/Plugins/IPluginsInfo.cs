@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace Nop.Services.Plugins
+﻿namespace Nop.Services.Plugins
 {
     /// <summary>
     /// Represents an information about plugins
@@ -22,7 +18,7 @@ namespace Nop.Services.Plugins
         /// The true if data are loaded, otherwise False
         /// </returns>
         void LoadPluginInfo();
-        
+
         /// <summary>
         /// Save plugins info to the file
         /// </summary>
@@ -33,7 +29,7 @@ namespace Nop.Services.Plugins
         /// </summary>
         /// <param name="pluginsInfo">Plugins info</param>
         void CopyFrom(IPluginsInfo pluginsInfo);
-        
+
         /// <summary>
         /// Gets or sets the list of all installed plugin
         /// </summary>
@@ -69,8 +65,8 @@ namespace Nop.Services.Plugins
         /// </summary>
         /// <remarks>
         /// Key - the system name of plugin.
-        /// Value - the reason of incompatibility.
+        /// Value - the incompatibility type.
         /// </remarks>
-        IDictionary<string, string> IncompatiblePlugins { get; set; }
+        IDictionary<string, PluginIncompatibleType> IncompatiblePlugins { get; set; }
     }
 }
