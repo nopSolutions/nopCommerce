@@ -18643,7 +18643,7 @@
     <Value>Admin area. Manage Affiliates</Value>
   </LocaleResource>
   <LocaleResource Name="Permission.ManageAppSettings">
-    <Value>Admin area. Manage App Setting</Value>
+    <Value>Admin area. Manage App Settings</Value>
   </LocaleResource>
   <LocaleResource Name="Permission.ManageAttributes">
     <Value>Admin area. Manage Attributes</Value>
