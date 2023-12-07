@@ -1,26 +1,23 @@
 ﻿using Nop.Core;
+using Nop.Core.Domain.Affiliates;
+using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Events;
+using Nop.Services.Affiliates;
+using Nop.Services.Attributes;
+using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Events;
+using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Services.Affiliates;
-using Nop.Web.Areas.Admin.Models.Affiliates;
-using Nop.Core.Domain.Affiliates;
-using Nop.Services.Localization;
-using Nop.Core.Domain.Catalog;
-using Nop.Services.Catalog;
-using System.Collections.Generic;
-using System;
-using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Services.Seo;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
-using Nop.Core.Domain.Common;
+
 
 namespace Nop.CustomExtensions.Services
 {
@@ -37,7 +34,7 @@ namespace Nop.CustomExtensions.Services
 
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ICustomerService _customerService;
-        private readonly ILogger _logger;
+        private readonly Nop.Services.Logging.ILogger _logger;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly IOrderService _orderService;
@@ -46,7 +43,7 @@ namespace Nop.CustomExtensions.Services
         private readonly IAddressService _addressService;
         private readonly ILocalizationService _localizationService;
 
-        private readonly ICustomerAttributeParser _customerAttributeParser;
+        protected readonly IAttributeParser<CustomerAttribute, CustomerAttributeValue> _customerAttributeParser;
         private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly ICategoryService _categoryService;
         private readonly IUrlRecordService _urlRecordService;
@@ -59,7 +56,7 @@ namespace Nop.CustomExtensions.Services
 
         public EventConsumer(IGenericAttributeService genericAttributeService,
              ICustomerService customerService,
-             ILogger logger,
+             Nop.Services.Logging.ILogger logger,
              IStoreContext storeContext,
              ShoppingCartSettings shoppingCartSettings,
              IOrderService orderService,
@@ -68,7 +65,7 @@ namespace Nop.CustomExtensions.Services
              ILocalizationService localizationService,
              ICustomerActivityService customerActivityService,
 
-             ICustomerAttributeParser customerAttributeParser,
+             IAttributeParser<CustomerAttribute, CustomerAttributeValue> customerAttributeParser,
              ISpecificationAttributeService specificationAttributeService,
              ICategoryService categoryService,
              IUrlRecordService urlRecordService,

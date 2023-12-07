@@ -50,7 +50,7 @@
         <i class="fa fa-bars" style="font-size: 2rem; color: white;"></i>
     </a>
     <span class="header-logo header-logo-on-menu" style="padding-left:5px;padding-top:10px;">
-        @await Component.InvokeAsync("Logo")
+        @await Component.InvokeAsync(typeof(LogoViewComponent))
     </span>
     <nav id="my-menu" class="navbar navbar-inverse category-menu" title="">
         <a id="menu-close-icon" style="float: right; width: 30px !important; margin-right: 0px; padding-left: 0px;padding-right:40px; ">

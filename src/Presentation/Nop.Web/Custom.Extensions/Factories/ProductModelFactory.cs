@@ -115,7 +115,7 @@ namespace Nop.Web.Factories
                 product, pictureSize, true, await _workContext.GetWorkingLanguageAsync(), _webHelper.IsCurrentConnectionSecured(),
                 await _storeContext.GetCurrentStoreAsync());
 
-            var defaultPictureModel = await _staticCacheManager.Get(cacheKey, async () =>
+            var defaultPictureModel = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
                 Picture picture = null;
 
@@ -280,7 +280,7 @@ namespace Nop.Web.Factories
                 if (profileType != string.Empty)
                 {
                     var userProfileTypeId = Convert.ToInt32(profileType);
-                    var profileTypeCategory = await _customerAttributeService.GetCustomerAttributeValueByIdAsync(userProfileTypeId);
+                    var profileTypeCategory = await _customerAttributeService.GetAttributeValueByIdAsync(userProfileTypeId);
                     return profileTypeCategory != null ? profileTypeCategory.Name : string.Empty;
                 }
             }
@@ -331,7 +331,7 @@ namespace Nop.Web.Factories
                 product, pictureSize, true, await _workContext.GetWorkingLanguageAsync(), _webHelper.IsCurrentConnectionSecured(),
                 await _storeContext.GetCurrentStoreAsync());
 
-            var defaultPictureModel = await _staticCacheManager.Get(cacheKey, async () =>
+            var defaultPictureModel = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
                 Picture picture = null;
 
@@ -447,7 +447,7 @@ namespace Nop.Web.Factories
             {
                 var targetCustomer = await _customerService.GetCustomerByIdAsync(product.VendorId);
                 //display customer first name instead of fullname.Proudct name is always full name.
-                model.ProductName = await _customerService.FormatUsernameAsync(targetCustomer);
+                //model.ProductName = await _customerService.FormatUsernameAsync(targetCustomer);
             }
 
         }

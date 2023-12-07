@@ -29,7 +29,7 @@ namespace Nop.Services.Messages
             var store = await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.CustomerAvailableNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.CUSTOMER_AVAILABLE_NOTIFICATION, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 

@@ -1,4 +1,4 @@
-﻿@model List<RenderWidgetModel>
+﻿@model List<Nop.Web.Framework.Models.Cms.RenderWidgetModel>
 @foreach (var widget in Model)
 {
     @await Component.InvokeAsync(widget.WidgetViewComponent, widget.WidgetViewComponentArguments);

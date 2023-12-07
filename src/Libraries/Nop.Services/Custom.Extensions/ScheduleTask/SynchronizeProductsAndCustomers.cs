@@ -13,6 +13,7 @@ using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Seo;
 using Nop.Services.ScheduleTasks;
+using Nop.Services.Attributes;
 
 namespace Nop.Services.Custom.Extensions.ScheduleTask
 {
@@ -34,7 +35,7 @@ namespace Nop.Services.Custom.Extensions.ScheduleTask
         private readonly ICategoryService _categoryService;
         private readonly IUrlRecordService _urlRecordService;
 
-        private readonly ICustomerAttributeParser _customerAttributeParser;
+        protected readonly IAttributeParser<CustomerAttribute, CustomerAttributeValue> _customerAttributeParser;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILogger _logger;
         private readonly IProductService _productService;
@@ -54,7 +55,7 @@ namespace Nop.Services.Custom.Extensions.ScheduleTask
             ICustomerService customerService,
             IWorkContext workContext,
             IProductService productService,
-            ICustomerAttributeParser customerAttributeParser,
+            IAttributeParser<CustomerAttribute, CustomerAttributeValue> customerAttributeParser,
             IWorkflowMessageService workflowMessageService,
             IGenericAttributeService genericAttributeService,
             ISpecificationAttributeService specificationAttributeService,

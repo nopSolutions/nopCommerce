@@ -1,7 +1,7 @@
-namespace Nop.Core.Domain.Messages
+﻿namespace Nop.Core.Domain.Messages
 {
     public static partial class MessageTemplateSystemNames
     {
-        public const string CustomerAvailableNotification = "Customer.Avialable";
+        public const string CUSTOMER_AVAILABLE_NOTIFICATION = "Customer.Avialable";
     }
 }

@@ -12,17 +12,17 @@
 }
 <div class="page product-reviews-page">
     <div class="page-title panel-heading">
-        <h1>@T("Reviews.ProductReviewsFor") <a href="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })">@Model.ProductName</a></h1>
+        @* <h1>@T("Reviews.ProductReviewsFor") <a href="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })">@Model.ProductName</a></h1> *@
     </div>
     <div class="page-body panel-body from-panel">
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductReviewsPageTop, additionalData = Model })
-        @if (Model.AddProductReview.SuccessfullyAdded)
+        @* @if (Model.AddProductReview.SuccessfullyAdded)
         {
             <div class="result alert alert-success">
                 @Model.AddProductReview.Result
             </div>
-        }
-        else if (!Model.AddProductReview.CanAddNewReview)
+        } else *@
+        if (!Model.AddProductReview.CanAddNewReview)
         {
             <div class="result review-already-added">
                 @T("Reviews.AlreadyAddedProductReviews")

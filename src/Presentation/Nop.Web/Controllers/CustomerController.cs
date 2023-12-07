@@ -351,8 +351,7 @@ namespace Nop.Web.Controllers
                                 var enteredText = ctrlAttributes.ToString().Trim().Split(",");
                                 foreach (var item in enteredText)
                                 {
-                                    attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
-                                    attribute, item.ToString());
+                                    attributesXml = _customerAttributeParser.AddAttribute(attributesXml,attribute, item.ToString());
                                 }
                             }
                         }

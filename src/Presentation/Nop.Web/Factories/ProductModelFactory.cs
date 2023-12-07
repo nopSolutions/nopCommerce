@@ -33,6 +33,7 @@ using Nop.Web.Models.Media;
 //customization
 using Nop.Services.Forums;
 using Nop.Web.Models.PrivateMessages;
+using Nop.Services.Attributes;
 
 namespace Nop.Web.Factories
 {
@@ -90,8 +91,8 @@ namespace Nop.Web.Factories
         private readonly IForumModelFactory _forumModelFactory;
         private readonly IForumService _forumService;
         private readonly IPrivateMessagesModelFactory _privateMessagesModelFactory;
-        private readonly ICustomerAttributeParser _customerAttributeParser;
-        private readonly ICustomerAttributeService _customerAttributeService;
+        protected readonly IAttributeParser<CustomerAttribute, CustomerAttributeValue> _customerAttributeParser;
+        protected readonly IAttributeService<CustomerAttribute, CustomerAttributeValue> _customerAttributeService;
         private readonly ICountryService _countryService;
 
         #endregion
@@ -142,8 +143,8 @@ namespace Nop.Web.Factories
             IForumModelFactory forumModelFactory,
             IForumService forumService,
             IPrivateMessagesModelFactory privateMessagesModelFactory,
-            ICustomerAttributeParser customerAttributeParser,
-            ICustomerAttributeService customerAttributeService,
+            IAttributeParser<CustomerAttribute, CustomerAttributeValue> customerAttributeParser,
+            IAttributeService<CustomerAttribute, CustomerAttributeValue> customerAttributeService,
             ICountryService countryService)
         {
             _captchaSettings = captchaSettings;

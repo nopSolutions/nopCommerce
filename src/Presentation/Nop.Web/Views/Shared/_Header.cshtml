@@ -16,7 +16,7 @@
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeaderMiddle })
     <div class="header-lower">
         <div class="header-logo">
-            @await Component.InvokeAsync(typeof(LogoViewComponent))
+            @await Component.InvokeAsync(typeof(Nop.Web.Components.LogoViewComponent))
         </div>
         <div class="search-box store-search-box">
             @await Component.InvokeAsync(typeof(SearchBoxViewComponent))

@@ -35,6 +35,9 @@ namespace Nop.Web.Models.Catalog
         public IList<ReviewTypeModel> ReviewTypeList { get; set; }
 
         public IList<AddProductReviewReviewTypeMappingModel> AddAdditionalProductReviewList { get; set; }
+
+        //customization
+        public string ProductName { get; set; }
     }
 
     public partial record ReviewTypeModel : BaseNopEntityModel
