@@ -127,8 +127,9 @@ namespace Nop.Services.Catalog
         /// {1} : roles of the current user
         /// {2} : current store ID
         /// {3} : language ID
+        /// {4} : show hidden records?
         /// </remarks>
-        public static CacheKey CategoryBreadcrumbCacheKey => new("Nop.category.breadcrumb.{0}-{1}-{2}-{3}", CategoryBreadcrumbPrefix);
+        public static CacheKey CategoryBreadcrumbCacheKey => new("Nop.category.breadcrumb.{0}-{1}-{2}-{3}-{4}", CategoryBreadcrumbPrefix);
 
         /// <summary>
         /// Gets a key pattern to clear cache
