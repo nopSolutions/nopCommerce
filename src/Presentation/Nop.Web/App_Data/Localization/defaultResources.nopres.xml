@@ -4554,6 +4554,12 @@
   <LocaleResource Name="Admin.Configuration.AppSettings.Data.SQLCommandTimeout.Hint">
     <Value>Gets or sets the wait time (in seconds) before terminating the attempt to execute a command and generating an error. By default, timeout isn't set and a default value for the current provider used. Set 0 to use infinite timeout.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Data.WithNoLock">
+    <Value>Use NOLOCK</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Data.WithNoLock.Hint">
+    <Value>Check to add the NOLOCK hint to SELECT statements.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Description">
     <Value><![CDATA[Configuration in ASP.NET Core is performed using a different configuration providers (e.g. external appsettings.json configuration file, environment variables, etc). These settings are used when the application is launched, so after editing them, the application will be restarted. You can find a detailed description of all configuration parameters in <a href="{0}" target="_blank">our documentation</a>. Please note that changing the values here will overwrite the external appsettings.json file, settings from other configuration providers will not be affected.]]></Value>
   </LocaleResource>

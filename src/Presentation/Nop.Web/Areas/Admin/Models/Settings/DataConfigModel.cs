@@ -20,6 +20,9 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [UIHint("Int32Nullable")]
         public int? SQLCommandTimeout { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.AppSettings.Data.WithNoLock")]
+        public bool WithNoLock { get; set; }
+
         #endregion
     }
 }

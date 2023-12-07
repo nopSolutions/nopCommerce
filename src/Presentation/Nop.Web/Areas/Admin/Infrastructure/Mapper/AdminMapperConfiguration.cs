@@ -211,8 +211,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
 
             CreateMap<DataConfig, DataConfigModel>()
                 .ForMember(model => model.DataProviderTypeValues, options => options.Ignore());
-            CreateMap<DataConfigModel, DataConfig>()
-                .ForMember(entity => entity.WithNoLock, options => options.Ignore());
+            CreateMap<DataConfigModel, DataConfig>();
 
             CreateMap<WebOptimizerConfig, WebOptimizerConfigModel>();
             CreateMap<WebOptimizerConfigModel, WebOptimizerConfig>()
