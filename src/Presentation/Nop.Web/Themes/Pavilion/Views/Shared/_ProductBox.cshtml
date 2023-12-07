@@ -359,7 +359,7 @@
                     @{decimal? savedPrice = null; }
                     @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
                     {
-                        string oldPriceStr = "Reg. Price " + Model.ProductPrice.OldPrice.Replace(".00", "");
+                        string oldPriceStr = "Compare At " + Model.ProductPrice.OldPrice.Replace(".00", "");
                         <span class="price old-price">@oldPriceStr</span>
                         savedPrice = decimal.Parse(Model.ProductPrice.OldPrice.Substring(1)) - decimal.Parse(Model.ProductPrice.Price.Substring(1));
                     }
