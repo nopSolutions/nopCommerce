@@ -150,8 +150,7 @@ namespace Nop.Data.Migrations.UpgradeTo470
                     .OnColumn(nameof(Product.Name)).Ascending() 
                     .WithOptions().NonClustered();
 
-            if (!Schema.Table(NameCompatibilityManager.GetTableName(typeof(ForumTopic)))
-                    .Index("IX_Forums_Topic_Subject").Exists())
+            if (!Schema.Table(NameCompatibilityManager.GetTableName(typeof(ForumTopic))).Index("IX_Forums_Topic_Subject").Exists())
                 Create.Index("IX_Forums_Topic_Subject")
                     .OnTable(NameCompatibilityManager.GetTableName(typeof(ForumTopic)))
                     .OnColumn(nameof(ForumTopic.Subject)).Ascending()
