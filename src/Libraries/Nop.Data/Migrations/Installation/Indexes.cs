@@ -90,6 +90,10 @@ namespace Nop.Data.Migrations.Installation
                 .OnColumn(nameof(ProductTag.Name)).Ascending()
                 .WithOptions().NonClustered();
 
+            Create.Index("IX_Product_Name").OnTable(nameof (Product))
+                .OnColumn(nameof(Product.Name)).Ascending()
+                .WithOptions().NonClustered();
+
             Create.Index("IX_Product_SubjectToAcl").OnTable(nameof(Product))
                 .OnColumn(nameof(Product.SubjectToAcl)).Ascending()
                 .WithOptions().NonClustered();
@@ -231,6 +235,10 @@ namespace Nop.Data.Migrations.Installation
 
             Create.Index("IX_Forums_Forum_DisplayOrder").OnTable(NameCompatibilityManager.GetTableName(typeof(Forum)))
                 .OnColumn(nameof(Forum.DisplayOrder)).Ascending()
+                .WithOptions().NonClustered();
+
+            Create.Index("IX_Forums_Topic_Subject").OnTable(NameCompatibilityManager.GetTableName(typeof(ForumTopic)))
+                .OnColumn(nameof(ForumTopic.Subject)).Ascending()
                 .WithOptions().NonClustered();
 
             Create.Index("IX_Customer_Username").OnTable(nameof(Customer))
