@@ -148,7 +148,7 @@ namespace Nop.Data.DataProviders
         {
             var table = (ITable<TEntity>)base.GetTable<TEntity>();
 
-            return DataSettingsManager.UseNoLock() ? table.AsSqlServer().WithNoLock() : table;
+            return DataSettingsManager.UseNoLock() ? table.With("NOLOCK") : table;
         }
 
         /// <summary>

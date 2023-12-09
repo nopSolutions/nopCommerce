@@ -185,6 +185,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
                 //#6941
                 ["Permission.ManageAppSettings"] = "Admin area. Manage App Settings",
 
+                //#6899
+                ["Admin.Configuration.AppSettings.Data.WithNoLock"] = "Use NOLOCK",
+                ["Admin.Configuration.AppSettings.Data.WithNoLock.Hint"] = "Check to add the NOLOCK hint to SELECT statements.",
 
             }, languageId);
 

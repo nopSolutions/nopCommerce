@@ -11,7 +11,7 @@ using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.UpgradeTo470
 {
-    [NopSchemaMigration("2023-11-09 00:00:02", "AddIndexesMigration for 4.70.0")]
+    [NopSchemaMigration("2023-12-06 19:53:00", "AddIndexesMigration for 4.70.0")]
     public class AddIndexesMigration : ForwardOnlyMigration
     {
         /// <summary>
@@ -143,6 +143,19 @@ namespace Nop.Data.Migrations.UpgradeTo470
                 IfDatabase(databaseType).Create.Index("IX_ProductReview_CustomerId").OnTable(nameof(ProductReview))
                     .OnColumn(nameof(ProductReview.CustomerId)).Ascending()
                     .WithOptions().NonClustered();
+
+            if(!Schema.Table(nameof(Product)).Index("IX_Product_Name").Exists())
+                Create.Index("IX_Product_Name")
+                    .OnTable(nameof(Product))
+                    .OnColumn(nameof(Product.Name)).Ascending() 
+                    .WithOptions().NonClustered();
+
+            if (!Schema.Table(NameCompatibilityManager.GetTableName(typeof(ForumTopic))).Index("IX_Forums_Topic_Subject").Exists())
+                Create.Index("IX_Forums_Topic_Subject")
+                    .OnTable(NameCompatibilityManager.GetTableName(typeof(ForumTopic)))
+                    .OnColumn(nameof(ForumTopic.Subject)).Ascending()
+                    .WithOptions().NonClustered();
+
         }
     }
 }
