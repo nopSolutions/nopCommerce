@@ -491,9 +491,10 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
                 if (!string.IsNullOrEmpty(appSettings.Get<HostingConfig>().ForwardedProtoHeaderName))
                     options.ForwardedProtoHeaderName = appSettings.Get<HostingConfig>().ForwardedProtoHeaderName;
-
-                if (!string.IsNullOrEmpty(appSettings.Get<HostingConfig>().KnownProxies))
+                
+                if (appSettings.Get<HostingConfig>().KnownProxies != null)
                 {
+                    options.KnownProxies.Clear();
                     foreach (var strIp in appSettings.Get<HostingConfig>().KnownProxies.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList())
                     {
                         if (IPAddress.TryParse(strIp, out var ip))
@@ -501,8 +502,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     }
                 }
 
-                if (!string.IsNullOrEmpty(appSettings.Get<HostingConfig>().KnownNetworks))
+                if (appSettings.Get<HostingConfig>().KnownNetworks != null)
                 {
+                    options.KnownNetworks.Clear();
                     foreach (var strIpNet in appSettings.Get<HostingConfig>().KnownNetworks.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList())
                     {
                         var ipNetParts = strIpNet.Split("/");
