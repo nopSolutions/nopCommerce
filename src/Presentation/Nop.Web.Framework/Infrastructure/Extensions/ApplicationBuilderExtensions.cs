@@ -32,6 +32,7 @@ using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Web.Framework.Globalization;
 using Nop.Web.Framework.Mvc.Routing;
+using Nop.Web.Framework.WebOptimizer;
 using QuestPDF.Drawing;
 using WebMarkupMin.AspNetCore8;
 using WebOptimizer;
@@ -219,6 +220,12 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseNopWebOptimizer(this IApplicationBuilder application)
         {
+            var appSettings = Singleton<AppSettings>.Instance;
+            var woConfig = appSettings.Get<WebOptimizerConfig>();
+
+            if (!woConfig.EnableCssBundling && !woConfig.EnableJavaScriptBundling)
+                return;
+
             var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
             var webHostEnvironment = EngineContext.Current.Resolve<IWebHostEnvironment>();
 

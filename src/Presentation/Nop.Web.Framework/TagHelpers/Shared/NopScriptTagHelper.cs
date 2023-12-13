@@ -7,14 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.UI;
 using Nop.Web.Framework.WebOptimizer;
-using WebOptimizer;
 
 namespace Nop.Web.Framework.TagHelpers.Shared
 {
@@ -37,7 +35,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
         #region Fields
 
         protected readonly AppSettings _appSettings;
-        protected readonly IAssetPipeline _assetPipeline;
+        protected readonly INopAssetHelper _bundleHelper;
         protected readonly INopHtmlHelper _nopHtmlHelper;
         protected readonly IWebHelper _webHelper;
         protected readonly IWebHostEnvironment _webHostEnvironment;
@@ -48,14 +46,14 @@ namespace Nop.Web.Framework.TagHelpers.Shared
 
         public NopScriptTagHelper(AppSettings appSettings,
             HtmlEncoder htmlEncoder,
-            IAssetPipeline assetPipeline,
+            INopAssetHelper bundleHelper,
             INopHtmlHelper nopHtmlHelper,
             IUrlHelperFactory urlHelperFactory,
             IWebHelper webHelper,
             IWebHostEnvironment webHostEnvironment) : base(urlHelperFactory, htmlEncoder)
         {
             _appSettings = appSettings;
-            _assetPipeline = assetPipeline ?? throw new ArgumentNullException(nameof(assetPipeline));
+            _bundleHelper = bundleHelper;
             _nopHtmlHelper = nopHtmlHelper;
             _webHelper = webHelper;
             _webHostEnvironment = webHostEnvironment;
@@ -100,7 +98,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
                 Src = srcAttribute;
         }
 
-        protected void ProcessAsset(TagHelperOutput output, WebOptimizerConfig woConfig)
+        protected void ProcessAsset(TagHelperOutput output)
         {
             if (string.IsNullOrEmpty(Src))
                 return;
@@ -116,12 +114,8 @@ namespace Nop.Web.Framework.TagHelpers.Shared
             var pathBase = ViewContext.HttpContext?.Request?.PathBase ?? PathString.Empty;
             PathString.FromUriComponent(Src).StartsWithSegments(pathBase, out var sourceFile);
 
-            if (!_assetPipeline.TryGetAssetFromRoute(sourceFile, out var asset))
-            {
-                asset = _assetPipeline.AddJavaScriptBundle(sourceFile, sourceFile);
-            }
-
-            output.Attributes.SetAttribute(SRC_ATTRIBUTE_NAME, $"{Src}?v={asset.GenerateCacheKey(ViewContext.HttpContext, woConfig)}");
+            var asset = _bundleHelper.GetOrCreateJavaScriptAsset(sourceFile, [sourceFile]);
+            output.Attributes.SetAttribute(SRC_ATTRIBUTE_NAME, _bundleHelper.CacheBusting(asset));
         }
 
         #endregion
@@ -155,7 +149,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
                 if (!string.IsNullOrEmpty(Src))
                 {
                     ProcessSrcAttribute(context, output);
-                    ProcessAsset(output, woConfig);
+                    ProcessAsset(output);
                 }
 
                 return;

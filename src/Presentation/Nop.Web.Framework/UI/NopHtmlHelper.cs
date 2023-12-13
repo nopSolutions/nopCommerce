@@ -35,7 +35,7 @@ namespace Nop.Web.Framework.UI
         protected readonly AppSettings _appSettings;
         protected readonly HtmlEncoder _htmlEncoder;
         protected readonly IActionContextAccessor _actionContextAccessor;
-        protected readonly IAssetPipeline _assetPipeline;
+        protected readonly INopAssetHelper _bundleHelper;
         protected readonly Lazy<ILocalizationService> _localizationService;
         protected readonly IStoreContext _storeContext;
         protected readonly IUrlHelperFactory _urlHelperFactory;
@@ -63,7 +63,7 @@ namespace Nop.Web.Framework.UI
         public NopHtmlHelper(AppSettings appSettings,
             HtmlEncoder htmlEncoder,
             IActionContextAccessor actionContextAccessor,
-            IAssetPipeline assetPipeline,
+            INopAssetHelper bundleHelper,
             Lazy<ILocalizationService> localizationService,
             IStoreContext storeContext,
             IUrlHelperFactory urlHelperFactory,
@@ -73,8 +73,8 @@ namespace Nop.Web.Framework.UI
             _appSettings = appSettings;
             _htmlEncoder = htmlEncoder;
             _actionContextAccessor = actionContextAccessor;
+            _bundleHelper = bundleHelper;
             _localizationService = localizationService;
-            _assetPipeline = assetPipeline;
             _storeContext = storeContext;
             _urlHelperFactory = urlHelperFactory;
             _webHostEnvironment = webHostEnvironment;
@@ -84,35 +84,6 @@ namespace Nop.Web.Framework.UI
         #endregion
 
         #region Utilities
-
-        protected IAsset CreateCssAsset(string bundleKey, string[] assetFiles)
-        {
-            var asset = _assetPipeline.AddBundle(bundleKey, $"{MimeTypes.TextCss}; charset=UTF-8", assetFiles)
-                .EnforceFileExtensions(".css")
-                .AdjustRelativePaths()
-                .AddResponseHeader(HeaderNames.XContentTypeOptions, "nosniff");
-
-            //to more precisely log problem files we minify them before concatenating
-            asset.Processors.Add(new NopCssMinifier());
-
-            asset.Concatenate();
-
-            return asset;
-        }
-
-        protected IAsset CreateJavaScriptAsset(string bundleKey, string[] assetFiles)
-        {
-            var asset = _assetPipeline.AddBundle(bundleKey, $"{MimeTypes.TextJavascript}; charset=UTF-8", assetFiles)
-                        .EnforceFileExtensions(".js", ".es5", ".es6")
-                        .AddResponseHeader(HeaderNames.XContentTypeOptions, "nosniff");
-
-            //to more precisely log problem files we minify them before concatenating
-            asset.Processors.Add(new NopJsMinifier());
-
-            asset.Concatenate();
-
-            return asset;
-        }
 
         protected static string GetAssetKey(string[] keys, string suffix)
         {
@@ -128,41 +99,6 @@ namespace Nop.Web.Framework.UI
                 key += suffix;
 
             return key.ToLower();
-        }
-
-        /// <summary>
-        /// Get or create an asset to the optimization pipeline.
-        /// </summary>
-        /// <param name="bundlePath">A registered route</param>
-        /// <param name="createAsset">The function which creates a bundle</param>
-        /// <param name="sourceFiles">Relative file names of the sources to optimize; if not specified, will use <paramref name="bundlePath"/></param>
-        /// <returns>The bundle</returns>
-        protected IAsset GetOrCreateBundle(string bundlePath, Func<string, string[], IAsset> createAsset, params string[] sourceFiles)
-        {
-            if (string.IsNullOrEmpty(bundlePath))
-                throw new ArgumentNullException(nameof(bundlePath));
-
-            ArgumentNullException.ThrowIfNull(createAsset);
-
-            if (sourceFiles.Length == 0)
-                sourceFiles = [bundlePath];
-
-            //remove the base path from the generated URL if exists
-            var pathBase = _actionContextAccessor.ActionContext?.HttpContext.Request.PathBase ?? PathString.Empty;
-            sourceFiles = sourceFiles.Select(src => src.RemoveApplicationPathFromRawUrl(pathBase)).ToArray();
-
-            if (!_assetPipeline.TryGetAssetFromRoute(bundlePath, out var bundleAsset))
-            {
-                bundleAsset = createAsset(bundlePath, sourceFiles);
-            }
-            else if (bundleAsset.SourceFiles.Count != sourceFiles.Length || !bundleAsset.SourceFiles.SequenceEqual(sourceFiles))
-            {
-                bundleAsset.SourceFiles.Clear();
-                foreach (var source in sourceFiles)
-                    bundleAsset.TryAddSourceFile(source);
-            }
-
-            return bundleAsset;
         }
 
         #endregion
@@ -402,6 +338,7 @@ namespace Nop.Web.Framework.UI
             var woConfig = _appSettings.Get<WebOptimizerConfig>();
 
             var httpContext = _actionContextAccessor.ActionContext.HttpContext;
+            var pathBase = _actionContextAccessor.ActionContext?.HttpContext.Request.PathBase ?? PathString.Empty;
 
             if (woConfig.EnableJavaScriptBundling && value.Any(item => !item.ExcludeFromBundle))
             {
@@ -411,11 +348,11 @@ namespace Nop.Web.Framework.UI
 
                 var bundleKey = string.Concat("/js/", GetAssetKey(sources, woConfig.JavaScriptBundleSuffix), ".js");
 
-                var bundleAsset = GetOrCreateBundle(bundleKey, CreateJavaScriptAsset, sources);
+                var bundleAsset = _bundleHelper.GetOrCreateJavaScriptAsset(bundleKey, sources);
+                var route = _bundleHelper.CacheBusting(bundleAsset);
 
-                var pathBase = _actionContextAccessor.ActionContext?.HttpContext.Request.PathBase ?? PathString.Empty;
-                result.AppendFormat("<script type=\"{0}\" src=\"{1}{2}?v={3}\"></script>",
-                    MimeTypes.TextJavascript, pathBase, bundleAsset.Route, bundleAsset.GenerateCacheKey(httpContext, woConfig));
+                result.AppendFormat("<script type=\"{0}\" src=\"{1}{2}\"></script>",
+                    MimeTypes.TextJavascript, pathBase, route);
             }
 
             var scripts = value.Where(item => !woConfig.EnableJavaScriptBundling || item.ExcludeFromBundle || !item.IsLocal)
@@ -430,10 +367,11 @@ namespace Nop.Web.Framework.UI
                     continue;
                 }
 
-                var asset = GetOrCreateBundle(item.Src, CreateJavaScriptAsset);
+                var asset = _bundleHelper.GetOrCreateJavaScriptAsset(item.Src);
+                var route = _bundleHelper.CacheBusting(asset);
 
-                result.AppendFormat("<script type=\"{0}\" src=\"{1}?v={2}\"></script>",
-                    MimeTypes.TextJavascript, asset.Route, asset.GenerateCacheKey(httpContext, woConfig));
+                result.AppendFormat("<script type=\"{0}\" src=\"{1}{2}\"></script>",
+                    MimeTypes.TextJavascript, pathBase, route);
 
                 result.Append(Environment.NewLine);
             }
@@ -571,6 +509,7 @@ namespace Nop.Web.Framework.UI
 
             var woConfig = _appSettings.Get<WebOptimizerConfig>();
             var httpContext = _actionContextAccessor.ActionContext.HttpContext;
+            var pathBase = _actionContextAccessor.ActionContext?.HttpContext.Request.PathBase ?? PathString.Empty;
 
             if (woConfig.EnableCssBundling && _cssParts.Any(item => !item.ExcludeFromBundle))
             {
@@ -587,11 +526,11 @@ namespace Nop.Web.Framework.UI
 
                 var bundleKey = string.Concat("/css/", GetAssetKey(sources, bundleSuffix), ".css");
 
-                var bundleAsset = GetOrCreateBundle(bundleKey, CreateCssAsset, sources);
+                var bundleAsset = _bundleHelper.GetOrCreateCssAsset(bundleKey, sources);
+                var route = _bundleHelper.CacheBusting(bundleAsset);
 
-                var pathBase = _actionContextAccessor.ActionContext?.HttpContext.Request.PathBase ?? PathString.Empty;
-                result.AppendFormat("<link rel=\"stylesheet\" type=\"{0}\" href=\"{1}{2}?v={3}\" />",
-                    MimeTypes.TextCss, pathBase, bundleAsset.Route, bundleAsset.GenerateCacheKey(httpContext, woConfig));
+                result.AppendFormat("<link rel=\"stylesheet\" type=\"{0}\" href=\"{1}{2}\" />",
+                    MimeTypes.TextCss, pathBase, route);
             }
 
             var styles = _cssParts
@@ -607,10 +546,11 @@ namespace Nop.Web.Framework.UI
                     continue;
                 }
 
-                var asset = GetOrCreateBundle(item.Src, CreateCssAsset);
+                var asset = _bundleHelper.GetOrCreateCssAsset(item.Src);
+                var route = _bundleHelper.CacheBusting(asset);
 
-                result.AppendFormat("<link rel=\"stylesheet\" type=\"{0}\" href=\"{1}?v={2}\" />",
-                    MimeTypes.TextCss, asset.Route, asset.GenerateCacheKey(httpContext, woConfig));
+                result.AppendFormat("<link rel=\"stylesheet\" type=\"{0}\" href=\"{1}{2}\" />",
+                    MimeTypes.TextCss, pathBase, route);
                 result.AppendLine();
             }
 

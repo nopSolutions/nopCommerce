@@ -385,23 +385,29 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static void AddNopWebOptimizer(this IServiceCollection services)
         {
             var appSettings = Singleton<AppSettings>.Instance;
-            var cssBundling = appSettings.Get<WebOptimizerConfig>().EnableCssBundling;
-            var jsBundling = appSettings.Get<WebOptimizerConfig>().EnableJavaScriptBundling;
+            var woConfig = appSettings.Get<WebOptimizerConfig>();
+
+            if (!woConfig.EnableCssBundling && !woConfig.EnableJavaScriptBundling)
+            {
+                services.AddScoped<INopAssetHelper, NopDefaultAssetHelper>();
+                return;
+            }
 
             //add minification & bundling
             var cssSettings = new CssBundlingSettings
             {
                 FingerprintUrls = false,
-                Minify = cssBundling
+                Minify = woConfig.EnableCssBundling
             };
 
             var codeSettings = new CodeBundlingSettings
             {
-                Minify = jsBundling,
+                Minify = woConfig.EnableJavaScriptBundling,
                 AdjustRelativePaths = false //disable this feature because it breaks function names that have "Url(" at the end
             };
 
             services.AddWebOptimizer(null, cssSettings, codeSettings);
+            services.AddScoped<INopAssetHelper, NopAssetHelper>();
         }
 
         /// <summary>
