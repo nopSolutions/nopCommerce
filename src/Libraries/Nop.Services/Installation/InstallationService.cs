@@ -2855,8 +2855,8 @@ namespace Nop.Services.Installation
                 EnableSpecificationAttributeFiltering = true,
                 DisplayFromPrices = false,
                 AttributeValueOutOfStockDisplayType = AttributeValueOutOfStockDisplayType.AlwaysDisplay,
-                AllowCustomersToSearchWithCategoryName = true,
-                AllowCustomersToSearchWithManufacturerName = true,
+                AllowCustomersToSearchWithCategoryName = false,
+                AllowCustomersToSearchWithManufacturerName = false,
                 DisplayAllPicturesOnCatalogPages = false,
                 ProductUrlStructureTypeId = (int)ProductUrlStructureType.Product,
                 ActiveSearchProviderSystemName = string.Empty
