@@ -14,19 +14,14 @@ namespace Nop.Plugin.Shipping.UPS
         public string AccountNumber { get; set; }
 
         /// <summary>
-        /// Gets or sets the access key
+        /// Gets or sets the client ID
         /// </summary>
-        public string AccessKey { get; set; }
+        public string ClientId { get; set; }
 
         /// <summary>
-        /// Gets or sets the username
+        /// Gets or sets the client secret
         /// </summary>
-        public string Username { get; set; }
-
-        /// <summary>
-        /// Gets or sets the password
-        /// </summary>
-        public string Password { get; set; }
+        public string ClientSecret { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to use sandbox environment
@@ -97,5 +92,10 @@ namespace Nop.Plugin.Shipping.UPS
         /// Gets or sets package dimensions type (IN or CM)
         /// </summary>
         public string DimensionsType { get; set; }
+
+        /// <summary>
+        /// Gets or sets a period (in seconds) before the request times out
+        /// </summary>
+        public int? RequestTimeout { get; set; }
     }
 }

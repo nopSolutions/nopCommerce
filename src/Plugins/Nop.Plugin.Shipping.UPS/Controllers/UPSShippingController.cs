@@ -22,13 +22,13 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
     {
         #region Fields
 
-        protected readonly ILocalizationService _localizationService;
-        protected readonly IMeasureService _measureService;
-        protected readonly INotificationService _notificationService;
-        protected readonly IPermissionService _permissionService;
-        protected readonly ISettingService _settingService;
-        protected readonly UPSService _upsService;
-        protected readonly UPSSettings _upsSettings;
+        private readonly ILocalizationService _localizationService;
+        private readonly IMeasureService _measureService;
+        private readonly INotificationService _notificationService;
+        private readonly IPermissionService _permissionService;
+        private readonly ISettingService _settingService;
+        private readonly UPSService _upsService;
+        private readonly UPSSettings _upsSettings;
 
         #endregion
 
@@ -65,9 +65,8 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
             var model = new UPSShippingModel
             {
                 AccountNumber = _upsSettings.AccountNumber,
-                AccessKey = _upsSettings.AccessKey,
-                Username = _upsSettings.Username,
-                Password = _upsSettings.Password,
+                ClientId = _upsSettings.ClientId,
+                ClientSecret = _upsSettings.ClientSecret,
                 UseSandbox = _upsSettings.UseSandbox,
                 AdditionalHandlingCharge = _upsSettings.AdditionalHandlingCharge,
                 InsurePackage = _upsSettings.InsurePackage,
@@ -84,8 +83,8 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
             };
 
             //prepare offered delivery services
-            var servicesCodes = _upsSettings.CarrierServicesOffered.Split(':', StringSplitOptions.RemoveEmptyEntries)
-                .Select(idValue => idValue.Trim('[', ']')).ToList();
+            var servicesCodes = _upsSettings.CarrierServicesOffered?.Split(':', StringSplitOptions.RemoveEmptyEntries)
+                .Select(idValue => idValue.Trim('[', ']')).ToList() ?? new List<string>();
 
             //prepare available options
             model.AvailableCustomerClassifications = (await CustomerClassification.DailyRates.ToSelectListAsync(false))
@@ -94,7 +93,7 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
                 .Select(item => new SelectListItem(item.Text, item.Value)).ToList();
             model.AvailablePackagingTypes = (await PackagingType.CustomerSuppliedPackage.ToSelectListAsync(false))
                 .Select(item => new SelectListItem(item.Text?.TrimStart('_'), item.Value)).ToList();
-            model.AvailablePackingTypes = (await PackingType.PackByDimensions.ToSelectListAsync(false))
+            model.AvaliablePackingTypes = (await PackingType.PackByDimensions.ToSelectListAsync(false))
                 .Select(item => new SelectListItem(item.Text, item.Value)).ToList();
             model.AvailableCarrierServices = (await DeliveryService.Standard.ToSelectListAsync(false))
                 .Select(item =>
@@ -102,8 +101,8 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
                 var serviceCode = _upsService.GetUpsCode((DeliveryService)int.Parse(item.Value));
                 return new SelectListItem($"UPS {item.Text?.TrimStart('_')}", serviceCode, servicesCodes.Contains(serviceCode));
             }).ToList();
-            model.AvailableWeightTypes = new List<SelectListItem> { new("LBS", "LBS"), new("KGS", "KGS") };
-            model.AvailableDimensionsTypes = new List<SelectListItem> { new("IN", "IN"), new("CM", "CM") };
+            model.AvaliableWeightTypes = new List<SelectListItem> { new SelectListItem("LBS", "LBS"), new SelectListItem("KGS", "KGS") };
+            model.AvaliableDimensionsTypes = new List<SelectListItem> { new SelectListItem("IN", "IN"), new SelectListItem("CM", "CM") };
 
             //check measures
             var weightSystemName = _upsSettings.WeightType switch { "LBS" => "lb", "KGS" => "kg", _ => null };
@@ -129,9 +128,8 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
 
             //save settings
             _upsSettings.AccountNumber = model.AccountNumber;
-            _upsSettings.AccessKey = model.AccessKey;
-            _upsSettings.Username = model.Username;
-            _upsSettings.Password = model.Password;
+            _upsSettings.ClientId = model.ClientId;
+            _upsSettings.ClientSecret = model.ClientSecret;
             _upsSettings.UseSandbox = model.UseSandbox;
             _upsSettings.AdditionalHandlingCharge = model.AdditionalHandlingCharge;
             _upsSettings.CustomerClassification = (CustomerClassification)model.CustomerClassification;
