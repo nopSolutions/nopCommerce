@@ -1,6 +1,6 @@
 # ﻿nopCommerce Public License Version 4.0 ("NPL")
 
-nopCommerce open-source edition is licensed under nopCommerce Public License. It's basically a GNU Affero General Public License version 3 (GNU AGPL v3.0) License plus the "powered by nopCommerce" text requirement on every single page. The nopCommerce Public License Version 4.0 ("NPL") consists of the GNU AGPL v3.0 License with the Additional Terms below. The original GNU AGPL v3.0 License can be found at: http://opensource.org/licenses/GPL-3.0
+nopCommerce open-source edition is licensed under nopCommerce Public License. It's basically a GNU Affero General Public License version 3 (GNU AGPL v3.0) plus the "powered by nopCommerce" text requirement on every single page. The nopCommerce Public License Version 4.0 ("NPL") consists of the GNU AGPL v3.0 License with the Additional Terms below. The original GNU AGPL v3.0 License can be found at: http://opensource.org/licenses/GPL-3.0
 
 **Additional nopCommerce terms:**
 
