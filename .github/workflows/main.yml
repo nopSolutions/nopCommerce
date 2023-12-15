@@ -5,8 +5,8 @@ on:
     branches: [ "develop", "ci/setup" ]
 
 env:
-  DOCKER_IMAGE: portfolios-nopcommerce-dev    # set this to your application's name
-  ECR_REGISTRY: 015568130945.dkr.ecr.ap-southeast-1.amazonaws.com/portfolios-nopcommerce-dev
+  DOCKER_IMAGE: portfolio-nopcommerce-dev    # set this to your application's name
+  ECR_REGISTRY: 015568130945.dkr.ecr.ap-southeast-1.amazonaws.com/portfolio-nopcommerce-dev
 jobs:
   build:
     name: Build and push to ECR
@@ -60,5 +60,5 @@ jobs:
         -e RESOURCE_LIMITS_MEMORY=6Gi \
         -e RESOURCE_REQUEST_CPU=1000m \
         -e RESOURCE_REQUEST_MEMORY=4Gi \
-        -e EKS_NAMESPACE='prj-portfolios-nopcommerce' \
+        -e EKS_NAMESPACE='prj-portfolio-nopcommerce' \
         qitpy/aws-eks-helm-deploy:1.4
