@@ -6,6 +6,7 @@ using FluentMigrator.Runner.Processors;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Data.Mapping;
 using Nop.Data.Migrations;
@@ -70,6 +71,9 @@ namespace Nop.Data
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void Configure(IApplicationBuilder application)
         {
+            var config = Singleton<AppSettings>.Instance.Get<CacheConfig>();
+
+            LinqToDB.Common.Configuration.Linq.DisableQueryCache = config.LinqDisableQueryCache;
         }
 
         /// <summary>
