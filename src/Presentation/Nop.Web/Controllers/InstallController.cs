@@ -133,12 +133,12 @@ namespace Nop.Web.Controllers
             {
                 AdminEmail = "admin@yourStore.com",
                 InstallSampleData = false,
-                SubscribeNewsletters = true,
+                SubscribeNewsletters = false,
                 InstallRegionalResources = _appSettings.Get<InstallationConfig>().InstallRegionalResources,
                 DisableSampleDataOption = _appSettings.Get<InstallationConfig>().DisableSampleData,
-                CreateDatabaseIfNotExists = false,
+                CreateDatabaseIfNotExists = true,
                 ConnectionStringRaw = false,
-                DataProvider = DataProviderType.SqlServer
+                DataProvider = DataProviderType.PostgreSQL
             };
 
             PrepareAvailableDataProviders(model);
