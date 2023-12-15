@@ -478,26 +478,30 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static void UseNopProxy(this IApplicationBuilder application)
         {
             var appSettings = EngineContext.Current.Resolve<AppSettings>();
+            var hostingConfig = appSettings.Get<HostingConfig>();
 
-            if (appSettings.Get<HostingConfig>().UseProxy)
+            if (hostingConfig.UseProxy)
             {
                 var options = new ForwardedHeadersOptions
                 {
-                    ForwardedHeaders = ForwardedHeaders.All,
+                    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
                     // IIS already serves as a reverse proxy and will add X-Forwarded headers to all requests,
                     // so we need to increase this limit, otherwise, passed forwarding headers will be ignored.
                     ForwardLimit = 2
                 };
 
-                if (!string.IsNullOrEmpty(appSettings.Get<HostingConfig>().ForwardedForHeaderName))
-                    options.ForwardedForHeaderName = appSettings.Get<HostingConfig>().ForwardedForHeaderName;
+                if (!string.IsNullOrEmpty(hostingConfig.ForwardedForHeaderName))
+                    options.ForwardedForHeaderName = hostingConfig.ForwardedForHeaderName;
 
-                if (!string.IsNullOrEmpty(appSettings.Get<HostingConfig>().ForwardedProtoHeaderName))
-                    options.ForwardedProtoHeaderName = appSettings.Get<HostingConfig>().ForwardedProtoHeaderName;
+                if (!string.IsNullOrEmpty(hostingConfig.ForwardedProtoHeaderName))
+                    options.ForwardedProtoHeaderName = hostingConfig.ForwardedProtoHeaderName;
 
-                if (!string.IsNullOrEmpty(appSettings.Get<HostingConfig>().KnownProxies))
+                options.KnownNetworks.Clear();
+                options.KnownProxies.Clear();
+
+                if (!string.IsNullOrEmpty(hostingConfig.KnownProxies))
                 {
-                    foreach (var strIp in appSettings.Get<HostingConfig>().KnownProxies.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList())
+                    foreach (var strIp in hostingConfig.KnownProxies.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList())
                     {
                         if (IPAddress.TryParse(strIp, out var ip))
                             options.KnownProxies.Add(ip);
