@@ -4,7 +4,10 @@ services:
         build: .
         container_name: nopcommerce
         ports:
-            - "80:80"
+            - "80:8080"
+        volumes:
+          - ./App_Data/AppSettings:/app/App_Data/AppSettings
+          - ./App_Data/DataProtectionKeys:/app/App_Data/DataProtectionKeys
         depends_on:
             - nopcommerce_database
     nopcommerce_database:
@@ -13,6 +16,8 @@ services:
         restart: "always"
         environment:
           POSTGRES_PASSWORD: "nopCommerce_db_password"
+        volumes:
+          - ./App_Data/postgres:/var/lib/postgresql/data
 
 volumes:
   nopcommerce_data:            

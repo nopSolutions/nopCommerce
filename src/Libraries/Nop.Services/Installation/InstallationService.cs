@@ -299,20 +299,20 @@ namespace Nop.Services.Installation
             var stores = new List<Store>
             {
                 new() {
-                    Name = "Your store name",
-                    DefaultTitle = "Your store",
+                    Name = "Smartdev Commerce",
+                    DefaultTitle = "Smartdev Commerce",
                     DefaultMetaKeywords = string.Empty,
                     DefaultMetaDescription = string.Empty,
-                    HomepageTitle = "Home page title",
-                    HomepageDescription = "Home page description",
+                    HomepageTitle = "Smartdev Commerce",
+                    HomepageDescription = "Smartdev Commerce",
                     Url = storeUrl,
                     SslEnabled = _webHelper.IsCurrentConnectionSecured(),
-                    Hosts = "yourstore.com,www.yourstore.com",
+                    Hosts = "smartdev.com,commerce.smartdev.com",
                     DisplayOrder = 1,
                     //should we set some default company info?
-                    CompanyName = "Your company name",
-                    CompanyAddress = "your company country, state, zip, street, etc",
-                    CompanyPhoneNumber = "(123) 456-78901",
+                    CompanyName = "Smartdev",
+                    CompanyAddress = "DaNang city, Vietnam",
+                    CompanyPhoneNumber = "(+84) 236 3666 767",
                     CompanyVat = null
                 }
             };
@@ -763,7 +763,7 @@ namespace Nop.Services.Installation
             var storeId = defaultStore.Id;
 
             //second user
-            var secondUserEmail = "steve_gates@nopCommerce.com";
+            var secondUserEmail = "duc.nguyenhoai@smartdev.com";
             var secondUser = new Customer
             {
                 CustomerGuid = Guid.NewGuid(),
@@ -777,18 +777,18 @@ namespace Nop.Services.Installation
             var defaultSecondUserAddress = await InsertInstallationDataAsync(
                 new Address
                 {
-                    FirstName = "Steve",
-                    LastName = "Gates",
-                    PhoneNumber = "87654321",
+                    FirstName = "Duc",
+                    LastName = "Nguyen Hoai",
+                    PhoneNumber = "",
                     Email = secondUserEmail,
                     FaxNumber = string.Empty,
-                    Company = "Steve Company",
-                    Address1 = "750 Bel Air Rd.",
+                    Company = "Smartdev LLC",
+                    Address1 = "",
                     Address2 = string.Empty,
-                    City = "Los Angeles",
-                    StateProvinceId = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "California")?.Id,
-                    CountryId = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA")?.Id,
-                    ZipPostalCode = "90077",
+                    City = "Da Nang",
+                    // StateProvinceId = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "California")?.Id,
+                    // CountryId = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA")?.Id,
+                    ZipPostalCode = "12345",
                     CreatedOnUtc = DateTime.UtcNow
                 });
 
@@ -813,7 +813,7 @@ namespace Nop.Services.Installation
             });
 
             //third user
-            var thirdUserEmail = "arthur_holmes@nopCommerce.com";
+            var thirdUserEmail = "hieu.tran@smartdev.com";
             var thirdUser = new Customer
             {
                 CustomerGuid = Guid.NewGuid(),
@@ -828,17 +828,17 @@ namespace Nop.Services.Installation
             var defaultThirdUserAddress = await InsertInstallationDataAsync(
                 new Address
                 {
-                    FirstName = "Arthur",
-                    LastName = "Holmes",
-                    PhoneNumber = "111222333",
+                    FirstName = "Hieu",
+                    LastName = "Tran",
+                    PhoneNumber = "",
                     Email = thirdUserEmail,
                     FaxNumber = string.Empty,
-                    Company = "Holmes Company",
-                    Address1 = "221B Baker Street",
+                    Company = "Smartdev LLC",
+                    Address1 = "",
                     Address2 = string.Empty,
-                    City = "London",
-                    CountryId = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "GBR")?.Id,
-                    ZipPostalCode = "NW1 6XE",
+                    City = "Da Nang",
+                    CountryId = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "VN")?.Id,
+                    ZipPostalCode = "12345",
                     CreatedOnUtc = DateTime.UtcNow
                 });
 
@@ -863,7 +863,7 @@ namespace Nop.Services.Installation
             });
 
             //fourth user
-            var fourthUserEmail = "james_pan@nopCommerce.com";
+            var fourthUserEmail = "truc.le@smartdev.com";
             var fourthUser = new Customer
             {
                 CustomerGuid = Guid.NewGuid(),
@@ -877,8 +877,8 @@ namespace Nop.Services.Installation
             var defaultFourthUserAddress = await InsertInstallationDataAsync(
                 new Address
                 {
-                    FirstName = "James",
-                    LastName = "Pan",
+                    FirstName = "Truc",
+                    LastName = "Le",
                     PhoneNumber = "369258147",
                     Email = fourthUserEmail,
                     FaxNumber = string.Empty,
@@ -912,7 +912,7 @@ namespace Nop.Services.Installation
             });
 
             //fifth user
-            var fifthUserEmail = "brenda_lindgren@nopCommerce.com";
+            var fifthUserEmail = "kliment.nikoloski@smartdev.com";
             var fifthUser = new Customer
             {
                 CustomerGuid = Guid.NewGuid(),
@@ -926,8 +926,8 @@ namespace Nop.Services.Installation
             var defaultFifthUserAddress = await InsertInstallationDataAsync(
                 new Address
                 {
-                    FirstName = "Brenda",
-                    LastName = "Lindgren",
+                    FirstName = "Kliment",
+                    LastName = "Nikoloski",
                     PhoneNumber = "14785236",
                     Email = fifthUserEmail,
                     FaxNumber = string.Empty,
@@ -962,7 +962,7 @@ namespace Nop.Services.Installation
             });
 
             //sixth user
-            var sixthUserEmail = "victoria_victoria@nopCommerce.com";
+            var sixthUserEmail = "thang.vo@smartdev.com";
             var sixthUser = new Customer
             {
                 CustomerGuid = Guid.NewGuid(),
@@ -976,8 +976,8 @@ namespace Nop.Services.Installation
             var defaultSixthUserAddress = await InsertInstallationDataAsync(
                 new Address
                 {
-                    FirstName = "Victoria",
-                    LastName = "Terces",
+                    FirstName = "Thang",
+                    LastName = "Vo",
                     PhoneNumber = "45612378",
                     Email = sixthUserEmail,
                     FaxNumber = string.Empty,
@@ -1183,7 +1183,7 @@ namespace Nop.Services.Installation
             var defaultStore = await _storeRepository.Table.FirstOrDefaultAsync() ?? throw new Exception("No default store could be loaded");
 
             //first order
-            var firstCustomer = await _customerRepository.Table.FirstAsync(c => c.Email == "steve_gates@nopCommerce.com");
+            var firstCustomer = await _customerRepository.Table.FirstAsync(c => c.Email == "duc.nguyenhoai@smartdev.com");
 
             var firstCustomerBillingAddress = await InsertInstallationDataAsync(cloneAddress(await _addressRepository.GetByIdAsync(firstCustomer.BillingAddressId)));
             var firstCustomerShippingAddress = await InsertInstallationDataAsync(cloneAddress(await _addressRepository.GetByIdAsync(firstCustomer.ShippingAddressId)));
@@ -1310,8 +1310,8 @@ namespace Nop.Services.Installation
                 PriceInclTax = 25M,
                 PriceExclTax = 25M,
                 OriginalProductCost = decimal.Zero,
-                AttributeDescription = "From: Steve Gates &lt;steve_gates@nopCommerce.com&gt;<br />For: Brenda Lindgren &lt;brenda_lindgren@nopCommerce.com&gt;",
-                AttributesXml = "<Attributes><GiftCardInfo><RecipientName>Brenda Lindgren</RecipientName><RecipientEmail>brenda_lindgren@nopCommerce.com</RecipientEmail><SenderName>Steve Gates</SenderName><SenderEmail>steve_gates@gmail.com</SenderEmail><Message></Message></GiftCardInfo></Attributes>",
+                AttributeDescription = "From: Duc Nguyen Hoai &lt;duc.nguyenhoai@smartdev.com&gt;<br />For: Brenda Lindgren &lt;brenda_lindgren@smartdev.com.com&gt;",
+                AttributesXml = "<Attributes><GiftCardInfo><RecipientName>Brenda Lindgren</RecipientName><RecipientEmail>brenda_lindgren@smartdev.com</RecipientEmail><SenderName>Duc Nguyen Hoai</SenderName><SenderEmail>duc.nguyenhoai@smartdev.com</SenderEmail><Message></Message></GiftCardInfo></Attributes>",
                 Quantity = 1,
                 DiscountAmountInclTax = decimal.Zero,
                 DiscountAmountExclTax = decimal.Zero,
@@ -1333,9 +1333,9 @@ namespace Nop.Services.Installation
                 IsGiftCardActivated = false,
                 GiftCardCouponCode = string.Empty,
                 RecipientName = "Brenda Lindgren",
-                RecipientEmail = "brenda_lindgren@nopCommerce.com",
-                SenderName = "Steve Gates",
-                SenderEmail = "steve_gates@nopCommerce.com",
+                RecipientEmail = "brenda_lindgren@smartdev.com",
+                SenderName = "Duc Nguyen Hoai",
+                SenderEmail = "duc.nguyenhoai@smartdev.com",
                 Message = string.Empty,
                 IsRecipientNotified = false,
                 CreatedOnUtc = DateTime.UtcNow
@@ -1359,7 +1359,7 @@ namespace Nop.Services.Installation
             });
 
             //second order
-            var secondCustomer = await _customerRepository.Table.FirstAsync(c => c.Email == "arthur_holmes@nopCommerce.com");
+            var secondCustomer = await _customerRepository.Table.FirstAsync(c => c.Email == "hieu.tran@smartdev.com");
 
             var secondCustomerBillingAddress = await InsertInstallationDataAsync(cloneAddress(await _addressRepository.GetByIdAsync(secondCustomer.BillingAddressId)));
             var secondCustomerShippingAddress = await InsertInstallationDataAsync(cloneAddress(await _addressRepository.GetByIdAsync(secondCustomer.ShippingAddressId)));
@@ -1484,7 +1484,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(secondOrderItem2);
 
             //third order
-            var thirdCustomer = await _customerRepository.Table.FirstAsync(c => c.Email == "james_pan@nopCommerce.com");
+            var thirdCustomer = await _customerRepository.Table.FirstAsync(c => c.Email == "truc.le@smartdev.com");
 
             var thirdCustomerBillingAddress = await InsertInstallationDataAsync(cloneAddress(await _addressRepository.GetByIdAsync(thirdCustomer.BillingAddressId)));
 
@@ -1633,7 +1633,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(thirdOrderItem3);
 
             //fourth order
-            var fourthCustomer = await _customerRepository.Table.FirstAsync(c => c.Email == "brenda_lindgren@nopCommerce.com");
+            var fourthCustomer = await _customerRepository.Table.FirstAsync(c => c.Email == "thang.vo@smartdev.com");
 
             var fourthCustomerBillingAddress = await InsertInstallationDataAsync(cloneAddress(await _addressRepository.GetByIdAsync(fourthCustomer.BillingAddressId)));
             var fourthCustomerShippingAddress = await InsertInstallationDataAsync(cloneAddress(await _addressRepository.GetByIdAsync(fourthCustomer.ShippingAddressId)));
@@ -1859,7 +1859,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(fourthOrderShipment2Item1);
 
             //fifth order
-            var fifthCustomer = _customerRepository.Table.First(c => c.Email == "victoria_victoria@nopCommerce.com");
+            var fifthCustomer = _customerRepository.Table.First(c => c.Email == "thang.vo@smartdev.com");
 
             var fifthCustomerBillingAddress = await InsertInstallationDataAsync(cloneAddress(await _addressRepository.GetByIdAsync(fifthCustomer.BillingAddressId)));
             var fifthCustomerShippingAddress = await InsertInstallationDataAsync(cloneAddress(await _addressRepository.GetByIdAsync(fifthCustomer.ShippingAddressId)));
@@ -2529,7 +2529,7 @@ namespace Nop.Services.Installation
                     DisplayOrder = 1,
                     Published = true,
                     Title = string.Empty,
-                    Body = "<p>Put your contact information here. You can edit this in the admin site.</p>",
+                    Body = "<p>Just fill out the form below and include a description of your project. We typically respond within 2 business days to schedule a meeting.</p>",
                     TopicTemplateId = defaultTopicTemplate.Id
                 },
                 new() {
@@ -2550,7 +2550,7 @@ namespace Nop.Services.Installation
                     Published = true,
                     Title = "Welcome to our store",
                     Body =
-                        "<p>Online shopping is the process consumers go through to purchase products or services over the Internet. You can edit this in the admin site.</p><p>If you have questions, see the <a href=\"http://docs.nopcommerce.com/\">Documentation</a>, or post in the <a href=\"https://www.nopcommerce.com/boards/\">Forums</a> at <a href=\"https://www.nopcommerce.com\">nopCommerce.com</a></p>",
+                        "<p>Online shopping is the process consumers go through to purchase products or services over the Internet. You can edit this in the admin site.</p><p>If you have questions, contact us at <a href=\"https://smartdev.com/get-started//\">Smartdev Website</a></p>",
                     TopicTemplateId = defaultTopicTemplate.Id
                 },
                 new() {
@@ -3006,12 +3006,12 @@ namespace Nop.Services.Installation
             {
                 StoreClosed = false,
                 DefaultStoreTheme = "DefaultClean",
-                AllowCustomerToSelectTheme = false,
+                AllowCustomerToSelectTheme = true,
                 DisplayEuCookieLawWarning = isEurope,
-                FacebookLink = "https://www.facebook.com/nopCommerce",
-                TwitterLink = "https://twitter.com/nopCommerce",
-                YoutubeLink = "https://www.youtube.com/user/nopCommerce",
-                InstagramLink = "https://www.instagram.com/nopcommerce_official",
+                FacebookLink = "https://www.facebook.com/SmartDevLLC",
+                // TwitterLink = "https://www.facebook.com/SmartDevLLC",
+                YoutubeLink = "https://www.youtube.com/@smartdevllc",
+                // InstagramLink = "https://www.youtube.com/@smartdevllc",
                 HidePoweredByNopCommerce = false
             });
 
@@ -3238,7 +3238,7 @@ namespace Nop.Services.Installation
             });
             await settingService.SaveSettingAsync(new NewsSettings
             {
-                Enabled = true,
+                Enabled = false,
                 AllowNotRegisteredUsersToLeaveComments = true,
                 NotifyAboutNewNewsComments = false,
                 ShowNewsOnMainPage = true,
@@ -3312,20 +3312,20 @@ namespace Nop.Services.Installation
             {
                 DisplayHomepageMenuItem = true,
                 DisplayNewProductsMenuItem = true,
-                DisplayProductSearchMenuItem = true,
+                DisplayProductSearchMenuItem = false,
                 DisplayCustomerInfoMenuItem = true,
-                DisplayBlogMenuItem = true,
+                DisplayBlogMenuItem = false,
                 DisplayForumsMenuItem = true,
-                DisplayContactUsMenuItem = true
+                DisplayContactUsMenuItem = false
             });
 
             await settingService.SaveSettingAsync(new DisplayDefaultFooterItemSettings
             {
                 DisplaySitemapFooterItem = true,
-                DisplayContactUsFooterItem = true,
+                DisplayContactUsFooterItem = false,
                 DisplayProductSearchFooterItem = true,
-                DisplayNewsFooterItem = true,
-                DisplayBlogFooterItem = true,
+                DisplayNewsFooterItem = false,
+                DisplayBlogFooterItem = false,
                 DisplayForumsFooterItem = true,
                 DisplayRecentlyViewedProductsFooterItem = true,
                 DisplayCompareProductsFooterItem = true,
@@ -7928,21 +7928,21 @@ namespace Nop.Services.Installation
 
             var news = new List<NewsItem>
             {
+                // new() {
+                //     AllowComments = true,
+                //     LanguageId = defaultLanguage.Id,
+                //     Title = "About SmartdevCommerce",
+                //     Short = "It's stable and highly usable. From downloads to documentation, www.nopCommerce.com offers a comprehensive base of information, resources, and support to the nopCommerce community.",
+                //     Full = "<p>For full feature list go to <a href=\"https://www.nopCommerce.com\">nopCommerce.com</a></p><p>Providing outstanding custom search engine optimization, web development services and e-commerce development solutions to our clients at a fair price in a professional manner.</p>",
+                //     Published = true,
+                //     CreatedOnUtc = DateTime.UtcNow
+                // },
                 new() {
                     AllowComments = true,
                     LanguageId = defaultLanguage.Id,
-                    Title = "About nopCommerce",
-                    Short = "It's stable and highly usable. From downloads to documentation, www.nopCommerce.com offers a comprehensive base of information, resources, and support to the nopCommerce community.",
-                    Full = "<p>For full feature list go to <a href=\"https://www.nopCommerce.com\">nopCommerce.com</a></p><p>Providing outstanding custom search engine optimization, web development services and e-commerce development solutions to our clients at a fair price in a professional manner.</p>",
-                    Published = true,
-                    CreatedOnUtc = DateTime.UtcNow
-                },
-                new() {
-                    AllowComments = true,
-                    LanguageId = defaultLanguage.Id,
-                    Title = "nopCommerce new release!",
-                    Short = "nopCommerce includes everything you need to begin your e-commerce online store. We have thought of everything and it's all included! nopCommerce is a fully customizable shopping cart",
-                    Full = "<p>nopCommerce includes everything you need to begin your e-commerce online store. We have thought of everything and it's all included!</p>",
+                    Title = "SmartdevCommerce new release!",
+                    Short = "SmartdevCommerce includes everything you need to begin your e-commerce online store. We have thought of everything and it's all included! SmartdevCommerce is a fully customizable shopping cart",
+                    Full = "<p>SmartdevCommerce includes everything you need to begin your e-commerce online store. We have thought of everything and it's all included!</p>",
                     Published = true,
                     CreatedOnUtc = DateTime.UtcNow.AddSeconds(1)
                 },
@@ -7950,7 +7950,7 @@ namespace Nop.Services.Installation
                     AllowComments = true,
                     LanguageId = defaultLanguage.Id,
                     Title = "New online store is open!",
-                    Short = "The new nopCommerce store is open now! We are very excited to offer our new range of products. We will be constantly adding to our range so please register on our site.",
+                    Short = "The new SmartdevCommerce store is open now! We are very excited to offer our new range of products. We will be constantly adding to our range so please register on our site.",
                     Full = "<p>Our online store is officially up and running. Stock up for the holiday season! We have a great selection of items. We will be constantly adding to our range so please register on our site, this will enable you to keep up to date with any new products.</p><p>All shipping is worldwide and will leave the same day an order is placed! Happy Shopping and spread the word!!</p>",
                     Published = true,
                     CreatedOnUtc = DateTime.UtcNow.AddSeconds(2)
@@ -7999,7 +7999,7 @@ namespace Nop.Services.Installation
             var poll1 = new Poll
             {
                 LanguageId = defaultLanguage.Id,
-                Name = "Do you like nopCommerce?",
+                Name = "Do you like SmartdevCommerce?",
                 SystemKeyword = string.Empty,
                 Published = true,
                 ShowOnHomepage = true,
