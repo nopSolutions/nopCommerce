@@ -139,9 +139,9 @@ namespace Nop.Web.Controllers
                 InstallSampleData = false,
                 InstallRegionalResources = _appSettings.Get<InstallationConfig>().InstallRegionalResources,
                 DisableSampleDataOption = _appSettings.Get<InstallationConfig>().DisableSampleData,
-                CreateDatabaseIfNotExists = false,
+                CreateDatabaseIfNotExists = true,
                 ConnectionStringRaw = false,
-                DataProvider = DataProviderType.SqlServer
+                DataProvider = DataProviderType.PostgreSQL
             };
 
             PrepareAvailableDataProviders(model);

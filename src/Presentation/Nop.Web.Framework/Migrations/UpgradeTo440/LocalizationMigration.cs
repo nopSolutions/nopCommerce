@@ -318,7 +318,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
 
                 //configuration steps tour
                 ["Admin.ConfigurationSteps"] = "Start accepting orders",
-                ["Admin.ConfigurationSteps.Welcome.Title"] = "Welcome to your store!",
+                ["Admin.ConfigurationSteps.Welcome.Title"] = "Welcome to Smartdev store!",
                 ["Admin.ConfigurationSteps.Welcome.Text"] = "Can’t wait to start accepting orders? Let us show you how to set up your store fast and easy. The steps below describe the most important settings for the online shop. With our tips on each page you will see how clear this process is. You will be ready to start selling immediately after you go through these steps. So good luck!",
                 ["Admin.ConfigurationSteps.PersonalizeStore.Title"] = "Personalize your store",
                 ["Admin.ConfigurationSteps.PersonalizeStore.Description"] = "Choose a beautiful theme for your store and add your logo",
