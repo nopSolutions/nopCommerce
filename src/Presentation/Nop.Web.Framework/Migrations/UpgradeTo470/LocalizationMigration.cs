@@ -189,6 +189,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
                 ["Admin.Configuration.AppSettings.Data.WithNoLock"] = "Use NOLOCK",
                 ["Admin.Configuration.AppSettings.Data.WithNoLock.Hint"] = "Check to add the NOLOCK hint to SELECT statements.",
 
+                //#6939
+                ["Admin.Configuration.AppSettings.Cache.LinqDisableQueryCache"] = "Disable query cache",
+                ["Admin.Configuration.AppSettings.Cache.LinqDisableQueryCache.Hint"] = "Disable LINQ expressions caching for queries. This cache reduces time, required for query parsing but have several side-effects. For example, cached LINQ expressions could contain references to external objects as parameters, which could lead to memory leaks if those objects are not used anymore by other code. Or cache access synchronization could lead to bigger latencies than it saves.",
             }, languageId);
 
             #endregion

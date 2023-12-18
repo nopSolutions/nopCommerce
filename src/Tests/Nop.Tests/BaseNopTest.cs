@@ -159,10 +159,27 @@ namespace Nop.Tests
 
             var services = new ServiceCollection();
 
+            var rootPath =
+                new DirectoryInfo(
+                        $"{Directory.GetCurrentDirectory().Split("bin")[0]}{Path.Combine([.. @"\..\..\Presentation\Nop.Web".Split('\\', '/')])}")
+                    .FullName;
+
+            //Presentation\Nop.Web\wwwroot
+            var webHostEnvironment = new Mock<IWebHostEnvironment>();
+            webHostEnvironment.Setup(p => p.WebRootPath).Returns(Path.Combine(rootPath, "wwwroot"));
+            webHostEnvironment.Setup(p => p.ContentRootPath).Returns(rootPath);
+            webHostEnvironment.Setup(p => p.EnvironmentName).Returns("test");
+            webHostEnvironment.Setup(p => p.ApplicationName).Returns("nopCommerce");
+            services.AddSingleton(webHostEnvironment.Object);
+
+            //file provider
+            services.AddTransient<INopFileProvider, NopFileProvider>();
+            CommonHelper.DefaultFileProvider = new NopFileProvider(webHostEnvironment.Object);
+
             services.AddHttpClient();
 
             var memoryCache = new MemoryCache(new MemoryCacheOptions());
-            var typeFinder = new AppDomainTypeFinder();
+            var typeFinder = new WebAppTypeFinder();
             Singleton<ITypeFinder>.Instance = typeFinder;
 
             var mAssemblies = typeFinder.FindClassesOfType<ForwardOnlyMigration>()
@@ -183,20 +200,7 @@ namespace Nop.Tests
 
             var hostApplicationLifetime = new Mock<IHostApplicationLifetime>();
             services.AddSingleton(hostApplicationLifetime.Object);
-
-            var rootPath =
-                new DirectoryInfo(
-                        $"{Directory.GetCurrentDirectory().Split("bin")[0]}{Path.Combine([.. @"\..\..\Presentation\Nop.Web".Split('\\', '/')])}")
-                    .FullName;
-
-            //Presentation\Nop.Web\wwwroot
-            var webHostEnvironment = new Mock<IWebHostEnvironment>();
-            webHostEnvironment.Setup(p => p.WebRootPath).Returns(Path.Combine(rootPath, "wwwroot"));
-            webHostEnvironment.Setup(p => p.ContentRootPath).Returns(rootPath);
-            webHostEnvironment.Setup(p => p.EnvironmentName).Returns("test");
-            webHostEnvironment.Setup(p => p.ApplicationName).Returns("nopCommerce");
-            services.AddSingleton(webHostEnvironment.Object);
-
+            
             services.AddWebEncoders();
 
             var httpContext = new DefaultHttpContext();
@@ -231,11 +235,7 @@ namespace Nop.Tests
 
             services.AddSingleton<ITypeFinder>(typeFinder);
             Singleton<ITypeFinder>.Instance = typeFinder;
-
-            //file provider
-            services.AddTransient<INopFileProvider, NopFileProvider>();
-            CommonHelper.DefaultFileProvider = new NopFileProvider(webHostEnvironment.Object);
-
+            
             //web helper
             services.AddTransient<IWebHelper, WebHelper>();
 

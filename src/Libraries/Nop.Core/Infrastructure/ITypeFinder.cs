@@ -30,5 +30,11 @@ namespace Nop.Core.Infrastructure
         /// </summary>
         /// <returns>A list of assemblies</returns>
         IList<Assembly> GetAssemblies();
+
+        /// <summary>
+        /// Gets the assembly by it full name
+        /// </summary>
+        /// <returns>A list of assemblies</returns>
+        Assembly GetAssemblyByName(string assemblyFullName);
     }
 }

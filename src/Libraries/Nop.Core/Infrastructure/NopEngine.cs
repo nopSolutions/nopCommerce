@@ -1,5 +1,4 @@
-﻿﻿using System.Diagnostics;
-using System.Reflection;
+﻿using System.Reflection;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -90,9 +89,8 @@ namespace Nop.Core.Infrastructure
 
             //get assembly from TypeFinder
             var typeFinder = Singleton<ITypeFinder>.Instance;
-            assembly = typeFinder?.GetAssemblies().FirstOrDefault(a => a.FullName == assemblyFullName);
 
-            return assembly ?? AssemblyResolver.GetAssemblyByFullName(assemblyFullName);
+            return typeFinder?.GetAssemblyByName(assemblyFullName);
         }
 
         #endregion
@@ -227,74 +225,6 @@ namespace Nop.Core.Infrastructure
         /// Service provider
         /// </summary>
         public virtual IServiceProvider ServiceProvider { get; protected set; }
-
-        #endregion
-
-        #region Nested class
-
-        protected static class AssemblyResolver
-        {
-            private static readonly Dictionary<string, IDictionary<string, Assembly>> _assemblies = new(StringComparer.InvariantCultureIgnoreCase);
-
-            public static Assembly GetAssemblyByFullName(string assemblyFullName)
-            {
-                Assembly getAssembly(string fullName)
-                {
-                    var name = new AssemblyName(fullName);
-
-                    if (string.IsNullOrEmpty(name.Name))
-                        return null;
-
-                    if (!_assemblies.TryGetValue(name.Name, out var value))
-                        return null;
-
-                    var assemblies = value;
-
-                    if (!assemblies.Any())
-                        return null;
-                    
-                    assemblies.TryGetValue(assemblyFullName, out var assembly);
-
-                    return assembly ?? assemblies.Values.First();
-                }
-
-                void addAssembly(Assembly assembly)
-                {
-                    var name = assembly.GetName();
-
-                    if (string.IsNullOrEmpty(name.Name))
-                        return;
-
-                    if (!_assemblies.TryGetValue(name.Name, out var assemblies))
-                    {
-                        assemblies = new Dictionary<string, Assembly>();
-                        _assemblies.Add(name.Name, assemblies);
-                    }
-
-                    assemblies.TryAdd(name.FullName, assembly);
-                }
-
-                if (_assemblies.Count != 0)
-                    return getAssembly(assemblyFullName);
-                
-                var fileProvider = CommonHelper.DefaultFileProvider;
-
-                foreach (var dll in AppDomain.CurrentDomain.GetAssemblies())
-                    addAssembly(dll);
-
-                foreach (var dllPath in fileProvider.GetFiles(AppContext.BaseDirectory, "*.dll"))
-                    try
-                    {
-                        addAssembly(Assembly.LoadFrom(dllPath));
-                    }
-                    catch (Exception ex)
-                    {
-                        Trace.TraceError(ex.ToString());
-                    }
-
-                return getAssembly(assemblyFullName);
-            }
-        }
 
         #endregion
     }

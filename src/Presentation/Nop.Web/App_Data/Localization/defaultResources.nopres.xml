@@ -4464,6 +4464,12 @@
   <LocaleResource Name="Admin.Configuration.AppSettings.Cache.DefaultCacheTime.Hint">
     <Value>Set default cache time (in minutes).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Cache.LinqDisableQueryCache">
+    <Value>Disable query cache</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Cache.LinqDisableQueryCache.Hint">
+    <Value>Disable LINQ expressions caching for queries. This cache reduces time, required for query parsing but have several side-effects. For example, cached LINQ expressions could contain references to external objects as parameters, which could lead to memory leaks if those objects are not used anymore by other code. Or cache access synchronization could lead to bigger latencies than it saves.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Cache.ShortTermCacheTime">
     <Value>Short term cache time</Value>
   </LocaleResource>

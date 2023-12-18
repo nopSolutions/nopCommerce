@@ -11,7 +11,7 @@ namespace Nop.Plugin.Shipping.UPS
     {
         #region Fields
 
-        protected readonly UPSService _upsService;
+        private readonly UPSService _upsService;
 
         #endregion
 
