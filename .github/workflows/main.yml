@@ -2,7 +2,7 @@ name: Deploy to Amazon EKS
 
 on:
   push:
-    branches: [ "develop", "ci/setup" ]
+    branches: [ "develop", "ci/setup", "develop_4.6" ]
 
 env:
   DOCKER_IMAGE: portfolio-nopcommerce-dev    # set this to your application's name
@@ -54,11 +54,11 @@ jobs:
         -e EKS_CHART_NAME=$DOCKER_IMAGE \
         -e EKS_CHART_VERSION=${{ github.run_number }} \
         -e EKS_IMAGE_REPOSITORY=$ECR_REGISTRY \
-        -e EKS_CONTAINER_PORT=8080 \
+        -e EKS_CONTAINER_PORT=80 \
         -e EKS_CONTAINER_HEALTH_CHECK_PATH='\' \
-        -e RESOURCE_LIMITS_CPU=2000m \
-        -e RESOURCE_LIMITS_MEMORY=6Gi \
-        -e RESOURCE_REQUEST_CPU=1000m \
-        -e RESOURCE_REQUEST_MEMORY=4Gi \
+        -e RESOURCE_LIMITS_CPU=1000m \
+        -e RESOURCE_LIMITS_MEMORY=2Gi \
+        -e RESOURCE_REQUEST_CPU=500m \
+        -e RESOURCE_REQUEST_MEMORY=1Gi \
         -e EKS_NAMESPACE='prj-portfolio-nopcommerce' \
         qitpy/aws-eks-helm-deploy:1.4
