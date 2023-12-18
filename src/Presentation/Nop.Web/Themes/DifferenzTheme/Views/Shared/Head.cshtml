@@ -1,0 +1,24 @@
+﻿@using Nop.Core
+@using Nop.Services.Helpers
+@using Nop.Web.Framework.UI
+@inject IThemeContext themeContext
+@inject IUserAgentHelper userAgentHelper
+@{
+    Layout ="";
+    var themeName = await themeContext.GetWorkingThemeNameAsync();
+    var supportRtl = await Html.ShouldUseRtlThemeAsync();
+    //NopHtml.AppendCssFileParts("https://www.w3schools.com/w3css/4/w3.css", excludeFromBundle: false);
+
+    //add main CSS file
+    NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/styles{(supportRtl ? ".rtl" : "")}.css", excludeFromBundle: false);
+
+    //add jQuery UI css file
+    NopHtml.AppendCssFileParts("~/lib_npm/jquery-ui-dist/jquery-ui.min.css", excludeFromBundle: false);
+
+    //other 3rd party css file
+    NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/owl.carousel.min.css", excludeFromBundle: false);
+    NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/owl.theme.default.min.css", excludeFromBundle: false);
+    NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/loader.css", excludeFromBundle: false);
+
+   
+}

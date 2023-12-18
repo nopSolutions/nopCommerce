@@ -1,0 +1,77 @@
+﻿@using Nop.Services.Localization
+@using Nop.Core
+@inject ILocalizationService localizationService
+@inject IStoreContext storeContext
+
+@{
+    Layout = "_ColumnsOne";
+
+    var homepageTitle = await localizationService.GetLocalizedAsync(await storeContext.GetCurrentStoreAsync(), s => s.HomepageTitle);
+
+    //title
+    if (!string.IsNullOrEmpty(homepageTitle))
+    {
+        NopHtml.AddTitleParts(homepageTitle);
+    }
+
+    var homepageDescription = await localizationService.GetLocalizedAsync(await storeContext.GetCurrentStoreAsync(), s => s.HomepageDescription);
+
+    //meta
+    if (!string.IsNullOrEmpty(homepageDescription))
+    {
+        NopHtml.AddMetaDescriptionParts(homepageDescription);
+    }
+
+    //page class
+    NopHtml.AppendPageCssClassParts("html-home-page");
+}
+<div class="page home-page">
+    <div class="page-body">
+
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HomepageTop })
+
+        <div class="container mt-35px category-grid home-page-category-grid">
+            @await Component.InvokeAsync("TopicBlock", new { systemName = "HomepageText" })
+        </div>
+
+        <div class="container mt-35px category-grid home-page-category-grid">
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HomepageBeforeCategories })
+       
+            @await Component.InvokeAsync("HomepageCategories")
+        </div>
+
+        <div class="container mt-35px category-grid home-page-category-grid">
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HomepageBeforeProducts })
+        
+            @await Component.InvokeAsync("HomepageProducts")
+        </div>
+
+        <div class="container mt-35px category-grid home-page-category-grid">
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HomepageBeforeBestSellers })
+       
+            @await Component.InvokeAsync("HomepageBestSellers")
+        </div>
+
+        <div class="container  category-grid home-page-category-grid">
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HomepageBeforeNews })
+      
+            @await Component.InvokeAsync("HomepageNews")
+        </div>
+
+        <div class="container  mt-35pxcategory-grid home-page-category-grid">
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HomepageBeforePoll })
+       
+            @await Component.InvokeAsync("HomepagePolls")
+        </div>
+
+        <div class="container mt-35px category-grid home-page-category-grid">
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HomepageBottom })
+        </div>
+    </div>
+</div>
+
+@{
+    var themeName = await themeContext.GetWorkingThemeNameAsync();
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, $"~/Themes/{themeName}/Content/js/owl.carousel.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, $"~/Themes/{themeName}/Content/js/Home/Index.js");
+}

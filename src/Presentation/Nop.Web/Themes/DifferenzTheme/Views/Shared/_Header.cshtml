@@ -1,0 +1,47 @@
+﻿<div class="header header-wrapper">
+   
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderBefore })
+    <div class="header-upper">
+        <div class="container">
+            <div class="mob-header-adjust">
+                <div class="header-selectors-wrapper">
+                    @await Component.InvokeAsync("LanguageSelector")
+                    @await Component.InvokeAsync("TaxTypeSelector")
+                    @await Component.InvokeAsync("CurrencySelector")
+                    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderSelectors })
+
+                </div>
+                <div class="header-links-wrapper">
+                    @await Component.InvokeAsync("HeaderLinks")
+                    @await Component.InvokeAsync("FlyoutShoppingCart")
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderMiddle })
+
+    <div class="header-lower">
+        <div class="container header-lower-inner">
+            <div class="header-logo">
+                @await Component.InvokeAsync(typeof(LogoViewComponent))
+            </div>          
+            <div class="search-box store-search-box">
+                <form method="get" id="small-search-box-form" action="https://demo.nopcommerce.com/search">
+                    <div class="search-content">
+                        <input id="small-searchterms" autocomplete="off" name="q" placeholder="Search store" type="search" aria-label="Search store">
+                        <a href="#"><img src="~/Themes/DifferenzTheme/Content/images/thumbs/new/icons/search.svg"></a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderAfter })
+</div>
+
+@{
+    var themeName = await themeContext.GetWorkingThemeNameAsync();
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, $"~/Themes/{themeName}/Content/js/Head.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, $"~/Themes/{themeName}/Content/js/owl.carousel.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, $"~/Themes/{themeName}/Content/js/_header.js");
+}

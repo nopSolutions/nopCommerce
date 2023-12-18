@@ -10,6 +10,7 @@ services:
           - ./App_Data/DataProtectionKeys:/app/App_Data/DataProtectionKeys
         depends_on:
             - nopcommerce_database
+        restart: "always"
     nopcommerce_database:
         image: "postgres:latest"
         container_name: nopcommerce_postgres_server

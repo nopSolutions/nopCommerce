@@ -1,0 +1,34 @@
+﻿@*@model IList<ProductOverviewModel>
+@if (Model.Count > 0)
+{
+    <div class="related-products-grid product-grid">
+        <div class="title">
+            <strong>@T("Products.RelatedProducts")</strong>
+        </div>
+        <div class="item-grid">
+            @foreach (var item in Model)
+            {
+                <div class="item-box">@await Html.PartialAsync("_ProductBox", item)</div>
+            }
+        </div>
+    </div>
+}*@
+@model IList<ProductOverviewModel>
+@if (Model.Count > 0)
+{
+    <div class="title">
+        <h1>@T("Products.RelatedProducts")</h1>
+    </div>
+    <div class="product-grid">
+        <div class="owl-carousel owl-carousel2 owl-theme">
+            @foreach (var item in Model)
+            {
+                <div class="item">
+                    @await Html.PartialAsync("_ProductBox", item)
+                </div>
+            }
+        </div>
+    </div>
+
+  
+}

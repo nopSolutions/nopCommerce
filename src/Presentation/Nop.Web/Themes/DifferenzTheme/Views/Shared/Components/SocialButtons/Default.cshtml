@@ -1,0 +1,47 @@
+﻿@model SocialModel
+@if (!string.IsNullOrEmpty(Model.FacebookLink) || !string.IsNullOrEmpty(Model.TwitterLink) || Model.NewsEnabled || !string.IsNullOrEmpty(Model.YoutubeLink))
+{
+    <ul class="social-icons">
+        @if (!string.IsNullOrEmpty(Model.FacebookLink))
+        {
+            <li class="facebook">
+                <a href="@Model.FacebookLink" target="_blank">
+                    <div class="social-share">
+                        <img src="~/themes/differenztheme/content/images/thumbs/new/icons/fb.svg" />
+
+                    </div>
+                </a>
+            </li>
+        }
+        @if (!string.IsNullOrEmpty(Model.TwitterLink))
+        {
+            <li class="twitter">
+                <a href="@Model.TwitterLink" target="_blank">
+                    <div class="social-share">
+                        <img src="~/themes/differenztheme/content/images/thumbs/new/icons/twitter.svg">
+                    </div>
+                </a>
+            </li>
+        }
+        @if (Model.NewsEnabled)
+        {
+            <li class="rss">
+                <a href="@Url.RouteUrl("NewsRSS", new {languageId = Model.WorkingLanguageId})">
+                    <div class="social-share">
+                        <img src="~/themes/differenztheme/content/images/thumbs/new/icons/RSS.svg">
+                    </div>
+                </a>
+            </li>
+        }
+        @if (!string.IsNullOrEmpty(Model.YoutubeLink))
+        {
+            <li class="youtube">
+                <a href="@Model.YoutubeLink" target="_blank" rel="noopener noreferrer">
+                    <div class="social-share">
+                        <img src="~/themes/differenztheme/content/images/thumbs/new/icons/youtube.svg">
+                    </div>
+                </a>
+            </li>
+        }
+    </ul>
+}

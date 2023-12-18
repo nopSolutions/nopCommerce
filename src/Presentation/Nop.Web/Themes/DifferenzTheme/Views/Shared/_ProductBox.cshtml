@@ -1,0 +1,306 @@
+﻿@model ProductOverviewModel
+@using Nop.Core
+@using Nop.Core.Domain.Catalog
+@using Nop.Core.Domain.Orders
+@using Nop.Core.Domain.Tax
+@inject CatalogSettings catalogSettings
+@inject IWorkContext workContext
+@{
+    //prepare "Add to cart" AJAX link
+    var addtocartlink = "";
+    var shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart;
+    var quantity = 1;
+    if (Model.ProductPrice.ForceRedirectionAfterAddingToCart)
+    {
+        addtocartlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = shoppingCartTypeId, quantity = quantity, forceredirection = Model.ProductPrice.ForceRedirectionAfterAddingToCart });
+    }
+    else
+    {
+        addtocartlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = shoppingCartTypeId, quantity = quantity });
+    }
+
+    var addtowishlistlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = (int)ShoppingCartType.Wishlist, quantity = quantity });
+    var addtocomparelink = Url.RouteUrl("AddProductToCompare", new { productId = Model.Id });
+}
+
+@*------------------------------------------- Grid view ------------------------------------------------------------*@
+
+<div class="product-item product-wrapper item-box grid-view" data-productid="@Model.Id">
+    <div class="product-image-inner">
+        @if (Model.PictureModels.Count > 1)
+        {
+            <div class="swiper" id="swiper-@Model.Id" dir="@Html.GetUIDirection(!await Html.ShouldUseRtlThemeAsync())">
+                <div class="swiper-wrapper">
+                    @foreach (var picture in Model.PictureModels)
+                    {
+                        <a class="swiper-slide" href="@(Url.RouteUrl<Product>(new { SeName = Model.SeName }))" title="@picture.Title">
+                            @*<img alt="@picture.AlternateText" src="@picture.ImageUrl" title="@picture.Title" />*@
+                            <img class="product-image picture" alt="@picture.AlternateText" src="@picture.ImageUrl" title="@picture.Title">
+                            
+                        </a>
+                    }
+                </div>
+                <!-- Add Pagination -->
+                <div class="swiper-pagination"></div>
+            </div>
+
+            <script asp-location="Footer">
+                new Swiper('#swiper-@(Model.Id)', {
+                    pagination: {
+                        clickable: true,
+                        el: '.swiper-pagination',
+                    },
+                });
+            </script>
+        }
+        else
+        {
+            var picture = Model.PictureModels.FirstOrDefault();
+            <a href="@(Url.RouteUrl<Product>(new { SeName = Model.SeName }))" title="@picture?.Title">
+                <img alt="@picture?.AlternateText" src="@picture?.ImageUrl" title="@picture?.Title" />
+            </a>
+        }
+        @*<img class="product-image picture" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title">*@
+        @if (!Model.ProductPrice.DisableAddToCompareListButton)
+        {
+            <a class="compare add-to-compare-list-button" title="@T("ShoppingCart.AddToCompareList")" onclick="AjaxCart.addproducttocomparelist('@addtocomparelink');return false;">
+                <img src="~/Themes/DifferenzTheme/Content/images/thumbs/new/icons/compare.svg" alt="@T("ShoppingCart.AddToCompareList")">
+            </a>
+        }
+
+    </div>
+    <a href="@(Url.RouteUrl<Product>(new { SeName = Model.SeName }))">
+
+        <h5 class="product-title"> @Model.Name</h5>
+        <p class="desc-pro">@Html.Raw(Model.ShortDescription)</p>
+    </a>
+
+
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductBoxAddinfoBefore, additionalData = Model })
+
+
+    <div class="sku">
+        @if (catalogSettings.ShowSkuOnCatalogPages && !string.IsNullOrEmpty(Model.Sku))
+        {
+            @Model.Sku
+        }
+    </div>
+
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductBoxAddinfoMiddle, additionalData = Model })
+    <div class="flex-both">
+        @if (!Model.ProductPrice.DisableBuyButton)
+        {
+            var addToCartText = T("ShoppingCart.AddToCart").Text;
+            if (Model.ProductPrice.IsRental)
+            {
+                addToCartText = T("ShoppingCart.Rent").Text;
+            }
+            if (Model.ProductPrice.AvailableForPreOrder)
+            {
+                addToCartText = T("ShoppingCart.PreOrder").Text;
+            }
+            <button type="button" class="small-btn product-box-add-to-cart-button add-cart" onclick="AjaxCart.addproducttocart_catalog('@addtocartlink');return false;">@(addToCartText)</button>
+        }
+
+        <div class="value-wish-content">
+
+            @if (!Model.ProductPrice.DisableWishlistButton)
+            {
+                <a title="@T("ShoppingCart.AddToWishlist")" onclick="AjaxCart.addproducttocart_catalog('@addtowishlistlink');return false;" data-toggle="tooltip" data-placement="top" title="@T("ShoppingCart.AddToWishlist")">
+
+                    <img class="add-to-wishlist-button" src="~/Themes/DifferenzTheme/Content/images/thumbs/new/icons/wish_pink.png">
+                </a>
+            }
+
+            @if (Model.ReviewOverviewModel.AllowCustomerReviews)
+            {
+                var ratingPercent = 0;
+                if (Model.ReviewOverviewModel.TotalReviews != 0)
+                {
+                    ratingPercent = ((Model.ReviewOverviewModel.RatingSum * 100) / Model.ReviewOverviewModel.TotalReviews) / 5;
+                }
+                <div class="product-rating-box" title="@string.Format(T("Reviews.TotalReviews").Text, Model.ReviewOverviewModel.TotalReviews)">
+                    <div class=rating>
+                        <div style="width:@(ratingPercent)%"></div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductBoxAddinfoAfter, additionalData = Model })
+    <div class="original-price">
+        <div class="price-all">
+            @if (!string.IsNullOrEmpty(Model.ProductPrice.OldPrice))
+            {
+                <div class="price-through">@Model.ProductPrice.OldPrice</div>
+            }
+            @if (!string.IsNullOrEmpty(Model.ProductPrice.BasePricePAngV)) // need desgine
+            {
+                <div class="base-price-pangv price-optional">
+                    @Model.ProductPrice.BasePricePAngV
+                </div>
+            }
+        </div>
+        <div class="price-desc-origin">
+            @if (Model.ProductPrice.DisplayTaxShippingInfo) // need desgine
+            {
+                var inclTax = await workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
+                //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
+                //of course, you can modify appropriate locales to include VAT info there
+                <span class="tax-shipping-info">
+                    @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteTopicUrl("shippinginfo"))
+                </span>
+            }
+        </div>
+    </div>
+    <div class="prices">
+        @if (!string.IsNullOrEmpty(Model.ProductPrice.Price)) // need desgine
+        {
+            <button class="price">@Model.ProductPrice.Price</button>
+        }
+
+    </div>
+</div>
+
+
+@*------------------------------------------- List view ------------------------------------------------------------*@
+
+<div class="product-item list-view" data-productid="@Model.Id">
+    <div class="picture">
+        @if (Model.PictureModels.Count > 1)
+        {
+            <div class="swiper" id="swiper-@Model.Id" dir="@Html.GetUIDirection(!await Html.ShouldUseRtlThemeAsync())">
+                <div class="swiper-wrapper">
+                    @foreach (var picture in Model.PictureModels)
+                    {
+                        <a class="swiper-slide" href="@(Url.RouteUrl<Product>(new { SeName = Model.SeName }))" title="@picture.Title">
+                            @*<img alt="@picture.AlternateText" src="@picture.ImageUrl" title="@picture.Title" />*@
+                            <img class="product-image picture" alt="@picture.AlternateText" src="@picture.ImageUrl" title="@picture.Title">
+
+                        </a>
+                    }
+                </div>
+                <!-- Add Pagination -->
+                <div class="swiper-pagination"></div>
+            </div>
+
+            <script asp-location="Footer">
+                new Swiper('#swiper-@(Model.Id)', {
+                    pagination: {
+                        clickable: true,
+                        el: '.swiper-pagination',
+                    },
+                });
+            </script>
+        }
+        else
+        {
+            var picture = Model.PictureModels.FirstOrDefault();
+            <a href="@(Url.RouteUrl<Product>(new { SeName = Model.SeName }))" title="@picture?.Title">
+                <img alt="@picture?.AlternateText" src="@picture?.ImageUrl" title="@picture?.Title" />
+            </a>
+        }
+        @*<a href="/nikon-d5500-dslr" title="Show details for Nikon D5500 DSLR">
+            <img class="product-image picture" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title">
+        </a>*@
+    </div>
+    <div class="details">
+        <h2 class="product-title">
+            <a href="@(Url.RouteUrl<Product>(new { SeName = Model.SeName }))">
+                @Model.Name
+            </a>
+        </h2>
+        <div class="description">
+            @Html.Raw(Model.ShortDescription)
+        </div>
+        <div class="add-info">
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductBoxAddinfoBefore, additionalData = Model })
+            @if (catalogSettings.ShowSkuOnCatalogPages && !string.IsNullOrEmpty(Model.Sku))
+            {
+                <div class="sku">
+                    @Model.Sku
+                </div>
+            }
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductBoxAddinfoMiddle, additionalData = Model })
+
+            <div class="value-wish-content">
+                @if (!Model.ProductPrice.DisableWishlistButton)
+                {
+                    <a title="@T("ShoppingCart.AddToWishlist")" onclick="AjaxCart.addproducttocart_catalog('@addtowishlistlink');return false;" data-toggle="tooltip" data-placement="top" title="@T("ShoppingCart.AddToWishlist")">
+                        <img class="add-to-wishlist-button" src="~/Themes/DifferenzTheme/Content/images/thumbs/new/icons/wish_pink.png">
+                    </a>
+                }
+                @if (!Model.ProductPrice.DisableAddToCompareListButton)
+                {
+                    <a class="" title="@T("ShoppingCart.AddToCompareList")" onclick="AjaxCart.addproducttocomparelist('@addtocomparelink');return false;">
+                        <img src="~/Themes/DifferenzTheme/Content/images/thumbs/new/icons/compare.svg" alt="@T("ShoppingCart.AddToCompareList")">
+                    </a>
+                }
+                @if (Model.ReviewOverviewModel.AllowCustomerReviews)
+                {
+                    var ratingPercent = 0;
+                    if (Model.ReviewOverviewModel.TotalReviews != 0)
+                    {
+                        ratingPercent = ((Model.ReviewOverviewModel.RatingSum * 100) / Model.ReviewOverviewModel.TotalReviews) / 5;
+                    }
+                    <div class="product-rating-box" title="@string.Format(T("Reviews.TotalReviews").Text, Model.ReviewOverviewModel.TotalReviews)">
+                        <div class=rating>
+                            <div style="width:@ratingPercent%"></div>
+                        </div>
+                    </div>
+                }
+            </div>
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductBoxAddinfoAfter, additionalData = Model })
+          
+        </div>
+        @if (!Model.ProductPrice.DisableBuyButton)
+        {
+            var addToCartText = T("ShoppingCart.AddToCart").Text;
+            if (Model.ProductPrice.IsRental)
+            {
+                addToCartText = T("ShoppingCart.Rent").Text;
+            }
+            if (Model.ProductPrice.AvailableForPreOrder)
+            {
+                addToCartText = T("ShoppingCart.PreOrder").Text;
+            }
+            <button class="small-btn product-box-add-to-cart-button add-cart" onclick="AjaxCart.addproducttocart_catalog('@addtocartlink');return false;">@(addToCartText)</button>
+
+        }
+        <div class="original-price">
+            <div class="price-all">
+                @if (!string.IsNullOrEmpty(Model.ProductPrice.OldPrice))
+                {
+                    <div class="price-through">@Model.ProductPrice.OldPrice</div>
+                }
+                @if (!string.IsNullOrEmpty(Model.ProductPrice.BasePricePAngV)) // need desgine
+                {
+                    <div class="base-price-pangv price-optional">
+                        @Model.ProductPrice.BasePricePAngV
+                    </div>
+                }
+            </div>
+            <div class="price-desc-origin">
+                @if (Model.ProductPrice.DisplayTaxShippingInfo) // need desgine
+                {
+                    var inclTax = await workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
+                    //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
+                    //of course, you can modify appropriate locales to include VAT info there
+                    <span class="tax-shipping-info">
+                        @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteTopicUrl("shippinginfo"))
+
+                    </span>
+                }
+            </div>
+             @if (!string.IsNullOrEmpty(Model.ProductPrice.Price)) // need desgine
+            {
+
+                <div class="prices"><span class="price actual-price">@Model.ProductPrice.Price</span></div>
+            }
+        </div>
+    </div>
+</div>
+
+

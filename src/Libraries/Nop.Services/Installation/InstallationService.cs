@@ -3119,7 +3119,7 @@ namespace Nop.Services.Installation
                 // TwitterLink = "https://www.facebook.com/SmartDevLLC",
                 YoutubeLink = "https://www.youtube.com/@smartdevllc",
                 // InstagramLink = "https://www.youtube.com/@smartdevllc",
-                HidePoweredByNopCommerce = false
+                HidePoweredByNopCommerce = true
             });
 
             await settingService.SaveSettingAsync(new ExternalAuthenticationSettings

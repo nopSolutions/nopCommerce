@@ -1,0 +1,29 @@
+﻿@model LanguageSelectorModel
+
+@inject Nop.Core.IWebHelper webHelper
+
+@if (Model.AvailableLanguages.Count > 1)
+{
+    <div class="language-selector">
+        @{
+            var returnUrl = webHelper.GetRawUrl(Context.Request);
+            <select class="vodiapicker" onchange="setLocation(this.value);">
+                @foreach (var lang in Model.AvailableLanguages)
+                {
+                    var isSelcted = (lang.Id == Model.CurrentLanguageId ? "selected" : "");
+                    <option value="@Url.RouteUrl("ChangeLanguage", new { langid = lang.Id, returnUrl }, webHelper.GetCurrentRequestProtocol())" class="test" data-thumbnail="@Url.Content("~/images/flags/" + @lang.FlagImageFileName)" selected="@isSelcted">
+                        <img src="@Url.Content("~/images/flags/" + @lang.FlagImageFileName)" />  @lang.Name
+                    </option>
+                }
+            </select>
+
+            <div class="lang-select">
+                <button class="btn-select" value=""></button>
+                <img class="down-arrow" src="~/Themes/DifferenzTheme/Content/images/thumbs/new/icons/down.svg" alt="">
+                <div class="lang-all">
+                    <ul id="lang-none"></ul>
+                </div>
+            </div>
+        }
+    </div>
+}
