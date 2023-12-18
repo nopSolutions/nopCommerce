@@ -39,7 +39,7 @@
                                     <option value="0">@T("Products.ProductAttributes.DropdownList.DefaultItem")</option>
                                     @foreach (var attributeValue in attribute.Values)
                                     {
-                                        var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
+                                        var attributeName = attributeValue.PriceAdjustmentValue == 0 ?
                                             attributeValue.Name :
                                             T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment,
                                                 attributeValue.CustomerEntersQty ? T("Products.ProductAttributes.PriceAdjustment.PerItem").Text : string.Empty).Text;
