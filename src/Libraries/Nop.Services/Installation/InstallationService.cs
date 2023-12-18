@@ -2841,9 +2841,10 @@ namespace Nop.Services.Installation
                 RichEditorAllowStyleTag = false,
                 UseRichEditorForCustomerEmails = false,
                 UseRichEditorInMessageTemplates = false,
-                CheckLicense = true,
+                HideAdvertisementsOnAdminArea = true,
+                CheckLicense = false,
                 UseIsoDateFormatInJsonResult = true,
-                ShowDocumentationReferenceLinks = true
+                ShowDocumentationReferenceLinks = false
             });
 
             await settingService.SaveSettingAsync(new ProductEditorSettings

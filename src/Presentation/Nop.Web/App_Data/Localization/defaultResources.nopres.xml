@@ -12700,7 +12700,7 @@
     <Value>Search</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.NopCommerceNews">
-    <Value>NopCommerce News</Value>
+    <Value>SmartdevCommerce News</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders">
     <Value>Orders</Value>

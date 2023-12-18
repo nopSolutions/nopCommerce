@@ -11,12 +11,19 @@ services:
         depends_on:
             - nopcommerce_database
         restart: "always"
+        environment:
+          # CONNECTIONSTRINGS__CONNECTIONSTRING: "Host=nopcommerce_postgres_server;Database=noptest;Username=postgres;Password=nopCommerce_db_password"
+          # CONNECTIONSTRINGS__DATAPROVIDER: "postgresql"
+          DISTRIBUTEDCACHECONFIG__DISTRIBUTEDCACHETYPE: "redis"
+          # DISTRIBUTEDCACHECONFIG__ENABLED: "false"
     nopcommerce_database:
         image: "postgres:latest"
         container_name: nopcommerce_postgres_server
         restart: "always"
         environment:
           POSTGRES_PASSWORD: "nopCommerce_db_password"
+          # POSTGRES_USER: "postgres"
+          # POSTGRES_DB: "noptest"
         volumes:
           - ./App_Data/postgres:/var/lib/postgresql/data
 
