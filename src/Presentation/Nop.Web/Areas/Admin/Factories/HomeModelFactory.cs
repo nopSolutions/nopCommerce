@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core;
@@ -87,6 +88,16 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         public virtual async Task<NopCommerceNewsModel> PrepareNopCommerceNewsModelAsync()
         {
+            // begin custom code
+            return new NopCommerceNewsModel
+            {
+                CustomProperties = null,
+                Items = new List<NopCommerceNewsDetailsModel>(),
+                HasNewItems = false,
+                HideAdvertisements = true
+            };
+            // end custom code
+
             var model = new NopCommerceNewsModel
             {
                 HideAdvertisements = _adminAreaSettings.HideAdvertisementsOnAdminArea
