@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.StaticFiles;
@@ -169,7 +170,7 @@ public static class ApplicationBuilderExtensions
                         //get new path
                         var pageNotFoundPath = "/page-not-found";
                         //re-execute request with new path
-                        context.HttpContext.Response.Redirect(context.HttpContext.Request.PathBase + pageNotFoundPath);
+                        await CreateHandler(pageNotFoundPath, null)(context);
                     }
                     finally
                     {
@@ -544,5 +545,61 @@ public static class ApplicationBuilderExtensions
             return;
 
         application.UseWebMarkupMin();
+    }
+
+    /// <summary>
+    /// Creates a request handling method based on specified paths and a next request delegate.
+    /// It was inspired by UseStatusCodePagesWithReExecute method from Microsoft.AspNetCore.Builder.StatusCodePagesExtensions class.
+    /// </summary>
+    /// <param name="pathFormat">A string representing the path format.</param>
+    /// <param name="queryFormat">A string representing the query format.</param>
+    /// <param name="next">The next request delegate in the pipeline.</param>
+    /// <returns>A function that handles the status code context.</returns>
+    private static Func<StatusCodeContext, Task> CreateHandler(string pathFormat, string queryFormat, RequestDelegate next = null)
+    {
+        return (async context =>
+        {
+            var statusCode = context.HttpContext.Response.StatusCode;
+            var pathString = new PathString(string.Format(CultureInfo.InvariantCulture, pathFormat, statusCode));
+            var str = queryFormat == null ? null : string.Format(CultureInfo.InvariantCulture, queryFormat, statusCode);
+            var queryString = queryFormat == null ? QueryString.Empty : new QueryString(str);
+            var originalPath = context.HttpContext.Request.Path;
+            var originalQueryString = context.HttpContext.Request.QueryString;
+            var routeValuesFeature = context.HttpContext.Features.Get<IRouteValuesFeature>();
+            context.HttpContext.Features.Set<IStatusCodeReExecuteFeature>(new StatusCodeReExecuteFeature
+            {
+                OriginalPathBase = context.HttpContext.Request.PathBase.Value!,
+                OriginalPath = originalPath.Value!,
+                OriginalQueryString = (originalQueryString.HasValue ? originalQueryString.Value : null),
+                Endpoint = context.HttpContext.GetEndpoint(),
+                RouteValues = routeValuesFeature?.RouteValues
+            });
+            context.HttpContext.SetEndpoint(null);
+            if (routeValuesFeature != null)
+                routeValuesFeature.RouteValues = null!;
+            context.HttpContext.Request.Path = pathString;
+            context.HttpContext.Request.QueryString = queryString;
+            try
+            {
+                if (next != null)
+                {
+                    await next(context.HttpContext);
+                    originalPath = new PathString();
+                    originalQueryString = new QueryString();
+                }
+                else
+                {
+                    await context.Next(context.HttpContext);
+                    originalPath = new PathString();
+                    originalQueryString = new QueryString();
+                }
+            }
+            finally
+            {
+                context.HttpContext.Request.QueryString = originalQueryString;
+                context.HttpContext.Request.Path = originalPath;
+                context.HttpContext.Features.Set<IStatusCodeReExecuteFeature>(null);
+            }
+        });
     }
 }
