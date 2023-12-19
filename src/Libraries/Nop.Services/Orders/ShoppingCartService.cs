@@ -251,12 +251,15 @@ namespace Nop.Services.Orders
             if (!requiredProducts.Any())
                 return warnings;
 
+            var finalRequiredProducts = requiredProducts.GroupBy(p => p.Id)
+                .Select(g => new { Product = g.First(), Count = g.Count() });
+
             //get warnings
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
             var warningLocale = await _localizationService.GetResourceAsync("ShoppingCart.RequiredProductWarning");
-            foreach (var requiredProduct in requiredProducts)
+            foreach (var requiredProduct in finalRequiredProducts)
             {
-                var productsRequiringRequiredProduct = await GetProductsRequiringProductAsync(cart, requiredProduct);
+                var productsRequiringRequiredProduct = await GetProductsRequiringProductAsync(cart, requiredProduct.Product);
 
                 //get the required quantity of the required product
                 var requiredProductRequiredQuantity = quantity * requiredProductQuantity +
@@ -265,15 +268,15 @@ namespace Nop.Services.Orders
                         .Sum(item => item.Quantity * requiredProductQuantity);
 
                 //whether required product is already in the cart in the required quantity
-                var quantityToAdd = requiredProductRequiredQuantity - (cart.FirstOrDefault(item => item.ProductId == requiredProduct.Id)?.Quantity ?? 0);
+                var quantityToAdd = requiredProductRequiredQuantity * requiredProduct.Count - (cart.FirstOrDefault(item => item.ProductId == requiredProduct.Product.Id)?.Quantity ?? 0);
                 if (quantityToAdd <= 0)
                     continue;
 
                 //prepare warning message
-                var url = urlHelper.RouteUrl(nameof(Product), new { SeName = await _urlRecordService.GetSeNameAsync(requiredProduct) });
-                var requiredProductName = WebUtility.HtmlEncode(await _localizationService.GetLocalizedAsync(requiredProduct, x => x.Name));
+                var url = urlHelper.RouteUrl(nameof(Product), new { SeName = await _urlRecordService.GetSeNameAsync(requiredProduct.Product) });
+                var requiredProductName = WebUtility.HtmlEncode(await _localizationService.GetLocalizedAsync(requiredProduct.Product, x => x.Name));
                 var requiredProductWarning = _catalogSettings.UseLinksInRequiredProductWarnings
-                    ? string.Format(warningLocale, $"<a href=\"{url}\">{requiredProductName}</a>", requiredProductRequiredQuantity)
+                    ? string.Format(warningLocale, $"<a href=\"{url}\">{requiredProductName}</a>", requiredProductRequiredQuantity * requiredProduct.Count)
                     : string.Format(warningLocale, requiredProductName, requiredProductRequiredQuantity);
 
                 //add to cart (if possible)
@@ -282,7 +285,7 @@ namespace Nop.Services.Orders
                     //do not add required products to prevent circular references
                     var addToCartWarnings = await GetShoppingCartItemWarningsAsync(
                         customer: customer,
-                        product: requiredProduct,
+                        product: requiredProduct.Product,
                         attributesXml: null,
                         customerEnteredPrice: decimal.Zero,
                         shoppingCartType: shoppingCartType,
@@ -1683,9 +1686,12 @@ namespace Nop.Services.Orders
                 if (!requiredProducts.Any())
                     return;
 
-                foreach (var requiredProduct in requiredProducts)
+                var finalRequiredProducts = requiredProducts.GroupBy(p => p.Id)
+                    .Select(g => new { Product = g.First(), Count = g.Count() });
+
+                foreach (var requiredProduct in finalRequiredProducts)
                 {
-                    var productsRequiringRequiredProduct = await GetProductsRequiringProductAsync(cart, requiredProduct);
+                    var productsRequiringRequiredProduct = await GetProductsRequiringProductAsync(cart, requiredProduct.Product);
 
                     //get the required quantity of the required product
                     var requiredProductRequiredQuantity = (qty > 0 ? qty : quantity) +
@@ -1694,15 +1700,15 @@ namespace Nop.Services.Orders
                             .Sum(item => item.Quantity);
 
                     //whether required product is already in the cart in the required quantity
-                    var quantityToAdd = requiredProductRequiredQuantity - (cart.FirstOrDefault(item => item.ProductId == requiredProduct.Id)?.Quantity ?? 0);
+                    var quantityToAdd = requiredProductRequiredQuantity * requiredProduct.Count - (cart.FirstOrDefault(item => item.ProductId == requiredProduct.Product.Id)?.Quantity ?? 0);
                     if (quantityToAdd <= 0)
                         continue;
 
                     if (addRequiredProducts && product.AutomaticallyAddRequiredProducts)
                     {
                         //do not add required products to prevent circular references
-                        var addToCartWarnings = await AddToCartAsync(customer, requiredProduct, shoppingCartType, storeId,
-                            quantity: quantityToAdd, addRequiredProducts: requiredProduct.AutomaticallyAddRequiredProducts);
+                        var addToCartWarnings = await AddToCartAsync(customer, requiredProduct.Product, shoppingCartType, storeId,
+                            quantity: quantityToAdd, addRequiredProducts: requiredProduct.Product.AutomaticallyAddRequiredProducts);
 
                         if (addToCartWarnings.Any())
                         {
