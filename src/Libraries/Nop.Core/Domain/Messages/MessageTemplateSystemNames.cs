@@ -32,6 +32,11 @@
         /// </summary>
         public const string CUSTOMER_PASSWORD_RECOVERY_MESSAGE = "Customer.PasswordRecovery";
 
+        /// <summary>
+        /// Represents system name of delete customer request notification
+        /// </summary>
+        public const string DELETE_CUSTOMER_REQUEST_STORE_OWNER_NOTIFICATION = "Customer.Gdpr.DeleteRequest";
+
         #endregion
 
         #region Order

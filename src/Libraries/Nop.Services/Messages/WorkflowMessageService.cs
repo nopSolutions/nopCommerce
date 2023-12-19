@@ -441,6 +441,49 @@ namespace Nop.Services.Messages
             }).ToListAsync();
         }
 
+        /// <summary>
+        /// Sends 'New request to delete customer' message to a store owner
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendDeleteCustomerRequestStoreOwnerNotificationAsync(Customer customer, int languageId)
+        {
+            ArgumentNullException.ThrowIfNull(customer);
+
+            var store = await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
+
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.DELETE_CUSTOMER_REQUEST_STORE_OWNER_NOTIFICATION, store.Id);
+            if (!messageTemplates.Any())
+                return new List<int>();
+
+            //tokens
+            var commonTokens = new List<Token>();
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
+
+            return await messageTemplates.SelectAwait(async messageTemplate =>
+            {
+                //email account
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
+
+                var tokens = new List<Token>(commonTokens);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+
+                //event notification
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+
+                var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
+                var (replyToEmail, replyToName) = await GetCustomerReplyToNameAndEmailAsync(messageTemplate, customer);
+
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                    replyToEmailAddress: replyToEmail, replyToName: replyToName);
+            }).ToListAsync();
+        }
+
         #endregion
 
         #region Order workflow

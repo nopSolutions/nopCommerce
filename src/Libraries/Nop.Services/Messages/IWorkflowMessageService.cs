@@ -72,6 +72,17 @@ namespace Nop.Services.Messages
         /// </returns>
         Task<IList<int>> SendCustomerPasswordRecoveryMessageAsync(Customer customer, int languageId);
 
+        /// <summary>
+        /// Sends 'New request to delete customer' message to a store owner
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        Task<IList<int>> SendDeleteCustomerRequestStoreOwnerNotificationAsync(Customer customer, int languageId);
+
         #endregion
 
         #region Order workflow
