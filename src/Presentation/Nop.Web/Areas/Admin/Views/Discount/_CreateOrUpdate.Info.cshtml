@@ -229,7 +229,7 @@
             <nop-label asp-for="DiscountLimitationId" />
         </div>
         <div class="col-md-9">
-            <nop-select asp-for="DiscountLimitationId" asp-items="@(await (((DiscountLimitationType)Model.DiscountLimitationId).ToSelectListAsync()))" />
+            <nop-select asp-for="DiscountLimitationId" asp-items="@(await ((DiscountLimitationType)Model.DiscountLimitationId).ToSelectListAsync())" />
             <span asp-validation-for="DiscountLimitationId"></span>
         </div>
     </div>
