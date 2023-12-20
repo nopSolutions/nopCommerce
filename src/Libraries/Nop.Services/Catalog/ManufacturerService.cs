@@ -267,13 +267,22 @@ namespace Nop.Services.Catalog
                       (_catalogSettings.IncludeFeaturedProductsInNormalLists || !pc.IsFeaturedProduct)
                 select pc;
 
+            var manufacturerQuery = from m in _manufacturerRepository.Table
+                                    where !m.Deleted && m.Published
+                                    select m;
+
+            //apply store mapping constraints
+            manufacturerQuery = await _storeMappingService.ApplyStoreMapping(manufacturerQuery, store.Id);
+
+            //apply ACL constraints
+            manufacturerQuery = await _aclService.ApplyAcl(manufacturerQuery, customerRoleIds);
+
             // get manufacturers of the products
             var manufacturersQuery =
-                from m in _manufacturerRepository.Table
+                from m in manufacturerQuery
                 join pm in _productManufacturerRepository.Table on m.Id equals pm.ManufacturerId
                 join p in productsQuery on pm.ProductId equals p.Id
                 join pc in productCategoryQuery on p.Id equals pc.ProductId
-                where !m.Deleted
                 orderby
                    m.DisplayOrder, m.Name
                 select m;

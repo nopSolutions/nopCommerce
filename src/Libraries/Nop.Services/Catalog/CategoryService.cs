@@ -775,7 +775,8 @@ namespace Nop.Services.Catalog
                 category,
                 await _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync()),
                 await _storeContext.GetCurrentStoreAsync(),
-                await _workContext.GetWorkingLanguageAsync());
+                await _workContext.GetWorkingLanguageAsync(),
+                showHidden);
 
             return await _staticCacheManager.GetAsync(breadcrumbCacheKey, async () =>
             {
