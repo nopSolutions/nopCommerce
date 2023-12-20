@@ -154,7 +154,7 @@
                                 {
                                     var address = $"{point.Address} {point.City} {point.ZipPostalCode} {point.CountryName}";
                                     <text>
-                                        var interval_@i = setInterval( function () {
+                                        var interval_@(i) = setInterval( function () {
                                             geocoder.geocode({ 'address': "@address" }, function(results, status) {
                                                 if (status === google.maps.GeocoderStatus.OK) {
                                                     var marker = new google.maps.Marker({

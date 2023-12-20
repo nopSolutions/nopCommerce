@@ -123,7 +123,7 @@
                                 <nop-label asp-for="RoundingTypeId"/>
                             </div>
                             <div class="col-md-9">
-                                <nop-select asp-for="RoundingTypeId" asp-items="@await ((RoundingType) Model.RoundingTypeId).ToSelectListAsync()" />
+                                <nop-select asp-for="RoundingTypeId" asp-items="@(await ((RoundingType) Model.RoundingTypeId).ToSelectListAsync())" />
                                 <span asp-validation-for="RoundingTypeId"></span>
                             </div>
                         </div>
