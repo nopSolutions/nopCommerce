@@ -73,7 +73,7 @@
                         <nop-label asp-for="PaymentConnectionMethodId" />
                     </div>
                     <div class="col-md-9">
-                        <nop-select asp-for="PaymentConnectionMethodId" asp-items="@(await (((ConnectionMethodType)Model.PaymentConnectionMethodId).ToSelectListAsync()))" />
+                        <nop-select asp-for="PaymentConnectionMethodId" asp-items="@(await ((ConnectionMethodType)Model.PaymentConnectionMethodId).ToSelectListAsync())" />
                         <span asp-validation-for="PaymentConnectionMethodId"></span>
                     </div>
                 </div>
@@ -105,7 +105,7 @@
                         <nop-label asp-for="TransactionTypeId" />
                     </div>
                     <div class="col-md-9">
-                        <nop-select asp-for="TransactionTypeId" asp-items="@(await (((TransactionType)Model.TransactionTypeId).ToSelectListAsync()))" />
+                        <nop-select asp-for="TransactionTypeId" asp-items="@(await ((TransactionType)Model.TransactionTypeId).ToSelectListAsync())" />
                         <span asp-validation-for="TransactionTypeId"></span>
                     </div>
                 </div>
