@@ -1632,7 +1632,8 @@ namespace Nop.Services.Messages
                 MessageTemplateSystemNames.CUSTOMER_WELCOME_MESSAGE or
                 MessageTemplateSystemNames.CUSTOMER_EMAIL_VALIDATION_MESSAGE or
                 MessageTemplateSystemNames.CUSTOMER_EMAIL_REVALIDATION_MESSAGE or
-                MessageTemplateSystemNames.CUSTOMER_PASSWORD_RECOVERY_MESSAGE => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens },
+                MessageTemplateSystemNames.CUSTOMER_PASSWORD_RECOVERY_MESSAGE or
+                MessageTemplateSystemNames.DELETE_CUSTOMER_REQUEST_STORE_OWNER_NOTIFICATION => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens },
 
                 MessageTemplateSystemNames.ORDER_PLACED_VENDOR_NOTIFICATION or
                 MessageTemplateSystemNames.ORDER_PLACED_STORE_OWNER_NOTIFICATION or

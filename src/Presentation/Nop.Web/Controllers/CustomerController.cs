@@ -1822,6 +1822,8 @@ namespace Nop.Web.Controllers
             //log
             await _gdprService.InsertLogAsync(customer, 0, GdprRequestType.DeleteCustomer, await _localizationService.GetResourceAsync("Gdpr.DeleteRequested"));
 
+            await _workflowMessageService.SendDeleteCustomerRequestStoreOwnerNotificationAsync(customer, _localizationSettings.DefaultAdminLanguageId);
+
             var model = await _customerModelFactory.PrepareGdprToolsModelAsync();
             model.Result = await _localizationService.GetResourceAsync("Gdpr.DeleteRequested.Success");
 

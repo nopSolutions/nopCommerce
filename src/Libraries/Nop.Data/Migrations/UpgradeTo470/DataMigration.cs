@@ -2,6 +2,8 @@
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Messages;
+using Nop.Core.Domain.ScheduleTasks;
 using Nop.Core.Domain.Security;
 using Nop.Data.Mapping;
 
@@ -145,6 +147,20 @@ namespace Nop.Data.Migrations.UpgradeTo470
             var isTelecommunicationsOrBroadcastingOrElectronicServicesColumnName = "IsTelecommunicationsOrBroadcastingOrElectronicServices";
             if (Schema.Table(productTableName).Column(isTelecommunicationsOrBroadcastingOrElectronicServicesColumnName).Exists())
                 Delete.Column(isTelecommunicationsOrBroadcastingOrElectronicServicesColumnName).FromTable(productTableName);
+
+            //New message template
+            if (!_dataProvider.GetTable<MessageTemplate>().Any(st => string.Compare(st.Name, MessageTemplateSystemNames.DELETE_CUSTOMER_REQUEST_STORE_OWNER_NOTIFICATION, StringComparison.InvariantCultureIgnoreCase) == 0))
+            {
+                var eaGeneral = _dataProvider.GetTable<EmailAccount>().FirstOrDefault() ?? throw new Exception("Default email account cannot be loaded");                
+                _dataProvider.InsertEntity(new MessageTemplate()
+                {
+                    Name = MessageTemplateSystemNames.DELETE_CUSTOMER_REQUEST_STORE_OWNER_NOTIFICATION,
+                    Subject = "%Store.Name%. New request to delete customer (GDPR)",
+                    Body = $"%Customer.Email% has requested account deletion. You can consider this in the admin area.",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id
+                });
+            }            
         }
 
         public override void Down()

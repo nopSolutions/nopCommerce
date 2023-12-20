@@ -192,6 +192,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
                 //#6939
                 ["Admin.Configuration.AppSettings.Cache.LinqDisableQueryCache"] = "Disable query cache",
                 ["Admin.Configuration.AppSettings.Cache.LinqDisableQueryCache.Hint"] = "Disable LINQ expressions caching for queries. This cache reduces time, required for query parsing but have several side-effects. For example, cached LINQ expressions could contain references to external objects as parameters, which could lead to memory leaks if those objects are not used anymore by other code. Or cache access synchronization could lead to bigger latencies than it saves.",
+
+                //#6956
+                ["Admin.ContentManagement.MessageTemplates.Description.Customer.Gdpr.DeleteRequest"] = "This message template is used when customer create a new request to delete account. The message is received by a store owner.",
             }, languageId);
 
             #endregion

@@ -2215,6 +2215,14 @@ namespace Nop.Services.Installation
                     IsActive = true,
                     EmailAccountId = eaGeneral.Id
                 },
+                new()
+                {
+                    Name = MessageTemplateSystemNames.DELETE_CUSTOMER_REQUEST_STORE_OWNER_NOTIFICATION,
+                    Subject = "%Store.Name%. New request to delete customer (GDPR)",
+                    Body = $"%Customer.Email% has requested account deletion. You can consider this in the admin area.",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id
+                },
                 new() {
                     Name = MessageTemplateSystemNames.NEW_RETURN_REQUEST_CUSTOMER_NOTIFICATION,
                     Subject = "%Store.Name%. New return request.",
