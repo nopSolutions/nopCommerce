@@ -65,7 +65,7 @@ namespace Nop.Plugin.Misc.AbcPromos.Controllers
         public async Task<IActionResult> Promo(string promoSlug, CatalogProductsCommand command)
         {
             // Set to high to low by default for gifts under
-            if (promoSlug.Contains("gifts-under")
+            if (promoSlug.Contains("gifts-under"))
             {
                 command.OrderBy = 11;
             }
