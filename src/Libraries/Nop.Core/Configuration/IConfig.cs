@@ -1,22 +1,21 @@
 ﻿using Newtonsoft.Json;
 
-namespace Nop.Core.Configuration
+namespace Nop.Core.Configuration;
+
+/// <summary>
+/// Represents a configuration from app settings
+/// </summary>
+public partial interface IConfig
 {
     /// <summary>
-    /// Represents a configuration from app settings
+    /// Gets a section name to load configuration
     /// </summary>
-    public partial interface IConfig
-    {
-        /// <summary>
-        /// Gets a section name to load configuration
-        /// </summary>
-        [JsonIgnore]
-        string Name => GetType().Name;
+    [JsonIgnore]
+    string Name => GetType().Name;
 
-        /// <summary>
-        /// Gets an order of configuration
-        /// </summary>
-        /// <returns>Order</returns>
-        public int GetOrder() => 1;
-    }
+    /// <summary>
+    /// Gets an order of configuration
+    /// </summary>
+    /// <returns>Order</returns>
+    public int GetOrder() => 1;
 }

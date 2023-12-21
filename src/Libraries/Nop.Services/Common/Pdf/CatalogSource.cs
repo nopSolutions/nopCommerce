@@ -1,17 +1,16 @@
-namespace Nop.Services.Common.Pdf
+namespace Nop.Services.Common.Pdf;
+
+/// <summary>
+/// Represents the data source for an catalog document
+/// </summary>
+public partial class CatalogSource : DocumentSource
 {
+    #region Properties
+
     /// <summary>
-    /// Represents the data source for an catalog document
+    /// Gets or sets entries of the catalog
     /// </summary>
-    public partial class CatalogSource : DocumentSource
-    {
-        #region Properties
+    public List<CatalogItem> Products { get; set; }
 
-        /// <summary>
-        /// Gets or sets entries of the catalog
-        /// </summary>
-        public List<CatalogItem> Products { get; set; }
-
-        #endregion
-    }
+    #endregion
 }

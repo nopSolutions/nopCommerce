@@ -2,25 +2,24 @@
 using Nop.Web.Factories;
 using Nop.Web.Framework.Components;
 
-namespace Nop.Web.Components
+namespace Nop.Web.Components;
+
+public partial class LanguageSelectorViewComponent : NopViewComponent
 {
-    public partial class LanguageSelectorViewComponent : NopViewComponent
+    protected readonly ICommonModelFactory _commonModelFactory;
+
+    public LanguageSelectorViewComponent(ICommonModelFactory commonModelFactory)
     {
-        protected readonly ICommonModelFactory _commonModelFactory;
+        _commonModelFactory = commonModelFactory;
+    }
 
-        public LanguageSelectorViewComponent(ICommonModelFactory commonModelFactory)
-        {
-            _commonModelFactory = commonModelFactory;
-        }
+    public async Task<IViewComponentResult> InvokeAsync()
+    {
+        var model = await _commonModelFactory.PrepareLanguageSelectorModelAsync();
 
-        public async Task<IViewComponentResult> InvokeAsync()
-        {
-            var model = await _commonModelFactory.PrepareLanguageSelectorModelAsync();
+        if (model.AvailableLanguages.Count == 1)
+            return Content("");
 
-            if (model.AvailableLanguages.Count == 1)
-                return Content("");
-
-            return View(model);
-        }
+        return View(model);
     }
 }

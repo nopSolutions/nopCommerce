@@ -2,21 +2,20 @@
 using Nop.Web.Factories;
 using Nop.Web.Framework.Components;
 
-namespace Nop.Web.Components
+namespace Nop.Web.Components;
+
+public partial class LogoViewComponent : NopViewComponent
 {
-    public partial class LogoViewComponent : NopViewComponent
+    protected readonly ICommonModelFactory _commonModelFactory;
+
+    public LogoViewComponent(ICommonModelFactory commonModelFactory)
     {
-        protected readonly ICommonModelFactory _commonModelFactory;
+        _commonModelFactory = commonModelFactory;
+    }
 
-        public LogoViewComponent(ICommonModelFactory commonModelFactory)
-        {
-            _commonModelFactory = commonModelFactory;
-        }
-
-        public async Task<IViewComponentResult> InvokeAsync()
-        {
-            var model = await _commonModelFactory.PrepareLogoModelAsync();
-            return View(model);
-        }
+    public async Task<IViewComponentResult> InvokeAsync()
+    {
+        var model = await _commonModelFactory.PrepareLogoModelAsync();
+        return View(model);
     }
 }

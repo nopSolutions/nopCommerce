@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Nop.Web.Controllers
+namespace Nop.Web.Controllers;
+
+public partial class HomeController : BasePublicController
 {
-    public partial class HomeController : BasePublicController
+    public virtual IActionResult Index()
     {
-        public virtual IActionResult Index()
-        {
-            return View();
-        }
+        return View();
     }
 }

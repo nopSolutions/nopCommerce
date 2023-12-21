@@ -1,11 +1,10 @@
 ﻿using Nop.Core.Domain.Attributes;
 
-namespace Nop.Core.Domain.Common
+namespace Nop.Core.Domain.Common;
+
+/// <summary>
+/// Represents an address attribute
+/// </summary>
+public partial class AddressAttribute : BaseAttribute
 {
-    /// <summary>
-    /// Represents an address attribute
-    /// </summary>
-    public partial class AddressAttribute : BaseAttribute
-    {
-    }
 }

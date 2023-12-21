@@ -1,11 +1,10 @@
 ﻿using Nop.Web.Framework.Models;
 
-namespace Nop.Web.Areas.Admin.Models.Shipping
+namespace Nop.Web.Areas.Admin.Models.Shipping;
+
+/// <summary>
+/// Represents a warehouse list model
+/// </summary>
+public partial record WarehouseListModel : BasePagedListModel<WarehouseModel>
 {
-    /// <summary>
-    /// Represents a warehouse list model
-    /// </summary>
-    public partial record WarehouseListModel : BasePagedListModel<WarehouseModel>
-    {
-    }
 }

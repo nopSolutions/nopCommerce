@@ -1,16 +1,15 @@
 ﻿using Nop.Web.Framework.Models;
 
-namespace Nop.Web.Areas.Admin.Models.Forums
+namespace Nop.Web.Areas.Admin.Models.Forums;
+
+/// <summary>
+/// Represents a forum search model
+/// </summary>
+public partial record ForumSearchModel : BaseSearchModel
 {
-    /// <summary>
-    /// Represents a forum search model
-    /// </summary>
-    public partial record ForumSearchModel : BaseSearchModel
-    {
-        #region Properties
+    #region Properties
 
-        public int ForumGroupId { get; set; }
+    public int ForumGroupId { get; set; }
 
-        #endregion
-    }
+    #endregion
 }

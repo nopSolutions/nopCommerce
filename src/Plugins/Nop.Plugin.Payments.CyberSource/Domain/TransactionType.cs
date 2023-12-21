@@ -1,18 +1,17 @@
-﻿namespace Nop.Plugin.Payments.CyberSource.Domain
+﻿namespace Nop.Plugin.Payments.CyberSource.Domain;
+
+/// <summary>
+/// Represents a transaction type
+/// </summary>
+public enum TransactionType
 {
     /// <summary>
-    /// Represents a transaction type
+    /// Authorize Only
     /// </summary>
-    public enum TransactionType
-    {
-        /// <summary>
-        /// Authorize Only
-        /// </summary>
-        AuthorizeOnly = 0,
+    AuthorizeOnly = 0,
 
-        /// <summary>
-        /// Sale (Authorization and Capture)
-        /// </summary>
-        Sale = 5
-    }
+    /// <summary>
+    /// Sale (Authorization and Capture)
+    /// </summary>
+    Sale = 5
 }

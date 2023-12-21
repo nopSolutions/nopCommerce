@@ -1,43 +1,42 @@
-﻿namespace Nop.Web.Models.Sitemap
+﻿namespace Nop.Web.Models.Sitemap;
+
+/// <summary>
+/// Represents a sitemap update frequency
+/// </summary>
+public enum UpdateFrequency
 {
     /// <summary>
-    /// Represents a sitemap update frequency
+    /// Always
     /// </summary>
-    public enum UpdateFrequency
-    {
-        /// <summary>
-        /// Always
-        /// </summary>
-        Always,
+    Always,
 
-        /// <summary>
-        /// Hourly
-        /// </summary>
-        Hourly,
+    /// <summary>
+    /// Hourly
+    /// </summary>
+    Hourly,
 
-        /// <summary>
-        /// Daily
-        /// </summary>
-        Daily,
+    /// <summary>
+    /// Daily
+    /// </summary>
+    Daily,
 
-        /// <summary>
-        /// Weekly
-        /// </summary>
-        Weekly,
+    /// <summary>
+    /// Weekly
+    /// </summary>
+    Weekly,
 
-        /// <summary>
-        /// Monthly
-        /// </summary>
-        Monthly,
+    /// <summary>
+    /// Monthly
+    /// </summary>
+    Monthly,
 
-        /// <summary>
-        /// Yearly
-        /// </summary>
-        Yearly,
+    /// <summary>
+    /// Yearly
+    /// </summary>
+    Yearly,
 
-        /// <summary>
-        /// Never
-        /// </summary>
-        Never
-    }
+    /// <summary>
+    /// Never
+    /// </summary>
+    Never
 }

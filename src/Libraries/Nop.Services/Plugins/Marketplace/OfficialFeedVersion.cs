@@ -1,18 +1,17 @@
-﻿namespace Nop.Services.Plugins.Marketplace
+﻿namespace Nop.Services.Plugins.Marketplace;
+
+/// <summary>
+/// Support versions from nopCommerce.com marketplace
+/// </summary>
+public partial class OfficialFeedVersion
 {
     /// <summary>
-    /// Support versions from nopCommerce.com marketplace
+    /// Identifier
     /// </summary>
-    public partial class OfficialFeedVersion
-    {
-        /// <summary>
-        /// Identifier
-        /// </summary>
-        public int Id { get; set; }
+    public int Id { get; set; }
 
-        /// <summary>
-        /// Name
-        /// </summary>
-        public string Name { get; set; }
-    }
+    /// <summary>
+    /// Name
+    /// </summary>
+    public string Name { get; set; }
 }

@@ -1,16 +1,15 @@
 ﻿using Nop.Web.Framework.Models;
 
-namespace Nop.Web.Areas.Admin.Models.Catalog
+namespace Nop.Web.Areas.Admin.Models.Catalog;
+
+/// <summary>
+/// Represents a category product search model
+/// </summary>
+public partial record CategoryProductSearchModel : BaseSearchModel
 {
-    /// <summary>
-    /// Represents a category product search model
-    /// </summary>
-    public partial record CategoryProductSearchModel : BaseSearchModel
-    {
-        #region Properties
+    #region Properties
 
-        public int CategoryId { get; set; }
+    public int CategoryId { get; set; }
 
-        #endregion
-    }
+    #endregion
 }

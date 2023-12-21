@@ -1,19 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 
-namespace Nop.Web.Framework
+namespace Nop.Web.Framework;
+
+public class NullView : IView
 {
-    public class NullView : IView
+    public static readonly NullView Instance = new();
+
+    public string Path => string.Empty;
+
+    public Task RenderAsync(ViewContext context)
     {
-        public static readonly NullView Instance = new();
+        ArgumentNullException.ThrowIfNull(context);
 
-        public string Path => string.Empty;
-
-        public Task RenderAsync(ViewContext context)
-        {
-            ArgumentNullException.ThrowIfNull(context);
-
-            return Task.CompletedTask;
-        }
+        return Task.CompletedTask;
     }
 }

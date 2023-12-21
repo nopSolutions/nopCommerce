@@ -5,33 +5,33 @@ using Nop.Services.Stores;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Components;
 
-namespace Nop.Web.Components
+namespace Nop.Web.Components;
+
+public partial class RelatedProductsViewComponent : NopViewComponent
 {
-    public partial class RelatedProductsViewComponent : NopViewComponent
+    protected readonly IAclService _aclService;
+    protected readonly IProductModelFactory _productModelFactory;
+    protected readonly IProductService _productService;
+    protected readonly IStoreMappingService _storeMappingService;
+
+    public RelatedProductsViewComponent(IAclService aclService,
+        IProductModelFactory productModelFactory,
+        IProductService productService,
+        IStoreMappingService storeMappingService)
     {
-        protected readonly IAclService _aclService;
-        protected readonly IProductModelFactory _productModelFactory;
-        protected readonly IProductService _productService;
-        protected readonly IStoreMappingService _storeMappingService;
+        _aclService = aclService;
+        _productModelFactory = productModelFactory;
+        _productService = productService;
+        _storeMappingService = storeMappingService;
+    }
 
-        public RelatedProductsViewComponent(IAclService aclService,
-            IProductModelFactory productModelFactory,
-            IProductService productService,
-            IStoreMappingService storeMappingService)
-        {
-            _aclService = aclService;
-            _productModelFactory = productModelFactory;
-            _productService = productService;
-            _storeMappingService = storeMappingService;
-        }
+    public async Task<IViewComponentResult> InvokeAsync(int productId, int? productThumbPictureSize)
+    {
+        //load and cache report
+        var productIds = (await _productService.GetRelatedProductsByProductId1Async(productId)).Select(x => x.ProductId2).ToArray();
 
-        public async Task<IViewComponentResult> InvokeAsync(int productId, int? productThumbPictureSize)
-        {
-            //load and cache report
-            var productIds = (await _productService.GetRelatedProductsByProductId1Async(productId)).Select(x => x.ProductId2).ToArray();
-
-            //load products
-            var products = await (await _productService.GetProductsByIdsAsync(productIds))
+        //load products
+        var products = await (await _productService.GetProductsByIdsAsync(productIds))
             //ACL and store mapping
             .WhereAwait(async p => await _aclService.AuthorizeAsync(p) && await _storeMappingService.AuthorizeAsync(p))
             //availability dates
@@ -39,11 +39,10 @@ namespace Nop.Web.Components
             //visible individually
             .Where(p => p.VisibleIndividually).ToListAsync();
 
-            if (!products.Any())
-                return Content(string.Empty);
+        if (!products.Any())
+            return Content(string.Empty);
 
-            var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, true, true, productThumbPictureSize)).ToList();
-            return View(model);
-        }
+        var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, true, true, productThumbPictureSize)).ToList();
+        return View(model);
     }
 }

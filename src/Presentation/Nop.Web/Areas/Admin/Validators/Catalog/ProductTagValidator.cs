@@ -5,15 +5,14 @@ using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Validators;
 
-namespace Nop.Web.Areas.Admin.Validators.Catalog
-{
-    public partial class ProductTagValidator : BaseNopValidator<ProductTagModel>
-    {
-        public ProductTagValidator(ILocalizationService localizationService, IMappingEntityAccessor mappingEntityAccessor)
-        {
-            RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.ProductTags.Fields.Name.Required"));
+namespace Nop.Web.Areas.Admin.Validators.Catalog;
 
-            SetDatabaseValidationRules<ProductTag>(mappingEntityAccessor);
-        }
+public partial class ProductTagValidator : BaseNopValidator<ProductTagModel>
+{
+    public ProductTagValidator(ILocalizationService localizationService, IMappingEntityAccessor mappingEntityAccessor)
+    {
+        RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.ProductTags.Fields.Name.Required"));
+
+        SetDatabaseValidationRules<ProductTag>(mappingEntityAccessor);
     }
 }

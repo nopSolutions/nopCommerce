@@ -1,8 +1,7 @@
 ﻿using Nop.Web.Framework.UI.Paging;
 
-namespace Nop.Web.Models.News
+namespace Nop.Web.Models.News;
+
+public partial record NewsPagingFilteringModel : BasePageableModel
 {
-    public partial record NewsPagingFilteringModel : BasePageableModel
-    {
-    }
 }

@@ -1,16 +1,15 @@
 ﻿using Nop.Web.Framework.Models;
 
-namespace Nop.Web.Areas.Admin.Models.Catalog
+namespace Nop.Web.Areas.Admin.Models.Catalog;
+
+/// <summary>
+/// Represents a search model of products that use the product attribute
+/// </summary>
+public partial record ProductAttributeProductSearchModel : BaseSearchModel
 {
-    /// <summary>
-    /// Represents a search model of products that use the product attribute
-    /// </summary>
-    public partial record ProductAttributeProductSearchModel : BaseSearchModel
-    {
-        #region Properties
+    #region Properties
 
-        public int ProductAttributeId { get; set; }
+    public int ProductAttributeId { get; set; }
 
-        #endregion
-    }
+    #endregion
 }

@@ -1,23 +1,22 @@
-namespace Nop.Services.Payments
+namespace Nop.Services.Payments;
+
+/// <summary>
+/// Represents a recurring payment type
+/// </summary>
+public enum RecurringPaymentType
 {
     /// <summary>
-    /// Represents a recurring payment type
+    /// Not supported
     /// </summary>
-    public enum RecurringPaymentType
-    {
-        /// <summary>
-        /// Not supported
-        /// </summary>
-        NotSupported = 0,
+    NotSupported = 0,
 
-        /// <summary>
-        /// Manual
-        /// </summary>
-        Manual = 10,
+    /// <summary>
+    /// Manual
+    /// </summary>
+    Manual = 10,
 
-        /// <summary>
-        /// Automatic (payment is processed on payment gateway site)
-        /// </summary>
-        Automatic = 20
-    }
+    /// <summary>
+    /// Automatic (payment is processed on payment gateway site)
+    /// </summary>
+    Automatic = 20
 }

@@ -1,36 +1,35 @@
 ﻿using System.Reflection;
 using Newtonsoft.Json.Serialization;
 
-namespace Nop.Plugin.Shipping.UPS.API
+namespace Nop.Plugin.Shipping.UPS.API;
+
+public class NullToEmptyStringValueProvider : IValueProvider
 {
-    public class NullToEmptyStringValueProvider : IValueProvider
+    private readonly PropertyInfo _memberInfo;
+
+    public NullToEmptyStringValueProvider(PropertyInfo memberInfo)
     {
-        private readonly PropertyInfo _memberInfo;
+        _memberInfo = memberInfo;
+    }
 
-        public NullToEmptyStringValueProvider(PropertyInfo memberInfo)
-        {
-            _memberInfo = memberInfo;
-        }
+    public object GetValue(object target)
+    {
+        var result = _memberInfo.GetValue(target);
 
-        public object GetValue(object target)
-        {
-            var result = _memberInfo.GetValue(target);
-
-            if (_memberInfo.PropertyType != typeof(string))
-                return result;
-
-            var attributes = _memberInfo
-                .GetCustomAttributes(typeof(System.ComponentModel.DataAnnotations.RequiredAttribute)).FirstOrDefault() as System.ComponentModel.DataAnnotations.RequiredAttribute;
-            
-            if ((attributes?.AllowEmptyStrings ?? false) && result == null)
-                result = "";
-
+        if (_memberInfo.PropertyType != typeof(string))
             return result;
-        }
 
-        public void SetValue(object target, object value)
-        {
-            _memberInfo.SetValue(target, value);
-        }
+        var attributes = _memberInfo
+            .GetCustomAttributes(typeof(System.ComponentModel.DataAnnotations.RequiredAttribute)).FirstOrDefault() as System.ComponentModel.DataAnnotations.RequiredAttribute;
+            
+        if ((attributes?.AllowEmptyStrings ?? false) && result == null)
+            result = "";
+
+        return result;
+    }
+
+    public void SetValue(object target, object value)
+    {
+        _memberInfo.SetValue(target, value);
     }
 }

@@ -1,16 +1,15 @@
 ﻿using Nop.Web.Framework.Models;
 
-namespace Nop.Web.Areas.Admin.Models.Customers
+namespace Nop.Web.Areas.Admin.Models.Customers;
+
+/// <summary>
+/// Represents a reward points search model
+/// </summary>
+public partial record CustomerRewardPointsSearchModel : BaseSearchModel
 {
-    /// <summary>
-    /// Represents a reward points search model
-    /// </summary>
-    public partial record CustomerRewardPointsSearchModel : BaseSearchModel
-    {
-        #region Properties
+    #region Properties
 
-        public int CustomerId { get; set; }
+    public int CustomerId { get; set; }
 
-        #endregion
-    }
+    #endregion
 }

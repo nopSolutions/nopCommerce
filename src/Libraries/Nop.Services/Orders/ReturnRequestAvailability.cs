@@ -1,22 +1,21 @@
-﻿namespace Nop.Services.Orders
+﻿namespace Nop.Services.Orders;
+
+/// <summary>
+/// Represents the return request availability
+/// </summary>
+public partial class ReturnRequestAvailability
 {
+    #region Properties
+
     /// <summary>
-    /// Represents the return request availability
+    /// Gets the value indicating whether a return request is allowed
     /// </summary>
-    public partial class ReturnRequestAvailability
-    {
-        #region Properties
+    public bool IsAllowed => ReturnableOrderItems?.Any(i => i.AvailableQuantityForReturn > 0) ?? false;
 
-        /// <summary>
-        /// Gets the value indicating whether a return request is allowed
-        /// </summary>
-        public bool IsAllowed => ReturnableOrderItems?.Any(i => i.AvailableQuantityForReturn > 0) ?? false;
+    /// <summary>
+    /// Gets or sets the returnable order items
+    /// </summary>
+    public IList<ReturnableOrderItem> ReturnableOrderItems { get; set; }
 
-        /// <summary>
-        /// Gets or sets the returnable order items
-        /// </summary>
-        public IList<ReturnableOrderItem> ReturnableOrderItems { get; set; }
-
-        #endregion
-    }
+    #endregion
 }

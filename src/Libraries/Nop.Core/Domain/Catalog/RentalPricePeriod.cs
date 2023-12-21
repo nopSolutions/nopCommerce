@@ -1,28 +1,27 @@
-namespace Nop.Core.Domain.Catalog
+namespace Nop.Core.Domain.Catalog;
+
+/// <summary>
+/// Represents a rental product period (for prices)
+/// </summary>
+public enum RentalPricePeriod
 {
     /// <summary>
-    /// Represents a rental product period (for prices)
+    /// Days
     /// </summary>
-    public enum RentalPricePeriod
-    {
-        /// <summary>
-        /// Days
-        /// </summary>
-        Days = 0,
+    Days = 0,
 
-        /// <summary>
-        /// Weeks
-        /// </summary>
-        Weeks = 10,
+    /// <summary>
+    /// Weeks
+    /// </summary>
+    Weeks = 10,
 
-        /// <summary>
-        /// Months
-        /// </summary>
-        Months = 20,
+    /// <summary>
+    /// Months
+    /// </summary>
+    Months = 20,
 
-        /// <summary>
-        /// Years
-        /// </summary>
-        Years = 30,
-    }
+    /// <summary>
+    /// Years
+    /// </summary>
+    Years = 30,
 }

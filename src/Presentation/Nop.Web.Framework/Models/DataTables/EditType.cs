@@ -1,12 +1,11 @@
-﻿namespace Nop.Web.Framework.Models.DataTables
+﻿namespace Nop.Web.Framework.Models.DataTables;
+
+/// <summary>
+/// Represents type editing of column
+/// </summary>
+public enum EditType
 {
-    /// <summary>
-    /// Represents type editing of column
-    /// </summary>
-    public enum EditType
-    {
-        Number = 1,
-        Checkbox = 2,
-        String = 3
-    }
+    Number = 1,
+    Checkbox = 2,
+    String = 3
 }

@@ -1,23 +1,22 @@
-﻿namespace Nop.Core.Events
+﻿namespace Nop.Core.Events;
+
+/// <summary>
+/// A container for entities that are updated.
+/// </summary>
+/// <typeparam name="T"></typeparam>
+public partial class EntityUpdatedEvent<T> where T : BaseEntity
 {
     /// <summary>
-    /// A container for entities that are updated.
+    /// Ctor
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public partial class EntityUpdatedEvent<T> where T : BaseEntity
+    /// <param name="entity">Entity</param>
+    public EntityUpdatedEvent(T entity)
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="entity">Entity</param>
-        public EntityUpdatedEvent(T entity)
-        {
-            Entity = entity;
-        }
-
-        /// <summary>
-        /// Entity
-        /// </summary>
-        public T Entity { get; }
+        Entity = entity;
     }
+
+    /// <summary>
+    /// Entity
+    /// </summary>
+    public T Entity { get; }
 }

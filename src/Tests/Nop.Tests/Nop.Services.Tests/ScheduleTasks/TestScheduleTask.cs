@@ -1,24 +1,23 @@
 ﻿using Nop.Services.ScheduleTasks;
 
-namespace Nop.Tests.Nop.Services.Tests.ScheduleTasks
+namespace Nop.Tests.Nop.Services.Tests.ScheduleTasks;
+
+public class TestScheduleTask : IScheduleTask
 {
-    public class TestScheduleTask : IScheduleTask
+    public TestScheduleTask()
     {
-        public TestScheduleTask()
-        {
-            IsInit = true;
-        }
+        IsInit = true;
+    }
 
-        public Task ExecuteAsync()
-        {
-            throw new System.NotImplementedException();
-        }
+    public Task ExecuteAsync()
+    {
+        throw new System.NotImplementedException();
+    }
 
-        public static bool IsInit { get; protected set; }
+    public static bool IsInit { get; protected set; }
 
-        public static void ResetInitFlag()
-        {
-            IsInit = false;
-        }
+    public static void ResetInitFlag()
+    {
+        IsInit = false;
     }
 }

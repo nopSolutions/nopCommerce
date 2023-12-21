@@ -6,49 +6,48 @@ using Nop.Core.Http;
 using Nop.Services.Common;
 using Nop.Web.Framework.Components;
 
-namespace Nop.Web.Components
+namespace Nop.Web.Components;
+
+public partial class EuCookieLawViewComponent : NopViewComponent
 {
-    public partial class EuCookieLawViewComponent : NopViewComponent
+    protected readonly IGenericAttributeService _genericAttributeService;
+    protected readonly IStoreContext _storeContext;
+    protected readonly IWorkContext _workContext;
+    protected readonly StoreInformationSettings _storeInformationSettings;
+
+    public EuCookieLawViewComponent(IGenericAttributeService genericAttributeService,
+        IStoreContext storeContext,
+        IWorkContext workContext,
+        StoreInformationSettings storeInformationSettings)
     {
-        protected readonly IGenericAttributeService _genericAttributeService;
-        protected readonly IStoreContext _storeContext;
-        protected readonly IWorkContext _workContext;
-        protected readonly StoreInformationSettings _storeInformationSettings;
+        _genericAttributeService = genericAttributeService;
+        _storeContext = storeContext;
+        _workContext = workContext;
+        _storeInformationSettings = storeInformationSettings;
+    }
 
-        public EuCookieLawViewComponent(IGenericAttributeService genericAttributeService,
-            IStoreContext storeContext,
-            IWorkContext workContext,
-            StoreInformationSettings storeInformationSettings)
-        {
-            _genericAttributeService = genericAttributeService;
-            _storeContext = storeContext;
-            _workContext = workContext;
-            _storeInformationSettings = storeInformationSettings;
-        }
+    public async Task<IViewComponentResult> InvokeAsync()
+    {
+        if (!_storeInformationSettings.DisplayEuCookieLawWarning)
+            //disabled
+            return Content("");
 
-        public async Task<IViewComponentResult> InvokeAsync()
-        {
-            if (!_storeInformationSettings.DisplayEuCookieLawWarning)
-                //disabled
-                return Content("");
+        //ignore search engines because some pages could be indexed with the EU cookie as description
+        var customer = await _workContext.GetCurrentCustomerAsync();
+        if (customer.IsSearchEngineAccount())
+            return Content("");
 
-            //ignore search engines because some pages could be indexed with the EU cookie as description
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            if (customer.IsSearchEngineAccount())
-                return Content("");
+        var store = await _storeContext.GetCurrentStoreAsync();
 
-            var store = await _storeContext.GetCurrentStoreAsync();
+        if (await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.EuCookieLawAcceptedAttribute, store.Id))
+            //already accepted
+            return Content("");
 
-            if (await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.EuCookieLawAcceptedAttribute, store.Id))
-                //already accepted
-                return Content("");
+        //ignore notification?
+        //right now it's used during logout so popup window is not displayed twice
+        if (TempData[$"{NopCookieDefaults.Prefix}{NopCookieDefaults.IgnoreEuCookieLawWarning}"] != null && Convert.ToBoolean(TempData[$"{NopCookieDefaults.Prefix}{NopCookieDefaults.IgnoreEuCookieLawWarning}"]))
+            return Content("");
 
-            //ignore notification?
-            //right now it's used during logout so popup window is not displayed twice
-            if (TempData[$"{NopCookieDefaults.Prefix}{NopCookieDefaults.IgnoreEuCookieLawWarning}"] != null && Convert.ToBoolean(TempData[$"{NopCookieDefaults.Prefix}{NopCookieDefaults.IgnoreEuCookieLawWarning}"]))
-                return Content("");
-
-            return View();
-        }
+        return View();
     }
 }

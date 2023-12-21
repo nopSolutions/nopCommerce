@@ -232,3 +232,4 @@ csharp_space_after_dot                                                      = fa
 # Wrapping preferences
 csharp_preserve_single_line_statements  = false
 csharp_preserve_single_line_blocks      = true
+csharp_style_namespace_declarations 	= file_scoped:suggestion

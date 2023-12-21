@@ -1,13 +1,12 @@
-﻿namespace Nop.Web.Infrastructure
+﻿namespace Nop.Web.Infrastructure;
+
+/// <summary>
+/// Interface for custom RouteValues objects
+/// </summary>
+public partial interface IRouteValues
 {
     /// <summary>
-    /// Interface for custom RouteValues objects
+    /// The page number
     /// </summary>
-    public partial interface IRouteValues
-    {
-        /// <summary>
-        /// The page number
-        /// </summary>
-        int PageNumber { get; set; }
-    }
+    int PageNumber { get; set; }
 }
