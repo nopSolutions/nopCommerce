@@ -64,6 +64,12 @@ namespace Nop.Plugin.Misc.AbcPromos.Controllers
 
         public async Task<IActionResult> Promo(string promoSlug, CatalogProductsCommand command)
         {
+            // Set to high to low by default
+            if (command.OrderBy == null)
+            {
+                command.OrderBy = 11;
+            }
+
             var urlRecord = await _urlRecordService.GetBySlugAsync(promoSlug);
             if (urlRecord == null) return InvokeHttp404();
 
