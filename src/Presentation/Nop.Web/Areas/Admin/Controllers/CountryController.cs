@@ -488,8 +488,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //permission validation is not required here
 
             // This action method gets called via an ajax request
-            if (string.IsNullOrEmpty(countryId))
-                throw new ArgumentNullException(nameof(countryId));
+            ArgumentException.ThrowIfNullOrEmpty(countryId);
 
             var country = await _countryService.GetCountryByIdAsync(Convert.ToInt32(countryId));
             var states = country != null ? (await _stateProvinceService.GetStateProvincesByCountryIdAsync(country.Id, showHidden: true)).ToList() : [];

@@ -43,8 +43,7 @@ namespace Nop.Tests
         /// <returns>Connection to a database</returns>
         protected override DbConnection GetInternalDbConnection(string connectionString)
         {
-            if (string.IsNullOrEmpty(connectionString))
-                throw new ArgumentNullException(nameof(connectionString));
+            ArgumentException.ThrowIfNullOrEmpty(connectionString);
 
             return new SqliteConnection(string.IsNullOrEmpty(connectionString)
                 ? DataSettingsManager.LoadSettings().ConnectionString

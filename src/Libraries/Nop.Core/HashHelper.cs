@@ -16,9 +16,8 @@ namespace Nop.Core
         /// <returns>Data hash</returns>
         public static string CreateHash(byte[] data, string hashAlgorithm, int trimByteCount = 0)
         {
-            if (string.IsNullOrEmpty(hashAlgorithm))
-                throw new ArgumentNullException(nameof(hashAlgorithm));
-
+            ArgumentException.ThrowIfNullOrEmpty(hashAlgorithm);
+            
             var algorithm = (HashAlgorithm)CryptoConfig.CreateFromName(hashAlgorithm) ?? throw new ArgumentException("Unrecognized hash name");
 
             if (trimByteCount > 0 && data.Length > trimByteCount)

@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Text;
 using Newtonsoft.Json;
 using Nop.Core;
@@ -128,8 +129,7 @@ namespace Nop.Services.Plugins
         /// <returns>Original and parsed description files</returns>
         protected IList<(string DescriptionFile, PluginDescriptor PluginDescriptor)> GetDescriptionFilesAndDescriptors(string directoryName)
         {
-            if (string.IsNullOrEmpty(directoryName))
-                throw new ArgumentNullException(nameof(directoryName));
+            ArgumentException.ThrowIfNullOrEmpty(directoryName);
 
             var result = new List<(string DescriptionFile, PluginDescriptor PluginDescriptor)>();
 

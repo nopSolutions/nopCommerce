@@ -21,7 +21,9 @@ namespace Nop.Web.Framework.Mvc.ModelBinding.Binders
 
         public InvariantNumberModelBinder(NumberStyles supportedStyles, IModelBinder globalizedBinder)
         {
-            _globalizedBinder = globalizedBinder ?? throw new ArgumentNullException(nameof(globalizedBinder));
+            ArgumentNullException.ThrowIfNull(globalizedBinder);
+
+            _globalizedBinder = globalizedBinder;
             _supportedStyles = supportedStyles;
         }
 

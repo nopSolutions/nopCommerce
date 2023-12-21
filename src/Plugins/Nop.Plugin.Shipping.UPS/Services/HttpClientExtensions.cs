@@ -11,14 +11,9 @@ namespace Nop.Plugin.Shipping.UPS.Services
         public static void PrepareRequest(this HttpClient httpClient,
             HttpRequestMessage request, UPSSettings upsSettings, string accessToken = null)
         {
-            if (httpClient == null) 
-                throw new ArgumentNullException(nameof(httpClient));
-            
-            if (request == null) 
-                throw new ArgumentNullException(nameof(request));
-            
-            if (upsSettings == null) 
-                throw new ArgumentNullException(nameof(upsSettings));
+            ArgumentNullException.ThrowIfNull(httpClient);
+            ArgumentNullException.ThrowIfNull(request);
+            ArgumentNullException.ThrowIfNull(upsSettings);
 
             httpClient.Timeout = FromSeconds(upsSettings.RequestTimeout ?? UPSDefaults.RequestTimeout);
             httpClient.DefaultRequestHeaders.Add(HeaderNames.UserAgent, UPSDefaults.UserAgent);
@@ -41,14 +36,9 @@ namespace Nop.Plugin.Shipping.UPS.Services
 
         public static void ProcessResponse(this HttpClient httpClient, HttpResponseMessage response, UPSSettings upsSettings)
         {
-            if (httpClient == null)
-                throw new ArgumentNullException(nameof(httpClient));
-
-            if (response == null)
-                throw new ArgumentNullException(nameof(response));
-
-            if (upsSettings == null)
-                throw new ArgumentNullException(nameof(upsSettings));
+            ArgumentNullException.ThrowIfNull(httpClient);
+            ArgumentNullException.ThrowIfNull(response);
+            ArgumentNullException.ThrowIfNull(upsSettings);
 
             //save debug info
             if (!upsSettings.Tracing)

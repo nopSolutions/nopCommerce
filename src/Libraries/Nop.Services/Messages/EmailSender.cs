@@ -58,8 +58,7 @@ namespace Nop.Services.Messages
         /// </returns>
         protected virtual async Task<MimePart> CreateMimeAttachmentAsync(string filePath, string attachmentFileName = null)
         {
-            if (string.IsNullOrWhiteSpace(filePath))
-                throw new ArgumentNullException(nameof(filePath));
+            ArgumentException.ThrowIfNullOrWhiteSpace(filePath);
 
             if (string.IsNullOrWhiteSpace(attachmentFileName))
                 attachmentFileName = Path.GetFileName(filePath);

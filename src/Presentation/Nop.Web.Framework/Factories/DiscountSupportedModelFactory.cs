@@ -36,8 +36,7 @@ namespace Nop.Web.Framework.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual Task<TModel> PrepareModelDiscountsAsync<TModel>(TModel model, IList<Discount> availableDiscounts) where TModel : IDiscountSupportedModel
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
             //prepare available discounts
             model.AvailableDiscounts = availableDiscounts.Select(discount => new SelectListItem
@@ -64,8 +63,7 @@ namespace Nop.Web.Framework.Factories
             IList<Discount> availableDiscounts, bool ignoreAppliedDiscounts)
             where TModel : IDiscountSupportedModel where TMapping : DiscountMapping
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
             //prepare already applied discounts
             if (!ignoreAppliedDiscounts && entity != null)

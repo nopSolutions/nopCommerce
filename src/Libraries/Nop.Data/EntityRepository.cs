@@ -596,11 +596,10 @@ namespace Nop.Data
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteAsync(TEntity entity, bool publishEvent = true)
         {
+            ArgumentNullException.ThrowIfNull(entity);
+
             switch (entity)
             {
-                case null:
-                    throw new ArgumentNullException(nameof(entity));
-
                 case ISoftDeletedEntity softDeletedEntity:
                     softDeletedEntity.Deleted = true;
                     await _dataProvider.UpdateEntityAsync(entity);
@@ -623,11 +622,10 @@ namespace Nop.Data
         /// <param name="publishEvent">Whether to publish event notification</param>
         public virtual void Delete(TEntity entity, bool publishEvent = true)
         {
+            ArgumentNullException.ThrowIfNull(entity);
+
             switch (entity)
             {
-                case null:
-                    throw new ArgumentNullException(nameof(entity));
-
                 case ISoftDeletedEntity softDeletedEntity:
                     softDeletedEntity.Deleted = true;
                     _dataProvider.UpdateEntity(entity);

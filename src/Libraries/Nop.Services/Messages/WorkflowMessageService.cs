@@ -593,8 +593,7 @@ namespace Nop.Services.Messages
 
             var affiliate = await _affiliateService.GetAffiliateByIdAsync(order.AffiliateId);
 
-            if (affiliate == null)
-                throw new ArgumentNullException(nameof(affiliate));
+            ArgumentNullException.ThrowIfNull(affiliate);
 
             var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
@@ -686,8 +685,7 @@ namespace Nop.Services.Messages
 
             var affiliate = await _affiliateService.GetAffiliateByIdAsync(order.AffiliateId);
 
-            if (affiliate == null)
-                throw new ArgumentNullException(nameof(affiliate));
+            ArgumentNullException.ThrowIfNull(affiliate);
 
             var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
@@ -2404,8 +2402,7 @@ namespace Nop.Services.Messages
 
             var customer = await _customerService.GetCustomerByIdAsync(subscription.CustomerId);
 
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            ArgumentNullException.ThrowIfNull(customer);
 
             //ensure that customer is registered (simple and fast way)
             if (!CommonHelper.IsValidEmail(customer.Email))

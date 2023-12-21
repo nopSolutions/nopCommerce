@@ -162,8 +162,7 @@ namespace Nop.Services.Messages
         /// <returns>Text with all token keys replaces by token value</returns>
         public string Replace(string template, IEnumerable<Token> tokens, bool htmlEncode)
         {
-            if (string.IsNullOrWhiteSpace(template))
-                throw new ArgumentNullException(nameof(template));
+            ArgumentException.ThrowIfNullOrWhiteSpace(template);
 
             ArgumentNullException.ThrowIfNull(tokens);
 

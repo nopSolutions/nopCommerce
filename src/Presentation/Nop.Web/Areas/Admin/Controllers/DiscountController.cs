@@ -250,8 +250,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
 
-            if (string.IsNullOrEmpty(systemName))
-                throw new ArgumentNullException(nameof(systemName));
+            ArgumentException.ThrowIfNullOrEmpty(systemName);
 
             var discountRequirementRule = await _discountPluginManager.LoadPluginBySystemNameAsync(systemName)
                 ?? throw new ArgumentException("Discount requirement rule could not be loaded");

@@ -429,8 +429,7 @@ namespace Nop.Web.Controllers
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
             var address = await _customerService.GetCustomerAddressAsync(customer.Id, addressId);
-            if (address == null)
-                throw new ArgumentNullException(nameof(address));
+            ArgumentNullException.ThrowIfNull(address);
 
             var addressModel = new AddressModel();
 

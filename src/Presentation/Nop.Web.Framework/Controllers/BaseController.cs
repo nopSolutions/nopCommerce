@@ -219,8 +219,7 @@ namespace Nop.Web.Framework.Controllers
         {
             //keep this method synchronized with
             //"GetSelectedCardName" method of \Nop.Web.Framework\Extensions\HtmlExtensions.cs
-            if (string.IsNullOrEmpty(cardName))
-                throw new ArgumentNullException(nameof(cardName));
+            ArgumentException.ThrowIfNullOrEmpty(cardName);
 
             const string dataKey = "nop.selected-card-name";
             if (persistForTheNextRequest)

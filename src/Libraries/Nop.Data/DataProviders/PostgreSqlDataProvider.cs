@@ -50,9 +50,9 @@ namespace Nop.Data.DataProviders
         /// <returns>Connection to a database</returns>
         protected override DbConnection GetInternalDbConnection(string connectionString)
         {
-            return string.IsNullOrEmpty(connectionString)
-                ? throw new ArgumentNullException(nameof(connectionString))
-                : (DbConnection)new NpgsqlConnection(connectionString);
+            ArgumentException.ThrowIfNullOrEmpty(connectionString);
+
+            return new NpgsqlConnection(connectionString);
         }
 
         /// <summary>

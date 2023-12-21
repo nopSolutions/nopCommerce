@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Reflection;
 using Nop.Services.Localization;
@@ -25,8 +25,11 @@ namespace Nop.Services.Common.Pdf
 
         protected PdfDocument(T source, ILocalizationService localizationService)
         {
-            _localizationService = localizationService ?? throw new NullReferenceException(nameof(localizationService));
-            Source = source ?? throw new NullReferenceException(nameof(source));
+            ArgumentNullException.ThrowIfNull(localizationService);
+            ArgumentNullException.ThrowIfNull(source);
+
+            _localizationService = localizationService;
+            Source = source;
         }
 
         #endregion

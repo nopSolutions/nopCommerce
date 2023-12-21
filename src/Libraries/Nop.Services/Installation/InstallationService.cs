@@ -754,8 +754,7 @@ namespace Nop.Services.Installation
             var crRegistered = await _customerRoleRepository.Table
                 .FirstOrDefaultAsync(customerRole => customerRole.SystemName == NopCustomerDefaults.RegisteredRoleName);
 
-            if (crRegistered == null)
-                throw new ArgumentNullException(nameof(crRegistered));
+            ArgumentNullException.ThrowIfNull(crRegistered);
 
             //default store 
             var defaultStore = await _storeRepository.Table.FirstOrDefaultAsync() ?? throw new Exception("No default store could be loaded");

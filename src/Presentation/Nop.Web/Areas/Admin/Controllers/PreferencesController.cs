@@ -30,8 +30,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> SavePreference(string name, bool value)
         {
             //permission validation is not required here
-            if (string.IsNullOrEmpty(name))
-                throw new ArgumentNullException(nameof(name));
+            ArgumentException.ThrowIfNullOrEmpty(name);
 
             await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(), name, value);
 

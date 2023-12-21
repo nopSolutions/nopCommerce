@@ -45,8 +45,7 @@ namespace Nop.Web.Framework.WebOptimizer
         /// <param name="sourceFiles">A list of relative file names of the sources to optimize</param>
         public IAsset GetOrCreateJavaScriptAsset(string bundleKey, params string[] sourceFiles)
         {
-            if (string.IsNullOrEmpty(bundleKey))
-                throw new ArgumentNullException(nameof(bundleKey));
+            ArgumentException.ThrowIfNullOrEmpty(bundleKey);
 
             if (sourceFiles.Length == 0)
                 sourceFiles = [bundleKey];
@@ -83,8 +82,7 @@ namespace Nop.Web.Framework.WebOptimizer
         /// <param name="sourceFiles">A list of relative file names of the sources to optimize</param>
         public IAsset GetOrCreateCssAsset(string bundleKey, params string[] sourceFiles)
         {
-            if (string.IsNullOrEmpty(bundleKey))
-                throw new ArgumentNullException(nameof(bundleKey));
+            ArgumentException.ThrowIfNullOrEmpty(bundleKey);
 
             if (sourceFiles.Length == 0)
                 sourceFiles = [bundleKey];

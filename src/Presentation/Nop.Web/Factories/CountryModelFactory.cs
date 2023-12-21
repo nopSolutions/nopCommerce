@@ -47,8 +47,7 @@ namespace Nop.Web.Factories
         /// </returns>
         public virtual async Task<IList<StateProvinceModel>> GetStatesByCountryIdAsync(string countryId, bool addSelectStateItem)
         {
-            if (string.IsNullOrEmpty(countryId))
-                throw new ArgumentNullException(nameof(countryId));
+            ArgumentException.ThrowIfNullOrEmpty(countryId);
 
             var country = await _countryService.GetCountryByIdAsync(Convert.ToInt32(countryId));
             var states = (await _stateProvinceService

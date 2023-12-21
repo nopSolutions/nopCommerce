@@ -40,8 +40,7 @@ namespace Nop.Web.Framework.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareModelCustomerRolesAsync<TModel>(TModel model) where TModel : IAclSupportedModel
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
             //prepare available customer roles
             var availableRoles = await _customerService.GetAllCustomerRolesAsync(showHidden: true);
@@ -65,8 +64,7 @@ namespace Nop.Web.Framework.Factories
         public virtual async Task PrepareModelCustomerRolesAsync<TModel, TEntity>(TModel model, TEntity entity, bool ignoreAclMappings)
             where TModel : IAclSupportedModel where TEntity : BaseEntity, IAclSupported
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
             //prepare customer roles with granted access
             if (!ignoreAclMappings && entity != null)

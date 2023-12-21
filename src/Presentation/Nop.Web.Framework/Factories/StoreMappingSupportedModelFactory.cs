@@ -39,8 +39,7 @@ namespace Nop.Web.Framework.Factories
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareModelStoresAsync<TModel>(TModel model) where TModel : IStoreMappingSupportedModel
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
             //prepare available stores
             var availableStores = await _storeService.GetAllStoresAsync();
@@ -64,8 +63,7 @@ namespace Nop.Web.Framework.Factories
         public virtual async Task PrepareModelStoresAsync<TModel, TEntity>(TModel model, TEntity entity, bool ignoreStoreMappings)
             where TModel : IStoreMappingSupportedModel where TEntity : BaseEntity, IStoreMappingSupported
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            ArgumentNullException.ThrowIfNull(model);
 
             //prepare stores with granted access
             if (!ignoreStoreMappings && entity != null)

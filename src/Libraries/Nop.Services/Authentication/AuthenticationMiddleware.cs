@@ -22,8 +22,11 @@ namespace Nop.Services.Authentication
 
         public AuthenticationMiddleware(IAuthenticationSchemeProvider schemes, RequestDelegate next)
         {
-            Schemes = schemes ?? throw new ArgumentNullException(nameof(schemes));
-            _next = next ?? throw new ArgumentNullException(nameof(next));
+            ArgumentNullException.ThrowIfNull(schemes);
+            Schemes = schemes;
+
+            ArgumentNullException.ThrowIfNull(next);
+            _next = next;
         }
 
         #endregion

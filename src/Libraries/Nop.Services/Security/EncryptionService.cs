@@ -68,8 +68,7 @@ namespace Nop.Services.Security
         /// <returns>Encryption algorithm</returns>
         protected virtual SymmetricAlgorithm GetEncryptionAlgorithm(string encryptionKey)
         {
-            if (string.IsNullOrEmpty(encryptionKey))
-                throw new ArgumentNullException(nameof(encryptionKey));
+            ArgumentException.ThrowIfNullOrEmpty(encryptionKey);
 
             SymmetricAlgorithm provider = _securitySettings.UseAesEncryptionAlgorithm ? Aes.Create() : TripleDES.Create();
 

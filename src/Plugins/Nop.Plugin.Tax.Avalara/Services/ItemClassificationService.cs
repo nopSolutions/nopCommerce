@@ -129,8 +129,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// <returns>A task that represents the asynchronous operation</returns>
         public async Task UpdateItemClassificationAsync(ItemClassification item)
         {
-            if (item == null)
-                throw new ArgumentNullException(nameof(item));
+            ArgumentNullException.ThrowIfNull(item);
 
             await _itemClassificationRepository.UpdateAsync(item, false);
         }

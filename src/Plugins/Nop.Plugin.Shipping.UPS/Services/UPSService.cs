@@ -573,8 +573,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
         /// </returns>
         private async Task<IEnumerable<Shipment_Package>> GetPackagesByCubicRootAsync(GetShippingOptionRequest shippingOptionRequest)
         {
-            if (shippingOptionRequest == null)
-                throw new ArgumentNullException(nameof(shippingOptionRequest));
+            ArgumentNullException.ThrowIfNull(shippingOptionRequest);
 
             //Dimensional weight is based on volume (the amount of space a package occupies in relation to its actual weight). 
             //If the cubic size of package measures three cubic feet (5,184 cubic inches or 84,951 cubic centimetres) or greater, you will be charged the greater of the dimensional weight or the actual weight.

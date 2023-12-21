@@ -1297,9 +1297,7 @@ namespace Nop.Services.Customers
             string customerRoleSystemName, bool onlyActiveCustomerRoles = true)
         {
             ArgumentNullException.ThrowIfNull(customer);
-
-            if (string.IsNullOrEmpty(customerRoleSystemName))
-                throw new ArgumentNullException(nameof(customerRoleSystemName));
+            ArgumentException.ThrowIfNullOrEmpty(customerRoleSystemName);
 
             var customerRoles = await GetCustomerRolesAsync(customer, !onlyActiveCustomerRoles);
 

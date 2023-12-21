@@ -533,8 +533,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //    return AccessDeniedView();
 
             //this action method gets called via an ajax request
-            if (string.IsNullOrEmpty(attributeId))
-                throw new ArgumentNullException(nameof(attributeId));
+            ArgumentException.ThrowIfNullOrEmpty(attributeId);
 
             var options = await _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttributeAsync(Convert.ToInt32(attributeId));
             var result = (from o in options

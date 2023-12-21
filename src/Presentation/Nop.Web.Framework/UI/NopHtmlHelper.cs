@@ -87,9 +87,8 @@ namespace Nop.Web.Framework.UI
 
         protected static string GetAssetKey(string[] keys, string suffix)
         {
-            if (keys is null || keys.Length == 0)
-                throw new ArgumentNullException(nameof(keys));
-
+            ArgumentNullException.ThrowIfNull(keys?.Length > 0 ? keys : null, nameof(keys));
+            
             var hashInput = string.Join(',', keys);
             var input = MD5.HashData(Encoding.Unicode.GetBytes(hashInput));
 
@@ -277,8 +276,7 @@ namespace Nop.Web.Framework.UI
             if (!string.IsNullOrEmpty(debugSrc) && _webHostEnvironment.IsDevelopment())
                 src = debugSrc;
 
-            if (_actionContextAccessor.ActionContext == null)
-                throw new ArgumentNullException(nameof(_actionContextAccessor.ActionContext));
+            ArgumentNullException.ThrowIfNull(_actionContextAccessor.ActionContext);
 
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 
@@ -308,8 +306,7 @@ namespace Nop.Web.Framework.UI
             if (!string.IsNullOrEmpty(debugSrc) && _webHostEnvironment.IsDevelopment())
                 src = debugSrc;
 
-            if (_actionContextAccessor.ActionContext == null)
-                throw new ArgumentNullException(nameof(_actionContextAccessor.ActionContext));
+            ArgumentNullException.ThrowIfNull(_actionContextAccessor.ActionContext);
 
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 
@@ -453,8 +450,7 @@ namespace Nop.Web.Framework.UI
             if (!string.IsNullOrEmpty(debugSrc) && _webHostEnvironment.IsDevelopment())
                 src = debugSrc;
 
-            if (_actionContextAccessor.ActionContext == null)
-                throw new ArgumentNullException(nameof(_actionContextAccessor.ActionContext));
+            ArgumentNullException.ThrowIfNull(_actionContextAccessor.ActionContext);
 
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 
@@ -480,8 +476,7 @@ namespace Nop.Web.Framework.UI
             if (!string.IsNullOrEmpty(debugSrc) && _webHostEnvironment.IsDevelopment())
                 src = debugSrc;
 
-            if (_actionContextAccessor.ActionContext == null)
-                throw new ArgumentNullException(nameof(_actionContextAccessor.ActionContext));
+            ArgumentNullException.ThrowIfNull(_actionContextAccessor.ActionContext);
 
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 
@@ -502,8 +497,7 @@ namespace Nop.Web.Framework.UI
             if (_cssParts.Count == 0)
                 return HtmlString.Empty;
 
-            if (_actionContextAccessor.ActionContext == null)
-                throw new ArgumentNullException(nameof(_actionContextAccessor.ActionContext));
+            ArgumentNullException.ThrowIfNull(_actionContextAccessor.ActionContext);
 
             var result = new StringBuilder();
 
