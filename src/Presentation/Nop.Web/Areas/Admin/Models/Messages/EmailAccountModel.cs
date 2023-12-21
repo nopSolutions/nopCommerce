@@ -45,6 +45,9 @@ namespace Nop.Web.Areas.Admin.Models.Messages
         [NopResourceDisplayName("Admin.Configuration.EmailAccounts.Fields.SendTestEmailTo")]
         public string SendTestEmailTo { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.EmailAccounts.Fields.MaxNumberOfEmails")]
+        public int MaxNumberOfEmails { get; set; }
+
         #endregion
     }
 }

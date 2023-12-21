@@ -101,7 +101,10 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //set default values for the new model
             if (emailAccount == null)
+            {
                 model.Port = 25;
+                model.MaxNumberOfEmails = 50;
+            }
 
             return Task.FromResult(model);
         }

@@ -195,6 +195,11 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo470
 
                 //#6956
                 ["Admin.ContentManagement.MessageTemplates.Description.Customer.Gdpr.DeleteRequest"] = "This message template is used when customer create a new request to delete account. The message is received by a store owner.",
+
+                //#6958
+                ["Admin.Configuration.EmailAccounts.Fields.MaxNumberOfEmails"] = "Max number of emails",
+                ["Admin.Configuration.EmailAccounts.Fields.MaxNumberOfEmails.Hint"] = "The maximum number of emails sent at one time.",
+                ["Admin.Configuration.EmailAccounts.Fields.MaxNumberOfEmails.ShouldBeGreaterThanZero"] = "The maximum number of emails should be greater 0.",
             }, languageId);
 
             #endregion
