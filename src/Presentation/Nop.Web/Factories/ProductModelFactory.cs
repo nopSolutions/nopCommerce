@@ -394,7 +394,7 @@ namespace Nop.Web.Factories
                                 var warnings = new List<string>();
                                 warnings.AddRange(await _shoppingCartService.GetShoppingCartItemAttributeWarningsAsync(customer,
                                     ShoppingCartType.ShoppingCart, product, 1, attributesXml, true, true, true));
-                                if (warnings.Count != 0)
+                                if (warnings.Any())
                                     continue;
 
                                 //get price with additional charge
@@ -1436,7 +1436,7 @@ namespace Nop.Web.Factories
 
                     var mappings = await _productAttributeParser
                         .ParseProductAttributeMappingsAsync(combination.AttributesXml);
-                    if (mappings == null || mappings.Count == 0)
+                    if (mappings == null || !mappings.Any())
                         continue;
 
                     foreach (var mapping in mappings)
@@ -1448,7 +1448,7 @@ namespace Nop.Web.Factories
 
                         var values = await _productAttributeParser
                             .ParseProductAttributeValuesAsync(combination.AttributesXml, mapping.Id);
-                        if (values == null || values.Count == 0)
+                        if (values == null || !values.Any())
                             continue;
 
                         foreach (var value in values)

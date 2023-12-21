@@ -35,7 +35,7 @@ namespace Nop.Tests.Nop.Services.Tests.Orders
         [Test]
         public async Task ItShouldReturnEmptyOrdersWhenOrderIdsEmpty()
         {
-            var orders = await _orderService.GetOrdersByIdsAsync([]);
+            var orders = await _orderService.GetOrdersByIdsAsync(Array.Empty<int>());
             orders.Count.Should().Be(0);
         }
 

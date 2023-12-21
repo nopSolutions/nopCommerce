@@ -1,4 +1,4 @@
-using Nop.Core.Domain.Shipping;
+﻿using Nop.Core.Domain.Shipping;
 
 namespace Nop.Services.Shipping.Pickup
 {
@@ -26,7 +26,7 @@ namespace Nop.Services.Shipping.Pickup
         /// <summary>
         /// Gets a value indicating whether request has been completed successfully
         /// </summary>
-        public bool Success => Errors.Count == 0;
+        public bool Success => !Errors.Any();
 
         /// <summary>
         /// Add error

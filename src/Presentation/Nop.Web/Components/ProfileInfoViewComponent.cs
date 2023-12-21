@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Nop.Core.Domain.Catalog;
 using Nop.Services.Customers;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Components;

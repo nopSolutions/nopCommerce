@@ -373,7 +373,7 @@ namespace Nop.Services.Payments
         {
             ArgumentNullException.ThrowIfNull(request);
 
-            if (request.CustomValues.Count == 0)
+            if (!request.CustomValues.Any())
                 return null;
 
             //XmlSerializer won't serialize objects that implement IDictionary by default.
@@ -404,7 +404,7 @@ namespace Nop.Services.Payments
             ArgumentNullException.ThrowIfNull(order);
 
             if (string.IsNullOrWhiteSpace(order.CustomValuesXml))
-                return [];
+                return new Dictionary<string, object>();
 
             var serializer = new XmlSerializer(typeof(DictionarySerializer));
 

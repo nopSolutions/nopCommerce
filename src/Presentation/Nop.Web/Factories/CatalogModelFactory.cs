@@ -359,7 +359,7 @@ namespace Nop.Web.Factories
             if (!string.IsNullOrEmpty(model.WarningMessage))
                 return;
 
-            if (products.Count == 0 && isFiltering)
+            if (!products.Any() && isFiltering)
                 model.NoResultMessage = await _localizationService.GetResourceAsync("Catalog.Products.NoResult");
             else
             {
@@ -1606,7 +1606,7 @@ namespace Nop.Web.Factories
                 });
             }
 
-            if (categoriesModels.Count != 0)
+            if (categoriesModels.Any())
             {
                 //first empty entry
                 model.AvailableCategories.Add(new SelectListItem

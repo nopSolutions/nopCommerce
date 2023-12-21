@@ -421,8 +421,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
             foreach (var c in countries)
                 model.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (selectedCountry != null && c.Id == selectedCountry.Id) });
             //states
-            var states = selectedCountry != null ? (await _stateProvinceService.GetStateProvincesByCountryIdAsync(selectedCountry.Id, showHidden: true)).ToList()
-                : [];
+            var states = selectedCountry != null ? (await _stateProvinceService.GetStateProvincesByCountryIdAsync(selectedCountry.Id, showHidden: true)).ToList() : new List<StateProvince>();
             model.AvailableStates.Add(new SelectListItem { Text = "*", Value = "0" });
             foreach (var s in states)
                 model.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (selectedState != null && s.Id == selectedState.Id) });

@@ -454,7 +454,7 @@ namespace Nop.Services.Catalog
                 .ThenByDescending(pwi => pwi.StockQuantity)
                 .ToListAsync();
 
-            if (productInventory.Count == 0)
+            if (!productInventory.Any())
                 return;
 
             var qty = quantity;
@@ -667,7 +667,7 @@ namespace Nop.Services.Catalog
                 return featuredProducts.Select(p => p.Id).ToList();
             });
 
-            if (featuredProducts.Count == 0 && featuredProductIds.Count > 0)
+            if (!featuredProducts.Any() && featuredProductIds.Any())
                 featuredProducts = await _productRepository.GetByIdsAsync(featuredProductIds, cache => default, false);
 
             return featuredProducts;
@@ -712,7 +712,7 @@ namespace Nop.Services.Catalog
                 return query.Select(p => p.Id).ToList();
             });
 
-            if (featuredProducts.Count == 0 && featuredProductIds.Count > 0)
+            if (!featuredProducts.Any() && featuredProductIds.Any())
                 featuredProducts = await _productRepository.GetByIdsAsync(featuredProductIds, cache => default, false);
 
             return featuredProducts;
@@ -1426,7 +1426,7 @@ namespace Nop.Services.Catalog
             ArgumentNullException.ThrowIfNull(product);
 
             if (string.IsNullOrEmpty(product.RequiredProductIds))
-                return [];
+                return Array.Empty<int>();
 
             var ids = new List<int>();
 
@@ -1436,7 +1436,7 @@ namespace Nop.Services.Catalog
                 if (int.TryParse(idStr, out var id))
                     ids.Add(id);
 
-            return [.. ids];
+            return ids.ToArray();
         }
 
         /// <summary>
@@ -1482,7 +1482,7 @@ namespace Nop.Services.Catalog
                 }
             }
 
-            return [.. result];
+            return result.ToArray();
         }
 
         /// <summary>
@@ -2109,7 +2109,7 @@ namespace Nop.Services.Catalog
                 return result;
 
             var cartProductIds = cart.Select(sci => sci.ProductId).ToHashSet();
-            return await (await GetCrossSellProductsByProductIdsAsync([.. cartProductIds]))
+            return await (await GetCrossSellProductsByProductIdsAsync(cartProductIds.ToArray()))
                 .Select(cs => cs.ProductId2)
                 .Except(cartProductIds)
                 .SelectAwait(async cs => await GetProductByIdAsync(cs))

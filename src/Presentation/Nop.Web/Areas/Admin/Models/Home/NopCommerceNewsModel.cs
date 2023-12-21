@@ -11,7 +11,7 @@ namespace Nop.Web.Areas.Admin.Models.Home
 
         public NopCommerceNewsModel()
         {
-            Items = [];
+            Items = new List<NopCommerceNewsDetailsModel>();
         }
 
         #endregion

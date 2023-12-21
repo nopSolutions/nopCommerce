@@ -431,7 +431,7 @@ namespace Nop.Services.Orders
 
                             warnings.AddRange(await GetQuantityProductWarningsAsync(product, quantity, maximumQuantityCanBeAdded));
 
-                            if (warnings.Count != 0)
+                            if (warnings.Any())
                                 return warnings;
 
                             //validate product quantity with non combinable product attributes
@@ -463,7 +463,7 @@ namespace Nop.Services.Orders
                                 }
                             }
 
-                            if (warnings.Count != 0)
+                            if (warnings.Any())
                                 return warnings;
 
                             //validate product quantity and product quantity into bundles
@@ -728,7 +728,7 @@ namespace Nop.Services.Orders
 
             ArgumentNullException.ThrowIfNull(product);
 
-            if (cart.Count == 0)
+            if (!cart.Any())
                 return new List<Product>();
 
             var productIds = cart.Select(ci => ci.ProductId).ToArray();
@@ -949,7 +949,7 @@ namespace Nop.Services.Orders
                 }
             }
 
-            if (warnings.Count != 0 || ignoreBundledProducts)
+            if (warnings.Any() || ignoreBundledProducts)
                 return warnings;
 
             //validate bundled products
@@ -1317,7 +1317,7 @@ namespace Nop.Services.Orders
             var (unitPrice, discountAmount, appliedDiscounts) = await GetUnitPriceAsync(shoppingCartItem, includeDiscounts);
 
             //discount
-            if (appliedDiscounts.Count != 0)
+            if (appliedDiscounts.Any())
             {
                 //we can properly use "MaximumDiscountedQuantity" property only for one discount (not cumulative ones)
                 Discount oneAndOnlyDiscount = null;
@@ -1594,7 +1594,7 @@ namespace Nop.Services.Orders
 
                 await addRequiredProductsToCartAsync(newQuantity);
 
-                if (warnings.Count != 0)
+                if (warnings.Any())
                     return warnings;
 
                 warnings.AddRange(await GetShoppingCartItemWarningsAsync(customer, shoppingCartType, product,
@@ -1602,7 +1602,7 @@ namespace Nop.Services.Orders
                     customerEnteredPrice, rentalStartDate, rentalEndDate,
                     newQuantity, addRequiredProducts, shoppingCartItem.Id));
 
-                if (warnings.Count != 0)
+                if (warnings.Any())
                     return warnings;
 
                 shoppingCartItem.AttributesXml = attributesXml;
@@ -1619,12 +1619,12 @@ namespace Nop.Services.Orders
                     rentalStartDate, rentalEndDate,
                     quantity, addRequiredProducts));
 
-                if (warnings.Count != 0)
+                if (warnings.Any())
                     return warnings;
 
                 await addRequiredProductsToCartAsync();
 
-                if (warnings.Count != 0)
+                if (warnings.Any())
                     return warnings;
 
                 //maximum items validation
@@ -1765,7 +1765,7 @@ namespace Nop.Services.Orders
                     product, shoppingCartItem.StoreId,
                     attributesXml, customerEnteredPrice,
                     rentalStartDate, rentalEndDate, quantity, false, shoppingCartItemId));
-                if (warnings.Count != 0)
+                if (warnings.Any())
                     return warnings;
 
                 //if everything is OK, then update a shopping cart item
@@ -1783,7 +1783,7 @@ namespace Nop.Services.Orders
                 //check warnings for required products
                 warnings.AddRange(await GetRequiredProductWarningsAsync(customer, shoppingCartItem.ShoppingCartType,
                     product, shoppingCartItem.StoreId, quantity, false, shoppingCartItemId));
-                if (warnings.Count != 0)
+                if (warnings.Any())
                     return warnings;
 
                 //delete a shopping cart item

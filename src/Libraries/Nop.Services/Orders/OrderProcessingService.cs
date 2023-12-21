@@ -1148,7 +1148,7 @@ namespace Nop.Services.Orders
                 .Where(cr => purchasedProductIds.Contains(cr.PurchasedWithProductId))
                 .ToList();
 
-            if (customerRoles.Count == 0)
+            if (!customerRoles.Any())
                 return;
 
             var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
@@ -1385,7 +1385,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task SaveGiftCardUsageHistoryAsync(PlaceOrderContainer details, Order order)
         {
-            if (details.AppliedGiftCards == null || details.AppliedGiftCards.Count == 0)
+            if (details.AppliedGiftCards == null || !details.AppliedGiftCards.Any())
                 return;
 
             foreach (var agc in details.AppliedGiftCards)
@@ -1406,7 +1406,7 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task SaveDiscountUsageHistoryAsync(PlaceOrderContainer details, Order order)
         {
-            if (details.AppliedDiscounts == null || details.AppliedDiscounts.Count == 0)
+            if (details.AppliedDiscounts == null || !details.AppliedDiscounts.Any())
                 return;
 
             foreach (var discount in details.AppliedDiscounts)
@@ -3176,8 +3176,8 @@ namespace Nop.Services.Orders
             public PlaceOrderContainer()
             {
                 Cart = new List<ShoppingCartItem>();
-                AppliedDiscounts = [];
-                AppliedGiftCards = [];
+                AppliedDiscounts = new List<Discount>();
+                AppliedGiftCards = new List<AppliedGiftCard>();
             }
 
             /// <summary>

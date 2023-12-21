@@ -203,7 +203,7 @@ namespace Nop.Services.Catalog
                         where pam.ProductId == productId
                         select pam;
 
-            var attributes = await _staticCacheManager.GetAsync(allCacheKey, async () => await query.ToListAsync()) ?? [];
+            var attributes = await _staticCacheManager.GetAsync(allCacheKey, async () => await query.ToListAsync()) ?? new List<ProductAttributeMapping>();
 
             return attributes;
         }
@@ -363,7 +363,7 @@ namespace Nop.Services.Catalog
                         select pacp;
 
             var valuePictures = await _staticCacheManager.GetAsync(allCacheKey, async () => await query.ToListAsync())
-                ?? [];
+                ?? new List<ProductAttributeValuePicture>();
 
             return valuePictures;
         }
@@ -603,7 +603,7 @@ namespace Nop.Services.Catalog
                         select pacp;
 
             var combinationPictures = await _staticCacheManager.GetAsync(allCacheKey, async () => await query.ToListAsync()) 
-                ?? [];
+                ?? new List<ProductAttributeCombinationPicture>();
 
             return combinationPictures;
         }

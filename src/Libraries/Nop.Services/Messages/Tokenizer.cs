@@ -119,7 +119,7 @@ namespace Nop.Services.Messages
                     Condition = regexCondition.Match(capture.Value).Value
                 })).ToList();
 
-            if (conditionalStatements.Count == 0)
+            if (!conditionalStatements.Any())
                 return template;
 
             //replace conditional statements

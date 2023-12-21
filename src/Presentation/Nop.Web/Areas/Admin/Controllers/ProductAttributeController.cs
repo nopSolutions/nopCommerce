@@ -234,10 +234,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
-            if (selectedIds == null || selectedIds.Count == 0)
+            if (selectedIds == null || !selectedIds.Any())
                 return NoContent();
 
-            var productAttributes = await _productAttributeService.GetProductAttributeByIdsAsync([.. selectedIds]);
+            var productAttributes = await _productAttributeService.GetProductAttributeByIdsAsync(selectedIds.ToArray());
             await _productAttributeService.DeleteProductAttributesAsync(productAttributes);
 
             foreach (var productAttribute in productAttributes)

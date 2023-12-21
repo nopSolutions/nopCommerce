@@ -492,8 +492,8 @@ namespace Nop.Services.Catalog
             queryFilter = queryFilter.Except(filter).ToArray();
 
             //if some names not found
-            if (queryFilter.Length == 0)
-                return [.. queryFilter];
+            if (!queryFilter.Any())
+                return queryFilter.ToArray();
 
             //filtering by IDs
             filter = await query.Select(c => c.Id.ToString())

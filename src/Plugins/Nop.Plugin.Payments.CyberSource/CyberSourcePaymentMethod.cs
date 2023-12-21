@@ -176,7 +176,7 @@ namespace Nop.Plugin.Payments.CyberSource
                     if (!string.IsNullOrEmpty(processPaymentRequest.CreditCardNumber))
                     {
                         firstSixDigitOfCard = processPaymentRequest.CreditCardNumber.Length >= 6
-                            ? processPaymentRequest.CreditCardNumber[..6]
+                            ? processPaymentRequest.CreditCardNumber.Substring(0, 6)
                             : string.Empty;
                         lastFourDigitOfCard = processPaymentRequest.CreditCardNumber.Length >= 4
                             ? processPaymentRequest.CreditCardNumber[^4..]
@@ -375,7 +375,7 @@ namespace Nop.Plugin.Payments.CyberSource
             //request succeeded
             var refundIds = await _genericAttributeService
                 .GetAttributeAsync<List<string>>(refundPaymentRequest.Order, CyberSourceDefaults.RefundIdAttributeName)
-                ?? [];
+                ?? new List<string>();
             if (!refundIds.Contains(refundId))
                 refundIds.Add(refundId);
             await _genericAttributeService.SaveAttributeAsync(refundPaymentRequest.Order, CyberSourceDefaults.RefundIdAttributeName, refundIds);

@@ -114,7 +114,7 @@ namespace Nop.Services.Security
 
             ArgumentNullException.ThrowIfNull(customerRoleIds);
 
-            if (customerRoleIds.Length == 0 || _catalogSettings.IgnoreAcl || !await IsEntityAclMappingExistAsync<TEntity>())
+            if (!customerRoleIds.Any() || _catalogSettings.IgnoreAcl || !await IsEntityAclMappingExistAsync<TEntity>())
                 return query;
 
             return from entity in query

@@ -27,7 +27,7 @@ namespace Nop.Tests.Nop.Services.Tests.Messages
     {
         private readonly IWorkflowMessageService _workflowMessageService;
 
-        private readonly List<int> _notActiveTempletes = [];
+        private readonly List<int> _notActiveTempletes = new();
         private readonly IMessageTemplateService _messageTemplateService;
         private Customer _customer;
         private readonly IRepository<QueuedEmail> _queuedEmailRepository;

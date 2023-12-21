@@ -11,7 +11,7 @@ namespace Nop.Services.Common.Pdf
 
         public CatalogItem()
         {
-            PicturePaths = [];
+            PicturePaths = new();
         }
 
         #endregion

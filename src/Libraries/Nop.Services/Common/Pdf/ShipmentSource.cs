@@ -11,7 +11,7 @@ namespace Nop.Services.Common.Pdf
 
         public ShipmentSource()
         {
-            Products = [];
+            Products = new();
         }
 
         #endregion

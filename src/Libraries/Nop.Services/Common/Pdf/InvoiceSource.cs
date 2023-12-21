@@ -11,10 +11,10 @@ namespace Nop.Services.Common.Pdf
 
         public InvoiceSource()
         {
-            Products = [];
+            Products = new();
             Totals = new();
-            FooterTextColumn1 = [];
-            FooterTextColumn2 = [];
+            FooterTextColumn1 = new();
+            FooterTextColumn2 = new();
         }
 
         #endregion

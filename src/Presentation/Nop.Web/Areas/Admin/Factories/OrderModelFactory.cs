@@ -469,7 +469,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 .FormatOrderPriceAsync(order.OrderTax, order.CurrencyRate, order.CustomerCurrencyCode,
                 _orderSettings.DisplayCustomerCurrencyOnOrders, primaryStoreCurrency, languageId, null, false);
             var taxRates = _orderService.ParseTaxRates(order, order.TaxRates);
-            var displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Count != 0;
+            var displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Any();
             var displayTax = !displayTaxRates;
             foreach (var tr in taxRates)
             {

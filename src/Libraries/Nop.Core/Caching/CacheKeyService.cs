@@ -47,7 +47,7 @@ namespace Nop.Core.Caching
         {
             var identifiers = ids.ToList();
 
-            if (identifiers.Count == 0)
+            if (!identifiers.Any())
                 return string.Empty;
 
             var identifiersString = string.Join(", ", identifiers.OrderBy(id => id));

@@ -368,7 +368,7 @@ namespace Nop.Services.Orders
             }
 
             //add at least one tax rate (0%)
-            if (taxRates.Count == 0)
+            if (!taxRates.Any())
                 taxRates.Add(decimal.Zero, decimal.Zero);
 
             //summarize taxes
@@ -1291,7 +1291,7 @@ namespace Nop.Services.Orders
             ArgumentNullException.ThrowIfNull(cart);
 
             var taxTotalResult = await _taxService.GetTaxTotalAsync(cart, usePaymentMethodAdditionalFee);
-            var taxRates = taxTotalResult?.TaxRates ?? [];
+            var taxRates = taxTotalResult?.TaxRates ?? new SortedDictionary<decimal, decimal>();
             var taxTotal = taxTotalResult?.TaxTotal ?? decimal.Zero;
 
             if (_shoppingCartSettings.RoundPricesDuringCalculation)

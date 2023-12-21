@@ -783,13 +783,13 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 var errors = new List<string>();
                 if (online)
-                    errors = [.. (await _orderProcessingService.PartiallyRefundAsync(order, amountToRefund))];
+                    errors = (await _orderProcessingService.PartiallyRefundAsync(order, amountToRefund)).ToList();
                 else
                     await _orderProcessingService.PartiallyRefundOfflineAsync(order, amountToRefund);
 
                 await LogEditOrderAsync(order.Id);
 
-                if (errors.Count == 0)
+                if (!errors.Any())
                 {
                     //success
                     ViewBag.RefreshPage = true;
@@ -1089,7 +1089,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 enabledattributemappingids = enabledAttributeMappingIds.ToArray(),
                 disabledattributemappingids = disabledAttributeMappingIds.ToArray(),
-                message = errors.Count != 0 ? errors.ToArray() : null
+                message = errors.Any() ? errors.ToArray() : null
             });
         }
 
@@ -1668,7 +1668,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             warnings.AddRange(await _shoppingCartService.GetShoppingCartItemAttributeWarningsAsync(customer, ShoppingCartType.ShoppingCart, product, quantity, attributesXml));
             warnings.AddRange(await _shoppingCartService.GetShoppingCartItemGiftCardWarningsAsync(ShoppingCartType.ShoppingCart, product, attributesXml));
             warnings.AddRange(await _shoppingCartService.GetRentalProductWarningsAsync(product, rentalStartDate, rentalEndDate));
-            if (warnings.Count == 0)
+            if (!warnings.Any())
             {
                 //no errors
                 var currentStore = await _storeContext.GetCurrentStoreAsync();
@@ -2056,7 +2056,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //if we have at least one item in the shipment, then save it
-            if (shipmentItems.Count != 0)
+            if (shipmentItems.Any())
             {
                 shipment.TotalWeight = totalWeight;
                 await _shipmentService.InsertShipmentAsync(shipment);
@@ -2530,10 +2530,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
-            if (selectedIds == null || selectedIds.Count == 0)
+            if (selectedIds == null || !selectedIds.Any())
                 return NoContent();
 
-            var shipments = await _shipmentService.GetShipmentsByIdsAsync([.. selectedIds]);
+            var shipments = await _shipmentService.GetShipmentsByIdsAsync(selectedIds.ToArray());
 
             //a vendor should have access only to his products
             if (await _workContext.GetCurrentVendorAsync() != null)
@@ -2562,10 +2562,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
-            if (selectedIds == null || selectedIds.Count == 0)
+            if (selectedIds == null || !selectedIds.Any())
                 return NoContent();
 
-            var shipments = await _shipmentService.GetShipmentsByIdsAsync([.. selectedIds]);
+            var shipments = await _shipmentService.GetShipmentsByIdsAsync(selectedIds.ToArray());
 
             //a vendor should have access only to his products
             if (await _workContext.GetCurrentVendorAsync() != null)
@@ -2594,10 +2594,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
-            if (selectedIds == null || selectedIds.Count == 0)
+            if (selectedIds == null || !selectedIds.Any())
                 return NoContent();
 
-            var shipments = await _shipmentService.GetShipmentsByIdsAsync([.. selectedIds]);
+            var shipments = await _shipmentService.GetShipmentsByIdsAsync(selectedIds.ToArray());
 
             //a vendor should have access only to his products
             if (await _workContext.GetCurrentVendorAsync() != null)

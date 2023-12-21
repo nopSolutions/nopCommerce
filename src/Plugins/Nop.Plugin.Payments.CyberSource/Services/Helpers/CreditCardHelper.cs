@@ -142,7 +142,7 @@ namespace Nop.Plugin.Payments.CyberSource.Services.Helpers
 
             cardNumber = RemoveSpecialCharacters(cardNumber);
 
-            return cardNumber.Length >= 6 ? cardNumber[..6] : cardNumber;
+            return cardNumber.Length >= 6 ? cardNumber.Substring(0, 6) : cardNumber;
         }
 
         /// <summary>
@@ -157,7 +157,7 @@ namespace Nop.Plugin.Payments.CyberSource.Services.Helpers
 
             cardNumber = RemoveSpecialCharacters(cardNumber);
 
-            return cardNumber.Length >= 4 ? cardNumber[^4..] : cardNumber;
+            return cardNumber.Length >= 4 ? cardNumber.Substring(cardNumber.Length - 4) : cardNumber;
         }
 
         #endregion

@@ -838,7 +838,7 @@ namespace Nop.Services.Catalog
                         //add several values attribute types (checkboxes)
 
                         //checkboxes could have several values ticked
-                        foreach (var oldXml in attributesXml.Count != 0 ? attributesXml : [string.Empty])
+                        foreach (var oldXml in attributesXml.Any() ? attributesXml : [string.Empty])
                         {
                             foreach (var checkboxCombination in CreateCombination(attributeValues))
                             {
@@ -855,7 +855,7 @@ namespace Nop.Services.Catalog
                     {
                         //add one value attribute types (dropdownlist, radiobutton, color squares)
 
-                        foreach (var oldXml in attributesXml.Count != 0 ? attributesXml : [string.Empty])
+                        foreach (var oldXml in attributesXml.Any() ? attributesXml : [string.Empty])
                         {
                             currentAttributesXml.AddRange(attributeValues.Select(attributeValue =>
                                 AddProductAttribute(oldXml, productAttributeMapping, attributeValue.Id.ToString())));

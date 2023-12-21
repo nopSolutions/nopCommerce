@@ -90,7 +90,8 @@ namespace Nop.Tests.Nop.Services.Tests.Localization
 
             await _localizationService.AddOrUpdateLocaleResourceAsync(_resources.ToDictionary(p => p.Key.ToUpperInvariant(), p => p.Value.ToUpperInvariant()));
 
-            rez = [.. _lsrRepository.Table.Where(p => p.ResourceName.StartsWith(PREFIX, StringComparison.InvariantCultureIgnoreCase))];
+            rez = _lsrRepository.Table
+                .Where(p => p.ResourceName.StartsWith(PREFIX, StringComparison.InvariantCultureIgnoreCase)).ToList();
 
             rez.Count.Should().Be(3);
             rez.Count(p => p.ResourceValue == p.ResourceValue.ToUpperInvariant()).Should().Be(3);
@@ -144,7 +145,8 @@ namespace Nop.Tests.Nop.Services.Tests.Localization
 
             await _localizationService.DeleteLocaleResourcesAsync(PREFIX);
 
-            rez = [.. _lsrRepository.Table.Where(p => p.ResourceName.StartsWith(PREFIX, StringComparison.InvariantCultureIgnoreCase))];
+            rez = _lsrRepository.Table
+                .Where(p => p.ResourceName.StartsWith(PREFIX, StringComparison.InvariantCultureIgnoreCase)).ToList();
 
             rez.Count.Should().Be(0);
         }
@@ -161,7 +163,8 @@ namespace Nop.Tests.Nop.Services.Tests.Localization
 
             await _localizationService.DeleteLocaleResourcesAsync(PREFIX.ToUpperInvariant());
 
-            rez = [.. _lsrRepository.Table.Where(p => p.ResourceName.StartsWith(PREFIX, StringComparison.InvariantCultureIgnoreCase))];
+            rez = _lsrRepository.Table
+                .Where(p => p.ResourceName.StartsWith(PREFIX, StringComparison.InvariantCultureIgnoreCase)).ToList();
 
             rez.Count.Should().Be(0);
         }

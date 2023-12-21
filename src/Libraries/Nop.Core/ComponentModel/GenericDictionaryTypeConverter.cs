@@ -59,12 +59,12 @@ namespace Nop.Core.ComponentModel
                 return base.ConvertFrom(context, culture, value);
 
             var input = (string)value;
-            var items = string.IsNullOrEmpty(input) ? [] : input.Split(';').Select(x => x.Trim()).ToArray();
+            var items = string.IsNullOrEmpty(input) ? Array.Empty<string>() : input.Split(';').Select(x => x.Trim()).ToArray();
 
             var result = new Dictionary<K, V>();
             foreach (var item in items)
             {
-                var keyValueStr = string.IsNullOrEmpty(item) ? [] : item.Split(',').Select(x => x.Trim()).ToArray();
+                var keyValueStr = string.IsNullOrEmpty(item) ? Array.Empty<string>() : item.Split(',').Select(x => x.Trim()).ToArray();
                 if (keyValueStr.Length != 2)
                     continue;
 

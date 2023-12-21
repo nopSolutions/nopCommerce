@@ -889,7 +889,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
                 {
                     case "completed":
                         var refundIds = await _genericAttributeService.GetAttributeAsync<List<string>>(order, PayPalCommerceDefaults.RefundIdAttributeName)
-                            ?? [];
+                            ?? new List<string>();
                         if (!refundIds.Contains(refund.Id))
                         {
                             if (decimal.TryParse(refund.Amount?.Value, out var refundedAmount))

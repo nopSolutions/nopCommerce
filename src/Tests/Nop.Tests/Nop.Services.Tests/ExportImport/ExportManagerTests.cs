@@ -254,7 +254,7 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
             manager.SetSelectList("PaymentStatus", await PaymentStatus.Pending.ToSelectListAsync(useLocalization: false));
             manager.SetSelectList("ShippingStatus", await ShippingStatus.ShippingNotRequired.ToSelectListAsync(useLocalization: false));
 
-            AreAllObjectPropertiesPresent(order, manager, [.. ignore]);
+            AreAllObjectPropertiesPresent(order, manager, ignore.ToArray());
             PropertiesShouldEqual(order, manager, replacePairs);
 
             var addressFields = new List<string>
@@ -311,7 +311,7 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
 
             var ignore = new List<string> { "Picture", "EntityCacheKey", "PictureId", "SubjectToAcl", "LimitedToStores", "Deleted", "CreatedOnUtc", "UpdatedOnUtc", "AppliedDiscounts", "DiscountManufacturerMappings" };
 
-            AreAllObjectPropertiesPresent(manufacturer, manager, [.. ignore]);
+            AreAllObjectPropertiesPresent(manufacturer, manager, ignore.ToArray());
             PropertiesShouldEqual(manufacturer, manager, new Dictionary<string, string>());
 
             manager.GetDefaultProperties.First(p => p.PropertyName == "Picture").PropertyValue.Should().NotBeNull();
@@ -384,7 +384,7 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
             if(!_customerSettings.FaxEnabled)
                 ignore.Add("Fax");
             
-            AreAllObjectPropertiesPresent(customer, manager, [.. ignore]);
+            AreAllObjectPropertiesPresent(customer, manager, ignore.ToArray());
             PropertiesShouldEqual(customer, manager, new Dictionary<string, string>());
         }
 
@@ -406,7 +406,7 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
 
             var ignore = new List<string> { "CreatedOnUtc", "EntityCacheKey", "Picture", "PictureId", "AppliedDiscounts", "UpdatedOnUtc", "SubjectToAcl", "LimitedToStores", "Deleted", "DiscountCategoryMappings" };
 
-            AreAllObjectPropertiesPresent(category, manager, [.. ignore]);
+            AreAllObjectPropertiesPresent(category, manager, ignore.ToArray());
             PropertiesShouldEqual(category, manager, new Dictionary<string, string>());
 
             manager.GetDefaultProperties.First(p => p.PropertyName == "Picture").PropertyValue.Should().NotBeNull();
@@ -489,7 +489,7 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
 
             manager.ReadDefaultFromXlsx(worksheet, 2);
 
-            AreAllObjectPropertiesPresent(product, manager, [.. ignore]);
+            AreAllObjectPropertiesPresent(product, manager, ignore.ToArray());
             PropertiesShouldEqual(product, manager, replacePairs);
         }
 

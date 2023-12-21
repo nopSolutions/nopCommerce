@@ -89,7 +89,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var formKey = "allow_" + cr.Id;
                 var permissionRecordSystemNamesToRestrict = !StringValues.IsNullOrEmpty(form[formKey])
                     ? form[formKey].ToString().Split(_separator, StringSplitOptions.RemoveEmptyEntries).ToList()
-                    : [];
+                    : new List<string>();
 
                 foreach (var pr in permissionRecords)
                 {

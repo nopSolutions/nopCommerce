@@ -47,7 +47,7 @@ namespace Nop.Services.Caching
             {
                 await conn.OpenAsync();
                 command.Connection = conn;
-                if (parameters.Length != 0)
+                if (parameters.Any())
                     command.Parameters.AddRange(parameters);
 
                 await command.ExecuteNonQueryAsync();

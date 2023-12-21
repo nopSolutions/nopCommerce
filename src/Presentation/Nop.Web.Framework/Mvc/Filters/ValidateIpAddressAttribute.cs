@@ -83,7 +83,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 var ipAddresses = _securitySettings.AdminAreaAllowedIpAddresses;
 
                 //there are no restrictions
-                if (ipAddresses == null || ipAddresses.Count == 0)
+                if (ipAddresses == null || !ipAddresses.Any())
                     return;
 
                 //whether current IP is allowed

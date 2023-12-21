@@ -438,10 +438,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
-            if (selectedIds == null || selectedIds.Count == 0)
+            if (selectedIds == null || !selectedIds.Any())
                 return NoContent();
 
-            await _urlRecordService.DeleteUrlRecordsAsync(await _urlRecordService.GetUrlRecordsByIdsAsync([.. selectedIds]));
+            await _urlRecordService.DeleteUrlRecordsAsync(await _urlRecordService.GetUrlRecordsByIdsAsync(selectedIds.ToArray()));
 
             return Json(new { Result = true });
         }

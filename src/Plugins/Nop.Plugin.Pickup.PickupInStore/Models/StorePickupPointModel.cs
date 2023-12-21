@@ -10,7 +10,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Models
         public StorePickupPointModel()
         {
             Address = new AddressModel();
-            AvailableStores = [];
+            AvailableStores = new List<SelectListItem>();
         }
 
         public AddressModel Address { get; set; }

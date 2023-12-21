@@ -339,11 +339,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (interactionType.HasValue)
             {
-                requirements =
-                [
-                    .. (await _discountModelFactory
-                                        .PrepareDiscountRequirementRuleModelsAsync(topLevelRequirements, discount, interactionType.Value)),
-                ];
+                requirements = (await _discountModelFactory
+                    .PrepareDiscountRequirementRuleModelsAsync(topLevelRequirements, discount, interactionType.Value)).ToList();
             }
 
             //get available groups
@@ -492,7 +489,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var discount = await _discountService.GetDiscountByIdAsync(model.DiscountId)
                 ?? throw new ArgumentException("No discount found with the specified id");
 
-            var selectedProducts = await _productService.GetProductsByIdsAsync([.. model.SelectedProductIds]);
+            var selectedProducts = await _productService.GetProductsByIdsAsync(model.SelectedProductIds.ToArray());
             if (selectedProducts.Any())
             {
                 foreach (var product in selectedProducts)

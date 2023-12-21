@@ -51,7 +51,7 @@ namespace Nop.Web.Framework
         /// <param name="webHelper">Web helper</param>
         public RemotePost(IHttpContextAccessor httpContextAccessor, IWebHelper webHelper)
         {
-            Params = [];
+            Params = new NameValueCollection();
             Url = "http://www.someurl.com";
             Method = "post";
             FormName = "formName";

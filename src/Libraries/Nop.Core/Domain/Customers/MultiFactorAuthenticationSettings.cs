@@ -11,7 +11,7 @@ namespace Nop.Core.Domain.Customers
 
         public MultiFactorAuthenticationSettings()
         {
-            ActiveAuthenticationMethodSystemNames = [];
+            ActiveAuthenticationMethodSystemNames = new List<string>();
         }
 
         #endregion

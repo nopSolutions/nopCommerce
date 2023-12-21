@@ -244,7 +244,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
             taxTotal += paymentMethodAdditionalFeeTax;
 
             //add at least one tax rate (0%)
-            if (taxRates.Count == 0)
+            if (!taxRates.Any())
                 taxRates.Add(decimal.Zero, decimal.Zero);
 
             if (taxTotal < decimal.Zero)

@@ -335,10 +335,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
-            if (selectedIds == null || selectedIds.Count == 0)
+            if (selectedIds == null || !selectedIds.Any())
                 return NoContent();
 
-            var comments = await _newsService.GetNewsCommentsByIdsAsync([.. selectedIds]);
+            var comments = await _newsService.GetNewsCommentsByIdsAsync(selectedIds.ToArray());
 
             await _newsService.DeleteNewsCommentsAsync(comments);
 
@@ -358,11 +358,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
-            if (selectedIds == null || selectedIds.Count == 0)
+            if (selectedIds == null || !selectedIds.Any())
                 return NoContent();
 
             //filter not approved comments
-            var newsComments = (await _newsService.GetNewsCommentsByIdsAsync([.. selectedIds])).Where(comment => !comment.IsApproved);
+            var newsComments = (await _newsService.GetNewsCommentsByIdsAsync(selectedIds.ToArray())).Where(comment => !comment.IsApproved);
 
             foreach (var newsComment in newsComments)
             {
@@ -387,11 +387,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
-            if (selectedIds == null || selectedIds.Count == 0)
+            if (selectedIds == null || !selectedIds.Any())
                 return NoContent();
 
             //filter approved comments
-            var newsComments = (await _newsService.GetNewsCommentsByIdsAsync([.. selectedIds])).Where(comment => comment.IsApproved);
+            var newsComments = (await _newsService.GetNewsCommentsByIdsAsync(selectedIds.ToArray())).Where(comment => comment.IsApproved);
 
             foreach (var newsComment in newsComments)
             {

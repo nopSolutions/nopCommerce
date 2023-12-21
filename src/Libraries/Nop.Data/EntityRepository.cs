@@ -553,7 +553,7 @@ namespace Nop.Data
         {
             ArgumentNullException.ThrowIfNull(entities);
 
-            if (entities.Count == 0)
+            if (!entities.Any())
                 return;
 
             await _dataProvider.UpdateEntitiesAsync(entities);
@@ -575,7 +575,7 @@ namespace Nop.Data
         {
             ArgumentNullException.ThrowIfNull(entities);
 
-            if (entities.Count == 0)
+            if (!entities.Any())
                 return;
 
             _dataProvider.UpdateEntities(entities);

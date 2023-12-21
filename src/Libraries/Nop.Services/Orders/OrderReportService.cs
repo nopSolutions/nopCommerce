@@ -317,13 +317,13 @@ namespace Nop.Services.Orders
             if (!string.IsNullOrEmpty(paymentMethodSystemName))
                 query = query.Where(o => o.PaymentMethodSystemName == paymentMethodSystemName);
 
-            if (osIds != null && osIds.Count != 0)
+            if (osIds != null && osIds.Any())
                 query = query.Where(o => osIds.Contains(o.OrderStatusId));
 
-            if (psIds != null && psIds.Count != 0)
+            if (psIds != null && psIds.Any())
                 query = query.Where(o => psIds.Contains(o.PaymentStatusId));
 
-            if (ssIds != null && ssIds.Count != 0)
+            if (ssIds != null && ssIds.Any())
                 query = query.Where(o => ssIds.Contains(o.ShippingStatusId));
 
             if (startTimeUtc.HasValue)
@@ -489,11 +489,11 @@ namespace Nop.Services.Orders
                 query = query.Where(o => createdToUtc.Value >= o.CreatedOnUtc);
 
             //filter by order status
-            if (osIds != null && osIds.Count != 0)
+            if (osIds != null && osIds.Any())
                 query = query.Where(o => osIds.Contains(o.OrderStatusId));
 
             //filter by payment status
-            if (psIds != null && psIds.Count != 0)
+            if (psIds != null && psIds.Any())
                 query = query.Where(o => psIds.Contains(o.PaymentStatusId));
 
             //filter by category
@@ -822,7 +822,7 @@ namespace Nop.Services.Orders
             foreach (var reportLine in report)
                 ids.Add(reportLine.ProductId);
 
-            return [.. ids];
+            return ids.ToArray();
         }
 
         /// <summary>
@@ -933,11 +933,11 @@ namespace Nop.Services.Orders
             var dontSearchPaymentMethods = string.IsNullOrEmpty(paymentMethodSystemName);
 
             var orders = _orderRepository.Table;
-            if (osIds != null && osIds.Count != 0)
+            if (osIds != null && osIds.Any())
                 orders = orders.Where(o => osIds.Contains(o.OrderStatusId));
-            if (psIds != null && psIds.Count != 0)
+            if (psIds != null && psIds.Any())
                 orders = orders.Where(o => psIds.Contains(o.PaymentStatusId));
-            if (ssIds != null && ssIds.Count != 0)
+            if (ssIds != null && ssIds.Any())
                 orders = orders.Where(o => ssIds.Contains(o.ShippingStatusId));
 
             var manageStockInventoryMethodId = (int)ManageInventoryMethod.ManageStock;

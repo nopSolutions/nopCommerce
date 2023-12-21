@@ -479,7 +479,7 @@ namespace Nop.Data.DataProviders
         {
             var command = CreateDbCommand(procedureName, parameters);
             var rez = command.QueryProc<T>()?.ToList();
-            return Task.FromResult<IList<T>>(rez ?? []);
+            return Task.FromResult<IList<T>>(rez ?? new List<T>());
         }
 
         /// <summary>
@@ -495,7 +495,7 @@ namespace Nop.Data.DataProviders
         public virtual Task<IList<T>> QueryAsync<T>(string sql, params DataParameter[] parameters)
         {
             using var dataContext = CreateDataConnection();
-            return Task.FromResult<IList<T>>(dataContext.Query<T>(sql, parameters)?.ToList() ?? []);
+            return Task.FromResult<IList<T>>(dataContext.Query<T>(sql, parameters)?.ToList() ?? new List<T>());
         }
 
         /// <summary>

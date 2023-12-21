@@ -37,7 +37,7 @@ namespace Nop.Services.Stores
 
             var parsedValues = new List<string>();
             if (string.IsNullOrEmpty(store.Hosts))
-                return [.. parsedValues];
+                return parsedValues.ToArray();
 
             var hosts = store.Hosts.Split(_separator, StringSplitOptions.RemoveEmptyEntries);
 
@@ -48,7 +48,7 @@ namespace Nop.Services.Stores
                     parsedValues.Add(tmp);
             }
 
-            return [.. parsedValues];
+            return parsedValues.ToArray();
         }
 
         #endregion
@@ -181,8 +181,8 @@ namespace Nop.Services.Stores
             queryFilter = queryFilter.Except(filter).ToArray();
 
             //if some names not found
-            if (queryFilter.Length == 0)
-                return [.. queryFilter];
+            if (!queryFilter.Any())
+                return queryFilter.ToArray();
 
             //filtering by IDs
             filter = await query.Select(store => store.Id.ToString())
@@ -190,7 +190,7 @@ namespace Nop.Services.Stores
                 .ToListAsync();
             queryFilter = queryFilter.Except(filter).ToArray();
 
-            return [.. queryFilter];
+            return queryFilter.ToArray();
         }
 
         #endregion

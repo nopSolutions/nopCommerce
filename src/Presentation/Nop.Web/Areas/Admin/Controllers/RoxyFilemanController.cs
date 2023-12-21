@@ -317,7 +317,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 var form = await HttpContext.Request.ReadFormAsync();
 
-                if (form.Files.Count == 0)
+                if (!form.Files.Any())
                     throw new RoxyFilemanException("E_UploadNoFiles");
 
                 await _roxyFilemanService.UploadFilesAsync(uploadModel.D, form.Files);

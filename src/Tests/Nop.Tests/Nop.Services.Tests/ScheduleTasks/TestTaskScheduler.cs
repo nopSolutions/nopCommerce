@@ -12,7 +12,7 @@ namespace Nop.Tests.Nop.Services.Tests.ScheduleTasks
         {
         }
 
-        public bool IsInit => _taskThreads.Count != 0;
+        public bool IsInit => _taskThreads.Any();
 
         public bool IsRun => _taskThreads.All(p => p.IsStarted && !p.IsDisposed);
     }

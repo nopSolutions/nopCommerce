@@ -136,7 +136,7 @@ namespace Nop.Plugin.Tax.Avalara.Components
             validatedAddress.StateProvinceId = (await _stateProvinceService.GetStateProvinceByAbbreviationAsync(validatedAddressInfo.region))?.Id;
 
             //try to find an existing address with the same values
-            var existingAddress = _addressService.FindAddress([.. (await _customerService.GetAddressesByCustomerIdAsync(customer.Id))],
+            var existingAddress = _addressService.FindAddress((await _customerService.GetAddressesByCustomerIdAsync(customer.Id)).ToList(),
                 validatedAddress.FirstName, validatedAddress.LastName, validatedAddress.PhoneNumber,
                 validatedAddress.Email, validatedAddress.FaxNumber, validatedAddress.Company,
                 validatedAddress.Address1, validatedAddress.Address2, validatedAddress.City,

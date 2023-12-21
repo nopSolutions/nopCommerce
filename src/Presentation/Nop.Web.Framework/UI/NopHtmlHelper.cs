@@ -42,16 +42,16 @@ namespace Nop.Web.Framework.UI
         protected readonly IWebHostEnvironment _webHostEnvironment;
         protected readonly SeoSettings _seoSettings;
 
-        protected readonly Dictionary<ResourceLocation, List<ScriptReferenceMeta>> _scriptParts = [];
-        protected readonly Dictionary<ResourceLocation, List<string>> _inlineScriptParts = [];
-        protected readonly List<CssReferenceMeta> _cssParts = [];
+        protected readonly Dictionary<ResourceLocation, List<ScriptReferenceMeta>> _scriptParts = new();
+        protected readonly Dictionary<ResourceLocation, List<string>> _inlineScriptParts = new();
+        protected readonly List<CssReferenceMeta> _cssParts = new();
 
-        protected readonly List<string> _canonicalUrlParts = [];
-        protected readonly List<string> _headCustomParts = [];
-        protected readonly List<string> _metaDescriptionParts = [];
-        protected readonly List<string> _metaKeywordParts = [];
-        protected readonly List<string> _pageCssClassParts = [];
-        protected readonly List<string> _titleParts = [];
+        protected readonly List<string> _canonicalUrlParts = new();
+        protected readonly List<string> _headCustomParts = new();
+        protected readonly List<string> _metaDescriptionParts = new();
+        protected readonly List<string> _metaKeywordParts = new();
+        protected readonly List<string> _pageCssClassParts = new();
+        protected readonly List<string> _titleParts = new();
 
         protected string _activeAdminMenuSystemName;
         protected string _editPageUrl;
@@ -268,7 +268,7 @@ namespace Nop.Web.Framework.UI
         public virtual void AddScriptParts(ResourceLocation location, string src, string debugSrc = "", bool excludeFromBundle = false)
         {
             if (!_scriptParts.ContainsKey(location))
-                _scriptParts.Add(location, []);
+                _scriptParts.Add(location, new List<ScriptReferenceMeta>());
 
             if (string.IsNullOrEmpty(src))
                 return;
@@ -298,7 +298,7 @@ namespace Nop.Web.Framework.UI
         public virtual void AppendScriptParts(ResourceLocation location, string src, string debugSrc = "", bool excludeFromBundle = false)
         {
             if (!_scriptParts.ContainsKey(location))
-                _scriptParts.Add(location, []);
+                _scriptParts.Add(location, new List<ScriptReferenceMeta>());
 
             if (string.IsNullOrEmpty(src))
                 return;
@@ -328,7 +328,7 @@ namespace Nop.Web.Framework.UI
             if (!_scriptParts.TryGetValue(location, out var value) || value == null)
                 return HtmlString.Empty;
 
-            if (_scriptParts.Count == 0)
+            if (!_scriptParts.Any())
                 return HtmlString.Empty;
 
             var result = new StringBuilder();
@@ -384,7 +384,7 @@ namespace Nop.Web.Framework.UI
         public virtual void AddInlineScriptParts(ResourceLocation location, string script)
         {
             if (!_inlineScriptParts.ContainsKey(location))
-                _inlineScriptParts.Add(location, []);
+                _inlineScriptParts.Add(location, new());
 
             if (string.IsNullOrEmpty(script))
                 return;
@@ -403,7 +403,7 @@ namespace Nop.Web.Framework.UI
         public virtual void AppendInlineScriptParts(ResourceLocation location, string script)
         {
             if (!_inlineScriptParts.ContainsKey(location))
-                _inlineScriptParts.Add(location, []);
+                _inlineScriptParts.Add(location, new());
 
             if (string.IsNullOrEmpty(script))
                 return;
@@ -424,7 +424,7 @@ namespace Nop.Web.Framework.UI
             if (!_inlineScriptParts.TryGetValue(location, out var value) || value == null)
                 return HtmlString.Empty;
 
-            if (_inlineScriptParts.Count == 0)
+            if (!_inlineScriptParts.Any())
                 return HtmlString.Empty;
 
             var result = new StringBuilder();
@@ -494,7 +494,7 @@ namespace Nop.Web.Framework.UI
         /// <returns>Generated HTML string</returns>
         public virtual IHtmlContent GenerateCssFiles()
         {
-            if (_cssParts.Count == 0)
+            if (!_cssParts.Any())
                 return HtmlString.Empty;
 
             ArgumentNullException.ThrowIfNull(_actionContextAccessor.ActionContext);
@@ -631,7 +631,7 @@ namespace Nop.Web.Framework.UI
         {
             //use only distinct rows
             var distinctParts = _headCustomParts.Distinct().ToList();
-            if (distinctParts.Count == 0)
+            if (!distinctParts.Any())
                 return HtmlString.Empty;
 
             var result = new StringBuilder();

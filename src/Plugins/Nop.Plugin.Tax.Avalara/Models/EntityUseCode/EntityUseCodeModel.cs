@@ -13,7 +13,7 @@ namespace Nop.Plugin.Tax.Avalara.Models.EntityUseCode
 
         public EntityUseCodeModel()
         {
-            EntityUseCodes = [];
+            EntityUseCodes = new List<SelectListItem>();
         }
 
         #endregion

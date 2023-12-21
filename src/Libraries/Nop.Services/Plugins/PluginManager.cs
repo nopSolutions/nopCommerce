@@ -14,7 +14,7 @@ namespace Nop.Services.Plugins
         protected readonly ICustomerService _customerService;
         protected readonly IPluginService _pluginService;
 
-        protected readonly Dictionary<string, IList<TPlugin>> _plugins = [];
+        protected readonly Dictionary<string, IList<TPlugin>> _plugins = new();
 
         #endregion
 

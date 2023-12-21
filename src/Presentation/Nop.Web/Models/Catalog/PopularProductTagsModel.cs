@@ -6,7 +6,7 @@ namespace Nop.Web.Models.Catalog
     {
         public PopularProductTagsModel()
         {
-            Tags = [];
+            Tags = new List<ProductTagModel>();
         }
 
         #region Utilities

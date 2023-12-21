@@ -90,13 +90,13 @@ namespace Nop.Data.Migrations.UpgradeTo460
                 var genericAttributes = _dataProvider.GetTable<GenericAttribute>()
                     .Where(ga => ga.KeyGroup == nameof(Customer) && customerIds.Contains(ga.EntityId) && attributeKeys.Contains(ga.Key)).ToList();
 
-                if (genericAttributes.Count == 0)
+                if (!genericAttributes.Any())
                     continue;
 
                 foreach (var customer in customers)
                 {
                     var customerAttributes = genericAttributes.Where(ga => ga.EntityId == customer.Id).ToList();
-                    if (customerAttributes.Count == 0)
+                    if (!customerAttributes.Any())
                         continue;
 
                     customer.FirstName = getAttributeValue(customerAttributes, nameof(Customer.FirstName), castToString);

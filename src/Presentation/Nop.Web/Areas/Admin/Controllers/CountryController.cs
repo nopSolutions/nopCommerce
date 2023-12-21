@@ -295,7 +295,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
-            if (selectedIds == null || selectedIds.Count == 0)
+            if (selectedIds == null || !selectedIds.Any())
                 return NoContent();
 
             var countries = await _countryService.GetCountriesByIdsAsync([.. selectedIds]);
@@ -314,10 +314,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
-            if (selectedIds == null || selectedIds.Count == 0)
+            if (selectedIds == null || !selectedIds.Any())
                 return NoContent();
 
-            var countries = await _countryService.GetCountriesByIdsAsync([.. selectedIds]);
+            var countries = await _countryService.GetCountriesByIdsAsync(selectedIds.ToArray());
             foreach (var country in countries)
             {
                 country.Published = false;
@@ -491,7 +491,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             ArgumentException.ThrowIfNullOrEmpty(countryId);
 
             var country = await _countryService.GetCountryByIdAsync(Convert.ToInt32(countryId));
-            var states = country != null ? (await _stateProvinceService.GetStateProvincesByCountryIdAsync(country.Id, showHidden: true)).ToList() : [];
+            var states = country != null ? (await _stateProvinceService.GetStateProvincesByCountryIdAsync(country.Id, showHidden: true)).ToList() : new List<StateProvince>();
             var result = (from s in states
                           select new { id = s.Id, name = s.Name }).ToList();
             if (addAsterisk.HasValue && addAsterisk.Value)
@@ -516,7 +516,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 else
                 {
                     //some country is selected
-                    if (result.Count == 0)
+                    if (!result.Any())
                     {
                         //country does not have states
                         result.Insert(0, new { id = 0, name = await _localizationService.GetResourceAsync("Admin.Address.Other") });

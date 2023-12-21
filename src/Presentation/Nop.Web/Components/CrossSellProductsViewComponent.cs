@@ -53,7 +53,7 @@ namespace Nop.Web.Components
             //visible individually
             .Where(p => p.VisibleIndividually).ToListAsync();
 
-            if (products.Count == 0)
+            if (!products.Any())
                 return Content("");
 
             //Cross-sell products are displayed on the shopping cart page.

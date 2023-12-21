@@ -250,7 +250,7 @@ namespace Nop.Web.Factories
                     var states = (await _stateProvinceService
                         .GetStateProvincesByCountryIdAsync(model.CountryId ?? 0, languageId))
                         .ToList();
-                    if (states.Count != 0)
+                    if (states.Any())
                     {
                         model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectState"), Value = "0" });
 

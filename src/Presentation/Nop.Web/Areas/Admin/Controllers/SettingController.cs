@@ -1540,7 +1540,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 //security settings
                 var securitySettings = await _settingService.LoadSettingAsync<SecuritySettings>(storeScope);
-                securitySettings.AdminAreaAllowedIpAddresses ??= [];
+                if (securitySettings.AdminAreaAllowedIpAddresses == null)
+                    securitySettings.AdminAreaAllowedIpAddresses = new List<string>();
                 securitySettings.AdminAreaAllowedIpAddresses.Clear();
                 if (!string.IsNullOrEmpty(model.SecuritySettings.AdminAreaAllowedIpAddresses))
                     foreach (var s in model.SecuritySettings.AdminAreaAllowedIpAddresses.Split(_separator, StringSplitOptions.RemoveEmptyEntries))
@@ -1553,7 +1554,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var robotsTxtSettings = await _settingService.LoadSettingAsync<RobotsTxtSettings>(storeScope);
                 robotsTxtSettings.AllowSitemapXml = model.RobotsTxtSettings.AllowSitemapXml;
                 robotsTxtSettings.AdditionsRules = model.RobotsTxtSettings.AdditionsRules?.Split(Environment.NewLine).ToList();
-                robotsTxtSettings.DisallowLanguages = model.RobotsTxtSettings.DisallowLanguages?.ToList() ?? [];
+                robotsTxtSettings.DisallowLanguages = model.RobotsTxtSettings.DisallowLanguages?.ToList() ?? new List<int>();
                 robotsTxtSettings.DisallowPaths = model.RobotsTxtSettings.DisallowPaths?.Split(Environment.NewLine).ToList();
                 robotsTxtSettings.LocalizableDisallowPaths = model.RobotsTxtSettings.LocalizableDisallowPaths?.Split(Environment.NewLine).ToList();
 

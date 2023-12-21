@@ -75,7 +75,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 ArgumentNullException.ThrowIfNull(context);
 
                 //check request query parameters
-                if (context.HttpContext.Request.Query.Count == 0)
+                if (!context.HttpContext.Request.Query.Any())
                     return;
 
                 //only in GET requests

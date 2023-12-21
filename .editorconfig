@@ -194,6 +194,7 @@ csharp_prefer_simple_default_expression             = true:suggestion
 csharp_style_pattern_local_over_anonymous_function  = true:suggestion
 csharp_style_inlined_variable_declaration           = true:suggestion
 csharp_style_prefer_primary_constructors            = false:suggestion
+dotnet_style_prefer_collection_expression			= false:suggestion
 
 ###############################
 # C# Formatting Rules         #

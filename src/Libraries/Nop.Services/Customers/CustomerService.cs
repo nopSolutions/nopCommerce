@@ -857,7 +857,7 @@ namespace Nop.Services.Customers
 
             var couponCodes = new List<string>();
             if (string.IsNullOrEmpty(existingCouponCodes))
-                return [.. couponCodes];
+                return couponCodes.ToArray();
 
             try
             {
@@ -878,7 +878,7 @@ namespace Nop.Services.Customers
                 // ignored
             }
 
-            return [.. couponCodes];
+            return couponCodes.ToArray();
         }
 
         /// <summary>
@@ -989,7 +989,7 @@ namespace Nop.Services.Customers
 
             var couponCodes = new List<string>();
             if (string.IsNullOrEmpty(existingCouponCodes))
-                return [.. couponCodes];
+                return couponCodes.ToArray();
 
             try
             {
@@ -1011,7 +1011,7 @@ namespace Nop.Services.Customers
                 // ignored
             }
 
-            return [.. couponCodes];
+            return couponCodes.ToArray();
         }
 
         /// <summary>

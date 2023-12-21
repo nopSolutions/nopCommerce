@@ -377,7 +377,7 @@ namespace Nop.Plugin.Misc.Brevo.Services
                     var template = new { contacts = new[] { new { email = string.Empty, emailBlacklisted = false } } };
                     var contactObjects = JsonConvert.DeserializeAnonymousType(contacts.ToJson(), template);
                     var blackListedEmails = contactObjects?.contacts?.Where(contact => contact.emailBlacklisted)
-                        .Select(contact => contact.email).ToList() ?? [];
+                        .Select(contact => contact.email).ToList() ?? new List<string>();
 
                     foreach (var email in blackListedEmails)
                     {
@@ -1195,7 +1195,7 @@ namespace Nop.Plugin.Misc.Brevo.Services
 
                 //get all available senders
                 var senders = await sendersClient.GetSendersAsync();
-                if (senders.Senders.Count == 0)
+                if (!senders.Senders.Any())
                     return (0, "There are no senders");
 
                 var currentSender = senders.Senders.FirstOrDefault(sender => sender.Id.ToString() == senderId);

@@ -201,7 +201,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             _avalaraTaxSettings.AutoValidateCertificate = model.AutoValidateCertificate;
             _avalaraTaxSettings.AllowEditCustomer = model.AllowEditCustomer;
             _avalaraTaxSettings.DisplayNoValidCertificatesMessage = model.DisplayNoValidCertificatesMessage;
-            _avalaraTaxSettings.CustomerRoleIds = [.. model.SelectedCustomerRoleIds];
+            _avalaraTaxSettings.CustomerRoleIds = model.SelectedCustomerRoleIds.ToList();
             await _settingService.SaveSettingAsync(_avalaraTaxSettings);
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
@@ -219,7 +219,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             if (!ModelState.IsValid)
                 return await Configure();
 
-            _avalaraTaxSettings.SelectedCountryIds = [.. model.SelectedCountryIds];
+            _avalaraTaxSettings.SelectedCountryIds = model.SelectedCountryIds.ToList();
             _avalaraTaxSettings.UseItemClassification = model.UseItemClassification;
             await _settingService.SaveSettingAsync(_avalaraTaxSettings);
 

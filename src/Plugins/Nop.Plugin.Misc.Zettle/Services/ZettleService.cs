@@ -44,7 +44,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
         protected readonly ZettleRecordService _zettleRecordService;
         protected readonly ZettleSettings _zettleSettings;
 
-        protected Dictionary<string, string> _locations = [];
+        protected Dictionary<string, string> _locations = new();
 
         #endregion
 
@@ -190,7 +190,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
                 .Distinct()
                 .ToList();
 
-            if (idsToDelete.Count != 0)
+            if (idsToDelete.Any())
                 log.AppendLine($"\tDelete {idsToDelete.Count} products (#{string.Join(", #", idsToDelete)})");
 
             //if needed, also delete all existing products
@@ -212,7 +212,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
             }
 
             idsToDelete = idsToDelete.Distinct().ToList();
-            if (idsToDelete.Count != 0)
+            if (idsToDelete.Any())
                 await _zettleHttpClient.RequestAsync<DeleteProductsRequest, ApiResponse>(new DeleteProductsRequest { ProductUuids = idsToDelete });
 
             await _zettleRecordService.DeleteRecordsAsync(records.Select(record => record.Id).ToList());
@@ -253,7 +253,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
                     Name = existingProduct.Name,
                     ETag = $"\"{existingProduct.ETag}\""
                 };
-                if (product.CombinationRecords.Count == 0)
+                if (!product.CombinationRecords.Any())
                 {
                     request.Presentation = new Product.ProductPresentation { ImageUrl = product.ProductRecord?.ImageUrl };
                     request.Variants =
@@ -289,7 +289,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
                 .GetAllRecordsAsync(active: true, operationTypes: [OperationType.Update]))
                 .Where(record => record.InventoryTrackingEnabled && !string.IsNullOrEmpty(record.Uuid))
                 .ToList();
-            if (records.Count == 0)
+            if (!records.Any())
                 return;
 
             var storeBalance = await _zettleHttpClient.RequestAsync<GetLocationInventoryBalanceRequest, LocationInventoryBalance>(new());
@@ -303,7 +303,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
                 })
                 .Where(product => !storeBalance.TrackedProducts?.Contains(product.ProductRecord.Uuid, StringComparer.InvariantCultureIgnoreCase) ?? true)
                 .ToList();
-            if (products.Count == 0)
+            if (!products.Any())
                 return;
 
             var productChanges = new List<CreateTrackingRequest.ProductBalanceChange>();
@@ -372,7 +372,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
                 await UploadImagesAsync(records.ToList(), false, log);
 
                 //prepare products to import
-                var products = await _zettleRecordService.PrepareToSyncRecords([.. records]).SelectAwait(async product =>
+                var products = await _zettleRecordService.PrepareToSyncRecords(records.ToList()).SelectAwait(async product =>
                 {
                     var request = new Product
                     {
@@ -405,7 +405,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
                     var combinationRecords = records
                         .Where(record => record.ProductId == product.Id && record.CombinationId != 0)
                         .ToList();
-                    if (combinationRecords.Count == 0)
+                    if (!combinationRecords.Any())
                     {
                         //a single variant
                         var variant = new Product.ProductVariant
@@ -551,7 +551,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
                 ImageUrl = record.Url
             }).ToList();
 
-            if (imagesToUpload.Count == 0)
+            if (!imagesToUpload.Any())
                 return;
 
             log.AppendLine($"\tUpload {recordsWithImages.Count} new images");
@@ -623,7 +623,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
                 _ => GetLocationAsync("BIN")
             });
 
-            if (combinationRecords.Count == 0)
+            if (!combinationRecords.Any())
             {
                 //get initial quantity
                 var quantity = changeType == InventoryBalanceChangeType.StartTracking
@@ -679,7 +679,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
         /// <returns>A task that represents the asynchronous operation</returns>
         protected async Task UpdateInventoryBalanceAsync(InventoryBalanceChangeType changeType, List<CreateTrackingRequest.ProductBalanceChange> productChanges)
         {
-            if (productChanges.Count == 0)
+            if (!productChanges.Any())
                 return;
 
             var inventoryRequest = new CreateTrackingRequest
@@ -906,7 +906,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
                                 break;
                             }
 
-                            for (var i = 0; i < (balanceInfo.BalanceBefore ?? []).Count; i++)
+                            for (var i = 0; i < (balanceInfo.BalanceBefore ?? new()).Count; i++)
                             {
                                 var balanceBefore = balanceInfo.BalanceBefore?.ElementAtOrDefault(i);
                                 var balanceAfter = balanceInfo.BalanceAfter?.ElementAtOrDefault(i);
@@ -1003,7 +1003,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
                                 _zettleSettings.WebhookUrl = string.Empty;
                                 _zettleSettings.WebhookKey = string.Empty;
                                 _zettleSettings.ImportId = string.Empty;
-                                _zettleSettings.InventoryTrackingIds = [];
+                                _zettleSettings.InventoryTrackingIds = new();
                                 await _settingService.SaveSettingAsync(_zettleSettings);
                             }
                             await _logger.WarningAsync($"{ZettleDefaults.SystemName}. {warning}");
@@ -1075,7 +1075,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
                         record.OperationType = OperationType.None;
                         record.UpdatedOnUtc = DateTime.UtcNow;
                     }
-                    await _zettleRecordService.UpdateRecordsAsync([.. records]);
+                    await _zettleRecordService.UpdateRecordsAsync(records.ToList());
                 }
 
                 log.AppendLine($"Synchronization finished at {DateTime.UtcNow.ToLongTimeString()} UTC");
@@ -1103,13 +1103,13 @@ namespace Nop.Plugin.Misc.Zettle.Services
             var records = (await _zettleRecordService.GetAllRecordsAsync(active: true))
                 .Where(record => record.ProductId == productId && record.InventoryTrackingEnabled && !string.IsNullOrEmpty(record.Uuid))
                 .ToList();
-            if (records.Count == 0)
+            if (!records.Any())
                 return;
 
             var productRecord = records.FirstOrDefault(record => record.CombinationId == 0);
             var combinationRecords = combinationId > 0
                 ? records.Where(record => record.CombinationId == combinationId && record.InventoryTrackingEnabled && !string.IsNullOrEmpty(record.VariantUuid)).ToList()
-                : [];
+                : new List<ZettleRecord>();
 
             //we cannot know the exact reason of the change, so we will use Purchase for negative adjustments and Re-stock for positive ones
             var changeType = quantityAdjustment < 0 ? InventoryBalanceChangeType.Purchase : InventoryBalanceChangeType.Restock;

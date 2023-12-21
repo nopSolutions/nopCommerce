@@ -240,7 +240,7 @@ namespace Nop.Web.Factories
                         if (current == 0)
                             current = date.Year;
 
-                        if (date.Year > current || model.Count == 0)
+                        if (date.Year > current || !model.Any())
                         {
                             var yearModel = new BlogPostYearModel
                             {

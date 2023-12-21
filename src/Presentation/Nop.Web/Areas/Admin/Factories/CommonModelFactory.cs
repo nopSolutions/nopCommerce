@@ -601,7 +601,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             var notInstalled = plugins.Select(p => p.FriendlyName).ToList();
 
-            if (notInstalled.Count == 0)
+            if (!notInstalled.Any())
                 return;
 
             models.Add(new SystemWarningModel
@@ -670,7 +670,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 notEnabledSystemNames.Add(plugin.PluginDescriptor.SystemName);
             }
 
-            if (notEnabled.Count != 0)
+            if (notEnabled.Any())
             {
                 //get URL helper
                 var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);

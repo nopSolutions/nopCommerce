@@ -28,7 +28,7 @@ namespace Nop.Data.Migrations
         {
             var dataSettings = DataSettingsManager.LoadSettings();
 
-            if (processors.Count == 0)
+            if (!processors.Any())
                 throw new ProcessorFactoryNotFoundException("No migration processor registered.");
 
             if (dataSettings is null)

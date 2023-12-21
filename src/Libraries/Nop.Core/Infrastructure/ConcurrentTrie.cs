@@ -468,7 +468,7 @@ namespace Nop.Core.Infrastructure
                 try
                 {
                     // we can't know what is done during enumeration, so we need to make a copy of the children
-                    children = [.. n.Children.Values];
+                    children = n.Children.Values.ToList();
                 }
                 finally
                 {
@@ -650,7 +650,7 @@ namespace Nop.Core.Infrastructure
             public TrieNode(string label = "")
             {
                 Label = label;
-                Children = [];
+                Children = new Dictionary<char, TrieNode>();
             }
 
             public TrieNode(ReadOnlySpan<char> label) : this(label.ToString())

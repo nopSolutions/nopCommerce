@@ -20,7 +20,7 @@
     {
         <div class="section shipping-method" id="shipping-methods-form">
             @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OpCheckoutShippingMethodTop, additionalData = Model })
-            @if (Model.Warnings.Count == 0)
+            @if (!Model.Warnings.Any())
             {
                 <ul class="method-list">
                     @for (var i = 0; i < Model.ShippingMethods.Count; i++)

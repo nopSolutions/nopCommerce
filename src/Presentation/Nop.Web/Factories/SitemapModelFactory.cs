@@ -537,7 +537,7 @@ namespace Nop.Web.Factories
                     .Select(url => url.Value)
                     .ToList()).ToList();
 
-            if (sitemaps.Count == 0)
+            if (!sitemaps.Any())
                 return;
 
             await using var stream = new MemoryStream();

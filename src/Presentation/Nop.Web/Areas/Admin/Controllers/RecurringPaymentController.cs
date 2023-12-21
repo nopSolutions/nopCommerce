@@ -170,7 +170,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             try
             {
                 var errors = (await _orderProcessingService.ProcessNextRecurringPaymentAsync(payment)).ToList();
-                if (errors.Count != 0)
+                if (errors.Any())
                 {
                     foreach (var error in errors)
                     {

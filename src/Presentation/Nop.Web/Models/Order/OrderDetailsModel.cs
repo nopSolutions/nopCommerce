@@ -18,7 +18,7 @@ namespace Nop.Web.Models.Order
             ShippingAddress = new AddressModel();
             PickupAddress = new AddressModel();
 
-            CustomValues = [];
+            CustomValues = new Dictionary<string, object>();
         }
 
         public bool PrintMode { get; set; }

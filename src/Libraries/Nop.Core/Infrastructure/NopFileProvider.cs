@@ -263,12 +263,12 @@ namespace Nop.Core.Infrastructure
         {
             var allPaths = new List<string>();
 
-            if (paths.Length != 0 && !paths[0].Contains(WebRootPath, StringComparison.InvariantCulture))
+            if (paths.Any() && !paths[0].Contains(WebRootPath, StringComparison.InvariantCulture))
                 allPaths.Add(WebRootPath);
 
             allPaths.AddRange(paths);
 
-            return Combine([.. allPaths]);
+            return Combine(allPaths.ToArray());
         }
 
         /// <summary>
@@ -524,7 +524,7 @@ namespace Nop.Core.Infrastructure
         /// </returns>
         public virtual async Task<byte[]> ReadAllBytesAsync(string filePath)
         {
-            return File.Exists(filePath) ? await File.ReadAllBytesAsync(filePath) : [];
+            return File.Exists(filePath) ? await File.ReadAllBytesAsync(filePath) : Array.Empty<byte>();
         }
 
         /// <summary>

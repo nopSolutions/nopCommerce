@@ -335,7 +335,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             // Ensure that valid email address is entered if Registered role is checked to avoid registered customers with empty email address
-            if (newCustomerRoles.Count != 0 && newCustomerRoles.FirstOrDefault(c => c.SystemName == NopCustomerDefaults.RegisteredRoleName) != null &&
+            if (newCustomerRoles.Any() && newCustomerRoles.FirstOrDefault(c => c.SystemName == NopCustomerDefaults.RegisteredRoleName) != null &&
                 !CommonHelper.IsValidEmail(model.Email))
             {
                 ModelState.AddModelError(string.Empty, await _localizationService.GetResourceAsync("Admin.Customers.Customers.ValidEmailRequiredRegisteredRole"));
@@ -345,7 +345,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //custom customer attributes
             var customerAttributesXml = await ParseCustomCustomerAttributesAsync(form);
-            if (newCustomerRoles.Count != 0 && newCustomerRoles.FirstOrDefault(c => c.SystemName == NopCustomerDefaults.RegisteredRoleName) != null)
+            if (newCustomerRoles.Any() && newCustomerRoles.FirstOrDefault(c => c.SystemName == NopCustomerDefaults.RegisteredRoleName) != null)
             {
                 var customerAttributeWarnings = await _customerAttributeParser.GetAttributeWarningsAsync(customerAttributesXml);
                 foreach (var error in customerAttributeWarnings)
@@ -541,7 +541,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             // Ensure that valid email address is entered if Registered role is checked to avoid registered customers with empty email address
-            if (newCustomerRoles.Count != 0 && newCustomerRoles.FirstOrDefault(c => c.SystemName == NopCustomerDefaults.RegisteredRoleName) != null &&
+            if (newCustomerRoles.Any() && newCustomerRoles.FirstOrDefault(c => c.SystemName == NopCustomerDefaults.RegisteredRoleName) != null &&
                 !CommonHelper.IsValidEmail(model.Email))
             {
                 ModelState.AddModelError(string.Empty, await _localizationService.GetResourceAsync("Admin.Customers.Customers.ValidEmailRequiredRegisteredRole"));
@@ -550,7 +550,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //custom customer attributes
             var customerAttributesXml = await ParseCustomCustomerAttributesAsync(form);
-            if (newCustomerRoles.Count != 0 && newCustomerRoles.FirstOrDefault(c => c.SystemName == NopCustomerDefaults.RegisteredRoleName) != null)
+            if (newCustomerRoles.Any() && newCustomerRoles.FirstOrDefault(c => c.SystemName == NopCustomerDefaults.RegisteredRoleName) != null)
             {
                 var customerAttributeWarnings = await _customerAttributeParser.GetAttributeWarningsAsync(customerAttributesXml);
                 foreach (var error in customerAttributeWarnings)
@@ -1608,7 +1608,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
-            var customers = await _customerService.GetAllCustomersAsync(customerRoleIds: [.. model.SelectedCustomerRoleIds],
+            var customers = await _customerService.GetAllCustomersAsync(customerRoleIds: model.SelectedCustomerRoleIds.ToArray(),
                 email: model.SearchEmail,
                 username: model.SearchUsername,
                 firstName: model.SearchFirstName,
@@ -1666,7 +1666,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
-            var customers = await _customerService.GetAllCustomersAsync(customerRoleIds: [.. model.SelectedCustomerRoleIds],
+            var customers = await _customerService.GetAllCustomersAsync(customerRoleIds: model.SelectedCustomerRoleIds.ToArray(),
                 email: model.SearchEmail,
                 username: model.SearchUsername,
                 firstName: model.SearchFirstName,

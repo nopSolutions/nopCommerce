@@ -261,7 +261,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         {
             //filter active configurations
             var activeConfigurations = configurations.Where(configuration => configuration.PassUserProperties).ToList();
-            if (activeConfigurations.Count == 0)
+            if (!activeConfigurations.Any())
                 return string.Empty;
 
             //prepare user object
@@ -333,7 +333,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                 FacebookPixelDefaults.TrackedEventsSessionValue,
                 events.Except(activeEvents).ToList());
 
-            if (activeEvents.Count == 0)
+            if (!activeEvents.Any())
                 return string.Empty;
 
             return await activeEvents.AggregateAwaitAsync(string.Empty, async (preparedScripts, trackedEvent) =>
@@ -349,7 +349,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                     FacebookPixelDefaults.SEARCH => configurations.Where(configuration => configuration.TrackSearch).ToList(),
                     FacebookPixelDefaults.CONTACT => configurations.Where(configuration => configuration.TrackContact).ToList(),
                     FacebookPixelDefaults.COMPLETE_REGISTRATION => configurations.Where(configuration => configuration.TrackCompleteRegistration).ToList(),
-                    _ => []
+                    _ => new List<FacebookPixelConfiguration>()
                 };
                 if (trackedEvent.IsCustomEvent)
                 {
@@ -570,12 +570,12 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
 
             var conversionsApiConfigurations = configurations.Where(configuration => configuration.ConversionsApiEnabled).ToList();
             var pixelConfigurations = configurations.Where(configuration => configuration.PixelScriptEnabled).ToList();
-            if (conversionsApiConfigurations.Count == 0 && pixelConfigurations.Count == 0)
+            if (!conversionsApiConfigurations.Any() && !pixelConfigurations.Any())
                 return false;
 
             var model = await prepareModel();
 
-            if (pixelConfigurations.Count != 0)
+            if (pixelConfigurations.Any())
                 await PrepareEventScriptAsync(model);
 
             var logErrors = true; //set it to false to ignore Conversions API errors 
@@ -1046,7 +1046,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                             NopCustomerDefaults.EuCookieLawAcceptedAttribute, store.Id);
                     return cookieConsentAccepted;
                 }).ToListAsync();
-                if (configurations.Count == 0)
+                if (!configurations.Any())
                     return string.Empty;
 
                 //base script
@@ -1290,7 +1290,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                 //load configuration custom events
                 var configuration = await GetConfigurationByIdAsync(configurationId);
                 var customEventsValue = configuration?.CustomEvents ?? string.Empty;
-                var customEvents = JsonConvert.DeserializeObject<List<CustomEvent>>(customEventsValue) ?? [];
+                var customEvents = JsonConvert.DeserializeObject<List<CustomEvent>>(customEventsValue) ?? new List<CustomEvent>();
                 return customEvents;
             });
 
@@ -1319,7 +1319,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
 
             //load configuration custom events
             var customEventsValue = configuration.CustomEvents ?? string.Empty;
-            var customEvents = JsonConvert.DeserializeObject<List<CustomEvent>>(customEventsValue) ?? [];
+            var customEvents = JsonConvert.DeserializeObject<List<CustomEvent>>(customEventsValue) ?? new List<CustomEvent>();
 
             //try to get an event by the passed name
             var customEvent = customEvents

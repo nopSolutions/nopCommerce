@@ -12,7 +12,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
         public ShipmentItemModel()
         {
-            AvailableWarehouses = [];
+            AvailableWarehouses = new List<WarehouseInfo>();
         }
 
         #endregion

@@ -111,7 +111,7 @@ namespace Nop.Core.Rss
         /// <summary>
         /// Element extensions
         /// </summary>
-        public List<XElement> ElementExtensions { get; } = [];
+        public List<XElement> ElementExtensions { get; } = new List<XElement>();
 
         #endregion
     }

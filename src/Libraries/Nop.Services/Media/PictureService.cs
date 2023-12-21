@@ -236,7 +236,7 @@ namespace Nop.Services.Media
             ArgumentNullException.ThrowIfNull(picture);
 
             var result = fromDb
-                ? (await GetPictureBinaryByPictureIdAsync(picture.Id))?.BinaryData ?? []
+                ? (await GetPictureBinaryByPictureIdAsync(picture.Id))?.BinaryData ?? Array.Empty<byte>()
                 : await LoadPictureFromFileAsync(picture.Id, picture.MimeType);
 
             return result;
@@ -856,7 +856,7 @@ namespace Nop.Services.Media
                 IsNew = isNew
             };
             await _pictureRepository.InsertAsync(picture);
-            await UpdatePictureBinaryAsync(picture, await IsStoreInDbAsync() ? pictureBinary : []);
+            await UpdatePictureBinaryAsync(picture, await IsStoreInDbAsync() ? pictureBinary : Array.Empty<byte>());
 
             if (!await IsStoreInDbAsync())
                 await SavePictureInFileAsync(picture.Id, pictureBinary, mimeType);
@@ -974,7 +974,7 @@ namespace Nop.Services.Media
             picture.IsNew = isNew;
 
             await _pictureRepository.UpdateAsync(picture);
-            await UpdatePictureBinaryAsync(picture, await IsStoreInDbAsync() ? pictureBinary : []);
+            await UpdatePictureBinaryAsync(picture, await IsStoreInDbAsync() ? pictureBinary : Array.Empty<byte>());
 
             if (!await IsStoreInDbAsync())
                 await SavePictureInFileAsync(picture.Id, pictureBinary, mimeType);
@@ -1003,7 +1003,7 @@ namespace Nop.Services.Media
             picture.SeoFilename = seoFilename;
 
             await _pictureRepository.UpdateAsync(picture);
-            await UpdatePictureBinaryAsync(picture, await IsStoreInDbAsync() ? (await GetPictureBinaryByPictureIdAsync(picture.Id)).BinaryData : []);
+            await UpdatePictureBinaryAsync(picture, await IsStoreInDbAsync() ? (await GetPictureBinaryByPictureIdAsync(picture.Id)).BinaryData : Array.Empty<byte>());
 
             if (!await IsStoreInDbAsync())
                 await SavePictureInFileAsync(picture.Id, (await GetPictureBinaryByPictureIdAsync(picture.Id)).BinaryData, picture.MimeType);
@@ -1192,7 +1192,7 @@ namespace Nop.Services.Media
                             //now on file system
                             await SavePictureInFileAsync(picture.Id, pictureBinary, picture.MimeType);
                         //update appropriate properties
-                        await UpdatePictureBinaryAsync(picture, isStoreInDb ? pictureBinary : []);
+                        await UpdatePictureBinaryAsync(picture, isStoreInDb ? pictureBinary : Array.Empty<byte>());
                         picture.IsNew = true;
                     }
 

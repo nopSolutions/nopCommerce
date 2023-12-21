@@ -15,7 +15,7 @@ namespace Nop.Services.Plugins
         #region Fields
 
         protected const string OBSOLETE_FIELD = "Obsolete field, using only for compatibility";
-        protected List<string> _installedPluginNames = [];
+        protected List<string> _installedPluginNames = new();
         protected IList<PluginDescriptorBaseInfo> _installedPlugins = new List<PluginDescriptorBaseInfo>();
 
         protected readonly INopFileProvider _fileProvider;
@@ -152,7 +152,7 @@ namespace Nop.Services.Plugins
 
             //sort list by display order. NOTE: Lowest DisplayOrder will be first i.e 0 , 1, 1, 1, 5, 10
             //it's required: https://www.nopcommerce.com/boards/topic/17455/load-plugins-based-on-their-displayorder-on-startup
-            result = [.. result.OrderBy(item => item.PluginDescriptor.DisplayOrder)];
+            result = result.OrderBy(item => item.PluginDescriptor.DisplayOrder).ToList();
 
             return result;
         }
@@ -177,7 +177,7 @@ namespace Nop.Services.Plugins
                 _installedPluginNames.AddRange(GetObsoleteInstalledPluginNames());
 
                 //and save info into a new file if need
-                if (_installedPluginNames.Count != 0)
+                if (_installedPluginNames.Any())
                     Save();
             }
 
@@ -316,11 +316,11 @@ namespace Nop.Services.Plugins
         /// <param name="pluginsInfo">Plugins info</param>
         public virtual void CopyFrom(IPluginsInfo pluginsInfo)
         {
-            InstalledPlugins = pluginsInfo.InstalledPlugins?.ToList() ?? [];
-            PluginNamesToUninstall = pluginsInfo.PluginNamesToUninstall?.ToList() ?? [];
-            PluginNamesToDelete = pluginsInfo.PluginNamesToDelete?.ToList() ?? [];
+            InstalledPlugins = pluginsInfo.InstalledPlugins?.ToList() ?? new List<PluginDescriptorBaseInfo>();
+            PluginNamesToUninstall = pluginsInfo.PluginNamesToUninstall?.ToList() ?? new List<string>();
+            PluginNamesToDelete = pluginsInfo.PluginNamesToDelete?.ToList() ?? new List<string>();
             PluginNamesToInstall = pluginsInfo.PluginNamesToInstall?.ToList() ??
-                                   [];
+                                   new List<(string SystemName, Guid? CustomerGuid)>();
             AssemblyLoadedCollision = pluginsInfo.AssemblyLoadedCollision?.ToList();
             PluginDescriptors = pluginsInfo.PluginDescriptors;
             IncompatiblePlugins = pluginsInfo.IncompatiblePlugins?.ToDictionary(item => item.Key, item => item.Value);
@@ -340,12 +340,12 @@ namespace Nop.Services.Plugins
                 if (_installedPlugins.Any())
                     _installedPluginNames.Clear();
 
-                return _installedPluginNames.Count != 0 ? _installedPluginNames : [OBSOLETE_FIELD];
+                return _installedPluginNames.Any() ? _installedPluginNames : [OBSOLETE_FIELD];
             }
             set
             {
                 if (value?.Any() ?? false)
-                    _installedPluginNames = [.. value];
+                    _installedPluginNames = value.ToList();
             }
         }
 
@@ -356,7 +356,7 @@ namespace Nop.Services.Plugins
         {
             get
             {
-                if ((_installedPlugins?.Any() ?? false) || _installedPluginNames.Count == 0)
+                if ((_installedPlugins?.Any() ?? false) || !_installedPluginNames.Any())
                     return _installedPlugins;
 
                 if (PluginDescriptors?.Any() ?? false)

@@ -9,7 +9,7 @@
     {
         static SingletonDictionary()
         {
-            Singleton<Dictionary<TKey, TValue>>.Instance = [];
+            Singleton<Dictionary<TKey, TValue>>.Instance = new Dictionary<TKey, TValue>();
         }
 
         /// <summary>

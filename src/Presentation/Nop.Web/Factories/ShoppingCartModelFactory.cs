@@ -807,8 +807,8 @@ namespace Nop.Web.Factories
                     : model.StateProvinceId;
                 var states = defaultEstimateCountryId.HasValue
                     ? (await _stateProvinceService.GetStateProvincesByCountryIdAsync(defaultEstimateCountryId.Value, currentLanguage.Id)).ToList()
-                    : [];
-                if (states.Count != 0)
+                    : new List<StateProvince>();
+                if (states.Any())
                 {
                     foreach (var s in states)
                     {
@@ -946,7 +946,7 @@ namespace Nop.Web.Factories
                 model.ButtonPaymentMethodViewComponents.Add(viewComponent);
             }
             //hide "Checkout" button if we have only "Button" payment methods
-            model.HideCheckoutButton = nonButtonPaymentMethods.Count == 0 && model.ButtonPaymentMethodViewComponents.Any();
+            model.HideCheckoutButton = !nonButtonPaymentMethods.Any() && model.ButtonPaymentMethodViewComponents.Any();
 
             //order review data
             if (prepareAndDisplayOrderReviewData)
@@ -1217,7 +1217,7 @@ namespace Nop.Web.Factories
                     }
                     else
                     {
-                        displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Count != 0;
+                        displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Any();
                         displayTax = !displayTaxRates;
 
                         model.Tax = await _priceFormatter.FormatPriceAsync(shoppingCartTax, true, false);
@@ -1251,7 +1251,7 @@ namespace Nop.Web.Factories
                 }
 
                 //gift cards
-                if (appliedGiftCards != null && appliedGiftCards.Count != 0)
+                if (appliedGiftCards != null && appliedGiftCards.Any())
                 {
                     foreach (var appliedGiftCard in appliedGiftCards)
                     {
@@ -1394,7 +1394,7 @@ namespace Nop.Web.Factories
                             NopCustomerDefaults.SelectedShippingOptionAttribute, store.Id);
                 }
 
-                if (rawShippingOptions.Count != 0)
+                if (rawShippingOptions.Any())
                 {
                     foreach (var option in rawShippingOptions)
                     {

@@ -422,7 +422,7 @@ namespace Nop.Services.Shipping
                     matchedByCountry.Add(warehouse);
             }
             //no country matches. return any
-            if (matchedByCountry.Count == 0)
+            if (!matchedByCountry.Any())
                 return warehouses.FirstOrDefault();
 
             //find by state
@@ -437,7 +437,7 @@ namespace Nop.Services.Shipping
                     matchedByState.Add(warehouse);
             }
 
-            if (matchedByState.Count != 0)
+            if (matchedByState.Any())
                 return matchedByState.FirstOrDefault();
 
             //no state matches. return any

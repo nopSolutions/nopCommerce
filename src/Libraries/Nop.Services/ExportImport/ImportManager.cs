@@ -422,7 +422,7 @@ namespace Nop.Services.ExportImport
                                 ExportImportDefaults.ImageHashAlgorithm,
                                 trimByteCount);
 
-                            var imagesIds = productsImagesIds.TryGetValue(product.ProductItem.Id, out var value) ? value : [];
+                            var imagesIds = productsImagesIds.TryGetValue(product.ProductItem.Id, out var value) ? value : Array.Empty<int>();
 
                             pictureAlreadyExists = allPicturesHashes.Where(p => imagesIds.Contains(p.Key))
                                 .Select(p => p.Value)
@@ -636,7 +636,7 @@ namespace Nop.Services.ExportImport
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task ImportCategoryLocalizedAsync(Category category, WorkbookMetadata<Category> metadata, PropertyManager<Category, Language> manager, int iRow, IList<Language> languages)
         {
-            if (metadata.LocalizedWorksheets.Count == 0)
+            if (!metadata.LocalizedWorksheets.Any())
                 return;
 
             var setSeName = metadata.LocalizedProperties.Any(p => p.PropertyName == "SeName");
@@ -687,7 +687,7 @@ namespace Nop.Services.ExportImport
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task ImportManufaturerLocalizedAsync(Manufacturer manufacturer, WorkbookMetadata<Manufacturer> metadata, PropertyManager<Manufacturer, Language> manager, int iRow, IList<Language> languages)
         {
-            if (metadata.LocalizedWorksheets.Count == 0)
+            if (!metadata.LocalizedWorksheets.Any())
                 return;
 
             var setSeName = metadata.LocalizedProperties.Any(p => p.PropertyName == "SeName");
@@ -787,7 +787,7 @@ namespace Nop.Services.ExportImport
                 .FirstOrDefault(pam => pam.ProductAttributeId == productAttributeId);
             var pictureIds = new List<int>();
             if (!string.IsNullOrWhiteSpace(pictureIdsStr))
-                pictureIds = [.. Array.ConvertAll(pictureIdsStr.Split(new[] { ';', ' ' }, StringSplitOptions.RemoveEmptyEntries), int.Parse)];
+                pictureIds = Array.ConvertAll(pictureIdsStr.Split(new[] { ';', ' ' }, StringSplitOptions.RemoveEmptyEntries), int.Parse).ToList();
 
             if (productAttributeMapping == null)
             {
@@ -850,7 +850,7 @@ namespace Nop.Services.ExportImport
                     }
                 }
 
-                if (metadata.LocalizedWorksheets.Count == 0)
+                if (!metadata.LocalizedWorksheets.Any())
                     return;
 
                 foreach (var language in languages)
@@ -1012,7 +1012,7 @@ namespace Nop.Services.ExportImport
             else
                 await _specificationAttributeService.UpdateProductSpecificationAttributeAsync(productSpecificationAttribute);
 
-            if (metadata.LocalizedWorksheets.Count == 0)
+            if (!metadata.LocalizedWorksheets.Any())
                 return;
 
             foreach (var language in languages)
@@ -1312,36 +1312,36 @@ namespace Nop.Services.ExportImport
             }
 
             //performance optimization, the check for the existence of the categories in one SQL request
-            var notExistingCategories = await _categoryService.GetNotExistingCategoriesAsync([.. allCategories]);
-            if (notExistingCategories.Length != 0)
+            var notExistingCategories = await _categoryService.GetNotExistingCategoriesAsync(allCategories.ToArray());
+            if (notExistingCategories.Any())
             {
                 throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Import.CategoriesDontExist"), string.Join(", ", notExistingCategories)));
             }
 
             //performance optimization, the check for the existence of the manufacturers in one SQL request
-            var notExistingManufacturers = await _manufacturerService.GetNotExistingManufacturersAsync([.. allManufacturers]);
-            if (notExistingManufacturers.Length != 0)
+            var notExistingManufacturers = await _manufacturerService.GetNotExistingManufacturersAsync(allManufacturers.ToArray());
+            if (notExistingManufacturers.Any())
             {
                 throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Import.ManufacturersDontExist"), string.Join(", ", notExistingManufacturers)));
             }
 
             //performance optimization, the check for the existence of the product attributes in one SQL request
-            var notExistingProductAttributes = await _productAttributeService.GetNotExistingAttributesAsync([.. allAttributeIds]);
-            if (notExistingProductAttributes.Length != 0)
+            var notExistingProductAttributes = await _productAttributeService.GetNotExistingAttributesAsync(allAttributeIds.ToArray());
+            if (notExistingProductAttributes.Any())
             {
                 throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Import.ProductAttributesDontExist"), string.Join(", ", notExistingProductAttributes)));
             }
 
             //performance optimization, the check for the existence of the specification attribute options in one SQL request
             var notExistingSpecificationAttributeOptions = await _specificationAttributeService.GetNotExistingSpecificationAttributeOptionsAsync(allSpecificationAttributeOptionIds.Where(saoId => saoId != 0).ToArray());
-            if (notExistingSpecificationAttributeOptions.Length != 0)
+            if (notExistingSpecificationAttributeOptions.Any())
             {
                 throw new ArgumentException($"The following specification attribute option ID(s) don't exist - {string.Join(", ", notExistingSpecificationAttributeOptions)}");
             }
 
             //performance optimization, the check for the existence of the stores in one SQL request
-            var notExistingStores = await _storeService.GetNotExistingStoresAsync([.. allStores]);
-            if (notExistingStores.Length != 0)
+            var notExistingStores = await _storeService.GetNotExistingStoresAsync(allStores.ToArray());
+            if (notExistingStores.Any())
             {
                 throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Import.StoresDontExist"), string.Join(", ", notExistingStores)));
             }
@@ -1508,15 +1508,15 @@ namespace Nop.Services.ExportImport
             }
 
             //performance optimization, the check for the existence of the customers in one SQL request
-            var notExistingCustomerGuids = await _customerService.GetNotExistingCustomersAsync([.. allCustomerGuids]);
-            if (notExistingCustomerGuids.Length != 0)
+            var notExistingCustomerGuids = await _customerService.GetNotExistingCustomersAsync(allCustomerGuids.ToArray());
+            if (notExistingCustomerGuids.Any())
             {
                 throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.Orders.Import.CustomersDontExist"), string.Join(", ", notExistingCustomerGuids)));
             }
 
             //performance optimization, the check for the existence of the order items in one SQL request
-            var notExistingProductSkus = await _productService.GetNotExistingProductsAsync([.. allOrderItemSkus]);
-            if (notExistingProductSkus.Length != 0)
+            var notExistingProductSkus = await _productService.GetNotExistingProductsAsync(allOrderItemSkus.ToArray());
+            if (notExistingProductSkus.Any())
             {
                 throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.Orders.Import.ProductsDontExist"), string.Join(", ", notExistingProductSkus)));
             }
@@ -1589,7 +1589,7 @@ namespace Nop.Services.ExportImport
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task ImportProductLocalizedAsync(Product product, ImportProductMetadata metadata, int iRow, IList<Language> languages)
         {
-            if (metadata.LocalizedWorksheets.Count != 0)
+            if (metadata.LocalizedWorksheets.Any())
             {
                 var manager = metadata.Manager;
                 foreach (var language in languages)
@@ -1681,7 +1681,7 @@ namespace Nop.Services.ExportImport
                 if (languages.Any(l => l.UniqueSeoCode.Equals(ws.Name, StringComparison.InvariantCultureIgnoreCase)))
                     localizedWorksheets.Add(ws);
 
-            if (localizedWorksheets.Count != 0)
+            if (localizedWorksheets.Any())
             {
                 // get the first worksheet in the workbook
                 var localizedWorksheet = localizedWorksheets.First();
@@ -1926,8 +1926,8 @@ namespace Nop.Services.ExportImport
                         new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = roleId });
                 }
 
-                if (!isNew && rolesToSave.Count != 0)
-                    foreach (var customerRole in customerRoles.Where(cr => !rolesToSave.Contains(cr.Id)).ToList())
+                if (!isNew && rolesToSave.Any())
+                    foreach (var customerRole in customerRoles.Where(cr=>!rolesToSave.Contains(cr.Id)).ToList())
                         await _customerService.RemoveCustomerRoleMappingAsync(customer, customerRole);
 
                 if (avatarPictureId.HasValue)
@@ -1984,7 +1984,7 @@ namespace Nop.Services.ExportImport
 
             //performance optimization, load all products by SKU in one SQL request
             var currentVendor = await _workContext.GetCurrentVendorAsync();
-            var allProductsBySku = await _productService.GetProductsBySkuAsync([.. metadata.AllSku], currentVendor?.Id ?? 0);
+            var allProductsBySku = await _productService.GetProductsBySkuAsync(metadata.AllSku.ToArray(), currentVendor?.Id ?? 0);
 
             //validate maximum number of products per vendor
             if (_vendorSettings.MaximumProductNumber > 0 &&
@@ -2437,10 +2437,10 @@ namespace Nop.Services.ExportImport
                     var categoryList = tempProperty.StringValue;
 
                     //category mappings
-                    var categories = isNew || !allProductsCategoryIds.TryGetValue(product.Id, out var value) ? [] : value;
+                    var categories = isNew || !allProductsCategoryIds.ContainsKey(product.Id) ? Array.Empty<int>() : allProductsCategoryIds[product.Id];
 
                     var storesIds = product.LimitedToStores
-                        ? [.. (await _storeMappingService.GetStoresIdsWithAccessAsync(product))]
+                        ? (await _storeMappingService.GetStoresIdsWithAccessAsync(product)).ToList()
                         : new List<int>();
 
                     var importedCategories = await categoryList.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
@@ -2492,7 +2492,7 @@ namespace Nop.Services.ExportImport
                     var manufacturerList = tempProperty.StringValue;
 
                     //manufacturer mappings
-                    var manufacturers = isNew || !allProductsManufacturerIds.TryGetValue(product.Id, out var value) ? [] : value;
+                    var manufacturers = isNew || !allProductsManufacturerIds.ContainsKey(product.Id) ? Array.Empty<int>() : allProductsManufacturerIds[product.Id];
 
                     var importedManufacturers = await manufacturerList
                         .Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
@@ -2558,7 +2558,7 @@ namespace Nop.Services.ExportImport
                     var limitedToStoresList = tempProperty.StringValue;
 
                     var importedStores = product.LimitedToStores ? limitedToStoresList.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
-                        .Select(x => allStores.FirstOrDefault(store => store.Name == x.Trim())?.Id ?? int.Parse(x.Trim())).ToList() : [];
+                        .Select(x => allStores.FirstOrDefault(store => store.Name == x.Trim())?.Id ?? int.Parse(x.Trim())).ToList() : new List<int>();
 
                     await _productService.UpdateProductStoreMappingsAsync(product, importedStores);
                 }
@@ -2952,7 +2952,7 @@ namespace Nop.Services.ExportImport
                 iRow++;
             }
 
-            var needSave = saveNextTime.Count != 0;
+            var needSave = saveNextTime.Any();
 
             while (needSave)
             {
@@ -2980,14 +2980,14 @@ namespace Nop.Services.ExportImport
 
                 saveNextTime.RemoveAll(remove.Contains);
 
-                needSave = remove.Count != 0 && saveNextTime.Count != 0;
+                needSave = remove.Any() && saveNextTime.Any();
             }
 
             //activity log
             await _customerActivityService.InsertActivityAsync("ImportCategories",
                 string.Format(await _localizationService.GetResourceAsync("ActivityLog.ImportCategories"), iRow - 2 - saveNextTime.Count));
 
-            if (saveNextTime.Count == 0)
+            if (!saveNextTime.Any())
                 return;
 
             var categoriesName = new List<string>();
@@ -3014,10 +3014,10 @@ namespace Nop.Services.ExportImport
             (var metadata, var worksheet) = await PrepareImportOrderDataAsync(workbook);
 
             //performance optimization, load all orders by guid in one SQL request
-            var allOrdersByGuids = await _orderService.GetOrdersByGuidsAsync([.. metadata.AllOrderGuids]);
+            var allOrdersByGuids = await _orderService.GetOrdersByGuidsAsync(metadata.AllOrderGuids.ToArray());
 
             //performance optimization, load all customers by guid in one SQL request
-            var allCustomersByGuids = await _customerService.GetCustomersByGuidsAsync([.. metadata.AllCustomerGuids]);
+            var allCustomersByGuids = await _customerService.GetCustomersByGuidsAsync(metadata.AllCustomerGuids.ToArray());
 
             Order lastLoadedOrder = null;
 
@@ -3342,7 +3342,7 @@ namespace Nop.Services.ExportImport
             /// <returns>A task that represents the asynchronous operation</returns>
             public static async Task<CategoryKey> CreateCategoryKeyAsync(Category category, ICategoryService categoryService, IList<Category> allCategories, IStoreMappingService storeMappingService)
             {
-                return new CategoryKey(await categoryService.GetFormattedBreadCrumbAsync(category, allCategories), category.LimitedToStores ? [.. (await storeMappingService.GetStoresIdsWithAccessAsync(category))] : [])
+                return new CategoryKey(await categoryService.GetFormattedBreadCrumbAsync(category, allCategories), category.LimitedToStores ? (await storeMappingService.GetStoresIdsWithAccessAsync(category)).ToList() : new List<int>())
                 {
                     Category = category
                 };
@@ -3351,7 +3351,7 @@ namespace Nop.Services.ExportImport
             public CategoryKey(string key, List<int> storesIds = null)
             {
                 Key = key.Trim();
-                StoresIds = storesIds ?? [];
+                StoresIds = storesIds ?? new List<int>();
             }
 
             public List<int> StoresIds { get; }
@@ -3368,7 +3368,7 @@ namespace Nop.Services.ExportImport
                 if (Category != null && y.Category != null)
                     return Category.Id == y.Category.Id;
 
-                if ((StoresIds.Count != 0 || y.StoresIds.Count != 0)
+                if ((StoresIds.Any() || y.StoresIds.Any())
                     && (StoresIds.All(id => !y.StoresIds.Contains(id)) || y.StoresIds.All(id => !StoresIds.Contains(id))))
                     return false;
 
@@ -3377,7 +3377,7 @@ namespace Nop.Services.ExportImport
 
             public override int GetHashCode()
             {
-                if (StoresIds.Count == 0)
+                if (!StoresIds.Any())
                     return Key.GetHashCode();
 
                 var storesIds = StoresIds.Select(id => id.ToString())

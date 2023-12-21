@@ -71,12 +71,12 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Warnings
         /// </summary>
-        public List<string> Warnings { get; } = [];
+        public List<string> Warnings { get; } = new List<string>();
 
         /// <summary>
         /// Applied discounts
         /// </summary>
-        public List<Discount> AppliedDiscounts { get; } = [];
+        public List<Discount> AppliedDiscounts { get; } = new List<Discount>();
 
         /// <summary>
         /// Pickup point

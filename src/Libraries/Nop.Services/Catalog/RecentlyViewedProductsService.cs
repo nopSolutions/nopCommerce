@@ -59,12 +59,12 @@ namespace Nop.Services.Catalog
         {
             var httpContext = _httpContextAccessor.HttpContext;
             if (httpContext?.Request == null)
-                return [];
+                return new List<int>();
 
             //try to get cookie
             var cookieName = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.RecentlyViewedProductsCookie}";
             if (!httpContext.Request.Cookies.TryGetValue(cookieName, out var productIdsCookie) || string.IsNullOrEmpty(productIdsCookie))
-                return [];
+                return new List<int>();
 
             //get array of string product identifiers from cookie
             var productIds = productIdsCookie.Split(_separator, StringSplitOptions.RemoveEmptyEntries);
@@ -120,7 +120,7 @@ namespace Nop.Services.Catalog
             var productIds = GetRecentlyViewedProductsIds(number);
 
             //return list of product
-            return (await _productService.GetProductsByIdsAsync([.. productIds]))
+            return (await _productService.GetProductsByIdsAsync(productIds.ToArray()))
                 .Where(product => product.Published && !product.Deleted).ToList();
         }
 

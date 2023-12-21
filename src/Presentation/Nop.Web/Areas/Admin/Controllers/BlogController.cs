@@ -334,10 +334,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
 
-            if (selectedIds == null || selectedIds.Count == 0)
+            if (selectedIds == null || !selectedIds.Any())
                 return NoContent();
 
-            var comments = await _blogService.GetBlogCommentsByIdsAsync([.. selectedIds]);
+            var comments = await _blogService.GetBlogCommentsByIdsAsync(selectedIds.ToArray());
 
             await _blogService.DeleteBlogCommentsAsync(comments);
             //activity log
@@ -356,11 +356,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
 
-            if (selectedIds == null || selectedIds.Count == 0)
+            if (selectedIds == null || !selectedIds.Any())
                 return NoContent();
 
             //filter not approved comments
-            var blogComments = (await _blogService.GetBlogCommentsByIdsAsync([.. selectedIds])).Where(comment => !comment.IsApproved);
+            var blogComments = (await _blogService.GetBlogCommentsByIdsAsync(selectedIds.ToArray())).Where(comment => !comment.IsApproved);
 
             foreach (var blogComment in blogComments)
             {
@@ -385,11 +385,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
 
-            if (selectedIds == null || selectedIds.Count == 0)
+            if (selectedIds == null || !selectedIds.Any())
                 return NoContent();
 
             //filter approved comments
-            var blogComments = (await _blogService.GetBlogCommentsByIdsAsync([.. selectedIds])).Where(comment => comment.IsApproved);
+            var blogComments = (await _blogService.GetBlogCommentsByIdsAsync(selectedIds.ToArray())).Where(comment => comment.IsApproved);
 
             foreach (var blogComment in blogComments)
             {

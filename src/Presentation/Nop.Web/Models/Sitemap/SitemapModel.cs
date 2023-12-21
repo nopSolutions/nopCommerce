@@ -8,7 +8,7 @@ namespace Nop.Web.Models.Sitemap
 
         public SitemapModel()
         {
-            Items = [];
+            Items = new List<SitemapItemModel>();
             PageModel = new SitemapPageModel();
         }
 

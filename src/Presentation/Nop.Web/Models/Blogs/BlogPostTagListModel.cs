@@ -6,7 +6,7 @@ namespace Nop.Web.Models.Blogs
     {
         public BlogPostTagListModel()
         {
-            Tags = [];
+            Tags = new List<BlogPostTagModel>();
         }
 
         public int GetFontSize(BlogPostTagModel blogPostTag)

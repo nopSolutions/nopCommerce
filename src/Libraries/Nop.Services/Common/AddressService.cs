@@ -398,7 +398,7 @@ namespace Nop.Services.Common
             }
 
             var formatString = string.Format(format, fieldsList.Select(x => !string.IsNullOrEmpty(x.Value) ? $"{x.Value}{separator}" : x.Value).ToArray())
-                .TrimEnd([.. separator]);
+                .TrimEnd(separator.ToArray());
 
             return (formatString, fieldsList);
         }

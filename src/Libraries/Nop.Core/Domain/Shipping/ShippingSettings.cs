@@ -9,8 +9,8 @@ namespace Nop.Core.Domain.Shipping
     {
         public ShippingSettings()
         {
-            ActiveShippingRateComputationMethodSystemNames = [];
-            ActivePickupPointProviderSystemNames = [];
+            ActiveShippingRateComputationMethodSystemNames = new List<string>();
+            ActivePickupPointProviderSystemNames = new List<string>();
         }
 
         /// <summary>

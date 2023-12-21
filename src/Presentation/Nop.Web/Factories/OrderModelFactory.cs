@@ -437,7 +437,7 @@ namespace Nop.Web.Factories
                 else
                 {
                     var taxRates = _orderService.ParseTaxRates(order, order.TaxRates);
-                    displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Count != 0;
+                    displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Any();
                     displayTax = !displayTaxRates;
 
                     var orderTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTax, order.CurrencyRate);

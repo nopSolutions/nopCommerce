@@ -44,7 +44,7 @@ namespace Nop.Core.Configuration
             //get raw configuration parameters
             var configuration = JsonConvert.DeserializeObject<AppSettings>(fileProvider.ReadAllText(filePath, Encoding.UTF8))
                 ?.Configuration
-                ?? [];
+                ?? new();
             foreach (var config in configurations)
             {
                 configuration[config.Name] = JToken.FromObject(config);

@@ -96,7 +96,7 @@ namespace Nop.Web.Framework.Mvc.Filters
 
                 //check request query parameters
                 var request = context.HttpContext.Request;
-                if (request?.Query == null || request.Query.Count == 0)
+                if (request?.Query == null || !request.Query.Any())
                     return;
 
                 if (!DataSettingsManager.IsDatabaseInstalled())

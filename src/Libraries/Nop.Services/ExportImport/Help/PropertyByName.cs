@@ -195,7 +195,7 @@ namespace Nop.Services.ExportImport.Help
         /// <returns>Result</returns>
         public string[] GetDropDownElements()
         {
-            return IsDropDownCell ? DropDownElements.Select(ev => ev.Text).ToArray() : [];
+            return IsDropDownCell ? DropDownElements.Select(ev => ev.Text).ToArray() : Array.Empty<string>();
         }
 
         /// <summary>

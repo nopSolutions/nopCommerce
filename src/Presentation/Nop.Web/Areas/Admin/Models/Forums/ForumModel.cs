@@ -12,7 +12,7 @@ namespace Nop.Web.Areas.Admin.Models.Forums
 
         public ForumModel()
         {
-            ForumGroups = [];
+            ForumGroups = new List<ForumGroupModel>();
         }
 
         #endregion

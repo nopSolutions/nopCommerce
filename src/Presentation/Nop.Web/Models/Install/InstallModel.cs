@@ -9,9 +9,9 @@ namespace Nop.Web.Models.Install
     {
         public InstallModel()
         {
-            AvailableLanguages = [];
-            AvailableDataProviders = [];
-            AvailableCountries = [];
+            AvailableLanguages = new List<SelectListItem>();
+            AvailableDataProviders = new List<SelectListItem>();
+            AvailableCountries = new List<SelectListItem>();
         }
 
         [DataType(DataType.EmailAddress)]

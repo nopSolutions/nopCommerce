@@ -71,7 +71,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 if (!string.IsNullOrEmpty(ParentContainer))
                     dataInputSelector = "#" + ParentContainer + " input, #" + ParentContainer + " textarea, #" + ParentContainer + " select";
 
-                if (dataInputIds.Count != 0)
+                if (dataInputIds.Any())
                     dataInputSelector = "#" + string.Join(", #", dataInputIds);
 
                 var onClick = $"checkOverriddenStoreValue(this, '{dataInputSelector}')";

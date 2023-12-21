@@ -19,7 +19,7 @@ namespace Nop.Web.Areas.Admin.Models.Vendors
                 PageSize = 5;
 
             Address = new AddressModel();
-            VendorAttributes = [];
+            VendorAttributes = new List<VendorAttributeModel>();
             Locales = new List<VendorLocalizedModel>();
             AssociatedCustomers = new List<VendorAssociatedCustomerModel>();
             VendorNoteSearchModel = new VendorNoteSearchModel();

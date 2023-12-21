@@ -465,7 +465,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         {
             var itemsClassification = countryId > 0
                 ? (await _itemClassificationService.GetItemClassificationAsync(countryId)).ToList()
-                : [];
+                : new();
 
             return await orderItems.SelectAwait(async orderItem =>
             {
@@ -699,7 +699,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 throw new NopException($"File {AvalaraTaxDefaults.TaxRatesFilePath} is empty");
 
             var lines = text.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
-            if (lines.Length == 0 || lines[0].Split(',').Length < 14)
+            if (!lines.Any() || lines[0].Split(',').Length < 14)
                 throw new NopException($"Unsupported file {AvalaraTaxDefaults.TaxRatesFilePath} structure");
 
             //prepare tax rates
@@ -962,7 +962,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 var taxCodes = await ServiceClient.ListTaxCodesByCompanyAsync(selectedCompany.id, "isActive eq true", null, null, null, null)
                     ?? throw new NopException("No response from the service");
 
-                var existingTaxCodes = taxCodes.value?.Select(taxCode => taxCode.taxCode).ToList() ?? [];
+                var existingTaxCodes = taxCodes.value?.Select(taxCode => taxCode.taxCode).ToList() ?? new List<string>();
 
                 //prepare tax codes to export
                 var taxCodesToExport = await (await _taxCategoryService.GetAllTaxCategoriesAsync()).SelectAwait(async taxCategory => new TaxCodeModel
@@ -979,14 +979,14 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 var systemTaxCodesResult = await ServiceClient.ListTaxCodesAsync("isActive eq true", null, null, null)
                     ?? throw new NopException("No response from the service");
 
-                var systemTaxCodes = systemTaxCodesResult.value?.Select(taxCode => taxCode.taxCode).ToList() ?? [];
+                var systemTaxCodes = systemTaxCodesResult.value?.Select(taxCode => taxCode.taxCode).ToList() ?? new List<string>();
                 existingTaxCodes.AddRange(systemTaxCodes);
 
                 //remove duplicates
                 taxCodesToExport = taxCodesToExport.Where(taxCode => !existingTaxCodes.Contains(taxCode.taxCode)).Distinct().ToList();
 
                 //export tax codes
-                if (taxCodesToExport.Count == 0)
+                if (!taxCodesToExport.Any())
                     return 0;
 
                 //create items and get the result
@@ -1075,7 +1075,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                     ?? throw new NopException("No response from the service");
 
                 //return the paginated and filtered list
-                var existingItemCodes = items.value?.Select(item => item.itemCode).ToList() ?? [];
+                var existingItemCodes = items.value?.Select(item => item.itemCode).ToList() ?? new List<string>();
 
                 //prepare exported items
                 var productIds = selectedIds?.Split(_separator, StringSplitOptions.RemoveEmptyEntries).Select(id => Convert.ToInt32(id)).ToArray();
@@ -1121,7 +1121,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 exportedItems = exportedItems.Where(item => !existingItemCodes.Contains(item.itemCode)).Distinct().ToList();
 
                 //export items
-                if (exportedItems.Count == 0)
+                if (!exportedItems.Any())
                     return 0;
 
                 //create items and get the result

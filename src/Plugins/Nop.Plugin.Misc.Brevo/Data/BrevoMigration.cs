@@ -129,7 +129,7 @@ namespace Nop.Plugin.Misc.Brevo.Data
             #region settings
 
             var sendinblueSettings = _dataProvider.GetTable<Setting>().Where(x => x.Name.StartsWith("sendinbluesettings.")).ToList();
-            if (sendinblueSettings.Count != 0)
+            if (sendinblueSettings.Any())
             { 
                 foreach (var setting in sendinblueSettings)
                 {

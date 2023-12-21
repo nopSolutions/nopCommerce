@@ -17,7 +17,7 @@ namespace Nop.Services.ScheduleTasks
     {
         #region Fields
 
-        protected static readonly List<TaskThread> _taskThreads = [];
+        protected static readonly List<TaskThread> _taskThreads = new();
         protected readonly AppSettings _appSettings;
         private readonly IServiceScopeFactory _serviceScopeFactory;
 
@@ -47,7 +47,7 @@ namespace Nop.Services.ScheduleTasks
             if (!DataSettingsManager.IsDatabaseInstalled())
                 return;
 
-            if (_taskThreads.Count != 0)
+            if (_taskThreads.Any())
                 return;
 
             using var scope = _serviceScopeFactory.CreateScope();

@@ -831,7 +831,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     ? form[formKey].ToString().Split(_separator, StringSplitOptions.RemoveEmptyEntries)
                     .Select(int.Parse)
                     .ToList()
-                    : [];
+                    : new List<int>();
 
                 foreach (var country in countries)
                 {

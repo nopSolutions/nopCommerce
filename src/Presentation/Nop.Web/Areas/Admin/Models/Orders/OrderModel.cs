@@ -15,7 +15,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
         public OrderModel()
         {
-            CustomValues = [];
+            CustomValues = new Dictionary<string, object>();
             TaxRates = new List<TaxRate>();
             GiftCards = new List<GiftCard>();
             Items = new List<OrderItemModel>();

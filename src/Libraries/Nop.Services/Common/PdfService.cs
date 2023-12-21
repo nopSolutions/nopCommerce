@@ -202,7 +202,7 @@ namespace Nop.Services.Common
             if (!string.IsNullOrEmpty(customBillingAddressAttributes))
             {
                 var text = _htmlFormatter.ConvertHtmlToPlainText(customBillingAddressAttributes, true, true);
-                addressResult.AddressAttributes = [.. text.Split('\n')];
+                addressResult.AddressAttributes = text.Split('\n').ToList();
             }
 
             //vendors payment details
@@ -287,7 +287,7 @@ namespace Nop.Services.Common
                     if (!string.IsNullOrEmpty(customShippingAddressAttributes))
                     {
                         var text = _htmlFormatter.ConvertHtmlToPlainText(customShippingAddressAttributes, true, true);
-                        addressResult.AddressAttributes = [.. text.Split('\n')];
+                        addressResult.AddressAttributes = text.Split('\n').ToList();
                     }
                 }
                 else if (order.PickupAddressId.HasValue && await _addressService.GetAddressByIdAsync(order.PickupAddressId.Value) is Address pickupAddress)
@@ -341,7 +341,7 @@ namespace Nop.Services.Common
                 .OrderByDescending(on => on.CreatedOnUtc)
                 .ToList();
 
-            if (orderNotes.Count == 0)
+            if (!orderNotes.Any())
                 return notesResult;
 
             foreach (var orderNote in orderNotes)
@@ -384,7 +384,7 @@ namespace Nop.Services.Common
                 if (!string.IsNullOrEmpty(oi.AttributeDescription))
                 {
                     var attributes = _htmlFormatter.ConvertHtmlToPlainText(oi.AttributeDescription, true, true);
-                    productItem.ProductAttributes = [.. attributes.Split('\n')];
+                    productItem.ProductAttributes = attributes.Split('\n').ToList();
                 }
 
                 //SKU
@@ -563,7 +563,7 @@ namespace Nop.Services.Common
                 {
                     taxRates = _orderService.ParseTaxRates(order, order.TaxRates);
 
-                    displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Count != 0;
+                    displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Any();
                     displayTax = !displayTaxRates;
 
                     var orderTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTax, order.CurrencyRate);
@@ -690,13 +690,13 @@ namespace Nop.Services.Common
             var orderItems = await _orderService.GetOrderItemsAsync(order.Id, vendorId: vendor?.Id ?? 0);
 
             var column1Lines = string.IsNullOrEmpty(pdfSettingsByStore.InvoiceFooterTextColumn1) ?
-                []
+                new List<string>()
                 : pdfSettingsByStore.InvoiceFooterTextColumn1
                     .Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
                     .ToList();
 
             var column2Lines = string.IsNullOrEmpty(pdfSettingsByStore.InvoiceFooterTextColumn2) ?
-                []
+                new List<string>()
                 : pdfSettingsByStore.InvoiceFooterTextColumn2
                     .Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
                     .ToList();

@@ -42,9 +42,9 @@ namespace Nop.Services.ExportImport.Help
         /// <param name="languages">Languages</param>
         public PropertyManager(IEnumerable<PropertyByName<T, L>> defaultProperties, CatalogSettings catalogSettings, IEnumerable<PropertyByName<T, L>> localizedProperties = null, IList<L> languages = null)
         {
-            _defaultProperties = [];
+            _defaultProperties = new Dictionary<string, PropertyByName<T, L>>();
             _catalogSettings = catalogSettings;
-            _localizedProperties = [];
+            _localizedProperties = new Dictionary<string, PropertyByName<T, L>>();
             _languages = new List<L>();
 
             if (languages != null)
@@ -183,7 +183,7 @@ namespace Nop.Services.ExportImport.Help
                 if (prop.IsDropDownCell && _catalogSettings.ExportImportRelatedEntitiesByName)
                 {
                     var dropDownElements = prop.GetDropDownElements();
-                    if (dropDownElements.Length == 0)
+                    if (!dropDownElements.Any())
                     {
                         cell.Value = string.Empty;
                         continue;
@@ -245,7 +245,7 @@ namespace Nop.Services.ExportImport.Help
                 if (prop.IsDropDownCell && _catalogSettings.ExportImportRelatedEntitiesByName)
                 {
                     var dropDownElements = prop.GetDropDownElements();
-                    if (dropDownElements.Length == 0)
+                    if (!dropDownElements.Any())
                     {
                         cell.Value = string.Empty;
                         continue;
@@ -393,12 +393,12 @@ namespace Nop.Services.ExportImport.Help
         /// <summary>
         /// Get default property array
         /// </summary>
-        public PropertyByName<T, L>[] GetDefaultProperties => [.. _defaultProperties.Values];
+        public PropertyByName<T, L>[] GetDefaultProperties => _defaultProperties.Values.ToArray();
 
         /// <summary>
         /// Get localized property array
         /// </summary>
-        public PropertyByName<T, L>[] GetLocalizedProperties => [.. _localizedProperties.Values];
+        public PropertyByName<T, L>[] GetLocalizedProperties => _localizedProperties.Values.ToArray();
 
         /// <summary>
         /// Set SelectList

@@ -7,7 +7,7 @@
     {
         public CustomerMultiFactorAuthenticationInfo()
         {
-            CustomValues = [];
+            CustomValues = new Dictionary<string, object>();
         }
         public string UserName { get; set; }
 

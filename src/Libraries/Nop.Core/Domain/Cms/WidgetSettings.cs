@@ -9,7 +9,7 @@ namespace Nop.Core.Domain.Cms
     {
         public WidgetSettings()
         {
-            ActiveWidgetSystemNames = [];
+            ActiveWidgetSystemNames = new List<string>();
         }
 
         /// <summary>

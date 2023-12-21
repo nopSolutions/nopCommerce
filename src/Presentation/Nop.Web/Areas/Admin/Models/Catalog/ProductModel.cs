@@ -33,7 +33,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
             AvailableDeliveryDates = new List<SelectListItem>();
             AvailableProductAvailabilityRanges = new List<SelectListItem>();
             AvailableWarehouses = new List<SelectListItem>();
-            ProductsTypesSupportedByProductTemplates = [];
+            ProductsTypesSupportedByProductTemplates = new Dictionary<int, IList<SelectListItem>>();
 
             AvailableVendors = new List<SelectListItem>();
 

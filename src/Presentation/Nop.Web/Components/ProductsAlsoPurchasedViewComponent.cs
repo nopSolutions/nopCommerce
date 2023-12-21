@@ -60,7 +60,7 @@ namespace Nop.Web.Components
             //availability dates
             .Where(p => _productService.ProductIsAvailable(p)).ToListAsync();
 
-            if (products.Count == 0)
+            if (!products.Any())
                 return Content("");
 
             var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, true, true, productThumbPictureSize)).ToList();

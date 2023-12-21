@@ -20,7 +20,7 @@ namespace Nop.Web.Components
         {
             var model = await _catalogModelFactory.PreparePopularProductTagsModelAsync(_catalogSettings.NumberOfProductTags);
 
-            if (model.Tags.Count == 0)
+            if (!model.Tags.Any())
                 return Content("");
 
             return View(model);

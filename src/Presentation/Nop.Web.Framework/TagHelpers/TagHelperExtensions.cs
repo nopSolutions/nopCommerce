@@ -45,7 +45,7 @@ namespace Nop.Web.Framework.TagHelpers
 
             var result = new Dictionary<string, string>();
 
-            if (output.Attributes.Count == 0)
+            if (!output.Attributes.Any())
                 return result;
 
             foreach (var attrName in output.Attributes.Select(x => x.Name).Distinct())

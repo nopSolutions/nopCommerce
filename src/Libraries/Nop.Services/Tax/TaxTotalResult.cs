@@ -9,7 +9,7 @@
 
         public TaxTotalResult()
         {
-            TaxRates = [];
+            TaxRates = new SortedDictionary<decimal, decimal>();
             Errors = new List<string>();
         }
 

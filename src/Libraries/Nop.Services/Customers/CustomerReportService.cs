@@ -123,7 +123,7 @@ namespace Nop.Services.Customers
 
             return (await _customerService.GetAllCustomersAsync(
                 date,
-                customerRoleIds: [registeredCustomerRole.Id])).Count;
+                customerRoleIds: new[] { registeredCustomerRole.Id })).Count;
         }
 
         #endregion

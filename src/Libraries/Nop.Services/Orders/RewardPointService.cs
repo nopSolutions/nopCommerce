@@ -104,7 +104,7 @@ namespace Nop.Services.Orders
             var notActivatedPoints = query
                 .Where(historyEntry => !historyEntry.PointsBalance.HasValue && historyEntry.CreatedOnUtc < nowUtc)
                 .OrderBy(historyEntry => historyEntry.CreatedOnUtc).ThenBy(historyEntry => historyEntry.Id).ToList();
-            if (notActivatedPoints.Count == 0)
+            if (!notActivatedPoints.Any())
                 return;
 
             //get current points balance

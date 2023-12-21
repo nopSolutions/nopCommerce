@@ -579,7 +579,7 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             //get customers
-            var customers = await _customerService.GetAllCustomersAsync(customerRoleIds: [.. searchModel.SelectedCustomerRoleIds],
+            var customers = await _customerService.GetAllCustomersAsync(customerRoleIds: searchModel.SelectedCustomerRoleIds.ToArray(),
                 email: searchModel.SearchEmail,
                 username: searchModel.SearchUsername,
                 firstName: searchModel.SearchFirstName,

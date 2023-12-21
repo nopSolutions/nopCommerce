@@ -74,7 +74,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                     .Where(modelState => modelState.Value.ValidationState == ModelValidationState.Invalid
                         && modelState.Value.Errors.Any(error => error.ErrorMessage.Equals(NopValidationDefaults.NotNullValidationLocaleName)))
                     .ToList();
-                if (nullModelValues.Count == 0)
+                if (!nullModelValues.Any())
                     return;
 
                 //get model passed to the action

@@ -357,10 +357,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
-            if (selectedIds == null || selectedIds.Count == 0)
+            if (selectedIds == null || !selectedIds.Any())
                 return NoContent();
 
-            var specificationAttributes = await _specificationAttributeService.GetSpecificationAttributeByIdsAsync([.. selectedIds]);
+            var specificationAttributes = await _specificationAttributeService.GetSpecificationAttributeByIdsAsync(selectedIds.ToArray());
             await _specificationAttributeService.DeleteSpecificationAttributesAsync(specificationAttributes);
 
             foreach (var specificationAttribute in specificationAttributes)

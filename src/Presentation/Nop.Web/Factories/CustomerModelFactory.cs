@@ -274,7 +274,7 @@ namespace Nop.Web.Factories
                 {
                     //states
                     var states = (await _stateProvinceService.GetStateProvincesByCountryIdAsync(model.CountryId, currentLanguage.Id)).ToList();
-                    if (states.Count != 0)
+                    if (states.Any())
                     {
                         model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectState"), Value = "0" });
 
@@ -465,7 +465,7 @@ namespace Nop.Web.Factories
                 {
                     //states
                     var states = (await _stateProvinceService.GetStateProvincesByCountryIdAsync(model.CountryId, currentLanguage.Id)).ToList();
-                    if (states.Count != 0)
+                    if (states.Any())
                     {
                         model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectState"), Value = "0" });
 

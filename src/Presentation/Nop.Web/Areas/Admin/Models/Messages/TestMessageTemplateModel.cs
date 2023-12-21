@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Messages
     {
         public TestMessageTemplateModel()
         {
-            Tokens = [];
+            Tokens = new List<string>();
         }
 
         public int LanguageId { get; set; }

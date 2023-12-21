@@ -238,11 +238,8 @@ namespace Nop.Services.Plugins
                 pluginDescriptors = pluginDescriptors.Where(descriptor => typeof(TPlugin).IsAssignableFrom(descriptor.PluginType)).ToList();
 
             //order by group name
-            pluginDescriptors =
-            [
-                .. pluginDescriptors.OrderBy(descriptor => descriptor.Group)
-                                .ThenBy(descriptor => descriptor.DisplayOrder),
-            ];
+            pluginDescriptors = pluginDescriptors.OrderBy(descriptor => descriptor.Group)
+                .ThenBy(descriptor => descriptor.DisplayOrder).ToList();
 
             return pluginDescriptors;
         }
@@ -359,7 +356,7 @@ namespace Nop.Services.Plugins
                     var dependsOn = descriptor.DependsOn
                         .Where(dependsOnSystemName => !pluginsAfterRestart.Contains(dependsOnSystemName)).ToList();
 
-                    if (dependsOn.Count != 0)
+                    if (dependsOn.Any())
                     {
                         var dependsOnSystemNames = dependsOn.Aggregate((all, current) => $"{all}, {current}");
 
@@ -407,7 +404,7 @@ namespace Nop.Services.Plugins
                         : dependentPlugin.FriendlyName);
                 }
 
-                if (dependsOn.Count != 0)
+                if (dependsOn.Any())
                 {
                     var dependsOnSystemNames = dependsOn.Aggregate((all, current) => $"{all}, {current}");
 
@@ -487,7 +484,7 @@ namespace Nop.Services.Plugins
             //filter plugins need to install
             pluginDescriptors = pluginDescriptors.Where(descriptor => _pluginsInfo.PluginNamesToInstall
                 .Any(item => item.SystemName.Equals(descriptor.pluginDescriptor.SystemName))).ToList();
-            if (pluginDescriptors.Count == 0)
+            if (!pluginDescriptors.Any())
                 return;
 
             //do not inject services via constructor because it'll cause circular references
@@ -543,7 +540,7 @@ namespace Nop.Services.Plugins
             //filter plugins need to uninstall
             pluginDescriptors = pluginDescriptors
                 .Where(descriptor => _pluginsInfo.PluginNamesToUninstall.Contains(descriptor.pluginDescriptor.SystemName)).ToList();
-            if (pluginDescriptors.Count == 0)
+            if (!pluginDescriptors.Any())
                 return;
 
             //do not inject services via constructor because it'll cause circular references
@@ -599,7 +596,7 @@ namespace Nop.Services.Plugins
             //filter plugins need to delete
             pluginDescriptors = pluginDescriptors
                 .Where(descriptor => _pluginsInfo.PluginNamesToDelete.Contains(descriptor.pluginDescriptor.SystemName)).ToList();
-            if (pluginDescriptors.Count == 0)
+            if (!pluginDescriptors.Any())
                 return;
 
             //do not inject services via constructor because it'll cause circular references
@@ -719,11 +716,11 @@ namespace Nop.Services.Plugins
                 var pluginsDirectories =
                     _fileProvider.GetDirectories(_fileProvider.MapPath(NopPluginDefaults.UploadedPath));
 
-                if (pluginsDirectories.Length == 0)
+                if (!pluginsDirectories.Any())
                     return false;
 
                 return pluginsDirectories.Any(d =>
-                    _fileProvider.GetFiles(d, "*.dll").Length != 0 || _fileProvider.GetFiles(d, "plugin.json").Length != 0);
+                    _fileProvider.GetFiles(d, "*.dll").Any() || _fileProvider.GetFiles(d, "plugin.json").Any());
             }
         }
 

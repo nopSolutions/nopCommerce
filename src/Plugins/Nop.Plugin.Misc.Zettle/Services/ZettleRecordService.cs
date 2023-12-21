@@ -318,7 +318,7 @@ namespace Nop.Plugin.Misc.Zettle.Services
                 return null;
 
             var newProductIds = productIds.Except(_repository.Table.Select(record => record.ProductId)).ToList();
-            if (newProductIds.Count == 0)
+            if (!newProductIds.Any())
                 return null;
 
             var (records, invalidProducts) = await PrepareRecordsToAddAsync(newProductIds);

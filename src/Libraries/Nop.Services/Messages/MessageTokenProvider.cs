@@ -786,11 +786,11 @@ namespace Nop.Services.Messages
                 }
                 else
                 {
-                    taxRates = [];
+                    taxRates = new SortedDictionary<decimal, decimal>();
                     foreach (var tr in _orderService.ParseTaxRates(order, order.TaxRates))
                         taxRates.Add(tr.Key, _currencyService.ConvertCurrency(tr.Value, order.CurrencyRate));
 
-                    displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Count != 0;
+                    displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Any();
                     displayTax = !displayTaxRates;
 
                     var orderTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTax, order.CurrencyRate);

@@ -9,7 +9,7 @@ namespace Nop.Core.Domain.Common
     {
         public CommonSettings()
         {
-            IgnoreLogWordlist = [];
+            IgnoreLogWordlist = new List<string>();
         }
 
         /// <summary>

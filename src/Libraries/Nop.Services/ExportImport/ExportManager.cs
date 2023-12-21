@@ -681,7 +681,7 @@ namespace Nop.Services.ExportImport
                     };
                 }).ToListAsync();
 
-            if (attributes.Count == 0)
+            if (!attributes.Any())
                 return row;
 
             attributeManager.WriteDefaultCaption(worksheet, row, ExportProductAttribute.ProductAttributeCellOffset);
@@ -723,7 +723,7 @@ namespace Nop.Services.ExportImport
                 .GetProductSpecificationAttributesAsync(item.Id)).SelectAwait(
                 async psa => await ExportSpecificationAttribute.CreateAsync(psa, _specificationAttributeService)).ToListAsync();
 
-            if (attributes.Count == 0)
+            if (!attributes.Any())
                 return row;
 
             attributeManager.WriteDefaultCaption(worksheet, row, ExportProductAttribute.ProductAttributeCellOffset);
@@ -1798,7 +1798,7 @@ namespace Nop.Services.ExportImport
 
                 //shipments
                 var shipments = (await _shipmentService.GetShipmentsByOrderIdAsync(order.Id)).OrderBy(x => x.CreatedOnUtc).ToList();
-                if (shipments.Count != 0)
+                if (shipments.Any())
                 {
                     await xmlWriter.WriteStartElementAsync("Shipments");
                     foreach (var shipment in shipments)
@@ -2341,7 +2341,7 @@ namespace Nop.Services.ExportImport
             List<PrivateMessage> pmList = null;
             if (_forumSettings.AllowPrivateMessages)
             {
-                pmList = [.. (await _forumService.GetAllPrivateMessagesAsync(storeId, customer.Id, 0, null, null, null, null))];
+                pmList = (await _forumService.GetAllPrivateMessagesAsync(storeId, customer.Id, 0, null, null, null, null)).ToList();
                 pmList.AddRange((await _forumService.GetAllPrivateMessagesAsync(storeId, 0, customer.Id, null, null, null, null)).ToList());
             }
 

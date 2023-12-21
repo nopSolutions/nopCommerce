@@ -33,9 +33,9 @@ namespace Nop.Core.Caching
         /// <returns>Cache key</returns>
         public virtual CacheKey Create(Func<object, object> createCacheKeyParameters, params object[] keyObjects)
         {
-            var cacheKey = new CacheKey(Key, [.. Prefixes]);
+            var cacheKey = new CacheKey(Key, Prefixes.ToArray());
 
-            if (keyObjects.Length == 0)
+            if (!keyObjects.Any())
                 return cacheKey;
 
             cacheKey.Key = string.Format(cacheKey.Key, keyObjects.Select(createCacheKeyParameters).ToArray());
@@ -58,7 +58,7 @@ namespace Nop.Core.Caching
         /// <summary>
         /// Gets or sets prefixes for remove by prefix functionality
         /// </summary>
-        public List<string> Prefixes { get; protected set; } = [];
+        public List<string> Prefixes { get; protected set; } = new();
 
         /// <summary>
         /// Gets or sets a cache time in minutes

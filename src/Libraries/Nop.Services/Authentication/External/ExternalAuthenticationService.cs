@@ -229,7 +229,7 @@ namespace Nop.Services.Authentication.External
 
             if (session != null)
             {
-                var existsErrors = (await session.GetAsync<IList<string>>(NopAuthenticationDefaults.ExternalAuthenticationErrorsSessionKey))?.ToList() ?? [];
+                var existsErrors = (await session.GetAsync<IList<string>>(NopAuthenticationDefaults.ExternalAuthenticationErrorsSessionKey))?.ToList() ?? new List<string>();
 
                 existsErrors.AddRange(errors);
 

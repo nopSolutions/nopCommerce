@@ -35,7 +35,7 @@ namespace Nop.Services.Catalog
 
             ArgumentNullException.ThrowIfNull(customerRoleIds);
 
-            if (customerRoleIds.Length == 0)
+            if (!customerRoleIds.Any())
                 return source;
 
             return source.Where(tierPrice =>

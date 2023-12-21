@@ -321,13 +321,13 @@ namespace Nop.Services.Orders
             if (createdToUtc.HasValue)
                 query = query.Where(o => createdToUtc.Value >= o.CreatedOnUtc);
 
-            if (osIds != null && osIds.Count != 0)
+            if (osIds != null && osIds.Any())
                 query = query.Where(o => osIds.Contains(o.OrderStatusId));
 
-            if (psIds != null && psIds.Count != 0)
+            if (psIds != null && psIds.Any())
                 query = query.Where(o => psIds.Contains(o.PaymentStatusId));
 
-            if (ssIds != null && ssIds.Count != 0)
+            if (ssIds != null && ssIds.Any())
                 query = query.Where(o => ssIds.Contains(o.ShippingStatusId));
 
             if (!string.IsNullOrEmpty(orderNotes))
@@ -405,7 +405,7 @@ namespace Nop.Services.Orders
             }
 
             //add at least one tax rate (0%)
-            if (taxRatesDictionary.Count == 0)
+            if (!taxRatesDictionary.Any())
                 taxRatesDictionary.Add(decimal.Zero, decimal.Zero);
 
             return taxRatesDictionary;

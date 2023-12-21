@@ -11,7 +11,7 @@ namespace Nop.Services.Payments
     {
         public DictionarySerializer()
         {
-            Dictionary = [];
+            Dictionary = new Dictionary<string, object>();
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace Nop.Services.Payments
         /// <param name="writer">Writer</param>
         public void WriteXml(XmlWriter writer)
         {
-            if (Dictionary.Count == 0)
+            if (!Dictionary.Any())
                 return;
 
             foreach (var key in Dictionary.Keys)

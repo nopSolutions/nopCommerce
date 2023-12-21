@@ -347,7 +347,7 @@ namespace Nop.Web.Controllers
             var buttonPaymentMethods = paymentMethods
                 .Where(pm => pm.PaymentMethodType == PaymentMethodType.Button)
                 .ToList();
-            if (nonButtonPaymentMethods.Count == 0 && buttonPaymentMethods.Count != 0)
+            if (!nonButtonPaymentMethods.Any() && buttonPaymentMethods.Any())
                 return RedirectToRoute("ShoppingCart");
 
             //reset checkout data
@@ -682,7 +682,7 @@ namespace Nop.Web.Controllers
             if (ModelState.IsValid)
             {
                 //try to find an address with the same values (don't duplicate records)
-                var address = _addressService.FindAddress([.. (await _customerService.GetAddressesByCustomerIdAsync(customer.Id))],
+                var address = _addressService.FindAddress((await _customerService.GetAddressesByCustomerIdAsync(customer.Id)).ToList(),
                     newAddress.FirstName, newAddress.LastName, newAddress.PhoneNumber,
                     newAddress.Email, newAddress.FaxNumber, newAddress.Company,
                     newAddress.Address1, newAddress.Address2, newAddress.City,
@@ -840,7 +840,7 @@ namespace Nop.Web.Controllers
             if (ModelState.IsValid)
             {
                 //try to find an address with the same values (don't duplicate records)
-                var address = _addressService.FindAddress([.. (await _customerService.GetAddressesByCustomerIdAsync(customer.Id))],
+                var address = _addressService.FindAddress((await _customerService.GetAddressesByCustomerIdAsync(customer.Id)).ToList(),
                     newAddress.FirstName, newAddress.LastName, newAddress.PhoneNumber,
                     newAddress.Email, newAddress.FaxNumber, newAddress.Company,
                     newAddress.Address1, newAddress.Address2, newAddress.City,
@@ -986,14 +986,11 @@ namespace Nop.Web.Controllers
             //performance optimization. try cache first
             var shippingOptions = await _genericAttributeService.GetAttributeAsync<List<ShippingOption>>(customer,
                 NopCustomerDefaults.OfferedShippingOptionsAttribute, store.Id);
-            if (shippingOptions == null || shippingOptions.Count == 0)
+            if (shippingOptions == null || !shippingOptions.Any())
             {
                 //not found? let's load them using shipping service
-                shippingOptions =
-                [
-                    .. (await _shippingService.GetShippingOptionsAsync(cart, await _customerService.GetCustomerShippingAddressAsync(customer),
-                                        customer, shippingRateComputationMethodSystemName, store.Id)).ShippingOptions,
-                ];
+                shippingOptions = (await _shippingService.GetShippingOptionsAsync(cart, await _customerService.GetCustomerShippingAddressAsync(customer),
+                    customer, shippingRateComputationMethodSystemName, store.Id)).ShippingOptions.ToList();
             }
             else
             {
@@ -1571,7 +1568,7 @@ namespace Nop.Web.Controllers
                     }
 
                     //try to find an address with the same values (don't duplicate records)
-                    var address = _addressService.FindAddress([.. (await _customerService.GetAddressesByCustomerIdAsync(customer.Id))],
+                    var address = _addressService.FindAddress((await _customerService.GetAddressesByCustomerIdAsync(customer.Id)).ToList(),
                         newAddress.FirstName, newAddress.LastName, newAddress.PhoneNumber,
                         newAddress.Email, newAddress.FaxNumber, newAddress.Company,
                         newAddress.Address1, newAddress.Address2, newAddress.City,
@@ -1732,7 +1729,7 @@ namespace Nop.Web.Controllers
                     }
 
                     //try to find an address with the same values (don't duplicate records)
-                    var address = _addressService.FindAddress([.. (await _customerService.GetAddressesByCustomerIdAsync(customer.Id))],
+                    var address = _addressService.FindAddress((await _customerService.GetAddressesByCustomerIdAsync(customer.Id)).ToList(),
                         newAddress.FirstName, newAddress.LastName, newAddress.PhoneNumber,
                         newAddress.Email, newAddress.FaxNumber, newAddress.Company,
                         newAddress.Address1, newAddress.Address2, newAddress.City,
@@ -1818,14 +1815,11 @@ namespace Nop.Web.Controllers
                 //performance optimization. try cache first
                 var shippingOptions = await _genericAttributeService.GetAttributeAsync<List<ShippingOption>>(customer,
                     NopCustomerDefaults.OfferedShippingOptionsAttribute, store.Id);
-                if (shippingOptions == null || shippingOptions.Count == 0)
+                if (shippingOptions == null || !shippingOptions.Any())
                 {
                     //not found? let's load them using shipping service
-                    shippingOptions =
-                    [
-                        .. (await _shippingService.GetShippingOptionsAsync(cart, await _customerService.GetCustomerShippingAddressAsync(customer),
-                                                customer, shippingRateComputationMethodSystemName, store.Id)).ShippingOptions,
-                    ];
+                    shippingOptions = (await _shippingService.GetShippingOptionsAsync(cart, await _customerService.GetCustomerShippingAddressAsync(customer),
+                        customer, shippingRateComputationMethodSystemName, store.Id)).ShippingOptions.ToList();
                 }
                 else
                 {

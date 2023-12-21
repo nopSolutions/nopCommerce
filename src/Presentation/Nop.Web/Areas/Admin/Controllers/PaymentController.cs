@@ -175,7 +175,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var formKey = "restrict_" + pm.PluginDescriptor.SystemName;
                 var countryIdsToRestrict = (!StringValues.IsNullOrEmpty(form[formKey])
                         ? form[formKey].ToString().Split(_separator, StringSplitOptions.RemoveEmptyEntries).ToList()
-                        : [])
+                        : new List<string>())
                     .Select(x => Convert.ToInt32(x)).ToList();
 
                 var newCountryIds = new List<int>();

@@ -354,10 +354,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
-            if (selectedIds == null || selectedIds.Count == 0)
+            if (selectedIds == null || !selectedIds.Any())
                 return NoContent();
 
-            var checkoutAttributes = await _checkoutAttributeService.GetAttributeByIdsAsync([.. selectedIds]);
+            var checkoutAttributes = await _checkoutAttributeService.GetAttributeByIdsAsync(selectedIds.ToArray());
             await _checkoutAttributeService.DeleteAttributesAsync(checkoutAttributes);
 
             foreach (var checkoutAttribute in checkoutAttributes)

@@ -45,12 +45,12 @@ namespace Nop.Core.Rss
         /// <summary>
         /// Element extensions
         /// </summary>
-        public List<XElement> ElementExtensions { get; } = [];
+        public List<XElement> ElementExtensions { get; } = new List<XElement>();
 
         /// <summary>
         /// List of rss items
         /// </summary>
-        public List<RssItem> Items { get; set; } = [];
+        public List<RssItem> Items { get; set; } = new List<RssItem>();
 
         /// <summary>
         /// Title

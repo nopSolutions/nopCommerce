@@ -25,7 +25,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
             AvailableCountries = new List<SelectListItem>();
             AvailableStates = new List<SelectListItem>();
             AvailableVendors = new List<SelectListItem>();
-            CustomerAttributes = [];
+            CustomerAttributes = new List<CustomerAttributeModel>();
             AvailableNewsletterSubscriptionStores = new List<SelectListItem>();
             SelectedNewsletterSubscriptionStoreIds = new List<int>();
             AddRewardPoints = new AddRewardPointsToCustomerModel();
