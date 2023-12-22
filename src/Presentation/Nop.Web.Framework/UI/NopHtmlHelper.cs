@@ -11,17 +11,13 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Net.Http.Headers;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Seo;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.WebOptimizer;
-using Nop.Web.Framework.WebOptimizer.Processors;
-using WebOptimizer;
 
 namespace Nop.Web.Framework.UI;
 
@@ -334,7 +330,6 @@ public partial class NopHtmlHelper : INopHtmlHelper
         var result = new StringBuilder();
         var woConfig = _appSettings.Get<WebOptimizerConfig>();
 
-        var httpContext = _actionContextAccessor.ActionContext.HttpContext;
         var pathBase = _actionContextAccessor.ActionContext?.HttpContext.Request.PathBase ?? PathString.Empty;
 
         if (woConfig.EnableJavaScriptBundling && value.Any(item => !item.ExcludeFromBundle))
@@ -502,7 +497,6 @@ public partial class NopHtmlHelper : INopHtmlHelper
         var result = new StringBuilder();
 
         var woConfig = _appSettings.Get<WebOptimizerConfig>();
-        var httpContext = _actionContextAccessor.ActionContext.HttpContext;
         var pathBase = _actionContextAccessor.ActionContext?.HttpContext.Request.PathBase ?? PathString.Empty;
 
         if (woConfig.EnableCssBundling && _cssParts.Any(item => !item.ExcludeFromBundle))
