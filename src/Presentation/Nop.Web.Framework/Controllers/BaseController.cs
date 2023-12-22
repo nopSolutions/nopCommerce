@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc.ViewFeatures.Buffers;
 using Microsoft.Extensions.Primitives;
 using Nop.Core;
+using Nop.Core.Events;
 using Nop.Core.Http.Extensions;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Events;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.UI;
@@ -79,11 +81,37 @@ public abstract partial class BaseController : Controller
         if (string.IsNullOrEmpty(viewName))
             viewName = ControllerContext.ActionDescriptor.ActionName;
 
+        //partial view are not part of the controller life cycle.
+        //hence, we could no use action filters to intercept the Models being returned
+        //as we do in the /Nop.Web.Framework/Mvc/Filters/PublishModelEventsAttribute.cs for controllers
+        switch (model)
+        {
+            case BaseNopModel nopModel:
+            {
+                var eventPublisher = EngineContext.Current.Resolve<IEventPublisher>();
+
+                //we publish the ModelPrepared event for all models as the BaseNopModel, 
+                //so you need to implement IConsumer<ModelPrepared<BaseNopModel>> interface to handle this event
+                eventPublisher.ModelPreparedAsync(nopModel).Wait();
+                break;
+            }
+            case IEnumerable<BaseNopModel> modelCollection:
+            {
+                var eventPublisher = EngineContext.Current.Resolve<IEventPublisher>();
+
+                //we publish the ModelPrepared event for collection as the IEnumerable<BaseNopModel>, 
+                //so you need to implement IConsumer<ModelPrepared<IEnumerable<BaseNopModel>>> interface to handle this event
+                eventPublisher.ModelPreparedAsync(modelCollection).Wait();
+                break;
+            }
+        }
+
         //set model
         ViewData.Model = model;
 
         //try to get a view by the name
         var viewResult = razorViewEngine.FindView(actionContext, viewName, false);
+
         if (viewResult.View == null)
         {
             //or try to get a view by the path
@@ -91,10 +119,11 @@ public abstract partial class BaseController : Controller
             if (viewResult.View == null)
                 throw new ArgumentNullException($"{viewName} view was not found");
         }
+
         await using var stringWriter = new StringWriter();
         var viewContext = new ViewContext(actionContext, viewResult.View, ViewData, TempData, stringWriter, new HtmlHelperOptions());
-
         await viewResult.View.RenderAsync(viewContext);
+
         return stringWriter.GetStringBuilder().ToString();
     }
 
