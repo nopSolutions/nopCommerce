@@ -195,6 +195,14 @@ public class LocalizationMigration : MigrationBase
 
             //#6956
             ["Admin.ContentManagement.MessageTemplates.Description.Customer.Gdpr.DeleteRequest"] = "This message template is used when customer create a new request to delete account. The message is received by a store owner.",
+
+            //#6937
+            ["Admin.Configuration.AppSettings.Common.PermitLimit"] = "Permit limit",
+            ["Admin.Configuration.AppSettings.Common.PermitLimit.Hint"] = "Maximum number of permit counters that can be allowed in a window (1 minute). Must be set to a value > 0 by the time these options are passed to the constructor of FixedWindowRateLimiter. If set to 0 than limitation is off.",
+            ["Admin.Configuration.AppSettings.Common.QueueCount"] = "Queue count",
+            ["Admin.Configuration.AppSettings.Common.QueueCount.Hint"] = "Maximum cumulative permit count of queued acquisition requests. Must be set to a value >= 0 by the time these options are passed to the constructor of FixedWindowRateLimiter. If set to 0 than Queue is off.",
+            ["Admin.Configuration.AppSettings.Common.RejectionStatusCode"] = "Rejection status code",
+            ["Admin.Configuration.AppSettings.Common.RejectionStatusCode.Hint"] = "Default status code to set on the response when a request is rejected.",
         }, languageId);
 
         #endregion

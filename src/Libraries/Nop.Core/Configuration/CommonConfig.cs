@@ -56,4 +56,23 @@ public partial class CommonConfig : IConfig
     /// If value is set to false then the default .Net IoC container will be use
     /// </summary>
     public bool UseAutofac { get; set; } = true;
+
+    /// <summary>
+    /// Maximum number of permit counters that can be allowed in a window (1 minute).
+    /// Must be set to a value > 0 by the time these options are passed to the constructor of <see cref="FixedWindowRateLimiter"/>.
+    /// If set to 0 than limitation is off
+    /// </summary>
+    public int PermitLimit { get; set; } = 0;
+
+    /// <summary>
+    /// Maximum cumulative permit count of queued acquisition requests.
+    /// Must be set to a value >= 0 by the time these options are passed to the constructor of <see cref="FixedWindowRateLimiter"/>.
+    /// If set to 0 than Queue is off
+    /// </summary>
+    public int QueueCount { get; set; } = 0;
+
+    /// <summary>
+    /// Default status code to set on the response when a request is rejected.
+    /// </summary>
+    public int RejectionStatusCode { get; set; } = 503;
 }
