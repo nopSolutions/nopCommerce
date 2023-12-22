@@ -1,4 +1,9 @@
-﻿namespace Nop.Core.Domain.Catalog
+﻿namespace Nop.Core.Domain.Catalog;
+
+/// <summary>
+/// Represents an attribute control type
+/// </summary>
+public enum AttributeControlType
 {
     /// <summary>
     /// Dropdown list
@@ -51,5 +56,4 @@
     ReadonlyCheckboxes = 50,
 
     KendoMultiSelect = 51
-    
 }

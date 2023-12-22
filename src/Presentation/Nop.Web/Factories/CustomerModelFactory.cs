@@ -1002,7 +1002,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                     {
                         Id = attributeValue.Id,
                         Name = await _localizationService.GetLocalizedAsync(attributeValue, x => x.Name),
-                        IsPreSelected = attributeValue.IsPreSelected
+                        IsPreSelected = false
                     };
                     attributeModel.Values.Add(valueModel);
                 }

@@ -35,6 +35,8 @@ public partial record ProductReviewsModel : BaseNopModel
     public IList<ReviewTypeModel> ReviewTypeList { get; set; }
 
     public IList<AddProductReviewReviewTypeMappingModel> AddAdditionalProductReviewList { get; set; }
+
+    public string ProductName { get; set; }
 }
 
 public partial record ReviewTypeModel : BaseNopEntityModel
