@@ -1030,7 +1030,8 @@ namespace Nop.Web.Factories
                                     item.IsPreSelected = false;
 
                                 //select new values
-                                var selectedValues = await _customerAttributeParser.ParseAttributeValuesAsync(selectedAttributesXml);
+                                //customization
+                                var selectedValues = await _customerAttributeParser.ParseCustomerAttributeValuesCustomAsync(selectedAttributesXml);
                                 foreach (var attributeValue in selectedValues)
                                     foreach (var item in attributeModel.Values)
                                         if (attributeValue.Id == item.Id)

@@ -38,8 +38,8 @@ namespace Nop.Web.Factories
 
         protected virtual async Task<IList<SpecificationAttributeOption>> GetCustomCustomerAttributeValuesAsync(int attributeId)
         {
-            var _specificationAttributeService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
-            return await _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttributeAsync(attributeId);
+            var specificationAttributeService = EngineContext.Current.Resolve<ISpecificationAttributeService>();
+            return await specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttributeAsync(attributeId);
         }
 
         #endregion

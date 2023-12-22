@@ -14,6 +14,9 @@ SELECT * FROM [dbo].[Customer_CustomerRole_Mapping] where customer_id=1
 
 SELECT * FROM [Discount]
 
+SELECT * FROM [Log]
+
+
 
 -- exec ProductLoadAllPaged_V5 @ProductIds=N'5,13,14,15,16,17,18',@CustomerId=263,@ProfileTypeId=1
 
@@ -162,7 +165,7 @@ select * from [SpecificationAttribute] order by DisplayOrder
 
 SELECT * FROM [CustomerAttribute] 
 select * from [SpecificationAttribute]
-select * from [SpecificationAttributeOption] WHERE SpecificationAttributeId=9
+select * from [SpecificationAttributeOption] WHERE SpecificationAttributeId=1
 
 DELETE [SpecificationAttributeOption] WHERE SpecificationAttributeId=6
 
@@ -284,6 +287,13 @@ SET Value='False'
 where Name = 'catalogsettings.allowproductviewmodechanging';
 -- org: Recently viewed products
 
+UPDATE [dbo].[Setting]
+SET Value='Clear' 
+where Name = 'customersettings.defaultpasswordformat';
+
+
+SELECT TOP 1000 * FROM [dbo].[Setting]
+where Name like 'customersettings.%';
 
 ---------------------------------------------------------
 -- ***  Local String update queries ****

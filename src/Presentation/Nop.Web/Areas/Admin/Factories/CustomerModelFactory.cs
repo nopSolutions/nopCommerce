@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Primitives;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -9,6 +10,7 @@ using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Infrastructure;
 using Nop.Services.Affiliates;
 using Nop.Services.Attributes;
 using Nop.Services.Authentication.External;
@@ -246,7 +248,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 if (attribute.ShouldHaveValues)
                 {
                     //values
-                    var attributeValues = await _customerAttributeService.GetAttributeValuesAsync(attribute.Id);
+                    //customization
+                    var attributeValues = await _customerAttributeService.GetCustomCustomerAttributeValuesAsync(attribute.Id);
                     foreach (var attributeValue in attributeValues)
                     {
                         var attributeValueModel = new CustomerModel.CustomerAttributeValueModel
@@ -276,7 +279,7 @@ namespace Nop.Web.Areas.Admin.Factories
                                         item.IsPreSelected = false;
 
                                     //select new values
-                                    var selectedValues = await _customerAttributeParser.ParseAttributeValuesAsync(selectedCustomerAttributes);
+                                    var selectedValues = await _customerAttributeParser.ParseCustomerAttributeValuesCustomAsync(selectedCustomerAttributes);
                                     foreach (var attributeValue in selectedValues)
                                         foreach (var item in attributeModel.Values)
                                             if (attributeValue.Id == item.Id)
@@ -300,11 +303,33 @@ namespace Nop.Web.Areas.Admin.Factories
                                         attributeModel.DefaultValue = enteredText[0];
                                 }
                             }
-                            break;
+                            break;                        
                         case AttributeControlType.Datepicker:
                         case AttributeControlType.ColorSquares:
                         case AttributeControlType.ImageSquares:
                         case AttributeControlType.FileUpload:
+                        //customization
+                        case AttributeControlType.KendoMultiSelect:
+                            {
+                                if (!string.IsNullOrEmpty(selectedCustomerAttributes))
+                                {
+                                    //clear default selection
+                                    foreach (var item in attributeModel.Values)
+                                        item.IsPreSelected = false;
+
+                                    //select new values
+                                    var selectedValues = await _customerAttributeParser.ParseCustomerAttributeValuesCustomAsync(selectedCustomerAttributes);
+                                    foreach (var attributeValue in selectedValues)
+                                    {
+                                        foreach (var item in attributeModel.Values)
+                                        {
+                                            if (attributeValue.Id == item.Id)
+                                                item.IsPreSelected = true;
+                                        }
+                                    }
+                                }
+                            }
+                            break;
                         default:
                             //not supported attribute control types
                             break;
