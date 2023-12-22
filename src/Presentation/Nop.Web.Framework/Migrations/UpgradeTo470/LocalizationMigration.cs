@@ -48,6 +48,7 @@ public class LocalizationMigration : MigrationBase
 
             //6893
             "Admin.Configuration.AppSettings.Cache.ShortTermCacheTime",
+            "Admin.Configuration.AppSettings.Cache.ShortTermCacheTime.Hint",
 
             //#6894
             "Admin.Configuration.AppSettings.Cache.BundledFilesCacheTime",
