@@ -42,5 +42,14 @@ public partial record CommonConfigModel : BaseNopModel, IConfigModel
     [NopResourceDisplayName("Admin.Configuration.AppSettings.Common.UseAutofac")]
     public bool UseAutofac { get; set; }
 
+    [NopResourceDisplayName("Admin.Configuration.AppSettings.Common.PermitLimit")]
+    public int PermitLimit { get; set; } = 0;
+
+    [NopResourceDisplayName("Admin.Configuration.AppSettings.Common.QueueCount")]
+    public int QueueCount { get; set; } = 0;
+
+    [NopResourceDisplayName("Admin.Configuration.AppSettings.Common.RejectionStatusCode")]
+    public int RejectionStatusCode { get; set; } = 503;
+
     #endregion
 }

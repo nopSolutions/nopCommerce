@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Web.Framework.Infrastructure.Extensions;
 
@@ -28,6 +29,10 @@ public partial class NopRoutingStartup : INopStartup
     {
         //Add the RoutingMiddleware
         application.UseRouting();
+
+        var settings = Singleton<AppSettings>.Instance.Get<CommonConfig>();
+        if (settings.PermitLimit > 0)
+            application.UseRateLimiter();
     }
 
     /// <summary>

@@ -1133,7 +1133,12 @@ public partial class ProductService : IProductService
 
         if (providerResults.Any() && orderBy == ProductSortingEnum.Position && !showHidden)
         {
-            var sortedProducts = products.OrderBy(p => providerResults.IndexOf(p.Id)).ToList();
+            var sortedProducts = products.OrderBy(p => 
+            {
+                var index = providerResults.IndexOf(p.Id);
+                return index == -1 ? products.TotalCount : index;
+            }).ToList();
+
             return new PagedList<Product>(sortedProducts, pageIndex, pageSize, products.TotalCount);
         }
 

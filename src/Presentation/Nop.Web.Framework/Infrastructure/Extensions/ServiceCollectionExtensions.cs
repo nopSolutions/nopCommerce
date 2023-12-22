@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Threading.RateLimiting;
 using Azure.Identity;
 using Azure.Storage.Blobs;
 using FluentValidation;
@@ -93,6 +94,24 @@ public static class ServiceCollectionExtensions
 
         //create engine and configure service provider
         var engine = EngineContext.Create();
+
+        builder.Services.AddRateLimiter(options =>
+        {
+            var settings = Singleton<AppSettings>.Instance.Get<CommonConfig>();
+
+            options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+                RateLimitPartition.GetFixedWindowLimiter(
+                    partitionKey: httpContext.User.Identity?.Name ?? httpContext.Request.Headers.Host.ToString(),
+                    factory: partition => new FixedWindowRateLimiterOptions
+                    {
+                        AutoReplenishment = true,
+                        PermitLimit = settings.PermitLimit,
+                        QueueLimit = settings.QueueCount,
+                        Window = TimeSpan.FromMinutes(1)
+                    }));
+
+            options.RejectionStatusCode = settings.RejectionStatusCode;
+        });
 
         engine.ConfigureServices(services, builder.Configuration);
     }
