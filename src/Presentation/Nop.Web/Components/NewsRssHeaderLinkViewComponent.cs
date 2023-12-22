@@ -2,23 +2,22 @@
 using Nop.Core.Domain.News;
 using Nop.Web.Framework.Components;
 
-namespace Nop.Web.Components
+namespace Nop.Web.Components;
+
+public partial class NewsRssHeaderLinkViewComponent : NopViewComponent
 {
-    public partial class NewsRssHeaderLinkViewComponent : NopViewComponent
+    protected readonly NewsSettings _newsSettings;
+
+    public NewsRssHeaderLinkViewComponent(NewsSettings newsSettings)
     {
-        protected readonly NewsSettings _newsSettings;
+        _newsSettings = newsSettings;
+    }
 
-        public NewsRssHeaderLinkViewComponent(NewsSettings newsSettings)
-        {
-            _newsSettings = newsSettings;
-        }
+    public IViewComponentResult Invoke(int currentCategoryId, int currentProductId)
+    {
+        if (!_newsSettings.Enabled || !_newsSettings.ShowHeaderRssUrl)
+            return Content("");
 
-        public IViewComponentResult Invoke(int currentCategoryId, int currentProductId)
-        {
-            if (!_newsSettings.Enabled || !_newsSettings.ShowHeaderRssUrl)
-                return Content("");
-
-            return View();
-        }
+        return View();
     }
 }

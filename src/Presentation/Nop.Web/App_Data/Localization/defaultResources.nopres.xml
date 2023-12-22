@@ -10605,6 +10605,9 @@
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Customer.WelcomeMessage">
     <Value>This message template is used to welcome a new customer after registration.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Customer.Gdpr.DeleteRequest">
+    <Value>This message template is used when customer create a new request to delete account. The message is received by a store owner.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Forums.NewForumPost">
     <Value>This message template is used when a new forum post in certain forum topic is created. The message is received by a store owner.</Value>
   </LocaleResource>

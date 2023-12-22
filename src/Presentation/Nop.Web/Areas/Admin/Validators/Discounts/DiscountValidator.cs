@@ -5,15 +5,14 @@ using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Models.Discounts;
 using Nop.Web.Framework.Validators;
 
-namespace Nop.Web.Areas.Admin.Validators.Discounts
-{
-    public partial class DiscountValidator : BaseNopValidator<DiscountModel>
-    {
-        public DiscountValidator(ILocalizationService localizationService, IMappingEntityAccessor mappingEntityAccessor)
-        {
-            RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Promotions.Discounts.Fields.Name.Required"));
+namespace Nop.Web.Areas.Admin.Validators.Discounts;
 
-            SetDatabaseValidationRules<Discount>(mappingEntityAccessor);
-        }
+public partial class DiscountValidator : BaseNopValidator<DiscountModel>
+{
+    public DiscountValidator(ILocalizationService localizationService, IMappingEntityAccessor mappingEntityAccessor)
+    {
+        RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Promotions.Discounts.Fields.Name.Required"));
+
+        SetDatabaseValidationRules<Discount>(mappingEntityAccessor);
     }
 }

@@ -1,28 +1,27 @@
 ﻿using Nop.Web.Framework.Models;
 
-namespace Nop.Web.Models.Catalog
+namespace Nop.Web.Models.Catalog;
+
+/// <summary>
+/// Represents a new products model
+/// </summary>
+public partial record NewProductsModel : BaseNopModel
 {
+    #region Properties
+
     /// <summary>
-    /// Represents a new products model
+    /// Gets or sets the catalog products model
     /// </summary>
-    public partial record NewProductsModel : BaseNopModel
+    public CatalogProductsModel CatalogProductsModel { get; set; }
+
+    #endregion
+
+    #region Ctor
+
+    public NewProductsModel()
     {
-        #region Properties
-
-        /// <summary>
-        /// Gets or sets the catalog products model
-        /// </summary>
-        public CatalogProductsModel CatalogProductsModel { get; set; }
-
-        #endregion
-
-        #region Ctor
-
-        public NewProductsModel()
-        {
-            CatalogProductsModel = new CatalogProductsModel();
-        }
-
-        #endregion
+        CatalogProductsModel = new CatalogProductsModel();
     }
+
+    #endregion
 }

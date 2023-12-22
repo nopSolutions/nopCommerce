@@ -1,23 +1,22 @@
 ﻿using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
-namespace Nop.Web.Areas.Admin.Models.Catalog
+namespace Nop.Web.Areas.Admin.Models.Catalog;
+
+/// <summary>
+/// Represents a related product model
+/// </summary>
+public partial record RelatedProductModel : BaseNopEntityModel
 {
-    /// <summary>
-    /// Represents a related product model
-    /// </summary>
-    public partial record RelatedProductModel : BaseNopEntityModel
-    {
-        #region Properties
+    #region Properties
 
-        public int ProductId2 { get; set; }
+    public int ProductId2 { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.RelatedProducts.Fields.Product")]
-        public string Product2Name { get; set; }
+    [NopResourceDisplayName("Admin.Catalog.Products.RelatedProducts.Fields.Product")]
+    public string Product2Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.RelatedProducts.Fields.DisplayOrder")]
-        public int DisplayOrder { get; set; }
+    [NopResourceDisplayName("Admin.Catalog.Products.RelatedProducts.Fields.DisplayOrder")]
+    public int DisplayOrder { get; set; }
 
-        #endregion
-    }
+    #endregion
 }

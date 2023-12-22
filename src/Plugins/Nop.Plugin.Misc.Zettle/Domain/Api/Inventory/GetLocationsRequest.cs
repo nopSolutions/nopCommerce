@@ -1,20 +1,19 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Nop.Plugin.Misc.Zettle.Domain.Api.Inventory
+namespace Nop.Plugin.Misc.Zettle.Domain.Api.Inventory;
+
+/// <summary>
+/// Represents request to get all locations
+/// </summary>
+public class GetLocationsRequest : InventoryApiRequest
 {
     /// <summary>
-    /// Represents request to get all locations
+    /// Gets the request path
     /// </summary>
-    public class GetLocationsRequest : InventoryApiRequest
-    {
-        /// <summary>
-        /// Gets the request path
-        /// </summary>
-        public override string Path => "organizations/self/locations";
+    public override string Path => "organizations/self/locations";
 
-        /// <summary>
-        /// Gets the request method
-        /// </summary>
-        public override string Method => HttpMethods.Get;
-    }
+    /// <summary>
+    /// Gets the request method
+    /// </summary>
+    public override string Method => HttpMethods.Get;
 }

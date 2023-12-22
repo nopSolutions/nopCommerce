@@ -1,12 +1,11 @@
 ﻿using Nop.Web.Areas.Admin.Models.ShoppingCart;
 using Nop.Web.Framework.Models;
 
-namespace Nop.Web.Areas.Admin.Models.Customers
+namespace Nop.Web.Areas.Admin.Models.Customers;
+
+/// <summary>
+/// Represents a customer shopping cart list model
+/// </summary>
+public partial record CustomerShoppingCartListModel : BasePagedListModel<ShoppingCartItemModel>
 {
-    /// <summary>
-    /// Represents a customer shopping cart list model
-    /// </summary>
-    public partial record CustomerShoppingCartListModel : BasePagedListModel<ShoppingCartItemModel>
-    {
-    }
 }

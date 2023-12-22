@@ -10,221 +10,220 @@ using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Mvc.Filters;
 
-namespace Nop.Web.Areas.Admin.Controllers
+namespace Nop.Web.Areas.Admin.Controllers;
+
+/// <summary>
+/// Represent a review type controller
+/// </summary>
+public partial class ReviewTypeController : BaseAdminController
 {
-    /// <summary>
-    /// Represent a review type controller
-    /// </summary>
-    public partial class ReviewTypeController : BaseAdminController
+    #region Fields
+
+    protected readonly ICustomerActivityService _customerActivityService;
+    protected readonly ILocalizationService _localizationService;
+    protected readonly ILocalizedEntityService _localizedEntityService;
+    protected readonly INotificationService _notificationService;
+    protected readonly IPermissionService _permissionService;
+    protected readonly IReviewTypeModelFactory _reviewTypeModelFactory;
+    protected readonly IReviewTypeService _reviewTypeService;
+
+    #endregion
+
+    #region Ctor
+
+    public ReviewTypeController(ICustomerActivityService customerActivityService,
+        ILocalizationService localizationService,
+        ILocalizedEntityService localizedEntityService,
+        INotificationService notificationService,
+        IPermissionService permissionService,
+        IReviewTypeModelFactory reviewTypeModelFactory,
+        IReviewTypeService reviewTypeService)
     {
-        #region Fields
+        _reviewTypeModelFactory = reviewTypeModelFactory;
+        _reviewTypeService = reviewTypeService;
+        _customerActivityService = customerActivityService;
+        _localizedEntityService = localizedEntityService;
+        _localizationService = localizationService;
+        _notificationService = notificationService;
+        _permissionService = permissionService;
+    }
 
-        protected readonly ICustomerActivityService _customerActivityService;
-        protected readonly ILocalizationService _localizationService;
-        protected readonly ILocalizedEntityService _localizedEntityService;
-        protected readonly INotificationService _notificationService;
-        protected readonly IPermissionService _permissionService;
-        protected readonly IReviewTypeModelFactory _reviewTypeModelFactory;
-        protected readonly IReviewTypeService _reviewTypeService;
+    #endregion
 
-        #endregion
+    #region Utilities
 
-        #region Ctor
-
-        public ReviewTypeController(ICustomerActivityService customerActivityService,
-            ILocalizationService localizationService,
-            ILocalizedEntityService localizedEntityService,
-            INotificationService notificationService,
-            IPermissionService permissionService,
-            IReviewTypeModelFactory reviewTypeModelFactory,
-            IReviewTypeService reviewTypeService)
+    protected virtual async Task UpdateReviewTypeLocalesAsync(ReviewType reviewType, ReviewTypeModel model)
+    {
+        foreach (var localized in model.Locales)
         {
-            _reviewTypeModelFactory = reviewTypeModelFactory;
-            _reviewTypeService = reviewTypeService;
-            _customerActivityService = customerActivityService;
-            _localizedEntityService = localizedEntityService;
-            _localizationService = localizationService;
-            _notificationService = notificationService;
-            _permissionService = permissionService;
+            await _localizedEntityService.SaveLocalizedValueAsync(reviewType,
+                x => x.Name,
+                localized.Name,
+                localized.LanguageId);
+
+            await _localizedEntityService.SaveLocalizedValueAsync(reviewType,
+                x => x.Description,
+                localized.Description,
+                localized.LanguageId);
+        }
+    }
+
+    #endregion
+
+    #region Review type
+
+    public virtual IActionResult Index()
+    {
+        return RedirectToAction("List");
+    }
+
+    public virtual async Task<IActionResult> List()
+    {
+        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
+            return AccessDeniedView();
+
+        //select an appropriate card
+        SaveSelectedCardName("catalogsettings-review-types");
+
+        //we just redirect a user to the catalog settings page
+        return RedirectToAction("Catalog", "Setting");
+    }
+
+    [HttpPost]
+    public virtual async Task<IActionResult> List(ReviewTypeSearchModel searchModel)
+    {
+        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
+            return await AccessDeniedDataTablesJson();
+
+        //prepare model
+        var model = await _reviewTypeModelFactory.PrepareReviewTypeListModelAsync(searchModel);
+
+        return Json(model);
+    }
+
+    public virtual async Task<IActionResult> Create()
+    {
+        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
+            return AccessDeniedView();
+
+        //prepare model
+        var model = await _reviewTypeModelFactory.PrepareReviewTypeModelAsync(new ReviewTypeModel(), null);
+
+        return View(model);
+    }
+
+    [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    public virtual async Task<IActionResult> Create(ReviewTypeModel model, bool continueEditing)
+    {
+        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
+            return AccessDeniedView();
+
+        if (ModelState.IsValid)
+        {
+            var reviewType = model.ToEntity<ReviewType>();
+            await _reviewTypeService.InsertReviewTypeAsync(reviewType);
+
+            //activity log
+            await _customerActivityService.InsertActivityAsync("AddNewReviewType",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewReviewType"), reviewType.Id), reviewType);
+
+            //locales                
+            await UpdateReviewTypeLocalesAsync(reviewType, model);
+
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Settings.ReviewType.Added"));
+
+            return continueEditing ? RedirectToAction("Edit", new { id = reviewType.Id }) : RedirectToAction("List");
         }
 
-        #endregion
+        //prepare model
+        model = await _reviewTypeModelFactory.PrepareReviewTypeModelAsync(model, null, true);
 
-        #region Utilities
+        //if we got this far, something failed, redisplay form
+        return View(model);
+    }
 
-        protected virtual async Task UpdateReviewTypeLocalesAsync(ReviewType reviewType, ReviewTypeModel model)
+    public virtual async Task<IActionResult> Edit(int id)
+    {
+        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
+            return AccessDeniedView();
+
+        //try to get an product review type with the specified id
+        var reviewType = await _reviewTypeService.GetReviewTypeByIdAsync(id);
+        if (reviewType == null)
+            return RedirectToAction("List");
+
+        //prepare model
+        var model = await _reviewTypeModelFactory.PrepareReviewTypeModelAsync(null, reviewType);
+
+        return View(model);
+    }
+
+    [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    public virtual async Task<IActionResult> Edit(ReviewTypeModel model, bool continueEditing)
+    {
+        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
+            return AccessDeniedView();
+
+        //try to get an review type with the specified id
+        var reviewType = await _reviewTypeService.GetReviewTypeByIdAsync(model.Id);
+        if (reviewType == null)
+            return RedirectToAction("List");
+
+        if (ModelState.IsValid)
         {
-            foreach (var localized in model.Locales)
-            {
-                await _localizedEntityService.SaveLocalizedValueAsync(reviewType,
-                    x => x.Name,
-                    localized.Name,
-                    localized.LanguageId);
+            reviewType = model.ToEntity(reviewType);
+            await _reviewTypeService.UpdateReviewTypeAsync(reviewType);
 
-                await _localizedEntityService.SaveLocalizedValueAsync(reviewType,
-                   x => x.Description,
-                   localized.Description,
-                   localized.LanguageId);
-            }
+            //activity log
+            await _customerActivityService.InsertActivityAsync("EditReviewType",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditReviewType"), reviewType.Id),
+                reviewType);
+
+            //locales
+            await UpdateReviewTypeLocalesAsync(reviewType, model);
+
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Settings.ReviewType.Updated"));
+
+            return continueEditing ? RedirectToAction("Edit", new { id = reviewType.Id }) : RedirectToAction("List");
         }
 
-        #endregion
+        //prepare model
+        model = await _reviewTypeModelFactory.PrepareReviewTypeModelAsync(model, reviewType, true);
 
-        #region Review type
+        //if we got this far, something failed, redisplay form
+        return View(model);
+    }
 
-        public virtual IActionResult Index()
+    [HttpPost]
+    public virtual async Task<IActionResult> Delete(int id)
+    {
+        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
+            return AccessDeniedView();
+
+        //try to get an review type with the specified id
+        var reviewType = await _reviewTypeService.GetReviewTypeByIdAsync(id);
+        if (reviewType == null)
+            return RedirectToAction("List");
+
+        try
         {
+            await _reviewTypeService.DeleteReviewTypeAsync(reviewType);
+
+            //activity log
+            await _customerActivityService.InsertActivityAsync("DeleteReviewType",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteReviewType"), reviewType),
+                reviewType);
+
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Settings.ReviewType.Deleted"));
+
             return RedirectToAction("List");
         }
-
-        public virtual async Task<IActionResult> List()
+        catch (Exception exc)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
-            //select an appropriate card
-            SaveSelectedCardName("catalogsettings-review-types");
-
-            //we just redirect a user to the catalog settings page
-            return RedirectToAction("Catalog", "Setting");
+            await _notificationService.ErrorNotificationAsync(exc);
+            return RedirectToAction("Edit", new { id = reviewType.Id });
         }
-
-        [HttpPost]
-        public virtual async Task<IActionResult> List(ReviewTypeSearchModel searchModel)
-        {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-                return await AccessDeniedDataTablesJson();
-
-            //prepare model
-            var model = await _reviewTypeModelFactory.PrepareReviewTypeListModelAsync(searchModel);
-
-            return Json(model);
-        }
-
-        public virtual async Task<IActionResult> Create()
-        {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
-            //prepare model
-            var model = await _reviewTypeModelFactory.PrepareReviewTypeModelAsync(new ReviewTypeModel(), null);
-
-            return View(model);
-        }
-
-        [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual async Task<IActionResult> Create(ReviewTypeModel model, bool continueEditing)
-        {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
-            if (ModelState.IsValid)
-            {
-                var reviewType = model.ToEntity<ReviewType>();
-                await _reviewTypeService.InsertReviewTypeAsync(reviewType);
-
-                //activity log
-                await _customerActivityService.InsertActivityAsync("AddNewReviewType",
-                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewReviewType"), reviewType.Id), reviewType);
-
-                //locales                
-                await UpdateReviewTypeLocalesAsync(reviewType, model);
-
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Settings.ReviewType.Added"));
-
-                return continueEditing ? RedirectToAction("Edit", new { id = reviewType.Id }) : RedirectToAction("List");
-            }
-
-            //prepare model
-            model = await _reviewTypeModelFactory.PrepareReviewTypeModelAsync(model, null, true);
-
-            //if we got this far, something failed, redisplay form
-            return View(model);
-        }
-
-        public virtual async Task<IActionResult> Edit(int id)
-        {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
-            //try to get an product review type with the specified id
-            var reviewType = await _reviewTypeService.GetReviewTypeByIdAsync(id);
-            if (reviewType == null)
-                return RedirectToAction("List");
-
-            //prepare model
-            var model = await _reviewTypeModelFactory.PrepareReviewTypeModelAsync(null, reviewType);
-
-            return View(model);
-        }
-
-        [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual async Task<IActionResult> Edit(ReviewTypeModel model, bool continueEditing)
-        {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
-            //try to get an review type with the specified id
-            var reviewType = await _reviewTypeService.GetReviewTypeByIdAsync(model.Id);
-            if (reviewType == null)
-                return RedirectToAction("List");
-
-            if (ModelState.IsValid)
-            {
-                reviewType = model.ToEntity(reviewType);
-                await _reviewTypeService.UpdateReviewTypeAsync(reviewType);
-
-                //activity log
-                await _customerActivityService.InsertActivityAsync("EditReviewType",
-                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditReviewType"), reviewType.Id),
-                    reviewType);
-
-                //locales
-                await UpdateReviewTypeLocalesAsync(reviewType, model);
-
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Settings.ReviewType.Updated"));
-
-                return continueEditing ? RedirectToAction("Edit", new { id = reviewType.Id }) : RedirectToAction("List");
-            }
-
-            //prepare model
-            model = await _reviewTypeModelFactory.PrepareReviewTypeModelAsync(model, reviewType, true);
-
-            //if we got this far, something failed, redisplay form
-            return View(model);
-        }
-
-        [HttpPost]
-        public virtual async Task<IActionResult> Delete(int id)
-        {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
-            //try to get an review type with the specified id
-            var reviewType = await _reviewTypeService.GetReviewTypeByIdAsync(id);
-            if (reviewType == null)
-                return RedirectToAction("List");
-
-            try
-            {
-                await _reviewTypeService.DeleteReviewTypeAsync(reviewType);
-
-                //activity log
-                await _customerActivityService.InsertActivityAsync("DeleteReviewType",
-                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteReviewType"), reviewType),
-                    reviewType);
-
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Settings.ReviewType.Deleted"));
-
-                return RedirectToAction("List");
-            }
-            catch (Exception exc)
-            {
-                await _notificationService.ErrorNotificationAsync(exc);
-                return RedirectToAction("Edit", new { id = reviewType.Id });
-            }
-        }
-
-        #endregion
     }
+
+    #endregion
 }

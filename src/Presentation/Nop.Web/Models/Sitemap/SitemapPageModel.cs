@@ -1,8 +1,7 @@
 ﻿using Nop.Web.Framework.UI.Paging;
 
-namespace Nop.Web.Models.Sitemap
+namespace Nop.Web.Models.Sitemap;
+
+public partial record SitemapPageModel : BasePageableModel
 {
-    public partial record SitemapPageModel : BasePageableModel
-    {
-    }
 }

@@ -8,119 +8,103 @@ using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Web.Controllers;
 
-namespace Nop.Plugin.Payments.CyberSource.Controllers
+namespace Nop.Plugin.Payments.CyberSource.Controllers;
+
+[AutoValidateAntiforgeryToken]
+public class CyberSourcePayerAuthenticationController : BasePublicController
 {
-    [AutoValidateAntiforgeryToken]
-    public class CyberSourcePayerAuthenticationController : BasePublicController
+    #region Fields
+
+    protected readonly CustomerTokenService _customerTokenService;
+    protected readonly CyberSourceService _cyberSourceService;
+    protected readonly ILocalizationService _localizationService;
+    protected readonly ILogger _logger;
+    protected readonly IOrderTotalCalculationService _orderTotalCalculationService;
+    protected readonly IShoppingCartService _shoppingCartService;
+    protected readonly IStoreContext _storeContext;
+    protected readonly IWorkContext _workContext;
+
+    #endregion
+
+    #region Ctor
+
+    public CyberSourcePayerAuthenticationController(CustomerTokenService customerTokenService,
+        CyberSourceService cyberSourceService,
+        ILocalizationService localizationService,
+        ILogger logger,
+        IOrderTotalCalculationService orderTotalCalculationService,
+        IShoppingCartService shoppingCartService,
+        IStoreContext storeContext,
+        IWorkContext workContext)
     {
-        #region Fields
+        _customerTokenService = customerTokenService;
+        _cyberSourceService = cyberSourceService;
+        _localizationService = localizationService;
+        _logger = logger;
+        _orderTotalCalculationService = orderTotalCalculationService;
+        _shoppingCartService = shoppingCartService;
+        _storeContext = storeContext;
+        _workContext = workContext;
+    }
 
-        protected readonly CustomerTokenService _customerTokenService;
-        protected readonly CyberSourceService _cyberSourceService;
-        protected readonly ILocalizationService _localizationService;
-        protected readonly ILogger _logger;
-        protected readonly IOrderTotalCalculationService _orderTotalCalculationService;
-        protected readonly IShoppingCartService _shoppingCartService;
-        protected readonly IStoreContext _storeContext;
-        protected readonly IWorkContext _workContext;
+    #endregion
 
-        #endregion
+    #region Methods
 
-        #region Ctor
+    [HttpPost]
+    public async Task<IActionResult> Setup(int customerTokenId, string transientToken)
+    {
+        var error = await _localizationService.GetResourceAsync("Plugins.Payments.CyberSource.PayerAuthentication.Fail");
+        var customer = await _workContext.GetCurrentCustomerAsync();
+        var customerToken = await _customerTokenService.GetByIdAsync(customerTokenId);
+        if (string.IsNullOrEmpty(transientToken) && (customerToken is null || customerToken.CustomerId != customer.Id))
+            return Json(new { success = false, message = error });
 
-        public CyberSourcePayerAuthenticationController(CustomerTokenService customerTokenService,
-            CyberSourceService cyberSourceService,
-            ILocalizationService localizationService,
-            ILogger logger,
-            IOrderTotalCalculationService orderTotalCalculationService,
-            IShoppingCartService shoppingCartService,
-            IStoreContext storeContext,
-            IWorkContext workContext)
+        var (result, _) = await _cyberSourceService.PayerAuthenticationSetupAsync(customerToken, transientToken);
+        if (result?.ConsumerAuthenticationInformation is null || result.Status == CyberSourceDefaults.PayerAuthenticationSetupStatus.Failed)
         {
-            _customerTokenService = customerTokenService;
-            _cyberSourceService = cyberSourceService;
-            _localizationService = localizationService;
-            _logger = logger;
-            _orderTotalCalculationService = orderTotalCalculationService;
-            _shoppingCartService = shoppingCartService;
-            _storeContext = storeContext;
-            _workContext = workContext;
+            var message = $"Payer authentication setup failed. {result?.ErrorInformation?.Message}";
+            await _logger.ErrorAsync($"{CyberSourceDefaults.SystemName} error: {Environment.NewLine}{message}", customer: customer);
+
+            return Json(new { success = false, message = error });
         }
 
-        #endregion
-
-        #region Methods
-
-        [HttpPost]
-        public async Task<IActionResult> Setup(int customerTokenId, string transientToken)
+        return Json(new
         {
-            var error = await _localizationService.GetResourceAsync("Plugins.Payments.CyberSource.PayerAuthentication.Fail");
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var customerToken = await _customerTokenService.GetByIdAsync(customerTokenId);
-            if (string.IsNullOrEmpty(transientToken) && (customerToken is null || customerToken.CustomerId != customer.Id))
-                return Json(new { success = false, message = error });
+            success = true,
+            accessToken = result.ConsumerAuthenticationInformation.AccessToken,
+            deviceDataCollectionUrl = result.ConsumerAuthenticationInformation.DeviceDataCollectionUrl,
+            referenceId = result.ConsumerAuthenticationInformation.ReferenceId
+        });
+    }
 
-            var (result, _) = await _cyberSourceService.PayerAuthenticationSetupAsync(customerToken, transientToken);
-            if (result?.ConsumerAuthenticationInformation is null || result.Status == CyberSourceDefaults.PayerAuthenticationSetupStatus.Failed)
-            {
-                var message = $"Payer authentication setup failed. {result?.ErrorInformation?.Message}";
-                await _logger.ErrorAsync($"{CyberSourceDefaults.SystemName} error: {Environment.NewLine}{message}", customer: customer);
+    [HttpPost]
+    public async Task<IActionResult> Enrollment(string referenceId, int customerTokenId, string transientToken)
+    {
+        var error = await _localizationService.GetResourceAsync("Plugins.Payments.CyberSource.PayerAuthentication.Fail");
+        var customer = await _workContext.GetCurrentCustomerAsync();
+        var customerToken = await _customerTokenService.GetByIdAsync(customerTokenId);
+        if (string.IsNullOrEmpty(transientToken) && (customerToken is null || customerToken.CustomerId != customer.Id))
+            return Json(new { success = false, message = error });
 
-                return Json(new { success = false, message = error });
-            }
-
-            return Json(new
-            {
-                success = true,
-                accessToken = result.ConsumerAuthenticationInformation.AccessToken,
-                deviceDataCollectionUrl = result.ConsumerAuthenticationInformation.DeviceDataCollectionUrl,
-                referenceId = result.ConsumerAuthenticationInformation.ReferenceId
-            });
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Enrollment(string referenceId, int customerTokenId, string transientToken)
+        var store = await _storeContext.GetCurrentStoreAsync();
+        var returnUrl = $"{store.Url.TrimEnd('/')}{Url.RouteUrl(CyberSourceDefaults.PayerRedirectRouteName)}".ToLowerInvariant();
+        var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+        var (shoppingCartTotal, _, _, _, _, _) = await _orderTotalCalculationService.GetShoppingCartTotalAsync(cart);
+        var request = new ProcessPaymentRequest
         {
-            var error = await _localizationService.GetResourceAsync("Plugins.Payments.CyberSource.PayerAuthentication.Fail");
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var customerToken = await _customerTokenService.GetByIdAsync(customerTokenId);
-            if (string.IsNullOrEmpty(transientToken) && (customerToken is null || customerToken.CustomerId != customer.Id))
-                return Json(new { success = false, message = error });
+            OrderGuid = Guid.NewGuid(),
+            CustomerId = customer.Id,
+            OrderTotal = shoppingCartTotal ?? decimal.Zero
+        };
+        var (result, _) = await _cyberSourceService.PayerAuthenticationEnrollmentAsync(referenceId, customerToken, transientToken, request, returnUrl);
+        if (result?.ConsumerAuthenticationInformation is null || result.Status == CyberSourceDefaults.PayerAuthenticationStatus.Failed)
+        {
+            var message = $"Payer authentication enrollment failed. {result?.ErrorInformation?.Message}";
+            await _logger.ErrorAsync($"{CyberSourceDefaults.SystemName} error: {Environment.NewLine}{message}", customer: customer);
 
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var returnUrl = $"{store.Url.TrimEnd('/')}{Url.RouteUrl(CyberSourceDefaults.PayerRedirectRouteName)}".ToLowerInvariant();
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
-            var (shoppingCartTotal, _, _, _, _, _) = await _orderTotalCalculationService.GetShoppingCartTotalAsync(cart);
-            var request = new ProcessPaymentRequest
-            {
-                OrderGuid = Guid.NewGuid(),
-                CustomerId = customer.Id,
-                OrderTotal = shoppingCartTotal ?? decimal.Zero
-            };
-            var (result, _) = await _cyberSourceService.PayerAuthenticationEnrollmentAsync(referenceId, customerToken, transientToken, request, returnUrl);
-            if (result?.ConsumerAuthenticationInformation is null || result.Status == CyberSourceDefaults.PayerAuthenticationStatus.Failed)
-            {
-                var message = $"Payer authentication enrollment failed. {result?.ErrorInformation?.Message}";
-                await _logger.ErrorAsync($"{CyberSourceDefaults.SystemName} error: {Environment.NewLine}{message}", customer: customer);
-
-                if (result?.ConsumerAuthenticationInformation is not null &&
-                    result.ErrorInformation?.Reason == CyberSourceDefaults.PayerAuthenticationErrorReason.ConsumerAuthenticationRequired)
-                {
-                    return Json(new
-                    {
-                        success = true,
-                        complete = false,
-                        authenticationTransactionId = result.ConsumerAuthenticationInformation.AuthenticationTransactionId,
-                        accessToken = result.ConsumerAuthenticationInformation.AccessToken,
-                        stepUpUrl = result.ConsumerAuthenticationInformation.StepUpUrl
-                    });
-                }
-
-                return Json(new { success = false, message = result?.ConsumerAuthenticationInformation?.CardholderMessage ?? error });
-            }
-
-            if (result.Status == CyberSourceDefaults.PayerAuthenticationStatus.Pending ||
-                result.ConsumerAuthenticationInformation.ChallengeRequired == "Y")
+            if (result?.ConsumerAuthenticationInformation is not null &&
+                result.ErrorInformation?.Reason == CyberSourceDefaults.PayerAuthenticationErrorReason.ConsumerAuthenticationRequired)
             {
                 return Json(new
                 {
@@ -132,39 +116,54 @@ namespace Nop.Plugin.Payments.CyberSource.Controllers
                 });
             }
 
-            if (result.Status == CyberSourceDefaults.PayerAuthenticationStatus.Success)
+            return Json(new { success = false, message = result?.ConsumerAuthenticationInformation?.CardholderMessage ?? error });
+        }
+
+        if (result.Status == CyberSourceDefaults.PayerAuthenticationStatus.Pending ||
+            result.ConsumerAuthenticationInformation.ChallengeRequired == "Y")
+        {
+            return Json(new
             {
-                return Json(new
-                {
-                    success = true,
-                    complete = true,
-                    authenticationTransactionId = result.ConsumerAuthenticationInformation.AuthenticationTransactionId
-                });
-            }
+                success = true,
+                complete = false,
+                authenticationTransactionId = result.ConsumerAuthenticationInformation.AuthenticationTransactionId,
+                accessToken = result.ConsumerAuthenticationInformation.AccessToken,
+                stepUpUrl = result.ConsumerAuthenticationInformation.StepUpUrl
+            });
+        }
+
+        if (result.Status == CyberSourceDefaults.PayerAuthenticationStatus.Success)
+        {
+            return Json(new
+            {
+                success = true,
+                complete = true,
+                authenticationTransactionId = result.ConsumerAuthenticationInformation.AuthenticationTransactionId
+            });
+        }
+
+        return Json(new { success = false, message = error });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Validate(string authenticationTransactionId)
+    {
+        var error = await _localizationService.GetResourceAsync("Plugins.Payments.CyberSource.PayerAuthentication.Fail");
+        var customer = await _workContext.GetCurrentCustomerAsync();
+        if (string.IsNullOrEmpty(authenticationTransactionId))
+            return Json(new { success = false, message = error });
+
+        var (result, _) = await _cyberSourceService.PayerAuthenticationValidateAsync(authenticationTransactionId);
+        if (result?.Status != CyberSourceDefaults.PayerAuthenticationStatus.Success)
+        {
+            var message = $"Payer authentication validation failed. {result?.ErrorInformation?.Message}";
+            await _logger.ErrorAsync($"{CyberSourceDefaults.SystemName} error: {Environment.NewLine}{message}", customer: customer);
 
             return Json(new { success = false, message = error });
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Validate(string authenticationTransactionId)
-        {
-            var error = await _localizationService.GetResourceAsync("Plugins.Payments.CyberSource.PayerAuthentication.Fail");
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            if (string.IsNullOrEmpty(authenticationTransactionId))
-                return Json(new { success = false, message = error });
-
-            var (result, _) = await _cyberSourceService.PayerAuthenticationValidateAsync(authenticationTransactionId);
-            if (result?.Status != CyberSourceDefaults.PayerAuthenticationStatus.Success)
-            {
-                var message = $"Payer authentication validation failed. {result?.ErrorInformation?.Message}";
-                await _logger.ErrorAsync($"{CyberSourceDefaults.SystemName} error: {Environment.NewLine}{message}", customer: customer);
-
-                return Json(new { success = false, message = error });
-            }
-
-            return Json(new { success = true });
-        }
-
-        #endregion
+        return Json(new { success = true });
     }
+
+    #endregion
 }

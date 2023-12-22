@@ -1,17 +1,16 @@
 ﻿using Nop.Services.Events;
 
-namespace Nop.Tests.Nop.Web.Tests.Events
+namespace Nop.Tests.Nop.Web.Tests.Events;
+
+public class DateTimeConsumer : IConsumer<DateTime>
 {
-    public class DateTimeConsumer : IConsumer<DateTime>
+    public Task HandleEventAsync(DateTime eventMessage)
     {
-        public Task HandleEventAsync(DateTime eventMessage)
-        {
-            DateTime = eventMessage;
+        DateTime = eventMessage;
 
-            return Task.CompletedTask;
-        }
-
-        // For testing
-        public static DateTime DateTime { get; set; }
+        return Task.CompletedTask;
     }
+
+    // For testing
+    public static DateTime DateTime { get; set; }
 }

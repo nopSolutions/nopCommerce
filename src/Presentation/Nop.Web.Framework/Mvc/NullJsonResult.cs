@@ -1,17 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Nop.Web.Framework.Mvc
+namespace Nop.Web.Framework.Mvc;
+
+/// <summary>
+/// Null JSON result
+/// </summary>
+public partial class NullJsonResult : JsonResult
 {
     /// <summary>
-    /// Null JSON result
+    /// Ctor
     /// </summary>
-    public partial class NullJsonResult : JsonResult
+    public NullJsonResult() : base(null)
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        public NullJsonResult() : base(null)
-        {
-        }
     }
 }

@@ -1,13 +1,12 @@
-﻿namespace Nop.Plugin.Misc.Zettle.Domain.Api.Product
+﻿namespace Nop.Plugin.Misc.Zettle.Domain.Api.Product;
+
+/// <summary>
+/// Represents base request to Product API
+/// </summary>
+public abstract class ProductApiRequest : ApiRequest, IAuthorizedRequest
 {
     /// <summary>
-    /// Represents base request to Product API
+    /// Gets the request base URL
     /// </summary>
-    public abstract class ProductApiRequest : ApiRequest, IAuthorizedRequest
-    {
-        /// <summary>
-        /// Gets the request base URL
-        /// </summary>
-        public override string BaseUrl => "https://products.izettle.com/";
-    }
+    public override string BaseUrl => "https://products.izettle.com/";
 }

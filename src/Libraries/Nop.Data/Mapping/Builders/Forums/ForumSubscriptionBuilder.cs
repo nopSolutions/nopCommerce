@@ -4,24 +4,23 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Data.Extensions;
 
-namespace Nop.Data.Mapping.Builders.Forums
+namespace Nop.Data.Mapping.Builders.Forums;
+
+/// <summary>
+/// Represents a forum subscription entity builder
+/// </summary>
+public partial class ForumSubscriptionBuilder : NopEntityBuilder<ForumSubscription>
 {
+    #region Methods
+
     /// <summary>
-    /// Represents a forum subscription entity builder
+    /// Apply entity configuration
     /// </summary>
-    public partial class ForumSubscriptionBuilder : NopEntityBuilder<ForumSubscription>
+    /// <param name="table">Create table expression builder</param>
+    public override void MapEntity(CreateTableExpressionBuilder table)
     {
-        #region Methods
-
-        /// <summary>
-        /// Apply entity configuration
-        /// </summary>
-        /// <param name="table">Create table expression builder</param>
-        public override void MapEntity(CreateTableExpressionBuilder table)
-        {
-            table.WithColumn(nameof(ForumSubscription.CustomerId)).AsInt32().ForeignKey<Customer>(onDelete: Rule.None);
-        }
-
-        #endregion
+        table.WithColumn(nameof(ForumSubscription.CustomerId)).AsInt32().ForeignKey<Customer>(onDelete: Rule.None);
     }
+
+    #endregion
 }

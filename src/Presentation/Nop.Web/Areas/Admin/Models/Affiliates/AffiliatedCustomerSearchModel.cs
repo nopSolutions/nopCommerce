@@ -1,16 +1,15 @@
 ﻿using Nop.Web.Framework.Models;
 
-namespace Nop.Web.Areas.Admin.Models.Affiliates
+namespace Nop.Web.Areas.Admin.Models.Affiliates;
+
+/// <summary>
+/// Represents an affiliated customer search model
+/// </summary>
+public partial record AffiliatedCustomerSearchModel : BaseSearchModel
 {
-    /// <summary>
-    /// Represents an affiliated customer search model
-    /// </summary>
-    public partial record AffiliatedCustomerSearchModel : BaseSearchModel
-    {
-        #region Properties
+    #region Properties
 
-        public int AffliateId { get; set; }
+    public int AffliateId { get; set; }
 
-        #endregion
-    }
+    #endregion
 }

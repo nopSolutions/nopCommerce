@@ -754,8 +754,7 @@ namespace Nop.Services.Installation
             var crRegistered = await _customerRoleRepository.Table
                 .FirstOrDefaultAsync(customerRole => customerRole.SystemName == NopCustomerDefaults.RegisteredRoleName);
 
-            if (crRegistered == null)
-                throw new ArgumentNullException(nameof(crRegistered));
+            ArgumentNullException.ThrowIfNull(crRegistered);
 
             //default store 
             var defaultStore = await _storeRepository.Table.FirstOrDefaultAsync() ?? throw new Exception("No default store could be loaded");
@@ -2212,6 +2211,14 @@ namespace Nop.Services.Installation
                     Name = MessageTemplateSystemNames.NEW_RETURN_REQUEST_STORE_OWNER_NOTIFICATION,
                     Subject = "%Store.Name%. New return request.",
                     Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%Customer.FullName% has just submitted a new return request. Details are below:{Environment.NewLine}<br />{Environment.NewLine}Request ID: %ReturnRequest.CustomNumber%{Environment.NewLine}<br />{Environment.NewLine}Product: %ReturnRequest.Product.Quantity% x Product: %ReturnRequest.Product.Name%{Environment.NewLine}<br />{Environment.NewLine}Reason for return: %ReturnRequest.Reason%{Environment.NewLine}<br />{Environment.NewLine}Requested action: %ReturnRequest.RequestedAction%{Environment.NewLine}<br />{Environment.NewLine}Customer comments:{Environment.NewLine}<br />{Environment.NewLine}%ReturnRequest.CustomerComment%{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id
+                },
+                new()
+                {
+                    Name = MessageTemplateSystemNames.DELETE_CUSTOMER_REQUEST_STORE_OWNER_NOTIFICATION,
+                    Subject = "%Store.Name%. New request to delete customer (GDPR)",
+                    Body = $"%Customer.Email% has requested account deletion. You can consider this in the admin area.",
                     IsActive = true,
                     EmailAccountId = eaGeneral.Id
                 },

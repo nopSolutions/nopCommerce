@@ -4,33 +4,32 @@ using Nop.Data;
 using Nop.Data.Configuration;
 using Nop.Data.DataProviders;
 
-namespace Nop.Tests
+namespace Nop.Tests;
+
+/// <summary>
+/// Represents the data provider manager
+/// </summary>
+public partial class TestDataProviderManager : IDataProviderManager
 {
+    #region Properties
+
     /// <summary>
-    /// Represents the data provider manager
+    /// Gets data provider
     /// </summary>
-    public partial class TestDataProviderManager : IDataProviderManager
+    public INopDataProvider DataProvider
     {
-        #region Properties
-
-        /// <summary>
-        /// Gets data provider
-        /// </summary>
-        public INopDataProvider DataProvider
+        get
         {
-            get
+            return Singleton<DataConfig>.Instance.DataProvider switch
             {
-                return Singleton<DataConfig>.Instance.DataProvider switch
-                {
-                    DataProviderType.SqlServer => new MsSqlNopDataProvider(),
-                    DataProviderType.MySql => new MySqlNopDataProvider(),
-                    DataProviderType.PostgreSQL => new PostgreSqlDataProvider(),
-                    DataProviderType.Unknown => new SqLiteNopDataProvider(),
-                    _ => throw new NopException($"Unknown [{Singleton<DataConfig>.Instance.DataProvider}] DataProvider")
-                };
-            }
+                DataProviderType.SqlServer => new MsSqlNopDataProvider(),
+                DataProviderType.MySql => new MySqlNopDataProvider(),
+                DataProviderType.PostgreSQL => new PostgreSqlDataProvider(),
+                DataProviderType.Unknown => new SqLiteNopDataProvider(),
+                _ => throw new NopException($"Unknown [{Singleton<DataConfig>.Instance.DataProvider}] DataProvider")
+            };
         }
-
-        #endregion
     }
+
+    #endregion
 }

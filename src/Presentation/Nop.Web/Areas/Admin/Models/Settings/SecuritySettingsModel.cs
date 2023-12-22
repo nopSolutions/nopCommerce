@@ -1,26 +1,25 @@
 ﻿using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
-namespace Nop.Web.Areas.Admin.Models.Settings
+namespace Nop.Web.Areas.Admin.Models.Settings;
+
+/// <summary>
+/// Represents a security settings model
+/// </summary>
+public partial record SecuritySettingsModel : BaseNopModel, ISettingsModel
 {
-    /// <summary>
-    /// Represents a security settings model
-    /// </summary>
-    public partial record SecuritySettingsModel : BaseNopModel, ISettingsModel
-    {
-        #region Properties
+    #region Properties
 
-        public int ActiveStoreScopeConfiguration { get; set; }
+    public int ActiveStoreScopeConfiguration { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.EncryptionKey")]
-        public string EncryptionKey { get; set; }
+    [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.EncryptionKey")]
+    public string EncryptionKey { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.AdminAreaAllowedIpAddresses")]
-        public string AdminAreaAllowedIpAddresses { get; set; }
+    [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.AdminAreaAllowedIpAddresses")]
+    public string AdminAreaAllowedIpAddresses { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.HoneypotEnabled")]
-        public bool HoneypotEnabled { get; set; }
+    [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.HoneypotEnabled")]
+    public bool HoneypotEnabled { get; set; }
 
-        #endregion
-    }
+    #endregion
 }

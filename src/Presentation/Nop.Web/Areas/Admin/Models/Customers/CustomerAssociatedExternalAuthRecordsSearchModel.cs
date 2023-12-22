@@ -1,20 +1,19 @@
 ﻿using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
-namespace Nop.Web.Areas.Admin.Models.Customers
+namespace Nop.Web.Areas.Admin.Models.Customers;
+
+/// <summary>
+/// Represents a associated external auth records search model
+/// </summary>
+public partial record CustomerAssociatedExternalAuthRecordsSearchModel : BaseSearchModel
 {
-    /// <summary>
-    /// Represents a associated external auth records search model
-    /// </summary>
-    public partial record CustomerAssociatedExternalAuthRecordsSearchModel : BaseSearchModel
-    {
-        #region Properties
+    #region Properties
 
-        public int CustomerId { get; set; }
+    public int CustomerId { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.Customers.AssociatedExternalAuth")]
-        public IList<CustomerAssociatedExternalAuthModel> AssociatedExternalAuthRecords { get; set; } = new List<CustomerAssociatedExternalAuthModel>();
+    [NopResourceDisplayName("Admin.Customers.Customers.AssociatedExternalAuth")]
+    public IList<CustomerAssociatedExternalAuthModel> AssociatedExternalAuthRecords { get; set; } = new List<CustomerAssociatedExternalAuthModel>();
 
-        #endregion
-    }
+    #endregion
 }
