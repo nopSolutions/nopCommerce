@@ -5142,6 +5142,15 @@
   <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.MarkAsDefaultEmail">
     <Value>Mark as default email account</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.MaxNumberOfEmails">
+    <Value>Max number of emails</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.MaxNumberOfEmails.Hint">
+    <Value>The maximum number of emails sent at one time.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.MaxNumberOfEmails.ShouldBeGreaterThanZero">
+    <Value>The maximum number of emails should be greater 0.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.Password">
     <Value>Password</Value>
   </LocaleResource>

@@ -10,7 +10,7 @@ using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.UpgradeTo470;
 
-[NopSchemaMigration("2023-03-07 00:00:02", "SchemaMigration for 4.70.0")]
+[NopSchemaMigration("2023-03-07 00:00:03", "SchemaMigration for 4.70.0")]
 public class SchemaMigration : ForwardOnlyMigration
 {
     /// <summary>
@@ -70,5 +70,14 @@ public class SchemaMigration : ForwardOnlyMigration
         Alter.Table(nameof(ActivityLog)).AlterColumn(nameof(ActivityLog.IpAddress)).AsString(100).Nullable();
         Alter.Table(nameof(Log)).AlterColumn(nameof(Log.IpAddress)).AsString(100).Nullable();
         Alter.Table(nameof(Order)).AlterColumn(nameof(Order.CustomerIp)).AsString(100).Nullable();
+        
+        //#6958
+        //add column
+        var emailAccountTableName = nameof(EmailAccount);
+        var maxNumberOfEmailsColumnName = nameof(EmailAccount.MaxNumberOfEmails);
+
+        if (!Schema.Table(emailAccountTableName).Column(maxNumberOfEmailsColumnName).Exists())
+            Alter.Table(emailAccountTableName)
+                .AddColumn(maxNumberOfEmailsColumnName).AsInt32().NotNullable().SetExistingRowsTo(50);
     }
 }

@@ -15,6 +15,8 @@ public partial class EmailAccountValidator : BaseNopValidator<EmailAccountModel>
         RuleFor(x => x.Email).EmailAddress().WithMessageAwait(localizationService.GetResourceAsync("Admin.Common.WrongEmail"));
 
         RuleFor(x => x.DisplayName).NotEmpty();
+        RuleFor(x => x.MaxNumberOfEmails).NotEmpty().GreaterThan(0)
+                .WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.EmailAccounts.Fields.MaxNumberOfEmails.ShouldBeGreaterThanZero"));
 
         SetDatabaseValidationRules<EmailAccount>(mappingEntityAccessor);
     }
