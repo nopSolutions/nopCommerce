@@ -5,7 +5,7 @@ namespace Nop.Data.Mapping;
 /// <summary>
 /// Represents interface to implement an accessor to mapped entities
 /// </summary>
-public interface IMappingEntityAccessor
+public partial interface IMappingEntityAccessor
 {
     /// <summary>
     /// Returns mapped entity descriptor

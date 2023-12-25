@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents an information about plugins
 /// </summary>
-public interface IPluginsInfo
+public partial interface IPluginsInfo
 {
     /// <summary>
     /// Save plugins info to the file

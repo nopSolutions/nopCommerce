@@ -1,6 +1,6 @@
 ﻿namespace Nop.Services.Html;
 
-public interface IBBCodeHelper
+public partial interface IBBCodeHelper
 {
     /// <summary>
     /// Formats the text

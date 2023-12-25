@@ -3,7 +3,7 @@
 /// <summary>
 /// Paged list interface
 /// </summary>
-public interface IPagedList<T> : IList<T>
+public partial interface IPagedList<T> : IList<T>
 {
     /// <summary>
     /// Page index

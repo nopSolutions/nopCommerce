@@ -7,7 +7,7 @@ namespace Nop.Core.Infrastructure;
 /// <summary>
 /// A file provider abstraction
 /// </summary>
-public interface INopFileProvider : IFileProvider
+public partial interface INopFileProvider : IFileProvider
 {
     /// <summary>
     /// Combines an array of strings into a path

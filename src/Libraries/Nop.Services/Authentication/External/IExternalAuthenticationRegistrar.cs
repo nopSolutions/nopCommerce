@@ -5,7 +5,7 @@ namespace Nop.Services.Authentication.External;
 /// <summary>
 /// Interface to register (configure) an external authentication service (plugin)
 /// </summary>
-public interface IExternalAuthenticationRegistrar
+public partial interface IExternalAuthenticationRegistrar
 {
     /// <summary>
     /// Configure

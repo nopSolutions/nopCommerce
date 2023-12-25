@@ -5,7 +5,7 @@ namespace Nop.Core;
 /// <summary>
 /// Store context
 /// </summary>
-public interface IStoreContext
+public partial interface IStoreContext
 {
     /// <summary>
     /// Gets the current store

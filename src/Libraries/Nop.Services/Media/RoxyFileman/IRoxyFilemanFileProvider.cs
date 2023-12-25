@@ -5,7 +5,7 @@ namespace Nop.Services.Media.RoxyFileman;
 /// <summary>
 /// Represents provider interface for managing uploaded files
 /// </summary>
-public interface IRoxyFilemanFileProvider : IFileProvider
+public partial interface IRoxyFilemanFileProvider : IFileProvider
 {
     /// <summary>
     /// Create configuration file for RoxyFileman

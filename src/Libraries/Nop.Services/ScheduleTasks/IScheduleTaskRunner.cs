@@ -5,7 +5,7 @@ namespace Nop.Services.ScheduleTasks;
 /// <summary>
 /// Schedule task runner interface
 /// </summary>
-public interface IScheduleTaskRunner
+public partial interface IScheduleTaskRunner
 {
     /// <summary>
     /// Executes the task

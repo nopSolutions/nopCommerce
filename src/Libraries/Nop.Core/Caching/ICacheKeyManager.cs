@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents a cache key manager
 /// </summary>
-public interface ICacheKeyManager
+public partial interface ICacheKeyManager
 {
     /// <summary>
     /// Add the key

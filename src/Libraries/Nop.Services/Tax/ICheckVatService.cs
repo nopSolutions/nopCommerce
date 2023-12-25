@@ -5,7 +5,7 @@ namespace Nop.Services.Tax;
 /// <summary>
 /// Check vat service interface
 /// </summary>
-public interface ICheckVatService
+public partial interface ICheckVatService
 {
     /// <summary>
     /// Try to validate VAT number

@@ -3,6 +3,6 @@
 /// <summary>
 /// Setting interface
 /// </summary>
-public interface ISettings
+public partial interface ISettings
 {
 }

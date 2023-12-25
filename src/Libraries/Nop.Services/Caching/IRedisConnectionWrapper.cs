@@ -6,7 +6,7 @@ namespace Nop.Services.Caching;
 /// <summary>
 /// Represents Redis connection wrapper
 /// </summary>
-public interface IRedisConnectionWrapper
+public partial interface IRedisConnectionWrapper
 {
     /// <summary>
     /// Obtain an interactive connection to a database inside Redis
