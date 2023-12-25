@@ -1,5 +1,4 @@
 ﻿using Nop.Core.Caching;
-using Nop.Core.Domain.Customers;
 
 namespace Nop.Services.Customers;
 
@@ -51,15 +50,7 @@ public static partial class NopCustomerServicesDefaults
     #endregion
 
     #region Customer roles
-
-    /// <summary>
-    /// Gets a key for caching
-    /// </summary>
-    /// <remarks>
-    /// {0} : show hidden records?
-    /// </remarks>
-    public static CacheKey CustomerRolesAllCacheKey => new("Nop.customerrole.all.{0}", NopEntityCacheDefaults<CustomerRole>.AllPrefix);
-
+    
     /// <summary>
     /// Gets a key for caching
     /// </summary>
@@ -79,21 +70,13 @@ public static partial class NopCustomerServicesDefaults
     /// <remarks>
     /// {0} : customer identifier
     /// </remarks>
-    public static CacheKey CustomerRolesCacheKey => new("Nop.customer.customerrole.{0}", CustomerCustomerRolesByCustomerPrefix, CustomerCustomerRolesPrefix);
+    public static CacheKey CustomerRolesCacheKey => new("Nop.customer.customerrole.{0}", CustomerCustomerRolesPrefix);
 
     /// <summary>
     /// Gets a key pattern to clear cache
     /// </summary>
     public static string CustomerCustomerRolesPrefix => "Nop.customer.customerrole.";
-
-    /// <summary>
-    /// Gets a key pattern to clear cache
-    /// </summary>
-    /// <remarks>
-    /// {0} : customer identifier
-    /// </remarks>
-    public static string CustomerCustomerRolesByCustomerPrefix => "Nop.customer.customerrole.{0}";
-
+    
     #endregion
 
     #region Addresses
@@ -143,5 +126,4 @@ public static partial class NopCustomerServicesDefaults
     #endregion
 
     #endregion
-
 }
