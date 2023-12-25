@@ -5,7 +5,7 @@ namespace Nop.Services.Common.Pdf;
 /// <summary>
 /// Represents totals for an invoice
 /// </summary>
-public class InvoiceTotals
+public partial class InvoiceTotals
 {
     #region Ctor
 

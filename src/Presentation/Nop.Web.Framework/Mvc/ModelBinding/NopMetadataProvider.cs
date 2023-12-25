@@ -6,7 +6,7 @@ namespace Nop.Web.Framework.Mvc.ModelBinding;
 /// <summary>
 /// Represents metadata provider that adds custom attributes to the model's metadata, so it can be retrieved later
 /// </summary>
-public class NopMetadataProvider : IDisplayMetadataProvider
+public partial class NopMetadataProvider : IDisplayMetadataProvider
 {
     /// <summary>
     /// Sets the values for properties of isplay metadata

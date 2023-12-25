@@ -7,7 +7,7 @@ namespace Nop.Services.Common;
 /// <summary>
 /// Represents middleware that checks whether request is for keep alive
 /// </summary>
-public class KeepAliveMiddleware
+public partial class KeepAliveMiddleware
 {
     #region Fields
 

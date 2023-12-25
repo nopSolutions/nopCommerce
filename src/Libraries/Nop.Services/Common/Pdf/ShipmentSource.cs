@@ -5,7 +5,7 @@ namespace Nop.Services.Common.Pdf;
 /// <summary>
 /// Represents the data source for the packaging slip
 /// </summary>
-public class ShipmentSource : DocumentSource
+public partial class ShipmentSource : DocumentSource
 {
     #region Ctor
 

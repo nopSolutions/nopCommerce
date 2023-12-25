@@ -9,7 +9,7 @@ namespace Nop.Web.Framework.Mvc.Routing;
 /// <summary>
 /// Represents class language parameter transformer
 /// </summary>
-public class LanguageParameterTransformer : IOutboundParameterTransformer
+public partial class LanguageParameterTransformer : IOutboundParameterTransformer
 {
     #region Fields
 

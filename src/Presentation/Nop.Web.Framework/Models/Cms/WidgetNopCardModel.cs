@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents an widget model for the nop-card
 /// </summary>
-public class WidgetNopCardModel
+public partial class WidgetNopCardModel
 {
     /// <summary>
     /// Name of the card

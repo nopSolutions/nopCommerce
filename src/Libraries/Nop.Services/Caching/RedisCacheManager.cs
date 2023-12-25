@@ -10,7 +10,7 @@ namespace Nop.Services.Caching;
 /// <summary>
 /// Represents a redis distributed cache 
 /// </summary>
-public class RedisCacheManager : DistributedCacheManager
+public partial class RedisCacheManager : DistributedCacheManager
 {
     #region Fields
 

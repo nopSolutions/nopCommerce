@@ -10,7 +10,7 @@ namespace Nop.Services.Common.Pdf;
 /// <summary>
 /// Represents the invoice document
 /// </summary>
-public class InvoiceDocument : PdfDocument<InvoiceSource>
+public partial class InvoiceDocument : PdfDocument<InvoiceSource>
 {
 
     #region Ctor

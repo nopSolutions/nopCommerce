@@ -6,7 +6,7 @@ using Nop.Services.Localization;
 
 namespace Nop.Web.Framework.Validators;
 
-public class PasswordPropertyValidator<T, TProperty> : PropertyValidator<T, TProperty>
+public partial class PasswordPropertyValidator<T, TProperty> : PropertyValidator<T, TProperty>
 {
     #region Fields
 

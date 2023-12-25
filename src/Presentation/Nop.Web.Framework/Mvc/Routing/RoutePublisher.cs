@@ -6,7 +6,7 @@ namespace Nop.Web.Framework.Mvc.Routing;
 /// <summary>
 /// Represents implementation of route publisher
 /// </summary>
-public class RoutePublisher : IRoutePublisher
+public partial class RoutePublisher : IRoutePublisher
 {
     #region Fields
 

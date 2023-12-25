@@ -13,7 +13,7 @@ namespace Nop.Services.Caching;
 /// <remarks>
 /// This class should be registered on IoC as singleton instance
 /// </remarks>
-public class RedisSynchronizedMemoryCache : ISynchronizedMemoryCache
+public partial class RedisSynchronizedMemoryCache : ISynchronizedMemoryCache
 {
     #region Fields
 

@@ -5,7 +5,7 @@ namespace Nop.Web.Models.JsonLD;
 /// <summary>
 /// Represents JSON-LD model created event
 /// </summary>
-public class JsonLdCreatedEvent
+public partial class JsonLdCreatedEvent
 {
     #region Ctor
 
