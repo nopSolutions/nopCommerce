@@ -28,10 +28,10 @@ public class SchemaMigration : ForwardOnlyMigration
                 .AddColumn(allowDirectReplyColumnName).AsBoolean().NotNullable().SetExistingRowsTo(false);
 
         //1934
-        if (!Schema.Table(nameof(ProductAttributeCombinationPicture)).Exists()) 
+        if (!Schema.Table(nameof(ProductAttributeCombinationPicture)).Exists())
             Create.TableFor<ProductAttributeCombinationPicture>();
 
-        if (!Schema.Table(nameof(ProductAttributeValuePicture)).Exists()) 
+        if (!Schema.Table(nameof(ProductAttributeValuePicture)).Exists())
             Create.TableFor<ProductAttributeValuePicture>();
 
         var productTableName = nameof(Product);
@@ -70,7 +70,7 @@ public class SchemaMigration : ForwardOnlyMigration
         Alter.Table(nameof(ActivityLog)).AlterColumn(nameof(ActivityLog.IpAddress)).AsString(100).Nullable();
         Alter.Table(nameof(Log)).AlterColumn(nameof(Log.IpAddress)).AsString(100).Nullable();
         Alter.Table(nameof(Order)).AlterColumn(nameof(Order.CustomerIp)).AsString(100).Nullable();
-        
+
         //#6958
         //add column
         var emailAccountTableName = nameof(EmailAccount);

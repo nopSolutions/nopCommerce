@@ -48,5 +48,5 @@ public partial class EmailAccount : BaseEntity
     /// <summary>
     /// Gets or sets the maximum number of emails sent at one time
     /// </summary>
-    public int MaxNumberOfEmails { get;set; }
+    public int MaxNumberOfEmails { get; set; }
 }
