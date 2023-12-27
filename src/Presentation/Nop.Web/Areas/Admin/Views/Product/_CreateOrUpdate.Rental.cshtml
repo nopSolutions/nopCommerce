@@ -27,7 +27,7 @@
                 <nop-label asp-for="RentalPricePeriodId" />
             </div>
             <div class="col-md-9">
-                <nop-select asp-for="RentalPricePeriodId" asp-items="@await (((RentalPricePeriod)Model.RentalPricePeriodId).ToSelectListAsync())" />
+                <nop-select asp-for="RentalPricePeriodId" asp-items="@(await ((RentalPricePeriod)Model.RentalPricePeriodId).ToSelectListAsync())" />
                 <span asp-validation-for="RentalPricePeriodId"></span>
             </div>
         </div>
