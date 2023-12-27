@@ -8,6 +8,7 @@ using LinqToDB.DataProvider.MySql;
 using LinqToDB.SqlQuery;
 using MySqlConnector;
 using Nop.Core;
+using Nop.Data.Mapping;
 
 namespace Nop.Data.DataProviders;
 
@@ -166,7 +167,7 @@ public partial class MySqlNopDataProvider : BaseDataProvider, INopDataProvider
     public virtual async Task<int?> GetTableIdentAsync<TEntity>() where TEntity : BaseEntity
     {
         using var currentConnection = CreateDataConnection();
-        var tableName = GetEntityDescriptor(typeof(TEntity)).EntityName;
+        var tableName = NopMappingSchema.GetEntityDescriptor(typeof(TEntity)).EntityName;
         var databaseName = currentConnection.Connection.Database;
 
         //we're using the DbConnection object until linq2db solve this issue https://github.com/linq2db/linq2db/issues/1987
@@ -214,7 +215,7 @@ public partial class MySqlNopDataProvider : BaseDataProvider, INopDataProvider
             return;
 
         using var currentConnection = CreateDataConnection();
-        var tableName = GetEntityDescriptor(typeof(TEntity)).EntityName;
+        var tableName = NopMappingSchema.GetEntityDescriptor(typeof(TEntity)).EntityName;
 
         await currentConnection.ExecuteAsync($"ALTER TABLE `{tableName}` AUTO_INCREMENT = {ident};");
     }

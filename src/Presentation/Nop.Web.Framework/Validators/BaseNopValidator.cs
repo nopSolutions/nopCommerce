@@ -35,14 +35,11 @@ public abstract partial class BaseNopValidator<TModel> : AbstractValidator<TMode
     /// Sets validation rule(s) to appropriate database model
     /// </summary>
     /// <typeparam name="TEntity">Entity type</typeparam>
-    /// <param name="mappingEntityAccessor">An object implements accessor methods to mapped entities</param>
     /// <param name="filterStringPropertyNames">Properties to skip</param>
-    protected virtual void SetDatabaseValidationRules<TEntity>(IMappingEntityAccessor mappingEntityAccessor, params string[] filterStringPropertyNames)
+    protected virtual void SetDatabaseValidationRules<TEntity>(params string[] filterStringPropertyNames)
         where TEntity : BaseEntity
     {
-        ArgumentNullException.ThrowIfNull(mappingEntityAccessor);
-
-        var entityDescriptor = mappingEntityAccessor.GetEntityDescriptor(typeof(TEntity));
+        var entityDescriptor = NopMappingSchema.GetEntityDescriptor(typeof(TEntity));
 
         SetStringPropertiesMaxLength(entityDescriptor, filterStringPropertyNames);
         SetDecimalMaxValue(entityDescriptor);
@@ -65,7 +62,7 @@ public abstract partial class BaseNopValidator<TModel> : AbstractValidator<TMode
 
         //get max length of these properties
         var columnsMaxLengths = entityDescriptor.Fields.Where(field =>
-            modelPropertyNames.Contains(field.Name) && field.Type == typeof(string) && field.Size.HasValue);
+            modelPropertyNames.Contains(field.Name) && field.Type == System.Data.DbType.String && field.Size.HasValue);
 
         //create expressions for the validation rules
         var maxLengthExpressions = columnsMaxLengths.Select(field => new
@@ -99,7 +96,7 @@ public abstract partial class BaseNopValidator<TModel> : AbstractValidator<TMode
         //get max values of these properties
         var decimalColumnsMaxValues = entityDescriptor.Fields.Where(field =>
             modelPropertyNames.Contains(field.Name) &&
-            field.Type == typeof(decimal) && field.Size.HasValue && field.Precision.HasValue);
+            field.Type == System.Data.DbType.Decimal && field.Size.HasValue && field.Precision.HasValue);
 
         if (!decimalColumnsMaxValues.Any())
             return;

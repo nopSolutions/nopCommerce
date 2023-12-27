@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Nop.Core.Domain.Catalog;
-using Nop.Data.Mapping;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
 using Nop.Web.Areas.Admin.Models.Catalog;
@@ -10,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Validators.Catalog;
 
 public partial class CategoryValidator : BaseNopValidator<CategoryModel>
 {
-    public CategoryValidator(ILocalizationService localizationService, IMappingEntityAccessor mappingEntityAccessor)
+    public CategoryValidator(ILocalizationService localizationService)
     {
         RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.Categories.Fields.Name.Required"));
         RuleFor(x => x.PageSizeOptions).Must(ValidatorUtilities.PageSizeOptionsValidator).WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.Categories.Fields.PageSizeOptions.ShouldHaveUniqueItems"));
@@ -34,6 +33,6 @@ public partial class CategoryValidator : BaseNopValidator<CategoryModel>
             .WithMessage(x => string.Format(localizationService.GetResourceAsync("Admin.Catalog.Categories.Fields.PriceTo.GreaterThanZeroOrPriceFrom").Result, x.PriceFrom > decimal.Zero ? x.PriceFrom : decimal.Zero))
             .When(x => x.PriceRangeFiltering && x.ManuallyPriceRange);
 
-        SetDatabaseValidationRules<Category>(mappingEntityAccessor);
+        SetDatabaseValidationRules<Category>();
     }
 }

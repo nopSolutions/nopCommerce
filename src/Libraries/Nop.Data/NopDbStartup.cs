@@ -8,7 +8,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
-using Nop.Data.Mapping;
 using Nop.Data.Migrations;
 
 namespace Nop.Data;
@@ -40,7 +39,6 @@ public partial class NopDbStartup : INopStartup
             .AddScoped<IConnectionStringAccessor>(x => DataSettingsManager.LoadSettings())
             .AddSingleton<IMigrationManager, MigrationManager>()
             .AddSingleton<IConventionSet, NopConventionSet>()
-            .AddTransient<IMappingEntityAccessor>(x => x.GetRequiredService<IDataProviderManager>().DataProvider)
             .ConfigureRunner(rb =>
                 rb.WithVersionTable(new MigrationVersionInfo()).AddSqlServer().AddMySql5().AddPostgres()
                     // define the assembly containing the migrations

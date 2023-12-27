@@ -5,6 +5,7 @@ using LinqToDB.DataProvider;
 using LinqToDB.DataProvider.SqlServer;
 using Microsoft.Data.SqlClient;
 using Nop.Core;
+using Nop.Data.Mapping;
 
 namespace Nop.Data.DataProviders;
 
@@ -161,7 +162,7 @@ public partial class MsSqlNopDataProvider : BaseDataProvider, INopDataProvider
     public virtual Task<int?> GetTableIdentAsync<TEntity>() where TEntity : BaseEntity
     {
         using var currentConnection = CreateDataConnection();
-        var tableName = GetEntityDescriptor(typeof(TEntity)).EntityName;
+        var tableName = NopMappingSchema.GetEntityDescriptor(typeof(TEntity)).EntityName;
 
         var result = currentConnection.Query<decimal?>($"SELECT IDENT_CURRENT('[{tableName}]') as Value")
             .FirstOrDefault();
@@ -182,7 +183,7 @@ public partial class MsSqlNopDataProvider : BaseDataProvider, INopDataProvider
         if (!currentIdent.HasValue || ident <= currentIdent.Value)
             return;
 
-        var tableName = GetEntityDescriptor(typeof(TEntity)).EntityName;
+        var tableName = NopMappingSchema.GetEntityDescriptor(typeof(TEntity)).EntityName;
 
         await currentConnection.ExecuteAsync($"DBCC CHECKIDENT([{tableName}], RESEED, {ident})");
     }

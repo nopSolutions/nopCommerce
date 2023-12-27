@@ -1,31 +1,20 @@
-﻿using System.Collections.Concurrent;
-using System.Data.Common;
+﻿using System.Data.Common;
 using System.Linq.Expressions;
 using System.Reflection;
 using FluentMigrator;
-using FluentMigrator.Builders.Create.Table;
-using FluentMigrator.Expressions;
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider;
-using LinqToDB.Mapping;
 using LinqToDB.Tools;
 using Nop.Core;
 using Nop.Core.Infrastructure;
-using Nop.Data.Extensions;
 using Nop.Data.Mapping;
 using Nop.Data.Migrations;
 
 namespace Nop.Data.DataProviders;
 
-public abstract partial class BaseDataProvider : IMappingEntityAccessor
+public abstract partial class BaseDataProvider
 {
-    #region Fields
-
-    protected static ConcurrentDictionary<Type, NopEntityDescriptor> EntityDescriptors { get; } = new ConcurrentDictionary<Type, NopEntityDescriptor>();
-
-    #endregion
-
     #region Utilities
 
     /// <summary>
@@ -66,7 +55,7 @@ public abstract partial class BaseDataProvider : IMappingEntityAccessor
     {
         ArgumentNullException.ThrowIfNull(dataProvider);
 
-        var dataConnection = new DataConnection(dataProvider, CreateDbConnection(), GetMappingSchema())
+        var dataConnection = new DataConnection(dataProvider, CreateDbConnection(), NopMappingSchema.GetMappingSchema(ConfigurationName))
         {
             CommandTimeout = DataSettingsManager.GetSqlCommandTimeout()
         };
@@ -143,45 +132,7 @@ public abstract partial class BaseDataProvider : IMappingEntityAccessor
         return Task.FromResult<ITempDataStorage<TItem>>(new TempSqlDataStorage<TItem>(storeKey, query, CreateDataConnection()));
     }
 
-    /// <summary>
-    /// Returns mapped entity descriptor
-    /// </summary>
-    /// <param name="entityType">Type of entity</param>
-    /// <returns>Mapped entity descriptor</returns>
-    public virtual NopEntityDescriptor GetEntityDescriptor(Type entityType)
-    {
-        return EntityDescriptors.GetOrAdd(entityType, t =>
-        {
-            var tableName = NameCompatibilityManager.GetTableName(t);
-            var expression = new CreateTableExpression { TableName = tableName };
-            var builder = new CreateTableExpressionBuilder(expression, new NullMigrationContext());
-            builder.RetrieveTableExpressions(t);
 
-            return new NopEntityDescriptor
-            {
-                EntityName = tableName,
-                SchemaName = builder.Expression.SchemaName,
-                Fields = builder.Expression.Columns.Select(column => new NopEntityFieldDescriptor
-                {
-                    Name = column.Name,
-                    IsPrimaryKey = column.IsPrimaryKey,
-                    IsNullable = column.IsNullable,
-                    Size = column.Size,
-                    Precision = column.Precision,
-                    IsIdentity = column.IsIdentity,
-                    Type = getPropertyTypeByColumnName(t, column.Name)
-                }).ToList()
-            };
-        });
-
-        static Type getPropertyTypeByColumnName(Type targetType, string name)
-        {
-            var (mappedType, _) = Array.Find(targetType
-                .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.SetProperty), pi => name.Equals(NameCompatibilityManager.GetColumnName(targetType, pi.Name))).PropertyType.GetTypeToMap();
-
-            return mappedType;
-        }
-    }
 
     /// <summary>
     /// Get hash values of a stored entity field
@@ -219,17 +170,6 @@ public abstract partial class BaseDataProvider : IMappingEntityAccessor
     }
 
     /// <summary>
-    /// Get or create mapping schema with specified configuration name (<see cref="ConfigurationName"/>) and base mapping schema
-    /// </summary>
-    public MappingSchema GetMappingSchema()
-    {
-        return Singleton<MappingSchema>.Instance ??= new MappingSchema(ConfigurationName, LinqToDbDataProvider.MappingSchema)
-        {
-            MetadataReader = new FluentMigratorMetadataReader(this)
-        };
-    }
-
-    /// <summary>
     /// Returns queryable source for specified mapping class for current connection,
     /// mapped to database table or view.
     /// </summary>
@@ -237,12 +177,15 @@ public abstract partial class BaseDataProvider : IMappingEntityAccessor
     /// <returns>Queryable source</returns>
     public virtual IQueryable<TEntity> GetTable<TEntity>() where TEntity : BaseEntity
     {
-        return new DataContext(LinqToDbDataProvider, GetCurrentConnectionString())
-            {
-                MappingSchema = GetMappingSchema(),
-                CommandTimeout = DataSettingsManager.GetSqlCommandTimeout()
-            }
-            .GetTable<TEntity>();
+        var options = new DataOptions()
+            .UseConnectionString(LinqToDbDataProvider, GetCurrentConnectionString())
+            .UseMappingSchema(NopMappingSchema.GetMappingSchema(ConfigurationName));
+
+        return new DataContext(options)
+        {
+            CommandTimeout = DataSettingsManager.GetSqlCommandTimeout()
+        }
+        .GetTable<TEntity>();
     }
 
     /// <summary>

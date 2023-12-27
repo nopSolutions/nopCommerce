@@ -33,7 +33,6 @@ using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Configuration;
-using Nop.Data.Mapping;
 using Nop.Data.Migrations;
 using Nop.Services.Affiliates;
 using Nop.Services.Attributes;
@@ -246,7 +245,6 @@ public partial class BaseNopTest
         services.AddTransient<IDataProviderManager, TestDataProviderManager>();
         services.AddTransient(serviceProvider =>
             serviceProvider.GetRequiredService<IDataProviderManager>().DataProvider);
-        services.AddTransient<IMappingEntityAccessor>(x => x.GetRequiredService<INopDataProvider>());
 
         //repositories
         services.AddTransient(typeof(IRepository<>), typeof(EntityRepository<>));
