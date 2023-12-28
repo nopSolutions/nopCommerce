@@ -1,0 +1,49 @@
+@*
+    // ***	 ** ****** ****** ****** ******* **     ** ****** ***   ** **** ****
+    // ****  ** **  ** **  ** **  **  **  **  **   **  **  ** ****  ** *    *
+    // ** ** ** **  ** ****** ******  **  **   ** **   ****** ** ** ** *    ***
+    // **  **** **  ** **	  **  **  **  **    ***    **  ** **  **** *    *
+    // **   *** ****** **	  **  ** *******     *     **  ** **   *** **** ****
+    //
+    // **************************************************************************
+    // *                                                                		*
+	// *          YouTube product videos Plugin by NopAdvance team              *
+    // *			Copyright (c) NopAdvance LLP. All Rights Reserved			*
+    // *                                                                       	*
+    // **************************************************************************
+    // *                                                                       	*
+    // * Email:		contact@nopadvance.com										*
+    // * Website:	https://nopadvance.com										*
+    // *                                                                       	*
+    // **************************************************************************
+    // *                                                                       	*
+    // * Please see the  License file for the full End User License Agreement. 	*
+    // * The  complete license agreement is also available on  our  website at 	*
+    // * https://nopadvance.com/license-terms									*
+    // *                                                                       	*
+    // * This  software / plugin  is furnished  under a license  and  may   be  *
+    // * used  and modified  only in accordance with the terms of such license  *
+    // * and with the inclusion of the above copyright notice.  This  software	*
+    // * or any other copies thereof may not be  provided  or  otherwise  made	*
+    // * available  to any other person.  No title to  and  ownership  of  the  *
+    // * software is hereby transferred.                                        *
+    // *                                                                       	*
+    // * You may not reverse  engineer, decompile, defeat  license  encryption 	*
+    // * mechanisms  or  disassemble this software product or software product 	*
+    // * license.  NopAdvance may terminate this  license if you don't  comply 	*
+    // * with any of the terms & conditions set forth in our  end user license	*
+    // * agreement (EULA).  In such event , licensee agrees to return licensor	*
+    // * or destroy  all copies of software  upon termination  of the license.	*
+    // *                                                                       	*
+    // **************************************************************************
+*@
+@model ProductYouTubeVideoProductModel
+@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
+@inject Nop.Core.IWorkContext workContext
+@{
+    const string hideYouTubeVideoBlockAttributeName = "ProductPage.HideYouTubeVideosBlock";
+    var hideYouTubeVideoBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideYouTubeVideoBlockAttributeName, defaultValue: true);
+}
+<nop-card asp-name="product-youtube-videos" asp-icon="fab fa-youtube" asp-title="@T(LocaleResourceDefaults.PRODUCT_YOUTUBE_VIDEO)" asp-hide-block-attribute-name="@hideYouTubeVideoBlockAttributeName" asp-hide="@hideYouTubeVideoBlock" asp-advanced="true">
+    @await Html.PartialAsync($"~/Plugins/{PluginDefaults.SYSTEM_NAME}/Views/Admin/_CreateOrUpdateProduct.YouTubeVideos.cshtml", Model)
+</nop-card>

@@ -1,0 +1,87 @@
+@*
+    // ***	 ** ****** ****** ****** ******* **     ** ****** ***   ** **** ****
+    // ****  ** **  ** **  ** **  **  **  **  **   **  **  ** ****  ** *    *
+    // ** ** ** **  ** ****** ******  **  **   ** **   ****** ** ** ** *    ***
+    // **  **** **  ** **	  **  **  **  **    ***    **  ** **  **** *    *
+    // **   *** ****** **	  **  ** *******     *     **  ** **   *** **** ****
+    //
+    // **************************************************************************
+    // *                                                                		*
+	// *             NopAdvance Core Plugin by NopAdvance team                  *
+    // *			Copyright (c) NopAdvance LLP. All Rights Reserved			*
+    // *                                                                       	*
+    // **************************************************************************
+    // *                                                                       	*
+    // * Email:		contact@nopadvance.com										*
+    // * Website:	https://nopadvance.com										*
+    // *                                                                       	*
+    // **************************************************************************
+    // *                                                                       	*
+    // * Please see the  License file for the full End User License Agreement. 	*
+    // * The  complete license agreement is also available on  our  website at 	*
+    // * https://nopadvance.com/license-terms									*
+    // *                                                                       	*
+    // * This  software / plugin  is furnished  under a license  and  may   be  *
+    // * used  and modified  only in accordance with the terms of such license  *
+    // * and with the inclusion of the above copyright notice.  This  software	*
+    // * or any other copies thereof may not be  provided  or  otherwise  made	*
+    // * available  to any other person.  No title to  and  ownership  of  the  *
+    // * software is hereby transferred.                                        *
+    // *                                                                       	*
+    // * You may not reverse  engineer, decompile, defeat  license  encryption 	*
+    // * mechanisms  or  disassemble this software product or software product 	*
+    // * license.  NopAdvance may terminate this  license if you don't  comply 	*
+    // * with any of the terms & conditions set forth in our  end user license	*
+    // * agreement (EULA).  In such event , licensee agrees to return licensor	*
+    // * or destroy  all copies of software  upon termination  of the license.	*
+    // *                                                                       	*
+    // **************************************************************************
+*@
+@using NopAdvance.Plugin.Core.Infrastructure
+@using NopAdvance.Plugin.Core.Helpers
+@using NopAdvance.Plugin.Core.Domain
+@inject IGenericHelper genericHelper
+@{
+    var pluginDescriptor = genericHelper.GetPluginDescriptor(ViewBag.SystemName);
+
+    //friendly name
+    var friendlyName = pluginDescriptor?.FriendlyName;
+
+    Layout = "_AdminLayout";
+    //page title
+    ViewBag.PageTitle = friendlyName + " " + T(CoreLocaleResourceDefaults.SETTINGS_PAGE_TITLE).Text;
+
+    var pluginStatus = (PluginLicenceStatusType)ViewBag.PluginStatus;
+
+    var supportLink = await genericHelper.GetContactSupportLinkAsync(friendlyName);
+    var salesLink = await genericHelper.GetContactSalesLinkAsync();
+}
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @switch (pluginStatus)
+        {
+            case PluginLicenceStatusType.Registered:
+            case PluginLicenceStatusType.Free:
+                <i class="fas fa-check-circle text-green"></i>
+                break;
+            case PluginLicenceStatusType.Trial:
+                <i class="fas fa-exclamation-triangle text-yellow"></i>
+                break;
+            case PluginLicenceStatusType.Expired:
+                <i class="fas fa-times-circle text-red"></i>
+                break;
+        }
+        @friendlyName @T(CoreLocaleResourceDefaults.SETTINGS_PAGE_TITLE)
+    </h1>
+    <div class="float-right">
+        <a class="btn btn-primary" href="@supportLink">@T(CoreLocaleResourceDefaults.CONTACT_SUPPORT)</a>
+        <a class="btn bg-olive" href="@salesLink">@T(CoreLocaleResourceDefaults.CONTACT_SALES)</a>
+    </div>
+</div>
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            @RenderBody()
+        </div>
+    </div>
+</section>

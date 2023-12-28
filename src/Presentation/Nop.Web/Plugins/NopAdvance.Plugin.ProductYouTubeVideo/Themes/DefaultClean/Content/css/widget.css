@@ -1,0 +1,4 @@
+﻿.picture-thumbs .thumb-item.youthumb img { height: 100%; }
+.picture-thumbs .thumb-item.youthumb .you-pic { width: 32px; height: 32px; }
+.video-container { display: none; }
+.gallery .picture.isVideo:before { padding-top: 0; }

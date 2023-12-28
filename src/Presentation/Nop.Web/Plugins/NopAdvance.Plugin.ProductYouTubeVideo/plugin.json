@@ -1,0 +1,15 @@
+﻿{
+  "Group": "NopAdvance",
+  "FriendlyName": "YouTube product videos",
+  "SystemName": "NopAdvance.Plugin.ProductYouTubeVideo",
+  "Version": "1.0",
+  "SupportedVersions": [ "4.40" ],
+  "Author": "NopAdvance team",
+  "DisplayOrder": 1,
+  "FileName": "NopAdvance.Plugin.Widgets.ProductYouTubeVideo.dll",
+  "Description": "This plugin allows you to display youtube videos on product.",
+  "DependsOnSystemNames": [ "NopAdvance.Core" ],
+  "CoreVersion": "1.11",
+  "ProductUrl": "https://store.nopadvance.com/youtube-product-videos-nopcommerce-plugin",
+  "HelpUrl": "https://docs.nopadvance.com/youtubeproductvideos-nopcommerce.html"
+}

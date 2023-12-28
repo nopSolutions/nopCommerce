@@ -1,0 +1,323 @@
+@*
+    // ***	 ** ****** ****** ****** ******* **     ** ****** ***   ** **** ****
+    // ****  ** **  ** **  ** **  **  **  **  **   **  **  ** ****  ** *    *
+    // ** ** ** **  ** ****** ******  **  **   ** **   ****** ** ** ** *    ***
+    // **  **** **  ** **	  **  **  **  **    ***    **  ** **  **** *    *
+    // **   *** ****** **	  **  ** *******     *     **  ** **   *** **** ****
+    //
+    // **************************************************************************
+    // *                                                                		*
+	// *          YouTube product videos Plugin by NopAdvance team              *
+    // *			Copyright (c) NopAdvance LLP. All Rights Reserved			*
+    // *                                                                       	*
+    // **************************************************************************
+    // *                                                                       	*
+    // * Email:		contact@nopadvance.com										*
+    // * Website:	https://nopadvance.com										*
+    // *                                                                       	*
+    // **************************************************************************
+    // *                                                                       	*
+    // * Please see the  License file for the full End User License Agreement. 	*
+    // * The  complete license agreement is also available on  our  website at 	*
+    // * https://nopadvance.com/license-terms									*
+    // *                                                                       	*
+    // * This  software / plugin  is furnished  under a license  and  may   be  *
+    // * used  and modified  only in accordance with the terms of such license  *
+    // * and with the inclusion of the above copyright notice.  This  software	*
+    // * or any other copies thereof may not be  provided  or  otherwise  made	*
+    // * available  to any other person.  No title to  and  ownership  of  the  *
+    // * software is hereby transferred.                                        *
+    // *                                                                       	*
+    // * You may not reverse  engineer, decompile, defeat  license  encryption 	*
+    // * mechanisms  or  disassemble this software product or software product 	*
+    // * license.  NopAdvance may terminate this  license if you don't  comply 	*
+    // * with any of the terms & conditions set forth in our  end user license	*
+    // * agreement (EULA).  In such event , licensee agrees to return licensor	*
+    // * or destroy  all copies of software  upon termination  of the license.	*
+    // *                                                                       	*
+    // **************************************************************************
+*@
+@model ProductDetailsModel
+@inject IThemeHelper themeHelper
+@using Nop.Core
+@using NopAdvance.Plugin.Core.Helpers
+@using NopAdvance.Plugin.Widgets.ProductYouTubeVideo.Infrastructure
+@using Nop.Web.Framework.Infrastructure
+@using Nop.Web.Models.Catalog
+@using Nop.Services.Configuration
+
+@inject IStoreContext storeContext
+@inject ISettingService settingService
+@{
+    Html.AddCssFileParts(ResourceLocation.Footer, $"{await themeHelper.GetThemeCssPathAsync(PluginDefaults.SYSTEM_NAME)}/widget.css");
+    //Html.AddScriptParts(ResourceLocation.Footer, "~/lib/magnific-popup/jquery.magnific-popup.min.js");
+    //Html.AddCssFileParts("~/lib/magnific-popup/magnific-popup.css");
+
+    var youtubeImg = $"{await themeHelper.GetThemeImagePathAsync(PluginDefaults.SYSTEM_NAME)}youtube.png";
+
+    var store = await storeContext.GetCurrentStoreAsync();
+    var productYouTubeVideoSettings = await settingService.LoadSettingAsync<NopAdvanceProductYouTubeVideoSettings>(store.Id);
+    
+}
+<div class="gallery">
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsBeforePictures, additionalData = Model })
+    <div class="picture">
+        <div class="video-container">
+            <iframe width="100%" height="445" src="">
+            </iframe>
+        </div>
+        <div class="pic-container">
+            @if (Model.DefaultPictureZoomEnabled && Model.PictureModels.Count == 1)
+            {
+                var picture = Model.PictureModels.FirstOrDefault();
+                if (productYouTubeVideoSettings.Enabled && picture != null && picture.CustomProperties.Count > 0 && picture.CustomProperties.ContainsKey("VideoUrl"))
+                {
+                    var videoUrl = picture.CustomProperties.Where(x => x.Key == "VideoUrl").Select(x => x.Value).FirstOrDefault();
+
+                    <a href="@videoUrl.ToString()" alt="@picture.AlternateText" title="@picture.Title" class="thumb-item-cls-lightbox-anchor" id="main-product-img-lightbox-anchor-@Model.Id">
+                        <img data-code="@videoUrl.ToString()" src="@picture.ThumbImageUrl" alt="@picture.AlternateText" title="@picture.Title" data-defaultsize="@picture.ImageUrl" data-fullsize="@picture.FullSizeImageUrl" id="main-product-img-@Model.Id"
+                             style="display: none; " />
+                        <img class="you-pic" data-code="@videoUrl.ToString()" src="@youtubeImg" alt="@picture.AlternateText" title="@picture.Title" data-defaultsize="@picture.ImageUrl" data-fullsize="@picture.FullSizeImageUrl" />
+                    </a>
+
+                    <script asp-location="Footer">
+                    $(document).ready(function () {
+                        $('.thumb-item-cls-lightbox-anchor > img').load(
+                        function() {
+                        $('#main-product-img-@Model.Id').attr('src', $(this).attr('data-defaultsize'));
+                        $('#main-product-img-@Model.Id').attr('title', $(this).attr('title'));
+                        $('#main-product-img-@Model.Id').attr('alt', $(this).attr('alt'));
+                        $('#main-product-img-lightbox-anchor-@Model.Id').attr('href', $(this).attr('data-fullsize'));
+                        $('#main-product-img-lightbox-anchor-@Model.Id').attr('title', $(this).attr('title'));
+                        });
+                        $("iframe").attr('src',"");
+
+                        if ($('.thumb-item-cls-lightbox-anchor > img').attr("data-code")) {
+                            $(".picture").addClass("isVideo");
+                            $(".pic-container").css("display", "none");
+                            $(".video-container").css("display","block");
+                            var videocode = $('.thumb-item-cls-lightbox-anchor > img').attr("data-code");
+                            const videoId = getId(videocode);
+                            $("iframe").attr('src', "https://www.youtube.com/embed/" + videoId);
+                        } else {
+                            $(".picture").removeClass("isVideo");
+                            $(".pic-container").css("display", "block");
+                            $(".video-container").css("display", "none");
+                        }
+
+                    });
+                    </script>
+
+                    <script asp-location="Footer">
+                        $(document).ready(function() {
+                            $('#main-product-img-lightbox-anchor-@Model.Id').magnificPopup({ type: 'iframe' });
+                        });
+                    </script>
+                }
+                else
+                {
+                    <a href="@Model.DefaultPictureModel.FullSizeImageUrl" title="@Model.DefaultPictureModel.Title" id="main-product-img-lightbox-anchor-@Model.Id">
+                        <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" id="main-product-img-@Model.Id" />
+                    </a>
+                    <script asp-location="Footer">
+                        $(document).ready(function() {
+                            $('#main-product-img-lightbox-anchor-@Model.Id').magnificPopup({ type: 'image' });
+                        });
+                    </script>
+                }
+            }
+            else
+            {
+                var picture = Model.PictureModels.FirstOrDefault();
+                if (productYouTubeVideoSettings.Enabled && picture != null && picture.CustomProperties.Count > 0 && picture.CustomProperties.ContainsKey("VideoUrl"))
+                {
+                    var videoUrl = picture.CustomProperties.Where(x => x.Key == "VideoUrl").Select(x => x.Value).FirstOrDefault();
+                    <div class="thumb-item-cls youthumb">
+                        <img data-code="@videoUrl.ToString()" src="@picture.ThumbImageUrl" alt="@picture.AlternateText" title="@picture.Title" data-defaultsize="@picture.ImageUrl" data-fullsize="@picture.FullSizeImageUrl" id="main-product-img-@Model.Id" />
+                        <img class="you-pic" data-code="@videoUrl.ToString()" src="@youtubeImg" alt="@picture.AlternateText" title="@picture.Title" data-defaultsize="@picture.ImageUrl" data-fullsize="@picture.FullSizeImageUrl" />
+                    </div>
+
+                    <script asp-location="Footer">
+                        $(document).ready(function () {
+                            $('.thumb-item-cls- > img').load(
+                                function() {
+                                    $('#main-product-img-@Model.Id').attr('src', $(this).attr('data-defaultsize'));
+                                    $('#main-product-img-@Model.Id').attr('title', $(this).attr('title'));
+                                    $('#main-product-img-@Model.Id').attr('alt', $(this).attr('alt'));
+                                    $('#main-product-img-lightbox-anchor-@Model.Id').attr('href', $(this).attr('data-fullsize'));
+                                    $('#main-product-img-lightbox-anchor-@Model.Id').attr('title', $(this).attr('title'));
+                                });
+                            $("iframe").attr('src', "");
+
+                            if ($('.thumb-item-cls > img').attr("data-code")) {
+                                $(".picture").addClass("isVideo");
+                                $(".pic-container").css("display", "none");
+                                $(".video-container").css("display","block");
+                                var videocode = $('.thumb-item-cls > img').attr("data-code");
+
+                                const videoId = getId(videocode);
+                                $("iframe").attr('src', "https://www.youtube.com/embed/" + videoId);
+                            } else {
+                                $(".picture").removeClass("isVideo");
+                                $(".pic-container").css("display", "block");
+                                $(".video-container").css("display", "none");
+                            }
+
+                        });
+                    </script>
+                }
+                else
+                {
+                    <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" id="main-product-img-@Model.Id" />
+                }
+            }
+        </div>
+
+    </div>
+    @if (Model.PictureModels.Count > 1 && Model.DefaultPictureZoomEnabled)
+    {
+        <div class="picture-thumbs">
+
+            @foreach (var picture in Model.PictureModels)
+            {
+                if (productYouTubeVideoSettings.Enabled && picture.CustomProperties.Count > 0 && picture.CustomProperties.ContainsKey("VideoUrl"))
+                {
+                    var videoUrl = picture.CustomProperties.Where(x => x.Key == "VideoUrl").Select(x => x.Value).FirstOrDefault();
+
+                    <a class="thumb-item youthumb" href="@videoUrl.ToString()" alt="@picture.AlternateText" title="@picture.Title">
+                        <img data-code="@videoUrl.ToString()" src="@picture.ThumbImageUrl" alt="@picture.AlternateText" title="@picture.Title" data-defaultsize="@picture.ImageUrl" data-fullsize="@picture.FullSizeImageUrl" />
+                        <img class="you-pic" data-code="@videoUrl.ToString()" src="@youtubeImg" alt="@picture.AlternateText" title="@picture.Title" data-defaultsize="@picture.ImageUrl" data-fullsize="@picture.FullSizeImageUrl" />
+                    </a>
+                }
+                else
+                {
+                    <a class="thumb-item" href="@picture.FullSizeImageUrl" alt="@picture.AlternateText" title="@picture.Title">
+                        <img src="@picture.ThumbImageUrl" alt="@picture.AlternateText" title="@picture.Title" data-defaultsize="@picture.ImageUrl" data-fullsize="@picture.FullSizeImageUrl" />
+                    </a>
+                }
+            }
+        </div>
+        <script asp-location="Footer">
+            $(document).ready(function() {
+                $('.picture-thumbs').magnificPopup(
+                    {
+                        callbacks: {
+                            elementParse: function (item) {
+                                // the class name
+                                if (item.el[0].className =='thumb-item youthumb') {
+                                    item.type = 'iframe';
+                                } else {
+                                    item.type = 'image';
+                                }
+                            }
+                        },
+                        type: 'image',
+                        delegate: 'a',
+                        removalDelay: 300,
+                        gallery: {
+                            enabled: true,
+                            navigateByImgClick: true,
+                            preload: [0, 1],
+                            tPrev: '@T("Media.MagnificPopup.Previous")',
+                            tNext: '@T("Media.MagnificPopup.Next")',
+                            tCounter: '@T("Media.MagnificPopup.Counter")'
+                        },
+                        tClose: '@T("Media.MagnificPopup.Close")',
+                        tLoading: '@T("Media.MagnificPopup.Loading")'
+                    });
+            });
+        </script>
+        <script asp-location="Footer">
+            $(document).ready(function() {
+                $('.thumb-item > img').on('click',
+                    function () {
+                        $("iframe").attr('src', "");
+                        $('#main-product-img-@Model.Id').attr('src', $(this).attr('data-defaultsize'));
+                        $('#main-product-img-@Model.Id').attr('title', $(this).attr('title'));
+                        $('#main-product-img-@Model.Id').attr('alt', $(this).attr('alt'));
+                        $('#main-product-img-lightbox-anchor-@Model.Id').attr('href', $(this).attr('data-fullsize'));
+                        $('#main-product-img-lightbox-anchor-@Model.Id').attr('title', $(this).attr('title'));
+
+                        if ($(this).attr("data-code")) {
+                            $(".picture").addClass("isVideo");
+                            $(".pic-container").css("display", "none");
+                            $(".video-container").css("display", "block");
+                            var videocode = $(this).attr("data-code");
+
+                            const videoId = getId(videocode);
+                            $("iframe").attr('src', "https://www.youtube.com/embed/" + videoId);
+                        } else {
+                            $(".picture").removeClass("isVideo");
+                            $(".pic-container").css("display", "block");
+                            $(".video-container").css("display", "none");
+                        }
+                    });
+            });
+        </script>
+    }
+    else
+    {
+        if (Model.PictureModels.Count > 1)
+        {
+            <div class="picture-thumbs">
+                @foreach (var picture in Model.PictureModels)
+                {
+                    if (productYouTubeVideoSettings.Enabled && picture.CustomProperties.Count > 0 && picture.CustomProperties.ContainsKey("VideoUrl"))
+                    {
+                        var videoUrl = picture.CustomProperties.Where(x => x.Key == "VideoUrl").Select(x => x.Value).FirstOrDefault();
+                        <div class="thumb-item youthumb">
+                            <img data-code="@videoUrl.ToString()" src="@picture.ThumbImageUrl" alt="@picture.AlternateText" title="@picture.Title" data-defaultsize="@picture.ImageUrl" data-fullsize="@picture.FullSizeImageUrl" />
+                            <img class="you-pic" data-code="@videoUrl.ToString()" src="@youtubeImg" alt="@picture.AlternateText" title="@picture.Title" data-defaultsize="@picture.ImageUrl" data-fullsize="@picture.FullSizeImageUrl" />
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="thumb-item">
+                            <img src="@picture.ThumbImageUrl" alt="@picture.AlternateText" title="@picture.Title" data-defaultsize="@picture.ImageUrl" data-fullsize="@picture.FullSizeImageUrl" />
+                        </div>
+                    }
+                }
+            </div>
+            <script asp-location="Footer">
+                $(document).ready(function() {
+                    $('.thumb-item img').on('click',
+                        function () {
+                            $("iframe").attr('src', "");
+
+                            $('#main-product-img-@Model.Id').attr('src', $(this).attr('data-defaultsize'));
+                            $('#main-product-img-@Model.Id').attr('title', $(this).attr('title'));
+                            $('#main-product-img-@Model.Id').attr('alt', $(this).attr('alt'));
+                            $('#main-product-img-lightbox-anchor-@Model.Id')
+                                .attr('href', $(this).attr('data-fullsize'));
+                            $('#main-product-img-lightbox-anchor-@Model.Id').attr('title', $(this).attr('title'));
+
+                            if ($(this).attr("data-code")) {
+                                $(".picture").addClass("isVideo");
+                                $(".pic-container").css("display", "none");
+                                $(".video-container").css("display","block");
+                                var videocode = $(this).attr("data-code");
+
+                                const videoId = getId(videocode);
+                                $("iframe").attr('src', "https://www.youtube.com/embed/" + videoId);
+                            } else {
+                                $(".picture").removeClass("isVideo");
+                                $(".pic-container").css("display", "block");
+                                $(".video-container").css("display", "none");
+                            }
+                        });
+                });
+            </script>
+        }
+    }
+    <script asp-location="Footer">
+        function getId(url) {
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+            const match = url.match(regExp);
+
+            return (match && match[2].length === 11)
+                ? match[2]
+                : null;
+        }
+    </script>
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsAfterPictures, additionalData = Model })
+</div>

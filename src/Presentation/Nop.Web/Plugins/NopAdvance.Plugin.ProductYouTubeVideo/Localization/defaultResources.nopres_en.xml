@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="English">
+  <LocaleResource Name="NopAdvance.Plugin.ProductYouTubeVideo.ProductYouTubeVideo">
+    <Value>YouTube product videos</Value>
+  </LocaleResource>
+	<LocaleResource Name="NopAdvance.Plugin.ProductYouTubeVideo.Configure">
+		<Value>Configure</Value>
+	</LocaleResource>
+	<LocaleResource Name="NopAdvance.Plugin.ProductYouTubeVideo.Help">
+		<Value>Help</Value>
+	</LocaleResource>
+	<LocaleResource Name="NopAdvance.Plugin.ProductYouTubeVideo.Configure.Fields.Enabled">
+		<Value>Enabled</Value>
+	</LocaleResource>
+	<LocaleResource Name="NopAdvance.Plugin.ProductYouTubeVideo.Configure.Fields.Enabled.Hint">
+		<Value>Check/Uncheck to enable/disable plugin.</Value>
+	</LocaleResource>
+	<LocaleResource Name="NopAdvance.Plugin.ProductYouTubeVideo.Configure.Fields.Enabled.Note">
+		<Value>Note: The application will restart on configuration change for the "Enabled" setting.</Value>
+	</LocaleResource>
+	<LocaleResource Name="NopAdvance.Plugin.ProductYouTubeVideo.Products.Fields.VideoUrl">
+		<Value>Video URL</Value>
+	</LocaleResource>
+	<LocaleResource Name="NopAdvance.Plugin.ProductYouTubeVideo.Products.Fields.VideoUrl.Hint">
+		<Value>Enter the YouTube video URL.</Value>
+	</LocaleResource>
+	<LocaleResource Name="NopAdvance.Plugin.ProductYouTubeVideo.Products.Fields.Thumbnail">
+		<Value>Thumbnail</Value>
+	</LocaleResource>
+	<LocaleResource Name="NopAdvance.Plugin.ProductYouTubeVideo.Products.Fields.DisplayOrder">
+		<Value>Display order</Value>
+	</LocaleResource>
+	<LocaleResource Name="NopAdvance.Plugin.ProductYouTubeVideo.Products.Fields.DisplayOrder.Hint">
+		<Value>Display order of the video. 1 represents the top of the list.</Value>
+	</LocaleResource>
+	<LocaleResource Name="NopAdvance.Plugin.ProductYouTubeVideo.Products.YouTubeVideos">
+		<Value>YouTube videos</Value>
+	</LocaleResource>
+	<LocaleResource Name="NopAdvance.Plugin.ProductYouTubeVideo.Products.YouTubeVideos.AddNew">
+		<Value>Add a new YouTube video</Value>
+	</LocaleResource>
+	<LocaleResource Name="NopAdvance.Plugin.ProductYouTubeVideo.Products.YouTubeVideos.AddButton">
+		<Value>Add product video</Value>
+	</LocaleResource>
+	<LocaleResource Name="NopAdvance.Plugin.ProductYouTubeVideo.Products.YouTubeVideos.SaveBeforeEdit">
+		<Value>You need to save the product before you can add youtube videos for this product page.</Value>
+	</LocaleResource>
+	<LocaleResource Name="NopAdvance.Plugin.ProductYouTubeVideo.Products.YouTubeVideos.AddNew.Alert">
+		<Value>Enter YouTube video URL first.</Value>
+	</LocaleResource>
+	<LocaleResource Name="NopAdvance.Plugin.ProductYouTubeVideo.Products.YouTubeVideos.AddNew.Error">
+		<Value>Failed to add product YouTube video.</Value>
+	</LocaleResource>
+	<LocaleResource Name="NopAdvance.Plugin.ProductYouTubeVideo.Products.Fields.VideoUrl.Load">
+		<Value>Load video</Value>
+	</LocaleResource>
+	<LocaleResource Name="NopAdvance.Plugin.ProductYouTubeVideo.Products.YouTubeVideos.AddNew.AlreadyExistsUrlError">
+		<Value>Product YouTube video is already exist.</Value>
+	</LocaleResource>
+	<LocaleResource Name="NopAdvance.Plugin.ProductYouTubeVideo.Products.YouTubeVideos.AddNew.WrongUrlError">
+		<Value>Enter a valid YouTube video URL.</Value>
+	</LocaleResource>
+	<LocaleResource Name="NopAdvance.Plugin.ProductYouTubeVideo.Products.YouTubeVideos.VideoTitleAlternateTextFormat">
+		<Value>Video of {0}</Value>
+	</LocaleResource>
+</Language>
