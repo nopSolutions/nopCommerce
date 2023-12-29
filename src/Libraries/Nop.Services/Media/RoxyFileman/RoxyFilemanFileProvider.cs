@@ -11,7 +11,7 @@ using SkiaSharp;
  /// <summary>
  /// Looks up and manages uploaded files using the on-disk file system
  /// </summary>
- public class RoxyFilemanFileProvider : PhysicalFileProvider, IRoxyFilemanFileProvider
+ public partial class RoxyFilemanFileProvider : PhysicalFileProvider, IRoxyFilemanFileProvider
  {
      #region Fields
 

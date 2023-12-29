@@ -6,7 +6,7 @@ namespace Nop.Web.Framework.Mvc.ModelBinding.Binders;
 /// <summary>
 /// Represents model binder for string properties
 /// </summary>
-public class StringModelBinder : IModelBinder
+public partial class StringModelBinder : IModelBinder
 {
     Task IModelBinder.BindModelAsync(ModelBindingContext bindingContext)
     {

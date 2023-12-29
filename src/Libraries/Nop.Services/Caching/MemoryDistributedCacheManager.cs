@@ -5,7 +5,7 @@ using Nop.Core.Infrastructure;
 
 namespace Nop.Services.Caching;
 
-public class MemoryDistributedCacheManager : DistributedCacheManager
+public partial class MemoryDistributedCacheManager : DistributedCacheManager
 {
     #region Ctor
 

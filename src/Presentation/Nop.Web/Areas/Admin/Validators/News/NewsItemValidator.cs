@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Nop.Core.Domain.News;
-using Nop.Data.Mapping;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
 using Nop.Web.Areas.Admin.Models.News;
@@ -10,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Validators.News;
 
 public partial class NewsItemValidator : BaseNopValidator<NewsItemModel>
 {
-    public NewsItemValidator(ILocalizationService localizationService, IMappingEntityAccessor mappingEntityAccessor)
+    public NewsItemValidator(ILocalizationService localizationService)
     {
         RuleFor(x => x.Title).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.ContentManagement.News.NewsItems.Fields.Title.Required"));
 
@@ -21,6 +20,6 @@ public partial class NewsItemValidator : BaseNopValidator<NewsItemModel>
         RuleFor(x => x.SeName).Length(0, NopSeoDefaults.SearchEngineNameLength)
             .WithMessageAwait(localizationService.GetResourceAsync("Admin.SEO.SeName.MaxLengthValidation"), NopSeoDefaults.SearchEngineNameLength);
 
-        SetDatabaseValidationRules<NewsItem>(mappingEntityAccessor);
+        SetDatabaseValidationRules<NewsItem>();
     }
 }

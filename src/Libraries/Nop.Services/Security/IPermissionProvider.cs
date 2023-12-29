@@ -5,7 +5,7 @@ namespace Nop.Services.Security;
 /// <summary>
 /// Permission provider
 /// </summary>
-public interface IPermissionProvider
+public partial interface IPermissionProvider
 {
     /// <summary>
     /// Get permissions

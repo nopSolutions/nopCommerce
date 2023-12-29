@@ -7,7 +7,7 @@ namespace Nop.Services.Media.RoxyFileman;
 /// <summary>
 /// Represents errors that occur when working with uploaded files
 /// </summary>
-public class RoxyFilemanException : Exception
+public partial class RoxyFilemanException : Exception
 {
     #region Fields
 

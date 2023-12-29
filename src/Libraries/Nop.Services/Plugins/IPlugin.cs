@@ -4,7 +4,7 @@
 /// Interface denoting plug-in attributes that are displayed throughout 
 /// the editing interface.
 /// </summary>
-public interface IPlugin
+public partial interface IPlugin
 {
     /// <summary>
     /// Gets a configuration page URL

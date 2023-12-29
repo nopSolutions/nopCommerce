@@ -1,6 +1,6 @@
 ﻿namespace Nop.Core.Caching;
 
-public interface ILocker
+public partial interface ILocker
 {
     /// <summary>
     /// Performs some asynchronous task with exclusive lock

@@ -6,7 +6,7 @@ namespace Nop.Services.Common.Pdf;
 /// <summary>
 /// Represents the data source for an underlying PDF document
 /// </summary>
-public class DocumentSource
+public partial class DocumentSource
 {
     /// <summary>
     /// Gets or sets the language context

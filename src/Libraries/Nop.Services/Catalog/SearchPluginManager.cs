@@ -8,7 +8,7 @@ using Nop.Services.Plugins;
  /// <summary>
  /// Represents a search plugin manager implementation
  /// </summary>
- public class SearchPluginManager : PluginManager<ISearchProvider>, ISearchPluginManager
+ public partial class SearchPluginManager : PluginManager<ISearchProvider>, ISearchPluginManager
  {
      #region Fields
 

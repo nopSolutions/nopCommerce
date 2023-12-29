@@ -6,7 +6,7 @@ namespace Nop.Core.Caching;
 /// <summary>
 /// Represents a per request cache manager
 /// </summary>
-public class PerRequestCacheManager : CacheKeyService, IShortTermCacheManager
+public partial class PerRequestCacheManager : CacheKeyService, IShortTermCacheManager
 {
     #region Fields
 

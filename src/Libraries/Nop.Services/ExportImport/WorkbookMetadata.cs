@@ -4,7 +4,7 @@ using Nop.Services.ExportImport.Help;
 
 namespace Nop.Services.ExportImport;
 
-public class WorkbookMetadata<T>
+public partial class WorkbookMetadata<T>
 {
     public List<PropertyByName<T, Language>> DefaultProperties { get; set; }
 

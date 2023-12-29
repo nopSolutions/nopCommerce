@@ -44,4 +44,9 @@ public partial class EmailAccount : BaseEntity
     /// Gets or sets a value that controls whether the default system credentials of the application are sent with requests.
     /// </summary>
     public bool UseDefaultCredentials { get; set; }
+
+    /// <summary>
+    /// Gets or sets the maximum number of emails sent at one time
+    /// </summary>
+    public int MaxNumberOfEmails { get; set; }
 }

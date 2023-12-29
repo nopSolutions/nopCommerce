@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents a connection string info
 /// </summary>
-public interface INopConnectionStringInfo
+public partial interface INopConnectionStringInfo
 {
     /// <summary>
     /// DatabaseName

@@ -9,13 +9,24 @@ namespace Nop.Services.Customers.Caching;
 public partial class CustomerRoleCacheEventConsumer : CacheEventConsumer<CustomerRole>
 {
     /// <summary>
-    /// Clear cache data
+    /// Clear cache by entity event type
     /// </summary>
     /// <param name="entity">Entity</param>
+    /// <param name="entityEventType">Entity event type</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    protected override async Task ClearCacheAsync(CustomerRole entity)
+    protected override async Task ClearCacheAsync(CustomerRole entity, EntityEventType entityEventType)
     {
-        await RemoveByPrefixAsync(NopCustomerServicesDefaults.CustomerRolesBySystemNamePrefix);
-        await RemoveByPrefixAsync(NopCustomerServicesDefaults.CustomerCustomerRolesPrefix);
+        switch (entityEventType)
+        {
+            case EntityEventType.Update:
+                await RemoveByPrefixAsync(NopCustomerServicesDefaults.CustomerRolesBySystemNamePrefix);
+                break;
+            case EntityEventType.Delete:
+                await RemoveAsync(NopCustomerServicesDefaults.CustomerRolesBySystemNameCacheKey, entity.SystemName);
+                break;
+        }
+
+        if (entityEventType != EntityEventType.Insert)
+            await RemoveByPrefixAsync(NopCustomerServicesDefaults.CustomerCustomerRolesPrefix);
     }
 }

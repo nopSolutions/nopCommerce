@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents a HTML formatter
 /// </summary>
-public interface IHtmlFormatter
+public partial interface IHtmlFormatter
 {
     /// <summary>
     /// Formats the text

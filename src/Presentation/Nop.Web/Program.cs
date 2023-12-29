@@ -5,7 +5,7 @@ using Nop.Web.Framework.Infrastructure.Extensions;
 
 namespace Nop.Web;
 
-public class Program
+public partial class Program
 {
     public static async Task Main(string[] args)
     {

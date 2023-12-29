@@ -6,7 +6,7 @@ namespace Nop.Services.Catalog;
 /// <summary>
 /// Provides an interface for search plugin manager
 /// </summary>
-public interface ISearchPluginManager : IPluginManager<ISearchProvider>
+public partial interface ISearchPluginManager : IPluginManager<ISearchProvider>
 {
     /// <summary>
     /// Load primary active search provider

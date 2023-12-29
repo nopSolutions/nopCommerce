@@ -6,7 +6,7 @@ namespace Nop.Data.Migrations;
 /// <summary>
 /// Represents a migration manager
 /// </summary>
-public interface IMigrationManager
+public partial interface IMigrationManager
 {
     /// <summary>
     /// Executes an Up for all found unapplied migrations

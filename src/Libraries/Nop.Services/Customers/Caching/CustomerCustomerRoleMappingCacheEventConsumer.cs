@@ -15,6 +15,6 @@ public partial class CustomerCustomerRoleMappingCacheEventConsumer : CacheEventC
     /// <returns>A task that represents the asynchronous operation</returns>
     protected override async Task ClearCacheAsync(CustomerCustomerRoleMapping entity)
     {
-        await RemoveByPrefixAsync(NopCustomerServicesDefaults.CustomerCustomerRolesPrefix);
+        await RemoveAsync(NopCustomerServicesDefaults.CustomerRolesCacheKey, entity.CustomerId);
     }
 }

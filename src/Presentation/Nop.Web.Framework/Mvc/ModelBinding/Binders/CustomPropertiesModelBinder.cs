@@ -6,7 +6,7 @@ namespace Nop.Web.Framework.Mvc.ModelBinding.Binders;
 /// <summary>
 /// Represents model binder for CustomProperties
 /// </summary>
-public class CustomPropertiesModelBinder : IModelBinder
+public partial class CustomPropertiesModelBinder : IModelBinder
 {
     async Task IModelBinder.BindModelAsync(ModelBindingContext bindingContext)
     {

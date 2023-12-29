@@ -10,7 +10,7 @@ namespace Nop.Services.Caching;
 /// <summary>
 /// Represents a MsSql server distributed cache 
 /// </summary>
-public class MsSqlServerCacheManager : DistributedCacheManager
+public partial class MsSqlServerCacheManager : DistributedCacheManager
 {
     #region Fields
 

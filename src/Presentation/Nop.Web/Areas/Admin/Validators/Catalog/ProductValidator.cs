@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Nop.Core.Domain.Catalog;
-using Nop.Data.Mapping;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
 using Nop.Web.Areas.Admin.Models.Catalog;
@@ -10,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Validators.Catalog;
 
 public partial class ProductValidator : BaseNopValidator<ProductModel>
 {
-    public ProductValidator(ILocalizationService localizationService, IMappingEntityAccessor mappingEntityAccessor)
+    public ProductValidator(ILocalizationService localizationService)
     {
         RuleFor(x => x.Name)
             .NotEmpty()
@@ -25,6 +24,6 @@ public partial class ProductValidator : BaseNopValidator<ProductModel>
             .WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.Products.Fields.RentalPriceLength.ShouldBeGreaterThanZero"))
             .When(x => x.IsRental);
 
-        SetDatabaseValidationRules<Product>(mappingEntityAccessor);
+        SetDatabaseValidationRules<Product>();
     }
 }

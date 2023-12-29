@@ -7,6 +7,7 @@ using LinqToDB.DataProvider;
 using LinqToDB.SqlQuery;
 using Nop.Core;
 using Nop.Data.DataProviders.LinqToDB;
+using Nop.Data.Mapping;
 using Npgsql;
 
 namespace Nop.Data.DataProviders;
@@ -65,7 +66,7 @@ public partial class PostgreSqlDataProvider : BaseDataProvider, INopDataProvider
     {
         ArgumentNullException.ThrowIfNull(dataConnection);
 
-        var descriptor = GetEntityDescriptor(typeof(TEntity)) 
+        var descriptor = NopMappingSchema.GetEntityDescriptor(typeof(TEntity)) 
                          ?? throw new NopException($"Mapped entity descriptor is not found: {typeof(TEntity).Name}");
 
         var tableName = descriptor.EntityName;

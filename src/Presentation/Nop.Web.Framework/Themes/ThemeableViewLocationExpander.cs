@@ -6,7 +6,7 @@ namespace Nop.Web.Framework.Themes;
 /// <summary>
 /// Specifies the contracts for a view location expander that is used by Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine instances to determine search paths for a view.
 /// </summary>
-public class ThemeableViewLocationExpander : IViewLocationExpander
+public partial class ThemeableViewLocationExpander : IViewLocationExpander
 {
     protected const string THEME_KEY = "nop.themename";
 

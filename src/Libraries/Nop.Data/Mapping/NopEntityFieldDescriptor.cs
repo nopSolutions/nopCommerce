@@ -1,3 +1,5 @@
+﻿using System.Data;
+
 namespace Nop.Data.Mapping;
 
 public partial class NopEntityFieldDescriptor
@@ -9,5 +11,5 @@ public partial class NopEntityFieldDescriptor
     public bool IsUnique { get; set; }
     public int? Precision { get; set; }
     public int? Size { get; set; }
-    public Type Type { get; set; }
+    public DbType Type { get; set; }
 }

@@ -3,7 +3,7 @@
 /// <summary>
 /// Interface which should be implemented by tasks run on startup
 /// </summary>
-public interface IStartupTask
+public partial interface IStartupTask
 {
     /// <summary>
     /// Executes a task

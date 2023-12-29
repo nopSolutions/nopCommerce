@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.ViewEngines;
 
 namespace Nop.Web.Framework;
 
-public class NullView : IView
+public partial class NullView : IView
 {
     public static readonly NullView Instance = new();
 

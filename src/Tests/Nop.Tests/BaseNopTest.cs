@@ -5,6 +5,7 @@ using FluentAssertions;
 using FluentMigrator;
 using FluentMigrator.Runner;
 using FluentMigrator.Runner.Conventions;
+using FluentMigrator.Runner.Generators;
 using FluentMigrator.Runner.Initialization;
 using FluentMigrator.Runner.Processors;
 using Microsoft.AspNetCore.Hosting;
@@ -33,7 +34,6 @@ using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Configuration;
-using Nop.Data.Mapping;
 using Nop.Data.Migrations;
 using Nop.Services.Affiliates;
 using Nop.Services.Attributes;
@@ -246,7 +246,6 @@ public partial class BaseNopTest
         services.AddTransient<IDataProviderManager, TestDataProviderManager>();
         services.AddTransient(serviceProvider =>
             serviceProvider.GetRequiredService<IDataProviderManager>().DataProvider);
-        services.AddTransient<IMappingEntityAccessor>(x => x.GetRequiredService<INopDataProvider>());
 
         //repositories
         services.AddTransient(typeof(IRepository<>), typeof(EntityRepository<>));
@@ -428,6 +427,8 @@ public partial class BaseNopTest
                 rb.WithVersionTable(new MigrationVersionInfo()).AddSqlServer().AddMySql5().AddPostgres().AddSQLite()
                     // define the assembly containing the migrations
                     .ScanIn(mAssemblies).For.Migrations());
+
+        services.AddOptions<GeneratorOptions>().Configure(go => go.CompatibilityMode = CompatibilityMode.LOOSE);
 
         services.AddTransient<IStoreContext, WebStoreContext>();
         services.AddTransient<Lazy<IStoreContext>>();

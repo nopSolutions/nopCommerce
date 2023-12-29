@@ -7,7 +7,7 @@ namespace Nop.Services.Installation;
 /// <summary>
 /// Represents middleware that checks whether database is installed and redirects to installation URL in otherwise
 /// </summary>
-public class InstallUrlMiddleware
+public partial class InstallUrlMiddleware
 {
     #region Fields
 

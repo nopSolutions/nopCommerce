@@ -215,7 +215,7 @@
                                         <span asp-validation-for="DelayBeforeSend"></span>
                                     </div>
                                     <div class="col-md-3">
-                                        <nop-select asp-for="DelayPeriodId" asp-items="@await (((MessageDelayPeriod)Model.DelayPeriodId).ToSelectListAsync())" style="max-width: 200px;" />
+                                        <nop-select asp-for="DelayPeriodId" asp-items="@(await ((MessageDelayPeriod)Model.DelayPeriodId).ToSelectListAsync())" style="max-width: 200px;" />
                                         <span asp-validation-for="DelayPeriodId"></span>
                                     </div>
                                 </div>

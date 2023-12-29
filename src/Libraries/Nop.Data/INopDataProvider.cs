@@ -1,14 +1,13 @@
 ﻿using System.Linq.Expressions;
 using LinqToDB.Data;
 using Nop.Core;
-using Nop.Data.Mapping;
 
 namespace Nop.Data;
 
 /// <summary>
 /// Represents a data provider
 /// </summary>
-public partial interface INopDataProvider : IMappingEntityAccessor
+public partial interface INopDataProvider
 {
     #region Methods
 

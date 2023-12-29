@@ -10,7 +10,7 @@ namespace Nop.Services.Authentication;
 /// <summary>
 /// Represents middleware that enables authentication
 /// </summary>
-public class AuthenticationMiddleware
+public partial class AuthenticationMiddleware
 {
     #region Fields
 

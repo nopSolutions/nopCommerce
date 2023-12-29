@@ -46,7 +46,7 @@ public partial class CustomerCacheEventConsumer : CacheEventConsumer<Customer>, 
     /// <returns>A task that represents the asynchronous operation</returns>
     protected override async Task ClearCacheAsync(Customer entity)
     {
-        await RemoveByPrefixAsync(NopCustomerServicesDefaults.CustomerCustomerRolesByCustomerPrefix, entity);
+        await RemoveAsync(NopCustomerServicesDefaults.CustomerRolesCacheKey, entity);
         await RemoveByPrefixAsync(NopOrderDefaults.ShoppingCartItemsByCustomerPrefix, entity);
         await RemoveAsync(NopCustomerServicesDefaults.CustomerByGuidCacheKey, entity.CustomerGuid);
 

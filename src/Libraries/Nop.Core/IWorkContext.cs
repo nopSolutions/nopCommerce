@@ -9,7 +9,7 @@ namespace Nop.Core;
 /// <summary>
 /// Represents work context
 /// </summary>
-public interface IWorkContext
+public partial interface IWorkContext
 {
     /// <summary>
     /// Gets the current customer

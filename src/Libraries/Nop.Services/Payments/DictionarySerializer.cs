@@ -7,7 +7,7 @@ namespace Nop.Services.Payments;
 /// <summary>
 /// Dictionary serializer
 /// </summary>
-public class DictionarySerializer : IXmlSerializable
+public partial class DictionarySerializer : IXmlSerializable
 {
     public DictionarySerializer()
     {

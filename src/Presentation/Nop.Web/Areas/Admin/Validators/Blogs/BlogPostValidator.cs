@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Nop.Core.Domain.Blogs;
-using Nop.Data.Mapping;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
 using Nop.Web.Areas.Admin.Models.Blogs;
@@ -10,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Validators.Blogs;
 
 public partial class BlogPostValidator : BaseNopValidator<BlogPostModel>
 {
-    public BlogPostValidator(ILocalizationService localizationService, IMappingEntityAccessor mappingEntityAccessor)
+    public BlogPostValidator(ILocalizationService localizationService)
     {
         RuleFor(x => x.Title)
             .NotEmpty()
@@ -29,6 +28,6 @@ public partial class BlogPostValidator : BaseNopValidator<BlogPostModel>
         RuleFor(x => x.SeName).Length(0, NopSeoDefaults.SearchEngineNameLength)
             .WithMessageAwait(localizationService.GetResourceAsync("Admin.SEO.SeName.MaxLengthValidation"), NopSeoDefaults.SearchEngineNameLength);
 
-        SetDatabaseValidationRules<BlogPost>(mappingEntityAccessor);
+        SetDatabaseValidationRules<BlogPost>();
     }
 }

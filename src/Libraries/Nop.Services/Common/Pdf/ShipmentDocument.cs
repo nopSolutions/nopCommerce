@@ -9,7 +9,7 @@ namespace Nop.Services.Common.Pdf;
 /// <summary>
 /// Represents the shipment document
 /// </summary>
-public class ShipmentDocument : PdfDocument<ShipmentSource>
+public partial class ShipmentDocument : PdfDocument<ShipmentSource>
 {
     #region Ctor
 

@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Nop.Core.Domain.Vendors;
-using Nop.Data.Mapping;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
 using Nop.Web.Areas.Admin.Models.Vendors;
@@ -10,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Validators.Vendors;
 
 public partial class VendorValidator : BaseNopValidator<VendorModel>
 {
-    public VendorValidator(ILocalizationService localizationService, IMappingEntityAccessor mappingEntityAccessor)
+    public VendorValidator(ILocalizationService localizationService)
     {
         RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Vendors.Fields.Name.Required"));
 
@@ -37,6 +36,6 @@ public partial class VendorValidator : BaseNopValidator<VendorModel>
             .WithMessage(x => string.Format(localizationService.GetResourceAsync("Admin.Vendors.Fields.PriceTo.GreaterThanZeroOrPriceFrom").Result, x.PriceFrom > decimal.Zero ? x.PriceFrom : decimal.Zero))
             .When(x => x.PriceRangeFiltering && x.ManuallyPriceRange);
 
-        SetDatabaseValidationRules<Vendor>(mappingEntityAccessor);
+        SetDatabaseValidationRules<Vendor>();
     }
 }

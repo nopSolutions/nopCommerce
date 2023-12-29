@@ -5,7 +5,7 @@ namespace Nop.Services.Catalog;
 /// <summary>
 /// Provides an interface for creating search provider
 /// </summary>
-public interface ISearchProvider : IPlugin
+public partial interface ISearchProvider : IPlugin
 {
     /// <summary>
     /// Get products identifiers by the specified keywords

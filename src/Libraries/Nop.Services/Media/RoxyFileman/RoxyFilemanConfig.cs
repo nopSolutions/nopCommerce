@@ -1,6 +1,6 @@
 namespace Nop.Services.Media.RoxyFileman;
 
-public class RoxyFilemanConfig
+public partial class RoxyFilemanConfig
 {
     public string FILES_ROOT = string.Empty;
     public string SESSION_PATH_KEY = string.Empty;

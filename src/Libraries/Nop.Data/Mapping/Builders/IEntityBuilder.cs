@@ -5,7 +5,7 @@ namespace Nop.Data.Mapping.Builders;
 /// <summary>
 /// Represents database entity builder
 /// </summary>
-public interface IEntityBuilder
+public partial interface IEntityBuilder
 {
     /// <summary>
     /// Apply entity configuration
