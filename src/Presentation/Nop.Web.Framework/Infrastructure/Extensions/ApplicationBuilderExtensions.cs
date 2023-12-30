@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
@@ -168,7 +169,9 @@ public static class ApplicationBuilderExtensions
                     try
                     {
                         //get new path
-                        var pageNotFoundPath = "/page-not-found";
+                        var lang = GetLanguagePart(context);
+						var pageNotFoundPath = $"{lang}/page-not-found";
+
                         //re-execute request with new path
                         await CreateHandler(pageNotFoundPath, null)(context);
                     }
@@ -545,6 +548,19 @@ public static class ApplicationBuilderExtensions
             return;
 
         application.UseWebMarkupMin();
+    }
+
+    /// <summary>
+    /// Retrieves a language url part based on the given StatusCodeContext.
+    /// </summary>
+    /// <param name="context">The StatusCodeContext used to determine the language part.</param>
+    /// <returns>The language url part as a string.</returns>
+    private static string GetLanguagePart(StatusCodeContext context)
+    {
+        if (!DataSettingsManager.IsDatabaseInstalled()) return string.Empty;
+        var localizationSettings = EngineContext.Current.Resolve<LocalizationSettings>();
+        if (!localizationSettings.SeoFriendlyUrlsForLanguagesEnabled) return string.Empty;
+        return context.HttpContext.GetRouteValue(NopRoutingDefaults.RouteValue.Language) is string lang ? $"/{lang}" : "/en";
     }
 
     /// <summary>
