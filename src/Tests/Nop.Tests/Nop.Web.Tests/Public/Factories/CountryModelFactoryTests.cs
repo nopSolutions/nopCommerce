@@ -13,7 +13,7 @@ public class CountryModelFactoryTests : WebTest
     private string _invalidCountryId;
 
     [OneTimeSetUp]
-    public async Task SetUp()
+    public void SetUp()
     {
         _countryModelFactory = GetService<ICountryModelFactory>();
         _localizationService = GetService<ILocalizationService>();
