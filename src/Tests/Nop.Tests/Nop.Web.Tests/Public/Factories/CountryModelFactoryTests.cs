@@ -1,17 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Customers;
-using Nop.Core;
-using Nop.Services.Attributes;
-using Nop.Web.Factories;
-using NUnit.Framework;
-using Nop.Web.Models.Customer;
-using FluentAssertions;
+﻿using Nop.Web.Factories;
 using Nop.Services.Localization;
+using NUnit.Framework;
+using FluentAssertions;
+
 
 namespace Nop.Tests.Nop.Web.Tests.Public.Factories;
 public class CountryModelFactoryTests : WebTest
