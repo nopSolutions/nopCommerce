@@ -37,7 +37,7 @@ public partial interface IThemeProvider
     /// <param name="systemName">Theme system name</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue if the theme exists; otherwise false
+    /// The task result contains true if the theme exists; otherwise false
     /// </returns>
     Task<bool> ThemeExistsAsync(string systemName);
 }

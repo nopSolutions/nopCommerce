@@ -581,7 +581,7 @@ public partial interface ICustomerService
     /// <param name="customer">Customer</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue if password is expired; otherwise false
+    /// The task result contains true if password is expired; otherwise false
     /// </returns>
     Task<bool> IsPasswordExpiredAsync(Customer customer);
 

@@ -75,7 +75,7 @@ public partial interface IStoreMappingService
     /// <param name="entity">Entity</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue - authorized; otherwise, false
+    /// The task result contains true - authorized; otherwise, false
     /// </returns>
     Task<bool> AuthorizeAsync<TEntity>(TEntity entity) where TEntity : BaseEntity, IStoreMappingSupported;
 
@@ -87,7 +87,7 @@ public partial interface IStoreMappingService
     /// <param name="storeId">Store identifier</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue - authorized; otherwise, false
+    /// The task result contains true - authorized; otherwise, false
     /// </returns>
     Task<bool> AuthorizeAsync<TEntity>(TEntity entity, int storeId) where TEntity : BaseEntity, IStoreMappingSupported;
 
@@ -98,7 +98,7 @@ public partial interface IStoreMappingService
     /// <param name="entity">Entity</param>
     /// <param name="storeId">Store identifier</param>
     /// <returns>
-    /// The rue - authorized; otherwise, false
+    /// True - authorized; otherwise, false
     /// </returns>
     bool Authorize<TEntity>(TEntity entity, int storeId) where TEntity : BaseEntity, IStoreMappingSupported;
 }

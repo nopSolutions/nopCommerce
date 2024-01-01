@@ -15,7 +15,7 @@ public partial interface IMultiFactorAuthenticationPluginManager : IPluginManage
     /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue - if active multi-factor authentication methods
+    /// The task result contains true if we have active multi-factor authentication methods
     /// </returns>
     Task<bool> HasActivePluginsAsync(Customer customer = null, int storeId = 0);
 

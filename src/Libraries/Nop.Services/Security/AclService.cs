@@ -58,7 +58,7 @@ public partial class AclService : IAclService
     /// <typeparam name="TEntity">Type of entity that supports the ACL</typeparam>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue if exist; otherwise false
+    /// The task result contains true if exist; otherwise false
     /// </returns>
     protected virtual async Task<bool> IsEntityAclMappingExistAsync<TEntity>() where TEntity : BaseEntity, IAclSupported
     {
@@ -218,7 +218,7 @@ public partial class AclService : IAclService
     /// <param name="entity">Entity</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue - authorized; otherwise, false
+    /// The task result contains true - authorized; otherwise, false
     /// </returns>
     public virtual async Task<bool> AuthorizeAsync<TEntity>(TEntity entity) where TEntity : BaseEntity, IAclSupported
     {
@@ -233,7 +233,7 @@ public partial class AclService : IAclService
     /// <param name="customer">Customer</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue - authorized; otherwise, false
+    /// The task result contains true - authorized; otherwise, false
     /// </returns>
     public virtual async Task<bool> AuthorizeAsync<TEntity>(TEntity entity, Customer customer) where TEntity : BaseEntity, IAclSupported
     {

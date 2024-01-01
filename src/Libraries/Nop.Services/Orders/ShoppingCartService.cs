@@ -1851,7 +1851,7 @@ public partial class ShoppingCartService : IShoppingCartService
     /// <param name="shoppingCart">Shopping cart</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue if the shopping cart requires shipping; otherwise, false.
+    /// The task result contains true if the shopping cart requires shipping; otherwise, false.
     /// </returns>
     public virtual async Task<bool> ShoppingCartRequiresShippingAsync(IList<ShoppingCartItem> shoppingCart)
     {

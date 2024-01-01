@@ -68,7 +68,7 @@ public partial interface IPermissionService
     /// <param name="permission">Permission record</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue - authorized; otherwise, false
+    /// The task result contains true - authorized; otherwise, false
     /// </returns>
     Task<bool> AuthorizeAsync(PermissionRecord permission);
 
@@ -79,7 +79,7 @@ public partial interface IPermissionService
     /// <param name="customer">Customer</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue - authorized; otherwise, false
+    /// The task result contains true - authorized; otherwise, false
     /// </returns>
     Task<bool> AuthorizeAsync(PermissionRecord permission, Customer customer);
 
@@ -89,7 +89,7 @@ public partial interface IPermissionService
     /// <param name="permissionRecordSystemName">Permission record system name</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue - authorized; otherwise, false
+    /// The task result contains true - authorized; otherwise, false
     /// </returns>
     Task<bool> AuthorizeAsync(string permissionRecordSystemName);
 
@@ -100,7 +100,7 @@ public partial interface IPermissionService
     /// <param name="customer">Customer</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue - authorized; otherwise, false
+    /// The task result contains true - authorized; otherwise, false
     /// </returns>
     Task<bool> AuthorizeAsync(string permissionRecordSystemName, Customer customer);
 
@@ -111,7 +111,7 @@ public partial interface IPermissionService
     /// <param name="customerRoleId">Customer role identifier</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue - authorized; otherwise, false
+    /// The task result contains true - authorized; otherwise, false
     /// </returns>
     Task<bool> AuthorizeAsync(string permissionRecordSystemName, int customerRoleId);
 

@@ -53,7 +53,7 @@ public partial class StoreMappingService : IStoreMappingService
     /// <typeparam name="TEntity">Type of entity that supports store mapping</typeparam>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue if exists; otherwise false
+    /// The task result contains true if exists; otherwise false
     /// </returns>
     protected virtual async Task<bool> IsEntityMappingExistsAsync<TEntity>() where TEntity : BaseEntity, IStoreMappingSupported
     {
@@ -218,7 +218,7 @@ public partial class StoreMappingService : IStoreMappingService
     /// <param name="entity">Entity</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue - authorized; otherwise, false
+    /// The task result contains true - authorized; otherwise, false
     /// </returns>
     public virtual async Task<bool> AuthorizeAsync<TEntity>(TEntity entity) where TEntity : BaseEntity, IStoreMappingSupported
     {
@@ -235,7 +235,7 @@ public partial class StoreMappingService : IStoreMappingService
     /// <param name="storeId">Store identifier</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue - authorized; otherwise, false
+    /// The task result contains true - authorized; otherwise, false
     /// </returns>
     public virtual async Task<bool> AuthorizeAsync<TEntity>(TEntity entity, int storeId) where TEntity : BaseEntity, IStoreMappingSupported
     {
@@ -268,7 +268,7 @@ public partial class StoreMappingService : IStoreMappingService
     /// <param name="entity">Entity</param>
     /// <param name="storeId">Store identifier</param>
     /// <returns>
-    /// The rue - authorized; otherwise, false
+    /// True - authorized; otherwise, false
     /// </returns>
     public virtual bool Authorize<TEntity>(TEntity entity, int storeId) where TEntity : BaseEntity, IStoreMappingSupported
     {

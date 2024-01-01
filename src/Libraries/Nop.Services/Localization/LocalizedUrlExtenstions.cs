@@ -20,7 +20,7 @@ public static class LocalizedUrlExtensions
     /// <param name="isRawPath">A value indicating whether passed URL is raw URL</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue if passed URL contains SEO code; otherwise false. Language whose SEO code is in the URL if URL is localized
+    /// The task result contains true if passed URL contains SEO code; otherwise false. Language whose SEO code is in the URL if URL is localized
     /// </returns>
     public static async Task<(bool IsLocalized, Language Language)> IsLocalizedUrlAsync(this string url, PathString pathBase, bool isRawPath)
     {
