@@ -1,4 +1,5 @@
-﻿using Nop.Core;
+﻿using DocumentFormat.OpenXml.EMMA;
+using Nop.Core;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -17,6 +18,9 @@ using Nop.Services.Orders;
 using Nop.Services.Seo;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
+using Nop.Web.Framework.Events;
+using Nop.Web.Framework.Models;
+using Nop.Web.Models.Customer;
 
 
 namespace Nop.CustomExtensions.Services
@@ -28,7 +32,8 @@ namespace Nop.CustomExtensions.Services
         IConsumer<CustomerRegisteredEvent>,
         IConsumer<EntityInsertedEvent<GenericAttribute>>,
         IConsumer<EntityUpdatedEvent<GenericAttribute>>,
-        IConsumer<EntityDeletedEvent<GenericAttribute>>
+        IConsumer<EntityDeletedEvent<GenericAttribute>>,
+        IConsumer<ModelPreparedEvent<BaseNopModel>>
     {
         #region Fields
 
@@ -528,6 +533,44 @@ namespace Nop.CustomExtensions.Services
             await _customerService.UpdateCustomerAsync(customer);
         }
 
+        /// <summary>
+        /// This method is used to modify the model and its properties via events
+        /// -- Adding custom navigation items to My Account page with out modifying customermodelfactory class
+        /// </summary>
+        /// <param name="eventMessage"></param>
+        /// <returns></returns>
+        public Task HandleEventAsync(ModelPreparedEvent<BaseNopModel> eventMessage)
+        {
+            if (eventMessage.Model is CustomerNavigationModel model)
+            {
+                Console.WriteLine("Passed in event");
+
+                model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+                {
+                    RouteName = "PrivateMessages",
+                    Title = "Mails and Messages ",
+                    Tab = (int)CustomerNavigationEnum.PrivateMessages,
+                    ItemClass = "customer-PrivateMessages"
+                });
+
+                model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+                {
+                    RouteName = "ShortListed",
+                    Title = "Short Listed",
+                    Tab = (int)CustomerNavigationEnum.ShortListed,
+                    ItemClass = "customer-shortlisted"
+                });
+
+                //remove address item
+                model.CustomerNavigationItems.RemoveAt(1);
+
+                //sort by name
+            }
+
+            return Task.FromResult(0);
+        }
+
         #endregion
     }
+
 }

@@ -609,8 +609,9 @@ public partial class CustomerModelFactory : ICustomerModelFactory
             ItemClass = "customer-orders"
         });
 
-        // customization : My Account page. Add custom naviagation items
-        CustomizeCustomerNavigationItemsAsync(model);
+        //customization : My Account page. Add custom naviagation items
+        //this code moved to modelprepared events
+        //CustomizeCustomerNavigationItemsAsync(model);
 
         var store = await _storeContext.GetCurrentStoreAsync();
         var customer = await _workContext.GetCurrentCustomerAsync();

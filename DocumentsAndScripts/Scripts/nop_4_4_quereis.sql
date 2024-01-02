@@ -314,6 +314,8 @@ SELECT  * FROM [dbo].[Customer]  WHERE Id >=1619
 SELECT  * FROM [dbo].[Customer] WHERE VendorId not in (SELECT  Id FROM [dbo].[Product] )
 SELECT  * FROM [dbo].[Product] Where id >=25
 
+SELECT  * FROM [dbo].[Product] 
+
 --DELETE [dbo].[Customer]  WHERE Id >=1619
 --DELETE [dbo].[Product] Where id >=25
 --DELETE [dbo].[Forums_PrivateMessage]
