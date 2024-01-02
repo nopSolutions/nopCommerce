@@ -33,7 +33,7 @@ public partial class RoxyFilemanService : IRoxyFilemanService
     /// </summary>
     /// <param name="path">Path to the file</param>
     /// <returns>
-    /// The result contains the rue if the file can be handled; otherwise false
+    /// The result contains true if the file can be handled; otherwise false
     /// </returns>
     protected virtual bool CanHandleFile(string path)
     {

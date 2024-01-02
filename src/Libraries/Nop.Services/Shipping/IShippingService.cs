@@ -246,7 +246,7 @@ public partial interface IShippingService
     /// <param name="shoppingCartItem">Shopping cart item</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue if the shopping cart item requires shipping; otherwise false
+    /// The task result contains true if the shopping cart item requires shipping; otherwise false
     /// </returns>
     Task<bool> IsShipEnabledAsync(ShoppingCartItem shoppingCartItem);
 
@@ -256,7 +256,7 @@ public partial interface IShippingService
     /// <param name="shoppingCartItem">Shopping cart item</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue if the shopping cart item is free shipping; otherwise false
+    /// The task result contains true if the shopping cart item is free shipping; otherwise false
     /// </returns>
     Task<bool> IsFreeShippingAsync(ShoppingCartItem shoppingCartItem);
 

@@ -98,7 +98,7 @@ public partial class ShippingService : IShippingService
     /// <param name="items">Package items</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue if there are multiple items; otherwise false
+    /// The task result contains true if there are multiple items; otherwise false
     /// </returns>
     protected virtual async Task<bool> AreMultipleItemsAsync(IList<GetShippingOptionRequest.PackageItem> items)
     {
@@ -953,7 +953,7 @@ public partial class ShippingService : IShippingService
     /// <param name="shoppingCartItem">Shopping cart item</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue if the shopping cart item requires shipping; otherwise false
+    /// The task result contains true if the shopping cart item requires shipping; otherwise false
     /// </returns>
     public virtual async Task<bool> IsShipEnabledAsync(ShoppingCartItem shoppingCartItem)
     {
@@ -976,7 +976,7 @@ public partial class ShippingService : IShippingService
     /// <param name="shoppingCartItem">Shopping cart item</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue if the shopping cart item is free shipping; otherwise false
+    /// The task result contains true if the shopping cart item is free shipping; otherwise false
     /// </returns>
     public virtual async Task<bool> IsFreeShippingAsync(ShoppingCartItem shoppingCartItem)
     {

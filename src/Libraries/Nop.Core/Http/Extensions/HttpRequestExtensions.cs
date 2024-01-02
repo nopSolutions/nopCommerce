@@ -55,7 +55,7 @@ public static class HttpRequestExtensions
     /// <param name="formKey">Form key</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains True if the key is persists in the form, false in other case
+    /// The task result contains true if the key is persists in the form, false in other case
     /// </returns>
     public static async Task<bool> IsFormKeyExistsAsync(this HttpRequest request, string formKey)
     {
@@ -69,7 +69,7 @@ public static class HttpRequestExtensions
     /// <param name="predicate">Filter. Set null if filtering no need</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains True if the any item is persists in the form, false in other case
+    /// The task result contains true if the any item is persists in the form, false in other case
     /// </returns>
     public static async Task<bool> IsFormAnyAsync(this HttpRequest request, Func<string, bool> predicate = null)
     {
@@ -88,7 +88,7 @@ public static class HttpRequestExtensions
     /// <param name="formKey">The form key</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains True and the form value if the form contains an element with the specified key; otherwise, false and default value.
+    /// The task result contains true and the form value if the form contains an element with the specified key; otherwise, false and default value.
     /// </returns>
     public static async Task<(bool keyExists, StringValues formValue)> TryGetFormValueAsync(this HttpRequest request, string formKey)
     {

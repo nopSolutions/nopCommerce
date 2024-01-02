@@ -97,7 +97,7 @@ public class ManualPaymentProcessor : BasePlugin, IPaymentMethod
     /// <param name="cart">Shopping cart</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue - hide; false - display.
+    /// The task result contains true - hide; false - display.
     /// </returns>
     public Task<bool> HidePaymentMethodAsync(IList<ShoppingCartItem> cart)
     {
