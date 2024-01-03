@@ -32,11 +32,19 @@ public partial class RegisterValidator : BaseNopValidator<RegisterModel>
 
         if (customerSettings.FirstNameEnabled && customerSettings.FirstNameRequired)
         {
-            RuleFor(x => x.FirstName).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.FirstName.Required"));
+            RuleFor(x => x.FirstName)
+                 .NotEmpty()
+                 .WithMessage("Account.Fields.FirstName.Required")
+                 .Length(6, 72)
+                 .WithMessage("First Name must be between 6 and 72 characters.");
         }
         if (customerSettings.LastNameEnabled && customerSettings.LastNameRequired)
         {
-            RuleFor(x => x.LastName).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.LastName.Required"));
+            RuleFor(x => x.LastName)
+                .NotEmpty()
+                .WithMessage("Account.Fields.LastName.Required")
+                .Length(6, 72)
+                .WithMessage("Last Name must be between 6 and 72 characters.");
         }
 
         //Password rule
@@ -96,7 +104,7 @@ public partial class RegisterValidator : BaseNopValidator<RegisterModel>
         }
         if (customerSettings.CompanyRequired && customerSettings.CompanyEnabled)
         {
-            RuleFor(x => x.Company).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.Company.Required"));
+             RuleFor(x => x.Company).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.Company.Required"));
         }
         if (customerSettings.StreetAddressRequired && customerSettings.StreetAddressEnabled)
         {
