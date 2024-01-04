@@ -314,7 +314,7 @@
                                                 function(e) {
                                                     e.preventDefault();
                                                     displayPopupContentFromUrl(
-                                                        '@Url.RouteUrl("TopicPopup", new {SystemName = "conditionsofuse"})',
+                                                        '@Url.RouteUrl("TopicPopup", new { SystemName = "ConditionsOfUse" })',
                                                         '@T("Checkout.TermsOfService")');
                                                 });
                                         });
@@ -322,7 +322,7 @@
                             }
                             else
                             {
-                                <a class="read" id="read-terms" href="@Url.RouteTopicUrl("conditionsofuse")">@T("Checkout.TermsOfService.Read")</a>
+                                    <a class="read" id="read-terms" href="@Url.RouteTopicUrl("ConditionsOfUse")">@T("Checkout.TermsOfService.Read")</a>
                             }
                         </div>
                     }
