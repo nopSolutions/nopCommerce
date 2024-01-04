@@ -78,7 +78,7 @@ public partial interface IAclService
     /// <param name="entity">Entity</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue - authorized; otherwise, false
+    /// The task result contains true - authorized; otherwise, false
     /// </returns>
     Task<bool> AuthorizeAsync<TEntity>(TEntity entity) where TEntity : BaseEntity, IAclSupported;
 
@@ -90,7 +90,7 @@ public partial interface IAclService
     /// <param name="customer">Customer</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue - authorized; otherwise, false
+    /// The task result contains true - authorized; otherwise, false
     /// </returns>
     Task<bool> AuthorizeAsync<TEntity>(TEntity entity, Customer customer) where TEntity : BaseEntity, IAclSupported;
 }

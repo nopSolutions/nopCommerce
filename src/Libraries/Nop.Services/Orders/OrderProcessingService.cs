@@ -2060,7 +2060,7 @@ public partial class OrderProcessingService : IOrderProcessingService
     /// <param name="recurringPayment">Recurring Payment</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue if a customer can retry payment; otherwise false
+    /// The task result contains true if a customer can retry payment; otherwise false
     /// </returns>
     public virtual async Task<bool> CanRetryLastRecurringPaymentAsync(Customer customer, RecurringPayment recurringPayment)
     {
@@ -3040,7 +3040,7 @@ public partial class OrderProcessingService : IOrderProcessingService
     /// <param name="cart">Shopping cart</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue - OK; false - minimum order sub-total amount is not reached
+    /// The task result contains true - OK; false - minimum order sub-total amount is not reached
     /// </returns>
     public virtual async Task<bool> ValidateMinOrderSubtotalAmountAsync(IList<ShoppingCartItem> cart)
     {
@@ -3065,7 +3065,7 @@ public partial class OrderProcessingService : IOrderProcessingService
     /// <param name="cart">Shopping cart</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue - OK; false - minimum order total amount is not reached
+    /// The task result contains true - OK; false - minimum order total amount is not reached
     /// </returns>
     public virtual async Task<bool> ValidateMinOrderTotalAmountAsync(IList<ShoppingCartItem> cart)
     {

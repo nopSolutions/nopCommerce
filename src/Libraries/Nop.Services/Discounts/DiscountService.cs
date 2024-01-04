@@ -73,7 +73,7 @@ public partial class DiscountService : IDiscountService
     /// <param name="errors">Errors</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue if result is valid; otherwise false
+    /// The task result contains true if result is valid; otherwise false
     /// </returns>
     protected virtual async Task<bool> GetValidationResultAsync(IList<DiscountRequirement> requirements,
         RequirementGroupInteractionType groupInteractionType, Customer customer, List<string> errors)

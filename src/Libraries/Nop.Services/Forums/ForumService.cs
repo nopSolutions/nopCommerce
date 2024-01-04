@@ -940,7 +940,7 @@ public partial class ForumService : IForumService
     /// <param name="forum">Forum</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue if allowed, otherwise false
+    /// The task result contains true if allowed, otherwise false
     /// </returns>
     public virtual async Task<bool> IsCustomerAllowedToCreateTopicAsync(Customer customer, Forum forum)
     {
@@ -963,7 +963,7 @@ public partial class ForumService : IForumService
     /// <param name="topic">Topic</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue if allowed, otherwise false
+    /// The task result contains true if allowed, otherwise false
     /// </returns>
     public virtual async Task<bool> IsCustomerAllowedToEditTopicAsync(Customer customer, ForumTopic topic)
     {
@@ -994,7 +994,7 @@ public partial class ForumService : IForumService
     /// <param name="topic">Topic</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue if allowed, otherwise false
+    /// The task result contains true if allowed, otherwise false
     /// </returns>
     public virtual async Task<bool> IsCustomerAllowedToMoveTopicAsync(Customer customer, ForumTopic topic)
     {
@@ -1017,7 +1017,7 @@ public partial class ForumService : IForumService
     /// <param name="topic">Topic</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue if allowed, otherwise false
+    /// The task result contains true if allowed, otherwise false
     /// </returns>
     public virtual async Task<bool> IsCustomerAllowedToDeleteTopicAsync(Customer customer, ForumTopic topic)
     {
@@ -1048,7 +1048,7 @@ public partial class ForumService : IForumService
     /// <param name="topic">Topic</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue if allowed, otherwise false
+    /// The task result contains true if allowed, otherwise false
     /// </returns>
     public virtual async Task<bool> IsCustomerAllowedToCreatePostAsync(Customer customer, ForumTopic topic)
     {
@@ -1071,7 +1071,7 @@ public partial class ForumService : IForumService
     /// <param name="post">Topic</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue if allowed, otherwise false
+    /// The task result contains true if allowed, otherwise false
     /// </returns>
     public virtual async Task<bool> IsCustomerAllowedToEditPostAsync(Customer customer, ForumPost post)
     {
@@ -1102,7 +1102,7 @@ public partial class ForumService : IForumService
     /// <param name="post">Topic</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue if allowed, otherwise false
+    /// The task result contains true if allowed, otherwise false
     /// </returns>
     public virtual async Task<bool> IsCustomerAllowedToDeletePostAsync(Customer customer, ForumPost post)
     {
@@ -1132,7 +1132,7 @@ public partial class ForumService : IForumService
     /// <param name="customer">Customer</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue if allowed, otherwise false
+    /// The task result contains true if allowed, otherwise false
     /// </returns>
     public virtual async Task<bool> IsCustomerAllowedToSetTopicPriorityAsync(Customer customer)
     {
@@ -1151,7 +1151,7 @@ public partial class ForumService : IForumService
     /// <param name="customer">Customer</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the rue if allowed, otherwise false
+    /// The task result contains true if allowed, otherwise false
     /// </returns>
     public virtual async Task<bool> IsCustomerAllowedToSubscribeAsync(Customer customer)
     {
