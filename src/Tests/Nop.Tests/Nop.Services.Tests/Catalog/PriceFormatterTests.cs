@@ -86,12 +86,12 @@ public class PriceFormatterTests : ServiceTest
     [Test]
     public async Task CanFormatWithMinimumAndMaximumDecimalValues()
     {
-        // Test with minimum decimal value
+        //test with minimum decimal value
         var minDecimalValue = decimal.MinValue;
         var formatMinDecimal = await _priceFormatter.FormatPriceAsync(minDecimalValue);
         formatMinDecimal.Should().NotBeNull();
 
-        // Test with maximum decimal value
+        //test with maximum decimal value
         var maxDecimalValue = decimal.MaxValue;
         var formatMaxDecimal = await _priceFormatter.FormatPriceAsync(maxDecimalValue);
         formatMaxDecimal.Should().NotBeNull();
@@ -100,7 +100,7 @@ public class PriceFormatterTests : ServiceTest
     [Test]
     public async Task CanFormatWithZeroValuesForPrices()
     {
-        // Test with zero price
+        //test with zero price
         var zeroPrice = 0M;
         var formatZeroPrice = await _priceFormatter.FormatPriceAsync(zeroPrice);
         formatZeroPrice.Should().NotBeNull();
@@ -109,20 +109,20 @@ public class PriceFormatterTests : ServiceTest
     [Test]
     public async Task CanHandleNullOrEmptyCurrencyCodes()
     {
-        // Test with null currency code
+        //test with null currency code
         string nullCurrencyCode = null;
         var formatNullCurrency = await _priceFormatter.FormatPriceAsync(100M, true, nullCurrencyCode, _enLangId, false);
         formatNullCurrency.Should().NotBeNull();
 
-        // Test with empty currency code
-        string emptyCurrencyCode = string.Empty;
+        //test with empty currency code
+        var emptyCurrencyCode = string.Empty;
         var formatEmptyCurrency = await _priceFormatter.FormatPriceAsync(100M, true, emptyCurrencyCode, _enLangId, false);
         formatEmptyCurrency.Should().NotBeNull();
     }
     [Test]
     public async Task CanFormatRentalProductPriceForDays()
     {
-        // Create or fetch a rental product with a known price
+        //create or fetch a rental product with a known price
         var rentalProduct = new Product
         {
             IsRental = true,
@@ -130,13 +130,13 @@ public class PriceFormatterTests : ServiceTest
             RentalPriceLength = 5 
         };
 
-        decimal productPrice = 50M; 
+        var productPrice = 50M; 
         var formattedRentalPrice = await _priceFormatter.FormatRentalProductPeriodAsync(rentalProduct, productPrice.ToString());
 
-        // Assert that the formatted rental price for days is not null or empty
+        //assert that the formatted rental price for days is not null or empty
         formattedRentalPrice.Should().NotBeNullOrEmpty();
 
-        // Assert that the formatted rental price contains the expected details
+        //assert that the formatted rental price contains the expected details
         formattedRentalPrice.Should().Contain("50"); 
         formattedRentalPrice.Should().Contain("5"); 
         formattedRentalPrice.Should().Contain("day");
@@ -145,41 +145,38 @@ public class PriceFormatterTests : ServiceTest
     [Test]
     public void FormatBasePrice_WhenProductIsNull_ReturnsNull()
     {
-        // Arrange
-        Product nullProduct = null;
+        //arrange
         decimal? productPrice = 10.0M;
 
-        // Act and Assert
+        //act and Assert
         Assert.ThrowsAsync<ArgumentNullException>(
-            async () => await _priceFormatter.FormatBasePriceAsync(nullProduct, productPrice)
+            async () => await _priceFormatter.FormatBasePriceAsync(null, productPrice)
         );
     }
     [Test]
     public async Task FormatBasePrice_WhenBasePriceNotEnabled_ReturnsNull()
     {
-        // Arrange
+        //arrange
         var product = new Product { BasepriceEnabled = false };
         decimal? productPrice = 10.0M;
 
-        // Act
+        //act
         var result = await _priceFormatter.FormatBasePriceAsync(product, productPrice);
 
-        // Assert
+        //assert
         Assert.IsNull(result);
     }
     [Test]
     public void FormatTaxRate_ReturnsCorrectFormat()
     {
-        // Arrange
-        decimal taxRate = 0.123456m;
-        string expectedFormat = "0.123456";
+        //arrange
+        var taxRate = 0.123456m;
+        var expectedFormat = "0.123456";
 
-        // Act
-        string result = _priceFormatter.FormatTaxRate(taxRate);
+        //act
+        var result = _priceFormatter.FormatTaxRate(taxRate);
 
-        // Assert
+        //assert
         Assert.AreEqual(expectedFormat, result);
     }
-
-
 }
