@@ -1275,8 +1275,8 @@ public partial class OrderController : BaseAdminController
                 orderItem.Quantity = quantity;
                 orderItem.DiscountAmountInclTax = discountInclTax;
                 orderItem.DiscountAmountExclTax = discountExclTax;
-                orderItem.PriceInclTax = priceInclTax;
-                orderItem.PriceExclTax = priceExclTax;
+                orderItem.PriceInclTax = unitPriceInclTax * quantity;
+                orderItem.PriceExclTax = unitPriceExclTax * quantity;
                 await _orderService.UpdateOrderItemAsync(orderItem);
             }
 
