@@ -58,6 +58,8 @@ namespace Nop.CustomExtensions.Services
         private readonly IProductService _productService;
         private readonly CustomerSettings _customerSettings;
         private readonly IWorkContext _workContext;
+        protected readonly IWebHelper _webHelper;
+
         #endregion
 
         #region Ctor
@@ -79,8 +81,8 @@ namespace Nop.CustomExtensions.Services
              IUrlRecordService urlRecordService,
              IProductService productService,
              CustomerSettings customerSettings,
-             IWorkContext workContext
-
+             IWorkContext workContext,
+             IWebHelper webHelper
             )
         {
             _genericAttributeService = genericAttributeService;
@@ -101,6 +103,7 @@ namespace Nop.CustomExtensions.Services
             _productService = productService;
             _customerSettings = customerSettings;
             _workContext = workContext;
+            _webHelper = webHelper;
         }
 
         #endregion
@@ -610,9 +613,22 @@ namespace Nop.CustomExtensions.Services
             //this is for related products 
             if (eventMessage.Model is ProductOverviewModel productOverviewModel)
             {
-               
+
             }
 
+            //this is for header links model .
+            //Can be used to hide and show shopping cart link based on catogory
+            //show shopping cart in pricing page and hide in all other categories
+            if (eventMessage.Model is HeaderLinksModel headerLinksModel)
+            {
+                var currentPageUrl = _webHelper.GetThisPageUrl(false);
+
+                if (currentPageUrl.Contains("pricing", StringComparison.InvariantCultureIgnoreCase))
+                    headerLinksModel.ShoppingCartEnabled = true;
+                else
+                    headerLinksModel.ShoppingCartEnabled = false;
+
+            }
 
             //return Task.FromResult(0);
         }
