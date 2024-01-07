@@ -192,19 +192,32 @@
         //hide availability
         $('#customer_attribute_2').parent().parent().hide();
 
+        //hide relavent experiance
+        $('#customer_attribute_3').parent().parent().hide();
+
+        //hide linked in url
+        //$('#customer_attribute_9').parent().parent().hide();
+
         // give support
         $('#customer_attribute_1_1').change(function () {
             if (this.checked) {
                 //show relavent experiance
                 $('#customer_attribute_3').parent().parent().show();
+
+                //show linkedin url
+                $('#customer_attribute_9').parent().parent().show();
             }
         });
 
         //take support
         $('#customer_attribute_1_2').change(function () {
             if (this.checked) {
+
                 //hide relavent experiance
                 $('#customer_attribute_3').parent().parent().hide();
+
+                //hide linked in url
+                $('#customer_attribute_9').parent().parent().hide();
             }
         });
 

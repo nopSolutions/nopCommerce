@@ -20,7 +20,10 @@ using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Events;
 using Nop.Web.Framework.Models;
+using Nop.Web.Models.Catalog;
+using Nop.Web.Models.Common;
 using Nop.Web.Models.Customer;
+using Nop.Web.Models.Media;
 
 
 namespace Nop.CustomExtensions.Services
@@ -539,7 +542,7 @@ namespace Nop.CustomExtensions.Services
         /// </summary>
         /// <param name="eventMessage"></param>
         /// <returns></returns>
-        public Task HandleEventAsync(ModelPreparedEvent<BaseNopModel> eventMessage)
+        public async Task HandleEventAsync(ModelPreparedEvent<BaseNopModel> eventMessage)
         {
             if (eventMessage.Model is CustomerNavigationModel model)
             {
@@ -567,7 +570,51 @@ namespace Nop.CustomExtensions.Services
                 //sort by name
             }
 
-            return Task.FromResult(0);
+            if (eventMessage.Model is ProductDetailsModel productModel)
+            {
+                //remove last part after space which is surname
+                //var strTrimmed = productModel.DefaultPictureModel.Title.Trim();
+                //var finalString = strTrimmed.Substring(strTrimmed.LastIndexOf(" ", strTrimmed.Length));
+
+                //productModel.DefaultPictureModel.Title = finalString;
+                //productModel.DefaultPictureModel.AlternateText = finalString;
+
+                if (productModel.PictureModels.Count == 0)
+                {
+                    if (productModel.Gender.ToLower() == "F".ToLower())
+                    {
+                        //change picture to women image
+                        productModel.DefaultPictureModel.ImageUrl = "https://localhost:54077/images/thumbs/default-women-image_615.png";
+
+                    }
+                }
+            }
+
+            if (eventMessage.Model is ProductEmailAFriendModel emailAFriendModel)
+            {
+                //customization
+                var orders = await _orderService.SearchOrdersAsync(customerId: (await _workContext.GetCurrentCustomerAsync()).Id);
+
+                //check order status code
+                var isValid = orders.Where(a => a.OrderStatus == OrderStatus.OrderActive).SingleOrDefault();
+
+                if (isValid == null)
+                {
+                    //Dispaly Upgrade View
+                    emailAFriendModel.Result = await _localizationService.GetResourceAsync("Orders.UpgradeSubscription.Message");
+                    //ModelState.AddModelError("", await _localizationService.GetResourceAsync("Orders.UpgradeSubscription.Message"));
+                    //return View("_UpgradeSubscription.cshtml", model);
+                }
+            }
+
+            //this is for related products 
+            if (eventMessage.Model is ProductOverviewModel productOverviewModel)
+            {
+               
+            }
+
+
+            //return Task.FromResult(0);
         }
 
         #endregion

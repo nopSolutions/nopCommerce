@@ -28,6 +28,11 @@ select * from [SpecificationAttributeOption] where SpecificationAttributeId=5
 select * from [SpecificationAttributeOption] where id=2
 select * from [ProductAttribute] where id=2
 
+select * from [SpecificationAttribute]
+select * from [SpecificationAttributeOption]
+select * from [SpecificationAttributeOption] where SpecificationAttributeId=3
+select * from [SpecificationAttributeOption] where id=2
+
 select * from [dbo].[CustomerAddresses]
 select * from [dbo].[CustomerRole]
 
