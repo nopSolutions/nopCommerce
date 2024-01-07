@@ -42,8 +42,10 @@
                 }
             </ul>
         </div>
-        <a href="#" class="jcarousel-prev">&laquo;</a>
-        <a href="#" class="jcarousel-next">&raquo;</a>
+        <div class="jcarousel-nav">
+            <a class="jcarousel-prev">&laquo; Prev</a>
+            <a class="jcarousel-next">Next &raquo;</a>
+        </div>
         <script asp-location="Footer">
             $(document).ready(function() {
                 $('.jcarousel').magnificPopup(
@@ -89,8 +91,10 @@
                     </div>
                 }
             </div>
-            <a href="#" class="jcarousel-prev">&laquo;</a>
-            <a href="#" class="jcarousel-next">&raquo;</a>
+            <div class="jcarousel-nav">
+                <a class="jcarousel-prev">&laquo; Prev</a>
+                <a class="jcarousel-next">Next &raquo;</a>
+            </div>
             <script asp-location="Footer">
                 $(document).ready(function() {
                     $('.jcarousel-item img').on('click',
@@ -111,17 +115,15 @@
 <!-- carousel -->
 <script>
     $(document).ready(function () {
-        $('.jcarousel').jcarousel({
-            wrap: 'circular'
-        });
+        $('.jcarousel').jcarousel();
     });
 
     $('.jcarousel-prev').click(function() {
-        $('.jcarousel').jcarousel('scroll', '-=4');
+        $('.jcarousel').jcarousel('scroll', '-=1');
     });
 
     $('.jcarousel-next').click(function() {
-        $('.jcarousel').jcarousel('scroll', '+=4');
+        $('.jcarousel').jcarousel('scroll', '+=1');
     });
 </script>
 <style>
@@ -134,8 +136,8 @@
     .jcarousel {
         position: relative;
         overflow: hidden;
-        margin-top: 20px;
-        width: 200px;
+        margin: 20px auto;
+        width: 300px;
     }
 
     /*
@@ -163,22 +165,32 @@
         width: 100px;
     }
 
-    .jcarousel-prev, .jcarousel-next {
-        position: absolute;
-        top: 478px;
-        width: 30px;
-        height: 30px;
+    .jcarousel-nav {
+        margin: 0 auto;
         text-align: center;
-        background-color: rgb(62, 54, 48);
-        background-image: none;
-        color: rgb(232, 230, 227);
-        text-decoration-color: currentcolor;
-        text-shadow: rgb(0, 0, 0) 0px 0px 1px;
-        box-shadow: rgb(82, 88, 92) 0px 0px 2px;
-        border-radius: 30px;
     }
 
-    .jcarousel-next {
-        left: 400px;
+    @@media screen and (min-width: 475px) {
+        .jcarousel {
+            width: 400px;
+        }
+    }
+
+    @@media screen and (min-width: 595px) {
+        .jcarousel {
+            width: 500px;
+        }
+    }
+
+    @@media screen and (min-width: 769px) {
+        .jcarousel {
+            width: 300px;
+        }
+    }
+
+    @@media screen and (min-width: 1001px) {
+        .jcarousel {
+            width: 400px;
+        }
     }
 </style>
