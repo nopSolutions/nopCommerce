@@ -30,17 +30,23 @@
     </div>
     @if (Model.PictureModels.Count > 1 && Model.DefaultPictureZoomEnabled)
     {
-        <div class="picture-thumbs">
-            @foreach (var picture in Model.PictureModels)
-            {
-                <a class="thumb-item" href="@picture.FullSizeImageUrl" alt="@picture.AlternateText" title="@picture.Title">
-                    <img src="@picture.ThumbImageUrl" alt="@picture.AlternateText" title="@picture.Title" data-defaultsize="@picture.ImageUrl" data-fullsize="@picture.FullSizeImageUrl" />
-                </a>
-            }
+        <div class="jcarousel">
+            <ul>
+                @foreach (var picture in Model.PictureModels)
+                {
+                    <li>
+                        <a class="jcarousel-item" href="@picture.FullSizeImageUrl" alt="@picture.AlternateText" title="@picture.Title">
+                            <img src="@picture.ThumbImageUrl" alt="@picture.AlternateText" title="@picture.Title" data-defaultsize="@picture.ImageUrl" data-fullsize="@picture.FullSizeImageUrl" />
+                        </a>
+                    </li>
+                }
+            </ul>
         </div>
+        <a href="#" class="jcarousel-prev">&laquo;</a>
+        <a href="#" class="jcarousel-next">&raquo;</a>
         <script asp-location="Footer">
             $(document).ready(function() {
-                $('.picture-thumbs').magnificPopup(
+                $('.jcarousel').magnificPopup(
                     {
                         type: 'image',
                         delegate: 'a',
@@ -60,7 +66,7 @@
         </script>
         <script asp-location="Footer">
             $(document).ready(function() {
-                $('.thumb-item > img').on('click',
+                $('.jcarousel-item > img').on('click',
                     function() {
                         $('#main-product-img-@Model.Id').attr('src', $(this).attr('data-defaultsize'));
                         $('#main-product-img-@Model.Id').attr('title', $(this).attr('title'));
@@ -75,17 +81,19 @@
     {
         if (Model.PictureModels.Count > 1)
         {
-            <div class="picture-thumbs">
+            <div class="jcarousel">
                 @foreach (var picture in Model.PictureModels)
                 {
-                    <div class="thumb-item">
+                    <div class="jcarousel-item">
                         <img src="@picture.ThumbImageUrl" alt="@picture.AlternateText" title="@picture.Title" data-defaultsize="@picture.ImageUrl" data-fullsize="@picture.FullSizeImageUrl" />
                     </div>
                 }
             </div>
+            <a href="#" class="jcarousel-prev">&laquo;</a>
+            <a href="#" class="jcarousel-next">&raquo;</a>
             <script asp-location="Footer">
                 $(document).ready(function() {
-                    $('.thumb-item img').on('click',
+                    $('.jcarousel-item img').on('click',
                         function() {
                             $('#main-product-img-@Model.Id').attr('src', $(this).attr('data-defaultsize'));
                             $('#main-product-img-@Model.Id').attr('title', $(this).attr('title'));
@@ -101,5 +109,76 @@
     @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsAfterPictures, additionalData = Model })
 </div>
 <!-- carousel -->
-<script></script>
-<style></style>
+<script>
+    $(document).ready(function () {
+        $('.jcarousel').jcarousel({
+            wrap: 'circular'
+        });
+    });
+
+    $('.jcarousel-prev').click(function() {
+        $('.jcarousel').jcarousel('scroll', '-=4');
+    });
+
+    $('.jcarousel-next').click(function() {
+        $('.jcarousel').jcarousel('scroll', '+=4');
+    });
+</script>
+<style>
+    /*
+    This is the visible area of you carousel.
+    Set a width here to define how much items are visible.
+    The width can be either fixed in px or flexible in %.
+    Position must be relative!
+    */
+    .jcarousel {
+        position: relative;
+        overflow: hidden;
+        margin-top: 20px;
+        width: 200px;
+    }
+
+    /*
+    This is the container of the carousel items.
+    You must ensure that the position is relative or absolute and
+    that the width is big enough to contain all items.
+    */
+    .jcarousel ul {
+        width: 10000em;
+        position: relative;
+
+        /* Optional, required in this case since it's a <ul> element */
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    /*
+    These are the item elements. jCarousel works best, if the items
+    have a fixed width and height (but it's not required).
+    */
+    .jcarousel li {
+        /* Required only for block elements like <li>'s */
+        float: left;
+        width: 100px;
+    }
+
+    .jcarousel-prev, .jcarousel-next {
+        position: absolute;
+        top: 478px;
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        background-color: rgb(62, 54, 48);
+        background-image: none;
+        color: rgb(232, 230, 227);
+        text-decoration-color: currentcolor;
+        text-shadow: rgb(0, 0, 0) 0px 0px 1px;
+        box-shadow: rgb(82, 88, 92) 0px 0px 2px;
+        border-radius: 30px;
+    }
+
+    .jcarousel-next {
+        left: 400px;
+    }
+</style>
