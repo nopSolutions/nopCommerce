@@ -1,103 +1,125 @@
 ﻿@model IList<CustomerAttributeModel>
     @using Nop.Core.Domain.Catalog;
-    @using Nop.Services.Customers
+    @using Nop.Core.Infrastructure;
+    @using Nop.Services.Customers;
+    @using Nop.Core;
 
-    @{
-        var profileType = string.Empty;
-        var isHidden = false;
+@{
+    var profileType = string.Empty;
+    var isHidden = false;
+
+    //get current page url
+    var _webHelper = EngineContext.Current.Resolve<IWebHelper>();
+    var currentPageUrl = _webHelper.GetThisPageUrl(false);
+}
+
+@foreach (var attribute in Model)
+{
+    // do not show this attribute if it is not required
+    //this is an hack to show/hide the attributes
+    // in this case Secondaray technology is hidden by this condition
+    @if (!attribute.IsRequired)
+    {
+        //continue;
+    }
+    //this is to hide secondary technology attribute as we are not using this right now
+    @if (attribute.Id == 8)
+    {
+        continue;
+    }
+    // hide attribute in register page and show in info page
+    @if (!attribute.ShowOnRegisterPage & currentPageUrl.Contains("register", StringComparison.InvariantCultureIgnoreCase))
+    {
+        continue;
     }
 
-    @foreach (var attribute in Model)
+    var controlId = $"{NopCustomerServicesDefaults.CustomerAttributePrefix}{attribute.Id}";
+    var textPrompt = attribute.Name;
+    var helpText = attribute.HelpText;
+
+    @if (attribute.Name == "ProfileType")
     {
-        // do not show this attribute if it is not required
-        //this is an hack to show/hide the attributes
-        // in this case Secondaray technology is hidden by this condition
-        @if (!attribute.IsRequired)
-        {
-            continue;
-        }
-        //this is to hide secondary technology attribute
-        @if (attribute.Id == 2)
-        {
-            isHidden = false;
-        }
+        profileType = attribute.Name;
+    }
 
-        var controlId = $"{NopCustomerServicesDefaults.CustomerAttributePrefix}{attribute.Id}";
-        var textPrompt = attribute.Name;
-
-        @if (attribute.Name == "ProfileType")
-        {
-            profileType = attribute.Name;
-        }
-
-        <div class="form-group custom-attributes" @(isHidden ? Html.Raw("hidden") : null)>
-            <label class="control-label col-sm-2 col-md-2">@textPrompt:</label>
-            <div class="visible-xs form-title-rquired">
-                @if (attribute.IsRequired)
-                {
-                    <nop-required />
-                }
-            </div>
-            <div class="col-xs-12 col-sm-6 col-md-6">
-                @switch (attribute.AttributeControlType)
-                {
-                    case AttributeControlType.DropdownList:
-                        {
-                            <select class="form-control" name="@(controlId)" id="@(controlId)">
-                                @if (!attribute.IsRequired)
-                                {
-                                    <option value="0">---</option>
-                                }
-                                @foreach (var attributeValue in attribute.Values)
-                                {
-                                    <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">@attributeValue.Name</option>
-                                }
-                            </select>
-                        }
-                        break;
-                    case AttributeControlType.RadioList:
-                        {
-                            <ul class="option-list">
-                                @foreach (var attributeValue in attribute.Values)
-                                {
-                                    <li>
-                                        <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
-                                        <label for="@(controlId)_@(attributeValue.Id)">@attributeValue.Name</label>
-                                    </li>
-                                }
-                            </ul>
-                            <h6>You can''t modify this once registered..!</h6>
-                        }
-                        break;
-                    case AttributeControlType.Checkboxes:
-                    case AttributeControlType.ReadonlyCheckboxes:
-                        {
-                            <ul class="option-list">
-                                @foreach (var attributeValue in attribute.Values)
-                                {
-                                    <li>
-                                        <input id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
-                                        <label for="@(controlId)_@(attributeValue.Id)">@attributeValue.Name</label>
-                                    </li>
-                                }
-                            </ul>
-                        }
-                        break;
-                    case AttributeControlType.TextBox:
-                        {
-                            <input name="@(controlId)" type="text" class="textbox form-control" id="@(controlId)" @(!String.IsNullOrWhiteSpace(attribute.DefaultValue) ? " value=" + (attribute.DefaultValue) : null) />
-                        }
-                        break;
-                    case AttributeControlType.MultilineTextbox:
-                        {
-                            var maxLength = 100;
-                            @if (attribute.Name == "Full Description")
+    <div class="form-group custom-attributes" @(isHidden ? Html.Raw("hidden") : null)>
+        <label class="control-label col-sm-2 col-md-2">
+            @textPrompt:
+            @if (!string.IsNullOrEmpty(helpText))
+            {
+                <span style="float:none;font-size:1em" title="@helpText" data-toggle="tooltip" class="ico-help">
+                    <i class="fa fa-question-circle"></i>
+                </span>
+            }
+        </label>
+        <div class="visible-xs form-title-rquired">
+            @if (attribute.IsRequired)
+            {
+                <nop-required />
+            }
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-6">
+            @switch (attribute.AttributeControlType)
+            {
+                case AttributeControlType.DropdownList:
+                    {
+                        <select class="form-control" name="@(controlId)" id="@(controlId)">
+                            @if (!attribute.IsRequired)
                             {
-                                maxLength = 1000;
+                                <option value="0">---</option>
                             }
-                            <textarea id="@(controlId)" class="form-control" maxlength="@maxLength" name="@(controlId)">@(attribute.DefaultValue)</textarea>
-                            <span id="span_@(controlId)">@maxLength</span><span> Character(s) Remaining</span>
-                            <script>
+                            @foreach (var attributeValue in attribute.Values)
+                            {
+                                <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">@attributeValue.Name</option>
+                            }
+                        </select>
+                    }
+                    break;
+                case AttributeControlType.RadioList:
+                    {
+                        <ul class="option-list">
+                            @foreach (var attributeValue in attribute.Values)
+                            {
+                                <li>
+                                    <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
+                                    <label for="@(controlId)_@(attributeValue.Id)">@attributeValue.Name</label>
+                                </li>
+                            }
+                        </ul>
+                        <h6>You can''t modify this once registered..!</h6>
+                    }
+                    break;
+                case AttributeControlType.Checkboxes:
+                case AttributeControlType.ReadonlyCheckboxes:
+                    {
+                        <ul class="option-list">
+                            @foreach (var attributeValue in attribute.Values)
+                            {
+                                <li>
+                                    <input id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
+                                    <label for="@(controlId)_@(attributeValue.Id)">@attributeValue.Name</label>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    break;
+                case AttributeControlType.TextBox:
+                    {
+                        <input name="@(controlId)" type="text" class="textbox form-control" id="@(controlId)" @(!String.IsNullOrWhiteSpace(attribute.DefaultValue) ? " value=" + (attribute.DefaultValue) : null) />
+                    }
+                    break;
+                case AttributeControlType.MultilineTextbox:
+                    {
+                        var maxLength = 100;
+                        @if (attribute.Name == "Full Description")
+                        {
+                            maxLength = 1000;
+                        }
+                        <textarea id="@(controlId)" class="form-control" maxlength="@maxLength" name="@(controlId)">@(attribute.DefaultValue)</textarea>
+                        <span id="span_@(controlId)">@maxLength</span>
+
+                        <span> Character(s) Remaining</span>
+                        <script>
                             $(document).ready(function () {
                                 var maxLength = @maxLength;
                                 $('#@(controlId)').keyup(function () {
@@ -106,86 +128,86 @@
                                     $('#span_@(controlId)').text(textlen);
                                 });
                             });
-                            </script>
-                        }
-                        break;
-                    case AttributeControlType.Datepicker:
-                    case AttributeControlType.FileUpload:
-                    case AttributeControlType.ColorSquares:
-                    case AttributeControlType.ImageSquares:
-                        {
-                            //not support attribute type
-                        }
-                        break;
-                    case AttributeControlType.KendoMultiSelect:
-                        {
-                            <div class="">
-                                <div class="" style="min-height:60px;">
-                                    <select name="@(controlId)" id="@(controlId)" multiple>
-                                        @if (!attribute.IsRequired)
-                                        {
-                                            @*<option value="0">---</option>*@
-                                        }
-                                        @foreach (var attributeValue in attribute.Values)
-                                        {
-                                            <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">@attributeValue.Name</option>
-                                        }
-                                    </select>
-                                    <h6> You can select a maximum of 5 technologies.</h6>
-                                </div>
-                            </div>
-                            <script>
-                                $(document).ready(function () {
-                                    var ddlTest = $("#@(controlId)").kendoMultiSelect({
-                                        //autoClose: true,
-                                        autoBind: true,
-                                        filter: "contains",
-                                        placeholder: "Enter 3 chars to search ...",
-                                        highlightFirst: true,
-                                        maxSelectedItems: 10,
-                                        fillMode: "flat",
-                                        size: "large",
-                                        downArrow: true
-                                    }).data("kendoMultiSelect");
-                                });
-                            </script>
-                        }
-                        break;
-                }
-            </div>
-            <div class="col-sm-4 col-md-4">
-                <div class="visible-lg visible-md visible-sm form-title-rquired">
-                    @if (attribute.IsRequired)
-                    {
-                        <nop-required />
+                        </script>
                     }
-                </div>
+                    break;
+                case AttributeControlType.Datepicker:
+                case AttributeControlType.FileUpload:
+                case AttributeControlType.ColorSquares:
+                case AttributeControlType.ImageSquares:
+                    {
+                        //not support attribute type
+                    }
+                    break;
+                case AttributeControlType.KendoMultiSelect:
+                    {
+                        <div class="">
+                            <div class="" style="min-height:60px;">
+                                <select name="@(controlId)" id="@(controlId)" multiple>
+                                    @if (!attribute.IsRequired)
+                                    {
+                                        @*<option value="0">---</option>*@
+                                    }
+                                    @foreach (var attributeValue in attribute.Values)
+                                    {
+                                        <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">@attributeValue.Name</option>
+                                    }
+                                </select>
+                                <h6> You can select a maximum of 5 technologies.</h6>
+                            </div>
+                        </div>
+                        <script>
+                            $(document).ready(function () {
+                                var ddlTest = $("#@(controlId)").kendoMultiSelect({
+                                    //autoClose: true,
+                                    autoBind: true,
+                                    filter: "contains",
+                                    placeholder: "Enter 3 chars to search ...",
+                                    highlightFirst: true,
+                                    maxSelectedItems: 10,
+                                    fillMode: "flat",
+                                    size: "large",
+                                    downArrow: true
+                                }).data("kendoMultiSelect");
+                            });
+                        </script>
+                    }
+                    break;
+            }
+        </div>
+        <div class="col-sm-4 col-md-4">
+            <div class="visible-lg visible-md visible-sm form-title-rquired">
+                @if (attribute.IsRequired)
+                {
+                    <nop-required />
+                }
             </div>
         </div>
-    }
+    </div>
+}
 
-    <script>
-        $(document).ready(function () {
+<script>
+    $(document).ready(function () {
 
-            //hide availability
-            $('#customer_attribute_2').parent().parent().hide();
+        //hide availability
+        $('#customer_attribute_2').parent().parent().hide();
 
-            // give support
-            $('#customer_attribute_1_1').change(function () {
-                if (this.checked) {
-                    //show relavent experiance
-                    $('#customer_attribute_3').parent().parent().show();
-                }
-            });
-
-            //take support
-            $('#customer_attribute_1_2').change(function () {
-                if (this.checked) {
-                    //hide relavent experiance
-                    $('#customer_attribute_3').parent().parent().hide();
-                }
-            });
-
+        // give support
+        $('#customer_attribute_1_1').change(function () {
+            if (this.checked) {
+                //show relavent experiance
+                $('#customer_attribute_3').parent().parent().show();
+            }
         });
 
-    </script>
+        //take support
+        $('#customer_attribute_1_2').change(function () {
+            if (this.checked) {
+                //hide relavent experiance
+                $('#customer_attribute_3').parent().parent().hide();
+            }
+        });
+
+    });
+
+</script>

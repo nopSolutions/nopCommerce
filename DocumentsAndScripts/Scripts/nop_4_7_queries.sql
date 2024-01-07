@@ -1,11 +1,32 @@
 
 use [nop471]
 
---use [nopcommerce46]
+-- use [nopcommerce46]
 
 select * from Customer
 select * from [dbo].[CustomerAttribute]
 select * from [dbo].[CustomerAttributeValue]
+select * from [SpecificationAttributeOption]
+
+--update [CustomerAttribute]
+--SET HelpText='Provide Your mother tongue so that others can contact you <br/> if they chose same mother tongue seeker'
+--WHERE Id=4
+
+update [CustomerAttribute]
+SET ShowOnRegisterPage=1
+WHERE Id=4
+
+update [CustomerAttribute]
+SET IsRequired=0
+WHERE Id=9
+
+AttributeControlTypeId
+
+select * from [SpecificationAttribute]
+select * from [SpecificationAttributeOption]
+select * from [SpecificationAttributeOption] where SpecificationAttributeId=5
+select * from [SpecificationAttributeOption] where id=2
+select * from [ProductAttribute] where id=2
 
 select * from [dbo].[CustomerAddresses]
 select * from [dbo].[CustomerRole]

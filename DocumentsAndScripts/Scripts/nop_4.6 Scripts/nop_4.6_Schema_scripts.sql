@@ -60,6 +60,22 @@ END
 GO
 
 
+-- new column 'HelpText' as part of  NOP 4.7 version
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[CustomerAttribute]') AND NAME = 'HelpText')
+BEGIN
+	ALTER TABLE [CustomerAttribute]
+	ADD HelpText [nvarchar](max) NULL
+END
+GO
+
+-- new column 'ShowOnRegisterPage' as part of  NOP 4.7 version
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[CustomerAttribute]') AND NAME = 'ShowOnRegisterPage')
+BEGIN
+	ALTER TABLE [CustomerAttribute]
+	ADD ShowOnRegisterPage Bit NULL
+END
+GO
+
 
 ---------------------------------------------------------
 -- ***  END SCHEMA SCRIPTS ****

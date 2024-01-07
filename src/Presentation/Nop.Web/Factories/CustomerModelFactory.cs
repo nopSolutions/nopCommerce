@@ -989,6 +989,9 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                 Name = await _localizationService.GetLocalizedAsync(attribute, x => x.Name),
                 IsRequired = attribute.IsRequired,
                 AttributeControlType = attribute.AttributeControlType,
+                //customization
+                HelpText = attribute.HelpText,
+                ShowOnRegisterPage= attribute.ShowOnRegisterPage
             };
 
             if (attribute.ShouldHaveValues)
