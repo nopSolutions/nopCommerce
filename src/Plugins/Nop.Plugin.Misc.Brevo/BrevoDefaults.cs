@@ -284,7 +284,7 @@ public static class BrevoDefaults
     public static string TemplateIdAttribute => "TemplateId";
 
     /// <summary>
-    /// Gets a key of the attribute to store a value indicating whether use SMS notification
+    /// Gets a key of the attribute to store a value indicating whether to use SMS notification
     /// </summary>
     public static string UseSmsAttribute => "UseSmsNotifications";
 

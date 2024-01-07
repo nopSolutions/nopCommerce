@@ -11,7 +11,7 @@ public partial record CatalogProductsModel : BasePageableModel
     #region Properties
 
     /// <summary>
-    /// Get or set a value indicating whether use standart or AJAX products loading (applicable to 'paging', 'filtering', 'view modes') in catalog
+    /// Get or set a value indicating whether to use standard or AJAX products loading (applicable to 'paging', 'filtering', 'view modes') in catalog
     /// </summary>
     public bool UseAjaxLoading { get; set; }
 
