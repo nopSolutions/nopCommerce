@@ -8,7 +8,7 @@ using Nop.Services.Stores;
 using Nop.Plugin.Misc.AbcCore.Domain;
 using Nop.Core.Domain.Catalog;
 using System;
-using System.Threading.Tasks;
+using Nop.Plugin.Misc.AbcCore.Data;
 
 namespace Nop.Plugin.Misc.AbcMattresses.Tasks
 {
@@ -17,9 +17,8 @@ namespace Nop.Plugin.Misc.AbcMattresses.Tasks
         private readonly ILogger _logger;
 
         private readonly IAbcMattressModelService _abcMattressModelService;
-        private readonly IAbcMattressEntryService _abcMattressEntryService;
-        private readonly IAbcMattressPackageService _abcMattressPackageService;
         private readonly IAbcMattressProductService _abcMattressProductService;
+        private readonly ICustomNopDataProvider _customNopDataProvider;
         private readonly IProductService _productService;
         private readonly IProductAbcDescriptionService _productAbcDescriptionService;
         private readonly IStoreService _storeService;
@@ -28,9 +27,8 @@ namespace Nop.Plugin.Misc.AbcMattresses.Tasks
         public UpdateMattressesTask(
             ILogger logger,
             IAbcMattressModelService abcMattressModelService,
-            IAbcMattressEntryService abcMattressEntryService,
-            IAbcMattressPackageService abcMattressPackageService,
             IAbcMattressProductService abcMattressProductService,
+            ICustomNopDataProvider customNopDataProvider,
             IProductService productService,
             IProductAbcDescriptionService productAbcDescriptionService,
             IStoreService storeService,
@@ -39,9 +37,8 @@ namespace Nop.Plugin.Misc.AbcMattresses.Tasks
         {
             _logger = logger;
             _abcMattressModelService = abcMattressModelService;
-            _abcMattressEntryService = abcMattressEntryService;
-            _abcMattressPackageService = abcMattressPackageService;
             _abcMattressProductService = abcMattressProductService;
+            _customNopDataProvider = customNopDataProvider;
             _productService = productService;
             _productAbcDescriptionService = productAbcDescriptionService;
             _storeService = storeService;
@@ -51,7 +48,6 @@ namespace Nop.Plugin.Misc.AbcMattresses.Tasks
         public async System.Threading.Tasks.Task ExecuteAsync()
         {
             var models = _abcMattressModelService.GetAllAbcMattressModels();
-            // use this to allow for more robust run
             var wasSuccessful = true;
 
             foreach (var model in models)
@@ -77,11 +73,22 @@ namespace Nop.Plugin.Misc.AbcMattresses.Tasks
             }
 
             await ClearOldMattressProductsAsync();
+            await DeleteDuplicateManufacturerMappingsAsync();
 
             if (!wasSuccessful)
             {
                 throw new Exception("Errors occured during mattress sync.");
             }
+        }
+
+        private async System.Threading.Tasks.Task DeleteDuplicateManufacturerMappingsAsync()
+        {
+            var sql = @"
+                DELETE FROM [Product_Manufacturer_Mapping]
+                WHERE [Id] NOT IN
+                (SELECT MAX([Id]) FROM [Product_Manufacturer_Mapping]
+                GROUP BY [ProductId], [ManufacturerId])";
+            await _customNopDataProvider.ExecuteNonQueryAsync(sql);
         }
 
         private async System.Threading.Tasks.Task ClearOldMattressProductsAsync()
