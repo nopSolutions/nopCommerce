@@ -30,21 +30,21 @@
     </div>
     @if (Model.PictureModels.Count > 1 && Model.DefaultPictureZoomEnabled)
     {
-        <div class="jcarousel">
-            <ul>
-                @foreach (var picture in Model.PictureModels)
-                {
-                    <li>
-                        <a class="jcarousel-item" href="@picture.FullSizeImageUrl" alt="@picture.AlternateText" title="@picture.Title">
-                            <img src="@picture.ThumbImageUrl" alt="@picture.AlternateText" title="@picture.Title" data-defaultsize="@picture.ImageUrl" data-fullsize="@picture.FullSizeImageUrl" />
-                        </a>
-                    </li>
-                }
-            </ul>
-        </div>
-        <div class="jcarousel-nav">
-            <a class="jcarousel-prev">&laquo; Prev</a>
-            <a class="jcarousel-next">Next &raquo;</a>
+        <div class="jcarousel-wrapper">
+            <a class="jcarousel-prev"><i class="fas fa-arrow-left"></i></a>
+            <div class="jcarousel">
+                <ul>
+                    @foreach (var picture in Model.PictureModels)
+                    {
+                        <li>
+                            <a class="jcarousel-item" href="@picture.FullSizeImageUrl" alt="@picture.AlternateText" title="@picture.Title">
+                                <img src="@picture.ThumbImageUrl" alt="@picture.AlternateText" title="@picture.Title" data-defaultsize="@picture.ImageUrl" data-fullsize="@picture.FullSizeImageUrl" />
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+            <a class="jcarousel-next"><i class="fas fa-arrow-right"></i></a>
         </div>
         <script asp-location="Footer">
             $(document).ready(function() {
@@ -83,18 +83,24 @@
     {
         if (Model.PictureModels.Count > 1)
         {
-            <div class="jcarousel">
-                @foreach (var picture in Model.PictureModels)
-                {
-                    <div class="jcarousel-item">
-                        <img src="@picture.ThumbImageUrl" alt="@picture.AlternateText" title="@picture.Title" data-defaultsize="@picture.ImageUrl" data-fullsize="@picture.FullSizeImageUrl" />
-                    </div>
-                }
+            <div class="jcarousel-wrapper">
+                <a class="jcarousel-prev"><i class="fas fa-arrow-left"></i></a>
+                <div class="jcarousel">
+                    
+                    <ul>
+                        @foreach (var picture in Model.PictureModels)
+                        {
+                            <li>
+                                <div class="jcarousel-item">
+                                    <img src="@picture.ThumbImageUrl" alt="@picture.AlternateText" title="@picture.Title" data-defaultsize="@picture.ImageUrl" data-fullsize="@picture.FullSizeImageUrl" />
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+                <a class="jcarousel-next"><i class="fas fa-arrow-right"></i></a>
             </div>
-            <div class="jcarousel-nav">
-                <a class="jcarousel-prev">&laquo; Prev</a>
-                <a class="jcarousel-next">Next &raquo;</a>
-            </div>
+            
             <script asp-location="Footer">
                 $(document).ready(function() {
                     $('.jcarousel-item img').on('click',
@@ -115,15 +121,19 @@
 <!-- carousel -->
 <script>
     $(document).ready(function () {
-        $('.jcarousel').jcarousel();
-    });
+        var carousel = $('.jcarousel').jcarousel({
+            wrap: 'circular'
+        });
 
-    $('.jcarousel-prev').click(function() {
-        $('.jcarousel').jcarousel('scroll', '-=1');
-    });
+        $('.jcarousel-prev').jcarouselControl({
+            target: '-=2',
+            carousel: carousel
+        });
 
-    $('.jcarousel-next').click(function() {
-        $('.jcarousel').jcarousel('scroll', '+=1');
+        $('.jcarousel-next').jcarouselControl({
+            target: '+=2',
+            carousel: carousel
+        });
     });
 </script>
 <style>
@@ -137,7 +147,7 @@
         position: relative;
         overflow: hidden;
         margin: 20px auto;
-        width: 300px;
+        width: 200px;
     }
 
     /*
@@ -170,27 +180,34 @@
         text-align: center;
     }
 
+    .jcarousel-wrapper {
+        display: flex;
+        align-items: center;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
     @@media screen and (min-width: 475px) {
-        .jcarousel {
-            width: 400px;
-        }
-    }
-
-    @@media screen and (min-width: 595px) {
-        .jcarousel {
-            width: 500px;
-        }
-    }
-
-    @@media screen and (min-width: 769px) {
         .jcarousel {
             width: 300px;
         }
     }
 
-    @@media screen and (min-width: 1001px) {
+    @@media screen and (min-width: 595px) {
         .jcarousel {
             width: 400px;
+        }
+    }
+
+    @@media screen and (min-width: 769px) {
+        .jcarousel {
+            width: 200px;
+        }
+    }
+
+    @@media screen and (min-width: 1001px) {
+        .jcarousel {
+            width: 300px;
         }
     }
 </style>
