@@ -1199,7 +1199,8 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
         CreateMap<NewsletterSubscriptionModel, NewsLetterSubscription>()
             .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
             .ForMember(entity => entity.NewsLetterSubscriptionGuid, options => options.Ignore())
-            .ForMember(entity => entity.StoreId, options => options.Ignore());
+            .ForMember(entity => entity.StoreId, options => options.Ignore())
+            .ForMember(entity => entity.SubscriptionLanguage, options => options.Ignore());
 
         CreateMap<QueuedEmail, QueuedEmailModel>()
             .ForMember(model => model.CreatedOn, options => options.Ignore())

@@ -61,10 +61,14 @@ public partial class NewsletterController : BasePublicController
         {
             email = email.Trim();
             var store = await _storeContext.GetCurrentStoreAsync();
-            var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(email, store.Id);
             var currentLanguage = await _workContext.GetWorkingLanguageAsync();
+            var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(email, store.Id);
+            //subscription.SubscriptionLanguage = currentLanguage.Id;
             if (subscription != null)
+                
             {
+                subscription.SubscriptionLanguage = currentLanguage.Id;
+
                 if (subscribe)
                 {
                     if (!subscription.Active)
@@ -90,8 +94,10 @@ public partial class NewsletterController : BasePublicController
                     Email = email,
                     Active = false,
                     StoreId = store.Id,
-                    CreatedOnUtc = DateTime.UtcNow
-                };
+                    CreatedOnUtc = DateTime.UtcNow,
+                    SubscriptionLanguage = currentLanguage.Id,
+
+            };
                 await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(subscription);
                 await _workflowMessageService.SendNewsLetterSubscriptionActivationMessageAsync(subscription, currentLanguage.Id);
 
