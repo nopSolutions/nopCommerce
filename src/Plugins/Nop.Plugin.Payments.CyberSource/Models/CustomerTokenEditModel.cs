@@ -1,25 +1,24 @@
 ﻿using Nop.Web.Framework.Models;
 
-namespace Nop.Plugin.Payments.CyberSource.Models
+namespace Nop.Plugin.Payments.CyberSource.Models;
+
+/// <summary>
+/// Represents a CyberSource customer token edit model
+/// </summary>
+public record CustomerTokenEditModel : BaseNopModel
 {
-    /// <summary>
-    /// Represents a CyberSource customer token edit model
-    /// </summary>
-    public record CustomerTokenEditModel : BaseNopModel
+    #region Ctor
+
+    public CustomerTokenEditModel()
     {
-        #region Ctor
-
-        public CustomerTokenEditModel()
-        {
-            CustomerToken = new CustomerTokenModel();
-        }
-
-        #endregion
-
-        #region Properties
-
-        public CustomerTokenModel CustomerToken { get; set; }
-
-        #endregion
+        CustomerToken = new CustomerTokenModel();
     }
+
+    #endregion
+
+    #region Properties
+
+    public CustomerTokenModel CustomerToken { get; set; }
+
+    #endregion
 }

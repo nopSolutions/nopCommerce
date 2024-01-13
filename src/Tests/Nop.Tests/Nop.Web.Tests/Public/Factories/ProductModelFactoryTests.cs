@@ -7,115 +7,110 @@ using Nop.Web.Factories;
 using Nop.Web.Models.Catalog;
 using NUnit.Framework;
 
-namespace Nop.Tests.Nop.Web.Tests.Public.Factories
+namespace Nop.Tests.Nop.Web.Tests.Public.Factories;
+
+[TestFixture]
+public class ProductModelFactoryTests : WebTest
 {
-    [TestFixture]
-    public class ProductModelFactoryTests : WebTest
+    private IProductModelFactory _productModelFactory;
+    private IProductService _productService;
+    private IUrlRecordService _urlRecordService;
+
+    [OneTimeSetUp]
+    public void SetUp()
     {
-        private IProductModelFactory _productModelFactory;
-        private IProductService _productService;
-        private IUrlRecordService _urlRecordService;
+        _productModelFactory = GetService<IProductModelFactory>();
+        _productService = GetService<IProductService>();
+        _urlRecordService = GetService<IUrlRecordService>();
+    }
 
-        [OneTimeSetUp]
-        public void SetUp()
+    [Test]
+    public async Task CanPrepareProductTemplateViewPath()
+    {
+        var productTemplateRepository = GetService<IRepository<ProductTemplate>>();
+        var productTemplateSimple = productTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Simple product") ?? throw new Exception("Simple product template could not be loaded");
+        var productTemplateGrouped = productTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Grouped product (with variants)") ?? throw new Exception("Grouped product template could not be loaded");
+
+        var modelSimple = await _productModelFactory.PrepareProductTemplateViewPathAsync(new Product
         {
-            _productModelFactory = GetService<IProductModelFactory>();
-            _productService = GetService<IProductService>();
-            _urlRecordService = GetService<IUrlRecordService>();
-        }
+            ProductTemplateId = productTemplateSimple.Id
+        });
 
-        [Test]
-        public async Task CanPrepareProductTemplateViewPath()
+        var modelGrouped = await _productModelFactory.PrepareProductTemplateViewPathAsync(new Product
         {
-            var productTemplateRepository = GetService<IRepository<ProductTemplate>>();
-            var productTemplateSimple = productTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Simple product");
-            if (productTemplateSimple == null)
-                throw new Exception("Simple product template could not be loaded");
-            var productTemplateGrouped = productTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Grouped product (with variants)");
-            if (productTemplateGrouped == null)
-                throw new Exception("Grouped product template could not be loaded");
+            ProductTemplateId = productTemplateGrouped.Id
+        });
 
-            var modelSimple = await _productModelFactory.PrepareProductTemplateViewPathAsync(new Product
-            {
-                ProductTemplateId = productTemplateSimple.Id
-            });
+        modelSimple.Should().NotBe(modelGrouped);
 
-            var modelGrouped = await _productModelFactory.PrepareProductTemplateViewPathAsync(new Product
-            {
-                ProductTemplateId = productTemplateGrouped.Id
-            });
+        modelSimple.Should().Be(productTemplateSimple.ViewPath);
+        modelGrouped.Should().Be(productTemplateGrouped.ViewPath);
+    }
 
-            modelSimple.Should().NotBe(modelGrouped);
+    [Test]
+    public async Task CanPrepareProductOverviewModels()
+    {
+        var product = await _productService.GetProductByIdAsync(1);
+        var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(new[] { product })).FirstOrDefault();
 
-            modelSimple.Should().Be(productTemplateSimple.ViewPath);
-            modelGrouped.Should().Be(productTemplateGrouped.ViewPath);
-        }
+        PropertiesShouldEqual(product, model);
+    }
 
-        [Test]
-        public async Task CanPrepareProductOverviewModels()
-        {
-            var product = await _productService.GetProductByIdAsync(1);
-            var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(new[] { product })).FirstOrDefault();
+    [Test]
+    public async Task CanPrepareProductDetailsModel()
+    {
+        var product = await _productService.GetProductByIdAsync(1);
+        var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(new[] { product })).FirstOrDefault();
 
-            PropertiesShouldEqual(product, model);
-        }
+        PropertiesShouldEqual(product, model);
+    }
 
-        [Test]
-        public async Task CanPrepareProductDetailsModel()
-        {
-            var product = await _productService.GetProductByIdAsync(1);
-            var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(new[] { product })).FirstOrDefault();
+    [Test]
+    public async Task CanPrepareProductReviewsModel()
+    {
+        var pId = (await _productService.GetProductReviewByIdAsync(1)).ProductId;
+        var product = await _productService.GetProductByIdAsync(pId);
+        var model = await _productModelFactory.PrepareProductReviewsModelAsync(product);
 
-            PropertiesShouldEqual(product, model);
-        }
+        model.ProductId.Should().Be(product.Id);
 
-        [Test]
-        public async Task CanPrepareProductReviewsModel()
-        {
-            var pId = (await _productService.GetProductReviewByIdAsync(1)).ProductId;
-            var product = await _productService.GetProductByIdAsync(pId);
-            var model = await _productModelFactory.PrepareProductReviewsModelAsync(product);
+        model.Items.Any().Should().BeTrue();
+    }
 
-            model.ProductId.Should().Be(product.Id);
+    [Test]
+    public async Task CanPrepareCustomerProductReviewsModel()
+    {
+        var model = await _productModelFactory.PrepareCustomerProductReviewsModelAsync(null);
+        var review = model.ProductReviews.FirstOrDefault();
 
-            model.Items.Any().Should().BeTrue();
-        }
+        review.Should().NotBeNull();
 
-        [Test]
-        public async Task CanPrepareCustomerProductReviewsModel()
-        {
-            var model = await _productModelFactory.PrepareCustomerProductReviewsModelAsync(null);
-            var review = model.ProductReviews.FirstOrDefault();
+        var product = await _productService.GetProductByIdAsync(review.ProductId);
 
-            review.Should().NotBeNull();
+        review.ProductName.Should().Be(product.Name);
+        review.ProductSeName.Should().Be(await _urlRecordService.GetSeNameAsync(product));
+    }
 
-            var product = await _productService.GetProductByIdAsync(review.ProductId);
+    [Test]
+    public async Task CanPrepareProductEmailAFriendModel()
+    {
+        var product = await _productService.GetProductByIdAsync(1);
+        var model = await _productModelFactory.PrepareProductEmailAFriendModelAsync(new ProductEmailAFriendModel(), product, false);
 
-            review.ProductName.Should().Be(product.Name);
-            review.ProductSeName.Should().Be(await _urlRecordService.GetSeNameAsync(product));
-        }
+        model.ProductId.Should().Be(product.Id);
+        model.ProductName.Should().Be(product.Name);
+        model.ProductSeName.Should().Be(await GetService<IUrlRecordService>().GetSeNameAsync(product));
+        model.YourEmailAddress.Should().Be(NopTestsDefaults.AdminEmail);
+    }
 
-        [Test]
-        public async Task CanPrepareProductEmailAFriendModel()
-        {
-            var product = await _productService.GetProductByIdAsync(1);
-            var model = await _productModelFactory.PrepareProductEmailAFriendModelAsync(new ProductEmailAFriendModel(), product, false);
+    [Test]
+    public async Task CanPrepareProductSpecificationModel()
+    {
+        var product = await _productService.GetProductByIdAsync(1);
+        var model = await _productModelFactory.PrepareProductSpecificationModelAsync(product);
 
-            model.ProductId.Should().Be(product.Id);
-            model.ProductName.Should().Be(product.Name);
-            model.ProductSeName.Should().Be(await GetService<IUrlRecordService>().GetSeNameAsync(product));
-            model.YourEmailAddress.Should().Be(NopTestsDefaults.AdminEmail);
-        }
+        var group = model.Groups.FirstOrDefault();
 
-        [Test]
-        public async Task CanPrepareProductSpecificationModel()
-        {
-            var product = await _productService.GetProductByIdAsync(1);
-            var model = await _productModelFactory.PrepareProductSpecificationModelAsync(product);
-
-            var group = model.Groups.FirstOrDefault();
-
-            group.Should().NotBe(null);
-        }
+        group.Should().NotBe(null);
     }
 }

@@ -1,18 +1,17 @@
 ﻿using Nop.Web.Framework.Models;
 
-namespace Nop.Web.Areas.Admin.Models.Discounts
+namespace Nop.Web.Areas.Admin.Models.Discounts;
+
+/// <summary>
+/// Represents a discount manufacturer model
+/// </summary>
+public partial record DiscountManufacturerModel : BaseNopEntityModel
 {
-    /// <summary>
-    /// Represents a discount manufacturer model
-    /// </summary>
-    public partial record DiscountManufacturerModel : BaseNopEntityModel
-    {
-        #region Properties
+    #region Properties
 
-        public int ManufacturerId { get; set; }
+    public int ManufacturerId { get; set; }
 
-        public string ManufacturerName { get; set; }
+    public string ManufacturerName { get; set; }
 
-        #endregion
-    }
+    #endregion
 }

@@ -1,18 +1,17 @@
 ﻿using Nop.Web.Framework.Models;
 
-namespace Nop.Web.Areas.Admin.Models.Settings
+namespace Nop.Web.Areas.Admin.Models.Settings;
+
+/// <summary>
+/// Represents a setting mode model
+/// </summary>
+public partial record SettingModeModel : BaseNopModel
 {
-    /// <summary>
-    /// Represents a setting mode model
-    /// </summary>
-    public partial record SettingModeModel : BaseNopModel
-    {
-        #region Properties
+    #region Properties
 
-        public string ModeName { get; set; }
+    public string ModeName { get; set; }
 
-        public bool Enabled { get; set; }
+    public bool Enabled { get; set; }
 
-        #endregion
-    }
+    #endregion
 }

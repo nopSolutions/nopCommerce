@@ -192,7 +192,7 @@
                                 </div>
                             </div>
                         }
-                        @if (Model.AssociatedProducts.Count == 0)
+                        @if (!Model.AssociatedProducts.Any())
                         {
                             <div class="no-associated-products">
                                 @T("Products.NoAssociatedProducts")

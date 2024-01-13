@@ -73,7 +73,7 @@
                         <nop-label asp-for="PaymentConnectionMethodId" />
                     </div>
                     <div class="col-md-9">
-                        <nop-select asp-for="PaymentConnectionMethodId" asp-items="@await (((ConnectionMethodType)Model.PaymentConnectionMethodId).ToSelectListAsync())" />
+                        <nop-select asp-for="PaymentConnectionMethodId" asp-items="@(await ((ConnectionMethodType)Model.PaymentConnectionMethodId).ToSelectListAsync())" />
                         <span asp-validation-for="PaymentConnectionMethodId"></span>
                     </div>
                 </div>
@@ -105,7 +105,7 @@
                         <nop-label asp-for="TransactionTypeId" />
                     </div>
                     <div class="col-md-9">
-                        <nop-select asp-for="TransactionTypeId" asp-items="@await (((TransactionType)Model.TransactionTypeId).ToSelectListAsync())" />
+                        <nop-select asp-for="TransactionTypeId" asp-items="@(await ((TransactionType)Model.TransactionTypeId).ToSelectListAsync())" />
                         <span asp-validation-for="TransactionTypeId"></span>
                     </div>
                 </div>
@@ -125,7 +125,7 @@
                         <nop-label asp-for="AvsActionTypeId" />
                     </div>
                     <div class="col-md-9">
-                        <nop-select asp-for="AvsActionTypeId" asp-items="@await (((AvsActionType)Model.AvsActionTypeId).ToSelectListAsync())" />
+                        <nop-select asp-for="AvsActionTypeId" asp-items="@(await ((AvsActionType)Model.AvsActionTypeId).ToSelectListAsync())" />
                         <span asp-validation-for="AvsActionTypeId"></span>
                     </div>
                 </div>
@@ -135,7 +135,7 @@
                         <nop-label asp-for="CvnActionTypeId" />
                     </div>
                     <div class="col-md-9">
-                        <nop-select asp-for="CvnActionTypeId" asp-items="@await (((CvnActionType)Model.CvnActionTypeId).ToSelectListAsync())" />
+                        <nop-select asp-for="CvnActionTypeId" asp-items="@(await (((CvnActionType)Model.CvnActionTypeId).ToSelectListAsync()))" />
                         <span asp-validation-for="CvnActionTypeId"></span>
                     </div>
                 </div>

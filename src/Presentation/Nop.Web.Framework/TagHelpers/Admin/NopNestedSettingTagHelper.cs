@@ -4,127 +4,124 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 using Nop.Core;
 using Nop.Web.Framework.Extensions;
 
-namespace Nop.Web.Framework.TagHelpers.Admin
+namespace Nop.Web.Framework.TagHelpers.Admin;
+
+/// <summary>
+/// "nop-nested-setting" tag helper
+/// </summary>
+[HtmlTargetElement("nop-nested-setting", Attributes = FOR_ATTRIBUTE_NAME)]
+public partial class NopNestedSettingTagHelper : TagHelper
 {
-    /// <summary>
-    /// "nop-nested-setting" tag helper
-    /// </summary>
-    [HtmlTargetElement("nop-nested-setting", Attributes = FOR_ATTRIBUTE_NAME)]
-    public partial class NopNestedSettingTagHelper : TagHelper
+    #region Constants
+
+    protected const string FOR_ATTRIBUTE_NAME = "asp-for";
+    protected const string IS_CONDITION_INVERT = "is-condition-invert";
+    protected const string DISABLE_AUTOGENERATION = "disable-auto-generation";
+
+    #endregion
+
+    #region Ctor
+
+    public NopNestedSettingTagHelper(IHtmlGenerator generator)
     {
-        #region Constants
+        Generator = generator;
+    }
 
-        protected const string FOR_ATTRIBUTE_NAME = "asp-for";
-        protected const string IS_CONDITION_INVERT = "is-condition-invert";
-        protected const string DISABLE_AUTOGENERATION = "disable-auto-generation";
+    #endregion
 
-        #endregion
-        
-        #region Ctor
+    #region Methods
 
-        public NopNestedSettingTagHelper(IHtmlGenerator generator)
-        {
-            Generator = generator;
-        }
+    /// <summary>
+    /// Asynchronously executes the tag helper with the given context and output
+    /// </summary>
+    /// <param name="context">Contains information associated with the current HTML tag</param>
+    /// <param name="output">A stateful HTML element used to generate an HTML tag</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
+    {
+        ArgumentNullException.ThrowIfNull(context);
 
-        #endregion
+        ArgumentNullException.ThrowIfNull(output);
 
-        #region Methods
+        var parentSettingName = For.Name;
+        var jsConsistentParentSettingName = parentSettingName.Replace('.', '_');
 
-        /// <summary>
-        /// Asynchronously executes the tag helper with the given context and output
-        /// </summary>
-        /// <param name="context">Contains information associated with the current HTML tag</param>
-        /// <param name="output">A stateful HTML element used to generate an HTML tag</param>
-        /// <returns>A task that represents the asynchronous operation</returns>
-        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
-        {
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
+        var random = CommonHelper.GenerateRandomInteger();
+        var nestedSettingId = $"nestedSetting{random}";
+        var parentSettingId = $"parentSetting{random}";
 
-            if (output == null)
-                throw new ArgumentNullException(nameof(output));
+        //tag details
+        output.TagName = "div";
+        output.TagMode = TagMode.StartTagAndEndTag;
+        output.Attributes.Add("class", "nested-setting");
 
-            var parentSettingName = For.Name;
-            var jsConsistentParentSettingName = parentSettingName.Replace('.', '_');
+        if (context.AllAttributes.ContainsName("id"))
+            nestedSettingId = context.AllAttributes["id"].Value.ToString();
+        output.Attributes.Add("id", nestedSettingId);
 
-            var random = CommonHelper.GenerateRandomInteger();
-            var nestedSettingId = $"nestedSetting{random}";
-            var parentSettingId = $"parentSetting{random}";
+        //use javascript
+        var script = new TagBuilder("script");
 
-            //tag details
-            output.TagName = "div";
-            output.TagMode = TagMode.StartTagAndEndTag;
-            output.Attributes.Add("class", "nested-setting");
+        var isNot = IsConditionInvert ? "!" : "";
 
-            if (context.AllAttributes.ContainsName("id"))
-                nestedSettingId = context.AllAttributes["id"].Value.ToString();
-            output.Attributes.Add("id", nestedSettingId);
+        script.InnerHtml.AppendHtml(
+            "$(document).ready(function () {" +
+            $"initNestedSetting('{parentSettingName}', '{parentSettingId}', '{nestedSettingId}');"
+        );
 
-            //use javascript
-            var script = new TagBuilder("script");
-
-            var isNot = IsConditionInvert ? "!" : "";
-
+        if (!DisableAutoGeneration)
             script.InnerHtml.AppendHtml(
-                "$(document).ready(function () {" +
-                    $"initNestedSetting('{parentSettingName}', '{parentSettingId}', '{nestedSettingId}');"
+                $"$('#{jsConsistentParentSettingName}').click(toggle_{jsConsistentParentSettingName});" +
+                $"toggle_{jsConsistentParentSettingName}();"
             );
 
-            if (!DisableAutoGeneration)
-                script.InnerHtml.AppendHtml(
-                    $"$('#{jsConsistentParentSettingName}').click(toggle_{jsConsistentParentSettingName});" +
-                    $"toggle_{jsConsistentParentSettingName}();"
-                );
+        script.InnerHtml.AppendHtml("});");
 
-            script.InnerHtml.AppendHtml("});");
+        if (!DisableAutoGeneration)
+            script.InnerHtml.AppendHtml(
+                $"function toggle_{jsConsistentParentSettingName}() " + "{" +
+                $"if ({isNot}$('#{jsConsistentParentSettingName}').is(':checked')) " + "{" +
+                $"$('#{nestedSettingId}').showElement();" +
+                "} else {" +
+                $"$('#{nestedSettingId}').hideElement();" +
+                "}" +
+                "}"
+            );
 
-            if (!DisableAutoGeneration)
-                script.InnerHtml.AppendHtml(
-                    $"function toggle_{jsConsistentParentSettingName}() " + "{" +
-                        $"if ({isNot}$('#{jsConsistentParentSettingName}').is(':checked')) " + "{" +
-                            $"$('#{nestedSettingId}').showElement();" +
-                        "} else {" +
-                            $"$('#{nestedSettingId}').hideElement();" +
-                        "}" +
-                    "}"
-                );
-
-            var scriptTag = await script.RenderHtmlContentAsync();
-            output.PreContent.SetHtmlContent(scriptTag);
-        }
-
-        #endregion
-
-        #region Properties
-
-        protected IHtmlGenerator Generator { get; set; }
-
-        /// <summary>
-        /// An expression to be evaluated against the current model
-        /// </summary>
-        [HtmlAttributeName(FOR_ATTRIBUTE_NAME)]
-        public ModelExpression For { get; set; }
-
-        /// <summary>
-        /// Is condition inverted
-        /// </summary>
-        [HtmlAttributeName(IS_CONDITION_INVERT)]
-        public bool IsConditionInvert { get; set; }
-
-        /// <summary>
-        /// Disable auto-generation js script
-        /// </summary>
-        [HtmlAttributeName(DISABLE_AUTOGENERATION)]
-        public bool DisableAutoGeneration { get; set; }
-
-        /// <summary>
-        /// ViewContext
-        /// </summary>
-        [HtmlAttributeNotBound]
-        [ViewContext]
-        public ViewContext ViewContext { get; set; }
-
-        #endregion
+        var scriptTag = await script.RenderHtmlContentAsync();
+        output.PreContent.SetHtmlContent(scriptTag);
     }
+
+    #endregion
+
+    #region Properties
+
+    protected IHtmlGenerator Generator { get; set; }
+
+    /// <summary>
+    /// An expression to be evaluated against the current model
+    /// </summary>
+    [HtmlAttributeName(FOR_ATTRIBUTE_NAME)]
+    public ModelExpression For { get; set; }
+
+    /// <summary>
+    /// Is condition inverted
+    /// </summary>
+    [HtmlAttributeName(IS_CONDITION_INVERT)]
+    public bool IsConditionInvert { get; set; }
+
+    /// <summary>
+    /// Disable auto-generation js script
+    /// </summary>
+    [HtmlAttributeName(DISABLE_AUTOGENERATION)]
+    public bool DisableAutoGeneration { get; set; }
+
+    /// <summary>
+    /// ViewContext
+    /// </summary>
+    [HtmlAttributeNotBound]
+    [ViewContext]
+    public ViewContext ViewContext { get; set; }
+
+    #endregion
 }

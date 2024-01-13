@@ -4,52 +4,51 @@ using NUglify;
 using NUglify.Css;
 using WebOptimizer;
 
-namespace Nop.Web.Framework.WebOptimizer.Processors
+namespace Nop.Web.Framework.WebOptimizer.Processors;
+
+/// <summary>
+/// Represents a class of processor that handle style assets
+/// </summary>
+/// <remarks>Implementation has taken from WebOptimizer to add logging</remarks>
+public partial class NopCssMinifier : Processor
 {
+    #region Methods
+
     /// <summary>
-    /// Represents a class of processor that handle style assets
+    /// Executes the processor on the specified configuration.
     /// </summary>
-    /// <remarks>Implementation has taken from WebOptimizer to add logging</remarks>
-    public partial class NopCssMinifier : Processor
+    /// <param name="context">The context used to perform processing to WebOptimizer.IAsset instances</param>
+    public override async Task ExecuteAsync(IAssetContext context)
     {
-        #region Methods
+        var content = new Dictionary<string, byte[]>();
 
-        /// <summary>
-        /// Executes the processor on the specified configuration.
-        /// </summary>
-        /// <param name="context">The context used to perform processing to WebOptimizer.IAsset instances</param>
-        public override async Task ExecuteAsync(IAssetContext context)
+        foreach (var key in context.Content.Keys)
         {
-            var content = new Dictionary<string, byte[]>();
-
-            foreach (var key in context.Content.Keys)
+            if (key.EndsWith(".min.css", StringComparison.InvariantCultureIgnoreCase))
             {
-                if (key.EndsWith(".min.css", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    content[key] = context.Content[key];
-                    continue;
-                }
-
-                var input = context.Content[key].AsString();
-                var result = Uglify.Css(input, new CssSettings());
-
-                var minified = result.Code;
-
-                if (result.HasErrors)
-                {
-                    await EngineContext.Current.Resolve<ILogger>()
-                        .WarningAsync($"Stylesheet minification: {key}", new(string.Join(Environment.NewLine, result.Errors)));
-                }
-
-                content[key] = minified.AsByteArray();
+                content[key] = context.Content[key];
+                continue;
             }
 
-            context.Content = content;
+            var input = context.Content[key].AsString();
+            var result = Uglify.Css(input, new CssSettings());
 
-            return;
+            var minified = result.Code;
+
+            if (result.HasErrors)
+            {
+                await EngineContext.Current.Resolve<ILogger>()
+                    .WarningAsync($"Stylesheet minification: {key}", new(string.Join(Environment.NewLine, result.Errors)));
+            }
+
+            content[key] = minified.AsByteArray();
         }
 
-        #endregion
+        context.Content = content;
 
+        return;
     }
+
+    #endregion
+
 }

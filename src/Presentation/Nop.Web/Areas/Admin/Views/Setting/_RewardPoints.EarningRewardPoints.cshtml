@@ -80,7 +80,7 @@
                     <span asp-validation-for="ActivationDelay"></span>
                 </div>
                 <div class="col-md-3">
-                    <nop-select asp-for="ActivationDelayPeriodId" asp-items="@await (((RewardPointsActivatingDelayPeriod) Model.ActivationDelayPeriodId).ToSelectListAsync())" style="max-width: 200px;" />
+                    <nop-select asp-for="ActivationDelayPeriodId" asp-items="@(await ((RewardPointsActivatingDelayPeriod) Model.ActivationDelayPeriodId).ToSelectListAsync())" style="max-width: 200px;" />
                     <span asp-validation-for="ActivationDelayPeriodId"></span>
                 </div>
             </div>

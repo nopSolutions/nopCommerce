@@ -1,13 +1,12 @@
-﻿namespace Nop.Core.Domain.Media
+﻿namespace Nop.Core.Domain.Media;
+
+/// <summary>
+/// Represents a video
+/// </summary>
+public partial class Video : BaseEntity
 {
     /// <summary>
-    /// Represents a video
+    /// Gets or sets the URL of video
     /// </summary>
-    public partial class Video : BaseEntity
-    {
-        /// <summary>
-        /// Gets or sets the URL of video
-        /// </summary>
-        public string VideoUrl { get; set; }
-    }
+    public string VideoUrl { get; set; }
 }

@@ -1,9 +1,8 @@
-namespace Nop.Core.Domain.Localization
+namespace Nop.Core.Domain.Localization;
+
+/// <summary>
+/// Represents a localized enum
+/// </summary>
+public partial interface ILocalizedEnum
 {
-    /// <summary>
-    /// Represents a localized enum
-    /// </summary>
-    public interface ILocalizedEnum
-    {
-    }
 }

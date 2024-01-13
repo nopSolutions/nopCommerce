@@ -72,7 +72,7 @@
                                     <nop-label asp-for="AttributeValueTypeId" />
                                 </div>
                                 <div class="col-sm-9">
-                                    <nop-select asp-for="AttributeValueTypeId" asp-items="@await (((AttributeValueType)Model.AttributeValueTypeId).ToSelectListAsync())" />
+                                    <nop-select asp-for="AttributeValueTypeId" asp-items="@(await ((AttributeValueType)Model.AttributeValueTypeId).ToSelectListAsync())" />
                                     <span asp-validation-for="AttributeValueTypeId"></span>
                                 </div>
                             </div>

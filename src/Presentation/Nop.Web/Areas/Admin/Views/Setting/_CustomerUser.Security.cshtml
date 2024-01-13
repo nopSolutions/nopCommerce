@@ -71,7 +71,7 @@
                 <nop-label asp-for="CustomerSettings.DefaultPasswordFormat" />
             </div>
             <div class="col-md-9">
-                <nop-select asp-for="CustomerSettings.DefaultPasswordFormat" asp-items="@await (((PasswordFormat)Model.CustomerSettings.DefaultPasswordFormat).ToSelectListAsync())" />
+                <nop-select asp-for="CustomerSettings.DefaultPasswordFormat" asp-items="@(await ((PasswordFormat)Model.CustomerSettings.DefaultPasswordFormat).ToSelectListAsync())" />
                 <span asp-validation-for="CustomerSettings.DefaultPasswordFormat"></span>
             </div>
         </div>

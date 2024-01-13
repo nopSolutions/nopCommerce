@@ -1,11 +1,10 @@
 ﻿using Nop.Web.Framework.Models;
 
-namespace Nop.Plugin.Misc.Brevo.Models
+namespace Nop.Plugin.Misc.Brevo.Models;
+
+/// <summary>
+/// Represents message template search model
+/// </summary>
+public record BrevoMessageTemplateSearchModel : BaseSearchModel
 {
-    /// <summary>
-    /// Represents message template search model
-    /// </summary>
-    public record BrevoMessageTemplateSearchModel : BaseSearchModel
-    {
-    }
 }

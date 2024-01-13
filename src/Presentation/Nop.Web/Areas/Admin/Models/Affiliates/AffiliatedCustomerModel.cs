@@ -1,18 +1,17 @@
 ﻿using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
-namespace Nop.Web.Areas.Admin.Models.Affiliates
+namespace Nop.Web.Areas.Admin.Models.Affiliates;
+
+/// <summary>
+/// Represents an affiliated customer model
+/// </summary>
+public partial record AffiliatedCustomerModel : BaseNopEntityModel
 {
-    /// <summary>
-    /// Represents an affiliated customer model
-    /// </summary>
-    public partial record AffiliatedCustomerModel : BaseNopEntityModel
-    {
-        #region Properties
+    #region Properties
 
-        [NopResourceDisplayName("Admin.Affiliates.Customers.Name")]
-        public string Name { get; set; }
+    [NopResourceDisplayName("Admin.Affiliates.Customers.Name")]
+    public string Name { get; set; }
 
-        #endregion
-    }
+    #endregion
 }

@@ -4,38 +4,37 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Services.Security;
 
-namespace Nop.Plugin.Misc.NopMobileApp.Controllers
+namespace Nop.Plugin.Misc.NopMobileApp.Controllers;
+
+[AutoValidateAntiforgeryToken]
+[AuthorizeAdmin]
+[Area(AreaNames.ADMIN)]
+public class NopMobileAppController : BasePluginController
 {
-    [AutoValidateAntiforgeryToken]
-    [AuthorizeAdmin]
-    [Area(AreaNames.Admin)]
-    public class NopMobileAppController : BasePluginController
+    #region Fields
+
+    private readonly IPermissionService _permissionService;
+
+    #endregion
+
+    #region Ctor 
+
+    public NopMobileAppController(IPermissionService permissionService)
     {
-        #region Fields
-
-        private readonly IPermissionService _permissionService;
-
-        #endregion
-
-        #region Ctor 
-
-        public NopMobileAppController(IPermissionService permissionService)
-        {
-            _permissionService = permissionService;
-        }
-
-        #endregion
-
-        #region Methods
-
-        public virtual async Task<IActionResult> Configure()
-        {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-                return AccessDeniedView();
-
-            return View("~/Plugins/Misc.NopMobileApp/Views/Configure.cshtml");
-        }
-
-        #endregion
+        _permissionService = permissionService;
     }
+
+    #endregion
+
+    #region Methods
+
+    public virtual async Task<IActionResult> Configure()
+    {
+        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
+            return AccessDeniedView();
+
+        return View("~/Plugins/Misc.NopMobileApp/Views/Configure.cshtml");
+    }
+
+    #endregion
 }

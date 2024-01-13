@@ -1,18 +1,17 @@
 ﻿using Nop.Web.Framework.Models;
 
-namespace Nop.Web.Areas.Admin.Models.Plugins
+namespace Nop.Web.Areas.Admin.Models.Plugins;
+
+/// <summary>
+/// Represents a plugin model that is used for admin navigation
+/// </summary>
+public partial record AdminNavigationPluginModel : BaseNopModel
 {
-    /// <summary>
-    /// Represents a plugin model that is used for admin navigation
-    /// </summary>
-    public partial record AdminNavigationPluginModel : BaseNopModel
-    {
-        #region Properties
+    #region Properties
 
-        public string FriendlyName { get; set; }
+    public string FriendlyName { get; set; }
 
-        public string ConfigurationUrl { get; set; }
+    public string ConfigurationUrl { get; set; }
 
-        #endregion
-    }
+    #endregion
 }

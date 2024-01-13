@@ -1,16 +1,15 @@
 ﻿using Nop.Web.Framework.Models;
 
-namespace Nop.Web.Areas.Admin.Models.Vendors
+namespace Nop.Web.Areas.Admin.Models.Vendors;
+
+/// <summary>
+/// Represents a vendor associated customer model
+/// </summary>
+public partial record VendorAssociatedCustomerModel : BaseNopEntityModel
 {
-    /// <summary>
-    /// Represents a vendor associated customer model
-    /// </summary>
-    public partial record VendorAssociatedCustomerModel : BaseNopEntityModel
-    {
-        #region Properties
+    #region Properties
 
-        public string Email { get; set; }
+    public string Email { get; set; }
 
-        #endregion
-    }
+    #endregion
 }

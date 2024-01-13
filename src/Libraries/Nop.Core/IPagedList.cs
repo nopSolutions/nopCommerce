@@ -1,38 +1,37 @@
-﻿namespace Nop.Core
+﻿namespace Nop.Core;
+
+/// <summary>
+/// Paged list interface
+/// </summary>
+public partial interface IPagedList<T> : IList<T>
 {
     /// <summary>
-    /// Paged list interface
+    /// Page index
     /// </summary>
-    public interface IPagedList<T> : IList<T>
-    {
-        /// <summary>
-        /// Page index
-        /// </summary>
-        int PageIndex { get; }
+    int PageIndex { get; }
 
-        /// <summary>
-        /// Page size
-        /// </summary>
-        int PageSize { get; }
+    /// <summary>
+    /// Page size
+    /// </summary>
+    int PageSize { get; }
 
-        /// <summary>
-        /// Total count
-        /// </summary>
-        int TotalCount { get; }
+    /// <summary>
+    /// Total count
+    /// </summary>
+    int TotalCount { get; }
 
-        /// <summary>
-        /// Total pages
-        /// </summary>
-        int TotalPages { get; }
+    /// <summary>
+    /// Total pages
+    /// </summary>
+    int TotalPages { get; }
 
-        /// <summary>
-        /// Has previous page
-        /// </summary>
-        bool HasPreviousPage { get; }
+    /// <summary>
+    /// Has previous page
+    /// </summary>
+    bool HasPreviousPage { get; }
 
-        /// <summary>
-        /// Has next age
-        /// </summary>
-        bool HasNextPage { get; }
-    }
+    /// <summary>
+    /// Has next age
+    /// </summary>
+    bool HasNextPage { get; }
 }

@@ -4458,23 +4458,17 @@
   <LocaleResource Name="Admin.Configuration.AppSettings.Cache">
     <Value>Cache configuration</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Cache.BundledFilesCacheTime">
-    <Value>Bundled files cache time</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Cache.BundledFilesCacheTime.Hint">
-    <Value>Set bundled files cache time (in minutes).</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Cache.DefaultCacheTime">
     <Value>Default cache time</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Cache.DefaultCacheTime.Hint">
     <Value>Set default cache time (in minutes).</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Cache.ShortTermCacheTime">
-    <Value>Short term cache time</Value>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Cache.LinqDisableQueryCache">
+    <Value>Disable query cache</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Cache.ShortTermCacheTime.Hint">
-    <Value>Set short term cache time (in minutes).</Value>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Cache.LinqDisableQueryCache.Hint">
+    <Value>Disable LINQ expressions caching for queries. This cache reduces time, required for query parsing but have several side-effects. For example, cached LINQ expressions could contain references to external objects as parameters, which could lead to memory leaks if those objects are not used anymore by other code. Or cache access synchronization could lead to bigger latencies than it saves.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common">
     <Value>Common configuration</Value>
@@ -4497,11 +4491,29 @@
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.DisplayFullErrorStack.Hint">
     <Value>Enable this setting to display the full error in production environment. It's ignored (always enabled) in development environment.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Common.PermitLimit">
+     <Value>Permit limit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Common.PermitLimit.Hint">
+     <Value>Maximum number of permit counters that can be allowed in a window (1 minute). Must be set to a value > 0 by the time these options are passed to the constructor of FixedWindowRateLimiter. If set to 0 than limitation is off.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.PluginStaticFileExtensionsBlacklist">
     <Value>Plugin static file extensions blacklist</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.PluginStaticFileExtensionsBlacklist.Hint">
     <Value>Specify the blacklist of static file extension for plugin directories.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Common.QueueCount">
+    <Value>Queue count</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Common.QueueCount.Hint">
+    <Value>Maximum cumulative permit count of queued acquisition requests. Must be set to a value >= 0 by the time these options are passed to the constructor of FixedWindowRateLimiter. If set to 0 than Queue is off.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Common.RejectionStatusCode">
+    <Value>Rejection status code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Common.RejectionStatusCode.Hint">
+    <Value>Default status code to set on the response when a request is rejected.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.ScheduleTaskRunTimeout">
     <Value>Schedule task run timeout</Value>
@@ -4559,6 +4571,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Data.SQLCommandTimeout.Hint">
     <Value>Gets or sets the wait time (in seconds) before terminating the attempt to execute a command and generating an error. By default, timeout isn't set and a default value for the current provider used. Set 0 to use infinite timeout.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Data.WithNoLock">
+    <Value>Use NOLOCK</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Data.WithNoLock.Hint">
+    <Value>Check to add the NOLOCK hint to SELECT statements.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Description">
     <Value><![CDATA[Configuration in ASP.NET Core is performed using a different configuration providers (e.g. external appsettings.json configuration file, environment variables, etc). These settings are used when the application is launched, so after editing them, the application will be restarted. You can find a detailed description of all configuration parameters in <a href="{0}" target="_blank">our documentation</a>. Please note that changing the values here will overwrite the external appsettings.json file, settings from other configuration providers will not be affected.]]></Value>
@@ -5123,6 +5141,15 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.MarkAsDefaultEmail">
     <Value>Mark as default email account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.MaxNumberOfEmails">
+    <Value>Max number of emails</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.MaxNumberOfEmails.Hint">
+    <Value>The maximum number of emails sent at one time.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.MaxNumberOfEmails.ShouldBeGreaterThanZero">
+    <Value>The maximum number of emails should be greater 0.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.Password">
     <Value>Password</Value>
@@ -10598,6 +10625,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Customer.WelcomeMessage">
     <Value>This message template is used to welcome a new customer after registration.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Customer.Gdpr.DeleteRequest">
+    <Value>This message template is used when customer create a new request to delete account. The message is received by a store owner.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Forums.NewForumPost">
     <Value>This message template is used when a new forum post in certain forum topic is created. The message is received by a store owner.</Value>
@@ -18649,7 +18679,7 @@
     <Value>Admin area. Manage Affiliates</Value>
   </LocaleResource>
   <LocaleResource Name="Permission.ManageAppSettings">
-    <Value>Admin area. Manage App Setting</Value>
+    <Value>Admin area. Manage App Settings</Value>
   </LocaleResource>
   <LocaleResource Name="Permission.ManageAttributes">
     <Value>Admin area. Manage Attributes</Value>

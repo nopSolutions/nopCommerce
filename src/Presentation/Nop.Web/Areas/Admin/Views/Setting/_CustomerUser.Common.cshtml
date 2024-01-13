@@ -8,7 +8,7 @@
             <nop-label asp-for="CustomerSettings.UserRegistrationType" />
         </div>
         <div class="col-md-9">
-            <nop-select asp-for="CustomerSettings.UserRegistrationType" asp-items="@await (((UserRegistrationType)Model.CustomerSettings.UserRegistrationType).ToSelectListAsync())" />
+            <nop-select asp-for="CustomerSettings.UserRegistrationType" asp-items="@(await ((UserRegistrationType)Model.CustomerSettings.UserRegistrationType).ToSelectListAsync())" />
             <span asp-validation-for="CustomerSettings.UserRegistrationType"></span>
         </div>
     </div>

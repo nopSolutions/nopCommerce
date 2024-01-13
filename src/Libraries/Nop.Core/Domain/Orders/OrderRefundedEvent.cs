@@ -1,29 +1,28 @@
-namespace Nop.Core.Domain.Orders
+namespace Nop.Core.Domain.Orders;
+
+/// <summary>
+/// Order refunded event
+/// </summary>
+public partial class OrderRefundedEvent
 {
     /// <summary>
-    /// Order refunded event
+    /// Ctor
     /// </summary>
-    public partial class OrderRefundedEvent
+    /// <param name="order">Order</param>
+    /// <param name="amount">Amount</param>
+    public OrderRefundedEvent(Order order, decimal amount)
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="order">Order</param>
-        /// <param name="amount">Amount</param>
-        public OrderRefundedEvent(Order order, decimal amount)
-        {
-            Order = order;
-            Amount = amount;
-        }
-
-        /// <summary>
-        /// Order
-        /// </summary>
-        public Order Order { get; }
-
-        /// <summary>
-        /// Amount
-        /// </summary>
-        public decimal Amount { get; }
+        Order = order;
+        Amount = amount;
     }
+
+    /// <summary>
+    /// Order
+    /// </summary>
+    public Order Order { get; }
+
+    /// <summary>
+    /// Amount
+    /// </summary>
+    public decimal Amount { get; }
 }

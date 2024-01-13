@@ -19,7 +19,7 @@
                     <nop-label asp-for="GiftCardTypeId" />
                 </div>
                 <div class="col-md-9">
-                    <nop-select asp-for="GiftCardTypeId" asp-items="@await (((GiftCardType)Model.GiftCardTypeId).ToSelectListAsync())" />
+                    <nop-select asp-for="GiftCardTypeId" asp-items="@(await ((GiftCardType)Model.GiftCardTypeId).ToSelectListAsync())" />
                     <span asp-validation-for="GiftCardTypeId"></span>
                 </div>
             </div>

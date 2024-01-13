@@ -1,28 +1,27 @@
-﻿namespace Nop.Plugin.Misc.Zettle.Domain
+﻿namespace Nop.Plugin.Misc.Zettle.Domain;
+
+/// <summary>
+/// Represents an inventory balance change type enumeration
+/// </summary>
+public enum InventoryBalanceChangeType
 {
     /// <summary>
-    /// Represents an inventory balance change type enumeration
+    /// Start tracking
     /// </summary>
-    public enum InventoryBalanceChangeType
-    {
-        /// <summary>
-        /// Start tracking
-        /// </summary>
-        StartTracking,
+    StartTracking,
 
-        /// <summary>
-        /// Purchase
-        /// </summary>
-        Purchase,
+    /// <summary>
+    /// Purchase
+    /// </summary>
+    Purchase,
 
-        /// <summary>
-        /// Re-stock
-        /// </summary>
-        Restock,
+    /// <summary>
+    /// Re-stock
+    /// </summary>
+    Restock,
 
-        /// <summary>
-        /// Void
-        /// </summary>
-        Void
-    }
+    /// <summary>
+    /// Void
+    /// </summary>
+    Void
 }

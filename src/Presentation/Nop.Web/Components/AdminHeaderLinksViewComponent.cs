@@ -2,21 +2,20 @@
 using Nop.Web.Factories;
 using Nop.Web.Framework.Components;
 
-namespace Nop.Web.Components
+namespace Nop.Web.Components;
+
+public partial class AdminHeaderLinksViewComponent : NopViewComponent
 {
-    public partial class AdminHeaderLinksViewComponent : NopViewComponent
+    protected readonly ICommonModelFactory _commonModelFactory;
+
+    public AdminHeaderLinksViewComponent(ICommonModelFactory commonModelFactory)
     {
-        protected readonly ICommonModelFactory _commonModelFactory;
+        _commonModelFactory = commonModelFactory;
+    }
 
-        public AdminHeaderLinksViewComponent(ICommonModelFactory commonModelFactory)
-        {
-            _commonModelFactory = commonModelFactory;
-        }
-
-        public async Task<IViewComponentResult> InvokeAsync()
-        {
-            var model = await _commonModelFactory.PrepareAdminHeaderLinksModelAsync();
-            return View(model);
-        }
+    public async Task<IViewComponentResult> InvokeAsync()
+    {
+        var model = await _commonModelFactory.PrepareAdminHeaderLinksModelAsync();
+        return View(model);
     }
 }
