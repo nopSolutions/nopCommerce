@@ -223,7 +223,6 @@ src/Presentation/Nop.Web/Themes/**/Content/css/theme.custom*.css
 !src/Presentation/Nop.Web/Plugins/SevenSpikes.Core/
 !src/Presentation/Nop.Web/Plugins/SevenSpikes.Nop.Plugins.AjaxFilters/
 !src/Presentation/Nop.Web/Plugins/SevenSpikes.Nop.Plugins.AnywhereSliders/
-!src/Presentation/Nop.Web/Plugins/SevenSpikes.Nop.Plugins.CloudZoom/
 !src/Presentation/Nop.Web/Plugins/SevenSpikes.Nop.Plugins.HtmlWidgets/
 !src/Presentation/Nop.Web/Plugins/SevenSpikes.Nop.Plugins.InstantSearch/
 !src/Presentation/Nop.Web/Plugins/SevenSpikes.Nop.Plugins.JCarousel/
