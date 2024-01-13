@@ -95,11 +95,24 @@ namespace Nop.Plugin.Misc.AbcCore.Services.Custom
             return await GetProductsByIdsAsync(publishedProductIds.Except(productIdsWithPicture).ToArray());
         }
 
+        public async Task<IList<Product>> GetNewProductsAsync()
+        {
+            return await GetProductsByIdsAsync(GetNewProductsIds().ToArray());
+        }
+
         private IEnumerable<int> GetAllPublishedProductsIds()
         {
             return  _productRepository.Table.Where(
                         p => !p.Deleted &&
                         p.Published).ToList()
+                    .Select(p => p.Id);
+        }
+
+        private IEnumerable<int> GetNewProductsIds()
+        {
+            return  _productRepository.Table.Where(
+                        p => !p.Deleted &&
+                        p.MarkAsNew).ToList()
                     .Select(p => p.Id);
         }
     }
