@@ -72,6 +72,10 @@ public class CommonHelperEmailValidatorTests
         var email = "testperson@domain_with-hyphen.com";
         var result = CommonHelper.IsValidEmail(email);
         result.Should().BeTrue();
+
+        email = "testperson@example-domain.net";
+        result = CommonHelper.IsValidEmail(email);
+        result.Should().BeTrue();
     }
 
     [Test]
