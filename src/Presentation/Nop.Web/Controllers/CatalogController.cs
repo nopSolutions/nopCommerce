@@ -489,6 +489,7 @@ public partial class CatalogController : BasePublicController
         if (manufacturer.Deleted)
             isAvailable = false;
 
+
         var notAvailable =
             //published?
             !manufacturer.Published ||
