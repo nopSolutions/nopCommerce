@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Admin",
+  "FriendlyName": "Accounting",
+  "SystemName": "Admin.Accounting",
+  "Version": "1.0",
+  "SupportedVersions": [ "4.50" ],
+  "Author": "Axel Andersen [Andersen Outdoor ApS]",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Admin.Accounting.dll",
+  "Description": "This plugin will contain accounting information"
+}

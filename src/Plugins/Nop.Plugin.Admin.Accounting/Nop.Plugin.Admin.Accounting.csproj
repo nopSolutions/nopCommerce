@@ -1,0 +1,61 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>		
+		<Company>Andersen Outdoor ApS</Company>
+		<Authors>Axel Dalen Andersern</Authors>			
+		<OutputPath>..\..\Presentation\Nop.Web\Plugins\Admin.Accounting</OutputPath>
+		<OutDir>$(OutputPath)</OutDir>
+		<!--Set this parameter to true to get the dlls copied from the NuGet cache to the output of your    project. You need to set this parameter to true if your plugin has a nuget package to ensure that   the dlls copied from the NuGet cache to the output of your project-->
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+	</PropertyGroup>
+	<ItemGroup>
+	  <None Remove="Content\accounting.css" />
+	  <None Remove="logo.png" />
+	  <None Remove="plugin.json" />
+	  <None Remove="Views\Configure.cshtml" />
+	  <None Remove="Views\List.cshtml" />
+	  <None Remove="Views\ViewReconciliation.cshtml" />
+	  <None Remove="Views\_ViewImports.cshtml" />
+	</ItemGroup>
+	<ItemGroup>		
+		<ProjectReference Include="..\..\Libraries\AO.Services\AO.Services.csproj" />		
+		<ProjectReference Include="..\..\Libraries\Nop.Core\Nop.Core.csproj" />
+		<ProjectReference Include="..\..\Libraries\Nop.Data\Nop.Data.csproj" />
+		<ProjectReference Include="..\..\Libraries\Nop.Services\Nop.Services.csproj" />
+		<ProjectReference Include="..\..\Presentation\Nop.Web.Framework\Nop.Web.Framework.csproj" />
+		<ProjectReference Include="..\..\Presentation\Nop.Web\Nop.Web.csproj" />
+		<ProjectReference Include="..\Nop.Plugin.POS.Kaching\Nop.Plugin.POS.Kaching.csproj" />		
+		<ClearPluginAssemblies Include="$(MSBuildProjectDirectory)\..\..\Build\ClearPluginAssemblies.proj" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Content Include="Content\accounting.css">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="logo.png">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="plugin.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Views\Configure.cshtml">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Views\ViewReconciliation.cshtml">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Views\List.cshtml">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Views\_ViewImports.cshtml">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+	<ItemGroup>
+	  <PackageReference Include="RestSharp" Version="106.12.0" />	  
+	</ItemGroup>
+	<!-- This target execute after "Build" target -->
+	<Target Name="NopTarget" AfterTargets="Build">
+		<!-- Delete unnecessary libraries from plugins path -->
+		<MSBuild Projects="@(ClearPluginAssemblies)" Properties="PluginPath=$(MSBuildProjectDirectory)\$(OutDir)" Targets="NopClear" />
+	</Target>
+</Project>

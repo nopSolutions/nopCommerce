@@ -1,0 +1,71 @@
+﻿@using Nop.Plugin.POS.Kaching.Models.ReconciliationModels
+@using Nop.Web.Framework.UI;
+@using Nop.Plugin.Admin.Accounting.Models;
+
+@model ReconciliationModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    NopHtml.AddCssFileParts("~/Plugins/Admin.Accounting/Content/accounting.css");
+    NopHtml.SetActiveMenuItemSystemName("Admin.Accounting");
+}
+
+<form asp-controller="Accounting" asp-action="List" method="get">
+    <div class="content-header clearfix">
+        <div class="float-left">
+            <h1>Kasselukningsrapporter</h1>
+            <br />
+            <h5>
+                Liste af afstemninger fra Kaching
+                <br />
+                @if (Model != null)
+                {
+                    <span>Fra @Model.dtFrom.ToString("dd-MM-yyyy") til @Model.dtTo.ToString("dd-MM-yyyy")</span>
+                }
+            </h5>
+        </div>
+
+        <div class="float-right">
+            <a href="~/Admin/Accounting/Configure" title="Configure accounting area">Konfiguration</a>
+        </div>
+    </div>
+    <hr />
+    @if (Model == null)
+    {
+        <div class="errorMessage">Der er sket en fejl, Model is null. Se evt. mere i loggen</div>
+    }
+    else if (string.IsNullOrEmpty(Model.ErrorMessage) == false)
+    {
+        <div class="errorMessage">
+            @Model.ErrorMessage<br />
+        </div>
+    }
+    else if (Model.ReconciliationList == null || Model.ReconciliationList.Count == 0)
+    {
+        <div class="errorMessage">Der er sket en fejl, ingen kasselukningsrapporter fundet her. Se evt. mere i loggen</div>
+    }
+    else
+    {
+        @foreach (var reconciliation in Model.ReconciliationList)
+        {
+            foreach(var keyValue in reconciliation)
+            {
+                <div class="divAccountingSection">
+                    <div class="reconList" onclick="javascript:OpenReconciliation('@keyValue.Key', '@keyValue.Value.ReconciliationTimePresentation');">
+                        <div>
+                            Afstemningstid: @keyValue.Value.ReconciliationTimePresentation.ToString("dd-MM-yyyy hh:mm")
+                        </div>
+                        <div>
+                            Afstemning af: @keyValue.Value.Source?.RegisterName (@keyValue.Value.Source?.ShopName) @keyValue.Value.Source?.CashierName
+                        </div>
+                    </div>
+                </div>
+            }            
+        }
+    }
+</form>
+<script type="text/javascript">
+    function OpenReconciliation(key, dt)
+    {
+        location.href = '/Admin/Reconciliation/ViewReconciliation/?key=' + key + '&dtstr=' + dt;
+    }
+</script>

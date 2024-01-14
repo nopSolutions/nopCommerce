@@ -1,0 +1,194 @@
+﻿@model Nop.Plugin.POS.Kaching.Models.KachingConfigurationModel
+@{
+    Layout = "_ConfigurePlugin";
+}
+@inject Nop.Core.IWebHelper webHelper
+
+<form asp-controller="POSKaching" asp-action="Configure" method="post">
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <h4>Kaching settings</h4>
+                <hr />
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="POSKaChingActive" />
+                    </div>
+                    <div class="col-md-7">
+                        <nop-editor asp-for="POSKaChingActive" />
+                        <span asp-validation-for="POSKaChingActive"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="POSKaChingHost" />
+                    </div>
+                    <div class="col-md-5">
+                        <nop-editor asp-for="POSKaChingHost" />
+                        <span asp-validation-for="POSKaChingHost"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="POSKaChingId" />
+                    </div>
+                    <div class="col-md-5">
+                        <nop-editor asp-for="POSKaChingId" />
+                        <span asp-validation-for="POSKaChingId"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="POSKaChingAccountToken" />
+                    </div>
+                    <div class="col-md-5">
+                        <nop-editor asp-for="POSKaChingAccountToken" />
+                        <span asp-validation-for="POSKaChingAccountToken"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="POSKaChingAPIToken" />
+                    </div>
+                    <div class="col-md-5">
+                        <nop-editor asp-for="POSKaChingAPIToken" />
+                        <span asp-validation-for="POSKaChingAPIToken"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="POSKaChingImportQueueName" />
+                    </div>
+                    <div class="col-md-5">
+                        <nop-editor asp-for="POSKaChingImportQueueName" />
+                        <span asp-validation-for="POSKaChingImportQueueName"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="POSKaChingReconciliationMailAddresses" />
+                    </div>
+                    <div class="col-md-5">
+                        <nop-editor asp-for="POSKaChingReconciliationMailAddresses" />
+                        <span asp-validation-for="POSKaChingReconciliationMailAddresses"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="POSKaChingReconciliationMailName" />
+                    </div>
+                    <div class="col-md-5">
+                        <nop-editor asp-for="POSKaChingReconciliationMailName" />
+                        <span asp-validation-for="POSKaChingReconciliationMailName"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="ReconciliationInvoiceProductId" />
+                    </div>
+                    <div class="col-md-5">
+                        <nop-editor asp-for="ReconciliationInvoiceProductId" />
+                        <span asp-validation-for="ReconciliationInvoiceProductId"></span>
+                    </div>
+                </div>                
+
+                <div class="form-group row">
+                     <div class="col-md-3">                        
+                    </div>
+                    <div class="col-md-5">
+                        <input type="submit" name="save" class="btn bg-primary" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="field-validation-error">
+    <h6>@Html.Raw(Model.ErrorMessage)</h6>
+</div>
+<hr />
+<form asp-controller="POSKaching" asp-action="SendAllProducts" method="post">
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <h4>Kaching utilities</h4>
+                <div class="form-group">
+                    <div class="col-md-9 col-md-offset-3">
+                        <input type="submit" name="save" class="btn bg-primary" value="Send all products" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-9 col-md-offset-3">
+                        <p>@Model.ProductsTransferred</p>                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<hr />
+<form asp-controller="POSKaching" asp-action="SendProduct" method="post">
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">                
+                <div class="form-group">
+                    <div class="col-md-9 col-md-offset-3">
+                        <nop-label>ProductId</nop-label>
+                        <input type="text" name="productId" id="ProductId" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-9 col-md-offset-3">
+                        <input type="submit" name="save" class="btn bg-primary" value="Send 1 product" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-9 col-md-offset-3">
+                        <p>@Model.ProductsTransferred</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<hr />
+<form asp-controller="POSKaching" asp-action="SendAllProductCategories" method="post">
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body"> 
+                <div class="form-group">
+                    <div class="col-md-9 col-md-offset-3">
+                        <input type="submit" name="save" class="btn bg-primary" value="Send all product categories (Brands)" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-9 col-md-offset-3">
+                        <p>@Model.ProductsTransferred</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<hr />
+<form asp-controller="POSKaching" asp-action="TestConnection" method="post">
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <h4>Is Kaching online?</h4>
+                <div class="form-group">
+                    <div class="col-md-9 col-md-offset-3">
+                        <input type="submit" name="TestConnection" class="btn bg-primary" value="Test connection" />
+                    </div>
+                    <div  class="col-md-9 col-md-offset-3" style="color:green;">
+                        @(Model.KachingAliveValue)
+                    </div>
+                    <div class="col-md-9 col-md-offset-3 field-validation-error">
+                        @(Model.KachingIsDead)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,103 @@
+﻿@using Nop.Plugin.POS.Kaching.Models.ReconciliationModels
+@using Nop.Web.Framework.UI;
+@using Nop.Plugin.Admin.Accounting.Models;
+
+@model Reconciliation
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    NopHtml.AddCssFileParts("~/Plugins/Admin.Accounting/Content/accounting.css");
+    NopHtml.SetActiveMenuItemSystemName("Admin.Accounting");
+}
+
+<form asp-controller="Accounting" asp-action="List" method="get">
+    <div class="content-header clearfix">
+        <div class="float-left">
+            <h1>Kasselukningsrapport</h1>
+        </div>
+
+        <div class="float-right">
+            <a href="~/Admin/Accounting/Configure" title="Configure accounting area">Konfiguration</a>
+        </div>
+    </div>
+    <hr />
+    <div id="mainAccounting">        
+        <div>
+            <div class="divTopSection">
+                <div>
+                    <a href="/Admin/Reconciliation/List" title="Gå til listen over kasselukningsrapporter">Tilbage til listen</a>
+                </div>
+                <br />
+                @if(Model == null)
+                {
+                    <div>Der er sket en fejl, ingen kasselukningsrapport fundet her</div>
+                }
+                else
+                {
+                    <div>
+                        Afstemningstid: @Model.ReconciliationTimePresentation.ToString("dd-MM-yyyy hh:mm")
+                    </div>
+                    <div>
+                        Afstemning af: @Model.Source.RegisterName (@Model.Source.ShopName) @Model.Source.CashierName
+                    </div>
+                    <br />
+                    <div>
+                        <b>Totalsalg: @Model.GrandTotalPresentation</b>
+                    </div>
+                }
+            </div>   
+            @if(Model != null)
+            {
+                @foreach (ReconciliationElement recElem in @Model.Reconciliations)
+                { 
+                    <div class="divAccountingSection">
+                        <table class="tblAccounting">
+                            <tr>
+                                <td colspan='4'><b>Betalingstype: @recElem.PaymentTypeIdentifier @Environment.NewLine</b></td>
+                            </tr>
+                            @if (recElem.PaymentTypeIdentifier == "cash")
+                            {
+                                <tr>
+                                    @if (string.IsNullOrEmpty(@Model.TotalCashSalePresentation) == false)
+                                    {
+                                        <td class="td1">Kontantsalg</td>
+                                        <td class="td2">@recElem.CurrencyCode</td>
+                                        <td class="td3">@Model.TotalCashSalePresentation</td>
+                                        <td></td>
+                                    }
+                                </tr>
+                                <tr>
+                                    <td class="td1">Beløb i kassen:</td>
+                                    <td class="td2">@recElem.CurrencyCode</td>
+                                    <td class="td3">@Model.TotalCashPresentation</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class="td1">Optalt beløb:</td>
+                                    <td class="td2">@recElem.CurrencyCode</td>
+                                    <td class="td3">@Model.TotalCashCountedPresentation</td>
+                                    <td></td>
+                                </tr>
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td class="td1">Salg:</td>
+                                    <td class="td2">@recElem.CurrencyCode</td>
+                                    <td class="td3">@recElem.TotalSalePresentation</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class="td1">Optalt:</td>
+                                    <td class="td2">@recElem.CurrencyCode</td>
+                                    <td class="td3">@recElem.TotalCountedPresentation</td>
+                                    <td></td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+    <hr />
+</form>

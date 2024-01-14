@@ -1,0 +1,73 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Copyright>Copyright © Andersen Outdoor ApS</Copyright>
+    <Company>Andersen Outdoor ApS</Company>
+    <Authors>Axel Andersen</Authors>
+    <Version>4.4.0.0</Version>
+    <Description>Contains services shared by multiple plugins.</Description>	  
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="appsettings.json" />
+    <None Remove="Logging\nlog.config" />
+    <None Remove="swagger.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Logging\nlog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="appsettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Presentation\Nop.Web.Framework\Nop.Web.Framework.csproj" />
+    <ProjectReference Include="..\AO.ChatGPT\AO.ChatGPT.csproj" />
+    <ProjectReference Include="..\Nop.Core\Nop.Core.csproj" />
+    <ProjectReference Include="..\Nop.Data\Nop.Data.csproj" />
+    <ProjectReference Include="..\Nop.Services\Nop.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <OpenApiReference Include="swagger.json" CodeGenerator="NSwagCSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.53" />
+    <PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="6.0.23">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
+    <PackageReference Include="NLog" Version="4.7.13" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="1.7.4" />    
+    <PackageReference Include="NLog.Web.AspNetCore" Version="4.14.0" />
+    <PackageReference Include="NSwag.ApiDescription.Client" Version="13.20.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.0.2" />
+  </ItemGroup>
+
+	<Target Name="CopyDLLs" AfterTargets="Build">
+		<Message Text="Copy AO.Services dll to plugins" Importance="High" />		
+		<Copy SourceFiles="$(TargetDir)$(ProjectName).dll;" DestinationFolder="..\..\Presentation\Nop.Web\Plugins\Admin.Accounting" />
+		<Copy SourceFiles="$(TargetDir)$(ProjectName).dll;" DestinationFolder="..\..\Presentation\Nop.Web\Plugins\Admin.CleanUp" />
+		<Copy SourceFiles="$(TargetDir)$(ProjectName).dll;" DestinationFolder="..\..\Presentation\Nop.Web\Plugins\Admin.OrderManagementList" />
+		<Copy SourceFiles="$(TargetDir)$(ProjectName).dll;" DestinationFolder="..\..\Presentation\Nop.Web\Plugins\ExternalSuppliers.Bonvita" />
+		<Copy SourceFiles="$(TargetDir)$(ProjectName).dll;" DestinationFolder="..\..\Presentation\Nop.Web\Plugins\ExternalSuppliers.Bonvita" />
+		<Copy SourceFiles="$(TargetDir)$(ProjectName).dll;" DestinationFolder="..\..\Presentation\Nop.Web\Plugins\ExternalSuppliers.STM" />
+		<Copy SourceFiles="$(TargetDir)$(ProjectName).dll;" DestinationFolder="..\..\Presentation\Nop.Web\Plugins\POS.Kaching" />
+		<Copy SourceFiles="$(TargetDir)$(ProjectName).dll;" DestinationFolder="..\..\Presentation\Nop.Web\Plugins\Widgets.AOProductExtension" />
+		<Message Text="Copied AO.Services dll" Importance="High" />
+	</Target>
+
+</Project>

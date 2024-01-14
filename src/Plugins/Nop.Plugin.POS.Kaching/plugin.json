@@ -1,0 +1,11 @@
+﻿{
+  "Group": "POS",
+  "FriendlyName": "Kaching",
+  "SystemName": "POS.Kaching",
+  "Version": "1.0",
+  "SupportedVersions": [ "4.50" ],
+  "Author": "Axel Andersen [Andersen Outdoor ApS]",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.POS.Kaching.dll",
+  "Description": "This plugin allows to send and receive information on products and sales from and to Kaching"
+}

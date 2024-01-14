@@ -1,0 +1,14 @@
+﻿.reconList { cursor: pointer; }
+    .reconList div { cursor: pointer; padding: 0 0 0 10px; }
+    .reconList:hover { background-color: #c1c1c1; border-radius: 10px; }
+
+#mainAccounting { padding: 5px; }
+.divAccountingSection { margin: 12px 0 12px 20px; padding: 10px; background-color: #fff; border-radius: 10px; }
+.divTopSection { margin: 0 0 0 32px; }
+
+.errorMessage { padding: 20px; color: red; }
+
+.tblAccounting { width: 400px }
+.td1 { width: 150px; }
+.td2 { width: 40px; }
+.td3 { text-align: right; width: 70px; }
