@@ -67,7 +67,7 @@ public class CommonHelperEmailValidatorTests
     }
 
     [Test]
-    public void WhenEmailContainsSpecialCharactersCharactersThenTheValidatorShouldPass()
+    public void WhenEmailAddressContainsHyphenInDomainThenTheValidatorShouldPass()
     {
         var email = "testperson@domain_with-hyphen.com";
         var result = CommonHelper.IsValidEmail(email);
