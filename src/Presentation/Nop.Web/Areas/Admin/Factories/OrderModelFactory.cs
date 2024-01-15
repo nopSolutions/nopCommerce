@@ -645,7 +645,7 @@ public partial class OrderModelFactory : IOrderModelFactory
         model.ShippingMethod = order.ShippingMethod;
         model.CanAddNewShipments = await _orderService.HasItemsToAddToShipmentAsync(order);
         model.PickupInStore = order.PickupInStore;
-        if (!order.PickupInStore)
+        if (!order.PickupInStore && order.ShippingMethod != null)
         {
             var shippingAddress = await _addressService.GetAddressByIdAsync(order.ShippingAddressId.Value);
             var shippingCountry = await _countryService.GetCountryByAddressAsync(shippingAddress);
