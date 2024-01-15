@@ -1,6 +1,4 @@
 ﻿using FluentAssertions;
-using Microsoft.AspNetCore.Http;
-using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Services.Common;
 using NUnit.Framework;
