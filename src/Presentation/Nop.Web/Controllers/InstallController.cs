@@ -202,7 +202,7 @@ public partial class InstallController : Controller
                 ConnectionString = connectionString
             }, _fileProvider);
 
-            if (model.CreateDatabaseIfNotExists)
+            if (model.CreateDatabaseIfNotExists && !await dataProvider.DatabaseExistsAsync())
             {
                 try
                 {
