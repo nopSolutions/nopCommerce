@@ -1,4 +1,5 @@
 ﻿using FluentValidation.TestHelper;
+using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Validators.Catalog;
 using NUnit.Framework;
@@ -13,7 +14,7 @@ public class CategoryValidatorTests : BaseNopTest
     [OneTimeSetUp]
     public void Setup()
     {
-        _validator = GetService<CategoryValidator>();
+        _validator = new CategoryValidator(GetService<ILocalizationService>());
     }
 
     [Test]

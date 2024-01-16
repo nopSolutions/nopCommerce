@@ -1,4 +1,5 @@
 ﻿using FluentValidation.TestHelper;
+using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Validators.Catalog;
 using NUnit.Framework;
@@ -13,7 +14,7 @@ public class ManufacturerValidatorTests : BaseNopTest
     [OneTimeSetUp]
     public void Setup()
     {
-        _validator = GetService<ManufacturerValidator>();
+        _validator = new ManufacturerValidator(GetService<ILocalizationService>());
     }
 
     [Test]
