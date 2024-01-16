@@ -191,7 +191,7 @@ public class ExportManagerTests : ServiceTest
             if (manager.GetDefaultProperties.Any(p => p.PropertyName == propertyInfo.Name))
                 continue;
 
-            Assert.Fail("The property \"{0}.{1}\" no present on excel file", typeof(T).Name, propertyInfo.Name);
+            Assert.Fail($"The property \"{typeof(T).Name}.{propertyInfo.Name}\" no present on excel file");
         }
 
         return obj;
