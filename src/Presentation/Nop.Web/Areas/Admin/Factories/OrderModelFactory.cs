@@ -636,16 +636,19 @@ public partial class OrderModelFactory : IOrderModelFactory
         ArgumentNullException.ThrowIfNull(model);
 
         ArgumentNullException.ThrowIfNull(order);
-
-        model.ShippingStatus = await _localizationService.GetLocalizedEnumAsync(order.ShippingStatus);
+        
         if (order.ShippingStatus == ShippingStatus.ShippingNotRequired)
             return;
 
+        if (order.ShippingMethod == null)
+            return;
+
+        model.ShippingStatus = await _localizationService.GetLocalizedEnumAsync(order.ShippingStatus);
         model.IsShippable = true;
         model.ShippingMethod = order.ShippingMethod;
         model.CanAddNewShipments = await _orderService.HasItemsToAddToShipmentAsync(order);
         model.PickupInStore = order.PickupInStore;
-        if (!order.PickupInStore && order.ShippingMethod != null)
+        if (!order.PickupInStore)
         {
             var shippingAddress = await _addressService.GetAddressByIdAsync(order.ShippingAddressId.Value);
             var shippingCountry = await _countryService.GetCountryByAddressAsync(shippingAddress);
