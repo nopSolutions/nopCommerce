@@ -8,6 +8,7 @@ namespace Nop.Plugin.Misc.AbcCore.Areas.Admin.Models
         public string ItemNo { get; set; }
         public string Sku { get; set; }
         public string Name { get; set; }
-        public string WebEnabledDate { get; set; }
+        public DateTime CreatedOnUtc { get; set; }
+        public int ProductId { get; set; }
     }
 }

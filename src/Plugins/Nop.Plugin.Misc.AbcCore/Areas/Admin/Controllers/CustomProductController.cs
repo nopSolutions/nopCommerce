@@ -110,6 +110,9 @@ namespace Nop.Plugin.Misc.AbcCore.Areas.Admin.Controllers
                 product, "PLPDescription", plpDescription
             );
 
+            // Remove MarkAsNew
+            model.MarkAsNew = false;
+
             return await base.Edit(model, continueEditing);
         }
     }

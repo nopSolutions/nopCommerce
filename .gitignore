@@ -240,6 +240,3 @@ src/Presentation/Nop.Web/Themes/**/Content/css/theme.custom*.css
 !src/Presentation/Nop.Web/Plugins/Widgets.PowerReviews/
 !src/Presentation/Nop.Web/Plugins/Misc.LetsEncrypt/
 !src/Presentation/Nop.Web/Plugins/FoxNetSoft.WebPImages/
-
-# Automation
-automation/node_modules

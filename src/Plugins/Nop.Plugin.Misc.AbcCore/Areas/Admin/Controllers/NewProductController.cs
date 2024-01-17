@@ -52,7 +52,9 @@ namespace Nop.Plugin.Misc.AbcCore.Areas.Admin.Controllers
                     {
                         ItemNo = itemNo,
                         Sku = product.Sku,
-                        Name = product.Name
+                        Name = product.Name,
+                        CreatedOnUtc = product.CreatedOnUtc,
+                        ProductId = product.Id
                     };
 
                     return newProductModel;

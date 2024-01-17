@@ -1,6 +1,7 @@
 @model NewProductSearchModel
 
 @using Nop.Plugin.Misc.AbcCore.Areas.Admin.Models
+@using Nop.Web.Framework.Models.DataTables
 
 @{
     //page title
@@ -33,17 +34,29 @@
                             new ColumnProperty(nameof(NewProductModel.ItemNo))
                             {
                                 Title = "Item Number",
-                                Width = "100"
+                                Width = "50"
                             },
                             new ColumnProperty(nameof(NewProductModel.Sku))
                             {
                                 Title = "Sku",
-                                Width = "100"
+                                Width = "50"
                             },
                             new ColumnProperty(nameof(NewProductModel.Name))
                             {
                                 Title = "Name",
                                 Width = "100"
+                            },
+                            new ColumnProperty(nameof(NewProductModel.CreatedOnUtc))
+                            {
+                                Title = "Web Enabled Date",
+                                Width = "100"
+                            },
+                            new ColumnProperty(nameof(NewProductModel.ProductId))
+                            {
+                                Title = "Edit",
+                                Width = "80",
+                                ClassName =  NopColumnClassDefaults.Button,
+                                Render = new RenderButtonEdit(new DataUrl("~/Admin/Product/Edit/"))
                             }
                         }
                     })                    
