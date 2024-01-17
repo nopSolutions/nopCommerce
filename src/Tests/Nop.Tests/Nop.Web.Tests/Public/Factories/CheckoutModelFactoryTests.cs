@@ -19,7 +19,6 @@ using NUnit.Framework;
 namespace Nop.Tests.Nop.Web.Tests.Public.Factories;
 
 [TestFixture]
-//[Ignore("This test leads the Stack Overflow Exception")]
 public class CheckoutModelFactoryTests : ServiceTest
 {
     private ICheckoutModelFactory _checkoutModelFactory;

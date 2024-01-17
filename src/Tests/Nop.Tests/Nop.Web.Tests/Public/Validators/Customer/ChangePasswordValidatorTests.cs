@@ -1,4 +1,6 @@
 ﻿using FluentValidation.TestHelper;
+using Nop.Core.Domain.Customers;
+using Nop.Services.Localization;
 using Nop.Web.Models.Customer;
 using Nop.Web.Validators.Customer;
 using NUnit.Framework;
@@ -13,7 +15,7 @@ public class ChangePasswordValidatorTests : BaseNopTest
     [OneTimeSetUp]
     public void Setup()
     {
-        _validator = GetService<ChangePasswordValidator>();
+        _validator = new ChangePasswordValidator(GetService<ILocalizationService>(), GetService<CustomerSettings>()) ;
     }
 
     [Test]

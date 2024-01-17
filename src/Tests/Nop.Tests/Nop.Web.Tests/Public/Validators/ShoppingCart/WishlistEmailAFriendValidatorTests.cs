@@ -1,4 +1,5 @@
 ﻿using FluentValidation.TestHelper;
+using Nop.Services.Localization;
 using Nop.Web.Models.ShoppingCart;
 using Nop.Web.Validators.ShoppingCart;
 using NUnit.Framework;
@@ -13,7 +14,7 @@ public class WishlistEmailAFriendValidatorTests : BaseNopTest
     [OneTimeSetUp]
     public void Setup()
     {
-        _validator = GetService<WishlistEmailAFriendValidator>();
+        _validator = new WishlistEmailAFriendValidator(GetService<ILocalizationService>());
     }
 
     [Test]

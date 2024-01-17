@@ -28,5 +28,7 @@ public partial class CustomerRoleCacheEventConsumer : CacheEventConsumer<Custome
 
         if (entityEventType != EntityEventType.Insert)
             await RemoveByPrefixAsync(NopCustomerServicesDefaults.CustomerCustomerRolesPrefix);
+
+        await base.ClearCacheAsync(entity, entityEventType);
     }
 }

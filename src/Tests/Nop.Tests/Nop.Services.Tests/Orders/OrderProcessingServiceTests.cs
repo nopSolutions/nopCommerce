@@ -14,13 +14,13 @@ namespace Nop.Tests.Nop.Services.Tests.Orders;
 public class OrderProcessingServiceTests : ServiceTest
 {
     private IOrderService _orderService;
-    private OrderProcessingService _orderProcessingService;
+    private IOrderProcessingService _orderProcessingService;
 
     [OneTimeSetUp]
     public void SetUp()
     {
         _orderService = GetService<IOrderService>();
-        _orderProcessingService = GetService<OrderProcessingService>();
+        _orderProcessingService = GetService<IOrderProcessingService>();
     }
 
     [OneTimeTearDown]

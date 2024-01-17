@@ -1,4 +1,5 @@
 ﻿using FluentValidation.TestHelper;
+using Nop.Services.Localization;
 using Nop.Web.Models.Customer;
 using Nop.Web.Validators.Customer;
 using NUnit.Framework;
@@ -13,7 +14,7 @@ public class PasswordRecoveryValidatorTests : BaseNopTest
     [OneTimeSetUp]
     public void Setup()
     {
-        _validator = GetService<PasswordRecoveryValidator>();
+        _validator = new PasswordRecoveryValidator(GetService<ILocalizationService>());
     }
 
     [Test]

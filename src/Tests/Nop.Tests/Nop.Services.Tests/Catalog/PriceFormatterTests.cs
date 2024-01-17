@@ -164,7 +164,7 @@ public class PriceFormatterTests : ServiceTest
         var result = await _priceFormatter.FormatBasePriceAsync(product, productPrice);
 
         //assert
-        Assert.IsNull(result);
+        Assert.That(result, Is.Null);
     }
     [Test]
     public void FormatTaxRate_ReturnsCorrectFormat()
@@ -177,6 +177,6 @@ public class PriceFormatterTests : ServiceTest
         var result = _priceFormatter.FormatTaxRate(taxRate);
 
         //assert
-        Assert.AreEqual(expectedFormat, result);
+        Assert.That(expectedFormat, Is.EqualTo(result));
     }
 }

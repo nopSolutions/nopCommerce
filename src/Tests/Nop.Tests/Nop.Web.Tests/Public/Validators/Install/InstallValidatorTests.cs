@@ -1,4 +1,5 @@
 ﻿using FluentValidation.TestHelper;
+using Nop.Web.Infrastructure.Installation;
 using Nop.Web.Models.Install;
 using Nop.Web.Validators.Install;
 using NUnit.Framework;
@@ -13,7 +14,7 @@ public class InstallValidatorTests : BaseNopTest
     [OneTimeSetUp]
     public void Setup()
     {
-        _validator = GetService<InstallValidator>();
+        _validator = new InstallValidator(GetService<IInstallationLocalizationService>());
     }
 
     [Test]

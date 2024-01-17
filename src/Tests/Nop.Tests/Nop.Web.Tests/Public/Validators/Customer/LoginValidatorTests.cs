@@ -15,7 +15,7 @@ public class LoginValidatorTests : BaseNopTest
     [OneTimeSetUp]
     public void Setup()
     {
-        _validator = GetService<LoginValidator>();
+        _validator = new LoginValidator(GetService<ILocalizationService>(), GetService<CustomerSettings>());
     }
 
     [Test]
