@@ -1,4 +1,5 @@
 ﻿using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Localization;
@@ -14,7 +15,8 @@ public partial record LocaleResourceModel : BaseNopEntityModel
     public string ResourceName { get; set; }
 
     [NopResourceDisplayName("Admin.Configuration.Languages.Resources.Fields.Value")]
-    public string ResourceValue { get; set; }
+    [NoTrim]
+    public string ResourceValue { get; set; } = string.Empty;
 
     public int LanguageId { get; set; }
 
