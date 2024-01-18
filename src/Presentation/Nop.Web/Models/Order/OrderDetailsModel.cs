@@ -90,22 +90,17 @@ public partial record OrderDetailsModel : BaseNopEntityModel
 
     public partial record OrderItemModel : BaseNopEntityModel
     {
-        public OrderItemModel()
-        {
-            Picture = new PictureModel();
-        }
-
         public Guid OrderItemGuid { get; set; }
         public string Sku { get; set; }
         public int ProductId { get; set; }
         public string ProductName { get; set; }
         public string ProductSeName { get; set; }
-        public string UnitPrice { get; set; }
+        public List<string> UnitPrices { get; set; } = new();
         public decimal UnitPriceValue { get; set; }
         public string SubTotal { get; set; }
         public decimal SubTotalValue { get; set; }
         public int Quantity { get; set; }
-        public PictureModel Picture { get; set; }
+        public PictureModel Picture { get; set; } = new();
         public string AttributeInfo { get; set; }
         public string RentalInfo { get; set; }
 

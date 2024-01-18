@@ -1,4 +1,7 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Net;
+using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -6,6 +9,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Stores;
@@ -16,6 +20,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Discounts;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Security;
@@ -23,6 +28,7 @@ using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Date;
 using Nop.Services.Stores;
+using static SkiaSharp.HarfBuzz.SKShaper;
 
 namespace Nop.Services.Orders;
 
@@ -42,6 +48,7 @@ public partial class ShoppingCartService : IShoppingCartService
     protected readonly ICustomerService _customerService;
     protected readonly IDateRangeService _dateRangeService;
     protected readonly IDateTimeHelper _dateTimeHelper;
+    protected readonly IDiscountService _discountService;
     protected readonly IEventPublisher _eventPublisher;
     protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly ILocalizationService _localizationService;
@@ -77,6 +84,7 @@ public partial class ShoppingCartService : IShoppingCartService
         ICustomerService customerService,
         IDateRangeService dateRangeService,
         IDateTimeHelper dateTimeHelper,
+        IDiscountService discountService,
         IEventPublisher eventPublisher,
         IGenericAttributeService genericAttributeService,
         ILocalizationService localizationService,
@@ -108,6 +116,7 @@ public partial class ShoppingCartService : IShoppingCartService
         _customerService = customerService;
         _dateRangeService = dateRangeService;
         _dateTimeHelper = dateTimeHelper;
+        _discountService = discountService;
         _eventPublisher = eventPublisher;
         _genericAttributeService = genericAttributeService;
         _localizationService = localizationService;
@@ -702,8 +711,8 @@ public partial class ShoppingCartService : IShoppingCartService
     public virtual async Task<int> DeleteExpiredShoppingCartItemsAsync(DateTime olderThanUtc)
     {
         var query = from sci in _sciRepository.Table
-            where sci.UpdatedOnUtc < olderThanUtc
-            select sci;
+                    where sci.UpdatedOnUtc < olderThanUtc
+                    select sci;
 
         var cartItems = await query.ToListAsync();
 
@@ -1304,56 +1313,115 @@ public partial class ShoppingCartService : IShoppingCartService
     /// </summary>
     /// <param name="shoppingCartItem">The shopping cart item</param>
     /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
-    /// <returns>Shopping cart item sub total. Applied discount amount. Applied discounts. Maximum discounted qty. Return not nullable value if discount cannot be applied to ALL items</returns>
-    public virtual async Task<(decimal subTotal, decimal discountAmount, List<Discount> appliedDiscounts, int? maximumDiscountQty)> GetSubTotalAsync(ShoppingCartItem shoppingCartItem,
+    /// <returns>Shopping cart item sub total. Applied discount amount. Maximum discounted qty. Return not nullable value if discount cannot be applied to ALL items</returns>
+    public virtual async Task<(decimal subTotal, decimal discountAmount, List<DiscountPrice> discountPrices)> GetSubTotalAsync(ShoppingCartItem shoppingCartItem,
         bool includeDiscounts)
     {
         ArgumentNullException.ThrowIfNull(shoppingCartItem);
 
         decimal subTotal;
-        int? maximumDiscountQty = null;
+        var discountPricesByQuantity = new Dictionary<int, decimal>();
 
         //unit price
-        var (unitPrice, discountAmount, appliedDiscounts) = await GetUnitPriceAsync(shoppingCartItem, includeDiscounts);
+        var (unitPrice, totalDiscountAmount, appliedDiscounts) = await GetUnitPriceAsync(shoppingCartItem, includeDiscounts);
+
+        var (notDiscountedUnitPrice, _, _) = await GetUnitPriceAsync(shoppingCartItem, false);
+        
+        var mergedDiscounts = new List<DiscountPrice>();
 
         //discount
         if (appliedDiscounts.Any())
         {
-            //we can properly use "MaximumDiscountedQuantity" property only for one discount (not cumulative ones)
-            Discount oneAndOnlyDiscount = null;
-            if (appliedDiscounts.Count == 1)
-                oneAndOnlyDiscount = appliedDiscounts.First();
-
-            if ((oneAndOnlyDiscount?.MaximumDiscountedQuantity.HasValue ?? false) &&
-                shoppingCartItem.Quantity > oneAndOnlyDiscount.MaximumDiscountedQuantity.Value)
+            var allPossibleDiscounts = appliedDiscounts.Select(discount =>
             {
-                maximumDiscountQty = oneAndOnlyDiscount.MaximumDiscountedQuantity.Value;
-                //we cannot apply discount for all shopping cart items
-                var discountedQuantity = oneAndOnlyDiscount.MaximumDiscountedQuantity.Value;
-                var discountedSubTotal = unitPrice * discountedQuantity;
-                discountAmount *= discountedQuantity;
+                var discountAmount = _discountService.GetDiscountAmount(discount, notDiscountedUnitPrice);
 
-                var notDiscountedQuantity = shoppingCartItem.Quantity - discountedQuantity;
-                var notDiscountedUnitPrice = (await GetUnitPriceAsync(shoppingCartItem, false)).unitPrice;
-                var notDiscountedSubTotal = notDiscountedUnitPrice * notDiscountedQuantity;
+                //check whether MaximumDiscountedQuantity is set
+                var discountQuantity = !discount.MaximumDiscountedQuantity.HasValue || discount.MaximumDiscountedQuantity.Value > shoppingCartItem.Quantity
+                    ? shoppingCartItem.Quantity : discount.MaximumDiscountedQuantity.Value;
 
-                subTotal = discountedSubTotal + notDiscountedSubTotal;
-            }
-            else
+                return new
+                {
+                    Discount = discount,
+                    DiscountQuantity = discountQuantity,
+                    DiscountAmount = discountAmount,
+                    TotalDiscountAmount = discountAmount * discountQuantity
+                };
+            }).ToList();
+
+            var appliedByQuantityDiscounts = allPossibleDiscounts
+                .GroupBy(d => d.DiscountQuantity)
+                .Select(d =>
+                {
+                    var pd = new DiscountPrice
+                    {
+                        DiscountQuantity = d.Key,
+                        DiscountAmount = d.Sum(gd => gd.DiscountAmount),
+                        PriceWithDiscount = notDiscountedUnitPrice - d.Sum(gd => gd.DiscountAmount)
+                    };
+
+                    pd.AppliedDiscounts.AddRange(d.Select(x => x.Discount));
+
+                    return pd;
+                }
+                )
+            .OrderBy(d => d.DiscountQuantity);
+
+            var discs = new LinkedList<DiscountPrice>(appliedByQuantityDiscounts);
+
+            if (appliedByQuantityDiscounts.Count() == 1)
             {
-                //discount is applied to all items (quantity)
-                //calculate discount amount for all items
-                discountAmount *= shoppingCartItem.Quantity;
-
-                subTotal = unitPrice * shoppingCartItem.Quantity;
+                mergedDiscounts.AddRange(appliedByQuantityDiscounts);
             }
+            else if (appliedByQuantityDiscounts.Count() > 1)
+            {
+                var currentNode = discs.Last;
+                while (currentNode != null)
+                {
+                    if (currentNode.Previous is null)
+                    {
+                        mergedDiscounts.Add(currentNode.Value);
+                        break;
+                    }
+
+                    var nd = new DiscountPrice { 
+                        DiscountQuantity = currentNode.Value.DiscountQuantity - currentNode.Previous.Value.DiscountQuantity,
+                        DiscountAmount = currentNode.Value.DiscountAmount,
+                        PriceWithDiscount = currentNode.Value.PriceWithDiscount
+                    };
+
+                    nd.AppliedDiscounts.AddRange(currentNode.Value.AppliedDiscounts);
+
+                    currentNode.Previous.Value.DiscountAmount += nd.DiscountAmount;
+                    currentNode.Previous.Value.PriceWithDiscount = notDiscountedUnitPrice - currentNode.Previous.Value.DiscountAmount;
+                    currentNode.Previous.Value.AppliedDiscounts.AddRange(currentNode.Value.AppliedDiscounts);
+
+                    mergedDiscounts.Add(nd);
+
+                    currentNode = currentNode.Previous;
+                }
+            }
+
+            var discountedQuantity = mergedDiscounts.Sum(x => x.DiscountQuantity);
+
+            totalDiscountAmount = mergedDiscounts.Sum(x => x.DiscountAmount * x.DiscountQuantity);
+
+            var notDiscountedQuantity = shoppingCartItem.Quantity - discountedQuantity;
+            var notDiscountedSubTotal = notDiscountedUnitPrice * notDiscountedQuantity;
+
+
+            //we cannot apply discount for all shopping cart items
+            var discountedSubTotal = mergedDiscounts.Sum(dp => dp.PriceWithDiscount * dp.DiscountQuantity);
+
+            subTotal = discountedSubTotal + notDiscountedSubTotal;
+
         }
         else
         {
             subTotal = unitPrice * shoppingCartItem.Quantity;
         }
 
-        return (subTotal, discountAmount, appliedDiscounts, maximumDiscountQty);
+        return (subTotal, totalDiscountAmount, mergedDiscounts);
     }
 
     /// <summary>

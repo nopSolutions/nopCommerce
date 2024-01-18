@@ -67,7 +67,7 @@ public partial record ShoppingCartModel : BaseNopModel
 
         public string ProductSeName { get; set; }
 
-        public string UnitPrice { get; set; }
+        public List<string> UnitPrices { get; set; } = new();
         public decimal UnitPriceValue { get; set; }
 
         public string SubTotal { get; set; }

@@ -227,7 +227,7 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
                     var (unitPrice, _, _) = await _shoppingCartService.GetUnitPriceAsync(item, true);
                     itemModel.UnitPrice = await _priceFormatter.FormatPriceAsync((await _taxService.GetProductPriceAsync(product, unitPrice)).price);
                     itemModel.UnitPriceValue = (await _taxService.GetProductPriceAsync(product, unitPrice)).price;
-                    var (subTotal, _, _, _) = await _shoppingCartService.GetSubTotalAsync(item, true);
+                    var (subTotal, _, _) = await _shoppingCartService.GetSubTotalAsync(item, true);
                     itemModel.Total = await _priceFormatter.FormatPriceAsync((await _taxService.GetProductPriceAsync(product, subTotal)).price);
                     itemModel.TotalValue = (await _taxService.GetProductPriceAsync(product, subTotal)).price;
 

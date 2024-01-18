@@ -526,7 +526,10 @@
                                     }
                                     <td class="unit-price">
                                         <label class="td-title">@T("Order.Product(s).Price"):</label>
-                                        <span class="product-unit-price">@item.UnitPrice</span>
+                                        @foreach (var unitPrice in item.UnitPrices)
+                                        {
+                                            <div class="product-unit-price">@unitPrice</div>
+                                        }
                                     </td>
                                     <td class="quantity">
                                         <label class="td-title">@T("Order.Product(s).Quantity"):</label>

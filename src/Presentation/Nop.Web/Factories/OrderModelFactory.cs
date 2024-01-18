@@ -1,4 +1,5 @@
-﻿using Nop.Core;
+﻿using System.Collections.Generic;
+using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -13,6 +14,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Discounts;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
@@ -44,6 +46,7 @@ public partial class OrderModelFactory : IOrderModelFactory
     protected readonly ICurrencyService _currencyService;
     protected readonly ICustomerService _customerService;
     protected readonly IDateTimeHelper _dateTimeHelper;
+    protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly IGiftCardService _giftCardService;
     protected readonly ILocalizationService _localizationService;
     protected readonly IOrderProcessingService _orderProcessingService;
@@ -84,6 +87,7 @@ public partial class OrderModelFactory : IOrderModelFactory
         ICurrencyService currencyService,
         ICustomerService customerService,
         IDateTimeHelper dateTimeHelper,
+        IGenericAttributeService genericAttributeService,
         IGiftCardService giftCardService,
         ILocalizationService localizationService,
         IOrderProcessingService orderProcessingService,
@@ -120,6 +124,7 @@ public partial class OrderModelFactory : IOrderModelFactory
         _currencyService = currencyService;
         _customerService = customerService;
         _dateTimeHelper = dateTimeHelper;
+        _genericAttributeService = genericAttributeService;
         _giftCardService = giftCardService;
         _localizationService = localizationService;
         _orderProcessingService = orderProcessingService;
@@ -543,10 +548,25 @@ public partial class OrderModelFactory : IOrderModelFactory
             //unit price, subtotal
             if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
             {
-                //including tax
+                var pricesByQuantityInclTax = await _genericAttributeService.GetAttributeAsync<List<DiscountPriceByQuantity>>(orderItem, "pricesByQuantityInclTax");
+
+                //only one price for all items
                 var unitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceInclTax, order.CurrencyRate);
-                orderItemModel.UnitPrice = await _priceFormatter.FormatPriceAsync(unitPriceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, true);
+                orderItemModel.UnitPrices.Add(await _priceFormatter.FormatPriceAsync(unitPriceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, true));
                 orderItemModel.UnitPriceValue = unitPriceInclTaxInCustomerCurrency;
+                
+                if (pricesByQuantityInclTax != null && (pricesByQuantityInclTax?.Count() > 1 || pricesByQuantityInclTax.First().Quantity < orderItem.Quantity))
+                {
+                    //there is a distribution of prices by quantity
+                    orderItemModel.UnitPrices.AddRange(await pricesByQuantityInclTax.SelectAwait(async pq =>
+                    {
+                        var unitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(pq.DiscountPrice, order.CurrencyRate);
+                        var unitPrice = await _priceFormatter.FormatPriceAsync(unitPriceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, true);
+
+                        return string.Format(await _localizationService.GetResourceAsync("Order.Product(s).PriceByQuantity"), pq.Quantity, unitPrice);
+                    }).ToListAsync());
+
+                }
 
                 var priceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.PriceInclTax, order.CurrencyRate);
                 orderItemModel.SubTotal = await _priceFormatter.FormatPriceAsync(priceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, true);
@@ -555,9 +575,27 @@ public partial class OrderModelFactory : IOrderModelFactory
             else
             {
                 //excluding tax
+
+                var pricesByQuantityExclTax = await _genericAttributeService.GetAttributeAsync<List<DiscountPriceByQuantity>>(orderItem, "pricesByQuantityExclTax");
+
+                //base price for all items
                 var unitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceExclTax, order.CurrencyRate);
-                orderItemModel.UnitPrice = await _priceFormatter.FormatPriceAsync(unitPriceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, false);
+                orderItemModel.UnitPrices.Add(await _priceFormatter.FormatPriceAsync(unitPriceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, false));
                 orderItemModel.UnitPriceValue = unitPriceExclTaxInCustomerCurrency;
+
+
+                if (pricesByQuantityExclTax != null && (pricesByQuantityExclTax?.Count() > 1 || pricesByQuantityExclTax.First().Quantity < orderItem.Quantity))
+                { 
+                    //there is a distribution of prices by quantity
+                    orderItemModel.UnitPrices.AddRange(await pricesByQuantityExclTax.SelectAwait(async pq =>
+                    {
+                        var unitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(pq.DiscountPrice, order.CurrencyRate);
+                        var unitPrice = await _priceFormatter.FormatPriceAsync(unitPriceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, false);
+
+                        return string.Format(await _localizationService.GetResourceAsync("Order.Product(s).PriceByQuantity"), pq.Quantity, unitPrice);
+                    }).ToListAsync());
+                }
+
 
                 var priceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.PriceExclTax, order.CurrencyRate);
                 orderItemModel.SubTotal = await _priceFormatter.FormatPriceAsync(priceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, false);

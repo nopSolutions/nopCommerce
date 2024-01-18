@@ -3,6 +3,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Stores;
+using Nop.Services.Discounts;
 
 namespace Nop.Services.Orders;
 
@@ -218,9 +219,9 @@ public partial interface IShoppingCartService
     /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the shopping cart item sub total. Applied discount amount.Applied discounts. Maximum discounted qty. Return not nullable value if discount cannot be applied to ALL items
+    /// The task result contains the shopping cart item sub total. Applied discount amount. Maximum discounted qty. Return not nullable value if discount cannot be applied to ALL items
     /// </returns>
-    Task<(decimal subTotal, decimal discountAmount, List<Discount> appliedDiscounts, int? maximumDiscountQty)> GetSubTotalAsync(ShoppingCartItem shoppingCartItem,
+    Task<(decimal subTotal, decimal discountAmount, List<DiscountPrice> discountPrices)> GetSubTotalAsync(ShoppingCartItem shoppingCartItem,
         bool includeDiscounts);
 
     /// <summary>

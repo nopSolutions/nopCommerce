@@ -18192,6 +18192,9 @@
   <LocaleResource Name="Order.Product(s).Price">
     <Value>Price</Value>
   </LocaleResource>
+  <LocaleResource Name="Order.Product(s).PriceByQuantity">
+    <Value>{0} items for {1}</Value>
+  </LocaleResource>
   <LocaleResource Name="Order.Product(s).Quantity">
     <Value>Quantity</Value>
   </LocaleResource>

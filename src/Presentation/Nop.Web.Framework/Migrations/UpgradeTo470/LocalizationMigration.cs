@@ -209,6 +209,8 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Configuration.EmailAccounts.Fields.MaxNumberOfEmails"] = "Max number of emails",
             ["Admin.Configuration.EmailAccounts.Fields.MaxNumberOfEmails.Hint"] = "The maximum number of emails sent at one time.",
             ["Admin.Configuration.EmailAccounts.Fields.MaxNumberOfEmails.ShouldBeGreaterThanZero"] = "The maximum number of emails should be greater 0.",
+
+            ["Order.Product(s).PriceByQuantity"] = "{0} items for {1}",
         }, languageId);
 
         #endregion

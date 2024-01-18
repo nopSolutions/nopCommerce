@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -1239,8 +1240,8 @@ public partial class OrderProcessingService : IOrderProcessingService
             var product = await _productService.GetProductByIdAsync(sc.ProductId);
 
             //prices
-            var scUnitPrice = (await _shoppingCartService.GetUnitPriceAsync(sc, true)).unitPrice;
-            var (scSubTotal, discountAmount, scDiscounts, _) = await _shoppingCartService.GetSubTotalAsync(sc, true);
+            var (scUnitPrice, _, scDiscounts) = await _shoppingCartService.GetUnitPriceAsync(sc, true);
+            var (scSubTotal, discountAmount, discountPrices) = await _shoppingCartService.GetSubTotalAsync(sc, true);
             var scUnitPriceInclTax = await _taxService.GetProductPriceAsync(product, scUnitPrice, true, details.Customer);
             var scUnitPriceExclTax = await _taxService.GetProductPriceAsync(product, scUnitPrice, false, details.Customer);
             var scSubTotalInclTax = await _taxService.GetProductPriceAsync(product, scSubTotal, true, details.Customer);
@@ -1282,6 +1283,29 @@ public partial class OrderProcessingService : IOrderProcessingService
             };
 
             await _orderService.InsertOrderItemAsync(orderItem);
+
+            if (discountPrices.Any())
+            {
+                //including tax
+                var pricesByQuantityInclTax = await discountPrices.SelectAwait(async priceByQuantity => 
+                new DiscountPriceByQuantity
+                {
+                    Quantity = priceByQuantity.DiscountQuantity,
+                    DiscountPrice = (await _taxService.GetProductPriceAsync(product, priceByQuantity.PriceWithDiscount, true, details.Customer)).price
+                }).ToListAsync();
+
+                await _genericAttributeService.SaveAttributeAsync(orderItem, "pricesByQuantityInclTax", pricesByQuantityInclTax);
+
+                //excluding tax
+                var pricesByQuantityExclTax = await discountPrices.SelectAwait(async priceByQuantity =>
+                new DiscountPriceByQuantity
+                {
+                    Quantity = priceByQuantity.DiscountQuantity,
+                    DiscountPrice = (await _taxService.GetProductPriceAsync(product, priceByQuantity.PriceWithDiscount, false, details.Customer)).price
+                }).ToListAsync();
+
+                await _genericAttributeService.SaveAttributeAsync(orderItem, "pricesByQuantityExclTax", pricesByQuantityExclTax);
+            }
 
             //gift cards
             await AddGiftCardsAsync(product, sc.AttributesXml, sc.Quantity, orderItem, scUnitPriceExclTax.price);

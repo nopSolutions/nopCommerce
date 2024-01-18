@@ -1014,7 +1014,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                 var (unitPrice, _, _) = await _shoppingCartService.GetUnitPriceAsync(item, true);
                 shoppingCartItemModel.UnitPrice = await _priceFormatter.FormatPriceAsync((await _taxService.GetProductPriceAsync(product, unitPrice)).price);
                 shoppingCartItemModel.UnitPriceValue = (await _taxService.GetProductPriceAsync(product, unitPrice)).price;
-                var (subTotal, _, _, _) = await _shoppingCartService.GetSubTotalAsync(item, true);
+                var (subTotal, _, _) = await _shoppingCartService.GetSubTotalAsync(item, true);
                 shoppingCartItemModel.Total = await _priceFormatter.FormatPriceAsync((await _taxService.GetProductPriceAsync(product, subTotal)).price);
                 shoppingCartItemModel.TotalValue = (await _taxService.GetProductPriceAsync(product, subTotal)).price;
 
