@@ -19,7 +19,6 @@ using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
-using Nop.Web.Extensions;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
