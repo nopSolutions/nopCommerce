@@ -1,5 +1,8 @@
-﻿@model CategoryModel
-
+﻿@inject IThemeContext themeContext
+@{
+    var themeName =await themeContext.GetWorkingThemeNameAsync();
+}
+@model CategoryModel
 @using Nop.Core.Domain.Common;
 @using Nop.Core.Domain.Seo;
 @using Nop.Web.Models.Catalog;
@@ -13,7 +16,12 @@
 @inject SeoSettings seoSettings
 @inject IViewComponentSelector viewComponentSelector
 
-@{
+@if (Model !=null)
+{
+    //Lancelot Fix:Call the owl.carousel css and js for sub-category slider view
+    NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/owl.carousel.css");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, $"~/Themes/{themeName}/Content/scripts/owl.carousel.js");
+
     Layout = "_ColumnsTwo";
 
     //title
@@ -46,7 +54,7 @@
     {
         subCategoriesPerRowClassName = "two-per-row";
     }
-}
+
 
 @section Breadcrumb
 {
@@ -108,7 +116,7 @@
             @if (Model.SubCategories.Count > 0)
             {
                 <div class="category-grid sub-category-grid @subCategoriesPerRowClassName">
-                    <div class="item-grid">
+                    <div class="item-grid owl-carousel owl-theme">
                         @foreach (var item in Model.SubCategories)
                         {
                             <div class="item-box">
@@ -140,6 +148,7 @@
                         }
                     </div>
                 </div>
+                   
             }
             @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CategoryDetailsBeforeFeaturedProducts, additionalData = Model })
             @if (Model.FeaturedProducts.Count > 0)
@@ -179,3 +188,30 @@
         @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CategoryDetailsBottom, additionalData = Model })
     </div>
 </div>
+ <script asp-location="Footer">
+
+
+                var owl = $('.owl-carousel');
+        owl.owlCarousel({
+            items:3,
+            loop:true,
+            margin:10,
+            autoplay:true,
+            autoplayTimeout:3000,
+            autoplayHoverPause:true,
+            responsive: {
+                            0: {
+                                items: 1
+                            },
+                            481: {
+
+                                items: 2
+                            },
+                            769: {
+                                items: 3
+                            }
+                        }
+        });
+
+    </script>
+}
