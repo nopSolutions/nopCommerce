@@ -1,4 +1,5 @@
 ﻿using FluentValidation.TestHelper;
+using Nop.Services.Localization;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Validators.Catalog;
 using NUnit.Framework;
@@ -13,7 +14,7 @@ public class ProductEmailAFriendValidatorTests : BaseNopTest
     [OneTimeSetUp]
     public void Setup()
     {
-        _validator = GetService<ProductEmailAFriendValidator>();
+        _validator = new ProductEmailAFriendValidator(GetService<ILocalizationService>());
     }
 
     [Test]

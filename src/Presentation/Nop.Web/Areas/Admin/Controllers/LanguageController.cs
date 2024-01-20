@@ -329,12 +329,7 @@ public partial class LanguageController : BaseAdminController
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
             return AccessDeniedView();
-
-        if (model.ResourceName != null)
-            model.ResourceName = model.ResourceName;
-        if (model.ResourceValue != null)
-            model.ResourceValue = model.ResourceValue;
-
+        
         if (!ModelState.IsValid)
         {
             return ErrorJson(ModelState.SerializeErrors());
@@ -365,12 +360,7 @@ public partial class LanguageController : BaseAdminController
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
             return AccessDeniedView();
-
-        if (model.ResourceName != null)
-            model.ResourceName = model.ResourceName;
-        if (model.ResourceValue != null)
-            model.ResourceValue = model.ResourceValue;
-
+        
         if (!ModelState.IsValid)
         {
             return ErrorJson(ModelState.SerializeErrors());

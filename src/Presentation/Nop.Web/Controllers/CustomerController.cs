@@ -34,7 +34,6 @@ using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Tax;
-using Nop.Web.Extensions;
 using Nop.Web.Factories;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;

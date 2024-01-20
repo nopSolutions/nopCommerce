@@ -10,7 +10,7 @@ public class CustomerServiceTests : ServiceTest
 {
     private ICustomerService _customerService;
 
-    [OneTimeSetUp]
+    [SetUp]
     public async Task SetUp()
     {
         _customerService = GetService<ICustomerService>();
@@ -19,7 +19,7 @@ public class CustomerServiceTests : ServiceTest
         await _customerService.UpdateCustomerRoleAsync(moderator);
     }
 
-    [OneTimeTearDown]
+    [TearDown]
     public async Task TearDown()
     {
         var moderator = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.ForumModeratorsRoleName);

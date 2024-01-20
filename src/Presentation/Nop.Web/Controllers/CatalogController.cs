@@ -491,9 +491,12 @@ public partial class CatalogController : BasePublicController
 
     protected virtual async Task<bool> CheckManufacturerAvailabilityAsync(Manufacturer manufacturer)
     {
+        if (manufacturer == null)
+            return false;
+
         var isAvailable = true;
 
-        if (manufacturer == null || manufacturer.Deleted)
+        if (manufacturer.Deleted)
             isAvailable = false;
 
         var notAvailable =

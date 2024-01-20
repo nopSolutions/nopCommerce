@@ -21,7 +21,6 @@ using NUnit.Framework;
 namespace Nop.Tests.Nop.Services.Tests.Orders;
 
 [TestFixture]
-//[Ignore("This test leads the Stack Overflow Exception")]
 public class OrderTotalCalculationServiceTests : ServiceTest
 {
     private IOrderTotalCalculationService _orderTotalCalcService;
@@ -96,7 +95,7 @@ public class OrderTotalCalculationServiceTests : ServiceTest
 
     #endregion
 
-    [OneTimeSetUp]
+    [SetUp]
     public async Task SetUp()
     {
         _settingService = GetService<ISettingService>();
@@ -141,11 +140,11 @@ public class OrderTotalCalculationServiceTests : ServiceTest
         _customer = await _customerService.GetCustomerByEmailAsync(NopTestsDefaults.AdminEmail);
         _store = (await _storeService.GetAllStoresAsync()).First();
 
-        await GetService<IGenericAttributeService>().SaveAttributeAsync(_customer,
+        await _genericAttributeService.SaveAttributeAsync(_customer,
             NopCustomerDefaults.SelectedPaymentMethodAttribute, "Payments.TestMethod", 1);
     }
 
-    [OneTimeTearDown]
+    [TearDown]
     public async Task TearDown()
     {
         var settingService = GetService<ISettingService>();
@@ -361,11 +360,11 @@ public class OrderTotalCalculationServiceTests : ServiceTest
         var role = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.AdministratorsRoleName);
         role.FreeShipping = true;
         await _customerService.UpdateCustomerRoleAsync(role);
-        var isFreeShipping = await _orderTotalCalcService.IsFreeShippingAsync(await GetShoppingCartAsync());
         product.IsFreeShipping = true;
         await _productService.UpdateProductAsync(product);
         role.FreeShipping = false;
         await _customerService.UpdateCustomerRoleAsync(role);
+        var isFreeShipping = await _orderTotalCalcService.IsFreeShippingAsync(await GetShoppingCartAsync());
         isFreeShipping.Should().BeTrue();
     }
 
@@ -724,7 +723,6 @@ public class OrderTotalCalculationServiceTests : ServiceTest
         _rewardPointsSettings.MinimumRewardPointsToUse = 0;
 
         await _settingService.SaveSettingAsync(_rewardPointsSettings);
-        //var orderTotalCalculationService = GetService<IOrderTotalCalculationService>();
 
         GetService<IOrderTotalCalculationService>().CheckMinimumRewardPointsToUseRequirement(0).Should().BeTrue();
         GetService<IOrderTotalCalculationService>().CheckMinimumRewardPointsToUseRequirement(1).Should().BeTrue();

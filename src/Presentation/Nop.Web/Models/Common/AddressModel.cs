@@ -89,4 +89,25 @@ public partial record AddressModel : BaseNopEntityModel
     public string FormattedCustomAddressAttributes { get; set; }
     public IList<AddressAttributeModel> CustomAddressAttributes { get; set; }
 
+    public Address ToEntity(Address destination = null)
+    {
+        destination ??= new Address();
+        
+        destination.Id = Id;
+        destination.FirstName = FirstName;
+        destination.LastName = LastName;
+        destination.Email = Email;
+        destination.Company = Company;
+        destination.CountryId = CountryId == 0 ? null : CountryId;
+        destination.StateProvinceId = StateProvinceId == 0 ? null : StateProvinceId;
+        destination.County = County;
+        destination.City = City;
+        destination.Address1 = Address1;
+        destination.Address2 = Address2;
+        destination.ZipPostalCode = ZipPostalCode;
+        destination.PhoneNumber = PhoneNumber;
+        destination.FaxNumber = FaxNumber;
+
+        return destination;
+    }
 }
