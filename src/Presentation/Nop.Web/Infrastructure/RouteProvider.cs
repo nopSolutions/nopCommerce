@@ -65,10 +65,10 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             pattern: $"cart/selectshippingoption",
             defaults: new { controller = "ShoppingCart", action = "SelectShippingOption" });
 
-        //wishlist
+        //wishlist //customization
         endpointRouteBuilder.MapControllerRoute(name: "Wishlist",
             pattern: $"{lang}/wishlist/{{customerGuid?}}",
-            defaults: new { controller = "ShoppingCart", action = "Wishlist" });
+            defaults: new { controller = "ShoppingCart", action = "ShortListed" });
 
         //checkout attribute change (AJAX)
         endpointRouteBuilder.MapControllerRoute(name: "CheckoutAttributeChange",

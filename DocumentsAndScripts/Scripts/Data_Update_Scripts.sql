@@ -66,7 +66,7 @@ UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'shoppingcartsettings.show
 UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'shoppingcartsettings.allowcartitemediting';
 UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'shoppingcartsettings.moveitemsfromwishlisttocart';
 
--- catalogsettings
+-- catalog settings
 UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'catalogsettings.showskuonproductdetailspage';
 UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'catalogsettings.allowproductviewmodechanging';
 UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'catalogsettings.allowproductsorting';
@@ -91,6 +91,8 @@ UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'catalogsettings.enableman
 UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'catalogsettings.enablepricerangefiltering';
 UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'catalogsettings.productsbytagpricerangefiltering';
 UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'catalogsettings.searchpagepricerangefiltering';
+UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'catalogsettings.allowcustomerstosearchwithmanufacturername';
+UPDATE [dbo].[Setting] SET Value='0' WHERE Name = 'catalogsettings.manufacturersblockitemstodisplay';
 
 -- ordersettings
 UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'ordersettings.anonymouscheckoutallowed';
@@ -122,8 +124,9 @@ UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'customersettings.phonereq
 UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'customersettings.companyenabled';
 UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'customersettings.hidedownloadableproductstab';
 UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'customersettings.hidebackinstocksubscriptionstab';
-UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'customersettings.newsletterenabled';
-UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'customersettings.dateofbirthenabled';
+UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'customersettings.newsletterenabled';
+UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'customersettings.dateofbirthenabled';
+UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'customersettings.allowcustomerstouploadavatars';
 
 -- Customersettings -- AddressSettings -- Address form fields
 UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'addresssettings.companyenabled';
@@ -141,8 +144,31 @@ UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'addresssettings.phoneena
 UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'addresssettings.phonerequired';
 UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'addresssettings.faxenabled';
 
+
+
 -- shopping cart settings
 UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'shoppingcartsettings.displaycartafteraddingproduct';
+
+-- sitemap settings
+-- hide manufacture list in sitemap
+UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'sitemapsettings.sitemapincludemanufacturers';
+-- hide cateogories list in sitemap.It is shwoing both take support and give support but we should not show both categories
+-- hence hiding categories temporarily until a solution/fix is identified
+UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'sitemapsettings.sitemapincludecategories';
+
+-- menu settings
+-- hide search item in top menu
+UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'displaydefaultmenuitemsettings.displayproductsearchmenuitem';
+-- hide search item in footer
+UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'displaydefaultfooteritemsettings.displayproductsearchfooteritem';
+
+
+-- footer settings
+UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'displaydefaultfooteritemsettings.displayproductsearchfooteritem';
+UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'displaydefaultfooteritemsettings.displayapplyvendoraccountfooteritem';
+UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'displaydefaultfooteritemsettings.displaycustomeraddressesfooteritem';
+
+
 
 
 SELECT * FROM [dbo].[Setting] WHERE [Name] like 'customersettings.date%';
@@ -198,3 +224,7 @@ UPDATE [dbo].[Store] SET HomepageTitle='On Job support Help |Job support | Proxy
 -- Topics Settings
 UPDATE [dbo].[Topic] SET [Body] = '<p>Please contact us for any queries you have. We will be happy to assist you.</p>' WHERE Id=4 -- Contact us page
 UPDATE [dbo].[Topic] SET [Body] = '<p></p>', Title='' WHERE Id=7 -- Login Page Info
+
+
+
+
