@@ -1,0 +1,109 @@
+﻿@using Nop.Core
+@using Nop.Services.Configuration
+@using Nop.Services.Orders;
+@using Nop.Services.Security;
+@using Nop.Core.Domain.Orders;
+
+@inject ISettingService settingService
+@inject IStoreContext storeContext
+@inject IWorkContext workContext
+@inject IPermissionService permissionService
+@inject IShoppingCartService shoppingCartService
+
+@{
+    Layout = "_Root.Head";
+
+    var storeId = (await storeContext.GetCurrentStoreAsync()).Id;
+    var controllerName = Url.ActionContext.RouteData.Values["controller"].ToString();
+    var actionName = Url.ActionContext.RouteData.Values["action"].ToString();
+
+    var isHomePage = controllerName.Equals("home", StringComparison.InvariantCultureIgnoreCase);
+    var isCatalogPage = (controllerName.Equals("catalog", StringComparison.InvariantCultureIgnoreCase)
+                        || controllerName.Equals("product", StringComparison.InvariantCultureIgnoreCase))
+
+                        && actionName.Equals("category", StringComparison.InvariantCultureIgnoreCase)
+                        || actionName.Equals("manufacturer", StringComparison.InvariantCultureIgnoreCase)
+                        || actionName.Equals("manufacturerall", StringComparison.InvariantCultureIgnoreCase)
+                        || actionName.Equals("vendor", StringComparison.InvariantCultureIgnoreCase)
+                        || actionName.Equals("vendorall", StringComparison.InvariantCultureIgnoreCase)
+                        || actionName.Equals("productsbytag", StringComparison.InvariantCultureIgnoreCase)
+                        || actionName.Equals("newproducts", StringComparison.InvariantCultureIgnoreCase)
+                        || actionName.Equals("recentlyviewedproducts", StringComparison.InvariantCultureIgnoreCase);
+    var isProductPage = controllerName.Equals("product", StringComparison.InvariantCultureIgnoreCase)
+                        && actionName.Equals("productdetails", StringComparison.InvariantCultureIgnoreCase);
+
+    var CatalogPageLayout = string.Empty;
+    var ProductPageLayout = string.Empty;
+
+    if (isCatalogPage)
+    {
+        CatalogPageLayout = await settingService.GetSettingByKeyAsync("VoyageThemeSettings.CategoryPageLayout", "three-products", storeId, true);
+    }
+    if (isProductPage)
+    {
+        ProductPageLayout = await settingService.GetSettingByKeyAsync("VoyageThemeSettings.ProductPageLayout", "standard-gallery", storeId, true);
+    }
+
+    var shoppingCartEnabled = await permissionService.AuthorizeAsync(StandardPermissionProvider.EnableShoppingCart);
+    var shoppingCartItems = await shoppingCartService.GetShoppingCartAsync(await workContext.GetCurrentCustomerAsync(), ShoppingCartType.ShoppingCart, storeId);
+    var shoppingCartItemsCount = shoppingCartItems.Sum(item => item.Quantity);
+    ViewBag.ShoppingCartEnabled = shoppingCartEnabled;
+    ViewBag.ShoppingCartItems = shoppingCartItemsCount;
+}
+
+@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BodyStartHtmlTagAfter })
+@await Html.PartialAsync("_Notifications")
+@await Html.PartialAsync("_JavaScriptDisabledWarning")
+
+<div class="master-wrapper-page @CatalogPageLayout @ProductPageLayout"> 
+    @await Html.PartialAsync("_Header")
+    <script asp-location="Footer">
+        var localized_data = {
+            AjaxCartFailure: "@T("AjaxCart.Failure")"
+        };
+        AjaxCart.init(false, '.cart-qty', '.wishlist-qty', '#flyout-cart', localized_data);
+    </script>
+    <div class="overlayOffCanvas"></div>
+    <div class="responsive-nav-wrapper">
+        <div class="button menu-button">
+            <span class="txt">@T("SevenSpikes.Themes.Common.MenuTitle")</span>
+        </div>
+        <div class="button personal-button">
+            <span class="txt">@T("SevenSpikes.Themes.Common.Personal")</span>
+        </div>
+        <div class="header-logo mobile">
+            @await Component.InvokeAsync("Logo")
+        </div>
+        <div class="button search-button">
+            <span class="txt">@T("Search")</span>
+        </div>
+        @if (ViewBag.ShoppingCartEnabled != null && ViewBag.ShoppingCartEnabled)
+        {
+            <div class="button cart-button">
+                <a class="txt" href="@Url.RouteUrl("ShoppingCart")">
+                    <span class="cart-qty">@ViewBag.ShoppingCartItems</span>
+                </a>
+            </div>
+        }
+        @*<div class="filters-button">
+            <span>@T("SevenSpikes.Themes.Common.Filters")</span>
+        </div>*@
+    </div>
+    @if (isHomePage)
+    {
+        @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_main_slider" })
+    }
+    <div class="master-wrapper-content">
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ContentBefore })
+        @await Component.InvokeAsync("Widget", new { widgetZone = "voyage_color_squares" })
+        @if (IsSectionDefined("Breadcrumb"))
+        {
+            @RenderSection("Breadcrumb")
+        }
+        @RenderBody()
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ContentAfter })
+    </div>
+    @await Component.InvokeAsync("Footer")
+</div>
+@await Component.InvokeAsync("EuCookieLaw")
+@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BodyEndHtmlTagBefore })

@@ -1,0 +1,57 @@
+﻿@model SocialModel
+
+@using Nop.Core
+@using Nop.Core.Infrastructure
+@using Nop.Services.Configuration
+
+@{
+    var storeId = (await EngineContext.Current.Resolve<IStoreContext>().GetCurrentStoreAsync()).Id;
+    var pinterestUrl = await EngineContext.Current.Resolve<ISettingService>().GetSettingByKeyAsync("voyagethemesettings.pinteresturl", String.Empty, storeId, true);
+    var vimeoUrl = await EngineContext.Current.Resolve<ISettingService>().GetSettingByKeyAsync("voyagethemesettings.vimeourl", String.Empty, storeId, true);
+    var instagramUrl = await EngineContext.Current.Resolve<ISettingService>().GetSettingByKeyAsync("voyagethemesettings.instagramurl", String.Empty, storeId, true);
+}
+
+<ul class="social-networks">
+    @if (!String.IsNullOrEmpty(Model.FacebookLink))
+    {
+        <li class="facebook">
+            <a class="link" href="@Model.FacebookLink" target="_blank" rel="noopener noreferrer" aria-label="@T("Footer.FollowUs.Facebook")"></a>
+        </li>
+    }
+    @if (!String.IsNullOrEmpty(Model.TwitterLink))
+    {
+        <li class="twitter">
+            <a class="link" href="@Model.TwitterLink" target="_blank" rel="noopener noreferrer" aria-label="@T("Footer.FollowUs.Twitter")"></a>
+        </li>
+    }
+    @if (!String.IsNullOrEmpty(pinterestUrl))
+    {
+        <li class="pinterest">
+            <a class="link" href="@pinterestUrl" target="_blank" rel="noopener noreferrer" aria-label="@T("SevenSpikes.Themes.Common.Footer.FollowUs.Pinterest")"></a>
+        </li>
+    }
+    @if (!String.IsNullOrEmpty(instagramUrl))
+    {
+        <li class="instagram">
+            <a class="link" href="@instagramUrl" target="_blank" rel="noopener noreferrer" aria-label="@T("SevenSpikes.Themes.Common.Footer.FollowUs.Instagram")"></a>
+        </li>
+    }
+    @if (!String.IsNullOrEmpty(Model.YoutubeLink))
+    {
+        <li class="youtube">
+            <a class="link" href="@Model.YoutubeLink" target="_blank" rel="noopener noreferrer" aria-label="@T("Footer.FollowUs.Youtube")"></a>
+        </li>
+    }
+    @if (!String.IsNullOrEmpty(vimeoUrl))
+    {
+        <li class="vimeo">
+            <a class="link" href="@vimeoUrl" target="_blank" rel="noopener noreferrer" aria-label="@T("SevenSpikes.Themes.Common.Footer.FollowUs.Vimeo")"></a>
+        </li>
+    }
+    @*@if (Model.NewsEnabled)
+    {
+        <li class="rss">
+            <a class="link" href="@Url.RouteUrl("NewsRSS", new {languageId = Model.WorkingLanguageId})" aria-label="@T("Footer.FollowUs.RSS")"></a>
+        </li>
+    }*@
+</ul>
