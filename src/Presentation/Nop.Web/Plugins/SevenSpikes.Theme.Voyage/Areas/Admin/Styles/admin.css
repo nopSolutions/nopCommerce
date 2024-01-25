@@ -1,0 +1,91 @@
+﻿
+.logo-group {
+	margin-bottom: 20px !important;
+}
+.logo-group .picture-container {
+	vertical-align: middle;
+}
+.form-group em {
+    position: relative;
+    bottom: 1px;
+    margin: 0 8px;
+}
+
+/* COLOR PRESETS */
+
+.theme-color .upload-image-overlay {
+    position: absolute !important;
+}
+.theme-color .upload-image-overlay:before {
+    display: none !important;
+}
+.theme-color .upload-image-overlay:hover {
+    cursor: auto;
+}
+
+.theme-color .adminData {
+    position: relative;
+}
+.theme-color .radionButton {
+	position: relative;
+    float: left;
+    margin: 0 5px 10px;
+	box-shadow: 0 0 0 2px;
+	border: 2px solid transparent;
+	border-radius: 2px;
+    font-size: 0;
+	color: transparent;
+	transition: all 0.2s ease;
+}
+.theme-color .radionButton:hover {
+	opacity: 0.8;
+}
+.theme-color .radionButton.active {
+	color: #999;
+}
+.theme-color .radionButton .before {
+    display: none;
+}
+.theme-color .radionButton input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+	cursor: pointer;
+	opacity: 0;
+}
+.theme-color .radionButton label {
+    display: block;
+	position: relative;
+    width: 45px;
+    height: 45px;
+	margin: 0;
+	border-radius: 2px;
+    padding: 0;
+	cursor: pointer;
+}
+.theme-color .radionButton:last-child label:before {
+    content: "";
+    position: absolute;
+    right: -15px;
+    bottom: 7px;
+    width: 31px;
+    height: 31px;
+    background: url('color-picker.png') no-repeat;
+}
+.theme-color .radionButton:last-child .k-widget {
+    visibility: hidden; /*kendo fix*/
+}
+
+.theme-color .radionButton .k-widget {
+    width: 0 !important;
+    height: 0;
+}
+.theme-color .radionButton .k-picker-wrap {
+    height: auto;
+}
+.k-selected-color-display .k-color-value {
+    font-size:  13px;
+}

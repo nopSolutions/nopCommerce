@@ -1,0 +1,237 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings>
+
+  <!-- Global Settings -->
+
+  <Setting Name="VoyageThemeSettings.HomepageTopicLayout">
+    <Value>horizontal</Value>
+  </Setting>
+  <Setting Name="VoyageThemeSettings.CategoryPageLayout">
+    <Value>three-products</Value>
+  </Setting>
+  <Setting Name="VoyageThemeSettings.ProductPageLayout">
+    <Value>standard-gallery</Value>
+  </Setting>
+  <Setting Name="VoyageThemeSettings.preset">
+    <Value>e43d51</Value>
+  </Setting>
+  <Setting Name="VoyageThemeSettings.defaultpreset">
+    <Value>e43d51</Value>
+  </Setting>
+  <Setting Name="VoyageThemeSettings.ProductImageProportion">
+    <Value>130</Value>
+  </Setting>
+  <Setting Name="VoyageThemeSettings.DefaultProductImageProportion">
+    <Value>130</Value>
+  </Setting>
+  <Setting Name="VoyageThemeSettings.CategoryImageProportion">
+    <Value>130</Value>
+  </Setting>
+  <Setting Name="VoyageThemeSettings.DefaultCategoryImageProportion">
+    <Value>130</Value>
+  </Setting>
+  <Setting Name="VoyageThemeSettings.NumberOfSubcategoriesOnHomepage">
+    <Value>8</Value>
+  </Setting>  
+    <Setting Name="VoyageThemeSettings.ProductBoxesImagesCarouselEnabled">
+    <Value>False</Value>
+  </Setting>
+  
+  <!-- Media Settings -->
+
+  <Setting Name="mediasettings.maximumimagesize">
+    <Value>1920</Value>
+  </Setting>
+  <Setting Name="mediasettings.minicartthumbpicturesize">
+    <Value>130</Value>
+  </Setting>
+  <Setting Name="mediasettings.categorythumbpicturesize">
+    <Value>520</Value>
+  </Setting>
+  <Setting Name="mediasettings.manufacturerthumbpicturesize">
+    <Value>400</Value>
+  </Setting>
+  <Setting Name="mediasettings.vendorthumbpicturesize">
+    <Value>400</Value>
+  </Setting>
+  <Setting Name="mediasettings.productthumbpicturesize">
+    <Value>600</Value>
+  </Setting>
+  <Setting Name="mediasettings.productdetailspicturesize">
+    <Value>1170</Value>
+  </Setting>
+  <Setting Name="mediasettings.productthumbpicturesizeonproductdetailspage">
+    <Value>520</Value> <!-- large value because of "extended" gallery -->
+  </Setting>
+  <Setting Name="mediasettings.associatedproductpicturesize">
+    <Value>650</Value>
+  </Setting>
+  <Setting Name="mediasettings.cartthumbpicturesize">
+    <Value>130</Value>
+  </Setting>
+  <Setting Name="mediasettings.defaultpicturezoomenabled">
+    <Value>True</Value>
+  </Setting>
+
+  <!-- Footer Settings -->
+
+  <Setting Name="displaydefaultfooteritemsettings.displayblogfooteritem">
+    <Value>False</Value>
+  </Setting>
+  <Setting Name="displaydefaultfooteritemsettings.displaynewsfooteritem">
+    <Value>False</Value>
+  </Setting>
+  <Setting Name="displaydefaultfooteritemsettings.displayproductsearchfooteritem">
+    <Value>False</Value>
+  </Setting>
+  <Setting Name="displaydefaultfooteritemsettings.displayshoppingcartfooteritem">
+    <Value>False</Value>
+  </Setting>
+  <Setting Name="displaydefaultfooteritemsettings.displaywishlistfooteritem">
+    <Value>False</Value>
+  </Setting>
+  <Setting Name="displaydefaultfooteritemsettings.displaysitemapfooteritem">
+    <Value>False</Value>
+  </Setting>
+
+  <!-- Various Settings -->
+  
+  <Setting Name="catalogsettings.showbestsellersonhomepage">
+    <Value>False</Value>
+  </Setting>
+  <Setting Name="newssettings.shownewsonmainpage">
+    <Value>False</Value>
+  </Setting>
+  <Setting Name="customersettings.newsletterblockallowtounsubscribe">
+    <Value>False</Value>
+  </Setting>
+  <Setting Name="catalogsettings.recentlyviewedproductsenabled">
+    <Value>False</Value>
+  </Setting>
+  <Setting Name="catalogsettings.productsalsopurchasednumber">
+    <Value>4</Value>
+  </Setting>
+  <Setting Name="catalogsettings.compareproductsnumber">
+    <Value>4</Value>
+  </Setting>
+  <Setting Name="customersettings.enteringemailtwice">
+    <Value>False</Value>
+  </Setting>
+  <Setting Name="shoppingcartsettings.crosssellsnumber">
+    <Value>4</Value>
+  </Setting>
+
+  <!-- Plugin Settings -->
+
+  <Setting Name="SevenSpikesCommonSettings.LazyLoadImages">
+    <Value>True</Value>
+  </Setting>
+  <Setting Name="NopAjaxCartSettings.EnableProductQuantityTextbox">
+    <Value>False</Value>
+  </Setting>
+  <Setting Name="NopAjaxCartSettings.ProductAddedToCartImageSize">
+    <Value>460</Value>
+  </Setting>
+  <Setting Name="NopAjaxCartSettings.MiniProductDetailsViewImageSize">
+    <Value>460</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.ZoomWidth">
+    <Value>500</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.ZoomHeight">
+    <Value>500</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.Zoomposition">
+    <Value>inside</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.NumberOfPictureThumbnailsInCarousel-Voyage">
+    <Value>4</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.ResponsiveBreakpointsForThumbnailsCarousel-Voyage">
+    <Value>[{"breakpoint":1024,"settings":{"slidesToShow":3,"slidesToScroll":3}},{"breakpoint":768,"settings":{"slidesToShow":4,"slidesToScroll":4}},{"breakpoint":480,"settings":{"slidesToShow":3,"slidesToScroll":3}}]</Value>
+  </Setting>
+  <Setting Name="CloudZoomSettings.EnableSliderDots">
+    <Value>False</Value>
+  </Setting>
+  <Setting Name="InstantSearchSettings.PictureSize">
+    <Value>105</Value>
+  </Setting>
+  <Setting Name="JCarouselGeneralSettings.ResponsiveBreakpointsForSlickSlider-Voyage">
+    <Value>[{"breakpoint":973,"settings":{"slidesToShow":3}},{"breakpoint":729,"settings":{"slidesToShow":2}}]</Value>
+  </Setting>
+  <Setting Name="MegaMenuSettings.NumberOfCategoriesPerRow">
+    <Value>4</Value>
+  </Setting>
+  <Setting Name="MegaMenuSettings.CategoriesImageSize">
+    <Value>360</Value>
+  </Setting>
+  <Setting Name="MegaMenuSettings.NumberOfManufacturersPerRow">
+    <Value>6</Value>
+  </Setting>
+  <Setting Name="MegaMenuSettings.ManufacturerImageSize">
+    <Value>180</Value>
+  </Setting>
+  <Setting Name="MegaMenuSettings.NumberOfVendorsPerRow">
+    <Value>6</Value>
+  </Setting>
+  <Setting Name="MegaMenuSettings.VendorImageSize">
+    <Value>180</Value>
+  </Setting>
+  <Setting Name="PrevNextProductSettings.EnablePrevNextProduct">
+    <Value>False</Value>
+  </Setting>
+  <Setting Name="QuickViewSettings.ProductItemSelectorChild">
+    <Value>.buttons .wrapper</Value>
+  </Setting>
+  <Setting Name="QuickViewSettings.ProductDetailsPictureSize">
+    <Value>460</Value>
+  </Setting>
+  <Setting Name="QuickViewSettings.ProductThumbPictureSize">
+    <Value>115</Value>
+  </Setting>
+  <Setting Name="QuickViewSettings.AccordionPanelsHeightStyle">
+    <Value>content</Value>
+  </Setting>
+  <Setting Name="RichBlogSettings.NumberOfBlogPostsToShow">
+    <Value>1</Value>
+  </Setting>
+  <Setting Name="RichBlogSettings.HomePageImageSize">
+    <Value>600</Value>
+  </Setting>
+  <Setting Name="RichBlogSettings.BlogDetailsImageSize">
+    <Value>600</Value>
+  </Setting>
+  <Setting Name="RichBlogSettings.NumberOfCharactersInBlogPostPreviewOnHomePage">
+    <Value>400</Value>
+  </Setting>
+  <Setting Name="RichBlogSettings.NumberOfCharactersInBlogPostPreviewOnBlogListPage">
+    <Value>400</Value>
+  </Setting>
+  <Setting Name="SmartProductCollectionsSettings.ShowItemsInCarousel-Voyage">
+    <Value>True</Value>
+  </Setting>
+  <Setting Name="SmartProductCollectionsCategorySettings.CategoryImagesOrientation">
+    <Value>portrait</Value>
+  </Setting>
+  <Setting Name="SmartProductCollectionsCategorySettings.NumberOfSubcategoriesToShow">
+    <Value>5</Value>
+  </Setting>
+  <Setting Name="SmartProductCollectionsSettings.CategoryThumbImageSize">
+    <Value>470</Value>
+  </Setting>
+  <Setting Name="SmartProductCollectionsSettings.ProductThumbImageSize">
+    <Value>470</Value>
+  </Setting>
+  <Setting Name="SmartProductCollectionsSettings.SlickProductSettings-Voyage">
+    <Value>{ "respondTo": "slider", "infinite": true, "rows": 1, "slidesToShow": 4, "arrows": true, "appendArrows":".spc-header", "dots": false, "useSharedNavigationButtons": true, "easing": "swing", "draggable": false }</Value>
+  </Setting>
+  <Setting Name="SmartProductCollectionsSettings.SlickCategorySettings-Voyage">
+    <Value>{ "respondTo": "window", "infinite": true, "rows": 1, "slidesToShow": 4, "arrows": true, "appendArrows":".spc-header", "dots": false, "useSharedNavigationButtons": true, "easing": "swing", "draggable": false }</Value>
+  </Setting>
+  <Setting Name="SmartProductCollectionsSettings.SlickProductResponsiveBreakpoints-Voyage">
+    <Value>[{"breakpoint":973,"settings":{"slidesToShow":3}},{"breakpoint":729,"settings":{"slidesToShow":2}}]</Value>
+  </Setting>
+  <Setting Name="SmartProductCollectionsSettings.SlickCategoryResponsiveBreakpoints-Voyage">
+    <Value>[{"breakpoint":1025,"settings":{"slidesToShow":3}},{"breakpoint":768,"settings":{"slidesToShow":2}}]</Value>
+  </Setting>
+</Settings>

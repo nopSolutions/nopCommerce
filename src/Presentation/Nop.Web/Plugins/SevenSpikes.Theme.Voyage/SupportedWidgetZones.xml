@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SupportedWidgetZones>
+  <WidgetZone>Voyage_theme_logo</WidgetZone>
+  <WidgetZone>head_html_tag_after_css_files_Voyage</WidgetZone>
+  <WidgetZone>voyage_homepage_subcategories</WidgetZone>
+  <WidgetZone>voyage_subcategory_products_count</WidgetZone>
+  <WidgetZone>voyage_color_squares</WidgetZone>
+</SupportedWidgetZones>
