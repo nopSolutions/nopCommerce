@@ -10,6 +10,7 @@ using Nop.Web.Models.ShoppingCart;
 using Nop.Services.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Web.Models.Customer;
+using Nop.Services.Catalog;
 
 namespace Nop.Web.Components
 {
@@ -23,6 +24,7 @@ namespace Nop.Web.Components
         private readonly IOrderService _orderService;
         private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IProductService _productService;
 
 
         public ActiveSubscriptionViewComponent(IShoppingCartModelFactory shoppingCartModelFactory,
@@ -32,7 +34,8 @@ namespace Nop.Web.Components
             IOrderService orderService,
             ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
-            IWorkContext workContext)
+            IWorkContext workContext,
+            IProductService productService)
         {
             _shoppingCartModelFactory = shoppingCartModelFactory;
             _shoppingCartService = shoppingCartService;
@@ -42,6 +45,7 @@ namespace Nop.Web.Components
             _orderService = orderService;
             _customerService = customerService;
             _genericAttributeService = genericAttributeService;
+            _productService = productService;
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
@@ -53,16 +57,22 @@ namespace Nop.Web.Components
 
             //future implementation: check if subscription date is valid or not based on the subscription type 3, 6 or 1 year.
 
+            var subscriptionProductId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.SubscriptionId, storeId);
+
             var model = new SubscriptionModel
             {
-                SubscriptionId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.SubscriptionId, storeId),
+                SubscriptionId = subscriptionProductId,
                 SubscriptionDate = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SubscriptionDate, storeId),
                 AllottedCreditCount = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.SubscriptionAllottedCount, storeId),
                 UsedCreditCount = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.SubscriptionUsedCreditCount, storeId),
                 IsPaidCustomer = await _customerService.IsInCustomerRoleAsync(customer, "PaidCustomer")
             };
 
-            //var product=_productService
+            //get subscription product name
+            var product = await _productService.GetProductByIdAsync(subscriptionProductId);
+
+            if (product != null)
+                model.SubscriptionProduct = product.Name;
 
             return View(model);
 
