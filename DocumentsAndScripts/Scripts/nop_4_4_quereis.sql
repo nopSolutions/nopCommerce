@@ -295,15 +295,6 @@ where Name = 'customersettings.defaultpasswordformat';
 SELECT TOP 1000 * FROM [dbo].[Setting]
 where Name like 'customersettings.%';
 
----------------------------------------------------------
--- ***  Local String update queries ****
----------------------------------------------------------
-UPDATE [dbo].[LocaleStringResource]
-SET ResourceValue='Recently viewed profiles' 
-where resourcename = 'products.recentlyviewedproducts';
--- org: Recently viewed products
----------------------------------------------------------
-
 SELECT * FROM [itjobsupport].[dbo].[Forums_PrivateMessage]
 Delete [itjobsupport].[dbo].[Forums_PrivateMessage] WHERE SenderSubject is null
 

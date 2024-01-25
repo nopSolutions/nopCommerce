@@ -1,10 +1,9 @@
 
---use [itjobsupport]
---use [nopcommerce46]
--- use [onjobsupport47]
+-- use onjobsupport47
 
-SELECT * FROM [dbo].[LocaleStringResource] WHERE ResourceValue like '%options%'
-SELECT * FROM [dbo].[LocaleStringResource] WHERE ResourceName like '%.product(s)'
+
+-- SELECT * FROM [dbo].[LocaleStringResource] WHERE ResourceValue like '%options%'
+-- SELECT * FROM [dbo].[LocaleStringResource] WHERE ResourceName like '%.product(s)'
 
 ---------------  Local String update queries    ------------------------------------------
 
@@ -50,63 +49,9 @@ Update [dbo].[LocaleStringResource] SET [ResourceValue]='You will receive an e-m
 Update [dbo].[LocaleStringResource] SET [ResourceValue]='Partner Consultancies' WHERE [ResourceName]='manufacturers'
 --Update [dbo].[LocaleStringResource] SET ResourceValue='Your Shopping Cart is empty!' WHERE [ResourceName]='shoppingcart.cartisempty';
 
-SELECT * FROM [dbo].[LocaleStringResource] WHERE [ResourceName] like 'Admin.Configuration.Stores.Fields.%';
-SELECT * FROM [dbo].[LocaleStringResource] WHERE [ResourceName] like 'Products.Tags%';
 
---------------- End: [LocaleStringResource] Table Scripts--------------------------------------------------------------
-
-
----------------------	End: [Setting] Table Scripts---------------------------------------------------------------------
-
----------Start: [Countries] Tab7, 15, 20, 50, 100le Scripts : Update countries table that we only support ---------------------------------
-
-SELECT * FROM [Country] WHERE Published=1
-
--- Update [Country] SET Published=0 WHERE [TwoLetterIsoCode] NOT IN ('US','GB','AU','CA','IN','NZ','DE','IT','SG','FR','AE')
-
-Update [Country] SET Published=1 WHERE [TwoLetterIsoCode] IN ('US')
-Update [Country] SET Published=0 WHERE [TwoLetterIsoCode] IN ('AE')
-Update [Country] SET Published=0 WHERE [TwoLetterIsoCode]='IT'
-Update [Country] SET Published=0 WHERE [TwoLetterIsoCode]='SG'
-Update [Country] SET Published=0 WHERE [TwoLetterIsoCode]='NZ'
-
-Update [Country] SET DisplayOrder=0 WHERE [TwoLetterIsoCode]='IN'
-Update [Country] SET DisplayOrder=10 WHERE [TwoLetterIsoCode]='US'
-Update [Country] SET DisplayOrder=20 WHERE [TwoLetterIsoCode]='CA'
-Update [Country] SET DisplayOrder=30 WHERE [TwoLetterIsoCode]='AU'
-Update [Country] SET DisplayOrder=40 WHERE [TwoLetterIsoCode]='FR'
-Update [Country] SET DisplayOrder=50 WHERE [TwoLetterIsoCode]='DE'
-Update [Country] SET DisplayOrder=60 WHERE [TwoLetterIsoCode]='IT'
-Update [Country] SET DisplayOrder=70 WHERE [TwoLetterIsoCode]='SG'
-Update [Country] SET DisplayOrder=80 WHERE [TwoLetterIsoCode]='GB'                              
-
------------	End: [Countries] Table Scripts -----------------------------------------------------------------------------------
-
-SELECT * FROM [CustomerAttribute] Where Id>=7
-
--- Delete [CustomerAttribute]
---DBCC CHECKIDENT ('[CustomerAttribute]', RESEED, 0);
---DBCC CHECKIDENT ('[SpecificationAttributeOption]', RESEED, 4);
-
--- Make all feilds mandatory except secondary technology which is not used presently
-UPDATE [CustomerAttribute] SET IsRequired=1 WHERE Id Not In (8)
-
--- delete [SpecificationAttributeOption] WHERE id=6
-
---DBCC CHECKIDENT ('SpecificationAttributeOption', NORESEED);
---DBCC CHECKIDENT ('SpecificationAttributeOption', RESEED, 27);
-
---  Store SEO Settings
-UPDATE [dbo].[Store] SET DefaultTitle='On Job support Help |Job support | Proxy Support | Interview Support | USA | INDIA | MS Students | Masters in USA | OPT |CPT |' WHERE Id = 1
-UPDATE [dbo].[Store] SET DefaultMetaDescription='On Job support Help |Job support | Proxy Support | Interview Support | USA | INDIA | MS Students | Masters in USA | OPT |CPT |' WHERE Id = 1
-UPDATE [dbo].[Store] SET DefaultMetaKeywords='On Job support Help |Job support | Proxy Support | Interview Support | USA | INDIA | MS Students | Masters in USA | OPT |CPT |' WHERE Id = 1
-UPDATE [dbo].[Store] SET HomepageDescription='On Job support Help |Job support | Proxy Support | Interview Support | USA | INDIA | MS Students | Masters in USA | OPT |CPT |' WHERE Id = 1
-UPDATE [dbo].[Store] SET HomepageTitle='On Job support Help |Job support | Proxy Support | Interview Support | USA | INDIA | MS Students | Masters in USA | OPT |CPT |' WHERE Id = 1
-
--- Topics Settings
-UPDATE [dbo].[Topic] SET [Body] = '<p>Please contact us for any queries you have. We will be happy to assist you.</p>' WHERE Id=4 -- Contact us page
-UPDATE [dbo].[Topic] SET [Body] = '<p></p>', Title='' WHERE Id=7 -- Login Page Info
-
-
-
-
+IF NOT EXISTS (SELECT * FROM [LocaleStringResource] WHERE [ResourceName]='Orders.UpgradeSubscription.Message')
+   BEGIN
+		INSERT INTO [dbo].[LocaleStringResource]([ResourceName],[ResourceValue],[LanguageId]) 
+		VALUES('Orders.UpgradeSubscription.Message','Please upgrade to Subscription to View Mobile Number ,Send the messages.',1)
+   END

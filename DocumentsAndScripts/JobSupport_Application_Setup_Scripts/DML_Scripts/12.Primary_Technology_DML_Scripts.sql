@@ -1,33 +1,51 @@
 
+
+-- use onjobsupport47
+
+
 select * From SpecificationAttributeOption
  ----------------------  --------------------
 
  -- primary technology insert queries
+
+ --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('.NET Full Stack', 7, 1);
+ --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('Java Full Stack', 7, 2);
+ --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('QA Testing', 7, 3);
+ --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('Cyber Security', 7, 4);
+
 
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('AI', 7, 0);
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('Android', 7, 1);
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('Angular', 7, 2);
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('Appian Developer', 7, 3);
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('AWS', 7, 4);
+
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('Big Data', 7, 5);
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('Blockchain', 7, 6);
+
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('Cyber Ark', 7, 7);
---INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('Cyber Security', 7, 8);
+
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('Data Science', 7, 9);
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('Dell Boomi', 7, 10);
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('DevOps', 7, 11);
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('DOT NET', 7, 12);
+
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('GIS', 7, 13);
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('Guidewire', 7, 14);
+
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('MS sql server', 7, 15);
+
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('Office 365 Admin', 7, 16);
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('OKTA', 7, 17);
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('ORACLE', 7, 18);
+
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('Pega', 7, 19);
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('Performance Testing', 7, 20);
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('Power BI', 7, 21);
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('Python', 7, 22);
+
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('React js', 7, 23);
+
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('Salesforce', 7, 24);
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('SAP Hybris', 7, 25);
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('SAP Modules', 7, 26);
@@ -35,9 +53,12 @@ select * From SpecificationAttributeOption
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('SCCM', 7, 28);
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('SCRUM Master', 7, 29);
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('Splunk', 7, 30);
+
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('Talend', 7, 31);
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('TOSCA', 7, 32);
+
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('UI/UX Developer', 7, 33);
+
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('Workday', 7, 34);
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('AutoML', 7, 35);
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('BigQuery', 7, 36);
@@ -104,7 +125,7 @@ select * From SpecificationAttributeOption
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('Informatica Power Center', 7, 97);
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('IOS', 7, 98);
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('IOT', 7, 99);
---INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('Java Full Stack', 7, 100);
+
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('Jenkins', 7, 101);
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('Jira admin', 7, 102);
 --INSERT INTO [SpecificationAttributeOption] ( [Name], [SpecificationAttributeId], [DisplayOrder]) VALUES ('Juniper', 7, 103);
