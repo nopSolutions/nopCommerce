@@ -59,3 +59,9 @@ IF NOT EXISTS (SELECT * FROM [LocaleStringResource] WHERE [ResourceName]='Orders
 
 Update [dbo].[LocaleStringResource] SET [ResourceValue]='Show profiles in category {0}' WHERE [ResourceName]='media.category.imagelinktitleformat'
 -- Show products in category {0}
+
+IF NOT EXISTS (SELECT * FROM [LocaleStringResource] WHERE [ResourceName]='rewardpoints.fields.date')
+   BEGIN
+		INSERT INTO [dbo].[LocaleStringResource]([ResourceName],[ResourceValue],[LanguageId]) 
+		VALUES('rewardpoints.fields.date','Date',1)
+   END

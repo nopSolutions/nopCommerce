@@ -137,6 +137,8 @@ select * from Product
 select * from UrlRecord
 select * from [Product_Category_Mapping]
 
+select * from UrlRecord
+WHERE EntityName='Topic'
 
 select * from [Order]
 select * from OrderItem

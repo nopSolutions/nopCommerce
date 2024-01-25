@@ -88,6 +88,7 @@ UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'addresssettings.statepro
 UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'addresssettings.phoneenabled';
 UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'addresssettings.phonerequired';
 UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'addresssettings.faxenabled';
+UPDATE [dbo].[Setting] SET Value='1048576'  WHERE Name = 'customersettings.avatarmaximumsizebytes';
 
 -- shopping cart settings
 UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'shoppingcartsettings.displaycartafteraddingproduct';
@@ -114,6 +115,13 @@ UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'displaydefaultfooteritem
 UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'displaydefaultfooteritemsettings.displayproductsearchfooteritem';
 UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'displaydefaultfooteritemsettings.displayapplyvendoraccountfooteritem';
 UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'displaydefaultfooteritemsettings.displaycustomeraddressesfooteritem';
+UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'displaydefaultfooteritemsettings.displayshoppingcartfooteritem';
+UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'displaydefaultfooteritemsettings.displaynewproductsfooteritem';
+UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'displaydefaultfooteritemsettings.displaycompareproductsfooteritem';
+UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'displaydefaultfooteritemsettings.displaynewproductsfooteritem';
+
+
+
 -- hide footer option  'Apply for vendor account'
 UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'vendorsettings.allowcustomerstoapplyforvendoraccount';
 

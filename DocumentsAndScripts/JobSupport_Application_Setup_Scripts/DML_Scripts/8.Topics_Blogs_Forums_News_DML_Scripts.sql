@@ -5,6 +5,11 @@
 UPDATE [dbo].[Topic] SET [Body] = '<p>Please contact us for any queries you have. We will be happy to assist you.</p>' WHERE Id=4 -- Contact us page
 UPDATE [dbo].[Topic] SET [Body] = '<p></p>', Title='' WHERE Id=7 -- Login Page Info
 
+
+-- hide footer Shipping & returns item
+UPDATE [dbo].[Topic] SET IncludeInFooterColumn1=0 WHERE SystemName='ShippingInfo'
+
+
 -- LoginPageContent Topic
 INSERT INTO [dbo].[Topic]
            ([SystemName],[IncludeInSitemap],[IncludeInTopMenu],[IncludeInFooterColumn1]
