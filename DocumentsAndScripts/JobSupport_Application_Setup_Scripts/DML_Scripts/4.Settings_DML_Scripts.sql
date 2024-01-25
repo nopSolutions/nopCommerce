@@ -117,6 +117,9 @@ UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'displaydefaultfooteritem
 -- hide footer option  'Apply for vendor account'
 UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'vendorsettings.allowcustomerstoapplyforvendoraccount';
 
+-- forum settings
+UPDATE [dbo].[Setting] SET Value='True' WHERE Name = 'forumsettings.allowprivatemessages';
+
 
 -- Setting insert scripts
 IF NOT EXISTS (SELECT * FROM [Setting] WHERE [Name]='customersettings.genderspecificationattributeid')

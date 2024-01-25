@@ -55,3 +55,7 @@ IF NOT EXISTS (SELECT * FROM [LocaleStringResource] WHERE [ResourceName]='Orders
 		INSERT INTO [dbo].[LocaleStringResource]([ResourceName],[ResourceValue],[LanguageId]) 
 		VALUES('Orders.UpgradeSubscription.Message','Please upgrade to Subscription to View Mobile Number ,Send the messages.',1)
    END
+
+
+Update [dbo].[LocaleStringResource] SET [ResourceValue]='Show profiles in category {0}' WHERE [ResourceName]='media.category.imagelinktitleformat'
+-- Show products in category {0}

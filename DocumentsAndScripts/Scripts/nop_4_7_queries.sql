@@ -101,15 +101,35 @@ FROM
 
 
 select * FROM [dbo].[Setting] 
-where Name like 'catalogsettings.tag%';
+where Name like 'mediasettings.%';
 
+select * FROM [dbo].[Setting] 
+where Name like 'catalogsettings.show%';
+
+select * FROM [dbo].[Setting] 
+where Name like '%show products%';
+
+select * from LocaleStringResource
+Where ResourceValue like 'Show products%'
+
+select * from LocaleStringResource
+Where ResourceName='Media.Category.ImageAlternateTextFormat'
+
+select * from LocaleStringResource
+Where ResourceName='media.category.imagelinktitleformat'
 
 select * FROM [dbo].[Setting] 
 where Name like '%tag%'
-and Name like 'catalogsettings.%';
+and Name like 'catalogsettings.show%';
 
 
-select * FROM CustomerPassword
+select * FROM Customer
+select * FROM CustomerRole
+
+select * FROM [dbo].[Customer_CustomerRole_Mapping]
+-- 6
+
+-- Insert Into Customer_CustomerRole_Mapping values(6,2)
 
 -- update CustomerPassword set PasswordFormatId=0, Password='India@2024'
 
@@ -123,5 +143,11 @@ select * from OrderItem
 
 
 select * from [Log]
+
+select * from [picture]
+select * from [pictureBinary]
+
+ update Category set ShowOnHomepage=1
+ Where Id in (4,5)
 
 
