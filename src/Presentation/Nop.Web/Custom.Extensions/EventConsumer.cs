@@ -630,6 +630,11 @@ namespace Nop.CustomExtensions.Services
 
             }
 
+            if (eventMessage.Model is SearchBoxModel searchBoxModel)
+            {
+
+            }
+
             //return Task.FromResult(0);
         }
 

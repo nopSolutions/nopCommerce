@@ -98,7 +98,7 @@ public partial class ProductController : BasePublicController
         IWorkflowMessageService workflowMessageService,
         LocalizationSettings localizationSettings,
         ShoppingCartSettings shoppingCartSettings,
-        ShippingSettings shippingSettings,            
+        ShippingSettings shippingSettings,
         //customization
         IGenericAttributeService genericAttributeService,
         IPrivateMessagesModelFactory privateMessagesModelFactory)
@@ -176,6 +176,11 @@ public partial class ProductController : BasePublicController
         var product = await _productService.GetProductByIdAsync(productId);
         if (product == null || product.Deleted)
             return InvokeHttp404();
+
+        //customization
+        //prevent 'give support' profiles viewing 'give support' profiles and vice versa
+        if (!await _productModelFactory.CanCurrentCustomerViewTargetProfileAsync(product))
+            return RedirectToRoute("Homepage");
 
         var notAvailable =
             //published?

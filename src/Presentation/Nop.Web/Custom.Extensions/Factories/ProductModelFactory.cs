@@ -24,6 +24,8 @@ namespace Nop.Web.Factories
             bool forceRedirectionAfterAddingToCart = false);
 
         Task<IEnumerable<int>> FilterRelatedProductsAsync(IList<int> productIds);
+
+        Task<bool> CanCurrentCustomerViewTargetProfileAsync(Product product);
     }
 
     public partial class ProductModelFactory
@@ -436,7 +438,7 @@ namespace Nop.Web.Factories
                 model.TimeZoneId = customer.TimeZoneId;
                 model.AvatarPictureId = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.AvatarPictureIdAttribute);
 
-                model.CustomerProfileTypeId = model.FirstName;
+                model.CustomerProfileTypeId = customer.CustomerProfileTypeId;
             }
 
         }
@@ -499,5 +501,16 @@ namespace Nop.Web.Factories
         }
 
         #endregion
+
+        public virtual async Task<bool> CanCurrentCustomerViewTargetProfileAsync(Product product)
+        {
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var targetProfile = await _customerService.GetCustomerByIdAsync(product.VendorId);
+
+            if (customer.CustomerProfileTypeId == targetProfile.CustomerProfileTypeId)
+                return false;
+
+            return true;
+        }
     }
 }

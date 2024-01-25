@@ -14,7 +14,7 @@ namespace Nop.Web.Models.Catalog
         public string LanguageId { get; set; }
         public string TimeZoneId { get; set; }
         public string AvatarPictureId { get; set; }
-        public string CustomerProfileTypeId { get; set; }
+        public int CustomerProfileTypeId { get; set; }
         public string LastLoginDateTime { get; set; }
         public string PrimaryTechnology { get; set; }
         public string SecondaryTechnology { get; set; }
