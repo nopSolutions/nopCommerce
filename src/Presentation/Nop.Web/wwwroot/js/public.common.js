@@ -195,3 +195,108 @@ function addAntiForgeryToken(data) {
     }
     return data;
 };
+
+//customization
+function changeWishlistStatus(productId, messagetype) {
+
+    console.log(messagetype);
+
+    if (messagetype === 'sendInterest') {
+        var itemSelector = $('#product-interest-' + productId).children();
+
+        console.log(itemSelector);
+
+        itemSelector.first().removeClass('icon-color');
+        itemSelector.first().addClass('icon-selected-color');
+        itemSelector.last().text('Interest Sent');
+
+        itemSelector.last().removeAttr("href");
+        itemSelector.last().removeAttr("onclick");
+        return;
+    }
+
+    var productSelector = $('#product-' + productId).children();
+
+    if (messagetype === 'addToWishList') {
+
+        console.log(productSelector);
+
+        productSelector.first().removeClass('icon-color');
+        productSelector.first().addClass('icon-selected-color');
+        productSelector.last().text('Shortlisted');
+    }
+    else {
+        //other
+        console.log('Other Any Message Type:' + messagetype);
+        productSelector.first().removeClass('icon-selected-color');
+        productSelector.first().addClass('icon-color');
+        productSelector.last().text('Shortlist');
+    }
+}
+
+function displayPopupNotificationwithhtml(htmlcode) {
+
+    var windowOptions = {
+        actions: ["Close"],
+        //width: "500px",
+        //minWidth: "200px",
+        //size: "auto",
+        //position: {
+        //    top: 100, // or "100px"
+        //    //left: "20%"
+        //},
+        height: "100px",
+        width: "20%",
+        title: "View Mobile Number",
+        visible: false,
+        modal: true
+    };
+
+    $("#kendoWindow").kendoWindow(windowOptions);
+    $("#kendoWindow").html(htmlcode);
+    $("#kendoWindow").data("kendoWindow").center().open();
+
+    //$('<div id="divSubscribePopup"></div>').html(htmlcode)
+    //    .dialog({
+    //        modal: true,
+    //        title: 'View Mobile Number',
+    //        position: { my: 'top', at: 'top-150' },
+    //        close: function (event, ui) {
+    //            $(this).dialog('destroy').remove();
+    //        }
+    //    });
+}
+
+//customization
+function displayPopupWithHtml(htmlcode) {
+    customerTypePopUp = $('#customerTypePopUp');
+    customerTypePopUp.dialog({
+        modal: true,
+        width: 350,
+        position: { my: "center top+100", at: "center top+100", of: window }
+    });
+}
+
+//customization
+function updateCustomerProfileType(profileTypeId, url) {
+
+    console.log('updateCustomerProfileType method calling');
+
+    $.ajax({
+        url: url,
+        type: 'GET',
+        data: {
+            'customerProfileTypeId': profileTypeId
+        },
+        dataType: 'json',
+        success: function (data) {
+            if (data) {
+                window.location.reload(true)
+            }
+        },
+        error: function (request, error) {
+            console.log(error);
+        }
+    });
+
+}

@@ -39,6 +39,7 @@ using Nop.Web.Models.Media;
 using Nop.Web.Models.ShoppingCart;
 //customization
 using Nop.Services.Forums;
+using Nop.Core.Domain.Forums;
 
 namespace Nop.Web.Controllers;
 
@@ -200,93 +201,93 @@ public partial class ShoppingCartController : BasePublicController
                 case AttributeControlType.RadioList:
                 case AttributeControlType.ColorSquares:
                 case AttributeControlType.ImageSquares:
-                {
-                    var ctrlAttributes = form[controlId];
-                    if (!StringValues.IsNullOrEmpty(ctrlAttributes))
                     {
-                        var selectedAttributeId = int.Parse(ctrlAttributes);
-                        if (selectedAttributeId > 0)
-                            attributesXml = _checkoutAttributeParser.AddAttribute(attributesXml,
-                                attribute, selectedAttributeId.ToString());
-                    }
-                }
-
-                    break;
-                case AttributeControlType.Checkboxes:
-                {
-                    var cblAttributes = form[controlId];
-                    if (!StringValues.IsNullOrEmpty(cblAttributes))
-                    {
-                        foreach (var item in cblAttributes.ToString().Split(_separator, StringSplitOptions.RemoveEmptyEntries))
+                        var ctrlAttributes = form[controlId];
+                        if (!StringValues.IsNullOrEmpty(ctrlAttributes))
                         {
-                            var selectedAttributeId = int.Parse(item);
+                            var selectedAttributeId = int.Parse(ctrlAttributes);
                             if (selectedAttributeId > 0)
                                 attributesXml = _checkoutAttributeParser.AddAttribute(attributesXml,
                                     attribute, selectedAttributeId.ToString());
                         }
                     }
-                }
+
+                    break;
+                case AttributeControlType.Checkboxes:
+                    {
+                        var cblAttributes = form[controlId];
+                        if (!StringValues.IsNullOrEmpty(cblAttributes))
+                        {
+                            foreach (var item in cblAttributes.ToString().Split(_separator, StringSplitOptions.RemoveEmptyEntries))
+                            {
+                                var selectedAttributeId = int.Parse(item);
+                                if (selectedAttributeId > 0)
+                                    attributesXml = _checkoutAttributeParser.AddAttribute(attributesXml,
+                                        attribute, selectedAttributeId.ToString());
+                            }
+                        }
+                    }
 
                     break;
                 case AttributeControlType.ReadonlyCheckboxes:
-                {
-                    //load read-only (already server-side selected) values
-                    var attributeValues = await _checkoutAttributeService.GetAttributeValuesAsync(attribute.Id);
-                    foreach (var selectedAttributeId in attributeValues
-                                 .Where(v => v.IsPreSelected)
-                                 .Select(v => v.Id)
-                                 .ToList())
                     {
-                        attributesXml = _checkoutAttributeParser.AddAttribute(attributesXml,
-                            attribute, selectedAttributeId.ToString());
+                        //load read-only (already server-side selected) values
+                        var attributeValues = await _checkoutAttributeService.GetAttributeValuesAsync(attribute.Id);
+                        foreach (var selectedAttributeId in attributeValues
+                                     .Where(v => v.IsPreSelected)
+                                     .Select(v => v.Id)
+                                     .ToList())
+                        {
+                            attributesXml = _checkoutAttributeParser.AddAttribute(attributesXml,
+                                attribute, selectedAttributeId.ToString());
+                        }
                     }
-                }
 
                     break;
                 case AttributeControlType.TextBox:
                 case AttributeControlType.MultilineTextbox:
-                {
-                    var ctrlAttributes = form[controlId];
-                    if (!StringValues.IsNullOrEmpty(ctrlAttributes))
                     {
-                        var enteredText = ctrlAttributes.ToString().Trim();
-                        attributesXml = _checkoutAttributeParser.AddAttribute(attributesXml,
-                            attribute, enteredText);
+                        var ctrlAttributes = form[controlId];
+                        if (!StringValues.IsNullOrEmpty(ctrlAttributes))
+                        {
+                            var enteredText = ctrlAttributes.ToString().Trim();
+                            attributesXml = _checkoutAttributeParser.AddAttribute(attributesXml,
+                                attribute, enteredText);
+                        }
                     }
-                }
 
                     break;
                 case AttributeControlType.Datepicker:
-                {
-                    var date = form[controlId + "_day"];
-                    var month = form[controlId + "_month"];
-                    var year = form[controlId + "_year"];
-                    DateTime? selectedDate = null;
-                    try
                     {
-                        selectedDate = new DateTime(int.Parse(year), int.Parse(month), int.Parse(date));
-                    }
-                    catch
-                    {
-                        // ignored
-                    }
+                        var date = form[controlId + "_day"];
+                        var month = form[controlId + "_month"];
+                        var year = form[controlId + "_year"];
+                        DateTime? selectedDate = null;
+                        try
+                        {
+                            selectedDate = new DateTime(int.Parse(year), int.Parse(month), int.Parse(date));
+                        }
+                        catch
+                        {
+                            // ignored
+                        }
 
-                    if (selectedDate.HasValue)
-                        attributesXml = _checkoutAttributeParser.AddAttribute(attributesXml,
-                            attribute, selectedDate.Value.ToString("D"));
-                }
+                        if (selectedDate.HasValue)
+                            attributesXml = _checkoutAttributeParser.AddAttribute(attributesXml,
+                                attribute, selectedDate.Value.ToString("D"));
+                    }
 
                     break;
                 case AttributeControlType.FileUpload:
-                {
-                    _ = Guid.TryParse(form[controlId], out var downloadGuid);
-                    var download = await _downloadService.GetDownloadByGuidAsync(downloadGuid);
-                    if (download != null)
                     {
-                        attributesXml = _checkoutAttributeParser.AddAttribute(attributesXml,
-                            attribute, download.DownloadGuid.ToString());
+                        _ = Guid.TryParse(form[controlId], out var downloadGuid);
+                        var download = await _downloadService.GetDownloadByGuidAsync(downloadGuid);
+                        if (download != null)
+                        {
+                            attributesXml = _checkoutAttributeParser.AddAttribute(attributesXml,
+                                attribute, download.DownloadGuid.ToString());
+                        }
                     }
-                }
 
                     break;
                 default:
@@ -365,73 +366,73 @@ public partial class ShoppingCartController : BasePublicController
         switch (cartType)
         {
             case ShoppingCartType.Wishlist:
-            {
-                //activity log
-                await _customerActivityService.InsertActivityAsync("PublicStore.AddToWishlist",
-                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.AddToWishlist"), product.Name), product);
-
-                if (_shoppingCartSettings.DisplayWishlistAfterAddingProduct)
                 {
-                    //redirect to the wishlist page
+                    //activity log
+                    await _customerActivityService.InsertActivityAsync("PublicStore.AddToWishlist",
+                        string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.AddToWishlist"), product.Name), product);
+
+                    if (_shoppingCartSettings.DisplayWishlistAfterAddingProduct)
+                    {
+                        //redirect to the wishlist page
+                        return Json(new
+                        {
+                            redirect = Url.RouteUrl("Wishlist")
+                        });
+                    }
+
+                    //display notification message and update appropriate blocks
+                    var shoppingCarts = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.Wishlist, store.Id);
+
+                    var updateTopWishlistSectionHtml = string.Format(
+                        await _localizationService.GetResourceAsync("Wishlist.HeaderQuantity"),
+                        shoppingCarts.Sum(item => item.Quantity));
+
                     return Json(new
                     {
-                        redirect = Url.RouteUrl("Wishlist")
+                        success = true,
+                        message = string.Format(
+                            await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToTheWishlist.Link"),
+                            Url.RouteUrl("Wishlist")),
+                        updatetopwishlistsectionhtml = updateTopWishlistSectionHtml
                     });
                 }
-
-                //display notification message and update appropriate blocks
-                var shoppingCarts = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.Wishlist, store.Id);
-
-                var updateTopWishlistSectionHtml = string.Format(
-                    await _localizationService.GetResourceAsync("Wishlist.HeaderQuantity"),
-                    shoppingCarts.Sum(item => item.Quantity));
-
-                return Json(new
-                {
-                    success = true,
-                    message = string.Format(
-                        await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToTheWishlist.Link"),
-                        Url.RouteUrl("Wishlist")),
-                    updatetopwishlistsectionhtml = updateTopWishlistSectionHtml
-                });
-            }
 
             case ShoppingCartType.ShoppingCart:
             default:
-            {
-                //activity log
-                await _customerActivityService.InsertActivityAsync("PublicStore.AddToShoppingCart",
-                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.AddToShoppingCart"), product.Name), product);
-
-                if (_shoppingCartSettings.DisplayCartAfterAddingProduct)
                 {
-                    //redirect to the shopping cart page
+                    //activity log
+                    await _customerActivityService.InsertActivityAsync("PublicStore.AddToShoppingCart",
+                        string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.AddToShoppingCart"), product.Name), product);
+
+                    if (_shoppingCartSettings.DisplayCartAfterAddingProduct)
+                    {
+                        //redirect to the shopping cart page
+                        return Json(new
+                        {
+                            redirect = Url.RouteUrl("ShoppingCart")
+                        });
+                    }
+
+                    //display notification message and update appropriate blocks
+                    var shoppingCarts = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+
+                    var updateTopCartSectionHtml = string.Format(
+                        await _localizationService.GetResourceAsync("ShoppingCart.HeaderQuantity"),
+                        shoppingCarts.Sum(item => item.Quantity));
+
+                    var updateFlyoutCartSectionHtml = _shoppingCartSettings.MiniShoppingCartEnabled
+                        ? await RenderViewComponentToStringAsync(typeof(FlyoutShoppingCartViewComponent))
+                        : string.Empty;
+
                     return Json(new
                     {
-                        redirect = Url.RouteUrl("ShoppingCart")
+                        success = true,
+                        message = string.Format(await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToTheCart.Link"),
+                            Url.RouteUrl("ShoppingCart")),
+                        updatetopcartsectionhtml = updateTopCartSectionHtml,
+                        updateflyoutcartsectionhtml = updateFlyoutCartSectionHtml
                     });
                 }
-
-                //display notification message and update appropriate blocks
-                var shoppingCarts = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
-
-                var updateTopCartSectionHtml = string.Format(
-                    await _localizationService.GetResourceAsync("ShoppingCart.HeaderQuantity"),
-                    shoppingCarts.Sum(item => item.Quantity));
-
-                var updateFlyoutCartSectionHtml = _shoppingCartSettings.MiniShoppingCartEnabled
-                    ? await RenderViewComponentToStringAsync(typeof(FlyoutShoppingCartViewComponent))
-                    : string.Empty;
-
-                return Json(new
-                {
-                    success = true,
-                    message = string.Format(await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToTheCart.Link"),
-                        Url.RouteUrl("ShoppingCart")),
-                    updatetopcartsectionhtml = updateTopCartSectionHtml,
-                    updateflyoutcartsectionhtml = updateFlyoutCartSectionHtml
-                });
-            }
         }
     }
 
@@ -527,8 +528,9 @@ public partial class ShoppingCartController : BasePublicController
     //add product to cart using AJAX
     //currently we use this method on catalog pages (category/manufacturer/etc)
     [HttpPost]
+    [IgnoreAntiforgeryToken]
     public virtual async Task<IActionResult> AddProductToCart_Catalog(int productId, int shoppingCartTypeId,
-        int quantity, bool forceredirection = false)
+            int quantity, bool forceredirection = false)
     {
         var cartType = (ShoppingCartType)shoppingCartTypeId;
 
@@ -587,9 +589,9 @@ public partial class ShoppingCartController : BasePublicController
         {
             var attributeValues = await _productAttributeService.GetProductAttributeValuesAsync(attribute.Id);
             foreach (var selectedAttributeId in attributeValues
-                         .Where(v => v.IsPreSelected)
-                         .Select(v => v.Id)
-                         .ToList())
+                .Where(v => v.IsPreSelected)
+                .Select(v => v.Id)
+                .ToList())
             {
                 attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                     attribute, selectedAttributeId.ToString());
@@ -608,8 +610,8 @@ public partial class ShoppingCartController : BasePublicController
         var quantityToValidate = shoppingCartItem != null ? shoppingCartItem.Quantity + quantity : quantity;
         var addToCartWarnings = await _shoppingCartService
             .GetShoppingCartItemWarningsAsync(customer, cartType,
-                product, store.Id, string.Empty,
-                decimal.Zero, null, null, quantityToValidate, false, shoppingCartItem?.Id ?? 0, true, false, false, false);
+            product, store.Id, string.Empty,
+            decimal.Zero, null, null, quantityToValidate, false, shoppingCartItem?.Id ?? 0, true, false, false, false);
         if (addToCartWarnings.Any())
         {
             //cannot be added to the cart
@@ -621,85 +623,354 @@ public partial class ShoppingCartController : BasePublicController
             });
         }
 
+        //customization do not add product to cart now . We will add it later in switch case
         //now let's try adding product to the cart (now including product attribute validation, etc)
-        addToCartWarnings = await _shoppingCartService.AddToCartAsync(customer: customer,
-            product: product,
-            shoppingCartType: cartType,
-            storeId: store.Id,
-            attributesXml: attXml,
-            quantity: quantity);
-        if (addToCartWarnings.Any())
-        {
-            //cannot be added to the cart
-            //but we do not display attribute and gift card warnings here. let's do it on the product details page
-            return Json(new { redirect = redirectUrl });
-        }
+        //addToCartWarnings = await _shoppingCartService.AddToCartAsync(customer: customer,
+        //product: product,
+        //shoppingCartType: cartType,
+        //storeId: store.Id,
+        //attributesXml: attXml,
+        //quantity: quantity);
+        //if (addToCartWarnings.Any())
+        //{
+        //cannot be added to the cart
+        //but we do not display attribute and gift card warnings here. let's do it on the product details page            
+        //return Json(new { redirect = redirectUrl });
+        //}
 
         //added to the cart/wishlist
         switch (cartType)
         {
             case ShoppingCartType.Wishlist:
-            {
-                //activity log
-                await _customerActivityService.InsertActivityAsync("PublicStore.AddToWishlist",
-                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.AddToWishlist"), product.Name), product);
-
-                if (_shoppingCartSettings.DisplayWishlistAfterAddingProduct || forceredirection)
                 {
-                    //redirect to the wishlist page
+                    //activity log
+                    await _customerActivityService.InsertActivityAsync("PublicStore.AddToWishlist",
+                        string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.AddToWishlist"), product.Name), product);
+
+                    if (_shoppingCartSettings.DisplayWishlistAfterAddingProduct || forceredirection)
+                    {
+                        //redirect to the wishlist page
+                        return Json(new
+                        {
+                            redirect = Url.RouteUrl("Wishlist")
+                        });
+                    }
+
+                    //display notification message and update appropriate blocks
+                    var shoppingCarts = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.Wishlist, store.Id, productId);
+
+                    // target customer to whom we are shortlising or sending interest 
+                    var toCustomer = await _customerService.GetCustomerByIdAsync(product.VendorId);
+
+                    var message = string.Empty;
+                    var messagetype = string.Empty;
+
+                    if (shoppingCarts.Any())
+                    {
+                        //Remove product from wishlist
+                        await _shoppingCartService.DeleteShoppingCartItemAsync(shoppingCarts.First().Id, false, false);
+                        message = "Successfully removed from the short list.";
+                        messagetype = "removeFromWishList";
+                    }
+                    else
+                    {
+                        //create custom attXml before saving.
+                        attXml = $"Customer {(await _workContext.GetCurrentCustomerAsync()).Email} shortlisted Customer {toCustomer.Email} with Customer Id {toCustomer.Id}";
+
+                        //now let's try adding product to the cart (now including product attribute validation, etc)
+                        addToCartWarnings = await _shoppingCartService.AddToCartAsync(customer: await _workContext.GetCurrentCustomerAsync(),
+                                            product: product,
+                                            shoppingCartType: cartType,
+                                            storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
+                                            attributesXml: attXml,
+                                            quantity: quantity);
+
+                        if (addToCartWarnings.Any())
+                        {
+                            //cannot be added to the cart
+                            //but we do not display attribute and gift card warnings here. let's do it on the product details page
+                            return Json(new
+                            {
+                                redirect = Url.RouteUrl("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) })
+                            });
+                        }
+
+                        message = string.Format(await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToTheWishlist.Link"), Url.RouteUrl("Wishlist"));
+                        messagetype = "addToWishList";
+                    }
+
+                    var updatetopwishlistsectionhtml = string.Format(await _localizationService.GetResourceAsync("Wishlist.HeaderQuantity"),
+                        shoppingCarts.Sum(item => item.Quantity));
+
+                    // send email & show in the messages that customer has shortlisted the profile using privite messages
+                    var pm = new PrivateMessage
+                    {
+                        StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,
+                        ToCustomerId = product.VendorId, //Vendor id in Product table is customer id
+                        FromCustomerId = (await _workContext.GetCurrentCustomerAsync()).Id,
+                        Subject = "You have been shortlisted",
+                        SenderSubject = "You shorlisted a profile",
+                        Text = "You have been shortlisted. Please get in touch to discuss further.",
+                        SenderBodyText = $"You have shortlisted the profile {product.Name}",
+                        IsDeletedByAuthor = false,
+                        IsDeletedByRecipient = false,
+                        IsRead = false,
+                        IsSystemGenerated = true,
+                        CreatedOnUtc = DateTime.UtcNow
+                    };
+
+                    await _forumService.InsertPrivateMessageAsync(pm);
+
                     return Json(new
                     {
-                        redirect = Url.RouteUrl("Wishlist")
+                        success = true,
+                        message = message,
+                        updatetopwishlistsectionhtml,
+                        messagetype = messagetype,
+                        productId = product.Id
+                    });
+
+                }
+            case ShoppingCartType.InterestSent:
+                {
+                    var message = "Your interest has been sent successfully.";
+                    var messagetype = "sendInterest";
+
+                    //activity log
+                    await _customerActivityService.InsertActivityAsync("PublicStore.InterestSent",
+                        string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.AddToWishlist"), product.Name), product);
+
+                    //display notification message and update appropriate blocks
+                    var shoppingCarts = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.InterestSent, (await _storeContext.GetCurrentStoreAsync()).Id, product.Id);
+
+                    //if (shoppingCarts.Any())
+                    //{
+                    //    //alredy customer sent Interest. Trying to send interest again..
+                    //    return Json(new
+                    //    {
+                    //        success = false,
+                    //        message = "You already sent interest. No need to send it again..",
+                    //        messagetype,
+                    //        productId = product.Id
+                    //    });
+                    //}
+
+                    //create custom attXml before saving.
+                    attXml = $"Customer {(await _workContext.GetCurrentCustomerAsync()).Username} sent intereset to Customer {product.VendorId}";
+
+                    //now let's try adding product to the cart (now including product attribute validation, etc)
+                    addToCartWarnings = await _shoppingCartService.AddToCartAsync(customer: await _workContext.GetCurrentCustomerAsync(),
+                        product: product,
+                        shoppingCartType: cartType,
+                        attributesXml: attXml,
+                        storeId: (await _storeContext.GetCurrentStoreAsync()).Id);
+
+                    if (addToCartWarnings.Any())
+                    {
+                        //cannot be added to the cart
+                        //but we do not display attribute and gift card warnings here. let's do it on the product details page
+                        return Json(new
+                        {
+                            redirect = Url.RouteUrl("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) })
+                        });
+                    }
+
+                    //Create a shopping cart item as 'Interest'
+                    var pm = new PrivateMessage
+                    {
+                        StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,
+                        ToCustomerId = product.VendorId, //Vendor id in Product table is customer id
+                        FromCustomerId = (await _workContext.GetCurrentCustomerAsync()).Id,
+                        Subject = "Interest Received",
+                        SenderSubject = "You sent interest",
+                        Text = "You have received an interest.Please get in touch to discuss further.",
+                        SenderBodyText = $"You sent interest to the profile {await _urlRecordService.GetSeNameAsync(product)}",
+                        IsDeletedByAuthor = false,
+                        IsDeletedByRecipient = false,
+                        IsRead = false,
+                        IsSystemGenerated = true,
+                        CreatedOnUtc = DateTime.UtcNow
+                    };
+
+                    await _forumService.InsertPrivateMessageAsync(pm);
+
+                    return Json(new
+                    {
+                        success = true,
+                        message,
+                        messagetype,
+                        productId = product.Id
                     });
                 }
-
-                //display notification message and update appropriate blocks
-                var shoppingCarts = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.Wishlist, store.Id);
-
-                var updatetopwishlistsectionhtml = string.Format(await _localizationService.GetResourceAsync("Wishlist.HeaderQuantity"),
-                    shoppingCarts.Sum(item => item.Quantity));
-                return Json(new
+            case ShoppingCartType.AcceptedByMe:
                 {
-                    success = true,
-                    message = string.Format(await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToTheWishlist.Link"), Url.RouteUrl("Wishlist")),
-                    updatetopwishlistsectionhtml
-                });
-            }
+                    //activity log
+                    await _customerActivityService.InsertActivityAsync("PublicStore.DeclinedByMe",
+                        string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.AddToWishlist"), product.Name), product);
 
+                    //display notification message and update appropriate blocks
+                    var shoppingCarts = _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.AcceptedByMe, (await _storeContext.GetCurrentStoreAsync()).Id, product.Id);
+
+                    //create custom attXml before saving.
+                    attXml = $"Customer {(await _workContext.GetCurrentCustomerAsync()).Username} accepted intereset from Customer {product.VendorId}";
+
+                    //now let's try adding product to the cart (now including product attribute validation, etc)
+                    addToCartWarnings = await _shoppingCartService.AddToCartAsync(customer: await _workContext.GetCurrentCustomerAsync(),
+                        product: product,
+                        shoppingCartType: cartType,
+                        storeId: (await _storeContext.GetCurrentStoreAsync()).Id);
+
+                    if (addToCartWarnings.Any())
+                    {
+                        //cannot be added to the cart
+                        //but we do not display attribute and gift card warnings here. let's do it on the product details page
+                        return Json(new
+                        {
+                            redirect = Url.RouteUrl("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) })
+                        });
+                    }
+
+                    //Create a shopping cart item as 'AcceptedByMe'
+                    var pm = new PrivateMessage
+                    {
+                        StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,
+                        ToCustomerId = product.VendorId, //Vendor id in Product table is customer id
+                        FromCustomerId = (await _workContext.GetCurrentCustomerAsync()).Id,
+                        Subject = "Interest Accepted",
+                        SenderSubject = "You accepted the interest",
+                        Text = "Your interest has been accepted.Please get in touch to discuss further.",
+                        IsDeletedByAuthor = false,
+                        IsDeletedByRecipient = false,
+                        IsRead = false,
+                        CreatedOnUtc = DateTime.UtcNow
+                    };
+
+                    await _forumService.InsertPrivateMessageAsync(pm);
+
+                    var message = "You have accepted the interest.";
+                    var messagetype = "interestAccepted";
+
+                    return Json(new
+                    {
+                        success = true,
+                        message = message,
+                        messagetype = messagetype,
+                        productId = product.Id
+                    });
+                }
+            case ShoppingCartType.DeclinedByMe:
+                {
+                    //activity log
+                    await _customerActivityService.InsertActivityAsync("PublicStore.DeclinedByMe",
+                        string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.AddToWishlist"), product.Name), product);
+
+                    //display notification message and update appropriate blocks
+                    var shoppingCarts = _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.DeclinedByMe, (await _storeContext.GetCurrentStoreAsync()).Id, product.Id);
+
+                    //create custom attXml before saving.
+                    attXml = $"Customer {(await _workContext.GetCurrentCustomerAsync()).Username} declined intereset from Customer {product.VendorId}";
+
+                    //now let's try adding product to the cart (now including product attribute validation, etc)
+                    addToCartWarnings = await _shoppingCartService.AddToCartAsync(customer: await _workContext.GetCurrentCustomerAsync(),
+                        product: product,
+                        shoppingCartType: cartType,
+                        storeId: (await _storeContext.GetCurrentStoreAsync()).Id);
+
+                    if (addToCartWarnings.Any())
+                    {
+                        //cannot be added to the cart
+                        //but we do not display attribute and gift card warnings here. let's do it on the product details page
+                        return Json(new
+                        {
+                            redirect = Url.RouteUrl("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) })
+                        });
+                    }
+
+                    //Create a shopping cart item as 'DeclinedByMe'
+                    var pm = new PrivateMessage
+                    {
+                        StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,
+                        ToCustomerId = product.VendorId, //Vendor id in Product table is customer id
+                        FromCustomerId = (await _workContext.GetCurrentCustomerAsync()).Id,
+                        Subject = "Your interest has been inclined",
+                        SenderSubject = "You declined the interest",
+                        Text = "You have received an interest.Please get in touch to discuss further",
+                        IsDeletedByAuthor = false,
+                        IsDeletedByRecipient = false,
+                        IsRead = false,
+                        CreatedOnUtc = DateTime.UtcNow
+                    };
+
+                    await _forumService.InsertPrivateMessageAsync(pm);
+
+                    var message = "You have declined the request.";
+                    var messagetype = "interestDeclined";
+
+                    return Json(new
+                    {
+                        success = true,
+                        message = message,
+                        messagetype = messagetype,
+                        productId = product.Id
+                    });
+                }
             case ShoppingCartType.ShoppingCart:
             default:
-            {
-                //activity log
-                await _customerActivityService.InsertActivityAsync("PublicStore.AddToShoppingCart",
-                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.AddToShoppingCart"), product.Name), product);
-
-                if (_shoppingCartSettings.DisplayCartAfterAddingProduct || forceredirection)
                 {
-                    //redirect to the shopping cart page
+                    //customization Delete pricing category products before adding new one to make sure at 
+                    //any point there exists only one subscription
+                    foreach (var item in cart)
+                        await _shoppingCartService.DeleteShoppingCartItemAsync(item.Id, resetCheckoutData: true);
+
+                    //now let's try adding product to the cart (now including product attribute validation, etc)
+                    addToCartWarnings = await _shoppingCartService.AddToCartAsync(customer: await _workContext.GetCurrentCustomerAsync(),
+                        product: product,
+                        shoppingCartType: cartType,
+                        storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
+                        attributesXml: attXml,
+                        quantity: quantity);
+
+                    if (addToCartWarnings.Any())
+                    {
+                        //cannot be added to the cart
+                        //but we do not display attribute and gift card warnings here. let's do it on the product details page
+                        return Json(new
+                        {
+                            redirect = Url.RouteUrl("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) })
+                        });
+                    }
+
+                    //activity log
+                    await _customerActivityService.InsertActivityAsync("PublicStore.AddToShoppingCart",
+                        string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.AddToShoppingCart"), product.Name), product);
+
+                    if (_shoppingCartSettings.DisplayCartAfterAddingProduct || forceredirection)
+                    {
+                        //redirect to the shopping cart page
+                        return Json(new
+                        {
+                            redirect = Url.RouteUrl("ShoppingCart")
+                        });
+                    }
+
+                    //display notification message and update appropriate blocks
+                    var shoppingCarts = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+
+                    var updatetopcartsectionhtml = string.Format(await _localizationService.GetResourceAsync("ShoppingCart.HeaderQuantity"),
+                        shoppingCarts.Sum(item => item.Quantity));
+
+                    var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
+                        ? await RenderViewComponentToStringAsync(typeof(FlyoutShoppingCartViewComponent))
+                        : string.Empty;
+
                     return Json(new
                     {
-                        redirect = Url.RouteUrl("ShoppingCart")
+                        success = true,
+                        message = string.Format(await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToTheCart.Link"), Url.RouteUrl("ShoppingCart")),
+                        updatetopcartsectionhtml,
+                        updateflyoutcartsectionhtml
                     });
                 }
-
-                //display notification message and update appropriate blocks
-                var shoppingCarts = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
-
-                var updatetopcartsectionhtml = string.Format(await _localizationService.GetResourceAsync("ShoppingCart.HeaderQuantity"),
-                    shoppingCarts.Sum(item => item.Quantity));
-
-                var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
-                    ? await RenderViewComponentToStringAsync(typeof(FlyoutShoppingCartViewComponent))
-                    : string.Empty;
-
-                return Json(new
-                {
-                    success = true,
-                    message = string.Format(await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToTheCart.Link"), Url.RouteUrl("ShoppingCart")),
-                    updatetopcartsectionhtml,
-                    updateflyoutcartsectionhtml
-                });
-            }
         }
     }
 

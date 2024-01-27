@@ -105,7 +105,16 @@ var AjaxCart = {
                 else {
                     //specify timeout for success messages
                     displayBarNotification(response.message, 'success', 3500);
-                }
+              }
+
+              //customization
+              if (response.messagetype) {
+                changeWishlistStatus(response.productId, response.messagetype);
+              }
+              if (response.InterestSent) {
+                changeWishlistStatus(response.productId, response.messagetype);
+              }
+
             }
             else {
                 //error
