@@ -5337,7 +5337,7 @@ ul.poll-results {
 }
 
 .customer-info-page .radio-inline, .customer-info-page .checkbox-inline {
-  padding-left: 0px;
+  /*padding-left: 0px;*/
 }
 
 .form-horizontal .radio, .form-horizontal .checkbox, .form-horizontal .radio-inline, .form-horizontal .checkbox-inline {
@@ -7178,10 +7178,10 @@ ul.poll-results {
     padding-bottom: 15px;
   }
 
-.block-recently-viewed-products ul li.last {
-  margin-bottom: 10px;
-  border-bottom: none;
-}
+    .block-recently-viewed-products ul li.last {
+      margin-bottom: 10px;
+      border-bottom: none;
+    }
 
 .block-recently-viewed-products.well.box-shadow-wrapper .listbox ul li a {
   background: none;
@@ -8474,8 +8474,8 @@ div.block.product-filters.product-filters-wrapper div.product-filter.product-spe
   border-radius: 6px;
   margin-left: 0px;
   margin-right: 1px;
-  margin-bottom:20px;
-  padding-bottom:10px;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
 }
 
   .category-grid.home-page-category-grid .title.sub-title {
@@ -8757,3 +8757,20 @@ div.block.product-filters.product-filters-wrapper div.product-filter.product-spe
     padding-top: 15px;
     margin-bottom: 12px;
   }
+
+  /*customization*/
+.custom-attributes .option-list li {
+  display: inline-block;
+  margin: 5px 5px 5px 5px;
+  border: 1px solid #ddd;
+  padding: 8px 10px 4px 10px;
+  background-color: #eee;
+}
+
+.tooltip-inner {
+ /* width: 200px;
+  height: 100px;*/
+  padding: 10px;
+  background-color: yellow;
+  color:red;
+} 

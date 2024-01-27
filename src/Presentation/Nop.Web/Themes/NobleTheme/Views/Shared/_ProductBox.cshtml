@@ -36,7 +36,7 @@
     <div class="caption col-xs-8 col-sm-8 col-md-8">
         @*<div class="details">*@
         <h3 class="product-title col-xs-12 col-sm-12 col-md-12" style="">
-            <a href="@Url.RouteUrl("Product", new {SeName=Model.SeName})" style="margin-bottom:5px;">
+            <a href="@(Url.RouteUrl<Product>(new { SeName = Model.SeName }))" style="margin-bottom:5px;">
                 <i class="fa fa-sm icon-color @(Model.Gender == "M" ? Html.Raw("fa-male") : Html.Raw("fa-female"))"></i>
                 @Model.Name
                 @if (Model.PremiumCustomer)

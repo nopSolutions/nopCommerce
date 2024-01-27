@@ -47,7 +47,7 @@
             @textPrompt:
             @if (!string.IsNullOrEmpty(helpText))
             {
-                <span style="float:none;font-size:1em" title="@helpText" data-toggle="tooltip" class="ico-help">
+                <span style="float:none;font-size:1em" data-container="body" data-html="true" title="@Html.Raw(helpText)" data-toggle="tooltip" class="ico-help">
                     <i class="fa fa-question-circle"></i>
                 </span>
             }

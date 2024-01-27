@@ -39,9 +39,9 @@
                 {
                     <div class="form-group">
                         <label asp-for="FirstName" class="control-label col-sm-2 col-md-2" asp-postfix=":"></label>
-                        <span style="" title="FirstName of the User" data-toggle="tooltip" class="ico-help">
+                        @* <span style="" title="FirstName of the User" data-toggle="tooltip" class="ico-help">
                             <i class="fa fa-question-circle"></i>
-                        </span>
+                        </span> *@
                         @if (Model.FirstNameRequired)
                         {
                             <div class="visible-xs form-title-rquired"><nop-required /></div>

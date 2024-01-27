@@ -1,4 +1,5 @@
-﻿@model PrivateMessageModel
+﻿@using Nop.Core.Domain.Catalog
+@model PrivateMessageModel
 
 @{
     Layout = "_ColumnsTwo";
@@ -22,7 +23,9 @@
             <div>
                 <label>@T("PrivateMessages.View.From")</label>
                 @*<span>@Model.CustomerFromName</span>*@
-                <span><a href="@Url.RouteUrl("Product", new {SeName= @Model.CustomerFromSeName})">@Model.CustomerFromSeName</a></span>
+                <span>
+                    <a href="@(Url.RouteUrl<Product>(new { SeName = Model.CustomerFromSeName }))">@Model.CustomerFromSeName</a>
+                </span>
             </div>
             <div>
                 <label>@T("PrivateMessages.View.To")</label>
@@ -52,7 +55,7 @@
                     if (!Model.CanCustomerReply)
                     {
                         @*<span style="margin-right: 10px;" title="Please upgrade to reply to this message." data-toggle="tooltip" class="ico-help">
-                    <i class="fa fa-question-circle"></i>
+                <i class="fa fa-question-circle"></i>
                 </span>*@
                         <button disabled type="button" class="btn btn-default reply-pm-button" onclick="setLocation('@Url.RouteUrl("Pricing")')">Upgrade to Reply</button>
                     }

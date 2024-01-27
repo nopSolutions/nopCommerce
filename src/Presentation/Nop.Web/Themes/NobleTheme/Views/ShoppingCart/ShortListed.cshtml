@@ -36,11 +36,11 @@
             <li><a href="#tabs-2" data-toggle="tab">Short Listed Me</a></li>
         </ul>
         <div class="tab-content">
-            <div id="tabs-1" class="tab-pane active">
-                @await Component.InvokeAsync("ShortList", new { actionTypeId = (int)ShoppingCartType.Wishlist })
+            <div id="tabs-1" class="tab-pane active">                
+                @await Component.InvokeAsync(typeof(ShortListViewComponent), new { actionTypeId = (int)ShoppingCartType.Wishlist })
             </div>
-            <div id="tabs-2" class="tab-pane">
-                @await Component.InvokeAsync("ShortList", new { actionTypeId = (int)ShoppingCartType.ShortListedMe })
+            <div id="tabs-2" class="tab-pane">                
+                @await Component.InvokeAsync(typeof(ShortListViewComponent), new { actionTypeId = (int)ShoppingCartType.ShortListedMe })
             </div>
         </div>
     </div>

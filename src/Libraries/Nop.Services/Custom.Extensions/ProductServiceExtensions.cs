@@ -139,14 +139,8 @@ namespace Nop.Services.Catalog
             }
             if (shoppingCartType == ShoppingCartType.ShortListedMe)
             {
-                var customer = await _workContext.GetCurrentCustomerAsync();
-
-                pCustomerId = SqlParameterHelper.GetInt32Parameter("CustomerId", 0);
-                var pProductId = SqlParameterHelper.GetStringParameter("ProductId", customer.VendorId.ToString());
-                pShoppingCartTypeId = SqlParameterHelper.GetInt32Parameter("ShoppingCartTypeId", 2);
-
-                products = (await _productRepository.EntityFromSqlCustom("ProductsByShoppingCartType",
-                   pProductId,
+                products = (await _productRepository.EntityFromSqlCustom("ProductShortList",
+                   pProductIds,
                    pCustomerId,
                    pShoppingCartTypeId,
                    pOrderBy,
