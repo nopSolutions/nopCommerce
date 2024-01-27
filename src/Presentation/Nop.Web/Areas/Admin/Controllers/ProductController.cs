@@ -3024,7 +3024,11 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> ProductAttributeMappingDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+        {
+            if (_webHelper.IsAjaxRequest(HttpContext.Request))
+                return await AccessDeniedDataTablesJson();
             return AccessDeniedView();
+        }
 
         //try to get a product attribute mapping with the specified id
         var productAttributeMapping = await _productAttributeService.GetProductAttributeMappingByIdAsync(id)
@@ -3050,10 +3054,15 @@ public partial class ProductController : BaseAdminController
 
                 if (mappings?.Any(m => m.Id == productAttributeMapping.Id) == true)
                 {
-                    _notificationService.ErrorNotification(
-                        string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.AlreadyExistsInCombination"),
-                            await _productAttributeFormatter.FormatAttributesAsync(product, combination.AttributesXml, await _workContext.GetCurrentCustomerAsync(), await _storeContext.GetCurrentStoreAsync(), ", ")));
-
+                    var errorMessage = string.Format(
+                        await _localizationService.GetResourceAsync(
+                            "Admin.Catalog.Products.ProductAttributes.Attributes.AlreadyExistsInCombination"),
+                        await _productAttributeFormatter.FormatAttributesAsync(product, combination.AttributesXml,
+                            await _workContext.GetCurrentCustomerAsync(), await _storeContext.GetCurrentStoreAsync(),
+                            ", "));
+                    if (_webHelper.IsAjaxRequest(HttpContext.Request)) 
+                        return ErrorJson(errorMessage);
+                    _notificationService.ErrorNotification(errorMessage);
                     return RedirectToAction("ProductAttributeMappingEdit", new { id = productAttributeMapping.Id });
                 }
             }
@@ -3061,10 +3070,13 @@ public partial class ProductController : BaseAdminController
 
         await _productAttributeService.DeleteProductAttributeMappingAsync(productAttributeMapping);
 
-        _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Deleted"));
-
         //select an appropriate card
         SaveSelectedCardName("product-product-attributes");
+
+        if (_webHelper.IsAjaxRequest(HttpContext.Request))
+            return new NullJsonResult();
+        
+        _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Deleted"));
         return RedirectToAction("Edit", new { id = productAttributeMapping.ProductId });
     }
 
