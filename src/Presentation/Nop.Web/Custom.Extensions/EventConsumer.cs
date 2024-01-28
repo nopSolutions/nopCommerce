@@ -184,17 +184,17 @@ namespace Nop.CustomExtensions.Services
             var storeId = (await _storeContext.GetCurrentStoreAsync()).Id;
             var allottedCount = 00;
 
-            if (customerSubscribedProductId == _shoppingCartSettings.ThreeMonthSubscriptionProductId)
+            if (customerSubscribedProductId == _shoppingCartSettings.OneMonthSubscriptionProductId)
+            {
+                allottedCount = _shoppingCartSettings.OneMonthSubscriptionAllottedCount;
+            }
+            else if (customerSubscribedProductId == _shoppingCartSettings.ThreeMonthSubscriptionProductId)
             {
                 allottedCount = _shoppingCartSettings.ThreeMonthSubscriptionAllottedCount;
             }
             else if (customerSubscribedProductId == _shoppingCartSettings.SixMonthSubscriptionProductId)
             {
                 allottedCount = _shoppingCartSettings.SixMonthSubscriptionAllottedCount;
-            }
-            else if (customerSubscribedProductId == _shoppingCartSettings.OneYearSubscriptionProductId)
-            {
-                allottedCount = _shoppingCartSettings.OneYearSubscriptionAllottedCount;
             }
 
             // get the subscription details from generic attribute table
