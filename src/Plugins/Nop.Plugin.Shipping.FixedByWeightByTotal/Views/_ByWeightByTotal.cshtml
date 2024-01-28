@@ -16,7 +16,7 @@
 }
 
 <script asp-location="Footer">
-    $(document).ready(function () {
+    $(function() {
         $("#@Html.IdFor(model => model.SearchCountryId)").change(function () {
             var selectedItem = $(this).val();
             var ddlStates = $("#@Html.IdFor(model => model.SearchStateProvinceId)");

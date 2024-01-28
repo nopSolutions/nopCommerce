@@ -184,7 +184,7 @@
                                                 <div class="quantity down" id="quantity-down-@(item.Id)"></div>
                                             </div>
                                             <script asp-location="Footer">
-                                                $(document).ready(function () {
+                                                $(function() {
                                                     $('#quantity-up-@(item.Id)').on('click',
                                                         function (e) {
                                                             var input = $(document).find('#itemquantity@(item.Id)');
@@ -309,7 +309,7 @@
                             {
                                 <a class="read" id="read-terms">@T("Checkout.TermsOfService.Read")</a>
                                 <script asp-location="Footer">
-                                        $(document).ready(function() {
+                                        $(function() {
                                             $('#read-terms').on('click',
                                                 function(e) {
                                                     e.preventDefault();
@@ -330,7 +330,7 @@
                         @if (string.IsNullOrEmpty(Model.MinOrderSubtotalWarning) && !Model.HideCheckoutButton)
                         {
                             <script asp-location="Footer">
-                                $(document).ready(function () {
+                                $(function() {
                                     $('#checkout').on('click', function () {
                                         //terms of service
                                         var termOfServiceOk = true;

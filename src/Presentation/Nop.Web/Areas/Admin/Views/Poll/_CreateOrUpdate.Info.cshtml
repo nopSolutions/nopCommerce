@@ -71,7 +71,7 @@
         <div class="col-md-9">
             <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
             <script>
-                $(document).ready(function() {
+                $(function() {
                     var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').select2({
                         closeOnSelect: false,
                         @if (!Model.AvailableStores.Any())

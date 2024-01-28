@@ -50,7 +50,7 @@
     </div>
 
     <script asp-location="Footer">
-        $(document).ready(function () {
+        $(function() {
             toggleNewAndExistingCardSection();
         });
 
@@ -97,7 +97,7 @@ else
         <input type="hidden" asp-for="TransientToken" />
 
         <script asp-location="Footer">
-            $(document).ready(function () {
+            $(function() {
                 $('.payment-info-next-step-button').hide();
 
                 var payButton = $('#pay-button');

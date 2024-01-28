@@ -1,7 +1,7 @@
 ﻿@model PrivateMessageListModel
 <div class="private-messages-box">
     <script asp-location="Footer">
-        $(document).ready(function () {
+        $(function() {
 
             $('#selectall-sent').on('click', function () {
                 $('#pm-sent-table .rowcheckbox').prop('checked', $(this).is(':checked')).trigger('change');

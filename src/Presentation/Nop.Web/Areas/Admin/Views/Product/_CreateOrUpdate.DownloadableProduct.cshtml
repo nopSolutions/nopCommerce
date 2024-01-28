@@ -2,7 +2,7 @@
 @using Nop.Core.Domain.Catalog;
 @using Nop.Services
 <script>
-    $(document).ready(function() {
+    $(function() {
         $("#@Html.IdFor(model => model.IsDownload)").click(toggleDownloadableProduct);
         $("#@Html.IdFor(model => model.UnlimitedDownloads)").click(toggleDownloadableProduct);
         $("#@Html.IdFor(model => model.HasSampleDownload)").click(toggleDownloadableProduct);

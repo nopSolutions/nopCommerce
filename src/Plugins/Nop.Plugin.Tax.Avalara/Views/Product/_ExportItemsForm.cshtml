@@ -1,6 +1,6 @@
 ﻿<form asp-controller="AvalaraProduct" asp-action="ExportProducts" method="post" id="export-avalara-selected-form">
     <script>
-        $(document).ready(function () {
+        $(function() {
             $('#export-avalara-selected').click(function (e) {
                 e.preventDefault();
                 var ids = selectedIds.join(',');

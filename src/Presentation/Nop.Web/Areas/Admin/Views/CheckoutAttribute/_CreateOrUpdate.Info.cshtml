@@ -178,7 +178,7 @@
                 <div class="col-md-4">
                     <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
                     <script>
-                    $(document).ready(function() {
+                    $(function() {
                         var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').select2({
                             closeOnSelect: false,
                             @if (!Model.AvailableStores.Any())
@@ -201,7 +201,7 @@
 </div>
 
 <script>
-    $(document).ready(function() {
+    $(function() {
 
         $("#@Html.IdFor(model => model.IsTaxExempt)").click(toggleTax);
         $("#@Html.IdFor(model => model.AttributeControlTypeId)").change(toggleAttributeControlType);

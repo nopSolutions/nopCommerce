@@ -651,7 +651,7 @@
                     </div>
                 </form>
                 <script>
-                    $(document).ready(function () {
+                    $(function() {
                         $('input[type=checkbox].select-all-fields').each(function (index, value) {
                             if ($('input[type=checkbox]:checked', $(this).closest('.card')).length > 0) {
                                 $(this).prop('checked', true);

@@ -13,7 +13,7 @@
                     @T("Admin.System.Maintenance.ReIndexTables.ReIndexNow")
                 </button>
                 <script>
-                    $(document).ready(function() {
+                    $(function() {
                         $("button[name='re-index']").on("click", function () {
                             $("html, body").animate({ scrollTop: 0 }, 400);
                             showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.System.Maintenance.ReIndexTables.Progress").Text))');
