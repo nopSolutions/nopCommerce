@@ -3,7 +3,7 @@
 
 
 -- SELECT * FROM [dbo].[LocaleStringResource] WHERE ResourceValue like '%options%'
--- SELECT * FROM [dbo].[LocaleStringResource] WHERE ResourceName like '%.product(s)'
+-- SELECT * FROM [dbo].[LocaleStringResource] WHERE ResourceName like '%ContactUs.YourEnquiryHasBeenSent'
 
 ---------------  Local String update queries    ------------------------------------------
 
@@ -49,6 +49,12 @@ Update [dbo].[LocaleStringResource] SET [ResourceValue]='You will receive an e-m
 Update [dbo].[LocaleStringResource] SET [ResourceValue]='Partner Consultancies' WHERE [ResourceName]='manufacturers'
 --Update [dbo].[LocaleStringResource] SET ResourceValue='Your Shopping Cart is empty!' WHERE [ResourceName]='shoppingcart.cartisempty';
 
+
+Update [dbo].[LocaleStringResource] SET [ResourceValue]='Your enquiry has been successfully sent to support team. Team will reach out to you in next 24 hours.' WHERE [ResourceName]='contactus.yourenquiryhasbeensent'
+UPDATE LocaleStringResource 
+SET 
+ResourceValue='<p><strong>Welcome to on job support!</strong><br />Register with us for future convenience:</p><p style="text-align: left;">1.Resgistration is mandatory as we need to show relavent profiles to provide support and take support</p><p style="text-align: left;">2. You can directly contact with people who can provide support thus eliminating middle man</p><p style="text-align: left;">3. Please visit <a title="This Link" href="https://onjobsupport.in" target="_blank" rel="noopener">This Link</a> for further information</p>'
+Where ResourceName='Account.Login.NewCustomerText'
 
 IF NOT EXISTS (SELECT * FROM [LocaleStringResource] WHERE [ResourceName]='Orders.UpgradeSubscription.Message')
    BEGIN

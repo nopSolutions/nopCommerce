@@ -82,6 +82,11 @@ where Name = 'customersettings.defaultpasswordformat';
 
 --UPDATE [dbo].[CustomerPassword]
 --SET [Password]='123'
+--WHERE id in (2,3)
+
+select * from CustomerPassword
+
+select * from Topic
 
 select * from [dbo].[Customer_CustomerRole_Mapping]
 wHERE Customer_Id=3421
@@ -113,7 +118,16 @@ select * from LocaleStringResource
 Where ResourceValue like 'Show products%'
 
 select * from LocaleStringResource
-Where ResourceName='Media.Category.ImageAlternateTextFormat'
+Where ResourceName='Account.Login.NewCustomerText'
+
+update LocaleStringResource
+SET ResourceValue='<p><strong>Welcome to on job support!</strong><br />Register with us for future convenience:</p><p style="text-align: left;">1.Resgistration is mandatory as we need to show relavent profiles to provide support and take support</p><p style="text-align: left;">2. You can directly contact with people who can provide support thus eliminating middle man</p><p style="text-align: left;">3. Please visit <a title="This Link" href="https://onjobsupport.in" target="_blank" rel="noopener">This Link</a> for further information</p>'
+Where ResourceName='Account.Login.NewCustomerText'
+
+
+
+select * from LocaleStringResource
+Where ResourceName like '%locale%'
 
 select * from LocaleStringResource
 Where ResourceName='media.category.imagelinktitleformat'
@@ -137,19 +151,87 @@ select * from Product
 select * from UrlRecord
 select * from [Product_Category_Mapping]
 
+select * FROM Customer where VendorId=5
+
+-- hi-IN (India)
+
 select * from UrlRecord
 WHERE EntityName='Topic'
 
 select * from [Order]
 select * from OrderItem
 
-
 select * from [Log]
 
 select * from [picture]
 select * from [pictureBinary]
 
- update Category set ShowOnHomepage=1
- Where Id in (4,5)
+select * from [dbo].Forums_PrivateMessage
+
+ --update Category set ShowOnHomepage=1
+ --Where Id in (4,5)
 
 
+ select * from shoppingcartitem
+ -- delete shoppingcartitem
+
+  select * from ScheduleTask
+
+ select * from shoppingcartitem
+ where ProductId=4
+
+ select * from Product where VendorId=14
+
+ select * from ActivityLog
+ -- delete ActivityLog
+
+ 	SELECT p.Id
+	FROM
+		Product p with (NOLOCK)
+		INNER JOIN ShoppingCartItem sci with (NOLOCK)
+				ON p.Id = sci.ProductId
+		WHERE CustomerId=6
+		AND ShoppingCartTypeId=2
+		AND p.Deleted = 0
+		AND p.Id IN (4)
+
+
+        select Vendorid FROM Customer
+
+ SELECT * FROM  [GenericAttribute]
+ Where EntityId=14
+
+ -- customer 6
+
+ select * from Customer where Id=6 
+ select VendorId as productid from Customer where Id=6
+ -- 4
+ select * from SpecificationAttribute
+ select * from SpecificationAttributeOption
+ where SpecificationAttributeId in (7,4,9)
+
+ select * from RelatedProduct
+
+ select * from Product_SpecificationAttribute_Mapping psm
+ JOIN SpecificationAttributeOption sao on sao.Id=psm.SpecificationAttributeOptionId
+ where ProductId=(Select VendorId as productid from Customer where Id=6)
+ and sao.SpecificationAttributeId in (7,4,9)
+ --Order By SpecificationAttributeId
+ 
+
+ select sao.Id from Product_SpecificationAttribute_Mapping psm
+ JOIN SpecificationAttributeOption sao on sao.Id=psm.SpecificationAttributeOptionId
+ where ProductId=(Select VendorId as productid from Customer where Id=6)
+ and sao.SpecificationAttributeId in (7)
+ --Order By SpecificationAttributeId
+
+
+ select distinct(ProductId) FROM  Product_SpecificationAttribute_Mapping
+ WHERE SpecificationAttributeOptionId in 
+ (
+      select sao.Id from Product_SpecificationAttribute_Mapping psm
+     JOIN SpecificationAttributeOption sao on sao.Id=psm.SpecificationAttributeOptionId
+     where ProductId=(Select VendorId as productid from Customer where Id=6)
+     and sao.SpecificationAttributeId in (7,4,9)
+ )
+ AND ProductId != (Select VendorId as productid from Customer where Id=6)
