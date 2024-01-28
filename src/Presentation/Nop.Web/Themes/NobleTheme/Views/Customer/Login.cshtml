@@ -15,7 +15,7 @@
 }
 <div class="page login-page">
     @*<div class="page-title">
-        <h1>@T("Account.Login.Welcome")</h1>
+    <h1>@T("Account.Login.Welcome")</h1>
     </div>*@
     @await Html.PartialAsync("_ExternalAuthentication.Errors")
     <div class="page-body">
@@ -23,55 +23,55 @@
             <div class="row">
                 @if (Model.RegistrationType == UserRegistrationType.Disabled)
                 {
-				
-					<div class="col-sm-6 col-md-6">
-						<div class="new-wrapper register-block">
-                        <fieldset>
-                            <legend>@T("Account.Register")</legend>
-							<div class="text">
-								@T("Account.Register.Result.Disabled")
-							</div>
-                        </fieldset>
-						</div>
-					</div>
+
+                    <div class="col-sm-6 col-md-6">
+                        <div class="new-wrapper register-block">
+                            <fieldset>
+                                <legend>@T("Account.Register")</legend>
+                                <div class="text">
+                                    @T("Account.Register.Result.Disabled")
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
                 }
                 else if (Model.CheckoutAsGuest)
                 {
-                <div class="col-sm-6 col-md-6">
-                    <div class="new-wrapper checkout-as-guest-or-register-block">
-                        <fieldset>
-                            <legend>@T("Account.Login.CheckoutAsGuestOrRegister")</legend>
-                            <div class="text">
-                                @await Component.InvokeAsync("TopicBlock", new { systemName = "CheckoutAsGuestOrRegister" })
-                                <div class="buttons col-md-8 pull-right">
-                                    <div class="register-checkoutbtn-wrapper">
-                                        <button type="button" class="btn btn-default checkout-as-guest-button" onclick="location.href='@Url.RouteUrl("Checkout")'">@T("Account.Login.CheckoutAsGuest")</button>
-                                        <button type="button" class="btn btn-default register-button" onclick="location.href='@registerUrl'">@T("Account.Register")</button>
+                    <div class="col-sm-6 col-md-6">
+                        <div class="new-wrapper checkout-as-guest-or-register-block">
+                            <fieldset>
+                                <legend>@T("Account.Login.CheckoutAsGuestOrRegister")</legend>
+                                <div class="text">
+                                    @await Component.InvokeAsync("TopicBlock", new { systemName = "CheckoutAsGuestOrRegister" })
+                                    <div class="buttons col-md-8 pull-right">
+                                        <div class="register-checkoutbtn-wrapper">
+                                            <button type="button" class="btn btn-default checkout-as-guest-button" onclick="location.href='@Url.RouteUrl("Checkout")'">@T("Account.Login.CheckoutAsGuest")</button>
+                                            <button type="button" class="btn btn-default register-button" onclick="location.href='@registerUrl'">@T("Account.Register")</button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </fieldset>
+                            </fieldset>
+                        </div>
                     </div>
-                </div>
                 }
                 else
                 {
-                <div class="col-sm-6 col-md-6">
-                    <div class="new-wrapper register-block">
-                        <fieldset>
-                            <legend>@T("Account.Login.NewCustomer")</legend>
-                            <div class="text">
-                                @T("Account.Login.NewCustomerText")
-                                <div class="form-group">
-                                    <label class="control-label"></label>
-                                    <div class="controls">
-                                        <button type="button" class="btn btn-default register-button pull-right" onclick="location.href='@registerUrl'">@T("Account.Register")</button>
+                    <div class="col-sm-6 col-md-6">
+                        <div class="new-wrapper register-block">
+                            <fieldset>
+                                <legend>@T("Account.Login.NewCustomer")</legend>
+                                <div class="text">
+                                    @T("Account.Login.NewCustomerText")
+                                    <div class="form-group">
+                                        <label class="control-label"></label>
+                                        <div class="controls">
+                                            <button type="button" class="btn btn-default register-button pull-right" onclick="location.href='@registerUrl'">@T("Account.Register")</button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </fieldset>
+                            </fieldset>
+                        </div>
                     </div>
-                </div>
                 }
                 <div class="col-sm-6 col-md-6">
                     <form asp-route="Login" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post" autocomplete="off">
@@ -126,14 +126,14 @@
                                             </div>
                                         </div>
                                     }
-                                <div class="form-group">
-                                    <div class="controls col-md-2 col-xs-3">
-                                        <button class="btn btn-default login-button" type="submit">@T("Account.Login.LoginButton")</button>
+                                    <div class="form-group">
+                                        <div class="controls col-md-2 col-xs-3">
+                                            <button class="btn btn-default login-button" type="submit">@T("Account.Login.LoginButton")</button>
+                                        </div>
+                                        <div class="controls col-xs-4">
+                                            <button type="button" class="btn btn-default register-button" onclick="location.href='@registerUrl'">@T("Account.Register")</button>
+                                        </div>
                                     </div>
-                                    <div class="controls col-xs-4">
-                                        <button type="button" class="btn btn-default register-button" onclick="location.href='@registerUrl'">@T("Account.Register")</button>
-                                    </div>
-                                </div>
                                 </div>
                             </fieldset>
                         </div>
@@ -151,6 +151,6 @@
 </div>
 <div class="row">
     <div class="col-sm-12 col-md-12 login-abouts">
-        @await Component.InvokeAsync("TopicBlock", new { systemName = "LoginRegistrationInfo" })
+        @await Component.InvokeAsync(typeof(TopicBlockViewComponent), new { systemName = "LoginRegistrationInfo" })
     </div>
 </div>

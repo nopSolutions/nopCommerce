@@ -30,7 +30,7 @@
 }*@
 <div class="page home-page">
     <div class="page-body">
-        @*@await Component.InvokeAsync("TopicBlock", new { systemName = "HomepageText" })*@
+        @await Component.InvokeAsync("TopicBlock", new { systemName = "HomepageText" })
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HomepageBeforeCategories })
         @await Component.InvokeAsync("HomepageCategories")
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HomepageBeforeProducts })
@@ -40,7 +40,7 @@
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HomepageBeforeNews })
         @await Component.InvokeAsync("HomepageNews")
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HomepageBeforePoll })
-        @*@await Component.InvokeAsync("HomepagePolls")*@
+        @await Component.InvokeAsync("HomepagePolls")
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HomepageBottom })
     </div>
 </div>
