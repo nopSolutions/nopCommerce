@@ -29,7 +29,7 @@ public partial class HtmlFormatter : IHtmlFormatter
     /// Ensure only allowed HTML tags
     /// </summary>
     /// <param name="text">Text</param>
-    /// <returns>Validated text with all invalid tags removed</returns>
+    /// <returns>Sanitized text with all invalid tags removed</returns>
     protected static string EnsureOnlyAllowedHtml(string text)
     {
         if (string.IsNullOrEmpty(text))
