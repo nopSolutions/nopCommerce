@@ -1,0 +1,106 @@
+﻿/*
+* Copyright 2014 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+.mega-menu, .menu-title,
+.mega-menu .dropdown {
+	display: none;
+}
+.mega-menu .has-sublist > span {
+	cursor: pointer;
+}
+
+@media all and (min-width: 1261px) {
+
+.mega-menu {
+	display: block;
+}
+.mega-menu-responsive {
+	display: none;
+}
+.mega-menu .dropdown {
+	position: absolute;
+	left: 0; right: 0;
+	z-index: 1022;
+	width: 1200px;
+	margin: auto;
+	padding-top: 10px;
+}
+.mega-menu .dropdown.active {
+	display: block;
+}
+.mega-menu .row-wrapper {
+	box-shadow: 0 0 20px rgba(0,0,0,.15);
+	background-color: #fff;
+	padding: 30px 25px;
+}
+.mega-menu .row {
+	display: flex;
+}
+.mega-menu .row + .row {
+	margin-top: 15px;
+}
+.mega-menu .box {
+	padding: 0 5px;
+}
+.mega-menu .boxes-1 .box {
+    width: 100%;
+}
+.mega-menu .boxes-2 .box {
+    width: 50%;
+}
+.mega-menu .boxes-3 .box {
+    width: 33.333%;
+}
+.mega-menu .boxes-4 .box {
+    width: 25%;
+}
+.mega-menu .boxes-5 .box {
+    width: 20%;
+}
+.mega-menu .boxes-6 .box {
+    width: 16.666%;
+}
+.mega-menu .boxes-7 .box {
+    width: 14.285%;
+}
+.mega-menu .boxes-8 .box {
+    width: 12.5%;
+}
+
+.mega-menu .picture {
+	margin: 0 0 15px;
+	border: 1px solid #eee;
+	font-size: 0;
+}
+.mega-menu .picture a {
+	display: block;
+}
+.mega-menu .picture img {
+	max-width: 100%;
+}
+.mega-menu .title {
+	font-size: 15px;
+}
+.mega-menu .subcategories {
+	margin: 5px 0 0;
+}
+.mega-menu .subcategory-item {
+	margin: 5px 0;
+	font-size: 12px;
+	color: #888;
+}
+
+.mega-menu .picture-title-wrap,
+.mega-menu .manufacturers .box,
+.mega-menu .vendors .box {
+	display: flex;
+	flex-flow: column-reverse;
+}
+.mega-menu .subcategories a:hover {
+	text-decoration: underline;
+	color: #000;
+}
+
+}
