@@ -111,8 +111,7 @@ namespace Nop.Plugin.Misc.AbcCore.Services.Custom
         private IEnumerable<int> GetNewProductsIds()
         {
             return  _productRepository.Table.Where(
-                        p => !p.Deleted && !p.Published &&
-                        p.MarkAsNew).ToList()
+                        p => !p.Deleted && p.MarkAsNew).ToList()
                     .Select(p => p.Id);
         }
     }
