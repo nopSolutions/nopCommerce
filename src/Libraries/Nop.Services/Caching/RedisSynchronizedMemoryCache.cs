@@ -65,7 +65,7 @@ public partial class RedisSynchronizedMemoryCache : ISynchronizedMemoryCache
     {
         var channel = ChannelPrefix;
         var subscriber = _connection.GetSubscriber();
-        subscriber.Subscribe(channel + "*", (redisChannel, value) =>
+        subscriber.Subscribe(RedisChannel.Pattern(channel + "*"), (redisChannel, value) =>
         {
             var publisher = ((string)redisChannel).Replace(channel, "");
             if (publisher == _processId)
@@ -127,8 +127,8 @@ public partial class RedisSynchronizedMemoryCache : ISynchronizedMemoryCache
             return;
 
         var subscriber = _connection.GetSubscriber();
-        subscriber.Publish(
-            $"{ChannelPrefix}{_processId}",
+        subscriber.Publish(RedisChannel.Pattern( 
+            $"{ChannelPrefix}{_processId}"),
             JsonConvert.SerializeObject(keys),
             CommandFlags.FireAndForget);
     }
@@ -198,7 +198,7 @@ public partial class RedisSynchronizedMemoryCache : ISynchronizedMemoryCache
         {
             _timer?.Dispose();
             var subscriber = _connection.GetSubscriber();
-            subscriber.Unsubscribe(ChannelPrefix + "*");
+            subscriber.Unsubscribe(RedisChannel.Pattern(ChannelPrefix + "*"));
 
             _disposed = true;
         }
