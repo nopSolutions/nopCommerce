@@ -71,3 +71,6 @@ IF NOT EXISTS (SELECT * FROM [LocaleStringResource] WHERE [ResourceName]='reward
 		INSERT INTO [dbo].[LocaleStringResource]([ResourceName],[ResourceValue],[LanguageId]) 
 		VALUES('rewardpoints.fields.date','Date',1)
    END
+
+
+Update [dbo].[LocaleStringResource] SET [ResourceValue]='Be the first to review this profile' WHERE [ResourceName]='reviews.overview.first'

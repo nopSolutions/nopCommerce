@@ -13,6 +13,12 @@ select * from [SpecificationAttributeOption]
 select * from [dbo].[GenericAttribute] WHERE [KEY]='NotifiedAboutNewPrivateMessages'
 select * from [dbo].[GenericAttribute] where [KeyGroup]='Customer' and [Key]='SubscriptionId'
 
+select * from [dbo].[TopicTemplate]
+select * from [dbo].[Affiliate]
+select * from [dbo].[MessageTemplate]
+
+select * from [dbo].[GenericAttribute] 
+where [KeyGroup]='Customer' and [Key] like '%allotted%'
 --update [CustomerAttribute]
 --SET HelpText='Provide Your mother tongue so that others can contact you <br/> if they chose same mother tongue seeker'
 --WHERE Id=4
@@ -112,10 +118,13 @@ select * FROM [dbo].[Setting]
 where Name like 'catalogsettings.show%';
 
 select * FROM [dbo].[Setting] 
-where Name like '%show products%';
+where value like '%Be the first%';
+
+select * FROM [dbo].[Setting] 
+where value like '%Be the first%';
 
 select * from LocaleStringResource
-Where ResourceValue like 'Show products%'
+Where ResourceName like 'Admin.Catalog.Products.Fields.%desc%'
 
 select * from LocaleStringResource
 Where ResourceName='Account.Login.NewCustomerText'
@@ -157,6 +166,10 @@ select * FROM Customer where VendorId=5
 
 select * from UrlRecord
 WHERE EntityName='Topic'
+
+select * from [Forums_Topic]
+select * from [dbo].[Forums_Forum]
+
 
 select * from [Order]
 select * from OrderItem
@@ -235,3 +248,25 @@ select * from [dbo].Forums_PrivateMessage
      and sao.SpecificationAttributeId in (7,4,9)
  )
  AND ProductId != (Select VendorId as productid from Customer where Id=6)
+
+
+ SELECT * FROM ShoppingCartItem WHERE CustomerId=6 and ShoppingCartTypeId=2
+ 
+
+ SELECT Distinct(ProductId) FROM ShoppingCartItem WHERE CustomerId=6
+ SELECT CustomerId FROM ShoppingCartItem WHERE ProductId=4
+
+ SELECT Id FROM Product WHERE VendorId in (SELECT CustomerId FROM ShoppingCartItem WHERE ProductId=4)
+
+ select * from [dbo].[MessageTemplate]
+ WHERE Body like '%product %'
+ --and Body not like '%store.URL%'
+
+ select * from [dbo].[MessageTemplate]
+ WHERE Name in ('Product.ProductReview','ProductReview.Reply.CustomerNotification')
+
+
+ --UPDATE [dbo].[MessageTemplate]
+ --SET Subject=REPLACE(Subject,'product','profile')
+ --WHERE Name in ('Product.ProductReview','ProductReview.Reply.CustomerNotification')
+
