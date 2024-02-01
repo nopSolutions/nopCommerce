@@ -91,7 +91,7 @@ INSERT INTO [SpecificationAttributeOption] ([Id],[Name],[SpecificationAttributeI
 
 -- Gender
 INSERT INTO [SpecificationAttributeOption] ([Id],[Name],[SpecificationAttributeId],[DisplayOrder]) VALUES(27,'Male', 9, 19);
-INSERT INTO [SpecificationAttributeOption] ([Id],[Name],[SpecificationAttributeId],[DisplayOrder]) VALUES(28,'Fe Male', 9, 20);
+INSERT INTO [SpecificationAttributeOption] ([Id],[Name],[SpecificationAttributeId],[DisplayOrder]) VALUES(28,'FeMale', 9, 20);
 
 SET IDENTITY_INSERT [SpecificationAttributeOption] OFF
 

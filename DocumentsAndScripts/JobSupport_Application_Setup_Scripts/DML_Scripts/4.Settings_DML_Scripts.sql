@@ -137,12 +137,12 @@ IF NOT EXISTS (SELECT * FROM [Setting] WHERE [Name]='customersettings.genderspec
 
 IF NOT EXISTS (SELECT * FROM [Setting] WHERE [Name]='customersettings.gendermalespecificationattributeoptionid')
    BEGIN
-	 INSERT INTO [Setting] ([Name],[Value],[StoreId]) VALUES ('customersettings.gendermalespecificationattributeoptionid','28',0)
+	 INSERT INTO [Setting] ([Name],[Value],[StoreId]) VALUES ('customersettings.gendermalespecificationattributeoptionid','27',0)
    END
 
 IF NOT EXISTS (SELECT * FROM [Setting] WHERE [Name]='customersettings.genderfemalespecificationattributeoptionid')
    BEGIN
-	 INSERT INTO [Setting] ([Name],[Value],[StoreId]) VALUES ('customersettings.genderfemalespecificationattributeoptionid','29',0)
+	 INSERT INTO [Setting] ([Name],[Value],[StoreId]) VALUES ('customersettings.genderfemalespecificationattributeoptionid','28',0)
    END
 
  IF NOT EXISTS (SELECT * FROM [Setting] WHERE [Name]='customersettings.showsecondarytechnologyspecificationattribute')
