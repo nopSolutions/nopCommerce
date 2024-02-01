@@ -170,7 +170,7 @@ namespace Nop.Web.Factories
             foreach (var group in specModel.Groups)
             {
                 var ptList = group.Attributes
-                                 .Where(x => x.Name == psEnum.ToString())
+                                 .Where(x => x.Name.Replace(" ","") == psEnum.ToString())
                                  .Select(o => o.Values.Select(a => a.ValueRaw))
                                  .FirstOrDefault();
 
@@ -386,6 +386,7 @@ namespace Nop.Web.Factories
             model.ProfileType = GetSpecificationAttributeValues(model.ProductSpecificationModel, ProductAndCustomerAttributeEnum.ProfileType);
             model.RelaventExperiance = GetSpecificationAttributeValues(model.ProductSpecificationModel, ProductAndCustomerAttributeEnum.RelaventExperiance);
             model.MotherTongue = GetSpecificationAttributeValues(model.ProductSpecificationModel, ProductAndCustomerAttributeEnum.MotherTongue);
+            model.Gender = GetSpecificationAttributeValues(model.ProductSpecificationModel, ProductAndCustomerAttributeEnum.Gender);
 
             //get target customer
             var customer = (await _customerService.GetAllCustomersAsync(vendorId: model.Id)).FirstOrDefault();

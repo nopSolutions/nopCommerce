@@ -25,6 +25,8 @@ namespace Nop.Core.Domain.Catalog
         [Description("Secondary Technology")]
         SecondaryTechnology = 8,
 
+        Gender = 9,
+
     }
 
     public enum CustomerProfileTypeEnum

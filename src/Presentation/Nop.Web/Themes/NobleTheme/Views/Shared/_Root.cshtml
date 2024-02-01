@@ -8,7 +8,7 @@
 <div class="master-wrapper-page">
     <div class="admin-header-link">
         <ul>
-            @await Component.InvokeAsync("AdminHeaderLinks")
+            @await Component.InvokeAsync(typeof(AdminHeaderLinksViewComponent))
         </ul>
     </div>
     @{ await Html.RenderPartialAsync("_Header"); }
@@ -22,7 +22,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    @await Component.InvokeAsync("TopMenu")
+                    @await Component.InvokeAsync(typeof(TopMenuViewComponent))
                 </div>
             </div>
         </div>
@@ -35,7 +35,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ContentBefore })
+                    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ContentBefore })                   
                 </div>
             </div>
             @*ajax loading window*@
@@ -53,7 +53,7 @@
         </div>
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ContentAfter })
     </div>
-    @await Component.InvokeAsync("Footer")
+    @await Component.InvokeAsync(typeof(FooterViewComponent))
 </div>
-@await Component.InvokeAsync("EuCookieLaw")
+@await Component.InvokeAsync(typeof(EuCookieLawViewComponent))
 @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BodyEndHtmlTagBefore })

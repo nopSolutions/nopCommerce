@@ -126,7 +126,7 @@
                                         }
                                         <!--gift card-->
                                         @{
-                                                                            var dataDictGiftCard = new ViewDataDictionary(ViewData);
+                                            var dataDictGiftCard = new ViewDataDictionary(ViewData);
                                             dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = $"giftcard_{Model.Id}";
                                             @await Html.PartialAsync("_GiftCardInfo", Model.GiftCard, dataDictGiftCard)
                                         }
@@ -140,9 +140,27 @@
                                                             <i class="bi bi-person icon-color icon-size"></i>
                                                         </span>
                                                         Profile Type :
-                                                        <span itemprop="price" class="price-value-1025" style="font-size:14px;">
-                                                            He/She ready to  @Model.ProfileType
-                                                        </span>
+                                                        @if (!string.IsNullOrEmpty(Model.Gender))
+                                                        {
+                                                            if (Model.Gender == "M")
+                                                            {
+                                                                <span itemprop="price" class="price-value-1025" style="font-size:14px;">
+                                                                    He is ready to @Model.ProfileType
+                                                                </span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span itemprop="price" class="price-value-1025" style="font-size:14px;">
+                                                                    She is ready to  @Model.ProfileType
+                                                                </span>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <span itemprop="price" class="price-value-1025" style="font-size:14px;">
+                                                                He/She ready to  @Model.ProfileType
+                                                            </span>
+                                                        }
                                                     </div>
                                                 </div>
                                                 <div class="product-price">
@@ -253,16 +271,16 @@
                                                     </div>
                                                 </div>
                                                 @*<div class="product-price" style="font-weight:100;">
-                                    <div class="price-inclusive-text" style="height:30px !important;">
-                                        <div id="product-@Model.Id" class="email-a-friend">
-                                            <i class="fa fa-mobile-phone fa-lg icon-color" title="click to unlock"></i>
-                                            Joined Date :
-                                            <span itemprop="price" class="price-value-1025" style="font-size:14px;">
+                                                <div class="price-inclusive-text" style="height:30px !important;">
+                                                <div id="product-@Model.Id" class="email-a-friend">
+                                                <i class="fa fa-mobile-phone fa-lg icon-color" title="click to unlock"></i>
+                                                Joined Date :
+                                                <span itemprop="price" class="price-value-1025" style="font-size:14px;">
                                                 @Model.LastLoginDateTime
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>*@
+                                                </span>
+                                                </div>
+                                                </div>
+                                                </div>*@
                                             </div>
                                         </div>
                                         @*@await Html.PartialAsync("_ShareButton", Model)*@
@@ -310,12 +328,13 @@
                         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductDetailsBeforeCollateral, additionalData = Model })
                     </div>
                     <div class="product-collateral">
-                        @await Component.InvokeAsync("ProductsAlsoPurchased", new { productId = Model.Id })
-                        @await Component.InvokeAsync("RelatedProducts", new { productId = Model.Id })
+                        @await Component.InvokeAsync(typeof(ProductsAlsoPurchasedViewComponent), new { productId = Model.Id })
+                        @await Component.InvokeAsync(typeof(RelatedProductsViewComponent), new { productId = Model.Id })
                     </div>
                 </div>
             </div>
         </form>
+        @* @await Html.PartialAsync("_ProductReviews", Model.ProductReviews) *@
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductDetailsBottom, additionalData = Model })
     </div>
 </div>

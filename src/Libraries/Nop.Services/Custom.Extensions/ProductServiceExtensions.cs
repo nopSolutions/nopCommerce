@@ -354,7 +354,7 @@ namespace Nop.Services.Catalog
             var pProfileTypeId = SqlParameterHelper.GetInt32Parameter("ProfileTypeId", profileTypeId);
 
             //invoke stored procedure           
-            var products = await _productRepository.EntityFromSqlCustom("ProductLoadAllPaged_V5",
+            var products = await _productRepository.EntityFromSqlCustom("ProductLoadAllPaged_V6",
                 pProductIds,
                 pCustomerId,
                 pProfileTypeId);
