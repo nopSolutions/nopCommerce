@@ -753,7 +753,7 @@ public partial class ProductModelFactory : IProductModelFactory
                 var productModel = product.ToModel<ProductModel>();
 
                 //little performance optimization: ensure that "FullDescription" is not returned
-                productModel.FullDescription = string.Empty;
+                productModel.FullDescription = product.FullDescription;
 
                 //fill in additional values (not existing in the entity)
                 productModel.SeName = await _urlRecordService.GetSeNameAsync(product, 0, true, false);
