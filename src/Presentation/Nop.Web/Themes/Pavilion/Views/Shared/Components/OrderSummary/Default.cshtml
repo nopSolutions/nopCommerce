@@ -49,9 +49,6 @@
                                                 await HtmlHelpers.GetPavilionPrimaryColorAsync() :
                                                 await HtmlHelpers.GetPavilionAccentColorAsync();
 
-    bool hasOutOfStockItemsInCart = Model.Items.FirstOrDefault(i => i.Warnings.Contains("Out of stock")) != null ||
-                                    Model.Items.FirstOrDefault(i => i.Warnings.Contains("Please remove item from cart to continue.")) != null;
-
     Html.AddCssFileParts("~/Plugins/AbcWarehouse.HomeDeliveryStatusWidget/Content/loading.css");
     var isFedExMode = await settingService.GetSettingByKeyAsync<bool>("coresettings.isfedexmode");
 }
@@ -324,6 +321,7 @@
                             var pams = await productAttributeParser.ParseProductAttributeMappingsAsync(sci.AttributesXml);
                             var strippedUnitPrice = item.UnitPrice.Replace("$", "").Replace(",", "");
                             var adjustedUnitPrice = Convert.ToDecimal(strippedUnitPrice);
+                            var isPickup = item.AttributeInfo.Contains("Pickup");
 
                             foreach (var pam in pams)
                             {
@@ -462,21 +460,23 @@
                                         @* <div class="edit-item">
                                             <a href="@editCartItemUrl">@T("Common.Edit")</a>
                                         </div> *@
-                                        if (await product.IsPickupAsync() && !(await product.HasDeliveryOptionsAsync()))
+                                        if (!(await product.HasDeliveryOptionsAsync()))
                                         {
-                                            bool isPickup = item.AttributeInfo.Contains("Pickup");
-                                            string buttonMsg = isPickup ? "Change to FedEx" : "Change to Pickup in Store";
-                                            
-                                            <div class="change">
-                                                <button class="change-delivery-method" value="@item.Id">@buttonMsg</button>
-                                                <span id="change_method_error_@item.Id" class="delivery-method-error"></span>
-                                                @if (isPickup)
-                                                {
-                                                    <span class="edit-item">
-                                                        <a href="@editCartItemUrl">Change store</a>
-                                                    </span>
-                                                }
-                                            </div>
+                                            if ((isFedExMode && await product.HasFedExAttributeAsync()) &&
+                                                 await product.IsPickupAsync())
+                                            {
+                                                string buttonMsg = isPickup ? "Change to FedEx" : "Change to Pickup in Store";
+                                                <div class="change">
+                                                    <button class="change-delivery-method" value="@item.Id">@buttonMsg</button>
+                                                    <span id="change_method_error_@item.Id" class="delivery-method-error"></span>
+                                                </div>
+                                            }
+                                            if (isPickup)
+                                            {
+                                                <span class="edit-item">
+                                                    <a href="@editCartItemUrl">Change store</a>
+                                                </span>
+                                            }
                                         }
                                     }
                                     @if (item.Warnings.Count > 0)

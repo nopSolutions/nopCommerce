@@ -17,6 +17,23 @@ namespace Nop.Plugin.Misc.AbcCore.Extensions
         public const string IsAddToCartKey = "IsAddToCart";
         public const string IsAddToCartWithUserInfoKey = "IsAddToCartWithUserInfo";
 
+        public static async Task<bool> HasFedExAttributeAsync(this Product product)
+        {
+            var productAttributeService = EngineContext.Current.Resolve<IProductAttributeService>();
+            var productAttributeMappings = await productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id);
+
+            foreach (var pam in productAttributeMappings)
+            {
+                var productAttribute = await productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId);
+                if (productAttribute != null && productAttribute.Name == "FedEx")
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public static async Task<bool> HasDeliveryOptionsAsync(this Product product)
         {
             var abcProductAttributeService = EngineContext.Current.Resolve<IAbcProductAttributeService>();
