@@ -584,7 +584,7 @@ namespace Nop.CustomExtensions.Services
 
                 if (productModel.PictureModels.Count == 0)
                 {
-                    if (productModel.Gender.ToLower() == "F".ToLower())
+                    if (productModel.Gender?.ToLower() == "F".ToLower())
                     {
                         //change picture to women image
                         productModel.DefaultPictureModel.ImageUrl = "https://localhost:54077/images/thumbs/default-women-image_615.png";
@@ -604,7 +604,7 @@ namespace Nop.CustomExtensions.Services
                 if (isValid == null)
                 {
                     //Dispaly Upgrade View
-                    emailAFriendModel.Result = await _localizationService.GetResourceAsync("Orders.UpgradeSubscription.Message");
+                    //emailAFriendModel.Result = await _localizationService.GetResourceAsync("Orders.UpgradeSubscription.Message");
                     //ModelState.AddModelError("", await _localizationService.GetResourceAsync("Orders.UpgradeSubscription.Message"));
                     //return View("_UpgradeSubscription.cshtml", model);
                 }

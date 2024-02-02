@@ -17,10 +17,10 @@
                     <div class="item-box @(Model.ViewMode == "list" ? "col-xs-12 col-sm-12 col-md-12 product-align" : "col-xs-12 col-sm-4 col-md-4 product-align")">
                         <div class="thumbnail">
                             @await Html.PartialAsync("_ProductBox", product)
-                        </div>                        
+                        </div>
                     </div>
                 }
-            </div>            
+            </div>
         </div>
     </div>
 
@@ -42,6 +42,8 @@
 else if (!string.IsNullOrEmpty(Model.NoResultMessage))
 {
     <div class="no-result">
-        @Model.NoResultMessage
+        <div class="alert alert-danger" role="alert">
+            @Html.Raw(Model.NoResultMessage)
+        </div>
     </div>
 }

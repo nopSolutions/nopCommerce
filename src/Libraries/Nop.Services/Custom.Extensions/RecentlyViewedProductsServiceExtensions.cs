@@ -35,10 +35,17 @@ namespace Nop.Services.Catalog
 
             _workContext = EngineContext.Current.Resolve<IWorkContext>();
 
-            var customerId = (await _workContext.GetCurrentCustomerAsync()).Id;
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var profileTypeId = 0;
+
+            //Search for opposite profiles
+            if (customer.CustomerProfileTypeId == 1)
+                profileTypeId = 2;
+            if (customer.CustomerProfileTypeId == 2)
+                profileTypeId = 1;
 
             //return list of product
-            return (await _productService.SearchProductsSimpleCustomAsync(productIds: productIds, customerId: customerId))
+            return (await _productService.SearchProductsSimpleCustomAsync(productIds: productIds, customerId: customer.Id, profileTypeId: profileTypeId))
                 .Where(product => product.Published && !product.Deleted).ToList();
         }
 

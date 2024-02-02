@@ -39,11 +39,12 @@ public partial class RecentlyViewedProductsBlockViewComponent : NopViewComponent
             return Content("");
 
         var preparePictureModel = productThumbPictureSize.HasValue;
-        var products = await (await _recentlyViewedProductsService.GetRecentlyViewedProductsAsync(_catalogSettings.RecentlyViewedProductsNumber))
+        var products = await (await _recentlyViewedProductsService.GetRelatedProductsAsync(_catalogSettings.RecentlyViewedProductsNumber))
             //ACL and store mapping
             .WhereAwait(async p => await _aclService.AuthorizeAsync(p) && await _storeMappingService.AuthorizeAsync(p))
             //availability dates
-            .Where(p => _productService.ProductIsAvailable(p)).ToListAsync();
+            //.Where(p => _productService.ProductIsAvailable(p))
+            .ToListAsync();
 
         if (!products.Any())
             return Content("");

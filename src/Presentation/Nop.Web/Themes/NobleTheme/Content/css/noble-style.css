@@ -8773,4 +8773,8 @@ div.block.product-filters.product-filters-wrapper div.product-filter.product-spe
   padding: 10px;
   background-color: yellow;
   color:red;
-} 
+}
+
+.no-result .alert-danger {
+  margin: 10px;
+}
