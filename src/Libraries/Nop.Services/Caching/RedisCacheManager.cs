@@ -62,9 +62,11 @@ public partial class RedisCacheManager : DistributedCacheManager
         prefix = PrepareKeyPrefix(prefix, prefixParameters);
         var db = await _connectionWrapper.GetDatabaseAsync();
 
+        var instanceName = _appSettings.Get<DistributedCacheConfig>().InstanceName ?? string.Empty;
+
         foreach (var endPoint in await _connectionWrapper.GetEndPointsAsync())
         {
-            var keys = await GetKeysAsync(endPoint, prefix);
+            var keys = await GetKeysAsync(endPoint, instanceName + prefix);
             db.KeyDelete(keys.ToArray());
         }
 

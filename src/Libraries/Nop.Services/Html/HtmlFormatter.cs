@@ -28,8 +28,8 @@ public partial class HtmlFormatter : IHtmlFormatter
     /// <summary>
     /// Ensure only allowed HTML tags
     /// </summary>
-    /// <param name="text">Text to check</param>
-    /// <returns>True - if the text contains only valid tags, false otherwise</returns>
+    /// <param name="text">Text</param>
+    /// <returns>Sanitized text with all invalid tags removed</returns>
     protected static string EnsureOnlyAllowedHtml(string text)
     {
         if (string.IsNullOrEmpty(text))
@@ -53,7 +53,7 @@ public partial class HtmlFormatter : IHtmlFormatter
     /// <summary>
     /// Indicates whether the HTML tag is valid
     /// </summary>
-    /// <param name="tag">HTMl tag to check</param>
+    /// <param name="tag">HTML tag to check</param>
     /// <param name="tags">List of valid tags</param>
     /// <returns>True - if the tag if valid, false otherwise</returns>
     protected static bool IsValidTag(string tag, string tags)
