@@ -27,6 +27,11 @@ public partial class SecuritySettings : ISettings
     /// </summary>
     public string HoneypotInputName { get; set; }
 
+    // <summary>
+    /// Gets or sets a value indicating whether Honeypot events should be logged
+    /// </summary>
+    public bool LogHoneypotDetection { get; set; }
+
     /// <summary>
     /// Gets or sets a value indicating whether to allow non-ASCII characters in headers
     /// </summary>
