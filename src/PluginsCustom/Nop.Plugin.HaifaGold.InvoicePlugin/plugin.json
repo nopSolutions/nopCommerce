@@ -1,0 +1,11 @@
+﻿{
+  "Group": "HaifaGold",
+  "FriendlyName": "Haifa Gold Invoice Plugin",
+  "SystemName": "HaifaGold.InvoicePlugin",
+  "Version": "1.00",
+  "SupportedVersions": [ "4.60" ],
+  "Author": "Author Name",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.HaifaGold.InvoicePlugin.dll",
+  "Description": ""
+}
