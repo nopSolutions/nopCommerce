@@ -17,9 +17,9 @@
 
 <script>
     $(function() {
-        $('#cbUseDownloadURL@(randomNumber)').click(toggleDownloadRecordType@(randomNumber));
+        $('#cbUseDownloadURL@(randomNumber)').on('click', toggleDownloadRecordType@(randomNumber));
 
-        $('#saveDownloadUrl@(randomNumber)').click(function () {
+        $('#saveDownloadUrl@(randomNumber)').on('click', function () {
             var downloadUrl = $("#downloadurl@(randomNumber)").val();
             $('#saveDownloadUrl@(randomNumber)').attr('disabled', true);
 
@@ -40,11 +40,11 @@
                     }
                     else {
                         $('#saveDownloadUrlFailed-info').text(data.message);
-                        $("#saveDownloadUrlFailed").click();
+                        $("#saveDownloadUrlFailed").trigger("click");
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    $("#saveDownloadUrlAlert").click();
+                    $("#saveDownloadUrlAlert").trigger("click");
                 },
                 complete: function (jqXHR, textStatus) {
                     $('#saveDownloadUrl@(randomNumber)').attr('disabled', false);
