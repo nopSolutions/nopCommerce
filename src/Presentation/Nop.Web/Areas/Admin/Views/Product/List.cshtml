@@ -323,7 +323,7 @@
         $(document).ready(function () {
             $("#@Html.IdFor(model => model.GoDirectlyToSku)").keydown(function (event) {
                 if (event.keyCode === 13) {
-                    $("#go-to-product-by-sku").click();
+                    $("#go-to-product-by-sku").trigger("click");
                     return false;
                 }
             });
@@ -427,7 +427,7 @@
             var ids = selectedIds.join(",");
             if (!ids) {
                 $('#exportXmlSelected-info').text("@T("Admin.Products.NoProducts")");
-                $("#exportXmlSelected").click();
+                $("#exportXmlSelected").trigger("click");
             }
             else {
                 $('#export-xml-selected-form #selectedIds').val(ids);
@@ -452,7 +452,7 @@
                 var ids = selectedIds.join(",");
                 if (!ids) {
                     $('#exportExcelSelected-info').text("@T("Admin.Products.NoProducts")");
-                    $("#exportExcelSelected").click();
+                    $("#exportExcelSelected").trigger("click");
                 }
                 else {
                     $('#export-excel-selected-form #selectedIds').val(ids);

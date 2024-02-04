@@ -139,7 +139,7 @@
                                 updateTable('#attributecombinations-grid');
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
-                                $("#generateAllAttributeCombinationsAlert").click();
+                                $("#generateAllAttributeCombinationsAlert").trigger("click");
                             }
                         });
                         $('#btnGenerateAllCombinations-action-confirmation').modal('toggle');

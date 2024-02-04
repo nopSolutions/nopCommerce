@@ -151,7 +151,7 @@
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    $("#loadCustomerStatisticsAlert").click();
+                    $("#loadCustomerStatisticsAlert").trigger("click");
                 }
             });
         }

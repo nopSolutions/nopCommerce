@@ -74,7 +74,7 @@
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     $('#createConfigurationFailed-info').text(errorThrown);
-                    $("#createConfigurationFailed").click();
+                    $("#createConfigurationFailed").trigger("click");
                 }
             });
         }

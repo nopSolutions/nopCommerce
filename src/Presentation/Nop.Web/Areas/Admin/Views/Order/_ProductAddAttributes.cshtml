@@ -213,7 +213,7 @@
 
                                                     if (responseJSON.message) {
                                                         $('#uploadFileProductAttributeFailed-info').text((responseJSON.message).Text.replace(/<[^>]+>/g, ''));
-                                                        $("#uploadFileProductAttributeFailed").click();
+                                                        $("#uploadFileProductAttributeFailed").trigger("click");
                                                     }
                                                 });
 
@@ -305,7 +305,7 @@
                             }
                             if (data.message) {
                                 $('#productdetails_attributechangeMessage-info').text(data.message);
-                                $("#productdetails_attributechangeMessage").click();
+                                $("#productdetails_attributechangeMessage").trigger("click");
                             }
                         }
                     });
