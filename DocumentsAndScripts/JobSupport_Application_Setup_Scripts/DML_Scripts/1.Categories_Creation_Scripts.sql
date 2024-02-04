@@ -16,3 +16,12 @@ SET IDENTITY_INSERT [dbo].[Category] OFF
 INSERT INTO [dbo].[UrlRecord]([EntityName],[Slug],[EntityId],[IsActive],[LanguageId]) VALUES('Category','give-support',1,1,0)
 INSERT INTO [dbo].[UrlRecord]([EntityName],[Slug],[EntityId],[IsActive],[LanguageId]) VALUES('Category','take-support',2,1,0)
 INSERT INTO [dbo].[UrlRecord]([EntityName],[Slug],[EntityId],[IsActive],[LanguageId]) VALUES('Category','pricing',3,1,0)
+
+-- update category description for give support & Take support
+  UPDATE [dbo].[Category]
+  SET Description='<table style="border-collapse: collapse; width: 99.9%; height: 136px; background-color: #f9f9f9; border-color: #ffa500; border-style: solid;" border="1" cellspacing="5" cellpadding="5"><caption>&nbsp;</caption>  <tbody>  <tr>  <td style="width: 100%;">  <ul>  <li><span style="font-size: 10pt;">Below Profiles are interested to take support from you.</span></li>  <li><span style="font-size: 10pt;">You can filter further by using left filter to match your skillset.</span></li>  <li><span style="font-size: 10pt;">You can shortlist the profiles that you like. Shortlisted profiles will appear in My Account page for easy access in future.</span></li>  <li><span style="font-size: 10pt;">You can send interest to the profiles that you like. If they also interested about your profile they may contact you.</span></li>  </ul>  </td>  </tr>  </tbody>  </table>'
+  Where Id=2
+
+  UPDATE [dbo].[Category]
+  SET Description='<table style="border-collapse: collapse; width: 99.9%; height: 136px; background-color: #f9f9f9; border-color: #ffa500; border-style: solid;" border="1" cellspacing="5" cellpadding="5"><caption>&nbsp;</caption>  <tbody>  <tr>  <td style="width: 100%;">  <ul>  <li><span style="font-size: 10pt;">Below Profiles are interested to provide support.</span></li>  <li><span style="font-size: 10pt;">You can filter further by using left filter to match your skillset.</span></li>  <li><span style="font-size: 10pt;">You can shortlist the profiles that you like. Shortlisted profiles will appear in My Account page for easy access in future.</span></li>  <li><span style="font-size: 10pt;">You can send interest to the profiles that you like. If they also interested about your profile they may contact you.</span></li>  </ul>  </td>  </tr>  </tbody>  </table>'
+  Where Id=1

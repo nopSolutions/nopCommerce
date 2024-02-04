@@ -20,7 +20,7 @@ UPDATE [dbo].[LocaleStringResource] SET [ResourceValue]='New profiles' WHERE [Re
 UPDATE [dbo].[LocaleStringResource] SET [ResourceValue]='Search profiles' WHERE [ResourceName]='search.searchbox.text.label';
 
 UPDATE [dbo].[LocaleStringResource] SET [ResourceValue]='Search profiles' WHERE [ResourceName]='search.searchbox.tooltip';
-UPDATE [dbo].[LocaleStringResource] SET [ResourceValue]='No profiles were found that matched your criteria.Please adjust your filter criteria to see more profiles. </br> (OR) </br> Send an email using contact us form, our team will try best to get the relavent profiles.' WHERE resourcename = 'catalog.products.noresult';
+UPDATE [dbo].[LocaleStringResource] SET [ResourceValue]='No profiles were found that matched your criteria. Please adjust your filter criteria to see more profiles. </br> (OR) </br> Send an email using Contact us form, our team will try best to get the relavent profiles.' WHERE resourcename = 'catalog.products.noresult';
 UPDATE [dbo].[LocaleStringResource] SET [ResourceValue]='Profile review for' WHERE [ResourceName]='account.customerproductreviews.productreviewfor'
 UPDATE [dbo].[LocaleStringResource] SET [ResourceValue]='You will see the profile review after approving by administrator.' WHERE [ResourceName]='reviews.seeafterapproving'
 UPDATE [dbo].[LocaleStringResource] SET [ResourceValue]='Profile review for' WHERE [ResourceName]='account.customerproductreviews.productreviewfor'
@@ -74,3 +74,5 @@ IF NOT EXISTS (SELECT * FROM [LocaleStringResource] WHERE [ResourceName]='reward
 
 
 Update [dbo].[LocaleStringResource] SET [ResourceValue]='Be the first to review this profile' WHERE [ResourceName]='reviews.overview.first'
+Update [dbo].[LocaleStringResource] SET [ResourceValue]='An error occured. Please try again later.' WHERE [ResourceName]='shoppingcart.maximumquantity'
+--The maximum quantity allowed for purchase is {0}.

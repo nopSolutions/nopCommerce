@@ -16,8 +16,13 @@ IF NOT EXISTS (SELECT * FROM [EmailAccount] WHERE [Email]='no-reply@Onjobsupport
  UPDATE [dbo].[MessageTemplate]
  SET BccEmailAddresses='umsateesh@gmail.com'
 
- --replace product with profile in some columns
+ -- replace product with profile in some columns
  UPDATE [dbo].[MessageTemplate]
  SET Subject=REPLACE(Subject,'product','profile'),
     Body=REPLACE(Body,' product ',' profile ')
  WHERE Name in ('Product.ProductReview','ProductReview.Reply.CustomerNotification')
+
+ -- replace store with empty value
+ UPDATE [dbo].[MessageTemplate]
+ SET Body=REPLACE(Body,' store ',' ')
+ WHERE Name in ('ProductReview.Reply.CustomerNotification')
