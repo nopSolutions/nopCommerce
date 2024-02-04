@@ -2,61 +2,46 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version Condition=" '$(BUILD_BUILDNUMBER)' == '' ">0.0.1-local</Version>
-    <Version Condition=" '$(BUILD_BUILDNUMBER)' != '' ">$(BUILD_BUILDNUMBER)</Version>
     <Description>This plugin allows you to access/create Nop resources outside of the system</Description>
     <Copyright></Copyright>
     <Authors></Authors>
     <Company></Company>
-    <AssemblyName>Nop.Plugin.Api</AssemblyName>
-    <RootNamespace>Nop.Plugin.Api</RootNamespace>
-    <PluginDirectory>Nop.Plugin.Api</PluginDirectory>
+    <OutputPath>..\..\Presentation\Nop.Web\Plugins\Nop.Plugin.Api</OutputPath>
+    <OutDir>$(OutputPath)</OutDir>
   <!--Set this parameter to true to get the dlls copied from the NuGet cache to the output of your project.
     You need to set this parameter to true if your plugin has a nuget package 
     to ensure that the dlls copied from the NuGet cache to the output of your project-->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>..\..\nopCommerce\src\Presentation\Nop.Web\Plugins\Nop.Plugin.Api</OutputPath>
-    <OutDir>$(OutputPath)</OutDir>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\..\nopCommerce\src\Presentation\Nop.Web\Plugins\Nop.Plugin.Api</OutputPath>
-    <OutDir>$(OutputPath)</OutDir>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Rewrite" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Rewrite" Version="2.1.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.5.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\Nop.Core\Nop.Core.csproj" />
+    <ProjectReference Include="..\..\Presentation\Nop.Web.Framework\Nop.Web.Framework.csproj" />
     <ClearPluginAssemblies Include="$(MSBuildProjectDirectory)\..\..\Build\ClearPluginAssemblies.proj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Libraries\Nop.Core\Nop.Core.csproj" />
-    <ProjectReference Include="..\..\Presentation\Nop.Web.Framework\Nop.Web.Framework.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="Areas\Admin\Views\ApiAdmin\Settings.cshtml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Areas\Admin\Views\_ViewImports.cshtml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="logo.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="plugin.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   
