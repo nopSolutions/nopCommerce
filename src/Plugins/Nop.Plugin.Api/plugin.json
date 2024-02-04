@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Misc",
+  "FriendlyName": "Api plugin",
+  "SystemName": "Nop.Plugin.Api",
+  "Version": "4.70.2",
+  "SupportedVersions": [ "4.70" ],
+  "Author": "HaifaGold",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Api.dll",
+  "Description": "This plugin is Restfull API for nopCommerce"
+}
