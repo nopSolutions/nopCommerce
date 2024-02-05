@@ -1,4 +1,4 @@
-﻿@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
+@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
 @inject IWorkContext workContext
 @{
     const string prefix = "order-statistics";
@@ -62,59 +62,61 @@
                 datasets: [
                     {
                         label: "@T("Admin.SalesReport.OrderStatistics")",
-                        fillColor: "rgba(60,141,188,0.9)",
-                        strokeColor: "rgba(60,141,188,0.8)",
-                        pointColor: "#3b8bba",
-                        pointStrokeColor: "rgba(60,141,188,1)",
-                        pointHighlightFill: "#fff",
-                        pointHighlightStroke: "rgba(60,141,188,1)",
+                        backgroundColor: "rgba(60, 141, 188, 0.9)",
+                        borderColor: "rgba(60, 141, 188, 0.8)",
+                        pointBackgroundColor: "#3b8bba",
+                        pointBorderColor: "rgba(60, 141, 188, 1)",
+                        pointHoverBackgroundColor: "#fff",
+                        pointHoverBorderColor: "rgba(60, 141, 188, 1)",
                         borderColor: 'rgba(60, 141, 188, 0.7)',
                         backgroundColor: 'rgba(44, 152, 214, 0.5)',
                         pointBorderColor: 'rgba(37, 103, 142, 0.9)',
                         pointBackgroundColor: 'rgba(60, 141, 188, 0.4)',
                         pointBorderWidth: 1,
+                        borderWidth: 2,
+                        fill: 'origin',
                         data: []
                     }
                 ]
             },
             options: {
-                legend: {
-                    display: false
+                plugins: {
+                    legend: {
+                        display: false,
+                    },
                 },
                 scales: {
-                    xAxes: [{
+                    x: {
                         display: true,
-                        ticks: {
-                            userCallback: function (dataLabel, index) {
-                                if (window.orderStatistics && window.orderStatistics.config.data.labels.length > 12) {
-                                    return index % 5 === 0 ? dataLabel : '';
-                                }
-                                return dataLabel;
-                            }
+                        grid: {
+                            display: true, // Equivalent to scaleShowGridLines: false
+                            color: 'rgba(0,0,0,.05)', // Equivalent to scaleGridLineColor
+                            lineWidth: 1, // Equivalent to scaleGridLineWidth
                         }
-                    }],
-                    yAxes: [{
+                    },
+                    y: {
                         display: true,
-                        ticks: {
-                            userCallback: function (dataLabel, index) {
-                                return (dataLabel ^ 0) === dataLabel ? dataLabel : '';
-                            },
-                            min: 0
-                        }
-                    }]
+                        grid: {
+                            display: true, // Equivalent to scaleShowHorizontalLines and scaleShowVerticalLines
+                            color: 'rgba(0,0,0,.05)', // Equivalent to scaleGridLineColor
+                            lineWidth: 1, // Equivalent to scaleGridLineWidth
+                        },                        
+                        min: 0
+                    }
                 },
+                elements: {
+                    line: {
+                        borderWidth: 3, // Adjust this value as needed
+                    },
+                    point: {
+                        radius: 4, // Adjust these values as needed
+                        borderWidth: 1,
+                        hitRadius: 20,
+                    },
+                },       
                 showScale: true,
-                scaleShowGridLines: false,
-                scaleGridLineColor: "rgba(0,0,0,.05)",
-                scaleGridLineWidth: 1,
-                scaleShowHorizontalLines: true,
-                scaleShowVerticalLines: true,
-                bezierCurve: true,
-                pointDot: false,
-                pointDotRadius: 4,
-                pointDotStrokeWidth: 1,
-                pointHitDetectionRadius: 20,
-                datasetStroke: true,
+                cubicInterpolationMode: 'monotone',
+                borderWidth: 1,
                 datasetFill: true,
                 maintainAspectRatio: false,
                 responsive: true
