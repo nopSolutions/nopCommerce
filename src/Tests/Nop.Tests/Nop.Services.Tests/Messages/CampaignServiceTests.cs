@@ -93,8 +93,7 @@ public class CampaignServiceTests : BaseNopTest
             Port = 25,
             Username = "test_user",
             Password = "test_password",
-            EnableSsl = false,
-            UseDefaultCredentials = false
+            EnableSsl = false
         };
 
         var subscription = new NewsLetterSubscription { Active = true, Email = "test@test.com" };

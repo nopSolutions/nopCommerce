@@ -169,6 +169,8 @@ glob:*.user
 *.patch
 *.hg
 src/Presentation/Nop.Web/.config/*
+src/Presentation/Nop.Web/App_Data/Gmail/AuthStore/*
+!src/Presentation/Nop.Web/App_Data/Gmail/AuthStore/Index.htm
 src/Presentation/Nop.Web/App_Data/browscap.xml
 src/Presentation/Nop.Web/App_Data/additional.crawlers.xml
 src/Presentation/Nop.Web/App_Data/installedPlugins.json

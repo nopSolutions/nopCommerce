@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Core.Domain.Messages;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.ModelBinding;
@@ -36,9 +38,6 @@ public partial record EmailAccountModel : BaseNopEntityModel
     [NopResourceDisplayName("Admin.Configuration.EmailAccounts.Fields.EnableSsl")]
     public bool EnableSsl { get; set; }
 
-    [NopResourceDisplayName("Admin.Configuration.EmailAccounts.Fields.UseDefaultCredentials")]
-    public bool UseDefaultCredentials { get; set; }
-
     [NopResourceDisplayName("Admin.Configuration.EmailAccounts.Fields.IsDefaultEmailAccount")]
     public bool IsDefaultEmailAccount { get; set; }
 
@@ -47,6 +46,23 @@ public partial record EmailAccountModel : BaseNopEntityModel
 
     [NopResourceDisplayName("Admin.Configuration.EmailAccounts.Fields.MaxNumberOfEmails")]
     public int MaxNumberOfEmails { get; set; }
+
+    [NopResourceDisplayName("Admin.Configuration.EmailAccounts.Fields.EmailAuthenticationMethod")]
+    public EmailAuthenticationMethod EmailAuthenticationMethod { get; set; }
+    public List<SelectListItem> AvailableEmailAuthenticationMethods { get; set; } = new();
+
+    [NopResourceDisplayName("Admin.Configuration.EmailAccounts.Fields.ClientId")]
+    public string ClientId { get; set; }
+
+    [NopResourceDisplayName("Admin.Configuration.EmailAccounts.Fields.ClientSecret")]
+    [NoTrim]
+    [DataType(DataType.Password)]
+    public string ClientSecret { get; set; }
+
+    [NopResourceDisplayName("Admin.Configuration.EmailAccounts.Fields.TenantId")]
+    public string TenantId { get; set; }
+
+    public string AuthUrl { get; set; }
 
     #endregion
 }

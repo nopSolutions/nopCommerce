@@ -1,4 +1,5 @@
 ﻿using FluentMigrator;
+using LinqToDB;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Media;
@@ -33,7 +34,9 @@ public class DataMigration : Migration
             _dataProvider.InsertEntity(
                 new ActivityLogType
                 {
-                    SystemKeyword = "ImportCustomers", Enabled = true, Name = "Customers were imported"
+                    SystemKeyword = "ImportCustomers",
+                    Enabled = true,
+                    Name = "Customers were imported"
                 }
             );
 
@@ -79,7 +82,8 @@ public class DataMigration : Migration
 
                     _dataProvider.InsertEntity(new ProductAttributeCombinationPicture
                     {
-                        PictureId = combination.PictureId.Value, ProductAttributeCombinationId = combination.Id
+                        PictureId = combination.PictureId.Value,
+                        ProductAttributeCombinationId = combination.Id
                     });
 
                     combination.PictureId = null;
@@ -121,7 +125,8 @@ public class DataMigration : Migration
 
                     _dataProvider.InsertEntity(new ProductAttributeValuePicture
                     {
-                        PictureId = value.PictureId.Value, ProductAttributeValueId = value.Id
+                        PictureId = value.PictureId.Value,
+                        ProductAttributeValueId = value.Id
                     });
 
                     value.PictureId = null;
@@ -151,7 +156,7 @@ public class DataMigration : Migration
         //New message template
         if (!_dataProvider.GetTable<MessageTemplate>().Any(st => string.Compare(st.Name, MessageTemplateSystemNames.DELETE_CUSTOMER_REQUEST_STORE_OWNER_NOTIFICATION, StringComparison.InvariantCultureIgnoreCase) == 0))
         {
-            var eaGeneral = _dataProvider.GetTable<EmailAccount>().FirstOrDefault() ?? throw new Exception("Default email account cannot be loaded");                
+            var eaGeneral = _dataProvider.GetTable<EmailAccount>().FirstOrDefault() ?? throw new Exception("Default email account cannot be loaded");
             _dataProvider.InsertEntity(new MessageTemplate()
             {
                 Name = MessageTemplateSystemNames.DELETE_CUSTOMER_REQUEST_STORE_OWNER_NOTIFICATION,
@@ -160,7 +165,28 @@ public class DataMigration : Migration
                 IsActive = true,
                 EmailAccountId = eaGeneral.Id
             });
-        }            
+        }
+
+        //#7031
+        var emailAccountTableName = nameof(EmailAccount);
+        var credentialsColumnName = "UseDefaultCredentials";
+
+        if (Schema.Table(emailAccountTableName).Column(credentialsColumnName).Exists())
+        {
+            var emailAccounts = _dataProvider.GetTable<EmailAccount>().ToList();
+            foreach (var item in emailAccounts)
+            {
+                if (!string.IsNullOrEmpty(item.Username))
+                    item.EmailAuthenticationMethod = EmailAuthenticationMethod.Login;
+            }
+
+            _dataProvider.UpdateEntities(emailAccounts);
+
+            //remove column
+            Delete.Column(credentialsColumnName).FromTable(emailAccountTableName);
+        }
+
+
     }
 
     public override void Down()

@@ -30,8 +30,7 @@ public class EmailSenderTests : BaseNopTest
             Port = 25,
             Username = "test_user",
             Password = "test_password",
-            EnableSsl = false,
-            UseDefaultCredentials = false
+            EnableSsl = false
         };
 
         var subject = "Test subject";
