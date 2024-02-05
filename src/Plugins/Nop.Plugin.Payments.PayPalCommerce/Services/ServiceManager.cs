@@ -347,6 +347,15 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services
                     .GetShoppingCartAsync(customer, Core.Domain.Orders.ShoppingCartType.ShoppingCart, store.Id))
                     .ToList();
 
+                if (await _shoppingCartService.ShoppingCartRequiresShippingAsync(shoppingCart))
+                {
+                    //in some cases shipping option may be reset, then plugin calculate order totals incorrectly
+                    var shippingOption = await _genericAttributeService
+                        .GetAttributeAsync<Core.Domain.Shipping.ShippingOption>(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, store.Id);
+                    if (string.IsNullOrEmpty(shippingOption?.Name))
+                        throw new NopException("No shipping option selected");
+                }
+
                 var shippingAddress = await _addresService.GetAddressByIdAsync(customer.ShippingAddressId ?? 0);
                 if (!await _shoppingCartService.ShoppingCartRequiresShippingAsync(shoppingCart))
                     shippingAddress = null;
