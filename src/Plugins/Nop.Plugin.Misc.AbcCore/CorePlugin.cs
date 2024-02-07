@@ -23,6 +23,7 @@ using SevenSpikes.Nop.Plugins.HtmlWidgets.Domain;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Tasks;
 using Nop.Services.Tasks;
+using Nop.Plugin.Misc.AbcCore.Tasks;
 
 namespace Nop.Plugin.Misc.AbcCore
 {
@@ -30,9 +31,13 @@ namespace Nop.Plugin.Misc.AbcCore
         IConsumer<EntityDeletedEvent<ProductPicture>>,
         IConsumer<EntityUpdatedEvent<HtmlWidget>>
     {
-        private readonly string TaskType =
+        private readonly string UpdateProductTagsTaskType =
             $"{typeof(UpdateProductTagsTask).Namespace}.{typeof(UpdateProductTagsTask).Name}, " +
             $"{typeof(UpdateProductTagsTask).Assembly.GetName().Name}";
+
+        private readonly string UpdatePopularProductsTaskType =
+            $"{typeof(UpdatePopularProductsTask).Namespace}.{typeof(UpdatePopularProductsTask).Name}, " +
+            $"{typeof(UpdatePopularProductsTask).Assembly.GetName().Name}";
 
         private readonly IWebHelper _webHelper;
         private readonly ILocalizationService _localizationService;
@@ -146,19 +151,34 @@ namespace Nop.Plugin.Misc.AbcCore
             ScheduleTask task = new ScheduleTask();
             task.Name = $"Update Product Tags with ABC Item Number";
             task.Seconds = 14400;
-            task.Type = TaskType;
+            task.Type = UpdateProductTagsTaskType;
             task.Enabled = false;
             task.StopOnError = false;
 
             await _scheduleTaskService.InsertTaskAsync(task);
+
+            ScheduleTask task2 = new ScheduleTask();
+            task2.Name = $"Update Popular Products";
+            task2.Seconds = 14400;
+            task2.Type = UpdateProductTagsTaskType;
+            task2.Enabled = true;
+            task2.StopOnError = false;
+
+            await _scheduleTaskService.InsertTaskAsync(task2);
         }
 
         private async System.Threading.Tasks.Task RemoveTasksAsync()
         {
-            var task = await _scheduleTaskService.GetTaskByTypeAsync(TaskType);
+            var task = await _scheduleTaskService.GetTaskByTypeAsync(UpdateProductTagsTaskType);
             if (task != null)
             {
                 await _scheduleTaskService.DeleteTaskAsync(task);
+            }
+
+            var task2 = await _scheduleTaskService.GetTaskByTypeAsync(UpdatePopularProductsTaskType);
+            if (task2 != null)
+            {
+                await _scheduleTaskService.DeleteTaskAsync(task2);
             }
         }
 
