@@ -12,3 +12,6 @@
         command: 'build'
         projects: src/NopCommerce.sln
         this is the changes from qa
+
+  steps:
+    - task:
