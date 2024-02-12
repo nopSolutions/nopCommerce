@@ -47,11 +47,14 @@ namespace Nop.Plugin.Api.Infrastructure
             services.AddScoped<IProductAttributeConverter, ProductAttributeConverter>();
             services.AddScoped<ISpecificationAttributeApiService, SpecificationAttributesApiService>();
             services.AddScoped<IWarehouseApiService, WarehouseApiService>();
+            services.AddScoped<ICustomerApiService, CustomerApiService>();
+            services.AddScoped<IAddressApiService, AddressApiService>();
+            
 
             services.AddScoped<IMappingHelper, MappingHelper>();
             services.AddScoped<ICustomerRolesHelper, CustomerRolesHelper>();
             services.AddScoped<IJsonHelper, JsonHelper>();
-            services.AddScoped<IDTOHelper, DTOHelper>();
+            services.AddScoped<IDTOHelper, DTOHelperCustomized>();
 
             services.AddScoped<IJsonFieldsSerializer, JsonFieldsSerializer>();
 

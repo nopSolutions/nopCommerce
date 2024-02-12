@@ -23,5 +23,7 @@ namespace Nop.Plugin.Api.Services
         Product GetProductById(int productId);
 
         Product GetProductByIdNoTracking(int productId);
+
+        Task UpdateProductsAsync(IList<Product> products);
     }
 }

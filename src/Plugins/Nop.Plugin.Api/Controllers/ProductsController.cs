@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
 using Nop.Plugin.Api.Attributes;
 using Nop.Plugin.Api.Authorization.Attributes;
 using Nop.Plugin.Api.Delta;
+using Nop.Plugin.Api.DTO.Base;
 using Nop.Plugin.Api.DTO.Errors;
 using Nop.Plugin.Api.DTO.Images;
 using Nop.Plugin.Api.DTO.Products;
@@ -343,6 +339,62 @@ namespace Nop.Plugin.Api.Controllers
             productsRootObject.Products.Add(productDto);
 
             var json = JsonFieldsSerializer.Serialize(productsRootObject, string.Empty);
+
+            return new RawJsonActionResult(json);
+        }
+
+        [HttpPut]
+        [Route("/api/products/price", Name = "UpdateProductPrice")]
+        [AuthorizePermission("ManageProducts")]
+        [ProducesResponseType(typeof(ProductsRootObjectDto), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Unauthorized)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(ErrorsRootObject), 422)]
+        [ProducesResponseType(typeof(ErrorsRootObject), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> UpdateProductPrice(
+            [FromBody]
+            [ModelBinder(typeof(JsonModelBinder<ProductsUpdatePriceDto>))]
+            Delta<ProductsUpdatePriceDto> productsUpdatePriceDtos)
+        {
+            // Here we display the errors if the validation has failed at some point.
+            if (!ModelState.IsValid)
+            {
+                return Error();
+            }
+
+            var productsPrice = productsUpdatePriceDtos.Dto.ProductsPrice;
+
+            var productIds = productsPrice.Select(e => e.Id).Distinct().ToList();
+
+
+            var allProductsAsync = _productApiService.GetProducts(productIds)
+                                                .WhereAwait(async p => await StoreMappingService.AuthorizeAsync(p));
+
+            var allProducts = await allProductsAsync.ToListAsync();
+
+            foreach (var product in allProducts)
+            {
+                if (product == null)
+                {
+                    return Error(HttpStatusCode.NotFound, "product", "not found");
+                }
+
+                var productPriceDto = productsPrice.FirstOrDefault(e=>e.Id == product.Id);
+                product.UpdatedOnUtc = DateTime.UtcNow;
+                product.Price = productPriceDto.Price;
+            }
+         
+            await _productApiService.UpdateProductsAsync(allProducts);
+
+
+            IList<ProductDto> productsAsDtos = await allProducts.SelectAwait(async product => await _dtoHelper.PrepareProductDTOAsync(product)).ToListAsync();
+
+            var productsRootObject = new ProductsRootObjectDto
+            {
+                Products = productsAsDtos
+            };
+
+            var json = JsonFieldsSerializer.Serialize(productsRootObject, "Id");
 
             return new RawJsonActionResult(json);
         }

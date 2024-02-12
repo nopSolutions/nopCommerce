@@ -78,6 +78,16 @@ namespace Nop.Plugin.Api.Services
             return _productRepository.Table.FirstOrDefault(product => product.Id == productId && !product.Deleted);
         }
 
+        public virtual async Task UpdateProductsAsync(IList<Product> products)
+        {
+            if (products == null)
+            {
+                return;
+            }
+
+            await _productRepository.UpdateAsync(products);
+        }
+
         private IQueryable<Product> GetProductsQuery(
             DateTime? createdAtMin = null, DateTime? createdAtMax = null,
             DateTime? updatedAtMin = null, DateTime? updatedAtMax = null, string vendorName = null,
