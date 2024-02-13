@@ -2115,8 +2115,7 @@ namespace Nop.Services.Installation
                     Port = 25,
                     Username = "123",
                     Password = "123",
-                    EnableSsl = false,
-                    UseDefaultCredentials = false
+                    EnableSsl = false
                 }
             };
 

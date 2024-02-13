@@ -1,4 +1,5 @@
 ﻿using Nop.Core.Domain.Messages;
+using Nop.Services;
 using Nop.Services.Messages;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Messages;
@@ -92,7 +93,7 @@ public partial class EmailAccountModelFactory : IEmailAccountModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the email account model
     /// </returns>
-    public virtual Task<EmailAccountModel> PrepareEmailAccountModelAsync(EmailAccountModel model,
+    public virtual async Task<EmailAccountModel> PrepareEmailAccountModelAsync(EmailAccountModel model,
         EmailAccount emailAccount, bool excludeProperties = false)
     {
         //fill in model values from the entity
@@ -106,7 +107,9 @@ public partial class EmailAccountModelFactory : IEmailAccountModelFactory
             model.MaxNumberOfEmails = 50;
         }
 
-        return Task.FromResult(model);
+        model.AvailableEmailAuthenticationMethods.AddRange(await EmailAuthenticationMethod.None.ToSelectListAsync(false));
+
+        return model;
     }
 
     #endregion

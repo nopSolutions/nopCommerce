@@ -53,6 +53,10 @@ public class LocalizationMigration : MigrationBase
             //#6894
             "Admin.Configuration.AppSettings.Cache.BundledFilesCacheTime",
             "Admin.Configuration.AppSettings.Cache.BundledFilesCacheTime.Hint",
+
+            //#7031
+            "Admin.Configuration.EmailAccounts.Fields.UseDefaultCredentials",
+            "Admin.Configuration.EmailAccounts.Fields.UseDefaultCredentials.Hint"
         });
 
         #endregion
@@ -209,6 +213,30 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Configuration.EmailAccounts.Fields.MaxNumberOfEmails"] = "Max number of emails",
             ["Admin.Configuration.EmailAccounts.Fields.MaxNumberOfEmails.Hint"] = "The maximum number of emails sent at one time.",
             ["Admin.Configuration.EmailAccounts.Fields.MaxNumberOfEmails.ShouldBeGreaterThanZero"] = "The maximum number of emails should be greater 0.",
+
+            //#7031
+            ["Admin.Configuration.EmailAccounts.AuthorizationRequest.Text"] = "Authorization request",
+            ["Admin.Configuration.EmailAccounts.AuthorizationRequest.Info"] = "Your application must have that consent before it can execute a Google API request that requires user authorization. Click the {0} button below and follow the steps to perform API requests.",
+            ["Admin.Configuration.EmailAccounts.Fields.EmailAuthenticationMethod"] = "Authentication method",
+            ["Admin.Configuration.EmailAccounts.Fields.EmailAuthenticationMethod.Hint"] = "Choose the authentication method that will be used to identify the client when connecting to the SMTP server.",
+            ["Admin.Configuration.EmailAccounts.Fields.ClientId"] = "Client ID",
+            ["Admin.Configuration.EmailAccounts.Fields.ClientId.Hint"] = "Public identifier for application.",
+            ["Admin.Configuration.EmailAccounts.Fields.ClientId.Required"] = "The client identifier is required",
+            ["Admin.Configuration.EmailAccounts.Fields.ClientSecret"] = "Client Secret",
+            ["Admin.Configuration.EmailAccounts.Fields.ClientSecret.Change"] = "Change",
+            ["Admin.Configuration.EmailAccounts.Fields.ClientSecret.ClientSecretChanged"] = "The client Secret has been changed successfully.",
+            ["Admin.Configuration.EmailAccounts.Fields.ClientSecret.Hint"] = "The secret known only to the application and the authorization server.",
+            ["Admin.Configuration.EmailAccounts.Fields.ClientSecret.Required"] = "The client Secret is required",
+            ["Admin.Configuration.EmailAccounts.Fields.TenantId"] = "Tenant identifier",
+            ["Admin.Configuration.EmailAccounts.Fields.TenantId.Hint"] = "The tenant ID can be a GUID (the ID of your Microsoft Entra instance), domain name or one of placeholders: \"organizations\", \"consumers\", \"common\".",
+            ["Admin.Configuration.EmailAccounts.Fields.TenantId.Required"] = "The tenant identifier is required",
+
+            ["Enums.Nop.Core.Domain.Messages.EmailAuthenticationMethod.None"] = "No authentication",
+            ["Enums.Nop.Core.Domain.Messages.EmailAuthenticationMethod.Ntlm"] = "NTLM (the default network credentials)",
+            ["Enums.Nop.Core.Domain.Messages.EmailAuthenticationMethod.Login"] = "Login/Password",
+            ["Enums.Nop.Core.Domain.Messages.EmailAuthenticationMethod.GmailOAuth2"] = "Google (OAuth2)",
+            ["Enums.Nop.Core.Domain.Messages.EmailAuthenticationMethod.MicrosoftOAuth2"] = "Microsoft (OAuth2)",
+
         }, languageId);
 
         #endregion
