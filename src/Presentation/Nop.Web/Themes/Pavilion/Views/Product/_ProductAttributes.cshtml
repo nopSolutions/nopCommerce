@@ -543,61 +543,6 @@
         //render scripts
         //almost the same implementation is used in the \Views\Product\_RentalInfo.cshtml file
         <script asp-location="Footer">
-            //custom: scripts to calculate financing
-            function updateFinancingDisplay(overallPrice) {
-                var financingText = document.getElementsByClassName('synchrony-payment-detail')[0];
-                financingText.style.display = overallPrice >= 697 ? "block" : "none";
-
-                if (financingText.innerText.includes('/month')) {
-                    var monthCount = document.getElementsByClassName("min-payment-months")[0].innerText.split(' ')[0];
-                    var monthlyPayment = Math.ceil(overallPrice / parseInt(monthCount));
-                    var oldPrice = financingText.innerHTML.substring(financingText.innerHTML.indexOf('<b>') + 3, financingText.innerHTML.indexOf('</b>'));
-                    financingText.innerHTML = financingText.innerHTML.replace(oldPrice, '$' + monthlyPayment);
-
-                    // now reapply the listener
-                    $('.deferredPricingIcon-@productId').on('click', function () {
-                        var modal = document.getElementById('equalPaymentsModal-@productId');
-                        isModalOpen = true;
-                        modal.style.display = "table";
-
-                        // Close the modal on click
-                        // This extends to the entire viewport
-                        modal.onclick = function (event) {
-                            isModalOpen = false;
-                            modal.style.display = "none";
-                        }
-
-                        return false;
-                    });
-                }
-            }
-
-            function updateMinPaymentModal(overallPrice) {
-                var minPaymentFullPrice = document.getElementsByClassName('min-payment-full-price')[0];
-                if (minPaymentFullPrice === undefined) { return; }
-
-                minPaymentFullPrice.innerText = "$" + overallPrice;
-                
-                var minMonthlyPayment = document.getElementsByClassName('min-payment-monthly-payment')[0];
-                var minimumPayment = Math.max(Math.ceil(overallPrice * 0.035), 30);
-                minMonthlyPayment.innerText = "$" + minimumPayment;
-                
-                var months = parseInt(document.getElementsByClassName('min-payment-months')[0].innerText.split(' ')[0]);
-                var minFinalPayment = document.getElementsByClassName('min-payment-final-payment')[0];
-                minFinalPayment.innerText = "$" + (overallPrice - (minimumPayment * (months - 1)));
-            }
-
-            function updateEqualPaymentModal(overallPrice) {
-                var equalPaymentFullPrice = document.getElementsByClassName('equal-payment-full-price')[0];
-                if (equalPaymentFullPrice === undefined) { return; }
-
-                equalPaymentFullPrice.innerText = "$" + overallPrice;
-
-                var equalMonthlyPayment = document.getElementsByClassName('equal-payment-monthly-payment')[0];
-                var months = parseInt(document.getElementsByClassName('equal-payment-months')[0].innerText.split(' ')[0]);
-                var equalPayment = Math.ceil(overallPrice / months);
-                equalMonthlyPayment.innerText = "$" + equalPayment;
-            }
 
             function updateSavingsStory(overallPrice) {
                 var oldProductPriceElement = document.querySelector('.old-product-price');
@@ -690,9 +635,6 @@
                         $(document).trigger({ type: "product_attributes_changed", changedData: data });
 
                         var overallPrice = parseFloat($('[class^="price-value-"]')[0].innerText.replace('$', '').replace(',', ''));
-                        updateFinancingDisplay(overallPrice);
-                        updateMinPaymentModal(overallPrice);
-                        updateEqualPaymentModal(overallPrice);
 
                         updateSavingsStory(overallPrice);
                     }
