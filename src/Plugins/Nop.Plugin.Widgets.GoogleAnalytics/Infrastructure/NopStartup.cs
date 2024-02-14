@@ -22,6 +22,7 @@ public class NopStartup : INopStartup
         services.AddHttpClient<GoogleAnalyticsHttpClient>(
                 client => client.Timeout = TimeSpan.FromSeconds(10))
             .WithProxy();
+        services.AddScoped<GoogleAnalyticsHttpClient>();
     }
 
     /// <summary>
