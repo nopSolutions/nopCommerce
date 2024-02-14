@@ -5103,6 +5103,12 @@
   <LocaleResource Name="Admin.Configuration.EmailAccounts.AddNew">
     <Value>Add a new email account</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.EmailAccounts.AuthorizationRequest.Text">
+    <Value>Authorization request</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.EmailAccounts.AuthorizationRequest.Info">
+    <Value>Your application must have that consent before it can execute a Google API request that requires user authorization. Click the {0} button below and follow the steps to perform API requests.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.EmailAccounts.BackToList">
     <Value>back to email account list</Value>
   </LocaleResource>
@@ -5111,6 +5117,24 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.EmailAccounts.EditEmailAccountDetails">
     <Value>Edit email account details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.ClientId">
+    <Value>Client ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.ClientId.Hint">
+    <Value>Public identifier for application.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.ClientSecret">
+    <Value>Client Secret</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.ClientSecret.Change">
+    <Value>Change</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.ClientSecret.ClientSecretChanged">
+    <Value>The client Secret has been changed successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.ClientSecret.Hint">
+    <Value>The secret known only to the application and the authorization server.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.DisplayName">
     <Value>Email display name</Value>
@@ -5123,6 +5147,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.Email.Hint">
     <Value>This is the from address for all outgoing emails from your store e.g. 'sales@yourstore.com'.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.EmailAuthenticationMethod">
+    <Value>Authentication method</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.EmailAuthenticationMethod.Hint">
+    <Value>Choose the authentication method that will be used to identify the client when connecting to the SMTP server.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.EnableSsl">
     <Value>SSL</Value>
@@ -5175,11 +5205,11 @@
   <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.SendTestEmailTo.Hint">
     <Value>Send test email to ensure that everything is properly configured.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.UseDefaultCredentials">
-    <Value>Use default credentials</Value>
+  <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.TenantId">
+    <Value>Tenant identifier</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.UseDefaultCredentials.Hint">
-    <Value>Check to use default credentials for the connection.</Value>
+  <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.TenantId.Hint">
+    <Value>The tenant ID can be a GUID (the ID of your Microsoft Entra instance), domain name or one of placeholders: "organizations", "consumers", "common".</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.Username">
     <Value>User</Value>
@@ -17339,6 +17369,21 @@
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Logging.LogLevel.Warning">
     <Value>Warning</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Messages.EmailAuthenticationMethod.None">
+    <Value>No authentication</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Messages.EmailAuthenticationMethod.Ntlm">
+    <Value>NTLM (the default network credentials)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Messages.EmailAuthenticationMethod.Login">
+    <Value>Login/Password</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Messages.EmailAuthenticationMethod.GmailOAuth2">
+    <Value>Google (OAuth2)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Messages.EmailAuthenticationMethod.MicrosoftOAuth2">
+    <Value>Microsoft (OAuth2)</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Messages.MessageDelayPeriod.Days">
     <Value>Days</Value>

@@ -2,13 +2,18 @@
 using MailKit.Net.Smtp;
 using MimeKit;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Infrastructure;
+using Nop.Services.Localization;
 using Nop.Services.Messages;
 
 namespace Nop.Tests;
 
 public class TestSmtpBuilder : SmtpBuilder
 {
-    public TestSmtpBuilder(EmailAccountSettings emailAccountSettings, IEmailAccountService emailAccountService) : base(emailAccountSettings, emailAccountService)
+    public TestSmtpBuilder(EmailAccountSettings emailAccountSettings, 
+        IEmailAccountService emailAccountService,
+        ILocalizationService localizationService,
+        INopFileProvider fileProvider) : base(emailAccountSettings, emailAccountService, localizationService, fileProvider)
     {
     }
 

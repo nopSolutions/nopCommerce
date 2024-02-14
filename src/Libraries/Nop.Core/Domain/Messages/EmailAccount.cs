@@ -41,12 +41,36 @@ public partial class EmailAccount : BaseEntity
     public bool EnableSsl { get; set; }
 
     /// <summary>
-    /// Gets or sets a value that controls whether the default system credentials of the application are sent with requests.
-    /// </summary>
-    public bool UseDefaultCredentials { get; set; }
-
-    /// <summary>
     /// Gets or sets the maximum number of emails sent at one time
     /// </summary>
     public int MaxNumberOfEmails { get; set; }
+
+    /// <summary>
+    /// Gets or sets an identifier of the email authentication method
+    /// </summary>
+    public int EmailAuthenticationMethodId { get; set; }
+
+    /// <summary>
+    /// Gets or sets an authentication method
+    /// </summary>
+    public EmailAuthenticationMethod EmailAuthenticationMethod
+    {
+        get => (EmailAuthenticationMethod)EmailAuthenticationMethodId;
+        set => EmailAuthenticationMethodId = (int)value;
+    }
+
+    /// <summary>
+    /// Gets or sets the client identifier (OAuth2)
+    /// </summary>
+    public string ClientId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the client Secret
+    /// </summary>
+    public string ClientSecret { get; set; }
+
+    /// <summary>
+    /// Gets or sets the tenant ID of the organization from which the application will let users sign-in
+    /// </summary>
+    public string TenantId { get; set; }
 }

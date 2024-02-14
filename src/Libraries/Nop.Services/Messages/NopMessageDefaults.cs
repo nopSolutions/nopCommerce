@@ -13,6 +13,26 @@ public static partial class NopMessageDefaults
     /// </summary>
     public static string NotificationListKey => "NotificationList";
 
+    /// <summary>
+    /// Gets the path to directory used to store the token response
+    /// </summary>
+    public static string GmailAuthStorePath => "~/App_Data/Gmail/AuthStore";
+
+    /// <summary>
+    /// Gets the scopes requested to access a protected API (Gmail)
+    /// </summary>
+    public static string[] GmailScopes => ["https://mail.google.com/"];
+
+    /// <summary>
+    /// Gets the scopes requested to access a protected API (MSAL)
+    /// </summary>
+    public static string MSALTenantPattern => "https://login.microsoftonline.com/{0}/v2.0";
+
+    /// <summary>
+    /// Gets the scopes requested to access a protected API (MSAL)
+    /// </summary>
+    public static string[] MSALScopes => ["https://outlook.office365.com/.default"];
+
     #region Caching defaults
 
     /// <summary>
