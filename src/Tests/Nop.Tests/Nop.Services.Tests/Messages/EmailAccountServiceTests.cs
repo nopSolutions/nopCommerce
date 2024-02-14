@@ -26,8 +26,7 @@ public class EmailAccountServiceTests : BaseNopTest
             Port = 25,
             Username = "test_user",
             Password = "test_password",
-            EnableSsl = false,
-            UseDefaultCredentials = false
+            EnableSsl = false
         };
 
         var updateItem = new EmailAccount
@@ -38,11 +37,10 @@ public class EmailAccountServiceTests : BaseNopTest
             Port = 430,
             Username = "test_user",
             Password = "test_password",
-            EnableSsl = true,
-            UseDefaultCredentials = true
+            EnableSsl = true
         };
 
-        await TestCrud(insertItem, _emailAccountService.InsertEmailAccountAsync, updateItem, _emailAccountService.UpdateEmailAccountAsync, _emailAccountService.GetEmailAccountByIdAsync, (item, other) => item.UseDefaultCredentials.Equals(other.UseDefaultCredentials) && item.Port.Equals(other.Port) && item.EnableSsl.Equals(other.EnableSsl), _emailAccountService.DeleteEmailAccountAsync);
+        await TestCrud(insertItem, _emailAccountService.InsertEmailAccountAsync, updateItem, _emailAccountService.UpdateEmailAccountAsync, _emailAccountService.GetEmailAccountByIdAsync, (item, other) => item.Port.Equals(other.Port) && item.EnableSsl.Equals(other.EnableSsl), _emailAccountService.DeleteEmailAccountAsync);
     }
 
 }
