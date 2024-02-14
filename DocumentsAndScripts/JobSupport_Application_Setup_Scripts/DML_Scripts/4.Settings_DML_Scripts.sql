@@ -103,6 +103,8 @@ UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'sitemapsettings.sitemapi
 -- hide cateogories list in sitemap.It is shwoing both take support and give support but we should not show both categories
 -- hence hiding categories temporarily until a solution/fix is identified
 UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'sitemapsettings.sitemapincludecategories';
+UPDATE [dbo].[Setting] SET Value='True'  WHERE Name = 'sitemapsettings.sitemapenabled';
+UPDATE [dbo].[Setting] SET Value='2000'  WHERE Name = 'sitemapsettings.sitemappagesize';
 
 -- menu settings
 -- hide search item in top menu
@@ -120,13 +122,12 @@ UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'displaydefaultfooteritem
 UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'displaydefaultfooteritemsettings.displaycompareproductsfooteritem';
 UPDATE [dbo].[Setting] SET Value='False'  WHERE Name = 'displaydefaultfooteritemsettings.displaynewproductsfooteritem';
 
-
-
 -- hide footer option  'Apply for vendor account'
 UPDATE [dbo].[Setting] SET Value='False' WHERE Name = 'vendorsettings.allowcustomerstoapplyforvendoraccount';
 
 -- forum settings
 UPDATE [dbo].[Setting] SET Value='True' WHERE Name = 'forumsettings.allowprivatemessages';
+UPDATE [dbo].[Setting] SET Value='True' WHERE Name = 'forumsettings.notifyaboutprivatemessages';
 
 
 -- Setting insert scripts

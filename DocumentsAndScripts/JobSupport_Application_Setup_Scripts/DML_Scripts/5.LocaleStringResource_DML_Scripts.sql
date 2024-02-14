@@ -76,3 +76,15 @@ IF NOT EXISTS (SELECT * FROM [LocaleStringResource] WHERE [ResourceName]='reward
 Update [dbo].[LocaleStringResource] SET [ResourceValue]='Be the first to review this profile' WHERE [ResourceName]='reviews.overview.first'
 Update [dbo].[LocaleStringResource] SET [ResourceValue]='An error occured. Please try again later.' WHERE [ResourceName]='shoppingcart.maximumquantity'
 --The maximum quantity allowed for purchase is {0}.
+
+Update LocaleStringResource SET ResourceValue='Your registration completed. HR Manager will contact you shortly for further processing of your profile.' WHERE ResourceName='account.register.result.standard'
+Update LocaleStringResource SET ResourceValue='Your registration completed. HR Manager will contact you for activation of your account and for further processing of your profile..' WHERE ResourceName='account.register.result.adminapproval'
+Update LocaleStringResource SET ResourceValue='Search In profile descriptions' WHERE ResourceName='search.searchindescriptions'
+
+
+IF NOT EXISTS (SELECT * FROM [LocaleStringResource] WHERE [ResourceName]='Catalog.Products.GuestCustomerResult')
+   BEGIN
+		INSERT INTO [dbo].[LocaleStringResource]([ResourceName],[ResourceValue],[LanguageId]) 
+		VALUES('Catalog.Products.GuestCustomerResult','Please login to see the profiles. This helps us to show the relavent profiles.',1)
+   END
+
