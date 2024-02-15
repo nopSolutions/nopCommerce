@@ -543,10 +543,23 @@
         //render scripts
         //almost the same implementation is used in the \Views\Product\_RentalInfo.cshtml file
         <script asp-location="Footer">
-            function updateSavingsStory(overallPrice) {
+            function updateSavingsStory() {
                 var overallPrice = parseFloat($('[class^="price-value-"]')[0].innerText.replace('$', '').replace(',', ''));
                 var oldProductPriceElement = document.querySelector('.old-product-price');
                 var youSaveAmtElement = document.querySelector('.you-save-amt');
+
+                // hide if any other options are selected
+                var visibleDropdowns = document.querySelectorAll('dd:not([style="display:none"]) select');
+                for (var i = 0; i < visibleDropdowns.length; i++)
+                {
+                    var v = visibleDropdowns[i];
+                    if (!v.className.includes('mattress-size') && v.selectedIndex != 0)
+                    {
+                        oldProductPriceElement.style.display = 'none';
+                        youSaveAmtElement.style.display = 'none';
+                        return;
+                    }
+                }
 
                 var productAttributeValueId = document.querySelector('.mattress-size').selectedOptions[0].value;
                 var getProductAttributeValueUrl = `/api/ProductAttributeValue/${productAttributeValueId}`;
