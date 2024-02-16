@@ -28,7 +28,13 @@ namespace Nop.Services.Catalog.Caching
             await RemoveByPrefixAsync(NopDiscountDefaults.CategoryIdsPrefix);
 
             if (entityEventType == EntityEventType.Delete)
+            {
                 await RemoveAsync(NopCatalogDefaults.SpecificationAttributeOptionsByCategoryCacheKey, entity);
+                await RemoveByPrefixAsync(NopCatalogDefaults.ManufacturersByCategoryWithIdPrefix, entity);
+            }
+            
+            if (entityEventType == EntityEventType.Delete || !entity.Published)
+                await RemoveByPrefixAsync(NopCatalogDefaults.ProductCategoriesByProductWithOutIdPrefix);
 
             await RemoveAsync(NopDiscountDefaults.AppliedDiscountsCacheKey, nameof(Category), entity);
 
