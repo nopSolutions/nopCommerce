@@ -43,7 +43,7 @@ public static partial class MigrationExtension
                     var exist = localizationService.GetLocaleStringResourceByName(locale.Value, lang.Id, false);
 
                     if (exist != null)
-                        localizationService.DeleteLocaleStringResourceAsync(lsr);
+                        localizationService.DeleteLocaleStringResource(lsr);
                     else
                     {
                         lsr.ResourceName = locale.Value.ToLowerInvariant();
