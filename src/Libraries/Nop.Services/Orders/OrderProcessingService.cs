@@ -759,6 +759,8 @@ public partial class OrderProcessingService : IOrderProcessingService
         if (details.BillingAddress is null)
             throw new NopException("Billing address is not provided");
 
+        var sameShippingAddress = details.BillingAddress.Id == details.ShippingAddress?.Id;
+
         await _addressService.InsertAddressAsync(details.BillingAddress);
         order.BillingAddressId = details.BillingAddress.Id;
 
@@ -768,7 +770,9 @@ public partial class OrderProcessingService : IOrderProcessingService
             order.PickupAddressId = details.PickupAddress.Id;
         }
 
-        if (details.ShippingAddress != null)
+        if (sameShippingAddress)
+            order.ShippingAddressId = order.BillingAddressId;
+        else if (details.ShippingAddress != null)
         {
             await _addressService.InsertAddressAsync(details.ShippingAddress);
             order.ShippingAddressId = details.ShippingAddress.Id;
