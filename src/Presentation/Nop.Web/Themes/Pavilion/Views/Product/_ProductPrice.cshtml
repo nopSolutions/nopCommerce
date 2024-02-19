@@ -112,14 +112,8 @@
                 {
                     <div class="you-save-amt" style="display: none"></div>
                 }
-                <div class="@if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
-            {
-					<text>product-price</text>
-            }
-            else
-            {
-					<text>non-discounted-price</text>
-            }">
+                @* ABC: disallow non-discounted-proce*@
+                <div class="product-price">
                     @if (!String.IsNullOrWhiteSpace(savedStr))
                     {
                         <label class="price-sale-label">Sale: </label>
@@ -132,9 +126,9 @@
                         <span class="clearance-or-less">Or Less!</span>
                     </span>
                 </div>
+                @* ABC: removed discount price showing on PDP
                 if (!String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
                 {
-                    @*discounted price*@
                     <div class="product-price discounted-price">
                         <label>@T("Products.Price.WithDiscount"):</label>
                         <span itemprop="price" content="@Model.PriceValue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)" class="price-value-@(Model.ProductId)">
@@ -142,6 +136,7 @@
                         </span>
                     </div>
                 }
+                *@
                 <div class="clearance-msg-block">
                     <span class="clearance-msg">Available In Store Only</span><span class="clearance-msg-additional">Additional discounts based on product condition</span>
                 </div>

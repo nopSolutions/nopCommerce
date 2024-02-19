@@ -385,14 +385,16 @@ namespace Nop.Web.Factories
                         if (finalPriceWithoutDiscountBase != oldPriceBase && oldPriceBase > decimal.Zero)
                             strikeThroughPrice = oldPrice;
 
-                        if (finalPriceWithoutDiscountBase != finalPriceWithDiscountBase)
-                            strikeThroughPrice = finalPriceWithoutDiscount;
-
+                        // ABC: change to use price without discount
+                        // if (finalPriceWithoutDiscountBase != finalPriceWithDiscountBase)
+                        //     strikeThroughPrice = finalPriceWithoutDiscount;
                         if (strikeThroughPrice > decimal.Zero)
                             priceModel.OldPrice = await _priceFormatter.FormatPriceAsync(strikeThroughPrice);
-
-                        priceModel.Price = await _priceFormatter.FormatPriceAsync(finalPriceWithDiscount);
-                        priceModel.PriceValue = finalPriceWithDiscount;
+                        
+                        // priceModel.Price = await _priceFormatter.FormatPriceAsync(finalPriceWithDiscount);
+                        // priceModel.PriceValue = finalPriceWithDiscount;
+                        priceModel.Price = await _priceFormatter.FormatPriceAsync(finalPriceWithoutDiscount);
+                        priceModel.PriceValue = finalPriceWithoutDiscount;
                     }
 
                     if (product.IsRental)
