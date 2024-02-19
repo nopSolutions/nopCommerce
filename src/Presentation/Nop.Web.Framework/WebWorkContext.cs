@@ -305,6 +305,7 @@ namespace Nop.Web.Framework
                 return _cachedVendor;
 
             var customer = await GetCurrentCustomerAsync();
+
             if (customer == null)
                 return null;
 
@@ -415,6 +416,14 @@ namespace Nop.Web.Framework
 
             var customer = await GetCurrentCustomerAsync();
             var store = await _storeContext.GetCurrentStoreAsync();
+            //#5702 Currency store restricted for the system customer 
+            if (customer.IsSearchEngineAccount())
+            {
+                _cachedCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId)
+                                  ?? (await _currencyService.GetAllCurrenciesAsync(storeId: store.Id)).FirstOrDefault();
+
+                return _cachedCurrency;
+            }
 
             //find a currency previously selected by a customer
             var customerCurrencyId = await _genericAttributeService
@@ -455,6 +464,11 @@ namespace Nop.Web.Framework
         {
             //save passed currency identifier
             var customer = await GetCurrentCustomerAsync();
+            // #5702 Currency store restricted for the system customer 
+            if (customer.IsSearchEngineAccount())
+                return;
+
+
             var store = await _storeContext.GetCurrentStoreAsync();
             await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CurrencyIdAttribute, currency?.Id ?? 0, store.Id);
 
