@@ -41,7 +41,7 @@
     "overlayscrollbars": "^1.13.3",
     "shepherd.js": "^10.0.1",
     "swiper": "^8.3.2",
-    "tinymce": "^5.10.7",
+    "tinymce": "^5.10.9",
     "tinymce-langs": "1.0.0",
     "typeahead.js": "^0.11.1"
   }
