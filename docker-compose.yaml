@@ -10,6 +10,8 @@ services:
       - 32000:5000
     networks:
       - nopnet
+    depends_on:
+      - nopdb 
   nopdb:
     image: mysql:8
     environment:
