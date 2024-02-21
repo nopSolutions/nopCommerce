@@ -548,16 +548,26 @@
                 var oldProductPriceElement = document.querySelector('.old-product-price');
                 var youSaveAmtElement = document.querySelector('.you-save-amt');
 
-                // hide if any other options are selected
+                // add any bundled items
                 var visibleDropdowns = document.querySelectorAll('dd:not([style="display:none"]) select');
+                var bundledItemsCost = 0;
                 for (var i = 0; i < visibleDropdowns.length; i++)
                 {
                     var v = visibleDropdowns[i];
                     if (!v.className.includes('mattress-size') && v.selectedIndex != 0)
                     {
-                        oldProductPriceElement.style.display = 'none';
-                        youSaveAmtElement.style.display = 'none';
-                        return;
+                        var selectedOptionText = v.selectedOptions[0].text;
+                        var firstBracketIndex = selectedOptionText.indexOf('[');
+                        if (firstBracketIndex == -1) {
+                            continue;
+                        }
+                        selectedOptionText = selectedOptionText.substring(firstBracketIndex);
+                        selectedOptionText = selectedOptionText.replace('[', '')
+                                                               .replace(']', '')
+                                                               .replace('$', '')
+                                                               .replace('+', '')
+                                                               .replace('-', '');
+                        bundledItemsCost += parseFloat(selectedOptionText);
                     }
                 }
 
@@ -567,9 +577,10 @@
                     url: getProductAttributeValueUrl,
                     success: function (data) {
                         var oldProductPriceAmount = document.querySelector('.old-product-price span');
-                        oldProductPriceAmount.innerText = '$' + new Intl.NumberFormat('en-US').format(data.Cost);
+                        var updatedOldPrice = data.Cost + bundledItemsCost; 
+                        oldProductPriceAmount.innerText = '$' + new Intl.NumberFormat('en-US').format(updatedOldPrice);
 
-                        var difference = data.Cost - overallPrice;
+                        var difference = updatedOldPrice - overallPrice;
                         youSaveAmtElement.innerText = "You Save $" + new Intl.NumberFormat('en-US').format(difference);
 
                         oldProductPriceElement.style.display = 'block';
