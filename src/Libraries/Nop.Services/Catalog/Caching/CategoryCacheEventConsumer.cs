@@ -27,8 +27,14 @@ public partial class CategoryCacheEventConsumer : CacheEventConsumer<Category>
         await RemoveByPrefixAsync(NopDiscountDefaults.CategoryIdsPrefix);
 
         if (entityEventType == EntityEventType.Delete)
+        {
             await RemoveAsync(NopCatalogDefaults.SpecificationAttributeOptionsByCategoryCacheKey, entity);
+            await RemoveByPrefixAsync(NopCatalogDefaults.ManufacturersByCategoryWithIdPrefix, entity);
+        }
 
+        if (entityEventType == EntityEventType.Delete || !entity.Published)
+                await RemoveByPrefixAsync(NopCatalogDefaults.ProductCategoriesByProductWithoutIdPrefix);
+        
         await RemoveAsync(NopDiscountDefaults.AppliedDiscountsCacheKey, nameof(Category), entity);
 
         await base.ClearCacheAsync(entity, entityEventType);

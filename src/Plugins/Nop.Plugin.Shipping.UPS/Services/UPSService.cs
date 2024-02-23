@@ -330,7 +330,7 @@ public class UPSService
         {
             AddressLine = new[] { shippingOptionRequest.AddressFrom },
             City = shippingOptionRequest.CityFrom,
-            StateProvinceCode = stateCodeFrom ,
+            StateProvinceCode = stateCodeFrom,
             CountryCode = countryCodeFrom,
             PostalCode = shippingOptionRequest.ZipPostalCodeFrom
         };
@@ -377,7 +377,7 @@ public class UPSService
         }
 
         //set negotiated rates details
-        if (!string.IsNullOrEmpty(_upsSettings.AccountNumber) && !string.IsNullOrEmpty(stateCodeFrom) && !string.IsNullOrEmpty(stateCodeTo))
+        if (!string.IsNullOrEmpty(_upsSettings.AccountNumber) && !string.IsNullOrEmpty(stateCodeTo))
             request.Shipment.ShipmentRatingOptions = new Shipment_ShipmentRatingOptions
             {
                 NegotiatedRatesIndicator = string.Empty,
@@ -649,7 +649,7 @@ public class UPSService
 
         //create packages according to calculated value
         var package = CreatePackage(width, length, height, weight / totalPackages, insuranceAmountPerPackage);
-            
+
         return Enumerable.Repeat(package, totalPackages);
     }
 
@@ -664,7 +664,7 @@ public class UPSService
     private async Task<(decimal width, decimal length, decimal height)> GetDimensionsForSingleItemAsync(ShoppingCartItem item, Product product)
     {
         var items = new[] { new GetShippingOptionRequest.PackageItem(item, product, 1) };
-            
+
         return await GetDimensionsAsync(items);
     }
 
