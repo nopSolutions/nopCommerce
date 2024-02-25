@@ -34,22 +34,21 @@ public static partial class MigrationExtension
     public static void RenameLocales(this IMigration _, Dictionary<string, string> localesToRename, IList<Language> allLanguages, ILocalizationService localizationService)
     {
         foreach (var lang in allLanguages)
+        foreach (var locale in localesToRename)
         {
-            foreach (var locale in localesToRename)
-            {
-                var lsr = localizationService.GetLocaleStringResourceByName(locale.Key, lang.Id, false);
-                if (lsr != null)
-                {
-                    var exist = localizationService.GetLocaleStringResourceByName(locale.Value, lang.Id, false);
+            var lsr = localizationService.GetLocaleStringResourceByName(locale.Key, lang.Id, false);
+            
+            if (lsr == null) 
+                continue;
 
-                    if (exist != null)
-                        localizationService.DeleteLocaleStringResourceAsync(lsr);
-                    else
-                    {
-                        lsr.ResourceName = locale.Value.ToLowerInvariant();
-                        localizationService.UpdateLocaleStringResource(lsr);
-                    }
-                }
+            var exist = localizationService.GetLocaleStringResourceByName(locale.Value, lang.Id, false);
+
+            if (exist != null)
+                localizationService.DeleteLocaleStringResource(lsr);
+            else
+            {
+                lsr.ResourceName = locale.Value.ToLowerInvariant();
+                localizationService.UpdateLocaleStringResource(lsr);
             }
         }
     }
