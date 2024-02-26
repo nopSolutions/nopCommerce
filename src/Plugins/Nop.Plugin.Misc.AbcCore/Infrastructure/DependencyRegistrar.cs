@@ -65,6 +65,7 @@ namespace Nop.Plugin.Misc.AbcCore.Infrastructure
             services.AddScoped<IAbcProductAttributeService, AbcProductAttributeService>();
             services.AddScoped<IGeocodeService, GeocodeService>();
             services.AddScoped<ICheckoutModelFactory, AbcCheckoutModelFactory>();
+            services.AddScoped<IShoppingCartModelFactory, AbcShoppingCartModelFactory>();
         }
     }
 }
