@@ -11,6 +11,11 @@ public static class GoogleAnalyticsDefaults
     public static string SystemName => "Widgets.GoogleAnalytics";
 
     /// <summary>
+    /// Gets the configuration route name
+    /// </summary>
+    public static string ConfigurationRouteName => "Plugin.Widgets.GoogleAnalytics.Configure";
+
+    /// <summary>
     /// Gets a URL to send data using the Measurement Protocol on Google account
     /// </summary>
     public static string EndPointUrl => "https://www.google-analytics.com/mp/collect";

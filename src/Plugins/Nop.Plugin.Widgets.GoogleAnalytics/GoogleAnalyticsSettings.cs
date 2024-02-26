@@ -10,7 +10,6 @@ public class GoogleAnalyticsSettings : ISettings
     public bool EnableEcommerce { get; set; }
     public bool UseSandbox { get; set; }
     public bool IncludingTax { get; set; }
-    public string WidgetZone { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether to include customer identifier to script
