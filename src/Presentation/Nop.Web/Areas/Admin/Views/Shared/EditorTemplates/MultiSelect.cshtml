@@ -3,7 +3,7 @@
     <select asp-for="@Model" asp-items="@((IEnumerable<SelectListItem>)ViewData["SelectList"])" multiple="multiple" class="form-control select2" data-dropdown-css-class="select2-blue"></select>
 </div>
 <script>
-    $(document).ready(function () {
+    $(function() {
         $("#@Html.IdForModel()").select2();
     });
 </script>

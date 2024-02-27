@@ -101,7 +101,7 @@
                                     <nop-textarea asp-for="Body" asp-required="true"></nop-textarea>
                                     <text>
                                         <script>
-                                        $(document).ready(function () {
+                                        $(function() {
                                             $('#@Html.IdFor(model => model.Body)').height($('#@Html.IdFor(model => model.Body)')[0].scrollHeight);
                                         });
                                         </script>

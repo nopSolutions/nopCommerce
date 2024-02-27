@@ -119,7 +119,7 @@ public partial class NopTabsTagHelper : TagHelper
             {
                 var script = new TagBuilder("script");
                 script.InnerHtml.AppendHtml(
-                    "$(document).ready(function () {" +
+                    "$(function() {" +
                     "bindBootstrapTabSelectEvent('" + output.Attributes["id"].Value + "', 'selected-tab-name');" +
                     "});");
                 var scriptTag = await script.RenderHtmlContentAsync();

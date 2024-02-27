@@ -27,7 +27,7 @@
 
             <button type="submit" name="plugin-reload-grid" class="btn btn-primary">@T("Admin.Configuration.Plugins.ReloadList")</button>
             <script>
-                $(document).ready(function() {
+                $(function() {
                     $("button[name='plugin-reload-grid']").on("click",
                         function(e) {
                             showThrobber(
@@ -57,7 +57,7 @@
     <div class="container-fluid">
         <div class="form-horizontal">
             <script>
-                $(document).ready(function () {
+                $(function() {
                     //install a plugin
                     $("#plugins-local-grid").on("click", ".install-plugin-link", function (e) {
                         $("html, body").animate({ scrollTop: 0 }, 400);
@@ -308,7 +308,7 @@
                     <div>
                         <button type="submit" id="btnRefreshList" style="display: none"></button>
                         <script>
-                            $(document).ready(function () {
+                            $(function() {
                                 $('#btnRefreshList').click(function () {
                                     //refresh grid
                                     updateTable('#plugins-local-grid');

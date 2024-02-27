@@ -68,7 +68,7 @@
     </nop-nested-setting>
 </div>
 <script>
-    $(document).ready(function () {
+    $(function() {
         $("#@Html.IdFor(model => model.DistributedCacheConfigModel.Enabled)").click(toggleDistributedCache);
         $(@Html.IdFor(model => model.DistributedCacheConfigModel.DistributedCacheType)).change(toggleDistributedCache);
         toggleDistributedCache();

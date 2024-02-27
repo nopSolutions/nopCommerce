@@ -1,4 +1,4 @@
-﻿$(document).ready(function () {
+﻿$(function() {
   $('#tax-providers-grid').on('draw.dt', function () {
     const tour = new Shepherd.Tour(AdminTourCommonTourOptions);
 

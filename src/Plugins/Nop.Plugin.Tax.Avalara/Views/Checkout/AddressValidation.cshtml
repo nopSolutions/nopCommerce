@@ -1,7 +1,7 @@
 ﻿@model AddressValidationModel
 
 <script asp-location="Footer">
-    $(document).ready(function () {
+    $(function() {
         @if (Model.IsError)
         {
             <text>alert('@Model.Message');</text>

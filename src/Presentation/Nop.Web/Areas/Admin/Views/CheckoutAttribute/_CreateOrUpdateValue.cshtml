@@ -64,7 +64,7 @@
                                 <nop-editor asp-for="ColorSquaresRgb"/>
                                 <div id="color-picker"></div>
                                 <script>
-                                    $(document).ready(function(){
+                                    $(function(){
                                         $('#color-picker').farbtastic('#@Html.IdFor(model => model.ColorSquaresRgb)');
                     });
                                 </script>

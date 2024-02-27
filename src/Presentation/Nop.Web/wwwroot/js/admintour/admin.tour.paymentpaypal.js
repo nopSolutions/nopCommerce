@@ -1,4 +1,4 @@
-﻿$(document).ready(function () {
+﻿$(function() {
   if ($('body').hasClass('basic-settings-mode')) {
     //$('.onoffswitch-checkbox').trigger('click');
   }

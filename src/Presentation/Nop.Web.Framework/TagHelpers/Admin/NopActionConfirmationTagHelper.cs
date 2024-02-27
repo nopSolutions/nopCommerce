@@ -83,7 +83,7 @@ public partial class NopActionConfirmationTagHelper : TagHelper
         //modal script
         var script = new TagBuilder("script");
         script.InnerHtml.AppendHtml(
-            "$(document).ready(function () {" +
+            "$(function() {" +
             $"$('#{ButtonId}').attr(\"data-toggle\", \"modal\").attr(\"data-target\", \"#{modalId}\");" +
             $"$('#{modalId}-submit-button').attr(\"name\", $(\"#{ButtonId}\").attr(\"name\"));" +
             $"$(\"#{ButtonId}\").attr(\"name\", \"\");" +

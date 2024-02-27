@@ -439,7 +439,7 @@
                             if (consent.IsRequired)
                             {
                                 <script asp-location="Footer">
-                                    $(document).ready(function() {
+                                    $(function() {
                                         $('#save-info-button').on('click', function() {
                                             if ($('#consent@(consent.Id)').is(':checked')) {
                                                     //do some stuff

@@ -154,7 +154,7 @@
     @if (Model.UseAjaxMenu)
     {
         <script asp-location="Footer">
-        $(document).ready(function () {
+        $(function() {
             $('.menu-toggle').on('click', function () {
                 $(this).siblings('.top-menu.mobile').slideToggle('slow');
             $('.menu-toggle').on('keydown', function (event) {
@@ -176,7 +176,7 @@
     else
     {
         <script asp-location="Footer">
-            $(document).ready(function () {
+            $(function() {
                 $('.menu-toggle').on('click', function () {
                     $(this).siblings('.top-menu.mobile').slideToggle('slow');
                 });

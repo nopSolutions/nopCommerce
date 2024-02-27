@@ -19,7 +19,7 @@
     </div>
 </div>
 <script asp-location="Footer">
-    $(document).ready(function () {
+    $(function() {
         var $msEls = $('[data-manufacturer-id]');
         $msEls.on('change', function () {
             CatalogProducts.getProducts();

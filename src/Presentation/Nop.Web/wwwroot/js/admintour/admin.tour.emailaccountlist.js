@@ -1,4 +1,4 @@
-﻿$(document).ready(function () {
+﻿$(function() {
   $('#email-accounts-grid').on('draw.dt', function () {
     const tour = new Shepherd.Tour(AdminTourCommonTourOptions);
 

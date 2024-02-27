@@ -328,7 +328,7 @@
                     })
 
                     <script>
-                        $(document).ready(function () {
+                        $(function() {
                             $('#recordsUpdate').click(function () {
                                 updateTable('#records-grid');
                                 return false;
@@ -434,7 +434,7 @@
                 @if (Model.Import.Active)
                 {
                     <script>
-                        $(document).ready(function () {
+                        $(function() {
                             $('#start-sync').prop('disabled', true);
                             updateSyncState();
                         });

@@ -129,7 +129,7 @@
                                                 <span>@T("Admin.Header.RestartApplication")</span>
                                             </button>
                                             <script>
-                                                $(document).ready(function () {
+                                                $(function() {
                                                     $("#restart-application").click(function (e) {
                                                         showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Header.RestartApplication.Progress").Text))');
                                                     });
@@ -168,7 +168,7 @@
                     <nav class="mt-2">
                         @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.SearchBoxBefore })
                         <script>
-                            $(document).ready(function () {
+                            $(function() {
                                 Admin.Search.init();
                             });
                         </script>
@@ -234,7 +234,7 @@
     }
     <a id="backTop" class="btn btn-back-top bg-teal"></a>
     <script>
-        $(document).ready(function () {
+        $(function() {
             //enable "back top" arrow
             $('#backTop').backTop();
 

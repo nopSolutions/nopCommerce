@@ -16,7 +16,7 @@
     <div class="card card-default card-popup">
 
         <script>
-            $(document).ready(function() {
+            $(function() {
                 $("#@Html.IdFor(model => model.Address.CountryId)").change(function(){
                     var selectedItem = $(this).val();
                     var ddlStates = $("#@Html.IdFor(model => model.Address.StateProvinceId)");

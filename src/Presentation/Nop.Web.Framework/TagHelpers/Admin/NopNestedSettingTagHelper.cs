@@ -65,7 +65,7 @@ public partial class NopNestedSettingTagHelper : TagHelper
         var isNot = IsConditionInvert ? "!" : "";
 
         script.InnerHtml.AppendHtml(
-            "$(document).ready(function () {" +
+            "$(function() {" +
             $"initNestedSetting('{parentSettingName}', '{parentSettingId}', '{nestedSettingId}');"
         );
 

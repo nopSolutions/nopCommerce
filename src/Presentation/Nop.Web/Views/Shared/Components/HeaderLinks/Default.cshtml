@@ -55,7 +55,7 @@
     {
         //new private message notification
         <script asp-location="Footer">
-            $(document).ready(function () {
+            $(function() {
                 displayPopupNotification('@Html.Raw(JavaScriptEncoder.Default.Encode(Model.AlertMessage))', 'success', false);
             });
         </script>
@@ -63,7 +63,7 @@
     @if (Model.ShoppingCartEnabled)
     {
         <script asp-location="Footer">
-            $(document).ready(function () {
+            $(function() {
                 $('.header').on('mouseenter', '#topcartlink', function () {
                     $('#flyout-cart').addClass('active');
                 });

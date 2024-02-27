@@ -35,7 +35,7 @@
     </div>
 </div>
 <script asp-location="Footer">
-    $(document).ready(function () {
+    $(function() {
         var $optionEls = $('[data-option-id]');
         $optionEls.on('change', function () {
             CatalogProducts.getProducts();

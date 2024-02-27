@@ -9,7 +9,7 @@
             @foreach (var item in Model.Items)
             {
                 <script>
-                    $(document).ready(function () {
+                    $(function() {
                         toggleOrderItemEdit@(item.Id)(false);
                     });
                 </script>

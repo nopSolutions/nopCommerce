@@ -180,7 +180,7 @@
 </form>
 
 <script asp-location="Footer">
-    $(document).ready(function() {
+    $(function() {
         $('#@Html.IdFor(model => model.PaymentConnectionMethodId)').change(toggleConnectionMethod);
         toggleConnectionMethod();
     });

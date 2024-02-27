@@ -2,7 +2,7 @@
 @using Nop.Core.Domain.Catalog;
 @using Nop.Services
 <script>
-    $(document).ready(function() {
+    $(function() {
         $("#@Html.IdFor(model => model.ManageInventoryMethodId)").change(toggleManageStock);
         $("#@Html.IdFor(model => model.UseMultipleWarehouses)").click(toggleManageStock);
         $("#@Html.IdFor(model => model.BackorderModeId)").change(toggleManageStock);
@@ -181,7 +181,7 @@
                                     <td style="width: 10%;">
                                         <input type="checkbox" id="warehouse_used_@(item.WarehouseId)" name="warehouse_used_@(item.WarehouseId)" value="@item.WarehouseId" checked="@item.WarehouseUsed" />
                                         <script>
-                                        $(document).ready(function() {
+                                        $(function() {
                                             $("#warehouse_used_@(item.WarehouseId)").change(toggleWarehouseUsed_@(item.WarehouseId));
                                             toggleWarehouseUsed_@(item.WarehouseId)();
                                         });

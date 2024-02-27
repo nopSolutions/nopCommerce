@@ -60,7 +60,7 @@
             showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.System.Maintenance.BackupDatabase.Progress").Text))');
         };
 
-        $(document).ready(function () {
+        $(function() {
             $("#backup-database").on("click", function () {
                 showProgress();
             });

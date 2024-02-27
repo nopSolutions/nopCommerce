@@ -73,7 +73,7 @@
                                                 <nop-textarea asp-for="@Model.Locales[item].Body"/>
                                                 <text>
                                                     <script>
-                                                        $(document).ready(function() {
+                                                        $(function() {
                                                             $('#@Html.IdFor(model => model.Locales[item].Body)').height('auto');
                                                         });
                                                     </script>
@@ -146,7 +146,7 @@
                                             <nop-textarea asp-for="Body" asp-required="true" />
                                             <text>
                                                 <script>
-                                                    $(document).ready(function() {
+                                                    $(function() {
                                                         $('#@Html.IdFor(model => model.Body)').height('auto');
                                                     });
                                                 </script>
@@ -262,7 +262,7 @@
                                     <div class="col-md-4">
                                         <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
                                         <script>
-                                            $(document).ready(function() {
+                                            $(function() {
                                                 var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').select2({
                                                     closeOnSelect: false,
                                                     @if (!Model.AvailableStores.Any())
@@ -287,7 +287,7 @@
                 @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.MessageTemplateDetailsBottom, additionalData = Model })
             </div>
             <script>
-                $(document).ready(function() {
+                $(function() {
                     $("#@Html.IdFor(model => model.HasAttachedDownload)").change(toggleHasAttachedDownload);
                     $("#@Html.IdFor(model => model.SendImmediately)").click(sendImmediately);
                     toggleHasAttachedDownload();

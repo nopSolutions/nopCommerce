@@ -69,7 +69,7 @@ var AdminTourNextButton = {}
 var AdminTourNextPageButton = {}
 var AdminTourDoneButton = {}
 
-$(document).ready(function () {
+$(function() {
   AdminTourBackButton = {
     classes: 'button-back',
     text: '<i class="fas fa-chevron-left"></i>' + '<div class="button-text">' + AdminTourDataProvider.localized_data.Back + '</div>',

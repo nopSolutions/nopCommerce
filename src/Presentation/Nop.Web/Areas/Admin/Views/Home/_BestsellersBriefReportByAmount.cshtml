@@ -26,7 +26,7 @@
         </div>
     </div>
     <script>
-        $(document).ready(function () {
+        $(function() {
             var collapsed = !$('#@cardId').hasClass('collapsed-card');
             if (collapsed) {
                 $('#bestsellersBriefReportByAmount').load('@Url.Action("GetBestsellersBriefReportByAmount", "Home")');

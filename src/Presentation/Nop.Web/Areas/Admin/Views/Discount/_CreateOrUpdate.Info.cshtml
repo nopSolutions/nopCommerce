@@ -3,7 +3,7 @@
 @using Nop.Services
 
 <script>
-    $(document).ready(function() {
+    $(function() {
         $("#@Html.IdFor(model => model.DiscountTypeId)").change(toggleDiscountType);
         $("#@Html.IdFor(model => model.UsePercentage)").click(toggleUsePercentage);
         $("#@Html.IdFor(model => model.RequiresCouponCode)").click(toggleRequiresCouponCode);

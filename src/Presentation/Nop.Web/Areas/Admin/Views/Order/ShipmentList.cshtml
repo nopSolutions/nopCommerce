@@ -313,7 +313,7 @@
                             </div>
                         </div>
                         <script>
-                            $(document).ready(function() {
+                            $(function() {
                                 //load states when changing a country dropdownlist
                                 $("#@Html.IdFor(model => model.CountryId)").change(function() {
                                     var selectedItem = $(this).val();
@@ -378,7 +378,7 @@
 </form>
 
 <script>
-    $(document).ready(function () {
+    $(function() {
         $('#exportpackagingslips-selected').click(function (e) {
             e.preventDefault();
             var ids = selectedIds.join(",");

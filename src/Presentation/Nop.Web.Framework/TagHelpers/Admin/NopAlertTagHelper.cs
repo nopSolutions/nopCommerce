@@ -79,7 +79,7 @@ public partial class NopAlertTagHelper : TagHelper
         //modal script
         var script = new TagBuilder("script");
         script.InnerHtml.AppendHtml(
-            "$(document).ready(function () {" +
+            "$(function() {" +
             $"$('#{AlertId}').attr(\"data-toggle\", \"modal\").attr(\"data-target\", \"#{modalId}\")" +
             "});");
         var scriptTag = await script.RenderHtmlContentAsync();

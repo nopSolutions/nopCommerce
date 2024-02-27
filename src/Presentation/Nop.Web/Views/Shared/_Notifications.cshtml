@@ -37,7 +37,7 @@
     if (messagesSettings.UsePopupNotifications)
     {
         <script asp-location="Footer">
-            $(document).ready(function () {
+            $(function() {
                 var notes = {
                     'success': [
                         @Html.Raw(string.Join(", ", successMessages.Select(x => $" '{JavaScriptEncoder.Default.Encode(x)}' ")))],
@@ -54,7 +54,7 @@
     else
     {
         <script asp-location="Footer">
-            $(document).ready(function () {
+            $(function() {
                 var successMsg = [ @Html.Raw(string.Join(", ", successMessages.Select(x => $" '{JavaScriptEncoder.Default.Encode(x)}' "))) ];
                 displayBarNotification(successMsg, 'success', false);
 

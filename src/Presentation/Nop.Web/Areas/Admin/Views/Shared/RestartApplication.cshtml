@@ -2,7 +2,7 @@
 @inject CommonSettings commonSettings
 
 <script>
-    $(document).ready(function () {
+    $(function() {
         showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Header.RestartApplication.Progress").Text))');
         $.ajax({
             type: "GET",

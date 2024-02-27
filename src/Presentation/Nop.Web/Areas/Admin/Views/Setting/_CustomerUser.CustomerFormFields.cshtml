@@ -1,7 +1,7 @@
 @model CustomerUserSettingsModel
 
 <script>
-    $(document).ready(function () {
+    $(function() {
         $("#@Html.IdFor(model => model.CustomerSettings.DateOfBirthRequired)").click(toggleCustomerRequiredFormField);
         $("#@Html.IdFor(model => model.CustomerSettings.CountryEnabled)").click(toggleCustomerCountryFormField);
         $("#@Html.IdFor(model => model.CustomerSettings.StateProvinceEnabled)").click(toggleCustomerStateProvinceFormField);

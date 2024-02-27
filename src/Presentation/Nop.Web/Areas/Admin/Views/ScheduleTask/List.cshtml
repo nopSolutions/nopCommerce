@@ -18,7 +18,7 @@
 </div>
 
 <script>
-    $(document).ready(function () {
+    $(function() {
         $("#schedule-tasks-grid").on("click", ".run-now", function (e) {
             showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.System.ScheduleTasks.RunNow.Progress").Text))');
         });

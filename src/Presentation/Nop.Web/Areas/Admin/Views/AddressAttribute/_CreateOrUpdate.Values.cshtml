@@ -56,7 +56,7 @@
                     return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/AddressAttribute/ValueEditPopup/")' + data + '?btnId=btnRefresh&formId=addressattribute-form\', 800, 800, true); return false;\" class="btn btn-default"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit").Text</button>';
                 }
 
-                $(document).ready(function () {
+                $(function() {
                     $('#btnRefresh').click(function () {
                         //refresh grid
                         updateTable('#addressattributevalues-grid');

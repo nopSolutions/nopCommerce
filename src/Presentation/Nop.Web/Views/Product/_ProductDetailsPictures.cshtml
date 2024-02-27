@@ -12,7 +12,7 @@
                 <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" id="main-product-img-@Model.Id" />
             </a>
             <script asp-location="Footer">
-                $(document).ready(function() {
+                $(function() {
                     $('#main-product-img-lightbox-anchor-@Model.Id').magnificPopup({ type: 'image' });
                 });
             </script>
@@ -33,7 +33,7 @@
             }
         </div>
         <script asp-location="Footer">
-            $(document).ready(function() {
+            $(function() {
                 $('.picture-thumbs').magnificPopup(
                     {
                         type: 'image',
@@ -53,7 +53,7 @@
             });
         </script>
         <script asp-location="Footer">
-            $(document).ready(function() {
+            $(function() {
                 $('.thumb-item > img').on('click',
                     function() {
                         $('#main-product-img-@Model.Id').attr('src', $(this).attr('data-defaultsize'));
@@ -78,7 +78,7 @@
                 }
             </div>
             <script asp-location="Footer">
-                $(document).ready(function() {
+                $(function() {
                     $('.thumb-item img').on('click',
                         function() {
                             $('#main-product-img-@Model.Id').attr('src', $(this).attr('data-defaultsize'));

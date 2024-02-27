@@ -127,7 +127,7 @@
         {
             <nop-card asp-name="brevo-synchronization" asp-icon="fas fa-exchange" asp-title="@T("Plugins.Misc.Brevo.Synchronization")" asp-hide-block-attribute-name="@BrevoDefaults.HideSynchronizationBlock" asp-hide="@Model.HideSynchronizationBlock" asp-advanced="false">
                 <script>
-                    $(document).ready(function () {
+                    $(function() {
                         //$("#progressBar").hide();
                         if (@((ViewData["synchronizationStart"] != null && (bool)ViewData["synchronizationStart"]).ToString().ToLowerInvariant())) {
                             $("#progressBar").show();
@@ -451,7 +451,7 @@
                                         </div>
                                     </div>
                                     <script>
-                                        $(document).ready(function () {
+                                        $(function() {
                                             $('#addSms').click(function () {
                                                 $('#addSms').attr('disabled', true);
                                                 var postData = {
@@ -576,7 +576,7 @@
                                 <div class="col-md-9">
                                     <nop-textarea asp-for="TrackingScript" />
                                     <script>
-                                        $(document).ready(function() {
+                                        $(function() {
                                             $('#@Html.IdFor(model => model.TrackingScript)').height($('#@Html.IdFor(model => model.TrackingScript)')[0].scrollHeight);
                                         });
                                     </script>

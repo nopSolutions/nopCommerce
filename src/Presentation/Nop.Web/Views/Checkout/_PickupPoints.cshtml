@@ -13,7 +13,7 @@
             @T("Checkout.PickupPoints.Description")
         </div>
         <script asp-location="Footer">
-            $(document).ready(function () {
+            $(function() {
                 togglePickupInStore($("#@Html.IdFor(model => model.PickupInStore)")[0]);
 
                 $(document).on('checkout_toggle_pickup_in_store', function (e) {
@@ -111,7 +111,7 @@
                 <script asp-location="Footer">
                     var markers = new Map();
                     var googleMap = null;
-                    $(document).ready(function () {
+                    $(function() {
                         $.getScript("@src", function( data, textStatus, jqxhr ) {
                             google.maps.visualRefresh = true;
                             googleMap = new google.maps.Map(document.getElementById("map"), {

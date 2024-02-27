@@ -54,7 +54,7 @@
                                     </div>
                                 }
                                 <script asp-location="Footer">
-                                    $(document).ready(function() {
+                                    $(function() {
                                         showHideDropdownQuantity("@controlId");
                                     });
                                 </script>
@@ -85,7 +85,7 @@
                                     }
                                 </ul>
                                 <script asp-location="Footer">
-                                    $(document).ready(function() {
+                                    $(function() {
                                         showHideRadioQuantity("@controlId");
                                     });
                                 </script>
@@ -112,7 +112,7 @@
                                                     <label for="@(controlId)_@(attributeValue.Id)_qty">@(T("Products.ProductAttributes.PriceAdjustment.Quantity").Text)</label>
                                                     <input type="text" name="@(controlId)_@(attributeValue.Id)_qty" id="@(controlId)_@(attributeValue.Id)_qty" value="@(attributeValue.Quantity)" />
                                                     <script asp-location="Footer">
-                                                        $(document).ready(function() {
+                                                        $(function() {
                                                             showHideCheckboxQuantity('@(controlId)_@(attributeValue.Id)');
                                                         })
                                                     </script>
@@ -201,7 +201,7 @@
                                     </div>
                                 </script>
                                 <script asp-location="Footer">
-                                    $(document).ready(function() {
+                                    $(function() {
                                         $("#@(controlId)uploader").fineUploader({
                                             request: {
                                                 endpoint: '@(Url.RouteUrl("UploadFileProductAttribute", new { attributeId = attribute.Id }))'
@@ -278,7 +278,7 @@
                                     </div>
                                 }
                                 <script asp-location="Footer">
-                                    $(document).ready(function() {
+                                    $(function() {
                                         $('.attributes #color-squares-@(attribute.Id)').on('click', 'input', function(event) {
                                             $('.attributes #color-squares-@(attribute.Id)').find('li').removeClass('selected-value');
                                             $(this).closest('li').addClass('selected-value');
@@ -320,7 +320,7 @@
                                     </div>
                                 }
                                 <script asp-location="Footer">
-                                    $(document).ready(function() {
+                                    $(function() {
                                         $('.attributes #image-squares-@(attribute.Id)').on('click', 'input', function(event) {
                                             $('.attributes #image-squares-@(attribute.Id)').find('li').removeClass('selected-value');
                                             $(this).closest('li').addClass('selected-value');
@@ -364,7 +364,7 @@
 
         <script asp-location="Footer">
             var combinationsBehavior_@(Model.Id);
-            $(document).ready(function () {
+            $(function() {
                 combinationsBehavior_@(Model.Id) = createCombinationsBehavior({
                     contentEl: '[data-productid="@Model.Id"]',
                     fetchUrl: '@Html.Raw(Url.RouteUrl("GetProductCombinations", new { productId = Model.Id }))'
@@ -384,7 +384,7 @@
         if (Model.AllowAddingOnlyExistingAttributeCombinations && catalogSettings.AttributeValueOutOfStockDisplayType == AttributeValueOutOfStockDisplayType.Disable)
         {
             <script asp-location="Footer">
-                $(document).ready(function () {
+                $(function() {
                     $(combinationsBehavior_@(Model.Id)).on('processed', function () {
                         @(attributeChangeHandlerFuncName)();
                     });
@@ -514,7 +514,7 @@
                     }
                 });
             }
-            $(document).ready(function() {
+            $(function() {
                 @(attributeChangeHandlerFuncName)();
                 @Html.Raw(attributeChangeScriptsBuilder.ToString())
             });
