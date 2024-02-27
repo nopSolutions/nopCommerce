@@ -333,7 +333,7 @@
                                             });
                                         },
                                         error: function (jqXHR, textStatus, errorThrown) {
-                                            $("#statesAlert").click();
+                                            $("#statesAlert").trigger("click");
                                         }
                                     });
                                 });
@@ -384,7 +384,7 @@
             var ids = selectedIds.join(",");
             if (!ids) {
                 $('#exportPackagingSlipsSelected-info').text("@T("Admin.Orders.Shipments.NoShipmentsSelected")");
-                $("#exportPackagingSlipsSelected").click();
+                $("#exportPackagingSlipsSelected").trigger("click");
             }
             else {
                 $('#pdf-packaging-slip-selected-form #selectedIds').val(ids);

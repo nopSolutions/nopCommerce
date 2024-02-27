@@ -21,7 +21,7 @@
                         });
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    $("#statesAlert").click();
+                    $("#statesAlert").trigger("click");
                 }
             });
         });

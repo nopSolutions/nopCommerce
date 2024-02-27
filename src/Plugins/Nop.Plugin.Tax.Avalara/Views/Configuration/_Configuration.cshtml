@@ -285,7 +285,7 @@
                                     });
                                 },
                                 error: function (jqXHR, textStatus, errorThrown) {
-                                    $('#states-alert').click();
+                                    $('#states-alert').trigger('click');
                                 }
                             });
                         });

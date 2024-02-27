@@ -385,7 +385,7 @@
             var ids = selectedIds.join(",");
             if (!ids) {
                 $('#exportXmlSelected-info').text("@T("Admin.Customers.NoCustomers")");
-                $("#exportXmlSelected").click();
+                $("#exportXmlSelected").trigger("click");
             }
             else {
                 $('#export-xml-selected-form #selectedIds').val(ids);
@@ -452,7 +452,7 @@
             var ids = selectedIds.join(",");
             if (!ids) {
                 $('#exportExcelSelected-info').text("@T("Admin.Customers.NoCustomers")");
-                $("#exportExcelSelected").click();
+                $("#exportExcelSelected").trigger("click");
             }
             else {
                 $('#export-excel-selected-form #selectedIds').val(ids);

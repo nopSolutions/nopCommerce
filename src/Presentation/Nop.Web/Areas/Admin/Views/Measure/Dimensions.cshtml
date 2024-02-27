@@ -77,7 +77,7 @@
 
             function markAsPrimaryDimension(id) {
                 selectedId = id;
-                $("#btnMarkAsPrimaryDimension").click();
+                $("#btnMarkAsPrimaryDimension").trigger("click");
             };
 
             $(document).ready(function () {
@@ -95,7 +95,7 @@
                             updateTable('#measuredimension-grid');
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
-                            $("#markAsPrimaryDimensionAlert").click();
+                            $("#markAsPrimaryDimensionAlert").trigger("click");
                         }
                     });
                     $('#btnMarkAsPrimaryDimension-action-confirmation').modal('toggle');

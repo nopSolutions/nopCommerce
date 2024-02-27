@@ -79,7 +79,7 @@
                                     },
                                     error: function (jqXHR, textStatus, errorThrown) {
                                         $('#generateCouponCodeFailed-info').text(errorThrown);
-                                        $("#generateCouponCodeFailed").click();                                                
+                                        $("#generateCouponCodeFailed").trigger("click");                                                
                                     }
                                 });
                             });

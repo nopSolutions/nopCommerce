@@ -156,7 +156,7 @@
                                 <script>
                                     function selectAssociatedProduct(productid) {
                                         $("#@Html.IdFor(model => model.AssociateProductToAttributeValueModel.AssociatedToProductId)").val(productid);
-                                        $('#save').click();
+                                        $('#save').trigger('click');
                                     }
                                 </script>
                             </div>

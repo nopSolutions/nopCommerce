@@ -422,7 +422,7 @@
                                     $("#@Html.IdFor(model => model.GoDirectlyToCustomOrderNumber)").keydown(
                                         function(event) {
                                             if (event.keyCode === 13) {
-                                                $("#go-to-order-by-number").click();
+                                                $("#go-to-order-by-number").trigger("click");
                                                 return false;
                                             }
                                         });
@@ -530,7 +530,7 @@
             var ids = selectedIds.join(",");
             if (!ids) {
                 $('#exportXmlSelected-info').text("@T("Admin.Orders.NoOrders")");
-                $("#exportXmlSelected").click();
+                $("#exportXmlSelected").trigger("click");
             }
             else {
                 $('#export-xml-selected-form #selectedIds').val(ids);
@@ -555,7 +555,7 @@
             var ids = selectedIds.join(",");
              if (!ids) {
                 $('#exportExcelSelected-info').text("@T("Admin.Orders.NoOrders")");
-                $("#exportExcelSelected").click();
+                $("#exportExcelSelected").trigger("click");
             }
             else {
                 $('#export-excel-selected-form #selectedIds').val(ids);
@@ -580,7 +580,7 @@
             var ids = selectedIds.join(",");
            if (!ids) {
                 $('#pdfInvoiceSelected-info').text("@T("Admin.Orders.NoOrders")");
-                $("#pdfInvoiceSelected").click();
+                $("#pdfInvoiceSelected").trigger("click");
             }
             else {
                 $('#pdf-invoice-selected-form #selectedIds').val(ids);

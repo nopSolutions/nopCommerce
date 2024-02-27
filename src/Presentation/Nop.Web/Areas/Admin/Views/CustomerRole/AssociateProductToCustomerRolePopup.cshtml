@@ -152,7 +152,7 @@
                                         }
                                         function selectAssociatedProduct(productid) {
                                             $("#@Html.IdFor(model => model.AddProductToCustomerRoleModel.AssociatedToProductId)").val(productid);
-                                            $('#save').click();
+                                            $('#save').trigger('click');
                                         }
                                     </script>
                                 </div>

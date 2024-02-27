@@ -154,7 +154,7 @@ else
                                     var tokenPayload = parseJwt(token);
                                     if (!payerAuthenticationEnabled) {
                                         displayAjaxLoading(false);
-                                        $('.payment-info-next-step-button').click();
+                                        $('.payment-info-next-step-button').trigger('click');
                                     } else {
                                         setupPayerAuth(tokenPayload.jti);
                                     }
@@ -164,7 +164,7 @@ else
                     } else {
                         if (!payerAuthenticationEnabled) {
                             displayAjaxLoading(false);
-                            $('.payment-info-next-step-button').click();
+                            $('.payment-info-next-step-button').trigger('click');
                         } else {
                             setupPayerAuth();
                         }
@@ -297,7 +297,7 @@ else
                     success: function (data, textStatus, jqXHR) {
                         if (typeof (data) != 'undefined' && data != null && data.success) {
                             displayAjaxLoading(false);
-                            $('.payment-info-next-step-button').click();
+                            $('.payment-info-next-step-button').trigger('click');
                         }
                         else {
                             displayAjaxLoading(false);

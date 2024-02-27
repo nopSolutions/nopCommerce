@@ -66,7 +66,7 @@
                         data: postData,
                         dataType: "json",
                         error: function (jqXHR, textStatus, errorThrown) {
-                            $("#saveModeAlert").click();
+                            $("#saveModeAlert").trigger("click");
                         }
                     });
                     ensureDataTablesRendered();
