@@ -31,7 +31,7 @@ public class GoogleAnalyticsPlugin : BasePlugin, IWidgetPlugin
 
     #region Ctor
 
-    public GoogleAnalyticsPlugin(IActionContextAccessor actionContextAccessor, 
+    public GoogleAnalyticsPlugin(IActionContextAccessor actionContextAccessor,
         ILocalizationService localizationService,
         IWebHelper webHelper,
         ISettingService settingService,
@@ -59,9 +59,9 @@ public class GoogleAnalyticsPlugin : BasePlugin, IWidgetPlugin
     /// </returns>
     public Task<IList<string>> GetWidgetZonesAsync()
     {
-        return Task.FromResult<IList<string>>(new List<string> 
-        { 
-            PublicWidgetZones.HeadHtmlTag 
+        return Task.FromResult<IList<string>>(new List<string>
+        {
+            PublicWidgetZones.HeadHtmlTag
         });
     }
 
@@ -81,7 +81,7 @@ public class GoogleAnalyticsPlugin : BasePlugin, IWidgetPlugin
     public Type GetWidgetViewComponent(string widgetZone)
     {
         ArgumentNullException.ThrowIfNull(widgetZone);
-        
+
         if (widgetZone.Equals(PublicWidgetZones.HeadHtmlTag))
             return typeof(WidgetsGoogleAnalyticsViewComponent);
 
@@ -106,7 +106,6 @@ public class GoogleAnalyticsPlugin : BasePlugin, IWidgetPlugin
 
                   gtag('config', '{GOOGLEID}');
                   {CUSTOMER_TRACKING}
-                  {ECOMMERCE_TRACKING}
                 </script>"
         };
         await _settingService.SaveSettingAsync(settings);
@@ -161,8 +160,12 @@ public class GoogleAnalyticsPlugin : BasePlugin, IWidgetPlugin
 
     #endregion
 
+    #region Properties
+
     /// <summary>
     /// Gets a value indicating whether to hide this plugin on the widget list page in the admin area
     /// </summary>
     public bool HideInWidgetList => false;
+
+    #endregion
 }
