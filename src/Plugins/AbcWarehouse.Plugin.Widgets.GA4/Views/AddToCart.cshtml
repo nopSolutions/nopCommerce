@@ -3,23 +3,25 @@
 <script>
   $(function() {
     var button = document.getElementById("@Model.ButtonId");
+    if (button === null) {
+      return;
+    }
     button.addEventListener("click", function () {
-      console.log('')
-        gtag("event", "add_to_cart", {
-          currency: "USD",
-          value: @Model.Item.Price,
-          items: [
-            {
-              item_id: "@Model.Item.Sku",
-              item_name: "@Model.Item.Name",
-              index: 0,
-              item_brand: "@Model.Item.Brand",
-              item_category: "@Model.Item.Category",
-              price: @Model.Item.Price,
-              quantity: 1
-            }
-          ]
-        });
+      gtag("event", "add_to_cart", {
+        currency: "USD",
+        value: @Model.Item.Price,
+        items: [
+          {
+            item_id: "@Model.Item.Sku",
+            item_name: "@Model.Item.Name",
+            index: 0,
+            item_brand: "@Model.Item.Brand",
+            item_category: "@Model.Item.Category",
+            price: @Model.Item.Price,
+            quantity: 1
+          }
+        ]
+      });
     });
   });
 </script>

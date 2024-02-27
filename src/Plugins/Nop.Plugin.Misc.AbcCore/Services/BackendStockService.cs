@@ -229,15 +229,15 @@ namespace Nop.Plugin.Misc.AbcCore.Services
                                     .Select(u => u.Slug)
                                     .FirstOrDefault();
 
-            // Bloomfield Township
-            ProductStock bloomfieldTownshipMockShop = new ProductStock()
+            // Flint
+            ProductStock flintTownshipMockShop = new ProductStock()
             {
-                Shop = await _shopService.GetShopByIdAsync(440),
+                Shop = await _shopService.GetShopByIdAsync(441),
                 Available = true,
                 Quantity = 1,
                 Message = "Available on Display in Store, Ship to Store 1 to 3 days"
             };
-            stockResponse.ProductStocks.Add(bloomfieldTownshipMockShop);
+            stockResponse.ProductStocks.Add(flintTownshipMockShop);
 
             ProductStock rochesterMockShop = new ProductStock()
             {
