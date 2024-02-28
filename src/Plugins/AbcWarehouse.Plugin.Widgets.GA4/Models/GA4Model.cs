@@ -12,5 +12,6 @@ namespace AbcWarehouse.Plugin.Widgets.GA4.Models
         public BeginCheckoutModel BeginCheckoutModel { get; set; }
         public PurchaseModel PurchaseModel { get; set; }
         public AddToCartModel AddToCartModel { get; set; }
+        public ViewCartModel ViewCartModel { get; set; }
     }
 }

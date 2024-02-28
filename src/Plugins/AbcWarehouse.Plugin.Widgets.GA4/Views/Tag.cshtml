@@ -59,6 +59,33 @@
     </text>
   }
 
+  @if (Model.ViewCartModel != null)
+  {
+    <text>
+      gtag("event", "view_cart", {
+        currency: "USD",
+        value: @Model.ViewCartModel.Value,
+        items: [
+          @for (var i = 0; i < Model.ViewCartModel.Items.Count(); i++)
+          {
+            var item = Model.ViewCartModel.Items[i];
+            <text>
+              {
+                item_id: "@item.Sku",
+                item_name: "@item.Name",
+                index: @i,
+                item_brand: "@item.Brand",
+                item_category: "@item.Category",
+                price: @item.Price,
+                quantity: @item.Quantity
+              },
+            </text>
+          }
+        ]
+      });
+    </text>
+  }
+
   @if (Model.PurchaseModel != null)
   {
     <text>

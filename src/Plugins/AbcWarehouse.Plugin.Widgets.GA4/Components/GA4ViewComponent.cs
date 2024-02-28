@@ -160,6 +160,26 @@ namespace AbcWarehouse.Plugin.Widgets.GA4.Components
                 };
             }
 
+            if (IsViewCart())
+            {
+                var cart = await _shoppingCartService.GetShoppingCartAsync(
+                    await _workContext.GetCurrentCustomerAsync(),
+                    ShoppingCartType.ShoppingCart,
+                    (await _storeContext.GetCurrentStoreAsync()).Id);
+                var value = 0M;
+                foreach (var sci in cart)
+                {
+                    value += (await _shoppingCartService.GetUnitPriceAsync(sci, true)).unitPrice;
+                }
+                var ga4OrderItems = await GetGA4OrderItemsFromShoppingCart(cart);
+
+                model.ViewCartModel = new ViewCartModel()
+                {
+                    Value = value,
+                    Items = ga4OrderItems
+                };
+            }
+
             return View("~/Plugins/Widgets.GA4/Views/Tag.cshtml", model);
         }
 
@@ -185,6 +205,14 @@ namespace AbcWarehouse.Plugin.Widgets.GA4.Components
             var controller = routeData.Values["controller"];
             var action = routeData.Values["action"];
             return controller.Equals("Product") && action.Equals("ProductDetails");
+        }
+
+        private bool IsViewCart()
+        {
+            var routeData = Url.ActionContext.RouteData;
+            var controller = routeData.Values["controller"];
+            var action = routeData.Values["action"];
+            return controller.Equals("ShoppingCart") && action.Equals("Cart");
         }
 
         private async Task<IList<GA4OrderItem>> GetGA4OrderItemsFromShoppingCart(IList<ShoppingCartItem> shoppingCartItems)
