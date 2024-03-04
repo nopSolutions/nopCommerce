@@ -60,13 +60,6 @@ NOPCommerce codebase that runs both abcwarehouse.com and hawthorneonline.com
 </div> 
 ```
 
-## IP Addresses
-
-* ABC Prod - 163.123.137.18
-* ABC Stage - 163.123.137.99
-* Haw Prod - 163.123.137.41
-* Mickey Prod - 163.123.137.44
-
 ## Setting Up Active Store (Main/Clearance)
 
 To set up the store to debug:
