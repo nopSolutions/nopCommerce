@@ -1,0 +1,37 @@
+@model AbcWarehouse.Plugin.Widgets.GA4.Models.GA4GeneralModel
+
+<script>
+  $(function() {
+        // grab the buttons from shipping screen
+        var existingAddressButtons = document.querySelectorAll('.select-shipping-address-button');
+        var newAddressButton = document.querySelectorAll('.new-address-next-step-button');
+        var buttons = Array.from(existingAddressButtons).concat(Array.from(newAddressButton));
+
+        // loop through the buttons and add an event listener to each
+        buttons.forEach(function(button) {
+          button.addEventListener('click', function() {
+            gtag("event", "add_shipping_info", {
+              currency: "USD",
+              value: @Model.Value,
+              items: [
+                @for (var i = 0; i < Model.Items.Count(); i++)
+                {
+                  var item = Model.Items[i];
+                  <text>
+                    {
+                      item_id: "@item.Sku",
+                      item_name: "@item.Name",
+                      index: @i,
+                      item_brand: "@item.Brand",
+                      item_category: "@item.Category",
+                      price: @item.Price,
+                      quantity: @item.Quantity
+                    },
+                  </text>
+                }
+              ]
+            });
+          });
+        });
+      });
+</script>

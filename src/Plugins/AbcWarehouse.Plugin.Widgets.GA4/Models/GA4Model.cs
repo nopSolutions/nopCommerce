@@ -9,9 +9,10 @@ namespace AbcWarehouse.Plugin.Widgets.GA4.Models
         public bool IsDebugMode { get; set; }
 
         public GA4OrderItem ViewItemModel { get; set; }
-        public BeginCheckoutModel BeginCheckoutModel { get; set; }
+        public GA4GeneralModel BeginCheckoutModel { get; set; }
         public PurchaseModel PurchaseModel { get; set; }
         public AddToCartModel AddToCartModel { get; set; }
-        public ViewCartModel ViewCartModel { get; set; }
+        public GA4GeneralModel ViewCartModel { get; set; }
+        public GA4GeneralModel AddShippingInfoModel { get; set; }
     }
 }

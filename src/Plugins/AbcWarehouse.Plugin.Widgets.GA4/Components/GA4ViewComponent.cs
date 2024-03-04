@@ -97,6 +97,31 @@ namespace AbcWarehouse.Plugin.Widgets.GA4.Components
                     addToCartModel);
             }
 
+            if (widgetZone == PublicWidgetZones.CheckoutShippingAddressBottom)
+            {
+                var cart = await _shoppingCartService.GetShoppingCartAsync(
+                    await _workContext.GetCurrentCustomerAsync(),
+                    ShoppingCartType.ShoppingCart,
+                    (await _storeContext.GetCurrentStoreAsync()).Id);
+                var value = 0M;
+                foreach (var sci in cart)
+                {
+                    value += (await _shoppingCartService.GetUnitPriceAsync(sci, true)).unitPrice;
+                }
+                var ga4OrderItems = await GetGA4OrderItemsFromShoppingCart(cart);
+
+                var addShippingInfoModel = new GA4GeneralModel()
+                {
+                    Value = value,
+                    Items = ga4OrderItems
+                };
+
+                return View(
+                    "~/Plugins/Widgets.GA4/Views/AddShippingInfo.cshtml",
+                    addShippingInfoModel);
+            }
+
+            // Start full tag processing
             var model = new GA4Model() {
                 GoogleTag = _settings.GoogleTag,
                 IsDebugMode = _settings.IsDebugMode
@@ -134,7 +159,7 @@ namespace AbcWarehouse.Plugin.Widgets.GA4.Components
                 }
                 var ga4OrderItems = await GetGA4OrderItemsFromShoppingCart(cart);
 
-                model.BeginCheckoutModel = new BeginCheckoutModel()
+                model.BeginCheckoutModel = new GA4GeneralModel()
                 {
                     Value = value,
                     Items = ga4OrderItems
@@ -173,7 +198,7 @@ namespace AbcWarehouse.Plugin.Widgets.GA4.Components
                 }
                 var ga4OrderItems = await GetGA4OrderItemsFromShoppingCart(cart);
 
-                model.ViewCartModel = new ViewCartModel()
+                model.ViewCartModel = new GA4GeneralModel()
                 {
                     Value = value,
                     Items = ga4OrderItems
