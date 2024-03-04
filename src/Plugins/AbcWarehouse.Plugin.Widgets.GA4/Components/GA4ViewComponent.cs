@@ -99,10 +99,7 @@ namespace AbcWarehouse.Plugin.Widgets.GA4.Components
 
             if (widgetZone == PublicWidgetZones.CheckoutShippingAddressBottom)
             {
-                var cart = await _shoppingCartService.GetShoppingCartAsync(
-                    await _workContext.GetCurrentCustomerAsync(),
-                    ShoppingCartType.ShoppingCart,
-                    (await _storeContext.GetCurrentStoreAsync()).Id);
+                var cart = await _shoppingCartService.GetCurrentShoppingCartAsync();
                 var value = 0M;
                 foreach (var sci in cart)
                 {
@@ -148,10 +145,7 @@ namespace AbcWarehouse.Plugin.Widgets.GA4.Components
 
             if (IsBeginCheckout())
             {
-                var cart = await _shoppingCartService.GetShoppingCartAsync(
-                    await _workContext.GetCurrentCustomerAsync(),
-                    ShoppingCartType.ShoppingCart,
-                    (await _storeContext.GetCurrentStoreAsync()).Id);
+                var cart = await _shoppingCartService.GetCurrentShoppingCartAsync();
                 var value = 0M;
                 foreach (var sci in cart)
                 {
@@ -187,10 +181,7 @@ namespace AbcWarehouse.Plugin.Widgets.GA4.Components
 
             if (IsViewCart())
             {
-                var cart = await _shoppingCartService.GetShoppingCartAsync(
-                    await _workContext.GetCurrentCustomerAsync(),
-                    ShoppingCartType.ShoppingCart,
-                    (await _storeContext.GetCurrentStoreAsync()).Id);
+                var cart = await _shoppingCartService.GetCurrentShoppingCartAsync();
                 var value = 0M;
                 foreach (var sci in cart)
                 {
