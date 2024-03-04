@@ -260,6 +260,7 @@ public static class FilePermissionHelper
             fileProvider.Combine(rootDir, "logs"),
             fileProvider.Combine(rootDir, "Plugins"),
             fileProvider.Combine(rootDir, @"Plugins\Uploaded"),
+            fileProvider.Combine(rootDir, @"wwwroot\.well-known"),
             fileProvider.Combine(rootDir, @"wwwroot\bundles"),
             fileProvider.Combine(rootDir, @"wwwroot\db_backups"),
             fileProvider.Combine(rootDir, @"wwwroot\files"),
