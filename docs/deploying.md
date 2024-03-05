@@ -11,11 +11,11 @@ performance for around 2-5 minutes.**
 
 2. Open a Powershell command prompt as Administrator.
 3. Navigate to C:\Users\xby2\nopCommerce:
-![First step](docs/deploy_1.png?raw=true)
+![First step](/docs/deploy_1.png?raw=true)
 
 4. Run command `git pull` to pull the latest changes from `main`.
 5. Run command `.\deploy.ps1` to build and deploy changes:
-![Second step](docs/deploy_2.png?raw=true)
+![Second step](/docs/deploy_2.png?raw=true)
 
 6. (Mickey Shorr only) - revert the changes made to `web.config` to allow for redirects to work:
-![Final step](docs/deploy_3.png?raw=true)
+![Final step](/docs/deploy_3.png?raw=true)
