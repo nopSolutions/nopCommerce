@@ -389,7 +389,7 @@ public class ZettleAdminController : BasePluginController
     }
 
     [HttpPost]
-    public async Task<IActionResult> SyncRecordDelete(List<int> selectedIds)
+    public async Task<IActionResult> SyncRecordDelete(ICollection<int> selectedIds)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
             return await AccessDeniedDataTablesJson();
