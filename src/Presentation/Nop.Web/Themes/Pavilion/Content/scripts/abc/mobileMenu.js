@@ -137,21 +137,11 @@ function effectBack() {
     }
 }
 
+// ABCTODO: Probably worth making a createAbc and using this method to
+// coordinate between the three stores
 function menuSetting() {
     var menu_array = header.find('li');
-    
-    // remove any undesired mobile items
-    for (var i = 0; i < menu_array.length; i++) {
-        if (menu_array[i].innerText === "BLOG") {
-            var element = menu_array[i];
-            menu_array.splice(i, 1);
-            element.remove();
-            break;
-        }
-    }
-
     var len = menu_array.length;
-    var width = 100 / len + '%';
     var path = '';
     var storeFlag = "abc";
     for (var i = 0; i < len; i++) {
@@ -165,8 +155,10 @@ function menuSetting() {
         const isAbc = storeFlag == "abc";
         var str = $(menu_array[i]).find('span').text().trim();
         var img = "";
-
-        if (str == "Home") {
+        
+        if (str == "Blog") {
+            path = 'url(/Plugins/Misc.AbcFrontend/Images/BlogButton.png)';
+        } else if (str == "Home") {
             if (storeFlag == "abc") {
                 path = 'url(/Plugins/Misc.AbcFrontend/Images/' + imageArray[1] + ')';
             } else {
@@ -203,25 +195,62 @@ function menuSetting() {
             path = 'url(/Plugins/Misc.AbcFrontend/Images/' + imageArray[0] + ')';
         }
         $(menu_array[i]).find('a').css('background-image', path);
-        $(menu_array[i]).css('width', width);
+        $(menu_array[i]).css('width', '33.3%');
     }
     $(menu_array[len]).append("<div class='phone-line'></div>");
     $(menu_array[len]).find('span').css('line-height', '0px');
 
-    hardcodeForMickeyShorr(menu_array, len);
+    createForHawthorne(menu_array, len);
+    createForMickeyShorr(menu_array, len);
 }
 
-// Hardcodes for Mickey Shorr since menu items don't match desired outcome.
-function hardcodeForMickeyShorr(menu_array, len) {
+function createForHawthorne(menu_array, len) {
+    // hardcode this to true for local testing
+    const isHawthorne = window.location.href.indexOf("hawthorneonline") > -1;
+    if (!isHawthorne) { return; }
+
+    // adjust sidebar title for single row of icons
+    var mobileSidebarTitle = document.getElementsByClassName("mobile-sidebar-title")[0];
+    mobileSidebarTitle.style.top = "125px";
+
+    $(menu_array[0]).css('width', "25%");
+    $(menu_array[0]).find('a').css('background-image', "url('/Plugins/Misc.AbcFrontend/Images/LocationsButton.png')");
+    $(menu_array[0]).find('a').attr("href", '/AllShops');
+    $(menu_array[0]).find('a').find('span').text('Locations');
+    $(menu_array[1]).css('width', "25%");
+    $(menu_array[1]).find('a').css('background-image', "url('/Plugins/Misc.AbcFrontend/Images/CreditIcon.png')");
+    $(menu_array[1]).find('a').attr("href", '/hawthorne-credit-card');
+    $(menu_array[1]).find('a').find('span').text('Financing');
+    $(menu_array[2]).css('width', "25%");
+    $(menu_array[2]).find('a').css('background-image', "url('/Plugins/Misc.AbcFrontend/Images/ClearanceTagButton.png')");
+    $(menu_array[2]).find('a').attr("href", 'https://clearance.hawthorneonline.com');
+    $(menu_array[2]).find('a').find('span').text('Clearance');
+    $(menu_array[3]).css('width', "25%");
+    $(menu_array[3]).find('a').css('background-image', "url('/Plugins/Misc.AbcFrontend/Images/SaleAdButton.png')");
+    $(menu_array[3]).find('a').attr("href", '/special-financing-options-2');
+    $(menu_array[3]).find('a').find('span').text('Lookbook');
+
+    for (var i = 4; i < len; i++)
+    {
+        $(menu_array[i]).remove();
+    }
+}
+
+function createForMickeyShorr(menu_array, len) {
+    // hardcode this to true for local testing
     const isMickeyShorr = window.location.href.indexOf("mickeyshorr") > -1;
     if (!isMickeyShorr) { return; }
+
+    // adjust sidebar title for single row of icons
+    var mobileSidebarTitle = document.getElementsByClassName("mobile-sidebar-title")[0];
+    mobileSidebarTitle.style.top = "125px";
 
     $(menu_array[0]).css('width', "33.3%");
     $(menu_array[0]).find('a').css('background-image', "url('/Plugins/Misc.AbcFrontend/Images/LocationsButton.png')");
     $(menu_array[0]).find('a').attr("href", '/AllShops')
     $(menu_array[0]).find('a').find('span').text('Locations')
     $(menu_array[1]).css('width', "33.3%");
-    $(menu_array[1]).find('a').css('background-image', "url('/Plugins/Misc.AbcFrontend/Images/HawthWeeklyAD.png')");
+    $(menu_array[1]).find('a').css('background-image', "url('/Plugins/Misc.AbcFrontend/Images/SaleAdButton.png')");
     $(menu_array[1]).find('a').attr("href", '/sale-ad')
     $(menu_array[1]).find('a').find('span').text('Sale Ad')
     $(menu_array[2]).css('width', "33.3%");
@@ -233,7 +262,6 @@ function hardcodeForMickeyShorr(menu_array, len) {
     {
         $(menu_array[i]).remove();
     }
-    
 }
 
 function removeNonLeafLinks() {

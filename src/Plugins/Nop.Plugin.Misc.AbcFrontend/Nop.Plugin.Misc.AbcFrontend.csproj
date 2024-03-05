@@ -40,8 +40,7 @@
     <None Remove="Images\haw\Online.jpg" />
     <None Remove="Images\haw\OnlineOnlyFreeShipping.jpg" />
     <None Remove="Images\haw\OrLess.jpg" />
-    <None Remove="Images\BackButtonABCclearance.png" />
-    <None Remove="Images\BackButtonHAWclearance.png" />
+    <None Remove="Images\BlogButton.png" />
     <None Remove="Images\clearance_banner.png" />
     <None Remove="Images\ClearanceTagButton.png" />
     <None Remove="Images\CreditIcon.png" />
@@ -134,10 +133,7 @@
     <Content Include="Images\haw\OrLess.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\BackButtonABCclearance.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\BackButtonHAWclearance.png">
+    <Content Include="Images\BlogButton.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\clearance_banner.png">

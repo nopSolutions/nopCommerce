@@ -6,11 +6,12 @@
 
 /* icons */
 .header-menu .mobile-sidebar-category.first {
-    position: fixed;
     display: flex;
     width: 100%;
     padding-top: 10px;
     background-color: #fff;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 .header-menu .mobile-sidebar-category.first li {
     text-align: center;
@@ -26,13 +27,13 @@
 }
 .header-menu .mobile-sidebar-category.first li > a > span {
     font-size: 12px;
-    line-height: 110px;
+    line-height: 70px;
 }
 
 /* title */
 .header-menu .mobile-sidebar-title {
     position: fixed;
-    top: 160px;
+    top: 200px;
     color: #333;
     font-size: 20px;
     font-weight: bold;
@@ -62,7 +63,7 @@
 
 /* categories */
 .header-menu .mobile-sidebar-category.second {
-    margin-top: 195px !important;
+    margin-top: 40px !important;
 }
 .header-menu > ul li > .with-subcategories {
     width: 260px;
@@ -80,7 +81,7 @@
     top: 0;
     left: 0;
     width: 320px;
-    height: 100%;
+    height: 100% !important;
     background-color: #f6f6f6;
     box-shadow: 1px 0 5px rgba(0,0,0,0.5);
     overflow: hidden;

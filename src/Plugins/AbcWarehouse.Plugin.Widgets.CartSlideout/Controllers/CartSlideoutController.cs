@@ -161,7 +161,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Controllers
         {
             var result = attributesXml;
             var productAttribute = await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId);
-            // TODO: Turn "Warranty" into an AbcDeliveryConst
+            // ABCTODO: Turn "Warranty" into an AbcDeliveryConst
             // removes the existing option
             if (productAttribute.Name == AbcDeliveryConsts.DeliveryPickupOptionsProductAttributeName ||
                 productAttribute.Name == "Warranty")

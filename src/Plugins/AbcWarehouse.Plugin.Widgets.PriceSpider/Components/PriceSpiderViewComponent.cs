@@ -71,7 +71,7 @@ namespace AbcWarehouse.Plugin.Widgets.PriceSpider.Components
                 priceSpiderProductsModels.Add(priceSpiderProductModel);
             }
 
-            // TODO: build pixel model for each product in the order
+            // ABCTODO: build pixel model for each product in the order
             var model = new PriceSpiderModel()
             {
                 MerchantId = _settings.MerchantId,

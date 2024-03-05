@@ -144,9 +144,6 @@ function ResetOtherDropdowns() {
   // Change the values and kick off change events
   matchingElements.forEach(element => {
       element.parentNode.value = element.value;
-      // TODO: Delete after 2022.07.15
-      // this was calling change events, I don't think it's necessary
-      // element.parentNode.dispatchEvent(new Event('change'));
   });
 }
 
