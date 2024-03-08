@@ -107,8 +107,8 @@
     @*<script src="https://onjobsupport.blob.core.windows.net/nop-cdn/js/mmenu-light.js"></script>*@
 
     //phone number format widget
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@19.5.6/build/css/intlTelInput.css" />
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@19.5.6/build/js/intlTelInput.min.js"></script>
 
     if (thisPageUrl.Contains("Login", StringComparison.InvariantCultureIgnoreCase))
     {
@@ -159,7 +159,7 @@
     @await Component.InvokeAsync(typeof(FaviconViewComponent))
     @* @if (displayMiniProfiler)
     {
-        <mini-profiler />
+    <mini-profiler />
     } *@
 
     @NopHtml.GenerateScripts(ResourceLocation.Head)

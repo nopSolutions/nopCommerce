@@ -1,6 +1,6 @@
 ﻿@model RegisterModel
 @{
-    Layout = "_ColumnsOne";
+    Layout = "_ColumnsTwo";
 
     //title
     NopHtml.AddTitleParts(T("PageTitle.Register").Text);
@@ -40,8 +40,8 @@
                     <div class="form-group">
                         <label asp-for="FirstName" class="control-label col-sm-2 col-md-2" asp-postfix=":"></label>
                         @* <span style="" title="FirstName of the User" data-toggle="tooltip" class="ico-help">
-                            <i class="fa fa-question-circle"></i>
-                        </span> *@
+                    <i class="fa fa-question-circle"></i>
+                    </span> *@
                         @if (Model.FirstNameRequired)
                         {
                             <div class="visible-xs form-title-rquired"><nop-required /></div>
@@ -173,16 +173,16 @@
                 </div>
             }
             @if (Model.StreetAddressEnabled ||
-                Model.StreetAddress2Enabled ||
-                Model.ZipPostalCodeEnabled ||
-                Model.CityEnabled ||
-                Model.CountyEnabled ||
-                Model.CountryEnabled)
+            Model.StreetAddress2Enabled ||
+            Model.ZipPostalCodeEnabled ||
+            Model.CityEnabled ||
+            Model.CountyEnabled ||
+            Model.CountryEnabled)
             {
                 <div class="fieldset">
                     @*<div>
-                        <h3>@T("Account.YourAddress")</h3>
-                    </div>*@
+                <h3>@T("Account.YourAddress")</h3>
+                </div>*@
                     @if (Model.StreetAddressEnabled)
                     {
                         <div class="form-group row">
@@ -317,8 +317,8 @@
             {
                 <div class="fieldset">
                     @*<div>
-                            <h3>@T("Account.YourContactInformation")</h3>
-                        </div>*@
+                <h3>@T("Account.YourContactInformation")</h3>
+                </div>*@
                     @if (Model.PhoneEnabled)
                     {
                         <div class="form-group row">
@@ -454,7 +454,7 @@
                                         else {
                                             //just show validation errors, dont post
                                             alert('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Account.Fields.AcceptPrivacyPolicy.Required").Text))');
-                                                return false;
+                                            return false;
                                         }
                                     });
                                 });
@@ -471,7 +471,7 @@
                                         {
                                             <span class="read" id="read-privacyinfo">@T("Account.Fields.AcceptPrivacyPolicy.Read")</span>
                                             <script type="text/javascript" asp-location="Footer">
-                                                $(document).ready(function() {
+                                                $(document).ready(function () {
                                                     $('#read-privacyinfo').on('click', function (e) {
                                                         displayPopupContentFromUrl('@Url.RouteUrl("TopicPopup", new { SystemName = "privacyinfo" })', '@T("Account.Fields.AcceptPrivacyPolicy")');
                                                     });
@@ -493,18 +493,18 @@
                                 if (consent.IsRequired)
                                 {
                                     <script asp-location="Footer">
-                                    $(document).ready(function() {
-                                        $('#register-button').on('click', function() {
-                                            if ($('#consent@(consent.Id)').is(':checked')) {
+                                        $(document).ready(function () {
+                                            $('#register-button').on('click', function () {
+                                                if ($('#consent@(consent.Id)').is(':checked')) {
                                                     //do some stuff
                                                     return true;
                                                 } else {
                                                     //just show validation errors, don't post
-                                               alert('@Html.Raw(JavaScriptEncoder.Default.Encode(consent.RequiredMessage))');
+                                                    alert('@Html.Raw(JavaScriptEncoder.Default.Encode(consent.RequiredMessage))');
                                                     return false;
                                                 }
                                             });
-                                    });
+                                        });
                                     </script>
                                 }
                                 <div class="fieldset">
@@ -555,15 +555,16 @@
     const phoneInputField = document.querySelector("#phone");
 
     const phoneInput = window.intlTelInput(phoneInputField, {
-        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+        utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@19.5.6/build/js/utils.js",
         initialCountry: "in",
         autoHideDialCode: false,
-        preferredCountries: ["in", "us"],
-        onlyCountries: ["in", "us", "ca", "au", "gb"],
+        preferredCountries: ["in", "us", "ca", "au", "gb"],
+        // onlyCountries: ["in", "us", "ca", "au", "gb"],
         separateDialCode: true,
         nationalMode: true,
         formatOnDisplay: false,
-        localizedCountries: { 'in': 'India' }
+        localizedCountries: { 'in': 'India' },
+        showSelectedDialCode: true
         /*hiddenInput:"Phone"*/
     });
 

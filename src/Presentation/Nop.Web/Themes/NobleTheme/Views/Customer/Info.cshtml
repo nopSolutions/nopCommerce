@@ -610,15 +610,16 @@
     const phoneInputField = document.querySelector("#phone");
 
     const phoneInput = window.intlTelInput(phoneInputField, {
-        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+        utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@19.5.6/build/js/utils.js",
         initialCountry: "in",
         autoHideDialCode: false,
         preferredCountries: ["in", "us"],
-        onlyCountries: ["in", "us", "ca", "au", "gb"],
+        // onlyCountries: ["in", "us", "ca", "au", "gb"],
         separateDialCode: true,
         nationalMode: true,
         formatOnDisplay: false,
-        localizedCountries: { 'in': 'India' }
+        localizedCountries: { 'in': 'India' },
+        showSelectedDialCode: true
         /*hiddenInput:"Phone"*/
     });
 
