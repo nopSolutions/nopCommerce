@@ -2,16 +2,6 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "clean-css",
-            "command": "rm",
-            "type": "process",
-            "args": [
-                "-rf",
-                "Presentation/Nop.Web/wwwroot\\css"
-            ],
-            "problemMatcher": "$msCompile"
-        },
-        {
             "label": "clean",
             "command": "dotnet",
             "type": "process",
@@ -20,9 +10,6 @@
                 "${workspaceFolder}/src/NopCommerce.sln",
             ],
             "problemMatcher": "$msCompile",
-            "dependsOn": [
-                "clean-css"
-            ]
         },
         {
             "label": "build",
