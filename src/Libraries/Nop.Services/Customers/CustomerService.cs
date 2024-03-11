@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
@@ -16,6 +15,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Polls;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Common;
@@ -655,6 +655,10 @@ namespace Nop.Services.Customers
                 await _genericAttributeService.SaveAttributeAsync<string>(customer, NopCustomerDefaults.SelectedPaymentMethodAttribute, null, storeId);
 
             await UpdateCustomerAsync(customer);
+
+            //TODO: move to DI
+            var eventPublisher = EngineContext.Current.Resolve<IEventPublisher>();
+            await eventPublisher.PublishAsync(new ResetCheckoutDataEvent(customer, storeId));
         }
 
         /// <summary>
