@@ -15,7 +15,8 @@ namespace Nop.Data.DataProviders.LinqToDB
 
         public override void SetParameter(DataConnection dataConnection, DbParameter parameter, string name, DbDataType dataType, object value)
         {
-            if (value is string && dataType.DataType == DataType.NVarChar)
+
+            if (value is string && dataType.SystemType == typeof(string))
             {
                 dataType = dataType.WithDbType("citext");
             }
