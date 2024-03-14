@@ -2,7 +2,8 @@
 
     @if (!string.IsNullOrEmpty(Model.RibbonPictureModel.PictureUrl))
     {
-        <img id="ribbon-picture-@Model.ProductRibbonId-@Model.ProductId-@Model.PictureId" style="@Model.ImageStyle" src="@Model.RibbonPictureModel.PictureUrl"/>
+        <!-- ABC: Adding alt for Accessibility -->
+        <img alt="@Model.Text" id="ribbon-picture-@Model.ProductRibbonId-@Model.ProductId-@Model.PictureId" style="@Model.ImageStyle" src="@Model.RibbonPictureModel.PictureUrl"/>
     }
 
     @if (!string.IsNullOrEmpty(Model.Text))
