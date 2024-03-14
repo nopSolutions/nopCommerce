@@ -1,4 +1,8 @@
 ﻿@model Nop.Web.Models.Catalog.SearchModel
+
+@using Nop.Plugin.Misc.AbcCore.Nop;
+@inject IAbcCategoryService categoryService;
+
 @{
     Layout = "_ColumnsTwo";
 
@@ -13,6 +17,9 @@
     {
         searchPageTitle = T("Search").ToString();
     }
+
+    var category = await categoryService.GetCategoryByNameAsync("Appliances");
+    var childCategories = await categoryService.GetChildCategoryIdsAsync(category.Id);
 }
 
 <script asp-location="Footer">
