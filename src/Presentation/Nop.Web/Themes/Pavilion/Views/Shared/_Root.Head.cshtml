@@ -247,33 +247,6 @@
     {
         <script type="text/javascript" src="@sliRacConfig"></script>
     }
-    <div id="myModal" class="modal">
-        <!-- Modal content -->
-        <div class="modal-content">
-            <h2>What's the Price?</h2>
-            <p>
-                Please provide the following information to see the pricing details and continue the
-                checkout process.  You can delete the item from your cart at any time.
-            </p>
-
-            <form id="modalForm">
-                <label>First Name<span class="required">*</span></label>
-                <input type="text" /><br />
-                <label>Last Name<span class="required">*</span></label>
-                <input type="text" /><br />
-                <label>E-Mail Address<span class="required">*</span></label>
-                <input type="text" /><br />
-            </form>
-
-            <button id="modalButton" disabled="disabled">Continue</button><br />
-            <h3>Why is the price not shown?</h3>
-            <p>
-                Because our price on this item may be lower than specific manufacturers allow us to show,
-                we need you to input the above information first.  Thank you!
-            </p>
-            <p class="required-text">* - Required</p>
-        </div>
-    </div>
     @RenderBody()
     @Html.NopCssFiles(ResourceLocation.Footer)
     @Html.NopScripts(ResourceLocation.Footer)

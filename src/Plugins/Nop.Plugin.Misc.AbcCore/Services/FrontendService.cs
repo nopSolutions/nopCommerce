@@ -166,13 +166,5 @@ namespace Nop.Plugin.Misc.AbcCore.Services
                 return await _urlRecordService.GetSeNameAsync(product);
             });
         }
-
-        public bool IsProductPopup(int productId)
-        {
-            return _staticCacheManager.Get(new CacheKey(string.Format(PRODUCT_POPUP, productId), "Abc."), () =>
-            {
-                return ProductRequiresLogin.GetByProductIdFunc(EngineContext.Current.Resolve<IRepository<ProductRequiresLogin>>(), productId)() != null;
-            });
-        }
     }
 }

@@ -76,8 +76,6 @@
         }
     }
 
-    bool isPopupItem = frontEndService.IsProductPopup(Model.Id);
-
     var product = await productService.GetProductByIdAsync(Model.Id);
 
     var priceStr = Model.ProductPrice.Price?.Replace(".00", "");
@@ -230,54 +228,9 @@
     }
 
     $(function () {
-        /* modal functionality */
-        $('form#modalForm > input').keyup(function() {
-
-            var empty = false;
-            var count = 0;
-            $('form#modalForm > input').each(function() {
-                if ($(this).val() == '') {
-                    empty = true;
-                }
-
-                if (count == 2 && !isEmail($(this).val())) {
-                    empty = true;
-                }
-                count++;
-            });
-
-            if (empty) {
-                $('#modalButton').attr('disabled', 'disabled');
-            } else {
-                $('#modalButton').removeAttr('disabled');
-            }
-        });
-
-        var isModalOpen = false;
         $('#product-box-add-to-cart-button-@Model.Id').on('click', function () {
-            var productNeedsInfo = @isPopupItem.ToString().ToLower();
-            if (productNeedsInfo && !isModalOpen) {
-                var modal = document.getElementById('myModal');
-                // When the user clicks anywhere outside of the modal, close it
-                window.onclick = function(event) {
-                    if (event.target == modal) {
-                        isModalOpen = false;
-                        modal.style.display = "none";
-                    }
-                }
-
-                var modalButton = document.getElementById('modalButton');
-                modalButton.onclick = function(event) {
-                    AjaxCart.addproducttocart_catalog('@addtocartlink');return false;
-                }
-
-                isModalOpen = true;
-                modal.style.display = "block";
-                return false;
-            } else {
-                AjaxCart.addproducttocart_catalog('@addtocartlink');
-                return false;
-            }
+            AjaxCart.addproducttocart_catalog('@addtocartlink');
+            return false;
         });
     });
 
