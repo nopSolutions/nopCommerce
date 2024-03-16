@@ -67,19 +67,20 @@
   <!-- This target execute after "Build" target.
     We use it to clean up folder with plugins from unnecessary and obsolete libraries. -->
   <Target Name="NopTarget" AfterTargets="Build">
+
     <ItemGroup>
       <!-- Get plugin description files to get plugin paths -->
       <PluginsDescription Include="$(MSBuildProjectDirectory)\Plugins\**\plugin.json;" />
       <!-- Get paths for all plugins -->
       <PluginsFolders Include="@(PluginsDescription->'%(relativedir)')" />
-
       <!-- Get paths for ClearPluginAssemblies project -->
       <ClearPluginAssemblies Include="$(MSBuildProjectDirectory)\..\..\Build\ClearPluginAssemblies.proj" />
-
     </ItemGroup>
+
     <PropertyGroup>
       <PluginsFolders>@(PluginsFolders)</PluginsFolders>
     </PropertyGroup>
+
     <!-- When .NET Core builds a project, it copies all referenced libraries to the output folder.
       For plugins it creates too many unnecessary files that just take up space.
       At the moment you can't disable this behavior. That's why we have to manually delete all unnecessary libraries from plugin output directories. -->
@@ -111,6 +112,8 @@
       
       More details here: https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/fundamentals#concurrent-garbage-collection-->
     <ConcurrentGarbageCollection>false</ConcurrentGarbageCollection>
+    <!--https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/iis/in-process-hosting?view=aspnetcore-8.0-->
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
   </PropertyGroup>
 
 </Project>
