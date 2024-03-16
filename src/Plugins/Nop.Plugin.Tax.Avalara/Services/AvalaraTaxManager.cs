@@ -1591,16 +1591,40 @@ public class AvalaraTaxManager : IDisposable
     /// A task that represents the asynchronous operation
     /// The task result contains the customer details
     /// </returns>
-    public async Task<CustomerModel> DeleteCustomerAsync(int customerId)
+    public async Task DeleteCustomerAsync(int customerId)
     {
-        return await HandleFunctionAsync(async () =>
+        try
         {
+            //ensure that Avalara tax provider is configured
+            if (!IsConfigured())
+                throw new NopException("Tax provider is not configured");
+
             if (_avalaraTaxSettings.CompanyId is null)
                 throw new NopException("Company not selected");
 
-            return await ServiceClient.DeleteCustomerAsync(_avalaraTaxSettings.CompanyId.Value, customerId.ToString())
-                   ?? throw new NopException("Failed to delete customer");
-        });
+            await ServiceClient.DeleteCustomerAsync(_avalaraTaxSettings.CompanyId.Value, customerId.ToString());
+        }
+        catch (Exception exception)
+        {
+            //compose an error message
+            var errorMessage = exception.Message;
+            if (exception is AvaTaxError avaTaxError && avaTaxError.error != null)
+            {
+                var errorInfo = avaTaxError.error.error;
+                if (errorInfo != null)
+                {
+                    errorMessage = $"{errorInfo.code} - {errorInfo.message}{Environment.NewLine}";
+                    if (errorInfo.details?.Any() ?? false)
+                    {
+                        var errorDetails = errorInfo.details.Aggregate(string.Empty, (error, detail) => $"{error}{detail.description}{Environment.NewLine}");
+                        errorMessage = $"{errorMessage} Details: {errorDetails}";
+                    }
+                }
+            }
+
+            //log errors
+            await _logger.ErrorAsync($"{AvalaraTaxDefaults.SystemName} error. Failed to delete customer. {errorMessage}", exception, await _workContext.GetCurrentCustomerAsync());
+        }
     }
 
     /// <summary>
