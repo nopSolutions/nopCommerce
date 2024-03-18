@@ -19,7 +19,9 @@
     }
 
     var category = await categoryService.GetCategoryByNameAsync("Appliances");
-    var childCategories = await categoryService.GetChildCategoryIdsAsync(category.Id);
+    var childCategories = category != null ?
+        await categoryService.GetChildCategoryIdsAsync(category.Id) :
+        null;
 }
 
 <script asp-location="Footer">
