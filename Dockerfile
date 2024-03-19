@@ -30,18 +30,18 @@ WORKDIR /app/published
 RUN mkdir logs
 RUN mkdir bin
 
-RUN chmod 775 App_Data/
-RUN chmod 775 App_Data/DataProtectionKeys
-RUN chmod 775 bin
-RUN chmod 775 logs
-RUN chmod 775 Plugins
-RUN chmod 775 wwwroot/bundles
-RUN chmod 775 wwwroot/db_backups
-RUN chmod 775 wwwroot/files/exportimport
-RUN chmod 775 wwwroot/icons
-RUN chmod 775 wwwroot/images
-RUN chmod 775 wwwroot/images/thumbs
-RUN chmod 775 wwwroot/images/uploaded
+RUN chmod 775 App_Data \
+              App_Data/DataProtectionKeys \
+              bin \
+              logs \
+              Plugins \
+              wwwroot/bundles \
+              wwwroot/db_backups \
+              wwwroot/files/exportimport \
+              wwwroot/icons \
+              wwwroot/images \
+              wwwroot/images/thumbs \
+              wwwroot/images/uploaded
 
 # create the runtime instance 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS runtime 
