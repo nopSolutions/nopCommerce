@@ -5,23 +5,22 @@ using System.Threading.Tasks;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
-using Nop.Plugin.Misc.AbcCore.Extensions;
 using Nop.Services.Catalog;
-using Nop.Plugin.Misc.AbcCore.Delivery;
 using Nop.Core;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Services.Customers;
-using Nop.Services.Discounts;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Stores;
+using Nop.Services.Catalog;
+using Nop.Services.Seo;
 
 namespace Nop.Plugin.Misc.AbcCore.Nop
 {
     public class AbcCategoryService : CategoryService, IAbcCategoryService
     {
         private readonly IRepository<Category> _categoryRepository;
+        private readonly IUrlRecordService _urlRecordService;
 
         public AbcCategoryService(
             IAclService aclService,
@@ -34,7 +33,8 @@ namespace Nop.Plugin.Misc.AbcCore.Nop
             IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
             IStoreMappingService storeMappingService,
-            IWorkContext workContext
+            IWorkContext workContext,
+            IUrlRecordService urlRecordService
         ) : base(
             aclService,
             customerService,
@@ -50,6 +50,7 @@ namespace Nop.Plugin.Misc.AbcCore.Nop
         )
         {
             _categoryRepository = categoryRepository;
+            _urlRecordService = urlRecordService;
         }
 
         public async Task<Category> GetCategoryByNameAsync(string name)

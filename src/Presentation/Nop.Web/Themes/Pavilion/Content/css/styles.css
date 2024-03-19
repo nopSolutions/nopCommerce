@@ -6080,3 +6080,45 @@ label, label + * {
 	padding: 0 30px;
 	color: #999;
 }
+
+.search-category-container {
+    width: 30%;
+    min-height: 290px;
+    background: #fff;
+    border: solid 1px;
+    padding: 15px 20px;
+    margin: 10px;
+    border-color: #e9e9e9;
+    display: inline-grid;
+    box-shadow: 10px 10px 10px #cfcfcf;
+}
+.search-page-container {
+    background: #fff;
+	padding: 10px;
+}
+
+.search-category-container li {
+    padding-top: 10px;
+}
+.search-page-title {
+	padding-bottom: 25px;
+	padding-top: 15px;
+}
+.search-page-banner img{
+	max-width: 100%;
+}
+
+@media screen and (max-width: 720px) {
+	.search-category-container {
+		width: 49%;
+		text-align: center;
+	}
+}
+
+@media screen and (max-width: 550px) {
+	.search-category-container {
+		width: 100%;
+		min-height: 0;
+		padding-bottom: 50px;
+	}
+}

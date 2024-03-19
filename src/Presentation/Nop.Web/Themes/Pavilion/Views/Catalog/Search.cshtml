@@ -2,7 +2,14 @@
 
 @using Nop.Plugin.Misc.AbcCore.Nop;
 @inject IAbcCategoryService categoryService;
+@using Nop.Services.Seo;
+@inject ISitemapGenerator sitemapGenerator;
+@inject IUrlRecordService urlRecordService;
 
+<div class="search-page-banner">
+    <a href="/sale-ad"><img src="/images/SaleAdShop.jpg" alt ="Shop Sale Ad"/></a>
+</div>
+<div class="search-page-container">
 @{
     Layout = "_ColumnsTwo";
 
@@ -17,10 +24,42 @@
     {
         searchPageTitle = T("Search").ToString();
     }
+    
+    <h1 class="search-page-title">Shop By Category</h1>
 
-    var category = await categoryService.GetCategoryByNameAsync("Appliances");
-    var childCategories = await categoryService.GetChildCategoryIdsAsync(category.Id);
+
+    // List of only specific categores to display 
+    List<string> parentCategories = new List<string>
+            { "Appliances", "TV - Video", "Mattresses", "Furniture", "Car Audio/Video" };
+
+    int x = 0;
+    @foreach (var category in parentCategories) 
+    {
+        var topParentCategory = await categoryService.GetCategoryByNameAsync(parentCategories[x++]);
+        var childCategories = await categoryService.GetAllCategoriesByParentCategoryIdAsync(topParentCategory.Id);
+
+        <div class="search-category-container">
+            <div class="search-content-container">
+                @{
+                    var categoryUrl = await urlRecordService.GetSeNameAsync(topParentCategory);
+                }
+                <a href="/@categoryUrl"><h2>@topParentCategory.Name</h2></a>
+
+
+                <ul class="search-sub-list">
+                    
+                    @foreach (var subCategory in childCategories)
+                    {
+                        var subCategoryUrl = await urlRecordService.GetSeNameAsync(subCategory);
+                        var firstSubCategory = categoryService.GetCategoryByIdAsync(subCategory.Id);
+                        <a href="/@subCategoryUrl"><li>@firstSubCategory.Result.Name</li></a>
+                    }
+                </ul>
+            </div>
+        </div>
+    }
 }
+</div>
 
 <script asp-location="Footer">
     $(document).ready(function () {
