@@ -1,9 +1,12 @@
 ﻿@model BasePageRibbonModel
+    @{
+        var imgAlt = !string.IsNullOrEmpty(Model.Text) ? Model.Text : "Ribbon Image";
+    }
 
     @if (!string.IsNullOrEmpty(Model.RibbonPictureModel.PictureUrl))
     {
         <!-- ABC: Adding alt for Accessibility -->
-        <img alt="@Model.Text" id="ribbon-picture-@Model.ProductRibbonId-@Model.ProductId-@Model.PictureId" style="@Model.ImageStyle" src="@Model.RibbonPictureModel.PictureUrl"/>
+        <img alt="@imgAlt" id="ribbon-picture-@Model.ProductRibbonId-@Model.ProductId-@Model.PictureId" style="@Model.ImageStyle" src="@Model.RibbonPictureModel.PictureUrl"/>
     }
 
     @if (!string.IsNullOrEmpty(Model.Text))
