@@ -236,6 +236,7 @@ public class LocalizationMigration : MigrationBase
             ["Enums.Nop.Core.Domain.Messages.EmailAuthenticationMethod.Login"] = "Login/Password",
             ["Enums.Nop.Core.Domain.Messages.EmailAuthenticationMethod.GmailOAuth2"] = "Google (OAuth2)",
             ["Enums.Nop.Core.Domain.Messages.EmailAuthenticationMethod.MicrosoftOAuth2"] = "Microsoft (OAuth2)",
+            ["Admin.Configuration.EmailAccounts.RedirectUrl.Info"] = "{0} - enter this redirect URI when creating your credentials in the Google Cloud console. You will be redirected to this path after authenticating with Google.",
 
         }, languageId);
 
