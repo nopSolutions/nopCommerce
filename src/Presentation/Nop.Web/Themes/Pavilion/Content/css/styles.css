@@ -6119,7 +6119,11 @@ label, label + * {
 	.search-category-container {
 		width: 100%;
 		min-height: 0;
-		padding-bottom: 50px;
+		padding-bottom: 20px;
+	}
+	.search-category-container {
+		margin: 10px 0px;
+		box-shadow: none;
 	}
 }
 
