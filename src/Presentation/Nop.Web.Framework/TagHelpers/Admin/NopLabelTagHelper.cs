@@ -50,11 +50,27 @@ public partial class NopLabelTagHelper : TagHelper
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
     {
         ArgumentNullException.ThrowIfNull(context);
-
         ArgumentNullException.ThrowIfNull(output);
 
+        string resourceValue = null;
+        string resourceName = null;
+        var type = For.Metadata.ContainerType;
+        var propertyName = For.Metadata.Name;
+
+        if (type != null && !string.IsNullOrEmpty(propertyName))
+        {
+            resourceName = type.GetProperty(propertyName)
+                ?.GetCustomAttributes(typeof(NopResourceDisplayNameAttribute), true)
+                .OfType<NopResourceDisplayNameAttribute>()
+                .FirstOrDefault()?.ResourceKey;
+            
+            if (!string.IsNullOrEmpty(resourceName))
+                //get locale resource value
+                resourceValue = await _localizationService.GetResourceAsync(resourceName);
+        }
+
         //generate label
-        var tagBuilder = Generator.GenerateLabel(ViewContext, For.ModelExplorer, For.Name, null, new { @class = "col-form-label" });
+        var tagBuilder = Generator.GenerateLabel(ViewContext, For.ModelExplorer, For.Name, resourceValue, new { @class = "col-form-label" });
         if (tagBuilder != null)
         {
             //create a label wrapper
@@ -71,12 +87,11 @@ public partial class NopLabelTagHelper : TagHelper
             output.Content.SetHtmlContent(tagBuilder);
 
             //add hint
-            if (DisplayHint && For.Metadata.AdditionalValues.TryGetValue("NopResourceDisplayNameAttribute", out var value)
-                            && value is NopResourceDisplayNameAttribute resourceDisplayName)
+            if (DisplayHint && !string.IsNullOrEmpty(resourceName))
             {
                 var language = await _workContext.GetWorkingLanguageAsync();
                 var hintResource = await _localizationService
-                    .GetResourceAsync($"{resourceDisplayName.ResourceKey}.Hint", language.Id, returnEmptyIfNotFound: true, logIfNotFound: false);
+                    .GetResourceAsync($"{resourceName}.Hint", language.Id, returnEmptyIfNotFound: true, logIfNotFound: false);
 
                 if (!string.IsNullOrEmpty(hintResource))
                 {
