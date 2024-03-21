@@ -6107,6 +6107,9 @@ label, label + * {
 .search-page-banner img{
 	max-width: 100%;
 }
+h1.search-page-title {
+    text-align: center;
+}
 
 @media screen and (max-width: 720px) {
 	.search-category-container {
