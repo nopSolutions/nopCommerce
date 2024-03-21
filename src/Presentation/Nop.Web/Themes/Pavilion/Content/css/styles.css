@@ -6122,3 +6122,7 @@ label, label + * {
 		padding-bottom: 50px;
 	}
 }
+
+.header-links {
+	left: -20px;
+  }
