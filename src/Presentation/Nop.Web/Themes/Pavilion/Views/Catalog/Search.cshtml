@@ -36,6 +36,9 @@
     @foreach (var category in parentCategories) 
     {
         var topParentCategory = await categoryService.GetCategoryByNameAsync(parentCategories[x++]);
+        if (topParentCategory == null) {
+          continue;  
+        }
         var childCategories = await categoryService.GetAllCategoriesByParentCategoryIdAsync(topParentCategory.Id);
 
         <div class="search-category-container">
