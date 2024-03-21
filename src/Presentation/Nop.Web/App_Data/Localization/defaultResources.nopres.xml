@@ -5218,7 +5218,7 @@
     <Value>This is the username you use to authenticate to your mail server.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.EmailAccounts.RedirectUrl.Info">
-    <Value>{0} - enter this redirect URI when creating your credentials in the Google Cloud console. You will be redirected to this path after authenticating with Google.</Value>
+    <Value><![CDATA[<b>{0}</b> - enter this "Authorized redirect URI" when creating your credentials in the Google Cloud console. You will be redirected to this path after authenticating with Google.]]</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.EmailAccounts.SendTestEmail">
     <Value>Send Test Email (save settings first by clicking "Save" button)</Value>
