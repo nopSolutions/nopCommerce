@@ -33,7 +33,7 @@ namespace Nop.Services.Localization
                 url = url.RemoveApplicationPathFromRawUrl(pathBase);
 
             //get first segment of passed URL
-            var firstSegment = url.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault() ?? string.Empty;
+            var firstSegment = url.Split(new[] { '/', '?' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault() ?? string.Empty;
             if (string.IsNullOrEmpty(firstSegment))
                 return (false, null);
 
