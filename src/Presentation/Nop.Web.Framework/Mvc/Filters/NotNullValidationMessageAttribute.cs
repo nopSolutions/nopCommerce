@@ -83,25 +83,36 @@ public sealed class NotNullValidationMessageAttribute : TypeFilterAttribute
                 return;
 
             //get model properties that failed validation
-            var properties = model.GetType().GetProperties();
+            var modelType = model.GetType();
+            var properties = modelType.GetProperties();
             var locale = await _localizationService.GetResourceAsync(NopValidationDefaults.NotNullValidationLocaleName);
             foreach (var modelState in nullModelValues)
             {
+                if (modelState.Value == null)
+                    continue;
+
                 var property = properties
                     .FirstOrDefault(propertyInfo => propertyInfo.Name.Equals(modelState.Key, StringComparison.InvariantCultureIgnoreCase));
+                
                 if (property is null)
                     continue;
 
-                var displayName = property
-                                      .GetCustomAttributes(typeof(NopResourceDisplayNameAttribute), true)
-                                      .OfType<NopResourceDisplayNameAttribute>()
-                                      .FirstOrDefault()
-                                      ?.DisplayName
-                                  ?? property.Name;
+                var resourceName = modelType.GetProperty(property.Name)?.GetCustomAttributes(typeof(NopResourceDisplayNameAttribute), true)
+                    .OfType<NopResourceDisplayNameAttribute>()
+                    .FirstOrDefault()?.ResourceKey;
+                
+                string resourceValue = null;
+
+                if (!string.IsNullOrEmpty(resourceName))
+                    //get locale resource value
+                    resourceValue = await _localizationService.GetResourceAsync(resourceName);
+
+                if (resourceValue?.Equals(resourceName, StringComparison.InvariantCultureIgnoreCase) ?? false)
+                    resourceValue = property.Name;
 
                 //set localized error message
                 modelState.Value.Errors.Clear();
-                modelState.Value.Errors.Add(string.Format(locale, displayName));
+                modelState.Value.Errors.Add(string.Format(locale, resourceValue));
             }
         }
 

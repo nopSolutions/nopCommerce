@@ -1,13 +1,13 @@
 ﻿using System.ComponentModel;
-using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 
 namespace Nop.Web.Framework.Mvc.ModelBinding;
 
 /// <summary>
-/// Represents model attribute that specifies the display name by passed key of the locale resource
+/// Represents model property attribute that specifies the display name by passed key of the locale resource
 /// </summary>
+[AttributeUsage(AttributeTargets.Property)]
 public sealed class NopResourceDisplayNameAttribute : DisplayNameAttribute, IModelAttribute
 {
     #region Fields
@@ -43,11 +43,8 @@ public sealed class NopResourceDisplayNameAttribute : DisplayNameAttribute, IMod
     {
         get
         {
-            //get working language identifier
-            var workingLanguageId = EngineContext.Current.Resolve<IWorkContext>().GetWorkingLanguageAsync().Result.Id;
-
             //get locale resource value
-            _resourceValue = EngineContext.Current.Resolve<ILocalizationService>().GetResourceAsync(ResourceKey, workingLanguageId, true, ResourceKey).Result;
+            _resourceValue = EngineContext.Current.Resolve<ILocalizationService>().GetResourceAsync(ResourceKey).Result;
 
             return _resourceValue;
         }
