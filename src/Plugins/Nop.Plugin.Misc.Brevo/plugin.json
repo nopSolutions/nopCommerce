@@ -2,7 +2,7 @@
   "Group": "Misc",
   "FriendlyName": "Brevo",
   "SystemName": "Misc.Brevo",
-  "Version": "4.70.8",
+  "Version": "4.70.9",
   "SupportedVersions": [ "4.70" ],
   "Author": "nopCommerce team",
   "DisplayOrder": 1,
