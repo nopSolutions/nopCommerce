@@ -346,7 +346,9 @@ namespace Nop.Tests
         {
             using (new ReaderWriteLockDisposable(_locker, ReaderWriteLockType.Read))
             {
-                var command = CreateDbCommand(sql, dataParameters);
+                using var dataConnection = CreateDataConnection(LinqToDbDataProvider);
+                var command = new CommandInfo(dataConnection, sql, dataParameters);
+
                 return command.ExecuteAsync();
             }
         }
