@@ -75,6 +75,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbcWarehouse.Plugin.Payment
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbcWarehouse.Plugin.Widgets.PriceSpider", "Plugins\AbcWarehouse.Plugin.Widgets.PriceSpider\AbcWarehouse.Plugin.Widgets.PriceSpider.csproj", "{64DDE441-C215-4685-858B-8DECA588C873}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbcWarehouse.Plugin.Widgets.AddressAutocomplete", "Plugins\AbcWarehouse.Plugin.Widgets.AddressAutocomplete\AbcWarehouse.Plugin.Widgets.AddressAutocomplete.csproj", "{FC608397-A182-4F37-9F75-6E37608D0EF8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -457,6 +459,18 @@ Global
 		{64DDE441-C215-4685-858B-8DECA588C873}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{64DDE441-C215-4685-858B-8DECA588C873}.Release|x86.ActiveCfg = Release|Any CPU
 		{64DDE441-C215-4685-858B-8DECA588C873}.Release|x86.Build.0 = Release|Any CPU
+		{FC608397-A182-4F37-9F75-6E37608D0EF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC608397-A182-4F37-9F75-6E37608D0EF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC608397-A182-4F37-9F75-6E37608D0EF8}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{FC608397-A182-4F37-9F75-6E37608D0EF8}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{FC608397-A182-4F37-9F75-6E37608D0EF8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FC608397-A182-4F37-9F75-6E37608D0EF8}.Debug|x86.Build.0 = Debug|Any CPU
+		{FC608397-A182-4F37-9F75-6E37608D0EF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC608397-A182-4F37-9F75-6E37608D0EF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC608397-A182-4F37-9F75-6E37608D0EF8}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{FC608397-A182-4F37-9F75-6E37608D0EF8}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{FC608397-A182-4F37-9F75-6E37608D0EF8}.Release|x86.ActiveCfg = Release|Any CPU
+		{FC608397-A182-4F37-9F75-6E37608D0EF8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -494,6 +508,7 @@ Global
 		{B25F1E0C-1B9A-43D2-B889-F532569FEA7A} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 		{72F3A3E3-21D6-42CB-A20E-927C82C45C37} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 		{64DDE441-C215-4685-858B-8DECA588C873} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
+		{FC608397-A182-4F37-9F75-6E37608D0EF8} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EE72A8B2-332A-4175-9319-6726D36E9D25}
