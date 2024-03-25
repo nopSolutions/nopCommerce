@@ -12,7 +12,6 @@ using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Orders;
-using Nop.Services.Stores;
 using Nop.Services.Tax;
 
 namespace Nop.Plugin.Misc.Omnisend.Services;
@@ -39,7 +38,6 @@ public class OmnisendService
     private readonly IShoppingCartService _shoppingCartService;
     private readonly IStateProvinceService _stateProvinceService;
     private readonly IStoreContext _storeContext;
-    private readonly IStoreService _storeService;
     private readonly ITaxService _taxService;
     private readonly IWebHelper _webHelper;
     private readonly IWorkContext _workContext;
@@ -67,7 +65,6 @@ public class OmnisendService
         IShoppingCartService shoppingCartService,
         IStateProvinceService stateProvinceService,
         IStoreContext storeContext,
-        IStoreService storeService,
         ITaxService taxService,
         IWebHelper webHelper,
         IWorkContext workContext,
@@ -91,7 +88,6 @@ public class OmnisendService
         _shoppingCartService = shoppingCartService;
         _stateProvinceService = stateProvinceService;
         _storeContext = storeContext;
-        _storeService = storeService;
         _taxService = taxService;
         _webHelper = webHelper;
         _workContext = workContext;
@@ -872,8 +868,7 @@ public class OmnisendService
         if (!await CanSendRequestAsync(customer))
             return;
 
-        var store = await _storeService.GetStoreByIdAsync(shoppingCartItem.StoreId);
-        var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+        var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, shoppingCartItem.StoreId);
 
         if (cart.Count == 1)
             await CreateCartAsync(cart);
@@ -910,8 +905,7 @@ public class OmnisendService
         if (!await CanSendRequestAsync(customer))
             return;
 
-        var store = await _storeService.GetStoreByIdAsync(shoppingCartItem.StoreId);
-        var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+        var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, shoppingCartItem.StoreId);
 
         //var sendRequest = await _omnisendCustomerService.IsNeedToSendDeleteShoppingCartEventAsync(customer);
 
