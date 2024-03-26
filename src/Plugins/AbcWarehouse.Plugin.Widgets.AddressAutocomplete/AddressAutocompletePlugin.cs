@@ -33,6 +33,7 @@ namespace AbcWarehouse.Plugin.Widgets.AddressAutocomplete
         {
             return Task.FromResult<IList<string>>(new List<string>
             {
+                PublicWidgetZones.CheckoutBillingAddressBottom,
                 PublicWidgetZones.CheckoutShippingAddressBottom,
             });
         }

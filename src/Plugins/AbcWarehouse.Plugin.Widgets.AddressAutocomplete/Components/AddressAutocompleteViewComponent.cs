@@ -35,13 +35,14 @@ namespace AbcWarehouse.Plugin.Widgets.AddressAutocomplete.Components
 
         public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData = null)
         {
-            if (string.IsNullOrWhiteSpace(_settings.GooglePlacesApiKey))
+            var googlePlacesApiKey = _settings.GooglePlacesApiKey;
+            if (string.IsNullOrWhiteSpace(googlePlacesApiKey))
             {
                 await _logger.ErrorAsync("Widgets.AddressAutocomplete: Google Places API key not defined, add in Settings.");
                 return Content(string.Empty);
             }
 
-            return Content("<div>works!</div>");
+            return View("~/Plugins/Widgets.AddressAutocomplete/Views/Script.cshtml", googlePlacesApiKey);
         }
     }
 }

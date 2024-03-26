@@ -1,0 +1,50 @@
+@model string
+
+<script src="https://maps.googleapis.com/maps/api/js?key=@Model&libraries=places"></script>
+<script>
+    $(document).ready(function () {
+        function fillInAddress() {
+            const place = autocomplete.getPlace();
+            for (const component of place.address_components) {
+                const componentType = component.types[0];
+                switch (componentType) {
+                    // State
+                    case "administrative_area_level_1": {
+                        document.querySelector("#BillingNewAddress_StateProvinceId").value = component.short_name;
+                        break;
+                    }
+
+                    case "postal_code": {
+                        document.querySelector("#BillingNewAddress_ZipPostalCode").value = component.long_name;
+                        break;
+                    }
+
+                    // City
+                    case "locality": {
+                        document.querySelector("#BillingNewAddress_City").value = component.long_name;
+                        break;
+                    }
+                }
+            }
+        }
+
+        // center in Pontiac, MI
+        const center = { lat: 42, lng: -83 };
+        // Create a bounding box with sides ~10km away from the center point
+        const defaultBounds = {
+            north: center.lat + 0.1,
+            south: center.lat - 0.1,
+            east: center.lng + 0.1,
+            west: center.lng - 0.1,
+        };
+        const input = document.getElementById("BillingNewAddress_Address1");
+        const options = {
+            bounds: defaultBounds,
+            componentRestrictions: { country: "us" },
+            fields: ["address_components", "geometry", "icon", "name"],
+            strictBounds: false,
+        };
+        const autocomplete = new google.maps.places.Autocomplete(input, options);
+        autocomplete.addListener("place_changed", fillInAddress);
+    });
+</script>
