@@ -7,5 +7,5 @@
   "Author": "Dave Farinelli",
   "DisplayOrder": 1,
   "FileName": "AbcWarehouse.Plugin.Widgets.AddressAutocomplete.dll",
-  "Description": "Address address autocomplete to checkout process."
+  "Description": "Adds address autocomplete to checkout process."
 }
