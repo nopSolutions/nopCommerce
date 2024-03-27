@@ -78,7 +78,10 @@ public sealed class ValidateHoneypotAttribute : TypeFilterAttribute
             if (!StringValues.IsNullOrEmpty(inputValue))
             {
                 //warning admin about it
-                await _logger.WarningAsync("A bot detected. Honeypot.");
+                if (_securitySettings.LogHoneypotDetection)
+                {
+                    await _logger.WarningAsync("A bot detected. Honeypot.");
+                }
 
                 //and redirect to the original page
                 var page = _webHelper.GetThisPageUrl(true);
