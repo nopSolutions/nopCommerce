@@ -5253,3 +5253,82 @@ td:not(.shipment-id) label {
 .private-message-view-page .back-pm-button {
     display: none;
 }
+
+/********************* Temp **********************/
+.page-title h1 {
+    font-family: 'Poppins', sans-serif !important;
+}
+
+.abc-container {
+    display: flex;
+    flex-wrap: wrap;
+    text-align: center;
+    margin: 1rem 0
+}
+
+.abc-item {
+    margin: 5px auto;
+    background: #fff;
+    line-height: 25px;
+    padding: 1rem;
+    flex: 0 0 16rem
+}
+
+.abc-item a {
+    text-decoration: none;
+    font-weight: bold
+}
+
+.abc-item a:hover {
+    text-decoration: underline
+}
+
+.abc-item.abc-promo-item {
+    border: solid 2px #eee;
+    box-shadow: 3px 4px 5px #eee;
+}
+
+.slick-carousel.item-grid.slick-initialized.slick-slider.slick-dotted {
+    display: block !important;
+}
+
+.home-page ul.slick-dots {
+    display: none !important;
+}
+
+*:before, *:after {
+    font-family: 'voyage-icons';
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    box-sizing: border-box;
+}
+
+.nop-jcarousel .slick-prev:before {
+    content: "";
+    font-size: 14px;
+    padding: 10px 15px;
+    margin-right: 8px;
+	border: solid 2px #eee;
+}
+
+.nop-jcarousel .slick-next:after {
+    content: "";
+    font-size: 14px;
+    padding: 10px 15px;
+    margin-left: 8px;
+	border: solid 2px #eee;
+}
+.details {
+    padding: 0px 10px;
+}
+
+button.slick-next.slick-arrow {
+    float: right;
+}
+
+button.slick-prev.slick-arrow {
+    float: left;
+}
