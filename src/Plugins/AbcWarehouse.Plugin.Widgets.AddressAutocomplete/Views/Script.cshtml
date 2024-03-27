@@ -5,39 +5,106 @@
     $(document).ready(function () {
         function fillInAddress() {
             const place = autocomplete.getPlace();
+            var streetNumber = "";
+            var route = "";
+
             for (const component of place.address_components) {
                 const componentType = component.types[0];
                 switch (componentType) {
+                    // Address
+                    case "street_number": {
+                        streetNumber = component.long_name;
+                        break;
+                    }
+                    case "route": {
+                        route = component.long_name;
+                        break;
+                    }
+
                     // State
                     case "administrative_area_level_1": {
-                        document.querySelector("#BillingNewAddress_StateProvinceId").value = component.short_name;
+                        var stateName = component.long_name;
+                        var stateSelect = document.querySelector("#BillingNewAddress_StateProvinceId");
+                        if (stateSelect === undefined || stateSelect === null) {
+                            stateSelect = document.querySelector("#ShippingNewAddress_StateProvinceId");
+                        }
+                        if (stateSelect === undefined || stateSelect === null) {
+                            console.error('Widgets.AddressAutocomplete: Could not find state input element');
+                            return;
+                        }
+
+                        var options = stateSelect.children;
+                        for (var i = 0; i < options.length; i++) {
+                            var option = options[i];
+                            if (option.text === stateName) {
+                                stateSelect.selectedIndex = i;
+                                break;
+                            }
+                        }
+
+                        console.error("Widgets.AddressAutocomplete: State '${stateName}' not found in dropdown.");
                         break;
                     }
 
                     case "postal_code": {
-                        document.querySelector("#BillingNewAddress_ZipPostalCode").value = component.long_name;
+                        var zip = document.querySelector("#BillingNewAddress_ZipPostalCode");
+                        if (zip === undefined || zip === null) {
+                            zip = document.querySelector("#ShippingNewAddress_ZipPostalCode");
+                        }
+                        if (zip === undefined || zip === null) {
+                            console.error('Widgets.AddressAutocomplete: Could not find zip input element');
+                            return;
+                        }
+                        zip.value = component.long_name;
                         break;
                     }
 
                     // City
                     case "locality": {
-                        document.querySelector("#BillingNewAddress_City").value = component.long_name;
+                        var city = document.querySelector("#BillingNewAddress_City");
+                        if (city === undefined || city === null) {
+                            city = document.querySelector("#ShippingNewAddress_City");
+                        }
+                        if (city === undefined || city === null) {
+                            console.error('Widgets.AddressAutocomplete: Could not find city input element');
+                            return;
+                        }
+                        city.value = component.long_name;
                         break;
                     }
                 }
             }
+
+            // Now update address line to remove all but street number and route
+            var address1 = document.querySelector("#BillingNewAddress_Address1");
+            if (address1 === undefined || address1 === null) {
+                address1 = document.querySelector("#ShippingNewAddress_Address1");
+            }
+            if (address1 === undefined || address1 === null) {
+                console.error('Widgets.AddressAutocomplete: Could not find address 1 input element');
+                return;
+            }
+            address1.value = streetNumber + " " + route;
         }
 
-        // center in Pontiac, MI
+        // center in Pontiac, MI, and bounding box with sides ~10km away from the center point
         const center = { lat: 42, lng: -83 };
-        // Create a bounding box with sides ~10km away from the center point
         const defaultBounds = {
             north: center.lat + 0.1,
             south: center.lat - 0.1,
             east: center.lng + 0.1,
             west: center.lng - 0.1,
         };
-        const input = document.getElementById("BillingNewAddress_Address1");
+
+        var input = document.getElementById("BillingNewAddress_Address1");
+        if (input === undefined || input === null) {
+            input = document.getElementById("ShippingNewAddress_Address1");
+        }
+        if (input === undefined || input === null) {
+            console.error('Widgets.AddressAutocomplete: Could not find address input element');
+            return;
+        }
+
         const options = {
             bounds: defaultBounds,
             componentRestrictions: { country: "us" },
