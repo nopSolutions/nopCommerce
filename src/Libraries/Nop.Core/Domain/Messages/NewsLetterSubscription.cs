@@ -19,6 +19,8 @@ public partial class NewsLetterSubscription : BaseEntity
     /// Gets or sets a value indicating whether subscription is active
     /// </summary>
     public bool Active { get; set; }
+    public int SubscriptionLanguage { get; set; }
+    
 
     /// <summary>
     /// Gets or sets the store identifier in which a customer has subscribed to newsletter
