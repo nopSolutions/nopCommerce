@@ -861,7 +861,12 @@ public partial class ShoppingCartService : IShoppingCartService
                         continue;
 
                     var attributeValuesStr = _productAttributeParser.ParseValues(attributesXml, a1.Id);
-
+                    var productAttributeValues = await _productAttributeService.GetProductAttributeValuesAsync(a2.Id);
+                    if (productAttributeValues.Any() && !productAttributeValues.Any(x => attributeValuesStr.Contains(x.Id.ToString())))
+                    {
+                        warnings.Add("Attribute error");
+                        break;
+                    }
                     foreach (var str1 in attributeValuesStr)
                     {
                         if (string.IsNullOrEmpty(str1.Trim()))
