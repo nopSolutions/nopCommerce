@@ -25,7 +25,7 @@ public abstract partial class NopRazorPage<TModel> : Microsoft.AspNetCore.Mvc.Ra
             _localizer ??= (format, args) =>
             {
                 var resFormat = _localizationService.GetResourceAsync(format).Result;
-                if (string.IsNullOrEmpty(resFormat))
+                if (resFormat == null)
                 {
                     return new LocalizedString(format);
                 }

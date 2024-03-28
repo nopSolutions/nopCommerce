@@ -19,7 +19,7 @@ public partial class LanguageResourceValidator : BaseNopValidator<LocaleResource
                 .WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Languages.Resources.Fields.Name.Required"));
 
             RuleFor(model => model.ResourceValue)
-                .NotEmpty()
+                .NotNull()
                 .WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Languages.Resources.Fields.Value.Required"));
 
             SetDatabaseValidationRules<LocaleStringResource>();

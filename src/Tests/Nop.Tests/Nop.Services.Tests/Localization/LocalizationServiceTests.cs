@@ -116,7 +116,7 @@ public class LocalizationServiceTests : ServiceTest
     }
 
     [Test]
-    public async Task AddOrUpdateLocaleResourceShouldApdateAllResorcesIfLangIdIsNull()
+    public async Task AddOrUpdateLocaleResourceShouldUpdateAllResourcesIfLangIdIsNull()
     {
         var languageService = GetService<ILanguageService>();
         var language = new Language
@@ -152,7 +152,7 @@ public class LocalizationServiceTests : ServiceTest
     }
 
     [Test]
-    public async Task DeleteLocaleResourcesShuoldIgnoreCase()
+    public async Task DeleteLocaleResourcesShouldIgnoreCase()
     {
         await _localizationService.AddOrUpdateLocaleResourceAsync(_resources);
 
@@ -167,6 +167,16 @@ public class LocalizationServiceTests : ServiceTest
             .Where(p => p.ResourceName.StartsWith(PREFIX, StringComparison.InvariantCultureIgnoreCase)).ToList();
 
         rez.Count.Should().Be(0);
+    }
+
+    [TestCase("A Value")]
+    [TestCase("")] //empty string is valid value
+    public async Task CanGetResourceAsync(string val)
+    {
+        var resKey = $"{PREFIX}.CanGetResourceAsync";
+        await _localizationService.AddOrUpdateLocaleResourceAsync(resKey,val);
+        var resource = await _localizationService.GetResourceAsync(resKey);
+        resource.Should().Be(val);
     }
 
     public class LocaleResourceConsumer : IConsumer<EntityUpdatedEvent<LocaleStringResource>>
