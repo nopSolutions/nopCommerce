@@ -65,4 +65,28 @@ public class CommonHelperEmailValidatorTests
         result = CommonHelper.IsValidEmail(email);
         result.Should().BeTrue();
     }
+
+    [Test]
+    public void WhenEmailAddressContainsHyphenInDomainThenTheValidatorShouldPass()
+    {
+        var email = "testperson@domain_with-hyphen.com";
+        var result = CommonHelper.IsValidEmail(email);
+        result.Should().BeTrue();
+
+        email = "testperson@example-domain.net";
+        result = CommonHelper.IsValidEmail(email);
+        result.Should().BeTrue();
+    }
+
+    [Test]
+    public void WhenEmailAddressContainsDifferentTLDsThenTheValidatorShouldPass()
+    {
+        var email = "testperson@example.co.uk";
+        var result = CommonHelper.IsValidEmail(email);
+        result.Should().BeTrue();
+
+        email = "testperson@example.museum";
+        result = CommonHelper.IsValidEmail(email);
+        result.Should().BeTrue();
+    }
 }
