@@ -1,0 +1,32 @@
+﻿@model PopularTopicTagsModel
+
+@using Nop.Core.Domain.Catalog
+
+@{
+	Layout = "_ColumnsTwo";
+
+	//title
+	NopHtml.AddTitleParts(T("PageTitle.AllTopicTags").Text);
+	//page class
+	NopHtml.AppendPageCssClassParts("html-topic-tags-all-page");
+}
+<div class="page topic-tags-all-page">
+	<div class="page-title">
+		<h1>@T("Topic.Tags.All")</h1>
+	</div>
+	<div class="page-body">
+		@if (Model.Tags.Count > 0)
+		{
+			<ul class="topic-tags-list">
+				@foreach (var item in Model.Tags)
+				{
+					<li>
+						<a href="@(Url.RouteUrl<TopicTag>(new { SeName = item.SeName }))" class="topictag" style="font-size:@(Model.GetFontSize(item))%;">
+							@item.Name
+						</a>
+					</li>
+				}
+			</ul>
+		}
+	</div>
+</div>
