@@ -63,6 +63,11 @@ public class ZettleRecord : BaseEntity
     public DateTime? UpdatedOnUtc { get; set; }
 
     /// <summary>
+    /// Gets or sets the unique identifier of external guid
+    /// </summary>
+    public string ExternalUuid { get; set; }
+
+    /// <summary>
     /// Gets or sets an operation type
     /// </summary>
     public OperationType OperationType
