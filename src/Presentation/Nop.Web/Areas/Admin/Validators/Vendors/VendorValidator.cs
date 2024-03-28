@@ -14,7 +14,9 @@ public partial class VendorValidator : BaseNopValidator<VendorModel>
         RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Vendors.Fields.Name.Required"));
 
         RuleFor(x => x.Email).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Vendors.Fields.Email.Required"));
-        RuleFor(x => x.Email).EmailAddress().WithMessageAwait(localizationService.GetResourceAsync("Admin.Common.WrongEmail"));
+        RuleFor(x => x.Email)
+            .IsEmailAddress()
+            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Common.WrongEmail"));
         RuleFor(x => x.PageSizeOptions).Must(ValidatorUtilities.PageSizeOptionsValidator).WithMessageAwait(localizationService.GetResourceAsync("Admin.Vendors.Fields.PageSizeOptions.ShouldHaveUniqueItems"));
         RuleFor(x => x.PageSize).Must((x, context) =>
         {
