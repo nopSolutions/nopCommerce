@@ -13,15 +13,15 @@ public class GoogleAnalyticsHttpClient
 {
     #region Fields
 
-    protected readonly HttpClient _httpClient;
+    private readonly IHttpClientFactory _clientFactory;
 
     #endregion
 
     #region Ctor
 
-    public GoogleAnalyticsHttpClient(HttpClient httpClient)
+    public GoogleAnalyticsHttpClient(IHttpClientFactory clientFactory)
     {
-        _httpClient = httpClient;
+        _clientFactory = clientFactory;
     }
 
     #endregion
@@ -39,21 +39,22 @@ public class GoogleAnalyticsHttpClient
         //configure client
         try
         {
-            var query = new Dictionary<string, string>()
+            var query = new Dictionary<string, string>
             {
                 ["api_secret"] = googleAnalyticsSettings.ApiSecret,
                 ["measurement_id"] = googleAnalyticsSettings.GoogleId
             };
 
-            var uri = QueryHelpers.AddQueryString(googleAnalyticsSettings.UseSandbox ? GoogleAnalyticsDefaults.EndPointDebugUrl : GoogleAnalyticsDefaults.EndPointUrl, query);
-
-            _httpClient.BaseAddress = new Uri(uri);
-            _httpClient.Timeout = TimeSpan.FromSeconds(10);
+            var endPointUrl = googleAnalyticsSettings.UseSandbox ? GoogleAnalyticsDefaults.EndPointDebugUrl : GoogleAnalyticsDefaults.EndPointUrl;
+            var uri = QueryHelpers.AddQueryString(endPointUrl, query);
+            var fullUri = new Uri(uri);
 
             var requestString = JsonConvert.SerializeObject(request);
             var requestContent = new StringContent(requestString, Encoding.Default, MimeTypes.ApplicationJson);
-            var requestMessage = new HttpRequestMessage(new HttpMethod(request.Method), null as Uri) { Content = requestContent };
-            var httpResponse = await _httpClient.SendAsync(requestMessage);
+            var requestMessage = new HttpRequestMessage(new HttpMethod(request.Method), fullUri) { Content = requestContent };
+
+            var httpClient = _clientFactory.CreateClient(nameof(GoogleAnalyticsHttpClient));
+            var httpResponse = await httpClient.SendAsync(requestMessage);
             httpResponse.EnsureSuccessStatusCode();
 
             var responseString = await httpResponse.Content.ReadAsStringAsync();
@@ -66,7 +67,7 @@ public class GoogleAnalyticsHttpClient
         catch (AggregateException exception)
         {
             //rethrow actual exception
-            throw exception.InnerException;
+            throw exception.InnerException ?? exception;
         }
     }
 

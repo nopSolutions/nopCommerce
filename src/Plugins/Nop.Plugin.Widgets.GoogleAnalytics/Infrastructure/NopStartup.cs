@@ -19,7 +19,10 @@ public class NopStartup : INopStartup
     /// <param name="configuration">Configuration of the application</param>
     public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
-        services.AddHttpClient<GoogleAnalyticsHttpClient>().WithProxy();
+        services.AddHttpClient<GoogleAnalyticsHttpClient>(
+                client => client.Timeout = TimeSpan.FromSeconds(10))
+            .WithProxy();
+        services.AddScoped<GoogleAnalyticsHttpClient>();
     }
 
     /// <summary>
