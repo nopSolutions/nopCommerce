@@ -23,11 +23,8 @@ namespace Nop.Plugin.Misc.AbcCore.Services
         private const string CATEGORYISLEAF_KEY = "Nop.category.categoryisleaf.{0}";
         private const string THEMENAME_KEY = "Nop.currenttheme.name";
         private const string SEOSETTINGS_KEY = "Nop.settings.seosettings";
-        private const string NONCLEARANCEURL_KEY = "Abc.nonclearanceurl";
-        private const string STOREISCLEARANCE_KEY = "Abc.storeisclearance.{0}";
         private const string STOREISABC_KEY = "Abc.isAbc.{0}";
         private const string STOREISHAWTHORNE_KEY = "Abc.isHawthorne.{0}";
-        private const string STOREISHAWTHORNECLEARANCE_KEY = "Abc.isHawthorneClearance.{0}";
         private const string PRODUCTISABC_KEY = ProductAbcDescription.PRODUCTABCDESCRIPTION_PATTERN_KEY + "isabc.{0}";
         private const string PRODUCTFLAG_KEY = ProductAbcDescription.PRODUCTABCDESCRIPTION_PATTERN_KEY + "productflag.{0}";
         private const string PRODUCTHASDOCUMENTS_KEY = ProductDocuments.DOCUMENT_PATTERN_KEY + "hasdocuments.{0}";
@@ -62,15 +59,6 @@ namespace Nop.Plugin.Misc.AbcCore.Services
             });
         }
 
-        public bool StoreIsClearance(Store currentStore)
-        {
-            return _staticCacheManager.Get(new CacheKey(string.Format(STOREISCLEARANCE_KEY, currentStore.Id), "Abc."), () =>
-            {
-                string abcClearance = "clearance";
-                return currentStore.Url.Contains(abcClearance);
-            });
-        }
-
         public bool StoreIsHawthorne(Store currentStore)
         {
             return _staticCacheManager.Get(new CacheKey(string.Format(STOREISHAWTHORNE_KEY, currentStore.Id), "Abc."), () =>
@@ -86,27 +74,6 @@ namespace Nop.Plugin.Misc.AbcCore.Services
             {
                 string abcIdentifier = "abcwarehouse";
                 return currentStore.Url.Contains(abcIdentifier);
-            });
-        }
-
-        public bool StoreIsHawthorneClearance(Store currentStore)
-        {
-            return _staticCacheManager.Get(new CacheKey(string.Format(STOREISHAWTHORNECLEARANCE_KEY, currentStore.Id), "Abc."), () =>
-            {
-                string hawthorneIdentifier = "clearance.hawthorne";
-                return currentStore.Url.Contains(hawthorneIdentifier);
-            });
-        }
-
-        public async Task<string> GetNonClearanceUrl(int currentStoreId)
-        {
-            return await _staticCacheManager.Get(new CacheKey(NONCLEARANCEURL_KEY, "Abc."), async () =>
-            {
-                var storeService = EngineContext.Current.Resolve<IStoreService>();
-                var storeList = await storeService.GetAllStoresAsync();
-                //this grabs the non-clearance store
-                Store abcStore = storeList.Where(s => s.Id != currentStoreId).Select(s => s).FirstOrDefault();
-                return abcStore.Url;
             });
         }
 

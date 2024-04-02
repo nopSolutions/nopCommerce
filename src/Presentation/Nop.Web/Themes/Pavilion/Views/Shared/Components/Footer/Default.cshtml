@@ -89,11 +89,8 @@
                         string giftCardUrl = Nop.Plugin.Misc.AbcCore.HtmlHelpers.GetGiftCardUrl();
                         string brandUrl = "/manufacturer/all";
                     }
-                    @if (!Model.StoreName.Contains("Clearance"))
-                    {
-                        <li><a href="@brandUrl">Shop by Brand</a></li>
-                        <li><a href="@giftCardUrl">Gift Card</a></li>
-                    }
+                    <li><a href="@brandUrl">Shop by Brand</a></li>
+                    <li><a href="@giftCardUrl">Gift Card</a></li>
                 </ul>
             </div>
             @if (!hideCustomerService)

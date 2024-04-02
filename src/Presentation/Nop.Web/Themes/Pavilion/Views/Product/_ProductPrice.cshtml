@@ -24,6 +24,7 @@
     var itemNumber = "";
     var usesPairPricing = false;
 
+    // ClearanceTODO: check if the product is Clearance category
     bool isClearance = frontEndService.StoreIsClearance(await storeContext.GetCurrentStoreAsync()) || frontEndService.StoreIsHawthorneClearance(await storeContext.GetCurrentStoreAsync());
     bool isHawthorne = frontEndService.StoreIsHawthorne(await storeContext.GetCurrentStoreAsync());
 

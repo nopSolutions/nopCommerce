@@ -76,6 +76,7 @@
     await eventPublisher.PublishAsync(new PageRenderingEvent(this.Html));
 
     // ABC: custom stuff
+    // ClearanceTODO: check if the product is Clearance category
     bool isClearanceStore = frontEndService.StoreIsClearance(await storeContext.GetCurrentStoreAsync());
     string clearanceClass = isClearanceStore ? "abc-clearance" : "";
 
@@ -102,11 +103,11 @@
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,700&display=swap' rel='stylesheet' type='text/css'>
     
     @* ABC: link SLI stylesheet based on store *@
-    @if (!isClearanceStore && !isHawthorne)
+    @if (!isHawthorne)
     {
         <link rel="stylesheet" type="text/css" href="//abcwarehouse.resultspage.com/autocomplete/sli-rac.css">
     }
-    @if (!isClearanceStore && isHawthorne)
+    @if (isHawthorne)
     {
         <link rel="stylesheet" type="text/css" href="//hawthorneonline.resultspage.com/autocomplete/sli-rac.css">
     }

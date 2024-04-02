@@ -75,6 +75,7 @@
     // custom
     // this part is for adding class if it is clearance store
     Product currentProduct = await productService.GetProductByIdAsync(Model.Id);
+    // ClearanceTODO: check if the product is Clearance category
     bool isClearanceStore = frontEndService.StoreIsClearance(await storeContext.GetCurrentStoreAsync());
     string clearanceClass = isClearanceStore ? "abc-clearance" : "";
 

@@ -85,6 +85,7 @@ namespace Nop.Plugin.Widgets.AbcPickupInStore.Components
             }
 
             Product product = await _productService.GetProductByIdAsync(productId);
+            // ClearanceTODO: Check the product's category instead
             var storeUrl = (await _storeContext.GetCurrentStoreAsync()).Url;
             var isClearanceStore = storeUrl.Contains("clearance");
             if (await product.HasDeliveryOptionsAsync() && !isClearanceStore)

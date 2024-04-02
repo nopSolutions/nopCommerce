@@ -53,6 +53,7 @@
     var itemNumber = "";
     var itemNumberDisplay = "";
     ProductFlag productFlag = frontEndService.GetProductFlag(Model.Id);
+    // ClearanceTODO: check if the product is Clearance category
     bool isOpenBox = productFlag != null &&
                      !(frontEndService.StoreIsClearance(await storeContext.GetCurrentStoreAsync()) || frontEndService.StoreIsHawthorneClearance(await storeContext.GetCurrentStoreAsync())) ?
                         productFlag.IsOpenBox() : false;

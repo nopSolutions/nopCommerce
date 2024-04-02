@@ -178,22 +178,16 @@ namespace Nop.Plugin.Misc.AbcCore.Services
             Store abcWarehouseStore
                 = storeList.Where(s => s.Name == "ABC Warehouse")
                 .Select(s => s).FirstOrDefault();
-            Store abcClearanceStore
-                = storeList.Where(s => s.Name == "ABC Clearance")
-                .Select(s => s).FirstOrDefault();
             Store hawthorneStore
                 = storeList.Where(s => s.Name == "Hawthorne Online")
                 .Select(s => s).FirstOrDefault();
-            Store hawthorneClearanceStore
-                = storeList.Where(s => s.Name == "Hawthorne Clearance")
-                .Select(s => s).FirstOrDefault();
 
-            if (abcWarehouseStore != null || abcClearanceStore != null)
+            if (abcWarehouseStore != null)
             {
                 return HOME_DELIVERY_MESSAGE_ABC;
             }
 
-            if (hawthorneStore != null || hawthorneClearanceStore != null)
+            if (hawthorneStore != null
             {
                 return HOME_DELIVERY_MESSAGE_HAWTHORNE;
             }
