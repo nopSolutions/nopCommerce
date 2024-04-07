@@ -24,8 +24,7 @@ RUN dotnet publish Nop.Web.csproj -c Release -o /app/published
 
 WORKDIR /app/published
 
-RUN mkdir logs
-RUN mkdir bin
+RUN mkdir logs bin
 
 RUN chmod 775 App_Data \
               App_Data/DataProtectionKeys \
