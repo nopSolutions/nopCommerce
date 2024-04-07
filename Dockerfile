@@ -4,9 +4,6 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
 WORKDIR /src                                                                    
 COPY ./src ./
 
-# restore solution
-RUN dotnet restore NopCommerce.sln
-
 WORKDIR /src/Presentation/Nop.Web   
 
 # build project   
