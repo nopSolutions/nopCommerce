@@ -81,7 +81,7 @@ public partial class JsonLdModelFactory : IJsonLdModelFactory
     {
         var breadcrumbList = await PrepareJsonLdBreadcrumbListAsync(categoryModels);
 
-        await _eventPublisher.PublishAsync(new JsonLdCreatedEvent(breadcrumbList));
+        await _eventPublisher.PublishAsync(new JsonLdCreatedEvent<JsonLdBreadcrumbListModel>(breadcrumbList));
 
         return breadcrumbList;
     }
@@ -107,7 +107,7 @@ public partial class JsonLdModelFactory : IJsonLdModelFactory
             }
         });
 
-        await _eventPublisher.PublishAsync(new JsonLdCreatedEvent(breadcrumbList));
+        await _eventPublisher.PublishAsync(new JsonLdCreatedEvent<JsonLdBreadcrumbListModel>(breadcrumbList));
 
         return breadcrumbList;
     }
@@ -181,7 +181,7 @@ public partial class JsonLdModelFactory : IJsonLdModelFactory
             product.HasVariant.Add(await PrepareJsonLdProductAsync(associatedProduct, parentUrl));
         }
 
-        await _eventPublisher.PublishAsync(new JsonLdCreatedEvent(product));
+        await _eventPublisher.PublishAsync(new JsonLdCreatedEvent<JsonLdProductModel>(product));
 
         return product;
     }
