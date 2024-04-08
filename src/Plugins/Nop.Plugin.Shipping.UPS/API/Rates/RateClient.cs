@@ -3377,13 +3377,7 @@ namespace Nop.Plugin.Shipping.UPS.API.Rates
         [Newtonsoft.Json.JsonProperty("ResponseStatus", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         public Response_ResponseStatus ResponseStatus { get; set; } = new Response_ResponseStatus();
-
-        [Newtonsoft.Json.JsonProperty("Alert", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<Response_Alert> Alert { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("AlertDetail", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<Response_AlertDetail> AlertDetail { get; set; }
-
+        
         [Newtonsoft.Json.JsonProperty("TransactionReference", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Response_TransactionReference TransactionReference { get; set; }
 
