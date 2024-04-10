@@ -851,6 +851,8 @@ public partial class ShoppingCartService : IShoppingCartService
 
         foreach (var a2 in attributes2)
         {
+            var productAttributeValues = await _productAttributeService.GetProductAttributeValuesAsync(a2.Id);
+
             if (a2.IsRequired)
             {
                 var found = false;
@@ -861,12 +863,10 @@ public partial class ShoppingCartService : IShoppingCartService
                         continue;
 
                     var attributeValuesStr = _productAttributeParser.ParseValues(attributesXml, a1.Id);
-                    var productAttributeValues = await _productAttributeService.GetProductAttributeValuesAsync(a2.Id);
+
                     if (productAttributeValues.Any() && !productAttributeValues.Any(x => attributeValuesStr.Contains(x.Id.ToString())))
-                    {
-                        warnings.Add("Attribute error");
                         break;
-                    }
+
                     foreach (var str1 in attributeValuesStr)
                     {
                         if (string.IsNullOrEmpty(str1.Trim()))
@@ -895,7 +895,7 @@ public partial class ShoppingCartService : IShoppingCartService
                 continue;
 
             //customers cannot edit read-only attributes
-            var allowedReadOnlyValueIds = (await _productAttributeService.GetProductAttributeValuesAsync(a2.Id))
+            var allowedReadOnlyValueIds = productAttributeValues
                 .Where(x => x.IsPreSelected)
                 .Select(x => x.Id)
                 .ToArray();
