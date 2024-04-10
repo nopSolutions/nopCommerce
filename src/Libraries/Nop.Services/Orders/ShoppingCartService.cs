@@ -961,11 +961,15 @@ public partial class ShoppingCartService : IShoppingCartService
 
             var productAttributeMapping = await _productAttributeService.GetProductAttributeMappingByIdAsync(attributeValue.ProductAttributeMappingId);
 
-            if (ignoreNonCombinableAttributes && productAttributeMapping != null && productAttributeMapping.IsNonCombinable())
+            if (productAttributeMapping == null)
+                continue;
+
+            if (ignoreNonCombinableAttributes && productAttributeMapping.IsNonCombinable())
                 continue;
 
             //associated product (bundle)
             var associatedProduct = await _productService.GetProductByIdAsync(attributeValue.AssociatedProductId);
+            
             if (associatedProduct != null)
             {
                 var store = await _storeContext.GetCurrentStoreAsync();
@@ -986,9 +990,7 @@ public partial class ShoppingCartService : IShoppingCartService
                 }
             }
             else
-            {
                 warnings.Add($"Associated product cannot be loaded - {attributeValue.AssociatedProductId}");
-            }
         }
 
         return warnings;

@@ -1,7 +1,6 @@
 ﻿using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Security;
@@ -192,17 +191,9 @@ public partial class CheckoutModelFactory : ICheckoutModelFactory
                         OpeningHours = point.OpeningHours,
                         IsPreSelected = selectedPickupPoint is not null && selectedPickupPoint.Id == point.Id,
                     };
-
-                    var amount = await _orderTotalCalculationService.IsFreeShippingAsync(cart) ? 0 : point.PickupFee;
+                    
                     var currentCurrency = await _workContext.GetWorkingCurrencyAsync();
-
-                    if (amount > 0)
-                    {
-                        (amount, _) = await _taxService.GetShippingPriceAsync(amount, customer);
-                        amount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(amount, currentCurrency);
-                        pickupPointModel.PickupFee = await _priceFormatter.FormatShippingPriceAsync(amount, true);
-                    }
-
+                    
                     //adjust rate
                     var (shippingTotal, _) = await _orderTotalCalculationService.AdjustShippingRateAsync(point.PickupFee, cart, true);
                     var (rateBase, _) = await _taxService.GetShippingPriceAsync(shippingTotal, customer);
@@ -271,13 +262,14 @@ public partial class CheckoutModelFactory : ICheckoutModelFactory
 
         //existing addresses
         var addresses = await (await _customerService.GetAddressesByCustomerIdAsync(customer.Id))
-            .WhereAwait(async a => !a.CountryId.HasValue || await _countryService.GetCountryByAddressAsync(a) is Country country &&
-                (//published
-                    country.Published &&
-                    //allow billing
-                    country.AllowsBilling &&
-                    //enabled for the current store
-                    await _storeMappingService.AuthorizeAsync(country)))
+            .WhereAwait(async a => !a.CountryId.HasValue || await _countryService.GetCountryByAddressAsync(a) is
+                {
+                    Published: true, 
+                    AllowsBilling: true
+                } country
+                &&
+                //enabled for the current store
+                await _storeMappingService.AuthorizeAsync(country))
             .ToListAsync();
         foreach (var address in addresses)
         {
@@ -288,13 +280,9 @@ public partial class CheckoutModelFactory : ICheckoutModelFactory
                 addressSettings: _addressSettings);
 
             if (await _addressService.IsAddressValidAsync(address))
-            {
                 model.ExistingAddresses.Add(addressModel);
-            }
             else
-            {
                 model.InvalidExistingAddresses.Add(addressModel);
-            }
         }
 
         //new address
@@ -336,13 +324,14 @@ public partial class CheckoutModelFactory : ICheckoutModelFactory
         //existing addresses
         var customer = await _workContext.GetCurrentCustomerAsync();
         var addresses = await (await _customerService.GetAddressesByCustomerIdAsync(customer.Id))
-            .WhereAwait(async a => !a.CountryId.HasValue || await _countryService.GetCountryByAddressAsync(a) is Country country &&
-                (//published
-                    country.Published &&
-                    //allow shipping
-                    country.AllowsShipping &&
-                    //enabled for the current store
-                    await _storeMappingService.AuthorizeAsync(country)))
+            .WhereAwait(async a => !a.CountryId.HasValue || await _countryService.GetCountryByAddressAsync(a) is
+                {
+                    Published: true, 
+                    AllowsShipping: true
+                } country
+                &&
+                //enabled for the current store
+                await _storeMappingService.AuthorizeAsync(country))
             .ToListAsync();
         foreach (var address in addresses)
         {
@@ -353,13 +342,9 @@ public partial class CheckoutModelFactory : ICheckoutModelFactory
                 addressSettings: _addressSettings);
 
             if (await _addressService.IsAddressValidAsync(address))
-            {
                 model.ExistingAddresses.Add(addressModel);
-            }
             else
-            {
                 model.InvalidExistingAddresses.Add(addressModel);
-            }
         }
 
         //new address
@@ -432,13 +417,11 @@ public partial class CheckoutModelFactory : ICheckoutModelFactory
 
             //sort shipping methods
             if (model.ShippingMethods.Count > 1)
-            {
                 model.ShippingMethods = (_shippingSettings.ShippingSorting switch
                 {
                     ShippingSortingEnum.ShippingCost => model.ShippingMethods.OrderBy(option => option.Rate),
                     _ => model.ShippingMethods.OrderBy(option => option.DisplayOrder)
                 }).ToList();
-            }
 
             //find a selected (previously) shipping method
             var selectedShippingOption = await _genericAttributeService.GetAttributeAsync<ShippingOption>(customer,
@@ -451,32 +434,24 @@ public partial class CheckoutModelFactory : ICheckoutModelFactory
                         so.Name.Equals(selectedShippingOption.Name, StringComparison.InvariantCultureIgnoreCase) &&
                         !string.IsNullOrEmpty(so.ShippingRateComputationMethodSystemName) &&
                         so.ShippingRateComputationMethodSystemName.Equals(selectedShippingOption.ShippingRateComputationMethodSystemName, StringComparison.InvariantCultureIgnoreCase));
-                if (shippingOptionToSelect != null)
-                {
+                if (shippingOptionToSelect != null) 
                     shippingOptionToSelect.Selected = true;
-                }
             }
             //if no option has been selected, let's do it for the first one
             if (model.ShippingMethods.FirstOrDefault(so => so.Selected) == null)
             {
                 var shippingOptionToSelect = model.ShippingMethods.FirstOrDefault();
-                if (shippingOptionToSelect != null)
-                {
+                if (shippingOptionToSelect != null) 
                     shippingOptionToSelect.Selected = true;
-                }
             }
 
             //notify about shipping from multiple locations
-            if (_shippingSettings.NotifyCustomerAboutShippingFromMultipleLocations)
-            {
+            if (_shippingSettings.NotifyCustomerAboutShippingFromMultipleLocations) 
                 model.NotifyCustomerAboutShippingFromMultipleLocations = getShippingOptionResponse.ShippingFromMultipleLocations;
-            }
         }
         else
-        {
             foreach (var error in getShippingOptionResponse.Errors)
                 model.Warnings.Add(error);
-        }
 
         return model;
     }

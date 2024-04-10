@@ -124,7 +124,7 @@ public class AddressValidationViewComponent : NopViewComponent
             return Content(string.Empty);
 
         //get validated address info
-        var validatedAddressInfo = validationResult.validatedAddresses.FirstOrDefault();
+        var validatedAddressInfo = validationResult.validatedAddresses.First();
 
         //create new address as a copy of address to validate and with details of the validated one
         var validatedAddress = _addressService.CloneAddress(address);

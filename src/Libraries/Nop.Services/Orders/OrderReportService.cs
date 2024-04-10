@@ -339,7 +339,7 @@ public partial class OrderReportService : IOrderReportService
                 where n.Note.Contains(orderNotes)
                 select o;
 
-            query.Distinct();
+            query = query.Distinct();
         }
 
         var item = await (from oq in query
@@ -854,7 +854,7 @@ public partial class OrderReportService : IOrderReportService
             where (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
                   (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
                   !o.Deleted
-            select new { ProductId = oi.ProductId };
+            select new { oi.ProductId };
 
         var query =
             from p in _productRepository.Table

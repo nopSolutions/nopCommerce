@@ -500,9 +500,7 @@ public partial class ProductModelFactory : IProductModelFactory
                 {
                     //rental product
                     priceModel.OldPrice = await _priceFormatter.FormatRentalProductPeriodAsync(product, priceModel.OldPrice);
-                    priceModel.OldPriceValue = priceModel.OldPriceValue;
                     priceModel.Price = await _priceFormatter.FormatRentalProductPeriodAsync(product, priceModel.Price);
-                    priceModel.PriceValue = priceModel.PriceValue;
                 }
 
                 //property for German market
