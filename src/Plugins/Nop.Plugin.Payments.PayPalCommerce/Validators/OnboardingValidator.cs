@@ -16,7 +16,7 @@ public class OnboardingValidator : BaseNopValidator<OnboardingModel>
     {
         RuleFor(model => model.Email)
             .NotEmpty()
-            .EmailAddress()
+            .IsEmailAddress()
             .WithMessageAwait(localizationService.GetResourceAsync("Admin.Common.WrongEmail"));
     }
 

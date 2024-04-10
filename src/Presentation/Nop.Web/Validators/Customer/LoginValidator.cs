@@ -14,7 +14,9 @@ public partial class LoginValidator : BaseNopValidator<LoginModel>
         {
             //login by email
             RuleFor(x => x.Email).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Account.Login.Fields.Email.Required"));
-            RuleFor(x => x.Email).EmailAddress().WithMessageAwait(localizationService.GetResourceAsync("Common.WrongEmail"));
+            RuleFor(x => x.Email)
+                .IsEmailAddress()
+                .WithMessageAwait(localizationService.GetResourceAsync("Common.WrongEmail"));
         }
     }
 }

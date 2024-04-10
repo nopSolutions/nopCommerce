@@ -15,12 +15,16 @@ public partial class RegisterValidator : BaseNopValidator<RegisterModel>
         CustomerSettings customerSettings)
     {
         RuleFor(x => x.Email).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.Email.Required"));
-        RuleFor(x => x.Email).EmailAddress().WithMessageAwait(localizationService.GetResourceAsync("Common.WrongEmail"));
+        RuleFor(x => x.Email)
+            .IsEmailAddress()
+            .WithMessageAwait(localizationService.GetResourceAsync("Common.WrongEmail"));
 
         if (customerSettings.EnteringEmailTwice)
         {
             RuleFor(x => x.ConfirmEmail).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.ConfirmEmail.Required"));
-            RuleFor(x => x.ConfirmEmail).EmailAddress().WithMessageAwait(localizationService.GetResourceAsync("Common.WrongEmail"));
+            RuleFor(x => x.ConfirmEmail)
+                .IsEmailAddress()
+                .WithMessageAwait(localizationService.GetResourceAsync("Common.WrongEmail"));
             RuleFor(x => x.ConfirmEmail).Equal(x => x.Email).WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.Email.EnteredEmailsDoNotMatch"));
         }
 
