@@ -246,7 +246,7 @@
                                         @ILS.GetResource("ConnectionString")
                                     </label>
                                     <div class="col-sm-8">
-                                        <input asp-for="ConnectionString" class="form-control" />
+                                        <input asp-for="ConnectionString" class="form-control" autocomplete="off" />
                                         <span class="hint">
                                             @ILS.GetResource("Example"):<br />
                                             Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User

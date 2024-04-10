@@ -23,6 +23,11 @@ public class ConfigurationValidator : BaseNopValidator<ConfigurationModel>
             .NotEmpty()
             .WithMessageAwait(localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Fields.SecretKey.Required"))
             .When(model => !model.UseSandbox && model.SetCredentialsManually);
+
+        RuleFor(model => model.Email)
+            .NotEmpty()
+            .IsEmailAddress()
+            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Common.WrongEmail"));
     }
 
     #endregion

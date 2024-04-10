@@ -18,7 +18,7 @@ public partial class CustomerValidator : BaseNopValidator<CustomerModel>
         //ensure that valid email address is entered if Registered role is checked to avoid registered customers with empty email address
         RuleFor(x => x.Email)
             .NotEmpty()
-            .EmailAddress()
+            .IsEmailAddress()
             //.WithMessage("Valid Email is required for customer to be in 'Registered' role")
             .WithMessageAwait(localizationService.GetResourceAsync("Admin.Common.WrongEmail"))
             //only for registered users
