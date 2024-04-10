@@ -1,7 +1,4 @@
-﻿using System.Xml.Serialization;
-using Newtonsoft.Json;
-
-namespace Nop.Web.Framework.Models;
+﻿namespace Nop.Web.Framework.Models;
 
 /// <summary>
 /// Represents base nopCommerce model
@@ -38,10 +35,7 @@ public partial record BaseNopModel
     /// <summary>
     /// Gets or sets property to store any custom values for models 
     /// </summary>
-    [XmlIgnore]
-    [JsonIgnore]
     public Dictionary<string, string> CustomProperties { get; set; }
 
     #endregion
-
 }

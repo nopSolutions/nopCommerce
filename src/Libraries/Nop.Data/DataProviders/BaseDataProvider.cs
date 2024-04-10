@@ -33,20 +33,6 @@ public abstract partial class BaseDataProvider
     }
 
     /// <summary>
-    /// Creates database command instance using provided command text and parameters.
-    /// </summary>
-    /// <param name="sql">Command text</param>
-    /// <param name="dataParameters">Command parameters</param>
-    protected virtual CommandInfo CreateDbCommand(string sql, DataParameter[] dataParameters)
-    {
-        ArgumentNullException.ThrowIfNull(dataParameters);
-
-        var dataConnection = CreateDataConnection(LinqToDbDataProvider);
-
-        return new CommandInfo(dataConnection, sql, dataParameters);
-    }
-
-    /// <summary>
     /// Creates the database connection
     /// </summary>
     /// <param name="dataProvider">Data provider</param>
@@ -402,7 +388,8 @@ public abstract partial class BaseDataProvider
     /// </returns>
     public virtual async Task<int> ExecuteNonQueryAsync(string sql, params DataParameter[] dataParameters)
     {
-        var command = CreateDbCommand(sql, dataParameters);
+        using var dataConnection = CreateDataConnection(LinqToDbDataProvider);
+        var command = new CommandInfo(dataConnection, sql, dataParameters);
 
         return await command.ExecuteAsync();
     }
@@ -420,7 +407,9 @@ public abstract partial class BaseDataProvider
     /// </returns>
     public virtual Task<IList<T>> QueryProcAsync<T>(string procedureName, params DataParameter[] parameters)
     {
-        var command = CreateDbCommand(procedureName, parameters);
+        using var dataConnection = CreateDataConnection(LinqToDbDataProvider);
+        var command = new CommandInfo(dataConnection, procedureName, parameters);
+
         var rez = command.QueryProc<T>()?.ToList();
         return Task.FromResult<IList<T>>(rez ?? new List<T>());
     }

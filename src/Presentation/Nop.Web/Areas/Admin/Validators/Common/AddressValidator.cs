@@ -23,9 +23,8 @@ public partial class AddressValidator : BaseNopValidator<AddressModel>
             .WithMessageAwait(localizationService.GetResourceAsync("Admin.Address.Fields.Email.Required"))
             .When(x => x.EmailRequired);
         RuleFor(x => x.Email)
-            .EmailAddress()
-            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Common.WrongEmail"))
-            .When(x => x.EmailRequired);
+            .IsEmailAddress()
+            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Common.WrongEmail"));
         RuleFor(x => x.Company)
             .NotEmpty()
             .WithMessageAwait(localizationService.GetResourceAsync("Admin.Address.Fields.Company.Required"))

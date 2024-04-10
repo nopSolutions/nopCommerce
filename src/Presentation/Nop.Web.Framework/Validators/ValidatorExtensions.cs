@@ -1,4 +1,6 @@
 ﻿using FluentValidation;
+using FluentValidation.Validators;
+using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Localization;
 
@@ -70,5 +72,16 @@ public static class ValidatorExtensions
         ILocalizationService localizationService, CustomerSettings customerSettings)
     {
         return ruleBuilder.SetValidator(new PasswordPropertyValidator<TModel, string>(localizationService, customerSettings));
+    }
+
+    /// <summary>
+    /// Set email address validator
+    /// </summary>
+    /// <typeparam name="TModel">Type of model being validated</typeparam>
+    /// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+    /// <returns></returns>
+    public static IRuleBuilderOptions<TModel, string> IsEmailAddress<TModel>(this IRuleBuilder<TModel, string> ruleBuilder)
+    {
+        return ruleBuilder.SetValidator(new RegularExpressionValidator<TModel>(CommonHelper.GetEmailRegex()));
     }
 }
