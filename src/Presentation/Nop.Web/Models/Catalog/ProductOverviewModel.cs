@@ -31,7 +31,6 @@ namespace Nop.Web.Models.Catalog
         //picture
         public PictureModel DefaultPictureModel { get; set; }
         //specification attributes
-
         public ProductSpecificationModel ProductSpecificationModel { get; set; }
         //price
         public ProductReviewOverviewModel ReviewOverviewModel { get; set; }

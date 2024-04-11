@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using iTextSharp.text;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -523,27 +524,72 @@ namespace Nop.Web.Factories
 
             var defaultPictureModel = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
-                var picture = (await _pictureService.GetPicturesByProductIdAsync(product.Id, 1)).FirstOrDefault();
-                string fullSizeImageUrl, imageUrl;
-                (imageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture, pictureSize);
-                (fullSizeImageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture);
+                var picture = await _pictureService.GetPicturesByProductIdAsync(product.Id, 2);
+                string fullSizeImageUrl, imageUrl, hoverImageUrl, hoverFullSizeImageUrl;
+                
 
-                var pictureModel = new PictureModel
+                var pictureModel = new PictureModel {};
+                if(picture.Count >= 2) 
                 {
-                    ImageUrl = imageUrl,
-                    FullSizeImageUrl = fullSizeImageUrl,
-                    //"title" attribute
-                    Title = (picture != null && !string.IsNullOrEmpty(picture.TitleAttribute))
-                        ? picture.TitleAttribute
-                        : string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageLinkTitleFormat"),
-                            productName),
-                    //"alt" attribute
-                    AlternateText = (picture != null && !string.IsNullOrEmpty(picture.AltAttribute))
-                        ? picture.AltAttribute
-                        : string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageAlternateTextFormat"),
-                            productName)
-                };
+                    (imageUrl, picture[0]) = await _pictureService.GetPictureUrlAsync(picture[0], pictureSize);
+                    (fullSizeImageUrl, picture[0]) = await _pictureService.GetPictureUrlAsync(picture[0]);
+                    (hoverImageUrl, picture[1]) = await _pictureService.GetPictureUrlAsync(picture[1], pictureSize);
+                    (hoverFullSizeImageUrl, picture[1]) = await _pictureService.GetPictureUrlAsync(picture[1]);
 
+                    System.Diagnostics.Debug.WriteLine("Two");
+                    pictureModel = new PictureModel
+                    {
+                        ImageUrl = imageUrl,
+                        FullSizeImageUrl = fullSizeImageUrl,
+                        //"title" attribute
+                        Title = (picture != null && !string.IsNullOrEmpty(picture[0].TitleAttribute))
+                            ? picture[0].TitleAttribute
+                            : string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageLinkTitleFormat"),
+                                productName),
+                        //"alt" attribute
+                        AlternateText = (picture != null && !string.IsNullOrEmpty(picture[0].AltAttribute))
+                            ? picture[0].AltAttribute
+                            : string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageAlternateTextFormat"),
+                                productName),
+                        HoverImageUrl = hoverImageUrl,
+                        HoverFullSizeImageUrl = hoverFullSizeImageUrl,
+                        //"title" attribute
+                        HoverTitle = (picture != null && !string.IsNullOrEmpty(picture[1].TitleAttribute))
+                            ? picture[1].TitleAttribute
+                            : string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageLinkTitleFormat"),
+                                productName),
+                        //"alt" attribute
+                        HoverAlternateText = (picture != null && !string.IsNullOrEmpty(picture[1].AltAttribute))
+                            ? picture[1].AltAttribute
+                            : string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageAlternateTextFormat"),
+                                productName)
+                    };
+                }
+                    else if(picture.Count >= 1) 
+                    {
+                        (imageUrl, picture[0]) = await _pictureService.GetPictureUrlAsync(picture[0], pictureSize);
+                        (fullSizeImageUrl, picture[0]) = await _pictureService.GetPictureUrlAsync(picture[0]);
+                        System.Diagnostics.Debug.WriteLine("One");
+                        pictureModel = new PictureModel
+                        {
+                            ImageUrl = imageUrl,
+                            FullSizeImageUrl = fullSizeImageUrl,
+                            //"title" attribute
+                            Title = (picture != null && !string.IsNullOrEmpty(picture[0].TitleAttribute))
+                                ? picture[0].TitleAttribute
+                                : string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageLinkTitleFormat"),
+                                    productName),
+                            //"alt" attribute
+                            AlternateText = (picture != null && !string.IsNullOrEmpty(picture[0].AltAttribute))
+                                ? picture[0].AltAttribute
+                                : string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageAlternateTextFormat"),
+                                    productName),
+                        };
+                    }
+                    else
+                    {
+                        return new PictureModel {};
+                    }
                 return pictureModel;
             });
 
