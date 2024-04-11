@@ -242,21 +242,34 @@
         <a href="@productUrl"><span>@man</span><span class="man-no">@manNo</span></a>
     </h2>
     <div class="picture">
-        <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title">
-            @if (viewComponentSelector.SelectComponent("LazyLoadImage") != null)
-            {
-                @await Component.InvokeAsync("LazyLoadImage", new(string Key, string Value)[] 
+        <div class="image-container">
+            <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title">
+                @if (viewComponentSelector.SelectComponent("LazyLoadImage") != null)
                 {
-                    ("src", Model.DefaultPictureModel.ImageUrl),
-                    ("alt", Model.DefaultPictureModel.AlternateText),
-                    ("title", Model.DefaultPictureModel.Title)
-                })
-            }
-            else
-            {
-                <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
-            }
-        </a>
+                    @await Component.InvokeAsync("LazyLoadImage", new(string Key, string Value)[] 
+                    {
+                        ("src", Model.DefaultPictureModel.ImageUrl),
+                        ("alt", Model.DefaultPictureModel.AlternateText),
+                        ("title", Model.DefaultPictureModel.Title)
+                    })
+                }
+                else
+                {
+                    <img class="main-image" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
+                }
+                <div class="hover-image">
+                    @if (viewComponentSelector.SelectComponent("LazyLoadImage") != null)
+                    {
+                        @await Component.InvokeAsync("LazyLoadImage", new(string Key, string Value)[] 
+                        {
+                            ("src", Model.DefaultPictureModel.HoverImageUrl),
+                            ("alt", Model.DefaultPictureModel.HoverAlternateText),
+                            ("title", Model.DefaultPictureModel.HoverTitle),
+                        })
+                    }
+                </div>
+            </a>
+        </div>
     </div>
     <div class="details">
         @if (Model.ReviewOverviewModel.AllowCustomerReviews)

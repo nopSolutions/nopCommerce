@@ -897,3 +897,16 @@ div.rental-price {
 }
 
 }
+
+.hover-image img {
+	position: absolute;
+	top: 0;
+	left: 0;
+	opacity: 0;
+	transition: opacity 0.3s ease;
+  }
+  
+  .image-container:hover .hover-image img {
+	opacity: 1;
+  }
+  

@@ -13,5 +13,14 @@ namespace Nop.Web.Models.Media
         public string Title { get; set; }
 
         public string AlternateText { get; set; }
+        public string HoverImageUrl { get; set; }
+
+        public string HoverThumbImageUrl { get; set; }
+
+        public string HoverFullSizeImageUrl { get; set; }
+
+        public string HoverTitle { get; set; }
+
+        public string HoverAlternateText { get; set; }
     }
 }
