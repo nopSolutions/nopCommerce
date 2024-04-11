@@ -584,6 +584,18 @@ namespace Nop.Web.Factories
                                 ? picture[0].AltAttribute
                                 : string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageAlternateTextFormat"),
                                     productName),
+                            HoverImageUrl = imageUrl,
+                            HoverFullSizeImageUrl = fullSizeImageUrl,
+                            //"title" attribute
+                            HoverTitle = (picture != null && !string.IsNullOrEmpty(picture[0].TitleAttribute))
+                                ? picture[0].TitleAttribute
+                                : string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageLinkTitleFormat"),
+                                    productName),
+                            //"alt" attribute
+                            HoverAlternateText = (picture != null && !string.IsNullOrEmpty(picture[0].AltAttribute))
+                                ? picture[0].AltAttribute
+                                : string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageAlternateTextFormat"),
+                                    productName)
                         };
                     }
                     else
