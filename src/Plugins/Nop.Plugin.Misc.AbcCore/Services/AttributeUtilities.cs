@@ -187,7 +187,7 @@ namespace Nop.Plugin.Misc.AbcCore.Services
                 return HOME_DELIVERY_MESSAGE_ABC;
             }
 
-            if (hawthorneStore != null
+            if (hawthorneStore != null)
             {
                 return HOME_DELIVERY_MESSAGE_HAWTHORNE;
             }

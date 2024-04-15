@@ -17,15 +17,14 @@
 @inject IProductService productService
 @inject IAbcMattressListingPriceService abcMattressListingPriceService
 @inject IWebHelper webHelper
+@inject IAbcCategoryService abcCategoryService
 
 @{
     Html.AddCssFileParts("https://use.fontawesome.com/releases/v5.3.1/css/all.css", "", true);
 
     var itemNumber = "";
     var usesPairPricing = false;
-
-    // ClearanceTODO: check if the product is Clearance category
-    bool isClearance = frontEndService.StoreIsClearance(await storeContext.GetCurrentStoreAsync()) || frontEndService.StoreIsHawthorneClearance(await storeContext.GetCurrentStoreAsync());
+    
     bool isHawthorne = frontEndService.StoreIsHawthorne(await storeContext.GetCurrentStoreAsync());
 
     if (frontEndService.ProductIsAbc(Model.ProductId))
@@ -52,6 +51,9 @@
     }
 
     var product = await productService.GetProductByIdAsync(Model.ProductId);
+    var productCategories = await productService.GetProductCategoriesByProductIdAsync(Model.ProductId);
+    var isClearance = productCategories.Any(x => await abcCategoryService.IsCategoryIdClearance(x.CategoryId));
+
     bool usesCartPricing = await product.IsAddToCartAsync() || await product.IsAddToCartWithUserInfoAsync();
 
     // get price bucket code

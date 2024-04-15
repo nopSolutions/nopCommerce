@@ -29,6 +29,7 @@
 @inject IAbcProductAttributeService abcProductAttributeService
 @inject IProductService productService
 @inject IStoreContext storeContext
+@inject IAbcCategoryService abcCategoryService
 
 @{
     var hasDeliveryOptions = await abcProductAttributeService.ProductHasDeliveryOptionsAsync(Model.Id);
@@ -53,15 +54,6 @@
     var itemNumber = "";
     var itemNumberDisplay = "";
     ProductFlag productFlag = frontEndService.GetProductFlag(Model.Id);
-    // ClearanceTODO: check if the product is Clearance category
-    bool isOpenBox = productFlag != null &&
-                     !(frontEndService.StoreIsClearance(await storeContext.GetCurrentStoreAsync()) || frontEndService.StoreIsHawthorneClearance(await storeContext.GetCurrentStoreAsync())) ?
-                        productFlag.IsOpenBox() : false;
-    decimal openBoxPrice = 0.0M;
-    if (isOpenBox)
-    {
-        openBoxPrice = productFlag.CalculateOpenBoxPrice(Model.ProductPrice.PriceValue);
-    }
 
     bool isHawthorne = frontEndService.StoreIsHawthorne(await storeContext.GetCurrentStoreAsync());
     string equalPaymentsModalStoreName = isHawthorne ? "Hawthorne" : "ABC Warehouse";
@@ -173,6 +165,25 @@
     {
         man = Model.Name.Substring(0, index);
         manNo = Model.Name.Substring(index);
+    }
+
+    var isClearance = false;
+    var productCategories = await abcCategoryService.GetProductCategoriesByProductIdAsync(Model.Id);
+    foreach (var productCategory in productCategories)
+    {
+        isClearance = await abcCategoryService.IsCategoryIdClearance(productCategory.CategoryId);
+        if (isClearance)
+        {
+            break;
+        }
+    }
+
+    bool isOpenBox = productFlag != null &&
+                     !isClearance ? productFlag.IsOpenBox() : false;
+    decimal openBoxPrice = 0.0M;
+    if (isOpenBox)
+    {
+        openBoxPrice = productFlag.CalculateOpenBoxPrice(Model.ProductPrice.PriceValue);
     }
 }
 

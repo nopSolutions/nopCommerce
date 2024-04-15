@@ -61,5 +61,12 @@ namespace Nop.Plugin.Misc.AbcCore.Nop
 
             return await query.FirstOrDefaultAsync();
         }
+
+        public async Task<bool> IsCategoryIdClearance(int categoryId)
+        {
+            var category = await GetCategoryByIdAsync(categoryId);
+
+            return category.Name == "Clearance";
+        }
     }
 }

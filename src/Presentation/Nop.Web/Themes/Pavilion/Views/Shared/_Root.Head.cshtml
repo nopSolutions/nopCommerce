@@ -76,12 +76,6 @@
     await eventPublisher.PublishAsync(new PageRenderingEvent(this.Html));
 
     // ABC: custom stuff
-    // ClearanceTODO: check if the product is Clearance category
-    bool isClearanceStore = frontEndService.StoreIsClearance(await storeContext.GetCurrentStoreAsync());
-    string clearanceClass = isClearanceStore ? "abc-clearance" : "";
-
-    Url.ActionContext.HttpContext.Response.Cookies.Append("AbcClearanceStore", isClearanceStore.ToString());
-
     bool isHawthorne = frontEndService.StoreIsHawthorne(await storeContext.GetCurrentStoreAsync());
     string sliRacConfig = isHawthorne ?
                         "https://hawthorneonline.resultspage.com/autocomplete/custom/sli-rac.config.js" :
@@ -132,7 +126,7 @@
     @Html.NopInlineScripts(ResourceLocation.Head)
     <!--Powered by nopCommerce - https://www.nopCommerce.com-->
 </head>
-<body class="@isAndroid23Class @currentPageClass @if (supportRtl){<text>rtl</text>} @clearanceClass">
+<body class="@isAndroid23Class @currentPageClass @if (supportRtl){<text>rtl</text>}">
     @* ABC: A bunch of custom styles *@
     <style>
         .flyout-cart-wrapper:hover .flyout-cart {
@@ -244,10 +238,8 @@
             margin-top: 0.5em;
         }
     </style>
-    @if (!isClearanceStore)
-    {
-        <script type="text/javascript" src="@sliRacConfig"></script>
-    }
+    <!-- ABC: SLI -->
+    <script type="text/javascript" src="@sliRacConfig"></script>
     @RenderBody()
     @Html.NopCssFiles(ResourceLocation.Footer)
     @Html.NopScripts(ResourceLocation.Footer)
