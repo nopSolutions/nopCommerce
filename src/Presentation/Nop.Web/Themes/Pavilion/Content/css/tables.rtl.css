@@ -60,3 +60,8 @@ td.footable-first-column {
 	display: inline-block !important;
 	font-size: 13px !important;
 }
+
+.header-links {
+	left: -20px;
+  }
+  

@@ -251,7 +251,7 @@ namespace AbcWarehouse.Plugin.Payments.UniFi
             return "UniFiPaymentsProcessor";
         }
 
-        public Task<string> GetPaymentMethodDescriptionAsync() => Task.FromResult("Allows for payment via ABC Warehouse Card.");
+        public Task<string> GetPaymentMethodDescriptionAsync() => Task.FromResult("Pay with your ABC Warehouse card and Synchrony Pay Later");
 
         public bool SupportCapture
         {
