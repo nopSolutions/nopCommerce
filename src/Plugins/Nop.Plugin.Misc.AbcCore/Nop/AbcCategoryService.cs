@@ -12,7 +12,6 @@ using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Stores;
-using Nop.Services.Catalog;
 using Nop.Services.Seo;
 
 namespace Nop.Plugin.Misc.AbcCore.Nop

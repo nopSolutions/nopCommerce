@@ -12,6 +12,8 @@ using Nop.Services.Logging;
 using Nop.Services.Tasks;
 using Nop.Plugin.Misc.AbcCore.Mattresses;
 using Nop.Plugin.Misc.AbcCore.Extensions;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 
 namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
 {
@@ -53,6 +55,8 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
             _priceFormatter = priceFormatter;
         }
 
+        // Suppress to allow synchronous task runs to revent collision issues
+        [SuppressMessage("Await.Warning", "CS4014:Await.Warning")]
         public async System.Threading.Tasks.Task ExecuteAsync()
         {
             _deliveryPickupOptionsProductAttribute =
@@ -85,43 +89,42 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                         {
                             var deliveryOptionPavs = await UpdateDeliveryOptionsPavAsync(deliveryOptionsPam, map);
 
-                            // Try running these synchronously to prevent the PAV collision issues
                             var deliveryOnlyPav = deliveryOptionPavs.SingleOrDefault(pav => pav.Name.Contains("Home Delivery ("));
                             if (deliveryOnlyPav != null)
                             {
-                                UpdateHaulawayAsync(productId, map.DeliveryHaulway, _haulAwayDeliveryProductAttribute.Id, deliveryOptionsPam.Id, deliveryOnlyPav);
-                                UpdateAccessoriesAsync(
+                                System.Threading.Tasks.Task.Run(() => UpdateHaulawayAsync(productId, map.DeliveryHaulway, _haulAwayDeliveryProductAttribute.Id, deliveryOptionsPam.Id, deliveryOnlyPav)).GetAwaiter().GetResult();
+                                System.Threading.Tasks.Task.Run(() => UpdateAccessoriesAsync(
                                     productId,
                                     map,
                                     _deliveryAccessoriesProductAttribute.Id,
                                     deliveryOptionsPam.Id,
                                     deliveryOnlyPav,
-                                    "Recommended Accessories");
+                                    "Recommended Accessories")).GetAwaiter().GetResult();
                             }
 
                             var deliveryInstallPav = deliveryOptionPavs.SingleOrDefault(pav => pav.Name.Contains("Home Delivery and Installation ("));
                             if (deliveryInstallPav != null)
                             {
-                                UpdateHaulawayAsync(productId, map.DeliveryHaulwayInstall, _haulAwayDeliveryInstallProductAttribute.Id, deliveryOptionsPam.Id, deliveryInstallPav);
-                                UpdateAccessoriesAsync(
+                                System.Threading.Tasks.Task.Run(() => UpdateHaulawayAsync(productId, map.DeliveryHaulwayInstall, _haulAwayDeliveryInstallProductAttribute.Id, deliveryOptionsPam.Id, deliveryInstallPav)).GetAwaiter().GetResult();
+                                System.Threading.Tasks.Task.Run(() => UpdateAccessoriesAsync(
                                     productId,
                                     map,
                                     _deliveryInstallAccessoriesProductAttribute.Id,
                                     deliveryOptionsPam.Id,
                                     deliveryInstallPav,
-                                    "Required Accessories");
+                                    "Required Accessories")).GetAwaiter().GetResult();
                             }
 
                             var pickupPav = deliveryOptionPavs.SingleOrDefault(pav => pav.Name.Contains("Pickup In-Store Or Curbside ("));
                             if (pickupPav != null)
                             {
-                                UpdateAccessoriesAsync(
+                                System.Threading.Tasks.Task.Run(() => UpdateAccessoriesAsync(
                                     productId,
                                     map,
                                     _pickupAccessoriesProductAttribute.Id,
                                     deliveryOptionsPam.Id,
                                     pickupPav,
-                                    "Recommended Accessories");
+                                    "Recommended Accessories")).GetAwaiter().GetResult();
                             }
                         }
                     }
@@ -328,7 +331,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
                 "MATTRESS" : 
                 await _priceFormatter.FormatPriceAsync(deliveryOnlyItem.Price);
 
-            string message = await GetHomeDeliveryMessageAsync(
+            string message = GetHomeDeliveryMessage(
                 deliveryOnlyPriceFormatted,
                 map.HasMailInRebate());
 
@@ -485,7 +488,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
             return existingPav;
         }
 
-        private async System.Threading.Tasks.Task<string> GetHomeDeliveryMessageAsync(
+        private string GetHomeDeliveryMessage(
             string deliveryOnlyPriceFormatted,
             bool hasMailInRebate)
         {
