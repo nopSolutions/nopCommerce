@@ -238,7 +238,6 @@ public class ZettleAdminController : BasePluginController
             _zettleSettings.WebhookUrl = string.Empty;
             _zettleSettings.WebhookKey = string.Empty;
             _zettleSettings.ImportId = string.Empty;
-            _zettleSettings.InventoryTrackingIds = new();
 
             if (ZettleService.IsConfigured(_zettleSettings))
             {
@@ -324,7 +323,6 @@ public class ZettleAdminController : BasePluginController
         _zettleSettings.WebhookUrl = string.Empty;
         _zettleSettings.WebhookKey = string.Empty;
         _zettleSettings.ImportId = string.Empty;
-        _zettleSettings.InventoryTrackingIds = new();
         await _settingService.SaveSettingAsync(_zettleSettings);
 
         _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Misc.Zettle.Credentials.AccessRevoked"));
