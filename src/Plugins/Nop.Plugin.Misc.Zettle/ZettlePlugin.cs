@@ -9,6 +9,7 @@ using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Plugins;
 using Nop.Services.ScheduleTasks;
+using Nop.Services.Security;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Menu;
 
@@ -23,6 +24,7 @@ public class ZettlePlugin : BasePlugin, IAdminMenuPlugin, IMiscPlugin
 
     protected readonly IActionContextAccessor _actionContextAccessor;
     protected readonly ILocalizationService _localizationService;
+    protected readonly IPermissionService _permissionService;
     protected readonly IScheduleTaskService _scheduleTaskService;
     protected readonly ISettingService _settingService;
     protected readonly IUrlHelperFactory _urlHelperFactory;
@@ -35,6 +37,7 @@ public class ZettlePlugin : BasePlugin, IAdminMenuPlugin, IMiscPlugin
 
     public ZettlePlugin(IActionContextAccessor actionContextAccessor,
         ILocalizationService localizationService,
+        IPermissionService permissionService,
         IScheduleTaskService scheduleTaskService,
         ISettingService settingService,
         IUrlHelperFactory urlHelperFactory,
@@ -43,6 +46,7 @@ public class ZettlePlugin : BasePlugin, IAdminMenuPlugin, IMiscPlugin
     {
         _actionContextAccessor = actionContextAccessor;
         _localizationService = localizationService;
+        _permissionService = permissionService;
         _scheduleTaskService = scheduleTaskService;
         _settingService = settingService;
         _urlHelperFactory = urlHelperFactory;
@@ -69,6 +73,9 @@ public class ZettlePlugin : BasePlugin, IAdminMenuPlugin, IMiscPlugin
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task ManageSiteMapAsync(SiteMapNode rootNode)
     {
+        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
+            return;
+
         var configurationItem = rootNode.ChildNodes.FirstOrDefault(node => node.SystemName.Equals("Configuration"));
         if (configurationItem is null)
             return;
