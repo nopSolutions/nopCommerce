@@ -82,6 +82,6 @@ public static class ValidatorExtensions
     /// <returns></returns>
     public static IRuleBuilderOptions<TModel, string> IsEmailAddress<TModel>(this IRuleBuilder<TModel, string> ruleBuilder)
     {
-        return ruleBuilder.SetValidator(new RegularExpressionValidator<TModel>(CommonHelper.GetEmailRegex()));
+        return ruleBuilder.SetValidator(new EmailPropertyValidator<TModel>());
     }
 }
