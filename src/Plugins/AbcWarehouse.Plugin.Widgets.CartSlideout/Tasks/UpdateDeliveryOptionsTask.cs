@@ -55,7 +55,7 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout.Tasks
             _priceFormatter = priceFormatter;
         }
 
-        // Suppress to allow synchronous task runs to revent collision issues
+        // Suppress to allow synchronous task runs to prevent collision issues
         [SuppressMessage("Await.Warning", "CS4014:Await.Warning")]
         public async System.Threading.Tasks.Task ExecuteAsync()
         {
