@@ -22,8 +22,8 @@ $(document).ready(function () {
 							form.submit();
 						}
 						else {
-							if (transactionMessage !== 'Address verification check Fail') {
-								alert(`${transactionMessage}`);
+							if (transactionMessage !== 'Address verification check Fail' || transactionMessage !== 'Customer Terminated') {
+								alert(`${transactionMessage}`);						
 							}
 							
 							$('#synchrony-error-button').show();
