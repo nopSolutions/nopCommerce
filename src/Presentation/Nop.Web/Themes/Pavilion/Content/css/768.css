@@ -902,20 +902,20 @@ div.rental-price {
 	position: absolute;
 	top: 0;
 	left: 0;
-	opacity: 0;
+	opacity: 0 !important;
 	transition: opacity 1s ease;
   }
   
 .image-container:hover .hover-image img {
-opacity: 1;
+opacity: 1 !important;
 }
   
 .image-container:hover a > img {
 	visibility: hidden;
-	opacity: 0;
+	opacity: 0 !important;
 	transition: opacity 1s ease;
 }
 
 .hover-image img {
-	opacity: 0;
+	opacity: 0 !important;
 }
