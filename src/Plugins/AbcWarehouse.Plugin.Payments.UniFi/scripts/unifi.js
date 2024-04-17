@@ -22,7 +22,7 @@ $(document).ready(function () {
 							form.submit();
 						}
 						else {
-							if (transactionMessage !== 'Address verification check Fail' || transactionMessage !== 'Customer Terminated') {
+							if (transactionMessage !== 'Address verification check Fail' && transactionMessage !== 'Customer Terminated') {
 								alert(`${transactionMessage}`);						
 							}
 							
