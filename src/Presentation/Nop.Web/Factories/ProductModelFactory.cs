@@ -697,7 +697,14 @@ public partial class ProductModelFactory : IProductModelFactory
         if (!productCategories.Any())
             return breadcrumbModel;
 
-        var category = await _categoryService.GetCategoryByIdAsync(productCategories[0].CategoryId);
+        var categoryId = productCategories[0].CategoryId;
+        var categoryIdBasedOnUrlReferrer = await GetCategoryIdBasedOnUrlReferrer();
+        if (categoryIdBasedOnUrlReferrer.HasValue)
+        {
+            categoryId = categoryIdBasedOnUrlReferrer.Value;
+        }
+        
+        var category = await _categoryService.GetCategoryByIdAsync(categoryId);
         if (category == null)
             return breadcrumbModel;
 
@@ -721,7 +728,28 @@ public partial class ProductModelFactory : IProductModelFactory
 
         return breadcrumbModel;
     }
+    
+    private async Task<int?> GetCategoryIdBasedOnUrlReferrer()
+    {
+        try
+        {
+            var previousPath = _webHelper.GetUrlReferrer();
+            if (string.IsNullOrEmpty(previousPath)) return null;
+            var previousUri = new Uri(previousPath);
+            if(string.IsNullOrEmpty(previousUri.AbsolutePath)) return null;
+            var absolutePath = previousUri.AbsolutePath.TrimStart('/');
 
+            if (string.IsNullOrEmpty(absolutePath)) return null;
+
+            var urlRecord = await _urlRecordService.GetBySlugAsync(absolutePath);
+            return urlRecord?.EntityId;
+        }
+        catch (Exception ex)
+        {
+            // Consider logging the exception
+            return null;
+        }
+    }
     /// <summary>
     /// Prepare the product tag models
     /// </summary>
