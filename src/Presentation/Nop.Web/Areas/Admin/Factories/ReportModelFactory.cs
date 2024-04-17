@@ -577,6 +577,9 @@ public partial class ReportModelFactory : IReportModelFactory
         //prepare available payment statuses
         await _baseAdminModelFactory.PreparePaymentStatusesAsync(searchModel.AvailablePaymentStatuses);
 
+        //prepare available stores
+        await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
+
         //prepare page parameters
         searchModel.SetGridPageSize();
 
@@ -606,6 +609,7 @@ public partial class ReportModelFactory : IReportModelFactory
         //get items
         var items = (await _orderReportService.GetCountryReportAsync(os: orderStatus,
             ps: paymentStatus,
+            storeId: searchModel.SearchStoreId,
             startTimeUtc: startDateValue,
             endTimeUtc: endDateValue)).ToPagedList(searchModel);
 
