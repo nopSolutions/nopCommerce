@@ -777,10 +777,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("Edit", new { id = customer.Id });
             }
 
-            if (!ModelState.IsValid)
-                return RedirectToAction("Edit", new { id = customer.Id });
-
-            var changePassRequest = new ChangePasswordRequest(model.Email,
+            var changePassRequest = new ChangePasswordRequest(customer.Email,
                 false, _customerSettings.DefaultPasswordFormat, model.Password);
             var changePassResult = await _customerRegistrationService.ChangePasswordAsync(changePassRequest);
             if (changePassResult.Success)
