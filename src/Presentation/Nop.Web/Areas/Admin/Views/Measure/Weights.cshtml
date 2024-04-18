@@ -76,7 +76,7 @@
 
             function markAsPrimaryWeight(id) {
                 selectedId = id;
-                $("#btnMarkAsPrimaryWeight").click();
+                $("#btnMarkAsPrimaryWeight").trigger("click");
             };
 
             $(function() {
@@ -94,7 +94,7 @@
                             updateTable('#measureweight-grid');
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
-                            $("#markAsPrimaryWeightAlert").click();
+                            $("#markAsPrimaryWeightAlert").trigger("click");
                         }
                     });
                     $('#btnMarkAsPrimaryWeight-action-confirmation').modal('toggle');
