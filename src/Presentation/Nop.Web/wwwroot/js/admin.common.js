@@ -38,7 +38,7 @@ $(function() {
     //we must intercept all events of pressing the Enter button in the search bar to be sure that the input focus remains in the context of the search
     $("div.card-search").keypress(function (event) {
         if (event.which == 13 || event.keyCode == 13) {
-            $("button.btn-search").click();
+          $("button.btn-search").trigger("click");
             return false;
         }
     });
@@ -312,7 +312,7 @@ function reloadAllDataTables(itemCount) {
 function showAlert(alertId, text)
 {
     $('#' + alertId + '-info').text(text);
-    $('#' + alertId).click();
+    $('#' + alertId).trigger("click");
 }
 
 //scrolling and hidden DataTables issue workaround
