@@ -161,7 +161,7 @@
                                     </div>
                                 </script>
                                 <script asp-location="Footer">
-                                    $(document).ready(function() {
+                                    $(function() {
                                         $("#@(controlId)uploader").fineUploader({
                                             request: {
                                                 endpoint: '@(Url.RouteUrl("UploadFileCheckoutAttribute", new {attributeId = attribute.Id}))'
@@ -229,7 +229,7 @@
                                     }
                                 </ul>
                                 <script asp-location="Footer">
-                                    $(document).ready(function() {
+                                    $(function() {
                                         $('.checkout-attributes #color-squares-@(attribute.Id)').on('click', 'input', function (event) {
                                             $('.checkout-attributes #color-squares-@(attribute.Id)').find('li').removeClass('selected-value');
                                             $(this).closest('li').addClass('selected-value');
@@ -249,7 +249,7 @@
         </dl>
     </div>
     <script asp-location="Footer">
-        $(document).ready(function() {
+        $(function() {
             checkoutAttributeChange();
             @Html.Raw(attributeChangeScriptsBuilder.ToString())
         });

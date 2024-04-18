@@ -16,7 +16,7 @@
 <script asp-exclude-from-bundle="true" src="~/lib_npm/fine-uploader/jquery.fine-uploader/jquery.fine-uploader.min.js" asp-location="Footer"></script>
 
 <script>
-    $(document).ready(function () {
+    $(function() {
         $('#cbUseDownloadURL@(randomNumber)').click(toggleDownloadRecordType@(randomNumber));
 
         $('#saveDownloadUrl@(randomNumber)').click(function () {
@@ -162,7 +162,7 @@
 
                 <script>
 
-                    $(document).ready(function () {
+                    $(function() {
                         $("#@clientId").fineUploader({
                             request: {
                                 endpoint: '@(Url.Action("AsyncUpload", "Download", new { area = AreaNames.ADMIN }))'

@@ -4,7 +4,7 @@
 <input asp-for="Id" type="hidden" />
 
 <script>
-    $(document).ready(function() {
+    $(function() {
         toggleRemoveButton();
     });
     
@@ -106,7 +106,7 @@
                                 <button type="submit" id="btnRefreshPurchasedWithProduct" style="display: none"></button>
 
                                 <script>
-                                $(document).ready(function () {
+                                $(function() {
                                     $('#purchased-with-product-name-remove').click(function () {
                                         $('#purchased-with-product-name').text('');
                                         $("#@Html.IdFor(model => model.PurchasedWithProductId)").val(0);

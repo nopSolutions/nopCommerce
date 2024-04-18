@@ -24,7 +24,7 @@
                         <nop-select asp-for="ConditionModel.SelectedAttributeId" asp-items="@(Model.ConditionModel.ConditionAttributes.Select(x => new SelectListItem() {Text = x.Name, Value = x.Id.ToString()}))" />
 
                         <script>
-                            $(document).ready(function() {
+                            $(function() {
                                 $("#@Html.IdFor(model => model.ConditionModel.SelectedAttributeId)")
                                     .change(toggleConditionAttributes);
 

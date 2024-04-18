@@ -33,7 +33,7 @@
             {
                 <a class="watch-forum" href="#" id="watch-forum">@Model.WatchForumText</a>
                 <script asp-location="Footer">
-                    $(document).ready(function() {
+                    $(function() {
                         $('#watch-forum').on('click', function () {
                             var postData = {};
                             addAntiForgeryToken(postData);

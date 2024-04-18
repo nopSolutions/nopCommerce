@@ -40,7 +40,7 @@
             {
                 <a class="read" id="read-terms">@T("Checkout.TermsOfService.Read")</a>
                 <script>
-                    $(document).ready(function() {
+                    $(function() {
                         $('#read-terms').on('click', function(e) {
                             e.preventDefault();
                             displayPopupContentFromUrl('@Url.RouteUrl("TopicPopup", new {SystemName = "conditionsofuse"})', '@T("Checkout.TermsOfService")');
