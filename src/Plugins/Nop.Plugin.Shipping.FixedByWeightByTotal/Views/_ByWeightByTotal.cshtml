@@ -35,7 +35,7 @@
                     });
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    $("#getStatesByCountryIdAlert").click();
+                    $("#getStatesByCountryIdAlert").trigger("click");
                 }
             });
         });

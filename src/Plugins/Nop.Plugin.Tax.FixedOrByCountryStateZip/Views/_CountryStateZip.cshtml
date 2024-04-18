@@ -106,7 +106,7 @@
                                             });
                                     },
                                     error: function (jqXHR, textStatus, errorThrown) {
-                                        $("#getStatesByCountryIdAlert").click();
+                                        $("#getStatesByCountryIdAlert").trigger("click");
                                     }
                                 });
                             });
@@ -191,7 +191,7 @@
                                                 updateTable('#tax-countrystatezip-grid');
                                             },
                                             error: function (jqXHR, textStatus, errorThrown) {
-                                                $("#addRateByCountryStateZipAlert").click();
+                                                $("#addRateByCountryStateZipAlert").trigger("click");
                                             }
                                         });
                                         return false;
