@@ -204,7 +204,7 @@
 </section>
 
 <script asp-location="Footer">
-    $(document).ready(function () {
+    $(function () {
         var authSelectEl = $('#@Html.IdFor(model => model.EmailAuthenticationMethod)');
         authSelectEl.change(toggleAuthMethod);
         authSelectEl.trigger('change');

@@ -30,7 +30,7 @@ function showThrobber(message) {
     }, 1000);
 }
 
-$(document).ready(function () {
+$(function() {
     $('.multi-store-override-option').each(function (k, v) {
         checkOverriddenStoreValue(v, $(v).attr('data-for-input-selector'));
     });
@@ -237,7 +237,7 @@ $(document).ajaxStart(function () {
     });
 
 //no-tabs solution
-$(document).ready(function () {
+$(function() {
   $(".card.card-secondary >.card-header").click(CardToggle);
 
   //expanded
@@ -268,7 +268,7 @@ function WrapAndSaveBlockData(card, collapsed) {
 }
 
 //collapse search block
-$(document).ready(function () {
+$(function() {
   $(".row.search-row").click(ToggleSearchBlockAndSavePreferences);
 });
 
@@ -317,7 +317,7 @@ function showAlert(alertId, text)
 
 //scrolling and hidden DataTables issue workaround
 //More info - https://datatables.net/examples/api/tabs_and_scrolling.html
-$(document).ready(function () {
+$(function() {
   $('button[data-card-widget="collapse"]').on('click', function (e) {
     //hack with waiting animation. 
     //when page is loaded, a box that should be collapsed have style 'display: none;'.that's why a table is not updated

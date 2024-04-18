@@ -1,4 +1,4 @@
-﻿$(document).ready(function () {
+﻿$(function() {
   const tour = new Shepherd.Tour(AdminTourCommonTourOptions);
 
   AdminTourNextPageButton.action = function () { window.location = '/Admin/EmailAccount/List?showtour=True' };

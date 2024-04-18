@@ -9,7 +9,7 @@
 
 <form asp-controller="UPSShipping" asp-action="Configure" method="post">
     <script>
-        $(document).ready(function () {
+        $(function() {
             $("#PackingType").change(togglePackingType);
             togglePackingType();
         });

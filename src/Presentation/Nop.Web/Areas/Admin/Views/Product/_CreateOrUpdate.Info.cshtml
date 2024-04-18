@@ -16,7 +16,7 @@
 
 
     <script asp-location="Footer">
-    $(document).ready(function() {
+    $(function() {
         @if (!Model.IsLoggedInAsVendor)
         {
             <text>
@@ -107,11 +107,11 @@
     }
 
     //required product friendly names
-    $(document).ready(function() {
+    $(function() {
         loadRequiredProductFriendlyNames();
     });
 
-    $(document).ready(function() {
+    $(function() {
         $('#@Html.IdFor(model => model.RequiredProductIds)')
             .data('timeout', null)
             .keyup(function() {
@@ -153,7 +153,7 @@
         }
     }
 
-    $(document).ready(function () {
+    $(function() {
         if ('@Model.Sku') {
             warningValidation('@Url.Action("SkuReservedWarning")', '@Html.NameFor(model => model.Sku)', { productId: @Model.Id, sku: '@Model.Sku' });
         }
@@ -249,7 +249,7 @@
                 </div>
             </div>
             <script>
-                $(document).ready(function() {
+                $(function() {
 					var categoryIdsInput = $('#@Html.IdFor(model => model.SelectedCategoryIds)').select2({
                         closeOnSelect: false,
                         @if (!Model.AvailableCategories.Any())
@@ -271,7 +271,7 @@
         <div class="col-md-9">
             <nop-select asp-for="SelectedManufacturerIds" asp-items="Model.AvailableManufacturers" asp-multiple="true" />
             <script>
-                $(document).ready(function() {
+                $(function() {
                     var manufacturersIdsInput = $('#@Html.IdFor(model => model.SelectedManufacturerIds)').select2({
                         closeOnSelect: false,
                         @if (!Model.AvailableManufacturers.Any())
@@ -431,7 +431,7 @@
                 </button>
                 <button type="submit" id="btnRefreshAssociatedProducts" style="display: none"></button>
                 <script>
-                    $(document).ready(function () {
+                    $(function() {
                         $('#btnRefreshAssociatedProducts').click(function () {
                             //refresh grid
                             updateTable('#associatedproducts-grid');
@@ -477,7 +477,7 @@
                 <div class="col-md-4">
                     <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true"/>
                     <script>
-                        $(document).ready(function() {
+                        $(function() {
                                 var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').select2({
                                 closeOnSelect: false,
                                 @if (!Model.AvailableCustomerRoles.Any())
@@ -506,7 +506,7 @@
                 <div class="col-md-4">
                     <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
                     <script>
-                        $(document).ready(function() {
+                        $(function() {
                                 var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').select2({
                                 closeOnSelect: false,
                                 @if (!Model.AvailableStores.Any())
@@ -558,7 +558,7 @@
                     <div class="input-group-append">
                         <button type="submit" id="btnRefreshRequiredProducts" style="display: none"></button>
                         <script>
-                            $(document).ready(function () {
+                            $(function() {
                                 $('#btnRefreshRequiredProducts').click(function () {
                                     //refresh product list
                                     loadRequiredProductFriendlyNames();

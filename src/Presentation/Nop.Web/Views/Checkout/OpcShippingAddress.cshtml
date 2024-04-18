@@ -10,7 +10,7 @@
     {
         @await Html.PartialAsync("_PickupPoints", Model.PickupPointsModel)
         <script>
-            $(document).ready(function () {
+            $(function() {
                 $(document).unbind('checkout_toggle_pickup_in_store');
                 $(document).on('checkout_toggle_pickup_in_store', function (e) {
                     if (e.checked) {

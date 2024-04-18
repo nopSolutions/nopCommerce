@@ -136,7 +136,7 @@
                                                     <button type="button" id="search-product-clear" class="btn bg-gray" style="display: none; margin-top: 5px;">@T("Admin.Common.Clear")</button>
                                                     <input asp-for="ProductId" autocomplete="off" style="display: none;" />
                                                     <script>
-                                                    $(document).ready(function() {
+                                                    $(function() {
                                                         $('#search-product-name').autocomplete({
                                                             delay: 500,
                                                             minLength: 3,
@@ -418,7 +418,7 @@
                                     return `${row.CustomerFullName}<br /><a href="${link}">${data}</a>`;
                                 }
 
-                                $(document).ready(function() {
+                                $(function() {
                                     $("#@Html.IdFor(model => model.GoDirectlyToCustomOrderNumber)").keydown(
                                         function(event) {
                                             if (event.keyCode === 13) {
@@ -479,7 +479,7 @@
 }
 
 <script>
-    $(document).ready(function () {
+    $(function() {
         var displayModal = @((Model.LicenseCheckModel.DisplayWarning == true || Model.LicenseCheckModel?.BlockPages == true).ToString().ToLower());
         if (displayModal){
             $('#license-window').modal({
@@ -524,7 +524,7 @@
 </form>
 
 <script>
-    $(document).ready(function () {
+    $(function() {
         $('#exportxml-selected').click(function (e) {
             e.preventDefault();
             var ids = selectedIds.join(",");
@@ -549,7 +549,7 @@
 </form>
 
 <script>
-    $(document).ready(function () {
+    $(function() {
         $('#exportexcel-selected').click(function (e) {
             e.preventDefault();
             var ids = selectedIds.join(",");
@@ -574,7 +574,7 @@
 </form>
 
 <script>
-    $(document).ready(function () {
+    $(function() {
         $('#pdf-invoice-selected').click(function (e) {
             e.preventDefault();
             var ids = selectedIds.join(",");

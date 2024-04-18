@@ -223,7 +223,7 @@
                             <span asp-validation-for="DisableForUsersNotAcceptingCookieConsent"></span>
                         </div>
                         <script>
-                            $(document).ready(function () {
+                            $(function() {
                                 $("#@Html.IdFor(model => model.DisableForUsersNotAcceptingCookieConsent)").click(toggleCheckbox);
                                 $("#@Html.IdFor(model => model.ConversionsApiEnabled)").click(toggleConversionsApiFormField);
                                 toggleCheckbox();
@@ -338,7 +338,7 @@
                                     asp-items="@Model.CustomEventSearchModel.AddCustomEvent.AvailableWidgetZones"
                                     asp-multiple="true" />
                                 <script>
-                                    $(document).ready(function () {
+                                    $(function() {
                                         var input = $('#@Html.IdFor(model => model.CustomEventSearchModel.AddCustomEvent.WidgetZonesIds)').select2({
                                             closeOnSelect: false,
                                         });
@@ -354,7 +354,7 @@
                         </div>
 
                         <script>
-                            $(document).ready(function () {
+                            $(function() {
                                 $('#add').click(function () {
                                     $('#add').attr('disabled', true);
                                     var postData = {

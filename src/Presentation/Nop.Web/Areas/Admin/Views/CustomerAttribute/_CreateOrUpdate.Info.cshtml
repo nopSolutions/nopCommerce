@@ -3,7 +3,7 @@
 @using Nop.Services
 
 <script>
-    $(document).ready(function() {
+    $(function() {
         $("#@Html.IdFor(model => model.AttributeControlTypeId)").change(toggleAttributeControlType);
         toggleAttributeControlType();
     });
