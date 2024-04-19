@@ -58,6 +58,11 @@ public class ZettleRecord : BaseEntity
     public bool InventoryTrackingEnabled { get; set; }
 
     /// <summary>
+    /// Gets or sets the unique identifier as UUID version 1 (used when changing inventory balance)
+    /// </summary>
+    public string ExternalUuid { get; set; }
+
+    /// <summary>
     /// Gets or sets the date and time when the record was updated
     /// </summary>
     public DateTime? UpdatedOnUtc { get; set; }

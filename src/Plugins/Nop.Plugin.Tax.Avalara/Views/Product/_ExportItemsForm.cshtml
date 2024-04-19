@@ -1,12 +1,12 @@
 ﻿<form asp-controller="AvalaraProduct" asp-action="ExportProducts" method="post" id="export-avalara-selected-form">
     <script>
-        $(document).ready(function () {
+        $(function() {
             $('#export-avalara-selected').click(function (e) {
                 e.preventDefault();
                 var ids = selectedIds.join(',');
                 if (!ids) {
                     $('#export-avalara-selected-alert-info').text('@T("Admin.Products.NoProducts")');
-                    $('#export-avalara-selected-alert').click();
+                    $('#export-avalara-selected-alert').trigger('click');
                 }
                 else {
                     $('#export-avalara-selected-form #selectedIds').val(ids);

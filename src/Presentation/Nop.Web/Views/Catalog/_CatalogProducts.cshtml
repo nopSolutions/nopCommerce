@@ -9,7 +9,7 @@
     </div>
 </div>
 <script asp-location="Footer">
-    $(document).ready(function () {
+    $(function() {
         CatalogProducts.init({
             ajax: @Model.UseAjaxLoading.ToString().ToLowerInvariant(),
             browserPath: '@Context.Request.Path',

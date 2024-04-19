@@ -41,7 +41,7 @@ public abstract partial class BaseDataProvider
     {
         ArgumentNullException.ThrowIfNull(dataProvider);
 
-        var dataConnection = new DataConnection(dataProvider, CreateDbConnection(), NopMappingSchema.GetMappingSchema(ConfigurationName))
+        var dataConnection = new DataConnection(dataProvider, CreateDbConnection(), NopMappingSchema.GetMappingSchema(ConfigurationName, LinqToDbDataProvider))
         {
             CommandTimeout = DataSettingsManager.GetSqlCommandTimeout()
         };
@@ -165,7 +165,7 @@ public abstract partial class BaseDataProvider
     {
         var options = new DataOptions()
             .UseConnectionString(LinqToDbDataProvider, GetCurrentConnectionString())
-            .UseMappingSchema(NopMappingSchema.GetMappingSchema(ConfigurationName));
+            .UseMappingSchema(NopMappingSchema.GetMappingSchema(ConfigurationName, LinqToDbDataProvider));
 
         return new DataContext(options)
         {

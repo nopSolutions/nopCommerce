@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using FluentMigrator.Builders.Create.Table;
 using FluentMigrator.Expressions;
+using LinqToDB.DataProvider;
 using LinqToDB.Mapping;
 using Nop.Core;
 using Nop.Core.Infrastructure;
@@ -58,12 +59,12 @@ public static class NopMappingSchema
     /// <summary>
     /// Get or create mapping schema with specified configuration name
     /// </summary>
-    public static MappingSchema GetMappingSchema(string configurationName)
+    public static MappingSchema GetMappingSchema(string configurationName, IDataProvider mappings)
     {
 
         if (Singleton<MappingSchema>.Instance is null)
         {
-            Singleton<MappingSchema>.Instance = new MappingSchema(configurationName);
+            Singleton<MappingSchema>.Instance = new MappingSchema(configurationName, mappings.MappingSchema);
             Singleton<MappingSchema>.Instance.AddMetadataReader(new FluentMigratorMetadataReader());
         }
 

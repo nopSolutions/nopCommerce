@@ -149,11 +149,8 @@ public partial class JsonLdModelFactory : IJsonLdModelFactory
 
         if (model.ProductReviewOverview.TotalReviews > 0)
         {
-            var ratingPercent = 0;
-            if (model.ProductReviewOverview.TotalReviews != 0)
-            {
-                ratingPercent = ((model.ProductReviewOverview.RatingSum * 100) / model.ProductReviewOverview.TotalReviews) / 5;
-            }
+            var ratingPercent = model.ProductReviewOverview.RatingSum * 100 / model.ProductReviewOverview.TotalReviews / 5;
+
             var ratingValue = ratingPercent / (decimal)20;
 
             product.AggregateRating = new JsonLdAggregateRatingModel

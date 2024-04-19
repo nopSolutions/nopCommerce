@@ -180,11 +180,11 @@
                                         {
                                             <div class="product-quantity">
                                                 <div class="quantity up" id="quantity-up-@(item.Id)"></div>
-                                                <input name="itemquantity@(item.Id)" id="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="qty-input" aria-label="@T("ShoppingCart.Quantity")" onchange="$('#updatecart').click();" />
+                                                <input name="itemquantity@(item.Id)" id="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="qty-input" aria-label="@T("ShoppingCart.Quantity")" onchange="$('#updatecart').trigger('click');" />
                                                 <div class="quantity down" id="quantity-down-@(item.Id)"></div>
                                             </div>
                                             <script asp-location="Footer">
-                                                $(document).ready(function () {
+                                                $(function() {
                                                     $('#quantity-up-@(item.Id)').on('click',
                                                         function (e) {
                                                             var input = $(document).find('#itemquantity@(item.Id)');
@@ -237,7 +237,7 @@
                                         else
                                         {
                                             <input type="checkbox" name="removefromcart" id="removefromcart@(item.Id)" value="@(item.Id)" aria-label="@T("ShoppingCart.Remove")" />
-                                            <button type="button" name="updatecart" class="remove-btn" onclick="$('#removefromcart@(item.Id)').attr('checked', true); $('#updatecart').click();"></button>
+                                            <button type="button" name="updatecart" class="remove-btn" onclick="$('#removefromcart@(item.Id)').attr('checked', true); $('#updatecart').trigger('click');"></button>
                                         }
                                     </td>
                                 }
@@ -309,7 +309,7 @@
                             {
                                 <a class="read" id="read-terms">@T("Checkout.TermsOfService.Read")</a>
                                 <script asp-location="Footer">
-                                        $(document).ready(function() {
+                                        $(function() {
                                             $('#read-terms').on('click',
                                                 function(e) {
                                                     e.preventDefault();
@@ -330,7 +330,7 @@
                         @if (string.IsNullOrEmpty(Model.MinOrderSubtotalWarning) && !Model.HideCheckoutButton)
                         {
                             <script asp-location="Footer">
-                                $(document).ready(function () {
+                                $(function() {
                                     $('#checkout').on('click', function () {
                                         //terms of service
                                         var termOfServiceOk = true;

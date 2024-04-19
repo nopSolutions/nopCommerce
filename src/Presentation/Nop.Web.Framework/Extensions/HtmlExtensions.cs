@@ -135,7 +135,7 @@ public static class HtmlExtensions
         //render tabs script
         var script = new TagBuilder("script");
         script.InnerHtml.AppendHtml(
-            "$(document).ready(function () {" +
+            "$(function() {" +
             "bindBootstrapTabSelectEvent('" + name + "', 'selected-tab-name-" + name + "');" +
             "});");
         var scriptTag = await script.RenderHtmlContentAsync();
@@ -201,7 +201,7 @@ public static class HtmlExtensions
     {
         return new HtmlString($@"
                 <script>
-                    $(document).ready(function() {{
+                    $(function() {{
                         $('<li><a data-tab-name='{tabId}' data-toggle='tab' href='#{tabId}'>{tabName}</a></li>').appendTo('#{eventMessage.TabStripName} .nav-tabs:first');
                         $.get('{url}', function(result) {{
                             $(`<div class='tab-pane' id='{tabId}'>` + result + `</div>`).appendTo('#{eventMessage.TabStripName} .tab-content:first');
@@ -222,7 +222,7 @@ public static class HtmlExtensions
     {
         return new HtmlString($@"
                 <script>
-                    $(document).ready(function() {{
+                    $(function() {{
                         $(`<li><a data-tab-name='{tabId}' data-toggle='tab' href='#{tabId}'>{tabName}</a></li>`).appendTo('#{eventMessage.TabStripName} .nav-tabs:first');
                         $(`<div class='tab-pane' id='{tabId}'>{contentModel}</div>`).appendTo('#{eventMessage.TabStripName} .tab-content:first');
                     }});

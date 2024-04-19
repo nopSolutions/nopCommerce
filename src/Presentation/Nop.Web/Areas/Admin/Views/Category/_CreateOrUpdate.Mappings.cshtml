@@ -8,7 +8,7 @@
         <div class="col-md-9">
             <nop-select asp-for="SelectedDiscountIds" asp-items="Model.AvailableDiscounts" asp-multiple="true" />
             <script>
-				$(document).ready(function() {
+				$(function() {
 					var discountsIdsInput = $('#@Html.IdFor(model => model.SelectedDiscountIds)').select2({
                         closeOnSelect: false,
                         @if (!Model.AvailableDiscounts.Any())
@@ -32,7 +32,7 @@
                 <div class="col-md-4">
                     <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true" />
                     <script>
-						$(document).ready(function() {
+						$(function() {
 							var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').select2({
                                 closeOnSelect: false,
                                 @if (!Model.AvailableCustomerRoles.Any())
@@ -61,7 +61,7 @@
                 <div class="col-md-4">
                     <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
                     <script>
-						$(document).ready(function() {
+						$(function() {
 							var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').select2({
                                 closeOnSelect: false,
                                 @if (!Model.AvailableStores.Any())

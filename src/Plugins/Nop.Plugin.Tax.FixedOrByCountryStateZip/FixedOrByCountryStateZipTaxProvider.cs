@@ -297,7 +297,14 @@ public class FixedOrByCountryStateZipTaxProvider : BasePlugin, ITaxProvider
             ["Plugins.Tax.FixedOrByCountryStateZip.Fields.Percentage"] = "Percentage",
             ["Plugins.Tax.FixedOrByCountryStateZip.Fields.Percentage.Hint"] = "The tax rate.",
             ["Plugins.Tax.FixedOrByCountryStateZip.AddRecord"] = "Add tax rate",
-            ["Plugins.Tax.FixedOrByCountryStateZip.AddRecordTitle"] = "New tax rate"
+            ["Plugins.Tax.FixedOrByCountryStateZip.AddRecordTitle"] = "New tax rate",
+            ["Plugins.Tax.FixedOrByCountryStateZip.SwitchRate"] = @"
+                    <p>
+                        You are going to change the way the tax rate is calculated. This will cause the tax rate to be calculated based on the settings specified on the configuration page.
+                    </p>
+                    <p>
+                        Any current tax rate settings will be saved, but will not be active until you return to this tax calculation method.
+                    </p>",
         });
 
         await base.InstallAsync();

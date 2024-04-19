@@ -312,14 +312,15 @@ public class ZettleRecordService
     /// A task that represents the asynchronous operation
     /// The task result contains the number of products that were not added
     /// </returns>
-    public async Task<int?> AddRecordsAsync(List<int> productIds)
+    public async Task<int> AddRecordsAsync(List<int> productIds)
     {
         if (!productIds?.Any() ?? true)
-            return null;
+            return 0;
 
         var newProductIds = productIds.Except(_repository.Table.Select(record => record.ProductId)).ToList();
+        
         if (!newProductIds.Any())
-            return null;
+            return 0;
 
         var (records, invalidProducts) = await PrepareRecordsToAddAsync(newProductIds);
         await InsertRecordsAsync(records);

@@ -8,7 +8,7 @@
     NopHtml.AppendPageCssClassParts("html-search-page");
 }
 <script asp-location="Footer">
-    $(document).ready(function () {
+    $(function() {
         $("#@Html.IdFor(model => model.advs)").on('click', toggleAdvancedSearch);
         toggleAdvancedSearch();
     });
@@ -95,7 +95,7 @@
             }
             @await Html.PartialAsync("_CatalogProducts", Model.CatalogProductsModel, catalogProductsViewData)
             <script asp-location="Footer">
-                $(document).ready(function () {
+                $(function() {
                     $(CatalogProducts).on('before', function (e) {
                         var isAdvanced = $('#@Html.IdFor(model => model.advs)').is(':checked');
 

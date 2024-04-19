@@ -120,7 +120,7 @@
                                         <button type="button" id="search-product-clear" class="btn bg-gray" style="display: none; margin-top: 5px;">@T("Admin.Common.Clear")</button>
                                         <input asp-for="ProductId" autocomplete="off" style="display: none;" />
                                         <script>
-                                            $(document).ready(function() {
+                                            $(function() {
                                                 $('#search-product-name').autocomplete({
                                                     delay: 500,
                                                     minLength: 3,

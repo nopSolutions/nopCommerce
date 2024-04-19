@@ -14,6 +14,7 @@ public partial record ProductReviewOverviewModel : BaseNopModel
     public bool AllowCustomerReviews { get; set; }
 
     public bool CanAddNewReview { get; set; }
+    public bool CanCurrentCustomerLeaveReview { get; set; }
 }
 
 public partial record ProductReviewsModel : BaseNopModel

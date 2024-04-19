@@ -238,6 +238,10 @@ public class LocalizationMigration : MigrationBase
             ["Enums.Nop.Core.Domain.Messages.EmailAuthenticationMethod.MicrosoftOAuth2"] = "Microsoft (OAuth2)",
             ["Admin.Configuration.EmailAccounts.RedirectUrl.Info"] = "<b>{0}</b> - enter this \"Authorized redirect URI\" when creating your credentials in the Google Cloud console. You will be redirected to this path after authenticating with Google.",
 
+            //#7097
+            ["Admin.Reports.Sales.Country.SearchStore"] = "Store",
+            ["Admin.Reports.Sales.Country.SearchStore.Hint"] = "Search by a specific store.",
+
         }, languageId);
 
         #endregion

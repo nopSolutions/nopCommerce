@@ -3388,8 +3388,7 @@ public partial class ImportManager : IImportManager
 
         public override bool Equals(object obj)
         {
-            var other = obj as CategoryKey;
-            return other?.Equals(other) ?? false;
+            return obj is CategoryKey other && other.Equals(this);
         }
     }
 

@@ -77,10 +77,10 @@
 
             function markAsPrimaryDimension(id) {
                 selectedId = id;
-                $("#btnMarkAsPrimaryDimension").click();
+                $("#btnMarkAsPrimaryDimension").trigger("click");
             };
 
-            $(document).ready(function () {
+            $(function() {
                 $("#btnMarkAsPrimaryDimension-action-confirmation-submit-button").bind("click", function () {
                     var postData = {
                         id: selectedId
@@ -95,7 +95,7 @@
                             updateTable('#measuredimension-grid');
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
-                            $("#markAsPrimaryDimensionAlert").click();
+                            $("#markAsPrimaryDimensionAlert").trigger("click");
                         }
                     });
                     $('#btnMarkAsPrimaryDimension-action-confirmation').modal('toggle');
@@ -151,7 +151,7 @@
                 </div>
             </div>
             <script>
-                $(document).ready(function () {
+                $(function() {
                     $('#addMeasureDimension').click(function () {
                         $('#addMeasureDimension').attr('disabled', true);
 

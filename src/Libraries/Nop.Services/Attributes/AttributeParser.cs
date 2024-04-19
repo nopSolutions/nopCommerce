@@ -494,10 +494,10 @@ public partial class AttributeParser<TAttribute, TAttributeValue> : IAttributePa
     public async Task<bool?> IsConditionMetAsync(string conditionAttributeXml, string selectedAttributesXml)
     {
         if (string.IsNullOrEmpty(conditionAttributeXml))
+            //no condition
             return null;
 
-        if (string.IsNullOrEmpty(conditionAttributeXml))
-            //no condition
+        if (string.IsNullOrEmpty(selectedAttributesXml))
             return null;
 
         //load an attribute this one depends on

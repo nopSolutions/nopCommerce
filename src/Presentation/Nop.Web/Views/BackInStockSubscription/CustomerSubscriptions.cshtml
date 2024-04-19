@@ -27,7 +27,7 @@
                 @T("Account.BackInStockSubscriptions.Description")
             </div>
             <script asp-location="Footer">
-                $(document).ready(function () {
+                $(function() {
                     $('#selectall').on('click', function () {
                         $('.subscription-list .rowcheckbox').prop('checked', $(this).is(':checked')).trigger('change');
                     });

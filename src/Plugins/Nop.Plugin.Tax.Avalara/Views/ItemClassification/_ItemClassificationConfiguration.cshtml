@@ -26,7 +26,7 @@
                                 <nop-select asp-for="SelectedCountryIds" asp-items="@Model.AvailableCountries" asp-multiple="true" />
                                 <span asp-validation-for="SelectedCountryIds"></span>
                                 <script>
-                                    $(document).ready(function () {
+                                    $(function() {
                                         var countryIdsInput = $('#@Html.IdFor(model => model.SelectedCountryIds)').data("kendoMultiSelect");
                                         countryIdsInput.setOptions({
                                             autoClose: false,
@@ -175,7 +175,7 @@
                         })
 
                         <script>
-                            $(document).ready(function () {
+                            $(function() {
                                 $('#recordsUpdate').click(function () {
                                     updateTable('#item-classification-grid');
                                     return false;

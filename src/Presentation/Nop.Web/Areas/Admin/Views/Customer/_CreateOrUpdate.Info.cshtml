@@ -4,7 +4,7 @@
 @if (Model.CountryEnabled && Model.StateProvinceEnabled)
 {
     <script>
-        $(document).ready(function() {
+        $(function() {
             $("#@Html.IdFor(model => model.CountryId)").change(function() {
                 var selectedItem = $(this).val();
                 var ddlStates = $("#@Html.IdFor(model => model.StateProvinceId)");
@@ -26,7 +26,7 @@
                         });
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
-                        $("#statesAlert").click();
+                        $("#statesAlert").trigger("click");
                     }
                 });
             });
@@ -319,7 +319,7 @@
                     <div class="input-group-btn"></div>
                 </div>
                 <script>
-                $(document).ready(function() {
+                $(function() {
                     var newsletterSubscriptionStoreIdsInput = $('#@Html.IdFor(model => model.SelectedNewsletterSubscriptionStoreIds)').select2();
                 });
                 </script>
@@ -341,7 +341,7 @@
                 </div>
             </div>
             <script>
-                $(document).ready(function() {
+                $(function() {
                     var customerRoleIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').select2({
                         closeOnSelect: false,
                         @if (!Model.AvailableCustomerRoles.Any())

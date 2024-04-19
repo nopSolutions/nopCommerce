@@ -158,7 +158,7 @@ public static class HtmlExtensions
                             grecaptcha.execute('{publicKey}', {{ 'action': actionBtn }}).then(function(token) {{
                                 $('#g-recaptcha-response_{id}', form).val(token);
                                 loaded = true;
-                                btn.click();
+                                btn.trigger('click');
                             }});
                         }}
                         return loaded;

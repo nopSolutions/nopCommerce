@@ -40,7 +40,7 @@
             </div>
         </div>
         <script>
-			$(document).ready(function () {
+			$(function() {
 				$('#@Html.IdFor(model => model.Locales[item].SeName)').on('input change', function () {
 					var parameters = {
 					    entityId: '@Model.Id',
@@ -92,7 +92,7 @@
             </div>
         </div>
         <script>
-    		$(document).ready(function () {
+    		$(function() {
     			$('#@Html.IdFor(model => model.SeName)').on('input change', function () {
     				var parameters = {
     				    entityId: '@Model.Id',

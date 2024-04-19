@@ -226,15 +226,14 @@ public class ItemClassificationController : BaseAdminController
         foreach (var item in items)
         {
             var (classification, error) = await _avalaraTaxManager.ClassificationProductsAsync(item);
-            if (!string.IsNullOrEmpty(error))
-            {
+            
+            if (!string.IsNullOrEmpty(error)) 
                 return Json(new { success = false, message = error });
-            }
 
             if (!string.IsNullOrEmpty(classification?.Id))
             {
                 //save classification id for future use (get hsCode)
-                item.HSClassificationRequestId = classification?.Id;
+                item.HSClassificationRequestId = classification.Id;
                 item.UpdatedOnUtc = DateTime.UtcNow;
                 await _itemClassificationService.UpdateItemClassificationAsync(item);
             }

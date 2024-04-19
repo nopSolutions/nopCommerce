@@ -49,6 +49,13 @@ public class SettingMigration : MigrationBase
             settingService.SaveSetting(securitySettings, settings => settings.AllowStoreOwnerExportImportCustomersWithHashedPassword);
         }
 
+        //#7053
+        if (!settingService.SettingExists(securitySettings, settings => settings.LogHoneypotDetection))
+        {
+            securitySettings.LogHoneypotDetection = true;
+            settingService.SaveSetting(securitySettings, settings => settings.LogHoneypotDetection);
+        }
+
         var addressSettings = settingService.LoadSetting<AddressSettings>();
         if (!settingService.SettingExists(addressSettings, settings => settings.DefaultCountryId))
         {

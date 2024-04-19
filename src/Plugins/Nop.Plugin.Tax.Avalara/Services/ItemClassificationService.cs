@@ -95,20 +95,18 @@ public class ItemClassificationService
     /// Add items for classification
     /// </summary>
     /// <param name="productIds">Product identifiers</param>
-    /// <returns>A task that represents the asynchronous operation
-    /// The task result contains the number of products that were not added
-    /// </returns>
-    public async Task<int?> AddItemClassificationAsync(List<int> productIds)
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public async Task AddItemClassificationAsync(List<int> productIds)
     {
         if (!productIds?.Any() ?? true)
-            return productIds.Count;
+            return;
 
         var newProductIds = productIds.Except(_itemClassificationRepository.Table.Select(record => record.ProductId)).ToList();
         if (!newProductIds.Any())
-            return productIds.Count;
+            return;
 
         if (!_avalaraTaxSettings.SelectedCountryIds?.Any() ?? true)
-            return productIds.Count;
+            return;
 
         var records = _avalaraTaxSettings.SelectedCountryIds.SelectMany(countryId => newProductIds.Select(productId => new ItemClassification
         {
@@ -118,8 +116,6 @@ public class ItemClassificationService
         }));
 
         await _itemClassificationRepository.InsertAsync(records.ToList(), false);
-
-        return productIds.Count - newProductIds.Count;
     }
 
     /// <summary>
