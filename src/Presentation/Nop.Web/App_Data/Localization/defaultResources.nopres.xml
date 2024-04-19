@@ -14796,6 +14796,12 @@
   <LocaleResource Name="Admin.Reports.Sales.Country.RunReport">
     <Value>Run report</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Country.SearchStore">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Country.SearchStore.Hint">
+    <Value>Search by a specific store.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Reports.Sales.Country.StartDate">
     <Value>Start date</Value>
   </LocaleResource>

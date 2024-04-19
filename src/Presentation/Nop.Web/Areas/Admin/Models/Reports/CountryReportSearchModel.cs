@@ -16,6 +16,7 @@ public partial record CountryReportSearchModel : BaseSearchModel
     {
         AvailableOrderStatuses = new List<SelectListItem>();
         AvailablePaymentStatuses = new List<SelectListItem>();
+        AvailableStores = new List<SelectListItem>();
     }
 
     #endregion
@@ -36,9 +37,14 @@ public partial record CountryReportSearchModel : BaseSearchModel
     [NopResourceDisplayName("Admin.Reports.Sales.Country.PaymentStatus")]
     public int PaymentStatusId { get; set; }
 
+    [NopResourceDisplayName("Admin.Reports.Sales.Country.SearchStore")]
+    public int SearchStoreId { get; set; }
+
     public IList<SelectListItem> AvailableOrderStatuses { get; set; }
 
     public IList<SelectListItem> AvailablePaymentStatuses { get; set; }
+
+    public IList<SelectListItem> AvailableStores { get; set; }
 
     #endregion
 }
