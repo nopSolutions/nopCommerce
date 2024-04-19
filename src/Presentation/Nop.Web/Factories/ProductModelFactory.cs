@@ -268,6 +268,7 @@ public partial class ProductModelFactory : IProductModelFactory
         {
             productReview.ProductId = product.Id;
             productReview.AllowCustomerReviews = product.AllowCustomerReviews;
+            productReview.CanCurrentCustomerLeaveReview = _catalogSettings.AllowAnonymousUsersToReviewProduct || !await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync());
             productReview.CanAddNewReview = await _productService.CanAddReviewAsync(product.Id, _catalogSettings.ShowProductReviewsPerStore ? currentStore.Id : 0);
         }
 

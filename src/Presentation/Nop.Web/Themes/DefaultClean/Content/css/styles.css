@@ -2155,8 +2155,8 @@ label, label + * {
 }
 
 .product-review-box {
-  display: inline-block;
-  margin: 0 0 8px;
+  margin: 0 auto 8px;
+  width: 100%;
 }
 
 .product-review-box .rating {
@@ -2171,6 +2171,18 @@ label, label + * {
   font-size: 0px;
   line-height: 0px;
 }
+.product-review-links {
+    display: inline-block;
+}
+
+  .product-review-links.add-review::before {
+    content: "|";
+    padding: 0 5px;
+  }
+
+  .add-review.product-no-reviews::before {
+      display: none;
+  }
 
 .product-review-links a {
   text-decoration: underline;
@@ -2927,22 +2939,22 @@ label, label + * {
 
 
 
-.product-reviews-page h1 a {
+.product-reviews h1 a {
   color: #4ab2f1;
 }
 
-.product-reviews-page h1 a:before,
-.product-reviews-page h1 a:after {
+.product-reviews h1 a:before,
+.product-reviews h1 a:after {
   content: "''";
 }
 
-.product-reviews-page .title {
+.product-reviews .title {
   margin: 0 0 20px;
   font-size: 20px;
   color: #444;
 }
 
-.product-reviews-page .title strong {
+.product-reviews .title strong {
   font-weight: normal;
 }
 
@@ -3035,8 +3047,8 @@ label, label + * {
   background-color: #248ece;
 }
 
-.product-reviews-page .result,
-.product-reviews-page .message-error {
+.product-reviews .result,
+.product-reviews .message-error {
   margin: 0 0 20px;
 }
 
@@ -6814,6 +6826,10 @@ label, label + * {
     width: 100%;
     margin: 0 5px 0 0;
     text-align: center;
+  }
+
+  .product-review-box {
+    width: fit-content;
   }
 }
 
