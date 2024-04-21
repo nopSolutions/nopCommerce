@@ -504,19 +504,17 @@ namespace Nop.CustomExtensions.Services
 
         public async Task CreateCustomerAffliateAsync(Customer customer)
         {
-            var address = await _customerService.GetAddressesByCustomerIdAsync(customer.Id);
+            var address = await _customerService.GetCustomerBillingAddressAsync(customer);
 
-            var storeId = (await _storeContext.GetCurrentStoreAsync()).Id;
             var firstName = customer.FirstName;
             var lastName = customer.LastName;
-
-            //affiliate.AddressId = address.Id;
 
             var affiliate = new Affiliate
             {
                 Active = true,
-                AdminComment = "Affiliate created for customer",
-                FriendlyUrlName = ""
+                AdminComment = "Affiliate created for customer while registering..",
+                FriendlyUrlName = "",
+                AddressId= address.Id
             };
 
             //validate friendly URL name
@@ -524,9 +522,8 @@ namespace Nop.CustomExtensions.Services
             var friendlyUrlName = await _affiliateService.ValidateFriendlyUrlNameAsync(affiliate, freindlyName);
 
             affiliate.FriendlyUrlName = friendlyUrlName;
-            //affiliate.AddressId = address.FirstOrDefault().Id;
 
-            //await _affiliateService.InsertAffiliateAsync(affiliate);
+            await _affiliateService.InsertAffiliateAsync(affiliate);
 
             //activity log
             await _customerActivityService.InsertActivityAsync("AddNewAffiliate",
