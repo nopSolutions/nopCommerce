@@ -13,6 +13,15 @@ namespace Nop.Web.Factories
             if (!string.IsNullOrEmpty(model.WarningMessage))
                 return;
 
+            var customer = await _workContext.GetCurrentCustomerAsync();
+
+            if (await _customerService.IsGuestAsync(customer))
+            {
+                //do not show any profiles to guest customers. show message to login to view the profiles
+                model.NoResultMessage = await _localizationService.GetResourceAsync("Catalog.Products.GuestCustomerResult");
+                return;
+            }
+
             if (products.Count == 0 && isFiltering)
                 model.NoResultMessage = await _localizationService.GetResourceAsync("Catalog.Products.NoResult");
             else

@@ -178,6 +178,12 @@ public partial class ProductController : BasePublicController
             return InvokeHttp404();
 
         //customization
+        //do not show product detail page to not logged in users
+        var customer = await _workContext.GetCurrentCustomerAsync();
+        if (await _customerService.IsGuestAsync(customer))
+            return RedirectToRoute("Homepage");
+
+        //customization
         //prevent 'give support' profiles viewing 'give support' profiles and vice versa
         if (!await _productModelFactory.CanCurrentCustomerViewTargetProfileAsync(product))
             return RedirectToRoute("Homepage");
