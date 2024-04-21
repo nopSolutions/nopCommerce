@@ -364,6 +364,13 @@
                                     ClassName = NopColumnClassDefaults.Button,
                                     Render = new RenderButtonEdit(new DataUrl("Edit"))
                                 });
+                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.VendorId))
+                                {
+                                    Title = "Product",
+                                    Width = "80",
+                                    ClassName = NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonEdit(new DataUrl("/Admin/Product/Edit/", "View"))
+                                });
                             }
                             @await Html.PartialAsync("Table", gridModel)
                         </div>

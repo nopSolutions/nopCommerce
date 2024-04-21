@@ -640,6 +640,9 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                 customerModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(customer.CreatedOnUtc, DateTimeKind.Utc);
                 customerModel.LastActivityDate = await _dateTimeHelper.ConvertToUserTimeAsync(customer.LastActivityDateUtc, DateTimeKind.Utc);
 
+                // admin customization
+                customerModel.VendorId= customer.VendorId;
+
                 //fill in additional values (not existing in the entity)
                 customerModel.CustomerRoleNames = string.Join(", ",
                     (await _customerService.GetCustomerRolesAsync(customer)).Select(role => role.Name));
