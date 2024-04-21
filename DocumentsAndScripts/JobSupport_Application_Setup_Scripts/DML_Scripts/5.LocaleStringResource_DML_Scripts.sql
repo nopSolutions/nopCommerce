@@ -17,9 +17,9 @@ UPDATE [dbo].[LocaleStringResource] SET [ResourceValue]='My profile reviews' WHE
 UPDATE [dbo].[LocaleStringResource] SET [ResourceValue]='Profile specifications' WHERE [ResourceName]='products.specs';
 UPDATE [dbo].[LocaleStringResource] SET [ResourceValue]='New Profiles' WHERE [ResourceName]='pagetitle.newproducts';
 UPDATE [dbo].[LocaleStringResource] SET [ResourceValue]='New profiles' WHERE [ResourceName]='products.newproducts';
-UPDATE [dbo].[LocaleStringResource] SET [ResourceValue]='Search profiles' WHERE [ResourceName]='search.searchbox.text.label';
+UPDATE [dbo].[LocaleStringResource] SET [ResourceValue]='Search  Any Technology' WHERE [ResourceName]='search.searchbox.text.label';
 
-UPDATE [dbo].[LocaleStringResource] SET [ResourceValue]='Search profiles' WHERE [ResourceName]='search.searchbox.tooltip';
+UPDATE [dbo].[LocaleStringResource] SET [ResourceValue]='Search  Any Technology' WHERE [ResourceName]='search.searchbox.tooltip';
 UPDATE [dbo].[LocaleStringResource] SET [ResourceValue]='No profiles were found that matched your criteria. Please adjust your filter criteria to see more profiles. </br> (OR) </br> Send an email using Contact us form, our team will try best to get the relavent profiles.' WHERE resourcename = 'catalog.products.noresult';
 UPDATE [dbo].[LocaleStringResource] SET [ResourceValue]='Profile review for' WHERE [ResourceName]='account.customerproductreviews.productreviewfor'
 UPDATE [dbo].[LocaleStringResource] SET [ResourceValue]='You will see the profile review after approving by administrator.' WHERE [ResourceName]='reviews.seeafterapproving'
@@ -85,6 +85,7 @@ Update LocaleStringResource SET ResourceValue='Search In profile descriptions' W
 IF NOT EXISTS (SELECT * FROM [LocaleStringResource] WHERE [ResourceName]='Catalog.Products.GuestCustomerResult')
    BEGIN
 		INSERT INTO [dbo].[LocaleStringResource]([ResourceName],[ResourceValue],[LanguageId]) 
-		VALUES('Catalog.Products.GuestCustomerResult','Please login to see the profiles. This helps us to show the relavent profiles.',1)
+		VALUES('Catalog.Products.GuestCustomerResult','Please login/register to see the profiles. This helps us to show the relavent profiles.',1)
    END
 
+Update LocaleStringResource SET ResourceValue='Please <a href="https://onjobsupport.in/login">Login / Register</a> to see the profiles. This helps us to show the relavent profiles.' WHERE ResourceName='Catalog.Products.GuestCustomerResult'

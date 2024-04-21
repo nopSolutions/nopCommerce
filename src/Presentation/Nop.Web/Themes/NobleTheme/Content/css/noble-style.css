@@ -648,7 +648,7 @@ ul.nav.navbar-nav li {
 
 .slider-wrapper.theme-custom {
   margin-top: 0px;
-  display: none;
+  display:block;
 }
 
 .html-home-page .slider-wrapper.theme-custom {
@@ -2471,7 +2471,7 @@ a:focus {
   padding: 0px 12px;
   margin-right: -3px;
   width: 210px;
-  background: #e5e5e5;
+  /*background: #e5e5e5;*/
   border: none;
   box-shadow: none;
 }
@@ -8777,4 +8777,8 @@ div.block.product-filters.product-filters-wrapper div.product-filter.product-spe
 
 .no-result .alert-danger {
   margin: 10px;
+}
+
+.page-body .category-description {
+  margin:0px 4px 4px 4px !important;
 }

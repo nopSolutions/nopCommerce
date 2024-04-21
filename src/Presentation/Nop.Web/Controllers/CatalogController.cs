@@ -48,6 +48,8 @@ public partial class CatalogController : BasePublicController
     protected readonly IWorkContext _workContext;
     protected readonly MediaSettings _mediaSettings;
     protected readonly VendorSettings _vendorSettings;
+    //customization
+    protected readonly Nop.Web.Areas.Admin.Factories.ICategoryModelFactory _categoryModelFactory;
 
     #endregion
 
@@ -73,7 +75,9 @@ public partial class CatalogController : BasePublicController
         IWebHelper webHelper,
         IWorkContext workContext,
         MediaSettings mediaSettings,
-        VendorSettings vendorSettings)
+        VendorSettings vendorSettings,
+        //customization
+        Nop.Web.Areas.Admin.Factories.ICategoryModelFactory categoryModelFactory)
     {
         _catalogSettings = catalogSettings;
         _aclService = aclService;
@@ -96,6 +100,8 @@ public partial class CatalogController : BasePublicController
         _workContext = workContext;
         _mediaSettings = mediaSettings;
         _vendorSettings = vendorSettings;
+        //customization
+        _categoryModelFactory = categoryModelFactory;
     }
 
     #endregion
@@ -106,7 +112,7 @@ public partial class CatalogController : BasePublicController
     {
         //customization : re direct guest users to login/register page when they try to visit any category (except pricing category) or profiles
         //if ((await _workContext.GetCurrentCustomerAsync()).CustomerProfileTypeId == 0 && categoryId != 3)
-            //return RedirectToRoute("Login");
+        //return RedirectToRoute("Login");
 
         //customization : show opposite category products to logged in user
         //i.e for 'Support Takers' show 'Give Support' category profiles and vice versa
@@ -434,15 +440,24 @@ public partial class CatalogController : BasePublicController
 
         var showLinkToResultSearch = _catalogSettings.ShowLinkToAllResultInSearchAutoComplete && (products.TotalCount > productNumber);
 
+        //customization: search by category names but not product names
+        var searchModel = new Nop.Web.Areas.Admin.Models.Catalog.CategorySearchModel
+        {
+            SearchCategoryName = term
+        };
+
+        var model = await _categoryModelFactory.PrepareCategoryListModelAsync(searchModel);
+
         var models = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, false, _catalogSettings.ShowProductImagesInSearchAutoComplete, _mediaSettings.AutoCompleteSearchThumbPictureSize)).ToList();
-        var result = (from p in models
-                select new
-                {
-                    label = p.Name,
-                    producturl = Url.RouteUrl<Product>(new { SeName = p.SeName }),
-                    productpictureurl = p.PictureModels.FirstOrDefault()?.ImageUrl,
-                    showlinktoresultsearch = showLinkToResultSearch
-                })
+
+        var result = (from p in model.Data
+                      select new
+                      {
+                          label = p.Name,
+                          producturl = Url.RouteUrl<Category>(new { SeName = p.SeName }),
+                          productpictureurl = "",
+                          showlinktoresultsearch = showLinkToResultSearch
+                      })
             .ToList();
         return Json(result);
     }
