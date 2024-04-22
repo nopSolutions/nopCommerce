@@ -242,6 +242,9 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Reports.Sales.Country.SearchStore"] = "Store",
             ["Admin.Reports.Sales.Country.SearchStore.Hint"] = "Search by a specific store.",
 
+            //#6978
+            ["Admin.Promotions.NewsLetterSubscriptions.Fields.Language"] = "Language",
+
         }, languageId);
 
         #endregion

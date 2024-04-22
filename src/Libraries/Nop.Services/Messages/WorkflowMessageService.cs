@@ -1439,17 +1439,16 @@ public partial class WorkflowMessageService : IWorkflowMessageService
     /// Sends a newsletter subscription activation message
     /// </summary>
     /// <param name="subscription">Newsletter subscription</param>
-    /// <param name="languageId">Language identifier</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the queued email identifier
     /// </returns>
-    public virtual async Task<IList<int>> SendNewsLetterSubscriptionActivationMessageAsync(NewsLetterSubscription subscription, int languageId)
+    public virtual async Task<IList<int>> SendNewsLetterSubscriptionActivationMessageAsync(NewsLetterSubscription subscription)
     {
         ArgumentNullException.ThrowIfNull(subscription);
 
         var store = await _storeContext.GetCurrentStoreAsync();
-        languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
+        var languageId = await EnsureLanguageIsActiveAsync(subscription.LanguageId, store.Id);
 
         var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NEWSLETTER_SUBSCRIPTION_ACTIVATION_MESSAGE, store.Id);
         if (!messageTemplates.Any())
@@ -1478,17 +1477,16 @@ public partial class WorkflowMessageService : IWorkflowMessageService
     /// Sends a newsletter subscription deactivation message
     /// </summary>
     /// <param name="subscription">Newsletter subscription</param>
-    /// <param name="languageId">Language identifier</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the queued email identifier
     /// </returns>
-    public virtual async Task<IList<int>> SendNewsLetterSubscriptionDeactivationMessageAsync(NewsLetterSubscription subscription, int languageId)
+    public virtual async Task<IList<int>> SendNewsLetterSubscriptionDeactivationMessageAsync(NewsLetterSubscription subscription)
     {
         ArgumentNullException.ThrowIfNull(subscription);
 
         var store = await _storeContext.GetCurrentStoreAsync();
-        languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
+        var languageId = await EnsureLanguageIsActiveAsync(subscription.LanguageId, store.Id);
 
         var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NEWSLETTER_SUBSCRIPTION_DEACTIVATION_MESSAGE, store.Id);
         if (!messageTemplates.Any())

@@ -920,6 +920,7 @@ public partial class CustomerController : BasePublicController
                                 Email = customerEmail,
                                 Active = isNewsletterActive,
                                 StoreId = store.Id,
+                                LanguageId = customer.LanguageId ?? store.DefaultLanguageId,
                                 CreatedOnUtc = DateTime.UtcNow
                             });
 
@@ -1312,6 +1313,7 @@ public partial class CustomerController : BasePublicController
                                 Email = customer.Email,
                                 Active = true,
                                 StoreId = store.Id,
+                                LanguageId = customer.LanguageId ?? store.DefaultLanguageId,
                                 CreatedOnUtc = DateTime.UtcNow
                             });
                         }

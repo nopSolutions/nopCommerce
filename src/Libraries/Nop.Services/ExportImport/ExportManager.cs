@@ -2166,6 +2166,8 @@ public partial class ExportManager : IExportManager
         sb.Append(await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptions.Fields.Active"));
         sb.Append(separator);
         sb.Append(await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptions.Fields.Store"));
+        sb.Append(separator);
+        sb.Append(await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptions.Fields.Language"));
         sb.Append(Environment.NewLine);
 
         foreach (var subscription in subscriptions)
@@ -2175,6 +2177,8 @@ public partial class ExportManager : IExportManager
             sb.Append(subscription.Active);
             sb.Append(separator);
             sb.Append(subscription.StoreId);
+            sb.Append(separator);
+            sb.Append(subscription.LanguageId);
             sb.Append(Environment.NewLine);
         }
 

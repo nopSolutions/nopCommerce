@@ -420,6 +420,7 @@ public partial class CustomerController : BaseAdminController
                                 Email = customer.Email,
                                 Active = true,
                                 StoreId = store.Id,
+                                LanguageId = customer.LanguageId ?? store.DefaultLanguageId,
                                 CreatedOnUtc = DateTime.UtcNow
                             });
                         }
@@ -663,6 +664,7 @@ public partial class CustomerController : BaseAdminController
                                     Email = customer.Email,
                                     Active = true,
                                     StoreId = store.Id,
+                                    LanguageId = customer.LanguageId ?? store.DefaultLanguageId,
                                     CreatedOnUtc = DateTime.UtcNow
                                 });
                             }

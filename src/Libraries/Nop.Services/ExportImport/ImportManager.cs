@@ -2658,12 +2658,14 @@ public partial class ImportManager : IImportManager
                 }
                 else
                 {
+                    var customer = await _customerService.GetCustomerByEmailAsync(email);
                     subscription = new NewsLetterSubscription
                     {
                         Active = isActive,
                         CreatedOnUtc = DateTime.UtcNow,
                         Email = email,
                         StoreId = storeId,
+                        LanguageId = customer?.LanguageId ?? store.DefaultLanguageId,
                         NewsLetterSubscriptionGuid = Guid.NewGuid()
                     };
                     await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(subscription);
