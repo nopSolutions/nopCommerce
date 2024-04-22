@@ -79,7 +79,7 @@ public class WorkflowMessageServiceTests : ServiceTest
         _shipment = await shipmentService.GetShipmentByIdAsync(1);
         _orderNote = await orderService.GetOrderNoteByIdAsync(1);
         _recurringPayment = new RecurringPayment { InitialOrderId = _order.Id, IsActive = true };
-        _subscription = new NewsLetterSubscription { Active = true, Email = NopTestsDefaults.AdminEmail };
+        _subscription = new NewsLetterSubscription { Active = true, Email = NopTestsDefaults.AdminEmail, LanguageId = 1 };
         _product = await productService.GetProductByIdAsync(1);
         _returnRequest = new ReturnRequest { CustomerId = _customer.Id, OrderItemId = _orderItem.Id };
         _forum = await _forumService.GetForumByIdAsync(1);
@@ -320,14 +320,14 @@ public class WorkflowMessageServiceTests : ServiceTest
     public async Task CanSendNewsLetterSubscriptionActivationMessage()
     {
         await CheckData(async () =>
-            await _workflowMessageService.SendNewsLetterSubscriptionActivationMessageAsync(_subscription, 1));
+            await _workflowMessageService.SendNewsLetterSubscriptionActivationMessageAsync(_subscription));
     }
 
     [Test]
     public async Task CanSendNewsLetterSubscriptionDeactivationMessage()
     {
         await CheckData(async () =>
-            await _workflowMessageService.SendNewsLetterSubscriptionDeactivationMessageAsync(_subscription, 1));
+            await _workflowMessageService.SendNewsLetterSubscriptionDeactivationMessageAsync(_subscription));
     }
 
     #endregion

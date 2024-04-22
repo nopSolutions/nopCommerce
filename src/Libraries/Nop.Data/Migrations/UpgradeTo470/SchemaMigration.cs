@@ -10,7 +10,7 @@ using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.UpgradeTo470;
 
-[NopSchemaMigration("2024-01-31 00:00:00", "SchemaMigration for 4.70.0")]
+[NopSchemaMigration("2024-04-20 00:00:00", "SchemaMigration for 4.70.0")]
 public class SchemaMigration : ForwardOnlyMigration
 {
     /// <summary>
@@ -96,5 +96,11 @@ public class SchemaMigration : ForwardOnlyMigration
         if (!Schema.Table(emailAccountTableName).Column(nameof(EmailAccount.TenantId)).Exists())
             Alter.Table(emailAccountTableName)
                 .AddColumn(nameof(EmailAccount.TenantId)).AsString().Nullable();
+
+        //#6978
+        var newsLetterSubscriptionTableName = nameof(NewsLetterSubscription);
+        if (!Schema.Table(newsLetterSubscriptionTableName).Column(nameof(NewsLetterSubscription.LanguageId)).Exists())
+            Alter.Table(newsLetterSubscriptionTableName)
+                .AddColumn(nameof(NewsLetterSubscription.LanguageId)).AsInt32().NotNullable().SetExistingRowsTo(1);
     }
 }

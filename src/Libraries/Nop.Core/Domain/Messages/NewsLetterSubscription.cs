@@ -29,4 +29,9 @@ public partial class NewsLetterSubscription : BaseEntity
     /// Gets or sets the date and time when subscription was created
     /// </summary>
     public DateTime CreatedOnUtc { get; set; }
+
+    /// <summary>
+    /// Gets or sets the language identifier in which a customer has subscribed to newsletter
+    /// </summary>
+    public int LanguageId { get; set; }
 }
