@@ -27,7 +27,7 @@ public partial class CountryController : BasePublicController
     [CheckAccessPublicStore(ignore: true)]
     //ignore SEO friendly URLs checks
     [CheckLanguageSeoCode(ignore: true)]
-    public virtual async Task<IActionResult> GetStatesByCountryId(string countryId, bool addSelectStateItem)
+    public virtual async Task<IActionResult> GetStatesByCountryId(int countryId, bool addSelectStateItem)
     {
         var model = await _countryModelFactory.GetStatesByCountryIdAsync(countryId, addSelectStateItem);
 

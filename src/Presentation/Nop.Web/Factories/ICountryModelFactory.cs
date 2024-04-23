@@ -16,5 +16,5 @@ public partial interface ICountryModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the list of identifiers and names of states and provinces
     /// </returns>
-    Task<IList<StateProvinceModel>> GetStatesByCountryIdAsync(string countryId, bool addSelectStateItem);
+    Task<IList<StateProvinceModel>> GetStatesByCountryIdAsync(int countryId, bool addSelectStateItem);
 }
