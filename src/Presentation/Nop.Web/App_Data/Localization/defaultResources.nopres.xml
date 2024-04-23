@@ -17967,6 +17967,9 @@
   <LocaleResource Name="Homepage.Products">
     <Value>Featured products</Value>
   </LocaleResource>
+  <LocaleResource Name="Honeypot.BotDetected">
+    <Value>A bot detected. Honeypot.</Value>
+  </LocaleResource>
   <LocaleResource Name="Languages">
     <Value>Languages</Value>
   </LocaleResource>
