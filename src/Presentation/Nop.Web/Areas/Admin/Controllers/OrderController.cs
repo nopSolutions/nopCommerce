@@ -2078,11 +2078,8 @@ public partial class OrderController : BaseAdminController
 
             await _eventPublisher.PublishAsync(new ShipmentCreatedEvent(shipment));
 
-            //publish an event to inform related consumers
             if (!string.IsNullOrWhiteSpace(shipment.TrackingNumber))
-            {
                 await _eventPublisher.PublishAsync(new ShipmentTrackingNumberSetEvent(shipment));
-            }
 
             var canShip = !order.PickupInStore && model.CanShip;
             if (canShip)
@@ -2190,15 +2187,12 @@ public partial class OrderController : BaseAdminController
         if (await _workContext.GetCurrentVendorAsync() != null && !await HasAccessToShipmentAsync(shipment))
             return RedirectToAction("List");
 
-        //if tracking number has not been changed,
-        //then redirect details page without calling and updating DB!
         if (shipment.TrackingNumber == model.TrackingNumber)
             return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
 
         shipment.TrackingNumber = model.TrackingNumber;
         await _shipmentService.UpdateShipmentAsync(shipment);
 
-        //publish an event to inform related consumers
         await _eventPublisher.PublishAsync(new ShipmentTrackingNumberSetEvent(shipment));
 
         return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
