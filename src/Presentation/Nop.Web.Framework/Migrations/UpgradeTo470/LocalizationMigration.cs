@@ -245,7 +245,7 @@ public class LocalizationMigration : MigrationBase
             //#6978
             ["Admin.Promotions.NewsLetterSubscriptions.Fields.Language"] = "Language",
 
-            ["Honeypot.BotDetected"] ="A bot detected.Honeypot.",
+            ["Honeypot.BotDetected"] ="A bot detected. Honeypot.",
         }, languageId);
 
         #endregion
