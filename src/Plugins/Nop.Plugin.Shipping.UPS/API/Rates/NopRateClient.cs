@@ -5,8 +5,8 @@ namespace Nop.Plugin.Shipping.UPS.API.Rates;
 
 public partial class RateClient
 {
-    private UPSSettings _upsSettings;
-    private string _accessToken;
+    private readonly UPSSettings _upsSettings;
+    private readonly string _accessToken;
 
     public RateClient(HttpClient httpClient, UPSSettings upsSettings, string accessToken) : this(httpClient)
     {
@@ -26,7 +26,7 @@ public partial class RateClient
     public async Task<RateResponse> ProcessRateAsync(RateRequest request)
     {
         var response = await RateAsync(Guid.NewGuid().ToString(),
-            _upsSettings.UseSandbox ? "testing" : UPSDefaults.SystemName, string.Empty, "v1", "Shop", new RATERequestWrapper
+            _upsSettings.UseSandbox ? "testing" : UPSDefaults.SystemName, string.Empty, "v2403", "Shop", new RATERequestWrapper
             {
                 RateRequest = request
             });
@@ -34,7 +34,7 @@ public partial class RateClient
         return response.RateResponse;
     }
 
-    partial void UpdateJsonSerializerSettings(JsonSerializerSettings settings)
+    static partial void UpdateJsonSerializerSettings(JsonSerializerSettings settings)
     {
         settings.ContractResolver = new NullToEmptyStringResolver();
     }
