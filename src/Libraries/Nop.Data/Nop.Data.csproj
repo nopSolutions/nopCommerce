@@ -19,7 +19,7 @@
     <PackageReference Include="FluentMigrator.Runner" Version="5.1.0" />
     <PackageReference Include="linq2db" Version="5.4.1" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.0" />
-    <PackageReference Include="MySqlConnector" Version="2.3.6" />
+    <PackageReference Include="MySqlConnector" Version="2.3.7" />
     <PackageReference Include="Npgsql" Version="8.0.2" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
     <PackageReference Include="System.Net.NameResolution" Version="4.3.0" />
