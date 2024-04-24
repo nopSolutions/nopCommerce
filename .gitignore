@@ -233,7 +233,6 @@ src/Presentation/Nop.Web/Themes/**/Content/css/theme.custom*.css
 !src/Presentation/Nop.Web/Plugins/SevenSpikes.Nop.Plugins.RichBlog/
 !src/Presentation/Nop.Web/Plugins/SevenSpikes.Nop.Plugins.StoreLocator/
 !src/Presentation/Nop.Web/Plugins/SevenSpikes.Theme.Pavilion/
-!src/Presentation/Nop.Web/Plugins/SevenSpikes.Theme.Voyage/
 !src/Presentation/Nop.Web/Plugins/Shipping.Fedex/
 !src/Presentation/Nop.Web/Plugins/Widgets.AccessiBe/
 !src/Presentation/Nop.Web/Plugins/Widgets.Bronto/

@@ -1,9 +1,0 @@
-﻿@model string
-@inject IStoreContext storeContext
-@inject Nop.Services.Localization.ILocalizationService localizationService
-
-@{
-    string storeName = await localizationService.GetLocalizedAsync(await storeContext.GetCurrentStoreAsync(), x => x.Name);
-}
-
-<img alt="@storeName" src="@Model" />
