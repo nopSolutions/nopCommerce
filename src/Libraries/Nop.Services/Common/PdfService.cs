@@ -31,6 +31,8 @@ using Nop.Services.Stores;
 using Nop.Services.Vendors;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
+using SkiaSharp;
+using Svg.Skia;
 
 namespace Nop.Services.Common
 {
@@ -145,6 +147,41 @@ namespace Nop.Services.Common
         #endregion
 
         #region Utils
+
+        /// <summary>
+        /// Convert image from SVG format to PNG
+        /// </summary>
+        /// <param name="filePath">Stream for SVG file</param>
+        /// <returns>The byte array</returns>
+        protected virtual byte[] ConvertSvgToPng(Stream logo)
+        {
+            try
+            {
+                using var svg = new SKSvg();
+                svg.Load(logo);
+
+                using var bitmap = new SKBitmap((int)svg.Picture.CullRect.Width, (int)svg.Picture.CullRect.Height);
+                var canvas = new SKCanvas(bitmap);
+                canvas.DrawPicture(svg.Picture);
+                canvas.Flush();
+                canvas.Save();
+
+                using var image = SKImage.FromBitmap(bitmap);
+                using var data = image.Encode(SKEncodedImageFormat.Png, 100);
+
+                // save the data to a stream
+                using var memStream = new MemoryStream();
+                data.SaveTo(memStream);
+                memStream.Seek(0, SeekOrigin.Begin);
+
+                return memStream.ToArray();
+            }
+            catch
+            {
+            }
+
+            return null;
+        }
 
         /// <summary>
         /// Get billing address
@@ -656,15 +693,12 @@ namespace Nop.Services.Common
             var logoPicture = await _pictureService.GetPictureByIdAsync(pdfSettingsByStore.LogoPictureId);
             if (logoPicture != null)
             {
-                var logoFilePath = await _pictureService.GetThumbLocalPathAsync(logoPicture, 0, false);
+                logo = await _pictureService.LoadPictureBinaryAsync(logoPicture);
 
                 if (logoPicture.MimeType == MimeTypes.ImageSvg)
                 {
-                    logo = await _pictureService.ConvertSvgToPngAsync(logoFilePath);
-                }
-                else
-                {
-                    logo = await _fileProvider.ReadAllBytesAsync(logoFilePath);
+                    using var logoStream = new MemoryStream(logo);
+                    logo = ConvertSvgToPng(logoStream);
                 }
             }
 
