@@ -41,7 +41,7 @@
         </div>
     </div>
     <script>
-        $(document).ready(function () {
+        $(function() {
             $('#@cardId').on('click', 'button[data-card-widget="collapse"]', function () {
                 var collapsed = !$('#@cardId').hasClass('collapsed-card');
                 saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@NopCustomerDefaults.HideConfigurationStepsAttribute', collapsed);

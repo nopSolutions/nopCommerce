@@ -331,23 +331,21 @@ public partial interface IWorkflowMessageService
     /// Sends a newsletter subscription activation message
     /// </summary>
     /// <param name="subscription">Newsletter subscription</param>
-    /// <param name="languageId">Language identifier</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the queued email identifier
     /// </returns>
-    Task<IList<int>> SendNewsLetterSubscriptionActivationMessageAsync(NewsLetterSubscription subscription, int languageId);
+    Task<IList<int>> SendNewsLetterSubscriptionActivationMessageAsync(NewsLetterSubscription subscription);
 
     /// <summary>
     /// Sends a newsletter subscription deactivation message
     /// </summary>
     /// <param name="subscription">Newsletter subscription</param>
-    /// <param name="languageId">Language identifier</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the queued email identifier
     /// </returns>
-    Task<IList<int>> SendNewsLetterSubscriptionDeactivationMessageAsync(NewsLetterSubscription subscription, int languageId);
+    Task<IList<int>> SendNewsLetterSubscriptionDeactivationMessageAsync(NewsLetterSubscription subscription);
 
     #endregion
 

@@ -1,10 +1,16 @@
-﻿using System.Net;
-using System.Net.Security;
+﻿using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.Auth.OAuth2.Flows;
+using Google.Apis.Auth.OAuth2.Web;
+using Google.Apis.Util.Store;
 using MailKit.Net.Smtp;
 using MailKit.Security;
+using Microsoft.Identity.Client;
 using Nop.Core;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Infrastructure;
+using Nop.Services.Localization;
 
 namespace Nop.Services.Messages;
 
@@ -17,15 +23,86 @@ public partial class SmtpBuilder : ISmtpBuilder
 
     protected readonly EmailAccountSettings _emailAccountSettings;
     protected readonly IEmailAccountService _emailAccountService;
+    protected readonly ILocalizationService _localizationService;
+    protected readonly INopFileProvider _fileProvider;
 
     #endregion
 
     #region Ctor
 
-    public SmtpBuilder(EmailAccountSettings emailAccountSettings, IEmailAccountService emailAccountService)
+    public SmtpBuilder(EmailAccountSettings emailAccountSettings,
+        IEmailAccountService emailAccountService,
+        ILocalizationService localizationService,
+        INopFileProvider fileProvider)
     {
         _emailAccountSettings = emailAccountSettings;
         _emailAccountService = emailAccountService;
+        _localizationService = localizationService;
+        _fileProvider = fileProvider;
+    }
+
+    #endregion
+
+    #region Utilities
+
+    protected virtual async Task<SaslMechanism> GetGmailCredentialsAsync(EmailAccount emailAccount)
+    {
+        ArgumentNullException.ThrowIfNull(emailAccount);
+
+        if (string.IsNullOrEmpty(emailAccount.ClientId))
+            throw new NopException(await _localizationService.GetResourceAsync("Admin.Configuration.EmailAccounts.Fields.ClientId.Required"));
+
+        if (string.IsNullOrEmpty(emailAccount.ClientSecret))
+            throw new NopException(await _localizationService.GetResourceAsync("Admin.Configuration.EmailAccounts.Fields.ClientSecret.Required"));
+
+        var tokenFilePath = _fileProvider.MapPath(NopMessageDefaults.GmailAuthStorePath);
+        var credentialRoot = _fileProvider.Combine(tokenFilePath, emailAccount.Email);
+
+        var codeFlow = new GoogleAuthorizationCodeFlow(new GoogleAuthorizationCodeFlow.Initializer
+        {
+            ClientSecrets = new ClientSecrets
+            {
+                ClientId = emailAccount.ClientId,
+                ClientSecret = emailAccount.ClientSecret
+            },
+            Scopes = NopMessageDefaults.GmailScopes,
+            DataStore = new FileDataStore(credentialRoot, true)
+        });
+
+        var authCode = new AuthorizationCodeWebApp(codeFlow, null, null);
+
+        var authResult = await authCode.AuthorizeAsync(emailAccount.Email, CancellationToken.None);
+
+        if (authResult.Credential is null)
+            throw new NopException("Failed to obtain user credentials for the authorization server. Check the client secrets and allow the application to perform required operations.");
+
+        if (authResult.Credential.Token?.IsStale == true)
+            await authResult.Credential.RefreshTokenAsync(CancellationToken.None);
+
+        return new SaslMechanismOAuth2(authResult.Credential.UserId, authResult.Credential.Token.AccessToken);
+    }
+
+    protected virtual async Task<SaslMechanism> GetExchangeCredentialsAsync(EmailAccount emailAccount)
+    {
+        ArgumentNullException.ThrowIfNull(emailAccount);
+
+        if (string.IsNullOrEmpty(emailAccount.ClientId))
+            throw new NopException(await _localizationService.GetResourceAsync("Admin.Configuration.EmailAccounts.Fields.ClientId.Required"));
+
+        if (string.IsNullOrEmpty(emailAccount.ClientSecret))
+            throw new NopException(await _localizationService.GetResourceAsync("Admin.Configuration.EmailAccounts.Fields.ClientSecret.Required"));
+
+        if (string.IsNullOrEmpty(emailAccount.TenantId))
+            throw new NopException(await _localizationService.GetResourceAsync("Admin.Configuration.EmailAccounts.Fields.TenantId.Required"));
+
+        var confidentialClientApplication = ConfidentialClientApplicationBuilder.Create(emailAccount.ClientId)
+            .WithAuthority(string.Format(NopMessageDefaults.MSALTenantPattern, emailAccount.TenantId))
+            .WithClientSecret(emailAccount.ClientSecret)
+            .Build();
+
+        var authToken = await confidentialClientApplication.AcquireTokenForClient(NopMessageDefaults.MSALScopes).ExecuteAsync();
+
+        return new SaslMechanismOAuth2(emailAccount.Email, authToken.AccessToken);
     }
 
     #endregion
@@ -57,13 +134,20 @@ public partial class SmtpBuilder : ISmtpBuilder
                 emailAccount.Port,
                 emailAccount.EnableSsl ? SecureSocketOptions.SslOnConnect : SecureSocketOptions.StartTlsWhenAvailable);
 
-            if (emailAccount.UseDefaultCredentials)
+            switch (emailAccount.EmailAuthenticationMethod)
             {
-                await client.AuthenticateAsync(CredentialCache.DefaultNetworkCredentials);
-            }
-            else if (!string.IsNullOrWhiteSpace(emailAccount.Username))
-            {
-                await client.AuthenticateAsync(new NetworkCredential(emailAccount.Username, emailAccount.Password));
+                case EmailAuthenticationMethod.Login:
+                    await client.AuthenticateAsync(new SaslMechanismLogin(emailAccount.Username, emailAccount.Password));
+                    break;
+                case EmailAuthenticationMethod.GmailOAuth2:
+                    await client.AuthenticateAsync(await GetGmailCredentialsAsync(emailAccount));
+                    break;
+                case EmailAuthenticationMethod.MicrosoftOAuth2:
+                    await client.AuthenticateAsync(await GetExchangeCredentialsAsync(emailAccount));
+                    break;
+                case EmailAuthenticationMethod.Ntlm:
+                    await client.AuthenticateAsync(new SaslMechanismNtlm());
+                    break;
             }
 
             return client;

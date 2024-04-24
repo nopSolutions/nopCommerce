@@ -1,4 +1,5 @@
 ﻿using FluentValidation.TestHelper;
+using Nop.Services.Localization;
 using Nop.Web.Models.Blogs;
 using Nop.Web.Validators.Blogs;
 using NUnit.Framework;
@@ -13,7 +14,7 @@ public class BlogPostValidatorTests : BaseNopTest
     [OneTimeSetUp]
     public void Setup()
     {
-        _validator = GetService<BlogPostValidator>();
+        _validator =  new BlogPostValidator(GetService<ILocalizationService>());
     }
 
     [Test]

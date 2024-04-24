@@ -231,7 +231,7 @@
                                             <div class="col-md-8">                                               
                                                     <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true" />                                                                                                                                              
                                                 <script>
-                                                    $(document).ready(function() {
+                                                    $(function() {
                                                         var rolesIdsInput =
                                                             $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').select2({
                                                                 closeOnSelect: false,
@@ -379,13 +379,13 @@
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
 <script>
-    $(document).ready(function () {
+    $(function() {
         $('#exportxml-selected').click(function (e) {
             e.preventDefault();
             var ids = selectedIds.join(",");
             if (!ids) {
                 $('#exportXmlSelected-info').text("@T("Admin.Customers.NoCustomers")");
-                $("#exportXmlSelected").click();
+                $("#exportXmlSelected").trigger("click");
             }
             else {
                 $('#export-xml-selected-form #selectedIds').val(ids);
@@ -446,13 +446,13 @@
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
 <script>
-    $(document).ready(function () {
+    $(function() {
         $('#exportexcel-selected').click(function (e) {
             e.preventDefault();
             var ids = selectedIds.join(",");
             if (!ids) {
                 $('#exportExcelSelected-info').text("@T("Admin.Customers.NoCustomers")");
-                $("#exportExcelSelected").click();
+                $("#exportExcelSelected").trigger("click");
             }
             else {
                 $('#export-excel-selected-form #selectedIds').val(ids);

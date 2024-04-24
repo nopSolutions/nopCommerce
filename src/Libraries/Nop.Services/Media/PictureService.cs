@@ -605,6 +605,7 @@ public partial class PictureService : IPictureService
             ? $"{picture.Id:0000000}_{seoFileName}.{lastPart}"
             : $"{picture.Id:0000000}.{lastPart}";
 
+        //there is no need to resize the svg image as the browser will take care of it
         if (targetSize == 0 || picture.MimeType == MimeTypes.ImageSvg)
         {
             var thumbFilePath = await GetThumbLocalPathAsync(thumbFileName);
@@ -630,45 +631,40 @@ public partial class PictureService : IPictureService
         }
         else
         {
-            //There is no need to resize the svg image as the browser will take care of it
-            if (picture.MimeType != MimeTypes.ImageSvg)
+            thumbFileName = !string.IsNullOrEmpty(seoFileName)
+                ? $"{picture.Id:0000000}_{seoFileName}_{targetSize}.{lastPart}"
+                : $"{picture.Id:0000000}_{targetSize}.{lastPart}";
+
+            var thumbFilePath = await GetThumbLocalPathAsync(thumbFileName);
+            if (await GeneratedThumbExistsAsync(thumbFilePath, thumbFileName))
+                return (await GetThumbUrlAsync(thumbFileName, storeLocation), picture);
+
+            pictureBinary ??= await LoadPictureBinaryAsync(picture);
+
+            //the named mutex helps to avoid creating the same files in different threads,
+            //and does not decrease performance significantly, because the code is blocked only for the specific file.
+            //you should be very careful, mutexes cannot be used in with the await operation
+            //we can't use semaphore here, because it produces PlatformNotSupportedException exception on UNIX based systems
+            using var mutex = new Mutex(false, thumbFileName);
+            mutex.WaitOne();
+            try
             {
-                thumbFileName = !string.IsNullOrEmpty(seoFileName)
-                    ? $"{picture.Id:0000000}_{seoFileName}_{targetSize}.{lastPart}"
-                    : $"{picture.Id:0000000}_{targetSize}.{lastPart}";
-
-                var thumbFilePath = await GetThumbLocalPathAsync(thumbFileName);
-                if (await GeneratedThumbExistsAsync(thumbFilePath, thumbFileName))
-                    return (await GetThumbUrlAsync(thumbFileName, storeLocation), picture);
-
-                pictureBinary ??= await LoadPictureBinaryAsync(picture);
-
-                //the named mutex helps to avoid creating the same files in different threads,
-                //and does not decrease performance significantly, because the code is blocked only for the specific file.
-                //you should be very careful, mutexes cannot be used in with the await operation
-                //we can't use semaphore here, because it produces PlatformNotSupportedException exception on UNIX based systems
-                using var mutex = new Mutex(false, thumbFileName);
-                mutex.WaitOne();
-                try
-                {
-                    if (pictureBinary != null)
+                if (pictureBinary != null)
+                    try
                     {
-                        try
-                        {
-                            using var image = SKBitmap.Decode(pictureBinary);
-                            var format = GetImageFormatByMimeType(picture.MimeType);
-                            pictureBinary = ImageResize(image, format, targetSize);
-                            SaveThumbAsync(thumbFilePath, thumbFileName, picture.MimeType, pictureBinary).Wait();
-                        }
-                        catch
-                        {
-                        }
+                        using var image = SKBitmap.Decode(pictureBinary);
+                        var format = GetImageFormatByMimeType(picture.MimeType);
+                        pictureBinary = ImageResize(image, format, targetSize);
+                        SaveThumbAsync(thumbFilePath, thumbFileName, picture.MimeType, pictureBinary).Wait();
                     }
-                }
-                finally
-                {
-                    mutex.ReleaseMutex();
-                }
+                    catch
+                    {
+                        // ignored
+                    }
+            }
+            finally
+            {
+                mutex.ReleaseMutex();
             }
         }
 
@@ -701,15 +697,15 @@ public partial class PictureService : IPictureService
     /// <summary>
     /// Convert image from SVG format to PNG
     /// </summary>
-    /// <param name="filePath">SVG file path</param>
+    /// <param name="stream">Stream for SVG file</param>
     /// <returns>A task that represents the asynchronous operation
     /// The task result contains the byte array</returns>
-    public virtual Task<byte[]> ConvertSvgToPngAsync(string filePath)
+    public virtual Task<byte[]> ConvertSvgToPngAsync(Stream stream)
     {
         try
         {
             using var svg = new SKSvg();
-            svg.Load(filePath);
+            svg.Load(stream);
 
             using var bitmap = new SKBitmap((int)svg.Picture.CullRect.Width, (int)svg.Picture.CullRect.Height);
             var canvas = new SKCanvas(bitmap);

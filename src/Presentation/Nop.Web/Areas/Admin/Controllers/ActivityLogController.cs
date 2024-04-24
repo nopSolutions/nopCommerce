@@ -107,11 +107,11 @@ public partial class ActivityLogController : BaseAdminController
     public virtual async Task<IActionResult> ActivityLogDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageActivityLog))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         //try to get a log item with the specified id
         var logItem = await _customerActivityService.GetActivityByIdAsync(id)
-                      ?? throw new ArgumentException("No activity log found with the specified id", nameof(id));
+            ?? throw new ArgumentException("No activity log found with the specified id", nameof(id));
 
         await _customerActivityService.DeleteActivityAsync(logItem);
 

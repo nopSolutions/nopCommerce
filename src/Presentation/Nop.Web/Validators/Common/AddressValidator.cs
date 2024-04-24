@@ -25,7 +25,7 @@ public partial class AddressValidator : BaseNopValidator<AddressModel>
             .NotEmpty()
             .WithMessageAwait(localizationService.GetResourceAsync("Address.Fields.Email.Required"));
         RuleFor(x => x.Email)
-            .EmailAddress()
+            .IsEmailAddress()
             .WithMessageAwait(localizationService.GetResourceAsync("Common.WrongEmail"));
         if (addressSettings.CountryEnabled)
         {

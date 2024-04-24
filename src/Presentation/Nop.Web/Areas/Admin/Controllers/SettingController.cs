@@ -807,7 +807,7 @@ public partial class SettingController : BaseAdminController
     public virtual async Task<IActionResult> SortOptionUpdate(SortOptionModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
         var catalogSettings = await _settingService.LoadSettingAsync<CatalogSettings>(storeScope);
@@ -1939,20 +1939,14 @@ public partial class SettingController : BaseAdminController
     public virtual async Task<IActionResult> SettingUpdate(SettingModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
-        if (model.Name != null)
-            model.Name = model.Name;
-
-        if (model.Value != null)
-            model.Value = model.Value;
+            return await AccessDeniedDataTablesJson();
 
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
 
         //try to get a setting with the specified id
         var setting = await _settingService.GetSettingByIdAsync(model.Id)
-                      ?? throw new ArgumentException("No setting found with the specified id");
+            ?? throw new ArgumentException("No setting found with the specified id");
 
         if (!setting.Name.Equals(model.Name, StringComparison.InvariantCultureIgnoreCase))
         {
@@ -1972,13 +1966,7 @@ public partial class SettingController : BaseAdminController
     public virtual async Task<IActionResult> SettingAdd(SettingModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
-        if (model.Name != null)
-            model.Name = model.Name;
-
-        if (model.Value != null)
-            model.Value = model.Value;
+            return await AccessDeniedDataTablesJson();
 
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
@@ -1998,11 +1986,11 @@ public partial class SettingController : BaseAdminController
     public virtual async Task<IActionResult> SettingDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         //try to get a setting with the specified id
         var setting = await _settingService.GetSettingByIdAsync(id)
-                      ?? throw new ArgumentException("No setting found with the specified id", nameof(id));
+            ?? throw new ArgumentException("No setting found with the specified id", nameof(id));
 
         await _settingService.DeleteSettingAsync(setting);
 

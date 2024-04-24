@@ -363,7 +363,7 @@
                         @if (Model.AcceptPrivacyPolicyEnabled)
                         {
                             <script asp-location="Footer">
-                                $(document).ready(function() {
+                                $(function() {
                                     $('#register-button').on('click', function() {
                                         if ($('#accept-consent').is(':checked')) {
                                             //do some stuff
@@ -383,7 +383,7 @@
                                 {
                                     <span class="read" id="read-privacyinfo">@T("Account.Fields.AcceptPrivacyPolicy.Read")</span>
                                     <script asp-location="Footer">
-                                    $(document).ready(function() {
+                                    $(function() {
                                         $('#read-privacyinfo').on('click',
                                             function(e) {
                                                 displayPopupContentFromUrl(
@@ -407,7 +407,7 @@
                                 if (consent.IsRequired)
                                 {
                                     <script asp-location="Footer">
-                                    $(document).ready(function() {
+                                    $(function() {
                                         $('#register-button').on('click', function() {
                                             if ($('#consent@(consent.Id)').is(':checked')) {
                                                     //do some stuff

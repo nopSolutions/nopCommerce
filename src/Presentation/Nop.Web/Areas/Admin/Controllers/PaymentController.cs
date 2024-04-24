@@ -111,7 +111,7 @@ public partial class PaymentController : BaseAdminController
     public virtual async Task<IActionResult> MethodUpdate(PaymentMethodModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         var pm = await _paymentPluginManager.LoadPluginBySystemNameAsync(model.SystemName);
         if (_paymentPluginManager.IsPluginActive(pm))

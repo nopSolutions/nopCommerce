@@ -286,11 +286,11 @@ public partial class BlogController : BaseAdminController
     public virtual async Task<IActionResult> CommentUpdate(BlogCommentModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         //try to get a blog comment with the specified id
         var comment = await _blogService.GetBlogCommentByIdAsync(model.Id)
-                      ?? throw new ArgumentException("No comment found with the specified id");
+            ?? throw new ArgumentException("No comment found with the specified id");
 
         var previousIsApproved = comment.IsApproved;
 
@@ -313,11 +313,11 @@ public partial class BlogController : BaseAdminController
     public virtual async Task<IActionResult> CommentDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         //try to get a blog comment with the specified id
         var comment = await _blogService.GetBlogCommentByIdAsync(id)
-                      ?? throw new ArgumentException("No comment found with the specified id", nameof(id));
+            ?? throw new ArgumentException("No comment found with the specified id", nameof(id));
 
         await _blogService.DeleteBlogCommentAsync(comment);
 
@@ -332,7 +332,7 @@ public partial class BlogController : BaseAdminController
     public virtual async Task<IActionResult> DeleteSelectedComments(ICollection<int> selectedIds)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();
@@ -354,7 +354,7 @@ public partial class BlogController : BaseAdminController
     public virtual async Task<IActionResult> ApproveSelected(ICollection<int> selectedIds)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();
@@ -383,7 +383,7 @@ public partial class BlogController : BaseAdminController
     public virtual async Task<IActionResult> DisapproveSelected(ICollection<int> selectedIds)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();

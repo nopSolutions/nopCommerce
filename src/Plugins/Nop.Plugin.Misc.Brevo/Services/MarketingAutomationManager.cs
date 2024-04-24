@@ -147,7 +147,7 @@ public class MarketingAutomationManager
                 var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 
                 //get shopping cart amounts
-                var (_, cartDiscount, _, cartSubtotal, _) = await _orderTotalCalculationService.GetShoppingCartSubTotalAsync(cart,
+                var (cartDiscount, _, cartSubtotal, _, _) = await _orderTotalCalculationService.GetShoppingCartSubTotalAsync(cart,
                     await _workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax);
                 var cartTax = await _orderTotalCalculationService.GetTaxTotalAsync(cart, false);
                 var cartShipping = await _orderTotalCalculationService.GetShoppingCartShippingTotalAsync(cart);

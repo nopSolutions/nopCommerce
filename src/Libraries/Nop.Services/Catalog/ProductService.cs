@@ -903,14 +903,23 @@ public partial class ProductService : IProductService
 
             //Set a flag which will to points need to search in localized properties. If showHidden doesn't set to true should be at least two published languages.
             var searchLocalizedValue = languageId > 0 && langs.Count >= 2 && (showHidden || langs.Count(l => l.Published) >= 2);
-            IQueryable<int> productsByKeywords;
+            var productsByKeywords = new List<int>().AsQueryable();
+            var runStandardSearch = activeSearchProvider is null || showHidden;
 
-            if (activeSearchProvider is not null && !showHidden)
+            try
             {
-                providerResults = await activeSearchProvider.SearchProductsAsync(keywords, searchLocalizedValue);
-                productsByKeywords = providerResults.AsQueryable();
+                if (!runStandardSearch)
+                {
+                    providerResults = await activeSearchProvider.SearchProductsAsync(keywords, searchLocalizedValue);
+                    productsByKeywords = providerResults.AsQueryable();
+                }
             }
-            else
+            catch
+            {
+                runStandardSearch = _catalogSettings.UseStandardSearchWhenSearchProviderThrowsException;
+            }
+
+            if (runStandardSearch)
             {
                 productsByKeywords =
                     from p in _productRepository.Table
@@ -1054,8 +1063,10 @@ public partial class ProductService : IProductService
             {
                 var productCategoryQuery =
                     from pc in _productCategoryRepository.Table
+                    join c in _categoryRepository.Table on pc.CategoryId equals c.Id
                     where (!excludeFeaturedProducts || !pc.IsFeaturedProduct) &&
                           categoryIds.Contains(pc.CategoryId)
+                    orderby c.DisplayOrder
                     group pc by pc.ProductId into pc
                     select new
                     {

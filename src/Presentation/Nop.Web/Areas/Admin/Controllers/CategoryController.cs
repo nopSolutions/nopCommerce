@@ -426,7 +426,7 @@ public partial class CategoryController : BaseAdminController
     public virtual async Task<IActionResult> DeleteSelected(ICollection<int> selectedIds)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();
@@ -522,7 +522,7 @@ public partial class CategoryController : BaseAdminController
 
         //try to get a category with the specified id
         var category = await _categoryService.GetCategoryByIdAsync(searchModel.CategoryId)
-                       ?? throw new ArgumentException("No category found with the specified id");
+            ?? throw new ArgumentException("No category found with the specified id");
 
         //prepare model
         var model = await _categoryModelFactory.PrepareCategoryProductListModelAsync(searchModel, category);
@@ -533,11 +533,11 @@ public partial class CategoryController : BaseAdminController
     public virtual async Task<IActionResult> ProductUpdate(CategoryProductModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         //try to get a product category with the specified id
         var productCategory = await _categoryService.GetProductCategoryByIdAsync(model.Id)
-                              ?? throw new ArgumentException("No product category mapping found with the specified id");
+            ?? throw new ArgumentException("No product category mapping found with the specified id");
 
         //fill entity from product
         productCategory = model.ToEntity(productCategory);
@@ -549,11 +549,11 @@ public partial class CategoryController : BaseAdminController
     public virtual async Task<IActionResult> ProductDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         //try to get a product category with the specified id
         var productCategory = await _categoryService.GetProductCategoryByIdAsync(id)
-                              ?? throw new ArgumentException("No product category mapping found with the specified id", nameof(id));
+            ?? throw new ArgumentException("No product category mapping found with the specified id", nameof(id));
 
         await _categoryService.DeleteProductCategoryAsync(productCategory);
 

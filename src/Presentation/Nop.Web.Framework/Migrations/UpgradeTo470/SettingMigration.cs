@@ -1,4 +1,5 @@
 ﻿using FluentMigrator;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
@@ -46,6 +47,13 @@ public class SettingMigration : MigrationBase
         {
             securitySettings.AllowStoreOwnerExportImportCustomersWithHashedPassword = true;
             settingService.SaveSetting(securitySettings, settings => settings.AllowStoreOwnerExportImportCustomersWithHashedPassword);
+        }
+
+        //#7053
+        if (!settingService.SettingExists(securitySettings, settings => settings.LogHoneypotDetection))
+        {
+            securitySettings.LogHoneypotDetection = true;
+            settingService.SaveSetting(securitySettings, settings => settings.LogHoneypotDetection);
         }
 
         var addressSettings = settingService.LoadSetting<AddressSettings>();
@@ -110,6 +118,15 @@ public class SettingMigration : MigrationBase
             customerSettings.RequiredReLoginAfterPasswordChange = false;
             settingService.SaveSetting(customerSettings, settings => settings.RequiredReLoginAfterPasswordChange);
         }
+
+        //#7064
+        var catalogSettings = settingService.LoadSetting<CatalogSettings>();
+        if (!settingService.SettingExists(catalogSettings, settings => settings.UseStandardSearchWhenSearchProviderThrowsException))
+        {
+            catalogSettings.UseStandardSearchWhenSearchProviderThrowsException = true;
+            settingService.SaveSetting(catalogSettings, settings => settings.UseStandardSearchWhenSearchProviderThrowsException);
+        }
+
     }
 
     public override void Down()

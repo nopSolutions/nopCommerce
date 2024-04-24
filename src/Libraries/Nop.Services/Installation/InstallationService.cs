@@ -2115,8 +2115,7 @@ namespace Nop.Services.Installation
                     Port = 25,
                     Username = "123",
                     Password = "123",
-                    EnableSsl = false,
-                    UseDefaultCredentials = false
+                    EnableSsl = false
                 }
             };
 
@@ -2866,7 +2865,8 @@ namespace Nop.Services.Installation
                 AllowCustomersToSearchWithManufacturerName = false,
                 DisplayAllPicturesOnCatalogPages = false,
                 ProductUrlStructureTypeId = (int)ProductUrlStructureType.Product,
-                ActiveSearchProviderSystemName = string.Empty
+                ActiveSearchProviderSystemName = string.Empty,
+                UseStandardSearchWhenSearchProviderThrowsException = true
             });
 
             await settingService.SaveSettingAsync(new LocalizationSettings

@@ -1,4 +1,5 @@
 ﻿using FluentValidation.TestHelper;
+using Nop.Services.Localization;
 using Nop.Web.Models.Boards;
 using Nop.Web.Validators.Boards;
 using NUnit.Framework;
@@ -13,7 +14,7 @@ public class EditForumTopicValidatorTests : BaseNopTest
     [OneTimeSetUp]
     public void Setup()
     {
-        _validator = GetService<EditForumTopicValidator>();
+        _validator = new EditForumTopicValidator(GetService<ILocalizationService>());
     }
 
     [Test]

@@ -4,6 +4,6 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  *
- * Version: 5.10.7 (2022-12-06)
+ * Version: 5.10.9 (2023-11-15)
  */
 !function(){"use strict";tinymce.util.Tools.resolve("tinymce.PluginManager").add("textcolor",function(){})}();

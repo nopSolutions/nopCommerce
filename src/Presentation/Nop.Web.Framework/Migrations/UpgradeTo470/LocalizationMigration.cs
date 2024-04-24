@@ -53,6 +53,10 @@ public class LocalizationMigration : MigrationBase
             //#6894
             "Admin.Configuration.AppSettings.Cache.BundledFilesCacheTime",
             "Admin.Configuration.AppSettings.Cache.BundledFilesCacheTime.Hint",
+
+            //#7031
+            "Admin.Configuration.EmailAccounts.Fields.UseDefaultCredentials",
+            "Admin.Configuration.EmailAccounts.Fields.UseDefaultCredentials.Hint"
         });
 
         #endregion
@@ -126,14 +130,14 @@ public class LocalizationMigration : MigrationBase
             //#6602
             ["Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Note"] = "NOTE: Do not forget to backup your database before changing this option. It is not recommended to change this setting in production environment.",
             //6167
-            ["Admin.ContentManagement.MessageTemplates.Fields.AllowDirectReply"] = "Allow Direct Reply",
+            ["Admin.ContentManagement.MessageTemplates.Fields.AllowDirectReply"] = "Allow direct reply",
             ["Admin.ContentManagement.MessageTemplates.Fields.AllowDirectReply.Hint"] = "When checked, the store owner can reply directly to the customer's email address from mailbox when a customer-related message is received.",
             //5023
-            ["Header.SkipNavigation.Text"] = "Skip Navigation",
+            ["Header.SkipNavigation.Text"] = "Skip navigation",
             //6640
-            ["Admin.Configuration.Settings.CustomerUser.AddressFormFields.DefaultCountry"] = "Default Country",
+            ["Admin.Configuration.Settings.CustomerUser.AddressFormFields.DefaultCountry"] = "Default country",
             ["Admin.Configuration.Settings.CustomerUser.AddressFormFields.DefaultCountry.Hint"] = "Select the default country for address form fields. This can speed up the checkout process.",
-            ["Admin.Configuration.Settings.CustomerUser.DefaultCountry"] = "Default Country",
+            ["Admin.Configuration.Settings.CustomerUser.DefaultCountry"] = "Default country",
             ["Admin.Configuration.Settings.CustomerUser.DefaultCountry.Hint"] = "Select the default country for customer form fields. This can speed up the registration process.",
 
             //5312
@@ -159,9 +163,9 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Pictures.Hint"] = "Choose pictures associated to this attribute combination. These pictures will replace the main product image when this product attribute combination is selected.",
             ["Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Pictures"] = "Pictures",
             ["Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Pictures.Hint"] = "Choose pictures associated to this attribute combination. These pictures will replace the main product image when this product attribute combination is selected.",
-            ["Admin.Configuration.Settings.ProductEditor.DisplayAttributeCombinationImagesOnly"] = "Display attribute combination images only",
-            ["Admin.Catalog.Products.Fields.DisplayAttributeCombinationImagesOnly"] = "Display attribute combination images only",
-            ["Admin.Catalog.Products.Fields.DisplayAttributeCombinationImagesOnly.Hint"] = "Check to display attribute combination images only. When enabled, customers will see attribute combination images only if any.",
+            ["Admin.Configuration.Settings.ProductEditor.DisplayAttributeCombinationImagesOnly"] = "Display only uploaded images of attribute combination",
+            ["Admin.Catalog.Products.Fields.DisplayAttributeCombinationImagesOnly"] = "Display only uploaded images of attribute combination",
+            ["Admin.Catalog.Products.Fields.DisplayAttributeCombinationImagesOnly.Hint"] = "Check to display only uploaded images of this attribute combination",
 
             //5768
             ["Admin.Configuration.Settings.Tax.AutomaticallyDetectCountry"] = "Automatically detect country by IP address",
@@ -209,6 +213,39 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Configuration.EmailAccounts.Fields.MaxNumberOfEmails"] = "Max number of emails",
             ["Admin.Configuration.EmailAccounts.Fields.MaxNumberOfEmails.Hint"] = "The maximum number of emails sent at one time.",
             ["Admin.Configuration.EmailAccounts.Fields.MaxNumberOfEmails.ShouldBeGreaterThanZero"] = "The maximum number of emails should be greater 0.",
+
+            //#7031
+            ["Admin.Configuration.EmailAccounts.AuthorizationRequest.Text"] = "Authorization request",
+            ["Admin.Configuration.EmailAccounts.AuthorizationRequest.Info"] = "Your application must have that consent before it can execute a Google API request that requires user authorization. Click the {0} button below and follow the steps to perform API requests.",
+            ["Admin.Configuration.EmailAccounts.Fields.EmailAuthenticationMethod"] = "Authentication method",
+            ["Admin.Configuration.EmailAccounts.Fields.EmailAuthenticationMethod.Hint"] = "Choose the authentication method that will be used to identify the client when connecting to the SMTP server.",
+            ["Admin.Configuration.EmailAccounts.Fields.ClientId"] = "Client ID",
+            ["Admin.Configuration.EmailAccounts.Fields.ClientId.Hint"] = "Public identifier for application.",
+            ["Admin.Configuration.EmailAccounts.Fields.ClientId.Required"] = "The client identifier is required",
+            ["Admin.Configuration.EmailAccounts.Fields.ClientSecret"] = "Client Secret",
+            ["Admin.Configuration.EmailAccounts.Fields.ClientSecret.Change"] = "Change",
+            ["Admin.Configuration.EmailAccounts.Fields.ClientSecret.ClientSecretChanged"] = "The client Secret has been changed successfully.",
+            ["Admin.Configuration.EmailAccounts.Fields.ClientSecret.Hint"] = "The secret known only to the application and the authorization server.",
+            ["Admin.Configuration.EmailAccounts.Fields.ClientSecret.Required"] = "The client Secret is required",
+            ["Admin.Configuration.EmailAccounts.Fields.TenantId"] = "Tenant identifier",
+            ["Admin.Configuration.EmailAccounts.Fields.TenantId.Hint"] = "The tenant ID can be a GUID (the ID of your Microsoft Entra instance), domain name or one of placeholders: \"organizations\", \"consumers\", \"common\".",
+            ["Admin.Configuration.EmailAccounts.Fields.TenantId.Required"] = "The tenant identifier is required",
+
+            ["Enums.Nop.Core.Domain.Messages.EmailAuthenticationMethod.None"] = "No authentication",
+            ["Enums.Nop.Core.Domain.Messages.EmailAuthenticationMethod.Ntlm"] = "NTLM (the default network credentials)",
+            ["Enums.Nop.Core.Domain.Messages.EmailAuthenticationMethod.Login"] = "Login/Password",
+            ["Enums.Nop.Core.Domain.Messages.EmailAuthenticationMethod.GmailOAuth2"] = "Google (OAuth2)",
+            ["Enums.Nop.Core.Domain.Messages.EmailAuthenticationMethod.MicrosoftOAuth2"] = "Microsoft (OAuth2)",
+            ["Admin.Configuration.EmailAccounts.RedirectUrl.Info"] = "<b>{0}</b> - enter this \"Authorized redirect URI\" when creating your credentials in the Google Cloud console. You will be redirected to this path after authenticating with Google.",
+
+            //#7097
+            ["Admin.Reports.Sales.Country.SearchStore"] = "Store",
+            ["Admin.Reports.Sales.Country.SearchStore.Hint"] = "Search by a specific store.",
+
+            //#6978
+            ["Admin.Promotions.NewsLetterSubscriptions.Fields.Language"] = "Language",
+
+            ["Honeypot.BotDetected"] ="A bot detected. Honeypot.",
         }, languageId);
 
         #endregion

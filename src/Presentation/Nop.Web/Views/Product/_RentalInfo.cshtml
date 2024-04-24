@@ -25,7 +25,7 @@
                 <div class="attribute-data">
                     <input id="@(startDateControlId)" name="@(startDateControlId)" type="text" class="datepicker" value="@(Model.RentalStartDate.HasValue ? Model.RentalStartDate.Value.ToShortDateString() : null)" @if(isMobileDevice){<text>readonly</text>}/>
                     <script asp-location="Footer">
-                        $(document).ready(function () {
+                        $(function() {
                             $("#@(startDateControlId)").datepicker({ dateFormat: "@datePickerFormat", onSelect: @(dateControlChangeHandlerFuncName) });
                         });
                     </script>
@@ -41,7 +41,7 @@
                 <div class="attribute-data">
                     <input id="@(endDateControlId)" name="@(endDateControlId)" type="text" class="datepicker" value="@(Model.RentalEndDate.HasValue ? Model.RentalEndDate.Value.ToShortDateString() : null)" @if(isMobileDevice){<text>readonly</text>}/>
                     <script asp-location="Footer">
-                        $(document).ready(function () {
+                        $(function() {
                             $("#@(endDateControlId)").datepicker({ dateFormat: "@datePickerFormat", onSelect: @(dateControlChangeHandlerFuncName) });
                         });
                     </script>

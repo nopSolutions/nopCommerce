@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="繁體中文" IsDefault="false" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>管理員電郵</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>請輸入管理員電子信箱</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>管理員密碼</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>請輸入管理員密碼</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>帳號{0}沒有修改文件夾{1}的權限，請重新配置權限</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>帳號{0}沒有修改文件{1}的權限，請重新配置權限</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>確認密碼</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>請輸入確認密碼</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>連接字符串</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>鏈接字符串必填</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>連接字符串格式錯誤</Value>
+  </LocaleResource>
+  <LocaleResource Name="Country">
+    <Value>國家</Value>
+  </LocaleResource>
+  <LocaleResource Name="CountrySelect">
+    <Value>選擇你的國家...</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>如果資料庫不存在則創建</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>創建範例數據</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>指定collation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>資料庫</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>創建資料庫時出錯:{0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>資料庫資訊</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>資料庫名稱</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>資料庫不存在或者您沒有權限鏈接到它</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>選擇數據提供者</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>如果您需要瞭解怎麽使用nopCommerce，請訪問</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>文檔位於nopCommerce.com</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>範例</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>安裝</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>安裝nopCommerce中...</Value>
+  </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>使用集成的Windows身份驗證</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>密碼不匹配</Value>
+  </LocaleResource>
+  <LocaleResource Name="PostgreSQL">
+    <Value>PostgreSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>輸入原始鏈接字符串(高級)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>重啓安裝</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>點擊重啓安裝進程(情況所有緩存值)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartProgress">
+    <Value>重新啟動中…</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>伺服器名稱</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>伺服器名稱必填</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>設定失敗: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPassword">
+    <Value>SQL密碼</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPasswordRequired">
+    <Value>SQL密碼必填</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsername">
+    <Value>SQL用戶名</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsernameRequired">
+    <Value>SQL用户名必填</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>商店資訊</Value>
+  </LocaleResource>
+  <LocaleResource Name="SubscribeNewsletters">
+    <Value>Subscribe to nopCommerce newsletter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>nopCommerce安裝</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>要完成此嚮導，您必須了解一些有關數據庫服務器的信息（“連接字符串”）。 如有必要，請聯繫您的ISP。 如果要在本地計算機或服務器上進行安裝，則可能需要係統管理員提供的信息。</Value>
+  </LocaleResource>
+</Language>

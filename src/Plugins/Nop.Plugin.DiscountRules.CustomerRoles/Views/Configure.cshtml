@@ -4,7 +4,7 @@
 }
 
     <script>
-    $(document).ready(function () {
+    $(function() {
         $('#savecustomerrolesrequirement@(Model.RequirementId)').click(function () {
             var customerRoleId = $("#@Html.IdFor(model => model.CustomerRoleId)").val();
             var discountId = @Model.DiscountId;
@@ -34,7 +34,7 @@
                                 errorMessages += '</br>';
                         });
                         $alertInfoEl.html(errorMessages);
-                        $("#savecustomerrolesrequirementAlert").click();
+                        $("#savecustomerrolesrequirementAlert").trigger("click");
 
                         return;
                     } 
@@ -52,7 +52,7 @@
                     // display default error
                     $alertInfoEl.html('@T("Admin.Promotions.Discounts.Requirements.FailedToSave")');
 
-                    $("#savecustomerrolesrequirementAlert").click();
+                    $("#savecustomerrolesrequirementAlert").trigger("click");
                 }
             });
         });

@@ -6,6 +6,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Events;
 using Nop.Core.Http;
 using Nop.Core.Security;
 using Nop.Services.Authentication;
@@ -33,6 +34,7 @@ public partial class WebWorkContext : IWorkContext
     protected readonly IAuthenticationService _authenticationService;
     protected readonly ICurrencyService _currencyService;
     protected readonly ICustomerService _customerService;
+    protected readonly IEventPublisher _eventPublisher;
     protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly IHttpContextAccessor _httpContextAccessor;
     protected readonly ILanguageService _languageService;
@@ -60,6 +62,7 @@ public partial class WebWorkContext : IWorkContext
         IAuthenticationService authenticationService,
         ICurrencyService currencyService,
         ICustomerService customerService,
+        IEventPublisher eventPublisher,
         IGenericAttributeService genericAttributeService,
         IHttpContextAccessor httpContextAccessor,
         ILanguageService languageService,
@@ -76,6 +79,7 @@ public partial class WebWorkContext : IWorkContext
         _authenticationService = authenticationService;
         _currencyService = currencyService;
         _customerService = customerService;
+        _eventPublisher = eventPublisher;
         _genericAttributeService = genericAttributeService;
         _httpContextAccessor = httpContextAccessor;
         _languageService = languageService;
@@ -108,7 +112,7 @@ public partial class WebWorkContext : IWorkContext
     /// <param name="customerGuid">Guid of the customer</param>
     protected virtual void SetCustomerCookie(Guid customerGuid)
     {
-        if (_httpContextAccessor.HttpContext?.Response?.HasStarted ?? true)
+        if (_httpContextAccessor.HttpContext?.Response.HasStarted ?? true)
             return;
 
         //delete current cookie value
@@ -139,7 +143,7 @@ public partial class WebWorkContext : IWorkContext
     /// <param name="language">Language</param>
     protected virtual void SetLanguageCookie(Language language)
     {
-        if (_httpContextAccessor.HttpContext?.Response?.HasStarted ?? true)
+        if (_httpContextAccessor.HttpContext?.Response.HasStarted ?? true)
             return;
 
         //delete current cookie value
@@ -330,6 +334,9 @@ public partial class WebWorkContext : IWorkContext
         {
             customer.LanguageId = language?.Id;
             await _customerService.UpdateCustomerAsync(customer);
+
+            //raise event
+            await _eventPublisher.PublishAsync(new CustomerChangeWorkingLanguageEvent(customer));
         }
 
         //set cookie

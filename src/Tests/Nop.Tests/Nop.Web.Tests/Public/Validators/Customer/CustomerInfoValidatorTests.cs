@@ -21,10 +21,15 @@ public class CustomerInfoValidatorTests : BaseNopTest
         _stateProvinceService = GetService<IStateProvinceService>();
     }
 
+    private CustomerInfoValidator GetDefaultValidator()
+    {
+        return new CustomerInfoValidator(_localizationService, _stateProvinceService, GetService<CustomerSettings>());
+    }
+
     [Test]
     public void ShouldHaveErrorWhenEmailIsNullOrEmpty()
     {
-        var validator = GetService<CustomerInfoValidator>();
+        var validator = GetDefaultValidator();
 
         var model = new CustomerInfoModel
         {
@@ -38,7 +43,7 @@ public class CustomerInfoValidatorTests : BaseNopTest
     [Test]
     public void ShouldHaveErrorWhenEmailIsWrongFormat()
     {
-        var validator = GetService<CustomerInfoValidator>();
+        var validator = GetDefaultValidator();
 
         var model = new CustomerInfoModel
         {
@@ -50,7 +55,7 @@ public class CustomerInfoValidatorTests : BaseNopTest
     [Test]
     public void ShouldNotHaveErrorWhenEmailIsCorrectFormat()
     {
-        var validator = GetService<CustomerInfoValidator>();
+        var validator = GetDefaultValidator();
 
         var model = new CustomerInfoModel
         {

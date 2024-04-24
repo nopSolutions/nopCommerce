@@ -48,7 +48,7 @@
                                 else
                                 {
                                     <script>
-                                $(document).ready(function () {
+                                $(function() {
                                     @foreach (var pm in Model.PaymentMethodRestriction.AvailablePaymentMethods)
                                     {
                                         var systemNameWithoutDot = pm.SystemName.Replace(".", "");

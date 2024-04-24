@@ -128,7 +128,7 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             //exclude some properties from mapping configuration and models
             if (typeof(IConfig).IsAssignableFrom(mapConfiguration.DestinationType))
                 map.ForMember(nameof(IConfig.Name), options => options.Ignore());
-               
+
             //exclude Locales from mapping ILocalizedModel
             if (typeof(ILocalizedModel).IsAssignableFrom(mapConfiguration.DestinationType))
                 map.ForMember(nameof(ILocalizedModel<ILocalizedModel>.Locales), options => options.Ignore());
@@ -426,6 +426,7 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(settings => settings.PublishBackProductWhenCancellingOrders, options => options.Ignore())
             .ForMember(settings => settings.UseAjaxLoadMenu, options => options.Ignore())
             .ForMember(settings => settings.UseLinksInRequiredProductWarnings, options => options.Ignore())
+            .ForMember(settings => settings.UseStandardSearchWhenSearchProviderThrowsException, options => options.Ignore())
             .ForMember(settings => settings.ActiveSearchProviderSystemName, options => options.Ignore());
 
         CreateMap<ProductCategory, CategoryProductModel>()
@@ -1179,10 +1180,13 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
 
         CreateMap<EmailAccount, EmailAccountModel>()
             .ForMember(model => model.IsDefaultEmailAccount, options => options.Ignore())
-            .ForMember(model => model.Password, options => options.Ignore())
-            .ForMember(model => model.SendTestEmailTo, options => options.Ignore());
+            .ForMember(model => model.SendTestEmailTo, options => options.Ignore())
+            .ForMember(model => model.AvailableEmailAuthenticationMethods, options => options.Ignore())
+            .ForMember(model => model.AuthUrl, options => options.Ignore());
         CreateMap<EmailAccountModel, EmailAccount>()
-            .ForMember(entity => entity.Password, options => options.Ignore());
+            .ForMember(entity => entity.Password, options => options.Ignore())
+            .ForMember(entity => entity.ClientSecret, options => options.Ignore())
+            .ForMember(entity => entity.EmailAuthenticationMethodId, options => options.Ignore());
 
         CreateMap<MessageTemplate, MessageTemplateModel>()
             .ForMember(model => model.AllowedTokens, options => options.Ignore())
@@ -1195,10 +1199,12 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
 
         CreateMap<NewsLetterSubscription, NewsletterSubscriptionModel>()
             .ForMember(model => model.CreatedOn, options => options.Ignore())
+            .ForMember(model => model.LanguageName, options => options.Ignore())
             .ForMember(model => model.StoreName, options => options.Ignore());
         CreateMap<NewsletterSubscriptionModel, NewsLetterSubscription>()
             .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
             .ForMember(entity => entity.NewsLetterSubscriptionGuid, options => options.Ignore())
+            .ForMember(entity => entity.LanguageId, option => option.Ignore())
             .ForMember(entity => entity.StoreId, options => options.Ignore());
 
         CreateMap<QueuedEmail, QueuedEmailModel>()

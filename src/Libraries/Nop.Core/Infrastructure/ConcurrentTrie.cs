@@ -180,6 +180,7 @@ public partial class ConcurrentTrie<TValue> : IConcurrentCollection<TValue>
         try
         {
             // we use while instead of if so we can break
+            // and put a recursive call at the end of the method to enable tail-recursion optimization
             while (!node.IsDeleted && node.Children.TryGetValue(c, out nextNode))
             {
                 var label = nextNode.Label.AsSpan();

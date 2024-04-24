@@ -83,6 +83,7 @@ using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.UI;
+using Nop.Web.Framework.WebOptimizer;
 using Nop.Web.Infrastructure.Installation;
 using SkiaSharp;
 using IAuthenticationService = Nop.Services.Authentication.IAuthenticationService;
@@ -99,6 +100,8 @@ public partial class BaseNopTest
     {
         SetDataProviderType(DataProviderType.Unknown);
     }
+
+    public ServiceProvider ServiceProvider => _serviceProvider;
 
     private static void Init()
     {
@@ -243,8 +246,8 @@ public partial class BaseNopTest
         services.AddTransient<IUserAgentHelper, UserAgentHelper>();
 
         //data layer
-        services.AddTransient<IDataProviderManager, TestDataProviderManager>();
-        services.AddTransient(serviceProvider =>
+        services.AddSingleton<IDataProviderManager, TestDataProviderManager>();
+        services.AddSingleton(serviceProvider =>
             serviceProvider.GetRequiredService<IDataProviderManager>().DataProvider);
 
         //repositories
@@ -372,6 +375,8 @@ public partial class BaseNopTest
         services.AddScoped<IBBCodeHelper, BBCodeHelper>();
         services.AddScoped<IHtmlFormatter, HtmlFormatter>();
 
+        services.AddScoped<INopAssetHelper, NopAssetHelper>();
+
         //slug route transformer
         services.AddSingleton<IReviewTypeService, ReviewTypeService>();
         services.AddSingleton<IEventPublisher, EventPublisher>();
@@ -400,6 +405,8 @@ public partial class BaseNopTest
         {
             services.AddTransient(setting,
                 context => context.GetRequiredService<ISettingService>().LoadSettingAsync(setting).Result);
+
+
         }
 
         //event consumers
@@ -539,28 +546,14 @@ public partial class BaseNopTest
         Init();
     }
 
-    public static T GetService<T>()
+    protected static T GetService<T>()
     {
-        try
-        {
-            return _serviceProvider.GetRequiredService<T>();
-        }
-        catch (InvalidOperationException)
-        {
-            return (T)EngineContext.Current.ResolveUnregistered(typeof(T));
-        }
+        return _serviceProvider.GetRequiredService<T>();
     }
 
-    public static T GetService<T>(IServiceScope scope)
+    protected static T GetService<T>(IServiceScope scope)
     {
-        try
-        {
-            return scope.ServiceProvider.GetService<T>();
-        }
-        catch (InvalidOperationException)
-        {
-            return (T)EngineContext.Current.ResolveUnregistered(typeof(T));
-        }
+        return scope.ServiceProvider.GetService<T>();
     }
 
     public async Task TestCrud<TEntity>(TEntity baseEntity, Func<TEntity, Task> insert, TEntity updateEntity, Func<TEntity, Task> update, Func<int, Task<TEntity>> getById, Func<TEntity, TEntity, bool> equals, Func<TEntity, Task> delete) where TEntity : BaseEntity

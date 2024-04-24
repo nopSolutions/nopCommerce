@@ -59,7 +59,7 @@
             {
                 <a class="watch-topic-button" href="#" id="watch-topic-top">@Model.WatchTopicText</a>
                 <script asp-location="Footer">
-                    $(document).ready(function () {
+                    $(function() {
                         $('#watch-topic-top').on('click', function () {
                             var postData = {};
                             addAntiForgeryToken(postData);
@@ -117,7 +117,7 @@
             {
                 <a class="watch-topic-button" href="#" id="watch-topic-bottom">@Model.WatchTopicText</a>
                 <script asp-location="Footer">
-                    $(document).ready(function() {
+                    $(function() {
                         $('#watch-topic-bottom').on('click', function() {
                             var postData = {};
                             addAntiForgeryToken(postData);

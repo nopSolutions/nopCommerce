@@ -37,7 +37,7 @@
     <Value>Country</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Select your country...</Value>
+    <Value>Valitse maasi...</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>Krijoni bazën e të dhënave nëse nuk ekziston.</Value>

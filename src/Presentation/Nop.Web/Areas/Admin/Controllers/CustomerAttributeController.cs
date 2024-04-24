@@ -230,7 +230,7 @@ public partial class CustomerAttributeController : BaseAdminController
 
         //try to get a customer attribute with the specified id
         var customerAttribute = await _customerAttributeService.GetAttributeByIdAsync(searchModel.CustomerAttributeId)
-                                ?? throw new ArgumentException("No customer attribute found with the specified id");
+            ?? throw new ArgumentException("No customer attribute found with the specified id");
 
         //prepare model
         var model = await _customerAttributeModelFactory.PrepareCustomerAttributeValueListModelAsync(searchModel, customerAttribute);
@@ -354,11 +354,11 @@ public partial class CustomerAttributeController : BaseAdminController
     public virtual async Task<IActionResult> ValueDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         //try to get a customer attribute value with the specified id
         var customerAttributeValue = await _customerAttributeService.GetAttributeValueByIdAsync(id)
-                                     ?? throw new ArgumentException("No customer attribute value found with the specified id", nameof(id));
+            ?? throw new ArgumentException("No customer attribute value found with the specified id", nameof(id));
 
         await _customerAttributeService.DeleteAttributeValueAsync(customerAttributeValue);
 

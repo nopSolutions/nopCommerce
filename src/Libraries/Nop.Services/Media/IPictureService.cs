@@ -261,10 +261,10 @@ public partial interface IPictureService
     /// <summary>
     /// Convert image from SVG format to PNG
     /// </summary>
-    /// <param name="filePath">SVG file path</param>
+    /// <param name="stream">Stream for SVG file</param>
     /// <returns>A task that represents the asynchronous operation
     /// The task result contains the byte array</returns>
-    Task<byte[]> ConvertSvgToPngAsync(string filePath);
+    Task<byte[]> ConvertSvgToPngAsync(Stream stream);
 
     /// <summary>
     /// Get content type for picture by file extension

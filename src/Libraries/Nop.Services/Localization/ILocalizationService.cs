@@ -20,6 +20,12 @@ public partial interface ILocalizationService
     Task DeleteLocaleStringResourceAsync(LocaleStringResource localeStringResource);
 
     /// <summary>
+    /// Deletes a locale string resource
+    /// </summary>
+    /// <param name="localeStringResource">Locale string resource</param>
+    void DeleteLocaleStringResource(LocaleStringResource localeStringResource);
+
+    /// <summary>
     /// Gets a locale string resource
     /// </summary>
     /// <param name="localeStringResourceId">Locale string resource identifier</param>

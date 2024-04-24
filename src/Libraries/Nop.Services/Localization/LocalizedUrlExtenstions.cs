@@ -10,7 +10,7 @@ namespace Nop.Services.Localization;
 /// </summary>
 public static class LocalizedUrlExtensions
 {
-    private static readonly char[] _separator = ['/'];
+    private static readonly char[] _separator = ['/', '?'];
 
     /// <summary>
     /// Get a value indicating whether URL is localized (contains SEO code)

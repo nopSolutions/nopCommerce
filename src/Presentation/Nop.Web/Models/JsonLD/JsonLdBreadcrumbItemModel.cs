@@ -1,9 +1,8 @@
 ﻿using Newtonsoft.Json;
-using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.JsonLD;
 
-public record JsonLdBreadcrumbItemModel : BaseNopModel
+public record JsonLdBreadcrumbItemModel : JsonLdModel
 {
     #region Properties
 

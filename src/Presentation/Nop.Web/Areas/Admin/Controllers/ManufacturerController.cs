@@ -415,7 +415,7 @@ public partial class ManufacturerController : BaseAdminController
     public virtual async Task<IActionResult> DeleteSelected(ICollection<int> selectedIds)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();
@@ -517,7 +517,7 @@ public partial class ManufacturerController : BaseAdminController
 
         //try to get a manufacturer with the specified id
         var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(searchModel.ManufacturerId)
-                           ?? throw new ArgumentException("No manufacturer found with the specified id");
+            ?? throw new ArgumentException("No manufacturer found with the specified id");
 
         //prepare model
         var model = await _manufacturerModelFactory.PrepareManufacturerProductListModelAsync(searchModel, manufacturer);
@@ -529,11 +529,11 @@ public partial class ManufacturerController : BaseAdminController
     public virtual async Task<IActionResult> ProductUpdate(ManufacturerProductModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         //try to get a product manufacturer with the specified id
         var productManufacturer = await _manufacturerService.GetProductManufacturerByIdAsync(model.Id)
-                                  ?? throw new ArgumentException("No product manufacturer mapping found with the specified id");
+            ?? throw new ArgumentException("No product manufacturer mapping found with the specified id");
 
         //fill entity from model
         productManufacturer = model.ToEntity(productManufacturer);
@@ -546,11 +546,11 @@ public partial class ManufacturerController : BaseAdminController
     public virtual async Task<IActionResult> ProductDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         //try to get a product manufacturer with the specified id
         var productManufacturer = await _manufacturerService.GetProductManufacturerByIdAsync(id)
-                                  ?? throw new ArgumentException("No product manufacturer mapping found with the specified id");
+            ?? throw new ArgumentException("No product manufacturer mapping found with the specified id");
 
         await _manufacturerService.DeleteProductManufacturerAsync(productManufacturer);
 

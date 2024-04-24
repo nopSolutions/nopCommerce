@@ -111,7 +111,7 @@
                             </div>
 
                             <script>
-                                $(document).ready(function() {
+                                $(function() {
                                     var valueContainers = {
                                         @((int) SpecificationAttributeType.Option): $('#AttributeValueOptionSection'),
                                         @((int) SpecificationAttributeType.CustomText): $('#AttributeValueCustomTextSection'),
@@ -149,7 +149,7 @@
                             @if (Model.SpecificationId == 0)
                             {
                                 <script>
-                                    $(document).ready(function() {
+                                    $(function() {
                                         $("#@Html.IdFor(model => model.AttributeId)").change(function() {
                                             var selectedAttributeId = $(this).val();
                                             //get options list
@@ -170,7 +170,7 @@
                                                         });
                                                 },
                                                 error: function (jqXHR, textStatus, errorThrown) {
-                                                    $("#getOptionsByAttributeIdAlert").click();
+                                                    $("#getOptionsByAttributeIdAlert").trigger("click");
                                                 }
                                             });
                                         });

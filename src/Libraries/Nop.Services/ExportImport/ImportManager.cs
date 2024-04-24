@@ -2658,12 +2658,14 @@ public partial class ImportManager : IImportManager
                 }
                 else
                 {
+                    var customer = await _customerService.GetCustomerByEmailAsync(email);
                     subscription = new NewsLetterSubscription
                     {
                         Active = isActive,
                         CreatedOnUtc = DateTime.UtcNow,
                         Email = email,
                         StoreId = storeId,
+                        LanguageId = customer?.LanguageId ?? store.DefaultLanguageId,
                         NewsLetterSubscriptionGuid = Guid.NewGuid()
                     };
                     await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(subscription);
@@ -3388,8 +3390,7 @@ public partial class ImportManager : IImportManager
 
         public override bool Equals(object obj)
         {
-            var other = obj as CategoryKey;
-            return other?.Equals(other) ?? false;
+            return obj is CategoryKey other && other.Equals(this);
         }
     }
 

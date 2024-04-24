@@ -19,7 +19,7 @@ public class StorePickupPointValidator : BaseNopValidator<StorePickupPointModel>
             .WithMessageAwait(localizationService.GetResourceAsync("Plugins.Pickup.PickupInStore.Fields.Latitude.IsNullWhenLongitudeHasValue"))
             .When(model => model.Longitude.HasValue);
         RuleFor(model => model.Latitude)
-            .ScalePrecision(8, 18)
+            .PrecisionScale(18, 8, false)
             .WithMessageAwait(localizationService.GetResourceAsync("Plugins.Pickup.PickupInStore.Fields.Latitude.InvalidPrecision"));
 
         // Longitude
@@ -32,7 +32,7 @@ public class StorePickupPointValidator : BaseNopValidator<StorePickupPointModel>
             .WithMessageAwait(localizationService.GetResourceAsync("Plugins.Pickup.PickupInStore.Fields.Longitude.IsNullWhenLatitudeHasValue"))
             .When(model => model.Latitude.HasValue);
         RuleFor(model => model.Longitude)
-            .ScalePrecision(8, 18)
+            .PrecisionScale(18, 8, false)
             .WithMessageAwait(localizationService.GetResourceAsync("Plugins.Pickup.PickupInStore.Fields.Longitude.InvalidPrecision"));
     }
 }

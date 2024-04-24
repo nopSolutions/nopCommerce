@@ -328,12 +328,7 @@ public partial class LanguageController : BaseAdminController
     public virtual async Task<IActionResult> ResourceUpdate([Validate] LocaleResourceModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
-            return AccessDeniedView();
-
-        if (model.ResourceName != null)
-            model.ResourceName = model.ResourceName;
-        if (model.ResourceValue != null)
-            model.ResourceValue = model.ResourceValue;
+            return await AccessDeniedDataTablesJson();
 
         if (!ModelState.IsValid)
         {
@@ -364,12 +359,7 @@ public partial class LanguageController : BaseAdminController
     public virtual async Task<IActionResult> ResourceAdd(int languageId, [Validate] LocaleResourceModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
-            return AccessDeniedView();
-
-        if (model.ResourceName != null)
-            model.ResourceName = model.ResourceName;
-        if (model.ResourceValue != null)
-            model.ResourceValue = model.ResourceValue;
+            return await AccessDeniedDataTablesJson();
 
         if (!ModelState.IsValid)
         {
@@ -398,11 +388,11 @@ public partial class LanguageController : BaseAdminController
     public virtual async Task<IActionResult> ResourceDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         //try to get a locale resource with the specified id
         var resource = await _localizationService.GetLocaleStringResourceByIdAsync(id)
-                       ?? throw new ArgumentException("No resource found with the specified id", nameof(id));
+            ?? throw new ArgumentException("No resource found with the specified id", nameof(id));
 
         await _localizationService.DeleteLocaleStringResourceAsync(resource);
 

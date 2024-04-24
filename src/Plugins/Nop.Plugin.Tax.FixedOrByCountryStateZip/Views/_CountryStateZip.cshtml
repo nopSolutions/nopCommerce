@@ -1,8 +1,4 @@
-﻿@using Nop.Core.Domain.Common
-@using Nop.Plugin.Tax.FixedOrByCountryStateZip.Models
-@using Nop.Web.Framework.Models.DataTables
-@model ConfigurationModel
-@inject AdminAreaSettings adminAreaSettings
+﻿@model ConfigurationModel
 
 @{
     Layout = "";
@@ -83,35 +79,34 @@
             </div>
             <div class="card-body">
                 <script>
-                    $(document)
-                        .ready(function() {
-                            $("#@Html.IdFor(model => model.AddCountryId)")
-                                .change(function() {
-                                    var selectedItem = $(this).val();
-                                    var ddlStates = $("#@Html.IdFor(model => model.AddStateProvinceId)");
-                                    $.ajax({
-                                        cache: false,
-                                        type: "GET",
-                                        url: "@(Url.Action("GetStatesByCountryId", "Country"))",
-                                        data: {
-                                            "countryId": selectedItem,
-                                            "addAsterisk": "true"
-                                        },
-                                        success: function (data, textStatus, jqXHR) {
-                                            ddlStates.html('');
-                                            $.each(data,
-                                                function(id, option) {
-                                                    ddlStates
-                                                        .append($('<option></option>').val(option.id)
-                                                            .html(option.name));
-                                                });
-                                        },
-                                        error: function (jqXHR, textStatus, errorThrown) {
-                                            $("#getStatesByCountryIdAlert").click();
-                                        }
-                                    });
+                    $(function() {
+                        $("#@Html.IdFor(model => model.AddCountryId)")
+                            .change(function() {
+                                var selectedItem = $(this).val();
+                                var ddlStates = $("#@Html.IdFor(model => model.AddStateProvinceId)");
+                                $.ajax({
+                                    cache: false,
+                                    type: "GET",
+                                    url: "@(Url.Action("GetStatesByCountryId", "Country"))",
+                                    data: {
+                                        "countryId": selectedItem,
+                                        "addAsterisk": "true"
+                                    },
+                                    success: function (data, textStatus, jqXHR) {
+                                        ddlStates.html('');
+                                        $.each(data,
+                                            function(id, option) {
+                                                ddlStates
+                                                    .append($('<option></option>').val(option.id)
+                                                        .html(option.name));
+                                            });
+                                    },
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        $("#getStatesByCountryIdAlert").trigger("click");
+                                    }
                                 });
-                        });
+                            });
+                    });
                 </script>
                 <div class="form-group row" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                     <div class="col-md-3">
@@ -175,30 +170,29 @@
                         <button type="button" id="addtaxrate" class="btn btn-primary">@T("Plugins.Tax.FixedOrByCountryStateZip.AddRecord")</button>
 
                         <script>
-                            $(document)
-                                .ready(function() {
-                                    $('#addtaxrate')
-                                        .click(function() {
+                            $(function() {
+                                $('#addtaxrate')
+                                    .click(function() {
 
-                                            var postData = $(this.form).serialize();
-                                            addAntiForgeryToken(postData);
+                                        var postData = $(this.form).serialize();
+                                        addAntiForgeryToken(postData);
 
-                                            $.ajax({
-                                                cache: false,
-                                                type: "POST",
-                                                url: "@Url.Action("AddRateByCountryStateZip", "FixedOrByCountryStateZip")",
-                                                data: postData,
-                                                dataType: "json",
-                                                success: function (data, textStatus, jqXHR) {
-                                                    updateTable('#tax-countrystatezip-grid');
-                                                },
-                                                error: function (jqXHR, textStatus, errorThrown) {
-                                                    $("#addRateByCountryStateZipAlert").click();
-                                                }
-                                            });
-                                            return false;
+                                        $.ajax({
+                                            cache: false,
+                                            type: "POST",
+                                            url: "@Url.Action("AddRateByCountryStateZip", "FixedOrByCountryStateZip")",
+                                            data: postData,
+                                            dataType: "json",
+                                            success: function (data, textStatus, jqXHR) {
+                                                updateTable('#tax-countrystatezip-grid');
+                                            },
+                                            error: function (jqXHR, textStatus, errorThrown) {
+                                                $("#addRateByCountryStateZipAlert").trigger("click");
+                                            }
                                         });
-                                });
+                                        return false;
+                                    });
+                            });
                         </script>
                     </div>
                 </div>

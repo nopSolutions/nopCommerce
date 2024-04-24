@@ -1,4 +1,6 @@
 ﻿using FluentValidation.TestHelper;
+using Nop.Core.Domain.Common;
+using Nop.Services.Localization;
 using Nop.Web.Models.Common;
 using Nop.Web.Validators.Common;
 using NUnit.Framework;
@@ -13,7 +15,7 @@ public class ContactVendorValidatorTests : BaseNopTest
     [OneTimeSetUp]
     public void Setup()
     {
-        _validator = GetService<ContactVendorValidator>();
+        _validator =  new ContactVendorValidator(GetService<ILocalizationService>(), GetService<CommonSettings>());
     }
 
     [Test]

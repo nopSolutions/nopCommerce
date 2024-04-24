@@ -121,7 +121,7 @@ public partial class OrderTotalCalculationService : IOrderTotalCalculationServic
 
         var allDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToOrderSubTotal);
         var allowedDiscounts = new List<Discount>();
-        if (allDiscounts != null)
+        if (allDiscounts?.Any() == true)
         {
             var couponCodesToValidate = await _customerService.ParseAppliedDiscountCouponCodesAsync(customer);
             foreach (var discount in allDiscounts)
@@ -160,7 +160,7 @@ public partial class OrderTotalCalculationService : IOrderTotalCalculationServic
 
         var allDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToShipping);
         var allowedDiscounts = new List<Discount>();
-        if (allDiscounts != null)
+        if (allDiscounts?.Any() == true)
         {
             var couponCodesToValidate = await _customerService.ParseAppliedDiscountCouponCodesAsync(customer);
 
@@ -198,7 +198,7 @@ public partial class OrderTotalCalculationService : IOrderTotalCalculationServic
 
         var allDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToOrderTotal);
         var allowedDiscounts = new List<Discount>();
-        if (allDiscounts != null)
+        if (allDiscounts?.Any() == true)
         {
             var couponCodesToValidate = await _customerService.ParseAppliedDiscountCouponCodesAsync(customer);
             foreach (var discount in allDiscounts)

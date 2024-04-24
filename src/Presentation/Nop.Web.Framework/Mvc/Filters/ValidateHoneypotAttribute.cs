@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Core.Domain.Security;
 using Nop.Core.Http.Extensions;
 using Nop.Data;
+using Nop.Services.Localization;
 using Nop.Services.Logging;
 
 namespace Nop.Web.Framework.Mvc.Filters;
@@ -34,6 +35,7 @@ public sealed class ValidateHoneypotAttribute : TypeFilterAttribute
     {
         #region Fields
 
+        protected readonly ILocalizationService _localizationService;
         protected readonly ILogger _logger;
         protected readonly IWebHelper _webHelper;
         protected readonly SecuritySettings _securitySettings;
@@ -42,10 +44,12 @@ public sealed class ValidateHoneypotAttribute : TypeFilterAttribute
 
         #region Ctor
 
-        public ValidateHoneypotFilter(ILogger logger,
+        public ValidateHoneypotFilter(ILocalizationService localizationService,
+            ILogger logger,
             IWebHelper webHelper,
             SecuritySettings securitySettings)
         {
+            _localizationService = localizationService;
             _logger = logger;
             _webHelper = webHelper;
             _securitySettings = securitySettings;
@@ -78,7 +82,8 @@ public sealed class ValidateHoneypotAttribute : TypeFilterAttribute
             if (!StringValues.IsNullOrEmpty(inputValue))
             {
                 //warning admin about it
-                await _logger.WarningAsync("A bot detected. Honeypot.");
+                if (_securitySettings.LogHoneypotDetection) 
+                    await _logger.WarningAsync(await _localizationService.GetResourceAsync("Honeypot.BotDetected"));
 
                 //and redirect to the original page
                 var page = _webHelper.GetThisPageUrl(true);

@@ -21,6 +21,7 @@ public partial class NewsletterSubscriptionModelFactory : INewsletterSubscriptio
     protected readonly CatalogSettings _catalogSettings;
     protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
     protected readonly IDateTimeHelper _dateTimeHelper;
+    protected readonly ILanguageService _languageService;
     protected readonly ILocalizationService _localizationService;
     protected readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
     protected readonly IStoreService _storeService;
@@ -32,6 +33,7 @@ public partial class NewsletterSubscriptionModelFactory : INewsletterSubscriptio
     public NewsletterSubscriptionModelFactory(CatalogSettings catalogSettings,
         IBaseAdminModelFactory baseAdminModelFactory,
         IDateTimeHelper dateTimeHelper,
+        ILanguageService languageService,
         ILocalizationService localizationService,
         INewsLetterSubscriptionService newsLetterSubscriptionService,
         IStoreService storeService)
@@ -39,6 +41,7 @@ public partial class NewsletterSubscriptionModelFactory : INewsletterSubscriptio
         _catalogSettings = catalogSettings;
         _baseAdminModelFactory = baseAdminModelFactory;
         _dateTimeHelper = dateTimeHelper;
+        _languageService = languageService;
         _localizationService = localizationService;
         _newsLetterSubscriptionService = newsLetterSubscriptionService;
         _storeService = storeService;
@@ -132,6 +135,7 @@ public partial class NewsletterSubscriptionModelFactory : INewsletterSubscriptio
 
                 //fill in additional values (not existing in the entity)
                 subscriptionModel.StoreName = (await _storeService.GetStoreByIdAsync(subscription.StoreId))?.Name ?? "Deleted";
+                subscriptionModel.LanguageName = (await _languageService.GetLanguageByIdAsync(subscription.LanguageId))?.Name ?? string.Empty;
 
                 return subscriptionModel;
             });

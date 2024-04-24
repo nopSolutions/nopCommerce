@@ -1,4 +1,5 @@
 ﻿using FluentValidation.TestHelper;
+using Nop.Services.Localization;
 using Nop.Web.Models.PrivateMessages;
 using Nop.Web.Validators.PrivateMessages;
 using NUnit.Framework;
@@ -13,7 +14,7 @@ public class SendPrivateMessageValidatorTests : BaseNopTest
     [OneTimeSetUp]
     public void Setup()
     {
-        _validator = GetService<SendPrivateMessageValidator>();
+        _validator = new SendPrivateMessageValidator(GetService<ILocalizationService>());
     }
 
     [Test]

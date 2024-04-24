@@ -124,7 +124,7 @@ public partial class SpecificationAttributeController : BaseAdminController
         if (searchModel.SpecificationAttributeGroupId > 0)
         {
             group = await _specificationAttributeService.GetSpecificationAttributeGroupByIdAsync(searchModel.SpecificationAttributeGroupId)
-                    ?? throw new ArgumentException("No specification attribute group found with the specified id");
+                ?? throw new ArgumentException("No specification attribute group found with the specified id");
         }
 
         var model = await _specificationAttributeModelFactory.PrepareSpecificationAttributeListModelAsync(searchModel, group);
@@ -355,7 +355,7 @@ public partial class SpecificationAttributeController : BaseAdminController
     public virtual async Task<IActionResult> DeleteSelectedSpecificationAttributes(ICollection<int> selectedIds)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();
@@ -384,7 +384,7 @@ public partial class SpecificationAttributeController : BaseAdminController
 
         //try to get a specification attribute with the specified id
         var specificationAttribute = await _specificationAttributeService.GetSpecificationAttributeByIdAsync(searchModel.SpecificationAttributeId)
-                                     ?? throw new ArgumentException("No specification attribute found with the specified id");
+            ?? throw new ArgumentException("No specification attribute found with the specified id");
 
         //prepare model
         var model = await _specificationAttributeModelFactory.PrepareSpecificationAttributeOptionListModelAsync(searchModel, specificationAttribute);
@@ -513,11 +513,11 @@ public partial class SpecificationAttributeController : BaseAdminController
     public virtual async Task<IActionResult> OptionDelete(int id, int specificationAttributeId)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         //try to get a specification attribute option with the specified id
         var specificationAttributeOption = await _specificationAttributeService.GetSpecificationAttributeOptionByIdAsync(id)
-                                           ?? throw new ArgumentException("No specification attribute option found with the specified id", nameof(id));
+            ?? throw new ArgumentException("No specification attribute option found with the specified id", nameof(id));
 
         await _specificationAttributeService.DeleteSpecificationAttributeOptionAsync(specificationAttributeOption);
 
@@ -529,8 +529,8 @@ public partial class SpecificationAttributeController : BaseAdminController
     {
         //do not make any permission validation here 
         //because this method could be used on some other pages (such as product editing)
-        //if (!await _permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-        //    return AccessDeniedView();
+        //if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
+        //    return await AccessDeniedDataTablesJson();
 
         //this action method gets called via an ajax request
         ArgumentException.ThrowIfNullOrEmpty(attributeId);
@@ -553,7 +553,7 @@ public partial class SpecificationAttributeController : BaseAdminController
 
         //try to get a specification attribute with the specified id
         var specificationAttribute = await _specificationAttributeService.GetSpecificationAttributeByIdAsync(searchModel.SpecificationAttributeId)
-                                     ?? throw new ArgumentException("No specification attribute found with the specified id");
+            ?? throw new ArgumentException("No specification attribute found with the specified id");
 
         //prepare model
         var model = await _specificationAttributeModelFactory.PrepareSpecificationAttributeProductListModelAsync(searchModel, specificationAttribute);

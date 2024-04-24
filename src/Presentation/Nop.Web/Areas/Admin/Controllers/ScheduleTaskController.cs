@@ -81,11 +81,11 @@ public partial class ScheduleTaskController : BaseAdminController
     public virtual async Task<IActionResult> TaskUpdate(ScheduleTaskModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageScheduleTasks))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         //try to get a schedule task with the specified id
         var scheduleTask = await _scheduleTaskService.GetTaskByIdAsync(model.Id)
-                           ?? throw new ArgumentException("Schedule task cannot be loaded");
+            ?? throw new ArgumentException("Schedule task cannot be loaded");
 
         //To prevent inject the XSS payload in Schedule tasks ('Name' field), we must disable editing this field, 
         //but since it is required, we need to get its value before updating the entity.
@@ -121,7 +121,7 @@ public partial class ScheduleTaskController : BaseAdminController
         {
             //try to get a schedule task with the specified id
             var scheduleTask = await _scheduleTaskService.GetTaskByIdAsync(id)
-                               ?? throw new ArgumentException("Schedule task cannot be loaded", nameof(id));
+                ?? throw new ArgumentException("Schedule task cannot be loaded", nameof(id));
 
             await _taskRunner.ExecuteAsync(scheduleTask, true, true, false);
 

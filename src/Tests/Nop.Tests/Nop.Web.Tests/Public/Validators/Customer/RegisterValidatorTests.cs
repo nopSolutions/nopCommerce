@@ -16,7 +16,7 @@ public class RegisterValidatorTests : BaseNopTest
     [OneTimeSetUp]
     public void SetUp()
     {
-        _validator = GetService<RegisterValidator>();
+        _validator = new RegisterValidator(GetService<ILocalizationService>(), GetService<IStateProvinceService>(), GetService<CustomerSettings>());
     }
 
     [Test]

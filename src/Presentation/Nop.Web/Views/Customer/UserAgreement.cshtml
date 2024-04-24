@@ -6,7 +6,7 @@
     NopHtml.AppendPageCssClassParts("html-user-agreement-page");
 }
 <script asp-location="Footer">
-    $(document).ready(function () {
+    $(function() {
         $("#agreement-agree").on('click', toggleContinueButton);
         toggleContinueButton();
     });

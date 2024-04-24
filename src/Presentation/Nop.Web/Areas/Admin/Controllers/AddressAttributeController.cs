@@ -245,7 +245,7 @@ public partial class AddressAttributeController : BaseAdminController
 
         //try to get an address attribute with the specified id
         var addressAttribute = await _addressAttributeService.GetAttributeByIdAsync(searchModel.AddressAttributeId)
-                               ?? throw new ArgumentException("No address attribute found with the specified id");
+            ?? throw new ArgumentException("No address attribute found with the specified id");
 
         //prepare model
         var model = await _addressAttributeModelFactory.PrepareAddressAttributeValueListModelAsync(searchModel, addressAttribute);
@@ -370,11 +370,11 @@ public partial class AddressAttributeController : BaseAdminController
     public virtual async Task<IActionResult> ValueDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         //try to get an address attribute value with the specified id
         var addressAttributeValue = await _addressAttributeService.GetAttributeValueByIdAsync(id)
-                                    ?? throw new ArgumentException("No address attribute value found with the specified id", nameof(id));
+            ?? throw new ArgumentException("No address attribute value found with the specified id", nameof(id));
 
         await _addressAttributeService.DeleteAttributeValueAsync(addressAttributeValue);
 

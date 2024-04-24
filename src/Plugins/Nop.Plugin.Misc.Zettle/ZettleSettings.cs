@@ -115,10 +115,5 @@ public class ZettleSettings : ISettings
     /// </summary>
     public bool ClearRecordsOnChangeCredentials { get; set; }
 
-    /// <summary>
-    /// Gets or sets the list of inventory balance changes unique identifiers as UUID version 1
-    /// </summary>
-    public List<string> InventoryTrackingIds { get; set; } = new();
-
     #endregion
 }

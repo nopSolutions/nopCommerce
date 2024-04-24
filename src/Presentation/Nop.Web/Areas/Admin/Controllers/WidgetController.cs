@@ -77,7 +77,7 @@ public partial class WidgetController : BaseAdminController
     public virtual async Task<IActionResult> WidgetUpdate(WidgetModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         var widget = await _widgetPluginManager.LoadPluginBySystemNameAsync(model.SystemName);
         if (_widgetPluginManager.IsPluginActive(widget, _widgetSettings.ActiveWidgetSystemNames))

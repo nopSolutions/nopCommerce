@@ -420,6 +420,7 @@ public partial class CustomerController : BaseAdminController
                                 Email = customer.Email,
                                 Active = true,
                                 StoreId = store.Id,
+                                LanguageId = customer.LanguageId ?? store.DefaultLanguageId,
                                 CreatedOnUtc = DateTime.UtcNow
                             });
                         }
@@ -663,6 +664,7 @@ public partial class CustomerController : BaseAdminController
                                     Email = customer.Email,
                                     Active = true,
                                     StoreId = store.Id,
+                                    LanguageId = customer.LanguageId ?? store.DefaultLanguageId,
                                     CreatedOnUtc = DateTime.UtcNow
                                 });
                             }
@@ -774,10 +776,7 @@ public partial class CustomerController : BaseAdminController
             return RedirectToAction("Edit", new { id = customer.Id });
         }
 
-        if (!ModelState.IsValid)
-            return RedirectToAction("Edit", new { id = customer.Id });
-
-        var changePassRequest = new ChangePasswordRequest(model.Email,
+        var changePassRequest = new ChangePasswordRequest(customer.Email,
             false, _customerSettings.DefaultPasswordFormat, model.Password);
         var changePassResult = await _customerRegistrationService.ChangePasswordAsync(changePassRequest);
         if (changePassResult.Success)
@@ -1021,8 +1020,8 @@ public partial class CustomerController : BaseAdminController
                 throw new NopException("Email body is empty");
 
             var emailAccount = (await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId)
-                                ?? (await _emailAccountService.GetAllEmailAccountsAsync()).FirstOrDefault())
-                               ?? throw new NopException("Email account can't be loaded");
+                ?? (await _emailAccountService.GetAllEmailAccountsAsync()).FirstOrDefault())
+                ?? throw new NopException("Email account can't be loaded");
             var email = new QueuedEmail
             {
                 Priority = QueuedEmailPriority.High,
@@ -1109,7 +1108,7 @@ public partial class CustomerController : BaseAdminController
 
         //try to get a customer with the specified id
         var customer = await _customerService.GetCustomerByIdAsync(searchModel.CustomerId)
-                       ?? throw new ArgumentException("No customer found with the specified id");
+            ?? throw new ArgumentException("No customer found with the specified id");
 
         //prepare model
         var model = await _customerModelFactory.PrepareRewardPointsListModelAsync(searchModel, customer);
@@ -1120,7 +1119,7 @@ public partial class CustomerController : BaseAdminController
     public virtual async Task<IActionResult> RewardPointsHistoryAdd(AddRewardPointsToCustomerModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         //prevent adding a new row with zero value
         if (model.Points == 0)
@@ -1168,7 +1167,7 @@ public partial class CustomerController : BaseAdminController
 
         //try to get a customer with the specified id
         var customer = await _customerService.GetCustomerByIdAsync(searchModel.CustomerId)
-                       ?? throw new ArgumentException("No customer found with the specified id");
+            ?? throw new ArgumentException("No customer found with the specified id");
 
         //prepare model
         var model = await _customerModelFactory.PrepareCustomerAddressListModelAsync(searchModel, customer);
@@ -1180,11 +1179,11 @@ public partial class CustomerController : BaseAdminController
     public virtual async Task<IActionResult> AddressDelete(int id, int customerId)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         //try to get a customer with the specified id
         var customer = await _customerService.GetCustomerByIdAsync(customerId)
-                       ?? throw new ArgumentException("No customer found with the specified id", nameof(customerId));
+            ?? throw new ArgumentException("No customer found with the specified id", nameof(customerId));
 
         //try to get an address with the specified id
         var address = await _customerService.GetCustomerAddressAsync(customer.Id, id);
@@ -1339,7 +1338,7 @@ public partial class CustomerController : BaseAdminController
 
         //try to get a customer with the specified id
         var customer = await _customerService.GetCustomerByIdAsync(searchModel.CustomerId)
-                       ?? throw new ArgumentException("No customer found with the specified id");
+            ?? throw new ArgumentException("No customer found with the specified id");
 
         //prepare model
         var model = await _customerModelFactory.PrepareCustomerOrderListModelAsync(searchModel, customer);
@@ -1447,7 +1446,7 @@ public partial class CustomerController : BaseAdminController
 
         //try to get a customer with the specified id
         var customer = await _customerService.GetCustomerByIdAsync(searchModel.CustomerId)
-                       ?? throw new ArgumentException("No customer found with the specified id");
+            ?? throw new ArgumentException("No customer found with the specified id");
 
         //prepare model
         var model = await _customerModelFactory.PrepareCustomerShoppingCartListModelAsync(searchModel, customer);
@@ -1467,7 +1466,7 @@ public partial class CustomerController : BaseAdminController
 
         //try to get a customer with the specified id
         var customer = await _customerService.GetCustomerByIdAsync(searchModel.CustomerId)
-                       ?? throw new ArgumentException("No customer found with the specified id");
+            ?? throw new ArgumentException("No customer found with the specified id");
 
         //prepare model
         var model = await _customerModelFactory.PrepareCustomerActivityLogListModelAsync(searchModel, customer);
@@ -1487,7 +1486,7 @@ public partial class CustomerController : BaseAdminController
 
         //try to get a customer with the specified id
         var customer = await _customerService.GetCustomerByIdAsync(searchModel.CustomerId)
-                       ?? throw new ArgumentException("No customer found with the specified id");
+            ?? throw new ArgumentException("No customer found with the specified id");
 
         //prepare model
         var model = await _customerModelFactory.PrepareCustomerBackInStockSubscriptionListModelAsync(searchModel, customer);

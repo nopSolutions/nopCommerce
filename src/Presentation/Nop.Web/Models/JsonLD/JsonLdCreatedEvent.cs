@@ -1,11 +1,9 @@
-﻿using Nop.Web.Framework.Models;
-
-namespace Nop.Web.Models.JsonLD;
+﻿namespace Nop.Web.Models.JsonLD;
 
 /// <summary>
 /// Represents JSON-LD model created event
 /// </summary>
-public partial class JsonLdCreatedEvent
+public partial class JsonLdCreatedEvent<T> where T : JsonLdModel
 {
     #region Ctor
 
@@ -13,7 +11,7 @@ public partial class JsonLdCreatedEvent
     /// Ctor
     /// </summary>
     /// <param name="model">Created model</param>
-    public JsonLdCreatedEvent(BaseNopModel model)
+    public JsonLdCreatedEvent(T model)
     {
         Model = model;
     }
@@ -25,7 +23,7 @@ public partial class JsonLdCreatedEvent
     /// <summary>
     /// Created model
     /// </summary>
-    public BaseNopModel Model { get; }
+    public T Model { get; }
 
     #endregion
 }

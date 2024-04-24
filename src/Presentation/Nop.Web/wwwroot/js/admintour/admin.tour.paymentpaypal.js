@@ -1,4 +1,4 @@
-﻿$(document).ready(function () {
+﻿$(function() {
   if ($('body').hasClass('basic-settings-mode')) {
     //$('.onoffswitch-checkbox').trigger('click');
   }
@@ -60,7 +60,7 @@
       },
       beforeShowPromise: function () {
         return new Promise(function (resolve) {
-          $('#SetCredentialsManually').click();
+          $('#SetCredentialsManually').trigger("click");
           if ($('body').hasClass('basic-settings-mode')) {
             $('.onoffswitch-checkbox').trigger('click');
           }
@@ -119,7 +119,6 @@
         },
         beforeShowPromise: function () {
           return new Promise(function (resolve) {
-            //$('#SetCredentialsManually').click();
             resolve();
           });
         },

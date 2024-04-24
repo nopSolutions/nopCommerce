@@ -1,9 +1,8 @@
 ﻿using Newtonsoft.Json;
-using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.JsonLD;
 
-public record JsonLdReviewModel : BaseNopModel
+public record JsonLdReviewModel : JsonLdModel
 {
     #region Properties
 

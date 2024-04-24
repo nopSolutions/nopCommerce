@@ -105,7 +105,7 @@ public class GoogleAuthenticatorController : BasePluginController
     public async Task<IActionResult> GoogleAuthenticatorList(GoogleAuthenticatorSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         //get GoogleAuthenticator configuration records
         var configurations = await _googleAuthenticatorService.GetPagedConfigurationsAsync(searchModel.SearchEmail,
@@ -132,12 +132,14 @@ public class GoogleAuthenticatorController : BasePluginController
 
         //delete configuration
         var configuration = await _googleAuthenticatorService.GetConfigurationByIdAsync(model.Id);
-        if (configuration != null)
-        {
-            await _googleAuthenticatorService.DeleteConfigurationAsync(configuration);
-        }
+
+        if (configuration == null)
+            return new NullJsonResult();
+
+        await _googleAuthenticatorService.DeleteConfigurationAsync(configuration);
+
         var customer = await _customerService.GetCustomerByEmailAsync(configuration.Customer) ??
-                       await _customerService.GetCustomerByUsernameAsync(configuration.Customer);
+            await _customerService.GetCustomerByUsernameAsync(configuration.Customer);
 
         if (customer != null)
             await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute, string.Empty);
