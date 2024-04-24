@@ -426,6 +426,7 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(settings => settings.PublishBackProductWhenCancellingOrders, options => options.Ignore())
             .ForMember(settings => settings.UseAjaxLoadMenu, options => options.Ignore())
             .ForMember(settings => settings.UseLinksInRequiredProductWarnings, options => options.Ignore())
+            .ForMember(settings => settings.UseStandardSearchWhenSearchProviderThrowsException, options => options.Ignore())
             .ForMember(settings => settings.ActiveSearchProviderSystemName, options => options.Ignore());
 
         CreateMap<ProductCategory, CategoryProductModel>()
@@ -1198,6 +1199,7 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
 
         CreateMap<NewsLetterSubscription, NewsletterSubscriptionModel>()
             .ForMember(model => model.CreatedOn, options => options.Ignore())
+            .ForMember(model => model.LanguageName, options => options.Ignore())
             .ForMember(model => model.StoreName, options => options.Ignore());
         CreateMap<NewsletterSubscriptionModel, NewsLetterSubscription>()
             .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
