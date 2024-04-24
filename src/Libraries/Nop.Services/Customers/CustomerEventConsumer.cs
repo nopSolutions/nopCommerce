@@ -12,6 +12,7 @@ public class CustomerEventConsumer : IConsumer<CustomerChangeWorkingLanguageEven
 {
     #region Fields
 
+    protected readonly ICustomerService _customerService;
     protected readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
     protected readonly IStoreContext _storeContext;
 
@@ -19,9 +20,11 @@ public class CustomerEventConsumer : IConsumer<CustomerChangeWorkingLanguageEven
 
     #region Ctor
 
-    public CustomerEventConsumer(INewsLetterSubscriptionService newsLetterSubscriptionService,
+    public CustomerEventConsumer(ICustomerService customerService,
+        INewsLetterSubscriptionService newsLetterSubscriptionService,
         IStoreContext storeContext)
     {
+        _customerService = customerService;
         _newsLetterSubscriptionService = newsLetterSubscriptionService;
         _storeContext = storeContext;
     }
@@ -37,6 +40,9 @@ public class CustomerEventConsumer : IConsumer<CustomerChangeWorkingLanguageEven
     public async Task HandleEventAsync(CustomerChangeWorkingLanguageEvent eventMessage)
     {
         if (eventMessage.Customer is not Customer customer)
+            return;
+
+        if (await _customerService.IsGuestAsync(customer))
             return;
 
         var store = await _storeContext.GetCurrentStoreAsync();
