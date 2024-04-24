@@ -262,7 +262,7 @@ public class PickupInStoreController : BasePluginController
     public async Task<IActionResult> Delete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         var pickupPoint = await _storePickupPointService.GetStorePickupPointByIdAsync(id);
         if (pickupPoint == null)

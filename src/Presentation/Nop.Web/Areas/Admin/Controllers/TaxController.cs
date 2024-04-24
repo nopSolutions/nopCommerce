@@ -144,7 +144,7 @@ public partial class TaxController : BaseAdminController
     public virtual async Task<IActionResult> CategoryUpdate(TaxCategoryModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
@@ -160,7 +160,7 @@ public partial class TaxController : BaseAdminController
     public virtual async Task<IActionResult> CategoryAdd(TaxCategoryModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
@@ -176,11 +176,11 @@ public partial class TaxController : BaseAdminController
     public virtual async Task<IActionResult> CategoryDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         //try to get a tax category with the specified id
         var taxCategory = await _taxCategoryService.GetTaxCategoryByIdAsync(id)
-                          ?? throw new ArgumentException("No tax category found with the specified id", nameof(id));
+            ?? throw new ArgumentException("No tax category found with the specified id", nameof(id));
 
         await _taxCategoryService.DeleteTaxCategoryAsync(taxCategory);
 

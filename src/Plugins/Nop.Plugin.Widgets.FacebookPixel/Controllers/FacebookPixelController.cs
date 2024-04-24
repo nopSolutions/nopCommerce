@@ -266,7 +266,7 @@ public class FacebookPixelController : BasePluginController
             return await AccessDeniedDataTablesJson();
 
         var configuration = await _facebookPixelService.GetConfigurationByIdAsync(searchModel.ConfigurationId)
-                            ?? throw new ArgumentException("No configuration found with the specified id", nameof(searchModel.ConfigurationId));
+            ?? throw new ArgumentException("No configuration found with the specified id", nameof(searchModel.ConfigurationId));
 
         var customEvents = (await _facebookPixelService.GetCustomEventsAsync(configuration.Id, searchModel.WidgetZone)).ToPagedList(searchModel);
         var model = new CustomEventListModel().PrepareToGrid(searchModel, customEvents, () =>
@@ -288,7 +288,7 @@ public class FacebookPixelController : BasePluginController
     public virtual async Task<IActionResult> CustomEventAdd(int configurationId, [Validate] CustomEventModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
@@ -303,7 +303,7 @@ public class FacebookPixelController : BasePluginController
     public virtual async Task<IActionResult> CustomEventDelete(int configurationId, string id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         //save custom events configuration
         var eventName = id;
@@ -315,7 +315,7 @@ public class FacebookPixelController : BasePluginController
     public async Task<IActionResult> CookieSettingsWarning(bool disableForUsersNotAcceptingCookieConsent)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         if (!disableForUsersNotAcceptingCookieConsent || _storeInformationSettings.DisplayEuCookieLawWarning)
             return Json(new { Result = string.Empty });

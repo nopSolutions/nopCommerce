@@ -79,7 +79,7 @@ public partial class MeasureController : BaseAdminController
     public virtual async Task<IActionResult> WeightUpdate(MeasureWeightModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
@@ -99,7 +99,7 @@ public partial class MeasureController : BaseAdminController
     public virtual async Task<IActionResult> WeightAdd(MeasureWeightModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
@@ -119,11 +119,11 @@ public partial class MeasureController : BaseAdminController
     public virtual async Task<IActionResult> WeightDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         //try to get a weight with the specified id
         var weight = await _measureService.GetMeasureWeightByIdAsync(id)
-                     ?? throw new ArgumentException("No weight found with the specified id", nameof(id));
+            ?? throw new ArgumentException("No weight found with the specified id", nameof(id));
 
         if (weight.Id == _measureSettings.BaseWeightId)
         {
@@ -143,11 +143,11 @@ public partial class MeasureController : BaseAdminController
     public virtual async Task<IActionResult> MarkAsPrimaryWeight(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         //try to get a weight with the specified id
         var weight = await _measureService.GetMeasureWeightByIdAsync(id)
-                     ?? throw new ArgumentException("No weight found with the specified id", nameof(id));
+            ?? throw new ArgumentException("No weight found with the specified id", nameof(id));
 
         _measureSettings.BaseWeightId = weight.Id;
         await _settingService.SaveSettingAsync(_measureSettings);
@@ -175,7 +175,7 @@ public partial class MeasureController : BaseAdminController
     public virtual async Task<IActionResult> DimensionUpdate(MeasureDimensionModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
@@ -195,7 +195,7 @@ public partial class MeasureController : BaseAdminController
     public virtual async Task<IActionResult> DimensionAdd(MeasureDimensionModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
@@ -215,11 +215,11 @@ public partial class MeasureController : BaseAdminController
     public virtual async Task<IActionResult> DimensionDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         //try to get a dimension with the specified id
         var dimension = await _measureService.GetMeasureDimensionByIdAsync(id)
-                        ?? throw new ArgumentException("No dimension found with the specified id", nameof(id));
+            ?? throw new ArgumentException("No dimension found with the specified id", nameof(id));
 
         if (dimension.Id == _measureSettings.BaseDimensionId)
         {
@@ -239,11 +239,11 @@ public partial class MeasureController : BaseAdminController
     public virtual async Task<IActionResult> MarkAsPrimaryDimension(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         //try to get a dimension with the specified id
         var dimension = await _measureService.GetMeasureDimensionByIdAsync(id)
-                        ?? throw new ArgumentException("No dimension found with the specified id", nameof(id));
+            ?? throw new ArgumentException("No dimension found with the specified id", nameof(id));
 
         _measureSettings.BaseDimensionId = dimension.Id;
         await _settingService.SaveSettingAsync(_measureSettings);

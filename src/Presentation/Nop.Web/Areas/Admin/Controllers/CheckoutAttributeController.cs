@@ -157,7 +157,8 @@ public partial class CheckoutAttributeController : BaseAdminController
                         //hence we won't be able to find a selected attribute
                         attributesXml = _checkoutAttributeParser.AddAttribute(null, attribute, string.IsNullOrEmpty(selectedValue) ? string.Empty : selectedValue);
                     }
-                        break;
+                    break;
+
                     case AttributeControlType.Checkboxes:
                     {
                         var selectedAttribute = model.ConditionModel.ConditionAttributes
@@ -173,7 +174,8 @@ public partial class CheckoutAttributeController : BaseAdminController
                         else
                             attributesXml = _checkoutAttributeParser.AddAttribute(null, attribute, string.Empty);
                     }
-                        break;
+                    break;
+
                     case AttributeControlType.ReadonlyCheckboxes:
                     case AttributeControlType.TextBox:
                     case AttributeControlType.MultilineTextbox:
@@ -352,7 +354,7 @@ public partial class CheckoutAttributeController : BaseAdminController
     public virtual async Task<IActionResult> DeleteSelected(ICollection<int> selectedIds)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();
@@ -382,7 +384,7 @@ public partial class CheckoutAttributeController : BaseAdminController
 
         //try to get a checkout attribute with the specified id
         var checkoutAttribute = await _checkoutAttributeService.GetAttributeByIdAsync(searchModel.CheckoutAttributeId)
-                                ?? throw new ArgumentException("No checkout attribute found with the specified id");
+            ?? throw new ArgumentException("No checkout attribute found with the specified id");
 
         //prepare model
         var model = await _checkoutAttributeModelFactory.PrepareCheckoutAttributeValueListModelAsync(searchModel, checkoutAttribute);
@@ -537,11 +539,11 @@ public partial class CheckoutAttributeController : BaseAdminController
     public virtual async Task<IActionResult> ValueDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         //try to get a checkout attribute value with the specified id
         var checkoutAttributeValue = await _checkoutAttributeService.GetAttributeValueByIdAsync(id)
-                                     ?? throw new ArgumentException("No checkout attribute value found with the specified id", nameof(id));
+            ?? throw new ArgumentException("No checkout attribute value found with the specified id", nameof(id));
 
         await _checkoutAttributeService.DeleteAttributeValueAsync(checkoutAttributeValue);
 

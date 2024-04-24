@@ -472,7 +472,7 @@ public partial class VendorController : BaseAdminController
 
         //try to get a vendor with the specified id
         var vendor = await _vendorService.GetVendorByIdAsync(searchModel.VendorId)
-                     ?? throw new ArgumentException("No vendor found with the specified id");
+            ?? throw new ArgumentException("No vendor found with the specified id");
 
         //prepare model
         var model = await _vendorModelFactory.PrepareVendorNoteListModelAsync(searchModel, vendor);
@@ -483,7 +483,7 @@ public partial class VendorController : BaseAdminController
     public virtual async Task<IActionResult> VendorNoteAdd(int vendorId, string message)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         if (string.IsNullOrEmpty(message))
             return ErrorJson(await _localizationService.GetResourceAsync("Admin.Vendors.VendorNotes.Fields.Note.Validation"));
@@ -507,11 +507,11 @@ public partial class VendorController : BaseAdminController
     public virtual async Task<IActionResult> VendorNoteDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         //try to get a vendor note with the specified id
         var vendorNote = await _vendorService.GetVendorNoteByIdAsync(id)
-                         ?? throw new ArgumentException("No vendor note found with the specified id", nameof(id));
+            ?? throw new ArgumentException("No vendor note found with the specified id", nameof(id));
 
         await _vendorService.DeleteVendorNoteAsync(vendorNote);
 

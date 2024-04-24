@@ -87,7 +87,7 @@ public class TaxTransactionLogController : BaseAdminController
     public async Task<IActionResult> DeleteSelected(ICollection<int> selectedIds)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();
@@ -142,7 +142,7 @@ public class TaxTransactionLogController : BaseAdminController
     public async Task<IActionResult> ClearAll()
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         await _taxTransactionLogService.ClearLogAsync();
 

@@ -108,8 +108,8 @@ public class AvalaraTaxController : TaxController
         var taxTypes = (await _cacheManager.GetAsync(cacheKey, async () => await _avalaraTaxManager.GetTaxCodeTypesAsync()))
             ?.Select(taxType => new { Id = taxType.Key, Name = taxType.Value });
         var defaultType = taxTypes
-                              ?.FirstOrDefault(taxType => taxType.Name.Equals("Unknown", StringComparison.InvariantCultureIgnoreCase))
-                          ?? taxTypes?.FirstOrDefault();
+            ?.FirstOrDefault(taxType => taxType.Name.Equals("Unknown", StringComparison.InvariantCultureIgnoreCase))
+            ?? taxTypes?.FirstOrDefault();
 
         //prepare grid model
         var model = await new Models.Tax.TaxCategoryListModel().PrepareToGridAsync(searchModel, taxCategories, () =>
@@ -127,8 +127,8 @@ public class AvalaraTaxController : TaxController
 
                 //try to get previously saved tax code type and description
                 var taxCodeType = (await taxTypes?.FirstOrDefaultAwaitAsync(async type =>
-                                      type.Id.Equals((await _genericAttributeService.GetAttributeAsync<string>(taxCategory, AvalaraTaxDefaults.TaxCodeTypeAttribute)) ?? string.Empty)))
-                                  ?? defaultType;
+                        type.Id.Equals((await _genericAttributeService.GetAttributeAsync<string>(taxCategory, AvalaraTaxDefaults.TaxCodeTypeAttribute)) ?? string.Empty)))
+                    ?? defaultType;
                 taxCategoryModel.Type = taxCodeType?.Name ?? string.Empty;
                 taxCategoryModel.TypeId = taxCodeType?.Id ?? Guid.Empty.ToString();
                 taxCategoryModel.Description = (await _genericAttributeService
@@ -155,7 +155,7 @@ public class AvalaraTaxController : TaxController
             return new NullJsonResult();
 
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
@@ -179,11 +179,11 @@ public class AvalaraTaxController : TaxController
             return new NullJsonResult();
 
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         //try to get a tax category with the specified id
         var taxCategory = await _taxCategoryService.GetTaxCategoryByIdAsync(id)
-                          ?? throw new ArgumentException("No tax category found with the specified id");
+            ?? throw new ArgumentException("No tax category found with the specified id");
 
         //delete generic attributes 
         await _genericAttributeService.SaveAttributeAsync<string>(taxCategory, AvalaraTaxDefaults.TaxCodeDescriptionAttribute, null);

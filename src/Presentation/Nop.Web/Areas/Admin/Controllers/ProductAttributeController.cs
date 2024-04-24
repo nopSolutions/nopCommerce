@@ -232,7 +232,7 @@ public partial class ProductAttributeController : BaseAdminController
     public virtual async Task<IActionResult> DeleteSelected(ICollection<int> selectedIds)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();
@@ -261,7 +261,7 @@ public partial class ProductAttributeController : BaseAdminController
 
         //try to get a product attribute with the specified id
         var productAttribute = await _productAttributeService.GetProductAttributeByIdAsync(searchModel.ProductAttributeId)
-                               ?? throw new ArgumentException("No product attribute found with the specified id");
+            ?? throw new ArgumentException("No product attribute found with the specified id");
 
         //prepare model
         var model = await _productAttributeModelFactory.PrepareProductAttributeProductListModelAsync(searchModel, productAttribute);
@@ -281,7 +281,7 @@ public partial class ProductAttributeController : BaseAdminController
 
         //try to get a product attribute with the specified id
         var productAttribute = await _productAttributeService.GetProductAttributeByIdAsync(searchModel.ProductAttributeId)
-                               ?? throw new ArgumentException("No product attribute found with the specified id");
+            ?? throw new ArgumentException("No product attribute found with the specified id");
 
         //prepare model
         var model = await _productAttributeModelFactory.PreparePredefinedProductAttributeValueListModelAsync(searchModel, productAttribute);
@@ -296,7 +296,7 @@ public partial class ProductAttributeController : BaseAdminController
 
         //try to get a product attribute with the specified id
         var productAttribute = await _productAttributeService.GetProductAttributeByIdAsync(productAttributeId)
-                               ?? throw new ArgumentException("No product attribute found with the specified id", nameof(productAttributeId));
+            ?? throw new ArgumentException("No product attribute found with the specified id", nameof(productAttributeId));
 
         //prepare model
         var model = await _productAttributeModelFactory
@@ -313,7 +313,7 @@ public partial class ProductAttributeController : BaseAdminController
 
         //try to get a product attribute with the specified id
         var productAttribute = await _productAttributeService.GetProductAttributeByIdAsync(model.ProductAttributeId)
-                               ?? throw new ArgumentException("No product attribute found with the specified id");
+            ?? throw new ArgumentException("No product attribute found with the specified id");
 
         if (ModelState.IsValid)
         {
@@ -342,11 +342,11 @@ public partial class ProductAttributeController : BaseAdminController
 
         //try to get a predefined product attribute value with the specified id
         var productAttributeValue = await _productAttributeService.GetPredefinedProductAttributeValueByIdAsync(id)
-                                    ?? throw new ArgumentException("No predefined product attribute value found with the specified id");
+            ?? throw new ArgumentException("No predefined product attribute value found with the specified id");
 
         //try to get a product attribute with the specified id
         var productAttribute = await _productAttributeService.GetProductAttributeByIdAsync(productAttributeValue.ProductAttributeId)
-                               ?? throw new ArgumentException("No product attribute found with the specified id");
+            ?? throw new ArgumentException("No product attribute found with the specified id");
 
         //prepare model
         var model = await _productAttributeModelFactory.PreparePredefinedProductAttributeValueModelAsync(null, productAttribute, productAttributeValue);
@@ -362,11 +362,11 @@ public partial class ProductAttributeController : BaseAdminController
 
         //try to get a predefined product attribute value with the specified id
         var productAttributeValue = await _productAttributeService.GetPredefinedProductAttributeValueByIdAsync(model.Id)
-                                    ?? throw new ArgumentException("No predefined product attribute value found with the specified id");
+            ?? throw new ArgumentException("No predefined product attribute value found with the specified id");
 
         //try to get a product attribute with the specified id
         var productAttribute = await _productAttributeService.GetProductAttributeByIdAsync(productAttributeValue.ProductAttributeId)
-                               ?? throw new ArgumentException("No product attribute found with the specified id");
+            ?? throw new ArgumentException("No product attribute found with the specified id");
 
         if (ModelState.IsValid)
         {
@@ -391,11 +391,11 @@ public partial class ProductAttributeController : BaseAdminController
     public virtual async Task<IActionResult> PredefinedProductAttributeValueDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         //try to get a predefined product attribute value with the specified id
         var productAttributeValue = await _productAttributeService.GetPredefinedProductAttributeValueByIdAsync(id)
-                                    ?? throw new ArgumentException("No predefined product attribute value found with the specified id", nameof(id));
+            ?? throw new ArgumentException("No predefined product attribute value found with the specified id", nameof(id));
 
         await _productAttributeService.DeletePredefinedProductAttributeValueAsync(productAttributeValue);
 
