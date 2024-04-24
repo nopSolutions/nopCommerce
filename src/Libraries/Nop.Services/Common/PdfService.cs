@@ -672,15 +672,12 @@ public partial class PdfService : IPdfService
         var logoPicture = await _pictureService.GetPictureByIdAsync(pdfSettingsByStore.LogoPictureId);
         if (logoPicture != null)
         {
-            var logoFilePath = await _pictureService.GetThumbLocalPathAsync(logoPicture, 0, false);
+            logo = await _pictureService.LoadPictureBinaryAsync(logoPicture);
 
             if (logoPicture.MimeType == MimeTypes.ImageSvg)
             {
-                logo = await _pictureService.ConvertSvgToPngAsync(logoFilePath);
-            }
-            else
-            {
-                logo = await _fileProvider.ReadAllBytesAsync(logoFilePath);
+                await using var logoStream = new MemoryStream(logo);
+                logo = await _pictureService.ConvertSvgToPngAsync(logoStream);
             }
         }
 

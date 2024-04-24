@@ -697,15 +697,15 @@ public partial class PictureService : IPictureService
     /// <summary>
     /// Convert image from SVG format to PNG
     /// </summary>
-    /// <param name="filePath">SVG file path</param>
+    /// <param name="stream">Stream for SVG file</param>
     /// <returns>A task that represents the asynchronous operation
     /// The task result contains the byte array</returns>
-    public virtual Task<byte[]> ConvertSvgToPngAsync(string filePath)
+    public virtual Task<byte[]> ConvertSvgToPngAsync(Stream stream)
     {
         try
         {
             using var svg = new SKSvg();
-            svg.Load(filePath);
+            svg.Load(stream);
 
             using var bitmap = new SKBitmap((int)svg.Picture.CullRect.Width, (int)svg.Picture.CullRect.Height);
             var canvas = new SKCanvas(bitmap);
