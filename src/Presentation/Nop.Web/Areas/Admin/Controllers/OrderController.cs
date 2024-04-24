@@ -2078,6 +2078,9 @@ public partial class OrderController : BaseAdminController
 
             await _eventPublisher.PublishAsync(new ShipmentCreatedEvent(shipment));
 
+            if (!string.IsNullOrWhiteSpace(shipment.TrackingNumber))
+                await _eventPublisher.PublishAsync(new ShipmentTrackingNumberSetEvent(shipment));
+
             var canShip = !order.PickupInStore && model.CanShip;
             if (canShip)
                 await _orderProcessingService.ShipAsync(shipment, true);
@@ -2184,8 +2187,13 @@ public partial class OrderController : BaseAdminController
         if (await _workContext.GetCurrentVendorAsync() != null && !await HasAccessToShipmentAsync(shipment))
             return RedirectToAction("List");
 
+        if (shipment.TrackingNumber == model.TrackingNumber)
+            return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
+
         shipment.TrackingNumber = model.TrackingNumber;
         await _shipmentService.UpdateShipmentAsync(shipment);
+
+        await _eventPublisher.PublishAsync(new ShipmentTrackingNumberSetEvent(shipment));
 
         return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
     }
