@@ -1,144 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Language Name="Shqip" IsDefault="false" IsRightToLeft="false">
+<Language Name="Portugês (Brasil)" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
-    <Value>Email i përdoruesit të administratorit.</Value>
+    <Value>Email do Administrador</Value>
   </LocaleResource>
   <LocaleResource Name="AdminEmailRequired">
-    <Value>Vendosni emailin e administratorit.</Value>
+    <Value>Entre com o email do Administrador</Value>
   </LocaleResource>
   <LocaleResource Name="AdminPassword">
-    <Value>Fjalëkalimi i përdoruesit të administratorit.</Value>
+    <Value>Senha do Administrador</Value>
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
-    <Value>Fjalëkalimi i përdoruesit të administratorit.</Value>
+    <Value>Entre com a senha do Administrador</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
-    <Value>{0}' llogaria nuk jepet me Modifikimin e lejes në dosje '{1}'. Ju lutemi konfiguroni këto leje.</Value>
+    <Value>A conta '{0}' não tem permissões de escrita na pasta '{1}'. Por favor configure essas permissões.</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureFilePermissions">
-    <Value>Llogaria '{0}' nuk jepet me Leje të modifikojë në dosjen '{1}'. Ju lutemi konfiguroni këto leje.</Value>
+    <Value>A conta '{0}' não tem permissão de escrita no arquivo '{1}'. Por favor configure essas permissões.</Value>
   </LocaleResource>
   <LocaleResource Name="ConfirmPassword">
-    <Value>Konfirmoni fjalëkalimin</Value>
+    <Value>Confirme a senha</Value>
   </LocaleResource>
   <LocaleResource Name="ConfirmPasswordRequired">
-    <Value>Vendosni fjalëkalimin konfirmues.</Value>
+    <Value>Entre com a confirmação da senha</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionString">
-    <Value>Varg lidhjeje</Value>
+    <Value>String de conexão</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringRequired">
-    <Value>Kërkohet një varg lidhjeje SQL</Value>
+    <Value>Entre com a string de conexão</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringWrongFormat">
-    <Value>Forma e gabuar e lidhjes SQL të gabuar.</Value>
+    <Value>Formato incorreto para a String de conexão</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Country</Value>
+    <Value>País</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Valitse maasi...</Value>
+    <Value>Selecione seu país</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
-    <Value>Krijoni bazën e të dhënave nëse nuk ekziston.</Value>
+    <Value>Criar banco de dados se não existir</Value>
   </LocaleResource>
   <LocaleResource Name="CreateSampleData">
-    <Value>Krijoni të dhënat e mostrës.</Value>
+    <Value>Criar dados de exemplo</Value>
   </LocaleResource>
   <LocaleResource Name="CustomCollation">
-    <Value>Specifikoni përpilimin me porosi.</Value>
+    <Value>Especificar ordenação personalizada</Value>
   </LocaleResource>
   <LocaleResource Name="Database">
-    <Value>Baza e të dhënave</Value>
+    <Value>Banco de dados</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseCreationError">
-    <Value>Ndodhi një gabim gjatë krijimit të bazës i të dhënave: {0}</Value>
+    <Value>Ocorreu um erro ao criar o banco: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
-    <Value>Informacioni i bazës i të dhënave.</Value>
+    <Value>Informações do banco de dados</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseName">
-    <Value>Emri i bazës i të dhënave.</Value>
+    <Value>Nome do banco de dados</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseNotExists">
-    <Value>Baza e të dhënave nuk ekziston ose nuk keni leje për t'u lidhur me të.</Value>
+    <Value>Banco de dados não existe ou você não tem permissão para conexão</Value>
   </LocaleResource>
   <LocaleResource Name="DataProviderRequired">
-    <Value>Zgjidhni ofruesin e të dhënave.</Value>
+    <Value>Escolha seu provedor</Value>
   </LocaleResource>
   <LocaleResource Name="Documentation1">
-    <Value>Nëse keni nevojë për informacion se si të përdorni nopCommerce, vizitoni</Value>
+    <Value>Se você precisa de informações em como usar o nopCommerce, visite</Value>
   </LocaleResource>
   <LocaleResource Name="Documentation2">
-    <Value>Seksioni i dokumentacionit në nopCommerce.com</Value>
+    <Value>a sessão de documentação em nopCommerce.com</Value>
   </LocaleResource>
   <LocaleResource Name="Example">
-    <Value>Shembull</Value>
+    <Value>Exemplo</Value>
   </LocaleResource>
   <LocaleResource Name="Install">
-    <Value>Instalo</Value>
+    <Value>Instalar</Value>
   </LocaleResource>
   <LocaleResource Name="Installing">
-    <Value>Duke instaluar nopCommerce …</Value>
+    <Value>Instalando nopCommerce...</Value>
   </LocaleResource>
   <LocaleResource Name="IntegratedAuthentication">
-    <Value>Përdorni vërtetimin e integruar të Windows</Value>
+    <Value>Usar autenticação integrada com o Windows</Value>
   </LocaleResource>
   <LocaleResource Name="MySql">
     <Value>MySQL</Value>
   </LocaleResource>
   <LocaleResource Name="PasswordsDoNotMatch">
-    <Value>Fjalëkalimet nuk përputhen</Value>
+    <Value>As senhas não são iguais</Value>
   </LocaleResource>
   <LocaleResource Name="PostgreSQL">
     <Value>PostgreSQL</Value>
   </LocaleResource>
   <LocaleResource Name="RawConnectionString">
-    <Value>Shkruaj varg lidhjesh të papërpunuar (të avancuar)</Value>
+    <Value>Entre com a string de conexão (avançado)</Value>
   </LocaleResource>
   <LocaleResource Name="RestartInstallation">
-    <Value>Rinisni instalimin</Value>
+    <Value>Reiniciar a instalação</Value>
   </LocaleResource>
   <LocaleResource Name="RestartInstallationTooltip">
-    <Value>Klikoni për të rinisur procesin e instalimit (pastroni të gjitha vlerat e ruajtura në memorje)</Value>
+    <Value>Clique para reiniciar o processo de instalação (limpar todos os valores)</Value>
   </LocaleResource>
   <LocaleResource Name="RestartProgress">
-    <Value>Rifillimi ...</Value>
+    <Value>Reiniciando...</Value>
   </LocaleResource>
   <LocaleResource Name="ServerName">
-    <Value>Emri i serverit.</Value>
+    <Value>Nome do servidor</Value>
   </LocaleResource>
   <LocaleResource Name="ServerNameRequired">
-    <Value>Kërkohet emri i serverit.</Value>
+    <Value>Nome do servidor é obrigatório</Value>
   </LocaleResource>
   <LocaleResource Name="SetupFailed">
-    <Value>Konfigurimi dështoi: {0}</Value>
+    <Value>Falha na configuração: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="SqlPassword">
-    <Value>Fjalëkalimi SQL</Value>
+    <Value>Senha SQL</Value>
   </LocaleResource>
   <LocaleResource Name="SqlPasswordRequired">
-    <Value>Kërkohet fjalëkalimi SQL</Value>
+    <Value>Entre com a senha SQL</Value>
   </LocaleResource>
   <LocaleResource Name="SqlServer">
-    <Value>Server SQL Microsoft.</Value>
+    <Value>Microsoft SQL Server</Value>
   </LocaleResource>
   <LocaleResource Name="SqlUsername">
-    <Value>Emri i SQL</Value>
+    <Value>Usuário SQL</Value>
   </LocaleResource>
   <LocaleResource Name="SqlUsernameRequired">
-    <Value>Kërkohet Emri i përdoruesit SQL</Value>
+    <Value>Entre com o usuário SQL</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
-    <Value>Informacioni i dyqanit</Value>
+    <Value>Guardar informação</Value>
   </LocaleResource>
   <LocaleResource Name="SubscribeNewsletters">
     <Value>Subscribe to nopCommerce newsletter</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
-    <Value>Instalimi i tregtisë nopCommerce</Value>
+    <Value>Instalação nopCommerce</Value>
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
-    <Value>Për të përfunduar këtë magjistar, duhet të dini disa informacione në lidhje me serverin tuaj të bazës të të dhënave ('vargu i lidhjes'). Ju lutemi kontaktoni ISP-në tuaj nëse është e nevojshme. Nëse jeni duke instaluar në një makinë lokale ose server, mund t'ju duhet informacion nga Administratori juaj i Sistemit.</Value>
+    <Value>Para completar o passo a passo você precisa saber algumas informações sobre seu servidor de banco de dados ("string de conexão"). Por favor entre em contato com seu provedor de hospedagem se necessário. Se você está instalando em um computador local ou servidor talvez seja necessário informações do seu Administrador de Sistemas.</Value>
   </LocaleResource>
 </Language>
