@@ -346,6 +346,10 @@
                         <span class="price-sale-tag">Sale</span>
                     }
                     <span class="price actual-price">@priceStr</span>
+                    @if (isClearance)
+                    {
+                        <span class="or-less">OR LESS!</span>
+                    }
                     @if (usesPairPricing)
                     {
                         <span class="pair-price-disclaimer">*pair</span>

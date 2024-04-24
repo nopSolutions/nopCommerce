@@ -46,6 +46,8 @@
     {
         Html.AddHeadCustomParts("<link rel='stylesheet' href='/Misc/StearnsAndFoster/css/style.css'>");
     }
+
+	var isClearance = Model.Name == "Clearance";
 }
 
 @using Nop.Core.Domain.Common;
@@ -70,6 +72,30 @@
 	<style>
 		.item-grid {
 			margin-top: 4em;
+		}
+	</style>
+}
+@if (isClearance)
+{
+	<style>
+		.price.actual-price {
+    		text-decoration: line-through;
+		}
+		
+		.or-less {
+        	font-size: .9rem;
+			display: inline-block;
+			padding-left: .5em;
+			color: #949494;
+			font-style: italic;
+			font-weight: bold;
+			vertical-align: middle;
+    	}
+
+		@@media (min-width: 425px) {
+			.or-less {
+				font-size: 1rem;
+			}
 		}
 	</style>
 }
