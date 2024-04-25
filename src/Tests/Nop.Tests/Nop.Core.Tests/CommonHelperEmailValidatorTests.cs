@@ -69,9 +69,10 @@ public class CommonHelperEmailValidatorTests
     [Test]
     public void WhenEmailAddressContainsHyphenInDomainThenTheValidatorShouldPass()
     {
+        //underscore is not allowed in domain part 
         var email = "testperson@domain_with-hyphen.com";
         var result = CommonHelper.IsValidEmail(email);
-        result.Should().BeTrue();
+        result.Should().BeFalse();
 
         email = "testperson@example-domain.net";
         result = CommonHelper.IsValidEmail(email);
