@@ -467,7 +467,7 @@ public partial class PriceFormatter : IPriceFormatter
     /// <returns>Formatted tax rate</returns>
     public virtual string FormatTaxRate(decimal taxRate)
     {
-        return taxRate.ToString("G29");
+        return taxRate.ToString("G29", CultureInfo.InvariantCulture);
     }
 
     /// <summary>
