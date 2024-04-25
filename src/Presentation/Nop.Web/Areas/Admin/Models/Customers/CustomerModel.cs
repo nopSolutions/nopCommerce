@@ -238,7 +238,7 @@ public partial record CustomerModel : BaseNopEntityModel, IAclSupportedModel
     //GDPR enabled
     public bool GdprEnabled { get; set; }
 
-    public string AvatarUrl { get; internal set; }
+    public string AvatarUrl { get; set; }
 
     public CustomerAddressSearchModel CustomerAddressSearchModel { get; set; }
 
