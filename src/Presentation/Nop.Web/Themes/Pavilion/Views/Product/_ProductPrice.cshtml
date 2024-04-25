@@ -9,7 +9,7 @@
 @using Nop.Web.Extensions
 @using Nop.Plugin.Misc.AbcCore.Infrastructure
 @using Nop.Plugin.Misc.AbcCore.Mattresses
-@using Nop.Core
+@using Nop.Plugin.Misc.AbcCore.Nop;
 
 @inject IWorkContext workContext
 @inject FrontEndService frontEndService
@@ -51,8 +51,16 @@
     }
 
     var product = await productService.GetProductByIdAsync(Model.ProductId);
-    var productCategories = await productService.GetProductCategoriesByProductIdAsync(Model.ProductId);
-    var isClearance = productCategories.Any(x => await abcCategoryService.IsCategoryIdClearance(x.CategoryId));
+    var productCategories = await abcCategoryService.GetProductCategoriesByProductIdAsync(Model.ProductId);
+    bool isClearance = false;
+    foreach (var productCategory in productCategories)
+    {
+        isClearance = await abcCategoryService.IsCategoryIdClearance(productCategory.CategoryId);
+        if (isClearance)
+        {
+            break;
+        }
+    }
 
     bool usesCartPricing = await product.IsAddToCartAsync() || await product.IsAddToCartWithUserInfoAsync();
 
@@ -140,9 +148,12 @@
                     </div>
                 }
                 *@
-                <div class="clearance-msg-block">
-                    <span class="clearance-msg">Available In Store Only</span><span class="clearance-msg-additional">Additional discounts based on product condition</span>
-                </div>
+                if (isClearance)
+                {
+                    <div class="clearance-msg-block">
+                        <span class="clearance-msg">Available In Store Only</span><span class="clearance-msg-additional">Additional discounts based on product condition</span>
+                    </div>
+                }
 
                 @*Don't worry about base price*@
                 if (!String.IsNullOrEmpty(Model.BasePricePAngV))
