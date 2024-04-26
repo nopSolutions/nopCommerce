@@ -1,4 +1,5 @@
 ﻿using FluentMigrator;
+using Microsoft.AspNetCore.Http.Features;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Data;
@@ -21,6 +22,8 @@ public class AppSettingsMigration : MigrationBase
         var rootDir = fileProvider.MapPath("~/");
         var woConfig = new WebOptimizerConfig
         {
+            CdnUrl = string.Empty,
+            HttpsCompression = HttpsCompressionMode.Compress,
             EnableTagHelperBundling = false,
             EnableCaching = true,
             EnableDiskCache = true,
