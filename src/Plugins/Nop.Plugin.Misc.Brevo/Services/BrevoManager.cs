@@ -228,6 +228,8 @@ public partial class BrevoManager
                         break;
                 }
 
+                var languages = await _languageService.GetAllLanguagesAsync(storeId: storeId);
+
                 //prepare CSV 
                 var title =
                     $"{BrevoDefaults.EmailServiceAttribute};" +
@@ -294,10 +296,10 @@ public partial class BrevoManager
                         county = customer.County;
                         state = (await _stateProvinceService.GetStateProvinceByIdAsync(customer.StateProvinceId))?.Name;
                         fax = customer.Fax;
-                        language = await _languageService.GetLanguageByIdAsync(customer.LanguageId ?? 0);
                     }
 
-                    language ??= (await _languageService.GetAllLanguagesAsync(storeId: storeId)).FirstOrDefault();
+                    language = languages.FirstOrDefault(lang => lang.Id == (customer?.LanguageId ?? subscription.LanguageId))
+                        ?? languages.FirstOrDefault();
 
                     return $"{all}\n" +
                            $"{subscription.Email};" +
@@ -526,7 +528,7 @@ public partial class BrevoManager
             catch (ApiException apiException)
             {
                 if (apiException.ErrorCode != 404)
-                {                        
+                {
                     await _logger.ErrorAsync($"Brevo error: {apiException.Message}.", apiException, await _workContext.GetCurrentCustomerAsync());
                     return;
                 }
@@ -577,10 +579,10 @@ public partial class BrevoManager
                 county = customer.County;
                 state = (await _stateProvinceService.GetStateProvinceByIdAsync(customer.StateProvinceId))?.Name;
                 fax = customer.Fax;
-                language = await _languageService.GetLanguageByIdAsync(customer.LanguageId ?? 0);
             }
 
-            language ??= (await _languageService.GetAllLanguagesAsync(storeId: subscription.StoreId)).FirstOrDefault();
+            language = await _languageService.GetLanguageByIdAsync(customer?.LanguageId ?? subscription.LanguageId)
+                ?? (await _languageService.GetAllLanguagesAsync(storeId: subscription.StoreId)).FirstOrDefault();
 
             var attributes = new Dictionary<string, string>
             {
@@ -1400,7 +1402,7 @@ public partial class BrevoManager
         }
 
         return string.Empty;
-    }        
+    }
 
     #endregion
 

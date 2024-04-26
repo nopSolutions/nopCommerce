@@ -4,9 +4,6 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
 WORKDIR /src                                                                    
 COPY ./src ./
 
-# restore solution
-RUN dotnet restore NopCommerce.sln
-
 WORKDIR /src/Presentation/Nop.Web   
 
 # build project   
@@ -27,8 +24,7 @@ RUN dotnet publish Nop.Web.csproj -c Release -o /app/published
 
 WORKDIR /app/published
 
-RUN mkdir logs
-RUN mkdir bin
+RUN mkdir logs bin
 
 RUN chmod 775 App_Data \
               App_Data/DataProtectionKeys \

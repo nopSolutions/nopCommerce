@@ -227,7 +227,7 @@ public partial class PollController : BaseAdminController
 
         //try to get a poll with the specified id
         var poll = await _pollService.GetPollByIdAsync(searchModel.PollId)
-                   ?? throw new ArgumentException("No poll found with the specified id");
+            ?? throw new ArgumentException("No poll found with the specified id");
 
         //prepare model
         var model = await _pollModelFactory.PreparePollAnswerListModelAsync(searchModel, poll);
@@ -240,14 +240,14 @@ public partial class PollController : BaseAdminController
     public virtual async Task<IActionResult> PollAnswerUpdate([Validate] PollAnswerModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
 
         //try to get a poll answer with the specified id
         var pollAnswer = await _pollService.GetPollAnswerByIdAsync(model.Id)
-                         ?? throw new ArgumentException("No poll answer found with the specified id");
+            ?? throw new ArgumentException("No poll answer found with the specified id");
 
         pollAnswer = model.ToEntity(pollAnswer);
 
@@ -261,7 +261,7 @@ public partial class PollController : BaseAdminController
     public virtual async Task<IActionResult> PollAnswerAdd(int pollId, [Validate] PollAnswerModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
@@ -276,11 +276,11 @@ public partial class PollController : BaseAdminController
     public virtual async Task<IActionResult> PollAnswerDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         //try to get a poll answer with the specified id
         var pollAnswer = await _pollService.GetPollAnswerByIdAsync(id)
-                         ?? throw new ArgumentException("No poll answer found with the specified id", nameof(id));
+            ?? throw new ArgumentException("No poll answer found with the specified id", nameof(id));
 
         await _pollService.DeletePollAnswerAsync(pollAnswer);
 

@@ -293,7 +293,7 @@ public partial class CountryController : BaseAdminController
     public virtual async Task<IActionResult> PublishSelected(ICollection<int> selectedIds)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();
@@ -312,7 +312,7 @@ public partial class CountryController : BaseAdminController
     public virtual async Task<IActionResult> UnpublishSelected(ICollection<int> selectedIds)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();
@@ -339,7 +339,7 @@ public partial class CountryController : BaseAdminController
 
         //try to get a country with the specified id
         var country = await _countryService.GetCountryByIdAsync(searchModel.CountryId)
-                      ?? throw new ArgumentException("No country found with the specified id");
+            ?? throw new ArgumentException("No country found with the specified id");
 
         //prepare model
         var model = await _countryModelFactory.PrepareStateProvinceListModelAsync(searchModel, country);
@@ -462,11 +462,11 @@ public partial class CountryController : BaseAdminController
     public virtual async Task<IActionResult> StateDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         //try to get a state with the specified id
         var state = await _stateProvinceService.GetStateProvinceByIdAsync(id)
-                    ?? throw new ArgumentException("No state found with the specified id");
+            ?? throw new ArgumentException("No state found with the specified id");
 
         if (await _addressService.GetAddressTotalByStateProvinceIdAsync(state.Id) > 0)
         {

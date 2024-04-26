@@ -1063,8 +1063,10 @@ public partial class ProductService : IProductService
             {
                 var productCategoryQuery =
                     from pc in _productCategoryRepository.Table
+                    join c in _categoryRepository.Table on pc.CategoryId equals c.Id
                     where (!excludeFeaturedProducts || !pc.IsFeaturedProduct) &&
                           categoryIds.Contains(pc.CategoryId)
+                    orderby c.DisplayOrder
                     group pc by pc.ProductId into pc
                     select new
                     {

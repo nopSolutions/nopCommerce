@@ -84,7 +84,7 @@ public partial class AuthenticationController : BaseAdminController
     public virtual async Task<IActionResult> ExternalMethodUpdate(ExternalAuthenticationMethodModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageExternalAuthenticationMethods))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         var method = await _authenticationPluginManager.LoadPluginBySystemNameAsync(model.SystemName);
         if (_authenticationPluginManager.IsPluginActive(method))
@@ -150,7 +150,7 @@ public partial class AuthenticationController : BaseAdminController
     public virtual async Task<IActionResult> MultiFactorMethodUpdate(MultiFactorAuthenticationMethodModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         var method = await _multiFactorAuthenticationPluginManager.LoadPluginBySystemNameAsync(model.SystemName);
         if (_multiFactorAuthenticationPluginManager.IsPluginActive(method))

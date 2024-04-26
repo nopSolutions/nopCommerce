@@ -303,13 +303,14 @@ public partial class CommonController : BaseAdminController
                     _fileProvider.DeleteFile(backupPath);
                     _notificationService.SuccessNotification(string.Format(await _localizationService.GetResourceAsync("Admin.System.Maintenance.BackupDatabase.BackupDeleted"), fileName));
                 }
-                    break;
+                break;
+
                 case "restore-backup":
                 {
                     await _dataProvider.RestoreDatabaseAsync(backupPath);
                     _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.System.Maintenance.BackupDatabase.DatabaseRestored"));
                 }
-                    break;
+                break;
             }
         }
         catch (Exception exc)
@@ -436,7 +437,7 @@ public partial class CommonController : BaseAdminController
     public virtual async Task<IActionResult> DeleteSelectedSeNames(ICollection<int> selectedIds)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();

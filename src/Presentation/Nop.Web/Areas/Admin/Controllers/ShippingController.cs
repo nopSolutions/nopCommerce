@@ -159,7 +159,7 @@ public partial class ShippingController : BaseAdminController
     public virtual async Task<IActionResult> ProviderUpdate(ShippingProviderModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         var srcm = await _shippingPluginManager.LoadPluginBySystemNameAsync(model.SystemName);
         if (_shippingPluginManager.IsPluginActive(srcm))
@@ -226,7 +226,7 @@ public partial class ShippingController : BaseAdminController
     public virtual async Task<IActionResult> PickupPointProviderUpdate(PickupPointProviderModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         var pickupPointProvider = await _pickupPluginManager.LoadPluginBySystemNameAsync(model.SystemName);
         if (_pickupPluginManager.IsPluginActive(pickupPointProvider))

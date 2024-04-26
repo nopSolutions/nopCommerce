@@ -9,9 +9,9 @@ public class CountryModelFactoryTests : WebTest
 {
     private ICountryModelFactory _countryModelFactory;
     private ILocalizationService _localizationService;
-    private string _countryId;
-    private string _invalidCountryId;
-    private string _countryWithoutStatesId;
+    private int _countryId;
+    private int _invalidCountryId;
+    private int _countryWithoutStatesId;
 
     [OneTimeSetUp]
     public void SetUp()
@@ -19,9 +19,9 @@ public class CountryModelFactoryTests : WebTest
         _countryModelFactory = GetService<ICountryModelFactory>();
         _localizationService = GetService<ILocalizationService>();
 
-        _countryId = "41"; //Canada
-        _countryWithoutStatesId = "3"; //Albania
-        _invalidCountryId = "0";
+        _countryId = 41; //Canada
+        _countryWithoutStatesId = 3; //Albania
+        _invalidCountryId = 0;
     }
 
     [Test]

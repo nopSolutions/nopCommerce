@@ -2950,10 +2950,10 @@
     <Value>No discounts available. Create at least one discount before mapping.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.DisplayAttributeCombinationImagesOnly">
-    <Value>Display attribute combination images only</Value>
+    <Value>Display only uploaded images of attribute combination</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.DisplayAttributeCombinationImagesOnly.Hint">
-    <Value>Check to display attribute combination images only. When enabled, customers will see attribute combination images only if any.</Value>
+    <Value>Check to display only uploaded images of this attribute combination.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.DisplayOrder">
     <Value>Display order</Value>
@@ -5218,7 +5218,7 @@
     <Value>This is the username you use to authenticate to your mail server.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.EmailAccounts.RedirectUrl.Info">
-    <Value><![CDATA[<b>{0}</b> - enter this "Authorized redirect URI" when creating your credentials in the Google Cloud console. You will be redirected to this path after authenticating with Google.]]</Value>
+    <Value><![CDATA[<b>{0}</b> - enter this "Authorized redirect URI" when creating your credentials in the Google Cloud console. You will be redirected to this path after authenticating with Google.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.EmailAccounts.SendTestEmail">
     <Value>Send Test Email (save settings first by clicking "Save" button)</Value>
@@ -6472,7 +6472,7 @@
     <Value>Check if 'County / region' is required.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.DefaultCountry">
-    <Value>Default Country</Value>
+    <Value>Default country</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.DefaultCountry.Hint">
     <Value>Select the default country for address form fields. This can speed up the checkout process.</Value>
@@ -6685,7 +6685,7 @@
     <Value>A value indicating whether to display default user avatar.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.DefaultCountry">
-    <Value>Default Country</Value>
+    <Value>Default country</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.DefaultCountry.Hint">
     <Value>Select the default country for customer form fields. This can speed up the registration process.</Value>
@@ -8548,7 +8548,7 @@
     <Value>Discounts</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DisplayAttributeCombinationImagesOnly">
-    <Value>Display attribute combination images only</Value>
+    <Value>Display only uploaded images of attribute combination</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DisplayStockAvailability">
     <Value>Display availability</Value>
@@ -10822,7 +10822,7 @@
     <Value>A delay before sending the message.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.AllowDirectReply">
-    <Value>Allow Direct Reply</Value>
+    <Value>Allow direct reply</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.AllowDirectReply.Hint">
    <Value>When checked, the store owner can reply directly to the customer's email address from mailbox when a customer-related message is received.</Value>
@@ -14412,6 +14412,9 @@
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.Fields.Store">
     <Value>Store</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.Fields.Language">
+    <Value>Language</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.ImportEmailsSuccess">
     <Value>{0} emails have been successfully imported</Value>
   </LocaleResource>
@@ -17956,13 +17959,16 @@
     <Value><![CDATA[From: {0} <{1}>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Header.SkipNavigation.Text">
-    <Value>Skip Navigation</Value>
+    <Value>Skip navigation</Value>
   </LocaleResource>
   <LocaleResource Name="Homepage">
     <Value>Home page</Value>
   </LocaleResource>
   <LocaleResource Name="Homepage.Products">
     <Value>Featured products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Honeypot.BotDetected">
+    <Value>A bot detected. Honeypot.</Value>
   </LocaleResource>
   <LocaleResource Name="Languages">
     <Value>Languages</Value>

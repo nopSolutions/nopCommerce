@@ -24,7 +24,7 @@ public partial class VendorAttributeController : BaseAdminController
     protected readonly INotificationService _notificationService;
     protected readonly IPermissionService _permissionService;
     protected readonly IVendorAttributeModelFactory _vendorAttributeModelFactory;
-        
+
     #endregion
 
     #region Ctor
@@ -233,7 +233,7 @@ public partial class VendorAttributeController : BaseAdminController
 
         //try to get a vendor attribute with the specified id
         var vendorAttribute = await _vendorAttributeService.GetAttributeByIdAsync(searchModel.VendorAttributeId)
-                              ?? throw new ArgumentException("No vendor attribute found with the specified id");
+            ?? throw new ArgumentException("No vendor attribute found with the specified id");
 
         //prepare model
         var model = await _vendorAttributeModelFactory.PrepareVendorAttributeValueListModelAsync(searchModel, vendorAttribute);
@@ -358,11 +358,11 @@ public partial class VendorAttributeController : BaseAdminController
     public virtual async Task<IActionResult> ValueDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
+            return await AccessDeniedDataTablesJson();
 
         //try to get a vendor attribute value with the specified id
         var value = await _vendorAttributeService.GetAttributeValueByIdAsync(id)
-                    ?? throw new ArgumentException("No vendor attribute value found with the specified id", nameof(id));
+            ?? throw new ArgumentException("No vendor attribute value found with the specified id", nameof(id));
 
         await _vendorAttributeService.DeleteAttributeValueAsync(value);
 

@@ -1,4 +1,6 @@
-﻿namespace Nop.Web.Framework.Models;
+﻿using System.Xml.Serialization;
+
+namespace Nop.Web.Framework.Models;
 
 /// <summary>
 /// Represents base nopCommerce model
@@ -35,6 +37,7 @@ public partial record BaseNopModel
     /// <summary>
     /// Gets or sets property to store any custom values for models 
     /// </summary>
+    [XmlIgnore]
     public Dictionary<string, string> CustomProperties { get; set; }
 
     #endregion

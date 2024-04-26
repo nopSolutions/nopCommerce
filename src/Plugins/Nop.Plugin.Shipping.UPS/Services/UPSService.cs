@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
@@ -46,8 +47,11 @@ public class UPSService
 
     #region Fields
 
+    private readonly CurrencySettings _currencySettings;
+
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ICountryService _countryService;
+    private readonly ICurrencyService _currencyService;
     private readonly ILocalizationService _localizationService;
     private readonly ILogger _logger;
     private readonly IMeasureService _measureService;
@@ -68,8 +72,10 @@ public class UPSService
 
     #region Ctor
 
-    public UPSService(IHttpClientFactory httpClientFactory,
+    public UPSService(CurrencySettings currencySettings,
+        IHttpClientFactory httpClientFactory,
         ICountryService countryService,
+        ICurrencyService currencyService,
         ILocalizationService localizationService,
         ILogger logger,
         IMeasureService measureService,
@@ -79,8 +85,10 @@ public class UPSService
         IWorkContext workContext,
         UPSSettings upsSettings)
     {
+        _currencySettings = currencySettings;
         _httpClientFactory = httpClientFactory;
         _countryService = countryService;
+        _currencyService = currencyService;
         _localizationService = localizationService;
         _logger = logger;
         _measureService = measureService;
@@ -414,7 +422,7 @@ public class UPSService
     /// A task that represents the asynchronous operation
     /// The task result contains the package details
     /// </returns>
-    private Shipment_Package CreatePackage(decimal width, decimal length, decimal height, decimal weight, decimal insuranceAmount)
+    private async Task<Shipment_Package> CreatePackageAsync(decimal width, decimal length, decimal height, decimal weight, decimal insuranceAmount)
     {
         //set package details
         var package = new Shipment_Package
@@ -442,22 +450,21 @@ public class UPSService
         };
 
         //set insurance details
-        //TODO: found new way for insurance
-        /*if (_upsSettings.InsurePackage && insuranceAmount > decimal.Zero)
+        if (_upsSettings.InsurePackage && insuranceAmount > decimal.Zero)
         {
             var currencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode;
             package.PackageServiceOptions = new Package_PackageServiceOptions
             {
-                Insurance = new UPSRate.InsuranceType
+                Insurance = new PackageServiceOptions_Insurance
                 {
-                    BasicFlexibleParcelIndicator = new UPSRate.InsuranceValueType
+                    BasicFlexibleParcelIndicator = new Insurance_BasicFlexibleParcelIndicator
                     {
                         CurrencyCode = currencyCode,
                         MonetaryValue = insuranceAmount.ToString("0.00", CultureInfo.InvariantCulture)
                     }
                 }
             };
-        }*/
+        }
 
         return package;
     }
@@ -480,13 +487,11 @@ public class UPSService
 
             var insuranceAmount = 0;
             if (_upsSettings.InsurePackage)
-            {
                 //The maximum declared amount per package: 50000 USD.
                 insuranceAmount = Convert.ToInt32(packageItem.Product.Price);
-            }
 
             //create packages according to item quantity
-            var package = CreatePackage(width, length, height, weight, insuranceAmount);
+            var package = await CreatePackageAsync(width, length, height, weight, insuranceAmount);
 
             return Enumerable.Repeat(package, packageItem.GetQuantity());
         }).ToListAsync();
@@ -526,7 +531,7 @@ public class UPSService
                 insuranceAmount = Convert.ToInt32(subTotalWithoutDiscount);
             }
 
-            return new[] { CreatePackage(width, length, height, weight, insuranceAmount) };
+            return new[] { await CreatePackageAsync(width, length, height, weight, insuranceAmount) };
         }
 
         //get total packages number according to package limits
@@ -559,7 +564,7 @@ public class UPSService
         }
 
         //create packages according to calculated value
-        var package = CreatePackage(width, length, height, weight, insuranceAmountPerPackage);
+        var package = await CreatePackageAsync(width, length, height, weight, insuranceAmountPerPackage);
         return Enumerable.Repeat(package, totalPackages);
     }
 
@@ -648,7 +653,7 @@ public class UPSService
         }
 
         //create packages according to calculated value
-        var package = CreatePackage(width, length, height, weight / totalPackages, insuranceAmountPerPackage);
+        var package = await CreatePackageAsync(width, length, height, weight / totalPackages, insuranceAmountPerPackage);
 
         return Enumerable.Repeat(package, totalPackages);
     }
@@ -778,6 +783,14 @@ public class UPSService
                 return shippingOption;
             }).ToList(), null);
         }
+        catch (API.Rates.ApiException<ErrorResponse> exception)
+        {
+            //log errors
+            var message = $"Error while getting UPS rates{Environment.NewLine}{string.Join(", ", exception.Result.Response.Errors.Select(p=>$"{p.Code}: {p.Message}"))}";
+            await _logger.ErrorAsync(message, exception, shippingOptionRequest.Customer);
+
+            return (new List<ShippingOption>(), message);
+        }
         catch (Exception exception)
         {
             //log errors
@@ -835,7 +848,7 @@ public class UPSService
             //parse transit days
             int? transitDays = null;
 
-            var serviceSummary = rate.TimeInTransit?.ServiceSummary.FirstOrDefault();
+            var serviceSummary = rate.TimeInTransit?.ServiceSummary;
 
             if (serviceSummary != null)
                 if (!string.IsNullOrWhiteSpace(serviceSummary.EstimatedArrival.BusinessDaysInTransit) && int.TryParse(serviceSummary.EstimatedArrival.BusinessDaysInTransit, out var businessDaysInTransit))

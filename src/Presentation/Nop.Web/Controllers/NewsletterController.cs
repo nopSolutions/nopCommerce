@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Security;
+using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Web.Factories;
@@ -13,6 +15,8 @@ namespace Nop.Web.Controllers;
 public partial class NewsletterController : BasePublicController
 {
     protected readonly CaptchaSettings _captchaSettings;
+    protected readonly ICustomerService _customerService;
+    protected readonly ILanguageService _languageService;
     protected readonly ILocalizationService _localizationService;
     protected readonly INewsletterModelFactory _newsletterModelFactory;
     protected readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
@@ -21,6 +25,8 @@ public partial class NewsletterController : BasePublicController
     protected readonly IWorkflowMessageService _workflowMessageService;
 
     public NewsletterController(CaptchaSettings captchaSettings,
+        ICustomerService customerService,
+        ILanguageService languageService,
         ILocalizationService localizationService,
         INewsletterModelFactory newsletterModelFactory,
         INewsLetterSubscriptionService newsLetterSubscriptionService,
@@ -29,6 +35,8 @@ public partial class NewsletterController : BasePublicController
         IWorkflowMessageService workflowMessageService)
     {
         _captchaSettings = captchaSettings;
+        _customerService = customerService;
+        _languageService = languageService;
         _localizationService = localizationService;
         _newsletterModelFactory = newsletterModelFactory;
         _newsLetterSubscriptionService = newsLetterSubscriptionService;
@@ -65,11 +73,12 @@ public partial class NewsletterController : BasePublicController
             var currentLanguage = await _workContext.GetWorkingLanguageAsync();
             if (subscription != null)
             {
+                subscription.LanguageId = subscription.LanguageId == 0 ? currentLanguage.Id : subscription.LanguageId;
                 if (subscribe)
                 {
                     if (!subscription.Active)
                     {
-                        await _workflowMessageService.SendNewsLetterSubscriptionActivationMessageAsync(subscription, currentLanguage.Id);
+                        await _workflowMessageService.SendNewsLetterSubscriptionActivationMessageAsync(subscription);
                     }
                     result = await _localizationService.GetResourceAsync("Newsletter.SubscribeEmailSent");
                 }
@@ -77,7 +86,7 @@ public partial class NewsletterController : BasePublicController
                 {
                     if (subscription.Active)
                     {
-                        await _workflowMessageService.SendNewsLetterSubscriptionDeactivationMessageAsync(subscription, currentLanguage.Id);
+                        await _workflowMessageService.SendNewsLetterSubscriptionDeactivationMessageAsync(subscription);
                     }
                     result = await _localizationService.GetResourceAsync("Newsletter.UnsubscribeEmailSent");
                 }
@@ -90,10 +99,11 @@ public partial class NewsletterController : BasePublicController
                     Email = email,
                     Active = false,
                     StoreId = store.Id,
+                    LanguageId = currentLanguage.Id,
                     CreatedOnUtc = DateTime.UtcNow
                 };
                 await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(subscription);
-                await _workflowMessageService.SendNewsLetterSubscriptionActivationMessageAsync(subscription, currentLanguage.Id);
+                await _workflowMessageService.SendNewsLetterSubscriptionActivationMessageAsync(subscription);
 
                 result = await _localizationService.GetResourceAsync("Newsletter.SubscribeEmailSent");
             }
@@ -123,6 +133,12 @@ public partial class NewsletterController : BasePublicController
         {
             subscription.Active = true;
             await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(subscription);
+
+            if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()) &&
+                await _languageService.GetLanguageByIdAsync(subscription.LanguageId) is Language language)
+            {
+                await _workContext.SetWorkingLanguageAsync(language);
+            }
         }
         else
             await _newsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(subscription);

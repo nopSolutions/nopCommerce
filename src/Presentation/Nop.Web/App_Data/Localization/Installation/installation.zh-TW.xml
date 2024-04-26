@@ -1,144 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Language Name="Shqip" IsDefault="false" IsRightToLeft="false">
+<Language Name="繁體中文" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
-    <Value>Email i përdoruesit të administratorit.</Value>
+    <Value>管理員電郵</Value>
   </LocaleResource>
   <LocaleResource Name="AdminEmailRequired">
-    <Value>Vendosni emailin e administratorit.</Value>
+    <Value>請輸入管理員電子信箱</Value>
   </LocaleResource>
   <LocaleResource Name="AdminPassword">
-    <Value>Fjalëkalimi i përdoruesit të administratorit.</Value>
+    <Value>管理員密碼</Value>
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
-    <Value>Fjalëkalimi i përdoruesit të administratorit.</Value>
+    <Value>請輸入管理員密碼</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
-    <Value>{0}' llogaria nuk jepet me Modifikimin e lejes në dosje '{1}'. Ju lutemi konfiguroni këto leje.</Value>
+    <Value>帳號{0}沒有修改文件夾{1}的權限，請重新配置權限</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureFilePermissions">
-    <Value>Llogaria '{0}' nuk jepet me Leje të modifikojë në dosjen '{1}'. Ju lutemi konfiguroni këto leje.</Value>
+    <Value>帳號{0}沒有修改文件{1}的權限，請重新配置權限</Value>
   </LocaleResource>
   <LocaleResource Name="ConfirmPassword">
-    <Value>Konfirmoni fjalëkalimin</Value>
+    <Value>確認密碼</Value>
   </LocaleResource>
   <LocaleResource Name="ConfirmPasswordRequired">
-    <Value>Vendosni fjalëkalimin konfirmues.</Value>
+    <Value>請輸入確認密碼</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionString">
-    <Value>Varg lidhjeje</Value>
+    <Value>連接字符串</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringRequired">
-    <Value>Kërkohet një varg lidhjeje SQL</Value>
+    <Value>鏈接字符串必填</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringWrongFormat">
-    <Value>Forma e gabuar e lidhjes SQL të gabuar.</Value>
+    <Value>連接字符串格式錯誤</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Country</Value>
+    <Value>國家</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Valitse maasi...</Value>
+    <Value>選擇你的國家...</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
-    <Value>Krijoni bazën e të dhënave nëse nuk ekziston.</Value>
+    <Value>如果資料庫不存在則創建</Value>
   </LocaleResource>
   <LocaleResource Name="CreateSampleData">
-    <Value>Krijoni të dhënat e mostrës.</Value>
+    <Value>創建範例數據</Value>
   </LocaleResource>
   <LocaleResource Name="CustomCollation">
-    <Value>Specifikoni përpilimin me porosi.</Value>
+    <Value>指定collation</Value>
   </LocaleResource>
   <LocaleResource Name="Database">
-    <Value>Baza e të dhënave</Value>
+    <Value>資料庫</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseCreationError">
-    <Value>Ndodhi një gabim gjatë krijimit të bazës i të dhënave: {0}</Value>
+    <Value>創建資料庫時出錯:{0}</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
-    <Value>Informacioni i bazës i të dhënave.</Value>
+    <Value>資料庫資訊</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseName">
-    <Value>Emri i bazës i të dhënave.</Value>
+    <Value>資料庫名稱</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseNotExists">
-    <Value>Baza e të dhënave nuk ekziston ose nuk keni leje për t'u lidhur me të.</Value>
+    <Value>資料庫不存在或者您沒有權限鏈接到它</Value>
   </LocaleResource>
   <LocaleResource Name="DataProviderRequired">
-    <Value>Zgjidhni ofruesin e të dhënave.</Value>
+    <Value>選擇數據提供者</Value>
   </LocaleResource>
   <LocaleResource Name="Documentation1">
-    <Value>Nëse keni nevojë për informacion se si të përdorni nopCommerce, vizitoni</Value>
+    <Value>如果您需要瞭解怎麽使用nopCommerce，請訪問</Value>
   </LocaleResource>
   <LocaleResource Name="Documentation2">
-    <Value>Seksioni i dokumentacionit në nopCommerce.com</Value>
+    <Value>文檔位於nopCommerce.com</Value>
   </LocaleResource>
   <LocaleResource Name="Example">
-    <Value>Shembull</Value>
+    <Value>範例</Value>
   </LocaleResource>
   <LocaleResource Name="Install">
-    <Value>Instalo</Value>
+    <Value>安裝</Value>
   </LocaleResource>
   <LocaleResource Name="Installing">
-    <Value>Duke instaluar nopCommerce …</Value>
+    <Value>安裝nopCommerce中...</Value>
   </LocaleResource>
   <LocaleResource Name="IntegratedAuthentication">
-    <Value>Përdorni vërtetimin e integruar të Windows</Value>
+    <Value>使用集成的Windows身份驗證</Value>
   </LocaleResource>
   <LocaleResource Name="MySql">
     <Value>MySQL</Value>
   </LocaleResource>
   <LocaleResource Name="PasswordsDoNotMatch">
-    <Value>Fjalëkalimet nuk përputhen</Value>
+    <Value>密碼不匹配</Value>
   </LocaleResource>
   <LocaleResource Name="PostgreSQL">
     <Value>PostgreSQL</Value>
   </LocaleResource>
   <LocaleResource Name="RawConnectionString">
-    <Value>Shkruaj varg lidhjesh të papërpunuar (të avancuar)</Value>
+    <Value>輸入原始鏈接字符串(高級)</Value>
   </LocaleResource>
   <LocaleResource Name="RestartInstallation">
-    <Value>Rinisni instalimin</Value>
+    <Value>重啓安裝</Value>
   </LocaleResource>
   <LocaleResource Name="RestartInstallationTooltip">
-    <Value>Klikoni për të rinisur procesin e instalimit (pastroni të gjitha vlerat e ruajtura në memorje)</Value>
+    <Value>點擊重啓安裝進程(情況所有緩存值)</Value>
   </LocaleResource>
   <LocaleResource Name="RestartProgress">
-    <Value>Rifillimi ...</Value>
+    <Value>重新啟動中…</Value>
   </LocaleResource>
   <LocaleResource Name="ServerName">
-    <Value>Emri i serverit.</Value>
+    <Value>伺服器名稱</Value>
   </LocaleResource>
   <LocaleResource Name="ServerNameRequired">
-    <Value>Kërkohet emri i serverit.</Value>
+    <Value>伺服器名稱必填</Value>
   </LocaleResource>
   <LocaleResource Name="SetupFailed">
-    <Value>Konfigurimi dështoi: {0}</Value>
+    <Value>設定失敗: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="SqlPassword">
-    <Value>Fjalëkalimi SQL</Value>
+    <Value>SQL密碼</Value>
   </LocaleResource>
   <LocaleResource Name="SqlPasswordRequired">
-    <Value>Kërkohet fjalëkalimi SQL</Value>
+    <Value>SQL密碼必填</Value>
   </LocaleResource>
   <LocaleResource Name="SqlServer">
-    <Value>Server SQL Microsoft.</Value>
+    <Value>Microsoft SQL Server</Value>
   </LocaleResource>
   <LocaleResource Name="SqlUsername">
-    <Value>Emri i SQL</Value>
+    <Value>SQL用戶名</Value>
   </LocaleResource>
   <LocaleResource Name="SqlUsernameRequired">
-    <Value>Kërkohet Emri i përdoruesit SQL</Value>
+    <Value>SQL用户名必填</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
-    <Value>Informacioni i dyqanit</Value>
+    <Value>商店資訊</Value>
   </LocaleResource>
   <LocaleResource Name="SubscribeNewsletters">
     <Value>Subscribe to nopCommerce newsletter</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
-    <Value>Instalimi i tregtisë nopCommerce</Value>
+    <Value>nopCommerce安裝</Value>
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
-    <Value>Për të përfunduar këtë magjistar, duhet të dini disa informacione në lidhje me serverin tuaj të bazës të të dhënave ('vargu i lidhjes'). Ju lutemi kontaktoni ISP-në tuaj nëse është e nevojshme. Nëse jeni duke instaluar në një makinë lokale ose server, mund t'ju duhet informacion nga Administratori juaj i Sistemit.</Value>
+    <Value>要完成此嚮導，您必須了解一些有關數據庫服務器的信息（“連接字符串”）。 如有必要，請聯繫您的ISP。 如果要在本地計算機或服務器上進行安裝，則可能需要係統管理員提供的信息。</Value>
   </LocaleResource>
 </Language>

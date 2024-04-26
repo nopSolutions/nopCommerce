@@ -130,14 +130,14 @@ public class LocalizationMigration : MigrationBase
             //#6602
             ["Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Note"] = "NOTE: Do not forget to backup your database before changing this option. It is not recommended to change this setting in production environment.",
             //6167
-            ["Admin.ContentManagement.MessageTemplates.Fields.AllowDirectReply"] = "Allow Direct Reply",
+            ["Admin.ContentManagement.MessageTemplates.Fields.AllowDirectReply"] = "Allow direct reply",
             ["Admin.ContentManagement.MessageTemplates.Fields.AllowDirectReply.Hint"] = "When checked, the store owner can reply directly to the customer's email address from mailbox when a customer-related message is received.",
             //5023
-            ["Header.SkipNavigation.Text"] = "Skip Navigation",
+            ["Header.SkipNavigation.Text"] = "Skip navigation",
             //6640
-            ["Admin.Configuration.Settings.CustomerUser.AddressFormFields.DefaultCountry"] = "Default Country",
+            ["Admin.Configuration.Settings.CustomerUser.AddressFormFields.DefaultCountry"] = "Default country",
             ["Admin.Configuration.Settings.CustomerUser.AddressFormFields.DefaultCountry.Hint"] = "Select the default country for address form fields. This can speed up the checkout process.",
-            ["Admin.Configuration.Settings.CustomerUser.DefaultCountry"] = "Default Country",
+            ["Admin.Configuration.Settings.CustomerUser.DefaultCountry"] = "Default country",
             ["Admin.Configuration.Settings.CustomerUser.DefaultCountry.Hint"] = "Select the default country for customer form fields. This can speed up the registration process.",
 
             //5312
@@ -163,9 +163,9 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Pictures.Hint"] = "Choose pictures associated to this attribute combination. These pictures will replace the main product image when this product attribute combination is selected.",
             ["Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Pictures"] = "Pictures",
             ["Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Pictures.Hint"] = "Choose pictures associated to this attribute combination. These pictures will replace the main product image when this product attribute combination is selected.",
-            ["Admin.Configuration.Settings.ProductEditor.DisplayAttributeCombinationImagesOnly"] = "Display attribute combination images only",
-            ["Admin.Catalog.Products.Fields.DisplayAttributeCombinationImagesOnly"] = "Display attribute combination images only",
-            ["Admin.Catalog.Products.Fields.DisplayAttributeCombinationImagesOnly.Hint"] = "Check to display attribute combination images only. When enabled, customers will see attribute combination images only if any.",
+            ["Admin.Configuration.Settings.ProductEditor.DisplayAttributeCombinationImagesOnly"] = "Display only uploaded images of attribute combination",
+            ["Admin.Catalog.Products.Fields.DisplayAttributeCombinationImagesOnly"] = "Display only uploaded images of attribute combination",
+            ["Admin.Catalog.Products.Fields.DisplayAttributeCombinationImagesOnly.Hint"] = "Check to display only uploaded images of this attribute combination",
 
             //5768
             ["Admin.Configuration.Settings.Tax.AutomaticallyDetectCountry"] = "Automatically detect country by IP address",
@@ -242,6 +242,10 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Reports.Sales.Country.SearchStore"] = "Store",
             ["Admin.Reports.Sales.Country.SearchStore.Hint"] = "Search by a specific store.",
 
+            //#6978
+            ["Admin.Promotions.NewsLetterSubscriptions.Fields.Language"] = "Language",
+
+            ["Honeypot.BotDetected"] ="A bot detected. Honeypot.",
         }, languageId);
 
         #endregion
