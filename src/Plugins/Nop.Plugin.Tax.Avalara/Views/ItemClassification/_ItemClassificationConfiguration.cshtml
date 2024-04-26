@@ -1,0 +1,268 @@
+@model ConfigurationModel
+
+<div class="card-body">
+    <div class="card card-default no-margin">
+        <div class="card-body">
+            <p>
+                Avalara Item Classification automates the complex process of determining HS codes, taking into consideration country, product attributes, and other factors.
+            </p>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="UseItemClassification" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="UseItemClassification" />
+                    <span asp-validation-for="UseItemClassification"></span>
+                </div>
+            </div>
+            <nop-nested-setting asp-for="UseItemClassification">
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="SelectedCountryIds" />
+                    </div>
+                    <div class="col-md-9">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <nop-select asp-for="SelectedCountryIds" asp-items="@Model.AvailableCountries" asp-multiple="true" />
+                                <span asp-validation-for="SelectedCountryIds"></span>
+                                <script>
+                                    $(function() {
+                                        var countryIdsInput = $('#@Html.IdFor(model => model.SelectedCountryIds)').data("kendoMultiSelect");
+                                        countryIdsInput.setOptions({
+                                            autoClose: false,
+                                            filter: 'contains'
+                                        });
+
+                                        @if (!Model.AvailableCountries.Any())
+                                        {
+                                            <text>
+                                                countryIdsInput.setOptions({
+                                                    enable: false,
+                                                    placeholder: 'No countries available'
+                                                });
+                                                countryIdsInput._placeholder();
+                                                countryIdsInput._enable();
+                                            </text>
+                                        }
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nop-nested-setting>
+            <div class="form-group row">
+                <div class="col-md-9 offset-md-3">
+                    <button type="submit" name="saveIC" class="btn btn-primary">@T("Admin.Common.Save")</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @if (Model.UseItemClassification)
+    {
+        <div class="card card-default">
+            <div class="card-header">
+                @T("Plugins.Tax.Avalara.ItemClassification.Sync")
+            </div>
+            <div class="card-body">
+                <p>
+                    The Avalara Item Classification provides the user with the capability to submit products for Item Classification and retrieve the HS Codes.
+                    <br />
+                    To run the sync right away, click on the "Sync now" button.
+                </p>
+                <div class="card card-default card-search">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="@Model.ItemClassificationSearchModel.SearchCountryId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="@Model.ItemClassificationSearchModel.SearchCountryId" asp-items="@Model.ItemClassificationSearchModel.AvailableCountries" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-8 offset-md-4">
+                                        <button type="button" id="search-item-classification-product" class="btn btn-primary btn-search">
+                                            <i class="fas fa-search"></i>
+                                            @T("Admin.Common.Search")
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-default">
+                    <div class="card-body">
+                        <button type="submit" id="btnAddNewRecord" class="btn bg-olive ml-1"
+                                onclick="javascript:OpenWindow('@(Url.Action("ProductToClassification", "ItemClassification", new { btnId = "recordsUpdate", formId = "configuration-form" }))', 800, 800, true);return false;">
+                            @T("Plugins.Tax.Avalara.ItemClassification.AddProduct")
+                        </button>
+                        <button type="submit" id="recordsUpdate" style="display: none"></button>
+
+                        <button type="button" id="delete-selected-items" class="btn btn-danger ml-1">
+                            <i class="far fa-trash-alt"></i>
+                            @T("Admin.System.Log.DeleteSelected")
+                        </button>
+                        <nop-action-confirmation asp-button-id="delete-selected-items" />
+
+                        <button type="button" id="clear-all-items" class="btn btn-danger ml-1">
+                            <i class="far fa-trash-alt"></i>
+                            @T("Admin.Common.Clear")
+                        </button>
+                        <nop-action-confirmation asp-button-id="clear-all-items" />
+
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "item-classification-grid",
+                            UrlRead = new DataUrl("List", "ItemClassification", null),
+                            UrlUpdate = new DataUrl("Update", "ItemClassification", null),
+                            SearchButtonId = "search-item-classification-product",
+                            Length = Model.ItemClassificationSearchModel.PageSize,
+                            LengthMenu = Model.ItemClassificationSearchModel.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
+                            {
+                                new FilterParameter(nameof(Model.ItemClassificationSearchModel.SearchCountryId), nameof(Model.ItemClassificationSearchModel))
+                            },
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(ItemClassificationModel.Id))
+                                {
+                                    IsMasterCheckBox = true,
+                                    Render = new RenderCheckBox("checkbox_item"),
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Width = "50",
+                                },
+                                new ColumnProperty(nameof(ItemClassificationModel.ProductName))
+                                {
+                                    Title = T("Plugins.Tax.Avalara.ItemClassification.Product").Text,
+                                    Render = new RenderLink(new DataUrl("~/Admin/Product/Edit/", nameof(ItemClassificationModel.ProductId)))
+                                },
+                                new ColumnProperty(nameof(ItemClassificationModel.CountryName))
+                                {
+                                    Title = T("Plugins.Tax.Avalara.ItemClassification.Country").Text,
+                                    Width = "200"
+                                },
+                                new ColumnProperty(nameof(ItemClassificationModel.HSClassificationRequestId))
+                                {
+                                    Title = T("Plugins.Tax.Avalara.ItemClassification.HSClassificationRequestId").Text,
+                                    Width = "200"
+                                },
+                                new ColumnProperty(nameof(ItemClassificationModel.HSCode))
+                                {
+                                    Title = T("Plugins.Tax.Avalara.ItemClassification.HSCode").Text,
+                                    Width = "200",
+                                    Editable = true,
+                                    EditType = EditType.String
+                                },
+                                new ColumnProperty(nameof(ItemClassificationModel.UpdatedDate))
+                                {
+                                    Title = T("Plugins.Tax.Avalara.ItemClassification.UpdatedDate").Text,
+                                    Width = "140",
+                                    Render = new RenderDate()
+                                },
+                                new ColumnProperty(nameof(ItemClassificationModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    ClassName = NopColumnClassDefaults.Button + " column-edit",
+                                    Width = "100",
+                                    Render = new RenderButtonsInlineEdit()
+                                }
+                            }
+                        })
+
+                        <script>
+                            $(function() {
+                                $('#recordsUpdate').click(function () {
+                                    updateTable('#item-classification-grid');
+                                    return false;
+                                });
+
+                                $('#start-sync-action-confirmation-submit-button').bind('click', function () {
+                                    $.ajax({
+                                        cache: false,
+                                        type: 'GET',
+                                        url: '@(Url.Action("StartClassification", "ItemClassification"))',
+                                        error: function (jqXHR, textStatus, errorThrown) {
+                                            showAlert('sync-failed', errorThrown);
+                                        },
+                                        success: function (data, textStatus, jqXHR) {
+                                            if (typeof (data) != 'undefined' && data != null && data.success) {
+                                                showAlert('sync-success', data.message);
+                                            }
+                                            else {
+                                                showAlert('sync-failed', data.message);
+                                            }
+                                        },
+                                        complete: function (jqXHR, textStatus) {
+                                            updateTable('#item-classification-grid');
+                                            //window.location = window.location.href;
+                                        }
+                                    });
+                                    $('#start-sync-action-confirmation').modal('toggle');
+                                    return false;
+                                });
+
+                                $('#delete-selected-items-action-confirmation-submit-button').bind('click', function () {
+                                    var postData = {
+                                        selectedIds: selectedIds
+                                    };
+                                    addAntiForgeryToken(postData);
+                                    $.ajax({
+                                        cache: false,
+                                        type: 'POST',
+                                        url: '@(Url.Action("DeleteSelected", "ItemClassification"))',
+                                        data: postData,
+                                        traditional: true,
+                                        error: function (jqXHR, textStatus, errorThrown) {
+                                            showAlert('delete-selected-items-failed', errorThrown);
+                                        },
+                                        complete: function (jqXHR, textStatus) {
+                                            if (jqXHR.status === 204) {
+                                                showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                                                return;
+                                            }
+                                            updateTable('#item-classification-grid');
+                                        }
+                                    });
+                                    $('#delete-selected-items-action-confirmation').modal('toggle');
+                                    return false;
+                                });
+
+                                $('#clear-all-items-action-confirmation-submit-button').bind('click', function () {
+                                    $.ajax({
+                                        cache: false,
+                                        type: 'GET',
+                                        url: '@(Url.Action("ClearAll", "ItemClassification"))',
+                                        error: function (jqXHR, textStatus, errorThrown) {
+                                            showAlert('clear-all-items-failed', errorThrown);
+                                        },
+                                        complete: function (jqXHR, textStatus) {
+                                            updateTable('#item-classification-grid');
+                                        }
+                                    });
+                                    $('#clear-all-items-action-confirmation').modal('toggle');
+                                    return false;
+                                });
+                            });
+                        </script>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" name="sync" id="start-sync" class="btn btn-primary">
+                            @T("Plugins.Tax.Avalara.ItemClassification.Sync.Button")
+                        </button>
+                        <nop-action-confirmation asp-button-id="start-sync" asp-additional-confirm="Plugins.Tax.Avalara.ItemClassification.Sync.Confirm" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<nop-alert asp-alert-id="delete-selected-items-failed" />
+<nop-alert asp-alert-id="clear-all-items-failed" />
+<nop-alert asp-alert-id="sync-failed" />
+<nop-alert asp-alert-id="sync-success" />

@@ -1,14 +1,13 @@
 ﻿
-namespace Nop.Web.Framework.Models
+namespace Nop.Web.Framework.Models;
+
+/// <summary>
+/// Represents a settings model
+/// </summary>
+public partial interface ISettingsModel
 {
     /// <summary>
-    /// Represents a settings model
+    /// Gets or sets an active store scope configuration (store identifier)
     /// </summary>
-    public partial interface ISettingsModel
-    {
-        /// <summary>
-        /// Gets or sets an active store scope configuration (store identifier)
-        /// </summary>
-        int ActiveStoreScopeConfiguration { get; set; }
-    }
+    int ActiveStoreScopeConfiguration { get; set; }
 }

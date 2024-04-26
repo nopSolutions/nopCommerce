@@ -1,63 +1,63 @@
 ﻿using FluentValidation.TestHelper;
+using Nop.Services.Localization;
 using Nop.Web.Models.Boards;
 using Nop.Web.Validators.Boards;
 using NUnit.Framework;
 
-namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Boards
+namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Boards;
+
+[TestFixture]
+public class EditForumTopicValidatorTests : BaseNopTest
 {
-    [TestFixture]
-    public class EditForumTopicValidatorTests : BaseNopTest
+    private EditForumTopicValidator _validator;
+
+    [OneTimeSetUp]
+    public void Setup()
     {
-        private EditForumTopicValidator _validator;
-        
-        [OneTimeSetUp]
-        public void Setup()
-        {
-            _validator = GetService<EditForumTopicValidator>();
-        }
+        _validator = new EditForumTopicValidator(GetService<ILocalizationService>());
+    }
 
-        [Test]
-        public void ShouldHaveErrorWhenSubjectIsNullOrEmpty()
+    [Test]
+    public void ShouldHaveErrorWhenSubjectIsNullOrEmpty()
+    {
+        var model = new EditForumTopicModel
         {
-            var model = new EditForumTopicModel
-            {
-                Subject = null
-            };
-            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Subject);
-            model.Subject = string.Empty;
-            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Subject);
-        }
+            Subject = null
+        };
+        _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Subject);
+        model.Subject = string.Empty;
+        _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Subject);
+    }
 
-        [Test]
-        public void ShouldNotHaveErrorWhenSubjectIsSpecified()
+    [Test]
+    public void ShouldNotHaveErrorWhenSubjectIsSpecified()
+    {
+        var model = new EditForumTopicModel
         {
-            var model = new EditForumTopicModel
-            {
-                Subject = "some comment"
-            };
-            _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.Subject);
-        }
+            Subject = "some comment"
+        };
+        _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.Subject);
+    }
 
-        [Test]
-        public void ShouldHaveErrorWhenTextIsNullOrEmpty()
+    [Test]
+    public void ShouldHaveErrorWhenTextIsNullOrEmpty()
+    {
+        var model = new EditForumTopicModel
         {
-            var model = new EditForumTopicModel
-            {
-                Text = null
-            };
-            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Text);
-            model.Text = string.Empty;
-            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Text);
-        }
+            Text = null
+        };
+        _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Text);
+        model.Text = string.Empty;
+        _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Text);
+    }
 
-        [Test]
-        public void ShouldNotHaveErrorWhenTextIsSpecified()
+    [Test]
+    public void ShouldNotHaveErrorWhenTextIsSpecified()
+    {
+        var model = new EditForumTopicModel
         {
-            var model = new EditForumTopicModel
-            {
-                Text = "some comment"
-            };
-            _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.Text);
-        }
+            Text = "some comment"
+        };
+        _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.Text);
     }
 }

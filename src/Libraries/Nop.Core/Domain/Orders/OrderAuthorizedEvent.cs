@@ -1,22 +1,21 @@
-﻿namespace Nop.Core.Domain.Orders
+﻿namespace Nop.Core.Domain.Orders;
+
+/// <summary>
+/// Order authorized event
+/// </summary>
+public partial class OrderAuthorizedEvent
 {
     /// <summary>
-    /// Order authorized event
+    /// Ctor
     /// </summary>
-    public partial class OrderAuthorizedEvent
+    /// <param name="order">Order</param>
+    public OrderAuthorizedEvent(Order order)
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="order">Order</param>
-        public OrderAuthorizedEvent(Order order)
-        {
-            Order = order;
-        }
-
-        /// <summary>
-        /// Order
-        /// </summary>
-        public Order Order { get; }
+        Order = order;
     }
+
+    /// <summary>
+    /// Order
+    /// </summary>
+    public Order Order { get; }
 }

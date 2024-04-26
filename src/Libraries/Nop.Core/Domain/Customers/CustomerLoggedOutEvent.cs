@@ -1,22 +1,21 @@
-namespace Nop.Core.Domain.Customers
+namespace Nop.Core.Domain.Customers;
+
+/// <summary>
+/// "Customer is logged out" event
+/// </summary>
+public partial class CustomerLoggedOutEvent
 {
     /// <summary>
-    /// "Customer is logged out" event
+    /// Ctor
     /// </summary>
-    public partial class CustomerLoggedOutEvent
+    /// <param name="customer">Customer</param>
+    public CustomerLoggedOutEvent(Customer customer)
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        public CustomerLoggedOutEvent(Customer customer)
-        {
-            Customer = customer;
-        }
-
-        /// <summary>
-        /// Get or set the customer
-        /// </summary>
-        public Customer Customer { get; }
+        Customer = customer;
     }
+
+    /// <summary>
+    /// Get or set the customer
+    /// </summary>
+    public Customer Customer { get; }
 }

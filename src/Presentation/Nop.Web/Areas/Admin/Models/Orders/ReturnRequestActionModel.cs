@@ -1,41 +1,39 @@
-﻿using System.Collections.Generic;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
-namespace Nop.Web.Areas.Admin.Models.Orders
+namespace Nop.Web.Areas.Admin.Models.Orders;
+
+/// <summary>
+/// Represents a return request action model
+/// </summary>
+public partial record ReturnRequestActionModel : BaseNopEntityModel, ILocalizedModel<ReturnRequestActionLocalizedModel>
 {
-    /// <summary>
-    /// Represents a return request action model
-    /// </summary>
-    public partial record ReturnRequestActionModel : BaseNopEntityModel, ILocalizedModel<ReturnRequestActionLocalizedModel>
+    #region Ctor
+
+    public ReturnRequestActionModel()
     {
-        #region Ctor
-
-        public ReturnRequestActionModel()
-        {
-            Locales = new List<ReturnRequestActionLocalizedModel>();
-        }
-
-        #endregion
-
-        #region Properties
-
-        [NopResourceDisplayName("Admin.Configuration.Settings.Order.ReturnRequestActions.Name")]
-        public string Name { get; set; }
-
-        [NopResourceDisplayName("Admin.Configuration.Settings.Order.ReturnRequestActions.DisplayOrder")]
-        public int DisplayOrder { get; set; }
-
-        public IList<ReturnRequestActionLocalizedModel> Locales { get; set; }
-
-        #endregion
+        Locales = new List<ReturnRequestActionLocalizedModel>();
     }
 
-    public partial record ReturnRequestActionLocalizedModel : ILocalizedLocaleModel
-    {
-        public int LanguageId { get; set; }
+    #endregion
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.Order.ReturnRequestActions.Name")]
-        public string Name { get; set; }
-    }
+    #region Properties
+
+    [NopResourceDisplayName("Admin.Configuration.Settings.Order.ReturnRequestActions.Name")]
+    public string Name { get; set; }
+
+    [NopResourceDisplayName("Admin.Configuration.Settings.Order.ReturnRequestActions.DisplayOrder")]
+    public int DisplayOrder { get; set; }
+
+    public IList<ReturnRequestActionLocalizedModel> Locales { get; set; }
+
+    #endregion
+}
+
+public partial record ReturnRequestActionLocalizedModel : ILocalizedLocaleModel
+{
+    public int LanguageId { get; set; }
+
+    [NopResourceDisplayName("Admin.Configuration.Settings.Order.ReturnRequestActions.Name")]
+    public string Name { get; set; }
 }

@@ -1,7 +1,4 @@
-﻿@model BestsellerBriefSearchModel
-@using Nop.Services.Orders;
-
-@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
+﻿@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
 @inject IWorkContext workContext
 @{
     const string cardId = "bestsellers-report-quantity-card";
@@ -29,46 +26,22 @@
         </div>
     </div>
     <script>
-        $(document).ready(function () {
+        $(function() {
+            var collapsed = !$('#@cardId').hasClass('collapsed-card');
+            if (collapsed) {
+                $('#bestsellersBriefReportByQuantity').load('@Url.Action("GetBestsellersBriefReportByQuantity", "Home")');
+            }
+
             $('#@cardId').on('click', 'button[data-card-widget="collapse"]', function () {
                 var collapsed = !$('#@cardId').hasClass('collapsed-card');
                 saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hideCardAttributeName', collapsed);
+                if (!collapsed) {
+                    $('#bestsellersBriefReportByQuantity').load('@Url.Action("GetBestsellersBriefReportByQuantity", "Home")');
+                }
             });
         });
     </script>
     <div class="card-body">
-        @await Html.PartialAsync("Table", new DataTablesModel
-        {
-            Name = "bestsellers-byquantity-grid",
-            UrlRead = new DataUrl("BestsellersBriefReportByQuantityList", "Order", new RouteValueDictionary { [nameof(Model.OrderBy)] = OrderByEnum.OrderByQuantity }),
-            Length = Model.PageSize,
-            Dom = "<'row'<'col-md-12't>>" +
-                  "<'row margin-t-5'" +
-                    "<'col-lg-10 col-xs-12'<'float-lg-left'p>>" +
-                    "<'col-lg-2 col-xs-12'<'float-lg-right text-center'i>>" +
-                  ">",
-            ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(BestsellerModel.ProductName))
-                {
-                    Title = T("Admin.Reports.Sales.Bestsellers.Fields.Name").Text
-                },
-                new ColumnProperty(nameof(BestsellerModel.TotalQuantity))
-                {
-                    Title = T("Admin.Reports.Sales.Bestsellers.Fields.TotalQuantity").Text
-                },
-                new ColumnProperty(nameof(BestsellerModel.TotalAmount))
-                {
-                    Title = T("Admin.Reports.Sales.Bestsellers.Fields.TotalAmount").Text
-                },
-                new ColumnProperty(nameof(BestsellerModel.ProductId))
-                {
-                    Title = T("Admin.Common.View").Text,
-                    Width = "80",
-                    ClassName = NopColumnClassDefaults.Button,
-                    Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
-                }
-            }
-        })
+        <div id="bestsellersBriefReportByQuantity"></div>
     </div>
 </div>

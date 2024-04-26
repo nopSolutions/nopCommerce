@@ -136,7 +136,7 @@
                                                     <button type="button" id="search-product-clear" class="btn bg-gray" style="display: none; margin-top: 5px;">@T("Admin.Common.Clear")</button>
                                                     <input asp-for="ProductId" autocomplete="off" style="display: none;" />
                                                     <script>
-                                                    $(document).ready(function() {
+                                                    $(function() {
                                                         $('#search-product-name').autocomplete({
                                                             delay: 500,
                                                             minLength: 3,
@@ -358,7 +358,7 @@
                                     gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CustomerEmail))
                                     {
                                         Title = T("Admin.Orders.Fields.Customer").Text,
-                                        Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(OrderModel.CustomerId)))
+                                        Render = new RenderCustom("renderColumnCustomer")
                                     });
                                     gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.StoreName))
                                     {
@@ -413,11 +413,16 @@
                                     return '<span class="grid-report-item ' + color + '">' + data + '</span >';
                                 }
 
-                                $(document).ready(function() {
+                                function renderColumnCustomer(data, type, row, meta) {
+                                    var link = '@Url.Content("~/Admin/Customer/Edit/")' + row.CustomerId;
+                                    return `${row.CustomerFullName}<br /><a href="${link}">${data}</a>`;
+                                }
+
+                                $(function() {
                                     $("#@Html.IdFor(model => model.GoDirectlyToCustomOrderNumber)").keydown(
                                         function(event) {
                                             if (event.keyCode === 13) {
-                                                $("#go-to-order-by-number").click();
+                                                $("#go-to-order-by-number").trigger("click");
                                                 return false;
                                             }
                                         });
@@ -474,7 +479,7 @@
 }
 
 <script>
-    $(document).ready(function () {
+    $(function() {
         var displayModal = @((Model.LicenseCheckModel.DisplayWarning == true || Model.LicenseCheckModel?.BlockPages == true).ToString().ToLower());
         if (displayModal){
             $('#license-window').modal({
@@ -519,13 +524,13 @@
 </form>
 
 <script>
-    $(document).ready(function () {
+    $(function() {
         $('#exportxml-selected').click(function (e) {
             e.preventDefault();
             var ids = selectedIds.join(",");
             if (!ids) {
                 $('#exportXmlSelected-info').text("@T("Admin.Orders.NoOrders")");
-                $("#exportXmlSelected").click();
+                $("#exportXmlSelected").trigger("click");
             }
             else {
                 $('#export-xml-selected-form #selectedIds').val(ids);
@@ -544,13 +549,13 @@
 </form>
 
 <script>
-    $(document).ready(function () {
+    $(function() {
         $('#exportexcel-selected').click(function (e) {
             e.preventDefault();
             var ids = selectedIds.join(",");
              if (!ids) {
                 $('#exportExcelSelected-info').text("@T("Admin.Orders.NoOrders")");
-                $("#exportExcelSelected").click();
+                $("#exportExcelSelected").trigger("click");
             }
             else {
                 $('#export-excel-selected-form #selectedIds').val(ids);
@@ -569,13 +574,13 @@
 </form>
 
 <script>
-    $(document).ready(function () {
+    $(function() {
         $('#pdf-invoice-selected').click(function (e) {
             e.preventDefault();
             var ids = selectedIds.join(",");
            if (!ids) {
                 $('#pdfInvoiceSelected-info').text("@T("Admin.Orders.NoOrders")");
-                $("#pdfInvoiceSelected").click();
+                $("#pdfInvoiceSelected").trigger("click");
             }
             else {
                 $('#pdf-invoice-selected-form #selectedIds').val(ids);

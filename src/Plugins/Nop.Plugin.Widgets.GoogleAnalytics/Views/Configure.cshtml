@@ -26,6 +26,16 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="ApiSecret_OverrideForStore" asp-input="ApiSecret" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="ApiSecret" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ApiSecret" html-attributes="@(new { value = Model.ApiSecret })" />
+                        <span asp-validation-for="ApiSecret"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
                         <nop-override-store-checkbox asp-for="TrackingScript_OverrideForStore" asp-input="TrackingScript" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                         <nop-label asp-for="TrackingScript" />
                     </div>
@@ -47,12 +57,12 @@
                 <nop-nested-setting asp-for="EnableEcommerce">
                     <div class="form-group row">
                         <div class="col-md-3">
-                            <nop-override-store-checkbox asp-for="UseJsToSendEcommerceInfo_OverrideForStore" asp-input="UseJsToSendEcommerceInfo" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                            <nop-label asp-for="UseJsToSendEcommerceInfo" />
+                            <nop-override-store-checkbox asp-for="UseSandbox_OverrideForStore" asp-input="UseSandbox" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="UseSandbox" />
                         </div>
                         <div class="col-md-9">
-                            <nop-editor asp-for="UseJsToSendEcommerceInfo" />
-                            <span asp-validation-for="UseJsToSendEcommerceInfo"></span>
+                            <nop-editor asp-for="UseSandbox" />
+                            <span asp-validation-for="UseSandbox"></span>
                         </div>
                     </div>
                     <div class="form-group row">

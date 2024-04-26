@@ -4,7 +4,7 @@
 @using Nop.Services
 
 <script>
-    $(document).ready(function() {
+    $(function() {
         $("#@Html.IdFor(model => model.AttributeControlTypeId)").change(toggleAttributeControlType);
 
         toggleAttributeControlType();
@@ -118,7 +118,7 @@
             <nop-label asp-for="AttributeControlTypeId" />
         </div>
         <div class="col-md-9">
-            <nop-select asp-for="AttributeControlTypeId" asp-items="@await (((AttributeControlType)Model.AttributeControlTypeId).ToSelectListAsync())" />
+            <nop-select asp-for="AttributeControlTypeId" asp-items="@(await ((AttributeControlType)Model.AttributeControlTypeId).ToSelectListAsync())" />
             <span asp-validation-for="AttributeControlTypeId"></span>
         </div>
     </div>

@@ -1,27 +1,25 @@
-﻿using System.Collections.Generic;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
 
-namespace Nop.Web.Models.Catalog
+namespace Nop.Web.Models.Catalog;
+
+public partial record CategorySimpleModel : BaseNopEntityModel
 {
-    public partial record CategorySimpleModel : BaseNopEntityModel
+    public CategorySimpleModel()
     {
-        public CategorySimpleModel()
-        {
-            SubCategories = new List<CategorySimpleModel>();
-        }
-
-        public string Name { get; set; }
-
-        public string SeName { get; set; }
-
-        public int? NumberOfProducts { get; set; }
-
-        public bool IncludeInTopMenu { get; set; }
-
-        public List<CategorySimpleModel> SubCategories { get; set; }
-
-        public bool HaveSubCategories { get; set; }
-
-        public string Route { get; set; }
+        SubCategories = new List<CategorySimpleModel>();
     }
+
+    public string Name { get; set; }
+
+    public string SeName { get; set; }
+
+    public int? NumberOfProducts { get; set; }
+
+    public bool IncludeInTopMenu { get; set; }
+
+    public List<CategorySimpleModel> SubCategories { get; set; }
+
+    public bool HaveSubCategories { get; set; }
+
+    public string Route { get; set; }
 }

@@ -23,7 +23,7 @@
 </div>
 
 <script asp-location="Footer">
-    $(document).ready(function() {
+    $(function() {
         $("#@(Model.Prefix)_CountryId").change(function(){
             var selectedItem = $(this).children("option:selected").val();
             var w3w = $("#what3words-autosuggest_@(Model.Prefix)");

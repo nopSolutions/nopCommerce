@@ -2,24 +2,23 @@
 using Nop.Core.Domain.Orders;
 using Nop.Data.Extensions;
 
-namespace Nop.Data.Mapping.Builders.Orders
+namespace Nop.Data.Mapping.Builders.Orders;
+
+/// <summary>
+/// Represents a recurring payment history entity builder
+/// </summary>
+public partial class RecurringPaymentHistoryBuilder : NopEntityBuilder<RecurringPaymentHistory>
 {
+    #region Methods
+
     /// <summary>
-    /// Represents a recurring payment history entity builder
+    /// Apply entity configuration
     /// </summary>
-    public partial class RecurringPaymentHistoryBuilder : NopEntityBuilder<RecurringPaymentHistory>
+    /// <param name="table">Create table expression builder</param>
+    public override void MapEntity(CreateTableExpressionBuilder table)
     {
-        #region Methods
-
-        /// <summary>
-        /// Apply entity configuration
-        /// </summary>
-        /// <param name="table">Create table expression builder</param>
-        public override void MapEntity(CreateTableExpressionBuilder table)
-        {
-            table.WithColumn(nameof(RecurringPaymentHistory.RecurringPaymentId)).AsInt32().ForeignKey<RecurringPayment>();
-        }
-
-        #endregion
+        table.WithColumn(nameof(RecurringPaymentHistory.RecurringPaymentId)).AsInt32().ForeignKey<RecurringPayment>();
     }
+
+    #endregion
 }

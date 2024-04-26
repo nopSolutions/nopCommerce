@@ -35,6 +35,13 @@
                                     <input type="radio" asp-for="Gender" value="F" checked="@(Model.Gender == "F")" id="gender-female" />
                                     <label class="forcheckbox" for="gender-female">@T("Account.Fields.Gender.Female")</label>
                                 </span>
+                                @if (Model.NeutralGenderEnabled)
+                                {
+                                    <span class="Neutral">
+                                        <input type="radio" asp-for="Gender" value="N" checked="@(Model.Gender == "N")" id="gender-neutral" />
+                                        <label class="forcheckbox" for="gender-neutral">@T("Account.Fields.Gender.Neutral")</label>
+                                    </span>
+                                }
                             </div>
                         </div>
                     }
@@ -356,7 +363,7 @@
                         @if (Model.AcceptPrivacyPolicyEnabled)
                         {
                             <script asp-location="Footer">
-                                $(document).ready(function() {
+                                $(function() {
                                     $('#register-button').on('click', function() {
                                         if ($('#accept-consent').is(':checked')) {
                                             //do some stuff
@@ -376,7 +383,7 @@
                                 {
                                     <span class="read" id="read-privacyinfo">@T("Account.Fields.AcceptPrivacyPolicy.Read")</span>
                                     <script asp-location="Footer">
-                                    $(document).ready(function() {
+                                    $(function() {
                                         $('#read-privacyinfo').on('click',
                                             function(e) {
                                                 displayPopupContentFromUrl(
@@ -400,7 +407,7 @@
                                 if (consent.IsRequired)
                                 {
                                     <script asp-location="Footer">
-                                    $(document).ready(function() {
+                                    $(function() {
                                         $('#register-button').on('click', function() {
                                             if ($('#consent@(consent.Id)').is(':checked')) {
                                                     //do some stuff

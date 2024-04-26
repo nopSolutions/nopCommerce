@@ -17,6 +17,7 @@
         <h1>@T("Account.MyAccount") - @T("Account.Gdpr")</h1>
     </div>
     <div class="page-body">
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerGdprToolsTop, additionalData = Model })
         @if (!string.IsNullOrEmpty(Model.Result))
         {
             <div class="result">
@@ -46,7 +47,7 @@
                     <button type="submit" id="delete-account" name="delete-account" class="button-1 gdpr-delete-account-button">@T("Account.Gdpr.Delete.Button")</button>
 
                     <script asp-location="Footer">
-                        $(document).ready(function() {
+                        $(function() {
                             $('#delete-account').on('click', function() {
                                 return confirm('@T("Common.AreYouSure")');
                             });
@@ -55,5 +56,6 @@
                 </div>
             </div>
         </form>
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerGdprToolsBottom, additionalData = Model })
     </div>
 </div>

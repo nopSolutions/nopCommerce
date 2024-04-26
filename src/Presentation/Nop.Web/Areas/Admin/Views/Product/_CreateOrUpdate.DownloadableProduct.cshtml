@@ -2,7 +2,7 @@
 @using Nop.Core.Domain.Catalog;
 @using Nop.Services
 <script>
-    $(document).ready(function() {
+    $(function() {
         $("#@Html.IdFor(model => model.IsDownload)").click(toggleDownloadableProduct);
         $("#@Html.IdFor(model => model.UnlimitedDownloads)").click(toggleDownloadableProduct);
         $("#@Html.IdFor(model => model.HasSampleDownload)").click(toggleDownloadableProduct);
@@ -103,7 +103,7 @@
                 <nop-label asp-for="DownloadActivationTypeId" />
             </div>
             <div class="col-md-9">
-                <nop-select asp-for="DownloadActivationTypeId" asp-items="@await (((DownloadActivationType)Model.DownloadActivationTypeId).ToSelectListAsync())" />
+                <nop-select asp-for="DownloadActivationTypeId" asp-items="@(await ((DownloadActivationType)Model.DownloadActivationTypeId).ToSelectListAsync())" />
                 <span asp-validation-for="DownloadActivationTypeId"></span>
             </div>
         </div>

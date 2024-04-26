@@ -82,7 +82,7 @@
                                 <nop-label asp-for="ReturnRequestStatusId" />
                             </div>
                             <div class="col-md-9">
-                                <nop-select asp-for="ReturnRequestStatusId" asp-items="@await (((ReturnRequestStatus)Model.ReturnRequestStatusId).ToSelectListAsync())" />
+                                <nop-select asp-for="ReturnRequestStatusId" asp-items="@(await ((ReturnRequestStatus)Model.ReturnRequestStatusId).ToSelectListAsync())" />
                                 <span asp-validation-for="ReturnRequestStatusId"></span>
                             </div>
                         </div>

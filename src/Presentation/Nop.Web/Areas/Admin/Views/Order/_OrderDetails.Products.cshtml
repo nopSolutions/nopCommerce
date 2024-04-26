@@ -9,7 +9,7 @@
             @foreach (var item in Model.Items)
             {
                 <script>
-                    $(document).ready(function () {
+                    $(function() {
                         toggleOrderItemEdit@(item.Id)(false);
                     });
                 </script>
@@ -20,20 +20,38 @@
                             $('#pnlEditPvUnitPrice@(item.Id)').showElement();
                             $('#pnlEditPvQuantity@(item.Id)').showElement();
                             $('#pnlEditPvDiscount@(item.Id)').showElement();
-                            $('#pnlEditPvPrice@(item.Id)').showElement();
-                            $('#btnEditOrderItem@(item.Id)').hideElement();
-                            $('#btnDeleteOrderItem@(item.Id)').hideElement();
+                            $('#pnlEditPvPrice@(item.Id)').showElement();                            
                             $('#btnSaveOrderItem@(item.Id)').showElement();
                             $('#btnCancelOrderItem@(item.Id)').showElement();
+
+                            $('#pvUnitPriceInclTax@(item.Id)').prop("disabled", false);
+                            $('#pvUnitPriceExclTax@(item.Id)').prop("disabled", false);
+                            $('#pvQuantity@(item.Id)').prop("disabled", false);
+                            $('#pvDiscountInclTax@(item.Id)').prop("disabled", false);
+                            $('#pvDiscountExclTax@(item.Id)').prop("disabled", false);
+                            $('#pvPriceInclTax@(item.Id)').prop("disabled", false);
+                            $('#pvPriceExclTax@(item.Id)').prop("disabled", false);                            
+
+                            $('#btnEditOrderItem@(item.Id)').hideElement();
+                            $('#btnDeleteOrderItem@(item.Id)').hideElement();
                         } else {
                             $('#pnlEditPvUnitPrice@(item.Id)').hideElement();
                             $('#pnlEditPvQuantity@(item.Id)').hideElement();
                             $('#pnlEditPvDiscount@(item.Id)').hideElement();
                             $('#pnlEditPvPrice@(item.Id)').hideElement();
-                            $('#btnEditOrderItem@(item.Id)').showElement();
-                            $('#btnDeleteOrderItem@(item.Id)').showElement();
                             $('#btnSaveOrderItem@(item.Id)').hideElement();
                             $('#btnCancelOrderItem@(item.Id)').hideElement();
+
+                            $('#pvUnitPriceInclTax@(item.Id)').prop("disabled", true);
+                            $('#pvUnitPriceExclTax@(item.Id)').prop("disabled", true);
+                            $('#pvQuantity@(item.Id)').prop("disabled", true);
+                            $('#pvDiscountInclTax@(item.Id)').prop("disabled", true);
+                            $('#pvDiscountExclTax@(item.Id)').prop("disabled", true);
+                            $('#pvPriceInclTax@(item.Id)').prop("disabled", true);
+                            $('#pvPriceExclTax@(item.Id)').prop("disabled", true);
+
+                            $('#btnEditOrderItem@(item.Id)').showElement();
+                            $('#btnDeleteOrderItem@(item.Id)').showElement();                            
                         }
                     }
                 </script>
@@ -93,7 +111,7 @@
                     {
                         <tr>
                         <td class="text-center">
-                            <img src="@item.PictureThumbnailUrl" alt="" title=""/>
+                            <img src="@item.PictureThumbnailUrl" alt="" title="" width="100%"/>
                         </td>
                         <td style="width: 15%;" class="text-left">
                             <em><a asp-controller="Product" asp-action="Edit" asp-route-id="@item.ProductId">@item.ProductName</a></em>

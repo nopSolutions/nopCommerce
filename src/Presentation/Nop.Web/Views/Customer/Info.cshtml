@@ -21,6 +21,7 @@
         <h1>@T("Account.MyAccount") - @T("Account.CustomerInfo")</h1>
     </div>
     <div class="page-body">
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerInfoTop, additionalData = Model })
         <form asp-route="CustomerInfo" method="post">
             <div asp-validation-summary="ModelOnly" class="message-error"></div>
             <div class="fieldset">
@@ -41,6 +42,13 @@
                                     <input type="radio" asp-for="Gender" value="F" checked="@(Model.Gender == "F")" id="gender-female" />
                                     <label class="forcheckbox" for="gender-female">@T("Account.Fields.Gender.Female")</label>
                                 </span>
+                                @if (Model.NeutralGenderEnabled)
+                                {
+                                    <span class="Neutral">
+                                        <input type="radio" asp-for="Gender" value="N" checked="@(Model.Gender == "N")" id="gender-neutral" />
+                                        <label class="forcheckbox" for="gender-neutral">@T("Account.Fields.Gender.Neutral")</label>
+                                    </span>
+                                }
                             </div>
                         </div>
                     }
@@ -431,7 +439,7 @@
                             if (consent.IsRequired)
                             {
                                 <script asp-location="Footer">
-                                    $(document).ready(function() {
+                                    $(function() {
                                         $('#save-info-button').on('click', function() {
                                             if ($('#consent@(consent.Id)').is(':checked')) {
                                                     //do some stuff
@@ -457,6 +465,7 @@
                 <button type="submit" id="save-info-button" name="save-info-button" class="button-1 save-customer-info-button">@T("Common.Save")</button>
             </div>
         </form>
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerInfoBottom, additionalData = Model })
     </div>
 </div>
 
@@ -470,7 +479,7 @@
             $.ajax({
                 cache: false,
                 type: "POST",
-                url: "@Url.Action("RemoveExternalAssociation", "Customer")",
+                url: "@Url.RouteUrl("CustomerRemoveExternalAssociation")",
                 data: postData,
                 dataType: "json",
                 success: function (data, textStatus, jqXHR) {

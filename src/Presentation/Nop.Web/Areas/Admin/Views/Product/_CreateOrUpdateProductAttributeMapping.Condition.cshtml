@@ -1,14 +1,11 @@
 ﻿@model ProductAttributeMappingModel
-
-@using System.Collections.Generic
-@using Microsoft.AspNetCore.Mvc.Rendering
 @using Nop.Core.Domain.Catalog
 @using Nop.Services.Catalog
 
 @if(Model.Id > 0)
 {
     <script>
-    $(document).ready(function() {
+    $(function() {
         $("#@Html.IdFor(model => model.ConditionModel.EnableCondition)").click(toggleEnableCondition);
         toggleEnableCondition();
     });
@@ -52,7 +49,7 @@
                         <nop-select asp-for="ConditionModel.SelectedProductAttributeId" asp-items="@attributesList" />
 
                         <script>
-                        $(document).ready(function() {
+                        $(function() {
                             $("#@Html.IdFor(model => model.ConditionModel.SelectedProductAttributeId)")
                                 .change(toggleProductAttributes);
 

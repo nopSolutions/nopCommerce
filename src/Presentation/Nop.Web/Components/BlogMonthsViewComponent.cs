@@ -1,29 +1,27 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Blogs;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Components;
 
-namespace Nop.Web.Components
+namespace Nop.Web.Components;
+
+public partial class BlogMonthsViewComponent : NopViewComponent
 {
-    public partial class BlogMonthsViewComponent : NopViewComponent
+    protected readonly BlogSettings _blogSettings;
+    protected readonly IBlogModelFactory _blogModelFactory;
+
+    public BlogMonthsViewComponent(BlogSettings blogSettings, IBlogModelFactory blogModelFactory)
     {
-        private readonly BlogSettings _blogSettings;
-        private readonly IBlogModelFactory _blogModelFactory;
+        _blogSettings = blogSettings;
+        _blogModelFactory = blogModelFactory;
+    }
 
-        public BlogMonthsViewComponent(BlogSettings blogSettings, IBlogModelFactory blogModelFactory)
-        {
-            _blogSettings = blogSettings;
-            _blogModelFactory = blogModelFactory;
-        }
+    public async Task<IViewComponentResult> InvokeAsync(int currentCategoryId, int currentProductId)
+    {
+        if (!_blogSettings.Enabled)
+            return Content("");
 
-        public async Task<IViewComponentResult> InvokeAsync(int currentCategoryId, int currentProductId)
-        {
-            if (!_blogSettings.Enabled)
-                return Content("");
-
-            var model = await _blogModelFactory.PrepareBlogPostYearModelAsync();
-            return View(model);
-        }
+        var model = await _blogModelFactory.PrepareBlogPostYearModelAsync();
+        return View(model);
     }
 }

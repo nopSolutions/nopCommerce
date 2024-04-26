@@ -1,45 +1,42 @@
-﻿using System;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core.Events;
 using Nop.Services.Events;
 using NUnit.Framework;
 
-namespace Nop.Tests.Nop.Web.Tests.Events
+namespace Nop.Tests.Nop.Web.Tests.Events;
+
+[TestFixture]
+public class EventsTests : BaseNopTest
 {
-    [TestFixture]
-    public class EventsTests : BaseNopTest
+    private IEventPublisher _eventPublisher;
+
+    [OneTimeSetUp]
+    public void SetUp()
     {
-        private IEventPublisher _eventPublisher;
+        _eventPublisher = GetService<IEventPublisher>();
+    }
 
-        [OneTimeSetUp]
-        public void SetUp()
+    [Test]
+    public async Task CanPublishEvent()
+    {
+        var oldDateTime = DateTime.Now.Subtract(TimeSpan.FromDays(7));
+        DateTimeConsumer.DateTime = oldDateTime;
+
+        var newDateTime = DateTime.Now.Subtract(TimeSpan.FromDays(5));
+        await _eventPublisher.PublishAsync(newDateTime);
+        newDateTime.Should().Be(DateTimeConsumer.DateTime);
+    }
+
+    public class DateTimeConsumer : IConsumer<DateTime>
+    {
+        public Task HandleEventAsync(DateTime eventMessage)
         {
-            _eventPublisher = GetService<IEventPublisher>();
+            DateTime = eventMessage;
+
+            return Task.CompletedTask;
         }
 
-        [Test]
-        public async Task CanPublishEvent()
-        {
-            var oldDateTime = DateTime.Now.Subtract(TimeSpan.FromDays(7));
-            DateTimeConsumer.DateTime = oldDateTime;
-
-            var newDateTime = DateTime.Now.Subtract(TimeSpan.FromDays(5));
-            await _eventPublisher.PublishAsync(newDateTime);
-            newDateTime.Should().Be(DateTimeConsumer.DateTime);
-        }
-
-        public class DateTimeConsumer : IConsumer<DateTime>
-        {
-            public Task HandleEventAsync(DateTime eventMessage)
-            {
-                DateTime = eventMessage;
-
-                return Task.CompletedTask;
-            }
-
-            // For testing
-            public static DateTime DateTime { get; set; }
-        }
+        // For testing
+        public static DateTime DateTime { get; set; }
     }
 }

@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace Nop.Data.Mapping;
 
-namespace Nop.Data.Mapping
+/// <summary>
+/// Backward compatibility of table naming
+/// </summary>
+public partial interface INameCompatibility
 {
     /// <summary>
-    /// Backward compatibility of table naming
+    /// Gets table name for mapping with the type
     /// </summary>
-    public partial interface INameCompatibility
-    {
-        /// <summary>
-        /// Gets table name for mapping with the type
-        /// </summary>
-        Dictionary<Type, string> TableNames { get; }
+    Dictionary<Type, string> TableNames { get; }
 
-        /// <summary>
-        ///  Gets column name for mapping with the entity's property and type
-        /// </summary>
-        Dictionary<(Type, string), string> ColumnName { get; }
-    }
+    /// <summary>
+    ///  Gets column name for mapping with the entity's property and type
+    /// </summary>
+    Dictionary<(Type, string), string> ColumnName { get; }
 }

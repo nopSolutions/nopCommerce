@@ -33,7 +33,7 @@
             {
                 <a class="watch-forum" href="#" id="watch-forum">@Model.WatchForumText</a>
                 <script asp-location="Footer">
-                    $(document).ready(function() {
+                    $(function() {
                         $('#watch-forum').on('click', function () {
                             var postData = {};
                             addAntiForgeryToken(postData);
@@ -65,7 +65,7 @@
                 ShowTotalSummary = false,
                 RouteActionName = "ForumSlugPaged",
                 UseRouteLinks = true,
-                RouteValues = new RouteValues { Id = Model.Id, Slug = Model.SeName }
+                RouteValues = new SlugRouteValues { Id = Model.Id, Slug = Model.SeName }
             });
         }
         @if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))

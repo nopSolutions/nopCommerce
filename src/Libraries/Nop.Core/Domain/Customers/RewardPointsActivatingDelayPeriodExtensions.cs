@@ -1,26 +1,23 @@
-﻿using System;
+﻿namespace Nop.Core.Domain.Customers;
 
-namespace Nop.Core.Domain.Customers
+/// <summary>
+/// RewardPointsActivatingDelayPeriod Extensions
+/// </summary>
+public static class RewardPointsActivatingDelayPeriodExtensions
 {
     /// <summary>
-    /// RewardPointsActivatingDelayPeriod Extensions
+    /// Returns a delay period before activating points in hours
     /// </summary>
-    public static class RewardPointsActivatingDelayPeriodExtensions
+    /// <param name="period">Reward points activating delay period</param>
+    /// <param name="value">Value of delay</param>
+    /// <returns>Value of delay in hours</returns>
+    public static int ToHours(this RewardPointsActivatingDelayPeriod period, int value)
     {
-        /// <summary>
-        /// Returns a delay period before activating points in hours
-        /// </summary>
-        /// <param name="period">Reward points activating delay period</param>
-        /// <param name="value">Value of delay</param>
-        /// <returns>Value of delay in hours</returns>
-        public static int ToHours(this RewardPointsActivatingDelayPeriod period, int value)
+        return period switch
         {
-            return period switch
-            {
-                RewardPointsActivatingDelayPeriod.Hours => value,
-                RewardPointsActivatingDelayPeriod.Days => value * 24,
-                _ => throw new ArgumentOutOfRangeException(nameof(period)),
-            };
-        }
+            RewardPointsActivatingDelayPeriod.Hours => value,
+            RewardPointsActivatingDelayPeriod.Days => value * 24,
+            _ => throw new ArgumentOutOfRangeException(nameof(period)),
+        };
     }
 }

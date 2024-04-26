@@ -1,27 +1,25 @@
-﻿using System.Collections.Generic;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
 
-namespace Nop.Web.Areas.Admin.Models.Catalog
+namespace Nop.Web.Areas.Admin.Models.Catalog;
+
+/// <summary>
+/// Represents a related product model to add to the product
+/// </summary>
+public partial record AddRelatedProductModel : BaseNopModel
 {
-    /// <summary>
-    /// Represents a related product model to add to the product
-    /// </summary>
-    public partial record AddRelatedProductModel : BaseNopModel
+    #region Ctor
+
+    public AddRelatedProductModel()
     {
-        #region Ctor
-
-        public AddRelatedProductModel()
-        {
-            SelectedProductIds = new List<int>();
-        }
-        #endregion
-
-        #region Properties
-
-        public int ProductId { get; set; }
-
-        public IList<int> SelectedProductIds { get; set; }
-
-        #endregion
+        SelectedProductIds = new List<int>();
     }
+    #endregion
+
+    #region Properties
+
+    public int ProductId { get; set; }
+
+    public IList<int> SelectedProductIds { get; set; }
+
+    #endregion
 }

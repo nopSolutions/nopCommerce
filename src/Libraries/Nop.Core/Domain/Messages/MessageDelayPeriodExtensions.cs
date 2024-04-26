@@ -1,26 +1,23 @@
-﻿using System;
+﻿namespace Nop.Core.Domain.Messages;
 
-namespace Nop.Core.Domain.Messages
+/// <summary>
+/// MessageDelayPeriod Extensions
+/// </summary>
+public static class MessageDelayPeriodExtensions
 {
     /// <summary>
-    /// MessageDelayPeriod Extensions
+    /// Returns message delay in hours
     /// </summary>
-    public static class MessageDelayPeriodExtensions
+    /// <param name="period">Message delay period</param>
+    /// <param name="value">Value of delay send</param>
+    /// <returns>Value of message delay in hours</returns>
+    public static int ToHours(this MessageDelayPeriod period, int value)
     {
-        /// <summary>
-        /// Returns message delay in hours
-        /// </summary>
-        /// <param name="period">Message delay period</param>
-        /// <param name="value">Value of delay send</param>
-        /// <returns>Value of message delay in hours</returns>
-        public static int ToHours(this MessageDelayPeriod period, int value)
+        return period switch
         {
-            return period switch
-            {
-                MessageDelayPeriod.Hours => value,
-                MessageDelayPeriod.Days => value * 24,
-                _ => throw new ArgumentOutOfRangeException(nameof(period)),
-            };
-        }
+            MessageDelayPeriod.Hours => value,
+            MessageDelayPeriod.Days => value * 24,
+            _ => throw new ArgumentOutOfRangeException(nameof(period)),
+        };
     }
 }

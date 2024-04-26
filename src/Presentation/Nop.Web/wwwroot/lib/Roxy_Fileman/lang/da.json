@@ -74,7 +74,7 @@
 "Copy":"Kopier",
 "Paste":"Indsæt",
 "E_CopyFile":"Fejl ved kopiering af fil",
-"E_CopyFileInvalisPath":"Kan ikke kopiere filen - stien eksisterer ikke",
+"E_CopyFileInvalidPath":"Kan ikke kopiere filen - stien eksisterer ikke",
 "E_CopyDirInvalidPath":"Kan ikke kopiere mappen - stien eksisterer ikke",
 "E_CreateArchive":"Fejl ved oprettelse af zip-fil.",
 "E_UploadingFile":"fejl"

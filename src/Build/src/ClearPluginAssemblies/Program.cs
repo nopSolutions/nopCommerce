@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-
-namespace ClearPluginAssemblies
+﻿namespace ClearPluginAssemblies
 {
     public class Program
     {
@@ -42,7 +38,7 @@ namespace ClearPluginAssemblies
                                 File.Delete(pdbfilePath);
                         }
 
-                        if (!directoryInfo.GetFiles().Any() && !directoryInfo.GetDirectories().Any() && !saveLocalesFolders)
+                        if (directoryInfo.GetFiles().Length == 0 && directoryInfo.GetDirectories().Length == 0 && !saveLocalesFolders)
                             directoryInfo.Delete(true);
                     }
                 }
@@ -59,7 +55,7 @@ namespace ClearPluginAssemblies
             var pluginPaths = string.Empty;
             var saveLocalesFolders = true;
 
-            var settings = args.FirstOrDefault(a => a.Contains("|")) ?? string.Empty;
+            var settings = args.FirstOrDefault(a => a.Contains('|')) ?? string.Empty;
             if(string.IsNullOrEmpty(settings))
                 return;
 
@@ -79,7 +75,7 @@ namespace ClearPluginAssemblies
                         pluginPaths = value;
                         break;
                     case "SaveLocalesFolders":
-                        bool.TryParse(value, out saveLocalesFolders);
+                        _ = bool.TryParse(value, out saveLocalesFolders);
                         break;
                 }
             }
@@ -88,11 +84,13 @@ namespace ClearPluginAssemblies
                 return;
 
             var di = new DirectoryInfo(outputPath);
+            var separator = Path.DirectorySeparatorChar;
+            var folderToIgnore = string.Concat(separator, "Plugins", separator);
             var fileNames = di.GetFiles("*.dll", SearchOption.AllDirectories)
-                .Where(fi => !fi.FullName.Contains(@"\Plugins\"))
+                .Where(fi => !fi.FullName.Contains(folderToIgnore))
                 .Select(fi => fi.Name.Replace(fi.Extension, "")).ToList();
            
-            if (string.IsNullOrEmpty(pluginPaths) || !fileNames.Any())
+            if (string.IsNullOrEmpty(pluginPaths) || fileNames.Count == 0)
             {
                 return;
             }

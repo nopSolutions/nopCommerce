@@ -2,26 +2,25 @@
 using Nop.Core.Domain.Vendors;
 using Nop.Data.Extensions;
 
-namespace Nop.Data.Mapping.Builders.Vendors
+namespace Nop.Data.Mapping.Builders.Vendors;
+
+/// <summary>
+/// Represents a vendor attribute value entity builder
+/// </summary>
+public partial class VendorAttributeValueBuilder : NopEntityBuilder<VendorAttributeValue>
 {
+    #region Methods
+
     /// <summary>
-    /// Represents a vendor attribute value entity builder
+    /// Apply entity configuration
     /// </summary>
-    public partial class VendorAttributeValueBuilder : NopEntityBuilder<VendorAttributeValue>
+    /// <param name="table">Create table expression builder</param>
+    public override void MapEntity(CreateTableExpressionBuilder table)
     {
-        #region Methods
-
-        /// <summary>
-        /// Apply entity configuration
-        /// </summary>
-        /// <param name="table">Create table expression builder</param>
-        public override void MapEntity(CreateTableExpressionBuilder table)
-        {
-            table
-                .WithColumn(nameof(VendorAttributeValue.Name)).AsString(400).NotNullable()
-                .WithColumn(nameof(VendorAttributeValue.VendorAttributeId)).AsInt32().ForeignKey<VendorAttribute>();
-        }
-
-        #endregion
+        table
+            .WithColumn(nameof(VendorAttributeValue.Name)).AsString(400).NotNullable()
+            .WithColumn(NameCompatibilityManager.GetColumnName(typeof(VendorAttributeValue), nameof(VendorAttributeValue.AttributeId))).AsInt32().ForeignKey<VendorAttribute>();
     }
+
+    #endregion
 }

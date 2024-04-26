@@ -1,5 +1,4 @@
 ﻿@model CommonStatisticsModel
-@using Nop.Core
 @inject Nop.Services.Common.IGenericAttributeService genericAttributeService
 @inject IWorkContext workContext
 @{
@@ -91,7 +90,7 @@
                 </div>
 
                 <script>
-            $(document).ready(function () {
+            $(function() {
                 $('#@cardId').on('click', 'button[data-card-widget="collapse"]', function () {
                     var collapsed = !$('#@cardId').hasClass('collapsed-card');
                     saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hideCardAttributeName', collapsed);

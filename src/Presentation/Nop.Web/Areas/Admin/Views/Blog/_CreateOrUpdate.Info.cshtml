@@ -7,7 +7,7 @@
 
 <script asp-location="Footer">
     //tags
-    $(document).ready(function() {
+    $(function() {
         @Html.Raw(Model.InitialBlogTags)
         $("#@Html.IdFor(model => model.Tags)").tagEditor({
             autocomplete: {
@@ -117,25 +117,18 @@
         <div class="col-md-9">
             <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
             <script>
-                    $(document).ready(function() {
-                        var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
-                        storesIdsInput.setOptions({
-                            autoClose: false,
-                            filter: "contains"
-                        });
-
-                        @if (Model.AvailableStores.Count == 0)
+                $(function() {
+                    var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').select2({
+                        closeOnSelect: false,
+                        @if (!Model.AvailableStores.Any())
                         {
-                            <text>
-                        storesIdsInput.setOptions({
-                            enable: false,
-                            placeholder: 'No stores available'
-                        });
-                        storesIdsInput._placeholder();
-                        storesIdsInput._enable();
+                        <text>
+                        disabled: true,
+                        placeholder: 'No stores available',
                         </text>
                         }
                     });
+                });
             </script>
         </div>
     </div>

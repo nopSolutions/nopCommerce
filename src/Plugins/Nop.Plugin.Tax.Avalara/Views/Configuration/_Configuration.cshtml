@@ -95,7 +95,7 @@
                     <span asp-validation-for="TaxOriginAddressTypeId"></span>
                 </div>
                 <script>
-                    $(document).ready(function () {
+                    $(function() {
                         $('#@Html.IdFor(model => model.TaxOriginAddressTypeId)').click(changeOriginAddressType);
                     });
 
@@ -126,7 +126,7 @@
                 </div>
             </div>
             <script>
-                $(document).ready(function () {
+                $(function() {
                     $('#@Html.IdFor(model => model.UseTaxRateTables)').click(toggleUseTaxRateTables);
                     toggleUseTaxRateTables();
                 });
@@ -166,7 +166,7 @@
                     <span asp-validation-for="EnableCertificates"></span>
                 </div>
                 <script>
-                    $(document).ready(function () {
+                    $(function() {
                         $('#@Html.IdFor(model => model.EnableCertificates)').click(changeEnableCertificates);
                     });
 
@@ -188,24 +188,17 @@
                             <div class="col-md-4">
                                 <nop-select asp-for="SelectedCustomerRoleIds" asp-items="@Model.AvailableCustomerRoles" asp-multiple="true" />
                                 <script>
-                                $(document).ready(function() {
-                                    var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
-                                    rolesIdsInput.setOptions({
-                                        autoClose: false,
-                                        filter: 'contains'
+                                $(function() {
+                                    var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').select2({
+                                        closeOnSelect: false,
+                                        @if (!Model.AvailableCustomerRoles.Any())
+                                        {
+                                            <text>
+                                            disabled: true,
+                                            placeholder: 'No customer roles available',
+                                            </text>
+                                        }
                                     });
-
-                                    @if (!Model.AvailableCustomerRoles.Any())
-                                    {
-                                        <text>
-                                            rolesIdsInput.setOptions({
-                                                enable: false,
-                                                placeholder: 'No customer roles available'
-                                            });
-                                            rolesIdsInput._placeholder();
-                                            rolesIdsInput._enable();
-                                        </text>
-                                    }
                                 });
                                 </script>
                             </div>
@@ -274,7 +267,7 @@
             </div>
             <div class="card-body">
                 <script>
-                    $(document).ready(function () {
+                    $(function() {
                         $('#@Html.IdFor(model => model.TestAddress.CountryId)').change(function () {
                             var selectedItem = $(this).val();
                             var ddlStates = $('#@Html.IdFor(model => model.TestAddress.StateProvinceId)');
@@ -292,7 +285,7 @@
                                     });
                                 },
                                 error: function (jqXHR, textStatus, errorThrown) {
-                                    $('#states-alert').click();
+                                    $('#states-alert').trigger('click');
                                 }
                             });
                         });

@@ -1,18 +1,17 @@
-﻿namespace Nop.Core.Infrastructure
+﻿namespace Nop.Core.Infrastructure;
+
+/// <summary>
+/// Interface which should be implemented by tasks run on startup
+/// </summary>
+public partial interface IStartupTask
 {
     /// <summary>
-    /// Interface which should be implemented by tasks run on startup
+    /// Executes a task
     /// </summary>
-    public interface IStartupTask 
-    {
-        /// <summary>
-        /// Executes a task
-        /// </summary>
-        void Execute();
+    void Execute();
 
-        /// <summary>
-        /// Gets order of this startup task implementation
-        /// </summary>
-        int Order { get; }
-    }
+    /// <summary>
+    /// Gets order of this startup task implementation
+    /// </summary>
+    int Order { get; }
 }

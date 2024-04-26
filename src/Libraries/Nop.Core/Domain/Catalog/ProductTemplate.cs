@@ -1,28 +1,27 @@
-namespace Nop.Core.Domain.Catalog
+namespace Nop.Core.Domain.Catalog;
+
+/// <summary>
+/// Represents a product template
+/// </summary>
+public partial class ProductTemplate : BaseEntity
 {
     /// <summary>
-    /// Represents a product template
+    /// Gets or sets the template name
     /// </summary>
-    public partial class ProductTemplate : BaseEntity
-    {
-        /// <summary>
-        /// Gets or sets the template name
-        /// </summary>
-        public string Name { get; set; }
+    public string Name { get; set; }
 
-        /// <summary>
-        /// Gets or sets the view path
-        /// </summary>
-        public string ViewPath { get; set; }
+    /// <summary>
+    /// Gets or sets the view path
+    /// </summary>
+    public string ViewPath { get; set; }
 
-        /// <summary>
-        /// Gets or sets the display order
-        /// </summary>
-        public int DisplayOrder { get; set; }
+    /// <summary>
+    /// Gets or sets the display order
+    /// </summary>
+    public int DisplayOrder { get; set; }
 
-        /// <summary>
-        /// Gets or sets a comma-separated list of product type identifiers NOT supported by this template
-        /// </summary>
-        public string IgnoredProductTypes { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets a comma-separated list of product type identifiers NOT supported by this template
+    /// </summary>
+    public string IgnoredProductTypes { get; set; }
 }

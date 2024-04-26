@@ -1,8 +1,6 @@
-﻿@using System.Globalization
-@inject IEventPublisher eventPublisher
+﻿@inject IEventPublisher eventPublisher
 @inject LocalizationSettings localizationSettings
 @using Nop.Core.Domain.Localization
-@using Nop.Web.Framework.UI;
 @{
     //page title
     string adminPageTitle = !string.IsNullOrWhiteSpace(ViewBag.PageTitle) ? ViewBag.PageTitle + " / " : "";
@@ -34,7 +32,7 @@
     </div>
 
     <script>
-        $(document).ready(function () {
+        $(function() {
             //enable tooltips
             $('[data-toggle="tooltip"]').tooltip();
         });

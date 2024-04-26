@@ -98,7 +98,7 @@
             @if (Model.AllowPostVoting)
             {
                 <script asp-location="Footer">
-                    $(document).ready(function () {
+                    $(function() {
                         var post = '#post-vote-' + @Model.Id;
                         $(post + ' span.vote').on('click', function () {
                             var postData = {
@@ -109,7 +109,7 @@
                             $.ajax({
                                 cache: false,
                                 type: "POST",
-                                url: "@Url.Action("PostVote", "Boards")",
+                                url: "@Url.RouteUrl("PostVote")",
                                 data: postData,
                                 success: function (data, textStatus, jqXHR) {
                                     if (data.Error) {

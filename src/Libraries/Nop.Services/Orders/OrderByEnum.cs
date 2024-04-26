@@ -1,8 +1,7 @@
-﻿namespace Nop.Services.Orders
+﻿namespace Nop.Services.Orders;
+
+public enum OrderByEnum
 {
-    public enum OrderByEnum
-    {
-        OrderByQuantity = 1,
-        OrderByTotalAmount = 2
-    }
+    OrderByQuantity = 1,
+    OrderByTotalAmount = 2
 }

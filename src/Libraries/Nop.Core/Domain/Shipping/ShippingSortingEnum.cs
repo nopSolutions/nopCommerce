@@ -1,18 +1,17 @@
-﻿namespace Nop.Core.Domain.Shipping
+﻿namespace Nop.Core.Domain.Shipping;
+
+/// <summary>
+/// Represents the shipping methods' sorting
+/// </summary>
+public enum ShippingSortingEnum
 {
     /// <summary>
-    /// Represents the shipping methods' sorting
+    /// Position (display order)
     /// </summary>
-    public enum ShippingSortingEnum
-    {
-        /// <summary>
-        /// Position (display order)
-        /// </summary>
-        Position = 1,
+    Position = 1,
 
-        /// <summary>
-        /// Shipping Cost
-        /// </summary>
-        ShippingCost = 2
-    }
+    /// <summary>
+    /// Shipping Cost
+    /// </summary>
+    ShippingCost = 2
 }

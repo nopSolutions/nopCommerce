@@ -17,7 +17,7 @@
     "admin-lte": "3.2.0",
     "bootstrap": "^4.6.0",
     "bootstrap-touchspin": "4.3.0",
-    "chart.js": "^2.9.4",
+    "chart.js": "^4.4.2",
     "cldr-data": ">=36.0.1",
     "cldrjs": "^0.5.5",
     "datatables.net": "^1.10.23",
@@ -28,8 +28,8 @@
     "fine-uploader": "5.16.2",
     "globalize": "^1.7.0",
     "ionicons": "^2.0.1",
-    "jquery": "^3.6.0",
-    "jquery-migrate": "^3.4.0",
+    "jquery": "^3.7.1",
+    "jquery-migrate": "^3.4.1",
     "jquery-tageditor": "^1.0.1",
     "jquery-ui-dist": "^1.13.2",
     "jquery-ui-touch-punch": "^0.2.3",
@@ -41,7 +41,7 @@
     "overlayscrollbars": "^1.13.3",
     "shepherd.js": "^10.0.1",
     "swiper": "^8.3.2",
-    "tinymce": "^5.9.2",
+    "tinymce": "^5.10.9",
     "tinymce-langs": "1.0.0",
     "typeahead.js": "^0.11.1"
   }

@@ -1,17 +1,15 @@
-﻿using System.Collections.Generic;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
 
-namespace Nop.Web.Models.Common
+namespace Nop.Web.Models.Common;
+
+public partial record CurrencySelectorModel : BaseNopModel
 {
-    public partial record CurrencySelectorModel : BaseNopModel
+    public CurrencySelectorModel()
     {
-        public CurrencySelectorModel()
-        {
-            AvailableCurrencies = new List<CurrencyModel>();
-        }
-
-        public IList<CurrencyModel> AvailableCurrencies { get; set; }
-
-        public int CurrentCurrencyId { get; set; }
+        AvailableCurrencies = new List<CurrencyModel>();
     }
+
+    public IList<CurrencyModel> AvailableCurrencies { get; set; }
+
+    public int CurrentCurrencyId { get; set; }
 }

@@ -1,13 +1,12 @@
-﻿namespace Nop.Services.ScheduleTasks
+﻿namespace Nop.Services.ScheduleTasks;
+
+/// <summary>
+/// Represents default values related to task services
+/// </summary>
+public static partial class NopTaskDefaults
 {
     /// <summary>
-    /// Represents default values related to task services
+    /// Gets a running schedule task path
     /// </summary>
-    public static partial class NopTaskDefaults
-    {
-        /// <summary>
-        /// Gets a running schedule task path
-        /// </summary>
-        public static string ScheduleTaskPath => "scheduletask/runtask";
-    }
+    public static string ScheduleTaskPath => "scheduletask/runtask";
 }

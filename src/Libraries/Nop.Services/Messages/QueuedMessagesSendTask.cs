@@ -1,73 +1,78 @@
-﻿using System;
-using Nop.Services.Logging;
+﻿using Nop.Services.Logging;
 using Nop.Services.ScheduleTasks;
 
-namespace Nop.Services.Messages
+namespace Nop.Services.Messages;
+
+/// <summary>
+/// Represents a task for sending queued message 
+/// </summary>
+public partial class QueuedMessagesSendTask : IScheduleTask
 {
-    /// <summary>
-    /// Represents a task for sending queued message 
-    /// </summary>
-    public partial class QueuedMessagesSendTask : IScheduleTask
+    #region Fields
+
+    protected readonly IEmailAccountService _emailAccountService;
+    protected readonly IEmailSender _emailSender;
+    protected readonly ILogger _logger;
+    protected readonly IQueuedEmailService _queuedEmailService;
+    private static readonly char[] _separator = [';'];
+
+    #endregion
+
+    #region Ctor
+
+    public QueuedMessagesSendTask(IEmailAccountService emailAccountService,
+        IEmailSender emailSender,
+        ILogger logger,
+        IQueuedEmailService queuedEmailService)
     {
-        #region Fields
+        _emailAccountService = emailAccountService;
+        _emailSender = emailSender;
+        _logger = logger;
+        _queuedEmailService = queuedEmailService;
+    }
 
-        private readonly IEmailAccountService _emailAccountService;
-        private readonly IEmailSender _emailSender;
-        private readonly ILogger _logger;
-        private readonly IQueuedEmailService _queuedEmailService;
+    #endregion
 
-        #endregion
+    #region Methods
 
-        #region Ctor
+    /// <summary>
+    /// Executes a task
+    /// </summary>
+    public virtual async Task ExecuteAsync()
+    {
+        var maxTries = 3;
+        var queuedEmails = (await _queuedEmailService.SearchEmailsAsync(null, null, null, null,
+            true, true, maxTries, false, 0, int.MaxValue)).GroupBy(qe => qe.EmailAccountId);
 
-        public QueuedMessagesSendTask(IEmailAccountService emailAccountService,
-            IEmailSender emailSender,
-            ILogger logger,
-            IQueuedEmailService queuedEmailService)
+        foreach (var item in queuedEmails)
         {
-            _emailAccountService = emailAccountService;
-            _emailSender = emailSender;
-            _logger = logger;
-            _queuedEmailService = queuedEmailService;
-        }
+            var emailAccount = await _emailAccountService.GetEmailAccountByIdAsync(item.Key);
 
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// Executes a task
-        /// </summary>
-        public virtual async System.Threading.Tasks.Task ExecuteAsync()
-        {
-            var maxTries = 3;
-            var queuedEmails = await _queuedEmailService.SearchEmailsAsync(null, null, null, null,
-                true, true, maxTries, false, 0, 500);
-            foreach (var queuedEmail in queuedEmails)
+            foreach (var queuedEmail in item.Take(emailAccount.MaxNumberOfEmails))
             {
                 var bcc = string.IsNullOrWhiteSpace(queuedEmail.Bcc)
-                            ? null
-                            : queuedEmail.Bcc.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                    ? null
+                    : queuedEmail.Bcc.Split(_separator, StringSplitOptions.RemoveEmptyEntries);
                 var cc = string.IsNullOrWhiteSpace(queuedEmail.CC)
-                            ? null
-                            : queuedEmail.CC.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                    ? null
+                    : queuedEmail.CC.Split(_separator, StringSplitOptions.RemoveEmptyEntries);
 
                 try
                 {
-                    await _emailSender.SendEmailAsync(await _emailAccountService.GetEmailAccountByIdAsync(queuedEmail.EmailAccountId),
+                    await _emailSender.SendEmailAsync(emailAccount,
                         queuedEmail.Subject,
                         queuedEmail.Body,
-                       queuedEmail.From,
-                       queuedEmail.FromName,
-                       queuedEmail.To,
-                       queuedEmail.ToName,
-                       queuedEmail.ReplyTo,
-                       queuedEmail.ReplyToName,
-                       bcc,
-                       cc,
-                       queuedEmail.AttachmentFilePath,
-                       queuedEmail.AttachmentFileName,
-                       queuedEmail.AttachedDownloadId);
+                        queuedEmail.From,
+                        queuedEmail.FromName,
+                        queuedEmail.To,
+                        queuedEmail.ToName,
+                        queuedEmail.ReplyTo,
+                        queuedEmail.ReplyToName,
+                        bcc,
+                        cc,
+                        queuedEmail.AttachmentFilePath,
+                        queuedEmail.AttachmentFileName,
+                        queuedEmail.AttachedDownloadId);
 
                     queuedEmail.SentOnUtc = DateTime.UtcNow;
                 }
@@ -82,7 +87,7 @@ namespace Nop.Services.Messages
                 }
             }
         }
-
-        #endregion
     }
+
+    #endregion
 }

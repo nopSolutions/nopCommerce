@@ -37,7 +37,7 @@
     if (messagesSettings.UsePopupNotifications)
     {
         <script asp-location="Footer">
-            $(document).ready(function () {
+            $(function() {
                 var notes = {
                     'success': [
                         @Html.Raw(string.Join(", ", successMessages.Select(x => $" '{JavaScriptEncoder.Default.Encode(x)}' ")))],
@@ -54,7 +54,7 @@
     else
     {
         <script asp-location="Footer">
-            $(document).ready(function () {
+            $(function() {
                 var successMsg = [ @Html.Raw(string.Join(", ", successMessages.Select(x => $" '{JavaScriptEncoder.Default.Encode(x)}' "))) ];
                 displayBarNotification(successMsg, 'success', false);
 
@@ -70,12 +70,12 @@
 
 <div class="ajax-loading-block-window" style="display: none">
 </div>
-<div id="dialog-notifications-success" title="@T("Common.Notification")" style="display:none;">
+<div id="dialog-notifications-success" role="status" aria-live="polite" aria-atomic="true" title="@T("Common.Notification")" style="display:none;">
 </div>
-<div id="dialog-notifications-error" title="@T("Common.Error")" style="display:none;">
+<div id="dialog-notifications-error" role="alert" aria-live="assertive" aria-atomic="true" title="@T("Common.Error")" style="display:none;">
 </div>
-<div id="dialog-notifications-warning" title="@T("Common.Warning")" style="display:none;">
+<div id="dialog-notifications-warning" role="alert" aria-live="assertive" aria-atomic="true" title="@T("Common.Warning")" style="display:none;">
 </div>
-<div id="bar-notification" class="bar-notification-container" data-close="@T("Common.Close")">
+<div id="bar-notification" class="bar-notification-container" role="status" aria-live="polite" aria-atomic="true" data-close="@T("Common.Close")">
 </div>
 @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.Notifications })

@@ -102,7 +102,7 @@
                             <span asp-validation-for="@Model.AddRewardPoints.ActivationDelay"></span>
                         </div>
                         <div class="col-md-3">
-                            <nop-select asp-for="@Model.AddRewardPoints.ActivationDelayPeriodId" asp-items="@await (((RewardPointsActivatingDelayPeriod) Model.AddRewardPoints.ActivationDelayPeriodId).ToSelectListAsync())" style="max-width: 200px;" />
+                            <nop-select asp-for="@Model.AddRewardPoints.ActivationDelayPeriodId" asp-items="@(await ((RewardPointsActivatingDelayPeriod) Model.AddRewardPoints.ActivationDelayPeriodId).ToSelectListAsync())" style="max-width: 200px;" />
                             <span asp-validation-for="@Model.AddRewardPoints.ActivationDelayPeriodId"></span>
                         </div>
                     </div>
@@ -115,7 +115,7 @@
             </div>
         </div>
         <script>
-        $(document).ready(function () {
+        $(function() {
             $("#@Html.IdFor(model => Model.AddRewardPoints.ActivatePointsImmediately)").click(activatePointsImmediately);
             activatePointsImmediately();
             $('#addRewardPoints').click(function () {
@@ -142,12 +142,12 @@
                             //reload grid
                             updateTable('#customer-rewardpoints-grid');
 
-                            $("#@Html.IdFor(model => model.AddRewardPoints.Points)").data("kendoNumericTextBox").value(0);
+                            $("#@Html.IdFor(model => model.AddRewardPoints.Points)").value(0);
                             $("#@Html.IdFor(model => model.AddRewardPoints.Message)").val('@JavaScriptEncoder.Default.Encode(Model.AddRewardPoints.Message)');
                             $("#@Html.IdFor(model => model.AddRewardPoints.StoreId)").val(@Model.AddRewardPoints.StoreId);
                             $("#@Html.IdFor(model => model.AddRewardPoints.ActivationDelayPeriodId)").val(@Model.AddRewardPoints.ActivationDelayPeriodId);
-                            $("#@Html.IdFor(model => model.AddRewardPoints.ActivationDelay)").data("kendoNumericTextBox").value(@Model.AddRewardPoints.ActivationDelay);
-                            $("#@Html.IdFor(model => model.AddRewardPoints.PointsValidity)").data("kendoNumericTextBox").value(0);
+                            $("#@Html.IdFor(model => model.AddRewardPoints.ActivationDelay)").value(@Model.AddRewardPoints.ActivationDelay);
+                            $("#@Html.IdFor(model => model.AddRewardPoints.PointsValidity)").value(0);
                             $("#@Html.IdFor(model => model.AddRewardPoints.ActivatePointsImmediately)").prop('checked', @(Model.AddRewardPoints.ActivatePointsImmediately.ToString().ToLowerInvariant()));
 
                             activatePointsImmediately();

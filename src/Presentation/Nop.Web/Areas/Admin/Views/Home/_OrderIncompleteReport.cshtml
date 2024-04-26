@@ -26,41 +26,23 @@
         </div>
     </div>
     <script>
-        $(document).ready(function () {
+        $(function() {
+            var collapsed = !$('#@cardId').hasClass('collapsed-card');
+            if (collapsed) {
+                $('#orderIncompleteReport').load('@Url.Action("GetOrderIncomplete", "Home")');
+            }
+
             $('#@cardId').on('click', 'button[data-card-widget="collapse"]', function () {
-                var collapsed = !$('#@cardId').hasClass('collapsed-card');
+                collapsed = !$('#@cardId').hasClass('collapsed-card');
                 saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hideCardAttributeName', collapsed);
+                if (!collapsed){
+                    $('#orderIncompleteReport').load('@Url.Action("GetOrderIncomplete", "Home")');
+                }
             });
         });
     </script>
     <div class="card-body">
-        @await Html.PartialAsync("Table", new DataTablesModel
-        {
-            Name = "incomplete-order-report-grid",
-            UrlRead = new DataUrl("OrderIncompleteReportList", "Order", null),
-            Length = int.MaxValue,
-            Paging = false,
-            Info = false,
-            ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(OrderIncompleteReportModel.Item))
-                {
-                    Title = T("Admin.SalesReport.Incomplete.Item").Text
-                },
-                new ColumnProperty(nameof(OrderIncompleteReportModel.Total))
-                {
-                    Title = T("Admin.SalesReport.Incomplete.Total").Text,
-                    Width = "50"
-                },
-                new ColumnProperty(nameof(OrderIncompleteReportModel.Count))
-                {
-                    Title = T("Admin.SalesReport.Incomplete.Count").Text,
-                    Width = "120",
-                    ClassName =  NopColumnClassDefaults.Button,
-                    Render = new RenderCustom("renderColumnOrderIncompleteReportCount")
-                }
-            }
-        })
+        <div id="orderIncompleteReport"></div>
         <script>
             function renderColumnOrderIncompleteReportCount(data, type, row, meta) {
                 return '<a class="btn btn-default" href="' + row.ViewLink +'"><i class="far fa-eye"></i>' + row.Count + ' - @T("Admin.SalesReport.Incomplete.View").Text</a>';

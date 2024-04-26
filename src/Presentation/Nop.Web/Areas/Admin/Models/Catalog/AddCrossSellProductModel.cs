@@ -1,27 +1,25 @@
-﻿using System.Collections.Generic;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
 
-namespace Nop.Web.Areas.Admin.Models.Catalog
+namespace Nop.Web.Areas.Admin.Models.Catalog;
+
+/// <summary>
+/// Represents a cross-sell product model to add to the product
+/// </summary>
+public partial record AddCrossSellProductModel : BaseNopModel
 {
-    /// <summary>
-    /// Represents a cross-sell product model to add to the product
-    /// </summary>
-    public partial record AddCrossSellProductModel : BaseNopModel
+    #region Ctor
+
+    public AddCrossSellProductModel()
     {
-        #region Ctor
-
-        public AddCrossSellProductModel()
-        {
-            SelectedProductIds = new List<int>();
-        }
-        #endregion
-
-        #region Properties
-
-        public int ProductId { get; set; }
-
-        public IList<int> SelectedProductIds { get; set; }
-
-        #endregion
+        SelectedProductIds = new List<int>();
     }
+    #endregion
+
+    #region Properties
+
+    public int ProductId { get; set; }
+
+    public IList<int> SelectedProductIds { get; set; }
+
+    #endregion
 }

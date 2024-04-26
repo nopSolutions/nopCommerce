@@ -1,14 +1,13 @@
 ﻿
-namespace Nop.Web.Framework.Models
+namespace Nop.Web.Framework.Models;
+
+/// <summary>
+/// Represents base nopCommerce entity model
+/// </summary>
+public partial record BaseNopEntityModel : BaseNopModel
 {
     /// <summary>
-    /// Represents base nopCommerce entity model
+    /// Gets or sets model identifier
     /// </summary>
-    public partial record BaseNopEntityModel : BaseNopModel
-    {
-        /// <summary>
-        /// Gets or sets model identifier
-        /// </summary>
-        public virtual int Id { get; set; }
-    }
+    public virtual int Id { get; set; }
 }

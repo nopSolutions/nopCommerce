@@ -2,13 +2,9 @@
 @inject IWebHelper webHelper
 @inject LocalizationSettings localizationSettings
 @inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment WebHostEnvironment
-
-@using System.Globalization
 @using Nop.Core.Domain.Localization
 
 @{
-    //Kendo UI
-    var kendoVersion = "2020.1.406";
     var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl && !localizationSettings.IgnoreRtlPropertyForAdminArea;
 
     var culture = CultureInfo.CurrentCulture;
@@ -37,9 +33,6 @@
 <link rel="stylesheet" href="~/lib_npm/jquery-ui-dist/jquery-ui.min.css"/>
 <link rel="stylesheet" href="~/lib_npm/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css"/>
 <link rel="stylesheet" href="~/lib_npm/@("@fortawesome")/fontawesome-free/css/all.min.css"/>
-<link rel="stylesheet" href="~/lib/kendo/@kendoVersion/styles/web/kendo.common.min.css"/>
-<link rel="stylesheet" href="~/lib/kendo/@kendoVersion/styles/web/kendo.default.min.css"/>
-<link rel="stylesheet" href="~/lib/kendo/@kendoVersion/styles/web/kendo.rtl.min.css"/>
 <link rel="stylesheet" href="~/lib_npm/datatables.net-bs4/css/dataTables.bootstrap4.min.css"/>
 <link rel="stylesheet" href="~/lib_npm/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css"/>
 <link rel="stylesheet" href="~/lib_npm/overlayscrollbars/css/OverlayScrollbars.min.css"/>
@@ -56,6 +49,8 @@ else
     <link rel="stylesheet" href="~/css/admin/styles.css"/>
 }
 
+<link rel="stylesheet" href="~/lib_npm/admin-lte/plugins/select2/css/select2.min.css">
+
 @NopHtml.GenerateCssFiles()
 
 @* scripts *@
@@ -67,6 +62,7 @@ else
 <script src="~/lib_npm/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="~/lib_npm/jquery-validation/jquery.validate.min.js"></script>
 <script src="~/lib_npm/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/lib_npm/admin-lte/plugins/select2/js/select2.full.min.js"></script>
 
 @* cldr scripts (needed for globalize) *@
 <script src="~/lib_npm/cldrjs/cldr.js"></script>
@@ -79,23 +75,12 @@ else
 <script src="~/lib_npm/globalize/globalize/date.js"></script>
 <script src="~/lib_npm/globalize/globalize/currency.js"></script>
 
-@* this file can be downloaded from :
-    https://github.com/johnnyreilly/jquery-validation-globalize *@
-<script src="~/lib/jquery-validation-globalize/jquery.validate.globalize.min.js"></script>
-
 <script src="~/lib_npm/jquery-migrate/jquery-migrate.min.js"></script>
 <script src="~/lib_npm/typeahead.js/typeahead.bundle.min.js"></script>
 <script src="~/js/admin.common.js"></script>
 <script src="~/js/admin.navigation.js"></script>
 <script src="~/js/admin.search.js"></script>
-<script src="~/lib/kendo/@kendoVersion/js/kendo.ui.core.min.js"></script>
 
-@{ var fileInfo = fileProvider.GetFileInfo($"{WebHostEnvironment.WebRootPath}/lib/kendo/{kendoVersion}/js/messages/kendo.messages.{uiCulture.Name}.min.js"); }
-@* exclude because it has bugs for Chinese languages that cause the bundle to crash *@
-<script asp-exclude-from-bundle="true" src="~/lib/kendo/@kendoVersion/js/messages/kendo.messages.@(fileInfo.Exists ? uiCulture.Name : NopCommonDefaults.DefaultLanguageCulture).min.js"></script>
-
-
-<script src="~/lib/kendo/@kendoVersion/js/cultures/kendo.culture.@(culture.Name).min.js"></script>
 <script src="~/lib_npm/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="~/lib_npm/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
 <script src="~/lib_npm/moment/min/moment-with-locales.min.js"></script>
@@ -123,9 +108,6 @@ else
         }).then(Globalize.load).then(function () {
             Globalize.locale(culture);
         });
-</script>
-<script asp-location="Footer">
-        kendo.culture("@(culture.Name)");
 </script>
 
 @NopHtml.GenerateScripts(ResourceLocation.Head)

@@ -27,7 +27,7 @@
             <nop-select asp-for="LanguageCulture" asp-items="@cultures" />
             <span asp-validation-for="LanguageCulture"></span>
             <script>
-                $(document).ready(function() {
+                $(function() {
                     $('#@Html.IdFor(model => model.LanguageCulture)').on('input change', function () {
                         warningValidation('@Url.Action("LanguageCultureWarning")', '@Html.NameFor(model => model.LanguageCulture)', { currentCulture: '@(Model.LanguageCulture)', changedCulture: $(this).val() });
                     });
@@ -49,29 +49,23 @@
             <nop-label asp-for="FlagImageFileName" />
         </div>
         <div class="col-md-9">
-            <nop-editor asp-for="FlagImageFileName" asp-render-form-control-class="false" />
+            <div class="select2-blue">
+                <nop-select asp-for="FlagImageFileName" asp-items="Model.AvailableFlagImages" class="form-control" data-dropdown-css-class="select2-blue"/>
+            </div>
             <span asp-validation-for="FlagImageFileName"></span>
             <script>
                 $(function() {
-                    $('#FlagImageFileName').kendoDropDownList({
-                        dataTextField: "Text",
-                        dataValueField: "Value",
-                        valueTemplate:
-                            '<span class="image" style="background-image: url(\'@Url.Content("~/images/flags/#:data.Text#")\'); width: 16px; height: 11px;"></span><span>#:data.Value#</span>',
-                        template:
-                            '<span class="image" style="background-image: url(\'@Url.Content("~/images/flags/#:data.Text#")\'); width: 16px; height: 11px;"></span><span>#:data.Value#</span>',
-                        dataSource: {
-                            transport: {
-                                type: "json",
-                                read: {
-                                    url: "@Html.Raw(Url.Action("GetAvailableFlagFileNames", "Language"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: addAntiForgeryToken
-                                }
+                    $('#FlagImageFileName').select2({
+                        templateResult: function (data) {
+                            if (data.loading) {
+                                return data.text;
                             }
+                            return $('<span class="image" style="display:inline-block;margin-right:4px;background-image: url(\'@Url.Content("~/images/flags/")' + data.text + '\'); width: 16px; height: 11px;"></span><span>' + data.id + '</span>');
+                        },
+                        templateSelection: function (data, container) {
+                            return $('<span class="image" style="display:inline-block;margin-right:4px;background-image: url(\'@Url.Content("~/images/flags/")' + data.text + '\'); width: 16px; height: 11px;"></span><span>' + data.text + '</span>');
                         }
-                    }).data("kendoDropDownList");
+                    });
                 });
             </script>
         </div>
@@ -103,24 +97,17 @@
                 <div class="col-md-3">
                     <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
                     <script>
-                        $(document).ready(function() {
-                            var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
-                            storesIdsInput.setOptions({
-                                autoClose: false,
-                                filter: "contains"
-                            });
-
-                            @if (Model.AvailableStores.Count == 0)
-                            {
+                        $(function() {
+                            var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').select2({
+                                closeOnSelect: false,
+                                @if (!Model.AvailableStores.Any())
+                                {
                                 <text>
-                        storesIdsInput.setOptions({
-                            enable: false,
-                            placeholder: 'No stores available'
-                        });
-                        storesIdsInput._placeholder();
-                        storesIdsInput._enable();
-                        </text>
-                            }
+                                disabled: true,
+                                placeholder: 'No stores available',
+                                </text>
+                                }
+                            });
                         });
                     </script>
                 </div>

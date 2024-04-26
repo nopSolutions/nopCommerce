@@ -2,28 +2,30 @@
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
-namespace Nop.Web.Areas.Admin.Models.Messages
+namespace Nop.Web.Areas.Admin.Models.Messages;
+
+/// <summary>
+/// Represents a newsletter subscription model
+/// </summary>
+public partial record NewsletterSubscriptionModel : BaseNopEntityModel
 {
-    /// <summary>
-    /// Represents a newsletter subscription model
-    /// </summary>
-    public partial record NewsletterSubscriptionModel : BaseNopEntityModel
-    {
-        #region Properties
+    #region Properties
 
-        [DataType(DataType.EmailAddress)]
-        [NopResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.Fields.Email")]
-        public string Email { get; set; }
+    [DataType(DataType.EmailAddress)]
+    [NopResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.Fields.Email")]
+    public string Email { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.Fields.Active")]
-        public bool Active { get; set; }
+    [NopResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.Fields.Active")]
+    public bool Active { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.Fields.Store")]
-        public string StoreName { get; set; }
+    [NopResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.Fields.Store")]
+    public string StoreName { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.Fields.CreatedOn")]
-        public string CreatedOn { get; set; }
+    [NopResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.Fields.Language")]
+    public string LanguageName { get; set; }
 
-        #endregion
-    }
+    [NopResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.Fields.CreatedOn")]
+    public string CreatedOn { get; set; }
+
+    #endregion
 }

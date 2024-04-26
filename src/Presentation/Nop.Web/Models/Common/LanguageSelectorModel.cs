@@ -1,19 +1,17 @@
-﻿using System.Collections.Generic;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
 
-namespace Nop.Web.Models.Common
+namespace Nop.Web.Models.Common;
+
+public partial record LanguageSelectorModel : BaseNopModel
 {
-    public partial record LanguageSelectorModel : BaseNopModel
+    public LanguageSelectorModel()
     {
-        public LanguageSelectorModel()
-        {
-            AvailableLanguages = new List<LanguageModel>();
-        }
-
-        public IList<LanguageModel> AvailableLanguages { get; set; }
-
-        public int CurrentLanguageId { get; set; }
-
-        public bool UseImages { get; set; }
+        AvailableLanguages = new List<LanguageModel>();
     }
+
+    public IList<LanguageModel> AvailableLanguages { get; set; }
+
+    public int CurrentLanguageId { get; set; }
+
+    public bool UseImages { get; set; }
 }

@@ -1,14 +1,12 @@
-﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
-namespace Nop.Plugin.Widgets.FacebookPixel.Domain
+namespace Nop.Plugin.Widgets.FacebookPixel.Domain;
+
+public class ConversionsEvent
 {
-    public class ConversionsEvent
-    {
-        /// <summary>
-        /// Gets or sets an array of server event objects
-        /// </summary>
-        [JsonProperty(PropertyName = "data")]
-        public List<ConversionsEventDatum> Data { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets an array of server event objects
+    /// </summary>
+    [JsonProperty(PropertyName = "data")]
+    public List<ConversionsEventDatum> Data { get; set; }
 }

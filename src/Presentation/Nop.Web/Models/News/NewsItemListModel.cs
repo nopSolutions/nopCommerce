@@ -1,18 +1,16 @@
-﻿using System.Collections.Generic;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
 
-namespace Nop.Web.Models.News
+namespace Nop.Web.Models.News;
+
+public partial record NewsItemListModel : BaseNopModel
 {
-    public partial record NewsItemListModel : BaseNopModel
+    public NewsItemListModel()
     {
-        public NewsItemListModel()
-        {
-            PagingFilteringContext = new NewsPagingFilteringModel();
-            NewsItems = new List<NewsItemModel>();
-        }
-
-        public int WorkingLanguageId { get; set; }
-        public NewsPagingFilteringModel PagingFilteringContext { get; set; }
-        public IList<NewsItemModel> NewsItems { get; set; }
+        PagingFilteringContext = new NewsPagingFilteringModel();
+        NewsItems = new List<NewsItemModel>();
     }
+
+    public int WorkingLanguageId { get; set; }
+    public NewsPagingFilteringModel PagingFilteringContext { get; set; }
+    public IList<NewsItemModel> NewsItems { get; set; }
 }

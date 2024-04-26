@@ -1,123 +1,119 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
 using Nop.Data;
 using Nop.Services.Customers;
 
-namespace Nop.Web.Framework.Mvc.Filters
+namespace Nop.Web.Framework.Mvc.Filters;
+
+/// <summary>
+/// Represents filter attribute that validates customer password expiration
+/// </summary>
+public sealed class ValidatePasswordAttribute : TypeFilterAttribute
 {
+    #region Ctor
+
     /// <summary>
-    /// Represents filter attribute that validates customer password expiration
+    /// Create instance of the filter attribute
     /// </summary>
-    public sealed class ValidatePasswordAttribute : TypeFilterAttribute
+    public ValidatePasswordAttribute() : base(typeof(ValidatePasswordFilter))
     {
+    }
+
+    #endregion
+
+    #region Nested filter
+
+    /// <summary>
+    /// Represents a filter that validates customer password expiration
+    /// </summary>
+    private class ValidatePasswordFilter : IAsyncActionFilter
+    {
+        #region Fields
+
+        protected readonly ICustomerService _customerService;
+        protected readonly IWebHelper _webHelper;
+        protected readonly IWorkContext _workContext;
+
+        #endregion
+
         #region Ctor
 
-        /// <summary>
-        /// Create instance of the filter attribute
-        /// </summary>
-        public ValidatePasswordAttribute() : base(typeof(ValidatePasswordFilter))
+        public ValidatePasswordFilter(ICustomerService customerService,
+            IWebHelper webHelper,
+            IWorkContext workContext)
         {
+            _customerService = customerService;
+            _webHelper = webHelper;
+            _workContext = workContext;
         }
 
         #endregion
 
-        #region Nested filter
+        #region Utilities
 
         /// <summary>
-        /// Represents a filter that validates customer password expiration
+        /// Called asynchronously before the action, after model binding is complete.
         /// </summary>
-        private class ValidatePasswordFilter : IAsyncActionFilter
+        /// <param name="context">A context for action filters</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        private async Task ValidatePasswordAsync(ActionExecutingContext context)
         {
-            #region Fields
+            ArgumentNullException.ThrowIfNull(context);
 
-            private readonly ICustomerService _customerService;
-            private readonly IWebHelper _webHelper;
-            private readonly IWorkContext _workContext;
+            if (context.HttpContext.Request == null)
+                return;
 
-            #endregion
+            //ignore AJAX requests
+            if (_webHelper.IsAjaxRequest(context.HttpContext.Request))
+                return;
 
-            #region Ctor
+            if (!DataSettingsManager.IsDatabaseInstalled())
+                return;
 
-            public ValidatePasswordFilter(ICustomerService customerService,
-                IWebHelper webHelper,
-                IWorkContext workContext)
-            {
-                _customerService = customerService;
-                _webHelper = webHelper;
-                _workContext = workContext;
-            }
+            //get action and controller names
+            var actionDescriptor = context.ActionDescriptor as ControllerActionDescriptor;
+            var actionName = actionDescriptor?.ActionName;
+            var controllerName = actionDescriptor?.ControllerName;
 
-            #endregion
+            if (string.IsNullOrEmpty(actionName) || string.IsNullOrEmpty(controllerName))
+                return;
 
-            #region Utilities
+            //don't validate on the 'Change Password' page
+            if (controllerName.Equals("Customer", StringComparison.InvariantCultureIgnoreCase) &&
+                actionName.Equals("ChangePassword", StringComparison.InvariantCultureIgnoreCase))
+                return;
 
-            /// <summary>
-            /// Called asynchronously before the action, after model binding is complete.
-            /// </summary>
-            /// <param name="context">A context for action filters</param>
-            /// <returns>A task that represents the asynchronous operation</returns>
-            private async Task ValidatePasswordAsync(ActionExecutingContext context)
-            {
-                if (context == null)
-                    throw new ArgumentNullException(nameof(context));
+            //check password expiration
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (!await _customerService.IsPasswordExpiredAsync(customer))
+                return;
 
-                if (context.HttpContext.Request == null)
-                    return;
+            var returnUrl = _webHelper.GetRawUrl(context.HttpContext.Request);
+            //redirect to ChangePassword page if expires
+            context.Result = new RedirectToRouteResult("CustomerChangePassword", new { returnUrl = returnUrl });
+        }
 
-                //ignore AJAX requests
-                if (_webHelper.IsAjaxRequest(context.HttpContext.Request))
-                    return;
+        #endregion
 
-                if (!DataSettingsManager.IsDatabaseInstalled())
-                    return;
+        #region Methods
 
-                //get action and controller names
-                var actionDescriptor = context.ActionDescriptor as ControllerActionDescriptor;
-                var actionName = actionDescriptor?.ActionName;
-                var controllerName = actionDescriptor?.ControllerName;
-
-                if (string.IsNullOrEmpty(actionName) || string.IsNullOrEmpty(controllerName))
-                    return;
-
-                //don't validate on the 'Change Password' page
-                if (controllerName.Equals("Customer", StringComparison.InvariantCultureIgnoreCase) &&
-                    actionName.Equals("ChangePassword", StringComparison.InvariantCultureIgnoreCase))
-                    return;
-
-                //check password expiration
-                var customer = await _workContext.GetCurrentCustomerAsync();
-                if (!await _customerService.IsPasswordExpiredAsync(customer))
-                    return;
-
-                var returnUrl = _webHelper.GetRawUrl(context.HttpContext.Request);
-                //redirect to ChangePassword page if expires
-                context.Result = new RedirectToRouteResult("CustomerChangePassword", new { returnUrl = returnUrl });
-            }
-
-            #endregion
-
-            #region Methods
-
-            /// <summary>
-            /// Called asynchronously before the action, after model binding is complete.
-            /// </summary>
-            /// <param name="context">A context for action filters</param>
-            /// <param name="next">A delegate invoked to execute the next action filter or the action itself</param>
-            /// <returns>A task that represents the asynchronous operation</returns>
-            public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
-            {
-                await ValidatePasswordAsync(context);
-                if (context.Result == null)
-                    await next();
-            }
-
-            #endregion
+        /// <summary>
+        /// Called asynchronously before the action, after model binding is complete.
+        /// </summary>
+        /// <param name="context">A context for action filters</param>
+        /// <param name="next">A delegate invoked to execute the next action filter or the action itself</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+        {
+            await ValidatePasswordAsync(context);
+            if (context.Result == null)
+                await next();
         }
 
         #endregion
     }
+
+    #endregion
 }

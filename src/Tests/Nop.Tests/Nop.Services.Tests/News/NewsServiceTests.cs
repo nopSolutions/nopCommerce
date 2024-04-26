@@ -1,86 +1,84 @@
-﻿using System;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core.Domain.News;
 using Nop.Services.News;
 using NUnit.Framework;
 
-namespace Nop.Tests.Nop.Services.Tests.News
+namespace Nop.Tests.Nop.Services.Tests.News;
+
+[TestFixture]
+public class NewsServiceTests : ServiceTest
 {
-    [TestFixture]
-    public class NewsServiceTests : ServiceTest
+    private INewsService _newsService;
+
+    [OneTimeSetUp]
+    public void SetUp()
     {
-        private INewsService _newsService;
+        _newsService = GetService<INewsService>();
+    }
 
-        [OneTimeSetUp]
-        public void SetUp()
+    [Test]
+    public void ShouldBeAvailableWhenStartDateIsNotSet()
+    {
+        var newsItem = new NewsItem
         {
-            _newsService = GetService<INewsService>();
-        }
+            StartDateUtc = null
+        };
 
-        [Test]
-        public void ShouldBeAvailableWhenStartDateIsNotSet()
+        _newsService.IsNewsAvailable(newsItem, new DateTime(2010, 01, 03)).Should().BeTrue();
+    }
+
+    [Test]
+    public void ShouldBeAvailableWhenStartDateIsLessThanSomeDate()
+    {
+        var newsItem = new NewsItem
         {
-            var newsItem = new NewsItem
-            {
-                StartDateUtc = null
-            };
+            StartDateUtc = new DateTime(2010, 01, 02)
+        };
 
-            _newsService.IsNewsAvailable(newsItem, new DateTime(2010, 01, 03)).Should().BeTrue();
-        }
+        _newsService.IsNewsAvailable(newsItem, new DateTime(2010, 01, 03)).Should().BeTrue();
+    }
 
-        [Test]
-        public void ShouldBeAvailableWhenStartDateIsLessThanSomeDate()
+    [Test]
+    public void ShouldNotBeAvailableWhenStartDateIsGreaterThanSomeDate()
+    {
+        var newsItem = new NewsItem
         {
-            var newsItem = new NewsItem
-            {
-                StartDateUtc = new DateTime(2010, 01, 02)
-            };
+            StartDateUtc = new DateTime(2010, 01, 02)
+        };
 
-            _newsService.IsNewsAvailable(newsItem, new DateTime(2010, 01, 03)).Should().BeTrue();
-        }
+        _newsService.IsNewsAvailable(newsItem, new DateTime(2010, 01, 01)).Should().BeFalse();
+    }
 
-        [Test]
-        public void ShouldNotBeAvailableWhenStartDateIsGreaterThanSomeDate()
+    [Test]
+    public void ShouldBeAvailableWhenEndDateIsNotSet()
+    {
+        var newsItem = new NewsItem
         {
-            var newsItem = new NewsItem
-            {
-                StartDateUtc = new DateTime(2010, 01, 02)
-            };
+            EndDateUtc = null
+        };
 
-            _newsService.IsNewsAvailable(newsItem, new DateTime(2010, 01, 01)).Should().BeFalse();
-        }
+        _newsService.IsNewsAvailable(newsItem, new DateTime(2010, 01, 03)).Should().BeTrue();
+    }
 
-        [Test]
-        public void ShouldBeAvailableWhenEndDateIsNotSet()
+    [Test]
+    public void ShouldBeAvailableWhenEndDateIsGreaterThanSomeDate()
+    {
+        var newsItem = new NewsItem
         {
-            var newsItem = new NewsItem
-            {
-                EndDateUtc = null
-            };
+            EndDateUtc = new DateTime(2010, 01, 02)
+        };
 
-            _newsService.IsNewsAvailable(newsItem, new DateTime(2010, 01, 03)).Should().BeTrue();
-        }
+        _newsService.IsNewsAvailable(newsItem, new DateTime(2010, 01, 01)).Should().BeTrue();
+    }
 
-        [Test]
-        public void ShouldBeAvailableWhenEndDateIsGreaterThanSomeDate()
+    [Test]
+    public void ShouldNotBeAvailableWhenEndDateIsLessThanSomeDate()
+    {
+        var newsItem = new NewsItem
         {
-            var newsItem = new NewsItem
-            {
-                EndDateUtc = new DateTime(2010, 01, 02)
-            };
+            EndDateUtc = new DateTime(2010, 01, 02)
+        };
 
-            _newsService.IsNewsAvailable(newsItem, new DateTime(2010, 01, 01)).Should().BeTrue();
-        }
-
-        [Test]
-        public void ShouldNotBeAvailableWhenEndDateIsLessThanSomeDate()
-        {
-            var newsItem = new NewsItem
-            {
-                EndDateUtc = new DateTime(2010, 01, 02)
-            };
-
-            _newsService.IsNewsAvailable(newsItem, new DateTime(2010, 01, 03)).Should().BeFalse();
-        }
+        _newsService.IsNewsAvailable(newsItem, new DateTime(2010, 01, 03)).Should().BeFalse();
     }
 }

@@ -1,7 +1,5 @@
 ﻿@model NopCommerceNewsModel
 @inject IWorkContext workContext
-
-@using Nop.Core
 @inject Nop.Services.Common.IGenericAttributeService genericAttributeService
 
 @{
@@ -59,7 +57,7 @@
             </div>
 
             <script>
-            $(document).ready(function () {
+            $(function() {
                 $('#@cardId').on('click', 'button[data-widget="collapse"]', function () {
                     var collapsed = !$('#@cardId').hasClass('collapsed-box');
                     saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hideCardAttributeName', collapsed);

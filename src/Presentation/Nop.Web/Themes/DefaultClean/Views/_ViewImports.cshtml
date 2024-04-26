@@ -6,7 +6,6 @@
 @*we remove the default InputTagHelper to prevent the checkbox duplicating: https://stackoverflow.com/questions/42544961/asp-net-core-custom-input-tag-helper-rendering-duplicate-checkboxes*@
 @removeTagHelper Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper, Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, Nop.Web.Framework
-@addTagHelper *, MiniProfiler.AspNetCore.Mvc
 
 @using System.Globalization;
 @using System.Text.Encodings.Web
@@ -19,6 +18,7 @@
 @using Nop.Web.Framework.Extensions
 @using Nop.Web.Framework.Infrastructure
 @using Nop.Web.Framework.Models
+@using Nop.Web.Framework.Models.Cms
 @using Nop.Web.Framework.Mvc.Routing
 @using Nop.Web.Framework.Security.Captcha
 @using Nop.Web.Framework.Security.Honeypot
@@ -28,7 +28,6 @@
 @using Nop.Web.Models.Boards
 @using Nop.Web.Models.Catalog
 @using Nop.Web.Models.Checkout
-@using Nop.Web.Models.Cms
 @using Nop.Web.Models.Common
 @using Nop.Web.Models.Customer
 @using Nop.Web.Models.Media

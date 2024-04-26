@@ -57,13 +57,13 @@
                         </div>
                         @if (Model.AddNewComment.DisplayCaptcha)
                         {
-                            <nop-captcha />
+                            <nop-captcha action-name="NewsCommentAdd" />
                         }
                     </div>
                     @if (!Model.PreventNotRegisteredUsersToLeaveComments)
                     {
                         <div class="buttons">
-                            <button type="submit" name="add-comment" data-action="NewsCommentAdd" class="button-1 news-item-add-comment-button">@T("News.Comments.SubmitButton")</button>
+                            <button type="submit" name="add-comment" class="button-1 news-item-add-comment-button">@T("News.Comments.SubmitButton")</button>
                         </div>
                     }
                     else

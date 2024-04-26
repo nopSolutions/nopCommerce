@@ -4,7 +4,7 @@
 <script src="~/lib_npm/farbstastic/farbtastic.min.js" asp-location="Head"></script>
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
-<input asp-for="CheckoutAttributeId" type="hidden" />
+<input asp-for="AttributeId" type="hidden" />
 <input asp-for="DisplayColorSquaresRgb" type="hidden" />
 
 @if (ViewBag.RefreshPage == true)
@@ -64,7 +64,7 @@
                                 <nop-editor asp-for="ColorSquaresRgb"/>
                                 <div id="color-picker"></div>
                                 <script>
-                                    $(document).ready(function(){
+                                    $(function(){
                                         $('#color-picker').farbtastic('#@Html.IdFor(model => model.ColorSquaresRgb)');
                     });
                                 </script>

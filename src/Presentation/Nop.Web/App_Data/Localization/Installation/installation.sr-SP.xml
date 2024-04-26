@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="Српски" IsDefault="false" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>Адреса е-поште администратора</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>Унесите адресу е-поште администратора</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>Корисничка лозинка администратора</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>Унесите лозинку администратора</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>Рачун '{0}' није одобрен са дозволом за промену у мапи '{1}'. конфигуришите ове дозволе.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>Рачун '{0}' није одобрен са дозволом за измену датотеке '{1}'. конфигуришите ове дозволе.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>Потврдите нову лозинку</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>Унесите лозинку за потврду</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>Вез за везу</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>Потребан је низ СКЛ веза</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>Погрешан формат SQL везе</Value>
+  </LocaleResource>
+  <LocaleResource Name="Country">
+    <Value>Country</Value>
+  </LocaleResource>
+  <LocaleResource Name="CountrySelect">
+    <Value>Select your country...</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>Креирајте базу података ако не постоји</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>Креирајте узорке података</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>Наведите прилагођено упоређивање</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>База података</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>Дошло је до грешке током креирања базе података: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>Информације о бази података</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>Име базе података</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>База података не постоји или немате дозволе за повезивање с њом</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>Изаберите провајдера података</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>Ако су вам потребне информације о томе како користити nopCommerce, посетите</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>одељак са документацијом на nopCommerce.com</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>Пример</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>Инсталирај</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>Инсталирање nopCommerce...</Value>
+  </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>Користите интегрисану Windows аутентификација</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>Лозинка не одговара</Value>
+  </LocaleResource>
+  <LocaleResource Name="PostgreSQL">
+    <Value>PostgreSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>Унесите сирови низ везе (напредно)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>Поново покрените инсталацију</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>Кликните да бисте поново покренули поступак инсталације (очистите све предмемориране вредности)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartProgress">
+    <Value>Поновно покретање…</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>Назив сервера</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>Назив сервера је обавезан</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>Подешавање није успело: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPassword">
+    <Value>SQL лозинка</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPasswordRequired">
+    <Value>SQL лозинка је обавезна</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Сервер</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsername">
+    <Value>SQL корисничко име</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsernameRequired">
+    <Value>SQL корисничко име је обавезно</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>Информације о продавцу</Value>
+  </LocaleResource>
+  <LocaleResource Name="SubscribeNewsletters">
+    <Value>Subscribe to nopCommerce newsletter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>nopCommerce инсталација</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>Да бисте довршили овај чаробњак, морате знати неке информације у вези са вашим сервером базе података ("конективни низ"). По потреби контактирајте свог даватеља интернетских услуга. Ако инсталирате на локалну машину или сервер, можда ће вам требати информације са вашег Администратор система.</Value>
+  </LocaleResource>
+</Language>

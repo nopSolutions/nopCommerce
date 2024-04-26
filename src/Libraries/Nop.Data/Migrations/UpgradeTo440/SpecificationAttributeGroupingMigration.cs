@@ -1,37 +1,30 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Catalog;
-using Nop.Data.Mapping;
 using Nop.Data.Extensions;
+using Nop.Data.Mapping;
 
-namespace Nop.Data.Migrations.UpgradeTo440
+namespace Nop.Data.Migrations.UpgradeTo440;
+
+[NopSchemaMigration("2020/03/08 11:26:08:9037680", "Specification attribute grouping")]
+public class SpecificationAttributeGroupingMigration : ForwardOnlyMigration
 {
-    [NopMigration("2020/03/08 11:26:08:9037680", "Specification attribute grouping", MigrationProcessType.Update)]
-    public class SpecificationAttributeGroupingMigration : MigrationBase
+    #region Methods
+
+    /// <summary>
+    /// Collect the UP migration expressions
+    /// </summary>
+    public override void Up()
     {
+        if (!Schema.Table(NameCompatibilityManager.GetTableName(typeof(SpecificationAttributeGroup))).Exists())
+            Create.TableFor<SpecificationAttributeGroup>();
 
-        #region Methods
-
-        /// <summary>
-        /// Collect the UP migration expressions
-        /// </summary>
-        public override void Up()
+        if (!Schema.Table(NameCompatibilityManager.GetTableName(typeof(SpecificationAttribute))).Column(nameof(SpecificationAttribute.SpecificationAttributeGroupId)).Exists())
         {
-            if (!Schema.Table(NameCompatibilityManager.GetTableName(typeof(SpecificationAttributeGroup))).Exists())
-                Create.TableFor<SpecificationAttributeGroup>();
-
-            if (!Schema.Table(NameCompatibilityManager.GetTableName(typeof(SpecificationAttribute))).Column(nameof(SpecificationAttribute.SpecificationAttributeGroupId)).Exists())
-            {
-                //add new column
-                Alter.Table(NameCompatibilityManager.GetTableName(typeof(SpecificationAttribute)))
-                    .AddColumn(nameof(SpecificationAttribute.SpecificationAttributeGroupId)).AsInt32().Nullable().ForeignKey<SpecificationAttributeGroup>();
-            }
+            //add new column
+            Alter.Table(NameCompatibilityManager.GetTableName(typeof(SpecificationAttribute)))
+                .AddColumn(nameof(SpecificationAttribute.SpecificationAttributeGroupId)).AsInt32().Nullable().ForeignKey<SpecificationAttributeGroup>();
         }
-
-        public override void Down()
-        {
-            //add the downgrade logic if necessary 
-        }
-
-        #endregion
     }
+
+    #endregion
 }

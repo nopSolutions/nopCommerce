@@ -73,7 +73,7 @@
                                                 <nop-textarea asp-for="@Model.Locales[item].Body"/>
                                                 <text>
                                                     <script>
-                                                        $(document).ready(function() {
+                                                        $(function() {
                                                             $('#@Html.IdFor(model => model.Locales[item].Body)').height('auto');
                                                         });
                                                     </script>
@@ -146,7 +146,7 @@
                                             <nop-textarea asp-for="Body" asp-required="true" />
                                             <text>
                                                 <script>
-                                                    $(document).ready(function() {
+                                                    $(function() {
                                                         $('#@Html.IdFor(model => model.Body)').height('auto');
                                                     });
                                                 </script>
@@ -215,10 +215,19 @@
                                         <span asp-validation-for="DelayBeforeSend"></span>
                                     </div>
                                     <div class="col-md-3">
-                                        <nop-select asp-for="DelayPeriodId" asp-items="@await (((MessageDelayPeriod)Model.DelayPeriodId).ToSelectListAsync())" style="max-width: 200px;" />
+                                        <nop-select asp-for="DelayPeriodId" asp-items="@(await ((MessageDelayPeriod)Model.DelayPeriodId).ToSelectListAsync())" style="max-width: 200px;" />
                                         <span asp-validation-for="DelayPeriodId"></span>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="form-group row advanced-setting">
+                            <div class="col-md-3">
+                                <nop-label asp-for="AllowDirectReply" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="AllowDirectReply" />
+                                <span asp-validation-for="AllowDirectReply"></span>
                             </div>
                         </div>
                         <div class="form-group row advanced-setting">
@@ -253,26 +262,18 @@
                                     <div class="col-md-4">
                                         <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
                                         <script>
-                                        $(document).ready(function() {
-                                            var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)')
-                                                .data("kendoMultiSelect");
-                                            storesIdsInput.setOptions({
-                                                autoClose: false,
-                                                filter: "contains"
+                                            $(function() {
+                                                var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').select2({
+                                                    closeOnSelect: false,
+                                                    @if (!Model.AvailableStores.Any())
+                                                    {
+                                                    <text>
+                                                    disabled: true,
+                                                    placeholder: 'No stores available',
+                                                    </text>
+                                                    }
+                                                });
                                             });
-
-                                            @if (Model.AvailableStores.Count == 0)
-                                            {
-                                                <text>
-                                                    storesIdsInput.setOptions({
-                                                        enable: false,
-                                                        placeholder: 'No stores available'
-                                                    });
-                                                    storesIdsInput._placeholder();
-                                                    storesIdsInput._enable();
-                                                </text>
-                                            }
-                                        });
                                         </script>
                                     </div>
                                     <div class="col-md-8">
@@ -286,7 +287,7 @@
                 @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.MessageTemplateDetailsBottom, additionalData = Model })
             </div>
             <script>
-                $(document).ready(function() {
+                $(function() {
                     $("#@Html.IdFor(model => model.HasAttachedDownload)").change(toggleHasAttachedDownload);
                     $("#@Html.IdFor(model => model.SendImmediately)").click(sendImmediately);
                     toggleHasAttachedDownload();

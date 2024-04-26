@@ -21,21 +21,11 @@
                 @if (Model.DisplayPickupInStore && Model.PickupPointsModel.AllowPickupInStore)
                 {
                     @await Html.PartialAsync("_PickupPoints", Model.PickupPointsModel)
-                    <script asp-location="Footer">
-                        $(document).ready(function () {
-                            $(document).on('checkout_toggle_pickup_in_store', function (e) {
-                                if (e.checked)
-                                    $('.method-list').hide();
-                                else
-                                    $('.method-list').show();
-                            });
-                        });
-                    </script>
                 }
 
                 @if (Model.PickupPointsModel == null || !Model.PickupPointsModel.PickupInStoreOnly)
                 {
-                    @if (Model.Warnings.Count == 0)
+                    @if (!Model.Warnings.Any())
                     {
                         <ul class="method-list">
                             @for (var i = 0; i < Model.ShippingMethods.Count; i++)

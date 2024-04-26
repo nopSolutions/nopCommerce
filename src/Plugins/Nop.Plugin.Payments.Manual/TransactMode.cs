@@ -1,24 +1,23 @@
 
-namespace Nop.Plugin.Payments.Manual
+namespace Nop.Plugin.Payments.Manual;
+
+/// <summary>
+/// Represents manual payment processor transaction mode
+/// </summary>
+public enum TransactMode
 {
     /// <summary>
-    /// Represents manual payment processor transaction mode
+    /// Pending
     /// </summary>
-    public enum TransactMode
-    {
-        /// <summary>
-        /// Pending
-        /// </summary>
-        Pending = 0,
+    Pending = 0,
 
-        /// <summary>
-        /// Authorize
-        /// </summary>
-        Authorize = 1,
+    /// <summary>
+    /// Authorize
+    /// </summary>
+    Authorize = 1,
 
-        /// <summary>
-        /// Authorize and capture
-        /// </summary>
-        AuthorizeAndCapture= 2
-    }
+    /// <summary>
+    /// Authorize and capture
+    /// </summary>
+    AuthorizeAndCapture = 2
 }

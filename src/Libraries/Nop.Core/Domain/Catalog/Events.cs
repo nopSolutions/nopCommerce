@@ -1,22 +1,21 @@
-namespace Nop.Core.Domain.Catalog
+namespace Nop.Core.Domain.Catalog;
+
+/// <summary>
+/// Product review approved event
+/// </summary>
+public partial class ProductReviewApprovedEvent
 {
     /// <summary>
-    /// Product review approved event
+    /// Ctor
     /// </summary>
-    public partial class ProductReviewApprovedEvent
+    /// <param name="productReview">Product review</param>
+    public ProductReviewApprovedEvent(ProductReview productReview)
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="productReview">Product review</param>
-        public ProductReviewApprovedEvent(ProductReview productReview)
-        {
-            ProductReview = productReview;
-        }
-
-        /// <summary>
-        /// Product review
-        /// </summary>
-        public ProductReview ProductReview { get; }
+        ProductReview = productReview;
     }
+
+    /// <summary>
+    /// Product review
+    /// </summary>
+    public ProductReview ProductReview { get; }
 }

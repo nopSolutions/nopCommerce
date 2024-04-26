@@ -1,15 +1,12 @@
-﻿using System;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
-using Nop.Core.Events;
-using Nop.Core.Http;
+using Nop.Core.Domain.Stores;
 using Nop.Plugin.Widgets.GoogleAnalytics.Api;
+using Nop.Plugin.Widgets.GoogleAnalytics.Api.Models;
 using Nop.Services.Catalog;
 using Nop.Services.Cms;
 using Nop.Services.Common;
@@ -20,242 +17,228 @@ using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Stores;
 
-namespace Nop.Plugin.Widgets.GoogleAnalytics
+namespace Nop.Plugin.Widgets.GoogleAnalytics;
+
+public class EventConsumer :
+    IConsumer<OrderPlacedEvent>,
+    IConsumer<OrderPaidEvent>,
+    IConsumer<OrderRefundedEvent>
 {
-    public class EventConsumer :
-        IConsumer<OrderStatusChangedEvent>,
-        IConsumer<OrderPaidEvent>,
-        IConsumer<EntityDeletedEvent<Order>>
+    protected readonly CurrencySettings _currencySettings;
+    protected readonly GoogleAnalyticsHttpClient _googleAnalyticsHttpClient;
+    protected readonly ICategoryService _categoryService;
+    protected readonly ICurrencyService _currencyService;
+    protected readonly IGenericAttributeService _genericAttributeService;
+    protected readonly IHttpContextAccessor _httpContextAccessor;
+    protected readonly ILogger _logger;
+    protected readonly IOrderService _orderService;
+    protected readonly IProductService _productService;
+    protected readonly ISettingService _settingService;
+    protected readonly IStoreContext _storeContext;
+    protected readonly IStoreService _storeService;
+    protected readonly IWidgetPluginManager _widgetPluginManager;
+
+    public EventConsumer(
+        CurrencySettings currencySettings,
+        GoogleAnalyticsHttpClient googleAnalyticsHttpClient,
+        ICategoryService categoryService,
+        ICurrencyService currencyService,
+        IGenericAttributeService genericAttributeService,
+        IHttpContextAccessor httpContextAccessor,
+        ILogger logger,
+        IOrderService orderService,
+        IProductService productService,
+        ISettingService settingService,
+        IStoreContext storeContext,
+        IStoreService storeService,
+        IWidgetPluginManager widgetPluginManager)
     {
-        private readonly IAddressService _addressService;
-        private readonly ICategoryService _categoryService;
-        private readonly ICountryService _countryService;
-        private readonly IHttpClientFactory _httpClientFactory;
-        private readonly ILogger _logger;
-        private readonly IOrderService _orderService;
-        private readonly IProductService _productService;
-        private readonly ISettingService _settingService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreService _storeService;
-        private readonly IWebHelper _webHelper;
-        private readonly IWidgetPluginManager _widgetPluginManager;
+        _currencySettings = currencySettings;
+        _googleAnalyticsHttpClient = googleAnalyticsHttpClient;
+        _categoryService = categoryService;
+        _currencyService = currencyService;
+        _genericAttributeService = genericAttributeService;
+        _httpContextAccessor = httpContextAccessor;
+        _logger = logger;
+        _orderService = orderService;
+        _productService = productService;
+        _settingService = settingService;
+        _storeContext = storeContext;
+        _storeService = storeService;
+        _widgetPluginManager = widgetPluginManager;
+    }
 
-        public EventConsumer(IAddressService addressService,
-            ICategoryService categoryService,
-            ICountryService countryService,
-            IHttpClientFactory httpClientFactory,
-            ILogger logger,
-            IOrderService orderService,
-            IProductService productService,
-            ISettingService settingService,
-            IStateProvinceService stateProvinceService,
-            IStoreContext storeContext,
-            IStoreService storeService,
-            IWebHelper webHelper,
-            IWidgetPluginManager widgetPluginManager)
+    /// <returns>A task that represents the asynchronous operation</returns>
+    protected async Task<bool> IsPluginEnabledAsync()
+    {
+        return await _widgetPluginManager.IsPluginActiveAsync(GoogleAnalyticsDefaults.SystemName);
+    }
+
+    protected async Task SaveCookiesAsync(Order order, GoogleAnalyticsSettings googleAnalyticsSettings, Store store)
+    {
+        //try to get cookie
+        var httpContext = _httpContextAccessor.HttpContext;
+
+        //client_id
+        httpContext.Request.Cookies.TryGetValue(GoogleAnalyticsDefaults.ClientIdCookiesName, out var clientId);
+        await _genericAttributeService.SaveAttributeAsync(order, GoogleAnalyticsDefaults.ClientIdAttribute, clientId, store.Id);
+
+        //session_id
+        var measurementId = googleAnalyticsSettings.GoogleId.Split('-')[1];
+        var sessionCookieKey = $"{GoogleAnalyticsDefaults.SessionIdCookiesName}{measurementId}";
+        httpContext.Request.Cookies.TryGetValue(sessionCookieKey, out var sessionId);
+        await _genericAttributeService.SaveAttributeAsync(order, GoogleAnalyticsDefaults.SessionIdAttribute, sessionId, store.Id);
+    }
+
+    /// <returns>A task that represents the asynchronous operation</returns>
+    protected async Task ProcessOrderEventAsync(Order order, GoogleAnalyticsSettings googleAnalyticsSettings, string eventName)
+    {
+        try
         {
-            _addressService = addressService;
-            _categoryService = categoryService;
-            _countryService = countryService;
-            _httpClientFactory = httpClientFactory;
-            _logger = logger;
-            _orderService = orderService;
-            _productService = productService;
-            _settingService = settingService;
-            _stateProvinceService = stateProvinceService;
-            _storeContext = storeContext;
-            _storeService = storeService;
-            _webHelper = webHelper;
-            _widgetPluginManager = widgetPluginManager;
-        }
+            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            var currency = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
+            var orderId = order.CustomOrderNumber;
+            var orderShipping = googleAnalyticsSettings.IncludingTax ? order.OrderShippingInclTax : order.OrderShippingExclTax;
+            var orderTax = order.OrderTax;
+            var orderTotal = order.OrderTotal;
 
-        private string FixIllegalJavaScriptChars(string text)
-        {
-            if (string.IsNullOrEmpty(text))
-                return text;
-
-            //replace ' with \' (http://stackoverflow.com/questions/4292761/need-to-url-encode-labels-when-tracking-events-with-google-analytics)
-            text = text.Replace("'", "\\'");
-            return text;
-        }
-
-        /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task<bool> IsPluginEnabledAsync()
-        {
-            return await _widgetPluginManager.IsPluginActiveAsync("Widgets.GoogleAnalytics");
-        }
-
-        /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task ProcessOrderEventAsync(Order order, bool add)
-        {
-            try
+            var gaRequest = new EventRequest
             {
-                //settings per store
-                var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
-                var googleAnalyticsSettings = await _settingService.LoadSettingAsync<GoogleAnalyticsSettings>(store.Id);
+                ClientId = await _genericAttributeService.GetAttributeAsync<string>(order, GoogleAnalyticsDefaults.ClientIdAttribute, store.Id),
+                UserId = order.CustomerId.ToString(),
+                TimestampMicros = (DateTimeOffset.UtcNow - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).Ticks / 10
+            };
 
-                var request = new GoogleRequest
+
+            var events = new List<Event>();
+            var gaEvent = new Event
+            {
+                Name = eventName
+            };
+            events.Add(gaEvent);
+
+            var gaParams = new Parameters
+            {
+                Currency = currency,
+                TransactionId = orderId,
+                EngagementTime = 100,
+                SessionId = await _genericAttributeService.GetAttributeAsync<string>(order, GoogleAnalyticsDefaults.SessionIdAttribute, store.Id),
+                Value = orderTotal,
+                Tax = orderTax,
+                Shipping = orderShipping
+            };
+
+            var items = new List<Item>();
+            foreach (var item in await _orderService.GetOrderItemsAsync(order.Id))
+            {
+                var product = await _productService.GetProductByIdAsync(item.ProductId);
+                var sku = await _productService.FormatSkuAsync(product, item.AttributesXml);
+                if (string.IsNullOrEmpty(sku))
+                    sku = product.Id.ToString();
+                //get category
+                var category = (await _categoryService.GetCategoryByIdAsync((await _categoryService.GetProductCategoriesByProductIdAsync(product.Id)).FirstOrDefault()?.CategoryId ?? 0))?.Name;
+                if (string.IsNullOrEmpty(category))
+                    category = "No category";
+                var unitPrice = googleAnalyticsSettings.IncludingTax ? item.UnitPriceInclTax : item.UnitPriceExclTax;
+
+                var gaItem = new Item
                 {
-                    AccountCode = googleAnalyticsSettings.GoogleId,
-                    Culture = "en-US",
-                    HostName = new Uri(_webHelper.GetThisPageUrl(false)).Host,
-                    PageTitle = add ? "AddTransaction" : "CancelTransaction"
+                    ItemId = sku,
+                    ItemName = product.Name,
+                    Affiliation = store.Name,
+                    ItemCategory = category,
+                    Price = unitPrice,
+                    Quantity = item.Quantity
                 };
 
-                var orderId = order.CustomOrderNumber;
-                var orderShipping = googleAnalyticsSettings.IncludingTax ? order.OrderShippingInclTax : order.OrderShippingExclTax;
-                var orderTax = order.OrderTax;
-                var orderTotal = order.OrderTotal;
-                if (!add)
-                {
-                    orderShipping = -orderShipping;
-                    orderTax = -orderTax;
-                    orderTotal = -orderTotal;
-                }
-
-                var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
-
-                var trans = new Transaction(FixIllegalJavaScriptChars(orderId),
-                    FixIllegalJavaScriptChars(billingAddress.City),
-                    await _countryService.GetCountryByAddressAsync(billingAddress) is Country country ? FixIllegalJavaScriptChars(country.Name) : string.Empty,
-                    await _stateProvinceService.GetStateProvinceByAddressAsync(billingAddress) is StateProvince stateProvince ? FixIllegalJavaScriptChars(stateProvince.Name) : string.Empty,
-                    store.Name,
-                    orderShipping,
-                    orderTax,
-                    orderTotal);
-
-                foreach (var item in await _orderService.GetOrderItemsAsync(order.Id))
-                {
-                    var product = await _productService.GetProductByIdAsync(item.ProductId);
-                    //get category
-                    var category = (await _categoryService.GetCategoryByIdAsync((await _categoryService.GetProductCategoriesByProductIdAsync(product.Id)).FirstOrDefault()?.CategoryId ?? 0))?.Name;
-                    if (string.IsNullOrEmpty(category))
-                        category = "No category";
-
-                    var unitPrice = googleAnalyticsSettings.IncludingTax ? item.UnitPriceInclTax : item.UnitPriceExclTax;
-                    var qty = item.Quantity;
-                    if (!add)
-                        qty = -qty;
-
-                    var sku = await _productService.FormatSkuAsync(product, item.AttributesXml);
-                    if (string.IsNullOrEmpty(sku))
-                        sku = product.Id.ToString();
-
-                    var productItem = new TransactionItem(FixIllegalJavaScriptChars(orderId),
-                      FixIllegalJavaScriptChars(sku),
-                      FixIllegalJavaScriptChars(product.Name),
-                      unitPrice,
-                      qty,
-                      FixIllegalJavaScriptChars(category));
-
-                    trans.Items.Add(productItem);
-                }
-
-                await request.SendRequest(trans, _httpClientFactory.CreateClient(NopHttpDefaults.DefaultHttpClient));
+                items.Add(gaItem);
             }
-            catch (Exception ex)
-            {
-                await _logger.InsertLogAsync(LogLevel.Error, "Google Analytics. Error canceling transaction from server side", ex.ToString());
-            }
+            gaParams.Items = items;
+            gaEvent.Params = gaParams;
+            gaRequest.Events = events;
+
+            await _googleAnalyticsHttpClient.RequestAsync(gaRequest, googleAnalyticsSettings);
         }
-
-        /// <summary>
-        /// Handles the event
-        /// </summary>
-        /// <param name="eventMessage">The event message</param>
-        /// <returns>A task that represents the asynchronous operation</returns>
-        public async Task HandleEventAsync(EntityDeletedEvent<Order> eventMessage)
+        catch (Exception ex)
         {
-            //ensure the plugin is installed and active
-            if (!await IsPluginEnabledAsync())
-                return;
-
-            var order = eventMessage.Entity;
-
-            //settings per store
-            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
-            var googleAnalyticsSettings = await _settingService.LoadSettingAsync<GoogleAnalyticsSettings>(store.Id);
-
-            //ecommerce is disabled
-            if (!googleAnalyticsSettings.EnableEcommerce)
-                return;
-
-            bool sendRequest;
-            if (googleAnalyticsSettings.UseJsToSendEcommerceInfo)
-            {
-                //if we use JS to notify GA about new orders (even when they are placed), then we should always notify GA about deleted orders
-                //but ignore already cancelled orders (do not duplicate request to GA)
-                sendRequest = order.OrderStatus != OrderStatus.Cancelled;
-            }
-            else
-            {
-                //if we use HTTP requests to notify GA about new orders (only when they are paid), then we should notify GA about deleted AND paid orders
-                sendRequest = order.PaymentStatus == PaymentStatus.Paid;
-            }
-
-            if (sendRequest)
-                await ProcessOrderEventAsync(order, false);
+            await _logger.InsertLogAsync(LogLevel.Error, "Google Analytics. Error canceling transaction from server side", ex.ToString());
         }
+    }
 
-        /// <summary>
-        /// Handles the event
-        /// </summary>
-        /// <param name="eventMessage">The event message</param>
-        /// <returns>A task that represents the asynchronous operation</returns>
-        public async Task HandleEventAsync(OrderStatusChangedEvent eventMessage)
-        {
-            if (eventMessage.Order.OrderStatus != OrderStatus.Cancelled)
-                return;
+    /// <summary>
+    /// Handles the event
+    /// </summary>
+    /// <param name="eventMessage">The event message</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public async Task HandleEventAsync(OrderRefundedEvent eventMessage)
+    {
+        //ensure the plugin is installed and active
+        if (!await IsPluginEnabledAsync())
+            return;
 
-            //ensure the plugin is installed and active
-            if (!await IsPluginEnabledAsync())
-                return;
+        var order = eventMessage.Order;
 
-            var order = eventMessage.Order;
+        //settings per store
+        var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+        var googleAnalyticsSettings = await _settingService.LoadSettingAsync<GoogleAnalyticsSettings>(store.Id);
 
-            //settings per store
-            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
-            var googleAnalyticsSettings = await _settingService.LoadSettingAsync<GoogleAnalyticsSettings>(store.Id);
+        //ecommerce is disabled
+        if (!googleAnalyticsSettings.EnableEcommerce)
+            return;
 
-            //ecommerce is disabled
-            if (!googleAnalyticsSettings.EnableEcommerce)
-                return;
+        //if we use HTTP requests to notify GA about new orders (only when they are paid), then we should notify GA about deleted AND paid orders
+        var sendRequest = order.PaymentStatus == PaymentStatus.Paid;
 
-            //if we use JS to notify GA about new orders (even when they are placed), then we should always notify GA about deleted orders
-            //if we use HTTP requests to notify GA about new orders (only when they are paid), then we should notify GA about deleted AND paid orders
-            var sendRequest = googleAnalyticsSettings.UseJsToSendEcommerceInfo || order.PaymentStatus == PaymentStatus.Paid;
+        if (sendRequest)
+            await ProcessOrderEventAsync(order, googleAnalyticsSettings, GoogleAnalyticsDefaults.OrderRefundedEventName);
+    }
 
-            if (sendRequest)
-                await ProcessOrderEventAsync(order, false);
-        }
+    /// <summary>
+    /// Handles the event
+    /// </summary>
+    /// <param name="eventMessage">The event message</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public async Task HandleEventAsync(OrderPaidEvent eventMessage)
+    {
+        //ensure the plugin is installed and active
+        if (!await IsPluginEnabledAsync())
+            return;
 
-        /// <summary>
-        /// Handles the event
-        /// </summary>
-        /// <param name="eventMessage">The event message</param>
-        /// <returns>A task that represents the asynchronous operation</returns>
-        public async Task HandleEventAsync(OrderPaidEvent eventMessage)
-        {
-            //ensure the plugin is installed and active
-            if (!await IsPluginEnabledAsync())
-                return;
+        var order = eventMessage.Order;
 
-            var order = eventMessage.Order;
+        //settings per store
+        var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+        var googleAnalyticsSettings = await _settingService.LoadSettingAsync<GoogleAnalyticsSettings>(store.Id);
 
-            //settings per store
-            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
-            var googleAnalyticsSettings = await _settingService.LoadSettingAsync<GoogleAnalyticsSettings>(store.Id);
+        //ecommerce is disabled
+        if (!googleAnalyticsSettings.EnableEcommerce)
+            return;
 
-            //ecommerce is disabled
-            if (!googleAnalyticsSettings.EnableEcommerce)
-                return;
+        //we use HTTP requests to notify GA about new orders (only when they are paid)
+        await ProcessOrderEventAsync(order, googleAnalyticsSettings, GoogleAnalyticsDefaults.OrderPaidEventName);
+    }
 
-            //we use HTTP requests to notify GA about new orders (only when they are paid)
-            var sendRequest = !googleAnalyticsSettings.UseJsToSendEcommerceInfo;
+    /// <summary>
+    /// Handles the event
+    /// </summary>
+    /// <param name="eventMessage">The event message</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public async Task HandleEventAsync(OrderPlacedEvent eventMessage)
+    {
+        //ensure the plugin is installed and active
+        if (!await IsPluginEnabledAsync())
+            return;
 
-            if (sendRequest)
-                await ProcessOrderEventAsync(order, true);
-        }
+        var order = eventMessage.Order;
+
+        //settings per store
+        var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+        var googleAnalyticsSettings = await _settingService.LoadSettingAsync<GoogleAnalyticsSettings>(store.Id);
+
+        //ecommerce is disabled
+        if (!googleAnalyticsSettings.EnableEcommerce)
+            return;
+
+        await SaveCookiesAsync(order, googleAnalyticsSettings, store);
     }
 }

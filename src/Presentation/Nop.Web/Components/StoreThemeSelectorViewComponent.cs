@@ -1,30 +1,28 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Components;
 
-namespace Nop.Web.Components
+namespace Nop.Web.Components;
+
+public partial class StoreThemeSelectorViewComponent : NopViewComponent
 {
-    public partial class StoreThemeSelectorViewComponent : NopViewComponent
+    protected readonly ICommonModelFactory _commonModelFactory;
+    protected readonly StoreInformationSettings _storeInformationSettings;
+
+    public StoreThemeSelectorViewComponent(ICommonModelFactory commonModelFactory,
+        StoreInformationSettings storeInformationSettings)
     {
-        private readonly ICommonModelFactory _commonModelFactory;
-        private readonly StoreInformationSettings _storeInformationSettings;
+        _commonModelFactory = commonModelFactory;
+        _storeInformationSettings = storeInformationSettings;
+    }
 
-        public StoreThemeSelectorViewComponent(ICommonModelFactory commonModelFactory,
-            StoreInformationSettings storeInformationSettings)
-        {
-            _commonModelFactory = commonModelFactory;
-            _storeInformationSettings = storeInformationSettings;
-        }
+    public async Task<IViewComponentResult> InvokeAsync()
+    {
+        if (!_storeInformationSettings.AllowCustomerToSelectTheme)
+            return Content("");
 
-        public async Task<IViewComponentResult> InvokeAsync()
-        {
-            if (!_storeInformationSettings.AllowCustomerToSelectTheme)
-                return Content("");
-
-            var model = await _commonModelFactory.PrepareStoreThemeSelectorModelAsync();
-            return View(model);
-        }
+        var model = await _commonModelFactory.PrepareStoreThemeSelectorModelAsync();
+        return View(model);
     }
 }

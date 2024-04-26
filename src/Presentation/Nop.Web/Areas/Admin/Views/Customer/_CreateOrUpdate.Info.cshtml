@@ -4,7 +4,7 @@
 @if (Model.CountryEnabled && Model.StateProvinceEnabled)
 {
     <script>
-        $(document).ready(function() {
+        $(function() {
             $("#@Html.IdFor(model => model.CountryId)").change(function() {
                 var selectedItem = $(this).val();
                 var ddlStates = $("#@Html.IdFor(model => model.StateProvinceId)");
@@ -26,7 +26,7 @@
                         });
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
-                        $("#statesAlert").click();
+                        $("#statesAlert").trigger("click");
                     }
                 });
             });
@@ -114,6 +114,15 @@
                             @T("Admin.Customers.Customers.Fields.Gender.Female")
                         </label>
                     </div>
+                    @if (Model.NeutralGenderEnabled)
+                    {
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" name="Gender" id="Gender_Neutral" value="N" @(Model.Gender == "N" ? Html.Raw("checked") : null)>
+                            <label class="form-check-label" for="Gender_Female">
+                                @T("Admin.Customers.Customers.Fields.Gender.Neutral")
+                            </label>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
@@ -310,12 +319,8 @@
                     <div class="input-group-btn"></div>
                 </div>
                 <script>
-                $(document).ready(function() {
-                    var newsletterSubscriptionStoreIdsInput = $('#@Html.IdFor(model => model.SelectedNewsletterSubscriptionStoreIds)').data("kendoMultiSelect");
-                    newsletterSubscriptionStoreIdsInput.setOptions({
-                        newsletterSubscriptionStoreIdsInput: false,
-                        filter: "contains"
-                    });
+                $(function() {
+                    var newsletterSubscriptionStoreIdsInput = $('#@Html.IdFor(model => model.SelectedNewsletterSubscriptionStoreIds)').select2();
                 });
                 </script>
             </div>
@@ -336,24 +341,17 @@
                 </div>
             </div>
             <script>
-                $(document).ready(function() {
-                    var customerRoleIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
-                    customerRoleIdsInput.setOptions({
-                        customerRoleIdsInput: false,
-                        filter: "contains"
-                    });
-
-                    @if (Model.AvailableCustomerRoles.Count == 0)
-                    {
+                $(function() {
+                    var customerRoleIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').select2({
+                        closeOnSelect: false,
+                        @if (!Model.AvailableCustomerRoles.Any())
+                        {
                         <text>
-                            customerRoleIdsInput.setOptions({
-                                enable: false,
-                                placeholder: '@T("Admin.Customers.Customers.Fields.CustomerRoles.NoRoles")'
-                            });
-                            customerRoleIdsInput._placeholder();
-                            customerRoleIdsInput._enable();
+                        disabled: true,
+                        placeholder: '@T("Admin.Customers.Customers.Fields.CustomerRoles.NoRoles")',
                         </text>
-                    }
+                        }
+                    });
                 });
             </script>
         </div>

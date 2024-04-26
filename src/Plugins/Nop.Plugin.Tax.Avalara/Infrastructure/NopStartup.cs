@@ -3,36 +3,38 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
 using Nop.Plugin.Tax.Avalara.Services;
+using Nop.Web.Framework.Infrastructure.Extensions;
 
-namespace Nop.Plugin.Tax.Avalara.Infrastructure
+namespace Nop.Plugin.Tax.Avalara.Infrastructure;
+
+/// <summary>
+/// Represents object for the configuring services on application startup
+/// </summary>
+public class NopStartup : INopStartup
 {
     /// <summary>
-    /// Represents object for the configuring services on application startup
+    /// Add and configure any of the middleware
     /// </summary>
-    public class NopStartup : INopStartup
+    /// <param name="services">Collection of service descriptors</param>
+    /// <param name="configuration">Configuration of the application</param>
+    public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
-        /// <summary>
-        /// Add and configure any of the middleware
-        /// </summary>
-        /// <param name="services">Collection of service descriptors</param>
-        /// <param name="configuration">Configuration of the application</param>
-        public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
-        {
-            services.AddScoped<AvalaraTaxManager>();
-            services.AddScoped<TaxTransactionLogService>();
-        }
-
-        /// <summary>
-        /// Configure the using of added middleware
-        /// </summary>
-        /// <param name="application">Builder for configuring an application's request pipeline</param>
-        public void Configure(IApplicationBuilder application)
-        {
-        }
-
-        /// <summary>
-        /// Gets order of this startup configuration implementation
-        /// </summary>
-        public int Order => 3000;
+        services.AddHttpClient<ItemClassificationHttpClient>().WithProxy();
+        services.AddScoped<AvalaraTaxManager>();
+        services.AddScoped<TaxTransactionLogService>();
+        services.AddScoped<ItemClassificationService>();
     }
+
+    /// <summary>
+    /// Configure the using of added middleware
+    /// </summary>
+    /// <param name="application">Builder for configuring an application's request pipeline</param>
+    public void Configure(IApplicationBuilder application)
+    {
+    }
+
+    /// <summary>
+    /// Gets order of this startup configuration implementation
+    /// </summary>
+    public int Order => 3000;
 }

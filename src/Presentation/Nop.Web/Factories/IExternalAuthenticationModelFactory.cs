@@ -1,21 +1,18 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Nop.Web.Models.Customer;
+﻿using Nop.Web.Models.Customer;
 
-namespace Nop.Web.Factories
+namespace Nop.Web.Factories;
+
+/// <summary>
+/// Represents the interface of the external authentication model factory
+/// </summary>
+public partial interface IExternalAuthenticationModelFactory
 {
     /// <summary>
-    /// Represents the interface of the external authentication model factory
+    /// Prepare the external authentication method model
     /// </summary>
-    public partial interface IExternalAuthenticationModelFactory
-    {
-        /// <summary>
-        /// Prepare the external authentication method model
-        /// </summary>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the list of the external authentication method model
-        /// </returns>
-        Task<List<ExternalAuthenticationMethodModel>> PrepareExternalMethodsModelAsync();
-    }
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the list of the external authentication method model
+    /// </returns>
+    Task<List<ExternalAuthenticationMethodModel>> PrepareExternalMethodsModelAsync();
 }

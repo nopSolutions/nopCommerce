@@ -1,38 +1,36 @@
-﻿using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core.Domain.Customers;
 using Nop.Web.Factories;
 using NUnit.Framework;
 
-namespace Nop.Tests.Nop.Web.Tests.Public.Factories
+namespace Nop.Tests.Nop.Web.Tests.Public.Factories;
+
+[TestFixture]
+public class NewsletterModelFactoryTests : BaseNopTest
 {
-    [TestFixture]
-    public class NewsletterModelFactoryTests : BaseNopTest
+    private INewsletterModelFactory _newsletterModelFactory;
+
+    [OneTimeSetUp]
+    public void SetUp()
     {
-        private INewsletterModelFactory _newsletterModelFactory;
+        _newsletterModelFactory = GetService<INewsletterModelFactory>();
+    }
 
-        [OneTimeSetUp]
-        public void SetUp()
-        {
-            _newsletterModelFactory = GetService<INewsletterModelFactory>();
-        }
+    [Test]
+    public async Task CanPrepareNewsletterBoxModel()
+    {
+        var model = await _newsletterModelFactory.PrepareNewsletterBoxModelAsync();
 
-        [Test]
-        public async Task CanPrepareNewsletterBoxModel()
-        {
-            var model = await _newsletterModelFactory.PrepareNewsletterBoxModelAsync();
+        model.AllowToUnsubscribe.Should().Be(GetService<CustomerSettings>().NewsletterBlockAllowToUnsubscribe);
+    }
 
-            model.AllowToUnsubscribe.Should().Be(GetService<CustomerSettings>().NewsletterBlockAllowToUnsubscribe);
-        }
+    [Test]
+    public async Task CanPrepareSubscriptionActivationModel()
+    {
+        var activated = (await _newsletterModelFactory.PrepareSubscriptionActivationModelAsync(true)).Result;
 
-        [Test]
-        public async Task CanPrepareSubscriptionActivationModel()
-        {
-            var activated = (await _newsletterModelFactory.PrepareSubscriptionActivationModelAsync(true)).Result;
+        var deactivated = (await _newsletterModelFactory.PrepareSubscriptionActivationModelAsync(false)).Result;
 
-            var deactivated = (await _newsletterModelFactory.PrepareSubscriptionActivationModelAsync(false)).Result;
-
-            activated.Should().NotBe(deactivated);
-        }
+        activated.Should().NotBe(deactivated);
     }
 }

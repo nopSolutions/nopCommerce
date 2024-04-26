@@ -1,56 +1,53 @@
-﻿using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Messages;
 using NUnit.Framework;
 
-namespace Nop.Tests.Nop.Services.Tests.Messages
+namespace Nop.Tests.Nop.Services.Tests.Messages;
+
+[TestFixture]
+public class EmailSenderTests : BaseNopTest
 {
-    [TestFixture]
-    public class EmailSenderTests : BaseNopTest
+    private IEmailSender _emailSender;
+
+    [OneTimeSetUp]
+    public void SetUp()
     {
-        private IEmailSender _emailSender;
+        _emailSender = GetService<IEmailSender>();
+    }
 
-        [OneTimeSetUp]
-        public void SetUp()
+    [Test]
+    public async Task CanSendEmail()
+    {
+        TestSmtpBuilder.TestSmtpClient.MessageIsSent = false;
+
+        var emailAccount = new EmailAccount
         {
-            _emailSender = GetService<IEmailSender>();
-        }
+            Id = 1,
+            Email = NopTestsDefaults.AdminEmail,
+            DisplayName = "Test name",
+            Host = "smtp.test.com",
+            Port = 25,
+            Username = "test_user",
+            Password = "test_password",
+            EnableSsl = false
+        };
 
-        [Test]
-        public async Task CanSendEmail()
-        {
-            TestSmtpBuilder.TestSmtpClient.MessageIsSent = false;
+        var subject = "Test subject";
+        var body = "Test body";
+        var fromAddress = NopTestsDefaults.AdminEmail;
+        var fromName = "From name";
+        var toAddress = "test@test.com";
+        var toName = "To name";
+        var replyToAddress = NopTestsDefaults.AdminEmail;
+        var replyToName = "Reply to name";
+        var bcc = new[] { NopTestsDefaults.AdminEmail };
+        var cc = new[] { NopTestsDefaults.AdminEmail };
 
-            var emailAccount = new EmailAccount
-            {
-                Id = 1,
-                Email = NopTestsDefaults.AdminEmail,
-                DisplayName = "Test name",
-                Host = "smtp.test.com",
-                Port = 25,
-                Username = "test_user",
-                Password = "test_password",
-                EnableSsl = false,
-                UseDefaultCredentials = false
-            };
+        await _emailSender.SendEmailAsync(emailAccount, subject, body,
+            fromAddress, fromName, toAddress, toName,
+            replyToAddress, replyToName, bcc, cc);
 
-            var subject = "Test subject";
-            var body = "Test body";
-            var fromAddress = NopTestsDefaults.AdminEmail;
-            var fromName = "From name";
-            var toAddress = "test@test.com";
-            var toName = "To name";
-            var replyToAddress = NopTestsDefaults.AdminEmail;
-            var replyToName = "Reply to name";
-            var bcc = new[] {NopTestsDefaults.AdminEmail};
-            var cc = new[] { NopTestsDefaults.AdminEmail };
-
-            await _emailSender.SendEmailAsync(emailAccount, subject, body,
-                fromAddress, fromName, toAddress, toName,
-                replyToAddress, replyToName, bcc, cc);
-
-            TestSmtpBuilder.TestSmtpClient.MessageIsSent.Should().BeTrue();
-        }
+        TestSmtpBuilder.TestSmtpClient.MessageIsSent.Should().BeTrue();
     }
 }

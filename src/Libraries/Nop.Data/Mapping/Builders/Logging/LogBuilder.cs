@@ -3,27 +3,26 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 using Nop.Data.Extensions;
 
-namespace Nop.Data.Mapping.Builders.Logging
+namespace Nop.Data.Mapping.Builders.Logging;
+
+/// <summary>
+/// Represents a log entity builder
+/// </summary>
+public partial class LogBuilder : NopEntityBuilder<Log>
 {
+    #region Methods
+
     /// <summary>
-    /// Represents a log entity builder
+    /// Apply entity configuration
     /// </summary>
-    public partial class LogBuilder : NopEntityBuilder<Log>
+    /// <param name="table">Create table expression builder</param>
+    public override void MapEntity(CreateTableExpressionBuilder table)
     {
-        #region Methods
-
-        /// <summary>
-        /// Apply entity configuration
-        /// </summary>
-        /// <param name="table">Create table expression builder</param>
-        public override void MapEntity(CreateTableExpressionBuilder table)
-        {
-            table
-                .WithColumn(nameof(Log.ShortMessage)).AsString(int.MaxValue).NotNullable()
-                .WithColumn(nameof(Log.IpAddress)).AsString(200).Nullable()
-                .WithColumn(nameof(Log.CustomerId)).AsInt32().Nullable().ForeignKey<Customer>();
-        }
-
-        #endregion
+        table
+            .WithColumn(nameof(Log.ShortMessage)).AsString(int.MaxValue).NotNullable()
+            .WithColumn(nameof(Log.IpAddress)).AsString(100).Nullable()
+            .WithColumn(nameof(Log.CustomerId)).AsInt32().Nullable().ForeignKey<Customer>();
     }
+
+    #endregion
 }

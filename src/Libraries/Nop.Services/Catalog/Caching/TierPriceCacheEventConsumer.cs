@@ -1,24 +1,22 @@
-﻿using System.Threading.Tasks;
-using Nop.Core.Domain.Catalog;
+﻿using Nop.Core.Domain.Catalog;
 using Nop.Services.Caching;
 
-namespace Nop.Services.Catalog.Caching
+namespace Nop.Services.Catalog.Caching;
+
+/// <summary>
+/// Represents a tier price cache event consumer
+/// </summary>
+public partial class TierPriceCacheEventConsumer : CacheEventConsumer<TierPrice>
 {
     /// <summary>
-    /// Represents a tier price cache event consumer
+    /// Clear cache data
     /// </summary>
-    public partial class TierPriceCacheEventConsumer : CacheEventConsumer<TierPrice>
+    /// <param name="entity">Entity</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    protected override async Task ClearCacheAsync(TierPrice entity)
     {
-        /// <summary>
-        /// Clear cache data
-        /// </summary>
-        /// <param name="entity">Entity</param>
-        /// <returns>A task that represents the asynchronous operation</returns>
-        protected override async Task ClearCacheAsync(TierPrice entity)
-        {
-            await RemoveAsync(NopCatalogDefaults.TierPricesByProductCacheKey, entity.ProductId);
-            await RemoveByPrefixAsync(NopCatalogDefaults.ProductPricePrefix, entity.ProductId);
-            await RemoveByPrefixAsync(NopCatalogDefaults.ProductMultiplePricePrefix, entity.ProductId);
-        }
+        await RemoveAsync(NopCatalogDefaults.TierPricesByProductCacheKey, entity.ProductId);
+        await RemoveByPrefixAsync(NopCatalogDefaults.ProductPricePrefix, entity.ProductId);
+        await RemoveByPrefixAsync(NopCatalogDefaults.ProductMultiplePricePrefix, entity.ProductId);
     }
 }

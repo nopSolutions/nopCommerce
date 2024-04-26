@@ -1,6 +1,9 @@
 ﻿@model Nop.Web.Models.Boards.SearchModel
 @using Nop.Core.Domain.Forums
 @using Nop.Services.Localization
+@using Nop.Web.Factories
+@using Nop.Web.Framework.TagHelpers.Shared
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @inject ILocalizationService localizationService
 @{
     Layout = "_ColumnsOne";
@@ -11,7 +14,7 @@
     NopHtml.AppendPageCssClassParts("html-forum-search-page");
 }
 <script asp-location="Footer">
-    $(document).ready(function () {
+    $(function() {
         toggleAdvancedSearch();
         $('#advs').on('click', function () {
             toggleAdvancedSearch();
@@ -95,7 +98,7 @@
                     PageIndex = Model.TopicPageIndex,
                     ShowTotalSummary = false,
                     RouteActionName = "Search",
-                    RouteValues = new ForumSearchRouteValues { Advs = advs, Searchterms = searchterms, ForumId = forumId, Within = within, LimitDays = limitDays },
+                    RouteValues = new ForumModelFactory.ForumSearchRouteValues { Advs = advs, Searchterms = searchterms, ForumId = forumId, Within = within, LimitDays = limitDays },
                 });
             }
             @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsSearchBeforeResults, additionalData = Model })

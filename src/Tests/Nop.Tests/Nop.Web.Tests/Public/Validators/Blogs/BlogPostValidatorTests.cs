@@ -1,35 +1,35 @@
 ﻿using FluentValidation.TestHelper;
+using Nop.Services.Localization;
 using Nop.Web.Models.Blogs;
 using Nop.Web.Validators.Blogs;
 using NUnit.Framework;
 
-namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Blogs
+namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Blogs;
+
+[TestFixture]
+public class BlogPostValidatorTests : BaseNopTest
 {
-    [TestFixture]
-    public class BlogPostValidatorTests : BaseNopTest
+    private BlogPostValidator _validator;
+
+    [OneTimeSetUp]
+    public void Setup()
     {
-        private BlogPostValidator _validator;
-        
-        [OneTimeSetUp]
-        public void Setup()
-        {
-            _validator = GetService<BlogPostValidator>();
-        }
+        _validator =  new BlogPostValidator(GetService<ILocalizationService>());
+    }
 
-        [Test]
-        public void ShouldHaveErrorWhenCommentIsNullOrEmpty()
-        {
-            var model = new BlogPostModel { AddNewComment = { CommentText = null } };
-            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.AddNewComment.CommentText);
-            model.AddNewComment.CommentText = string.Empty;
-            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.AddNewComment.CommentText);
-        }
+    [Test]
+    public void ShouldHaveErrorWhenCommentIsNullOrEmpty()
+    {
+        var model = new BlogPostModel { AddNewComment = { CommentText = null } };
+        _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.AddNewComment.CommentText);
+        model.AddNewComment.CommentText = string.Empty;
+        _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.AddNewComment.CommentText);
+    }
 
-        [Test]
-        public void ShouldNotHaveErrorWhenCommentIsSpecified()
-        {
-            var model = new BlogPostModel { AddNewComment = { CommentText = "some comment" } };
-            _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.AddNewComment.CommentText);
-        }
+    [Test]
+    public void ShouldNotHaveErrorWhenCommentIsSpecified()
+    {
+        var model = new BlogPostModel { AddNewComment = { CommentText = "some comment" } };
+        _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.AddNewComment.CommentText);
     }
 }

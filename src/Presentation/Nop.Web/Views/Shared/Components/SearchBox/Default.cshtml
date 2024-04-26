@@ -1,4 +1,9 @@
 ﻿@model SearchBoxModel
+
+@using Nop.Core.Domain.Media
+
+@inject MediaSettings mediaSettings
+
 <form asp-route="ProductSearch" method="get" id="small-search-box-form">
     @if (Model.ShowSearchBox)
     {
@@ -21,7 +26,7 @@
         @if (Model.AutoCompleteEnabled)
         {
             <script asp-location="Footer">
-                $(document).ready(function() {
+                $(function() {
                     var showLinkToResultSearch;
                     var searchText;
                     $('#small-searchterms').autocomplete({
@@ -48,9 +53,10 @@
                         showLinkToResultSearch = item.showlinktoresultsearch;
                         //html encode
                         t = htmlEncode(t);
+                        imageWidth = '@(mediaSettings.AutoCompleteSearchThumbPictureSize)';
                         return $("<li></li>")
                             .data("item.autocomplete", item)
-                            .append("<a>@(Model.ShowProductImagesInSearchAutoComplete ? Html.Raw("<img src='\" + item.productpictureurl + \"'>") : null)<span>" + t + "</span></a>")
+                                .append("<a>@(Model.ShowProductImagesInSearchAutoComplete ? Html.Raw("<img src='\" + item.productpictureurl + \"' width='\" + imageWidth + \"'>") : null)<span>" + t + "</span></a>")
                             .appendTo(ul);
                     };
                 });

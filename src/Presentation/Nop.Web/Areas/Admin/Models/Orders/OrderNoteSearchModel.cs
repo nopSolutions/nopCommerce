@@ -1,16 +1,15 @@
 ﻿using Nop.Web.Framework.Models;
 
-namespace Nop.Web.Areas.Admin.Models.Orders
+namespace Nop.Web.Areas.Admin.Models.Orders;
+
+/// <summary>
+/// Represents an order note search model
+/// </summary>
+public partial record OrderNoteSearchModel : BaseSearchModel
 {
-    /// <summary>
-    /// Represents an order note search model
-    /// </summary>
-    public partial record OrderNoteSearchModel : BaseSearchModel
-    {
-        #region Properties
+    #region Properties
 
-        public  int OrderId { get; set; }
+    public int OrderId { get; set; }
 
-        #endregion
-    }
+    #endregion
 }

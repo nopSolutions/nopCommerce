@@ -26,48 +26,22 @@
         </div>
     </div>
     <script>
-        $(document).ready(function () {
+        $(function() {
+            var collapsed = !$('#@cardId').hasClass('collapsed-card');
+            if (collapsed) {
+                $('#orderAverageReport').load('@Url.Action("GetOrderAverage", "Home")');
+            }
+
             $('#@cardId').on('click', 'button[data-card-widget="collapse"]', function () {
-                var collapsed = !$('#@cardId').hasClass('collapsed-card');
+                collapsed = !$('#@cardId').hasClass('collapsed-card');
                 saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hideCardAttributeName', collapsed);
+                if (!collapsed) {
+                    $('#orderAverageReport').load('@Url.Action("GetOrderAverage", "Home")');
+                }
             });
         });
     </script>
     <div class="card-body" style="padding-bottom: 22px;">
-        @await Html.PartialAsync("Table", new DataTablesModel
-        {
-            Name = "average-order-report-grid",
-            UrlRead = new DataUrl("OrderAverageReportList", "Order", null),
-            Length = int.MaxValue,
-            Paging = false,
-            Info = false,
-            ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(OrderAverageReportModel.OrderStatus))
-                {
-                    Title = T("Admin.SalesReport.Average.OrderStatus").Text
-                },
-                new ColumnProperty(nameof(OrderAverageReportModel.SumTodayOrders))
-                {
-                    Title = T("Admin.SalesReport.Average.SumTodayOrders").Text
-                },
-                new ColumnProperty(nameof(OrderAverageReportModel.SumThisWeekOrders))
-                {
-                    Title = T("Admin.SalesReport.Average.SumThisWeekOrders").Text
-                },
-                new ColumnProperty(nameof(OrderAverageReportModel.SumThisMonthOrders))
-                {
-                    Title = T("Admin.SalesReport.Average.SumThisMonthOrders").Text
-                },
-                new ColumnProperty(nameof(OrderAverageReportModel.SumThisYearOrders))
-                {
-                    Title = T("Admin.SalesReport.Average.SumThisYearOrders").Text
-                },
-                new ColumnProperty(nameof(OrderAverageReportModel.SumAllTimeOrders))
-                {
-                    Title = T("Admin.SalesReport.Average.SumAllTimeOrders").Text
-                }
-            }
-        })
+        <div id="orderAverageReport"></div>
     </div>
 </div>

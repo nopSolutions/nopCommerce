@@ -1,54 +1,54 @@
-﻿using System;
-using System.Threading.Tasks;
-using Nop.Services.Common;
+﻿using Nop.Services.Common;
 using NUnit.Framework;
 
-namespace Nop.Tests.Nop.Services.Tests.Common
+namespace Nop.Tests.Nop.Services.Tests.Common;
+
+[TestFixture]
+public class GenericAttributeServiceTests : ServiceTest
 {
-    [TestFixture]
-    public class GenericAttributeServiceTests : ServiceTest
+    private IGenericAttributeService _genericAttributeService;
+
+    [OneTimeSetUp]
+    public void SetUp()
     {
-        private IGenericAttributeService _genericAttributeService;
+        _genericAttributeService = GetService<IGenericAttributeService>();
+    }
 
-        [OneTimeSetUp]
-        public void SetUp()
+    [Test]
+    public async Task ShouldSetCreatedOrUpdatedDateUtcInInsertAttribute()
+    {
+        var attribute = new global::Nop.Core.Domain.Common.GenericAttribute
         {
-            _genericAttributeService = GetService<IGenericAttributeService>();
-        }
+            Key = "test",
+            KeyGroup = "test",
+            Value = "test",
+            CreatedOrUpdatedDateUTC = null
+        };
 
-        [Test]
-        public async Task ShouldSetCreatedOrUpdatedDateUtcInInsertAttribute()
-        {
-            var attribute = new global::Nop.Core.Domain.Common.GenericAttribute
-            {
-                Key = "test", KeyGroup = "test", Value = "test", CreatedOrUpdatedDateUTC = null
-            };
+        await _genericAttributeService.InsertAttributeAsync(attribute);
 
-            await _genericAttributeService.InsertAttributeAsync(attribute);
+        var createdOrUpdatedDate = attribute.CreatedOrUpdatedDateUTC;
 
-            var createdOrUpdatedDate = attribute.CreatedOrUpdatedDateUTC;
+        await _genericAttributeService.DeleteAttributeAsync(attribute);
 
-            await _genericAttributeService.DeleteAttributeAsync(attribute);
+        Assert.That(createdOrUpdatedDate,
+            Is.EqualTo(DateTime.UtcNow).Within(1).Minutes);
+    }
 
-            Assert.That(createdOrUpdatedDate,
-                Is.EqualTo(DateTime.UtcNow).Within(1).Minutes);
-        }
+    [Test]
+    public async Task ShouldUpdateCreatedOrUpdatedDateUtcInUpdateAttribute()
+    {
+        var attribute = new global::Nop.Core.Domain.Common.GenericAttribute { Key = "test", KeyGroup = "test", Value = "test" };
 
-        [Test]
-        public async Task ShouldUpdateCreatedOrUpdatedDateUtcInUpdateAttribute()
-        {
-            var attribute = new global::Nop.Core.Domain.Common.GenericAttribute { Key = "test", KeyGroup = "test", Value = "test" };
+        await _genericAttributeService.InsertAttributeAsync(attribute);
+        attribute.CreatedOrUpdatedDateUTC = DateTime.UtcNow.AddDays(-30);
+        await _genericAttributeService.UpdateAttributeAsync(attribute);
 
-            await _genericAttributeService.InsertAttributeAsync(attribute);
-            attribute.CreatedOrUpdatedDateUTC = DateTime.UtcNow.AddDays(-30);
-            await _genericAttributeService.UpdateAttributeAsync(attribute);
+        var createdOrUpdatedDate = attribute.CreatedOrUpdatedDateUTC;
 
-            var createdOrUpdatedDate = attribute.CreatedOrUpdatedDateUTC;
+        await _genericAttributeService.DeleteAttributeAsync(attribute);
 
-            await _genericAttributeService.DeleteAttributeAsync(attribute);
-
-            Assert.That(createdOrUpdatedDate,
-                Is.EqualTo(DateTime.UtcNow).Within(1).Minutes);
-        }
+        Assert.That(createdOrUpdatedDate,
+            Is.EqualTo(DateTime.UtcNow).Within(1).Minutes);
     }
 }

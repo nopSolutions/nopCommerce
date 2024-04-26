@@ -4,7 +4,6 @@
     const string cardId = "latest-orders-card";
     const string hideCardAttributeName = "Reports.HideLatestOrdersCard";
     var hideCard = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCardAttributeName);
-    var gridPageSize = 5;
 }
 
 <div class="card card-primary card-outline @if(hideCard){<text>collapsed-card</text>}" id="@cardId">
@@ -28,58 +27,23 @@
         </div>
     </div>
     <script>
-            $(document).ready(function () {
-                $('#@cardId').on('click', 'button[data-card-widget="collapse"]', function () {
-                    var collapsed = !$('#@cardId').hasClass('collapsed-card');
-                    saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hideCardAttributeName', collapsed);
-                });
-            });
-        </script>
-    <div class="card-body">
-        @await Html.PartialAsync("Table", new DataTablesModel
-        {
-            Name = "orders-grid",
-            UrlRead = new DataUrl("OrderList", "Order", null),
-            Length = gridPageSize,
-            Dom = "<'row'<'col-md-12't>>" +
-                  "<'row margin-t-5'" +
-                    "<'col-lg-10 col-xs-12'<'float-lg-left'p>>" +
-                    "<'col-lg-2 col-xs-12'<'float-lg-right text-center'i>>" +
-                  ">",
-            ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(OrderModel.CustomOrderNumber))
-                {
-                    Title = T("Admin.Orders.Fields.CustomOrderNumber").Text,
-                    Width = "80"
-                },
-                new ColumnProperty(nameof(OrderModel.OrderStatus))
-                {
-                    Title = T("Admin.Orders.Fields.OrderStatus").Text,
-                    Width = "100",
-                    Render = new RenderCustom("renderColumnOrderStatus")
-                },
-                new ColumnProperty(nameof(OrderModel.CustomerEmail))
-                {
-                    Title = T("Admin.Orders.Fields.Customer").Text,
-                    Width = "250",
-                    Render = new RenderCustom("renderColumnCustomerEmail")
-                },
-                new ColumnProperty(nameof(OrderModel.CreatedOn))
-                {
-                    Title = T("Admin.Orders.Fields.CreatedOn").Text,
-                    Width = "100",
-                    Render = new RenderDate()
-                },
-                new ColumnProperty(nameof(OrderModel.Id))
-                {
-                    Title = T("Admin.Common.View").Text,
-                    Width = "50",
-                    ClassName = NopColumnClassDefaults.Button,
-                    Render = new RenderButtonView(new DataUrl("~/Admin/Order/Edit/"))
-                }
+        $(function() {
+            var collapsed = !$('#@cardId').hasClass('collapsed-card');
+            if (collapsed) {
+                $('#latestOrdersReport').load('@Url.Action("GetLatestOrders", "Home")');
             }
-        })
+
+            $('#@cardId').on('click', 'button[data-card-widget="collapse"]', function () {
+                collapsed = !$('#@cardId').hasClass('collapsed-card');
+                saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hideCardAttributeName', collapsed);
+                if (!collapsed) {
+                    $('#latestOrdersReport').load('@Url.Action("GetLatestOrders", "Home")');
+                }
+            });
+        });
+    </script>
+    <div class="card-body">
+        <div id="latestOrdersReport"></div>
         <script asp-location="Footer">
             function renderColumnCustomerEmail(data, type, row, meta) {
                 var textRenderer = $.fn.dataTable.render.text().display;

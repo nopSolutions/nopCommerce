@@ -1,13 +1,13 @@
-﻿namespace Nop.Core.Infrastructure
+﻿namespace Nop.Core.Infrastructure;
+
+/// <summary>
+/// Represents default values related to core infrastructure
+/// </summary>
+public static partial class NopInfrastructureDefaults
 {
+    //TODO: delete unused property
     /// <summary>
-    /// Represents default values related to core infrastructure
+    /// Gets a path to the web config file
     /// </summary>
-    public static partial class NopInfrastructureDefaults
-    {
-        /// <summary>
-        /// Gets a path to the web config file
-        /// </summary>
-        public static string WebConfigPath => "~/web.config";
-    }
+    public static string WebConfigPath => "~/web.config";
 }

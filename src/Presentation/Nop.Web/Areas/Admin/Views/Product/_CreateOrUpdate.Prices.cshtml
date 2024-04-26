@@ -6,7 +6,7 @@
     var stores = await storeService.GetAllStoresAsync();
 }
 <script>
-    $(document).ready(function() {
+    $(function() {
         $("#@Html.IdFor(model => model.IsTaxExempt)").click(toggleTax);
 
         toggleTax();
@@ -178,24 +178,17 @@
         <div class="col-md-9">
             <nop-select asp-for="SelectedDiscountIds" asp-items="Model.AvailableDiscounts" asp-multiple="true" />
             <script>
-                $(document).ready(function() {
-                    var discountsIdsInput = $('#@Html.IdFor(model => model.SelectedDiscountIds)').data("kendoMultiSelect");
-                    discountsIdsInput.setOptions({
-                        autoClose: false,
-                        filter: "contains"
+                $(function() {
+                    var discountsIdsInput = $('#@Html.IdFor(model => model.SelectedDiscountIds)').select2({
+                        closeOnSelect: false,
+                        @if (!Model.AvailableDiscounts.Any())
+                        {
+                        <text>
+                        disabled: true,
+                        placeholder: '@T("Admin.Catalog.Products.Fields.Discounts.NoDiscounts")',
+                        </text>
+                        }
                     });
-
-                    @if (Model.AvailableDiscounts.Count == 0)
-            {
-                <text>
-                    discountsIdsInput.setOptions({
-                        enable: false,
-                        placeholder: '@T("Admin.Catalog.Products.Fields.Discounts.NoDiscounts")'
-                    });
-                    discountsIdsInput._placeholder();
-                    discountsIdsInput._enable();
-                    </text>
-            }
                 });
             </script>
         </div>
@@ -218,15 +211,6 @@
                 <nop-select asp-for="TaxCategoryId" asp-items="Model.AvailableTaxCategories" />
                 <span asp-validation-for="TaxCategoryId"></span>
             </div>
-        </div>
-    </div>
-    <div class="form-group row @(Model.ProductEditorSettingsModel.TelecommunicationsBroadcastingElectronicServices ? null : "advanced-setting")" id="pnlIsTelecommunicationsOrBroadcastingOrElectronicServices">
-        <div class="col-md-3">
-            <nop-label asp-for="IsTelecommunicationsOrBroadcastingOrElectronicServices" />
-        </div>
-        <div class="col-md-9">
-            <nop-editor asp-for="IsTelecommunicationsOrBroadcastingOrElectronicServices" />
-            <span asp-validation-for="IsTelecommunicationsOrBroadcastingOrElectronicServices"></span>
         </div>
     </div>
     <div class="card card-default @(Model.ProductEditorSettingsModel.TierPrices ? null : "advanced-setting")">
@@ -304,7 +288,7 @@
                 </button>
                 <button type="submit" id="btnRefreshTierPrices" style="display: none"></button>
                 <script>
-                    $(document).ready(function () {
+                    $(function() {
                         $('#btnRefreshTierPrices').click(function () {
                             updateTable('#tierprices-grid');
                             //return false to don't reload a page

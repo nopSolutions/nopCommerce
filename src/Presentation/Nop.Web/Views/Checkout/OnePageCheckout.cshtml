@@ -69,10 +69,6 @@
                         }
                     </script>
                     <div class="buttons" id="billing-buttons-container">
-                        <button id="edit-billing-address-button" type="button" class="button-1" style="display: none" onclick="Billing.editAddress('@(storeLocation)checkout/GetAddressById/'); return false;">@T("Common.Edit")</button>
-
-                        <button id="delete-billing-address-button" type="button" class="button-1" style="display: none" onclick="Billing.deleteAddress('@(storeLocation)checkout/DeleteEditBillingAddress/'); return false;">@T("Common.Delete")</button>
-
                         <button id="save-billing-address-button" type="button" class="button-1" style="display: none" onclick="Billing.saveEditAddress('@(storeLocation)checkout/SaveEditBillingAddress/'); return false;">@T("Common.Save")</button>
 
                         <button type="button" name="save" class="button-1 new-address-next-step-button" onclick="Billing.save()">@T("Common.Continue")</button>
@@ -108,11 +104,9 @@
                                 </p>
                             }
 
-                            <button id="edit-shipping-address-button" type="button" class="button-1" style="display: none" onclick="Shipping.editAddress('@(storeLocation)checkout/GetAddressById/'); return false;">@T("Common.Edit")</button>
-
-                            <button id="delete-shipping-address-button" type="button" class="button-1" style="display: none" onclick="Shipping.deleteAddress('@(storeLocation)checkout/DeleteEditShippingAddress/'); return false;">@T("Common.Delete")</button>
-
-                            <button id="save-shipping-address-button" type="button" class="button-1" style="display: none" onclick="Shipping.saveEditAddress('@(storeLocation)checkout/SaveEditShippingAddress/'); return false;">@T("Common.Save")</button>
+                            <span id="edit-shipping-address-buttons">
+                                <button id="save-shipping-address-button" type="button" class="button-1" style="display: none" onclick="Shipping.saveEditAddress('@(storeLocation)checkout/SaveEditShippingAddress/'); return false;">@T("Common.Save")</button>
+                            </span>
 
                             <button type="button" class="button-1 new-address-next-step-button" onclick="Shipping.save()">@T("Common.Continue")</button>
                             <span id="shipping-please-wait" class="please-wait" style="display: none;"> @T("Common.LoadingNextStep")</span>
@@ -207,7 +201,7 @@
                         @*confirm order content will be loaded here*@
                     </div>
                     <script asp-location="Footer">
-                        ConfirmOrder.init('@(storeLocation)checkout/OpcConfirmOrder/', '@Url.RouteUrl("CheckoutCompleted")', @Model.DisplayCaptcha.ToString().ToLowerInvariant(), @Model.IsReCaptchaV3.ToString().ToLowerInvariant(), '@Model.ReCaptchaPublicKey');
+                        ConfirmOrder.init('@(storeLocation)checkout/OpcConfirmOrder/', '@Url.RouteUrl("CheckoutCompleted")', @Model.DisplayCaptcha.ToString().ToLowerInvariant(), @Model.IsReCaptchaV3.ToString().ToLowerInvariant(), '@Model.ReCaptchaPublicKey', '#checkout-step-confirm-order');
                     </script>
                     <div class="buttons" id="confirm-order-buttons-container">
                         <p class="back-link">

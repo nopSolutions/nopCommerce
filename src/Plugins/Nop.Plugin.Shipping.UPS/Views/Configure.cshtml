@@ -9,7 +9,7 @@
 
 <form asp-controller="UPSShipping" asp-action="Configure" method="post">
     <script>
-        $(document).ready(function () {
+        $(function() {
             $("#PackingType").change(togglePackingType);
             togglePackingType();
         });
@@ -45,38 +45,29 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-md-3">
+                        <nop-label asp-for="ClientId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ClientId" />
+                        <span asp-validation-for="ClientId"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="ClientSecret" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ClientSecret" />
+                        <span asp-validation-for="ClientSecret"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
                         <nop-label asp-for="AccountNumber" />
                     </div>
                     <div class="col-md-9">
                         <nop-editor asp-for="AccountNumber" />
                         <span asp-validation-for="AccountNumber"></span>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-md-3">
-                        <nop-label asp-for="AccessKey" />
-                    </div>
-                    <div class="col-md-9">
-                        <nop-editor asp-for="AccessKey" />
-                        <span asp-validation-for="AccessKey"></span>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-md-3">
-                        <nop-label asp-for="Username" />
-                    </div>
-                    <div class="col-md-9">
-                        <nop-editor asp-for="Username" />
-                        <span asp-validation-for="Username"></span>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-md-3">
-                        <nop-label asp-for="Password" />
-                    </div>
-                    <div class="col-md-9">
-                        <nop-editor asp-for="Password" />
-                        <span asp-validation-for="Password"></span>
                     </div>
                 </div>
                 <div class="form-group row">

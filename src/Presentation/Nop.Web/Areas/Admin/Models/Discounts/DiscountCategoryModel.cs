@@ -1,18 +1,17 @@
 ﻿using Nop.Web.Framework.Models;
 
-namespace Nop.Web.Areas.Admin.Models.Discounts
+namespace Nop.Web.Areas.Admin.Models.Discounts;
+
+/// <summary>
+/// Represents a discount category model
+/// </summary>
+public partial record DiscountCategoryModel : BaseNopEntityModel
 {
-    /// <summary>
-    /// Represents a discount category model
-    /// </summary>
-    public partial record DiscountCategoryModel : BaseNopEntityModel
-    {
-        #region Properties
+    #region Properties
 
-        public int CategoryId { get; set; }
+    public int CategoryId { get; set; }
 
-        public string CategoryName { get; set; }
+    public string CategoryName { get; set; }
 
-        #endregion
-    }
+    #endregion
 }

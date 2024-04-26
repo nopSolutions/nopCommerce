@@ -5,29 +5,29 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Data.Extensions;
 
-namespace Nop.Data.Mapping.Builders.Orders
+namespace Nop.Data.Mapping.Builders.Orders;
+
+/// <summary>
+/// Represents a order entity builder
+/// </summary>
+public partial class OrderBuilder : NopEntityBuilder<Order>
 {
+    #region Methods
+
     /// <summary>
-    /// Represents a order entity builder
+    /// Apply entity configuration
     /// </summary>
-    public partial class OrderBuilder : NopEntityBuilder<Order>
+    /// <param name="table">Create table expression builder</param>
+    public override void MapEntity(CreateTableExpressionBuilder table)
     {
-        #region Methods
-
-        /// <summary>
-        /// Apply entity configuration
-        /// </summary>
-        /// <param name="table">Create table expression builder</param>
-        public override void MapEntity(CreateTableExpressionBuilder table)
-        {
-            table
-                .WithColumn(nameof(Order.CustomOrderNumber)).AsString(int.MaxValue).NotNullable()
-                .WithColumn(nameof(Order.BillingAddressId)).AsInt32().ForeignKey<Address>(onDelete: Rule.None)
-                .WithColumn(nameof(Order.CustomerId)).AsInt32().ForeignKey<Customer>(onDelete: Rule.None)
-                .WithColumn(nameof(Order.PickupAddressId)).AsInt32().Nullable().ForeignKey<Address>(onDelete: Rule.None)
-                .WithColumn(nameof(Order.ShippingAddressId)).AsInt32().Nullable().ForeignKey<Address>(onDelete: Rule.None);
-        }
-
-        #endregion
+        table
+            .WithColumn(nameof(Order.CustomOrderNumber)).AsString(int.MaxValue).NotNullable()
+            .WithColumn(nameof(Order.BillingAddressId)).AsInt32().ForeignKey<Address>(onDelete: Rule.None)
+            .WithColumn(nameof(Order.CustomerId)).AsInt32().ForeignKey<Customer>(onDelete: Rule.None)
+            .WithColumn(nameof(Order.PickupAddressId)).AsInt32().Nullable().ForeignKey<Address>(onDelete: Rule.None)
+            .WithColumn(nameof(Order.ShippingAddressId)).AsInt32().Nullable().ForeignKey<Address>(onDelete: Rule.None)
+            .WithColumn(nameof(Order.CustomerIp)).AsString(100).Nullable();
     }
+
+    #endregion
 }

@@ -124,6 +124,21 @@ export default function copyDependencies()
     //Magnific Popup
     gulp
       .src(nodeModules + 'magnific-popup/dist/**/*.{css,min.js}')
-      .pipe(gulp.dest(`${targetPath}magnific-popup`))
+      .pipe(gulp.dest(`${targetPath}magnific-popup`)),
+
+    //Admin LTE plugins: select2
+    gulp
+    .src(nodeModules + '/admin-lte/plugins/select2/**/*.{css,min.js}')
+    .pipe(gulp.dest(`${targetPath}admin-lte/plugins/select2`)),
+
+    //Chart.js
+    gulp
+      .src(nodeModules + 'chart.js/dist/chart.umd.{js,js.map}')
+      .pipe(rename({
+        suffix: '.min'
+      }))
+      .pipe(gulp.dest(`${targetPath}chart.js`)),
     ]);
+
+    
 }

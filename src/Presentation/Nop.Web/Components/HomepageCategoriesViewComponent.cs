@@ -1,27 +1,24 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Components;
 
-namespace Nop.Web.Components
+namespace Nop.Web.Components;
+
+public partial class HomepageCategoriesViewComponent : NopViewComponent
 {
-    public partial class HomepageCategoriesViewComponent : NopViewComponent
+    protected readonly ICatalogModelFactory _catalogModelFactory;
+
+    public HomepageCategoriesViewComponent(ICatalogModelFactory catalogModelFactory)
     {
-        private readonly ICatalogModelFactory _catalogModelFactory;
+        _catalogModelFactory = catalogModelFactory;
+    }
 
-        public HomepageCategoriesViewComponent(ICatalogModelFactory catalogModelFactory)
-        {
-            _catalogModelFactory = catalogModelFactory;
-        }
+    public async Task<IViewComponentResult> InvokeAsync()
+    {
+        var model = await _catalogModelFactory.PrepareHomepageCategoryModelsAsync();
+        if (!model.Any())
+            return Content("");
 
-        public async Task<IViewComponentResult> InvokeAsync()
-        {
-            var model = await _catalogModelFactory.PrepareHomepageCategoryModelsAsync();
-            if (!model.Any())
-                return Content("");
-
-            return View(model);
-        }
+        return View(model);
     }
 }

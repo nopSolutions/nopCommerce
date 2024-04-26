@@ -1,18 +1,17 @@
-namespace Nop.Core.Domain.Messages
+namespace Nop.Core.Domain.Messages;
+
+/// <summary>
+/// Represents priority of queued email
+/// </summary>
+public enum QueuedEmailPriority
 {
     /// <summary>
-    /// Represents priority of queued email
+    /// Low
     /// </summary>
-    public enum QueuedEmailPriority
-    {
-        /// <summary>
-        /// Low
-        /// </summary>
-        Low = 0,
+    Low = 0,
 
-        /// <summary>
-        /// High
-        /// </summary>
-        High = 5
-    }
+    /// <summary>
+    /// High
+    /// </summary>
+    High = 5
 }
