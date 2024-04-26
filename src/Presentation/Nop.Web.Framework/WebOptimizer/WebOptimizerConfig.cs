@@ -1,21 +1,14 @@
 ﻿using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Http.Features;
+using Nop.Core;
 using Nop.Core.Configuration;
+using Nop.Core.Infrastructure;
 using WebOptimizer;
 
 namespace Nop.Web.Framework.WebOptimizer;
 
-public partial class WebOptimizerConfig : WebOptimizerOptions, IConfig
+public partial class WebOptimizerConfig : IWebOptimizerOptions, IConfig
 {
-    #region Ctor
-
-    public WebOptimizerConfig()
-    {
-        EnableDiskCache = true;
-        EnableTagHelperBundling = false;
-    }
-
-    #endregion
-
     #region Properties
 
     /// <summary>
@@ -49,6 +42,34 @@ public partial class WebOptimizerConfig : WebOptimizerOptions, IConfig
     /// </summary>
     /// <returns>Order</returns>
     public int GetOrder() => 2;
+
+    #region WebOptimizer options
+
+    public bool? EnableCaching { get; set; } = true;
+    public bool? EnableMemoryCache { get; set; } = true;
+    public bool? EnableDiskCache { get; set; } = true;
+
+    private string _cacheDirectory = string.Empty;
+    public string CacheDirectory
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(_cacheDirectory))
+            {
+                var fileProvider = EngineContext.Current.Resolve<INopFileProvider>() ?? CommonHelper.DefaultFileProvider;
+                _cacheDirectory = fileProvider.Combine(fileProvider.MapPath("~/"), @"wwwroot\bundles");
+            }
+
+            return _cacheDirectory;
+        }
+        set => _cacheDirectory = value;
+    }
+    public bool? EnableTagHelperBundling { get; set; } = false;
+    public string CdnUrl { get; set; } = "";
+    public bool? AllowEmptyBundle { get; set; } = true;
+    public HttpsCompressionMode HttpsCompression { get; set; } = HttpsCompressionMode.Compress;
+
+    #endregion
 
     #endregion
 }
