@@ -244,28 +244,42 @@
     <div class="picture">
         <div class="image-container">
             <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title">
-                @if (viewComponentSelector.SelectComponent("LazyLoadImage") != null)
+                @if (viewComponentSelector.SelectComponent("LazyLoadImage") != null || Model.DefaultPictureModel.HoverImageUrl != "" || Model.DefaultPictureModel.HoverImageUrl != null)
                 {
                     @await Component.InvokeAsync("LazyLoadImage", new(string Key, string Value)[] 
                     {
                         ("src", Model.DefaultPictureModel.ImageUrl),
                         ("alt", Model.DefaultPictureModel.AlternateText),
                         ("title", Model.DefaultPictureModel.Title)
-                    })
+                    });
+
+                    if(Model.DefaultPictureModel.HoverImageUrl == "" || Model.DefaultPictureModel.HoverImageUrl == null)
+                        {
+                            <img alt="Default Image" src="https://www.abcwarehouse.com/images/thumbs/default-image_550.png" title="Default Image" id="default-img"/>
+                        }
                 }
                 else
                 {
-                    <img class="main-image" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
+                    <img alt="Default Image" src="https://www.abcwarehouse.com/images/thumbs/default-image_550.png" title="Default Image" id="default-img"/>
                 }
                 <div class="hover-image">
-                    @if (viewComponentSelector.SelectComponent("LazyLoadImage") != null)
+                    @if (viewComponentSelector.SelectComponent("LazyLoadImage") != null || Model.DefaultPictureModel.HoverImageUrl != "" || Model.DefaultPictureModel.HoverImageUrl != null)
                     {
                         @await Component.InvokeAsync("LazyLoadImage", new(string Key, string Value)[] 
                         {
                             ("src", Model.DefaultPictureModel.HoverImageUrl),
                             ("alt", Model.DefaultPictureModel.HoverAlternateText),
                             ("title", Model.DefaultPictureModel.HoverTitle),
-                        })
+                        });
+
+                        if(Model.DefaultPictureModel.HoverImageUrl == "" || Model.DefaultPictureModel.HoverImageUrl == null)
+                        {
+                            <img alt="Default Image" src="https://www.abcwarehouse.com/images/thumbs/default-image_550.png" title="Default Image" id="default-img"/>
+                        }
+                    }
+                    else
+                    {
+                        <img alt="Default Image" src="https://www.abcwarehouse.com/images/thumbs/default-image_550.png" title="Default Image" id="default-img"/>
                     }
                 </div>
             </a>
