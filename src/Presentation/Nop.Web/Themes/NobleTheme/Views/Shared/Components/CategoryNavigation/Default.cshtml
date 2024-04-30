@@ -69,7 +69,7 @@
         </div>
         <div class="listbox">
             <ul class="nav nav-list">
-                @foreach (var category in Model.Categories)
+                @foreach (var category in Model.Categories.Take(15))
                 {
                     var categoryLineModel = new CategoryNavigationModel.CategoryLineModel
                     {

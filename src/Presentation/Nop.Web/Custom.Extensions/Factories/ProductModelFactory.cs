@@ -170,7 +170,7 @@ namespace Nop.Web.Factories
             foreach (var group in specModel.Groups)
             {
                 var ptList = group.Attributes
-                                 .Where(x => x.Name.Replace(" ","") == psEnum.ToString())
+                                 .Where(x => x.Name.Replace(" ", "") == psEnum.ToString())
                                  .Select(o => o.Values.Select(a => a.ValueRaw))
                                  .FirstOrDefault();
 
@@ -508,7 +508,7 @@ namespace Nop.Web.Factories
             var customer = await _workContext.GetCurrentCustomerAsync();
             var targetProfile = await _customerService.GetCustomerByIdAsync(product.VendorId);
 
-            if (customer.CustomerProfileTypeId == targetProfile.CustomerProfileTypeId)
+            if (targetProfile == null || (customer.CustomerProfileTypeId == targetProfile.CustomerProfileTypeId))
                 return false;
 
             return true;

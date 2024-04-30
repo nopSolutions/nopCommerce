@@ -22,6 +22,7 @@ namespace Nop.Core.Domain.Customers
         public static string SubscriptionAllottedCount => "SubscriptionAllottedCount";
 
         public static string SubscriptionUsedCreditCount => "SubscriptionUsedCreditCount";
+        public static string CustomerViewContactDetail => "PublicStore.ViewContactDetail";
 
         
     }

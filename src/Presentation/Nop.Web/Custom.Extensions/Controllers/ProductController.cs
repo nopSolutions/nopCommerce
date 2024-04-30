@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DocumentFormat.OpenXml.Office2016.Excel;
+using DocumentFormat.OpenXml.Vml.Office;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Payments;
 using Nop.Web.Models.Catalog;
@@ -37,6 +39,14 @@ namespace Nop.Web.Controllers
             //check view count is valid ie under below allotted count from customer activity log
             var customerActivity = await _customerActivityService.GetAllActivitiesAsync(customerId: currentCustomer.Id, activityLogTypeId: 154, entityName: "Product");
 
+            //var viewedData = await _genericAttributeService.GetAttributeAsync<string>(currentCustomer, "PublicStore.ViewContactDetail", storeId);
+
+            var props = (await _genericAttributeService.GetAttributesForEntityAsync(currentCustomer.Id, "Customer"))
+                        .Where(x => x.StoreId == storeId && x.Key == "PublicStore.ViewContactDetail")
+                        .ToList();
+
+            var uniqueValues = props.GroupBy(x => x.Value).Select(grp => grp.First()).ToList();
+
             if (usedCreditCount >= allottedCreditCount)
             {
                 //subscription limit reached
@@ -51,10 +61,24 @@ namespace Nop.Web.Controllers
             model.TargetCustomerMobileNumber = mobileNumber;
             model.TargetCustomerEmailId = targetCustomer.Email;
 
-            if (!customerActivity.Where(o => o.EntityId == product.Id).Any())
+            if (!uniqueValues.Where(o => o.Value == targetCustomer.Id.ToString()).Any())
             {
                 //update viewed credits
                 await _genericAttributeService.SaveAttributeAsync(currentCustomer, NopCustomerDefaults.SubscriptionUsedCreditCount, (usedCreditCount + 1), storeId);
+
+                var attribute = new Nop.Core.Domain.Common.GenericAttribute
+                {
+                    Key = "PublicStore.ViewContactDetail",
+                    KeyGroup = "Customer",
+                    Value = targetCustomer.Id.ToString(),
+                    EntityId = currentCustomer.Id,
+                    StoreId= storeId,
+                    CreatedOrUpdatedDateUTC = DateTime.Now
+                };
+
+                //customer didnt view this customer contact detail previously. Insert in to generic attribute.
+                await _genericAttributeService.InsertAttributeAsync(attribute);
+                //await _genericAttributeService.SaveAttributeAsync(currentCustomer, "PublicStore.ViewContactDetail", targetCustomer.Id, storeId);
 
                 //customer didnt view this customer contact detail previously.
                 await _customerActivityService.InsertActivityAsync("PublicStore.ViewContactDetail", "Viewed Contact Details: First Time", product);

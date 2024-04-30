@@ -6,9 +6,9 @@
             <div class="title sub-title col-md-12">
                 <span class="category-home-box">@T("Categories")</span>
             </div>
-            @if (Model.Count <= 100)
+            @if (Model.Count <= 2000)
             {
-                foreach (var item in Model)
+                foreach (var item in Model.Take(15))
                 {
                     <div class="item-box col-xs-12 col-sm-3 col-md-2">
                         <div class="category-item category-item-home">
@@ -50,7 +50,7 @@
             <div class="title sub-title col-md-12">
                 <span class="category-home-box">All Technologies</span>
             </div>
-            @if (Model.Count <= 100)
+            @if (Model.Count <= 2000)
             {
                 foreach (var item in Model)
                 {

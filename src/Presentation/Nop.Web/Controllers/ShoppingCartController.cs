@@ -638,14 +638,17 @@ public partial class ShoppingCartController : BasePublicController
         //return Json(new { redirect = redirectUrl });
         //}
 
+        // target customer to whom we are shortlising or sending interest 
+        var toCustomer = await _customerService.GetCustomerByIdAsync(product.VendorId);
+
         //added to the cart/wishlist
         switch (cartType)
         {
             case ShoppingCartType.Wishlist:
                 {
                     //activity log
-                    await _customerActivityService.InsertActivityAsync("PublicStore.AddToWishlist",
-                        string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.AddToWishlist"), product.Name), product);
+                    //await _customerActivityService.InsertActivityAsync("PublicStore.AddToWishlist",
+                    //    string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.AddToWishlist"), product.Name), product);
 
                     if (_shoppingCartSettings.DisplayWishlistAfterAddingProduct || forceredirection)
                     {
@@ -659,11 +662,9 @@ public partial class ShoppingCartController : BasePublicController
                     //display notification message and update appropriate blocks
                     var shoppingCarts = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.Wishlist, store.Id, productId);
 
-                    // target customer to whom we are shortlising or sending interest 
-                    var toCustomer = await _customerService.GetCustomerByIdAsync(product.VendorId);
-
                     var message = string.Empty;
                     var messagetype = string.Empty;
+                    var canSendPM = true;
 
                     if (shoppingCarts.Any())
                     {
@@ -671,9 +672,20 @@ public partial class ShoppingCartController : BasePublicController
                         await _shoppingCartService.DeleteShoppingCartItemAsync(shoppingCarts.First().Id, false, false);
                         message = "Successfully removed from the short list.";
                         messagetype = "removeFromWishList";
+
+                        //do not send private message when un shortlisting
+                        canSendPM = false;
+
+                        //activity log
+                        await _customerActivityService.InsertActivityAsync("PublicStore.RemoveFromWishlist",
+                            string.Format("Removed a profile from wishlist ('{0}')", product.Name), product);
                     }
                     else
                     {
+                        //activity log
+                        await _customerActivityService.InsertActivityAsync("PublicStore.AddToWishlist",
+                            string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.AddToWishlist"), product.Name), product);
+
                         //create custom attXml before saving.
                         attXml = $"Customer {(await _workContext.GetCurrentCustomerAsync()).Email} shortlisted Customer {toCustomer.Email} with Customer Id {toCustomer.Id}";
 
@@ -702,24 +714,28 @@ public partial class ShoppingCartController : BasePublicController
                     var updatetopwishlistsectionhtml = string.Format(await _localizationService.GetResourceAsync("Wishlist.HeaderQuantity"),
                         shoppingCarts.Sum(item => item.Quantity));
 
-                    // send email & show in the messages that customer has shortlisted the profile using privite messages
-                    var pm = new PrivateMessage
-                    {
-                        StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,
-                        ToCustomerId = product.VendorId, //Vendor id in Product table is customer id
-                        FromCustomerId = (await _workContext.GetCurrentCustomerAsync()).Id,
-                        Subject = "You have been shortlisted",
-                        SenderSubject = "You shorlisted a profile",
-                        Text = "You have been shortlisted. Please get in touch to discuss further.",
-                        SenderBodyText = $"You have shortlisted the profile {product.Name}",
-                        IsDeletedByAuthor = false,
-                        IsDeletedByRecipient = false,
-                        IsRead = false,
-                        IsSystemGenerated = true,
-                        CreatedOnUtc = DateTime.UtcNow
-                    };
 
-                    await _forumService.InsertPrivateMessageAsync(pm);
+                    if (canSendPM)
+                    {
+                        // send email & show in the messages that customer has shortlisted the profile using privite messages
+                        var pm = new PrivateMessage
+                        {
+                            StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,
+                            ToCustomerId = product.VendorId, //Vendor id in Product table is customer id
+                            FromCustomerId = (await _workContext.GetCurrentCustomerAsync()).Id,
+                            Subject = "You have been shortlisted",
+                            SenderSubject = "You shorlisted a profile",
+                            Text = "You have been shortlisted. Please get in touch to discuss further.",
+                            SenderBodyText = $"You have shortlisted the profile {product.Name}",
+                            IsDeletedByAuthor = false,
+                            IsDeletedByRecipient = false,
+                            IsRead = false,
+                            IsSystemGenerated = true,
+                            CreatedOnUtc = DateTime.UtcNow
+                        };
+
+                        await _forumService.InsertPrivateMessageAsync(pm);
+                    }
 
                     return Json(new
                     {
@@ -738,7 +754,7 @@ public partial class ShoppingCartController : BasePublicController
 
                     //activity log
                     await _customerActivityService.InsertActivityAsync("PublicStore.InterestSent",
-                        string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.AddToWishlist"), product.Name), product);
+                        string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.SendPM"), toCustomer.Email), toCustomer);
 
                     //display notification message and update appropriate blocks
                     var shoppingCarts = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.InterestSent, (await _storeContext.GetCurrentStoreAsync()).Id, product.Id);
