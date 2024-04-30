@@ -80,10 +80,32 @@
                         <ul class="option-list">
                             @foreach (var attributeValue in attribute.Values)
                             {
-                                <li>
-                                    <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
-                                    <label for="@(controlId)_@(attributeValue.Id)">@attributeValue.Name</label>
-                                </li>
+                                if (attribute.Name == "ProfileType" && currentPageUrl.Contains("register", StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    //give support?  then preselect it.
+                                    if (attributeValue.Id == 1)
+                                    {
+                                        <li>
+                                            <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="checked" />
+                                            <label for="@(controlId)_@(attributeValue.Id)">@attributeValue.Name</label>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li>
+                                            <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
+                                            <label for="@(controlId)_@(attributeValue.Id)">@attributeValue.Name</label>
+                                        </li>
+                                    }
+
+                                }
+                                else
+                                {
+                                    <li>
+                                        <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
+                                        <label for="@(controlId)_@(attributeValue.Id)">@attributeValue.Name</label>
+                                    </li>
+                                }
                             }
                         </ul>
                         <h6>You can''t modify this once registered..!</h6>
@@ -153,7 +175,8 @@
                                         <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">@attributeValue.Name</option>
                                     }
                                 </select>
-                                <h6> You can select a maximum of 5 technologies.</h6>
+                                <h6> You can select a maximum of 10 skills. <span style="font-weight:bold;color:red" id="lblSkillsMessage"></span></h6>
+
                             </div>
                         </div>
                         <script>
@@ -162,12 +185,13 @@
                                     //autoClose: true,
                                     autoBind: true,
                                     filter: "contains",
-                                    placeholder: "Enter 3 chars to search ...",
+                                    placeholder: "Enter characters to filter/search ...",
                                     highlightFirst: true,
                                     maxSelectedItems: 10,
                                     fillMode: "flat",
                                     size: "large",
-                                    downArrow: true
+                                    downArrow: true,
+                                    change: onChange
                                 }).data("kendoMultiSelect");
                             });
                         </script>
@@ -221,6 +245,21 @@
             }
         });
 
+        if ($('#customer_attribute_1_1').is(':checked')) {
+            //show relavent experiance
+            $('#customer_attribute_3').parent().parent().show();
+        }
+
     });
+
+</script>
+
+<script>
+
+    function onChange(e) {
+        console.log(e.sender.value());
+        $("#lblSkillsMessage").text(e.sender.value().length + "/10 selected.")
+    }
+
 
 </script>
