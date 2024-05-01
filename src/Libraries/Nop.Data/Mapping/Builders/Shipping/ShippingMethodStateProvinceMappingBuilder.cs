@@ -22,7 +22,7 @@ public partial class ShippingMethodStateProvinceMappingBuilder : NopEntityBuilde
             .WithColumn(NameCompatibilityManager.GetColumnName(typeof(ShippingMethodStateProvinceMapping), nameof(ShippingMethodStateProvinceMapping.ShippingMethodId)))
             .AsInt32().PrimaryKey().ForeignKey<ShippingMethod>()
             .WithColumn(NameCompatibilityManager.GetColumnName(typeof(ShippingMethodStateProvinceMapping), nameof(ShippingMethodStateProvinceMapping.CountryId)))
-            .AsInt32().PrimaryKey().ForeignKey<Country>()
+            .AsInt32().PrimaryKey().ForeignKey<Country>().OnDelete(System.Data.Rule.None)
             .WithColumn(NameCompatibilityManager.GetColumnName(typeof(ShippingMethodStateProvinceMapping), nameof(ShippingMethodStateProvinceMapping.StateProvinceId)))
             .AsInt32().PrimaryKey().ForeignKey<StateProvince>();
     }
