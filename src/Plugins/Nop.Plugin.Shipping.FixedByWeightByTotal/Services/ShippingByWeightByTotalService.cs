@@ -63,7 +63,9 @@ public class ShippingByWeightByTotalService : IShippingByWeightByTotalService
                 : query;
 
             //filter by shipping method
-            data = data.Where(sbw => sbw.ShippingMethodId == shippingMethodId);
+            data = shippingMethodId <= 0
+                ? data
+                : data = data.Where(sbw => sbw.ShippingMethodId == shippingMethodId);
 
             //filter by store
             data = storeId == 0

@@ -109,6 +109,7 @@ public class FixedByWeightByTotalController : BasePluginController
         foreach (var sm in await _shippingService.GetAllShippingMethodsAsync())
             model.AvailableShippingMethods.Add(new SelectListItem { Text = sm.Name, Value = sm.Id.ToString() });
         //countries
+        model.AvailableShippingMethods.Add(new SelectListItem { Text = "*", Value = "0" });
         model.AvailableCountries.Add(new SelectListItem { Text = "*", Value = "0" });
         var countries = await _countryService.GetAllCountriesAsync();
         foreach (var c in countries)
