@@ -163,7 +163,7 @@ public class FixedByWeightByTotalComputationMethod : BasePlugin, IShippingRateCo
             //get weight of shipped items (excluding items with free shipping)
             var weight = await _shippingService.GetTotalWeightAsync(getShippingOptionRequest, ignoreFreeShippedItems: true);
 
-            foreach (var shippingMethod in await _shippingService.GetAllShippingMethodsAsync(countryId))
+            foreach (var shippingMethod in await _shippingService.GetAllShippingMethodsAsync(countryId, stateProvinceId))
             {
                 int? transitDays = null;
                 var rate = decimal.Zero;
@@ -194,7 +194,8 @@ public class FixedByWeightByTotalComputationMethod : BasePlugin, IShippingRateCo
         {
             //shipping rate calculation by fixed rate
             var restrictByCountryId = getShippingOptionRequest.ShippingAddress?.CountryId;
-            response.ShippingOptions = await (await _shippingService.GetAllShippingMethodsAsync(restrictByCountryId)).SelectAwait(async shippingMethod => new ShippingOption
+            var restrictByStateProvinceId = getShippingOptionRequest.ShippingAddress?.StateProvinceId;
+            response.ShippingOptions = await (await _shippingService.GetAllShippingMethodsAsync(restrictByCountryId, restrictByStateProvinceId)).SelectAwait(async shippingMethod => new ShippingOption
             {
                 Name = await _localizationService.GetLocalizedAsync(shippingMethod, x => x.Name),
                 Description = await _localizationService.GetLocalizedAsync(shippingMethod, x => x.Description),
@@ -223,7 +224,8 @@ public class FixedByWeightByTotalComputationMethod : BasePlugin, IShippingRateCo
             return null;
 
         var restrictByCountryId = getShippingOptionRequest.ShippingAddress?.CountryId;
-        var rates = await (await _shippingService.GetAllShippingMethodsAsync(restrictByCountryId))
+        var restrictByStateProvinceId = getShippingOptionRequest.ShippingAddress?.StateProvinceId;
+        var rates = await (await _shippingService.GetAllShippingMethodsAsync(restrictByCountryId, restrictByStateProvinceId))
             .SelectAwait(async shippingMethod => await GetRateAsync(shippingMethod.Id)).Distinct().ToListAsync();
 
         //return default rate if all of them equal

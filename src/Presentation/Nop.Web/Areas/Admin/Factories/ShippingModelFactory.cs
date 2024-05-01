@@ -530,5 +530,41 @@ public partial class ShippingModelFactory : IShippingModelFactory
         return model;
     }
 
+    /// <summary>
+    /// Prepare shipping method state province restriction model
+    /// </summary>
+    /// <param name="model">Shipping method state province restriction model</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the shipping method state province restriction model
+    /// </returns>
+    public virtual async Task<ShippingMethodStateProvinceRestrictionModel> PrepareShippingMethodStateProvinceRestrictionModelAsync(ShippingMethodStateProvinceRestrictionModel model)
+    {
+        if (model == null)
+            throw new ArgumentNullException(nameof(model));
+
+        var stateProvinces = await _stateProvinceService.GetStateProvincesByCountryIdAsync(model.CountryId, showHidden: true);
+        model.AvailableStateProvinces = stateProvinces.Select(stateProvince =>
+        {
+            var stateProvinceModel = stateProvince.ToModel<StateProvinceModel>();
+
+            return stateProvinceModel;
+        }).ToList();
+
+        foreach (var shippingMethod in await _shippingService.GetAllShippingMethodsAsync())
+        {
+            model.AvailableShippingMethods.Add(shippingMethod.ToModel<ShippingMethodModel>());
+            foreach (var stateProvince in stateProvinces)
+            {
+                if (!model.Restricted.ContainsKey(stateProvince.Id))
+                    model.Restricted[stateProvince.Id] = new Dictionary<int, bool>();
+
+                model.Restricted[stateProvince.Id][shippingMethod.Id] = await _shippingService.StateProvinceRestrictionExistsAsync(shippingMethod, model.CountryId, stateProvince.Id);
+            }
+        }
+
+        return model;
+    }
+
     #endregion
 }
