@@ -161,7 +161,7 @@
                                     </div>
                                 </script>
                                 <script asp-location="Footer">
-                                    $(document).ready(function() {
+                                    $(function() {
                                         $("#@(controlId)uploader").fineUploader({
                                             request: {
                                                 endpoint: '@(Url.RouteUrl("UploadFileCheckoutAttribute", new {attributeId = attribute.Id}))'
@@ -192,7 +192,7 @@
                                 <div id="@(controlId + "downloadurl")">
                                     @if (download != null)
                                     {
-                                        <a href="@(Url.Action("GetFileUpload", "Download", new { downloadId = download.DownloadGuid }))" class="download-uploaded-file">@T("Common.FileUploader.DownloadUploadedFile")</a>
+                                        <a href="@(Url.RouteUrl("DownloadGetFileUpload", new { downloadId = download.DownloadGuid }))" class="download-uploaded-file">@T("Common.FileUploader.DownloadUploadedFile")</a>
                                     }
                                 </div>
                                 <div>
@@ -229,7 +229,7 @@
                                     }
                                 </ul>
                                 <script asp-location="Footer">
-                                    $(document).ready(function() {
+                                    $(function() {
                                         $('.checkout-attributes #color-squares-@(attribute.Id)').on('click', 'input', function (event) {
                                             $('.checkout-attributes #color-squares-@(attribute.Id)').find('li').removeClass('selected-value');
                                             $(this).closest('li').addClass('selected-value');
@@ -249,7 +249,7 @@
         </dl>
     </div>
     <script asp-location="Footer">
-        $(document).ready(function() {
+        $(function() {
             checkoutAttributeChange();
             @Html.Raw(attributeChangeScriptsBuilder.ToString())
         });
@@ -257,7 +257,7 @@
         function checkoutAttributeChange() {
             $.ajax({
                 cache: false,
-                url: "@Html.Raw(Url.Action("checkoutattributechange", "shoppingcart", new { isEditable = Model.IsEditable }))",
+                url: "@Html.Raw(Url.RouteUrl("CheckoutAttributeChange", new { isEditable = Model.IsEditable }))",
                 data: $('#shopping-cart-form').serialize(),
                 type: "POST",
                 success: function (data, textStatus, jqXHR) {

@@ -22,6 +22,10 @@
                     </span>
                 </div>
             }
+            @if (Model.DisplayCaptcha)
+            {
+                <nop-captcha />
+            }
         </div>
         <div class="newsletter-validation">
             <span id="subscribe-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait")</span>
@@ -29,13 +33,37 @@
         </div>
     </div>
     <div class="newsletter-result" id="newsletter-result-block"></div>
-    <script asp-location="Footer">
-        function newsletter_subscribe(subscribe) {
+    <script asp-location="Footer">        
+        async function getCaptchaToken(action, reCaptchaPublicKey, isReCaptchaV3) {
+            var recaptchaToken = '';
+            if (isReCaptchaV3) {
+                grecaptcha.ready(() => {
+                    grecaptcha.execute(reCaptchaPublicKey, { action: action }).then((token) => {
+                        recaptchaToken = token;
+                    });
+                });
+
+                while (recaptchaToken == '') {
+                    await new Promise(t => setTimeout(t, 100));
+                }
+            } else {
+                recaptchaToken = $('#newsletter-subscribe-block .captcha-box textarea[name="g-recaptcha-response"').val();
+            }
+            
+            return recaptchaToken;
+        }       
+
+        async function newsletter_subscribe(subscribe) {
             var subscribeProgress = $("#subscribe-loading-progress");
             subscribeProgress.show();
+            var captchaTok = '';
+            if (@Model.DisplayCaptcha.ToString().ToLowerInvariant() == true) {
+                captchaTok = await getCaptchaToken('SubscribeNewsletter', '@Model.ReCaptchaPublicKey', @Model.IsReCaptchaV3.ToString().ToLowerInvariant());
+            }
             var postData = {
                 subscribe: subscribe,
-                email: $("#newsletter-email").val()
+                email: $("#newsletter-email").val(),                
+                'g-recaptcha-response': captchaTok
             };
             addAntiForgeryToken(postData);
             $.ajax({
@@ -61,7 +89,7 @@
             });
         }
 
-        $(document).ready(function () {
+        $(function() {
             $('#newsletter-subscribe-button').on('click', function () {
                 @if (Model.AllowToUnsubscribe)
                 {

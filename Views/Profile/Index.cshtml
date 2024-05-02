@@ -16,7 +16,7 @@
             var selectPostsTab = Model.ForumsEnabled && Model.PagingPosts ? ".tabs( 'option', 'active', 1 )" : "";
         }
         <script asp-location="Footer">
-            $(document).ready(function () {
+            $(function() {
                 $("#tabs").tabs()@Html.Raw(selectPostsTab);
             });
         </script>

@@ -37,18 +37,18 @@
                                     </div>
                                 </div>
 
-                                @if (Model.PaymentMethodRestriction.AvailablePaymentMethods.Count == 0)
+                                @if (!Model.PaymentMethodRestriction.AvailablePaymentMethods.Any())
                                 {
                                     <text>No payment methods installed</text>
                                 }
-                                else if (Model.PaymentMethodRestriction.AvailableCountries.Count == 0)
+                                else if (!Model.PaymentMethodRestriction.AvailableCountries.Any())
                                 {
                                     <text>No countries available</text>
                                 }
                                 else
                                 {
                                     <script>
-                                $(document).ready(function () {
+                                $(function() {
                                     @foreach (var pm in Model.PaymentMethodRestriction.AvailablePaymentMethods)
                                     {
                                         var systemNameWithoutDot = pm.SystemName.Replace(".", "");

@@ -47,10 +47,28 @@
                 <span asp-validation-for="DistributedCacheConfigModel.TableName"></span>
             </div>
         </div>
+        <div class="form-group row" id="distributed-cache-instance-name">
+            <div class="col-md-3">
+                <nop-label asp-for="DistributedCacheConfigModel.InstanceName" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="DistributedCacheConfigModel.InstanceName" />
+                <span asp-validation-for="DistributedCacheConfigModel.InstanceName"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="distributed-cache-publish-interval">
+            <div class="col-md-3">
+                <nop-label asp-for="DistributedCacheConfigModel.PublishIntervalMs" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="DistributedCacheConfigModel.PublishIntervalMs" />
+                <span asp-validation-for="DistributedCacheConfigModel.PublishIntervalMs"></span>
+            </div>
+        </div>
     </nop-nested-setting>
 </div>
 <script>
-    $(document).ready(function () {
+    $(function() {
         $("#@Html.IdFor(model => model.DistributedCacheConfigModel.Enabled)").click(toggleDistributedCache);
         $(@Html.IdFor(model => model.DistributedCacheConfigModel.DistributedCacheType)).change(toggleDistributedCache);
         toggleDistributedCache();
@@ -61,25 +79,44 @@
             $('#distributed-cache-connection-string').showElement();
             $('#distributed-cache-type').showElement();
 
-            var cacheType = $('#@Html.IdFor(model => model.DistributedCacheConfigModel.DistributedCacheType)').val();
+            var cacheType = Number.parseInt($('#@Html.IdFor(model => model.DistributedCacheConfigModel.DistributedCacheType)').val());
 
-            if (cacheType == @((int)DistributedCacheType.Memory))
+            switch (cacheType)
             {
-                $('#distributed-cache-connection-string').hideElement();
-            }
-
-            if (cacheType == @((int)DistributedCacheType.SqlServer)) {
-                $('#distributed-cache-schema-name').showElement();
-                $('#distributed-cache-table-name').showElement();
-            } else {
-                $('#distributed-cache-schema-name').hideElement();
-                $('#distributed-cache-table-name').hideElement();
+                case @((int)DistributedCacheType.Memory):
+                    $('#distributed-cache-connection-string').hideElement();
+                    $('#distributed-cache-schema-name').hideElement();
+                    $('#distributed-cache-table-name').hideElement();
+                    $('#distributed-cache-instance-name').hideElement();
+                    $('#distributed-cache-publish-interval').hideElement();
+                    break;
+                case @((int)DistributedCacheType.SqlServer):
+                    $('#distributed-cache-schema-name').showElement();
+                    $('#distributed-cache-table-name').showElement();
+                    $('#distributed-cache-instance-name').hideElement();
+                    $('#distributed-cache-publish-interval').hideElement();
+                    break;
+                case @((int)DistributedCacheType.Redis):
+                    $('#distributed-cache-publish-interval').hideElement();
+                    $('#distributed-cache-schema-name').hideElement();
+                    $('#distributed-cache-table-name').hideElement();
+                    $('#distributed-cache-instance-name').showElement();
+                    break;
+                case @((int)DistributedCacheType.RedisSynchronizedMemory):
+                    $('#distributed-cache-publish-interval').showElement();
+                    $('#distributed-cache-schema-name').hideElement();
+                    $('#distributed-cache-table-name').hideElement();
+                    $('#distributed-cache-instance-name').showElement();
+                default:
+                    break;
             }
         } else {
             $('#distributed-cache-connection-string').hideElement();
             $('#distributed-cache-schema-name').hideElement();
             $('#distributed-cache-table-name').hideElement();
             $('#distributed-cache-type').hideElement();
+            $('#distributed-cache-instance-name').hideElement();
+            $('#distributed-cache-publish-interval').hideElement();
         }
     }
 </script>

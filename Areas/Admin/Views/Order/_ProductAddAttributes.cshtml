@@ -59,7 +59,7 @@
                                             </div>
                                         }
                                         <script>
-                                            $(document).ready(function() {
+                                            $(function() {
                                                 showHideDropdownQuantity("@controlId");
                                             });
                                         </script>
@@ -87,7 +87,7 @@
                                                 }
                                             </div>
                                             <script>
-                                                $(document).ready(function() {
+                                                $(function() {
                                                     showHideRadioQuantity("@controlId");
                                                 });
                                             </script>
@@ -112,7 +112,7 @@
                                                         <label class="margin-l-10 margin-r-5" for="@(controlId)_@(attributeValue.Id)_qty">@(T("Products.ProductAttributes.PriceAdjustment.Quantity").Text)</label>
                                                         <input class="qty-box form-control" type="text" name="@(controlId)_@(attributeValue.Id)_qty" id="@(controlId)_@(attributeValue.Id)_qty" value="@(attributeValue.Quantity)" />
                                                         <script>
-                                                            $(document).ready(function() {
+                                                            $(function() {
                                                                 showHideCheckboxQuantity('@(controlId)_@(attributeValue.Id)');
                                                             })
                                                         </script>
@@ -188,7 +188,7 @@
                                             </div>
                                         </script>
                                         <script>
-                                            $(document).ready(function() {
+                                            $(function() {
                                                 $("#@(controlId)uploader").fineUploader({
                                                     request: {
                                                         endpoint: '@(Url.RouteUrl("UploadFileProductAttribute", new {attributeId = attribute.Id}))'
@@ -213,7 +213,7 @@
 
                                                     if (responseJSON.message) {
                                                         $('#uploadFileProductAttributeFailed-info').text((responseJSON.message).Text.replace(/<[^>]+>/g, ''));
-                                                        $("#uploadFileProductAttributeFailed").click();
+                                                        $("#uploadFileProductAttributeFailed").trigger("click");
                                                     }
                                                 });
 
@@ -305,13 +305,13 @@
                             }
                             if (data.message) {
                                 $('#productdetails_attributechangeMessage-info').text(data.message);
-                                $("#productdetails_attributechangeMessage").click();
+                                $("#productdetails_attributechangeMessage").trigger("click");
                             }
                         }
                     });
                 }
 
-                $(document).ready(function() {
+                $(function() {
                     @(attributeChangeHandlerFuncName)();
                     @Html.Raw(attributeChangeScriptsBuilder.ToString())
                 });

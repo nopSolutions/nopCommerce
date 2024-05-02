@@ -39,7 +39,7 @@
                                     <option value="0">@T("Products.ProductAttributes.DropdownList.DefaultItem")</option>
                                     @foreach (var attributeValue in attribute.Values)
                                     {
-                                        var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
+                                        var attributeName = attributeValue.PriceAdjustmentValue == 0 ?
                                             attributeValue.Name :
                                             T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment,
                                                 attributeValue.CustomerEntersQty ? T("Products.ProductAttributes.PriceAdjustment.PerItem").Text : string.Empty).Text;
@@ -54,7 +54,7 @@
                                     </div>
                                 }
                                 <script asp-location="Footer">
-                                    $(document).ready(function() {
+                                    $(function() {
                                         showHideDropdownQuantity("@controlId");
                                     });
                                 </script>
@@ -85,7 +85,7 @@
                                     }
                                 </ul>
                                 <script asp-location="Footer">
-                                    $(document).ready(function() {
+                                    $(function() {
                                         showHideRadioQuantity("@controlId");
                                     });
                                 </script>
@@ -112,7 +112,7 @@
                                                     <label for="@(controlId)_@(attributeValue.Id)_qty">@(T("Products.ProductAttributes.PriceAdjustment.Quantity").Text)</label>
                                                     <input type="text" name="@(controlId)_@(attributeValue.Id)_qty" id="@(controlId)_@(attributeValue.Id)_qty" value="@(attributeValue.Quantity)" />
                                                     <script asp-location="Footer">
-                                                        $(document).ready(function() {
+                                                        $(function() {
                                                             showHideCheckboxQuantity('@(controlId)_@(attributeValue.Id)');
                                                         })
                                                     </script>
@@ -201,7 +201,7 @@
                                     </div>
                                 </script>
                                 <script asp-location="Footer">
-                                    $(document).ready(function() {
+                                    $(function() {
                                         $("#@(controlId)uploader").fineUploader({
                                             request: {
                                                 endpoint: '@(Url.RouteUrl("UploadFileProductAttribute", new { attributeId = attribute.Id }))'
@@ -232,7 +232,7 @@
                                 <div id="@(controlId + "downloadurl")">
                                     @if (download != null)
                                     {
-                                        <a href="@(Url.Action("GetFileUpload", "Download", new {downloadId = download.DownloadGuid}))" class="download-uploaded-file">@T("Common.FileUploader.DownloadUploadedFile")</a>
+                                        <a href="@(Url.RouteUrl("DownloadGetFileUpload", new {downloadId = download.DownloadGuid}))" class="download-uploaded-file">@T("Common.FileUploader.DownloadUploadedFile")</a>
                                     }
                                 </div>
                                 <div>
@@ -278,7 +278,7 @@
                                     </div>
                                 }
                                 <script asp-location="Footer">
-                                    $(document).ready(function() {
+                                    $(function() {
                                         $('.attributes #color-squares-@(attribute.Id)').on('click', 'input', function(event) {
                                             $('.attributes #color-squares-@(attribute.Id)').find('li').removeClass('selected-value');
                                             $(this).closest('li').addClass('selected-value');
@@ -320,7 +320,7 @@
                                     </div>
                                 }
                                 <script asp-location="Footer">
-                                    $(document).ready(function() {
+                                    $(function() {
                                         $('.attributes #image-squares-@(attribute.Id)').on('click', 'input', function(event) {
                                             $('.attributes #image-squares-@(attribute.Id)').find('li').removeClass('selected-value');
                                             $(this).closest('li').addClass('selected-value');
@@ -364,7 +364,7 @@
 
         <script asp-location="Footer">
             var combinationsBehavior_@(Model.Id);
-            $(document).ready(function () {
+            $(function() {
                 combinationsBehavior_@(Model.Id) = createCombinationsBehavior({
                     contentEl: '[data-productid="@Model.Id"]',
                     fetchUrl: '@Html.Raw(Url.RouteUrl("GetProductCombinations", new { productId = Model.Id }))'
@@ -384,7 +384,7 @@
         if (Model.AllowAddingOnlyExistingAttributeCombinations && catalogSettings.AttributeValueOutOfStockDisplayType == AttributeValueOutOfStockDisplayType.Disable)
         {
             <script asp-location="Footer">
-                $(document).ready(function () {
+                $(function() {
                     $(combinationsBehavior_@(Model.Id)).on('processed', function () {
                         @(attributeChangeHandlerFuncName)();
                     });
@@ -444,7 +444,7 @@
             function @(attributeChangeHandlerFuncName)() {
                 $.ajax({
                     cache: false,
-                    url: "@Html.Raw(Url.Action("productdetails_attributechange", "shoppingcart", new { productId = Model.Id, validateAttributeConditions = attributesHaveConditions, loadPicture = attributesHaveAssociatedPictures }))",
+                    url: "@Html.Raw(Url.RouteUrl("ProductDetailsAttributeChange", new { productId = Model.Id, validateAttributeConditions = attributesHaveConditions, loadPicture = attributesHaveAssociatedPictures }))",
                     data: $('#product-details-form').serialize(),
                     type: "POST",
                     success: function (data, textStatus, jqXHR) {
@@ -492,6 +492,21 @@
                         if (data.pictureFullSizeUrl) {
                             $('#main-product-img-lightbox-anchor-@Model.Id').attr("href", data.pictureFullSizeUrl);
                         }
+                        @if (Model.DisplayAttributeCombinationImagesOnly) 
+                        {
+                            <text>
+                            $.each($('.thumb-item'), function(i, elem) { 
+                                var id = $(elem).data('pictureid');
+                                elems = elem
+                                if (data.pictureIds.length == 0 || data.pictureIds.includes(id)) {
+                                    $(elem).show();
+                                }
+                                else { 
+                                    $(elem).hide();
+                                }
+                            });
+                            </text>    
+                        }
                         if (data.message) {
                             alert(data.message);
                         }
@@ -499,7 +514,7 @@
                     }
                 });
             }
-            $(document).ready(function() {
+            $(function() {
                 @(attributeChangeHandlerFuncName)();
                 @Html.Raw(attributeChangeScriptsBuilder.ToString())
             });

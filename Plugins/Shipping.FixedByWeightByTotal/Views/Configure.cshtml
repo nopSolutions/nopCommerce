@@ -48,30 +48,29 @@
     }
 
     checkAdvancedSettingsMode($("#advanced-settings-mode").is(':checked'));
-    $(document)
-        .ready(function() {
-            $("#advanced-settings-mode")
-                .click(function() {
-                    checkAdvancedSettingsMode($(this).is(':checked'));
+    $(function() {
+        $("#advanced-settings-mode")
+            .click(function() {
+                checkAdvancedSettingsMode($(this).is(':checked'));
 
-                    var postData = {
-                        value: $(this).is(':checked')
-                    };
-                    addAntiForgeryToken(postData);
+                var postData = {
+                    value: $(this).is(':checked')
+                };
+                addAntiForgeryToken(postData);
 
-                    $.ajax({
-                        cache: false,
-                        url: "@Url.Action("SaveMode", "FixedByWeightByTotal")",
-                        type: "POST",
-                        data: postData,
-                        dataType: "json",
-                        error: function (jqXHR, textStatus, errorThrown) {
-                            $("#saveModeAlert").click();
-                        }
-                    });
-                    ensureDataTablesRendered();
+                $.ajax({
+                    cache: false,
+                    url: "@Url.Action("SaveMode", "FixedByWeightByTotal")",
+                    type: "POST",
+                    data: postData,
+                    dataType: "json",
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        $("#saveModeAlert").trigger("click");
+                    }
                 });
-        });
+                ensureDataTablesRendered();
+            });
+    });
 </script>
 
 <nop-alert asp-alert-id="saveModeAlert" asp-alert-message="@T("Admin.Common.Alert.Save.Error")" />

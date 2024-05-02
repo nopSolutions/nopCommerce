@@ -2,7 +2,6 @@
 
 @using Nop.Core
 @using Nop.Services.Customers
-@using Nop.Web.Framework.UI;
 @inject IWorkContext workContext
 @inject ICustomerService customerService
 
@@ -24,7 +23,6 @@
     }
 }
 
-
 <div class="page account-page check-gift-card-balance-page">
     <div class="page-title">
         @if (isRegisterCustomer)
@@ -37,6 +35,7 @@
         }
     </div>
     <div class="page-body">
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerCheckGiftCardBalanceTop, additionalData = Model })
         @if (!string.IsNullOrEmpty(Model.Message))
         {
             <div class="message-error">
@@ -65,10 +64,10 @@
             <div class="buttons">
                 <button type="submit" name="checkbalancegiftcard" id="checkbalancegiftcard" class="button-1 check-gift-card-balance-button">@T("CheckGiftCard.GiftCardCouponCode.Button")</button>
                 <script asp-location="Footer">
-                    $(document).ready(function () {
+                    $(function() {
                         $('#giftcardcouponcode').keydown(function (event) {
                             if (event.keyCode == 13) {
-                                $('#checkbalancegiftcard').click();
+                                $('#checkbalancegiftcard').trigger('click');
                                 return false;
                             }
                         });
@@ -76,5 +75,6 @@
                 </script>
             </div>
         </form>
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerCheckGiftCardBalanceBottom, additionalData = Model })
     </div>
 </div>

@@ -1,17 +1,2 @@
 @model DateTime?
-<input asp-for="@Model" />
-@if (!CultureInfo.CurrentCulture.TextInfo.IsRightToLeft)
-{
-<script>
-    $(document).ready(function () {
-        $("#@Html.IdForModel()").kendoDateTimePicker({
-            culture: "en-US",
-            value: "@Model?.ToString("MM/dd/yyyy hh:mm tt", CultureInfo.InvariantCulture)",
-            popup: {
-                position: "bottom right",
-                origin: "top right"
-            }
-        });
-    });
-</script>
-}
+<input asp-for="@Model" class="form-control"  type="datetime-local" />

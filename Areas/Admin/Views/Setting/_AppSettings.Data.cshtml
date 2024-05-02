@@ -1,3 +1,4 @@
+@using Nop.Data
 @model AppSettingsModel
 
 <div class="card-body">
@@ -27,4 +28,16 @@
             <span asp-validation-for="DataConfigModel.SQLCommandTimeout"></span>
         </div>
     </div>
+    @if(Model.DataConfigModel.DataProvider == (int)DataProviderType.SqlServer)
+    {
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="DataConfigModel.WithNoLock" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="DataConfigModel.WithNoLock" />
+                <span asp-validation-for="DataConfigModel.WithNoLock"></span>
+            </div>
+        </div>
+    }
 </div>

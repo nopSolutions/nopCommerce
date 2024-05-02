@@ -98,25 +98,17 @@
                                     <div class="col-md-4">
                                         <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true"/>
                                         <script>
-                                        $(document).ready(function() {
-                                            var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)')
-                                                .data("kendoMultiSelect");
-                                            storesIdsInput.setOptions({
-                                                autoClose: false,
-                                                filter: "contains"
-                                            });
-
-                                            @if (Model.AvailableStores.Count == 0)
-                                            {
+                                        $(function() {
+                                            var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').select2({
+                                                closeOnSelect: false,
+                                                @if (!Model.AvailableStores.Any())
+                                                {
                                                 <text>
-                                                    storesIdsInput.setOptions({
-                                                        enable: false,
-                                                        placeholder: 'No stores available'
-                                                    });
-                                                    storesIdsInput._placeholder();
-                                                    storesIdsInput._enable();
+                                                disabled: true,
+                                                placeholder: 'No stores available',
                                                 </text>
-                                            }
+                                                }
+                                            });
                                         });
                                         </script>
                                     </div>
@@ -131,7 +123,7 @@
                                 <nop-label asp-for="RoundingTypeId"/>
                             </div>
                             <div class="col-md-9">
-                                <nop-select asp-for="RoundingTypeId" asp-items="@await ((RoundingType) Model.RoundingTypeId).ToSelectListAsync()" />
+                                <nop-select asp-for="RoundingTypeId" asp-items="@(await ((RoundingType) Model.RoundingTypeId).ToSelectListAsync())" />
                                 <span asp-validation-for="RoundingTypeId"></span>
                             </div>
                         </div>

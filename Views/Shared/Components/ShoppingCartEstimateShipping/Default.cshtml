@@ -12,7 +12,7 @@
 
 <script asp-location="Footer">
 
-    $(document).ready(function () {
+    $(function() {
         var popUp = {};
         var settings = {
             opener: '#open-estimate-shipping-popup',
@@ -38,7 +38,7 @@
                     City: address.city
                 });
 
-                return '@Html.Raw(Url.Action("getestimateshipping", "shoppingcart"))?' + params;
+                return '@Html.Raw(Url.RouteUrl("EstimateShipping"))?' + params;
             },
             handlers: {
                 selectedOption: function (option) {
@@ -54,7 +54,7 @@
 
                     $.ajax({
                         cache: false,
-                        url: '@Html.Raw(Url.Action("selectshippingoption", "shoppingcart"))' + (params ? '?' + params : ''),
+                        url: '@Html.Raw(Url.RouteUrl("SelectShippingOption"))' + (params ? '?' + params : ''),
                         data: $('#shopping-cart-form').serialize(),
                         type: 'POST',
                         beforeSend: function () {

@@ -1,5 +1,4 @@
 ﻿@model Nop.Plugin.Shipping.FixedByWeightByTotal.Models.ShippingByWeightByTotalModel
-@using Nop.Web.Framework.Extensions
 
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
@@ -14,7 +13,7 @@
 }
 
 <script>
-    $(document).ready(function () {
+    $(function() {
         $("#@Html.IdFor(model => model.CountryId)").change(function () {
             var selectedItem = $(this).val();
             var ddlStates = $("#@Html.IdFor(model => model.StateProvinceId)");
@@ -33,7 +32,7 @@
                     });
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    $("#getStatesByCountryIdAlert").click();
+                    $("#getStatesByCountryIdAlert").trigger("click");
                 }
             });
         });

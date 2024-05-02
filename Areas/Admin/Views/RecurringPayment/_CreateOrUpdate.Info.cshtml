@@ -34,7 +34,7 @@
             <nop-label asp-for="CyclePeriodId" />
         </div>
         <div class="col-md-9">
-            <nop-select asp-for="CyclePeriodId" asp-items="@await (((RecurringProductCyclePeriod)Model.CyclePeriodId).ToSelectListAsync())" />
+            <nop-select asp-for="CyclePeriodId" asp-items="@(await ((RecurringProductCyclePeriod)Model.CyclePeriodId).ToSelectListAsync())" />
             <span asp-validation-for="CyclePeriodId"></span>
         </div>
     </div>

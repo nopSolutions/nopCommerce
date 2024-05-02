@@ -74,7 +74,7 @@
 "Copy":"Copiar",
 "Paste":"Enganxar",
 "E_CopyFile":"Error en copiar l'arxiu",
-"E_CopyFileInvalisPath":"No es pot copiar l'arxiu- La direcció indicada no existeix",
+"E_CopyFileInvalidPath":"No es pot copiar l'arxiu- La direcció indicada no existeix",
 "E_CopyDirInvalidPath":"No es pot copiar el directòri- La direcció indicada no existeix",
 "E_CreateArchive":"Error creant l'arxiu comprimit",
 "E_UploadingFile":"error"

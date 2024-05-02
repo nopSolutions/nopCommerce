@@ -1,7 +1,5 @@
 ﻿@model CheckoutConfirmModel
 
-@using Nop.Core.Domain.Topics
-
 <div class="checkout-data">
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OpCheckoutConfirmTop, additionalData = Model })
     @if (!string.IsNullOrEmpty(Model.MinOrderTotalWarning) || Model.Warnings.Count > 0)
@@ -42,7 +40,7 @@
             {
                 <a class="read" id="read-terms">@T("Checkout.TermsOfService.Read")</a>
                 <script>
-                    $(document).ready(function() {
+                    $(function() {
                         $('#read-terms').on('click', function(e) {
                             e.preventDefault();
                             displayPopupContentFromUrl('@Url.RouteUrl("TopicPopup", new {SystemName = "conditionsofuse"})', '@T("Checkout.TermsOfService")');

@@ -2,7 +2,7 @@
 @if (Model.IsPasswordProtected)
 {
 <script asp-location="Footer">
-        $(document).ready(function () {
+        $(function() {
             $('#button-password-@Model.Id').on('click', function() {
                 var postData = {
                     id: $("#topic-@Model.Id").val(),
@@ -37,7 +37,7 @@
             });
         });
 
-        $(document).ready(function() {
+        $(function() {
             $('#ph-topic-@Model.Id').hide();
             $('#ph-password-@Model.Id #password-@Model.Id').select().focus();
         });

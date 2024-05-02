@@ -4,12 +4,15 @@
     Layout = "_ConfigurePlugin";
 }
 
-<form asp-controller="Avalara" asp-action="Configure" method="post">
+<form asp-controller="Avalara" asp-action="Configure" method="post" id="configuration-form">
     <div class="content">
         <div class="form-horizontal">
             <nop-cards id="avalara-cards">
                 <nop-card asp-name="configuration" asp-icon="fas fa-info" asp-title="@T("Plugins.Tax.Avalara.Configuration")" asp-hide-block-attribute-name="@AvalaraTaxDefaults.HideGeneralBlock" asp-hide="@Model.HideGeneralBlock" asp-advanced="false">
                     @(await Html.PartialAsync("~/Plugins/Tax.Avalara/Views/Configuration/_Configuration.cshtml", Model))
+                </nop-card>
+                <nop-card asp-name="item-classification" asp-icon="fas fa-star" asp-title="@T("Plugins.Tax.Avalara.ItemClassification")" asp-hide-block-attribute-name="@AvalaraTaxDefaults.HideItemClassificationBlock" asp-hide="@Model.HideItemClassificationBlock" asp-advanced="false">
+                    @(await Html.PartialAsync("~/Plugins/Tax.Avalara/Views/ItemClassification/_ItemClassificationConfiguration.cshtml", Model))
                 </nop-card>
                 <nop-card asp-name="log" asp-icon="fas fa-list" asp-title="@T("Plugins.Tax.Avalara.Log")" asp-hide-block-attribute-name="@AvalaraTaxDefaults.HideLogBlock" asp-hide="@Model.HideLogBlock" asp-advanced="false">
                     @(await Html.PartialAsync("~/Plugins/Tax.Avalara/Views/Log/List.cshtml", Model))

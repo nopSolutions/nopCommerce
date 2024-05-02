@@ -37,7 +37,7 @@
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductsByTagBeforeProductList, additionalData = Model })
         @{
             var catalogProductsViewData = new ViewDataDictionary(ViewData);
-            catalogProductsViewData["fetchUrl"] = Html.Raw(Url.Action("GetTagProducts", "Catalog", new { tagId = Model.Id }));
+            catalogProductsViewData["fetchUrl"] = Html.Raw(Url.RouteUrl("GetTagProducts", new { tagId = Model.Id }));
         }
         @await Html.PartialAsync("_CatalogProducts", Model.CatalogProductsModel, catalogProductsViewData)
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductsByTagBottom, additionalData = Model })

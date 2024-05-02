@@ -5,7 +5,7 @@
     {
         @await Html.PartialAsync("_PickupPoints", Model.PickupPointsModel)
         <script>
-            $(document).ready(function () {
+            $(function() {
                 $(document).unbind('checkout_toggle_pickup_in_store');
                 $(document).on('checkout_toggle_pickup_in_store', function (e) {
                     if (e.checked)
@@ -20,7 +20,7 @@
     {
         <div class="section shipping-method" id="shipping-methods-form">
             @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OpCheckoutShippingMethodTop, additionalData = Model })
-            @if (Model.Warnings.Count == 0)
+            @if (!Model.Warnings.Any())
             {
                 <ul class="method-list">
                     @for (var i = 0; i < Model.ShippingMethods.Count; i++)

@@ -16,7 +16,7 @@
 }
 
 <script asp-location="Footer">
-    $(document).ready(function () {
+    $(function() {
         $("#@Html.IdFor(model => model.SearchCountryId)").change(function () {
             var selectedItem = $(this).val();
             var ddlStates = $("#@Html.IdFor(model => model.SearchStateProvinceId)");
@@ -35,7 +35,7 @@
                     });
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    $("#getStatesByCountryIdAlert").click();
+                    $("#getStatesByCountryIdAlert").trigger("click");
                 }
             });
         });
@@ -230,28 +230,27 @@
                                     return '<button onclick=\"javascript:OpenWindow(\'@Url.Action("EditRateByWeightByTotalPopup", "FixedByWeightByTotal")?id=' + data + '&btnId=btnRefresh&formId=shipping-byweight-form\', 800, 800, true); return false;\" class="btn btn-default"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit").Text</button>';
                                 }
 
-                                $(document)
-                                    .ready(function() {
-                                        $('#savegeneralsettings').click(function() {
-                                            var postData = $(this.form).serialize();
-                                            addAntiForgeryToken(postData);
+                                $(function() {
+                                    $('#savegeneralsettings').click(function() {
+                                        var postData = $(this.form).serialize();
+                                        addAntiForgeryToken(postData);
 
-                                            $.ajax({
-                                                cache: false,
-                                                type: "POST",
-                                                url: "@Url.Action("Configure", "FixedByWeightByTotal")",
-                                                data: postData,
-                                                dataType: "json",
-                                                success: function (data, textStatus, jqXHR) {
-                                                    $("#savegeneralsettingsOk").click();
-                                                },
-                                                error: function (jqXHR, textStatus, errorThrown) {
-                                                    $("#savegeneralsettingsError").click();
-                                                }
-                                            });
-                                            return false;
+                                        $.ajax({
+                                            cache: false,
+                                            type: "POST",
+                                            url: "@Url.Action("Configure", "FixedByWeightByTotal")",
+                                            data: postData,
+                                            dataType: "json",
+                                            success: function (data, textStatus, jqXHR) {
+                                                $("#savegeneralsettingsOk").trigger("click");
+                                            },
+                                            error: function (jqXHR, textStatus, errorThrown) {
+                                                $("#savegeneralsettingsError").trigger("click");
+                                            }
                                         });
+                                        return false;
                                     });
+                                });
                             </script>
                         </div>
                     </div>
@@ -260,17 +259,16 @@
         </div>
     </div>
     <script asp-location="Footer">
-        $(document)
-            .ready(function () {
-                $('#btnRefresh')
-                    .click(function () {
-                        //refresh grid
-                        updateTable('#shipping-byweight-grid');
+        $(function () {
+            $('#btnRefresh')
+                .click(function () {
+                    //refresh grid
+                    updateTable('#shipping-byweight-grid');
 
-                        //return false to don't reload a page
-                        return false;
-                    });
-            });
+                    //return false to don't reload a page
+                    return false;
+                });
+        });
     </script>
 
 </form>

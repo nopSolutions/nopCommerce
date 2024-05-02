@@ -2,7 +2,7 @@
 @using Nop.Core.Domain.Catalog;
 @using Nop.Services
 <script>
-    $(document).ready(function() {
+    $(function() {
         $("#@Html.IdFor(model => model.ManageInventoryMethodId)").change(toggleManageStock);
         $("#@Html.IdFor(model => model.UseMultipleWarehouses)").click(toggleManageStock);
         $("#@Html.IdFor(model => model.BackorderModeId)").change(toggleManageStock);
@@ -113,7 +113,7 @@
                 <nop-label asp-for="ManageInventoryMethodId" />
             </div>
             <div class="col-md-9">
-                <nop-select asp-for="ManageInventoryMethodId" asp-items="@await (((ManageInventoryMethod)Model.ManageInventoryMethodId).ToSelectListAsync())" />
+                <nop-select asp-for="ManageInventoryMethodId" asp-items="@(await ((ManageInventoryMethod)Model.ManageInventoryMethodId).ToSelectListAsync())" />
                 <span asp-validation-for="ManageInventoryMethodId"></span>
             </div>
         </div>
@@ -181,7 +181,7 @@
                                     <td style="width: 10%;">
                                         <input type="checkbox" id="warehouse_used_@(item.WarehouseId)" name="warehouse_used_@(item.WarehouseId)" value="@item.WarehouseId" checked="@item.WarehouseUsed" />
                                         <script>
-                                        $(document).ready(function() {
+                                        $(function() {
                                             $("#warehouse_used_@(item.WarehouseId)").change(toggleWarehouseUsed_@(item.WarehouseId));
                                             toggleWarehouseUsed_@(item.WarehouseId)();
                                         });
@@ -260,7 +260,7 @@
                 <nop-label asp-for="LowStockActivityId" />
             </div>
             <div class="col-md-9">
-                <nop-select asp-for="LowStockActivityId" asp-items="@await (((LowStockActivity)Model.LowStockActivityId).ToSelectListAsync())" />
+                <nop-select asp-for="LowStockActivityId" asp-items="@(await ((LowStockActivity)Model.LowStockActivityId).ToSelectListAsync())" />
                 <span asp-validation-for="LowStockActivityId"></span>
             </div>
         </div>
@@ -278,7 +278,7 @@
                 <nop-label asp-for="BackorderModeId" />
             </div>
             <div class="col-md-9">
-                <nop-select asp-for="BackorderModeId" asp-items="@await (((BackorderMode)Model.BackorderModeId).ToSelectListAsync())" />
+                <nop-select asp-for="BackorderModeId" asp-items="@(await ((BackorderMode)Model.BackorderModeId).ToSelectListAsync())" />
                 <span asp-validation-for="BackorderModeId"></span>
             </div>
         </div>

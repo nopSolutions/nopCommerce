@@ -1,4 +1,4 @@
-﻿$(document).ready(function () {
+﻿$(function() {
   const tour = new Shepherd.Tour(AdminTourCommonTourOptions);
 
   AdminTourNextPageButton.action = function () { window.location = '/Admin/Store/Edit/' + AdminTourDataProvider.next_button_entity_id + '?showtour=True' };

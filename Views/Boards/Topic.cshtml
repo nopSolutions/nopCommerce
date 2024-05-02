@@ -35,7 +35,7 @@
                             $.ajax({
                                 cache: false,
                                 type: "POST",
-                                url: "@Url.Action("TopicDelete", "Boards")",
+                                url: "@Url.RouteUrl("TopicDelete")",
                                 data: postData,
                                 dataType: "json",
                                 success: function (data, textStatus, jqXHR) {
@@ -59,7 +59,7 @@
             {
                 <a class="watch-topic-button" href="#" id="watch-topic-top">@Model.WatchTopicText</a>
                 <script asp-location="Footer">
-                    $(document).ready(function () {
+                    $(function() {
                         $('#watch-topic-top').on('click', function () {
                             var postData = {};
                             addAntiForgeryToken(postData);
@@ -91,7 +91,7 @@
                 ShowTotalSummary = false,
                 RouteActionName = "TopicSlugPaged",
                 UseRouteLinks = true,
-                RouteValues = new RouteValues { Id = Model.Id, Slug = Model.SeName }
+                RouteValues = new SlugRouteValues { Id = Model.Id, Slug = Model.SeName }
             });
         }
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsTopicTop, additionalData = Model })
@@ -117,7 +117,7 @@
             {
                 <a class="watch-topic-button" href="#" id="watch-topic-bottom">@Model.WatchTopicText</a>
                 <script asp-location="Footer">
-                    $(document).ready(function() {
+                    $(function() {
                         $('#watch-topic-bottom').on('click', function() {
                             var postData = {};
                             addAntiForgeryToken(postData);
@@ -160,7 +160,7 @@
             $.ajax({
                 cache: false,
                 type: "POST",
-                url: "@Url.Action("PostDelete", "Boards")",
+                url: "@Url.RouteUrl("PostDelete")",
                 data: postData,
                 dataType: "json",
                 success: function (data, textStatus, jqXHR) {

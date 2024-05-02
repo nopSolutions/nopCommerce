@@ -1,7 +1,8 @@
 ﻿@model ProductReviewOverviewModel
 @{
     var ratingPercent = 0;
-    if (Model.TotalReviews != 0)
+    var noReviews = Model.TotalReviews == 0;
+    if (!noReviews)
     {
         ratingPercent = ((Model.RatingSum * 100) / Model.TotalReviews) / 5;
     }
@@ -19,20 +20,15 @@
         @if (Model.TotalReviews > 0)
         {
             <div class="product-review-links">
-                <a href="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductId })">@Model.TotalReviews
+                <a href="#productreviews">@Model.TotalReviews
                     @T("Reviews.Overview.Reviews")</a>
-                
-                @if (Model.CanAddNewReview)
-                {
-                    <span class="separator">|</span> <a href="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductId })">@T("Reviews.Overview.AddNew")</a>
-                }
-                
-            </div>            
+            </div>
         }
-        else
+
+        @if (Model.CanAddNewReview && Model.CanCurrentCustomerLeaveReview)
         {
-            <div class="product-no-reviews">
-                <a href="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductId })">@T("Reviews.Overview.First")</a>
+            <div class="product-review-links add-review @(noReviews ? "product-no-reviews" : "")">
+                <a href="#addreview" class="">@T(noReviews ? "Reviews.Overview.First" : "Reviews.Overview.AddNew")</a>
             </div>
         }
     </div>

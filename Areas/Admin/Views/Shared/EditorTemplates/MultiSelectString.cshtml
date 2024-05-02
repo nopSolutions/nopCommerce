@@ -1,26 +1,24 @@
 ﻿@model List<string>
-<select asp-for="@Model" asp-items="@((IEnumerable<SelectListItem>)ViewData["SelectList"])"></select>
+<div class="select2-blue">
+    <select asp-for="@Model" asp-items="@((IEnumerable<SelectListItem>)ViewData["SelectList"])" multiple="multiple" class="form-control select2" data-dropdown-css-class="select2-blue"></select>
+</div>
 <script>
-    $(document).ready(function () {
-        $("#@Html.IdForModel()").kendoMultiSelect({
-            select: function (e) {
-                var current = this.value();
+    $(function() {
+        $("#@Html.IdForModel()").select2({
+            tags: true,
+            createTag: function(params) {
+                var term = $.trim(params.term);
 
-                if (this.dataSource.view()[e.item.index()].value.trim() == '') {
-                    this.value("");
+                if (term === '') {
+                    return null;
                 }
-                else if (current.indexOf("0") !== -1) {
-                    current = $.grep(current, function (value) {
-                        return value.trim() !== '';
-                    });
 
-                    this.value(current);
+                return {
+                    id: term,
+                    text: term,
+                    newTag: true
                 }
-            },
-            change: function (e) {
-                if (this.value().length === 0)
-                    this.value([""]);
             }
-        }).data("kendoMultiSelect");
+        })
     });
 </script>

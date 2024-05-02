@@ -71,6 +71,14 @@
                                         <nop-select asp-for="PaymentStatusId" asp-items="Model.AvailablePaymentStatuses" />
                                     </div>
                                 </div>
+                                <div class="form-group row" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchStoreId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
@@ -101,7 +109,8 @@
                             new FilterParameter(nameof(Model.StartDate), typeof(DateTime?)),
                             new FilterParameter(nameof(Model.EndDate), typeof(DateTime?)),
                             new FilterParameter(nameof(Model.OrderStatusId)),
-                            new FilterParameter(nameof(Model.PaymentStatusId))
+                            new FilterParameter(nameof(Model.PaymentStatusId)),
+                            new FilterParameter(nameof(Model.SearchStoreId)),
                         },
                         ColumnCollection = new List<ColumnProperty>
                         {

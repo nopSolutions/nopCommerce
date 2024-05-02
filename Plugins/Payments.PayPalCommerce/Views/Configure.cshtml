@@ -1,9 +1,16 @@
 ﻿@model ConfigurationModel
+@using Nop.Web.Framework.Models.AdminAreaTour
 
 @{
     Layout = "_ConfigurePlugin";
+
+    //tour step
+    ViewBag.TourStep = TourStep.PaymentPayPal;
+
     var learnMore = "<p>Learn more about the PayPal Commerce plugin configuration <a href='https://docs.nopcommerce.com/getting-started/configure-payments/payment-methods/paypal-commerce.html' target='_blank'>here</a>.</p>";
 }
+
+@await Html.PartialAsync("_AdminTour")
 
 @await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
 
@@ -13,7 +20,7 @@
 }
 
 <script>
-    $(document).ready(function () {
+    $(function() {
         $("#@Html.IdFor(model => model.SetCredentialsManually)").click(toggleCredentials);
         toggleCredentials();
     });

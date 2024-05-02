@@ -1,7 +1,7 @@
 @model CustomerUserSettingsModel
 
 <script>
-    $(document).ready(function () {
+    $(function() {
         $("#@Html.IdFor(model => model.CustomerSettings.DateOfBirthRequired)").click(toggleCustomerRequiredFormField);
         $("#@Html.IdFor(model => model.CustomerSettings.CountryEnabled)").click(toggleCustomerCountryFormField);
         $("#@Html.IdFor(model => model.CustomerSettings.StateProvinceEnabled)").click(toggleCustomerStateProvinceFormField);
@@ -14,10 +14,12 @@
     function toggleCustomerCountryFormField() {
         if ($('#@Html.IdFor(model => model.CustomerSettings.CountryEnabled)').is(':checked')) {
             $('#pnlCustomerCountryRequired').showElement();
+            $('#pnlCustomerDefaultCountryId').showElement();
             $('#pnlCustomerStateProvinceEnabled').showElement();
             toggleCustomerStateProvinceFormField();
         } else {
             $('#pnlCustomerCountryRequired').hideElement();
+            $('#pnlCustomerDefaultCountryId').hideElement();
             $('#pnlCustomerStateProvinceEnabled').hideElement();
             toggleCustomerStateProvinceFormField();
         }
@@ -55,6 +57,17 @@
             <span asp-validation-for="CustomerSettings.GenderEnabled"></span>
         </div>
     </div>
+    <nop-nested-setting asp-for="CustomerSettings.GenderEnabled">
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="CustomerSettings.NeutralGenderEnabled" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CustomerSettings.NeutralGenderEnabled" />
+                <span asp-validation-for="CustomerSettings.NeutralGenderEnabled"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
 	<div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="CustomerSettings.FirstNameEnabled" />
@@ -263,6 +276,15 @@
             <div class="col-md-9">
                 <nop-editor asp-for="CustomerSettings.CountryRequired" />
                 <span asp-validation-for="CustomerSettings.CountryRequired"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="pnlCustomerDefaultCountryId">
+            <div class="col-md-3">
+                <nop-label asp-for="CustomerSettings.DefaultCountryId" />
+            </div>
+            <div class="col-md-9">
+                <nop-select asp-for="CustomerSettings.DefaultCountryId" asp-items="Model.CustomerSettings.AvailableCountries" />
+                <span asp-validation-for="CustomerSettings.DefaultCountryId"></span>
             </div>
         </div>
     </nop-nested-setting>

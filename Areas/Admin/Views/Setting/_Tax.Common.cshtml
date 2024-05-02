@@ -1,3 +1,4 @@
+@using Nop.Core.Domain.Tax;
 @model TaxSettingsModel
 
 <div class="card-body">
@@ -9,6 +10,16 @@
         <div class="col-md-9">
             <nop-select asp-for="TaxBasedOn" asp-items="Model.TaxBasedOnValues" />
             <span asp-validation-for="TaxBasedOn"></span>
+        </div>
+    </div>
+    <div class="form-group row" id="automaticallyDetectCountry-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="AutomaticallyDetectCountry_OverrideForStore" asp-input="AutomaticallyDetectCountry" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="AutomaticallyDetectCountry" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AutomaticallyDetectCountry" />
+            <span asp-validation-for="AutomaticallyDetectCountry"></span>
         </div>
     </div>
     <div class="form-group row advanced-setting">
@@ -42,3 +53,20 @@
         </div>
     </div>
 </div>
+<script>
+    $(function() {
+        $("#@Html.IdFor(model => model.TaxBasedOn)").click(toggleBasedOnMethod);
+        toggleBasedOnMethod();
+    });
+
+    function toggleBasedOnMethod() {
+        var defaultAddress = '@((int)TaxBasedOn.DefaultAddress)';
+
+        var selectedBasedOnMethodId = $('#@Html.IdFor(model => model.TaxBasedOn)').val();
+        if (selectedBasedOnMethodId && selectedBasedOnMethodId == defaultAddress) {
+            $('#automaticallyDetectCountry-group').hideElement();
+        } else {
+            $('#automaticallyDetectCountry-group').showElement();
+        }
+    }
+</script>
