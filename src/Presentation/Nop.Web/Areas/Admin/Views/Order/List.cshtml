@@ -455,7 +455,6 @@
                                         data: postData,
                                         success: function (data, textStatus, jqXHR) {
                                             if (data) {
-                                                console.log(data);
                                                 for (var key in data) {
                                                     var reportSummary = '<div><strong>@T("Admin.Orders.Report.Summary").Text</strong></div>' +
                                                         '<div>@T("Admin.Orders.Report.Profit").Text <span>' + data['AggregatorProfit'] +'</span></div>' +
