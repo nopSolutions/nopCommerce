@@ -104,18 +104,17 @@
             $('.filters-button').show();
             $('.nopAjaxFilters7Spikes').show();
 
-            // remove category filters if we're not on Clearance
-			if (!isClearance) {
-				console.log('removing category spec filter');
-				var specificationPanels = $('.specificationFilterPanel7Spikes');
+            // remove filters depending on if we're in Clearance or not
+			var specificationPanels = $('.specificationFilterPanel7Spikes');
 
-				var i;
-				for (i = 0; i < specificationPanels.length; i++) {
-					var anchorTitle = $(specificationPanels[i]).find('.toggleControl');
-					var title = $(anchorTitle).text();
-					if (title.toLowerCase() === 'category') {
-						$(specificationPanels[i]).hide();
-					}
+			for (int i = 0; i < specificationPanels.length; i++) {
+				var anchorTitle = $(specificationPanels[i]).find('.toggleControl');
+				var title = $(anchorTitle).text();
+				if (isClearance && (title.toLowerCase() !== 'category' && title.toLowerCase() !== 'brands') {
+					$(specificationPanels[i]).hide();
+				}
+				else if (!isClearancetitle.toLowerCase() === 'category') {
+					$(specificationPanels[i]).hide();
 				}
 			}
         }
