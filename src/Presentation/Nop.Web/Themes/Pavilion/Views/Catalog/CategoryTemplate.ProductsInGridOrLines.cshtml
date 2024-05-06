@@ -94,6 +94,7 @@
     // check if it's a leaf category
     $(function () {
         var isLeaf = @Html.Raw(!hasChildCategories ? "true" : "false");
+		var isClearance = @Html.Raw(isClearance ? "true" : "false");
         if (isLeaf) {
             // show product display
             $('.product-selectors').show();
@@ -111,10 +112,10 @@
 			for (i = 0; i < specificationPanels.length; i++) {
 				var anchorTitle = $(specificationPanels[i]).find('.toggleControl');
 				var title = $(anchorTitle).text();
-				if (@Html.Raw(!isClearance ? "true" : "false") && title.toLowerCase() !== 'category' && title.toLowerCase() !== 'brands') {
+				if (isClearance && title.toLowerCase() !== 'category' && title.toLowerCase() !== 'brands') {
 					$(specificationPanels[i]).hide();
 				}
-				else if (!@Html.Raw(!isClearance ? "true" : "false") && title.toLowerCase() === 'category') {
+				else if (!isClearance && title.toLowerCase() === 'category') {
 					$(specificationPanels[i]).hide();
 				}
 			}
