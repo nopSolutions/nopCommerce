@@ -107,7 +107,8 @@
             // remove filters depending on if we're in Clearance or not
 			var specificationPanels = $('.specificationFilterPanel7Spikes');
 
-			for (int i = 0; i < specificationPanels.length; i++) {
+			var i = 0;
+			for (i = 0; i < specificationPanels.length; i++) {
 				var anchorTitle = $(specificationPanels[i]).find('.toggleControl');
 				var title = $(anchorTitle).text();
 				if (isClearance && (title.toLowerCase() !== 'category' && title.toLowerCase() !== 'brands') {
