@@ -39,7 +39,6 @@
     bool hasChildCategories = frontEndService.CategoryHasChildren(Model.Id);
 
     var category = Model.MetaTitle;
-    bool isFloorcareAccessories = Model.Name == "Floorcare Accessories";
 
 	/* Adding styles specific to categories */
     if (Model.Name == "Stearns & Foster")
@@ -67,14 +66,6 @@
 	</style>
 }
 
-@if (Model.Name == "Floorcare Accessories")
-{
-	<style>
-		.item-grid {
-			margin-top: 4em;
-		}
-	</style>
-}
 @if (isClearance)
 {
 	<style>
@@ -103,8 +94,7 @@
     // check if it's a leaf category
     $(function () {
         var isLeaf = @Html.Raw(!hasChildCategories ? "true" : "false");
-        var isFloorcareAccessoriesPage = @Html.Raw(isFloorcareAccessories ? "true" : "false");
-        if (isLeaf || isFloorcareAccessoriesPage) {
+        if (isLeaf) {
             // show product display
             $('.product-selectors').show();
             $('.product-grid').show();
@@ -114,17 +104,20 @@
             $('.filters-button').show();
             $('.nopAjaxFilters7Spikes').show();
 
-            // remove category filters
-            var specificationPanels = $('.specificationFilterPanel7Spikes');
+            // remove category filters if we're not on Clearance
+			if (!isClearance) {
+				console.log('removing category spec filter');
+				var specificationPanels = $('.specificationFilterPanel7Spikes');
 
-            var i;
-            for (i = 0; i < specificationPanels.length; i++) {
-                var anchorTitle = $(specificationPanels[i]).find('.toggleControl');
-                var title = $(anchorTitle).text();
-                if (title.toLowerCase() === 'category') {
-                    $(specificationPanels[i]).hide();
-                }
-            }
+				var i;
+				for (i = 0; i < specificationPanels.length; i++) {
+					var anchorTitle = $(specificationPanels[i]).find('.toggleControl');
+					var title = $(anchorTitle).text();
+					if (title.toLowerCase() === 'category') {
+						$(specificationPanels[i]).hide();
+					}
+				}
+			}
         }
         else {
             // hide product display
