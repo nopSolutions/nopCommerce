@@ -114,7 +114,7 @@
 				if (isClearance && (title.toLowerCase() !== 'category' && title.toLowerCase() !== 'brands') {
 					$(specificationPanels[i]).hide();
 				}
-				else if (!isClearancetitle.toLowerCase() === 'category') {
+				else if (!isClearance && title.toLowerCase() === 'category') {
 					$(specificationPanels[i]).hide();
 				}
 			}
