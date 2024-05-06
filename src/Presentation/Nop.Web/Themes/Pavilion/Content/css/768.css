@@ -919,3 +919,13 @@ opacity: 1 !important;
 .hover-image img {
 	opacity: 0 !important;
 }
+.header-links {
+	left: -20px;
+  }
+
+body .header-menu>ul>li>a {
+	padding: 5px 12px;
+}
+input.button-1.search-box-button {
+    z-index: 1;
+}
