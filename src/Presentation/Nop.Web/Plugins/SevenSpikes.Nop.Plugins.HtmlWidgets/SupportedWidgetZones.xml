@@ -183,4 +183,5 @@
   <WidgetZone>promo_products_below_banner</WidgetZone>
   <WidgetZone>topic_page_before_body</WidgetZone>
   <WidgetZone>topic_page_after_body</WidgetZone>
+  <WidgetZone>store_hours</WidgetZone>
 </SupportedWidgetZones>

@@ -920,12 +920,26 @@ opacity: 1 !important;
 	opacity: 0 !important;
 }
 .header-links {
-	left: -20px;
+	left: -20px !important;
   }
 
 body .header-menu>ul>li>a {
-	padding: 5px 12px;
+	padding: 5px 8px;
 }
 input.button-1.search-box-button {
     z-index: 1;
+}
+.elfsight-app-0939552e-738a-40b7-99ae-c6b3a185dada {
+    margin-left: 20px;
+}
+body .header-menu>ul>li>a>span {
+	font-size: 13px;
+}
+
+@media screen and (max-width: 1024px) {
+	div#mobile-header-logo {
+		position: absolute;
+		top: 10px;
+		left: 0;
+	}
 }
