@@ -942,4 +942,17 @@ body .header-menu>ul>li>a>span {
 		top: 10px;
 		left: 0;
 	}
+	.header {
+		margin-bottom: 0px;
+	}
+	.header-middle {
+		background: #fff;
+		width: 100%;
+		text-align: center;
+	}
+	.elfsight-app-0939552e-738a-40b7-99ae-c6b3a185dada {
+		margin-left: auto;
+		margin-right: auto;
+		padding-bottom: 15px;
+	}
 }
