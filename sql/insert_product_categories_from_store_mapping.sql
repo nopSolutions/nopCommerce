@@ -3,7 +3,7 @@ declare @StoreId int
 declare @CategoryId int
 
 set @StoreId = 7
-set @CategoryId = 449
+set @CategoryId = 442
 
 insert into Product_Category_Mapping
 select
