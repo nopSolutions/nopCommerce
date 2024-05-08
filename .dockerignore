@@ -187,4 +187,6 @@ src/Presentation/Nop.Web/wwwroot/images/uploaded/*
 !src/Presentation/Nop.Web/wwwroot/images/uploaded/placeholder.txt
 src/Presentation/Nop.Web/wwwroot/files/exportimport/*
 !src/Presentation/Nop.Web/wwwroot/files/exportimport/Index.htm
+src/Presentation/Nop.Web/wwwroot/sitemaps/*
+!src/Presentation/Nop.Web/wwwroot/sitemaps/Index.htm
 src/packages/*
