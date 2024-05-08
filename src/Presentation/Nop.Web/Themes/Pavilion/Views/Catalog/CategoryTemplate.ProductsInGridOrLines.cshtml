@@ -166,7 +166,6 @@
 
 			// Set up 'View More' for categories
 			var categoryPanel = specificationPanels[0];
-			debugger;
 			if (isClearance && categoryPanel) {
 				var categoryChildren = $(categoryPanel).find('.checkbox-item');
 				if (categoryChildren.length >= initialCount) {
@@ -196,6 +195,9 @@
 						$('#view-more-categories').show();
 					});
 				}
+
+				// Now move categories below price range
+				$(categoryPanel).insertAfter(".priceRangeFilterPanel7Spikes");
 			}
         }
         else {
