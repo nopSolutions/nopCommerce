@@ -1046,6 +1046,15 @@ public partial class OrderProcessingService : IOrderProcessingService
             var orderCancelledCustomerNotificationQueuedEmailIds = await _workflowMessageService.SendOrderCancelledCustomerNotificationAsync(order, order.CustomerLanguageId);
             if (orderCancelledCustomerNotificationQueuedEmailIds.Any())
                 await AddOrderNoteAsync(order, $"\"Order cancelled\" email (to customer) has been queued. Queued email identifiers: {string.Join(", ", orderCancelledCustomerNotificationQueuedEmailIds)}.");
+
+            var vendors = await GetVendorsInOrderAsync(order);
+            foreach (var vendor in vendors)
+            {
+                var orderCancelVendorNotificationQueuedEmailIds = await _workflowMessageService.SendOrderCancelledVendorNotificationAsync(order, vendor, _localizationSettings.DefaultAdminLanguageId);
+
+                if (orderCancelVendorNotificationQueuedEmailIds.Any())
+                    await AddOrderNoteAsync(order, $"\"Order cancelled\" email (to vendor) has been queued. Queued email identifiers: {string.Join(", ", orderCancelVendorNotificationQueuedEmailIds)}.");
+            }
         }
 
         //reward points
