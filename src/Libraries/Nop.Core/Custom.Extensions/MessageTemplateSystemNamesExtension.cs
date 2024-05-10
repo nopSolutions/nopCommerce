@@ -2,6 +2,6 @@
 {
     public static partial class MessageTemplateSystemNames
     {
-        public const string CUSTOMER_AVAILABLE_NOTIFICATION = "Customer.Avialable";
+        public const string CUSTOMER_AVAILABLE_NOTIFICATION = "NewCustomer.NotifyTargetCustomers";
     }
 }

@@ -20,6 +20,7 @@ namespace Nop.Core.Domain.Catalog
         #region Customization
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string Email { get; set; }
         public string Gender { get; set; }
         public string Phone { get; set; }
         public string Company { get; set; }
@@ -37,6 +38,8 @@ namespace Nop.Core.Domain.Catalog
         public DateTime LastLoginDateUtc { get; set; }
         public DateTime LastActivityDateUtc { get; set; }
 
+        public int CustomerProfileTypeId { get; set; }
+
         // Product specs related
         public string PrimaryTechnology { get; set; }
         public string SecondaryTechnology { get; set; }
@@ -50,7 +53,7 @@ namespace Nop.Core.Domain.Catalog
         public bool PremiumCustomer { get; set; }
         public string MotherTongue { get; set; }
         public string WorkExperience { get; set; }
-
+        
         #endregion
 
         /// <summary>

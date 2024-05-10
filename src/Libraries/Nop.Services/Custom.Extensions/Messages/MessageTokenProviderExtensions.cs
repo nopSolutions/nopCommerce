@@ -19,14 +19,14 @@ namespace Nop.Services.Messages
 
     public partial interface IMessageTokenProvider
     {
-        Task AddCustomProductTokensAsync(IList<Token> tokens, Product product, int languageId);
+        Task AddCustomProductTokensAsync(IList<Token> tokens, Product product, Customer customer, int languageId, IList<SpecificationAttributeOption> specOptions);
     }
 
     public partial class MessageTokenProvider
     {
         #region Methods
 
-        public virtual async Task AddCustomProductTokensAsync(IList<Token> tokens, Product product, int languageId)
+        public virtual async Task AddCustomProductTokensAsync(IList<Token> tokens, Product product, Customer customer, int languageId, IList<SpecificationAttributeOption> specOptions)
         {
             tokens.Add(new Token("Product.ID", product.Id));
             tokens.Add(new Token("Product.Name", await _localizationService.GetLocalizedAsync(product, x => x.Name, languageId)));
@@ -39,7 +39,12 @@ namespace Nop.Services.Messages
             var productUrl = await CustomRouteUrlAsync(routeName: "Product", routeValues: new { SeName = await _urlRecordService.GetSeNameAsync(product) });
             tokens.Add(new Token("Product.ProductURLForCustomer", productUrl, true));
 
-            //event notification
+            //add customer skillset
+            var skills = string.Join(", ", specOptions.Select(x => x.Name).ToArray());
+            //tokens.Add(new Token("Customer.RegisteredCustomerSkillSet", skills));
+
+            tokens.Add(new Token("Customer.FullName", customer.FirstName + " " + customer.LastName));
+
             await _eventPublisher.EntityTokensAddedAsync(product, tokens);
         }
 

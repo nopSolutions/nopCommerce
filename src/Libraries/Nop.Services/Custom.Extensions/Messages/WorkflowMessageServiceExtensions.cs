@@ -16,12 +16,12 @@ namespace Nop.Services.Messages
 {
     public partial interface IWorkflowMessageService
     {
-        Task<IList<int>> SendCustomerAvilableNotificationToOtherCustomersAsync(Product product, Customer customer, int languageId);
+        Task<IList<int>> SendCustomerAvilableNotificationToOtherCustomersAsync(Product product, Customer customer, int languageId, IList<SpecificationAttributeOption> specOptions);
     }
 
     public partial class WorkflowMessageService
     {
-        public virtual async Task<IList<int>> SendCustomerAvilableNotificationToOtherCustomersAsync(Product product, Customer customer, int languageId)
+        public virtual async Task<IList<int>> SendCustomerAvilableNotificationToOtherCustomersAsync(Product product, Customer customer, int languageId, IList<SpecificationAttributeOption> specOptions)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -34,7 +34,7 @@ namespace Nop.Services.Messages
                 return new List<int>();
 
             var commonTokens = new List<Token>();
-            await _messageTokenProvider.AddCustomProductTokensAsync(commonTokens, product, languageId);
+            await _messageTokenProvider.AddCustomProductTokensAsync(commonTokens, product, customer, languageId, specOptions);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
