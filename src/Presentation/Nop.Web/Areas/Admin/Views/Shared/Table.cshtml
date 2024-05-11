@@ -270,6 +270,11 @@
             }
 
             function updateRowData_@(tableName)(currentCells, data, nameData) {
+                var origData = data;
+                var modData = data;
+                if (typeof data == 'string') {
+                    modData = data.replace(/[.*+?^${}()|[\]\\]/g, "_");
+                }
                 var updateRowData = [];
                 updateRowData.push({ 'pname': nameData, 'pvalue': data });
                 $.each(columnData_@(tableName), function (index, element) {
@@ -301,9 +306,15 @@
                         //display error if returned
                         if (data) {
                             display_nop_error(data);
+
+                            //show the buttons
+                             $('#buttonEdit_@(tableName)' + modData).hide();
+                             $('#buttonConfirm_@(tableName)' + modData).show();
+                             $('#buttonCancel_@(tableName)' + modData).show();
+                        } else {
+                             //refresh grid
+                             $('#@Model.Name').DataTable().draw(false);
                         }
-                        //refresh grid
-                         $('#@Model.Name').DataTable().draw(false);
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         alert(errorThrown);
