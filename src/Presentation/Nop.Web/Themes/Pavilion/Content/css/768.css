@@ -935,6 +935,12 @@ input.button-1.search-box-button {
 body .header-menu>ul>li>a>span {
 	font-size: 13px;
 }
+body .header-menu .mobile-sidebar-category.first li>a>span {
+    line-height: 100px;
+}
+body .header-menu .mobile-sidebar-category.second {
+    margin-top: 60px !important;
+}
 
 @media screen and (max-width: 1024px) {
 	div#mobile-header-logo {
