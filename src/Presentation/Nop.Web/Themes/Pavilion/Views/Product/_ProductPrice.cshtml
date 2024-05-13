@@ -9,7 +9,7 @@
 @using Nop.Web.Extensions
 @using Nop.Plugin.Misc.AbcCore.Infrastructure
 @using Nop.Plugin.Misc.AbcCore.Mattresses
-@using Nop.Core
+@using Nop.Plugin.Misc.AbcCore.Nop;
 
 @inject IWorkContext workContext
 @inject FrontEndService frontEndService
@@ -17,14 +17,14 @@
 @inject IProductService productService
 @inject IAbcMattressListingPriceService abcMattressListingPriceService
 @inject IWebHelper webHelper
+@inject IAbcCategoryService abcCategoryService
 
 @{
     Html.AddCssFileParts("https://use.fontawesome.com/releases/v5.3.1/css/all.css", "", true);
 
     var itemNumber = "";
     var usesPairPricing = false;
-
-    bool isClearance = frontEndService.StoreIsClearance(await storeContext.GetCurrentStoreAsync()) || frontEndService.StoreIsHawthorneClearance(await storeContext.GetCurrentStoreAsync());
+    
     bool isHawthorne = frontEndService.StoreIsHawthorne(await storeContext.GetCurrentStoreAsync());
 
     if (frontEndService.ProductIsAbc(Model.ProductId))
@@ -51,6 +51,17 @@
     }
 
     var product = await productService.GetProductByIdAsync(Model.ProductId);
+    var productCategories = await abcCategoryService.GetProductCategoriesByProductIdAsync(Model.ProductId);
+    bool isClearance = false;
+    foreach (var productCategory in productCategories)
+    {
+        isClearance = await abcCategoryService.IsCategoryIdClearance(productCategory.CategoryId);
+        if (isClearance)
+        {
+            break;
+        }
+    }
+
     bool usesCartPricing = await product.IsAddToCartAsync() || await product.IsAddToCartWithUserInfoAsync();
 
     // get price bucket code
@@ -137,9 +148,12 @@
                     </div>
                 }
                 *@
-                <div class="clearance-msg-block">
-                    <span class="clearance-msg">Available In Store Only</span><span class="clearance-msg-additional">Additional discounts based on product condition</span>
-                </div>
+                if (isClearance)
+                {
+                    <div class="clearance-msg-block">
+                        <span class="clearance-msg">Available In Store Only</span><span class="clearance-msg-additional">Additional discounts based on product condition</span>
+                    </div>
+                }
 
                 @*Don't worry about base price*@
                 if (!String.IsNullOrEmpty(Model.BasePricePAngV))

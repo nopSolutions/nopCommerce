@@ -11,6 +11,7 @@
 @using Nop.Plugin.Misc.AbcFrontend.Extensions
 @using Nop.Plugin.Misc.AbcCore.Extensions
 @using Nop.Services.Configuration;
+@using Nop.Plugin.Misc.AbcCore.Nop;
 
 @inject Nop.Core.IWebHelper webHelper
 @inject SeoSettings seoSettings
@@ -20,6 +21,7 @@
 @inject IStoreContext storeContext
 @inject ISettingService _settingService
 @inject IProductAttributeService _productAttributeService
+@inject IAbcCategoryService abcCategoryService
 
 @{
     Layout = "_ColumnsOne";
@@ -73,11 +75,17 @@
 
 @{
     // custom
-    // this part is for adding class if it is clearance store
     Product currentProduct = await productService.GetProductByIdAsync(Model.Id);
-    bool isClearanceStore = frontEndService.StoreIsClearance(await storeContext.GetCurrentStoreAsync());
-    string clearanceClass = isClearanceStore ? "abc-clearance" : "";
-
+    var productCategories = await abcCategoryService.GetProductCategoriesByProductIdAsync(Model.Id);
+    var isClearance = false;
+    foreach (var productCategory in productCategories)
+    {
+        isClearance = await abcCategoryService.IsCategoryIdClearance(productCategory.CategoryId);
+        if (isClearance)
+        {
+            break;
+        }
+    }
     string displayIdStr = "";
 
     bool productIsAbc = frontEndService.ProductIsAbc(currentProduct.Id);
@@ -107,8 +115,44 @@
     }
 }
 
+@if (isClearance)
+{
+	<style>
+		.product-price.product-price.product-price span[itemprop="price"] {
+            color: #f00;
+            text-decoration: line-through;
+            font-weight: normal;
+        }
+
+        span.clearance-or-less {
+            display: inline-block;
+            margin-left: 8px;
+            font-weight: bold;
+            color: #949494;
+            text-transform: uppercase;
+            font-style: italic;
+        }
+
+        .clearance-msg {
+            font-size: 1.0rem;
+            color: #12659B;
+            font-weight: bold;
+            margin-right: 7px;
+        }
+
+        .clearance-msg-additional {
+            font-size: 0.8rem;
+            color: #4f4f4f;
+        }
+
+        .clearance-msg-block.clearance-msg-block.clearance-msg-block {
+            display: block;
+        }
+	</style>
+}
+
 @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsAfterBreadcrumb, additionalData = Model })
-<div class="page product-details-page @clearanceClass">
+<div class="page product-details-page">
     <div class="page-body">
         @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsTop, additionalData = Model })
         <form asp-route="Product" asp-route-sename="@Model.SeName" method="post" id="product-details-form">
@@ -211,9 +255,11 @@
                         @await Html.PartialAsync("_AddToCart", Model.AddToCart, dataDictAddToCart)
                     }
                     <!--wishlist, compare, email a friend-->
-                    @if (isClearanceStore)
+                    @if (isClearance)
                     {
-                        <button class="view-availability" type="button" onclick="location.href='#clearance_stock_widget'">View Availability</button>
+                        <button style="color: #446588; border: 2px solid #446588; padding: .4rem 1rem; font-weight: 700; text-transform: uppercase; background-color: #fff;"
+                                type="button"
+                                onclick="location.href='#clearance_stock_widget'">View Availability</button>
                     }
                     
                     <!--wishlist, compare, email a friend-->

@@ -8,5 +8,6 @@ namespace Nop.Plugin.Misc.AbcCore.Nop
     public interface IAbcCategoryService : ICategoryService
     {
         Task<Category> GetCategoryByNameAsync(string name);
+        Task<bool> IsCategoryIdClearance(int categoryId);
     }
 }

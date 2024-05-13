@@ -120,7 +120,7 @@ csx
 AppPackages/
 
 # Others
-sql/
+#sql/
 *.Cache
 ClientBin/
 [Ss]tyle[Cc]op.*

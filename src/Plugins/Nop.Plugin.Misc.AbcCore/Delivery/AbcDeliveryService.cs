@@ -47,7 +47,7 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
             {
                 return await _abcDeliveryItemRepository.Table.SingleAsync(adi => adi.Item_Number == itemNumber);
             }
-            catch (Exception e)
+            catch
             {
                 await _logger.ErrorAsync($"Cannot find single AbcDeliveryItem with ItemNumber {itemNumber}");
                 throw;
@@ -60,7 +60,7 @@ namespace Nop.Plugin.Misc.AbcCore.Delivery
             {
                 return await _abcDeliveryItemRepository.Table.SingleAsync(adi => adi.Description == description);
             }
-            catch (Exception e)
+            catch
             {
                 await _logger.ErrorAsync($"Cannot find single AbcDeliveryItem with Description {description}");
                 throw;

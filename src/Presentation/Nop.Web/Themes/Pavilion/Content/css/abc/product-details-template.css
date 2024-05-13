@@ -64,32 +64,6 @@ div.markdown-message {
 
 /*clearance store specific*/
 
-div.clearance-msg-block.clearance-msg-block.clearance-msg-block {
-    display: none;
-}
-
-.clearance-msg {
-    font-size: 1.0rem;
-    color: #12659B;
-    font-weight: bold;
-    margin-right: 7px;
-}
-
-.clearance-msg-additional {
-    font-size: 0.8rem;
-    color: #4f4f4f;
-}
-
-.abc-clearance .clearance-msg-block.clearance-msg-block.clearance-msg-block {
-    display: block;
-}
-
-.abc-clearance .product-price.product-price.product-price span[itemprop="price"] {
-    color: red;
-    text-decoration: line-through;
-    font-weight: normal;
-}
-
 .abc-clearance .overview-buttons {
     display: none;
 }

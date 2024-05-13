@@ -39,13 +39,14 @@
     bool hasChildCategories = frontEndService.CategoryHasChildren(Model.Id);
 
     var category = Model.MetaTitle;
-    bool isFloorcareAccessories = Model.Name == "Floorcare Accessories";
 
 	/* Adding styles specific to categories */
     if (Model.Name == "Stearns & Foster")
     {
         Html.AddHeadCustomParts("<link rel='stylesheet' href='/Misc/StearnsAndFoster/css/style.css'>");
     }
+
+	var isClearance = Model.Name == "Clearance";
 }
 
 @using Nop.Core.Domain.Common;
@@ -65,11 +66,35 @@
 	</style>
 }
 
-@if (Model.Name == "Floorcare Accessories")
+@if (isClearance)
 {
 	<style>
-		.item-grid {
-			margin-top: 4em;
+		.price.actual-price {
+    		text-decoration: line-through;
+		}
+		
+		.or-less {
+        	font-size: .9rem;
+			display: inline-block;
+			padding-left: .5em;
+			color: #949494;
+			font-style: italic;
+			font-weight: bold;
+			vertical-align: middle;
+    	}
+
+		#view-more-brands,
+		#view-less-brands,
+		#view-more-categories,
+		#view-less-categories {
+			margin: 0 auto;
+			padding-bottom: 1rem;
+		}
+
+		@@media (min-width: 425px) {
+			.or-less {
+				font-size: 1rem;
+			}
 		}
 	</style>
 }
@@ -77,8 +102,9 @@
     // check if it's a leaf category
     $(function () {
         var isLeaf = @Html.Raw(!hasChildCategories ? "true" : "false");
-        var isFloorcareAccessoriesPage = @Html.Raw(isFloorcareAccessories ? "true" : "false");
-        if (isLeaf || isFloorcareAccessoriesPage) {
+		var isClearance = @Html.Raw(isClearance ? "true" : "false");
+		var categoryPanel = undefined;
+        if (isLeaf) {
             // show product display
             $('.product-selectors').show();
             $('.product-grid').show();
@@ -88,17 +114,91 @@
             $('.filters-button').show();
             $('.nopAjaxFilters7Spikes').show();
 
-            // remove category filters
-            var specificationPanels = $('.specificationFilterPanel7Spikes');
+            // remove filters depending on if we're in Clearance or not
+			var specificationPanels = $('.specificationFilterPanel7Spikes');
 
-            var i;
-            for (i = 0; i < specificationPanels.length; i++) {
-                var anchorTitle = $(specificationPanels[i]).find('.toggleControl');
-                var title = $(anchorTitle).text();
-                if (title.toLowerCase() === 'category') {
-                    $(specificationPanels[i]).hide();
-                }
-            }
+			var i = 0;
+			for (i = 0; i < specificationPanels.length; i++) {
+				var anchorTitle = $(specificationPanels[i]).find('.toggleControl');
+				var title = $(anchorTitle).text();
+				if (isClearance && title.toLowerCase() !== 'category' && title.toLowerCase() !== 'brands') {
+					$(specificationPanels[i]).hide();
+				}
+				else if (!isClearance && title.toLowerCase() === 'category') {
+					categoryPanel = specificationPanels[i];
+					$(specificationPanels[i]).hide();
+				}
+			}
+
+			// Set up 'View More' for brands
+			var initialCount = 10;
+			var manufacturerPanel = $('.manufacturerFilterPanel7Spikes');
+			if (isClearance && manufacturerPanel) {
+				var manufacturerChildren = $(manufacturerPanel).find('.checkbox-item');
+				if (manufacturerChildren.length >= initialCount) {
+					var filtersCheckboxPanel = $(manufacturerPanel).find('.filtersCheckboxPanel');
+					$(filtersCheckboxPanel).append('<div style="display: flex"><a href="javascript:void(0)" id="view-more-brands">View More</a></div>');
+					$(filtersCheckboxPanel).append('<div style="display: flex"><a href="javascript:void(0)" id="view-less-brands" style="display: none">View Less</a></div>');
+					var i = 0;
+					for (i = 0; i < manufacturerChildren.length; i++) {
+						if (i > initialCount - 1) {
+							$(manufacturerChildren[i]).hide();
+						}
+					}
+					$('#view-more-brands').click(function (e) {
+						var i = 0;
+						for (i = 0; i < manufacturerChildren.length; i++) {
+							$(manufacturerChildren[i]).show();
+						}
+						$(this).hide();
+						$('#view-less-brands').show();
+					});
+					$('#view-less-brands').click(function (e) {
+						var i = initialCount - 1;
+						for (i = initialCount - 1; i < manufacturerChildren.length; i++) {
+							$(manufacturerChildren[i]).hide();
+						}
+						$(this).hide();
+						$('#view-more-brands').show();
+					});
+				}
+			}
+
+			// Set up 'View More' for categories
+			var categoryPanel = specificationPanels[0];
+			if (isClearance && categoryPanel) {
+				var categoryChildren = $(categoryPanel).find('.checkbox-item');
+				if (categoryChildren.length >= initialCount) {
+					var filtersCheckboxPanel = $(categoryPanel).find('.filtersCheckboxPanel');
+					$(filtersCheckboxPanel).append('<div style="display: flex"><a href="javascript:void(0)" id="view-more-categories">View More</a></div>');
+					$(filtersCheckboxPanel).append('<div style="display: flex"><a href="javascript:void(0)" id="view-less-categories" style="display: none">View Less</a></div>');
+					var i = 0;
+					for (i = 0; i < categoryChildren.length; i++) {
+						if (i > initialCount - 1) {
+							$(categoryChildren[i]).hide();
+						}
+					}
+					$('#view-more-categories').click(function (e) {
+						var i = 0;
+						for (i = 0; i < categoryChildren.length; i++) {
+							$(categoryChildren[i]).show();
+						}
+						$(this).hide();
+						$('#view-less-categories').show();
+					});
+					$('#view-less-categories').click(function (e) {
+						var i = initialCount - 1;
+						for (i = initialCount - 1; i < categoryChildren.length; i++) {
+							$(categoryChildren[i]).hide();
+						}
+						$(this).hide();
+						$('#view-more-categories').show();
+					});
+				}
+
+				// Now move categories below price range
+				$(categoryPanel).insertAfter(".priceRangeFilterPanel7Spikes");
+			}
         }
         else {
             // hide product display

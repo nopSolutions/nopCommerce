@@ -116,11 +116,9 @@ namespace Nop.Plugin.Misc.AbcMattresses.Tasks
             }
         }
 
-        // currently only doing main store
         private async System.Threading.Tasks.Task UnmapFromStoreAsync(Product product, ProductAbcDescription pad)
         {
             var mainStore = (await _storeService.GetAllStoresAsync())
-                                         .Where(s => !s.Name.ToLower().Contains("clearance"))
                                          .First();
             var mainStoreMapping = (await _storeMappingService.GetStoreMappingsAsync(product))
                                                        .Where(sm => sm.StoreId == mainStore.Id)

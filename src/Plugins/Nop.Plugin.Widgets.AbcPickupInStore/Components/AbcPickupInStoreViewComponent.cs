@@ -20,6 +20,7 @@ using SevenSpikes.Nop.Plugins.StoreLocator.Services;
 using System.Threading.Tasks;
 using Nop.Plugin.Widgets.AbcPickupInStore.Factories;
 using Nop.Plugin.Misc.AbcCore.Infrastructure;
+using Nop.Plugin.Misc.AbcCore.Nop;
 
 namespace Nop.Plugin.Widgets.AbcPickupInStore.Components
 {
@@ -42,6 +43,7 @@ namespace Nop.Plugin.Widgets.AbcPickupInStore.Components
         private readonly IShoppingCartService _shoppingCartService;
         private readonly PickupInStoreSettings _pickupInStoreSettings;
         private readonly StoreLocatorSettings _storeLocatorSettings;
+        private readonly IAbcCategoryService _abcCategoryService;
 
         public AbcPickupInStoreViewComponent(
             ILogger logger,
@@ -54,7 +56,8 @@ namespace Nop.Plugin.Widgets.AbcPickupInStore.Components
             IShopService shopService,
             IShoppingCartService shoppingCartService,
             PickupInStoreSettings pickupInStoreSettings,
-            StoreLocatorSettings storeLocatorSettings
+            StoreLocatorSettings storeLocatorSettings,
+            IAbcCategoryService abcCategoryService
         )
         {
             _logger = logger;
@@ -68,6 +71,7 @@ namespace Nop.Plugin.Widgets.AbcPickupInStore.Components
             _shoppingCartService = shoppingCartService;
             _pickupInStoreSettings = pickupInStoreSettings;
             _storeLocatorSettings = storeLocatorSettings;
+            _abcCategoryService = abcCategoryService;
         }
         public async Task<IViewComponentResult> InvokeAsync(
             string widgetZone,
@@ -85,14 +89,23 @@ namespace Nop.Plugin.Widgets.AbcPickupInStore.Components
             }
 
             Product product = await _productService.GetProductByIdAsync(productId);
+            var productCategories = await _abcCategoryService.GetProductCategoriesByProductIdAsync(productId);
+            var isClearance = false;
+            foreach (var productCategory in productCategories)
+            {
+                isClearance = await _abcCategoryService.IsCategoryIdClearance(productCategory.CategoryId);
+                if (isClearance)
+                {
+                    break;
+                }
+            }
             var storeUrl = (await _storeContext.GetCurrentStoreAsync()).Url;
-            var isClearanceStore = storeUrl.Contains("clearance");
-            if (await product.HasDeliveryOptionsAsync() && !isClearanceStore)
+            if (await product.HasDeliveryOptionsAsync() && !isClearance)
             {
                 return Content("");
             }
-            // clearance store specific
-            else if (isClearanceStore)
+            // clearance category specific
+            else if (isClearance)
             {
                 if (widgetZone == PICKUP_INFO_WIDGET_ZONE)
                 {

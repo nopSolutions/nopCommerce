@@ -58,8 +58,6 @@ namespace Nop.Plugin.Misc.AbcSliExport
         private static readonly string _promosTag = "promos";
         private static readonly string _promoTag = "promo";
 
-        private string _isClearanceTag = "clearance";
-
         #endregion
 
         private readonly SliExportSettings _settings;
@@ -248,15 +246,16 @@ namespace Nop.Plugin.Misc.AbcSliExport
 
 
             // Now write the XML export elements.
+            // ClearanceTODO: Can we remove the reference to clearance here?
             xml.WriteStartElement(_productTag);
 
             if (store.Url.Contains("hawthorne"))
             {
-                WriteElementHelper(xml, _isClearanceTag, "Y");
+                WriteElementHelper(xml, "clearance", "Y");
             }
             else
             {
-                WriteElementHelper(xml, _isClearanceTag, "N");
+                WriteElementHelper(xml, "clearance", "N");
             }
 
             await ExportBrandAsync(xml, product);

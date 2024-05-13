@@ -37,7 +37,6 @@ NOPCommerce codebase that runs both abcwarehouse.com and hawthorneonline.com
    4. ImportSiteOnTimeFilters
    5. ImportWarranties
    6. ProductLoadAllPagedNopAjaxFilters
-   7. UnmapNonstockClearanceItems
 5. Delete users eengle and SQLSERVERAGENT.
 6. NOP_BACPAC -> Tasks -> Export Data-tier Application *(takes ~1 hour)*
 7. Delete DB `NOP_BACPAC`
@@ -53,10 +52,3 @@ NOPCommerce codebase that runs both abcwarehouse.com and hawthorneonline.com
   </span>
 </div> 
 ```
-
-## Setting Up Active Store (Main/Clearance)
-
-To set up the store to debug:
-
-1. Configuration > Stores
-2. Change the Display order of the stores so the desired store is on top.
