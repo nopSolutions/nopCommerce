@@ -2162,6 +2162,7 @@ public partial class ProductService : IProductService
         ArgumentNullException.ThrowIfNull(product);
         ArgumentNullException.ThrowIfNull(customer);
 
+        //we use this property ("HasTierPrices") for performance optimization to avoid unnecessary database calls
         if (!product.HasTierPrices)
             return null;
 
@@ -2248,6 +2249,8 @@ public partial class ProductService : IProductService
         ArgumentNullException.ThrowIfNull(product);
         ArgumentNullException.ThrowIfNull(customer);
 
+
+        //we use this property ("HasTierPrices") for performance optimization to avoid unnecessary database calls
         if (!product.HasTierPrices)
             return null;
 

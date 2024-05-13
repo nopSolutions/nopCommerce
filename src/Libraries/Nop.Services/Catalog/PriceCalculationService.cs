@@ -74,12 +74,12 @@ public partial class PriceCalculationService : IPriceCalculationService
         if (_catalogSettings.IgnoreDiscounts)
             return allowedDiscounts;
 
+        //we use this property ("HasDiscountsApplied") for performance optimization to avoid unnecessary database calls
         if (!product.HasDiscountsApplied)
             return allowedDiscounts;
 
         var couponCodesToValidate = await _customerService.ParseAppliedDiscountCouponCodesAsync(customer);
 
-        //we use this property ("HasDiscountsApplied") for performance optimization to avoid unnecessary database calls
         foreach (var discount in await _discountService.GetAppliedDiscountsAsync(product))
             if (discount.DiscountType == DiscountType.AssignedToSkus &&
                 (await _discountService.ValidateDiscountAsync(discount, customer, couponCodesToValidate)).IsValid)
