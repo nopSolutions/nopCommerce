@@ -77,7 +77,6 @@
     // custom
     Product currentProduct = await productService.GetProductByIdAsync(Model.Id);
     var productCategories = await abcCategoryService.GetProductCategoriesByProductIdAsync(Model.Id);
-    // ClearanceTODO: check if the product is Clearance category
     var isClearance = false;
     foreach (var productCategory in productCategories)
     {
