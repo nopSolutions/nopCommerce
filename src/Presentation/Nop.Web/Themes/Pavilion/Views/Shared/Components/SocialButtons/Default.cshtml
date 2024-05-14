@@ -17,10 +17,6 @@
 }
 
 <ul class="social-sharing">
-    @if (!string.IsNullOrEmpty(Model.TwitterLink))
-    {
-        <li class="twitter"><a target="_blank" href="@Model.TwitterLink" rel="noopener noreferrer" aria-label="@T("Footer.FollowUs.Twitter")"></a></li>
-    }
     @if (!string.IsNullOrEmpty(Model.FacebookLink))
     {
         <li class="facebook"><a target="_blank" href="@Model.FacebookLink" rel="noopener noreferrer" aria-label="@T("Footer.FollowUs.Facebook")"></a></li>
