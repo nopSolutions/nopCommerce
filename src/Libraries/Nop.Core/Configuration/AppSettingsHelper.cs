@@ -29,7 +29,7 @@ public partial class AppSettingsHelper
     {
         ArgumentNullException.ThrowIfNull(configurations);
 
-        _configurationOrder ??= configurations.ToDictionary(config => config.Name, config => config.GetOrder());
+        _configurationOrder = configurations.ToDictionary(config => config.Name, config => config.GetOrder());
 
         //create app settings
         var appSettings = Singleton<AppSettings>.Instance ?? new AppSettings();
