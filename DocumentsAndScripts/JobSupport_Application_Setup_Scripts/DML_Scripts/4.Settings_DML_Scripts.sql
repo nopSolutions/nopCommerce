@@ -183,3 +183,32 @@ IF NOT EXISTS (SELECT * FROM [Setting] WHERE [Name]='shoppingCartSettings.oneyea
    BEGIN
 	 INSERT INTO [Setting] ([Name],[Value],[StoreId]) VALUES ('shoppingCartSettings.oneyearsubscriptionallottedcount','50',0)
    END
+
+
+  
+IF NOT EXISTS (SELECT * FROM [Setting] WHERE [Name]='shoppingCartSettings.onemonthsubscriptionproductid')
+   BEGIN
+	 INSERT INTO [Setting] ([Name],[Value],[StoreId]) VALUES ('shoppingCartSettings.onemonthsubscriptionproductid','1',0)
+   END
+
+IF NOT EXISTS (SELECT * FROM [Setting] WHERE [Name]='shoppingCartSettings.onemonthsubscriptionallottedcount')
+   BEGIN
+	 INSERT INTO [Setting] ([Name],[Value],[StoreId]) VALUES ('shoppingCartSettings.onemonthsubscriptionallottedcount','50',0)
+   END
+
+
+SELECT * FROM [dbo].[Setting] WHERE [Name] like '%shoppingCartSettings.freesubscriptionallottedcount%';
+SELECT * FROM [dbo].[Setting] WHERE [Value] like '%20%';
+
+SELECT * FROM [dbo].[Setting] WHERE [Name] like 'shoppingCartSettings.%subs%';
+
+--UPDATE [dbo].[Setting] SET Name='shoppingCartSettings.freesubscriptionproductid' WHERE Name = 'shoppingCartSettings.threemonthsubscriptionproductid';
+UPDATE [dbo].[Setting] SET Name='shoppingCartSettings.onemonthsubscriptionproductid' WHERE Name = 'shoppingCartSettings.sixmonthsubscriptionproductid';
+UPDATE [dbo].[Setting] SET Name='shoppingCartSettings.threemonthsubscriptionproductid' WHERE Name = 'shoppingCartSettings.oneyearsubscriptionproductid';
+
+--UPDATE [dbo].[Setting] SET Name='shoppingCartSettings.freesubscriptionallottedcount' WHERE Name = 'shoppingCartSettings.threemonthsubscriptionallottedcount';
+--UPDATE [dbo].[Setting] SET Name='shoppingCartSettings.onemonthsubscriptionallottedcount' WHERE Name = 'shoppingCartSettings.sixmonthsubscriptionallottedcount';
+--UPDATE [dbo].[Setting] SET Name='shoppingCartSettings.threemonthsubscriptionallottedcount' WHERE Name = 'shoppingCartSettings.oneyearsubscriptionallottedcount';
+
+UPDATE [dbo].[Setting] SET Value='True' WHERE Name = 'forumsettings.showalertforpm';
+UPDATE [dbo].[Setting] SET Value='True' WHERE Name = 'messagessettings.usepopupnotifications';

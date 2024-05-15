@@ -89,3 +89,14 @@ IF NOT EXISTS (SELECT * FROM [LocaleStringResource] WHERE [ResourceName]='Catalo
    END
 
 Update LocaleStringResource SET ResourceValue='Please <a href="https://onjobsupport.in/login">Login / Register</a> to see the profiles. This helps us to show the relavent profiles.' WHERE ResourceName='Catalog.Products.GuestCustomerResult'
+
+Update [LocaleStringResource] SET ResourceValue='Added a profile to wishlist (''{0}'')' WHERE ResourceName='activitylog.publicstore.addtowishlist'
+--Added a product to wishlist ('{0}')
+
+Update [LocaleStringResource] SET ResourceValue='Popular Technologies' WHERE ResourceName='categories';
+Update [LocaleStringResource] SET ResourceValue='Public store. Viewed a profile details page (''{0}'')' WHERE ResourceName='activitylog.publicstore.viewproduct';
+
+update LocaleStringResource SET ResourceValue='Your subscription has been successfully processed!' Where ResourceName='checkout.yourorderhasbeensuccessfullyprocessed'
+
+update LocaleStringResource SET ResourceValue='Skills!' Where ResourceName='search.category'
+

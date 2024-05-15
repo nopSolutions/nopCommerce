@@ -23,3 +23,19 @@ BEGIN
 END
 
 GO
+
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'PublicStore.InterestSent')
+BEGIN
+    INSERT INTO [dbo].[ActivityLogType]([SystemKeyword],[Name],[Enabled])
+    VALUES('PublicStore.InterestSent','Public store. Interest Sent',1)
+END
+
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'PublicStore.RemoveFromWishlist')
+BEGIN
+    INSERT INTO [dbo].[ActivityLogType]([SystemKeyword],[Name],[Enabled])
+    VALUES('PublicStore.RemoveFromWishlist','Public store. Remove From Wishlist',1)
+END
+
+GO

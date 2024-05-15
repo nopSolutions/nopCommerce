@@ -21,3 +21,7 @@ Update [Country] SET DisplayOrder=50 WHERE [TwoLetterIsoCode]='DE'
 Update [Country] SET DisplayOrder=60 WHERE [TwoLetterIsoCode]='IT'
 Update [Country] SET DisplayOrder=70 WHERE [TwoLetterIsoCode]='SG'
 Update [Country] SET DisplayOrder=80 WHERE [TwoLetterIsoCode]='GB'   
+
+
+-- enable all countries
+Update [Country] SET Published=1 WHERE [TwoLetterIsoCode] NOT IN ('US','GB','AU','CA','IN','NZ','DE','IT','SG','FR','AE')
