@@ -4,6 +4,7 @@ using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Events;
 using Nop.Services.Affiliates;
@@ -14,6 +15,7 @@ using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Seo;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
@@ -59,6 +61,8 @@ namespace Nop.CustomExtensions.Services
         private readonly CustomerSettings _customerSettings;
         private readonly IWorkContext _workContext;
         protected readonly IWebHelper _webHelper;
+        private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly LocalizationSettings _localizationSettings;
 
         #endregion
 
@@ -82,7 +86,9 @@ namespace Nop.CustomExtensions.Services
              IProductService productService,
              CustomerSettings customerSettings,
              IWorkContext workContext,
-             IWebHelper webHelper
+             IWebHelper webHelper,
+             IWorkflowMessageService workflowMessageService,
+             LocalizationSettings localizationSettings
             )
         {
             _genericAttributeService = genericAttributeService;
@@ -104,11 +110,13 @@ namespace Nop.CustomExtensions.Services
             _customerSettings = customerSettings;
             _workContext = workContext;
             _webHelper = webHelper;
+            _workflowMessageService = workflowMessageService;
+            _localizationSettings = localizationSettings;
         }
 
         #endregion
 
-        #region Methods
+        #region Events
 
         public async Task HandleEventAsync(OrderPaidEvent eventMessage)
         {
@@ -132,6 +140,8 @@ namespace Nop.CustomExtensions.Services
             //create customer as customer affliate so that he can refer his friends.
             await CreateCustomerAffliateAsync(customer);
 
+            //notify other customers who match registered customer's specification attributes
+            await NotifyOtherCustomersWhenNewCustomerRegistersAsync(customer);
         }
 
         public async Task HandleEventAsync(EntityInsertedEvent<Customer> eventMessage)
@@ -153,6 +163,110 @@ namespace Nop.CustomExtensions.Services
         {
             await Task.FromResult(0);
         }
+
+        /// <summary>
+        /// This method is used to modify the model and its properties via events
+        /// -- Adding custom navigation items to My Account page with out modifying customermodelfactory class
+        /// </summary>
+        /// <param name="eventMessage"></param>
+        /// <returns></returns>
+        public async Task HandleEventAsync(ModelPreparedEvent<BaseNopModel> eventMessage)
+        {
+            if (eventMessage.Model is CustomerNavigationModel model)
+            {
+                //insert private messages at index 1
+                model.CustomerNavigationItems.Insert(1, new CustomerNavigationItemModel
+                {
+                    RouteName = "PrivateMessages",
+                    Title = "Mails and Messages ",
+                    Tab = (int)CustomerNavigationEnum.PrivateMessages,
+                    ItemClass = "customer-PrivateMessages"
+                });
+
+                //insert ShortListed at index 2
+                model.CustomerNavigationItems.Insert(2, new CustomerNavigationItemModel
+                {
+                    RouteName = "ShortListed",
+                    Title = "Short Listed",
+                    Tab = (int)CustomerNavigationEnum.ShortListed,
+                    ItemClass = "customer-shortlisted"
+                });
+
+                //remove address item
+                model.CustomerNavigationItems.RemoveAt(3);
+
+                //sort by name
+                //model.CustomerNavigationItems = model.CustomerNavigationItems.OrderBy(x => x.Title).ToList();
+            }
+
+            if (eventMessage.Model is ProductDetailsModel productModel)
+            {
+                //remove last part after space which is surname
+                //var strTrimmed = productModel.DefaultPictureModel.Title.Trim();
+                //var finalString = strTrimmed.Substring(strTrimmed.LastIndexOf(" ", strTrimmed.Length));
+
+                //productModel.DefaultPictureModel.Title = finalString;
+                //productModel.DefaultPictureModel.AlternateText = finalString;
+
+                if (productModel.PictureModels.Count == 0)
+                {
+                    if (productModel.Gender?.ToLower() == "F".ToLower())
+                    {
+                        //change picture to women image
+                        productModel.DefaultPictureModel.ImageUrl = "https://localhost:54077/images/thumbs/default-women-image_615.png";
+
+                    }
+                }
+            }
+
+            if (eventMessage.Model is ProductEmailAFriendModel emailAFriendModel)
+            {
+                //customization
+                var orders = await _orderService.SearchOrdersAsync(customerId: (await _workContext.GetCurrentCustomerAsync()).Id);
+
+                //check order status code
+                var isValid = orders.Where(a => a.OrderStatus == OrderStatus.OrderActive).SingleOrDefault();
+
+                if (isValid == null)
+                {
+                    //Dispaly Upgrade View
+                    //emailAFriendModel.Result = await _localizationService.GetResourceAsync("Orders.UpgradeSubscription.Message");
+                    //ModelState.AddModelError("", await _localizationService.GetResourceAsync("Orders.UpgradeSubscription.Message"));
+                    //return View("_UpgradeSubscription.cshtml", model);
+                }
+            }
+
+            //this is for related products 
+            if (eventMessage.Model is ProductOverviewModel productOverviewModel)
+            {
+
+            }
+
+            //this is for header links model .
+            //Can be used to hide and show shopping cart link based on catogory
+            //show shopping cart in pricing page and hide in all other categories
+            if (eventMessage.Model is HeaderLinksModel headerLinksModel)
+            {
+                var currentPageUrl = _webHelper.GetThisPageUrl(false);
+
+                if (currentPageUrl.Contains("pricing", StringComparison.InvariantCultureIgnoreCase))
+                    headerLinksModel.ShoppingCartEnabled = true;
+                else
+                    headerLinksModel.ShoppingCartEnabled = false;
+
+            }
+
+            if (eventMessage.Model is SearchBoxModel searchBoxModel)
+            {
+
+            }
+
+            //return Task.FromResult(0);
+        }
+
+        #endregion
+
+        #region Methods for supporting events
 
         public async Task AddCustomerToPaidCustomerRole(int customerId)
         {
@@ -184,7 +298,11 @@ namespace Nop.CustomExtensions.Services
             var storeId = (await _storeContext.GetCurrentStoreAsync()).Id;
             var allottedCount = 00;
 
-            if (customerSubscribedProductId == _shoppingCartSettings.OneMonthSubscriptionProductId)
+            if (customerSubscribedProductId == _shoppingCartSettings.FreeSubscriptionProductId)
+            {
+                allottedCount = _shoppingCartSettings.FreeSubscriptionAllottedCount;
+            }
+            else if (customerSubscribedProductId == _shoppingCartSettings.OneMonthSubscriptionProductId)
             {
                 allottedCount = _shoppingCartSettings.OneMonthSubscriptionAllottedCount;
             }
@@ -330,7 +448,7 @@ namespace Nop.CustomExtensions.Services
                     ShowOnHomepage = false,
                     Published = true,
                     PriceRangeFiltering = false,
-                    PageSize = 20 //default page size otherwise cateogory wont appear 
+                    PageSize = 50 //default page size otherwise cateogory wont appear
                 };
                 await _categoryService.InsertCategoryAsync(newCategory);
 
@@ -514,7 +632,7 @@ namespace Nop.CustomExtensions.Services
                 Active = true,
                 AdminComment = "Affiliate created for customer while registering..",
                 FriendlyUrlName = "",
-                AddressId= address.Id
+                AddressId = address.Id
             };
 
             //validate friendly URL name
@@ -536,104 +654,40 @@ namespace Nop.CustomExtensions.Services
             await _customerService.UpdateCustomerAsync(customer);
         }
 
-        /// <summary>
-        /// This method is used to modify the model and its properties via events
-        /// -- Adding custom navigation items to My Account page with out modifying customermodelfactory class
-        /// </summary>
-        /// <param name="eventMessage"></param>
-        /// <returns></returns>
-        public async Task HandleEventAsync(ModelPreparedEvent<BaseNopModel> eventMessage)
+        public async Task NotifyOtherCustomersWhenNewCustomerRegistersAsync(Customer customer)
         {
-            if (eventMessage.Model is CustomerNavigationModel model)
+            var customerProfileTypeId = GetCustomerProfileTypeId(customer.CustomCustomerAttributesXML);
+
+
+            if (customerProfileTypeId == 2)
             {
-                Console.WriteLine("Passed in event");
+                //get primary skills
+                var primarySkillIds = _customerAttributeParser.ParseValues(customer.CustomCustomerAttributesXML,
+                                                                        (int)ProductAndCustomerAttributeEnum.PrimaryTechnology).Select(int.Parse).ToList();
 
-                model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+                var categoryIds = new List<int>() { 1 };
+
+                var specOptions = await _specificationAttributeService.GetSpecificationAttributeOptionsByIdsAsync(primarySkillIds.ToArray());
+
+                //get similar target customers
+                var targetProducts = (await _productService.SearchProductsAsync(categoryIds: categoryIds, filteredSpecOptions: specOptions)).ToList();
+
+                var targetCustomerIds = targetProducts.Where(x => x.VendorId > 0).Select(x => x.VendorId).ToArray();
+                var targetCustomers = await _customerService.GetCustomersByIdsAsync(targetCustomerIds);
+
+                var product = await _productService.GetProductByIdAsync(customer.VendorId);
+
+                //notify the target customers that a customer is just registered (i.e looking for support)
+                foreach (var customerToNotify in targetCustomers)
                 {
-                    RouteName = "PrivateMessages",
-                    Title = "Mails and Messages ",
-                    Tab = (int)CustomerNavigationEnum.PrivateMessages,
-                    ItemClass = "customer-PrivateMessages"
-                });
-
-                model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
-                {
-                    RouteName = "ShortListed",
-                    Title = "Short Listed",
-                    Tab = (int)CustomerNavigationEnum.ShortListed,
-                    ItemClass = "customer-shortlisted"
-                });
-
-                //remove address item
-                model.CustomerNavigationItems.RemoveAt(1);
-
-                //sort by name
-            }
-
-            if (eventMessage.Model is ProductDetailsModel productModel)
-            {
-                //remove last part after space which is surname
-                //var strTrimmed = productModel.DefaultPictureModel.Title.Trim();
-                //var finalString = strTrimmed.Substring(strTrimmed.LastIndexOf(" ", strTrimmed.Length));
-
-                //productModel.DefaultPictureModel.Title = finalString;
-                //productModel.DefaultPictureModel.AlternateText = finalString;
-
-                if (productModel.PictureModels.Count == 0)
-                {
-                    if (productModel.Gender?.ToLower() == "F".ToLower())
-                    {
-                        //change picture to women image
-                        productModel.DefaultPictureModel.ImageUrl = "https://localhost:54077/images/thumbs/default-women-image_615.png";
-
-                    }
+                    await _workflowMessageService.SendCustomerAvilableNotificationToOtherCustomersAsync(product, customerToNotify, _localizationSettings.DefaultAdminLanguageId, specOptions);
                 }
-            }
-
-            if (eventMessage.Model is ProductEmailAFriendModel emailAFriendModel)
-            {
-                //customization
-                var orders = await _orderService.SearchOrdersAsync(customerId: (await _workContext.GetCurrentCustomerAsync()).Id);
-
-                //check order status code
-                var isValid = orders.Where(a => a.OrderStatus == OrderStatus.OrderActive).SingleOrDefault();
-
-                if (isValid == null)
-                {
-                    //Dispaly Upgrade View
-                    //emailAFriendModel.Result = await _localizationService.GetResourceAsync("Orders.UpgradeSubscription.Message");
-                    //ModelState.AddModelError("", await _localizationService.GetResourceAsync("Orders.UpgradeSubscription.Message"));
-                    //return View("_UpgradeSubscription.cshtml", model);
-                }
-            }
-
-            //this is for related products 
-            if (eventMessage.Model is ProductOverviewModel productOverviewModel)
-            {
 
             }
 
-            //this is for header links model .
-            //Can be used to hide and show shopping cart link based on catogory
-            //show shopping cart in pricing page and hide in all other categories
-            if (eventMessage.Model is HeaderLinksModel headerLinksModel)
-            {
-                var currentPageUrl = _webHelper.GetThisPageUrl(false);
-
-                if (currentPageUrl.Contains("pricing", StringComparison.InvariantCultureIgnoreCase))
-                    headerLinksModel.ShoppingCartEnabled = true;
-                else
-                    headerLinksModel.ShoppingCartEnabled = false;
-
-            }
-
-            if (eventMessage.Model is SearchBoxModel searchBoxModel)
-            {
-
-            }
-
-            //return Task.FromResult(0);
+            await Task.FromResult(0);
         }
+
 
         #endregion
     }
