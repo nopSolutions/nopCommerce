@@ -50,7 +50,7 @@ namespace Nop.Web.Factories
                                         customerId: (await _workContext.GetCurrentCustomerAsync()).Id,
                                         orderBy: (ProductSortingEnum)command.OrderBy,
                                         pageIndex: command.PageNumber - 1,
-                                        pageSize: 20);
+                                        pageSize: _catalogSettings.DefaultCategoryPageSize);
 
             return productsCustomSimple;
         }

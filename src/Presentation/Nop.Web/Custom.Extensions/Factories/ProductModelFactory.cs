@@ -12,6 +12,7 @@ using Nop.Web.Models.PrivateMessages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace Nop.Web.Factories
@@ -74,7 +75,9 @@ namespace Nop.Web.Factories
 
                     PremiumCustomer = product.PremiumCustomer,
                     Gender = product.Gender,
-                    WorkExperience = product.WorkExperience
+                    WorkExperience = product.WorkExperience,
+                    CustomerProfileTypeId = product.CustomerProfileTypeId
+
                 };
 
                 var location = string.Empty;
@@ -455,7 +458,7 @@ namespace Nop.Web.Factories
 
         }
 
-        public virtual async Task<Picture> CustomizeProductPictureAsync(Product product)
+        public virtual async Task<(string fullSizeImageUrl, string imageUrl)> CustomizeProductPictureAsync(Product product)
         {
             int pictureAttributeId = 0;
 
@@ -468,7 +471,10 @@ namespace Nop.Web.Factories
             if (pictureAttributeId > 0)
                 picture = await _pictureService.GetPictureByIdAsync(pictureAttributeId);
 
-            return picture;
+
+            var fullSizeImageUrl = await _pictureService.GetDefaultPictureUrlAsync(0, PictureType.Avatar, null);
+
+            return (fullSizeImageUrl, fullSizeImageUrl);
 
         }
 

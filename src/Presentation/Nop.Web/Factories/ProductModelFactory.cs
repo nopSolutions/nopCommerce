@@ -672,7 +672,7 @@ public partial class ProductModelFactory : IProductModelFactory
                 (var imageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture, pictureSize);
 
                 //customization
-                //picture = await CustomizeProductPictureAsync(product);
+                //(fullSizeImageUrl, imageUrl) = await CustomizeProductPictureAsync(product);
 
                 return new PictureModel
                 {
@@ -1094,87 +1094,87 @@ public partial class ProductModelFactory : IProductModelFactory
                     case AttributeControlType.Checkboxes:
                     case AttributeControlType.ColorSquares:
                     case AttributeControlType.ImageSquares:
-                    {
-                        if (!string.IsNullOrEmpty(updatecartitem.AttributesXml))
                         {
-                            //clear default selection
-                            foreach (var item in attributeModel.Values)
-                                item.IsPreSelected = false;
+                            if (!string.IsNullOrEmpty(updatecartitem.AttributesXml))
+                            {
+                                //clear default selection
+                                foreach (var item in attributeModel.Values)
+                                    item.IsPreSelected = false;
 
-                            //select new values
-                            var selectedValues = await _productAttributeParser.ParseProductAttributeValuesAsync(updatecartitem.AttributesXml);
-                            foreach (var attributeValue in selectedValues)
-                            foreach (var item in attributeModel.Values)
-                                if (attributeValue.Id == item.Id)
-                                {
-                                    item.IsPreSelected = true;
+                                //select new values
+                                var selectedValues = await _productAttributeParser.ParseProductAttributeValuesAsync(updatecartitem.AttributesXml);
+                                foreach (var attributeValue in selectedValues)
+                                    foreach (var item in attributeModel.Values)
+                                        if (attributeValue.Id == item.Id)
+                                        {
+                                            item.IsPreSelected = true;
 
-                                    //set customer entered quantity
-                                    if (attributeValue.CustomerEntersQty)
-                                        item.Quantity = attributeValue.Quantity;
-                                }
+                                            //set customer entered quantity
+                                            if (attributeValue.CustomerEntersQty)
+                                                item.Quantity = attributeValue.Quantity;
+                                        }
+                            }
                         }
-                    }
 
                         break;
                     case AttributeControlType.ReadonlyCheckboxes:
-                    {
-                        //values are already pre-set
-
-                        //set customer entered quantity
-                        if (!string.IsNullOrEmpty(updatecartitem.AttributesXml))
                         {
-                            foreach (var attributeValue in (await _productAttributeParser.ParseProductAttributeValuesAsync(updatecartitem.AttributesXml))
-                                     .Where(value => value.CustomerEntersQty))
+                            //values are already pre-set
+
+                            //set customer entered quantity
+                            if (!string.IsNullOrEmpty(updatecartitem.AttributesXml))
                             {
-                                var item = attributeModel.Values.FirstOrDefault(value => value.Id == attributeValue.Id);
-                                if (item != null)
-                                    item.Quantity = attributeValue.Quantity;
+                                foreach (var attributeValue in (await _productAttributeParser.ParseProductAttributeValuesAsync(updatecartitem.AttributesXml))
+                                         .Where(value => value.CustomerEntersQty))
+                                {
+                                    var item = attributeModel.Values.FirstOrDefault(value => value.Id == attributeValue.Id);
+                                    if (item != null)
+                                        item.Quantity = attributeValue.Quantity;
+                                }
                             }
                         }
-                    }
 
                         break;
                     case AttributeControlType.TextBox:
                     case AttributeControlType.MultilineTextbox:
-                    {
-                        if (!string.IsNullOrEmpty(updatecartitem.AttributesXml))
                         {
-                            var enteredText = _productAttributeParser.ParseValues(updatecartitem.AttributesXml, attribute.Id);
-                            if (enteredText.Any())
-                                attributeModel.DefaultValue = enteredText[0];
+                            if (!string.IsNullOrEmpty(updatecartitem.AttributesXml))
+                            {
+                                var enteredText = _productAttributeParser.ParseValues(updatecartitem.AttributesXml, attribute.Id);
+                                if (enteredText.Any())
+                                    attributeModel.DefaultValue = enteredText[0];
+                            }
                         }
-                    }
 
                         break;
                     case AttributeControlType.Datepicker:
-                    {
-                        //keep in mind my that the code below works only in the current culture
-                        var selectedDateStr = _productAttributeParser.ParseValues(updatecartitem.AttributesXml, attribute.Id);
-                        if (selectedDateStr.Any())
                         {
-                            if (DateTime.TryParseExact(selectedDateStr[0], "D", CultureInfo.CurrentCulture, DateTimeStyles.None, out var selectedDate))
+                            //keep in mind my that the code below works only in the current culture
+                            var selectedDateStr = _productAttributeParser.ParseValues(updatecartitem.AttributesXml, attribute.Id);
+                            if (selectedDateStr.Any())
                             {
-                                //successfully parsed
-                                attributeModel.SelectedDay = selectedDate.Day;
-                                attributeModel.SelectedMonth = selectedDate.Month;
-                                attributeModel.SelectedYear = selectedDate.Year;
+                                if (DateTime.TryParseExact(selectedDateStr[0], "D", CultureInfo.CurrentCulture, DateTimeStyles.None, out var selectedDate))
+                                {
+                                    //successfully parsed
+                                    attributeModel.SelectedDay = selectedDate.Day;
+                                    attributeModel.SelectedMonth = selectedDate.Month;
+                                    attributeModel.SelectedYear = selectedDate.Year;
+                                }
                             }
                         }
-                    }
 
                         break;
                     case AttributeControlType.FileUpload:
-                    {
-                        if (!string.IsNullOrEmpty(updatecartitem.AttributesXml))
                         {
-                            var downloadGuidStr = _productAttributeParser.ParseValues(updatecartitem.AttributesXml, attribute.Id).FirstOrDefault();
-                            _ = Guid.TryParse(downloadGuidStr, out var downloadGuid);
-                            var download = await _downloadService.GetDownloadByGuidAsync(downloadGuid);
-                            if (download != null)
-                                attributeModel.DefaultValue = download.DownloadGuid.ToString();
+                            if (!string.IsNullOrEmpty(updatecartitem.AttributesXml))
+                            {
+                                var downloadGuidStr = _productAttributeParser.ParseValues(updatecartitem.AttributesXml, attribute.Id).FirstOrDefault();
+                                _ = Guid.TryParse(downloadGuidStr, out var downloadGuid);
+                                var download = await _downloadService.GetDownloadByGuidAsync(downloadGuid);
+                                if (download != null)
+                                    attributeModel.DefaultValue = download.DownloadGuid.ToString();
+                            }
                         }
-                    }
 
                         break;
                     default:
@@ -1284,7 +1284,7 @@ public partial class ProductModelFactory : IProductModelFactory
             (var imageUrl, defaultPicture) = await _pictureService.GetPictureUrlAsync(defaultPicture, defaultPictureSize, !isAssociatedProduct);
 
             //customization
-            defaultPicture = await CustomizeProductPictureAsync(product);
+            //defaultPicture = await CustomizeProductPictureAsync(product);
 
             var defaultPictureModel = new PictureModel
             {
@@ -1415,7 +1415,7 @@ public partial class ProductModelFactory : IProductModelFactory
 
             //customization
             await CustomizeProductModel(model, product);
-            
+
             //price
             if (preparePriceModel)
             {

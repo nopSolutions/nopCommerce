@@ -7,11 +7,13 @@ namespace Nop.Core.Domain.Orders;
 /// </summary>
 public partial class ShoppingCartSettings
 {
+    public int FreeSubscriptionProductId { get; set; }
     public int OneMonthSubscriptionProductId { get; set; }
     public int ThreeMonthSubscriptionProductId { get; set; }
     public int SixMonthSubscriptionProductId { get; set; }
     public int OneYearSubscriptionProductId { get; set; }
 
+    public int FreeSubscriptionAllottedCount { get; set; }
     public int OneMonthSubscriptionAllottedCount { get; set; }
     public int ThreeMonthSubscriptionAllottedCount { get; set; }
     public int SixMonthSubscriptionAllottedCount { get; set; }

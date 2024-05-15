@@ -365,7 +365,7 @@ namespace Nop.Services.Custom.Extensions.ScheduleTask
                 //notify the target customers that current customer is avialable
                 foreach (var customerToNotify in targetCustomers)
                 {
-                    await _workflowMessageService.SendCustomerAvilableNotificationToOtherCustomersAsync(product, customerToNotify, _localizationSettings.DefaultAdminLanguageId);
+                    await _workflowMessageService.SendCustomerAvilableNotificationToOtherCustomersAsync(product, customerToNotify, _localizationSettings.DefaultAdminLanguageId, specOptions);
                 }
 
                 //update activity log EntityId column to 1 so that notification is sent only one time when this customer is available back
