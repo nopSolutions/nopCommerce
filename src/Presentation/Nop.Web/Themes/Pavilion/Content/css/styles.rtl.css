@@ -1044,9 +1044,6 @@ label, label + * {
 .social-sharing .facebook a {
 	background-position: 0 0;
 }
-.social-sharing .twitter a {
-	background-position: -32px 0;
-}
 .social-sharing .google a {
 	background-position: -64px 0;
 }
