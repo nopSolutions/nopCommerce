@@ -54,38 +54,38 @@
                 <div class="advanced-search" id="advanced-search-block">
                     @if (Model.AvailableCategories.Count > 0)
                     {
-                    <div class="form-group">
-                        <label class="control-label col-sm-3 col-md-2" asp-for="cid">@T("Search.Category"):</label>
-                        <div class="col-sm-5 col-md-5">
-                            <select class="form-control dropdown-toggle category-iteam category-select" asp-for="cid" asp-items="Model.AvailableCategories"></select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-offset-3 col-md-offset-2 col-sm-5 col-md-5">
-                            <div class="checkbox custom-checkbox">
-                                <input asp-for="isc" />
-                                <label asp-for="isc">@T("Search.IncludeSubCategories")</label>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3 col-md-2" asp-for="cid">@T("Search.Category"):</label>
+                            <div class="col-sm-5 col-md-5">
+                                <select class="form-control dropdown-toggle category-iteam category-select" asp-for="cid" asp-items="Model.AvailableCategories"></select>
                             </div>
                         </div>
-                    </div>
+                        @* <div class="form-group">
+                            <div class="col-sm-offset-3 col-md-offset-2 col-sm-5 col-md-5">
+                                <div class="checkbox custom-checkbox">
+                                    <input asp-for="isc" />
+                                    <label asp-for="isc">@T("Search.IncludeSubCategories")</label>
+                                </div>
+                            </div>
+                        </div> *@
                     }
                     @if (Model.AvailableManufacturers.Count > 0)
                     {
-                    <div class="form-group">
-                        <label class="control-label col-sm-3 col-md-2" asp-for="mid">@T("Search.Manufacturer"):</label>
-                        <div class="col-sm-5 col-md-5">
-                            <select class="form-control category-iteam dropdown-toggle" asp-for="mid" asp-items="Model.AvailableManufacturers"></select>
-                        </div>
-                    </div>
+                        @* <div class="form-group">
+                            <label class="control-label col-sm-3 col-md-2" asp-for="mid">@T("Search.Manufacturer"):</label>
+                            <div class="col-sm-5 col-md-5">
+                                <select class="form-control category-iteam dropdown-toggle" asp-for="mid" asp-items="Model.AvailableManufacturers"></select>
+                            </div>
+                        </div> *@
                     }
                     @if (Model.asv && Model.AvailableVendors.Count > 0)
                     {
-                    <div class="form-group">
-                        <label class="control-label col-sm-3 col-md-2" asp-for="vid">@T("Search.Vendor"):</label>
-                        <div class="col-sm-5 col-md-5">
-                            <select asp-for="vid" class="form-control" asp-items="Model.AvailableVendors"></select>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3 col-md-2" asp-for="vid">@T("Search.Vendor"):</label>
+                            <div class="col-sm-5 col-md-5">
+                                <select asp-for="vid" class="form-control" asp-items="Model.AvailableVendors"></select>
+                            </div>
                         </div>
-                    </div>
                     }
                     <div class="form-group">
                         <div class="col-sm-offset-3 col-md-offset-2 col-sm-6 col-md-6">
@@ -111,7 +111,7 @@
                 var catalogProductsViewData = new ViewDataDictionary(ViewData);
                 catalogProductsViewData["fetchUrl"] = Html.Raw(Url.Action("SearchProducts", "Catalog"));
             }
-            @await Html.PartialAsync("_CatalogProducts", Model.CatalogProductsModel, catalogProductsViewData)
+            @* @await Html.PartialAsync("_CatalogProducts", Model.CatalogProductsModel, catalogProductsViewData) *@
             <script asp-location="Footer">
                 $(document).ready(function () {
                     $(CatalogProducts).on('before', function (e) {

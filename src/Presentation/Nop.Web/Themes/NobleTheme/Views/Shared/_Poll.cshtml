@@ -26,7 +26,7 @@
         </ul>
         <div class="buttons">
             <button type="button" id="vote-poll-@(Model.Id)" class="btn btn-default vote-poll-button">@T("Polls.Vote")</button>
-            <span id="poll-voting-progress-@(Model.Id)" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
+            <span id="poll-voting-progress-@(Model.Id)" style="display: none;" class="please-wait">@T("Common.Wait")</span>
         </div>
         <div class="poll-vote-error" id="block-poll-vote-error-@(Model.Id)" style="display:none">
         </div>
@@ -61,6 +61,8 @@
                                 }
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
+                                console.log(errorThrown);
+                                console.log(textStatus);
                                 alert('Failed to vote.');
                             },
                             complete: function (jqXHR, textStatus) {

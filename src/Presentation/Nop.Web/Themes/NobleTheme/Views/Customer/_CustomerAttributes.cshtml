@@ -108,7 +108,21 @@
                                 }
                             }
                         </ul>
-                        <h6>You can''t modify this once registered..!</h6>
+                        if (currentPageUrl.Contains("register", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            <div>
+                                <span style="color:red;font-weight:bold">Note:</span>
+                                <ul style="font-size:13px;">
+                                    <li>1. Select <strong>Give Support</strong> if you want to provide technical support to others</li>
+                                    <li>2. Select <strong>Take Support</strong> if you want to take technical/job support from others</li>
+                                    <li>2. You can't switch this once registered</li>
+                                </ul>
+                            </div>
+                        }
+                        else
+                        {
+                            <h6>You can''t modify this once registered..!</h6>
+                        }
                     }
                     break;
                 case AttributeControlType.Checkboxes:

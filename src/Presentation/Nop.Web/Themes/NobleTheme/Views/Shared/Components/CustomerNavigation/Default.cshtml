@@ -5,16 +5,25 @@
         <strong>@T("Account.Navigation")</strong>
     </div>
     <div class="listbox">
-        <nav id="my-AccountMenu" class="" title="">
-            <a id="menu-close-icon-account" class="close-icon-account" style="float: right; width: 30px !important; margin-right: 0px; padding-left: 0px;padding-right:40px; ">
+        <nav id="my-AccountMenu">
+            <a id="menu-close-icon-account" class="close-icon-account">
                 <i class="fa fa-times" style="font-size: 2rem;"></i>
             </a>
             <ul class="nav nav-list">
                 @foreach (var item in Model.CustomerNavigationItems)
                 {
-                    <li class="@item.ItemClass @(Model.SelectedTab == item.Tab ? "active" : "inactive")">
-                        <a href="@Url.RouteUrl(item.RouteName)">@(item.Title)</a>
-                    </li>
+                    if (@item.ItemClass == "customer-info")
+                    {
+                        <li class="reward-points @(Model.SelectedTab == item.Tab ? "active" : "inactive")">
+                            <a href="@Url.RouteUrl(item.RouteName)">@(item.Title)</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="@item.ItemClass @(Model.SelectedTab == item.Tab ? "active" : "inactive")">
+                            <a href="@Url.RouteUrl(item.RouteName)">@(item.Title)</a>
+                        </li>
+                    }
                 }
             </ul>
         </nav>
@@ -32,7 +41,7 @@
             const navigator = menuAccount.navigation({
                 title: 'My Account',
                 //slidingSubmenus: false,
-                theme: 'light'
+                theme: "light"
             });
 
             const drawerAccount = menuAccount.offcanvas({
@@ -50,6 +59,29 @@
                     evnt.preventDefault();
                     drawerAccount.close();
                 });
+
+            if (matchMedia) {
+                var mq = window.matchMedia("(min-width: 824px)");
+                mq.addListener(WidthChange);
+                WidthChange(mq);
+            }
+
+            // media query change
+            function WidthChange(mq) {
+                if (mq.matches) {
+                    // window width is at least 824px
+                    //navigator.close();
+                    drawerAccount.close();
+                    console.log("window width is at least 824px");
+
+                } else {
+                    // window width is less than 824px
+                    console.log("window width is less than 824px");
+                    //navigator.preventDefault();
+                    //drawerAccount.preventDefault();
+
+                }
+            }
         }
     );
 </script>
@@ -62,15 +94,34 @@
         }
     }
 
+   /*  @@media (min-width: 480px) {
+        #myAccountMenu {
+            display: none !important;
+        }
+    } */
+
+   /*  @@media (min-width: 1024px) {
+        #myAccountMenu {
+            display: none !important;
+        }
+    } */
+
+    .close-icon-account {
+        float: right;
+        width: 30px !important;
+        margin-right: 0px !important;
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }
+
     .mm-spn ul li.active > a {
-        background-color: #F5F5F5; 
-        border-left: 5px solid #20b2aa; 
-        text-decoration: none; 
+        background-color: #F5F5F5;
+        border-left: 5px solid #20b2aa;
+        text-decoration: none;
     }
 
-    .mm-spn.mm-spn--light { 
-        color: black !important; 
-        background-color:white;
+    .mm-spn.mm-spn--light {
+        color: black !important;
+        background-color: white;
     }
-
 </style>

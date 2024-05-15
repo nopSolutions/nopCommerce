@@ -298,7 +298,7 @@
                                             }
                                             @if (!string.IsNullOrEmpty(@Html.PartialAsync("_ProductTags", Model).ToString()))
                                             {
-                                                <li><a href="#tags" data-toggle="tab">@T("Products.Tags")</a></li>
+                                                @* <li><a href="#tags" data-toggle="tab">@T("Products.Tags")</a></li> *@
                                             }
                                             @if (!string.IsNullOrEmpty(@Html.PartialAsync("_ProductSpecifications", Model).ToString()))
                                             {
@@ -312,9 +312,9 @@
                                                     @Html.Raw(Model.FullDescription)
                                                 </div>
                                             }
-                                            <div class="product-tags tab-pane fade" id="tags">
+                                           @*  <div class="product-tags tab-pane fade" id="tags">
                                                 @await Html.PartialAsync("_ProductTags", Model.ProductTags)
-                                            </div>
+                                            </div> *@
                                             <div class="product-specification fade tab-pane" id="specification">
                                                 @await Html.PartialAsync("_ProductSpecifications", Model.ProductSpecificationModel)
                                             </div>

@@ -22,16 +22,21 @@
         });
 
         function ShowMobileNumber() {
+
             var ispremium = $("#callNow").attr("data-premium");
             if (!ispremium) {
                 displayPopupNotificationwithhtml('@Html.Raw(JavaScriptEncoder.Default.Encode(htmlStr))');
                 return false;
             }
             else {
+                //get confirmation
+                if (confirm("Are you sure to view the contact details!") == false) {
+                    return false;
+                }
 
+                displayPopupContentFromUrl('@viewMobileNumberRouteUrl', 'View Contact Detail', true, 300);
+                return false;
             }
-            displayPopupContentFromUrl('@viewMobileNumberRouteUrl', 'View Contact Detail', true, 300);
-            return false;
         }
     </script>
 }

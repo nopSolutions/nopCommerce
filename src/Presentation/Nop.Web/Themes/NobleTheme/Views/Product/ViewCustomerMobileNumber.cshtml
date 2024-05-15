@@ -14,17 +14,22 @@
         }
         else
         {
-            <div class="price-inclusive-text" style="font-weight:100">
-                Mobile Number :
-                <span itemprop="price" class="price-value-1025" style="font-size:14px;">
-                    @Model.TargetCustomerMobileNumber
-                </span>
-            </div>
-            <div class="price-inclusive-text" style="font-weight:100">
-                Email Id :
-                <span itemprop="price" class="price-value-1025" style="font-size:14px;">
-                    @Model.TargetCustomerEmailId
-                </span>
+            <div class="card" style="">
+                <div class="card-body">
+                    @* <h5 class="card-title">Contact Details</h5> *@
+                    <p class="card-text">You can use below contact details to contact directly.</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        Mobile :
+                        <a href="tel:@Model.TargetCustomerMobileNumber">@Model.TargetCustomerMobileNumber</a>
+                        @* <button class="btn btn-primary"><i class="fas fa-copy"></i></button> *@
+                    </li>
+                    <li class="list-group-item">
+                        Email :
+                        <a href="mailto:@Model.TargetCustomerEmailId">@Model.TargetCustomerEmailId</a>
+                    </li>
+                </ul>
             </div>
         }
 
