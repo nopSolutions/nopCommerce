@@ -85,10 +85,8 @@
                         display: true,
                         ticks: {
                             callback: function (dataLabel, index) {
-                                if (window.customerStatistics && window.customerStatistics.config.data.labels.length > 12) {
-                                    return index % 5 === 0 ? dataLabel : '';
-                                }
-                                return dataLabel;
+                                var labels = this.chart.config.data.labels;
+                                return labels.length <= 12 || index % 5 === 0 ? labels[index] : '';
                             }
                         },
                         grid: {
@@ -100,10 +98,7 @@
                     y: {
                         display: true,
                         ticks: {
-                            callback: function (dataLabel, index) {
-                                return (dataLabel ^ 0) === dataLabel ? dataLabel : '';
-                            },
-                            min: 0
+                            stepSize: 1
                         },
                         grid: {
                             display: true,
