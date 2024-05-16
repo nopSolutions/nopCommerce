@@ -191,15 +191,12 @@ public class DataMigration : Migration
         var languageIdColumnName = nameof(NewsLetterSubscription.LanguageId);
         if (Schema.Table(newsLetterSubscriptionTableName).Column(languageIdColumnName).Exists())
         {
-            var newsLetterSubscriptions = _dataProvider.GetTable<NewsLetterSubscription>().ToList();
             var defaultLanguageId = _dataProvider.GetTable<Language>().FirstOrDefault()?.Id ?? 0;
-            foreach (var newsLetterSubscription in newsLetterSubscriptions)
-            {
-                newsLetterSubscription.LanguageId = defaultLanguageId;
-            }
-            _dataProvider.UpdateEntities(newsLetterSubscriptions);
+            
+            _dataProvider.GetTable<NewsLetterSubscription>()
+                .Set(p=>p.LanguageId, defaultLanguageId)
+                .Update();
         }
-
     }
 
     public override void Down()
