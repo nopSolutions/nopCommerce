@@ -14,5 +14,5 @@ public class TestTaskScheduler : TaskScheduler
 
     public bool IsInit => _taskThreads.Any();
 
-    public bool IsRun => _taskThreads.All(p => p.IsStarted && !p.IsDisposed);
+    public bool IsRun => _taskThreads.Any() && _taskThreads.All(p => p.IsStarted && !p.IsDisposed);
 }

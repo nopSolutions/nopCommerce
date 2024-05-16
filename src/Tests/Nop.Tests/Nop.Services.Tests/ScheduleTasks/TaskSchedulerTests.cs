@@ -28,9 +28,9 @@ public class TaskSchedulerTests : ServiceTest
     }
 
     [OneTimeTearDown]
-    public void TearDown()
+    public async Task TearDown()
     {
-        _taskScheduler.StopScheduler();
+        await _taskScheduler.StopSchedulerAsync();
     }
 
     [Test]
@@ -42,12 +42,13 @@ public class TaskSchedulerTests : ServiceTest
     }
 
     [Test]
-    public void CanStartStopScheduler()
+    public async  Task CanStartStopScheduler()
     {
+        await _taskScheduler.InitializeAsync();
         _taskScheduler.IsRun.Should().BeFalse();
-        _taskScheduler.StartScheduler();
+        await _taskScheduler.StartSchedulerAsync();
         _taskScheduler.IsRun.Should().BeTrue();
-        _taskScheduler.StopScheduler();
+        await _taskScheduler.StopSchedulerAsync();
         _taskScheduler.IsRun.Should().BeFalse();
     }
 }

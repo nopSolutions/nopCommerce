@@ -78,7 +78,7 @@ public static class ApplicationBuilderExtensions
 
             var taskScheduler = engine.Resolve<ITaskScheduler>();
             await taskScheduler.InitializeAsync();
-            taskScheduler.StartScheduler();
+            await taskScheduler.StartSchedulerAsync();
         }
     }
 
