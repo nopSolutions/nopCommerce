@@ -68,6 +68,7 @@ public partial record AddProductToOrderModel : BaseNopModel
     {
         public ProductAttributeModel()
         {
+            AllowedFileExtensions = new List<string>();
             Values = new List<ProductAttributeValueModel>();
         }
 

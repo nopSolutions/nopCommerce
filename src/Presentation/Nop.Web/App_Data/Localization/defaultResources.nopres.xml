@@ -16854,11 +16854,8 @@
   <LocaleResource Name="Common.Error">
     <Value>Error</Value>
   </LocaleResource>
-  <LocaleResource Name="Common.FileUploader.Cancel">
-    <Value>Cancel</Value>
-  </LocaleResource>
-  <LocaleResource Name="Common.FileUploader.Delete">
-    <Value>Delete</Value>
+  <LocaleResource Name="Common.FileUploader.Browse">
+    <Value>Browse</Value>
   </LocaleResource>
   <LocaleResource Name="Common.FileUploader.DownloadUploadedFile">
     <Value>Download</Value>
@@ -16867,19 +16864,10 @@
     <Value>Drop files here to upload</Value>
   </LocaleResource>
   <LocaleResource Name="Common.FileUploader.Processing">
-    <Value>Processing dropped files...</Value>
+    <Value>Uploading...</Value>
   </LocaleResource>
   <LocaleResource Name="Common.FileUploader.RemoveDownload">
     <Value>Remove</Value>
-  </LocaleResource>
-  <LocaleResource Name="Common.FileUploader.Retry">
-    <Value>Retry</Value>
-  </LocaleResource>
-  <LocaleResource Name="Common.FileUploader.Upload">
-    <Value>Upload a file</Value>
-  </LocaleResource>
-  <LocaleResource Name="Common.FileUploader.Upload.Files">
-    <Value>Upload files</Value>
   </LocaleResource>
   <LocaleResource Name="Common.Hide">
     <Value>Hide</Value>

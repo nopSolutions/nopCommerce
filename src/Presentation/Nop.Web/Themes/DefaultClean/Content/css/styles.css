@@ -3620,11 +3620,8 @@ label, label + * {
 
 .return-request-page .return-request-file {
   font-size: 14px;
-}
-
-.return-request-page .return-request-file .uploadedfileinput {
-  display: inline-block;
-  vertical-align: middle;
+  width: 400px;
+  margin: 0 auto;
 }
 
 .registration-page .message-error,
@@ -4180,7 +4177,7 @@ label, label + * {
   font-size: 0;
 }
 
-.checkout-attributes li {
+.checkout-attributes .option-list>li {
   display: inline-block;
   margin: 5px;
   border: 1px solid #ddd;
@@ -4195,7 +4192,7 @@ label, label + * {
   line-height: 0;
 }
 
-.checkout-attributes li label {
+.checkout-attributes .option-list>li label {
   display: inline-block;
   margin: 0 0 0 5px;
 }
@@ -8497,11 +8494,11 @@ label, label + * {
 
   .shopping-cart-page .checkout-attributes {
     float: left;
-    max-width: 565px;
+    width: 565px;
     margin: -30px 0 15px;
   }
 
-  .shopping-cart-page .checkout-attributes li {
+  .shopping-cart-page .checkout-attributes .option-list>li {
     margin: 5px 10px 5px 0;
   }
 

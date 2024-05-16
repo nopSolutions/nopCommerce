@@ -12,8 +12,10 @@
 }
 
 @* register CSS and JS *@
-<link rel="stylesheet" href="~/lib_npm/fine-uploader/fine-uploader/fine-uploader.min.css" />
-<script asp-exclude-from-bundle="true" src="~/lib_npm/fine-uploader/jquery.fine-uploader/jquery.fine-uploader.min.js" asp-location="Footer"></script>
+<link rel="stylesheet" href="~/lib_npm/filepond/filepond.min.css" />
+<link rel="stylesheet" href="~/lib_npm/filepond-plugin-get-file/filepond-plugin-get-file.min.css" />
+<script asp-exclude-from-bundle="true" src="~/lib_npm/filepond/filepond.min.js" asp-location="Footer"></script>
+<script asp-exclude-from-bundle="true" src="~/lib_npm/filepond-plugin-get-file/filepond-plugin-get-file.min.js" asp-location="Footer"></script>
 
 <script>
     $(function() {
@@ -119,93 +121,67 @@
                 </div>
             </div>
             <div class="col-sm-8">
-                @*fine uploader container*@
-                <div id="@clientId">
-                    <noscript>
-                        <p>
-                            Please enable JavaScript to use file uploader.
-                        </p>
-                        <!-- or put a simple form for upload here -->
-                    </noscript>
-                </div>
-                @*fine uploader template (keep it synchronized to \Content\fineuploader\templates\default.html)*@
-                <script type="text/template" id="@(clientId)-qq-template">
-                    <div class="qq-uploader-selector qq-uploader">
-                        <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
-                            <span>@T("Common.FileUploader.DropFiles")</span>
-                        </div>
-                        <div class="qq-upload-button-selector qq-upload-button">
-                            <div>@T("Common.FileUploader.Upload")</div>
-                        </div>
-                        <span class="qq-drop-processing-selector qq-drop-processing">
-                            <span>@T("Common.FileUploader.Processing")</span>
-                            <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
-                        </span>
-                        <ul class="qq-upload-list-selector qq-upload-list">
-                            <li>
-                                <div class="qq-progress-bar-container-selector">
-                                    <div class="qq-progress-bar-selector qq-progress-bar"></div>
-                                </div>
-                                <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
-                                <span class="qq-edit-filename-icon-selector qq-edit-filename-icon"></span>
-                                <span class="qq-upload-file-selector qq-upload-file"></span>
-                                <input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">
-                                <span class="qq-upload-size-selector qq-upload-size"></span>
-                                <a class="qq-upload-cancel-selector qq-upload-cancel" href="#">@T("Common.FileUploader.Cancel")</a>
-                                <a class="qq-upload-retry-selector qq-upload-retry" href="#">@T("Common.FileUploader.Retry")</a>
-                                <a class="qq-upload-delete-selector qq-upload-delete" href="#">@T("Common.FileUploader.Delete")</a>
-                                <span class="qq-upload-status-text-selector qq-upload-status-text"></span>
-                            </li>
-                        </ul>
-                    </div>
-                </script>
-
-                <script>
-
-                    $(function() {
-                        $("#@clientId").fineUploader({
-                            request: {
-                                endpoint: '@(Url.Action("AsyncUpload", "Download", new { area = AreaNames.ADMIN }))'
-                            },
-                            template: "@(clientId)-qq-template",
-                            multiple: false
-                        }).on("complete", function (event, id, name, responseJSON, xhr) {
-                            $("#@(clientId + "downloadurl")").html("<a class='btn btn-default ml-1' href='" + responseJSON.downloadUrl + "'><i class='fas fa-download'></i>@T("Admin.Download.DownloadUploadedFile")</a>");
-                            $("#@(clientId + "value") input").val(responseJSON.downloadId);
-                            $("#@(clientId + "remove")").show();
-                        });
-
-
-                        $("#@(clientId + "remove")").click(function (e) {
-                            $("#@(clientId + "downloadurl")").html("");
-                            $("#@(clientId + "value") input").val(0);
-                            $("#@(clientId) .qq-upload-list-selector").empty();
-                            $(this).hide();
-                        });
-                    });
-
-                </script>
-                <div style="clear: both;">
-                    <div id="@(clientId + "downloadurl")" class="float-left my-1">
-                        @if (download != null)
-                        {
-                            <a class='btn btn-default' href="@(Url.Action("DownloadFile", "Download", new { downloadGuid = download.DownloadGuid, area = AreaNames.ADMIN }))"><i class='fas fa-download'></i>@T("Admin.Download.DownloadUploadedFile")</a>
-                        }
-                    </div>
-                    <div class="float-left my-1">
-                        @if (download != null)
-                        {
-                            <span id="@(clientId + "remove")" class="btn btn-default ml-2"><i class="far fa-trash-alt"></i>@T("Admin.Download.RemoveDownload")</span>
-                        }
-                        else
-                        {
-                            <span id="@(clientId + "remove")" class="btn btn-default ml-2" style="display:none;"><i class="far fa-trash-alt"></i>@T("Admin.Download.RemoveDownload")</span>
-                        }
-                    </div>
-                </div>
+                <div id="@clientId"></div>
             </div>
         </div>
     </div>
 </div>
 <nop-alert asp-alert-id="saveDownloadUrlAlert" asp-alert-message="@T("Admin.Download.SaveDownloadURL.Alert.FailedSave")" />
 <nop-alert asp-alert-id="saveDownloadUrlFailed" />
+
+<script asp-location="Footer"> 
+    $(function () {
+        // Register the plugin
+        FilePond.registerPlugin(FilePondPluginGetFile);
+
+        // Create a FilePond instance
+        FilePond.create(document.querySelector('#@(clientId)'), {
+            credits: false,
+            allowMultiple: false,
+            maxFiles: 1,
+            allowDownloadByUrl: true,
+            @if (download != null)
+            {
+            <text>
+                files: [
+                {
+                    source: '@Html.Raw($"{download.Filename ?? download.DownloadGuid.ToString()}{download.Extension}")',
+                    options: {
+                        type: 'local',
+                        metadata: {
+                            url: '@(Url.Action("DownloadFile", "Download", new { downloadGuid = download.DownloadGuid, area = AreaNames.ADMIN }))' 
+                        }
+                    }
+                },
+            ],
+            </text>
+            }
+            server: {
+                process: {
+                    url:'@(Url.Action("AsyncUpload", "Download", new { area = AreaNames.ADMIN }))',
+                    onload: function(response) {
+                        var r = JSON.parse(response);
+
+                        $("#@(Html.IdForModel())").val(r.downloadId);
+                    }
+                },
+                remove: (source, load, error) => {                                      
+                    $("#@(Html.IdForModel())").val('');
+                    load();
+                },
+                revert: (uniqueFileId, load, error) => {
+                    $("#@(Html.IdForModel())").val('');
+                    load();
+                },
+            },
+            onprocessfiles: (error) => {
+                if (error) {
+                    alert(error);
+                    return;
+                }
+            },
+            labelIdle: '@T("Common.FileUploader.DropFiles") / <span class="filepond--label-action">@T("Common.FileUploader.Browse")</span>',
+            labelFileProcessing: '@T("Common.FileUploader.Processing")',
+        });
+    });
+</script>
