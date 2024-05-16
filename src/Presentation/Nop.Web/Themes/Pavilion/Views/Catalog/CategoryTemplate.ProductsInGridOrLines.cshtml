@@ -279,11 +279,13 @@
 		</div>
 	}
 	<div class="page-body">
-		@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CategoryDetailsTop, additionalData = Model })
-		@await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.CategoryDetailsTopBelow480px, additionalData = Model })
-		@await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.CategoryDetailsTopMin480px, additionalData = Model })
-		@await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.CategoryDetailsTopMin768px, additionalData = Model })
-		@await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.CategoryDetailsTopAbove1000px, additionalData = Model })
+		<div class="categories-details-top">
+			@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CategoryDetailsTop, additionalData = Model })
+			@await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.CategoryDetailsTopBelow480px, additionalData = Model })
+			@await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.CategoryDetailsTopMin480px, additionalData = Model })
+			@await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.CategoryDetailsTopMin768px, additionalData = Model })
+			@await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.CategoryDetailsTopAbove1000px, additionalData = Model })
+		</div>
 		@if (hasChildCategories == false)
 		{
 			<h1 class="leaf-category-title">@Model.Name</h1>
