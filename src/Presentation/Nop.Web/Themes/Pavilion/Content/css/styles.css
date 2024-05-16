@@ -6136,3 +6136,28 @@ h1.search-page-title {
 .header-links {
 	left: -20px;
   }
+.header-links-wrapper label:hover {
+    cursor: pointer;
+}
+
+
+@media screen and (max-width: 1024px) {
+	div#mobile-header-logo {
+		position: absolute;
+		top: 10px;
+		left: 0;
+	}
+	.header-links {
+		left: 0 !important;
+	}
+	div#mobile-header-logo {
+		left: 0;
+		position: absolute;
+	}
+	.categories-details-top img {
+		width: 100% !important;
+	}
+	body .master-wrapper-content {
+		padding-top: 0px;
+	}
+}
