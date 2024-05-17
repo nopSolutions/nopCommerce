@@ -12,6 +12,7 @@ public partial class CustomerActivityService : ICustomerActivityService
 {
     #region Fields
 
+    protected readonly CustomerSettings _customerSettings;
     protected readonly IRepository<ActivityLog> _activityLogRepository;
     protected readonly IRepository<ActivityLogType> _activityLogTypeRepository;
     protected readonly IWebHelper _webHelper;
@@ -21,11 +22,13 @@ public partial class CustomerActivityService : ICustomerActivityService
 
     #region Ctor
 
-    public CustomerActivityService(IRepository<ActivityLog> activityLogRepository,
+    public CustomerActivityService(CustomerSettings customerSettings,
+        IRepository<ActivityLog> activityLogRepository,
         IRepository<ActivityLogType> activityLogTypeRepository,
         IWebHelper webHelper,
         IWorkContext workContext)
     {
+        _customerSettings = customerSettings;
         _activityLogRepository = activityLogRepository;
         _activityLogTypeRepository = activityLogTypeRepository;
         _webHelper = webHelper;
@@ -123,7 +126,7 @@ public partial class CustomerActivityService : ICustomerActivityService
             CustomerId = customer.Id,
             Comment = CommonHelper.EnsureMaximumLength(comment ?? string.Empty, 4000),
             CreatedOnUtc = DateTime.UtcNow,
-            IpAddress = _webHelper.GetCurrentIpAddress()
+            IpAddress = _customerSettings.StoreIpAddresses ? _webHelper.GetCurrentIpAddress() : string.Empty
         };
         await _activityLogRepository.InsertAsync(logItem);
 
