@@ -20,6 +20,7 @@ public partial class BoardsController : BasePublicController
     #region Fields
 
     protected readonly CaptchaSettings _captchaSettings;
+    protected readonly CustomerSettings _customerSettings;
     protected readonly ForumSettings _forumSettings;
     protected readonly ICustomerService _customerService;
     protected readonly IForumModelFactory _forumModelFactory;
@@ -34,6 +35,7 @@ public partial class BoardsController : BasePublicController
     #region Ctor
 
     public BoardsController(CaptchaSettings captchaSettings,
+        CustomerSettings customerSettings,
         ForumSettings forumSettings,
         ICustomerService customerService,
         IForumModelFactory forumModelFactory,
@@ -44,6 +46,7 @@ public partial class BoardsController : BasePublicController
         IWorkContext workContext)
     {
         _captchaSettings = captchaSettings;
+        _customerSettings = customerSettings;
         _forumSettings = forumSettings;
         _customerService = customerService;
         _forumModelFactory = forumModelFactory;
@@ -426,7 +429,6 @@ public partial class BoardsController : BasePublicController
                     text = text[0..maxPostLength];
 
                 var topicType = ForumTopicType.Normal;
-                var ipAddress = _webHelper.GetCurrentIpAddress();
                 var nowUtc = DateTime.UtcNow;
 
                 if (await _forumService.IsCustomerAllowedToSetTopicPriorityAsync(customer))
@@ -450,7 +452,7 @@ public partial class BoardsController : BasePublicController
                     TopicId = forumTopic.Id,
                     CustomerId = customer.Id,
                     Text = text,
-                    IPAddress = ipAddress,
+                    IPAddress = _customerSettings.StoreIpAddresses ? _webHelper.GetCurrentIpAddress() : string.Empty,
                     CreatedOnUtc = nowUtc,
                     UpdatedOnUtc = nowUtc
                 };
@@ -556,7 +558,6 @@ public partial class BoardsController : BasePublicController
                     text = text[0..maxPostLength];
 
                 var topicType = ForumTopicType.Normal;
-                var ipAddress = _webHelper.GetCurrentIpAddress();
                 var nowUtc = DateTime.UtcNow;
 
                 if (await _forumService.IsCustomerAllowedToSetTopicPriorityAsync(customer))
@@ -584,7 +585,7 @@ public partial class BoardsController : BasePublicController
                         TopicId = forumTopic.Id,
                         CustomerId = forumTopic.CustomerId,
                         Text = text,
-                        IPAddress = ipAddress,
+                        IPAddress = _customerSettings.StoreIpAddresses ? _webHelper.GetCurrentIpAddress() : string.Empty,
                         UpdatedOnUtc = nowUtc
                     };
 
@@ -721,8 +722,6 @@ public partial class BoardsController : BasePublicController
                 if (maxPostLength > 0 && text.Length > maxPostLength)
                     text = text[0..maxPostLength];
 
-                var ipAddress = _webHelper.GetCurrentIpAddress();
-
                 var nowUtc = DateTime.UtcNow;
 
                 var forumPost = new ForumPost
@@ -730,7 +729,7 @@ public partial class BoardsController : BasePublicController
                     TopicId = forumTopic.Id,
                     CustomerId = customer.Id,
                     Text = text,
-                    IPAddress = ipAddress,
+                    IPAddress = _customerSettings.StoreIpAddresses ? _webHelper.GetCurrentIpAddress() : string.Empty,
                     CreatedOnUtc = nowUtc,
                     UpdatedOnUtc = nowUtc
                 };
