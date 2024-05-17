@@ -1,11 +1,9 @@
-﻿using Nop.Core.Domain.Localization;
-
-namespace Nop.Core.Domain.Catalog;
+﻿namespace Nop.Core.Domain.Catalog;
 
 /// <summary>
 /// Represents a product attribute value picture
 /// </summary>
-public partial class ProductAttributeValuePicture : BaseEntity, ILocalizedEntity
+public partial class ProductAttributeValuePicture : BaseEntity
 {
     /// <summary>
     /// Gets or sets the product attribute value id
