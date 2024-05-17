@@ -144,7 +144,7 @@ public partial class PluginController : BaseAdminController
     public virtual async Task<IActionResult> ListSelect(PluginSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _pluginModelFactory.PreparePluginListModelAsync(searchModel);
@@ -602,7 +602,7 @@ public partial class PluginController : BaseAdminController
     public virtual async Task<IActionResult> OfficialFeedSelect(OfficialFeedPluginSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _pluginModelFactory.PrepareOfficialFeedPluginListModelAsync(searchModel);

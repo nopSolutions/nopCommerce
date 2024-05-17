@@ -221,7 +221,7 @@ public partial class OrderController : BaseAdminController
     public virtual async Task<IActionResult> OrderList(OrderSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _orderModelFactory.PrepareOrderListModelAsync(searchModel);
@@ -233,7 +233,7 @@ public partial class OrderController : BaseAdminController
     public virtual async Task<IActionResult> ReportAggregates(OrderSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _orderModelFactory.PrepareOrderAggregatorModelAsync(searchModel);
@@ -1587,7 +1587,7 @@ public partial class OrderController : BaseAdminController
     public virtual async Task<IActionResult> AddProductToOrder(AddProductToOrderSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get an order with the specified id
         var order = await _orderService.GetOrderByIdAsync(searchModel.OrderId)
@@ -1879,7 +1879,7 @@ public partial class OrderController : BaseAdminController
     public virtual async Task<IActionResult> ShipmentListSelect(ShipmentSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _orderModelFactory.PrepareShipmentListModelAsync(searchModel);
@@ -1891,7 +1891,7 @@ public partial class OrderController : BaseAdminController
     public virtual async Task<IActionResult> ShipmentsByOrder(OrderShipmentSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get an order with the specified id
         var order = await _orderService.GetOrderByIdAsync(searchModel.OrderId)
@@ -1911,7 +1911,7 @@ public partial class OrderController : BaseAdminController
     public virtual async Task<IActionResult> ShipmentsItemsByShipmentId(ShipmentItemSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a shipment with the specified id
         var shipment = await _shipmentService.GetShipmentByIdAsync(searchModel.ShipmentId)
@@ -2536,7 +2536,7 @@ public partial class OrderController : BaseAdminController
     public virtual async Task<IActionResult> SetAsShippedSelected(ICollection<int> selectedIds)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();
@@ -2568,7 +2568,7 @@ public partial class OrderController : BaseAdminController
     public virtual async Task<IActionResult> SetAsReadyForPickupSelected(ICollection<int> selectedIds)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();
@@ -2600,7 +2600,7 @@ public partial class OrderController : BaseAdminController
     public virtual async Task<IActionResult> SetAsDeliveredSelected(ICollection<int> selectedIds)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();
@@ -2636,7 +2636,7 @@ public partial class OrderController : BaseAdminController
     public virtual async Task<IActionResult> OrderNotesSelect(OrderNoteSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get an order with the specified id
         var order = await _orderService.GetOrderByIdAsync(searchModel.OrderId)
@@ -2655,7 +2655,7 @@ public partial class OrderController : BaseAdminController
     public virtual async Task<IActionResult> OrderNoteAdd(int orderId, int downloadId, bool displayToCustomer, string message)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         if (string.IsNullOrEmpty(message))
             return ErrorJson(await _localizationService.GetResourceAsync("Admin.Orders.OrderNotes.Fields.Note.Validation"));
@@ -2694,7 +2694,7 @@ public partial class OrderController : BaseAdminController
     public virtual async Task<IActionResult> OrderNoteDelete(int id, int orderId)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get an order with the specified id
         _ = await _orderService.GetOrderByIdAsync(orderId)
@@ -2721,7 +2721,7 @@ public partial class OrderController : BaseAdminController
     public virtual async Task<IActionResult> BestsellersBriefReportByQuantityList(BestsellerBriefSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _orderModelFactory.PrepareBestsellerBriefListModelAsync(searchModel);
@@ -2733,7 +2733,7 @@ public partial class OrderController : BaseAdminController
     public virtual async Task<IActionResult> BestsellersBriefReportByAmountList(BestsellerBriefSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _orderModelFactory.PrepareBestsellerBriefListModelAsync(searchModel);
@@ -2745,7 +2745,7 @@ public partial class OrderController : BaseAdminController
     public virtual async Task<IActionResult> OrderAverageReportList(OrderAverageReportSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //a vendor doesn't have access to this report
         if (await _workContext.GetCurrentVendorAsync() != null)
@@ -2761,7 +2761,7 @@ public partial class OrderController : BaseAdminController
     public virtual async Task<IActionResult> OrderIncompleteReportList(OrderIncompleteReportSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //a vendor doesn't have access to this report
         if (await _workContext.GetCurrentVendorAsync() != null)

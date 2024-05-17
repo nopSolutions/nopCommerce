@@ -106,7 +106,7 @@ public partial class SpecificationAttributeController : BaseAdminController
     public virtual async Task<IActionResult> SpecificationAttributeGroupList(SpecificationAttributeGroupSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         var model = await _specificationAttributeModelFactory.PrepareSpecificationAttributeGroupListModelAsync(searchModel);
 
@@ -117,7 +117,7 @@ public partial class SpecificationAttributeController : BaseAdminController
     public virtual async Task<IActionResult> SpecificationAttributeList(SpecificationAttributeSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         SpecificationAttributeGroup group = null;
 
@@ -355,7 +355,7 @@ public partial class SpecificationAttributeController : BaseAdminController
     public virtual async Task<IActionResult> DeleteSelectedSpecificationAttributes(ICollection<int> selectedIds)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();
@@ -380,7 +380,7 @@ public partial class SpecificationAttributeController : BaseAdminController
     public virtual async Task<IActionResult> OptionList(SpecificationAttributeOptionSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a specification attribute with the specified id
         var specificationAttribute = await _specificationAttributeService.GetSpecificationAttributeByIdAsync(searchModel.SpecificationAttributeId)
@@ -513,7 +513,7 @@ public partial class SpecificationAttributeController : BaseAdminController
     public virtual async Task<IActionResult> OptionDelete(int id, int specificationAttributeId)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a specification attribute option with the specified id
         var specificationAttributeOption = await _specificationAttributeService.GetSpecificationAttributeOptionByIdAsync(id)
@@ -530,7 +530,7 @@ public partial class SpecificationAttributeController : BaseAdminController
         //do not make any permission validation here 
         //because this method could be used on some other pages (such as product editing)
         //if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
-        //    return await AccessDeniedDataTablesJson();
+        //    return await AccessDeniedJsonAsync();
 
         //this action method gets called via an ajax request
         ArgumentException.ThrowIfNullOrEmpty(attributeId);
@@ -549,7 +549,7 @@ public partial class SpecificationAttributeController : BaseAdminController
     public virtual async Task<IActionResult> UsedByProducts(SpecificationAttributeProductSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a specification attribute with the specified id
         var specificationAttribute = await _specificationAttributeService.GetSpecificationAttributeByIdAsync(searchModel.SpecificationAttributeId)

@@ -164,7 +164,7 @@ public class FixedByWeightByTotalController : BasePluginController
     public async Task<IActionResult> FixedShippingRateList(ConfigurationModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         var shippingMethods = (await _shippingService.GetAllShippingMethodsAsync()).ToPagedList(searchModel);
 
@@ -207,7 +207,7 @@ public class FixedByWeightByTotalController : BasePluginController
     public async Task<IActionResult> RateByWeightByTotalList(ConfigurationModel searchModel, ConfigurationModel filter)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //var records = _shippingByWeightService.GetAll(command.Page - 1, command.PageSize);
         var records = await _shippingByWeightService.FindRecordsAsync(

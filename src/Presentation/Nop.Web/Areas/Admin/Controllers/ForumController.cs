@@ -64,7 +64,7 @@ public partial class ForumController : BaseAdminController
     public virtual async Task<IActionResult> ForumGroupList(ForumGroupSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _forumModelFactory.PrepareForumGroupListModelAsync(searchModel);
@@ -76,7 +76,7 @@ public partial class ForumController : BaseAdminController
     public virtual async Task<IActionResult> ForumList(ForumSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a forum group with the specified id
         var forumGroup = await _forumService.GetForumGroupByIdAsync(searchModel.ForumGroupId)

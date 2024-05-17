@@ -67,7 +67,7 @@ public partial class MeasureController : BaseAdminController
     public virtual async Task<IActionResult> Weights(MeasureWeightSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _measureModelFactory.PrepareMeasureWeightListModelAsync(searchModel);
@@ -79,7 +79,7 @@ public partial class MeasureController : BaseAdminController
     public virtual async Task<IActionResult> WeightUpdate(MeasureWeightModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
@@ -99,7 +99,7 @@ public partial class MeasureController : BaseAdminController
     public virtual async Task<IActionResult> WeightAdd(MeasureWeightModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
@@ -119,7 +119,7 @@ public partial class MeasureController : BaseAdminController
     public virtual async Task<IActionResult> WeightDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a weight with the specified id
         var weight = await _measureService.GetMeasureWeightByIdAsync(id)
@@ -143,7 +143,7 @@ public partial class MeasureController : BaseAdminController
     public virtual async Task<IActionResult> MarkAsPrimaryWeight(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a weight with the specified id
         var weight = await _measureService.GetMeasureWeightByIdAsync(id)
@@ -163,7 +163,7 @@ public partial class MeasureController : BaseAdminController
     public virtual async Task<IActionResult> Dimensions(MeasureDimensionSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _measureModelFactory.PrepareMeasureDimensionListModelAsync(searchModel);
@@ -175,7 +175,7 @@ public partial class MeasureController : BaseAdminController
     public virtual async Task<IActionResult> DimensionUpdate(MeasureDimensionModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
@@ -195,7 +195,7 @@ public partial class MeasureController : BaseAdminController
     public virtual async Task<IActionResult> DimensionAdd(MeasureDimensionModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
@@ -215,7 +215,7 @@ public partial class MeasureController : BaseAdminController
     public virtual async Task<IActionResult> DimensionDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a dimension with the specified id
         var dimension = await _measureService.GetMeasureDimensionByIdAsync(id)
@@ -239,7 +239,7 @@ public partial class MeasureController : BaseAdminController
     public virtual async Task<IActionResult> MarkAsPrimaryDimension(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a dimension with the specified id
         var dimension = await _measureService.GetMeasureDimensionByIdAsync(id)

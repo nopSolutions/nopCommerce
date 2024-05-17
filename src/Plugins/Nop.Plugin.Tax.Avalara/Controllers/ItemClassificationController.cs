@@ -68,7 +68,7 @@ public class ItemClassificationController : BaseAdminController
     public async Task<IActionResult> List(ItemClassificationSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //get item classification
         var itemClassification = await _itemClassificationService.GetItemClassificationAsync(
@@ -100,7 +100,7 @@ public class ItemClassificationController : BaseAdminController
     public async Task<IActionResult> Update(ItemClassificationModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         var item = await _itemClassificationService.GetItemClassificationByIdAsync(model.Id)
             ?? throw new ArgumentException("No record found");
@@ -116,7 +116,7 @@ public class ItemClassificationController : BaseAdminController
     public async Task<IActionResult> DeleteSelected(List<int> selectedIds)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         if (!selectedIds?.Any() ?? true)
             return NoContent();
@@ -139,7 +139,7 @@ public class ItemClassificationController : BaseAdminController
     public async Task<IActionResult> ClearAll()
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         await _itemClassificationService.ClearItemClassificationAsync();
 
@@ -169,10 +169,10 @@ public class ItemClassificationController : BaseAdminController
     public async Task<IActionResult> ProductListToClassification(AddProductToClassificationSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         var products = await _productService.SearchProductsAsync(showHidden: true,
             keywords: searchModel.SearchProductName,
@@ -218,7 +218,7 @@ public class ItemClassificationController : BaseAdminController
     public async Task<IActionResult> StartClassification()
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         var items = (await _itemClassificationService.GetItemClassificationAsync())
             .Where(x => string.IsNullOrEmpty(x.HSClassificationRequestId))

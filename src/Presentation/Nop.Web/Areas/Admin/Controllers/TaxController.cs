@@ -87,7 +87,7 @@ public partial class TaxController : BaseAdminController
     public virtual async Task<IActionResult> Providers(TaxProviderSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _taxModelFactory.PrepareTaxProviderListModelAsync(searchModel);
@@ -132,7 +132,7 @@ public partial class TaxController : BaseAdminController
     public virtual async Task<IActionResult> Categories(TaxCategorySearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _taxModelFactory.PrepareTaxCategoryListModelAsync(searchModel);
@@ -144,7 +144,7 @@ public partial class TaxController : BaseAdminController
     public virtual async Task<IActionResult> CategoryUpdate(TaxCategoryModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
@@ -160,7 +160,7 @@ public partial class TaxController : BaseAdminController
     public virtual async Task<IActionResult> CategoryAdd(TaxCategoryModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
@@ -176,7 +176,7 @@ public partial class TaxController : BaseAdminController
     public virtual async Task<IActionResult> CategoryDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a tax category with the specified id
         var taxCategory = await _taxCategoryService.GetTaxCategoryByIdAsync(id)

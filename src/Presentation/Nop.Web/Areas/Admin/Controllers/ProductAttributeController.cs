@@ -103,7 +103,7 @@ public partial class ProductAttributeController : BaseAdminController
     public virtual async Task<IActionResult> List(ProductAttributeSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _productAttributeModelFactory.PrepareProductAttributeListModelAsync(searchModel);
@@ -232,7 +232,7 @@ public partial class ProductAttributeController : BaseAdminController
     public virtual async Task<IActionResult> DeleteSelected(ICollection<int> selectedIds)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();
@@ -257,7 +257,7 @@ public partial class ProductAttributeController : BaseAdminController
     public virtual async Task<IActionResult> UsedByProducts(ProductAttributeProductSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a product attribute with the specified id
         var productAttribute = await _productAttributeService.GetProductAttributeByIdAsync(searchModel.ProductAttributeId)
@@ -277,7 +277,7 @@ public partial class ProductAttributeController : BaseAdminController
     public virtual async Task<IActionResult> PredefinedProductAttributeValueList(PredefinedProductAttributeValueSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a product attribute with the specified id
         var productAttribute = await _productAttributeService.GetProductAttributeByIdAsync(searchModel.ProductAttributeId)
@@ -391,7 +391,7 @@ public partial class ProductAttributeController : BaseAdminController
     public virtual async Task<IActionResult> PredefinedProductAttributeValueDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a predefined product attribute value with the specified id
         var productAttributeValue = await _productAttributeService.GetPredefinedProductAttributeValueByIdAsync(id)

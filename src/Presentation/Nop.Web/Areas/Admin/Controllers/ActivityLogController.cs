@@ -95,7 +95,7 @@ public partial class ActivityLogController : BaseAdminController
     public virtual async Task<IActionResult> ListLogs(ActivityLogSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageActivityLog))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _activityLogModelFactory.PrepareActivityLogListModelAsync(searchModel);
@@ -107,7 +107,7 @@ public partial class ActivityLogController : BaseAdminController
     public virtual async Task<IActionResult> ActivityLogDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageActivityLog))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a log item with the specified id
         var logItem = await _customerActivityService.GetActivityByIdAsync(id)

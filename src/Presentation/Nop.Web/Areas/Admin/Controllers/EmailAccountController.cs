@@ -142,7 +142,7 @@ public partial class EmailAccountController : BaseAdminController
     public virtual async Task<IActionResult> List(EmailAccountSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageEmailAccounts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _emailAccountModelFactory.PrepareEmailAccountListModelAsync(searchModel);

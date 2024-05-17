@@ -147,7 +147,7 @@ public partial class ShippingController : BaseAdminController
     public virtual async Task<IActionResult> Providers(ShippingProviderSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _shippingModelFactory.PrepareShippingProviderListModelAsync(searchModel);
@@ -159,7 +159,7 @@ public partial class ShippingController : BaseAdminController
     public virtual async Task<IActionResult> ProviderUpdate(ShippingProviderModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         var srcm = await _shippingPluginManager.LoadPluginBySystemNameAsync(model.SystemName);
         if (_shippingPluginManager.IsPluginActive(srcm))
@@ -214,7 +214,7 @@ public partial class ShippingController : BaseAdminController
     public virtual async Task<IActionResult> PickupPointProviders(PickupPointProviderSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _shippingModelFactory.PreparePickupPointProviderListModelAsync(searchModel);
@@ -226,7 +226,7 @@ public partial class ShippingController : BaseAdminController
     public virtual async Task<IActionResult> PickupPointProviderUpdate(PickupPointProviderModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         var pickupPointProvider = await _pickupPluginManager.LoadPluginBySystemNameAsync(model.SystemName);
         if (_pickupPluginManager.IsPluginActive(pickupPointProvider))
@@ -279,7 +279,7 @@ public partial class ShippingController : BaseAdminController
     public virtual async Task<IActionResult> Methods(ShippingMethodSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _shippingModelFactory.PrepareShippingMethodListModelAsync(searchModel);
@@ -411,7 +411,7 @@ public partial class ShippingController : BaseAdminController
     public virtual async Task<IActionResult> DeliveryDates(DeliveryDateSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _shippingModelFactory.PrepareDeliveryDateListModelAsync(searchModel);
@@ -529,7 +529,7 @@ public partial class ShippingController : BaseAdminController
     public virtual async Task<IActionResult> ProductAvailabilityRanges(ProductAvailabilityRangeSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _shippingModelFactory.PrepareProductAvailabilityRangeListModelAsync(searchModel);
@@ -658,7 +658,7 @@ public partial class ShippingController : BaseAdminController
     public virtual async Task<IActionResult> Warehouses(WarehouseSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _shippingModelFactory.PrepareWarehouseListModelAsync(searchModel);

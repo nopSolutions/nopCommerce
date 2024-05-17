@@ -102,7 +102,7 @@ public partial class AddressAttributeController : BaseAdminController
     public virtual async Task<IActionResult> List(AddressAttributeSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _addressAttributeModelFactory.PrepareAddressAttributeListModelAsync(searchModel);
@@ -241,7 +241,7 @@ public partial class AddressAttributeController : BaseAdminController
     public virtual async Task<IActionResult> ValueList(AddressAttributeValueSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get an address attribute with the specified id
         var addressAttribute = await _addressAttributeService.GetAttributeByIdAsync(searchModel.AddressAttributeId)
@@ -370,7 +370,7 @@ public partial class AddressAttributeController : BaseAdminController
     public virtual async Task<IActionResult> ValueDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get an address attribute value with the specified id
         var addressAttributeValue = await _addressAttributeService.GetAttributeValueByIdAsync(id)

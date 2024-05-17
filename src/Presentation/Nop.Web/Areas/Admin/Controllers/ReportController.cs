@@ -49,7 +49,7 @@ public partial class ReportController : BaseAdminController
     public virtual async Task<IActionResult> SalesSummaryList(SalesSummarySearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.SalesSummaryReport))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _reportModelFactory.PrepareSalesSummaryListModelAsync(searchModel);
@@ -77,7 +77,7 @@ public partial class ReportController : BaseAdminController
     public virtual async Task<IActionResult> LowStockList(LowStockProductSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _reportModelFactory.PrepareLowStockProductListModelAsync(searchModel);
@@ -104,7 +104,7 @@ public partial class ReportController : BaseAdminController
     public virtual async Task<IActionResult> BestsellersList(BestsellerSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _reportModelFactory.PrepareBestsellerListModelAsync(searchModel);
@@ -116,7 +116,7 @@ public partial class ReportController : BaseAdminController
     public virtual async Task<IActionResult> BestsellersReportAggregates(BestsellerSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var totalAmount = await _reportModelFactory.GetBestsellerTotalAmountAsync(searchModel);
@@ -143,7 +143,7 @@ public partial class ReportController : BaseAdminController
     public virtual async Task<IActionResult> NeverSoldList(NeverSoldReportSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _reportModelFactory.PrepareNeverSoldListModelAsync(searchModel);
@@ -170,7 +170,7 @@ public partial class ReportController : BaseAdminController
     public virtual async Task<IActionResult> CountrySalesList(CountryReportSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.OrderCountryReport))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _reportModelFactory.PrepareCountrySalesListModelAsync(searchModel);
@@ -219,7 +219,7 @@ public partial class ReportController : BaseAdminController
     public virtual async Task<IActionResult> ReportBestCustomersByOrderTotalList(BestCustomersReportSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _reportModelFactory.PrepareBestCustomersReportListModelAsync(searchModel);
@@ -231,7 +231,7 @@ public partial class ReportController : BaseAdminController
     public virtual async Task<IActionResult> ReportBestCustomersByNumberOfOrdersList(BestCustomersReportSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _reportModelFactory.PrepareBestCustomersReportListModelAsync(searchModel);
@@ -243,7 +243,7 @@ public partial class ReportController : BaseAdminController
     public virtual async Task<IActionResult> ReportRegisteredCustomersList(RegisteredCustomersReportSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _reportModelFactory.PrepareRegisteredCustomersReportListModelAsync(searchModel);

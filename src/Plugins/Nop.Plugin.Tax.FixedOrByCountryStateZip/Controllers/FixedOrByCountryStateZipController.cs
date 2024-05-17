@@ -151,7 +151,7 @@ public class FixedOrByCountryStateZipController : BasePluginController
     public async Task<IActionResult> FixedRatesList(ConfigurationModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         var categories = (await _taxCategoryService.GetAllTaxCategoriesAsync()).ToPagedList(searchModel);
 
@@ -189,7 +189,7 @@ public class FixedOrByCountryStateZipController : BasePluginController
     public async Task<IActionResult> RatesByCountryStateZipList(ConfigurationModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         var records = await _taxRateService.GetAllTaxRatesAsync(searchModel.Page - 1, searchModel.PageSize);
 

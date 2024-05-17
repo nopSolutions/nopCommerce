@@ -106,7 +106,7 @@ public partial class ReturnRequestController : BaseAdminController
     public virtual async Task<IActionResult> List(ReturnRequestSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageReturnRequests))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _returnRequestModelFactory.PrepareReturnRequestListModelAsync(searchModel);
@@ -256,7 +256,7 @@ public partial class ReturnRequestController : BaseAdminController
     public virtual async Task<IActionResult> ReturnRequestReasonList(ReturnRequestReasonSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _returnRequestModelFactory.PrepareReturnRequestReasonListModelAsync(searchModel);
@@ -390,7 +390,7 @@ public partial class ReturnRequestController : BaseAdminController
     public virtual async Task<IActionResult> ReturnRequestActionList(ReturnRequestActionSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _returnRequestModelFactory.PrepareReturnRequestActionListModelAsync(searchModel);

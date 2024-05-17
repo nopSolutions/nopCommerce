@@ -92,7 +92,7 @@ public partial class DiscountController : BaseAdminController
     public virtual async Task<IActionResult> List(DiscountSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _discountModelFactory.PrepareDiscountListModelAsync(searchModel);
@@ -248,7 +248,7 @@ public partial class DiscountController : BaseAdminController
     public virtual async Task<IActionResult> GetDiscountRequirementConfigurationUrl(string systemName, int discountId, int? discountRequirementId)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         ArgumentException.ThrowIfNullOrEmpty(systemName);
 
@@ -267,7 +267,7 @@ public partial class DiscountController : BaseAdminController
         int? parentId, int? interactionTypeId, bool deleteRequirement)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         var requirements = new List<DiscountRequirementRuleModel>();
 
@@ -355,7 +355,7 @@ public partial class DiscountController : BaseAdminController
     public virtual async Task<IActionResult> AddNewGroup(int discountId, string name)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         var discount = await _discountService.GetDiscountByIdAsync(discountId) ?? throw new ArgumentException("Discount could not be loaded");
 
@@ -420,7 +420,7 @@ public partial class DiscountController : BaseAdminController
     public virtual async Task<IActionResult> ProductList(DiscountProductSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a discount with the specified id
         var discount = await _discountService.GetDiscountByIdAsync(searchModel.DiscountId)
@@ -435,7 +435,7 @@ public partial class DiscountController : BaseAdminController
     public virtual async Task<IActionResult> ProductDelete(int discountId, int productId)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a discount with the specified id
         var discount = await _discountService.GetDiscountByIdAsync(discountId)
@@ -470,7 +470,7 @@ public partial class DiscountController : BaseAdminController
     public virtual async Task<IActionResult> ProductAddPopupList(AddProductToDiscountSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _discountModelFactory.PrepareAddProductToDiscountListModelAsync(searchModel);
@@ -515,7 +515,7 @@ public partial class DiscountController : BaseAdminController
     public virtual async Task<IActionResult> CategoryList(DiscountCategorySearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a discount with the specified id
         var discount = await _discountService.GetDiscountByIdAsync(searchModel.DiscountId)
@@ -530,7 +530,7 @@ public partial class DiscountController : BaseAdminController
     public virtual async Task<IActionResult> CategoryDelete(int discountId, int categoryId)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a discount with the specified id
         var discount = await _discountService.GetDiscountByIdAsync(discountId)
@@ -564,7 +564,7 @@ public partial class DiscountController : BaseAdminController
     public virtual async Task<IActionResult> CategoryAddPopupList(AddCategoryToDiscountSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _discountModelFactory.PrepareAddCategoryToDiscountListModelAsync(searchModel);
@@ -608,7 +608,7 @@ public partial class DiscountController : BaseAdminController
     public virtual async Task<IActionResult> ManufacturerList(DiscountManufacturerSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a discount with the specified id
         var discount = await _discountService.GetDiscountByIdAsync(searchModel.DiscountId)
@@ -623,7 +623,7 @@ public partial class DiscountController : BaseAdminController
     public virtual async Task<IActionResult> ManufacturerDelete(int discountId, int manufacturerId)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a discount with the specified id
         var discount = await _discountService.GetDiscountByIdAsync(discountId)
@@ -657,7 +657,7 @@ public partial class DiscountController : BaseAdminController
     public virtual async Task<IActionResult> ManufacturerAddPopupList(AddManufacturerToDiscountSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _discountModelFactory.PrepareAddManufacturerToDiscountListModelAsync(searchModel);
@@ -701,7 +701,7 @@ public partial class DiscountController : BaseAdminController
     public virtual async Task<IActionResult> UsageHistoryList(DiscountUsageHistorySearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a discount with the specified id
         var discount = await _discountService.GetDiscountByIdAsync(searchModel.DiscountId)
@@ -717,7 +717,7 @@ public partial class DiscountController : BaseAdminController
     public virtual async Task<IActionResult> UsageHistoryDelete(int discountId, int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a discount with the specified id
         _ = await _discountService.GetDiscountByIdAsync(discountId)

@@ -94,7 +94,7 @@ public partial class VendorAttributeController : BaseAdminController
     public virtual async Task<IActionResult> List(VendorAttributeSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _vendorAttributeModelFactory.PrepareVendorAttributeListModelAsync(searchModel);
@@ -229,7 +229,7 @@ public partial class VendorAttributeController : BaseAdminController
     public virtual async Task<IActionResult> ValueList(VendorAttributeValueSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a vendor attribute with the specified id
         var vendorAttribute = await _vendorAttributeService.GetAttributeByIdAsync(searchModel.VendorAttributeId)
@@ -358,7 +358,7 @@ public partial class VendorAttributeController : BaseAdminController
     public virtual async Task<IActionResult> ValueDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a vendor attribute value with the specified id
         var value = await _vendorAttributeService.GetAttributeValueByIdAsync(id)

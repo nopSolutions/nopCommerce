@@ -122,7 +122,7 @@ public partial class StoreController : BaseAdminController
     public virtual async Task<IActionResult> List(StoreSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageStores))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _storeModelFactory.PrepareStoreListModelAsync(searchModel);

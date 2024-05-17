@@ -72,7 +72,7 @@ public partial class AuthenticationController : BaseAdminController
     public virtual async Task<IActionResult> ExternalMethods(ExternalAuthenticationMethodSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageExternalAuthenticationMethods))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _externalAuthenticationMethodModelFactory.PrepareExternalAuthenticationMethodListModelAsync(searchModel);
@@ -84,7 +84,7 @@ public partial class AuthenticationController : BaseAdminController
     public virtual async Task<IActionResult> ExternalMethodUpdate(ExternalAuthenticationMethodModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageExternalAuthenticationMethods))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         var method = await _authenticationPluginManager.LoadPluginBySystemNameAsync(model.SystemName);
         if (_authenticationPluginManager.IsPluginActive(method))
@@ -138,7 +138,7 @@ public partial class AuthenticationController : BaseAdminController
     public virtual async Task<IActionResult> MultiFactorMethods(MultiFactorAuthenticationMethodSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _multiFactorAuthenticationMethodModelFactory.PrepareMultiFactorAuthenticationMethodListModelAsync(searchModel);
@@ -150,7 +150,7 @@ public partial class AuthenticationController : BaseAdminController
     public virtual async Task<IActionResult> MultiFactorMethodUpdate(MultiFactorAuthenticationMethodModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         var method = await _multiFactorAuthenticationPluginManager.LoadPluginBySystemNameAsync(model.SystemName);
         if (_multiFactorAuthenticationPluginManager.IsPluginActive(method))

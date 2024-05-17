@@ -113,7 +113,7 @@ public class FacebookPixelController : BasePluginController
     public virtual async Task<IActionResult> List(FacebookPixelSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         var configurations = await _facebookPixelService.GetPagedConfigurationsAsync(searchModel.StoreId, searchModel.Page - 1, searchModel.PageSize);
         var model = await new FacebookPixelListModel().PrepareToGridAsync(searchModel, configurations, () =>
@@ -263,7 +263,7 @@ public class FacebookPixelController : BasePluginController
     public virtual async Task<IActionResult> CustomEventList(CustomEventSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         var configuration = await _facebookPixelService.GetConfigurationByIdAsync(searchModel.ConfigurationId)
             ?? throw new ArgumentException("No configuration found with the specified id", nameof(searchModel.ConfigurationId));
@@ -288,7 +288,7 @@ public class FacebookPixelController : BasePluginController
     public virtual async Task<IActionResult> CustomEventAdd(int configurationId, [Validate] CustomEventModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
@@ -303,7 +303,7 @@ public class FacebookPixelController : BasePluginController
     public virtual async Task<IActionResult> CustomEventDelete(int configurationId, string id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //save custom events configuration
         var eventName = id;
@@ -315,7 +315,7 @@ public class FacebookPixelController : BasePluginController
     public async Task<IActionResult> CookieSettingsWarning(bool disableForUsersNotAcceptingCookieConsent)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         if (!disableForUsersNotAcceptingCookieConsent || _storeInformationSettings.DisplayEuCookieLawWarning)
             return Json(new { Result = string.Empty });

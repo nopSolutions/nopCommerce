@@ -75,7 +75,7 @@ public partial class CustomerRoleController : BaseAdminController
     public virtual async Task<IActionResult> List(CustomerRoleSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _customerRoleModelFactory.PrepareCustomerRoleListModelAsync(searchModel);
@@ -232,7 +232,7 @@ public partial class CustomerRoleController : BaseAdminController
     public virtual async Task<IActionResult> AssociateProductToCustomerRolePopupList(CustomerRoleProductSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers) || !await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAcl))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _customerRoleModelFactory.PrepareCustomerRoleProductListModelAsync(searchModel);

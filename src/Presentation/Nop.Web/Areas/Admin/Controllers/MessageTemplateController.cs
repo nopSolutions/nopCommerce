@@ -134,7 +134,7 @@ public partial class MessageTemplateController : BaseAdminController
     public virtual async Task<IActionResult> List(MessageTemplateSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageTemplates))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _messageTemplateModelFactory.PrepareMessageTemplateListModelAsync(searchModel);

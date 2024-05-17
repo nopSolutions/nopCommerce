@@ -229,7 +229,7 @@ public partial class CommonController : BaseAdminController
     public virtual async Task<IActionResult> BackupFiles(BackupFileSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _commonModelFactory.PrepareBackupFileListModelAsync(searchModel);
@@ -425,7 +425,7 @@ public partial class CommonController : BaseAdminController
     public virtual async Task<IActionResult> SeNames(UrlRecordSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _commonModelFactory.PrepareUrlRecordListModelAsync(searchModel);
@@ -437,7 +437,7 @@ public partial class CommonController : BaseAdminController
     public virtual async Task<IActionResult> DeleteSelectedSeNames(ICollection<int> selectedIds)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();
@@ -451,7 +451,7 @@ public partial class CommonController : BaseAdminController
     public virtual async Task<IActionResult> PopularSearchTermsReport(PopularSearchTermSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _commonModelFactory.PreparePopularSearchTermListModelAsync(searchModel);

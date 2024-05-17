@@ -79,7 +79,7 @@ public class PickupInStoreController : BasePluginController
     public async Task<IActionResult> List(StorePickupPointSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _storePickupPointModelFactory.PrepareStorePickupPointListModelAsync(searchModel);
@@ -262,7 +262,7 @@ public class PickupInStoreController : BasePluginController
     public async Task<IActionResult> Delete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         var pickupPoint = await _storePickupPointService.GetStorePickupPointByIdAsync(id);
         if (pickupPoint == null)

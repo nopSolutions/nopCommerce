@@ -795,7 +795,7 @@ public partial class SettingController : BaseAdminController
     public virtual async Task<IActionResult> SortOptionsList(SortOptionSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _settingModelFactory.PrepareSortOptionListModelAsync(searchModel);
@@ -807,7 +807,7 @@ public partial class SettingController : BaseAdminController
     public virtual async Task<IActionResult> SortOptionUpdate(SortOptionModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
         var catalogSettings = await _settingService.LoadSettingAsync<CatalogSettings>(storeScope);
@@ -1290,7 +1290,7 @@ public partial class SettingController : BaseAdminController
     public virtual async Task<IActionResult> GdprConsentList(GdprConsentSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _settingModelFactory.PrepareGdprConsentListModelAsync(searchModel);
@@ -1927,7 +1927,7 @@ public partial class SettingController : BaseAdminController
     public virtual async Task<IActionResult> AllSettings(SettingSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _settingModelFactory.PrepareSettingListModelAsync(searchModel);
@@ -1939,7 +1939,7 @@ public partial class SettingController : BaseAdminController
     public virtual async Task<IActionResult> SettingUpdate(SettingModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
@@ -1966,7 +1966,7 @@ public partial class SettingController : BaseAdminController
     public virtual async Task<IActionResult> SettingAdd(SettingModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
@@ -1986,7 +1986,7 @@ public partial class SettingController : BaseAdminController
     public virtual async Task<IActionResult> SettingDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a setting with the specified id
         var setting = await _settingService.GetSettingByIdAsync(id)

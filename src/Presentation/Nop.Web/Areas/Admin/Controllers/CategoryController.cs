@@ -213,7 +213,7 @@ public partial class CategoryController : BaseAdminController
     public virtual async Task<IActionResult> List(CategorySearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _categoryModelFactory.PrepareCategoryListModelAsync(searchModel);
@@ -426,7 +426,7 @@ public partial class CategoryController : BaseAdminController
     public virtual async Task<IActionResult> DeleteSelected(ICollection<int> selectedIds)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();
@@ -518,7 +518,7 @@ public partial class CategoryController : BaseAdminController
     public virtual async Task<IActionResult> ProductList(CategoryProductSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a category with the specified id
         var category = await _categoryService.GetCategoryByIdAsync(searchModel.CategoryId)
@@ -533,7 +533,7 @@ public partial class CategoryController : BaseAdminController
     public virtual async Task<IActionResult> ProductUpdate(CategoryProductModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a product category with the specified id
         var productCategory = await _categoryService.GetProductCategoryByIdAsync(model.Id)
@@ -549,7 +549,7 @@ public partial class CategoryController : BaseAdminController
     public virtual async Task<IActionResult> ProductDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a product category with the specified id
         var productCategory = await _categoryService.GetProductCategoryByIdAsync(id)
@@ -575,7 +575,7 @@ public partial class CategoryController : BaseAdminController
     public virtual async Task<IActionResult> ProductAddPopupList(AddProductToCategorySearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _categoryModelFactory.PrepareAddProductToCategoryListModelAsync(searchModel);

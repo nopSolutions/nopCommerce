@@ -69,7 +69,7 @@ public partial class ScheduleTaskController : BaseAdminController
     public virtual async Task<IActionResult> List(ScheduleTaskSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageScheduleTasks))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _scheduleTaskModelFactory.PrepareScheduleTaskListModelAsync(searchModel);
@@ -81,7 +81,7 @@ public partial class ScheduleTaskController : BaseAdminController
     public virtual async Task<IActionResult> TaskUpdate(ScheduleTaskModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageScheduleTasks))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a schedule task with the specified id
         var scheduleTask = await _scheduleTaskService.GetTaskByIdAsync(model.Id)

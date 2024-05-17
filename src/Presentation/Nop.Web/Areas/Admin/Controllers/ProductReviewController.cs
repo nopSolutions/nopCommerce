@@ -83,7 +83,7 @@ public partial class ProductReviewController : BaseAdminController
     public virtual async Task<IActionResult> List(ProductReviewSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProductReviews))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _productReviewModelFactory.PrepareProductReviewListModelAsync(searchModel);
@@ -221,7 +221,7 @@ public partial class ProductReviewController : BaseAdminController
     public virtual async Task<IActionResult> ApproveSelected(ICollection<int> selectedIds)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProductReviews))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //a vendor does not have access to this functionality
         if (await _workContext.GetCurrentVendorAsync() != null)
@@ -254,7 +254,7 @@ public partial class ProductReviewController : BaseAdminController
     public virtual async Task<IActionResult> DisapproveSelected(ICollection<int> selectedIds)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProductReviews))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //a vendor does not have access to this functionality
         if (await _workContext.GetCurrentVendorAsync() != null)
@@ -284,7 +284,7 @@ public partial class ProductReviewController : BaseAdminController
     public virtual async Task<IActionResult> DeleteSelected(ICollection<int> selectedIds)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProductReviews))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //a vendor does not have access to this functionality
         if (await _workContext.GetCurrentVendorAsync() != null)
@@ -311,7 +311,7 @@ public partial class ProductReviewController : BaseAdminController
     public virtual async Task<IActionResult> ProductReviewReviewTypeMappingList(ProductReviewReviewTypeMappingSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProductReviews))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
         var productReview = await _productService.GetProductReviewByIdAsync(searchModel.ProductReviewId)
             ?? throw new ArgumentException("No product review found with the specified id");
 

@@ -99,7 +99,7 @@ public partial class PollController : BaseAdminController
     public virtual async Task<IActionResult> List(PollSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _pollModelFactory.PreparePollListModelAsync(searchModel);
@@ -223,7 +223,7 @@ public partial class PollController : BaseAdminController
     public virtual async Task<IActionResult> PollAnswers(PollAnswerSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a poll with the specified id
         var poll = await _pollService.GetPollByIdAsync(searchModel.PollId)
@@ -240,7 +240,7 @@ public partial class PollController : BaseAdminController
     public virtual async Task<IActionResult> PollAnswerUpdate([Validate] PollAnswerModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
@@ -261,7 +261,7 @@ public partial class PollController : BaseAdminController
     public virtual async Task<IActionResult> PollAnswerAdd(int pollId, [Validate] PollAnswerModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
@@ -276,7 +276,7 @@ public partial class PollController : BaseAdminController
     public virtual async Task<IActionResult> PollAnswerDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a poll answer with the specified id
         var pollAnswer = await _pollService.GetPollAnswerByIdAsync(id)

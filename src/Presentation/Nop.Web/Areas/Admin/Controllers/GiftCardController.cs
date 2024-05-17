@@ -97,7 +97,7 @@ public partial class GiftCardController : BaseAdminController
     public virtual async Task<IActionResult> GiftCardList(GiftCardSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageGiftCards))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _giftCardModelFactory.PrepareGiftCardListModelAsync(searchModel);
@@ -294,7 +294,7 @@ public partial class GiftCardController : BaseAdminController
     public virtual async Task<IActionResult> UsageHistoryList(GiftCardUsageHistorySearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageGiftCards))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a gift card with the specified id
         var giftCard = await _giftCardService.GetGiftCardByIdAsync(searchModel.GiftCardId)

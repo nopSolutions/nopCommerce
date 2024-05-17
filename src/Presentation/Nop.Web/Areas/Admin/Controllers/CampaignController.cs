@@ -98,7 +98,7 @@ public partial class CampaignController : BaseAdminController
     public virtual async Task<IActionResult> List(CampaignSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCampaigns))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _campaignModelFactory.PrepareCampaignListModelAsync(searchModel);

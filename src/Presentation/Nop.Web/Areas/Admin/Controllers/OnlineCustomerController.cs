@@ -42,7 +42,7 @@ public partial class OnlineCustomerController : BaseAdminController
     public virtual async Task<IActionResult> List(OnlineCustomerSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _customerModelFactory.PrepareOnlineCustomerListModelAsync(searchModel);

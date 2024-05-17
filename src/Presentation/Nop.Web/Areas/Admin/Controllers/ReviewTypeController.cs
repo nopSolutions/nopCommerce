@@ -93,7 +93,7 @@ public partial class ReviewTypeController : BaseAdminController
     public virtual async Task<IActionResult> List(ReviewTypeSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _reviewTypeModelFactory.PrepareReviewTypeListModelAsync(searchModel);

@@ -50,7 +50,7 @@ public partial class ShoppingCartController : BaseAdminController
     public virtual async Task<IActionResult> CurrentCarts(ShoppingCartSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrentCarts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _shoppingCartModelFactory.PrepareShoppingCartListModelAsync(searchModel);
@@ -62,7 +62,7 @@ public partial class ShoppingCartController : BaseAdminController
     public virtual async Task<IActionResult> GetCartDetails(ShoppingCartItemSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrentCarts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a customer with the specified id
         var customer = await _customerService.GetCustomerByIdAsync(searchModel.CustomerId)
@@ -78,7 +78,7 @@ public partial class ShoppingCartController : BaseAdminController
     public virtual async Task<IActionResult> DeleteItem(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrentCarts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         await _shoppingCartService.DeleteShoppingCartItemAsync(id);
 

@@ -209,7 +209,7 @@ public partial class ManufacturerController : BaseAdminController
     public virtual async Task<IActionResult> List(ManufacturerSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _manufacturerModelFactory.PrepareManufacturerListModelAsync(searchModel);
@@ -415,7 +415,7 @@ public partial class ManufacturerController : BaseAdminController
     public virtual async Task<IActionResult> DeleteSelected(ICollection<int> selectedIds)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();
@@ -513,7 +513,7 @@ public partial class ManufacturerController : BaseAdminController
     public virtual async Task<IActionResult> ProductList(ManufacturerProductSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a manufacturer with the specified id
         var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(searchModel.ManufacturerId)
@@ -529,7 +529,7 @@ public partial class ManufacturerController : BaseAdminController
     public virtual async Task<IActionResult> ProductUpdate(ManufacturerProductModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a product manufacturer with the specified id
         var productManufacturer = await _manufacturerService.GetProductManufacturerByIdAsync(model.Id)
@@ -546,7 +546,7 @@ public partial class ManufacturerController : BaseAdminController
     public virtual async Task<IActionResult> ProductDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a product manufacturer with the specified id
         var productManufacturer = await _manufacturerService.GetProductManufacturerByIdAsync(id)
@@ -572,7 +572,7 @@ public partial class ManufacturerController : BaseAdminController
     public virtual async Task<IActionResult> ProductAddPopupList(AddProductToManufacturerSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _manufacturerModelFactory.PrepareAddProductToManufacturerListModelAsync(searchModel);

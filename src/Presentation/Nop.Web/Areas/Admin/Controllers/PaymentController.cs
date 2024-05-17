@@ -99,7 +99,7 @@ public partial class PaymentController : BaseAdminController
     public virtual async Task<IActionResult> Methods(PaymentMethodSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _paymentModelFactory.PreparePaymentMethodListModelAsync(searchModel);
@@ -111,7 +111,7 @@ public partial class PaymentController : BaseAdminController
     public virtual async Task<IActionResult> MethodUpdate(PaymentMethodModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         var pm = await _paymentPluginManager.LoadPluginBySystemNameAsync(model.SystemName);
         if (_paymentPluginManager.IsPluginActive(pm))

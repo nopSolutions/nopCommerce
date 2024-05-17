@@ -225,7 +225,7 @@ public partial class VendorController : BaseAdminController
     public virtual async Task<IActionResult> List(VendorSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _vendorModelFactory.PrepareVendorListModelAsync(searchModel);
@@ -468,7 +468,7 @@ public partial class VendorController : BaseAdminController
     public virtual async Task<IActionResult> VendorNotesSelect(VendorNoteSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a vendor with the specified id
         var vendor = await _vendorService.GetVendorByIdAsync(searchModel.VendorId)
@@ -483,7 +483,7 @@ public partial class VendorController : BaseAdminController
     public virtual async Task<IActionResult> VendorNoteAdd(int vendorId, string message)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         if (string.IsNullOrEmpty(message))
             return ErrorJson(await _localizationService.GetResourceAsync("Admin.Vendors.VendorNotes.Fields.Note.Validation"));
@@ -507,7 +507,7 @@ public partial class VendorController : BaseAdminController
     public virtual async Task<IActionResult> VendorNoteDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a vendor note with the specified id
         var vendorNote = await _vendorService.GetVendorNoteByIdAsync(id)

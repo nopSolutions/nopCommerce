@@ -65,7 +65,7 @@ public partial class RecurringPaymentController : BaseAdminController
     public virtual async Task<IActionResult> List(RecurringPaymentSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageRecurringPayments))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _recurringPaymentModelFactory.PrepareRecurringPaymentListModelAsync(searchModel);
@@ -143,7 +143,7 @@ public partial class RecurringPaymentController : BaseAdminController
     public virtual async Task<IActionResult> HistoryList(RecurringPaymentHistorySearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageRecurringPayments))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a recurring payment with the specified id
         var payment = await _orderService.GetRecurringPaymentByIdAsync(searchModel.RecurringPaymentId)

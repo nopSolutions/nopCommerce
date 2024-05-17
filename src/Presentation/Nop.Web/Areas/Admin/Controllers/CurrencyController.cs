@@ -145,7 +145,7 @@ public partial class CurrencyController : BaseAdminController
     public virtual async Task<IActionResult> ListGrid(CurrencySearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrencies))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _currencyModelFactory.PrepareCurrencyListModelAsync(searchModel);
@@ -157,7 +157,7 @@ public partial class CurrencyController : BaseAdminController
     public virtual async Task<IActionResult> ApplyRates(IEnumerable<CurrencyExchangeRateModel> rateModels)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrencies))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         foreach (var rate in rateModels)
         {
@@ -177,7 +177,7 @@ public partial class CurrencyController : BaseAdminController
     public virtual async Task<IActionResult> MarkAsPrimaryExchangeRateCurrency(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrencies))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         _currencySettings.PrimaryExchangeRateCurrencyId = id;
         await _settingService.SaveSettingAsync(_currencySettings);
@@ -189,7 +189,7 @@ public partial class CurrencyController : BaseAdminController
     public virtual async Task<IActionResult> MarkAsPrimaryStoreCurrency(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrencies))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         _currencySettings.PrimaryStoreCurrencyId = id;
         await _settingService.SaveSettingAsync(_currencySettings);

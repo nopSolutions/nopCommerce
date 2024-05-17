@@ -144,7 +144,7 @@ public partial class CountryController : BaseAdminController
     public virtual async Task<IActionResult> CountryList(CountrySearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _countryModelFactory.PrepareCountryListModelAsync(searchModel);
@@ -293,7 +293,7 @@ public partial class CountryController : BaseAdminController
     public virtual async Task<IActionResult> PublishSelected(ICollection<int> selectedIds)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();
@@ -312,7 +312,7 @@ public partial class CountryController : BaseAdminController
     public virtual async Task<IActionResult> UnpublishSelected(ICollection<int> selectedIds)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();
@@ -335,7 +335,7 @@ public partial class CountryController : BaseAdminController
     public virtual async Task<IActionResult> States(StateProvinceSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a country with the specified id
         var country = await _countryService.GetCountryByIdAsync(searchModel.CountryId)
@@ -462,7 +462,7 @@ public partial class CountryController : BaseAdminController
     public virtual async Task<IActionResult> StateDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a state with the specified id
         var state = await _stateProvinceService.GetStateProvinceByIdAsync(id)

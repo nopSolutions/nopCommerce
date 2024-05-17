@@ -811,7 +811,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> ProductList(ProductSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _productModelFactory.PrepareProductListModelAsync(searchModel);
@@ -1179,7 +1179,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> DeleteSelected(ICollection<int> selectedIds)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();
@@ -1300,7 +1300,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> RequiredProductAddPopupList(AddRequiredProductSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _productModelFactory.PrepareAddRequiredProductListModelAsync(searchModel);
@@ -1316,7 +1316,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> RelatedProductList(RelatedProductSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a product with the specified id
         var product = await _productService.GetProductByIdAsync(searchModel.ProductId)
@@ -1337,7 +1337,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> RelatedProductUpdate(RelatedProductModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a related product with the specified id
         var relatedProduct = await _productService.GetRelatedProductByIdAsync(model.Id)
@@ -1362,7 +1362,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> RelatedProductDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a related product with the specified id
         var relatedProduct = await _productService.GetRelatedProductByIdAsync(id)
@@ -1399,7 +1399,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> RelatedProductAddPopupList(AddRelatedProductSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _productModelFactory.PrepareAddRelatedProductListModelAsync(searchModel);
@@ -1450,7 +1450,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> CrossSellProductList(CrossSellProductSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a product with the specified id
         var product = await _productService.GetProductByIdAsync(searchModel.ProductId)
@@ -1471,7 +1471,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> CrossSellProductDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a cross-sell product with the specified id
         var crossSellProduct = await _productService.GetCrossSellProductByIdAsync(id)
@@ -1506,7 +1506,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> CrossSellProductAddPopupList(AddCrossSellProductSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _productModelFactory.PrepareAddCrossSellProductListModelAsync(searchModel);
@@ -1556,7 +1556,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> AssociatedProductList(AssociatedProductSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a product with the specified id
         var product = await _productService.GetProductByIdAsync(searchModel.ProductId)
@@ -1577,7 +1577,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> AssociatedProductUpdate(AssociatedProductModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get an associated product with the specified id
         var associatedProduct = await _productService.GetProductByIdAsync(model.Id)
@@ -1598,7 +1598,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> AssociatedProductDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get an associated product with the specified id
         var product = await _productService.GetProductByIdAsync(id)
@@ -1630,7 +1630,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> AssociatedProductAddPopupList(AddAssociatedProductSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _productModelFactory.PrepareAddAssociatedProductListModelAsync(searchModel);
@@ -1747,7 +1747,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> ProductPictureList(ProductPictureSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a product with the specified id
         var product = await _productService.GetProductByIdAsync(searchModel.ProductId)
@@ -1768,7 +1768,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> ProductPictureUpdate(ProductPictureModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a product picture with the specified id
         var productPicture = await _productService.GetProductPictureByIdAsync(model.Id)
@@ -1804,7 +1804,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> ProductPictureDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a product picture with the specified id
         var productPicture = await _productService.GetProductPictureByIdAsync(id)
@@ -1839,7 +1839,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> ProductVideoAdd(int productId, [Validate] ProductVideoModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         if (productId == 0)
             throw new ArgumentException();
@@ -1907,7 +1907,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> ProductVideoList(ProductVideoSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a product with the specified id
         var product = await _productService.GetProductByIdAsync(searchModel.ProductId)
@@ -1928,7 +1928,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> ProductVideoUpdate([Validate] ProductVideoModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a product picture with the specified id
         var productVideo = await _productService.GetProductVideoByIdAsync(model.Id)
@@ -1976,7 +1976,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> ProductVideoDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a product video with the specified id
         var productVideo = await _productService.GetProductVideoByIdAsync(id)
@@ -2086,7 +2086,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> ProductSpecAttrList(ProductSpecificationAttributeSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a product with the specified id
         var product = await _productService.GetProductByIdAsync(searchModel.ProductId)
@@ -2261,7 +2261,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> ProductTags(ProductTagSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProductTags))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _productModelFactory.PrepareProductTagListModelAsync(searchModel);
@@ -2290,7 +2290,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> ProductTagsDelete(ICollection<int> selectedIds)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProductTags))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();
@@ -2356,7 +2356,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> PurchasedWithOrders(ProductOrderSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a product with the specified id
         var product = await _productService.GetProductByIdAsync(searchModel.ProductId)
@@ -2651,7 +2651,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> TierPriceList(TierPriceSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a product with the specified id
         var product = await _productService.GetProductByIdAsync(searchModel.ProductId)
@@ -2791,7 +2791,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> TierPriceDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a tier price with the specified id
         var tierPrice = await _productService.GetTierPriceByIdAsync(id)
@@ -2822,7 +2822,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> ProductAttributeMappingList(ProductAttributeMappingSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a product with the specified id
         var product = await _productService.GetProductByIdAsync(searchModel.ProductId)
@@ -3073,7 +3073,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> ProductAttributeValueList(ProductAttributeValueSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a product attribute mapping with the specified id
         var productAttributeMapping = await _productAttributeService.GetProductAttributeMappingByIdAsync(searchModel.ProductAttributeMappingId)
@@ -3286,7 +3286,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> ProductAttributeValueDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a product attribute value with the specified id
         var productAttributeValue = await _productAttributeService.GetProductAttributeValueByIdAsync(id)
@@ -3341,7 +3341,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> AssociateProductToAttributeValuePopupList(AssociateProductToAttributeValueSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _productModelFactory.PrepareAssociateProductToAttributeValueListModelAsync(searchModel);
@@ -3412,7 +3412,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> ProductAttributeCombinationList(ProductAttributeCombinationSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a product with the specified id
         var product = await _productService.GetProductByIdAsync(searchModel.ProductId)
@@ -3433,7 +3433,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> ProductAttributeCombinationDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a combination with the specified id
         var combination = await _productAttributeService.GetProductAttributeCombinationByIdAsync(id)
@@ -3696,7 +3696,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> GenerateAllAttributeCombinations(int productId)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a product with the specified id
         var product = await _productService.GetProductByIdAsync(productId)
@@ -3749,7 +3749,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> StockQuantityHistory(StockQuantityHistorySearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         var product = await _productService.GetProductByIdAsync(searchModel.ProductId)
             ?? throw new ArgumentException("No product found with the specified id");

@@ -75,7 +75,7 @@ public partial class NewsLetterSubscriptionController : BaseAdminController
     public virtual async Task<IActionResult> SubscriptionList(NewsletterSubscriptionSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNewsletterSubscribers))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _newsletterSubscriptionModelFactory.PrepareNewsletterSubscriptionListModelAsync(searchModel);
@@ -87,7 +87,7 @@ public partial class NewsLetterSubscriptionController : BaseAdminController
     public virtual async Task<IActionResult> SubscriptionUpdate(NewsletterSubscriptionModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNewsletterSubscribers))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
@@ -105,7 +105,7 @@ public partial class NewsLetterSubscriptionController : BaseAdminController
     public virtual async Task<IActionResult> SubscriptionDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNewsletterSubscribers))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByIdAsync(id)
             ?? throw new ArgumentException("No subscription found with the specified id", nameof(id));

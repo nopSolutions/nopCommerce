@@ -338,7 +338,7 @@ public class ZettleAdminController : BasePluginController
     public async Task<IActionResult> SyncRecordList(SyncRecordSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         var records = await _zettleRecordService.GetAllRecordsAsync(productOnly: true,
             pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
@@ -367,7 +367,7 @@ public class ZettleAdminController : BasePluginController
     public async Task<IActionResult> SyncRecordUpdate(SyncRecordModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         var productRecord = await _zettleRecordService.GetRecordByIdAsync(model.Id)
                             ?? throw new ArgumentException("No record found");
@@ -390,7 +390,7 @@ public class ZettleAdminController : BasePluginController
     public async Task<IActionResult> SyncRecordDelete(ICollection<int> selectedIds)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         if (!selectedIds?.Any() ?? true)
             return NoContent();
@@ -431,10 +431,10 @@ public class ZettleAdminController : BasePluginController
     public async Task<IActionResult> ProductListToSync(AddProductToSyncSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         var products = await _productService.SearchProductsAsync(showHidden: true,
             keywords: searchModel.SearchProductName,
@@ -487,7 +487,7 @@ public class ZettleAdminController : BasePluginController
     public async Task<IActionResult> SyncStart()
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         await _zettleService.ImportAsync();
 
@@ -497,7 +497,7 @@ public class ZettleAdminController : BasePluginController
     public async Task<IActionResult> SyncUpdate()
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         if (string.IsNullOrEmpty(_zettleSettings.ImportId))
             return ErrorJson("Synchronization not found");

@@ -197,7 +197,7 @@ public partial class TopicController : BaseAdminController
     public virtual async Task<IActionResult> List(TopicSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _topicModelFactory.PrepareTopicListModelAsync(searchModel);

@@ -65,7 +65,7 @@ public partial class WidgetController : BaseAdminController
     public virtual async Task<IActionResult> List(WidgetSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _widgetModelFactory.PrepareWidgetListModelAsync(searchModel);
@@ -77,7 +77,7 @@ public partial class WidgetController : BaseAdminController
     public virtual async Task<IActionResult> WidgetUpdate(WidgetModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         var widget = await _widgetPluginManager.LoadPluginBySystemNameAsync(model.SystemName);
         if (_widgetPluginManager.IsPluginActive(widget, _widgetSettings.ActiveWidgetSystemNames))

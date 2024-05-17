@@ -116,7 +116,7 @@ public partial class LanguageController : BaseAdminController
     public virtual async Task<IActionResult> List(LanguageSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //prepare model
         var model = await _languageModelFactory.PrepareLanguageListModelAsync(searchModel);
@@ -310,7 +310,7 @@ public partial class LanguageController : BaseAdminController
     public virtual async Task<IActionResult> Resources(LocaleResourceSearchModel searchModel)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a language with the specified id
         var language = await _languageService.GetLanguageByIdAsync(searchModel.LanguageId);
@@ -328,7 +328,7 @@ public partial class LanguageController : BaseAdminController
     public virtual async Task<IActionResult> ResourceUpdate([Validate] LocaleResourceModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         if (!ModelState.IsValid)
         {
@@ -359,7 +359,7 @@ public partial class LanguageController : BaseAdminController
     public virtual async Task<IActionResult> ResourceAdd(int languageId, [Validate] LocaleResourceModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         if (!ModelState.IsValid)
         {
@@ -388,7 +388,7 @@ public partial class LanguageController : BaseAdminController
     public virtual async Task<IActionResult> ResourceDelete(int id)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
-            return await AccessDeniedDataTablesJson();
+            return await AccessDeniedJsonAsync();
 
         //try to get a locale resource with the specified id
         var resource = await _localizationService.GetLocaleStringResourceByIdAsync(id)
