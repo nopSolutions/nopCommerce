@@ -350,6 +350,12 @@
                                         Title = T("Admin.Customers.Customers.Fields.ZipPostalCode").Text
                                     });
                                 }
+                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.CreatedOn))
+                                {
+                                    Title = T("admin.customers.customers.fields.createdon").Text,
+                                    Width = "150",
+                                    Render = new RenderDate()
+                                });
                                 gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.Active))
                                 {
                                     Title = T("Admin.Customers.Customers.Fields.Active").Text,
