@@ -37,7 +37,8 @@ RUN chmod 775 App_Data \
               wwwroot/icons \
               wwwroot/images \
               wwwroot/images/thumbs \
-              wwwroot/images/uploaded
+              wwwroot/images/uploaded \
+			  wwwroot/sitemaps
 
 # create the runtime instance 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS runtime 

@@ -1941,8 +1941,9 @@ public partial class ImportManager : IImportManager
             if (_securitySettings.AllowStoreOwnerExportImportCustomersWithHashedPassword &&
                 !string.IsNullOrEmpty(password) && !string.IsNullOrEmpty(passwordSalt))
             {
-                var lastPassword = await _customerService.GetCurrentPasswordAsync(customer.Id);
-                if (!lastPassword.Password.Equals(password) || lastPassword.PasswordSalt.Equals(passwordSalt))
+                var lastPassword = isNew ? null : await _customerService.GetCurrentPasswordAsync(customer.Id);
+                
+                if (lastPassword == null || !(lastPassword.Password.Equals(password) && lastPassword.PasswordSalt.Equals(passwordSalt)))
                     await _customerService.InsertCustomerPasswordAsync(new CustomerPassword
                     {
                         CustomerId = customer.Id,
