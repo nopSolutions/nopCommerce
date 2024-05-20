@@ -399,25 +399,28 @@ public partial class ProductModelFactory : IProductModelFactory
                                 continue;
 
                             //get price with additional charge
-                            var additionalCharge = decimal.Zero;
                             var combination = await _productAttributeParser.FindProductAttributeCombinationAsync(product, attributesXml);
                             if (combination?.OverriddenPrice.HasValue ?? false)
-                                additionalCharge = combination.OverriddenPrice.Value;
+                            {
+                                (var priceWithoutDiscount, var priceWithDiscount, _, _) = await _priceCalculationService
+                                    .GetFinalPriceAsync(product, customer, store, combination.OverriddenPrice.Value, decimal.Zero, true, 1, null, null);
+                                prices.Add((priceWithoutDiscount, priceWithDiscount));
+                            }
                             else
                             {
+                                var additionalCharge = decimal.Zero;
                                 var attributeValues = await _productAttributeParser.ParseProductAttributeValuesAsync(attributesXml);
                                 foreach (var attributeValue in attributeValues)
                                 {
                                     additionalCharge += await _priceCalculationService.
                                         GetProductAttributeValuePriceAdjustmentAsync(product, attributeValue, customer, store);
                                 }
-                            }
-
-                            if (additionalCharge != decimal.Zero)
-                            {
-                                (var priceWithoutDiscount, var priceWithDiscount, _, _) = await _priceCalculationService
-                                    .GetFinalPriceAsync(product, customer, store, additionalCharge);
-                                prices.Add((priceWithoutDiscount, priceWithDiscount));
+                                if (additionalCharge != decimal.Zero)
+                                {
+                                    (var priceWithoutDiscount, var priceWithDiscount, _, _) = await _priceCalculationService
+                                        .GetFinalPriceAsync(product, customer, store, additionalCharge);
+                                    prices.Add((priceWithoutDiscount, priceWithDiscount));
+                                }
                             }
                         }
 
@@ -1075,15 +1078,15 @@ public partial class ProductModelFactory : IProductModelFactory
                             //select new values
                             var selectedValues = await _productAttributeParser.ParseProductAttributeValuesAsync(updatecartitem.AttributesXml);
                             foreach (var attributeValue in selectedValues)
-                            foreach (var item in attributeModel.Values)
-                                if (attributeValue.Id == item.Id)
-                                {
-                                    item.IsPreSelected = true;
+                                foreach (var item in attributeModel.Values)
+                                    if (attributeValue.Id == item.Id)
+                                    {
+                                        item.IsPreSelected = true;
 
-                                    //set customer entered quantity
-                                    if (attributeValue.CustomerEntersQty)
-                                        item.Quantity = attributeValue.Quantity;
-                                }
+                                        //set customer entered quantity
+                                        if (attributeValue.CustomerEntersQty)
+                                            item.Quantity = attributeValue.Quantity;
+                                    }
                         }
                     }
 
