@@ -262,13 +262,6 @@ public partial interface IProductService
     Task<IList<Product>> GetProductsBySkuAsync(string[] skuArray, int vendorId = 0);
 
     /// <summary>
-    /// Update HasTierPrices property (used for performance optimization)
-    /// </summary>
-    /// <param name="product">Product</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    Task UpdateHasTierPricesPropertyAsync(Product product);
-
-    /// <summary>
     /// Update HasDiscountsApplied property (used for performance optimization)
     /// </summary>
     /// <param name="product">Product</param>

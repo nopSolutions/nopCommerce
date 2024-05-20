@@ -1391,19 +1391,6 @@ public partial class ProductService : IProductService
     }
 
     /// <summary>
-    /// Update HasTierPrices property (used for performance optimization)
-    /// </summary>
-    /// <param name="product">Product</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task UpdateHasTierPricesPropertyAsync(Product product)
-    {
-        ArgumentNullException.ThrowIfNull(product);
-
-        product.HasTierPrices = (await GetTierPricesByProductAsync(product.Id)).Any();
-        await UpdateProductAsync(product);
-    }
-
-    /// <summary>
     /// Update HasDiscountsApplied property (used for performance optimization)
     /// </summary>
     /// <param name="product">Product</param>
@@ -2162,10 +2149,6 @@ public partial class ProductService : IProductService
         ArgumentNullException.ThrowIfNull(product);
         ArgumentNullException.ThrowIfNull(customer);
 
-        //we use this property ("HasTierPrices") for performance optimization to avoid unnecessary database calls
-        if (!product.HasTierPrices)
-            return null;
-
         //get actual tier prices
         return (await GetTierPricesByProductAsync(product.Id))
             .OrderBy(price => price.Quantity)
@@ -2183,11 +2166,9 @@ public partial class ProductService : IProductService
     /// <returns>A task that represents the asynchronous operation</returns>
     public virtual async Task<IList<TierPrice>> GetTierPricesByProductAsync(int productId)
     {
-        var query = _tierPriceRepository.Table.Where(tp => tp.ProductId == productId);
-
         return await _staticCacheManager.GetAsync(
             _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.TierPricesByProductCacheKey, productId),
-            async () => await query.ToListAsync());
+            async () => await _tierPriceRepository.Table.Where(tp => tp.ProductId == productId).ToListAsync());
     }
 
     /// <summary>
@@ -2248,11 +2229,6 @@ public partial class ProductService : IProductService
     {
         ArgumentNullException.ThrowIfNull(product);
         ArgumentNullException.ThrowIfNull(customer);
-
-
-        //we use this property ("HasTierPrices") for performance optimization to avoid unnecessary database calls
-        if (!product.HasTierPrices)
-            return null;
 
         //get the most suitable tier price based on the passed quantity
         return (await GetTierPricesAsync(product, customer, store))?.LastOrDefault(price => quantity >= price.Quantity);

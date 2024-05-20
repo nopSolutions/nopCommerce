@@ -18,9 +18,9 @@ public static class TierPriceExtensions
     {
         ArgumentNullException.ThrowIfNull(source);
 
-        ArgumentNullException.ThrowIfNull(store);
+        var storeId = store?.Id ?? 0;
 
-        return source.Where(tierPrice => tierPrice.StoreId == 0 || tierPrice.StoreId == store.Id);
+        return source.Where(tierPrice => tierPrice.StoreId == 0 || tierPrice.StoreId == storeId);
     }
 
     /// <summary>

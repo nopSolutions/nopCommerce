@@ -2579,8 +2579,7 @@ public partial class ImportManager : IImportManager
 
             lastLoadedProduct = product;
 
-            //update "HasTierPrices" and "HasDiscountsApplied" properties
-            //_productService.UpdateHasTierPricesProperty(product);
+            //update "HasDiscountsApplied" properties
             //_productService.UpdateHasDiscountsApplied(product);
         }
 

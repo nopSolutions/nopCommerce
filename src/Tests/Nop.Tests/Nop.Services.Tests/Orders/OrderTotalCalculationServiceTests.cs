@@ -51,9 +51,7 @@ public class OrderTotalCalculationServiceTests : ServiceTest
             Name = "Product name 1",
             Price = productPrice,
             CustomerEntersPrice = false,
-            Published = true,
-            //set HasTierPrices property
-            HasTierPrices = true
+            Published = true
         };
 
         await _productService.InsertProductAsync(product);
