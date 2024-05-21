@@ -71,4 +71,13 @@ public class GenericListTypeConverter
         result.Should().NotBeNull();
         result.Should().Be("foo,bar,day");
     }
+    
+    [Test]
+    public void CanConvertNullToString()
+    {
+        var converter = TypeDescriptor.GetConverter(typeof(List<string>));
+        var result = converter.ConvertTo(null, typeof(string)) as string;
+        result.Should().NotBeNull();
+        result.Should().BeEmpty();
+    }
 }
