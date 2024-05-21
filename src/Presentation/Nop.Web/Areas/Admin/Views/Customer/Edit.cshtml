@@ -19,6 +19,10 @@
             </small>
         </h1>
         <div class="float-right">
+            @* customization *@
+            <a target="_blank" class="btn btn-primary" role="button" href="/Admin/Product/Edit/@Model.VendorId">
+                View Product
+            </a>
             <button type="submit" name="save" class="btn btn-primary">
                 <i class="far fa-save"></i>
                 @T("Admin.Common.Save")
@@ -31,13 +35,13 @@
                 <i class="far fa-envelope"></i>
                 @T("Admin.Customers.Customers.SendEmail")
             </button>
-             @if (Model.AllowSendingOfPrivateMessage)
-             {
+            @if (Model.AllowSendingOfPrivateMessage)
+            {
                 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#sendprivatemessage-window">
                     <i class="fas fa-at"></i>
                     @T("Admin.Customers.Customers.SendPM")
                 </button>
-             }
+            }
             @if (Model.AllowSendingOfWelcomeMessage)
             {
                 <button type="submit" id="send-welcome-message" name="send-welcome-message" class="btn btn-success">
@@ -56,7 +60,7 @@
             }
             @if (Model.GdprEnabled)
             {
-                
+
                 <div class="btn-group">
                     <button type="button" class="btn btn-success">
                         <i class="fas fa-download"></i>
@@ -107,10 +111,10 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="sendemail-window-title">@T("Admin.Customers.Customers.SendEmail")</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>                
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <form asp-controller="Customer" asp-action="SendEmail" method="post">
-                <input type="hidden" asp-for="Id" id="SendEmail_Id"/>
+                <input type="hidden" asp-for="Id" id="SendEmail_Id" />
                 <div class="form-horizontal">
                     <div class="modal-body">
                         <div class="form-group row">
@@ -186,12 +190,12 @@
 <div id="sendprivatemessage-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="sendprivatemessage-window-title">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">                
+            <div class="modal-header">
                 <h4 class="modal-title" id="sendprivatemessage-window-title">@T("Admin.Customers.Customers.SendPM")</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <form asp-controller="Customer" asp-action="SendPm" method="post">
-                <input type="hidden" asp-for="Id" id="SendPm_Id"/>
+                <input type="hidden" asp-for="Id" id="SendPm_Id" />
                 <div class="form-horizontal">
                     <div class="modal-body">
                         <div class="form-group row">
