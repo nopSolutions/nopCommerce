@@ -160,10 +160,16 @@
     -web-box-shadow: 0 -3px 5px #aaaaaa;
   }
 
+  /*customization*/
+  /*hide popular technologies section on screens*/
+  .sidebar .block-category-navigation {
+    display: none;
+  }
+
   .k-drawer-items .title {
-    background: url("../images/toggle-down-arrow.png") no-repeat #f6f6f6 right center;
-    font-size: 10px;
-    /*padding: 16px;*/
+    /*background: url("../images/toggle-down-arrow.png") no-repeat #f6f6f6 right center;*/
+    font-size: 14px;
+    padding-bottom: 8px;
     height: 18px;
     cursor: pointer;
     /* border-bottom: 1px solid #ddd;*/
@@ -202,7 +208,7 @@
 
   .header-top-right ul li {
     display: inline-block;
-    float: none;
+    /*float:none;*/ /*commented to reduce size of header menu at the botton where login,logout buttons are there*/
   }
 
     .header-top-right ul li.my-account a, .header-top-right ul li.register a {
@@ -549,8 +555,14 @@
 
   .product-list .item-box .picture {
     padding: 10px;
-    margin: 0px 10px 0px 5px;
+    margin: 0px 10px 5px 0px;
     width: 25%;
+  }
+
+  /*customization*/
+  .product-list .item-box .product-item .product-title {
+    height: auto;
+    padding: 0px 0px 2px 0px;
   }
 
   .product-list .item-box .product-item {
@@ -956,9 +968,9 @@
   }
 
   .search-box .navbar-form {
-    margin: 15px auto 0px;
+    margin: 7px auto 0px;
     width: 250px;
-    padding: 10px 0px 0px;
+    padding: 0px 0px 7px;
   }
 
   .search-box {
@@ -1302,8 +1314,33 @@
     white-space: pre;
   }
 
-  .header-links.header-top-right .my-account span, .header-links.header-top-right .logout span {
+  .header-links.header-top-right .my-account span {
+    /* display: none*/
+    /*commented above to show 'my account' on mobile devices as to make the users understand*/
+    /*customization*/
+  }
+
+  .header-links.header-top-right .my-inbox span {
+     display: none
+    /*commented above to show 'my account' on mobile devices as to make the users understand*/
+    /*customization*/
+  }
+
+  .header-links.header-top-right .logout span {
     display: none
+  }
+
+  .header-links.header-top-right .login span {
+    display: none
+  }
+
+  /*show search icon only content mobile*/
+  .header-links.header-top-right .my-search {
+    display: block;
+  }
+
+  #searcboxid {
+    background-color:darkgray;
   }
 
   .theme-custom .nivoSlider img {
@@ -1319,14 +1356,26 @@
       padding-right: 10px;
     }*/
   .page-body {
-    padding-left: 10px;
-    padding-right: 10px;
+ /*   padding-left: 10px;
+    padding-right: 10px;*/
   }
 
   .panel-body {
-    margin-left: 15px;
+    /*  margin-left: 15px;*/ /*commented as the panels are misaligned with headings in all the pages - May 4-24 */
     font-size: 15px;
+    margin-top: 5px !important;
   }
+
+  /*added to reduce left padding to pages with muliple tabs like shorlisted and mail & messages in my account page*/
+  .private-messages-page .panel-body {
+    padding-left: 5px !important;
+    font-size: 13px;
+  }
+
+  .a-left.to, .a-left.subject, .a-left.date {
+    font-size: 13px;
+  }
+
   /* End Customization */
 }
 
@@ -2000,7 +2049,7 @@
   }
 
   .header-lower {
-    display: none;
+    display: block;
   }
 }
 
@@ -2041,7 +2090,16 @@
 
 @media (max-width:600px) {
   .product-list .item-box {
-    padding-left: 2px;
-    padding-right: 3px;
+    /*padding-left: 2px;*/
+    /*padding-right: 3px;*/
+  }
+}
+
+/*customization */
+/*May 2nd -2024  */
+@media (max-width: 640px) {
+  .topic-html-content .topic-html-content-body {
+    margin-left: -15px;
+    margin-right: -12px;
   }
 }

@@ -32,77 +32,87 @@
             <img class="lazyOwl" alt="@Model.PictureModels[0].AlternateText" data-src="@Model.PictureModels[0].ImageUrl" src="@Model.PictureModels[0].ImageUrl" title="@Model.PictureModels[0].Title" />
         </a>
     </div>
-
-    <div class="caption col-xs-8 col-sm-8 col-md-8">
-        @*<div class="details">*@
-        <h3 class="product-title col-xs-12 col-sm-12 col-md-12" style="">
-            <a href="@(Url.RouteUrl<Product>(new { SeName = Model.SeName }))" style="margin-bottom:5px;">
-                <i class="fa fa-sm icon-color @(Model.Gender == "M" ? Html.Raw("fa-male") : Html.Raw("fa-female"))"></i>
-                @Model.Name
-                @if (Model.PremiumCustomer)
-                {
-                    <span class="" style="font-size:10px;color:black;margin-left:20px;">
-                        <i class="fa fa-bookmark fa-rotate-90 fa-lg icon-color"></i>
-                        Premium
-                    </span>
-                }
-            </a>
-        </h3>
-        <div class="product-border-bottom"></div>
-        @if (Model.ReviewOverviewModel.AllowCustomerReviews)
-        {
-            var ratingPercent = 0;
-            if (Model.ReviewOverviewModel.TotalReviews != 0)
+    <a href="@(Url.RouteUrl<Product>(new { SeName = Model.SeName }))" class="productbox-link" style="font-size:10px;color:red">
+        <div class="caption col-xs-8 col-sm-8 col-md-8">
+            @*<div class="details">*@
+            <h3 class="product-title col-xs-12 col-sm-12 col-md-12" style="">
+                @* <a href="@(Url.RouteUrl<Product>(new { SeName = Model.SeName }))" style="margin-bottom:5px;"> *@
+                <div>
+                    <i class="fa fa-sm icon-color @(Model.Gender == "M" ? Html.Raw("fa-male") : Html.Raw("fa-female"))"></i>
+                    <span>@Model.Name</span>
+                    @if (Model.PremiumCustomer)
+                    {
+                        <span class="" style="font-size:10px;color:black;margin-left:20px;">
+                            <i class="fa fa-bookmark fa-rotate-90 fa-lg icon-color"></i>
+                            Premium
+                        </span>
+                    }
+                    @*  </a> *@
+                </div>
+            </h3>
+            <div class="product-border-bottom"></div>
+            @if (Model.ReviewOverviewModel.AllowCustomerReviews)
             {
-                ratingPercent = ((Model.ReviewOverviewModel.RatingSum * 100) / Model.ReviewOverviewModel.TotalReviews) / 5;
-            }
-            <div class="product-rating-box col-xs-12 col-sm-12 col-md-12" title="@string.Format(T("Reviews.TotalReviews").Text, Model.ReviewOverviewModel.TotalReviews)">
-                <div class="rating">
-                    <div style="width: @(ratingPercent)%">
+                var ratingPercent = 0;
+                if (Model.ReviewOverviewModel.TotalReviews != 0)
+                {
+                    ratingPercent = ((Model.ReviewOverviewModel.RatingSum * 100) / Model.ReviewOverviewModel.TotalReviews) / 5;
+                }
+                <div class="product-rating-box col-xs-12 col-sm-12 col-md-12" title="@string.Format(T("Reviews.TotalReviews").Text, Model.ReviewOverviewModel.TotalReviews)">
+                    <div class="rating">
+                        <div style="width: @(ratingPercent)%">
+                        </div>
                     </div>
                 </div>
-            </div>
-        }
-        @*<div class="description col-xs-12 col-sm-12 col-md-12">
+            }
+            @*<div class="description col-xs-12 col-sm-12 col-md-12">
             @Html.Raw(Model.ShortDescription)
-        </div>*@
-        <div class="description col-xs-12 col-sm-12 col-md-12">
-            <i class="fa fa-map-marker fa-lg icon-color"></i>
-            @Html.Raw(Model.Location)
-        </div>
-        <div class="description col-xs-12 col-sm-12 col-md-12">
-            <span style="" title="Primary Technology" class="">Technologies :</span>
-            @Html.Raw(Model.PrimaryTechnology)
-        </div>
-        @if (customerSettings.ShowSecondaryTechnologySpecificationAttribute)
-        {
+            </div>*@
             <div class="description col-xs-12 col-sm-12 col-md-12">
-                <span style="width:20px;" title="Mother Tounge" class="">Secondary Technology :</span>
-                @Html.Raw(Model.SecondaryTechnology)
+                <i class="fa fa-map-marker fa-lg icon-color"></i>
+                @Html.Raw(Model.Location)
             </div>
-        }
-        <div class="description col-xs-12 col-sm-12 col-md-12">
-            @*<i class="fa fa-language fa-lg icon-color"></i>*@
-            <span style="width:20px;" title="Mother Tounge" class="">Mother Tounge :</span>
-            @Html.Raw(Model.MotherTounge)
-        </div>
-        <div class="description col-xs-12 col-sm-12 col-md-12">
-            @*<i class="fa fa-language fa-lg icon-color"></i>*@
-            <span style="width:20px;" title="" class="">Experience :</span>
-            @Html.Raw(Model.WorkExperience) years
-        </div>
-        <div class="description col-xs-12 col-sm-12 col-md-12">
-            <span style="width:20px;" title="Mother Tounge" class="">Last Online :</span>
-            @Html.Raw(Model.LastLoginDateTime)
-        </div>
-    </div>
+            <div class="description col-xs-12 col-sm-12 col-md-12">
+                <span style="" title="Primary Technology" class="">Skills :</span>
+                @Html.Raw(Model.PrimaryTechnology)
+            </div>
+            @if (customerSettings.ShowSecondaryTechnologySpecificationAttribute)
+            {
+                <div class="description col-xs-12 col-sm-12 col-md-12">
+                    <span style="width:20px;" title="Mother Tounge" class="">Secondary Technology :</span>
+                    @Html.Raw(Model.SecondaryTechnology)
+                </div>
+            }
+            <div class="description col-xs-12 col-sm-12 col-md-12">
+                @*<i class="fa fa-language fa-lg icon-color"></i>*@
+                <span style="width:20px;" title="Mother Tounge" class="">Language :</span>
+                @Html.Raw(Model.MotherTounge)
+            </div>
 
-    @*<div class="caption pull-right">
-            <span class="product-item-links">
-                <ion-icon name="shield-checkmark" class="icon-color ion-icon-size"></ion-icon>
-                Premium
-            </span>
-        </div>*@
+            @* show Experience attribute to only give support profiles. *@
+            @if (Model.CustomerProfileTypeId == 1)
+            {
+                <div class="description col-xs-12 col-sm-12 col-md-12">
+                    <span style="width:20px;" title="" class="">Exp :</span>
+                    @Html.Raw(Model.WorkExperience) years
+                </div>
+            }
+            <div class="description col-xs-12 col-sm-12 col-md-12">
+                <span style="width:20px;" title="Mother Tounge" class="">Last Online :</span>
+                @Html.Raw(Model.LastLoginDateTime)
+            </div>
+        </div>
+    </a>
+   @*  <div class="description col-xs-8 col-sm-8 col-md-8 pull-right">
+        <span class="product-item-links">
+            <a href="@(Url.RouteUrl<Product>(new { SeName = Model.SeName }))" class="btn btn-outline-primary btn-sm" role="button">View More</a>
+        </span>
+    </div> *@
+    <div class="caption description col-xs-12 col-sm-12 col-md-12 pull-right">
+        <span class="product-item-links">
+            <a href="@(Url.RouteUrl<Product>(new { SeName = Model.SeName }))" class="btn btn-outline-primary btn-sm btn-block" role="button">View More</a>
+        </span>
+    </div>
 </div>
 
 <div class="product-item-footer">
@@ -128,4 +138,25 @@
         }
     </div>
 </div>
+
+<style>
+    .productbox-link {
+        color: red !important;
+    }
+
+        /* visited link */
+        .productbox-link a:visited {
+            color: green !important;
+        }
+
+        /* mouse over link */
+        .productbox-link a:hover {
+            color: hotpink !important;
+        }
+
+        /* selected link */
+        .productbox-link a:active {
+            color: blue !important;
+        }
+</style>
 

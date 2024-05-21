@@ -839,10 +839,10 @@ ul.nav.navbar-nav li {
   font-size: 18px;
   font-weight: 700;
   color: #666666;
-  padding-bottom: 10px;
+  padding-bottom: 4px;
   border-bottom: 2px solid #dddddd;
   text-transform: capitalize;
-  margin-bottom: 25px;
+  margin-bottom: 15px;
   text-align: left;
 }
 
@@ -947,7 +947,7 @@ ul.nav.navbar-nav li {
 
 #newsletter-subscribe-block #newsletter-email {
   float: left;
-  width: 160px;
+  width: 170px;
 }
 
 .block.block-newsletter .newsletter-result-block {
@@ -1903,7 +1903,7 @@ a.eu-cookie-privacyinfo-tag {
   padding: 0px 0px 10px;
   background: url(../images/breadcrumb-title-border.png) repeat-x left bottom;
   border-radius: 0px;
-  margin-bottom: 24px;
+  margin-bottom: 5px;
 }
 
   .breadcrumb-wrapper .breadcrumb li a {
@@ -2180,7 +2180,7 @@ a.eu-cookie-privacyinfo-tag {
   box-shadow: 0 0 5px #ddd;
   -moz-box-shadow: 0 0 5px #ddd;
   -webkit-box-shadow: 0 0 5px #ddd;
-  border: 1px solid #ddd;
+  /*border: 1px solid #ddd;*/ /*hide horizontal line in category pages */
   color: #666666;
   clear: both;
 }
@@ -8781,4 +8781,46 @@ div.block.product-filters.product-filters-wrapper div.product-filter.product-spe
 
 .page-body .category-description {
   margin:0px 4px 4px 4px !important;
+}
+
+.topic-html-content .topic-html-content-body {
+  border: 1px solid #fff;
+  background-color: #fff;
+  border-radius: 6px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+
+/*added below to reduce the margin next to icon on header menu like*/
+.header-top-right ul li a i {
+  margin-right: 4px !important;
+}
+
+/*added below to reduce the space between page start and account menu items*/
+.master-wrapper-page {
+  margin-top: -9px !important;
+}
+
+/*search page checkbox alignment*/
+.checkbox.custom-checkbox {
+  padding-left: 20px;
+}
+
+.item-box .product-item .product-title span {
+  font-size: 14px;
+}
+
+.item-box .product-item .product-title i {
+  font-size: medium;
+}
+
+.profile-viewmore{
+
+}
+
+/*hide search icon on large screen*/ 
+.header-links.header-top-right .my-search {
+  display: none
 }
