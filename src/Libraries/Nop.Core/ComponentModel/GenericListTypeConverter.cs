@@ -61,17 +61,11 @@ public partial class GenericListTypeConverter<T> : TypeConverter
             return base.ConvertFrom(context, culture, value);
 
         var items = GetStringArray((string)value);
-        var result = new List<T>();
-        foreach (var itemStr in items)
-        {
-            var item = typeConverter.ConvertFromInvariantString(itemStr);
-            if (item != null)
-            {
-                result.Add((T)item);
-            }
-        }
 
-        return result;
+        return items.Select(typeConverter.ConvertFromInvariantString)
+            .Where(item => item != null)
+            .Cast<T>()
+            .ToList();
     }
 
     /// <summary>
@@ -88,14 +82,15 @@ public partial class GenericListTypeConverter<T> : TypeConverter
             return base.ConvertTo(context, culture, value, destinationType);
 
         var result = string.Empty;
+
         if (value == null)
             return result;
 
         var cultureInvariantStrings = ((IList<T>)value)
             .Select(o => Convert.ToString(o, CultureInfo.InvariantCulture));
-        
+
         result = string.Join(',', cultureInvariantStrings);
-        
+
         return result;
     }
 }
