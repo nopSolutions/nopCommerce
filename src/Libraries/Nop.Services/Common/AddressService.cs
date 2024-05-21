@@ -333,10 +333,6 @@ public partial class AddressService : IAddressService
 
         var format = await _localizationService.GetResourceAsync("Address.LineFormat", languageId, true, "{0}{1}{2}{3}{4}{5}{6}");
         var indexArray = Regex.Matches(format, @"{\d}").Select(x => Convert.ToInt32(Regex.Match(x.Value, @"\d").Value)).ToArray();
-        var country = await _countryService.GetCountryByAddressAsync(address);
-        var countryName = country != null ? await _localizationService.GetLocalizedAsync(country, x => x.Name, languageId) : string.Empty;
-        var stateProvince = await _stateProvinceService.GetStateProvinceByAddressAsync(address);
-        var stateProvinceName = stateProvince != null ? await _localizationService.GetLocalizedAsync(stateProvince, x => x.Name, languageId) : string.Empty;
 
         var indexItem = 0;
         foreach (var item in indexArray)
@@ -344,17 +340,25 @@ public partial class AddressService : IAddressService
             switch ((AddressField)item)
             {
                 case AddressField.Country:
+                    var country = await _countryService.GetCountryByAddressAsync(address);
+                    var countryName = country != null ? await _localizationService.GetLocalizedAsync(country, x => x.Name, languageId) : string.Empty;
+
                     if (_addressSettings.CountryEnabled && !string.IsNullOrWhiteSpace(countryName))
                         fieldsList[indexItem] = new KeyValuePair<AddressField, string>(AddressField.Country, htmlEncode ? WebUtility.HtmlEncode(countryName) : countryName);
                     else
                         fieldsList[indexItem] = new KeyValuePair<AddressField, string>(AddressField.Country, string.Empty);
+
                     break;
 
                 case AddressField.StateProvince:
+                    var stateProvince = await _stateProvinceService.GetStateProvinceByAddressAsync(address);
+                    var stateProvinceName = stateProvince != null ? await _localizationService.GetLocalizedAsync(stateProvince, x => x.Name, languageId) : string.Empty;
+
                     if (_addressSettings.StateProvinceEnabled && !string.IsNullOrWhiteSpace(stateProvinceName))
                         fieldsList[indexItem] = new KeyValuePair<AddressField, string>(AddressField.StateProvince, htmlEncode ? WebUtility.HtmlEncode(stateProvinceName) : stateProvinceName);
                     else
                         fieldsList[indexItem] = new KeyValuePair<AddressField, string>(AddressField.StateProvince, string.Empty);
+
                     break;
 
                 case AddressField.City:
