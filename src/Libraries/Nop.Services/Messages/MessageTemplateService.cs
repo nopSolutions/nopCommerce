@@ -125,11 +125,12 @@ public partial class MessageTemplateService : IMessageTemplateService
     /// <param name="storeId">Store identifier; pass 0 to load all records</param>
     /// <param name="keywords">Keywords to search by name, body, or subject</param>
     /// <param name="isActive">A value indicating whether to get active records; "null" to load all records; "false" to load only inactive records; "true" to load only active records</param>
+    /// <param name="emailAccountId">Email account identifier; pass 0 to load all records</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the message template list
     /// </returns>
-    public virtual async Task<IList<MessageTemplate>> GetAllMessageTemplatesAsync(int storeId, string keywords = null, bool? isActive = null)
+    public virtual async Task<IList<MessageTemplate>> GetAllMessageTemplatesAsync(int storeId, string keywords = null, bool? isActive = null, int emailAccountId = 0)
     {
         var messageTemplates = await _messageTemplateRepository.GetAllAsync(async query =>
         {
@@ -142,12 +143,13 @@ public partial class MessageTemplateService : IMessageTemplateService
             return query.OrderBy(t => t.Name);
         }, cache => cache.PrepareKeyForDefaultCache(NopMessageDefaults.MessageTemplatesAllCacheKey, storeId, isActive));
 
+        if (emailAccountId > 0)
+            messageTemplates = messageTemplates.Where(mt => mt.EmailAccountId == emailAccountId).ToList();
+
         if (!string.IsNullOrWhiteSpace(keywords))
-        {
             messageTemplates = messageTemplates.Where(x => (x.Subject?.Contains(keywords, StringComparison.InvariantCultureIgnoreCase) ?? false)
-                                                           || (x.Body?.Contains(keywords, StringComparison.InvariantCultureIgnoreCase) ?? false)
-                                                           || (x.Name?.Contains(keywords, StringComparison.InvariantCultureIgnoreCase) ?? false)).ToList();
-        }
+                || (x.Body?.Contains(keywords, StringComparison.InvariantCultureIgnoreCase) ?? false)
+                || (x.Name?.Contains(keywords, StringComparison.InvariantCultureIgnoreCase) ?? false)).ToList();
 
         return messageTemplates;
     }

@@ -89,6 +89,11 @@ public partial class MessageTemplateModelFactory : IMessageTemplateModelFactory
 
         searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
 
+        //prepare available email accounts
+        await _baseAdminModelFactory.PrepareEmailAccountsAsync(searchModel.AvailableEmailAccounts,
+            defaultItemText: await _localizationService.GetResourceAsync("Admin.ContentManagement.MessageTemplates.List.SearchEmailAccount.All"));
+        searchModel.HideEmailAccount = searchModel.AvailableEmailAccounts.SelectionIsNotPossible();
+
         //prepare page parameters
         searchModel.SetGridPageSize();
 
@@ -111,7 +116,7 @@ public partial class MessageTemplateModelFactory : IMessageTemplateModelFactory
 
         //get message templates
         var messageTemplates = (await _messageTemplateService
-            .GetAllMessageTemplatesAsync(searchModel.SearchStoreId, searchModel.SearchKeywords, isActive)).ToPagedList(searchModel);
+            .GetAllMessageTemplatesAsync(searchModel.SearchStoreId, searchModel.SearchKeywords, isActive, searchModel.EmailAccountId)).ToPagedList(searchModel);
 
         //prepare store names (to avoid loading for each message template)
         var stores = (await _storeService.GetAllStoresAsync()).Select(store => new { store.Id, store.Name }).ToList();

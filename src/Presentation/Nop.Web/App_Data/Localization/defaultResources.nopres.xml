@@ -10884,6 +10884,12 @@
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.IsActive.InactiveOnly">
     <Value>Inactive only</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.SearchEmailAccount">
+    <Value>Email account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.SearchEmailAccount.All">
+    <Value>All</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.SearchKeywords">
     <Value>Search keywords</Value>
   </LocaleResource>
