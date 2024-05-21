@@ -392,14 +392,19 @@ public class OmnisendEventsService
             ? await _measureService.ConvertFromPrimaryMeasureWeightAsync(orderItem.ItemWeight ?? 0, measureWeight)
             : 0;
 
+        float discount = 0;
+
+        if (orderItem.DiscountAmountInclTax > 0 && orderItem.Quantity > 0)
+            discount = (float)orderItem.DiscountAmountInclTax / orderItem.Quantity;
+
         var productItem = new OrderProductItem
         {
             ProductCategories = await GetProductCategoriesAsync(product),
             ProductDescription = product.ShortDescription,
-            ProductDiscount = (float)orderItem.DiscountAmountInclTax,
+            ProductDiscount = discount,
             ProductId = product.Id,
             ProductImageURL = pictureUrl,
-            ProductPrice = (float)orderItem.PriceInclTax,
+            ProductPrice = (float)orderItem.UnitPriceInclTax + discount,
             ProductQuantity = orderItem.Quantity,
             ProductSku = sku,
             ProductStrikeThroughPrice = (float)product.OldPrice,

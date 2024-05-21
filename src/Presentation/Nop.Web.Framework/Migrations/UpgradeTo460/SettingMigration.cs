@@ -399,7 +399,7 @@ public class SettingMigration : MigrationBase
             settingService.SaveSetting(pdfSettings, settings => settings.FontFamily);
 
             //delete old setting
-            settingRepository.Delete(setting => setting.Name.Equals($"{nameof(PdfSettings)}.FontFileName", StringComparison.CurrentCultureIgnoreCase));
+            settingRepository.Delete(setting => setting.Name == $"{nameof(PdfSettings)}.FontFileName".ToLower());
         }
 
         var productEditorSettings = settingService.LoadSetting<ProductEditorSettings>();
