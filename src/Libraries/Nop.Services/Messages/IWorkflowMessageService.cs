@@ -254,6 +254,18 @@ public partial interface IWorkflowMessageService
     /// The task result contains the queued email identifier
     /// </returns>
     Task<IList<int>> SendOrderCancelledCustomerNotificationAsync(Order order, int languageId);
+    
+    /// <summary>
+    /// Sends an order cancelled notification to a vendor
+    /// </summary>
+    /// <param name="order">Order instance</param>
+    /// <param name="vendor">Vendor instance</param>
+    /// <param name="languageId">Message language identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the queued email identifier
+    /// </returns>
+    Task<IList<int>> SendOrderCancelledVendorNotificationAsync(Order order, Vendor vendor, int languageId);
 
     /// <summary>
     /// Sends an order refunded notification to a store owner
