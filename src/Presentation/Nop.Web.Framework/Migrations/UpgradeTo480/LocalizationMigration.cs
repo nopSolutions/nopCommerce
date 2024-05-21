@@ -37,8 +37,12 @@ public class LocalizationMigration : MigrationBase
 
         localizationService.AddOrUpdateLocaleResource(new Dictionary<string, string>
         {
+            //#7089
             ["Admin.ContentManagement.MessageTemplates.List.SearchEmailAccount"] = "Email account",
             ["Admin.ContentManagement.MessageTemplates.List.SearchEmailAccount.All"] = "All",
+
+            //#7108
+            ["Admin.ContentManagement.MessageTemplates.Description.OrderCancelled.VendorNotification"] = "This message template is used to notify a vendor that the certain order was cancelled.The order can be cancelled by a customer on the account page or by store owner in Customers - Customers in Orders tab or in Sales - Orders.",
         }, languageId);
 
         #endregion
