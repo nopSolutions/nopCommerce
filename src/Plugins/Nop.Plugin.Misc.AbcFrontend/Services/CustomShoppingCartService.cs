@@ -50,6 +50,7 @@ namespace Nop.Plugin.Misc.AbcFrontend.Services
         private readonly IBackendStockService _backendStockService;
         private readonly IShopService _shopService;
         private readonly IProductService _productService;
+        private readonly IWorkContext _workContext;
 
         public CustomShoppingCartService(
             CatalogSettings catalogSettings,
@@ -110,6 +111,7 @@ namespace Nop.Plugin.Misc.AbcFrontend.Services
             _shopService = shopService;
             _productAttributeParser = productAttributeParser;
             _productService = productService;
+            _workContext = workContext;
         }
 
         public override async Task MigrateShoppingCartAsync(Customer fromCustomer, Customer toCustomer, bool includeCouponCodes)
@@ -325,6 +327,9 @@ namespace Nop.Plugin.Misc.AbcFrontend.Services
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
                 finalPrice = await _priceCalculationService.RoundPriceAsync(finalPrice);
 
+            // ABC: custom discount processing
+            (finalPrice, discountAmount, appliedDiscounts) = await ProcessCustomDiscountAsync(finalPrice, discountAmount, appliedDiscounts);
+
             return (finalPrice, discountAmount, appliedDiscounts);
         }
 
@@ -350,7 +355,32 @@ namespace Nop.Plugin.Misc.AbcFrontend.Services
                 baseResult.unitPrice += hav.PriceAdjustment;
             }
 
+            // ABC: custom discount processing
+            baseResult = await ProcessCustomDiscountAsync(baseResult.unitPrice, baseResult.discountAmount, baseResult.appliedDiscounts);
+
             return baseResult;
+        }
+
+        private async Task<(decimal unitPrice, decimal discountAmount, List<Discount> appliedDiscounts)> ProcessCustomDiscountAsync(
+            decimal unitPrice,
+            decimal discountAmount,
+            List<Discount> appliedDiscounts
+        )
+        {
+            if (discountAmount == 0 || !appliedDiscounts.Any()) return (unitPrice, discountAmount, appliedDiscounts);
+
+            var buyOneGetDiscountGrouped = appliedDiscounts.FirstOrDefault(d => d.Name == "BuyOneGetDiscountGrouped");
+            if (buyOneGetDiscountGrouped == null) return (unitPrice, discountAmount, appliedDiscounts);
+
+            var groupedProductIds = (await _productService.GetProductsWithAppliedDiscountAsync(buyOneGetDiscountGrouped.Id)).Select(p => p.Id);
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var cartProductIds = (await GetShoppingCartAsync(customer)).Select(sci => sci.ProductId);
+
+            var commonProductIds = groupedProductIds.Intersect(cartProductIds);
+
+            // TODO: check if this is not the lowest priced item - remove discount if so
+
+            return (unitPrice, discountAmount, appliedDiscounts);
         }
     }
 }
