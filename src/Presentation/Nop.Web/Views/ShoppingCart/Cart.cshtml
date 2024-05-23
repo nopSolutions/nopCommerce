@@ -11,6 +11,7 @@
 {
     @await Component.InvokeAsync("CheckoutProgress", new {step = CheckoutProgressStep.Cart})
 }
+@await Component.InvokeAsync("Widget", new { widgetZone = "cart_popup" });
 <div class="page shopping-cart-page">
     <div class="page-title">
         <h1>@T("ShoppingCart")</h1>
