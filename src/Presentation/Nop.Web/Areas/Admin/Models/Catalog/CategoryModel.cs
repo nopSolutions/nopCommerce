@@ -129,6 +129,9 @@ public partial record CategoryModel : BaseNopEntityModel, IAclSupportedModel, ID
 
     public string PrimaryStoreCurrencyCode { get; set; }
 
+    //customization
+    public int? NumberOfProducts { get; set; }
+
     #endregion
 }
 
