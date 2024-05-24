@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Domain.Stores;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
@@ -166,6 +168,9 @@ public partial class CategoryModelFactory : ICategoryModelFactory
                 //fill in additional values (not existing in the entity)
                 categoryModel.Breadcrumb = await _categoryService.GetFormattedBreadCrumbAsync(category);
                 categoryModel.SeName = await _urlRecordService.GetSeNameAsync(category, 0, true, false);
+
+                //customization
+                categoryModel.NumberOfProducts = await _productService.GetNumberOfProductsInCategoryAsync(new List<int> { category.Id }, 1);
 
                 return categoryModel;
             });

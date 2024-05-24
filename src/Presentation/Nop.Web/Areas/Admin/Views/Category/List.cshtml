@@ -129,7 +129,7 @@
                             },
                             ColumnCollection = new List<ColumnProperty>
                             {
-                                 new ColumnProperty(nameof(CategoryModel.Id))
+                                new ColumnProperty(nameof(CategoryModel.Id))
                                 {
                                     IsMasterCheckBox = true,
                                     Render = new RenderCheckBox("checkbox_categories"),
@@ -139,6 +139,12 @@
                                 new ColumnProperty(nameof(CategoryModel.Breadcrumb))
                                 {
                                     Title = T("Admin.Catalog.Categories.Fields.Name").Text
+                                },
+                                //customization
+                                new ColumnProperty(nameof(CategoryModel.NumberOfProducts))
+                                {
+                                    Title = "Product Count",
+                                    Width = "150"
                                 },
                                 new ColumnProperty(nameof(CategoryModel.Published))
                                 {
