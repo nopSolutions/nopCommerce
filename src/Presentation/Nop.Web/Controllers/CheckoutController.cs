@@ -1555,6 +1555,7 @@ public partial class CheckoutController : BasePublicController
                         selectedCountryId: newAddress.CountryId,
                         overrideAttributesXml: customAttributes);
                     billingAddressModel.NewAddressPreselected = true;
+                    
                     return Json(new
                     {
                         update_section = new UpdateSectionJsonModel
@@ -1563,6 +1564,9 @@ public partial class CheckoutController : BasePublicController
                             html = await RenderPartialViewToStringAsync("OpcBillingAddress", billingAddressModel)
                         },
                         wrong_billing_address = true,
+                        error = true,
+                        message = string.Join(", ", ModelState.Values.Where(p => p.Errors.Any()).SelectMany(p => p.Errors)
+                            .Select(p => p.ErrorMessage))
                     });
                 }
 
@@ -1723,7 +1727,10 @@ public partial class CheckoutController : BasePublicController
                         {
                             name = "shipping",
                             html = await RenderPartialViewToStringAsync("OpcShippingAddress", shippingAddressModel)
-                        }
+                        },
+                        error = true,
+                        message = string.Join(", ", ModelState.Values.Where(p => p.Errors.Any()).SelectMany(p => p.Errors)
+                            .Select(p => p.ErrorMessage))
                     });
                 }
 
