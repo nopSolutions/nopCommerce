@@ -276,7 +276,7 @@ public static class BrevoDefaults
     /// <summary>
     /// Gets the marketing automation services URL
     /// </summary>
-    public static string MarketingAutomationUrl => "https://in-automate.sendinblue.com/api/v2/";
+    public static string MarketingAutomationUrl => "https://in-automate.brevo.com/api/v2/";
 
     /// <summary>
     /// Gets a key of the attribute to store template identifier

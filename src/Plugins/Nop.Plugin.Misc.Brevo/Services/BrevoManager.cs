@@ -1,5 +1,8 @@
 ﻿using System.Net;
 using System.Text.RegularExpressions;
+using brevo_csharp.Api;
+using brevo_csharp.Client;
+using brevo_csharp.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -7,7 +10,6 @@ using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Domain.Orders;
 using Nop.Plugin.Misc.Brevo.Domain;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
@@ -18,10 +20,7 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Stores;
-using sib_api_v3_sdk.Api;
-using sib_api_v3_sdk.Client;
-using sib_api_v3_sdk.Model;
-using static sib_api_v3_sdk.Model.GetAttributesAttributes;
+using static brevo_csharp.Model.GetAttributesAttributes;
 
 namespace Nop.Plugin.Misc.Brevo.Services;
 
@@ -422,7 +421,7 @@ public partial class BrevoManager
         try
         {
             //create API client
-            var client = await CreateApiClientAsync(config => new AttributesApi(config));
+            var client = await CreateApiClientAsync(config => new ContactsApi(config));
 
             foreach (var attribute in attributes)
             {
@@ -780,7 +779,7 @@ public partial class BrevoManager
     /// </summary>
     /// <param name="order">Order</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async System.Threading.Tasks.Task UpdateContactAfterCompletingOrderAsync(Order order)
+    public async System.Threading.Tasks.Task UpdateContactAfterCompletingOrderAsync(Core.Domain.Orders.Order order)
     {
         try
         {
@@ -960,7 +959,7 @@ public partial class BrevoManager
         try
         {
             //create API client
-            var client = await CreateApiClientAsync(config => new AttributesApi(config));
+            var client = await CreateApiClientAsync(config => new ContactsApi(config));
 
             var attributes = await client.GetAttributesAsync();
             var allAttribytes = attributes.Attributes.Select(s => s.Name).ToList();
@@ -1051,7 +1050,7 @@ public partial class BrevoManager
         try
         {
             //create API client
-            var client = await CreateApiClientAsync(config => new AttributesApi(config));
+            var client = await CreateApiClientAsync(config => new ContactsApi(config));
 
             var attributes = await client.GetAttributesAsync();
             var attributeNames = attributes.Attributes.Select(s => s.Name).ToList();
@@ -1116,7 +1115,7 @@ public partial class BrevoManager
         try
         {
             //create API client
-            var client = await CreateApiClientAsync(config => new AttributesApi(config));
+            var client = await CreateApiClientAsync(config => new ContactsApi(config));
 
             //get already existing transactional attributes
             var attributes = await client.GetAttributesAsync();
