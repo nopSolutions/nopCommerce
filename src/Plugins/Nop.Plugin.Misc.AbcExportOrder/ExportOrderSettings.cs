@@ -5,9 +5,9 @@ namespace Nop.Plugin.Misc.AbcExportOrder
 {
     public class ExportOrderSettings : ISettings
     {
-        public string OrderIdPrefix { get; private set; }
-        public string TablePrefix { get; private set; }
-        public string FailureAlertEmail { get; private set; }
+        public string OrderIdPrefix { get; set; }
+        public string TablePrefix { get; set; }
+        public string FailureAlertEmail { get; set; }
 
         public bool IsValid
         {
@@ -15,26 +15,6 @@ namespace Nop.Plugin.Misc.AbcExportOrder
             {
                 return !string.IsNullOrEmpty(OrderIdPrefix);
             }
-        }
-
-        internal ConfigModel ToModel()
-        {
-            return new ConfigModel()
-            {
-                OrderIdPrefix = OrderIdPrefix,
-                TablePrefix = TablePrefix,
-                FailureAlertEmail = FailureAlertEmail
-            };
-        }
-
-        internal static ExportOrderSettings FromModel(ConfigModel model)
-        {
-            return new ExportOrderSettings()
-            {
-                OrderIdPrefix = model.OrderIdPrefix,
-                TablePrefix = model.TablePrefix,
-                FailureAlertEmail = model.FailureAlertEmail
-            };
         }
     }
 }
