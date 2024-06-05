@@ -1740,7 +1740,6 @@ public partial class ImportManager : IImportManager
         }
 
         var iRow = 2;
-        var rolesToSave = new List<int>();
         var allRoles = await _customerService.GetAllCustomerRolesAsync();
         var countries = await _countryService.GetAllCountriesAsync();
         var states = await _stateProvinceService.GetStateProvincesAsync();
@@ -1773,6 +1772,8 @@ public partial class ImportManager : IImportManager
                     CustomerGuid = Guid.Empty.Equals(customerGuid) ? Guid.NewGuid() : customerGuid,
                     CreatedOnUtc = DateTime.UtcNow
                 };
+
+            var rolesToSave = new List<int>();
 
             foreach (var property in manager.GetDefaultProperties)
             {
