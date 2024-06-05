@@ -446,10 +446,7 @@ public class ExportManagerTests : ServiceTest
             "DownloadExpirationDays", "HasTierPrices", "HasDiscountsApplied", "AvailableStartDateTimeUtc",
             "AvailableEndDateTimeUtc", "DisplayOrder", "CreatedOnUtc", "UpdatedOnUtc", "ProductProductTagMappings",
             "DiscountProductMappings", "EntityCacheKey" };
-
-        if (!_productEditorSettings.DisplayAttributeCombinationImagesOnly)
-            ignore.Add("DisplayAttributeCombinationImagesOnly");
-
+        
         ignore.AddRange(replacePairs.Values);
 
         var product = _productRepository.Table.ToList().First();

@@ -1,4 +1,5 @@
 ﻿using FluentMigrator;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -17,6 +18,11 @@ public class SettingMigration : MigrationBase
 
         //do not use DI, because it produces exception on the installation process
         var settingService = EngineContext.Current.Resolve<ISettingService>();
+        
+        //#7215
+        var displayAttributeCombinationImagesOnly = settingService.GetSetting("producteditorsettings.displayattributecombinationimagesonly");
+        if (displayAttributeCombinationImagesOnly is not null) 
+            settingService.DeleteSetting(displayAttributeCombinationImagesOnly);
     }
 
     public override void Down()

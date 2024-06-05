@@ -25,6 +25,8 @@ public class LocalizationMigration : MigrationBase
 
         localizationService.DeleteLocaleResources(new List<string>
         {
+            //#7215
+            "Admin.Configuration.Settings.ProductEditor.DisplayAttributeCombinationImagesOnly"
         });
 
         #endregion
@@ -43,6 +45,9 @@ public class LocalizationMigration : MigrationBase
 
             //#7108
             ["Admin.ContentManagement.MessageTemplates.Description.OrderCancelled.VendorNotification"] = "This message template is used to notify a vendor that the certain order was cancelled.The order can be cancelled by a customer on the account page or by store owner in Customers - Customers in Orders tab or in Sales - Orders.",
+
+            //#7215
+            ["Admin.Catalog.Products.Fields.DisplayAttributeCombinationImagesOnly.Hint"] = "You may choose pictures associated to each product attribute value or attribute combination (these pictures will replace the main product image when this product attribute value or attribute combination is selected). Enable this option if you want to display only images of a chosen product attribute value or a attribute combination (other pictures will be hidden). Otherwise, all uploaded pictures will be displayed on the product details page",
         }, languageId);
 
         #endregion
