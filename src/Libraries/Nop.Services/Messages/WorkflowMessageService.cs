@@ -2597,10 +2597,16 @@ public partial class WorkflowMessageService : IWorkflowMessageService
         //event notification
         await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-        //force sending
-        messageTemplate.DelayBeforeSend = null;
+        var testTemplate = new MessageTemplate
+        {
+            Id = messageTemplate.Id,
+            Name = messageTemplate.Name,
+            Subject = messageTemplate.Subject,
+            Body = messageTemplate.Body,
+            BccEmailAddresses = messageTemplate.BccEmailAddresses
+        };
 
-        return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, sendToEmail, null);
+        return await SendNotificationAsync(testTemplate, emailAccount, languageId, tokens, sendToEmail, null);
     }
 
     #endregion
