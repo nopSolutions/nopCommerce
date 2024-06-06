@@ -226,6 +226,7 @@ public class BrevoMessageService : WorkflowMessageService
     /// <param name="fromEmail">Sender email. If specified, then it overrides passed "emailAccount" details</param>
     /// <param name="fromName">Sender name. If specified, then it overrides passed "emailAccount" details</param>
     /// <param name="subject">Subject. If specified, then it overrides subject of a message template</param>
+    /// <param name="ignoreDelayBeforeSend">A value indicating whether to ignore the delay before sending message</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the queued email identifier
@@ -233,7 +234,7 @@ public class BrevoMessageService : WorkflowMessageService
     public override async Task<int> SendNotificationAsync(MessageTemplate messageTemplate, EmailAccount emailAccount, int languageId, IList<Token> tokens,
         string toEmailAddress, string toName, string attachmentFilePath = null, string attachmentFileName = null,
         string replyToEmailAddress = null, string replyToName = null, string fromEmail = null, string fromName = null,
-        string subject = null)
+        string subject = null, bool ignoreDelayBeforeSend = false)
     {
         ArgumentNullException.ThrowIfNull(messageTemplate);
         ArgumentNullException.ThrowIfNull(emailAccount);
@@ -251,7 +252,7 @@ public class BrevoMessageService : WorkflowMessageService
         //send base notification
         return await base.SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens,
             toEmailAddress, toName, attachmentFilePath, attachmentFileName,
-            replyToEmailAddress, replyToName, fromEmail, fromName, subject);
+            replyToEmailAddress, replyToName, fromEmail, fromName, subject, ignoreDelayBeforeSend);
     }
 
     #endregion

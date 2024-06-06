@@ -669,6 +669,7 @@ public partial interface IWorkflowMessageService
     /// <param name="fromEmail">Sender email. If specified, then it overrides passed "emailAccount" details</param>
     /// <param name="fromName">Sender name. If specified, then it overrides passed "emailAccount" details</param>
     /// <param name="subject">Subject. If specified, then it overrides subject of a message template</param>
+    /// <param name="ignoreDelayBeforeSend">A value indicating whether to ignore the delay before sending message</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the queued email identifier
@@ -678,7 +679,8 @@ public partial interface IWorkflowMessageService
         string toEmailAddress, string toName,
         string attachmentFilePath = null, string attachmentFileName = null,
         string replyToEmailAddress = null, string replyToName = null,
-        string fromEmail = null, string fromName = null, string subject = null);
+        string fromEmail = null, string fromName = null, string subject = null,
+        bool ignoreDelayBeforeSend = false);
 
     #endregion
 }
