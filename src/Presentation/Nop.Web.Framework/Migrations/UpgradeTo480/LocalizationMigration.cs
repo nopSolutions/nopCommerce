@@ -7,7 +7,7 @@ using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo480;
 
-[NopUpdateMigration("2023-05-21 12:00:00", "4.80", UpdateMigrationType.Localization)]
+[NopUpdateMigration("2024-05-15 00:00:00", "4.80", UpdateMigrationType.Localization)]
 public class LocalizationMigration : MigrationBase
 {
     /// <summary>Collect the UP migration expressions</summary>
@@ -19,14 +19,21 @@ public class LocalizationMigration : MigrationBase
         //do not use DI, because it produces exception on the installation process
         var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
 
-        var (languageId, languages) = this.GetLanguageData();
+        var (languageId, _) = this.GetLanguageData();
 
         #region Delete locales
 
         localizationService.DeleteLocaleResources(new List<string>
         {
+            //#6977
+            "Common.FileUploader.Upload",
+            "Common.FileUploader.Upload.Files",
+            "Common.FileUploader.Cancel",
+            "Common.FileUploader.Retry",
+            "Common.FileUploader.Delete",
+
             //#7215
-            "Admin.Configuration.Settings.ProductEditor.DisplayAttributeCombinationImagesOnly"
+            "Admin.Configuration.Settings.ProductEditor.DisplayAttributeCombinationImagesOnly",
         });
 
         #endregion
@@ -39,6 +46,10 @@ public class LocalizationMigration : MigrationBase
 
         localizationService.AddOrUpdateLocaleResource(new Dictionary<string, string>
         {
+            //#6977
+            ["Common.FileUploader.Browse"] = "Browse",
+            ["Common.FileUploader.Processing"] = "Uploading...", 
+
             //#7089
             ["Admin.ContentManagement.MessageTemplates.List.SearchEmailAccount"] = "Email account",
             ["Admin.ContentManagement.MessageTemplates.List.SearchEmailAccount.All"] = "All",

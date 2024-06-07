@@ -1436,45 +1436,6 @@ input[type=file].form-control {
   z-index: 10000 !important;
 }
 
-/* QQ */
-.sidebar-mini .qq-upload-button {
-  display: inline-block;
-  padding: 6px 12px;
-  margin-bottom: 4px;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1.42857143;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: middle;
-  -ms-touch-action: manipulation;
-  touch-action: manipulation;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  background-image: none;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  background-color: #00a65a;
-  border-color: #008d4c;
-  float: left;
-  margin-right: 5px;
-}
-
-.qq-upload-list {
-  float: left;
-}
-
-.qq-upload-list .qq-upload-success, .qq-upload-list .qq-upload-fail {
-  margin-right: 5px !important;
-}
-
-.qq-upload-list li.qq-upload-success {
-  background-color: #3c8dbc !important;
-}
-
 /*order list statuses*/
 .order-list span.order-status {
   padding: .2em .6em .3em;
@@ -1894,20 +1855,16 @@ span.grid-report-item.red {
   width: 100%;
 }
 
-.upload-picture-block .qq-upload-success {
-  word-break: break-all;
-}
-
 .upload-picture-block .picture-container {
   display: table-cell;
   vertical-align: top;
 }
 
-.upload-picture-block .upload-button-container {
-  display: table-cell;
-  padding-left: 25px;
-  vertical-align: middle;
+/* Upload inputs */
+.file-upload-container {
+    width: 400px;
 }
+
 /*fix for inline-block buttons*/
 .content-header .float-right > .btn, .content-header .float-right > .btn-group {
   float: left;
@@ -2202,12 +2159,6 @@ div.dataTables_wrapper div.dataTables_paginate {
 @media (max-width: 572px) {
   .upload-picture-block .picture-container {
     display: block;
-    vertical-align: top;
-  }
-
-  .upload-picture-block .upload-button-container {
-    display: block;
-    padding-left: 0;
     vertical-align: top;
   }
 
