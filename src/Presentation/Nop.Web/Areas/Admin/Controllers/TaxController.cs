@@ -10,6 +10,7 @@ using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Tax;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Controllers;
@@ -61,11 +62,9 @@ public partial class TaxController : BaseAdminController
         return RedirectToAction("Providers");
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
     public virtual async Task<IActionResult> Providers(bool showtour = false)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _taxModelFactory.PrepareTaxProviderSearchModelAsync(new TaxProviderSearchModel());
 
@@ -84,22 +83,18 @@ public partial class TaxController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
     public virtual async Task<IActionResult> Providers(TaxProviderSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _taxModelFactory.PrepareTaxProviderListModelAsync(searchModel);
 
         return Json(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
     public virtual async Task<IActionResult> MarkAsPrimaryProvider(string systemName)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return AccessDeniedView();
-
         if (string.IsNullOrEmpty(systemName))
             return RedirectToAction("Providers");
 
@@ -117,11 +112,9 @@ public partial class TaxController : BaseAdminController
 
     #region Tax Categories
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
     public virtual async Task<IActionResult> Categories()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _taxModelFactory.PrepareTaxCategorySearchModelAsync(new TaxCategorySearchModel());
 
@@ -129,11 +122,9 @@ public partial class TaxController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
     public virtual async Task<IActionResult> Categories(TaxCategorySearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _taxModelFactory.PrepareTaxCategoryListModelAsync(searchModel);
 
@@ -141,11 +132,9 @@ public partial class TaxController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
     public virtual async Task<IActionResult> CategoryUpdate(TaxCategoryModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return await AccessDeniedJsonAsync();
-
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
 
@@ -157,11 +146,9 @@ public partial class TaxController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
     public virtual async Task<IActionResult> CategoryAdd(TaxCategoryModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return await AccessDeniedJsonAsync();
-
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
 
@@ -173,11 +160,9 @@ public partial class TaxController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
     public virtual async Task<IActionResult> CategoryDelete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return await AccessDeniedJsonAsync();
-
         //try to get a tax category with the specified id
         var taxCategory = await _taxCategoryService.GetTaxCategoryByIdAsync(id)
             ?? throw new ArgumentException("No tax category found with the specified id", nameof(id));

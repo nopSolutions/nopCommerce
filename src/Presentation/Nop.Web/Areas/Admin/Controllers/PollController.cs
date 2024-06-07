@@ -84,11 +84,9 @@ public partial class PollController : BaseAdminController
         return RedirectToAction("List");
     }
 
+    [CheckPermission(StandardPermission.ContentManagement.POLLS_VIEW)]
     public virtual async Task<IActionResult> List()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _pollModelFactory.PreparePollSearchModelAsync(new PollSearchModel());
 
@@ -96,22 +94,18 @@ public partial class PollController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.ContentManagement.POLLS_VIEW)]
     public virtual async Task<IActionResult> List(PollSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _pollModelFactory.PreparePollListModelAsync(searchModel);
 
         return Json(model);
     }
 
+    [CheckPermission(StandardPermission.ContentManagement.POLLS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Create()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _pollModelFactory.PreparePollModelAsync(new PollModel(), null);
 
@@ -119,11 +113,9 @@ public partial class PollController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.ContentManagement.POLLS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Create(PollModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
-            return AccessDeniedView();
-
         if (ModelState.IsValid)
         {
             var poll = model.ToEntity<Poll>();
@@ -147,11 +139,9 @@ public partial class PollController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.ContentManagement.POLLS_VIEW)]
     public virtual async Task<IActionResult> Edit(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
-            return AccessDeniedView();
-
         //try to get a poll with the specified id
         var poll = await _pollService.GetPollByIdAsync(id);
         if (poll == null)
@@ -164,11 +154,9 @@ public partial class PollController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.ContentManagement.POLLS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Edit(PollModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
-            return AccessDeniedView();
-
         //try to get a poll with the specified id
         var poll = await _pollService.GetPollByIdAsync(model.Id);
         if (poll == null)
@@ -198,11 +186,9 @@ public partial class PollController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.ContentManagement.POLLS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Delete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
-            return AccessDeniedView();
-
         //try to get a poll with the specified id
         var poll = await _pollService.GetPollByIdAsync(id);
         if (poll == null)
@@ -220,11 +206,9 @@ public partial class PollController : BaseAdminController
     #region Poll answer
 
     [HttpPost]
+    [CheckPermission(StandardPermission.ContentManagement.POLLS_VIEW)]
     public virtual async Task<IActionResult> PollAnswers(PollAnswerSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
-            return await AccessDeniedJsonAsync();
-
         //try to get a poll with the specified id
         var poll = await _pollService.GetPollByIdAsync(searchModel.PollId)
             ?? throw new ArgumentException("No poll found with the specified id");
@@ -237,11 +221,9 @@ public partial class PollController : BaseAdminController
 
     //ValidateAttribute is used to force model validation
     [HttpPost]
+    [CheckPermission(StandardPermission.ContentManagement.POLLS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> PollAnswerUpdate([Validate] PollAnswerModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
-            return await AccessDeniedJsonAsync();
-
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
 
@@ -258,11 +240,9 @@ public partial class PollController : BaseAdminController
 
     //ValidateAttribute is used to force model validation
     [HttpPost]
+    [CheckPermission(StandardPermission.ContentManagement.POLLS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> PollAnswerAdd(int pollId, [Validate] PollAnswerModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
-            return await AccessDeniedJsonAsync();
-
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
 
@@ -273,11 +253,9 @@ public partial class PollController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.ContentManagement.POLLS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> PollAnswerDelete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
-            return await AccessDeniedJsonAsync();
-
         //try to get a poll answer with the specified id
         var pollAnswer = await _pollService.GetPollAnswerByIdAsync(id)
             ?? throw new ArgumentException("No poll answer found with the specified id", nameof(id));

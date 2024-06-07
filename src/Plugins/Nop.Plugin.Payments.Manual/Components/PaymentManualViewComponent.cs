@@ -1,5 +1,4 @@
-﻿using System.Net;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Http.Extensions;
 using Nop.Plugin.Payments.Manual.Models;

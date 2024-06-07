@@ -23,7 +23,7 @@ public static partial class NopLocalizationDefaults
     /// <summary>
     /// Gets a prefix of locale resources for permissions 
     /// </summary>
-    public static string PermissionLocaleStringResourcesPrefix => "Permission.";
+    public static string PermissionLocaleStringResourcesPrefix => "Security.Permission.";
 
     /// <summary>
     /// Gets a prefix of locale resources for plugin friendly names 

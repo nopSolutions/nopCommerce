@@ -25,7 +25,6 @@ public partial class ManufacturerModelFactory : IManufacturerModelFactory
     protected readonly CatalogSettings _catalogSettings;
     protected readonly CurrencySettings _currencySettings;
     protected readonly ICurrencyService _currencyService;
-    protected readonly IAclSupportedModelFactory _aclSupportedModelFactory;
     protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
     protected readonly IManufacturerService _manufacturerService;
     protected readonly IDiscountService _discountService;
@@ -43,7 +42,6 @@ public partial class ManufacturerModelFactory : IManufacturerModelFactory
     public ManufacturerModelFactory(CatalogSettings catalogSettings,
         CurrencySettings currencySettings,
         ICurrencyService currencyService,
-        IAclSupportedModelFactory aclSupportedModelFactory,
         IBaseAdminModelFactory baseAdminModelFactory,
         IManufacturerService manufacturerService,
         IDiscountService discountService,
@@ -57,7 +55,6 @@ public partial class ManufacturerModelFactory : IManufacturerModelFactory
         _catalogSettings = catalogSettings;
         _currencySettings = currencySettings;
         _currencyService = currencyService;
-        _aclSupportedModelFactory = aclSupportedModelFactory;
         _baseAdminModelFactory = baseAdminModelFactory;
         _manufacturerService = manufacturerService;
         _discountService = discountService;
@@ -238,10 +235,7 @@ public partial class ManufacturerModelFactory : IManufacturerModelFactory
         //prepare model discounts
         var availableDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToManufacturers, showHidden: true, isActive: null);
         await _discountSupportedModelFactory.PrepareModelDiscountsAsync(model, manufacturer, availableDiscounts, excludeProperties);
-
-        //prepare model customer roles
-        await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(model, manufacturer, excludeProperties);
-
+        
         //prepare model stores
         await _storeMappingSupportedModelFactory.PrepareModelStoresAsync(model, manufacturer, excludeProperties);
 

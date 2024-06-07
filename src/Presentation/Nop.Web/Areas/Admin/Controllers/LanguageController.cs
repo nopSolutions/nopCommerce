@@ -101,11 +101,9 @@ public partial class LanguageController : BaseAdminController
         return RedirectToAction("List");
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_LANGUAGES)]
     public virtual async Task<IActionResult> List()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _languageModelFactory.PrepareLanguageSearchModelAsync(new LanguageSearchModel());
 
@@ -113,22 +111,18 @@ public partial class LanguageController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_LANGUAGES)]
     public virtual async Task<IActionResult> List(LanguageSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _languageModelFactory.PrepareLanguageListModelAsync(searchModel);
 
         return Json(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_LANGUAGES)]
     public virtual async Task<IActionResult> Create()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _languageModelFactory.PrepareLanguageModelAsync(new LanguageModel(), null);
 
@@ -136,11 +130,9 @@ public partial class LanguageController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_LANGUAGES)]
     public virtual async Task<IActionResult> Create(LanguageModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
-            return AccessDeniedView();
-
         if (ModelState.IsValid)
         {
             var language = model.ToEntity<Language>();
@@ -169,11 +161,9 @@ public partial class LanguageController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_LANGUAGES)]
     public virtual async Task<IActionResult> Edit(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
-            return AccessDeniedView();
-
         //try to get a language with the specified id
         var language = await _languageService.GetLanguageByIdAsync(id);
         if (language == null)
@@ -186,11 +176,9 @@ public partial class LanguageController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_LANGUAGES)]
     public virtual async Task<IActionResult> Edit(LanguageModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
-            return AccessDeniedView();
-
         //try to get a language with the specified id
         var language = await _languageService.GetLanguageByIdAsync(model.Id);
         if (language == null)
@@ -235,11 +223,9 @@ public partial class LanguageController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_LANGUAGES)]
     public virtual async Task<IActionResult> Delete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
-            return AccessDeniedView();
-
         //try to get a language with the specified id
         var language = await _languageService.GetLanguageByIdAsync(id);
         if (language == null)
@@ -268,11 +254,9 @@ public partial class LanguageController : BaseAdminController
     }
 
     [HttpPost]
-    public virtual async Task<JsonResult> GetAvailableFlagFileNames()
+    [CheckPermission(StandardPermission.Configuration.MANAGE_LANGUAGES)]
+    public virtual JsonResult GetAvailableFlagFileNames()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
-            return Json("Access denied");
-
         var flagNames = _fileProvider
             .EnumerateFiles(_fileProvider.GetAbsolutePath(FLAGS_PATH), "*.png")
             .Select(_fileProvider.GetFileName)
@@ -307,11 +291,9 @@ public partial class LanguageController : BaseAdminController
     #region Resources
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_LANGUAGES)]
     public virtual async Task<IActionResult> Resources(LocaleResourceSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
-            return await AccessDeniedJsonAsync();
-
         //try to get a language with the specified id
         var language = await _languageService.GetLanguageByIdAsync(searchModel.LanguageId);
         if (language == null)
@@ -325,11 +307,9 @@ public partial class LanguageController : BaseAdminController
 
     //ValidateAttribute is used to force model validation
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_LANGUAGES)]
     public virtual async Task<IActionResult> ResourceUpdate([Validate] LocaleResourceModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
-            return await AccessDeniedJsonAsync();
-
         if (!ModelState.IsValid)
         {
             return ErrorJson(ModelState.SerializeErrors());
@@ -356,11 +336,9 @@ public partial class LanguageController : BaseAdminController
 
     //ValidateAttribute is used to force model validation
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_LANGUAGES)]
     public virtual async Task<IActionResult> ResourceAdd(int languageId, [Validate] LocaleResourceModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
-            return await AccessDeniedJsonAsync();
-
         if (!ModelState.IsValid)
         {
             return ErrorJson(ModelState.SerializeErrors());
@@ -385,11 +363,9 @@ public partial class LanguageController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_LANGUAGES)]
     public virtual async Task<IActionResult> ResourceDelete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
-            return await AccessDeniedJsonAsync();
-
         //try to get a locale resource with the specified id
         var resource = await _localizationService.GetLocaleStringResourceByIdAsync(id)
             ?? throw new ArgumentException("No resource found with the specified id", nameof(id));
@@ -403,11 +379,9 @@ public partial class LanguageController : BaseAdminController
 
     #region Export / Import
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_LANGUAGES)]
     public virtual async Task<IActionResult> ExportXml(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
-            return AccessDeniedView();
-
         //try to get a language with the specified id
         var language = await _languageService.GetLanguageByIdAsync(id);
         if (language == null)
@@ -426,11 +400,9 @@ public partial class LanguageController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_LANGUAGES)]
     public virtual async Task<IActionResult> ImportXml(int id, IFormFile importxmlfile)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
-            return AccessDeniedView();
-
         //try to get a language with the specified id
         var language = await _languageService.GetLanguageByIdAsync(id);
         if (language == null)

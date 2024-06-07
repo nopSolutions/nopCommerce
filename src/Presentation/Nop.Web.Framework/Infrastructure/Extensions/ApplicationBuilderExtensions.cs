@@ -76,6 +76,10 @@ public static class ApplicationBuilderExtensions
             assembly = Assembly.GetAssembly(typeof(IMigrationManager));
             migrationManager.ApplyUpMigrations(assembly, MigrationProcessType.Update);
 
+            //insert new ACL permission if exists
+            var permissionService = engine.Resolve<IPermissionService>();
+            await permissionService.InsertPermissionsAsync();
+
             var taskScheduler = engine.Resolve<ITaskScheduler>();
             await taskScheduler.InitializeAsync();
             await taskScheduler.StartSchedulerAsync();
@@ -328,7 +332,7 @@ public static class ApplicationBuilderExtensions
             OnPrepareResponse = context =>
             {
                 if (!DataSettingsManager.IsDatabaseInstalled() ||
-                    !EngineContext.Current.Resolve<IPermissionService>().AuthorizeAsync(StandardPermissionProvider.ManageMaintenance).Result)
+                    !EngineContext.Current.Resolve<IPermissionService>().AuthorizeAsync(StandardPermission.System.MANAGE_MAINTENANCE).Result)
                 {
                     context.Context.Response.StatusCode = StatusCodes.Status404NotFound;
                     context.Context.Response.ContentLength = 0;

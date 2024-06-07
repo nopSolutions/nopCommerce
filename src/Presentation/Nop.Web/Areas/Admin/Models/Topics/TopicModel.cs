@@ -95,7 +95,6 @@ public partial record TopicModel : BaseNopEntityModel, IAclSupportedModel, ILoca
     public IList<SelectListItem> AvailableStores { get; set; }
 
     //ACL (customer roles)
-    [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.AclCustomerRoles")]
     public IList<int> SelectedCustomerRoleIds { get; set; }
 
     public IList<SelectListItem> AvailableCustomerRoles { get; set; }

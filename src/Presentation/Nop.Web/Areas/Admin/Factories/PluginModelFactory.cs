@@ -28,7 +28,6 @@ public partial class PluginModelFactory : IPluginModelFactory
 {
     #region Fields
 
-    protected readonly IAclSupportedModelFactory _aclSupportedModelFactory;
     protected readonly IAuthenticationPluginManager _authenticationPluginManager;
     protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
     protected readonly ILocalizationService _localizationService;
@@ -50,8 +49,7 @@ public partial class PluginModelFactory : IPluginModelFactory
 
     #region Ctor
 
-    public PluginModelFactory(IAclSupportedModelFactory aclSupportedModelFactory,
-        IAuthenticationPluginManager authenticationPluginManager,
+    public PluginModelFactory(IAuthenticationPluginManager authenticationPluginManager,
         IBaseAdminModelFactory baseAdminModelFactory,
         ILocalizationService localizationService,
         IMultiFactorAuthenticationPluginManager multiFactorAuthenticationPluginManager,
@@ -68,7 +66,6 @@ public partial class PluginModelFactory : IPluginModelFactory
         IWorkContext workContext,
         OfficialFeedManager officialFeedManager)
     {
-        _aclSupportedModelFactory = aclSupportedModelFactory;
         _authenticationPluginManager = authenticationPluginManager;
         _baseAdminModelFactory = baseAdminModelFactory;
         _localizationService = localizationService;
@@ -262,10 +259,7 @@ public partial class PluginModelFactory : IPluginModelFactory
         //prepare localized models
         if (!excludeProperties)
             model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
-
-        //prepare model customer roles
-        await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(model);
-
+        
         //prepare available stores
         await _storeMappingSupportedModelFactory.PrepareModelStoresAsync(model);
 

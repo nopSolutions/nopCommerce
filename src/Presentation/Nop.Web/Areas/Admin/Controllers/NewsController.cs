@@ -98,11 +98,9 @@ public partial class NewsController : BaseAdminController
         return RedirectToAction("NewsItems");
     }
 
+    [CheckPermission(StandardPermission.ContentManagement.NEWS_VIEW)]
     public virtual async Task<IActionResult> NewsItems(int? filterByNewsItemId)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _newsModelFactory.PrepareNewsContentModelAsync(new NewsContentModel(), filterByNewsItemId);
 
@@ -110,22 +108,18 @@ public partial class NewsController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.ContentManagement.NEWS_VIEW)]
     public virtual async Task<IActionResult> List(NewsItemSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _newsModelFactory.PrepareNewsItemListModelAsync(searchModel);
 
         return Json(model);
     }
 
+    [CheckPermission(StandardPermission.ContentManagement.NEWS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> NewsItemCreate()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _newsModelFactory.PrepareNewsItemModelAsync(new NewsItemModel(), null);
 
@@ -133,11 +127,9 @@ public partial class NewsController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.ContentManagement.NEWS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> NewsItemCreate(NewsItemModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
-            return AccessDeniedView();
-
         if (ModelState.IsValid)
         {
             var newsItem = model.ToEntity<NewsItem>();
@@ -170,11 +162,9 @@ public partial class NewsController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.ContentManagement.NEWS_VIEW)]
     public virtual async Task<IActionResult> NewsItemEdit(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
-            return AccessDeniedView();
-
         //try to get a news item with the specified id
         var newsItem = await _newsService.GetNewsByIdAsync(id);
         if (newsItem == null)
@@ -187,11 +177,9 @@ public partial class NewsController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.ContentManagement.NEWS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> NewsItemEdit(NewsItemModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
-            return AccessDeniedView();
-
         //try to get a news item with the specified id
         var newsItem = await _newsService.GetNewsByIdAsync(model.Id);
         if (newsItem == null)
@@ -229,11 +217,9 @@ public partial class NewsController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.ContentManagement.NEWS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Delete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
-            return AccessDeniedView();
-
         //try to get a news item with the specified id
         var newsItem = await _newsService.GetNewsByIdAsync(id);
         if (newsItem == null)
@@ -254,11 +240,9 @@ public partial class NewsController : BaseAdminController
 
     #region Comments
 
+    [CheckPermission(StandardPermission.ContentManagement.NEWS_COMMENTS_VIEW)]
     public virtual async Task<IActionResult> NewsComments(int? filterByNewsItemId)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
-            return AccessDeniedView();
-
         //try to get a news item with the specified id
         var newsItem = await _newsService.GetNewsByIdAsync(filterByNewsItemId ?? 0);
         if (newsItem == null && filterByNewsItemId.HasValue)
@@ -271,11 +255,9 @@ public partial class NewsController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.ContentManagement.NEWS_COMMENTS_VIEW)]
     public virtual async Task<IActionResult> Comments(NewsCommentSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _newsModelFactory.PrepareNewsCommentListModelAsync(searchModel, searchModel.NewsItemId);
 
@@ -283,11 +265,9 @@ public partial class NewsController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.ContentManagement.NEWS_COMMENTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> CommentUpdate(NewsCommentModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
-            return await AccessDeniedJsonAsync();
-
         //try to get a news comment with the specified id
         var comment = await _newsService.GetNewsCommentByIdAsync(model.Id)
             ?? throw new ArgumentException("No comment found with the specified id");
@@ -311,11 +291,9 @@ public partial class NewsController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.ContentManagement.NEWS_COMMENTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> CommentDelete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
-            return await AccessDeniedJsonAsync();
-
         //try to get a news comment with the specified id
         var comment = await _newsService.GetNewsCommentByIdAsync(id)
             ?? throw new ArgumentException("No comment found with the specified id", nameof(id));
@@ -330,11 +308,9 @@ public partial class NewsController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.ContentManagement.NEWS_COMMENTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> DeleteSelectedComments(ICollection<int> selectedIds)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
-            return await AccessDeniedJsonAsync();
-
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();
 
@@ -353,11 +329,9 @@ public partial class NewsController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.ContentManagement.NEWS_COMMENTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> ApproveSelected(ICollection<int> selectedIds)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
-            return await AccessDeniedJsonAsync();
-
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();
 
@@ -382,11 +356,9 @@ public partial class NewsController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.ContentManagement.NEWS_COMMENTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> DisapproveSelected(ICollection<int> selectedIds)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
-            return await AccessDeniedJsonAsync();
-
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();
 

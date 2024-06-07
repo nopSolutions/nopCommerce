@@ -81,11 +81,9 @@ public partial class CustomerAttributeController : BaseAdminController
         return RedirectToAction("List");
     }
 
-    public virtual async Task<IActionResult> List()
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
+    public virtual IActionResult List()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //select an appropriate card
         SaveSelectedCardName("customersettings-customerformfields");
 
@@ -94,22 +92,18 @@ public partial class CustomerAttributeController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> List(CustomerAttributeSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _customerAttributeModelFactory.PrepareCustomerAttributeListModelAsync(searchModel);
 
         return Json(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Create()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _customerAttributeModelFactory.PrepareCustomerAttributeModelAsync(new CustomerAttributeModel(), null);
 
@@ -117,11 +111,9 @@ public partial class CustomerAttributeController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Create(CustomerAttributeModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         if (ModelState.IsValid)
         {
             var customerAttribute = model.ToEntity<CustomerAttribute>();
@@ -150,11 +142,9 @@ public partial class CustomerAttributeController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Edit(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //try to get a customer attribute with the specified id
         var customerAttribute = await _customerAttributeService.GetAttributeByIdAsync(id);
         if (customerAttribute == null)
@@ -167,11 +157,9 @@ public partial class CustomerAttributeController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Edit(CustomerAttributeModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         var customerAttribute = await _customerAttributeService.GetAttributeByIdAsync(model.Id);
         if (customerAttribute == null)
             //no customer attribute found with the specified id
@@ -201,11 +189,9 @@ public partial class CustomerAttributeController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Delete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         var customerAttribute = await _customerAttributeService.GetAttributeByIdAsync(id);
         await _customerAttributeService.DeleteAttributeAsync(customerAttribute);
 
@@ -223,11 +209,9 @@ public partial class CustomerAttributeController : BaseAdminController
     #region Customer attribute values
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> ValueList(CustomerAttributeValueSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return await AccessDeniedJsonAsync();
-
         //try to get a customer attribute with the specified id
         var customerAttribute = await _customerAttributeService.GetAttributeByIdAsync(searchModel.CustomerAttributeId)
             ?? throw new ArgumentException("No customer attribute found with the specified id");
@@ -238,11 +222,9 @@ public partial class CustomerAttributeController : BaseAdminController
         return Json(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> ValueCreatePopup(int customerAttributeId)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //try to get a customer attribute with the specified id
         var customerAttribute = await _customerAttributeService.GetAttributeByIdAsync(customerAttributeId);
         if (customerAttribute == null)
@@ -256,11 +238,9 @@ public partial class CustomerAttributeController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> ValueCreatePopup(CustomerAttributeValueModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //try to get a customer attribute with the specified id
         var customerAttribute = await _customerAttributeService.GetAttributeByIdAsync(model.AttributeId);
         if (customerAttribute == null)
@@ -289,11 +269,9 @@ public partial class CustomerAttributeController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> ValueEditPopup(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //try to get a customer attribute value with the specified id
         var customerAttributeValue = await _customerAttributeService.GetAttributeValueByIdAsync(id);
         if (customerAttributeValue == null)
@@ -311,11 +289,9 @@ public partial class CustomerAttributeController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> ValueEditPopup(CustomerAttributeValueModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //try to get a customer attribute value with the specified id
         var customerAttributeValue = await _customerAttributeService.GetAttributeValueByIdAsync(model.Id);
         if (customerAttributeValue == null)
@@ -351,11 +327,9 @@ public partial class CustomerAttributeController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> ValueDelete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return await AccessDeniedJsonAsync();
-
         //try to get a customer attribute value with the specified id
         var customerAttributeValue = await _customerAttributeService.GetAttributeValueByIdAsync(id)
             ?? throw new ArgumentException("No customer attribute value found with the specified id", nameof(id));

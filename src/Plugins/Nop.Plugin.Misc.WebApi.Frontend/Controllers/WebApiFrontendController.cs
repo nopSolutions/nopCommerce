@@ -28,11 +28,9 @@ public class WebApiFrontendController : BasePluginController
 
     #region Methods
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public virtual async Task<IActionResult> Configure()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-            return AccessDeniedView();
-
         return View("~/Plugins/Misc.WebApi.Frontend/Views/Configure.cshtml");
     }
 

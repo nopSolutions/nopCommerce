@@ -61,8 +61,6 @@ public partial record PluginModel : BaseNopModel, IAclSupportedModel, ILocalized
 
     public IList<PluginLocalizedModel> Locales { get; set; }
 
-    //ACL (customer roles)
-    [NopResourceDisplayName("Admin.Configuration.Plugins.Fields.AclCustomerRoles")]
     public IList<int> SelectedCustomerRoleIds { get; set; }
 
     public IList<SelectListItem> AvailableCustomerRoles { get; set; }

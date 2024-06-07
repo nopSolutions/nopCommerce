@@ -76,7 +76,7 @@ public sealed class ForceMultiFactorAuthenticationAttribute : TypeFilterAttribut
                 return;
 
             //whether the feature is enabled
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableMultiFactorAuthentication))
+            if (!await _permissionService.AuthorizeAsync(StandardPermission.Security.ENABLE_MULTI_FACTOR_AUTHENTICATION))
                 return;
 
             //don't validate on the 'Multi-factor authentication settings' page

@@ -162,11 +162,9 @@ public class PayPalCommerceController : BasePluginController
 
     #region Methods
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PAYMENT_METHODS)]
     public async Task<IActionResult> Configure(bool showtour = false)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
-            return AccessDeniedView();
-
         var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
         var settings = await _settingService.LoadSettingAsync<PayPalCommerceSettings>(storeId);
 
@@ -265,11 +263,9 @@ public class PayPalCommerceController : BasePluginController
 
     [HttpPost, ActionName("Configure")]
     [FormValueRequired("save")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PAYMENT_METHODS)]
     public async Task<IActionResult> Configure(ConfigurationModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
-            return AccessDeniedView();
-
         var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
         var settings = await _settingService.LoadSettingAsync<PayPalCommerceSettings>(storeId);
 

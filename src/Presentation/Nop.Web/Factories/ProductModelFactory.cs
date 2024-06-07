@@ -321,13 +321,13 @@ public partial class ProductModelFactory : IProductModelFactory
     {
         //add to cart button
         priceModel.DisableBuyButton = product.DisableBuyButton ||
-                                      !await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableShoppingCart) ||
-                                      !await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices);
+                                      !await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_SHOPPING_CART) ||
+                                      !await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.DISPLAY_PRICES);
 
         //add to wishlist button
         priceModel.DisableWishlistButton = product.DisableWishlistButton ||
-                                           !await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableWishlist) ||
-                                           !await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices);
+                                           !await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_WISHLIST) ||
+                                           !await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.DISPLAY_PRICES);
         //compare products
         priceModel.DisableAddToCompareListButton = !_catalogSettings.CompareProductsEnabled;
 
@@ -344,7 +344,7 @@ public partial class ProductModelFactory : IProductModelFactory
         }
 
         //prices
-        if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices))
+        if (await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.DISPLAY_PRICES))
         {
             if (product.CustomerEntersPrice)
                 return;
@@ -541,13 +541,13 @@ public partial class ProductModelFactory : IProductModelFactory
 
         //add to cart button (ignore "DisableBuyButton" property for grouped products)
         priceModel.DisableBuyButton =
-            !await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableShoppingCart) ||
-            !await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices);
+            !await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_SHOPPING_CART) ||
+            !await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.DISPLAY_PRICES);
 
         //add to wishlist button (ignore "DisableWishlistButton" property for grouped products)
         priceModel.DisableWishlistButton =
-            !await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableWishlist) ||
-            !await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices);
+            !await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_WISHLIST) ||
+            !await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.DISPLAY_PRICES);
 
         //compare products
         priceModel.DisableAddToCompareListButton = !_catalogSettings.CompareProductsEnabled;
@@ -555,7 +555,7 @@ public partial class ProductModelFactory : IProductModelFactory
             return;
 
         //we have at least one associated product
-        if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices))
+        if (await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.DISPLAY_PRICES))
         {
             //find a minimum possible price
             decimal? minPossiblePrice = null;
@@ -772,7 +772,7 @@ public partial class ProductModelFactory : IProductModelFactory
             ProductId = product.Id
         };
 
-        if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices))
+        if (await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.DISPLAY_PRICES))
         {
             model.HidePrices = false;
             if (product.CustomerEntersPrice)
@@ -897,9 +897,9 @@ public partial class ProductModelFactory : IProductModelFactory
         }
 
         //'add to cart', 'add to wishlist' buttons
-        model.DisableBuyButton = product.DisableBuyButton || !await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableShoppingCart);
-        model.DisableWishlistButton = product.DisableWishlistButton || !await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableWishlist);
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices))
+        model.DisableBuyButton = product.DisableBuyButton || !await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_SHOPPING_CART);
+        model.DisableWishlistButton = product.DisableWishlistButton || !await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_WISHLIST);
+        if (!await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.DISPLAY_PRICES))
         {
             model.DisableBuyButton = true;
             model.DisableWishlistButton = true;
@@ -998,7 +998,7 @@ public partial class ProductModelFactory : IProductModelFactory
                     attributeModel.Values.Add(valueModel);
 
                     //display price if allowed
-                    if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices))
+                    if (await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.DISPLAY_PRICES))
                     {
                         var currentCustomer = await _workContext.GetCurrentCustomerAsync();
                         var customer = updatecartitem?.CustomerId is null ? currentCustomer : await _customerService.GetCustomerByIdAsync(updatecartitem.CustomerId);
@@ -1657,7 +1657,7 @@ public partial class ProductModelFactory : IProductModelFactory
         model.ProductReviews = await PrepareProductReviewsModelAsync(product);
 
         //tier prices
-        if (product.HasTierPrices && await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices))
+        if (product.HasTierPrices && await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.DISPLAY_PRICES))
         {
             model.TierPrices = await PrepareProductTierPriceModelsAsync(product);
         }

@@ -118,7 +118,7 @@ public partial class CatalogController : BasePublicController
             store.Id);
 
         //display "edit" (manage) link
-        if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
+        if (await _permissionService.AuthorizeAsync(StandardPermission.Security.ACCESS_ADMIN_PANEL) && await _permissionService.AuthorizeAsync(StandardPermission.Catalog.CATEGORIES_VIEW))
             DisplayEditLink(Url.Action("Edit", "Category", new { id = category.Id, area = AreaNames.ADMIN }));
 
         //activity log
@@ -183,7 +183,7 @@ public partial class CatalogController : BasePublicController
             store.Id);
 
         //display "edit" (manage) link
-        if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers))
+        if (await _permissionService.AuthorizeAsync(StandardPermission.Security.ACCESS_ADMIN_PANEL) && await _permissionService.AuthorizeAsync(StandardPermission.Catalog.MANUFACTURER_VIEW))
             DisplayEditLink(Url.Action("Edit", "Manufacturer", new { id = manufacturer.Id, area = AreaNames.ADMIN }));
 
         //activity log
@@ -240,7 +240,7 @@ public partial class CatalogController : BasePublicController
             store.Id);
 
         //display "edit" (manage) link
-        if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
+        if (await _permissionService.AuthorizeAsync(StandardPermission.Security.ACCESS_ADMIN_PANEL) && await _permissionService.AuthorizeAsync(StandardPermission.Customers.VENDORS_VIEW))
             DisplayEditLink(Url.Action("Edit", "Vendor", new { id = vendor.Id, area = AreaNames.ADMIN }));
 
         //model
@@ -470,7 +470,7 @@ public partial class CatalogController : BasePublicController
             !await _storeMappingService.AuthorizeAsync(category);
         //Check whether the current user has a "Manage categories" permission (usually a store owner)
         //We should allows him (her) to use "Preview" functionality
-        var hasAdminAccess = await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories);
+        var hasAdminAccess = await _permissionService.AuthorizeAsync(StandardPermission.Security.ACCESS_ADMIN_PANEL) && await _permissionService.AuthorizeAsync(StandardPermission.Catalog.CATEGORIES_VIEW);
         if (notAvailable && !hasAdminAccess)
             isAvailable = false;
 
@@ -496,7 +496,7 @@ public partial class CatalogController : BasePublicController
             !await _storeMappingService.AuthorizeAsync(manufacturer);
         //Check whether the current user has a "Manage categories" permission (usually a store owner)
         //We should allows him (her) to use "Preview" functionality
-        var hasAdminAccess = await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers);
+        var hasAdminAccess = await _permissionService.AuthorizeAsync(StandardPermission.Security.ACCESS_ADMIN_PANEL) && await _permissionService.AuthorizeAsync(StandardPermission.Catalog.MANUFACTURER_VIEW);
         if (notAvailable && !hasAdminAccess)
             isAvailable = false;
 

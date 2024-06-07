@@ -9,7 +9,6 @@ using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Plugins;
 using Nop.Web.Framework.Infrastructure;
-using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Plugin.Widgets.GoogleAnalytics;
 

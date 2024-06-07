@@ -175,11 +175,9 @@ public partial class SettingController : BaseAdminController
         return Redirect(returnUrl);
     }
 
+    [CheckPermission(StandardPermission.System.MANAGE_APP_SETTINGS)]
     public virtual async Task<IActionResult> AppSettings()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAppSettings))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _settingModelFactory.PrepareAppSettingsModel();
 
@@ -187,11 +185,9 @@ public partial class SettingController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.System.MANAGE_APP_SETTINGS)]
     public virtual async Task<IActionResult> AppSettings(AppSettingsModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAppSettings))
-            return AccessDeniedView();
-
         if (ModelState.IsValid)
         {
             var configurations = new List<IConfig>
@@ -228,11 +224,9 @@ public partial class SettingController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Blog()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _settingModelFactory.PrepareBlogSettingsModelAsync();
 
@@ -240,11 +234,9 @@ public partial class SettingController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Blog(BlogSettingsModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         if (ModelState.IsValid)
         {
             //load settings for a chosen store scope
@@ -282,11 +274,9 @@ public partial class SettingController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Vendor()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _settingModelFactory.PrepareVendorSettingsModelAsync();
 
@@ -294,11 +284,9 @@ public partial class SettingController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Vendor(VendorSettingsModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         if (ModelState.IsValid)
         {
             //load settings for a chosen store scope
@@ -339,11 +327,9 @@ public partial class SettingController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Forum()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _settingModelFactory.PrepareForumSettingsModelAsync();
 
@@ -351,11 +337,9 @@ public partial class SettingController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Forum(ForumSettingsModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         if (ModelState.IsValid)
         {
             //load settings for a chosen store scope
@@ -408,11 +392,9 @@ public partial class SettingController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> News()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _settingModelFactory.PrepareNewsSettingsModelAsync();
 
@@ -420,11 +402,9 @@ public partial class SettingController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> News(NewsSettingsModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         if (ModelState.IsValid)
         {
             //load settings for a chosen store scope
@@ -463,11 +443,9 @@ public partial class SettingController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Shipping()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _settingModelFactory.PrepareShippingSettingsModelAsync();
 
@@ -475,11 +453,9 @@ public partial class SettingController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Shipping(ShippingSettingsModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         if (ModelState.IsValid)
         {
             //load settings for a chosen store scope
@@ -552,11 +528,9 @@ public partial class SettingController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Tax()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _settingModelFactory.PrepareTaxSettingsModelAsync();
 
@@ -564,11 +538,9 @@ public partial class SettingController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Tax(TaxSettingsModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         if (ModelState.IsValid)
         {
             //load settings for a chosen store scope
@@ -648,11 +620,9 @@ public partial class SettingController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Catalog()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _settingModelFactory.PrepareCatalogSettingsModelAsync();
 
@@ -660,11 +630,9 @@ public partial class SettingController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Catalog(CatalogSettingsModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         if (ModelState.IsValid)
         {
             //load settings for a chosen store scope
@@ -792,11 +760,9 @@ public partial class SettingController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> SortOptionsList(SortOptionSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _settingModelFactory.PrepareSortOptionListModelAsync(searchModel);
 
@@ -804,11 +770,9 @@ public partial class SettingController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> SortOptionUpdate(SortOptionModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return await AccessDeniedJsonAsync();
-
         var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
         var catalogSettings = await _settingService.LoadSettingAsync<CatalogSettings>(storeScope);
 
@@ -827,11 +791,9 @@ public partial class SettingController : BaseAdminController
         return new NullJsonResult();
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> RewardPoints()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _settingModelFactory.PrepareRewardPointsSettingsModelAsync();
 
@@ -839,11 +801,9 @@ public partial class SettingController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> RewardPoints(RewardPointsSettingsModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         if (ModelState.IsValid)
         {
             //load settings for a chosen store scope
@@ -892,11 +852,9 @@ public partial class SettingController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Order()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _settingModelFactory.PrepareOrderSettingsModelAsync();
 
@@ -904,11 +862,9 @@ public partial class SettingController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Order(OrderSettingsModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         if (ModelState.IsValid)
         {
             //load settings for a chosen store scope
@@ -982,11 +938,9 @@ public partial class SettingController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> ShoppingCart()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _settingModelFactory.PrepareShoppingCartSettingsModelAsync();
 
@@ -994,11 +948,9 @@ public partial class SettingController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> ShoppingCart(ShoppingCartSettingsModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         if (ModelState.IsValid)
         {
             //load settings for a chosen store scope
@@ -1047,11 +999,9 @@ public partial class SettingController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Media()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _settingModelFactory.PrepareMediaSettingsModelAsync();
 
@@ -1060,11 +1010,9 @@ public partial class SettingController : BaseAdminController
 
     [HttpPost]
     [FormValueRequired("save")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Media(MediaSettingsModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         if (ModelState.IsValid)
         {
             //load settings for a chosen store scope
@@ -1114,11 +1062,9 @@ public partial class SettingController : BaseAdminController
 
     [HttpPost, ActionName("Media")]
     [FormValueRequired("change-picture-storage")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> ChangePictureStorage()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         await _pictureService.SetIsStoreInDbAsync(!await _pictureService.IsStoreInDbAsync());
 
         //activity log
@@ -1129,11 +1075,9 @@ public partial class SettingController : BaseAdminController
         return RedirectToAction("Media");
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> CustomerUser()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _settingModelFactory.PrepareCustomerUserSettingsModelAsync();
 
@@ -1141,11 +1085,9 @@ public partial class SettingController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> CustomerUser(CustomerUserSettingsModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         if (ModelState.IsValid)
         {
             var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
@@ -1235,11 +1177,9 @@ public partial class SettingController : BaseAdminController
 
     #region GDPR
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Gdpr()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _settingModelFactory.PrepareGdprSettingsModelAsync();
 
@@ -1247,11 +1187,9 @@ public partial class SettingController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Gdpr(GdprSettingsModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         if (ModelState.IsValid)
         {
             //load settings for a chosen store scope
@@ -1287,22 +1225,18 @@ public partial class SettingController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> GdprConsentList(GdprConsentSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _settingModelFactory.PrepareGdprConsentListModelAsync(searchModel);
 
         return Json(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> CreateGdprConsent()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _settingModelFactory.PrepareGdprConsentModelAsync(new GdprConsentModel(), null);
 
@@ -1310,11 +1244,9 @@ public partial class SettingController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> CreateGdprConsent(GdprConsentModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         if (ModelState.IsValid)
         {
             var gdprConsent = model.ToEntity<GdprConsent>();
@@ -1335,11 +1267,9 @@ public partial class SettingController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> EditGdprConsent(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //try to get a consent with the specified id
         var gdprConsent = await _gdprService.GetConsentByIdAsync(id);
         if (gdprConsent == null)
@@ -1352,11 +1282,9 @@ public partial class SettingController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> EditGdprConsent(GdprConsentModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //try to get a GDPR consent with the specified id
         var gdprConsent = await _gdprService.GetConsentByIdAsync(model.Id);
         if (gdprConsent == null)
@@ -1383,11 +1311,9 @@ public partial class SettingController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> DeleteGdprConsent(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //try to get a GDPR consent with the specified id
         var gdprConsent = await _gdprService.GetConsentByIdAsync(id);
         if (gdprConsent == null)
@@ -1402,11 +1328,9 @@ public partial class SettingController : BaseAdminController
 
     #endregion
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> GeneralCommon(bool showtour = false)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _settingModelFactory.PrepareGeneralCommonSettingsModelAsync();
 
@@ -1426,11 +1350,9 @@ public partial class SettingController : BaseAdminController
 
     [HttpPost]
     [FormValueRequired("save")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> GeneralCommon(GeneralCommonSettingsModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         if (ModelState.IsValid)
         {
             //load settings for a chosen store scope
@@ -1753,11 +1675,9 @@ public partial class SettingController : BaseAdminController
 
     [HttpPost, ActionName("GeneralCommon")]
     [FormValueRequired("changeencryptionkey")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> ChangeEncryptionKey(GeneralCommonSettingsModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
         var securitySettings = await _settingService.LoadSettingAsync<SecuritySettings>(storeScope);
 
@@ -1831,11 +1751,9 @@ public partial class SettingController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> UploadLocalePattern()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         try
         {
             await _uploadService.UploadLocalePatternAsync();
@@ -1850,11 +1768,9 @@ public partial class SettingController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> UploadIcons(IFormFile iconsFile)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         try
         {
             if (iconsFile == null || iconsFile.Length == 0)
@@ -1912,11 +1828,9 @@ public partial class SettingController : BaseAdminController
         return RedirectToAction("GeneralCommon");
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> AllSettings(string settingName)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _settingModelFactory.PrepareSettingSearchModelAsync(new SettingSearchModel { SearchSettingName = WebUtility.HtmlEncode(settingName) });
 
@@ -1924,11 +1838,9 @@ public partial class SettingController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> AllSettings(SettingSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _settingModelFactory.PrepareSettingListModelAsync(searchModel);
 
@@ -1936,11 +1848,9 @@ public partial class SettingController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> SettingUpdate(SettingModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return await AccessDeniedJsonAsync();
-
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
 
@@ -1963,11 +1873,9 @@ public partial class SettingController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> SettingAdd(SettingModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return await AccessDeniedJsonAsync();
-
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
 
@@ -1983,11 +1891,9 @@ public partial class SettingController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> SettingDelete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return await AccessDeniedJsonAsync();
-
         //try to get a setting with the specified id
         var setting = await _settingService.GetSettingByIdAsync(id)
             ?? throw new ArgumentException("No setting found with the specified id", nameof(id));

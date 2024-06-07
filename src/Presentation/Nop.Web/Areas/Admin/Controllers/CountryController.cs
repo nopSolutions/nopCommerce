@@ -129,11 +129,9 @@ public partial class CountryController : BaseAdminController
         return RedirectToAction("List");
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_COUNTRIES)]
     public virtual async Task<IActionResult> List()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _countryModelFactory.PrepareCountrySearchModelAsync(new CountrySearchModel());
 
@@ -141,22 +139,18 @@ public partial class CountryController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_COUNTRIES)]
     public virtual async Task<IActionResult> CountryList(CountrySearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _countryModelFactory.PrepareCountryListModelAsync(searchModel);
 
         return Json(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_COUNTRIES)]
     public virtual async Task<IActionResult> Create()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _countryModelFactory.PrepareCountryModelAsync(new CountryModel(), null);
 
@@ -164,11 +158,9 @@ public partial class CountryController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_COUNTRIES)]
     public virtual async Task<IActionResult> Create(CountryModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
-            return AccessDeniedView();
-
         if (ModelState.IsValid)
         {
             var country = model.ToEntity<Country>();
@@ -199,11 +191,9 @@ public partial class CountryController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_COUNTRIES)]
     public virtual async Task<IActionResult> Edit(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
-            return AccessDeniedView();
-
         //try to get a country with the specified id
         var country = await _countryService.GetCountryByIdAsync(id);
         if (country == null)
@@ -216,11 +206,9 @@ public partial class CountryController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_COUNTRIES)]
     public virtual async Task<IActionResult> Edit(CountryModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
-            return AccessDeniedView();
-
         //try to get a country with the specified id
         var country = await _countryService.GetCountryByIdAsync(model.Id);
         if (country == null)
@@ -257,11 +245,9 @@ public partial class CountryController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_COUNTRIES)]
     public virtual async Task<IActionResult> Delete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
-            return AccessDeniedView();
-
         //try to get a country with the specified id
         var country = await _countryService.GetCountryByIdAsync(id);
         if (country == null)
@@ -290,11 +276,9 @@ public partial class CountryController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_COUNTRIES)]
     public virtual async Task<IActionResult> PublishSelected(ICollection<int> selectedIds)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
-            return await AccessDeniedJsonAsync();
-
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();
 
@@ -309,11 +293,9 @@ public partial class CountryController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_COUNTRIES)]
     public virtual async Task<IActionResult> UnpublishSelected(ICollection<int> selectedIds)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
-            return await AccessDeniedJsonAsync();
-
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();
 
@@ -332,11 +314,9 @@ public partial class CountryController : BaseAdminController
     #region States / provinces
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_COUNTRIES)]
     public virtual async Task<IActionResult> States(StateProvinceSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
-            return await AccessDeniedJsonAsync();
-
         //try to get a country with the specified id
         var country = await _countryService.GetCountryByIdAsync(searchModel.CountryId)
             ?? throw new ArgumentException("No country found with the specified id");
@@ -347,11 +327,9 @@ public partial class CountryController : BaseAdminController
         return Json(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_COUNTRIES)]
     public virtual async Task<IActionResult> StateCreatePopup(int countryId)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
-            return AccessDeniedView();
-
         //try to get a country with the specified id
         var country = await _countryService.GetCountryByIdAsync(countryId);
         if (country == null)
@@ -364,11 +342,9 @@ public partial class CountryController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_COUNTRIES)]
     public virtual async Task<IActionResult> StateCreatePopup(StateProvinceModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
-            return AccessDeniedView();
-
         //try to get a country with the specified id
         var country = await _countryService.GetCountryByIdAsync(model.CountryId);
         if (country == null)
@@ -398,11 +374,9 @@ public partial class CountryController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_COUNTRIES)]
     public virtual async Task<IActionResult> StateEditPopup(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
-            return AccessDeniedView();
-
         //try to get a state with the specified id
         var state = await _stateProvinceService.GetStateProvinceByIdAsync(id);
         if (state == null)
@@ -420,11 +394,9 @@ public partial class CountryController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_COUNTRIES)]
     public virtual async Task<IActionResult> StateEditPopup(StateProvinceModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
-            return AccessDeniedView();
-
         //try to get a state with the specified id
         var state = await _stateProvinceService.GetStateProvinceByIdAsync(model.Id);
         if (state == null)
@@ -459,11 +431,9 @@ public partial class CountryController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_COUNTRIES)]
     public virtual async Task<IActionResult> StateDelete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
-            return await AccessDeniedJsonAsync();
-
         //try to get a state with the specified id
         var state = await _stateProvinceService.GetStateProvinceByIdAsync(id)
             ?? throw new ArgumentException("No state found with the specified id");
@@ -539,11 +509,9 @@ public partial class CountryController : BaseAdminController
 
     #region Export / import
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_COUNTRIES)]
     public virtual async Task<IActionResult> ExportCsv()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
-            return AccessDeniedView();
-
         var fileName = $"states_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}_{CommonHelper.GenerateRandomDigitCode(4)}.csv";
 
         var states = await _stateProvinceService.GetStateProvincesAsync(true);
@@ -553,11 +521,9 @@ public partial class CountryController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_COUNTRIES)]
     public virtual async Task<IActionResult> ImportCsv(IFormFile importcsvfile)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
-            return AccessDeniedView();
-
         try
         {
             if (importcsvfile != null && importcsvfile.Length > 0)

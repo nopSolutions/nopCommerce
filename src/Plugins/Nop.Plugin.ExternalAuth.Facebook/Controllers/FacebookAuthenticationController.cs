@@ -65,11 +65,9 @@ public class FacebookAuthenticationController : BasePluginController
 
     [AuthorizeAdmin]
     [Area(AreaNames.ADMIN)]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_EXTERNAL_AUTHENTICATION_METHODS)]
     public async Task<IActionResult> Configure()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageExternalAuthenticationMethods))
-            return AccessDeniedView();
-
         var model = new ConfigurationModel
         {
             ClientId = _facebookExternalAuthSettings.ClientKeyIdentifier,
@@ -82,11 +80,9 @@ public class FacebookAuthenticationController : BasePluginController
     [HttpPost]
     [AuthorizeAdmin]
     [Area(AreaNames.ADMIN)]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_EXTERNAL_AUTHENTICATION_METHODS)]
     public async Task<IActionResult> Configure(ConfigurationModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageExternalAuthenticationMethods))
-            return AccessDeniedView();
-
         if (!ModelState.IsValid)
             return await Configure();
 

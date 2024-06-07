@@ -48,11 +48,9 @@ public class PaymentCheckMoneyOrderController : BasePaymentController
 
     #region Methods
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PAYMENT_METHODS)]
     public async Task<IActionResult> Configure()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
-            return AccessDeniedView();
-
         //load settings for a chosen store scope
         var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
         var checkMoneyOrderPaymentSettings = await _settingService.LoadSettingAsync<CheckMoneyOrderPaymentSettings>(storeScope);
@@ -85,11 +83,9 @@ public class PaymentCheckMoneyOrderController : BasePaymentController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PAYMENT_METHODS)]
     public async Task<IActionResult> Configure(ConfigurationModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
-            return AccessDeniedView();
-
         if (!ModelState.IsValid)
             return await Configure();
 

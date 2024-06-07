@@ -53,7 +53,7 @@ public class NopMobilePlugin : BasePlugin, IAdminMenuPlugin, IMiscPlugin
 
     public async Task ManageSiteMapAsync(SiteMapNode rootNode)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
+        if (!await _permissionService.AuthorizeAsync(StandardPermission.Configuration.MANAGE_PLUGINS))
             return;
 
         var config = rootNode.ChildNodes.FirstOrDefault(node => node.SystemName.Equals("Configuration"));

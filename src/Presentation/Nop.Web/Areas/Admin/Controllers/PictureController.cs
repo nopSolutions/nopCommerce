@@ -28,7 +28,7 @@ public partial class PictureController : BaseAdminController
     [IgnoreAntiforgeryToken]
     public virtual async Task<IActionResult> AsyncUpload()
     {
-        //if (!await _permissionService.Authorize(StandardPermissionProvider.UploadPictures))
+        //if (!await _permissionService.Authorize(StandardPermission.UploadPictures))
         //    return Json(new { success = false, error = "You do not have required permissions" }, "text/plain");
 
         var httpPostedFile = await Request.GetFirstOrDefaultFileAsync();

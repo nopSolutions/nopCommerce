@@ -64,11 +64,9 @@ public class PickupInStoreController : BasePluginController
 
     #region Methods
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SHIPPING_SETTINGS)]
     public async Task<IActionResult> Configure()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _storePickupPointModelFactory.PrepareStorePickupPointSearchModelAsync(new StorePickupPointSearchModel());
 
@@ -76,22 +74,18 @@ public class PickupInStoreController : BasePluginController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SHIPPING_SETTINGS)]
     public async Task<IActionResult> List(StorePickupPointSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _storePickupPointModelFactory.PrepareStorePickupPointListModelAsync(searchModel);
 
         return Json(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SHIPPING_SETTINGS)]
     public async Task<IActionResult> Create()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return AccessDeniedView();
-
         var model = new StorePickupPointModel
         {
             Address = new AddressModel()
@@ -120,11 +114,9 @@ public class PickupInStoreController : BasePluginController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SHIPPING_SETTINGS)]
     public async Task<IActionResult> Create(StorePickupPointModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return AccessDeniedView();
-
         var address = new Address
         {
             Address1 = model.Address.Address1,
@@ -157,11 +149,9 @@ public class PickupInStoreController : BasePluginController
         return View("~/Plugins/Pickup.PickupInStore/Views/Create.cshtml", model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SHIPPING_SETTINGS)]
     public async Task<IActionResult> Edit(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return AccessDeniedView();
-
         var pickupPoint = await _storePickupPointService.GetStorePickupPointByIdAsync(id);
         if (pickupPoint == null)
             return RedirectToAction("Configure");
@@ -217,11 +207,9 @@ public class PickupInStoreController : BasePluginController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SHIPPING_SETTINGS)]
     public async Task<IActionResult> Edit(StorePickupPointModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return AccessDeniedView();
-
         if (!ModelState.IsValid)
             return await Edit(model.Id);
 
@@ -259,11 +247,9 @@ public class PickupInStoreController : BasePluginController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SHIPPING_SETTINGS)]
     public async Task<IActionResult> Delete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return await AccessDeniedJsonAsync();
-
         var pickupPoint = await _storePickupPointService.GetStorePickupPointByIdAsync(id);
         if (pickupPoint == null)
             return RedirectToAction("Configure");

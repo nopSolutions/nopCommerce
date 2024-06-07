@@ -90,7 +90,7 @@ public class Indexes : ForwardOnlyMigration
             .OnColumn(nameof(ProductTag.Name)).Ascending()
             .WithOptions().NonClustered();
 
-        Create.Index("IX_Product_Name").OnTable(nameof (Product))
+        Create.Index("IX_Product_Name").OnTable(nameof(Product))
             .OnColumn(nameof(Product.Name)).Ascending()
             .WithOptions().NonClustered();
 
@@ -300,6 +300,11 @@ public class Indexes : ForwardOnlyMigration
         Create.Index("IX_AclRecord_EntityId_EntityName").OnTable(nameof(AclRecord))
             .OnColumn(nameof(AclRecord.EntityId)).Ascending()
             .OnColumn(nameof(AclRecord.EntityName)).Ascending()
+            .WithOptions().NonClustered();
+
+        Create.Index("IX_Customer_Deleted")
+            .OnTable(nameof(Customer))
+            .OnColumn(nameof(Customer.Deleted)).Ascending()
             .WithOptions().NonClustered();
     }
 

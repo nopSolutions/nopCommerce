@@ -88,8 +88,14 @@ public partial class XmlSiteMap : IXmlSiteMap
         //permission name
         var permissionNames = GetStringValueFromAttribute(xmlNode, "PermissionNames");
         if (!string.IsNullOrEmpty(permissionNames))
-            siteMapNode.Visible = await permissionNames.Split(_separator, StringSplitOptions.RemoveEmptyEntries)
-                .AnyAwaitAsync(async permissionName => await _permissionService.AuthorizeAsync(permissionName.Trim()));
+        {
+            var permissions = permissionNames.Split(_separator, StringSplitOptions.RemoveEmptyEntries);
+
+            async ValueTask<bool> predicate(string permissionName) =>
+                await _permissionService.AuthorizeAsync(permissionName.Trim());
+
+            siteMapNode.Visible = xmlNode.ChildNodes.Count > 0 ? await permissions.AnyAwaitAsync(predicate) : await permissions.AllAwaitAsync(predicate);
+        }
         else
             siteMapNode.Visible = true;
 

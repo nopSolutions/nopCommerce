@@ -46,11 +46,9 @@ public class WidgetsGoogleAnalyticsController : BasePluginController
 
     #region Methods
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_WIDGETS)]
     public async Task<IActionResult> Configure()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
-            return AccessDeniedView();
-
         //load settings for a chosen store scope
         var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
         var googleAnalyticsSettings = await _settingService.LoadSettingAsync<GoogleAnalyticsSettings>(storeScope);
@@ -82,11 +80,9 @@ public class WidgetsGoogleAnalyticsController : BasePluginController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_WIDGETS)]
     public async Task<IActionResult> Configure(ConfigurationModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
-            return AccessDeniedView();
-
         //load settings for a chosen store scope
         var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
         var googleAnalyticsSettings = await _settingService.LoadSettingAsync<GoogleAnalyticsSettings>(storeScope);

@@ -86,7 +86,7 @@ public class EntityUseCodeViewComponent : NopViewComponent
         if (!await _taxPluginManager.IsPluginActiveAsync(AvalaraTaxDefaults.SystemName))
             return Content(string.Empty);
 
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
+        if (!await _permissionService.AuthorizeAsync(StandardPermission.Configuration.MANAGE_TAX_SETTINGS))
             return Content(string.Empty);
 
         //ensure that it's a proper widget zone

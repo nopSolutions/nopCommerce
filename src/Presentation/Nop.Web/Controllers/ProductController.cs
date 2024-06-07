@@ -173,7 +173,7 @@ public partial class ProductController : BasePublicController
             !_productService.ProductIsAvailable(product);
         //Check whether the current user has a "Manage products" permission (usually a store owner)
         //We should allows him (her) to use "Preview" functionality
-        var hasAdminAccess = await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts);
+        var hasAdminAccess = await _permissionService.AuthorizeAsync(StandardPermission.Security.ACCESS_ADMIN_PANEL) && await _permissionService.AuthorizeAsync(StandardPermission.Catalog.PRODUCTS_VIEW);
         if (notAvailable && !hasAdminAccess)
             return InvokeHttp404();
 
@@ -213,8 +213,8 @@ public partial class ProductController : BasePublicController
         await _recentlyViewedProductsService.AddProductToRecentlyViewedListAsync(product.Id);
 
         //display "edit" (manage) link
-        if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) &&
-            await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+        if (await _permissionService.AuthorizeAsync(StandardPermission.Security.ACCESS_ADMIN_PANEL) &&
+            await _permissionService.AuthorizeAsync(StandardPermission.Catalog.PRODUCTS_VIEW))
         {
             //a vendor should have access only to his products
             var currentVendor = await _workContext.GetCurrentVendorAsync();

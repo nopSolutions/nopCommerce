@@ -179,7 +179,7 @@ public partial class CustomerRegistrationService : ICustomerRegistrationService
             return CustomerLoginResults.WrongPassword;
         }
 
-        var selectedProvider = await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableMultiFactorAuthentication, customer)
+        var selectedProvider = await _permissionService.AuthorizeAsync(StandardPermission.Security.ENABLE_MULTI_FACTOR_AUTHENTICATION, customer)
             ? await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute)
             : null;
         var store = await _storeContext.GetCurrentStoreAsync();

@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Net;
 using System.Text;
-using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using Nop.Core;
@@ -44,7 +43,6 @@ public partial class ProductModelFactory : IProductModelFactory
 
     protected readonly CatalogSettings _catalogSettings;
     protected readonly CurrencySettings _currencySettings;
-    protected readonly IAclSupportedModelFactory _aclSupportedModelFactory;
     protected readonly IAddressService _addressService;
     protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
     protected readonly ICategoryService _categoryService;
@@ -88,7 +86,6 @@ public partial class ProductModelFactory : IProductModelFactory
 
     public ProductModelFactory(CatalogSettings catalogSettings,
         CurrencySettings currencySettings,
-        IAclSupportedModelFactory aclSupportedModelFactory,
         IAddressService addressService,
         IBaseAdminModelFactory baseAdminModelFactory,
         ICategoryService categoryService,
@@ -128,7 +125,6 @@ public partial class ProductModelFactory : IProductModelFactory
     {
         _catalogSettings = catalogSettings;
         _currencySettings = currencySettings;
-        _aclSupportedModelFactory = aclSupportedModelFactory;
         _addressService = addressService;
         _baseAdminModelFactory = baseAdminModelFactory;
         _categoryService = categoryService;
@@ -949,10 +945,7 @@ public partial class ProductModelFactory : IProductModelFactory
         //prepare model discounts
         var availableDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToSkus, showHidden: true, isActive: null);
         await _discountSupportedModelFactory.PrepareModelDiscountsAsync(model, product, availableDiscounts, excludeProperties);
-
-        //prepare model customer roles
-        await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(model, product, excludeProperties);
-
+        
         //prepare model stores
         await _storeMappingSupportedModelFactory.PrepareModelStoresAsync(model, product, excludeProperties);
 

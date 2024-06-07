@@ -73,7 +73,7 @@ public class ZettlePlugin : BasePlugin, IAdminMenuPlugin, IMiscPlugin
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task ManageSiteMapAsync(SiteMapNode rootNode)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
+        if (!await _permissionService.AuthorizeAsync(StandardPermission.Configuration.MANAGE_PLUGINS))
             return;
 
         var configurationItem = rootNode.ChildNodes.FirstOrDefault(node => node.SystemName.Equals("Configuration"));

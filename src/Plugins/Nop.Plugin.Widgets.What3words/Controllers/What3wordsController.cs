@@ -59,11 +59,9 @@ public class What3wordsController : BasePluginController
 
     #region Methods
 
-    public async Task<IActionResult> Configure()
+    [CheckPermission(StandardPermission.Configuration.MANAGE_WIDGETS)]
+    public IActionResult Configure()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
-            return AccessDeniedView();
-
         var model = new ConfigurationModel
         {
             Enabled = _what3WordsSettings.Enabled
@@ -73,13 +71,11 @@ public class What3wordsController : BasePluginController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_WIDGETS)]
     public async Task<IActionResult> Configure(ConfigurationModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
-            return AccessDeniedView();
-
         if (!ModelState.IsValid)
-            return await Configure();
+            return Configure();
 
         //request client API key if doesn't exist
         if (string.IsNullOrEmpty(_what3WordsSettings.ApiKey))
@@ -96,7 +92,7 @@ public class What3wordsController : BasePluginController
                 await _logger.ErrorAsync($"what3words error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
                 _notificationService
                     .ErrorNotification(await _localizationService.GetResourceAsync("Plugins.Widgets.What3words.Configuration.Failed"));
-                return await Configure();
+                return Configure();
             }
         }
 
@@ -105,7 +101,7 @@ public class What3wordsController : BasePluginController
 
         _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
 
-        return await Configure();
+        return Configure();
     }
 }
 

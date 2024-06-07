@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Primitives;
 using Nop.Core;
 using Nop.Core.Domain.Security;
 using Nop.Services.Customers;
-using Nop.Services.Localization;
-using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Security;
+using Nop.Web.Framework.Menu;
+using Nop.Web.Framework.Mvc.Filters;
 using ILogger = Nop.Services.Logging.ILogger;
 
 namespace Nop.Web.Areas.Admin.Controllers;
@@ -17,103 +16,159 @@ public partial class SecurityController : BaseAdminController
     #region Fields
 
     protected readonly ICustomerService _customerService;
-    protected readonly ILocalizationService _localizationService;
     protected readonly ILogger _logger;
-    protected readonly INotificationService _notificationService;
     protected readonly IPermissionService _permissionService;
     protected readonly ISecurityModelFactory _securityModelFactory;
     protected readonly IWorkContext _workContext;
+    protected readonly IXmlSiteMap _xmlSiteMap;
+
     private static readonly char[] _separator = [','];
+    private static Dictionary<string, string> _menuSystemNames = new();
 
     #endregion
 
     #region Ctor
 
     public SecurityController(ICustomerService customerService,
-        ILocalizationService localizationService,
         ILogger logger,
-        INotificationService notificationService,
         IPermissionService permissionService,
         ISecurityModelFactory securityModelFactory,
-        IWorkContext workContext)
+        IWorkContext workContext,
+        IXmlSiteMap xmlSiteMap)
     {
         _customerService = customerService;
-        _localizationService = localizationService;
         _logger = logger;
-        _notificationService = notificationService;
         _permissionService = permissionService;
         _securityModelFactory = securityModelFactory;
         _workContext = workContext;
+        _xmlSiteMap = xmlSiteMap;
     }
-
+    
     #endregion
 
     #region Methods
 
-    public virtual async Task<IActionResult> AccessDenied(string pageUrl)
+    public virtual async Task<IActionResult> AccessDenied(string pageUrl, string pageSystemNameKey)
     {
-        var currentCustomer = await _workContext.GetCurrentCustomerAsync();
-        if (currentCustomer == null || await _customerService.IsGuestAsync(currentCustomer))
+        if (!_menuSystemNames.Any())
         {
-            await _logger.InformationAsync($"Access denied to anonymous request on {pageUrl}");
-            return View();
+            await _xmlSiteMap.LoadFromAsync("~/Areas/Admin/sitemap.config");
+
+            void fillSystemNames(SiteMapNode node)
+            {
+                if (!string.IsNullOrEmpty(node.Url))
+                    return;
+
+                if (!string.IsNullOrEmpty(node.ControllerName) && !string.IsNullOrEmpty(node.ActionName))
+                {
+                    var key = $"{node.ControllerName}.{node.ActionName}";
+                    _menuSystemNames[key] = node.SystemName;
+                }
+
+                foreach (var childNode in node.ChildNodes) 
+                    fillSystemNames(childNode);
+            }
+
+            fillSystemNames(_xmlSiteMap.RootNode);
         }
 
-        await _logger.InformationAsync($"Access denied to user #{currentCustomer.Email} '{currentCustomer.Email}' on {pageUrl}");
+        var currentCustomer = await _workContext.GetCurrentCustomerAsync();
 
-        return View();
+        var menuSystemName = "Home";
+
+        if (_menuSystemNames.ContainsKey(pageSystemNameKey))
+            menuSystemName = _menuSystemNames[pageSystemNameKey];
+        else
+        {
+            var systemName =
+                _menuSystemNames.FirstOrDefault(item => item.Key.StartsWith(pageSystemNameKey.Split('.')[0]));
+                
+            if (!string.IsNullOrEmpty(systemName.Value))
+                    menuSystemName = systemName.Value;
+        }
+
+        if (currentCustomer == null || await _customerService.IsGuestAsync(currentCustomer))
+            await _logger.InformationAsync($"Access denied to anonymous request on {pageUrl}");
+        else
+            await _logger.InformationAsync($"Access denied to user #{currentCustomer.Id} '{currentCustomer.Email}' on {pageUrl}");
+
+        return View(model: menuSystemName);
     }
 
-    public virtual async Task<IActionResult> Permissions()
+    [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_ACL)]
+    public virtual async Task<IActionResult> PermissionCategory(PermissionItemSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAcl))
-            return AccessDeniedView();
+        var model = await _securityModelFactory.PreparePermissionItemListModelAsync(searchModel);
 
-        //prepare model
-        var model = await _securityModelFactory.PreparePermissionMappingModelAsync(new PermissionMappingModel());
+        return Json(model);
+    }
+
+    [CheckPermission(StandardPermission.Configuration.MANAGE_ACL)]
+    public virtual async Task<IActionResult> PermissionEditPopup(int id)
+    {
+        var permissionRecord = await _permissionService.GetPermissionRecordByIdAsync(id);
+        var model = await _securityModelFactory.PreparePermissionItemModelAsync(permissionRecord);
 
         return View(model);
     }
 
-    [HttpPost, ActionName("Permissions")]
-    public virtual async Task<IActionResult> PermissionsSave(PermissionMappingModel model, IFormCollection form)
+    [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_ACL)]
+    public virtual async Task<IActionResult> PermissionEditPopup(PermissionItemModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAcl))
-            return AccessDeniedView();
-
-        var permissionRecords = await _permissionService.GetAllPermissionRecordsAsync();
-        var customerRoles = await _customerService.GetAllCustomerRolesAsync(true);
-
-        foreach (var cr in customerRoles)
+        if (ModelState.IsValid)
         {
-            var formKey = "allow_" + cr.Id;
-            var permissionRecordSystemNamesToRestrict = !StringValues.IsNullOrEmpty(form[formKey])
-                ? form[formKey].ToString().Split(_separator, StringSplitOptions.RemoveEmptyEntries).ToList()
-                : new List<string>();
+            var mapping = await _permissionService.GetMappingByPermissionRecordIdAsync(model.Id);
 
-            foreach (var pr in permissionRecords)
-            {
-                var allow = permissionRecordSystemNamesToRestrict.Contains(pr.SystemName);
+            var rolesForDelete = mapping.Where(p => !model.SelectedCustomerRoleIds.Contains(p.CustomerRoleId))
+                .Select(p => p.CustomerRoleId).ToList();
 
-                if (allow == await _permissionService.AuthorizeAsync(pr.SystemName, cr.Id))
-                    continue;
+            var rolesToAdd = model.SelectedCustomerRoleIds.Where(p => mapping.All(m => m.CustomerRoleId != p)).ToList();
 
-                if (allow)
+            foreach (var customerRoleId in rolesForDelete)
+                await _permissionService.DeletePermissionRecordCustomerRoleMappingAsync(model.Id, customerRoleId);
+
+            foreach (var customerRoleId in rolesToAdd)
+                await _permissionService.InsertPermissionRecordCustomerRoleMappingAsync(new PermissionRecordCustomerRoleMapping
                 {
-                    await _permissionService.InsertPermissionRecordCustomerRoleMappingAsync(new PermissionRecordCustomerRoleMapping { PermissionRecordId = pr.Id, CustomerRoleId = cr.Id });
-                }
-                else
-                {
-                    await _permissionService.DeletePermissionRecordCustomerRoleMappingAsync(pr.Id, cr.Id);
-                }
+                    PermissionRecordId = model.Id,
+                    CustomerRoleId = customerRoleId
+                });
+            ViewBag.RefreshPage = true;
 
-                await _permissionService.UpdatePermissionRecordAsync(pr);
-            }
+            var permissionRecord = await _permissionService.GetPermissionRecordByIdAsync(model.Id);
+
+            if (rolesForDelete.Any() || rolesToAdd.Any())
+                //for clear cache
+                await _permissionService.UpdatePermissionRecordAsync(permissionRecord);
+
+
+            model = await _securityModelFactory.PreparePermissionItemModelAsync(permissionRecord);
+
+            return View(model);
         }
 
-        _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.ACL.Updated"));
+        //if we got this far, something failed, redisplay form
+        return View(model);
+    }
 
-        return RedirectToAction("Permissions");
+    [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_ACL)]
+    public virtual async Task<IActionResult> PermissionCategories(PermissionCategorySearchModel searchModel)
+    {
+        var model = await _securityModelFactory.PreparePermissionCategoryListModelAsync(searchModel);
+
+        return Json(model);
+    }
+
+    [CheckPermission(StandardPermission.Configuration.MANAGE_ACL)]
+    public virtual async Task<IActionResult> Permissions()
+    {
+        //prepare model
+        var model = await _securityModelFactory.PreparePermissionConfigurationModelAsync(new PermissionConfigurationModel());
+
+        return View(model);
     }
 
     #endregion

@@ -9,6 +9,7 @@ using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Templates;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Controllers;
@@ -50,11 +51,9 @@ public partial class TemplateController : BaseAdminController
 
     #region Methods
 
+    [CheckPermission(StandardPermission.System.MANAGE_MAINTENANCE)]
     public virtual async Task<IActionResult> List()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _templateModelFactory.PrepareTemplatesModelAsync(new TemplatesModel());
 
@@ -64,11 +63,9 @@ public partial class TemplateController : BaseAdminController
     #region Category templates        
 
     [HttpPost]
+    [CheckPermission(StandardPermission.System.MANAGE_MAINTENANCE)]
     public virtual async Task<IActionResult> CategoryTemplates(CategoryTemplateSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _templateModelFactory.PrepareCategoryTemplateListModelAsync(searchModel);
 
@@ -76,11 +73,9 @@ public partial class TemplateController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.System.MANAGE_MAINTENANCE)]
     public virtual async Task<IActionResult> CategoryTemplateUpdate(CategoryTemplateModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
-            return await AccessDeniedJsonAsync();
-
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
 
@@ -95,11 +90,9 @@ public partial class TemplateController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.System.MANAGE_MAINTENANCE)]
     public virtual async Task<IActionResult> CategoryTemplateAdd(CategoryTemplateModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
-            return await AccessDeniedJsonAsync();
-
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
 
@@ -111,11 +104,9 @@ public partial class TemplateController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.System.MANAGE_MAINTENANCE)]
     public virtual async Task<IActionResult> CategoryTemplateDelete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
-            return await AccessDeniedJsonAsync();
-
         if ((await _categoryTemplateService.GetAllCategoryTemplatesAsync()).Count == 1)
             return ErrorJson(await _localizationService.GetResourceAsync("Admin.System.Templates.NotDeleteOnlyOne"));
 
@@ -133,11 +124,9 @@ public partial class TemplateController : BaseAdminController
     #region Manufacturer templates        
 
     [HttpPost]
+    [CheckPermission(StandardPermission.System.MANAGE_MAINTENANCE)]
     public virtual async Task<IActionResult> ManufacturerTemplates(ManufacturerTemplateSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _templateModelFactory.PrepareManufacturerTemplateListModelAsync(searchModel);
 
@@ -145,11 +134,9 @@ public partial class TemplateController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.System.MANAGE_MAINTENANCE)]
     public virtual async Task<IActionResult> ManufacturerTemplateUpdate(ManufacturerTemplateModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
-            return await AccessDeniedJsonAsync();
-
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
 
@@ -164,11 +151,9 @@ public partial class TemplateController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.System.MANAGE_MAINTENANCE)]
     public virtual async Task<IActionResult> ManufacturerTemplateAdd(ManufacturerTemplateModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
-            return await AccessDeniedJsonAsync();
-
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
 
@@ -180,11 +165,9 @@ public partial class TemplateController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.System.MANAGE_MAINTENANCE)]
     public virtual async Task<IActionResult> ManufacturerTemplateDelete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
-            return await AccessDeniedJsonAsync();
-
         if ((await _manufacturerTemplateService.GetAllManufacturerTemplatesAsync()).Count == 1)
             return ErrorJson(await _localizationService.GetResourceAsync("Admin.System.Templates.NotDeleteOnlyOne"));
 
@@ -202,11 +185,9 @@ public partial class TemplateController : BaseAdminController
     #region Product templates
 
     [HttpPost]
+    [CheckPermission(StandardPermission.System.MANAGE_MAINTENANCE)]
     public virtual async Task<IActionResult> ProductTemplates(ProductTemplateSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _templateModelFactory.PrepareProductTemplateListModelAsync(searchModel);
 
@@ -214,11 +195,9 @@ public partial class TemplateController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.System.MANAGE_MAINTENANCE)]
     public virtual async Task<IActionResult> ProductTemplateUpdate(ProductTemplateModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
-            return await AccessDeniedJsonAsync();
-
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
 
@@ -233,11 +212,9 @@ public partial class TemplateController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.System.MANAGE_MAINTENANCE)]
     public virtual async Task<IActionResult> ProductTemplateAdd(ProductTemplateModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
-            return await AccessDeniedJsonAsync();
-
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
 
@@ -249,11 +226,9 @@ public partial class TemplateController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.System.MANAGE_MAINTENANCE)]
     public virtual async Task<IActionResult> ProductTemplateDelete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
-            return await AccessDeniedJsonAsync();
-
         if ((await _productTemplateService.GetAllProductTemplatesAsync()).Count == 1)
             return ErrorJson(await _localizationService.GetResourceAsync("Admin.System.Templates.NotDeleteOnlyOne"));
 
@@ -271,11 +246,9 @@ public partial class TemplateController : BaseAdminController
     #region Topic templates
 
     [HttpPost]
+    [CheckPermission(StandardPermission.System.MANAGE_MAINTENANCE)]
     public virtual async Task<IActionResult> TopicTemplates(TopicTemplateSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _templateModelFactory.PrepareTopicTemplateListModelAsync(searchModel);
 
@@ -283,11 +256,9 @@ public partial class TemplateController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.System.MANAGE_MAINTENANCE)]
     public virtual async Task<IActionResult> TopicTemplateUpdate(TopicTemplateModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
-            return await AccessDeniedJsonAsync();
-
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
 
@@ -302,11 +273,9 @@ public partial class TemplateController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.System.MANAGE_MAINTENANCE)]
     public virtual async Task<IActionResult> TopicTemplateAdd(TopicTemplateModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
-            return await AccessDeniedJsonAsync();
-
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
 
@@ -318,11 +287,9 @@ public partial class TemplateController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.System.MANAGE_MAINTENANCE)]
     public virtual async Task<IActionResult> TopicTemplateDelete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
-            return await AccessDeniedJsonAsync();
-
         if ((await _topicTemplateService.GetAllTopicTemplatesAsync()).Count == 1)
             return ErrorJson(await _localizationService.GetResourceAsync("Admin.System.Templates.NotDeleteOnlyOne"));
 
