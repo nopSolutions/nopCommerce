@@ -19,6 +19,8 @@ namespace Nop.Core.Domain.Customers
 
         public static string SubscriptionDate => "SubscriptionDate";
 
+        public static string SubscriptionExpiryDate => "SubscriptionExpiryDate";
+
         public static string SubscriptionAllottedCount => "SubscriptionAllottedCount";
 
         public static string SubscriptionUsedCreditCount => "SubscriptionUsedCreditCount";

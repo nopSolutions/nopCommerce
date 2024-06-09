@@ -15,6 +15,8 @@ namespace Nop.Services.Customers
     public partial interface ICustomerService
     {
         Task<string> GetCustomerAttributeAsync(Customer customer, string attribute);
+
+        Task<Customer> GetCustomerByPhoneAsync(string phone);
     }
 
     public partial class CustomerService
@@ -38,6 +40,20 @@ namespace Nop.Services.Customers
                 return customerAttribute;
             }
             return string.Empty;
+        }
+
+        public virtual async Task<Customer> GetCustomerByPhoneAsync(string phone)
+        {
+            if (string.IsNullOrWhiteSpace(phone))
+                return null;
+
+            var query = from c in _customerRepository.Table
+                        orderby c.Id
+                        where c.Phone == phone
+                        select c;
+            var customer = await query.FirstOrDefaultAsync();
+
+            return customer;
         }
 
         #endregion

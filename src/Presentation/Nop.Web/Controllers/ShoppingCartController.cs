@@ -540,7 +540,7 @@ public partial class ShoppingCartController : BasePublicController
             return Json(new
             {
                 success = false,
-                message = "No product found with the specified ID"
+                message = "No profile found with the specified ID"
             });
 
         var redirectUrl = await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = await _urlRecordService.GetSeNameAsync(product) });
@@ -640,6 +640,19 @@ public partial class ShoppingCartController : BasePublicController
 
         // target customer to whom we are shortlising or sending interest 
         var toCustomer = await _customerService.GetCustomerByIdAsync(product.VendorId);
+
+        //pricing product id list
+        var pricingProductIds = new int[] { 1, 2, 3 };
+
+        if (toCustomer == null && !pricingProductIds.Contains(productId))
+        {
+            //no target customer found
+            return Json(new
+            {
+                success = false,
+                message = "Unable to send interest to this profile. Please try after some time."
+            });
+        }
 
         //added to the cart/wishlist
         switch (cartType)

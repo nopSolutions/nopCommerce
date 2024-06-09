@@ -15,7 +15,19 @@
     </div>
     <div class="page-body panel-body from-panel">
         <div class="description alert alert-success">
-            @Model.Result
+            <div class="alert alert-success" role="alert">
+                <strong>Well done!</strong> <br />
+                @Model.Result
+            </div>
+        </div>
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <h3 class="panel-title"><strong>Did you verify your Email id?</strong></h3>
+            </div>
+            <div class="panel-body">
+                Verify your email id. <br />
+                Unless you verify your email id, your profile won't be active and not visible to others.
+            </div>
         </div>
         <div class="buttons">
             <a href="@Model.ReturnUrl" class="btn btn-primary register-continue-button">@T("Common.Continue")</a>

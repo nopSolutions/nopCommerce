@@ -13,9 +13,34 @@
         <h1>@T("Account.AccountActivation")</h1>
     </div>
     <div class="page-body">
-        <strong>
-            @Model.Result
-        </strong>
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h3 class="panel-title">Well done!</h3>
+            </div>
+            <div class="panel-body">
+                @Model.Result
+            </div>
+        </div>
+
+        @* customization start *@
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">What Next ?</h3>
+            </div>
+            <div class="panel-body">
+                <ul>
+                    <li class="list-group-item">1. Search technology/skill you are looking for using search box.</li>
+                    <li class="list-group-item">2. Identify/Filter the people who matches your skillset.</li>
+                    <li class="list-group-item">
+                        3. Start sending interest to the profiles. When you 'send interest' to a profile, an email will be sent conveying your interest to them<br />
+                        If they also interested in your profile , they will contact you.
+                    </li>
+                    <li class="list-group-item">4. Start shortlisting the profiles matching your skillset.<br />So that you can visit them easily from 'My Account - Shortlisted' page</li>
+                </ul>
+            </div>
+        </div>
+        @* customization end *@
+
         <div class="buttons">
             <a href="@Model.ReturnUrl" class="btn btn-primary">@T("Common.Continue")</a>
         </div>

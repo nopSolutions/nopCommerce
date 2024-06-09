@@ -1,4 +1,4 @@
-namespace Nop.Services.Authentication.External;
+﻿namespace Nop.Services.Authentication.External;
 
 /// <summary>
 /// External authentication parameters
@@ -40,4 +40,6 @@ public partial class ExternalAuthenticationParameters
     /// Gets or sets the additional user info as a list of a custom claims
     /// </summary>
     public IList<ExternalAuthenticationClaim> Claims { get; set; }
+
+    public string Phone { get; set; }
 }

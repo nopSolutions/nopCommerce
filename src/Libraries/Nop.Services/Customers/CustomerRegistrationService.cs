@@ -259,10 +259,17 @@ public partial class CustomerRegistrationService : ICustomerRegistrationService
             return result;
         }
 
-        //validate unique user
+        //validate unique user by email
         if (await _customerService.GetCustomerByEmailAsync(request.Email) != null)
         {
             result.AddError(await _localizationService.GetResourceAsync("Account.Register.Errors.EmailAlreadyExists"));
+            return result;
+        }
+
+        //customization : validate unique user by phone number
+        if (await _customerService.GetCustomerByPhoneAsync(request.Phone) != null)
+        {
+            result.AddError(await _localizationService.GetResourceAsync("Account.Register.Errors.PhoneAlreadyExists"));
             return result;
         }
 

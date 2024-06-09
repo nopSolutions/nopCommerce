@@ -168,6 +168,7 @@ public partial class ExternalAuthenticationService : IExternalAuthenticationServ
             CommonHelper.GenerateRandomDigitCode(20),
             PasswordFormat.Hashed,
             store.Id,
+            parameters.Phone,
             registrationIsApproved);
 
         //whether registration request has been completed successfully

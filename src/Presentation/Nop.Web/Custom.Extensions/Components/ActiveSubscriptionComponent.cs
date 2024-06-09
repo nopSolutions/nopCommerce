@@ -62,10 +62,12 @@ namespace Nop.Web.Components
             var model = new SubscriptionModel
             {
                 SubscriptionId = subscriptionProductId,
-                SubscriptionDate = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SubscriptionDate, storeId),
+                SubscriptionDate = await _genericAttributeService.GetAttributeAsync<DateTime>(customer, NopCustomerDefaults.SubscriptionDate, storeId),
+                SubscriptionExpiryDate = await _genericAttributeService.GetAttributeAsync<DateTime>(customer, NopCustomerDefaults.SubscriptionExpiryDate, storeId),
                 AllottedCreditCount = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.SubscriptionAllottedCount, storeId),
                 UsedCreditCount = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.SubscriptionUsedCreditCount, storeId),
-                IsPaidCustomer = await _customerService.IsInCustomerRoleAsync(customer, "PaidCustomer")
+                IsPaidCustomer = await _customerService.IsInCustomerRoleAsync(customer, "PaidCustomer"),
+                CustomerProfileTypeId = customer.CustomerProfileTypeId
             };
 
             //get subscription product name

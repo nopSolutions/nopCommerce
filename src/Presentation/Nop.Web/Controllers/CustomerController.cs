@@ -875,6 +875,7 @@ public partial class CustomerController : BasePublicController
         {
             var customerUserName = model.Username;
             var customerEmail = model.Email;
+            var customerPhone = model.Phone;
 
             //customization
             //customer.CustomerProfileTypeId = GetCustomerProfileTypeId(customerAttributesXml);
@@ -886,6 +887,7 @@ public partial class CustomerController : BasePublicController
                 model.Password,
                 _customerSettings.DefaultPasswordFormat,
                 store.Id,
+                customerPhone,
                 isApproved);
             var registrationResult = await _customerRegistrationService.RegisterCustomerAsync(registrationRequest);
             if (registrationResult.Success)

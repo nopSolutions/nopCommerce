@@ -13,7 +13,7 @@
         <div class="order-list">
             <div class="section order-item clearfix">
                 <div class="title">
-                    <strong>Active Subscriptions</strong>
+                    <strong>Active Subscription</strong>
                 </div>
                 <div class="order-details-page">
                     <div class="page-body panel-body from-panel" style="border: 2px solid darkgreen !important; background-color: #AFE1AF; margin-top: 10px;">
@@ -34,6 +34,9 @@
                                 <li class="order-total">
                                     Avaialable Credit Count: <strong> @(@Model.AllottedCreditCount - @Model.UsedCreditCount)</strong>
                                 </li>
+                                <li class="order-total">
+                                    Subscription Valid Upto: <strong> @Model.SubscriptionExpiryDate</strong>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -45,6 +48,54 @@
 }
 else
 {
+    if (@Model.CustomerProfileTypeId == 1)
+    {
+        //give support profile
+        <div class="page-body panel-body from-panel" style="margin-top:10px;">
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <h2 class="panel-title">Benefits of Upgrading ?</h2>
+                </div>
+                <div class="panel-body">
+                    <div class="order-details-page">
+                        <div class="page-body panel-body from-panel" style="border: 2px solid orange !important; background-color: #FFE5B4; ">
+                            <div class="section clearfix">
+                                <h5> <span>You do not have any active subscriptions. Please  <a href="/pricing"> upgrade </a></span></h5>
+                            </div>
+                        </div>
+                    </div>
+                   
+                    @* <div class="alert alert-danger" role="alert">
+            <strong>Note: </strong> Registration is necessary as we need to show the relevant profiles based on whether you are a job-support seeker or provider.
+            <br />
+            <p>So Please do register and explore the world of opportunities.</p>
+            <p>
+            <a href="https://onjobsupport.in/Register" class="btn btn-primary">Sign Up For Free</a>
+            </p>
+            </div>*@
+                </div>
+                <div class="panel-footer">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h5 class="panel-title">Benefits of Upgrading? </h5>
+                        </div>
+                        <div class="panel-body">
+                            <ul>
+                                <li class="list-group-item">1. We provide a user-friendly platform and offer a streamlined process that ensures hassle-free access to skilled software developers.</li>
+                                <li class="list-group-item">2. We are not middle man who take 30% money and share the remain with the real guy who support you.</li>
+                                <li class="list-group-item">3. You directly interact with the client and fix the price, we are no-where  in between.</li>
+                                <li class="list-group-item">4. We just show you the candidate and you can deal with them regarding technology and finances.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        //take support profile
+    }
     <div class="page-body panel-body from-panel" style="margin-top:10px;">
         <div class="order-list">
             <div class="section order-item clearfix">
