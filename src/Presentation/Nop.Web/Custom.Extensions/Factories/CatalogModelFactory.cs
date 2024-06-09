@@ -22,7 +22,9 @@ namespace Nop.Web.Factories
                 return;
             }
 
-            if (products.Count == 0 && isFiltering)
+            if (!products.Any() && isFiltering)
+                model.NoResultMessage = await _localizationService.GetResourceAsync("Catalog.Products.NoResult");
+            else if (!products.Any())
                 model.NoResultMessage = await _localizationService.GetResourceAsync("Catalog.Products.NoResult");
             else
             {
