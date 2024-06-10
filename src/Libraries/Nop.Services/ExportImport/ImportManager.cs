@@ -2580,9 +2580,8 @@ public partial class ImportManager : IImportManager
 
             lastLoadedProduct = product;
 
-            //update "HasTierPrices" and "HasDiscountsApplied" properties
+            //update "HasTierPrices" property
             //_productService.UpdateHasTierPricesProperty(product);
-            //_productService.UpdateHasDiscountsApplied(product);
         }
 
         if (_mediaSettings.ImportProductImagesUsingHash && await _pictureService.IsStoreInDbAsync())
