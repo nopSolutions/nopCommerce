@@ -37,8 +37,7 @@
       "Nop.Plugin.Misc.Brevo/1.0.0": {
         "dependencies": {
           "Nop.Web": "4.70.0",
-          "RestSharp": "106.12.0",
-          "sib_api_v3_sdk": "3.3.0",
+          "brevo_csharp": "1.0.0",
           "Microsoft.AspNetCore.Antiforgery": "8.0.0.0",
           "Microsoft.AspNetCore.Authentication.Abstractions": "8.0.0.0",
           "Microsoft.AspNetCore.Authentication.BearerToken": "8.0.0.0",
@@ -531,6 +530,24 @@
         },
         "compile": {
           "lib/net6.0/BouncyCastle.Cryptography.dll": {}
+        }
+      },
+      "brevo_csharp/1.0.0": {
+        "dependencies": {
+          "FubarCoder.RestSharp.Portable.Core": "4.0.8",
+          "FubarCoder.RestSharp.Portable.HttpClient": "4.0.8",
+          "JsonSubTypes": "2.0.1",
+          "Microsoft.CSharp": "4.7.0",
+          "Newtonsoft.Json": "13.0.3"
+        },
+        "runtime": {
+          "lib/netstandard2.0/brevo_csharp.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/brevo_csharp.dll": {}
         }
       },
       "ClosedXML/0.102.2": {
@@ -1657,19 +1674,18 @@
           "lib/netstandard1.6/Irony.dll": {}
         }
       },
-      "JsonSubTypes/1.2.0": {
+      "JsonSubTypes/2.0.1": {
         "dependencies": {
-          "NETStandard.Library": "1.6.1",
           "Newtonsoft.Json": "13.0.3"
         },
         "runtime": {
-          "lib/netstandard1.6/JsonSubTypes.dll": {
-            "assemblyVersion": "1.2.0.0",
-            "fileVersion": "1.2.0.0"
+          "lib/netstandard2.0/JsonSubTypes.dll": {
+            "assemblyVersion": "2.0.1.0",
+            "fileVersion": "2.0.1.0"
           }
         },
         "compile": {
-          "lib/netstandard1.6/JsonSubTypes.dll": {}
+          "lib/netstandard2.0/JsonSubTypes.dll": {}
         }
       },
       "LigerShark.WebOptimizer.Core/3.0.405": {
@@ -2532,17 +2548,6 @@
           "lib/net8.0/QuestPDF.dll": {}
         }
       },
-      "RestSharp/106.12.0": {
-        "runtime": {
-          "lib/netstandard2.0/RestSharp.dll": {
-            "assemblyVersion": "106.12.0.0",
-            "fileVersion": "106.12.0.0"
-          }
-        },
-        "compile": {
-          "lib/netstandard2.0/RestSharp.dll": {}
-        }
-      },
       "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {},
       "runtime.fedora.23-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {},
       "runtime.fedora.24-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {},
@@ -2600,23 +2605,6 @@
         },
         "compile": {
           "lib/net8.0/ShimSkiaSharp.dll": {}
-        }
-      },
-      "sib_api_v3_sdk/3.3.0": {
-        "dependencies": {
-          "FubarCoder.RestSharp.Portable.Core": "4.0.8",
-          "FubarCoder.RestSharp.Portable.HttpClient": "4.0.8",
-          "JsonSubTypes": "1.2.0",
-          "Newtonsoft.Json": "13.0.3"
-        },
-        "runtime": {
-          "lib/netstandard2.0/sib_api_v3_sdk.dll": {
-            "assemblyVersion": "3.3.0.0",
-            "fileVersion": "3.3.0.0"
-          }
-        },
-        "compile": {
-          "lib/netstandard2.0/sib_api_v3_sdk.dll": {}
         }
       },
       "SixLabors.Fonts/1.0.0": {
@@ -5824,6 +5812,13 @@
       "path": "bouncycastle.cryptography/2.3.0",
       "hashPath": "bouncycastle.cryptography.2.3.0.nupkg.sha512"
     },
+    "brevo_csharp/1.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-5yquPWOIxAwBpJZN1+Q4yE6OYOSmiDCvU3pEDrapQO+7KhLMeSkOVq5uXEZ/7qImmgS0dORr+v7gS0BQz7C2cA==",
+      "path": "brevo_csharp/1.0.0",
+      "hashPath": "brevo_csharp.1.0.0.nupkg.sha512"
+    },
     "ClosedXML/0.102.2": {
       "type": "package",
       "serviceable": true,
@@ -6433,12 +6428,12 @@
       "path": "irony.netcore/1.0.11",
       "hashPath": "irony.netcore.1.0.11.nupkg.sha512"
     },
-    "JsonSubTypes/1.2.0": {
+    "JsonSubTypes/2.0.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-XY9yuNIl9LmHhC/Vz+u35lB7Dyj/H/biKsNybJI9XLUyabBIHPF1PQ3PY/ffADn/LdjiQOhx/ry+ZsuEO4mBnw==",
-      "path": "jsonsubtypes/1.2.0",
-      "hashPath": "jsonsubtypes.1.2.0.nupkg.sha512"
+      "sha512": "sha512-1Po+Ypf0SjCeEKx5+C89Nb5OgTcqNvfS3uTI46MUM+KEp6Rq/M0h+vVsTUt/6DFRwZMTpsAJM4yJrZmEObVANA==",
+      "path": "jsonsubtypes/2.0.1",
+      "hashPath": "jsonsubtypes.2.0.1.nupkg.sha512"
     },
     "LigerShark.WebOptimizer.Core/3.0.405": {
       "type": "package",
@@ -6867,13 +6862,6 @@
       "path": "questpdf/2022.12.15",
       "hashPath": "questpdf.2022.12.15.nupkg.sha512"
     },
-    "RestSharp/106.12.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-irOsQHe5nTJB0BKxGQnTX1dsgCPl5dLTxvL7gbl98JiFPiHMN4wpFyUG/66ZpaFCsIrPKh6XwozWXlwYe9JwYQ==",
-      "path": "restsharp/106.12.0",
-      "hashPath": "restsharp.106.12.0.nupkg.sha512"
-    },
     "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {
       "type": "package",
       "serviceable": true,
@@ -6992,13 +6980,6 @@
       "sha512": "sha512-zcUISy3XoIPrYWOeHqt/CrM2oX+OHon91aEtIbfiWb/7eP5V20kjkwhN1h4V0eloy62jVE8H1TE5PCVQ0k0M2Q==",
       "path": "shimskiasharp/1.0.0.18",
       "hashPath": "shimskiasharp.1.0.0.18.nupkg.sha512"
-    },
-    "sib_api_v3_sdk/3.3.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-Nan2QAmjbuWdh4CsgIRc+Szf3sqaPY/4JPa6P6IIqKBmMqktsv3iMKK3cjp8kfNEH2yGJpK89Ef0oTDRomA/Pg==",
-      "path": "sib_api_v3_sdk/3.3.0",
-      "hashPath": "sib_api_v3_sdk.3.3.0.nupkg.sha512"
     },
     "SixLabors.Fonts/1.0.0": {
       "type": "package",
