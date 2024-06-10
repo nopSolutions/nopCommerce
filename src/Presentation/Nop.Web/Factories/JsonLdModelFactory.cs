@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Text.Encodings.Web;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Events;
@@ -161,13 +162,13 @@ public partial class JsonLdModelFactory : IJsonLdModelFactory
 
             product.Review = model.ProductReviews.Items?.Select(review => new JsonLdReviewModel
             {
-                Name = review.Title,
-                ReviewBody = review.ReviewText,
+                Name = JavaScriptEncoder.Default.Encode(review.Title),
+                ReviewBody = JavaScriptEncoder.Default.Encode(review.ReviewText),
                 ReviewRating = new JsonLdRatingModel
                 {
                     RatingValue = review.Rating
                 },
-                Author = new JsonLdPersonModel { Name = review.CustomerName },
+                Author = new JsonLdPersonModel { Name = JavaScriptEncoder.Default.Encode(review.CustomerName) },
                 DatePublished = review.WrittenOnStr
             }).ToList();
         }
