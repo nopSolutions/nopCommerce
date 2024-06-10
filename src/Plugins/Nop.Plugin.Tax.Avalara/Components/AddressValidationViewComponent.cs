@@ -133,7 +133,7 @@ public class AddressValidationViewComponent : NopViewComponent
         validatedAddress.Address1 = validatedAddressInfo.line1;
         validatedAddress.Address2 = validatedAddressInfo.line2;
         validatedAddress.ZipPostalCode = validatedAddressInfo.postalCode;
-        validatedAddress.StateProvinceId = (await _stateProvinceService.GetStateProvinceByAbbreviationAsync(validatedAddressInfo.region))?.Id;
+        validatedAddress.StateProvinceId = (await _stateProvinceService.GetStateProvinceByAbbreviationAsync(validatedAddressInfo.region, validatedAddress.CountryId))?.Id;
 
         //try to find an existing address with the same values
         var existingAddress = _addressService.FindAddress((await _customerService.GetAddressesByCustomerIdAsync(customer.Id)).ToList(),

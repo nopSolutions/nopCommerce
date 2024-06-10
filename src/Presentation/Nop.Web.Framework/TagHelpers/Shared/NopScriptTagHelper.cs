@@ -110,11 +110,7 @@ public partial class NopScriptTagHelper : UrlResolutionTagHelper
             return;
         }
 
-        //remove the application path from the generated URL if exists
-        var pathBase = ViewContext.HttpContext?.Request?.PathBase ?? PathString.Empty;
-        PathString.FromUriComponent(Src).StartsWithSegments(pathBase, out var sourceFile);
-
-        var asset = _bundleHelper.GetOrCreateJavaScriptAsset(sourceFile, [sourceFile]);
+        var asset = _bundleHelper.GetOrCreateJavaScriptAsset(Src, [Src]);
         output.Attributes.SetAttribute(SRC_ATTRIBUTE_NAME, _bundleHelper.CacheBusting(asset));
     }
 

@@ -1688,6 +1688,9 @@ public partial class ShoppingCartService : IShoppingCartService
 
         async Task addRequiredProductsToCartAsync(int qty = 0)
         {
+            if (!product.RequireOtherProducts)
+                return;
+
             //get these required products
             var requiredProducts = await _productService.GetProductsByIdsAsync(_productService.ParseRequiredProductIds(product));
             if (!requiredProducts.Any())

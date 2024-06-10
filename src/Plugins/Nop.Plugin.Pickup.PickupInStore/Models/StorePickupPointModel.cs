@@ -35,13 +35,11 @@ public record StorePickupPointModel : BaseNopEntityModel
     public int StoreId { get; set; }
     public string StoreName { get; set; }
 
-    [DataType(DataType.Text)]
-    [DisplayFormat(DataFormatString = "{0:F8}", ApplyFormatInEditMode = true)]
+    [UIHint("DecimalNullable")]
     [NopResourceDisplayName("Plugins.Pickup.PickupInStore.Fields.Latitude")]
     public decimal? Latitude { get; set; }
 
-    [DataType(DataType.Text)]
-    [DisplayFormat(DataFormatString = "{0:F8}", ApplyFormatInEditMode = true)]
+    [UIHint("DecimalNullable")]
     [NopResourceDisplayName("Plugins.Pickup.PickupInStore.Fields.Longitude")]
     public decimal? Longitude { get; set; }
 
