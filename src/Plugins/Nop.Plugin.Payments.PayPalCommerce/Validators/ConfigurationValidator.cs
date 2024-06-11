@@ -1,12 +1,12 @@
 ﻿using FluentValidation;
-using Nop.Plugin.Payments.PayPalCommerce.Models;
+using Nop.Plugin.Payments.PayPalCommerce.Models.Admin;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Validators;
 
 namespace Nop.Plugin.Payments.PayPalCommerce.Validators;
 
 /// <summary>
-/// Represents configuration model validator
+/// Represents the configuration model validator
 /// </summary>
 public class ConfigurationValidator : BaseNopValidator<ConfigurationModel>
 {
@@ -24,10 +24,10 @@ public class ConfigurationValidator : BaseNopValidator<ConfigurationModel>
             .WithMessageAwait(localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Fields.SecretKey.Required"))
             .When(model => !model.UseSandbox && model.SetCredentialsManually);
 
-        RuleFor(model => model.Email)
+        RuleFor(model => model.MerchantId)
             .NotEmpty()
-            .IsEmailAddress()
-            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Common.WrongEmail"));
+            .WithMessageAwait(localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Fields.MerchantId.Required"))
+            .When(model => !model.UseSandbox && model.SetCredentialsManually);
     }
 
     #endregion

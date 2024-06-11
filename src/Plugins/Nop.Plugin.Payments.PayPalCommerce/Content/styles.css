@@ -1,0 +1,245 @@
+
+.paypal-button-container {
+  border-radius: 5px;
+  padding: 10px 0;
+  max-width: 760px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.paypal-apm-container {
+  border-radius: 5px;
+  padding: 10px 0;
+  max-width: 760px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.paypal-googlepay-container {
+  border-radius: 5px;
+  padding: 10px 0;
+  max-width: 760px;
+  width: 100%;
+  height: 49px;
+  margin: 0 auto;
+}
+
+.paypal-applepay-container {
+  border-radius: 5px;
+  padding: 10px 0;
+  max-width: 760px;
+  width: 100%;
+  height: 49px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.paypal-messages-container {
+  border-radius: 5px;
+  font-size: 13px;
+  font-family: monospace;
+  padding: 10px 0;
+}
+
+.paypal-card-container {
+  border-radius: 5px;
+  padding: 10px 0;
+  max-width: 760px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.paypal-cart {
+}
+
+.paypal-product {
+}
+
+.paypal-checkout {
+}
+
+.card_field {
+  width: 100%;
+  padding: 18px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-top: 6px;
+  margin-bottom: 16px;
+  resize: vertical;
+  height: 55px;
+  background: white;
+  font-size: 17px;
+  color: #3a3a3a;
+  font-family: helvetica, tahoma, calibri, sans-serif;
+}
+
+  .card_field input {
+    margin: 0 10px;
+  }
+
+.card_field_50 {
+  width: 50%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-top: 6px;
+  margin-bottom: 16px;
+  resize: vertical;
+  height: 40px;
+  background: white;
+  font-size: 17px;
+  color: #3a3a3a;
+  font-family: helvetica, tahoma, calibri, sans-serif;
+}
+
+.card_field_75 {
+  width: 75%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-top: 6px;
+  margin-bottom: 16px;
+  resize: vertical;
+  height: 40px;
+  background: white;
+  font-size: 17px;
+  color: #3a3a3a;
+  font-family: helvetica, tahoma, calibri, sans-serif;
+}
+
+.card-vault {
+}
+
+.paypal-button:hover {
+  background-color: powderblue;
+}
+
+.paypal-button {
+  width: 100%;
+  height: 55px;
+  background: lightblue;
+  border: 1px dotted black;
+  font-size: 17px;
+  color: #3a3a3a;
+  padding: 12px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 0 auto;
+}
+
+.paypal-button-disabled {
+  opacity: 0.5 !important;
+}
+
+/*input[type=text], select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    resize: vertical;
+    height:40px;
+    background:white;
+    font-size:17px;
+    color:#3a3a3a;
+    font-family:helvetica, tahoma, calibri, sans-serif;
+}
+
+input[type=submit] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}*/
+
+#loading {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  position: fixed;
+  display: block;
+  opacity: 0.7;
+  background-color: #fff;
+  z-index: 99;
+  text-align: center;
+}
+
+#loading-image {
+  position: absolute;
+  z-index: 15;
+  top: 50%;
+  left: 50%;
+  margin: -100px 0 0 -150px;
+}
+
+.spinner {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin-left: -50px;
+  margin-top: -50px;
+  text-align: center;
+  z-index: 1234;
+  overflow: auto;
+  width: 100px;
+  height: 102px;
+}
+
+.button_container {
+  display: flex;
+  justify-content: center;
+}
+
+.btn_small {
+  width: 130px;
+  height: 39px;
+  background: lightblue;
+  border: 1px dotted black;
+  font-size: 14px;
+  color: #3a3a3a;
+}
+
+  .btn_small:hover {
+    background-color: powderblue;
+  }
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  max-width: 760px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+  .divider::before,
+  .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background-color: #ddd;
+    margin: 0 0.675rem;
+  }
+
+  .divider span {
+    font-size: 0.825rem;
+    color: #666;
+  }
+
+.totals {
+  max-width: 420px !important;
+}
+
+.pay-later-total-info {
+  margin: 0;
+  border-bottom: none;
+  padding: 5px 20px 10px;
+}
