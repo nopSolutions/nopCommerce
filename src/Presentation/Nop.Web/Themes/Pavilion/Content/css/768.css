@@ -926,9 +926,7 @@ opacity: 1 !important;
 body .header-menu>ul>li>a {
 	padding: 5px 5px;
 }
-.header-menu.categories-in-side-panel {
-    text-align: right;
-}
+
 input.button-1.search-box-button {
     z-index: 1;
 }
