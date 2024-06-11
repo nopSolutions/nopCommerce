@@ -169,7 +169,9 @@ span.price.you-save {
         font-size: 1.05rem;
     }
 }
-
+.home-page-body .product-item.product-item:not(.buttons-upper) {
+    height: auto;
+}
 @media (min-width: 1001px) {
 	.product-item.product-item:not(.buttons-upper) {
 		height: 38.5rem;
