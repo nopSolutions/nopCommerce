@@ -2707,9 +2707,6 @@ public partial class ProductController : BaseAdminController
 
             await _productService.InsertTierPriceAsync(tierPrice);
 
-            //update "HasTierPrices" property
-            await _productService.UpdateHasTierPricesPropertyAsync(product);
-
             ViewBag.RefreshPage = true;
 
             return View(model);
@@ -2806,9 +2803,6 @@ public partial class ProductController : BaseAdminController
             return Content("This is not your product");
 
         await _productService.DeleteTierPriceAsync(tierPrice);
-
-        //update "HasTierPrices" property
-        await _productService.UpdateHasTierPricesPropertyAsync(product);
 
         return new NullJsonResult();
     }

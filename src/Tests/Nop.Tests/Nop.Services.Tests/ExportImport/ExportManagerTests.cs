@@ -443,7 +443,7 @@ public class ExportManagerTests : ServiceTest
             "ProductTags", "ProductAttributeMappings", "ProductAttributeCombinations", "TierPrices",
             "AppliedDiscounts", "ProductWarehouseInventory", "ApprovedRatingSum", "NotApprovedRatingSum",
             "ApprovedTotalReviews", "NotApprovedTotalReviews", "SubjectToAcl", "LimitedToStores", "Deleted",
-            "DownloadExpirationDays", "HasTierPrices", "AvailableStartDateTimeUtc",
+            "DownloadExpirationDays", "AvailableStartDateTimeUtc",
             "AvailableEndDateTimeUtc", "DisplayOrder", "CreatedOnUtc", "UpdatedOnUtc", "ProductProductTagMappings",
             "DiscountProductMappings", "EntityCacheKey" };
         

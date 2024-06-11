@@ -2579,9 +2579,6 @@ public partial class ImportManager : IImportManager
             });
 
             lastLoadedProduct = product;
-
-            //update "HasTierPrices" property
-            //_productService.UpdateHasTierPricesProperty(product);
         }
 
         if (_mediaSettings.ImportProductImagesUsingHash && await _pictureService.IsStoreInDbAsync())

@@ -450,13 +450,15 @@ public partial class ProductModelFactory : IProductModelFactory
                 else
                     (minPossiblePriceWithoutDiscount, minPossiblePriceWithDiscount, _, _) = await _priceCalculationService.GetFinalPriceAsync(product, customer, store);
 
-                if (product.HasTierPrices)
-                {
-                    var (tierPriceMinPossiblePriceWithoutDiscount, tierPriceMinPossiblePriceWithDiscount, _, _) = await _priceCalculationService.GetFinalPriceAsync(product, customer, store, quantity: int.MaxValue);
+                var (minPriceWithoutDiscount, minPriceWithDiscount, _, _)
+                    = await _priceCalculationService.GetFinalPriceAsync(product, customer, store, quantity: int.MaxValue);
 
-                    //calculate price for the maximum quantity if we have tier prices, and choose minimal
-                    minPossiblePriceWithoutDiscount = Math.Min(minPossiblePriceWithoutDiscount, tierPriceMinPossiblePriceWithoutDiscount);
-                    minPossiblePriceWithDiscount = Math.Min(minPossiblePriceWithDiscount, tierPriceMinPossiblePriceWithDiscount);
+                var priceModifiersExist = minPriceWithoutDiscount < minPossiblePriceWithDiscount;
+
+                if (priceModifiersExist)
+                {
+                    minPossiblePriceWithoutDiscount = minPriceWithoutDiscount;
+                    minPossiblePriceWithDiscount = minPriceWithDiscount;
                 }
 
                 var (oldPriceBase, _) = await _taxService.GetProductPriceAsync(product, product.OldPrice);
@@ -486,16 +488,9 @@ public partial class ProductModelFactory : IProductModelFactory
                     priceModel.OldPriceValue = null;
                 }
 
-                //do we have tier prices configured?
-                var tierPrices = product.HasTierPrices
-                    ? await _productService.GetTierPricesAsync(product, customer, store)
-                    : new List<TierPrice>();
-
-                //When there is just one tier price (with  qty 1), there are no actual savings in the list.
-                var hasTierPrices = tierPrices.Any() && !(tierPrices.Count == 1 && tierPrices[0].Quantity <= 1);
-
                 var price = await _priceFormatter.FormatPriceAsync(finalPriceWithDiscount);
-                priceModel.Price = hasTierPrices || hasMultiplePrices
+
+                priceModel.Price = hasMultiplePrices || priceModifiersExist
                     ? string.Format(await _localizationService.GetResourceAsync("Products.PriceRangeFrom"), price)
                     : price;
                 priceModel.PriceValue = finalPriceWithDiscount;
@@ -563,14 +558,7 @@ public partial class ProductModelFactory : IProductModelFactory
             var customer = await _workContext.GetCurrentCustomerAsync();
             foreach (var associatedProduct in associatedProducts)
             {
-                var (_, tmpMinPossiblePrice, _, _) = await _priceCalculationService.GetFinalPriceAsync(associatedProduct, customer, store);
-
-                if (associatedProduct.HasTierPrices)
-                {
-                    //calculate price for the maximum quantity if we have tier prices, and choose minimal
-                    tmpMinPossiblePrice = Math.Min(tmpMinPossiblePrice,
-                        (await _priceCalculationService.GetFinalPriceAsync(associatedProduct, customer, store, quantity: int.MaxValue)).finalPrice);
-                }
+                var (_, tmpMinPossiblePrice, _, _) = await _priceCalculationService.GetFinalPriceAsync(associatedProduct, customer, store, quantity: int.MaxValue);
 
                 if (minPossiblePrice.HasValue && tmpMinPossiblePrice >= minPossiblePrice.Value)
                     continue;
@@ -1656,11 +1644,8 @@ public partial class ProductModelFactory : IProductModelFactory
 
         model.ProductReviews = await PrepareProductReviewsModelAsync(product);
 
-        //tier prices
-        if (product.HasTierPrices && await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices))
-        {
+        if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices))
             model.TierPrices = await PrepareProductTierPriceModelsAsync(product);
-        }
 
         //manufacturers
         model.ProductManufacturers = await PrepareProductManufacturerModelsAsync(product);
