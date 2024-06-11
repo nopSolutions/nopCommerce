@@ -269,13 +269,6 @@ public partial interface IProductService
     Task UpdateHasTierPricesPropertyAsync(Product product);
 
     /// <summary>
-    /// Update HasDiscountsApplied property (used for performance optimization)
-    /// </summary>
-    /// <param name="product">Product</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    Task UpdateHasDiscountsAppliedAsync(Product product);
-
-    /// <summary>
     /// Gets number of products by vendor identifier
     /// </summary>
     /// <param name="vendorId">Vendor identifier</param>

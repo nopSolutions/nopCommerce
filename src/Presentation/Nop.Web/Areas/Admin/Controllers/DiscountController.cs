@@ -228,10 +228,6 @@ public partial class DiscountController : BaseAdminController
 
         await _discountService.DeleteDiscountAsync(discount);
 
-        //update "HasDiscountsApplied" properties
-        foreach (var p in products)
-            await _productService.UpdateHasDiscountsAppliedAsync(p);
-
         //activity log
         await _customerActivityService.InsertActivityAsync("DeleteDiscount",
             string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteDiscount"), discount.Name), discount);
@@ -450,7 +446,6 @@ public partial class DiscountController : BaseAdminController
             await _productService.DeleteDiscountProductMappingAsync(discountProductMapping);
 
         await _productService.UpdateProductAsync(product);
-        await _productService.UpdateHasDiscountsAppliedAsync(product);
 
         return new NullJsonResult();
     }
@@ -498,7 +493,6 @@ public partial class DiscountController : BaseAdminController
                     await _productService.InsertDiscountProductMappingAsync(new DiscountProductMapping { EntityId = product.Id, DiscountId = discount.Id });
 
                 await _productService.UpdateProductAsync(product);
-                await _productService.UpdateHasDiscountsAppliedAsync(product);
             }
         }
 

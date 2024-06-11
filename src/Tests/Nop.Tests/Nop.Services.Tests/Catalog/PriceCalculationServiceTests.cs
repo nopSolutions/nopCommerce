@@ -161,9 +161,6 @@ public class PriceCalculationServiceTests : ServiceTest
         await _productService.InsertDiscountProductMappingAsync(mapping);
         await _customerService.ApplyDiscountCouponCodeAsync(customer, "123");
 
-        //set HasDiscountsApplied property
-        product.HasDiscountsApplied = true;
-
         var (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, store);
 
         await _productService.DeleteDiscountProductMappingAsync(mapping);

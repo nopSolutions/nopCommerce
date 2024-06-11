@@ -348,7 +348,6 @@ public partial class ProductController : BaseAdminController
         }
 
         await _productService.UpdateProductAsync(product);
-        await _productService.UpdateHasDiscountsAppliedAsync(product);
     }
 
     protected virtual async Task<string> GetAttributesXmlForProductAttributeCombinationAsync(IFormCollection form, List<string> warnings, int productId)

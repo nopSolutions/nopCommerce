@@ -1404,19 +1404,6 @@ public partial class ProductService : IProductService
     }
 
     /// <summary>
-    /// Update HasDiscountsApplied property (used for performance optimization)
-    /// </summary>
-    /// <param name="product">Product</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task UpdateHasDiscountsAppliedAsync(Product product)
-    {
-        ArgumentNullException.ThrowIfNull(product);
-
-        product.HasDiscountsApplied = _discountProductMappingRepository.Table.Any(dpm => dpm.EntityId == product.Id);
-        await UpdateProductAsync(product);
-    }
-
-    /// <summary>
     /// Gets number of products by vendor identifier
     /// </summary>
     /// <param name="vendorId">Vendor identifier</param>
@@ -2356,7 +2343,7 @@ public partial class ProductService : IProductService
     public virtual async Task<IPagedList<Product>> GetProductsWithAppliedDiscountAsync(int? discountId = null,
         bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue)
     {
-        var products = _productRepository.Table.Where(product => product.HasDiscountsApplied);
+        var products = _productRepository.Table;
 
         if (discountId.HasValue)
             products = from product in products
@@ -2795,9 +2782,6 @@ public partial class ProductService : IProductService
         await foreach (var pdcm in mappingsWithProducts.ToAsyncEnumerable())
         {
             mappingsToDelete.Add(pdcm.dcm);
-
-            //update "HasDiscountsApplied" property
-            await UpdateHasDiscountsAppliedAsync(pdcm.product);
         }
         await _discountProductMappingRepository.DeleteAsync(mappingsToDelete);
     }
