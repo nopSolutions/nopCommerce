@@ -133,7 +133,7 @@
     <Value>Informații magazin</Value>
   </LocaleResource>
   <LocaleResource Name="SubscribeNewsletters">
-    <Value>Subscribe to nopCommerce newsletter</Value>
+    <Value>Abonează-te la newsletter-ul nopCommerce</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
     <Value>Instalare nopCommerce</Value>

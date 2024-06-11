@@ -133,7 +133,7 @@
     <Value>Thông tin website</Value>
   </LocaleResource>
   <LocaleResource Name="SubscribeNewsletters">
-    <Value>Subscribe to nopCommerce newsletter</Value>
+    <Value>Đăng ký nhận bản tin của nopCommerce</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
     <Value>Cài đặt website</Value>

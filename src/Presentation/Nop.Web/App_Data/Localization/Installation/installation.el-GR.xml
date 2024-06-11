@@ -133,7 +133,7 @@
     <Value>Πληροφορίες καταστηματός</Value>
   </LocaleResource>
   <LocaleResource Name="SubscribeNewsletters">
-    <Value>Subscribe to nopCommerce newsletter</Value>
+    <Value>Εγγραφείτε στο ενημερωτικό δελτίο nopCommerce</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
     <Value>nopCommerce εγκατάσταση</Value>

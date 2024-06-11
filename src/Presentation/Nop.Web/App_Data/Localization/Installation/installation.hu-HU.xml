@@ -31,7 +31,7 @@
     <Value>A SQL kapcsolat string szükséges</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringWrongFormat">
-    <Value>Hibás az  SQL kapcsolat string formátuma</Value>
+    <Value>Hibás az SQL kapcsolat string formátuma</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
     <Value>Ország</Value>
@@ -70,7 +70,7 @@
     <Value>Ha információra van szüksége a nopCommerce használatával kapcsolatban, látogasson el</Value>
   </LocaleResource>
   <LocaleResource Name="Documentation2">
-    <Value>A dokumentáció szakasz nopCommerce.com-on</Value>
+    <Value>a nopCommerce.com dokumentációs részéhez</Value>
   </LocaleResource>
   <LocaleResource Name="Example">
     <Value>Példa</Value>
@@ -133,7 +133,7 @@
     <Value>Áruház információk</Value>
   </LocaleResource>
   <LocaleResource Name="SubscribeNewsletters">
-    <Value>Subscribe to nopCommerce newsletter</Value>
+    <Value>Iratkozzon fel a nopCommerce hírlevélre</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
     <Value>nopCommerce telepítés</Value>
