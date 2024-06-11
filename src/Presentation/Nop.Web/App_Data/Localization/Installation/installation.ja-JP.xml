@@ -133,7 +133,7 @@
     <Value>ストア情報</Value>
   </LocaleResource>
   <LocaleResource Name="SubscribeNewsletters">
-    <Value>Subscribe to nopCommerce newsletter</Value>
+    <Value>nopCommerce ニュースレター を購読する</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
     <Value>nopCommerceのインストール</Value>

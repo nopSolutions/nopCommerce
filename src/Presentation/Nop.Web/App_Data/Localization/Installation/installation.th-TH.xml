@@ -133,7 +133,7 @@
     <Value>ข้อมูลร้านค้า</Value>
   </LocaleResource>
   <LocaleResource Name="SubscribeNewsletters">
-    <Value>Subscribe to nopCommerce newsletter</Value>
+    <Value>สมัครรับจดหมายข่าวของ nopCommerce</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
     <Value>ติดตั้งผลิตภัณฑ์ nopCommerce</Value>

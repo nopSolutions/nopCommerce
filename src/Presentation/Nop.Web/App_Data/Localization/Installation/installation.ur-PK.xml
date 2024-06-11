@@ -133,7 +133,7 @@
     <Value>سٹور کی معلومات</Value>
   </LocaleResource>
   <LocaleResource Name="SubscribeNewsletters">
-    <Value>Subscribe to nopCommerce newsletter</Value>
+    <Value>nopCommerce نیوز لیٹر کو سبسکرائب کریں۔</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
     <Value> نوپ کامرس کی انسٹالیشن </Value>
