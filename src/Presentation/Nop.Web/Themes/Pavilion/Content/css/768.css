@@ -941,7 +941,7 @@ body .header-menu .mobile-sidebar-category.first li>a>span {
 body .header-menu .mobile-sidebar-category.second {
     margin-top: 60px !important;
 }
-body ul.mega-menu {
+.header-menu-parent ul.mega-menu {
     text-align: right;
 }
 
