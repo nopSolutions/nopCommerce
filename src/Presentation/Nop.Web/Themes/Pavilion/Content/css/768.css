@@ -924,8 +924,9 @@ opacity: 1 !important;
   }
 
 body .header-menu>ul>li>a {
-	padding: 5px 8px;
+	padding: 5px 5px;
 }
+
 input.button-1.search-box-button {
     z-index: 1;
 }
@@ -940,6 +941,9 @@ body .header-menu .mobile-sidebar-category.first li>a>span {
 }
 body .header-menu .mobile-sidebar-category.second {
     margin-top: 60px !important;
+}
+.header-menu-parent ul.mega-menu {
+    text-align: right;
 }
 
 @media screen and (max-width: 1024px) {
