@@ -121,7 +121,7 @@
 			for (i = 0; i < specificationPanels.length; i++) {
 				var anchorTitle = $(specificationPanels[i]).find('.toggleControl');
 				var title = $(anchorTitle).text();
-				if (isClearance && title.toLowerCase() !== 'category' && title.toLowerCase() !== 'brands') {
+				if (isClearance && title.toLowerCase() !== 'category' && title.toLowerCase() !== 'brands' && title.toLowerCase() !== 'store') {
 					$(specificationPanels[i]).hide();
 				}
 				else if (!isClearance && title.toLowerCase() === 'category') {
