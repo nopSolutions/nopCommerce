@@ -1,5 +1,5 @@
 .header-menu {
-    background-color: #fff;
+    background-color: transparent;
     /* allows for scrolling */
     overflow-y: auto;
 }
