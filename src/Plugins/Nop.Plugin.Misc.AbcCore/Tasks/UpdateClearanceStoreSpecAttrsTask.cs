@@ -10,6 +10,7 @@ using Nop.Plugin.Misc.AbcCore.Nop;
 using Nop.Core;
 using Nop.Services.Catalog;
 using System.Linq;
+using Nop.Core.Domain.Catalog;
 
 namespace Nop.Plugin.Misc.AbcCore.Tasks
 {
@@ -44,18 +45,43 @@ namespace Nop.Plugin.Misc.AbcCore.Tasks
                 throw new NopException("Cannot find the 'Store' specification attribute with options.");
             }
 
-            var productCategories = await _categoryService.GetProductCategoriesByCategoryIdAsync(clearanceCategory.Id);
+            var storeSpecAttrOptions = await _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttributeAsync(storeSpecAttr.Id);
+            var storeSpecAttrOptionIds = storeSpecAttrOptions.Select(pso => pso.Id);
 
+            var productCategories = await _categoryService.GetProductCategoriesByCategoryIdAsync(clearanceCategory.Id);
             foreach (var pc in productCategories)
             {
                 var productId = pc.ProductId;
+                var productSpecificationAttributes = (await _specificationAttributeService.GetProductSpecificationAttributesAsync(productId))
+                                                                                          .Where(psa => storeSpecAttrOptionIds.Contains(psa.SpecificationAttributeOptionId));
+                var currentStoreNames = await productSpecificationAttributes.SelectAwait(async psa => (await _specificationAttributeService.GetSpecificationAttributeOptionByIdAsync(psa.SpecificationAttributeOptionId)).Name)
+                                                                            .ToListAsync();
+
                 var backendStockResponse = await _backendStockService.GetApiStockAsync(productId);
                 if (backendStockResponse == null) { continue; }
-
-                var availableStores = backendStockResponse.ProductStocks.Where(ps => ps.Available);
-                foreach (var store in availableStores)
+                var availableStores = backendStockResponse.ProductStocks
+                                                          .Where(ps => ps.Available)
+                                                          .Select(ps => ps.Shop.Name);
+                
+                var toInsert = availableStores.Except(currentStoreNames);
+                foreach (var store in toInsert)
                 {
-                    var a = 1;
+                    var specAttrOption = storeSpecAttrOptions.First(sao => sao.Name == store);
+                    var psa = new ProductSpecificationAttribute()
+                    {
+                        ProductId = productId,
+                        AttributeType = SpecificationAttributeType.Option,
+                        SpecificationAttributeOptionId = specAttrOption.Id,
+                        AllowFiltering = true
+                    };
+                    await _specificationAttributeService.InsertProductSpecificationAttributeAsync(psa);
+                }
+
+                var toDelete = currentStoreNames.Except(availableStores);
+                foreach (var store in toDelete)
+                {
+                    var psa = await productSpecificationAttributes.FirstOrDefaultAwaitAsync(async psa => (await _specificationAttributeService.GetSpecificationAttributeOptionByIdAsync(psa.SpecificationAttributeOptionId)).Name == store);
+                    await _specificationAttributeService.DeleteProductSpecificationAttributeAsync(psa);
                 }
             }
         }
