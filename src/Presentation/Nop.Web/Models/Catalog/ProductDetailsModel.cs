@@ -178,46 +178,7 @@ public partial record ProductDetailsModel : BaseNopEntityModel
         public int UpdatedShoppingCartItemId { get; set; }
         public ShoppingCartType? UpdateShoppingCartItemType { get; set; }
     }
-
-    public partial record ProductPriceModel : BaseNopModel
-    {
-        /// <summary>
-        /// The currency (in 3-letter ISO 4217 format) of the offer price 
-        /// </summary>
-        public string CurrencyCode { get; set; }
-
-        public string OldPrice { get; set; }
-        public decimal? OldPriceValue { get; set; }
-
-        public string Price { get; set; }
-        public decimal PriceValue { get; set; }
-        public string PriceWithDiscount { get; set; }
-        public decimal? PriceWithDiscountValue { get; set; }
-
-        public bool CustomerEntersPrice { get; set; }
-
-        public bool CallForPrice { get; set; }
-
-        public int ProductId { get; set; }
-
-        public bool HidePrices { get; set; }
-
-        //rental
-        public bool IsRental { get; set; }
-        public string RentalPrice { get; set; }
-        public decimal? RentalPriceValue { get; set; }
-
-        /// <summary>
-        /// A value indicating whether we should display tax/shipping info (used in Germany)
-        /// </summary>
-        public bool DisplayTaxShippingInfo { get; set; }
-        /// <summary>
-        /// PAngV baseprice (used in Germany)
-        /// </summary>
-        public string BasePricePAngV { get; set; }
-        public decimal? BasePricePAngVValue { get; set; }
-    }
-
+    
     public partial record GiftCardModel : BaseNopModel
     {
         public bool IsGiftCard { get; set; }

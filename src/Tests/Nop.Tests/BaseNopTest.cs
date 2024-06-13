@@ -76,10 +76,10 @@ using Nop.Services.Themes;
 using Nop.Services.Topics;
 using Nop.Services.Vendors;
 using Nop.Tests.Nop.Services.Tests.ScheduleTasks;
+using Nop.Tests.Nop.Web.Tests.Public.Factories;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Factories;
-using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.UI;
@@ -123,31 +123,28 @@ public partial class BaseNopTest
         EngineContext.Current.Resolve<IPermissionService>().InstallPermissionsAsync(provider).Wait();
     }
 
-    protected static T PropertiesShouldEqual<T, Tm>(T entity, Tm model, params string[] filter) where T : BaseEntity
-        where Tm : BaseNopModel
+    protected static void PropertiesShouldEqual<T1, T2>(T1 obj1, T2 obj2, params string[] filter) 
     {
-        var objectProperties = typeof(T).GetProperties();
-        var modelProperties = typeof(Tm).GetProperties();
+        var object1Properties = typeof(T1).GetProperties();
+        var object2Properties = typeof(T2).GetProperties();
 
-        foreach (var objectProperty in objectProperties)
+        foreach (var object1Property in object1Properties)
         {
-            var name = objectProperty.Name;
+            var name = object1Property.Name;
 
             if (filter.Contains(name))
                 continue;
 
-            var modelProperty = Array.Find(modelProperties, p => p.Name == name);
+            var object2Property = Array.Find(object2Properties, p => p.Name == name);
 
-            if (modelProperty == null)
+            if (object2Property == null)
                 continue;
 
-            var objectPropertyValue = objectProperty.GetValue(entity);
-            var modelPropertyValue = modelProperty.GetValue(model);
-
-            objectPropertyValue.Should().Be(modelPropertyValue, $"The property \"{typeof(T).Name}.{objectProperty.Name}\" of these objects is not equal");
+            var object1PropertyValue = object1Property.GetValue(obj1);
+            var object2PropertyValue = object2Property.GetValue(obj2);
+            
+            object1PropertyValue.Should().Be(object2PropertyValue, $"The property \"{typeof(T1).Name}.{object1Property.Name}\" of these objects is not equal");
         }
-
-        return entity;
     }
 
     static BaseNopTest()
@@ -491,6 +488,7 @@ public partial class BaseNopTest
         services.AddTransient<IPluginModelFactory, PluginModelFactory>();
         services.AddTransient<IPollModelFactory, PollModelFactory>();
         services.AddTransient<IProductModelFactory, ProductModelFactory>();
+        services.AddTransient<ProductModelFactoryTests.ProductModelFactoryForTest>();
         services.AddTransient<IProductAttributeModelFactory, ProductAttributeModelFactory>();
         services.AddTransient<IProductReviewModelFactory, ProductReviewModelFactory>();
         services.AddTransient<IReportModelFactory, ReportModelFactory>();
