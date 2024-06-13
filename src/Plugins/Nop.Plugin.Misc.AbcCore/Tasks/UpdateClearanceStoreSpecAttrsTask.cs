@@ -38,11 +38,12 @@ namespace Nop.Plugin.Misc.AbcCore.Tasks
                 throw new NopException("Cannot find the 'Clearance' category.");
             }
 
+            var storeSpecAttrName = "Shop by Store";
             var storeSpecAttr = (await _specificationAttributeService.GetSpecificationAttributesWithOptionsAsync())
-                                                                         .FirstOrDefault(sa => sa.Name == "Store");
+                                                                         .FirstOrDefault(sa => sa.Name == storeSpecAttrName);
             if (storeSpecAttr == null)
             {
-                throw new NopException("Cannot find the 'Store' specification attribute with options.");
+                throw new NopException($"Cannot find the '{storeSpecAttrName}' specification attribute with options.");
             }
 
             var storeSpecAttrOptions = await _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttributeAsync(storeSpecAttr.Id);
