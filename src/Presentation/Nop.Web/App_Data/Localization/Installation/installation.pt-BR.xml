@@ -133,7 +133,7 @@
     <Value>Guardar informação</Value>
   </LocaleResource>
   <LocaleResource Name="SubscribeNewsletters">
-    <Value>Subscribe to nopCommerce newsletter</Value>
+    <Value>Inscrever-se no boletim nopCommerce</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
     <Value>Instalação nopCommerce</Value>

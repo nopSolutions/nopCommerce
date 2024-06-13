@@ -133,7 +133,7 @@
     <Value>Butiksinformation</Value>
   </LocaleResource>
   <LocaleResource Name="SubscribeNewsletters">
-    <Value>Subscribe to nopCommerce newsletter</Value>
+    <Value>Prenumerera på nopCommerce nyhetsbrev</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
     <Value>nopCommerce installation</Value>

@@ -133,7 +133,7 @@
     <Value>Podatki o trgovini</Value>
   </LocaleResource>
   <LocaleResource Name="SubscribeNewsletters">
-    <Value>Subscribe to nopCommerce newsletter</Value>
+    <Value>Naročite se na nopCommerce newsletter</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
     <Value>nopCommerce namestitev</Value>

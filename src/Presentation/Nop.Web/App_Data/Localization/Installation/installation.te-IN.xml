@@ -34,10 +34,10 @@
     <Value>తప్పు SQL కనెక్షన్ స్ట్రింగ్ ఆకృతి</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Country</Value>
+    <Value>దేశం</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Select your country...</Value>
+    <Value>మీ దేశాన్ని ఎంచుకోండి</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>డేటాబేస్ ఉనికిలో లేకపోతే దాన్ని సృష్టించండి</Value>
@@ -121,7 +121,7 @@
     <Value>SQL పాస్‌వర్డ్ అవసరం</Value>
   </LocaleResource>
   <LocaleResource Name="SqlServer">
-    <Value>Microsoft SQL సర్వర్</Value>
+    <Value>Microsoft SQL Server</Value>
   </LocaleResource>
   <LocaleResource Name="SqlUsername">
     <Value>SQL వినియోగదారు పేరు</Value>
@@ -133,7 +133,7 @@
     <Value>సమాచారాన్ని నిల్వ చేయండి</Value>
   </LocaleResource>
   <LocaleResource Name="SubscribeNewsletters">
-    <Value>Subscribe to nopCommerce newsletter</Value>
+    <Value>nopCommerce వార్తాలేఖకు సభ్యత్వాన్ని పొందండి</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
     <Value>nopCommerce సంస్థాపన</Value>

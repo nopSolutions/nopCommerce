@@ -133,7 +133,7 @@
     <Value>معلومات المتجر</Value>
   </LocaleResource>
   <LocaleResource Name="SubscribeNewsletters">
-    <Value>Subscribe to nopCommerce newsletter</Value>
+    <Value>اشترك في النشرة الإخبارية nopCommerce</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
     <Value>nopCommerce تنصيب</Value>

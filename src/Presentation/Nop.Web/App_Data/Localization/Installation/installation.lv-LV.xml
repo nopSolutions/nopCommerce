@@ -133,7 +133,7 @@
     <Value>Veikala informācija</Value>
   </LocaleResource>
   <LocaleResource Name="SubscribeNewsletters">
-    <Value>Subscribe to nopCommerce newsletter</Value>
+    <Value>Abonēt nopCommerce ziņu lapu</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
     <Value>nopCommerce uzstādīšana</Value>
