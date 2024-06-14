@@ -945,6 +945,15 @@ body .header-menu .mobile-sidebar-category.second {
 .header-menu-parent ul.mega-menu {
     text-align: right;
 }
+.listbox a.product-name {
+    word-break: break-word;
+}
+.water-heater-link {
+	display: none;
+}
+.appliances-list .water-heater-link {
+	display: block;
+}
 
 @media screen and (max-width: 1024px) {
 	div#mobile-header-logo {
