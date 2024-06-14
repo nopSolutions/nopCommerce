@@ -948,11 +948,8 @@ body .header-menu .mobile-sidebar-category.second {
 .listbox a.product-name {
     word-break: break-word;
 }
-.water-heater-link {
-	display: none;
-}
 .appliances-list .water-heater-link {
-	display: block;
+	display: block !important;
 }
 
 @media screen and (max-width: 1024px) {
