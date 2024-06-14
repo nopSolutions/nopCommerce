@@ -1,2 +1,2 @@
 ﻿@model DateTime
-<input id="@Html.IdForModel()" name="@Html.NameForModel()" value="@((Model > DateTime.MinValue ? Model : DateTime.Today).ToShortDateString())" type="date" class="form-control" /> 
+<input id="@Html.IdForModel()" name="@Html.NameForModel()" value="@((Model > DateTime.MinValue ? Model : DateTime.Today).ToString("yyyy-MM-dd"))" type="date" class="form-control" /> 
