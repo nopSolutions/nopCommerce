@@ -1,144 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Language Name="Shqip" IsDefault="false" IsRightToLeft="false">
+<Language Name="Eesti" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
-    <Value>Email i përdoruesit të administratorit.</Value>
+    <Value>Admini kasutaja e-post</Value>
   </LocaleResource>
   <LocaleResource Name="AdminEmailRequired">
-    <Value>Vendosni emailin e administratorit.</Value>
+    <Value>Sisesta admini e-post</Value>
   </LocaleResource>
   <LocaleResource Name="AdminPassword">
-    <Value>Fjalëkalimi i përdoruesit të administratorit.</Value>
+    <Value>Admini kasutaja parool</Value>
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
-    <Value>Fjalëkalimi i përdoruesit të administratorit.</Value>
+    <Value>Sisesta admini parool</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
-    <Value>{0}' llogaria nuk jepet me Modifikimin e lejes në dosje '{1}'. Ju lutemi konfiguroni këto leje.</Value>
+    <Value>Nn '{0}' "konto ei ole antud koos Muuda loata kausta" '{1}' "Palun seadistada need õigused."</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureFilePermissions">
-    <Value>Llogaria '{0}' nuk jepet me Leje të modifikojë në dosjen '{1}'. Ju lutemi konfiguroni këto leje.</Value>
+    <Value>Nn '{0}' "konto ei ole antud koos Muuda luba faili" '{1}' "Palun seadistada need õigused."</Value>
   </LocaleResource>
   <LocaleResource Name="ConfirmPassword">
-    <Value>Konfirmoni fjalëkalimin</Value>
+    <Value>Kinnita parool</Value>
   </LocaleResource>
   <LocaleResource Name="ConfirmPasswordRequired">
-    <Value>Vendosni fjalëkalimin konfirmues.</Value>
+    <Value>Sisesta kinnituse parool</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionString">
-    <Value>Varg lidhjeje</Value>
+    <Value>Ühenduse string</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringRequired">
-    <Value>Kërkohet një varg lidhjeje SQL</Value>
+    <Value>SQL ühenduse string on nõutav</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringWrongFormat">
-    <Value>Forma e gabuar e lidhjes SQL të gabuar.</Value>
+    <Value>Vale SQL ühenduse stringi formaat</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Държава</Value>
+    <Value>Riik</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Valitse maasi...</Value>
+    <Value>Vali riik...</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
-    <Value>Krijoni bazën e të dhënave nëse nuk ekziston.</Value>
+    <Value>Loo andmebaas kui seda ei eksisteeri</Value>
   </LocaleResource>
   <LocaleResource Name="CreateSampleData">
-    <Value>Krijoni të dhënat e mostrës.</Value>
+    <Value>Loo näidisandmed</Value>
   </LocaleResource>
   <LocaleResource Name="CustomCollation">
-    <Value>Specifikoni përpilimin me porosi.</Value>
+    <Value>Määrake kohandatud sortimine</Value>
   </LocaleResource>
   <LocaleResource Name="Database">
-    <Value>Baza e të dhënave</Value>
+    <Value>Andmebaas</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseCreationError">
-    <Value>Ndodhi një gabim gjatë krijimit të bazës i të dhënave: {0}</Value>
+    <Value>Tekkis viga andmebaasi loomisel: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
-    <Value>Informacioni i bazës i të dhënave.</Value>
+    <Value>Andmebaasi informatsioon</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseName">
-    <Value>Emri i bazës i të dhënave.</Value>
+    <Value>Andmebaasi nimi</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseNotExists">
-    <Value>Baza e të dhënave nuk ekziston ose nuk keni leje për t'u lidhur me të.</Value>
+    <Value>Andmebaasi ei eksisteeri või teil pole õigusi sellega ühendamiseks</Value>
   </LocaleResource>
   <LocaleResource Name="DataProviderRequired">
-    <Value>Zgjidhni ofruesin e të dhënave.</Value>
+    <Value>Vali andmepakkuja</Value>
   </LocaleResource>
   <LocaleResource Name="Documentation1">
-    <Value>Nëse keni nevojë për informacion se si të përdorni nopCommerce, vizitoni</Value>
+    <Value>Kui vajate teavet nopCommerce'i kasutamise kohta, külastage</Value>
   </LocaleResource>
   <LocaleResource Name="Documentation2">
-    <Value>Seksioni i dokumentacionit në nopCommerce.com</Value>
+    <Value>dokumentatsiooni sektsiooni nopCommerce.com-is</Value>
   </LocaleResource>
   <LocaleResource Name="Example">
-    <Value>Shembull</Value>
+    <Value>Näide</Value>
   </LocaleResource>
   <LocaleResource Name="Install">
-    <Value>Instalo</Value>
+    <Value>paigaldama</Value>
   </LocaleResource>
   <LocaleResource Name="Installing">
-    <Value>Duke instaluar nopCommerce …</Value>
+    <Value>Paigaldamine nopCommerce...</Value>
   </LocaleResource>
   <LocaleResource Name="IntegratedAuthentication">
-    <Value>Përdorni vërtetimin e integruar të Windows</Value>
+    <Value>Kasutage integreeritud Windowsi autentimist</Value>
   </LocaleResource>
   <LocaleResource Name="MySql">
     <Value>MySQL</Value>
   </LocaleResource>
   <LocaleResource Name="PasswordsDoNotMatch">
-    <Value>Fjalëkalimet nuk përputhen</Value>
+    <Value>Paroolid ei ühti</Value>
   </LocaleResource>
   <LocaleResource Name="PostgreSQL">
     <Value>PostgreSQL</Value>
   </LocaleResource>
   <LocaleResource Name="RawConnectionString">
-    <Value>Shkruaj varg lidhjesh të papërpunuar (të avancuar)</Value>
+    <Value>Sisesta toores ühenduse string (edasi arenenud)</Value>
   </LocaleResource>
   <LocaleResource Name="RestartInstallation">
-    <Value>Rinisni instalimin</Value>
+    <Value>Taaskäivita paigaldamine</Value>
   </LocaleResource>
   <LocaleResource Name="RestartInstallationTooltip">
-    <Value>Klikoni për të rinisur procesin e instalimit (pastroni të gjitha vlerat e ruajtura në memorje)</Value>
+    <Value>Klõpsake, et taaskäivitada paigaldusprotsess (kustutage kõik vahemällu salvestatud väärtused)</Value>
   </LocaleResource>
   <LocaleResource Name="RestartProgress">
-    <Value>Rifillimi ...</Value>
+    <Value>Taaskäivitamine...</Value>
   </LocaleResource>
   <LocaleResource Name="ServerName">
-    <Value>Emri i serverit.</Value>
+    <Value>Serveri nimi</Value>
   </LocaleResource>
   <LocaleResource Name="ServerNameRequired">
-    <Value>Kërkohet emri i serverit.</Value>
+    <Value>Serveri nimi on nõutav</Value>
   </LocaleResource>
   <LocaleResource Name="SetupFailed">
-    <Value>Konfigurimi dështoi: {0}</Value>
+    <Value>Paigaldus ebaõnnestus: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="SqlPassword">
-    <Value>Fjalëkalimi SQL</Value>
+    <Value>SQL parool</Value>
   </LocaleResource>
   <LocaleResource Name="SqlPasswordRequired">
-    <Value>Kërkohet fjalëkalimi SQL</Value>
+    <Value>SQL parool on nõutav</Value>
   </LocaleResource>
   <LocaleResource Name="SqlServer">
-    <Value>Server SQL Microsoft.</Value>
+    <Value>Microsoft SQL Server</Value>
   </LocaleResource>
   <LocaleResource Name="SqlUsername">
-    <Value>Emri i SQL</Value>
+    <Value>SQL kasutajanimi</Value>
   </LocaleResource>
   <LocaleResource Name="SqlUsernameRequired">
-    <Value>Kërkohet Emri i përdoruesit SQL</Value>
+    <Value>SQL kasutajanimi on nõutav</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
-    <Value>Informacioni i dyqanit</Value>
+    <Value>Poe teave</Value>
   </LocaleResource>
   <LocaleResource Name="SubscribeNewsletters">
-    <Value>Regjistrohu në buletinin e nopCommerce</Value>
+    <Value>Subscribe to nopCommerce newsletter</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
-    <Value>Instalimi i tregtisë nopCommerce</Value>
+    <Value>nopCommerce paigaldamine</Value>
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
-    <Value>Për të përfunduar këtë magjistar, duhet të dini disa informacione në lidhje me serverin tuaj të bazës të të dhënave ('vargu i lidhjes'). Ju lutemi kontaktoni ISP-në tuaj nëse është e nevojshme. Nëse jeni duke instaluar në një makinë lokale ose server, mund t'ju duhet informacion nga Administratori juaj i Sistemit.</Value>
+    <Value>Selle viisardi lõpetamiseks peate teadma mõningaid andmeid oma andmebaasi serveri kohta ("ühenduse string"). Kui vaja, võtke ühendust oma ISP-ga. Kui paigaldate kohalikule masinale või serverile, võib teil olla vaja teavet oma süsteemi administraatori käest.</Value>
   </LocaleResource>
 </Language>

@@ -415,7 +415,8 @@
 
                                 function renderColumnCustomer(data, type, row, meta) {
                                     var link = '@Url.Content("~/Admin/Customer/Edit/")' + row.CustomerId;
-                                    return `${row.CustomerFullName}<br /><a href="${link}">${data}</a>`;
+                                    var textRenderer = $.fn.dataTable.render.text().display;
+                                    return `${textRenderer(row.CustomerFullName)} <br /><a href="${link}">${data}</a > `;
                                 }
 
                                 $(function() {

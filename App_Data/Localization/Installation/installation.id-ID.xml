@@ -133,7 +133,7 @@
     <Value>Informasi Toko</Value>
   </LocaleResource>
   <LocaleResource Name="SubscribeNewsletters">
-    <Value>Subscribe to nopCommerce newsletter</Value>
+    <Value>Berlangganan newsletter nopCommerce</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
     <Value>Pemasangan nopCommerce</Value>

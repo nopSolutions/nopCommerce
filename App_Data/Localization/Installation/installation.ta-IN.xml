@@ -133,7 +133,7 @@
     <Value>வியாபார நிலையத் தகவல்கள்</Value>
   </LocaleResource>
   <LocaleResource Name="SubscribeNewsletters">
-    <Value>Subscribe to nopCommerce newsletter</Value>
+    <Value>nopCommerce செய்தித் திரட்டில் சந்தா சந்திக்கவும்</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
     <Value>nopCommerce நிறுவல்</Value>
