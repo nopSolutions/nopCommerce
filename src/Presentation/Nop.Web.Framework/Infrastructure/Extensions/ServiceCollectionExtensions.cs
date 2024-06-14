@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Reflection;
 using System.Threading.RateLimiting;
 using Azure.Identity;
 using Azure.Storage.Blobs;
@@ -62,6 +63,19 @@ public static class ServiceCollectionExtensions
         Singleton<ITypeFinder>.Instance = typeFinder;
         services.AddSingleton<ITypeFinder>(typeFinder);
 
+        //bind general configuration
+        services.BindApplicationSettings(builder);
+    }
+
+    /// <summary>
+    /// Bind application settings
+    /// </summary>
+    /// <param name="services">Collection of service descriptors</param>
+    /// <param name="builder">A builder for web applications and services</param>
+    public static void BindApplicationSettings(this IServiceCollection services, WebApplicationBuilder builder)
+    {
+        var typeFinder = Singleton<ITypeFinder>.Instance;
+
         //add configuration parameters
         var configurations = typeFinder
             .FindClassesOfType<IConfig>()
@@ -71,8 +85,18 @@ public static class ServiceCollectionExtensions
         foreach (var config in configurations)
             builder.Configuration.GetSection(config.Name).Bind(config, options => options.BindNonPublicProperties = true);
 
-        var appSettings = AppSettingsHelper.SaveAppSettings(configurations, CommonHelper.DefaultFileProvider, false);
-        services.AddSingleton(appSettings);
+        var appSettings = Singleton<AppSettings>.Instance;
+
+        if (appSettings == null)
+        {
+            appSettings = AppSettingsHelper.SaveAppSettings(configurations, CommonHelper.DefaultFileProvider, false);
+            services.AddSingleton(appSettings);
+        }
+        else
+        {
+            var needToUpdate = configurations.Any(conf => !appSettings.Configuration.ContainsKey(conf.Name));
+            AppSettingsHelper.SaveAppSettings(configurations, CommonHelper.DefaultFileProvider, needToUpdate);
+        }
     }
 
     /// <summary>
@@ -91,6 +115,9 @@ public static class ServiceCollectionExtensions
         var pluginConfig = new PluginConfig();
         builder.Configuration.GetSection(nameof(PluginConfig)).Bind(pluginConfig, options => options.BindNonPublicProperties = true);
         mvcCoreBuilder.PartManager.InitializePlugins(pluginConfig);
+
+        //bind plugins configurations
+        services.BindApplicationSettings(builder);
 
         //create engine and configure service provider
         var engine = EngineContext.Create();
