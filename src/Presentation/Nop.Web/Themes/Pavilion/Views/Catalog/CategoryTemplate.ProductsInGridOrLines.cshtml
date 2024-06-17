@@ -104,6 +104,7 @@
         var isLeaf = @Html.Raw(!hasChildCategories ? "true" : "false");
 		var isClearance = @Html.Raw(isClearance ? "true" : "false");
 		var categoryPanel = undefined;
+		var shopPanel = undefined;
         if (isLeaf) {
             // show product display
             $('.product-selectors').show();
@@ -119,13 +120,20 @@
 
 			var i = 0;
 			for (i = 0; i < specificationPanels.length; i++) {
+
 				var anchorTitle = $(specificationPanels[i]).find('.toggleControl');
 				var title = $(anchorTitle).text();
+				if (title.toLowerCase() === 'category') {
+					categoryPanel = specificationPanels[i];
+				}
+				if (title.toLowerCase() === 'shop by store') {
+					shopPanel = specificationPanels[i];
+				}
+
 				if (isClearance && title.toLowerCase() !== 'category' && title.toLowerCase() !== 'brands' && title.toLowerCase() !== 'shop by store') {
 					$(specificationPanels[i]).hide();
 				}
 				else if (!isClearance && title.toLowerCase() === 'category') {
-					categoryPanel = specificationPanels[i];
 					$(specificationPanels[i]).hide();
 				}
 			}
@@ -165,7 +173,6 @@
 			}
 
 			// Set up 'View More' for categories
-			var categoryPanel = specificationPanels[0];
 			if (isClearance && categoryPanel) {
 				var categoryChildren = $(categoryPanel).find('.checkbox-item');
 				if (categoryChildren.length >= initialCount) {
@@ -198,6 +205,41 @@
 
 				// Now move categories below price range
 				$(categoryPanel).insertAfter(".priceRangeFilterPanel7Spikes");
+			}
+
+			// Set up 'View More' for shops
+			if (isClearance && shopPanel) {
+				var shopChildren = $(shopPanel).find('.checkbox-item');
+				if (shopChildren.length >= initialCount) {
+					var filtersCheckboxPanel = $(shopPanel).find('.filtersCheckboxPanel');
+					$(filtersCheckboxPanel).append('<div style="display: flex"><a href="javascript:void(0)" id="view-more-shops">View More</a></div>');
+					$(filtersCheckboxPanel).append('<div style="display: flex"><a href="javascript:void(0)" id="view-less-shops" style="display: none">View Less</a></div>');
+					var i = 0;
+					for (i = 0; i < shopChildren.length; i++) {
+						if (i > initialCount - 1) {
+							$(shopChildren[i]).hide();
+						}
+					}
+					$('#view-more-shops').click(function (e) {
+						var i = 0;
+						for (i = 0; i < shopChildren.length; i++) {
+							$(shopChildren[i]).show();
+						}
+						$(this).hide();
+						$('#view-less-shops').show();
+					});
+					$('#view-less-shops').click(function (e) {
+						var i = initialCount - 1;
+						for (i = initialCount - 1; i < shopChildren.length; i++) {
+							$(shopChildren[i]).hide();
+						}
+						$(this).hide();
+						$('#view-more-shops').show();
+					});
+				}
+
+				// Now move shops below price range
+				$(shopPanel).insertAfter(".priceRangeFilterPanel7Spikes");
 			}
         }
         else {

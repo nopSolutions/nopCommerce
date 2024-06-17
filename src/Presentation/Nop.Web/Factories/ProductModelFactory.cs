@@ -536,7 +536,6 @@ namespace Nop.Web.Factories
                     (hoverImageUrl, picture[1]) = await _pictureService.GetPictureUrlAsync(picture[1], pictureSize);
                     (hoverFullSizeImageUrl, picture[1]) = await _pictureService.GetPictureUrlAsync(picture[1]);
 
-                    System.Diagnostics.Debug.WriteLine("Two");
                     pictureModel = new PictureModel
                     {
                         ImageUrl = imageUrl,
@@ -569,7 +568,6 @@ namespace Nop.Web.Factories
                     {
                         (imageUrl, picture[0]) = await _pictureService.GetPictureUrlAsync(picture[0], pictureSize);
                         (fullSizeImageUrl, picture[0]) = await _pictureService.GetPictureUrlAsync(picture[0]);
-                        System.Diagnostics.Debug.WriteLine("One");
                         pictureModel = new PictureModel
                         {
                             ImageUrl = imageUrl,
