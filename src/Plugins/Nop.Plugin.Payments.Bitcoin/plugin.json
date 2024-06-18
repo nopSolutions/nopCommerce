@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Widgets",
+  "FriendlyName": "Bitcoin Payments",
+  "SystemName": "Payments.Bitcoin",
+  "Version": "1.0",
+  "SupportedVersions": [ "4.80" ],
+  "Author": "Paolo Di Pietro",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Payments.Bitcoin.dll",
+  "Description": "This plugin allows you to make payments with Bitcoin."
+}

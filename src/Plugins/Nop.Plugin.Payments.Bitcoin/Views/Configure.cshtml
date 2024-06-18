@@ -1,0 +1,16 @@
+﻿@model Nop.Plugin.Payments.Bitcoin.Models.ConfigurationModel
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+@await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
+
+<form asp-controller="PaymentManual" asp-action="Configure" method="post">
+    <div class="cards-group">
+        <div class="card card-default">
+            <div class="card-body">
+                <p>Some text in the Configure.cshtml file</p>
+            </div>
+        </div>
+    </div>
+</form>
