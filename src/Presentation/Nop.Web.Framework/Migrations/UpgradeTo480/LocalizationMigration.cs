@@ -59,6 +59,10 @@ public class LocalizationMigration : MigrationBase
 
             //#7215
             ["Admin.Catalog.Products.Fields.DisplayAttributeCombinationImagesOnly.Hint"] = "You may choose pictures associated to each product attribute value or attribute combination (these pictures will replace the main product image when this product attribute value or attribute combination is selected). Enable this option if you want to display only images of a chosen product attribute value or a attribute combination (other pictures will be hidden). Otherwise, all uploaded pictures will be displayed on the product details page",
+
+            //#7208
+            ["Admin.Customers.Customers.List.SearchIsActive"] = "Is active",
+            ["Admin.Customers.Customers.List.SearchIsActive.Hint"] = "Search customers by an account status.",
         }, languageId);
 
         #endregion

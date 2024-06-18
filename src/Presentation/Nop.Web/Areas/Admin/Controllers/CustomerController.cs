@@ -1615,6 +1615,7 @@ public partial class CustomerController : BaseAdminController
             dayOfBirth: int.TryParse(model.SearchDayOfBirth, out var dayOfBirth) ? dayOfBirth : 0,
             monthOfBirth: int.TryParse(model.SearchMonthOfBirth, out var monthOfBirth) ? monthOfBirth : 0,
             company: model.SearchCompany,
+            isActive: model.SearchIsActive,
             phone: model.SearchPhone,
             zipPostalCode: model.SearchZipPostalCode);
 
@@ -1673,6 +1674,7 @@ public partial class CustomerController : BaseAdminController
             dayOfBirth: int.TryParse(model.SearchDayOfBirth, out var dayOfBirth) ? dayOfBirth : 0,
             monthOfBirth: int.TryParse(model.SearchMonthOfBirth, out var monthOfBirth) ? monthOfBirth : 0,
             company: model.SearchCompany,
+            isActive: model.SearchIsActive,
             phone: model.SearchPhone,
             zipPostalCode: model.SearchZipPostalCode);
 

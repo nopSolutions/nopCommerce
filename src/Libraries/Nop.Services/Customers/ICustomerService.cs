@@ -33,6 +33,7 @@ public partial interface ICustomerService
     /// <param name="phone">Phone; null to load all customers</param>
     /// <param name="zipPostalCode">Phone; null to load all customers</param>
     /// <param name="ipAddress">IP address; null to load all customers</param>
+    /// <param name="isActive">Customer is active; null to load all customers</param>
     /// <param name="pageIndex">Page index</param>
     /// <param name="pageSize">Page size</param>
     /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
@@ -46,7 +47,7 @@ public partial interface ICustomerService
         string email = null, string username = null, string firstName = null, string lastName = null,
         int dayOfBirth = 0, int monthOfBirth = 0,
         string company = null, string phone = null, string zipPostalCode = null, string ipAddress = null,
-        int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false);
+        bool? isActive = null, int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false);
 
     /// <summary>
     /// Gets online customers
