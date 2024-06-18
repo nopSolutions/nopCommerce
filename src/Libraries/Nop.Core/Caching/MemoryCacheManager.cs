@@ -129,12 +129,21 @@ public partial class MemoryCacheManager : CacheKeyService, IStaticCacheManager
 
         try
         {
-            return await task!.Value;
+            var data = await task!.Value;
+
+            //if a cached function return null, remove it from the cache
+            if (data == null)
+                await RemoveAsync(key);
+
+            return data;
         }
-        catch
+        catch (Exception ex)
         {
             //if a cached function throws an exception, remove it from the cache
             await RemoveAsync(key);
+
+            if (ex is NullReferenceException)
+                return default;
 
             throw;
         }
