@@ -9,7 +9,7 @@ namespace Nop.Plugin.Payments.Bitcoin.Components;
 /// <summary>
 /// Represents view component to embed test widget on pages
 /// </summary>
-public class WidgetsBitcoinPaymentViewComponent : NopViewComponent
+public class PaymentBitcoinViewComponent : NopViewComponent
 {
     #region Fields
 
@@ -20,7 +20,7 @@ public class WidgetsBitcoinPaymentViewComponent : NopViewComponent
 
     #region Ctor
 
-    public WidgetsBitcoinPaymentViewComponent(ICustomerService customerService, IWorkContext workContext)
+    public PaymentBitcoinViewComponent(ICustomerService customerService, IWorkContext workContext)
     {
         _customerService = customerService;
         _workContext = workContext;

@@ -1,5 +1,5 @@
 ﻿{
-  "Group": "Widgets",
+  "Group": "Payment methods",
   "FriendlyName": "Bitcoin Payments",
   "SystemName": "Payments.Bitcoin",
   "Version": "1.0",
