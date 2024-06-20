@@ -12156,6 +12156,12 @@
   <LocaleResource Name="Admin.Customers.Customers.List.SearchIpAddress.Hint">
     <Value>Search by IP address.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.List.SearchIsActive">
+    <Value>Is active</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.List.SearchIsActive.Hint">
+    <Value>Search customers by an account status.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.List.SearchLastActivityFrom">
     <Value>Last activity from</Value>
   </LocaleResource>

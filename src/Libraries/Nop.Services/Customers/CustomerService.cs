@@ -152,6 +152,7 @@ public partial class CustomerService : ICustomerService
     /// <param name="phone">Phone; null to load all customers</param>
     /// <param name="zipPostalCode">Phone; null to load all customers</param>
     /// <param name="ipAddress">IP address; null to load all customers</param>
+    /// <param name="isActive">Customer is active; null to load all customers</param>
     /// <param name="pageIndex">Page index</param>
     /// <param name="pageSize">Page size</param>
     /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
@@ -165,7 +166,7 @@ public partial class CustomerService : ICustomerService
         string email = null, string username = null, string firstName = null, string lastName = null,
         int dayOfBirth = 0, int monthOfBirth = 0,
         string company = null, string phone = null, string zipPostalCode = null, string ipAddress = null,
-        int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
+        bool? isActive = null, int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
     {
         var customers = await _customerRepository.GetAllPagedAsync(query =>
         {
@@ -181,6 +182,8 @@ public partial class CustomerService : ICustomerService
                 query = query.Where(c => affiliateId == c.AffiliateId);
             if (vendorId > 0)
                 query = query.Where(c => vendorId == c.VendorId);
+            if (isActive.HasValue)
+                query = query.Where(c => c.Active == isActive.Value);
 
             query = query.Where(c => !c.Deleted);
 
