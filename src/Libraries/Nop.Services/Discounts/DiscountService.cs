@@ -186,16 +186,11 @@ public partial class DiscountService : IDiscountService
         string couponCode = null, string discountName = null, bool showHidden = false,
         DateTime? startDateUtc = null, DateTime? endDateUtc = null, bool? isActive = true)
     {
-        //we load all discounts, and filter them using "discountType" parameter later (in memory)
-        //we do it because we know that this method is invoked several times per HTTP request with distinct "discountType" parameter
+        //we load all discounts, and filter them using "discountType" and dates later (in memory)
+        //we do it because we know that this method is invoked several times per HTTP request with distinct "discountType" parameter and date filters
         //that's why let's access the database only once
         var discounts = (await _discountRepository.GetAllAsync(query =>
             {
-                if (!showHidden)
-                    query = query.Where(discount =>
-                        (!discount.StartDateUtc.HasValue || discount.StartDateUtc <= DateTime.UtcNow) &&
-                        (!discount.EndDateUtc.HasValue || discount.EndDateUtc >= DateTime.UtcNow));
-
                 //filter by coupon code
                 if (!string.IsNullOrEmpty(couponCode))
                     query = query.Where(discount => discount.CouponCode == couponCode);
@@ -212,15 +207,18 @@ public partial class DiscountService : IDiscountService
 
                 return query;
             }, cache => cache.PrepareKeyForDefaultCache(NopDiscountDefaults.DiscountAllCacheKey,
-                showHidden, couponCode ?? string.Empty, discountName ?? string.Empty, isActive)))
+                couponCode ?? string.Empty, discountName ?? string.Empty, isActive)))
             .AsQueryable();
-
-        //we know that this method is usually invoked multiple times
-        //that's why we filter discounts by type and dates on the application layer
+        
         if (discountType.HasValue)
             discounts = discounts.Where(discount => discount.DiscountType == discountType.Value);
 
         //filter by dates
+        if (!showHidden)
+            discounts = discounts.Where(discount =>
+                (!discount.StartDateUtc.HasValue || discount.StartDateUtc <= DateTime.UtcNow) &&
+                (!discount.EndDateUtc.HasValue || discount.EndDateUtc >= DateTime.UtcNow));
+
         if (startDateUtc.HasValue)
             discounts = discounts.Where(discount =>
                 !discount.StartDateUtc.HasValue || discount.StartDateUtc >= startDateUtc.Value);

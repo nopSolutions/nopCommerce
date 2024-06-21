@@ -35,12 +35,11 @@ public static partial class NopDiscountDefaults
     /// Key for caching
     /// </summary>
     /// <remarks>
-    /// {0} : show hidden records?
-    /// {1} : coupon code
-    /// {2} : discount name
-    /// {3} : is active
+    /// {0} : coupon code
+    /// {1} : discount name
+    /// {2} : is active
     /// </remarks>
-    public static CacheKey DiscountAllCacheKey => new("Nop.discount.all.{0}-{1}-{2}-{3}", NopEntityCacheDefaults<Discount>.AllPrefix);
+    public static CacheKey DiscountAllCacheKey => new("Nop.discount.all.{0}-{1}-{2}", NopEntityCacheDefaults<Discount>.AllPrefix);
 
     /// <summary>
     /// Key for caching
