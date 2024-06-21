@@ -26,7 +26,7 @@ public partial class RateClient
     public async Task<RateResponse> ProcessRateAsync(RateRequest request)
     {
         var response = await RateAsync(Guid.NewGuid().ToString(),
-            _upsSettings.UseSandbox ? "testing" : UPSDefaults.SystemName, string.Empty, "v2403", "Shop", new RATERequestWrapper
+            _upsSettings.UseSandbox ? "testing" : UPSDefaults.SystemName, "timeintransit", "v2403", "Shop", new RATERequestWrapper
             {
                 RateRequest = request
             });
