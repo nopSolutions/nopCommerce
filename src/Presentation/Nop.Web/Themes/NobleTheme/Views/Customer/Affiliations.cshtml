@@ -1,0 +1,89 @@
+﻿@model List<CustomerInfoModel>
+
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.Account").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-account-page");
+    NopHtml.AppendPageCssClassParts("html-reward-points-page");
+}
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Affiliations })
+}
+<div class="page account-page reward-points-page">
+    <div class="page-title panel-heading">
+        <h1>My Affiliated Customers</h1>
+    </div>
+    <div class="page-body panel-body from-panel">
+        <div class="reward-points-overview">
+            @* <div class="current-balance alert alert-info">@T("RewardPoints.CurrentBalance", Model.RewardPointsBalance, Model.RewardPointsAmount)</div> *@
+            @*  @if (Model.MinimumRewardPointsBalance > 0)
+            {
+            <div class="min-balance alert alert-info">@T("RewardPoints.MinimumBalance", Model.MinimumRewardPointsBalance, Model.MinimumRewardPointsAmount)</div>
+            } *@
+        </div>
+        <div class="reward-points-history">
+            <div class="title">
+                Below are the users who registerd with your referal link.<br />
+                <strong>You will get 10% commisssion when they buy on this website.</strong>
+            </div>
+            @if (Model.Count > 0)
+            {
+                <div class="panel panel-default">
+                    <table class="data-table table table-bordered table-condensed">
+                        <colgroup>
+                            <col width="30%" />
+                            <col width="30%" />
+                            @* <col width="10%" /> *@
+                            <col />
+                           @*  <col width="20%" /> *@
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th class="a-center CreatedDate">
+                                    First Name
+                                </th>
+                                <th class="a-center points">
+                                    Last Name
+                                </th>
+                                <th class="a-center points-balance">
+                                    Registered Date
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="a-center date">
+                                        @item.FirstName
+                                    </td>
+                                    <td class="a-center points">
+                                        @item.LastName
+                                    </td>
+                                    <td class="a-center points-balance">
+                                        @item.Email
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+               @*  var pager = await Html.PagerAsync(Model.PagerModel);
+                if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
+                {
+                    <div class="pager">
+                        @pager
+                    </div>
+                } *@
+            }
+            else
+            {
+                <p>  No Affiliated Customers -- Refer your friends and earn money </p>
+            }
+        </div>
+    </div>
+</div>

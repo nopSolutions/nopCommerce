@@ -754,6 +754,13 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
         endpointRouteBuilder.MapControllerRoute(name: "ViewCustomerMobileNumber",
             pattern: $"{lang}/ViewCustomerMobileNumber/{{productId?}}",
             defaults: new { controller = "Product", action = "ViewCustomerMobileNumber" });
+
+        //customization
+        //route for my account -> affiliations naviagation menu
+        endpointRouteBuilder.MapControllerRoute(name: "CustomerAffiliations",
+            pattern: $"{lang}/customer/Affiliations",
+            defaults: new { controller = "Customer", action = "Affiliations" });
+
     }
 
     #endregion

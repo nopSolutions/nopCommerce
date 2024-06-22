@@ -43,5 +43,6 @@ public enum CustomerNavigationEnum
     //customization
     WishList = 200,
     PrivateMessages = 210,
-    ShortListed = 220
+    ShortListed = 220,
+    Affiliations = 230
 }

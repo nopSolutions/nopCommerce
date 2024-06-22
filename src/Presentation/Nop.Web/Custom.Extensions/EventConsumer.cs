@@ -195,6 +195,15 @@ namespace Nop.CustomExtensions.Services
                 //remove address item
                 model.CustomerNavigationItems.RemoveAt(3);
 
+                //add customer affiliations
+                model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+                {
+                    RouteName = "CustomerAffiliations",
+                    Title = "Affiliations",
+                    Tab = (int)CustomerNavigationEnum.Affiliations,
+                    ItemClass = "customer-affiliations"
+                });
+
                 //sort by name
                 //model.CustomerNavigationItems = model.CustomerNavigationItems.OrderBy(x => x.Title).ToList();
             }
@@ -642,6 +651,10 @@ namespace Nop.CustomExtensions.Services
             affiliate.FriendlyUrlName = friendlyUrlName;
 
             await _affiliateService.InsertAffiliateAsync(affiliate);
+
+            //update logged-in customer with newly created affiliate id
+            customer.VatNumberStatusId = affiliate.Id;
+            await _customerService.UpdateCustomerAsync(customer);
 
             //activity log
             await _customerActivityService.InsertActivityAsync("AddNewAffiliate",

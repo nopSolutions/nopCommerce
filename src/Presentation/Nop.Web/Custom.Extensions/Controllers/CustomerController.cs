@@ -392,5 +392,17 @@ namespace Nop.Web.Controllers
         {
             await Task.FromResult(0);
         }
+
+        public virtual async Task<IActionResult> Affiliations()
+        {
+            var customer = await _workContext.GetCurrentCustomerAsync();
+
+            if (customer == null)
+                return RedirectToRoute("Homepage");
+
+            var model = await _customerModelFactory.PrepareAffiliatedCustomersModelAsync(customer);
+
+            return View(model);
+        }
     }
 }
