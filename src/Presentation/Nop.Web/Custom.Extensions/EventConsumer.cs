@@ -35,6 +35,7 @@ namespace Nop.CustomExtensions.Services
     /// </summary>
     public class EventConsumer : IConsumer<OrderPaidEvent>,
         IConsumer<CustomerRegisteredEvent>,
+        IConsumer<CustomerActivatedEvent>,
         IConsumer<EntityInsertedEvent<GenericAttribute>>,
         IConsumer<EntityUpdatedEvent<GenericAttribute>>,
         IConsumer<EntityDeletedEvent<GenericAttribute>>,
@@ -139,6 +140,15 @@ namespace Nop.CustomExtensions.Services
 
             //create customer as customer affliate so that he can refer his friends.
             await CreateCustomerAffliateAsync(customer);
+
+        }
+
+        public async Task HandleEventAsync(CustomerActivatedEvent eventMessage)
+        {
+            var customer = eventMessage.Customer;
+
+            //publish the customer associated product
+            await PublishCustomerAssociatedProductAsync(customer);
 
             //notify other customers who match registered customer's specification attributes
             await NotifyOtherCustomersWhenNewCustomerRegistersAsync(customer);
@@ -389,7 +399,7 @@ namespace Nop.CustomExtensions.Services
             var productModel = new Nop.Web.Areas.Admin.Models.Catalog.ProductModel()
             {
                 Name = firstName + " " + lastName,
-                Published = true,
+                Published = false, //activate the product when customer account is activated
                 ShortDescription = _customerAttributeParser.ParseValues(customerAttributesXml, shortDescriptionId).FirstOrDefault(),
                 FullDescription = _customerAttributeParser.ParseValues(customerAttributesXml, fullDescriptionId).FirstOrDefault(),
                 ShowOnHomepage = false,
@@ -686,7 +696,7 @@ namespace Nop.CustomExtensions.Services
                 var targetProducts = (await _productService.SearchProductsAsync(categoryIds: categoryIds, filteredSpecOptions: specOptions)).ToList();
 
                 var targetCustomerIds = targetProducts.Where(x => x.VendorId > 0).Select(x => x.VendorId).ToArray();
-                var targetCustomers = await _customerService.GetCustomersByIdsAsync(targetCustomerIds);
+                var targetCustomers = (await _customerService.GetCustomersByIdsAsync(targetCustomerIds)).Where(x => x.Active = true).ToList();
 
                 var product = await _productService.GetProductByIdAsync(customer.VendorId);
 
@@ -701,6 +711,17 @@ namespace Nop.CustomExtensions.Services
             await Task.FromResult(0);
         }
 
+        private async Task PublishCustomerAssociatedProductAsync(Customer customer)
+        {
+            //get product associted to customer
+            var product = await _productService.GetProductByIdAsync(customer.VendorId);
+
+            product.Published = true;
+            product.UpdatedOnUtc = DateTime.UtcNow;
+
+            //update product
+            await _productService.UpdateProductAsync(product);
+        }
 
         #endregion
     }

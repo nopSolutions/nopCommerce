@@ -23,8 +23,7 @@ namespace Nop.Services.Messages
     {
         public virtual async Task<IList<int>> SendCustomerAvilableNotificationToOtherCustomersAsync(Product product, Customer customer, int languageId, IList<SpecificationAttributeOption> specOptions)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
 
             var store = await _storeContext.GetCurrentStoreAsync();
             languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
@@ -49,6 +48,13 @@ namespace Nop.Services.Messages
 
                 var toEmail = customer.Email;
                 var toName = await _customerService.GetCustomerFullNameAsync(customer);
+
+                //delay sending email to non premium customers by 1 hour
+                if (!await _customerService.IsInCustomerRoleAsync(customer, NopCustomerDefaults.PaidCustomerRoleName))
+                {
+                    messageTemplate.DelayBeforeSend = 1;
+                    messageTemplate.DelayPeriod = MessageDelayPeriod.Hours;
+                }
 
                 return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToListAsync();
