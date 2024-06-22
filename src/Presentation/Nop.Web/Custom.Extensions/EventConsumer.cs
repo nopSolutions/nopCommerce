@@ -310,7 +310,7 @@ namespace Nop.CustomExtensions.Services
         {
             var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
 
-            //get ordered product id
+            //get order product id
             var activeOrderItems = await _orderService.GetOrderItemsAsync(order.Id);
             var customerSubscribedProductId = activeOrderItems.FirstOrDefault().ProductId;
 
@@ -338,30 +338,59 @@ namespace Nop.CustomExtensions.Services
             var subscriptionId = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SubscriptionId, storeId);
             var subscriptionAllottedCount = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.SubscriptionAllottedCount, storeId);
             var subscriptionDate = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SubscriptionDate, storeId);
+            var oldSubscriptionExpiryDate = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SubscriptionExpiryDate, storeId);
 
             // carry forward previous credits
             allottedCount += subscriptionAllottedCount;
 
-            var oldSubscriptionInfo = string.Format("Old Subscription Info - Customer Email:{0} ; SubscriptionId: {1} ; Credits: {2} ; SubscriptionDate: {3}",
+            var oldSubscriptionInfo = string.Format("Old Subscription Info - Customer Email:{0} ; SubscriptionId: {1} ; Credits: {2} ; SubscriptionDate: {3} ; SubscriptionExpiryDate: {4}",
                                         customer.Email,
                                         subscriptionId,
                                         subscriptionAllottedCount,
-                                        subscriptionDate);
+                                        order.CreatedOnUtc.ToString(),
+                                        oldSubscriptionExpiryDate);
 
             //customer activity : Before updating the new subscription , save the old subscription details
             await _customerActivityService.InsertActivityAsync(customer, "PublicStore.CustomerSubscriptionInfo", oldSubscriptionInfo, customer);
 
-            //save SubscriptionId, credits , subscription date 
+            DateTime? subscriptionExpiryDate;
+
+            //subscription expiry date
+            if (customerSubscribedProductId == 1)
+            {
+                //free subscription
+                subscriptionExpiryDate = order.CreatedOnUtc.AddMonths(1);
+            }
+            else if (customerSubscribedProductId == 2)
+            {
+                //1 Month Subscription
+                subscriptionExpiryDate = order.CreatedOnUtc.AddMonths(1);
+
+            }
+            else if (customerSubscribedProductId == 3)
+            {
+                //3 months subscription
+                subscriptionExpiryDate = order.CreatedOnUtc.AddMonths(3);
+            }
+            else
+            {
+                //default expiry date
+                subscriptionExpiryDate = order.CreatedOnUtc.AddMonths(1);
+            }
+
+            //save SubscriptionId, credits , subscription date and expiry date
             await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SubscriptionId, customerSubscribedProductId, storeId);
             await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SubscriptionAllottedCount, allottedCount, storeId);
             await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SubscriptionDate, order.CreatedOnUtc, storeId);
+            await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SubscriptionExpiryDate, subscriptionExpiryDate, storeId);
 
 
-            var newSubscriptionInfo = string.Format("New Subscription Info - Customer Email:{0} ; SubscriptionId: {1} ; Credits: {2} ; SubscriptionDate: {3}",
+            var newSubscriptionInfo = string.Format("New Subscription Info - Customer Email:{0} ; SubscriptionId: {1} ; Credits: {2} ; SubscriptionDate: {3}; SubscriptionExpiryDate: {4}",
                                         customer.Email,
                                         customerSubscribedProductId,
                                         allottedCount,
-                                        order.CreatedOnUtc.ToString());
+                                        order.CreatedOnUtc.ToString(),
+                                        subscriptionExpiryDate);
 
             //customer activity
             await _customerActivityService.InsertActivityAsync(customer, "PublicStore.CustomerSubscriptionInfo", newSubscriptionInfo, customer);

@@ -35,7 +35,7 @@
                                     Avaialable Credit Count: <strong> @(@Model.AllottedCreditCount - @Model.UsedCreditCount)</strong>
                                 </li>
                                 <li class="order-total">
-                                    Subscription Valid Upto: <strong> @Model.SubscriptionExpiryDate</strong>
+                                    Subscription Valid Upto: <strong> @Model.SubscriptionExpiryDate.ToString("d")</strong>
                                 </li>
                             </ul>
                         </div>
