@@ -261,14 +261,14 @@ namespace Nop.CustomExtensions.Services
 
             }
 
-            //this is for header links model .
-            //Can be used to hide and show shopping cart link based on catogory
-            //show shopping cart in pricing page and hide in all other categories
+            //show shopping cart in pricing, onepagecheckout & cart page and hide in all other categories
             if (eventMessage.Model is HeaderLinksModel headerLinksModel)
             {
                 var currentPageUrl = _webHelper.GetThisPageUrl(false);
 
-                if (currentPageUrl.Contains("pricing", StringComparison.InvariantCultureIgnoreCase))
+                if (currentPageUrl.Contains("pricing", StringComparison.InvariantCultureIgnoreCase)
+                    || currentPageUrl.Contains("cart", StringComparison.InvariantCultureIgnoreCase)
+                    || currentPageUrl.Contains("onepagecheckout", StringComparison.InvariantCultureIgnoreCase))
                     headerLinksModel.ShoppingCartEnabled = true;
                 else
                     headerLinksModel.ShoppingCartEnabled = false;
