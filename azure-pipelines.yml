@@ -28,10 +28,13 @@ steps:
 - task: DotNetCoreCLI@2
   displayName: 'dotnet publish'
   inputs:
-    command: publish
+    command: 'publish'
+    publishWebProjects: true
     arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    zipAfterPublish: false
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact'
   inputs:
-    ArtifactName: '$(Parameters.ArtifactName)'
+    ArtifactName: 'haifagold'
+
 
