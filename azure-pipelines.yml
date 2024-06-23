@@ -11,7 +11,26 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
+  tag: '$(Build.BuildId)'
+  Solution_File: NopCommerce.sln
+  Solution_Dir: src
 
 steps:
-- script: dotnet build --configuration $(buildConfiguration)
-  displayName: 'dotnet build $(buildConfiguration)'
+
+    - task: UseDotNet@2
+      displayName: 'Use .NET 8 sdk'
+      inputs:
+        packageType: 'sdk'
+        version: '8.0.x'
+        performMultiLevelLookup: true
+        includePreviewVersions: false
+
+
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'publish'
+        zipAfterPublish: false
+        arguments: -c=Release -o=build
+        publishWebProjects: false
+        projects: '**/$(Solution_File)'
+        workingDirectory: '$(Solution_Dir)/'
