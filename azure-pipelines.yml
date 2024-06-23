@@ -12,25 +12,16 @@ pool:
 variables:
   buildConfiguration: 'Release'
   tag: '$(Build.BuildId)'
-  Solution_File: NopCommerce.sln
-  Solution_Dir: src
 
 steps:
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet restore'
+  inputs:
+    command: restore
+    projects: ./src/NopCommerce.sln
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet build'
+  inputs:
+    projects: ./src/NopCommerce.sln
+    arguments: '--configuration $(BuildConfiguration)'
 
-    - task: UseDotNet@2
-      displayName: 'Use .NET 8 sdk'
-      inputs:
-        packageType: 'sdk'
-        version: '8.0.x'
-        performMultiLevelLookup: true
-        includePreviewVersions: false
-
-
-    - task: DotNetCoreCLI@2
-      inputs:
-        command: 'publish'
-        zipAfterPublish: false
-        arguments: -c=Release -o=build
-        publishWebProjects: false
-        projects: '**/$(Solution_File)'
-        workingDirectory: '$(Solution_Dir)/'
