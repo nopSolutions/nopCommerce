@@ -25,3 +25,13 @@ steps:
     projects: ./src/NopCommerce.sln
     arguments: '--configuration $(BuildConfiguration)'
 
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet publish'
+  inputs:
+    command: publish
+    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact'
+  inputs:
+    ArtifactName: '$(Parameters.ArtifactName)'
+
