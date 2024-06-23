@@ -280,6 +280,23 @@ namespace Nop.CustomExtensions.Services
 
             }
 
+
+            #region Admin functionality
+
+            if (eventMessage.Model is Web.Areas.Admin.Models.Catalog.CategoryModel adminCategoryModel)
+            {
+                //set default values for the new model. i.e new category creation mode
+                if (adminCategoryModel.Id == 0)
+                {
+                    adminCategoryModel.ShowOnHomepage = false;
+                    adminCategoryModel.IncludeInTopMenu = false;
+                    adminCategoryModel.AllowCustomersToSelectPageSize = false;
+                    adminCategoryModel.PriceRangeFiltering = false;
+                    adminCategoryModel.ManuallyPriceRange = false;
+                }
+            }
+
+            #endregion
             //return Task.FromResult(0);
         }
 
