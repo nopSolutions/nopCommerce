@@ -25,6 +25,7 @@ namespace Nop.Plugin.Misc.AbcCore.Services.Custom
 {
     public class AbcProductService : ProductService, IAbcProductService
     {
+        private readonly INopDataProvider _nopDataProvider;
         private readonly IPictureService _pictureService;
 
         public AbcProductService(
@@ -62,7 +63,8 @@ namespace Nop.Plugin.Misc.AbcCore.Services.Custom
             IStoreMappingService storeMappingService,
             IWorkContext workContext,
             LocalizationSettings localizationSettings,
-            IPictureService pictureService
+            IPictureService pictureService,
+            INopDataProvider nopDataProvider
         ) : base(catalogSettings, commonSettings, aclService,
                 customerService, dateRangeService,
                 languageService, localizationService, productAttributeParser,
@@ -80,6 +82,7 @@ namespace Nop.Plugin.Misc.AbcCore.Services.Custom
                 storeService, storeMappingService, workContext, localizationSettings)
         {
             _pictureService = pictureService;
+            _nopDataProvider = nopDataProvider;
         }
 
         public async Task<IList<Product>> GetAllPublishedProductsAsync()
@@ -89,10 +92,24 @@ namespace Nop.Plugin.Misc.AbcCore.Services.Custom
 
         public async Task<IList<Product>> GetProductsWithoutImagesAsync()
         {
-            var publishedProductIds = GetAllPublishedProductsIds();
-            var productIdsWithPicture = (await GetProductsImagesIdsAsync(publishedProductIds.ToArray())).Select(p => p.Key);
+            var productIds = await _nopDataProvider.QueryAsync<int>(@"
+                IF OBJECT_ID('tempdb..#nonPromoPpmIds') IS NOT NULL
+                DROP TABLE #nonPromoPpmIds;
 
-            return await GetProductsByIdsAsync(publishedProductIds.Except(productIdsWithPicture).ToArray());
+                -- get non-promo picture mappings 
+                select ppm.Id, ppm.ProductId
+                INTO #nonPromoPpmIds
+                from Product_Picture_Mapping ppm
+                join Picture pi on pi.Id = ppm.PictureId
+                where SeoFilename not like '%promo%'
+
+                -- get products without images
+                select pr.Id from Product pr
+                left join #nonPromoPpmIds ppm on ppm.ProductId = pr.Id
+                where Published = 1 and ppm.ProductId is null
+            ");
+
+            return await GetProductsByIdsAsync(productIds.ToArray());
         }
 
         public async Task<IList<Product>> GetNewProductsAsync()
