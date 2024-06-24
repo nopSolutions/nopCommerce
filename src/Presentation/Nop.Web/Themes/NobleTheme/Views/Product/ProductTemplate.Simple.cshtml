@@ -126,7 +126,7 @@
                                         }
                                         <!--gift card-->
                                         @{
-                                            var dataDictGiftCard = new ViewDataDictionary(ViewData);
+                                                                            var dataDictGiftCard = new ViewDataDictionary(ViewData);
                                             dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = $"giftcard_{Model.Id}";
                                             @await Html.PartialAsync("_GiftCardInfo", Model.GiftCard, dataDictGiftCard)
                                         }
@@ -283,8 +283,8 @@
                                                 </div>*@
                                             </div>
                                         </div>
-                                        @*@await Html.PartialAsync("_ShareButton", Model)*@
-                                        @*@await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductDetailsOverviewBottom, additionalData = Model })*@
+                                        @await Html.PartialAsync("_ShareButton", Model)
+                                        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductDetailsOverviewBottom, additionalData = Model })
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -312,14 +312,13 @@
                                                     @Html.Raw(Model.FullDescription)
                                                 </div>
                                             }
-                                           @*  <div class="product-tags tab-pane fade" id="tags">
+                                            @*  <div class="product-tags tab-pane fade" id="tags">
                                                 @await Html.PartialAsync("_ProductTags", Model.ProductTags)
                                             </div> *@
                                             <div class="product-specification fade tab-pane" id="specification">
                                                 @await Html.PartialAsync("_ProductSpecifications", Model.ProductSpecificationModel)
                                             </div>
                                         </div>
-
                                         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductDetailsEssentialBottom, additionalData = Model })
                                     </div>
                                 </div>
@@ -335,6 +334,11 @@
             </div>
         </form>
         @* @await Html.PartialAsync("_ProductReviews", Model.ProductReviews) *@
+        <!--product reviews-->
+        @if (Model.ProductReviewOverview.AllowCustomerReviews)
+        {
+            @await Html.PartialAsync("_ProductReviews", Model.ProductReviews)
+        }
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductDetailsBottom, additionalData = Model })
     </div>
 </div>

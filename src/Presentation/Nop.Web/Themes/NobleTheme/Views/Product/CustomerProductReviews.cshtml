@@ -14,7 +14,7 @@
 }
 @section left
     {
-    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.ProductReviews })
+    @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = CustomerNavigationEnum.ProductReviews })
 }
 
 <div class="page account-page my-product-reviews-list-page">
@@ -22,6 +22,7 @@
         <h1>@T("Account.MyAccount") - @T("Account.CustomerProductReviews")</h1>
     </div>
     <div class="page-body panel-body from-panel">
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerProductReviewsTop, additionalData = Model })
         @if (Model.ProductReviews.Count > 0)
         {
             foreach (var review in Model.ProductReviews)
@@ -99,4 +100,5 @@
             </div>
         }
     </div>
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerProductReviewsBottom, additionalData = Model })
 </div>
