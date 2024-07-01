@@ -250,6 +250,7 @@ public static partial class AdminWidgetZones
     public static string ShippingMethodListButtons => "admin_shipping_method_list_buttons";
     public static string ShippingProviderListButtons => "admin_shipping_provider_list_buttons";
     public static string ShippingRestrictionListButtons => "admin_shipping_restriction_list_buttons";
+    public static string ShippingStateProvinceRestrictionListButtons => "admin_shipping_state_province_restriction_list_buttons";
     public static string ShippingDetailsBlock => "admin_shipping_details_block";
     public static string ShippingSettingsButtons => "admin_shipping_settings_buttons";
     public static string ShoppingCartSettingsDetailsBlock => "admin_shopping_cart_settings_details_block";

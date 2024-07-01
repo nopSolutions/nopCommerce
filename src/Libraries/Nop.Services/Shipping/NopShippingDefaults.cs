@@ -15,8 +15,9 @@ public static partial class NopShippingDefaults
     /// </summary>
     /// <remarks>
     /// {0} : country identifier
+    /// {1} : state province identifier
     /// </remarks>
-    public static CacheKey ShippingMethodsAllCacheKey => new("Nop.shippingmethod.all.{0}", NopEntityCacheDefaults<ShippingMethod>.AllPrefix);
+    public static CacheKey ShippingMethodsAllCacheKey => new("Nop.shippingmethod.all.{0}.{1}", NopEntityCacheDefaults<ShippingMethod>.AllPrefix);
 
     #endregion
 }

@@ -177,4 +177,14 @@ public partial interface IShippingModelFactory
     /// The task result contains the shipping method restriction model
     /// </returns>
     Task<ShippingMethodRestrictionModel> PrepareShippingMethodRestrictionModelAsync(ShippingMethodRestrictionModel model);
+
+    /// <summary>
+    /// Prepare shipping method state province restriction model
+    /// </summary>
+    /// <param name="model">Shipping method state province restriction model</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the shipping method state province restriction model
+    /// </returns>
+    Task<ShippingMethodStateProvinceRestrictionModel> PrepareShippingMethodStateProvinceRestrictionModelAsync(ShippingMethodStateProvinceRestrictionModel model);
 }

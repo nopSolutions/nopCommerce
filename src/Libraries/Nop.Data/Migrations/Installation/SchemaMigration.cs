@@ -116,6 +116,7 @@ public class SchemaMigration : ForwardOnlyMigration
         Create.TableFor<ShipmentItem>();
         Create.TableFor<ShippingMethod>();
         Create.TableFor<ShippingMethodCountryMapping>();
+        Create.TableFor<ShippingMethodStateProvinceMapping>();
         Create.TableFor<ProductWarehouseInventory>();
         Create.TableFor<StockQuantityHistory>();
         Create.TableFor<Download>();
