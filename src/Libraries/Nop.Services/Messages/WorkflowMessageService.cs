@@ -258,7 +258,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -302,7 +302,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -344,7 +344,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -386,7 +386,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -429,7 +429,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -471,7 +471,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -522,7 +522,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -565,7 +565,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -613,7 +613,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -657,7 +657,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -705,7 +705,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -752,7 +752,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -801,7 +801,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -847,7 +847,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -896,7 +896,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -942,7 +942,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -990,7 +990,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -1038,7 +1038,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -1087,7 +1087,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -1133,7 +1133,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -1181,7 +1181,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -1226,7 +1226,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -1272,7 +1272,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -1320,7 +1320,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -1368,7 +1368,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -1415,7 +1415,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -1463,7 +1463,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -1510,7 +1510,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -1548,7 +1548,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -1601,7 +1601,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -1646,7 +1646,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -1697,7 +1697,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -1749,7 +1749,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -1806,7 +1806,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -1861,7 +1861,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -1910,7 +1910,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -1952,7 +1952,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -2003,7 +2003,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -2049,7 +2049,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -2098,7 +2098,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -2141,7 +2141,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -2197,7 +2197,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -2238,7 +2238,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -2281,7 +2281,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -2327,7 +2327,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
@@ -2372,7 +2372,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -2418,7 +2418,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -2470,7 +2470,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -2517,7 +2517,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             string fromEmail;
             string fromName;
@@ -2605,7 +2605,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             }
 
             var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);

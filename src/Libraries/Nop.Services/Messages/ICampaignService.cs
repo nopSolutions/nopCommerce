@@ -67,6 +67,7 @@ public partial interface ICampaignService
     /// <param name="campaign">Campaign</param>
     /// <param name="emailAccount">Email account</param>
     /// <param name="email">Email</param>
+    /// <param name="languageId">Language identifier</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    Task SendCampaignAsync(Campaign campaign, EmailAccount emailAccount, string email);
+    Task SendCampaignAsync(Campaign campaign, EmailAccount emailAccount, string email, int languageId);
 }

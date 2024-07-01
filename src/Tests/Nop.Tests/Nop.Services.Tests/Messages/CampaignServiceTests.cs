@@ -101,7 +101,7 @@ public class CampaignServiceTests : BaseNopTest
         await _campaignService.SendCampaignAsync(campaign, emailAccount, new[] { subscription });
         _cueuedEmailRepository.Table.Count().Should().Be(1);
 
-        await _campaignService.SendCampaignAsync(campaign, emailAccount, NopTestsDefaults.AdminEmail);
+        await _campaignService.SendCampaignAsync(campaign, emailAccount, NopTestsDefaults.AdminEmail, 1);
         TestSmtpBuilder.TestSmtpClient.MessageIsSent.Should().BeTrue();
     }
 }

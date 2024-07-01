@@ -31,6 +31,7 @@ public partial class CampaignController : BaseAdminController
     protected readonly IPermissionService _permissionService;
     protected readonly IStoreContext _storeContext;
     protected readonly IStoreService _storeService;
+    protected readonly IWorkContext _workContext;
 
     #endregion
 
@@ -47,7 +48,8 @@ public partial class CampaignController : BaseAdminController
         INewsLetterSubscriptionService newsLetterSubscriptionService,
         IPermissionService permissionService,
         IStoreContext storeContext,
-        IStoreService storeService)
+        IStoreService storeService,
+        IWorkContext workContext)
     {
         _emailAccountSettings = emailAccountSettings;
         _campaignModelFactory = campaignModelFactory;
@@ -61,6 +63,7 @@ public partial class CampaignController : BaseAdminController
         _permissionService = permissionService;
         _storeContext = storeContext;
         _storeService = storeService;
+        _workContext = workContext;
     }
 
     #endregion
@@ -238,8 +241,10 @@ public partial class CampaignController : BaseAdminController
             }
             else
             {
+                var workingLanguage = await _workContext.GetWorkingLanguageAsync();
+
                 //no subscription found
-                await _campaignService.SendCampaignAsync(campaign, emailAccount, model.TestEmail);
+                await _campaignService.SendCampaignAsync(campaign, emailAccount, model.TestEmail, workingLanguage.Id);
             }
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Promotions.Campaigns.TestEmailSentToCustomers"));

@@ -614,7 +614,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
                     ? _productService.FormatRentalDate(product, orderItem.RentalStartDateUtc.Value) : string.Empty;
                 var rentalEndDate = orderItem.RentalEndDateUtc.HasValue
                     ? _productService.FormatRentalDate(product, orderItem.RentalEndDateUtc.Value) : string.Empty;
-                var rentalInfo = string.Format(await _localizationService.GetResourceAsync("Order.Rental.FormattedDate"),
+                var rentalInfo = string.Format(await _localizationService.GetResourceAsync("Order.Rental.FormattedDate", languageId),
                     rentalStartDate, rentalEndDate);
                 sb.AppendLine("<br />");
                 sb.AppendLine(rentalInfo);
@@ -1012,12 +1012,13 @@ public partial class MessageTokenProvider : IMessageTokenProvider
     /// <param name="tokens">List of already added tokens</param>
     /// <param name="store">Store</param>
     /// <param name="emailAccount">Email account</param>
+    /// <param name="languageId">Language identifier</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task AddStoreTokensAsync(IList<Token> tokens, Store store, EmailAccount emailAccount)
+    public virtual async Task AddStoreTokensAsync(IList<Token> tokens, Store store, EmailAccount emailAccount, int languageId)
     {
         ArgumentNullException.ThrowIfNull(emailAccount);
 
-        tokens.Add(new Token("Store.Name", await _localizationService.GetLocalizedAsync(store, x => x.Name)));
+        tokens.Add(new Token("Store.Name", await _localizationService.GetLocalizedAsync(store, x => x.Name, languageId)));
         tokens.Add(new Token("Store.URL", store.Url, true));
         tokens.Add(new Token("Store.Email", emailAccount.Email));
         tokens.Add(new Token("Store.CompanyName", store.CompanyName));
@@ -1067,9 +1068,9 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         tokens.Add(new Token("Order.BillingAddress2", billingAddress.Address2));
         tokens.Add(new Token("Order.BillingCity", billingAddress.City));
         tokens.Add(new Token("Order.BillingCounty", billingAddress.County));
-        tokens.Add(new Token("Order.BillingStateProvince", await _stateProvinceService.GetStateProvinceByAddressAsync(billingAddress) is StateProvince billingStateProvince ? await _localizationService.GetLocalizedAsync(billingStateProvince, x => x.Name) : string.Empty));
+        tokens.Add(new Token("Order.BillingStateProvince", await _stateProvinceService.GetStateProvinceByAddressAsync(billingAddress) is StateProvince billingStateProvince ? await _localizationService.GetLocalizedAsync(billingStateProvince, x => x.Name, languageId) : string.Empty));
         tokens.Add(new Token("Order.BillingZipPostalCode", billingAddress.ZipPostalCode));
-        tokens.Add(new Token("Order.BillingCountry", await _countryService.GetCountryByAddressAsync(billingAddress) is Country billingCountry ? await _localizationService.GetLocalizedAsync(billingCountry, x => x.Name) : string.Empty));
+        tokens.Add(new Token("Order.BillingCountry", await _countryService.GetCountryByAddressAsync(billingAddress) is Country billingCountry ? await _localizationService.GetLocalizedAsync(billingCountry, x => x.Name, languageId) : string.Empty));
         tokens.Add(new Token("Order.BillingCustomAttributes", await _addressAttributeFormatter.FormatAttributesAsync(billingAddress.CustomAttributes), true));
         tokens.Add(new Token("Order.BillingAddressLine", billingAddressLine));
         tokens.Add(new Token("Order.Shippable", !string.IsNullOrEmpty(order.ShippingMethod)));
@@ -1085,9 +1086,9 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         tokens.Add(new Token("Order.ShippingAddress2", (await orderAddress(order))?.Address2 ?? string.Empty));
         tokens.Add(new Token("Order.ShippingCity", (await orderAddress(order))?.City ?? string.Empty));
         tokens.Add(new Token("Order.ShippingCounty", (await orderAddress(order))?.County ?? string.Empty));
-        tokens.Add(new Token("Order.ShippingStateProvince", await _stateProvinceService.GetStateProvinceByAddressAsync(await orderAddress(order)) is StateProvince shippingStateProvince ? await _localizationService.GetLocalizedAsync(shippingStateProvince, x => x.Name) : string.Empty));
+        tokens.Add(new Token("Order.ShippingStateProvince", await _stateProvinceService.GetStateProvinceByAddressAsync(await orderAddress(order)) is StateProvince shippingStateProvince ? await _localizationService.GetLocalizedAsync(shippingStateProvince, x => x.Name, languageId) : string.Empty));
         tokens.Add(new Token("Order.ShippingZipPostalCode", (await orderAddress(order))?.ZipPostalCode ?? string.Empty));
-        tokens.Add(new Token("Order.ShippingCountry", await _countryService.GetCountryByAddressAsync(await orderAddress(order)) is Country orderCountry ? await _localizationService.GetLocalizedAsync(orderCountry, x => x.Name) : string.Empty));
+        tokens.Add(new Token("Order.ShippingCountry", await _countryService.GetCountryByAddressAsync(await orderAddress(order)) is Country orderCountry ? await _localizationService.GetLocalizedAsync(orderCountry, x => x.Name, languageId) : string.Empty));
         tokens.Add(new Token("Order.ShippingCustomAttributes", await _addressAttributeFormatter.FormatAttributesAsync((await orderAddress(order))?.CustomAttributes ?? string.Empty), true));
         tokens.Add(new Token("Order.ShippingAddressLine", shippingAddressLine));
         tokens.Add(new Token("Order.IsCompletelyShipped", !order.PickupInStore && order.ShippingStatus == ShippingStatus.Shipped));
@@ -1095,7 +1096,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         tokens.Add(new Token("Order.IsCompletelyDelivered", order.ShippingStatus == ShippingStatus.Delivered));
 
         var paymentMethod = await _paymentPluginManager.LoadPluginBySystemNameAsync(order.PaymentMethodSystemName);
-        var paymentMethodName = paymentMethod != null ? await _localizationService.GetLocalizedFriendlyNameAsync(paymentMethod, (await _workContext.GetWorkingLanguageAsync()).Id) : order.PaymentMethodSystemName;
+        var paymentMethodName = paymentMethod != null ? await _localizationService.GetLocalizedFriendlyNameAsync(paymentMethod, languageId) : order.PaymentMethodSystemName;
         tokens.Add(new Token("Order.PaymentMethod", paymentMethodName));
         tokens.Add(new Token("Order.VatNumber", order.VatNumber));
         var sbCustomValues = new StringBuilder();
