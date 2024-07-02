@@ -925,6 +925,7 @@ opacity: 1 !important;
 
 body .header-menu>ul>li>a {
 	padding: 5px 5px;
+	padding-bottom: 10px;
 }
 
 input.button-1.search-box-button {
@@ -970,5 +971,10 @@ body .header-menu .mobile-sidebar-category.second {
 		margin-left: auto;
 		margin-right: auto;
 		padding-bottom: 15px;
+	}
+}
+@media screen and (max-width: 1024px) {
+	.hours-desktop {
+		padding-top: 15px;
 	}
 }
