@@ -57,14 +57,20 @@
 }
 .header-links-wrapper {
     position: absolute;
-    top: 16px;
+    top: 29px;
     right: 0;
     z-index: 10;
+}
+.hours-desktop .cFzLkk {
+    margin-top: 0;
 }
 #flyout-cart {
     width: auto;
     float: right;
     margin-right: 115px;
+    margin-top: 0px;
+    margin-bottom: -15px;
+    padding-bottom: 5px;
 }
 
 /* Have logo match category width - other header logo fixes */
