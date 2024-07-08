@@ -175,4 +175,38 @@ public class MemoryCacheManagerTests : BaseNopTest
         obj = await _staticCacheManager.GetAsync(new CacheKey("some_key_2"));
         obj.Should().BeNull();
     }
+
+    [Test]
+    public async Task CanGetNullButNotCacheIt()
+    {
+        var key = new CacheKey("some_key_1");
+
+        var obj = await _staticCacheManager.GetAsync<object>(
+            key, () => null);
+
+        obj.Should().BeNull();
+
+        obj = await _staticCacheManager.GetAsync(
+            key, Task<object> () => Task.FromResult((object)null));
+
+        obj.Should().BeNull();
+
+        obj = await _staticCacheManager.GetAsync<object>(key, () => 1);
+        obj.Should().Be(1);
+
+        obj = await _staticCacheManager.GetAsync<object>(key, () => null);
+        obj.Should().Be(1);
+
+        obj = await _staticCacheManager.GetAsync(
+            key, Task<object> () => Task.FromResult((object)null));
+
+        obj.Should().Be(1);
+
+        await _staticCacheManager.RemoveAsync(key);
+
+        await _staticCacheManager.SetAsync<object>(key, null);
+
+        obj = await _staticCacheManager.GetAsync<int>(key);
+        obj.Should().Be(0);
+    }
 }

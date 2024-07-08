@@ -1631,6 +1631,9 @@ public partial class OrderProcessingService : IOrderProcessingService
 
         await _orderTotalCalculationService.UpdateOrderTotalsAsync(updateOrderParameters, restoredCart);
 
+        if (!itemDeleted)
+            await _orderService.UpdateOrderItemAsync(updatedOrderItem);
+
         if (updateOrderParameters.PickupPoint != null)
         {
             updatedOrder.PickupInStore = true;
