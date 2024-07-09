@@ -15,13 +15,11 @@ public partial class StateProvinceBuilder : NopEntityBuilder<StateProvince>
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) =>
         table
             .WithColumn(nameof(StateProvince.Name)).AsString(100).NotNullable()
             .WithColumn(nameof(StateProvince.Abbreviation)).AsString(100).Nullable()
             .WithColumn(nameof(StateProvince.CountryId)).AsInt32().ForeignKey<Country>();
-    }
 
     #endregion
 }

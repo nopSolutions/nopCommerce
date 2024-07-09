@@ -15,12 +15,10 @@ public partial class CustomerAttributeValueBuilder : NopEntityBuilder<CustomerAt
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) =>
         table
             .WithColumn(nameof(CustomerAttributeValue.Name)).AsString(400).NotNullable()
             .WithColumn(NameCompatibilityManager.GetColumnName(typeof(CustomerAttributeValue), nameof(CustomerAttributeValue.AttributeId))).AsInt32().ForeignKey<CustomerAttribute>();
-    }
 
     #endregion
 }

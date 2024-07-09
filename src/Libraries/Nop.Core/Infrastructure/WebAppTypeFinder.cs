@@ -30,15 +30,9 @@ public partial class WebAppTypeFinder : ITypeFinder
 
     #region Ctor
 
-    public WebAppTypeFinder()
-    {
-        _fileProvider = CommonHelper.DefaultFileProvider;
-    }
+    public WebAppTypeFinder() => _fileProvider = CommonHelper.DefaultFileProvider;
 
-    static WebAppTypeFinder()
-    {
-        AppDomain.CurrentDomain.AssemblyLoad += OnAssemblyLoad;
-    }
+    static WebAppTypeFinder() => AppDomain.CurrentDomain.AssemblyLoad += OnAssemblyLoad;
 
     #endregion
 
@@ -69,10 +63,8 @@ public partial class WebAppTypeFinder : ITypeFinder
     /// <returns>
     /// True if the assembly should be loaded into Nop.
     /// </returns>
-    protected static bool Matches(string assemblyFullName)
-    {
-        return !Regex.IsMatch(assemblyFullName, ASSEMBLY_SKIP_LOADING_PATTERN, RegexOptions.IgnoreCase | RegexOptions.Compiled);
-    }
+    protected static bool Matches(string assemblyFullName) => 
+        !Regex.IsMatch(assemblyFullName, ASSEMBLY_SKIP_LOADING_PATTERN, RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
     /// <summary>
     /// Does type implement generic?
@@ -243,10 +235,8 @@ public partial class WebAppTypeFinder : ITypeFinder
     /// <typeparam name="T">Type</typeparam>
     /// <param name="onlyConcreteClasses">A value indicating whether to find only concrete classes</param>
     /// <returns>Result</returns>
-    public virtual IEnumerable<Type> FindClassesOfType<T>(bool onlyConcreteClasses = true)
-    {
-        return FindClassesOfType(typeof(T), onlyConcreteClasses);
-    }
+    public virtual IEnumerable<Type> FindClassesOfType<T>(bool onlyConcreteClasses = true) =>
+        FindClassesOfType(typeof(T), onlyConcreteClasses);
 
     /// <summary>
     /// Find classes of type
@@ -255,10 +245,8 @@ public partial class WebAppTypeFinder : ITypeFinder
     /// <param name="onlyConcreteClasses">A value indicating whether to find only concrete classes</param>
     /// <returns>Result</returns>
     /// <returns></returns>
-    public virtual IEnumerable<Type> FindClassesOfType(Type assignTypeFrom, bool onlyConcreteClasses = true)
-    {
-        return FindClassesOfType(assignTypeFrom, GetAssemblies(), onlyConcreteClasses);
-    }
+    public virtual IEnumerable<Type> FindClassesOfType(Type assignTypeFrom, bool onlyConcreteClasses = true) => 
+        FindClassesOfType(assignTypeFrom, GetAssemblies(), onlyConcreteClasses);
 
     /// <summary>
     /// Gets the assembly by it full name

@@ -14,12 +14,10 @@ public partial class SettingBuilder : NopEntityBuilder<Setting>
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) =>
         table
             .WithColumn(nameof(Setting.Name)).AsString(200).NotNullable()
             .WithColumn(nameof(Setting.Value)).AsString(6000).NotNullable();
-    }
 
     #endregion
 }

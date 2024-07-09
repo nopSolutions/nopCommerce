@@ -66,10 +66,7 @@ public partial class CommonHelper
     /// </summary>
     /// <param name="ipAddress">IPAddress to verify</param>
     /// <returns>true if the string is a valid IpAddress and false if it's not</returns>
-    public static bool IsValidIpAddress(string ipAddress)
-    {
-        return IPAddress.TryParse(ipAddress, out var _);
-    }
+    public static bool IsValidIpAddress(string ipAddress) => IPAddress.TryParse(ipAddress, out var _);
 
     /// <summary>
     /// Generate random digit code
@@ -128,30 +125,22 @@ public partial class CommonHelper
     /// </summary>
     /// <param name="str">Input string</param>
     /// <returns>Input string with only numeric values, empty string if input is null/empty</returns>
-    public static string EnsureNumericOnly(string str)
-    {
-        return string.IsNullOrEmpty(str) ? string.Empty : new string(str.Where(char.IsDigit).ToArray());
-    }
+    public static string EnsureNumericOnly(string str) => 
+        string.IsNullOrEmpty(str) ? string.Empty : new string(str.Where(char.IsDigit).ToArray());
 
     /// <summary>
     /// Ensure that a string is not null
     /// </summary>
     /// <param name="str">Input string</param>
     /// <returns>Result</returns>
-    public static string EnsureNotNull(string str)
-    {
-        return str ?? string.Empty;
-    }
+    public static string EnsureNotNull(string str) => str ?? string.Empty;
 
     /// <summary>
     /// Indicates whether the specified strings are null or empty strings
     /// </summary>
     /// <param name="stringsToValidate">Array of strings to validate</param>
     /// <returns>Boolean</returns>
-    public static bool AreNullOrEmpty(params string[] stringsToValidate)
-    {
-        return stringsToValidate.Any(string.IsNullOrEmpty);
-    }
+    public static bool AreNullOrEmpty(params string[] stringsToValidate) => stringsToValidate.Any(string.IsNullOrEmpty);
 
     /// <summary>
     /// Compare two arrays
@@ -204,10 +193,7 @@ public partial class CommonHelper
     /// <param name="value">The value to convert.</param>
     /// <param name="destinationType">The type to convert the value to.</param>
     /// <returns>The converted value.</returns>
-    public static object To(object value, Type destinationType)
-    {
-        return To(value, destinationType, CultureInfo.InvariantCulture);
-    }
+    public static object To(object value, Type destinationType) => To(value, destinationType, CultureInfo.InvariantCulture);
 
     /// <summary>
     /// Converts a value to a destination type.
@@ -246,11 +232,9 @@ public partial class CommonHelper
     /// <param name="value">The value to convert.</param>
     /// <typeparam name="T">The type to convert the value to.</typeparam>
     /// <returns>The converted value.</returns>
-    public static T To<T>(object value)
-    {
+    public static T To<T>(object value) =>
         //return (T)Convert.ChangeType(value, typeof(T), CultureInfo.InvariantCulture);
-        return (T)To(value, typeof(T));
-    }
+        (T)To(value, typeof(T));
 
     /// <summary>
     /// Convert enum for front-end

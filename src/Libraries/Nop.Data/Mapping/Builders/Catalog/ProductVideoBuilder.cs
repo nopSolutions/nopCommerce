@@ -16,12 +16,10 @@ public partial class ProductVideoBuilder : NopEntityBuilder<ProductVideo>
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) => 
         table
             .WithColumn(nameof(ProductVideo.VideoId)).AsInt32().ForeignKey<Video>()
             .WithColumn(nameof(ProductVideo.ProductId)).AsInt32().ForeignKey<Product>();
-    }
 
     #endregion
 }

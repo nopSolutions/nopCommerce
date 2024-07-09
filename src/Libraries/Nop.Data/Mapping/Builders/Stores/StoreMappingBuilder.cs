@@ -15,12 +15,10 @@ public partial class StoreMappingBuilder : NopEntityBuilder<StoreMapping>
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) => 
         table
             .WithColumn(nameof(StoreMapping.EntityName)).AsString(400).NotNullable()
             .WithColumn(nameof(StoreMapping.StoreId)).AsInt32().ForeignKey<Store>();
-    }
 
     #endregion
 }

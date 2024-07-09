@@ -14,8 +14,7 @@ public partial class ProductBuilder : NopEntityBuilder<Product>
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) => 
         table
             .WithColumn(nameof(Product.Name)).AsString(400).NotNullable()
             .WithColumn(nameof(Product.MetaKeywords)).AsString(400).Nullable()
@@ -25,7 +24,6 @@ public partial class ProductBuilder : NopEntityBuilder<Product>
             .WithColumn(nameof(Product.Gtin)).AsString(400).Nullable()
             .WithColumn(nameof(Product.RequiredProductIds)).AsString(1000).Nullable()
             .WithColumn(nameof(Product.AllowedQuantities)).AsString(1000).Nullable();
-    }
 
     #endregion
 }

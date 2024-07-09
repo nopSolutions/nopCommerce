@@ -14,10 +14,8 @@ public partial class GdprConsentBuilder : NopEntityBuilder<GdprConsent>
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) =>
         table.WithColumn(nameof(GdprConsent.Message)).AsString(int.MaxValue).NotNullable();
-    }
 
     #endregion
 }

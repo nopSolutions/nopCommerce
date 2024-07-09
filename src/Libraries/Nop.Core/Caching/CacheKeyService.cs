@@ -17,10 +17,7 @@ public abstract partial class CacheKeyService : ICacheKeyService
 
     #region Ctor
 
-    protected CacheKeyService(AppSettings appSettings)
-    {
-        _appSettings = appSettings;
-    }
+    protected CacheKeyService(AppSettings appSettings) => _appSettings = appSettings;
 
     #endregion
 
@@ -31,12 +28,10 @@ public abstract partial class CacheKeyService : ICacheKeyService
     /// </summary>
     /// <param name="prefix">Cache key prefix</param>
     /// <param name="prefixParameters">Parameters to create cache key prefix</param>
-    protected virtual string PrepareKeyPrefix(string prefix, params object[] prefixParameters)
-    {
-        return prefixParameters?.Any() ?? false
+    protected virtual string PrepareKeyPrefix(string prefix, params object[] prefixParameters) =>
+        prefixParameters?.Any() ?? false
             ? string.Format(prefix, prefixParameters.Select(CreateCacheKeyParameters).ToArray())
             : prefix;
-    }
 
     /// <summary>
     /// Create the hash value of the passed identifiers
@@ -59,9 +54,8 @@ public abstract partial class CacheKeyService : ICacheKeyService
     /// </summary>
     /// <param name="parameter">Object to convert</param>
     /// <returns>Cache parameter</returns>
-    protected virtual object CreateCacheKeyParameters(object parameter)
-    {
-        return parameter switch
+    protected virtual object CreateCacheKeyParameters(object parameter) =>
+        parameter switch
         {
             null => "null",
             IEnumerable<int> ids => CreateIdsHash(ids),
@@ -70,7 +64,6 @@ public abstract partial class CacheKeyService : ICacheKeyService
             decimal param => param.ToString(CultureInfo.InvariantCulture),
             _ => parameter
         };
-    }
 
     #endregion
 
@@ -82,10 +75,8 @@ public abstract partial class CacheKeyService : ICacheKeyService
     /// <param name="cacheKey">Initial cache key</param>
     /// <param name="cacheKeyParameters">Parameters to create cache key</param>
     /// <returns>Cache key</returns>
-    public virtual CacheKey PrepareKey(CacheKey cacheKey, params object[] cacheKeyParameters)
-    {
-        return cacheKey.Create(CreateCacheKeyParameters, cacheKeyParameters);
-    }
+    public virtual CacheKey PrepareKey(CacheKey cacheKey, params object[] cacheKeyParameters) =>
+        cacheKey.Create(CreateCacheKeyParameters, cacheKeyParameters);
 
     /// <summary>
     /// Create a copy of cache key using the default cache time and fills it by passed parameters
@@ -101,7 +92,7 @@ public abstract partial class CacheKeyService : ICacheKeyService
 
         return key;
     }
-        
+
     #endregion
 
     #region Properties

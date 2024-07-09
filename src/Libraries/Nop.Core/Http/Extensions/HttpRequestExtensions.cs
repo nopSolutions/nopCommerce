@@ -14,20 +14,16 @@ public static class HttpRequestExtensions
     /// </summary>
     /// <param name="request">Request to check</param>
     /// <returns>True if the request is POST request, false in all other cases</returns>
-    public static bool IsPostRequest(this HttpRequest request)
-    {
-        return request.Method.Equals(WebRequestMethods.Http.Post, StringComparison.InvariantCultureIgnoreCase);
-    }
+    public static bool IsPostRequest(this HttpRequest request) => 
+        request.Method.Equals(WebRequestMethods.Http.Post, StringComparison.InvariantCultureIgnoreCase);
 
     /// <summary>
     /// Check if the request is the GET request
     /// </summary>
     /// <param name="request">Request to check</param>
     /// <returns>True if the request is GET request, false in all other cases</returns>
-    public static bool IsGetRequest(this HttpRequest request)
-    {
-        return request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase);
-    }
+    public static bool IsGetRequest(this HttpRequest request) => 
+        request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase);
 
     /// <summary>
     /// Gets the form value
@@ -47,7 +43,7 @@ public static class HttpRequestExtensions
 
         return form[formKey];
     }
-        
+
     /// <summary>
     /// Checks if the provided key is exists on the form
     /// </summary>
@@ -57,10 +53,8 @@ public static class HttpRequestExtensions
     /// A task that represents the asynchronous operation
     /// The task result contains true if the key is persists in the form, false in other case
     /// </returns>
-    public static async Task<bool> IsFormKeyExistsAsync(this HttpRequest request, string formKey)
-    {
-        return await IsFormAnyAsync(request, key => key.Equals(formKey));
-    }
+    public static async Task<bool> IsFormKeyExistsAsync(this HttpRequest request, string formKey) => 
+        await IsFormAnyAsync(request, key => key.Equals(formKey));
 
     /// <summary>
     /// Checks if the key is exists on the form

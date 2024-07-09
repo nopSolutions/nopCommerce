@@ -15,12 +15,10 @@ public partial class VendorAttributeValueBuilder : NopEntityBuilder<VendorAttrib
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) => 
         table
             .WithColumn(nameof(VendorAttributeValue.Name)).AsString(400).NotNullable()
             .WithColumn(NameCompatibilityManager.GetColumnName(typeof(VendorAttributeValue), nameof(VendorAttributeValue.AttributeId))).AsInt32().ForeignKey<VendorAttribute>();
-    }
 
     #endregion
 }

@@ -15,14 +15,12 @@ public partial class ProductAttributeCombinationBuilder : NopEntityBuilder<Produ
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) => 
         table
             .WithColumn(nameof(ProductAttributeCombination.Sku)).AsString(400).Nullable()
             .WithColumn(nameof(ProductAttributeCombination.ManufacturerPartNumber)).AsString(400).Nullable()
             .WithColumn(nameof(ProductAttributeCombination.Gtin)).AsString(400).Nullable()
             .WithColumn(nameof(ProductAttributeCombination.ProductId)).AsInt32().ForeignKey<Product>();
-    }
 
     #endregion
 }

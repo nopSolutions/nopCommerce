@@ -17,14 +17,12 @@ public partial class PrivateMessageBuilder : NopEntityBuilder<PrivateMessage>
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) => 
         table
             .WithColumn(nameof(PrivateMessage.Subject)).AsString(450).NotNullable()
             .WithColumn(nameof(PrivateMessage.Text)).AsString(int.MaxValue).NotNullable()
             .WithColumn(nameof(PrivateMessage.FromCustomerId)).AsInt32().ForeignKey<Customer>().OnDelete(Rule.None)
             .WithColumn(nameof(PrivateMessage.ToCustomerId)).AsInt32().ForeignKey<Customer>().OnDelete(Rule.None);
-    }
 
     #endregion
 }

@@ -14,8 +14,7 @@ public partial class StoreBuilder : NopEntityBuilder<Store>
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) =>
         table
             .WithColumn(nameof(Store.Name)).AsString(400).NotNullable()
             .WithColumn(nameof(Store.Url)).AsString(400).NotNullable()
@@ -24,7 +23,6 @@ public partial class StoreBuilder : NopEntityBuilder<Store>
             .WithColumn(nameof(Store.CompanyAddress)).AsString(1000).Nullable()
             .WithColumn(nameof(Store.CompanyPhoneNumber)).AsString(1000).Nullable()
             .WithColumn(nameof(Store.CompanyVat)).AsString(1000).Nullable();
-    }
 
     #endregion
 }

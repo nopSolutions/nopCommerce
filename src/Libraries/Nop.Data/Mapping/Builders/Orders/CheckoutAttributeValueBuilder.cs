@@ -15,13 +15,11 @@ public partial class CheckoutAttributeValueBuilder : NopEntityBuilder<CheckoutAt
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) =>
         table
             .WithColumn(nameof(CheckoutAttributeValue.Name)).AsString(400).NotNullable()
             .WithColumn(nameof(CheckoutAttributeValue.ColorSquaresRgb)).AsString(100).Nullable()
             .WithColumn(NameCompatibilityManager.GetColumnName(typeof(CheckoutAttributeValue), nameof(CheckoutAttributeValue.AttributeId))).AsInt32().ForeignKey<CheckoutAttribute>();
-    }
 
     #endregion
 }

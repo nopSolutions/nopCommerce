@@ -14,12 +14,10 @@ public partial class ProductTemplateBuilder : NopEntityBuilder<ProductTemplate>
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) => 
         table
             .WithColumn(nameof(ProductTemplate.Name)).AsString(400).NotNullable()
             .WithColumn(nameof(ProductTemplate.ViewPath)).AsString(400).NotNullable();
-    }
 
     #endregion
 }

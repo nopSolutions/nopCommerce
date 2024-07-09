@@ -2,10 +2,7 @@
 
 public partial class NopEntityDescriptor
 {
-    public NopEntityDescriptor()
-    {
-        Fields = new List<NopEntityFieldDescriptor>();
-    }
+    public NopEntityDescriptor() => Fields = new List<NopEntityFieldDescriptor>();
 
     public string EntityName { get; set; }
     public string SchemaName { get; set; }

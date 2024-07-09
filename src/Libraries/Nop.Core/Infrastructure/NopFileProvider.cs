@@ -61,10 +61,7 @@ public partial class NopFileProvider : PhysicalFileProvider, INopFileProvider
     /// <param name="path">The path to be tested.</param>
     /// <returns><see langword="true"/> if the path is a valid UNC path; 
     /// otherwise, <see langword="false"/>.</returns>
-    protected static bool IsUncPath(string path)
-    {
-        return Uri.TryCreate(path, UriKind.Absolute, out var uri) && uri.IsUnc;
-    }
+    protected static bool IsUncPath(string path) => Uri.TryCreate(path, UriKind.Absolute, out var uri) && uri.IsUnc;
 
     #endregion
 
@@ -164,10 +161,7 @@ public partial class NopFileProvider : PhysicalFileProvider, INopFileProvider
     /// true if path refers to an existing directory; false if the directory does not exist or an error occurs when
     /// trying to determine if the specified file exists
     /// </returns>
-    public virtual bool DirectoryExists(string path)
-    {
-        return Directory.Exists(path);
-    }
+    public virtual bool DirectoryExists(string path) => Directory.Exists(path);
 
     /// <summary>
     /// Moves a file or a directory and its contents to a new location
@@ -177,10 +171,7 @@ public partial class NopFileProvider : PhysicalFileProvider, INopFileProvider
     /// The path to the new location for sourceDirName. If sourceDirName is a file, then destDirName
     /// must also be a file name
     /// </param>
-    public virtual void DirectoryMove(string sourceDirName, string destDirName)
-    {
-        Directory.Move(sourceDirName, destDirName);
-    }
+    public virtual void DirectoryMove(string sourceDirName, string destDirName) => Directory.Move(sourceDirName, destDirName);
 
     /// <summary>
     /// Returns an enumerable collection of file names that match a search pattern in
@@ -201,11 +192,8 @@ public partial class NopFileProvider : PhysicalFileProvider, INopFileProvider
     /// the directory specified by path and that match the specified search pattern
     /// </returns>
     public virtual IEnumerable<string> EnumerateFiles(string directoryPath, string searchPattern,
-        bool topDirectoryOnly = true)
-    {
-        return Directory.EnumerateFiles(directoryPath, searchPattern,
+        bool topDirectoryOnly = true) => Directory.EnumerateFiles(directoryPath, searchPattern,
             topDirectoryOnly ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories);
-    }
 
     /// <summary>
     /// Copies an existing file to a new file. Overwriting a file of the same name is allowed
@@ -213,10 +201,8 @@ public partial class NopFileProvider : PhysicalFileProvider, INopFileProvider
     /// <param name="sourceFileName">The file to copy</param>
     /// <param name="destFileName">The name of the destination file. This cannot be a directory</param>
     /// <param name="overwrite">true if the destination file can be overwritten; otherwise, false</param>
-    public virtual void FileCopy(string sourceFileName, string destFileName, bool overwrite = false)
-    {
+    public virtual void FileCopy(string sourceFileName, string destFileName, bool overwrite = false) => 
         File.Copy(sourceFileName, destFileName, overwrite);
-    }
 
     /// <summary>
     /// Determines whether the specified file exists
@@ -226,10 +212,7 @@ public partial class NopFileProvider : PhysicalFileProvider, INopFileProvider
     /// True if the caller has the required permissions and path contains the name of an existing file; otherwise,
     /// false.
     /// </returns>
-    public virtual bool FileExists(string filePath)
-    {
-        return File.Exists(filePath);
-    }
+    public virtual bool FileExists(string filePath) => File.Exists(filePath);
 
     /// <summary>
     /// Gets the length of the file in bytes, or -1 for a directory or non-existing files
@@ -249,10 +232,7 @@ public partial class NopFileProvider : PhysicalFileProvider, INopFileProvider
     /// </summary>
     /// <param name="sourceFileName">The name of the file to move. Can include a relative or absolute path</param>
     /// <param name="destFileName">The new path and name for the file</param>
-    public virtual void FileMove(string sourceFileName, string destFileName)
-    {
-        File.Move(sourceFileName, destFileName);
-    }
+    public virtual void FileMove(string sourceFileName, string destFileName) => File.Move(sourceFileName, destFileName);
 
     /// <summary>
     /// Returns the absolute path to the directory
@@ -277,10 +257,7 @@ public partial class NopFileProvider : PhysicalFileProvider, INopFileProvider
     /// <param name="path">The path to a directory containing a System.Security.AccessControl.DirectorySecurity object that describes the file's access control list (ACL) information</param>
     /// <returns>An object that encapsulates the access control rules for the file described by the path parameter</returns>
     [SupportedOSPlatform("windows")]
-    public virtual DirectorySecurity GetAccessControl(string path)
-    {
-        return new DirectoryInfo(path).GetAccessControl();
-    }
+    public virtual DirectorySecurity GetAccessControl(string path) => new DirectoryInfo(path).GetAccessControl();
 
     /// <summary>
     /// Returns the creation date and time of the specified file or directory
@@ -290,10 +267,7 @@ public partial class NopFileProvider : PhysicalFileProvider, INopFileProvider
     /// A System.DateTime structure set to the creation date and time for the specified file or directory. This value
     /// is expressed in local time
     /// </returns>
-    public virtual DateTime GetCreationTime(string path)
-    {
-        return File.GetCreationTime(path);
-    }
+    public virtual DateTime GetCreationTime(string path) => File.GetCreationTime(path);
 
     /// <summary>
     /// Returns the names of the subdirectories (including their paths) that match the
@@ -330,50 +304,35 @@ public partial class NopFileProvider : PhysicalFileProvider, INopFileProvider
     /// Directory information for path, or null if path denotes a root directory or is null. Returns
     /// System.String.Empty if path does not contain directory information
     /// </returns>
-    public virtual string GetDirectoryName(string path)
-    {
-        return Path.GetDirectoryName(path);
-    }
+    public virtual string GetDirectoryName(string path) => Path.GetDirectoryName(path);
 
     /// <summary>
     /// Returns the directory name only for the specified path string
     /// </summary>
     /// <param name="path">The path of directory</param>
     /// <returns>The directory name</returns>
-    public virtual string GetDirectoryNameOnly(string path)
-    {
-        return new DirectoryInfo(path).Name;
-    }
+    public virtual string GetDirectoryNameOnly(string path) => new DirectoryInfo(path).Name;
 
     /// <summary>
     /// Returns the extension of the specified path string
     /// </summary>
     /// <param name="filePath">The path string from which to get the extension</param>
     /// <returns>The extension of the specified path (including the period ".")</returns>
-    public virtual string GetFileExtension(string filePath)
-    {
-        return Path.GetExtension(filePath);
-    }
+    public virtual string GetFileExtension(string filePath) => Path.GetExtension(filePath);
 
     /// <summary>
     /// Returns the file name and extension of the specified path string
     /// </summary>
     /// <param name="path">The path string from which to obtain the file name and extension</param>
     /// <returns>The characters after the last directory character in path</returns>
-    public virtual string GetFileName(string path)
-    {
-        return Path.GetFileName(path);
-    }
+    public virtual string GetFileName(string path) => Path.GetFileName(path);
 
     /// <summary>
     /// Returns the file name of the specified path string without the extension
     /// </summary>
     /// <param name="filePath">The path of the file</param>
     /// <returns>The file name, minus the last period (.) and all characters following it</returns>
-    public virtual string GetFileNameWithoutExtension(string filePath)
-    {
-        return Path.GetFileNameWithoutExtension(filePath);
-    }
+    public virtual string GetFileNameWithoutExtension(string filePath) => Path.GetFileNameWithoutExtension(filePath);
 
     /// <summary>
     /// Returns the names of files (including their paths) that match the specified search
@@ -413,10 +372,7 @@ public partial class NopFileProvider : PhysicalFileProvider, INopFileProvider
     /// </summary>
     /// <param name="path">The file or directory for which to obtain access date and time information</param>
     /// <returns>A System.DateTime structure set to the date and time that the specified file</returns>
-    public virtual DateTime GetLastAccessTime(string path)
-    {
-        return File.GetLastAccessTime(path);
-    }
+    public virtual DateTime GetLastAccessTime(string path) => File.GetLastAccessTime(path);
 
     /// <summary>
     /// Returns the date and time the specified file or directory was last written to
@@ -426,10 +382,7 @@ public partial class NopFileProvider : PhysicalFileProvider, INopFileProvider
     /// A System.DateTime structure set to the date and time that the specified file or directory was last written to.
     /// This value is expressed in local time
     /// </returns>
-    public virtual DateTime GetLastWriteTime(string path)
-    {
-        return File.GetLastWriteTime(path);
-    }
+    public virtual DateTime GetLastWriteTime(string path) => File.GetLastWriteTime(path);
 
     /// <summary>
     /// Returns the date and time, in coordinated universal time (UTC), that the specified file or directory was last
@@ -440,10 +393,7 @@ public partial class NopFileProvider : PhysicalFileProvider, INopFileProvider
     /// A System.DateTime structure set to the date and time that the specified file or directory was last written to.
     /// This value is expressed in UTC time
     /// </returns>
-    public virtual DateTime GetLastWriteTimeUtc(string path)
-    {
-        return File.GetLastWriteTimeUtc(path);
-    }
+    public virtual DateTime GetLastWriteTimeUtc(string path) => File.GetLastWriteTimeUtc(path);
 
     /// <summary>
     /// Creates or opens a file at the specified path for read/write access
@@ -466,10 +416,7 @@ public partial class NopFileProvider : PhysicalFileProvider, INopFileProvider
     /// </summary>
     /// <param name="directoryPath">The path for which to retrieve the parent directory</param>
     /// <returns>The parent directory, or null if path is the root directory, including the root of a UNC server or share name</returns>
-    public virtual string GetParentDirectory(string directoryPath)
-    {
-        return Directory.GetParent(directoryPath).FullName;
-    }
+    public virtual string GetParentDirectory(string directoryPath) => Directory.GetParent(directoryPath).FullName;
 
     /// <summary>
     /// Gets a virtual path from a physical disk path.
@@ -494,10 +441,7 @@ public partial class NopFileProvider : PhysicalFileProvider, INopFileProvider
     /// </summary>
     /// <param name="path">Path for check</param>
     /// <returns>True, if the path is a directory, otherwise false</returns>
-    public virtual bool IsDirectory(string path)
-    {
-        return DirectoryExists(path);
-    }
+    public virtual bool IsDirectory(string path) => DirectoryExists(path);
 
     /// <summary>
     /// Maps a virtual path to a physical disk path.
@@ -522,10 +466,7 @@ public partial class NopFileProvider : PhysicalFileProvider, INopFileProvider
     /// A task that represents the asynchronous operation
     /// The task result contains a byte array containing the contents of the file
     /// </returns>
-    public virtual async Task<byte[]> ReadAllBytesAsync(string filePath)
-    {
-        return File.Exists(filePath) ? await File.ReadAllBytesAsync(filePath) : Array.Empty<byte>();
-    }
+    public virtual async Task<byte[]> ReadAllBytesAsync(string filePath) => File.Exists(filePath) ? await File.ReadAllBytesAsync(filePath) : Array.Empty<byte>();
 
     /// <summary>
     /// Opens a file, reads all lines of the file with the specified encoding, and then closes the file.
@@ -564,10 +505,8 @@ public partial class NopFileProvider : PhysicalFileProvider, INopFileProvider
     /// <param name="filePath">The file to write to</param>
     /// <param name="bytes">The bytes to write to the file</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task WriteAllBytesAsync(string filePath, byte[] bytes)
-    {
+    public virtual async Task WriteAllBytesAsync(string filePath, byte[] bytes) => 
         await File.WriteAllBytesAsync(filePath, bytes);
-    }
 
     /// <summary>
     /// Creates a new file, writes the specified string to the file using the specified encoding,
@@ -577,10 +516,8 @@ public partial class NopFileProvider : PhysicalFileProvider, INopFileProvider
     /// <param name="contents">The string to write to the file</param>
     /// <param name="encoding">The encoding to apply to the string</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task WriteAllTextAsync(string path, string contents, Encoding encoding)
-    {
+    public virtual async Task WriteAllTextAsync(string path, string contents, Encoding encoding) => 
         await File.WriteAllTextAsync(path, contents, encoding);
-    }
 
     /// <summary>
     /// Creates a new file, writes the specified string to the file using the specified encoding,
@@ -589,10 +526,8 @@ public partial class NopFileProvider : PhysicalFileProvider, INopFileProvider
     /// <param name="path">The file to write to</param>
     /// <param name="contents">The string to write to the file</param>
     /// <param name="encoding">The encoding to apply to the string</param>
-    public virtual void WriteAllText(string path, string contents, Encoding encoding)
-    {
+    public virtual void WriteAllText(string path, string contents, Encoding encoding) => 
         File.WriteAllText(path, contents, encoding);
-    }
 
     /// <summary>Locate a file at the given path.</summary>
     /// <param name="subpath">Relative path that identifies the file.</param>

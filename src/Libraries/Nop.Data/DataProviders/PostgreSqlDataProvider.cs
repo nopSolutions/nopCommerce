@@ -39,10 +39,8 @@ public partial class PostgreSqlDataProvider : BaseDataProvider, INopDataProvider
     /// Gets the connection string builder
     /// </summary>
     /// <returns>The connection string builder</returns>
-    protected static NpgsqlConnectionStringBuilder GetConnectionStringBuilder()
-    {
-        return new NpgsqlConnectionStringBuilder(GetCurrentConnectionString());
-    }
+    protected static NpgsqlConnectionStringBuilder GetConnectionStringBuilder() => 
+        new NpgsqlConnectionStringBuilder(GetCurrentConnectionString());
 
     /// <summary>
     /// Gets a connection to the database for a current data provider
@@ -234,10 +232,8 @@ public partial class PostgreSqlDataProvider : BaseDataProvider, INopDataProvider
     /// Creates a backup of the database
     /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual Task BackupDatabaseAsync(string fileName)
-    {
+    public virtual Task BackupDatabaseAsync(string fileName) =>
         throw new DataException("This database provider does not support backup");
-    }
 
     /// <summary>
     /// Inserts record into table. Returns inserted entity with identity
@@ -291,10 +287,8 @@ public partial class PostgreSqlDataProvider : BaseDataProvider, INopDataProvider
     /// </summary>
     /// <param name="backupFileName">The name of the backup file</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual Task RestoreDatabaseAsync(string backupFileName)
-    {
+    public virtual Task RestoreDatabaseAsync(string backupFileName) => 
         throw new DataException("This database provider does not support backup");
-    }
 
     /// <summary>
     /// Re-index database tables
@@ -338,10 +332,8 @@ public partial class PostgreSqlDataProvider : BaseDataProvider, INopDataProvider
     /// <param name="primaryTable">Primary table</param>
     /// <param name="primaryColumn">Primary key column name</param>
     /// <returns>Name of a foreign key</returns>
-    public virtual string CreateForeignKeyName(string foreignTable, string foreignColumn, string primaryTable, string primaryColumn)
-    {
-        return $"FK_{foreignTable}_{foreignColumn}_{primaryTable}_{primaryColumn}";
-    }
+    public virtual string CreateForeignKeyName(string foreignTable, string foreignColumn, string primaryTable, string primaryColumn) =>
+        $"FK_{foreignTable}_{foreignColumn}_{primaryTable}_{primaryColumn}";
 
     /// <summary>
     /// Gets the name of an index
@@ -349,10 +341,7 @@ public partial class PostgreSqlDataProvider : BaseDataProvider, INopDataProvider
     /// <param name="targetTable">Target table name</param>
     /// <param name="targetColumn">Target column name</param>
     /// <returns>Name of an index</returns>
-    public virtual string GetIndexName(string targetTable, string targetColumn)
-    {
-        return $"IX_{targetTable}_{targetColumn}";
-    }
+    public virtual string GetIndexName(string targetTable, string targetColumn) => $"IX_{targetTable}_{targetColumn}";
 
     #endregion
 

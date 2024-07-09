@@ -15,14 +15,12 @@ public partial class CustomerCustomerRoleMappingBuilder : NopEntityBuilder<Custo
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) => 
         table
             .WithColumn(NameCompatibilityManager.GetColumnName(typeof(CustomerCustomerRoleMapping), nameof(CustomerCustomerRoleMapping.CustomerId)))
             .AsInt32().ForeignKey<Customer>().PrimaryKey()
             .WithColumn(NameCompatibilityManager.GetColumnName(typeof(CustomerCustomerRoleMapping), nameof(CustomerCustomerRoleMapping.CustomerRoleId)))
             .AsInt32().ForeignKey<CustomerRole>().PrimaryKey();
-    }
 
     #endregion
 }

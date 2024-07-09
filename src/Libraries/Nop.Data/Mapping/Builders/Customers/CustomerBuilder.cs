@@ -19,8 +19,7 @@ public partial class CustomerBuilder : NopEntityBuilder<Customer>
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) =>
         table
             .WithColumn(nameof(Customer.Username)).AsString(1000).Nullable()
             .WithColumn(nameof(Customer.Email)).AsString(1000).Nullable()
@@ -46,7 +45,6 @@ public partial class CustomerBuilder : NopEntityBuilder<Customer>
             .WithColumn(nameof(Customer.LanguageId)).AsInt32().ForeignKey<Language>(onDelete: Rule.SetNull).Nullable()
             .WithColumn(NameCompatibilityManager.GetColumnName(typeof(Customer), nameof(Customer.BillingAddressId))).AsInt32().ForeignKey<Address>(onDelete: Rule.None).Nullable()
             .WithColumn(NameCompatibilityManager.GetColumnName(typeof(Customer), nameof(Customer.ShippingAddressId))).AsInt32().ForeignKey<Address>(onDelete: Rule.None).Nullable();
-    }
 
     #endregion
 }

@@ -10,10 +10,7 @@ public partial class EntityDeletedEvent<T> where T : BaseEntity
     /// Ctor
     /// </summary>
     /// <param name="entity">Entity</param>
-    public EntityDeletedEvent(T entity)
-    {
-        Entity = entity;
-    }
+    public EntityDeletedEvent(T entity) => Entity = entity;
 
     /// <summary>
     /// Entity

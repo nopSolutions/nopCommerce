@@ -16,12 +16,10 @@ public partial class AclRecordBuilder : NopEntityBuilder<AclRecord>
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) => 
         table
             .WithColumn(nameof(AclRecord.EntityName)).AsString(400).NotNullable()
             .WithColumn(nameof(AclRecord.CustomerRoleId)).AsInt32().ForeignKey<CustomerRole>();
-    }
 
     #endregion
 }

@@ -14,13 +14,11 @@ public partial class GenericAttributeBuilder : NopEntityBuilder<GenericAttribute
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) =>
         table
             .WithColumn(nameof(GenericAttribute.KeyGroup)).AsString(400).NotNullable()
             .WithColumn(nameof(GenericAttribute.Key)).AsString(400).NotNullable()
             .WithColumn(nameof(GenericAttribute.Value)).AsString(int.MaxValue).NotNullable();
-    }
 
     #endregion
 }

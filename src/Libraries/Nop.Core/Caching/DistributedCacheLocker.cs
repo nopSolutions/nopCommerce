@@ -3,21 +3,16 @@ using Newtonsoft.Json;
 
 namespace Nop.Core.Caching;
 
-public partial class DistributedCacheLocker : ILocker
+public partial class DistributedCacheLocker(IDistributedCache distributedCache) : ILocker
 {
     #region Fields
 
     protected static readonly string _running = JsonConvert.SerializeObject(TaskStatus.Running);
-    protected readonly IDistributedCache _distributedCache;
+    protected readonly IDistributedCache _distributedCache= distributedCache;
 
     #endregion
 
     #region Ctor
-
-    public DistributedCacheLocker(IDistributedCache distributedCache)
-    {
-        _distributedCache = distributedCache;
-    }
 
     #endregion
 
@@ -138,10 +133,8 @@ public partial class DistributedCacheLocker : ILocker
     /// </summary>
     /// <param name="key">The task's key</param>
     /// <returns>A task that resolves to true if the background task is running; otherwise false</returns>
-    public async Task<bool> IsTaskRunningAsync(string key)
-    {
-        return !string.IsNullOrEmpty(await _distributedCache.GetStringAsync(key));
-    }
+    public async Task<bool> IsTaskRunningAsync(string key) => 
+        !string.IsNullOrEmpty(await _distributedCache.GetStringAsync(key));
 
     #endregion
 }

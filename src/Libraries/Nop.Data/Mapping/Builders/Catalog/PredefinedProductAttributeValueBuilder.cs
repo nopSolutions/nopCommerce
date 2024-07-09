@@ -15,12 +15,10 @@ public partial class PredefinedProductAttributeValueBuilder : NopEntityBuilder<P
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) =>
         table
             .WithColumn(nameof(PredefinedProductAttributeValue.Name)).AsString(400).NotNullable()
             .WithColumn(nameof(PredefinedProductAttributeValue.ProductAttributeId)).AsInt32().ForeignKey<ProductAttribute>();
-    }
 
     #endregion
 }

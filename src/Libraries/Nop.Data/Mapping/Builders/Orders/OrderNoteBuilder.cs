@@ -15,12 +15,10 @@ public partial class OrderNoteBuilder : NopEntityBuilder<OrderNote>
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) =>
         table
             .WithColumn(nameof(OrderNote.Note)).AsString(int.MaxValue).NotNullable()
             .WithColumn(nameof(OrderNote.OrderId)).AsInt32().ForeignKey<Order>();
-    }
 
     #endregion
 }

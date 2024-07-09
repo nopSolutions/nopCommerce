@@ -27,10 +27,7 @@ public abstract partial class BaseDataProvider
     /// <summary>
     /// Creates the database connection
     /// </summary>
-    protected virtual DataConnection CreateDataConnection()
-    {
-        return CreateDataConnection(LinqToDbDataProvider);
-    }
+    protected virtual DataConnection CreateDataConnection() => CreateDataConnection(LinqToDbDataProvider);
 
     /// <summary>
     /// Creates the database connection
@@ -54,10 +51,8 @@ public abstract partial class BaseDataProvider
     /// </summary>
     /// <param name="connectionString">Connection string</param>
     /// <returns>Connection to a database</returns>
-    protected virtual DbConnection CreateDbConnection(string connectionString = null)
-    {
-        return GetInternalDbConnection(!string.IsNullOrEmpty(connectionString) ? connectionString : GetCurrentConnectionString());
-    }
+    protected virtual DbConnection CreateDbConnection(string connectionString = null) => 
+        GetInternalDbConnection(!string.IsNullOrEmpty(connectionString) ? connectionString : GetCurrentConnectionString());
 
     /// <summary>
     /// Gets a data hash from database side
@@ -71,10 +66,7 @@ public abstract partial class BaseDataProvider
     [Sql.Expression("CONVERT(VARCHAR(128), HASHBYTES('SHA2_512', SUBSTRING({0}, 0, 8000)), 2)", ServerSideOnly = true, Configuration = ProviderName.SqlServer)]
     [Sql.Expression("SHA2({0}, 512)", ServerSideOnly = true, Configuration = ProviderName.MySql)]
     [Sql.Expression("encode(digest({0}, 'sha512'), 'hex')", ServerSideOnly = true, Configuration = ProviderName.PostgreSQL)]
-    protected static string SqlSha2(object binaryData)
-    {
-        throw new InvalidOperationException("This function should be used only in database code");
-    }
+    protected static string SqlSha2(object binaryData) => throw new InvalidOperationException("This function should be used only in database code");
 
     #endregion
 
@@ -113,10 +105,7 @@ public abstract partial class BaseDataProvider
     /// The task result contains the iQueryable instance of temporary storage
     /// </returns>
     public virtual Task<ITempDataStorage<TItem>> CreateTempDataStorageAsync<TItem>(string storeKey, IQueryable<TItem> query)
-        where TItem : class
-    {
-        return Task.FromResult<ITempDataStorage<TItem>>(new TempSqlDataStorage<TItem>(storeKey, query, CreateDataConnection()));
-    }
+        where TItem : class => Task.FromResult<ITempDataStorage<TItem>>(new TempSqlDataStorage<TItem>(storeKey, query, CreateDataConnection()));
 
 
 

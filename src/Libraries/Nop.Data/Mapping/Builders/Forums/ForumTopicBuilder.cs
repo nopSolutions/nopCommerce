@@ -17,13 +17,11 @@ public partial class ForumTopicBuilder : NopEntityBuilder<ForumTopic>
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) =>
         table
             .WithColumn(nameof(ForumTopic.Subject)).AsString(450).NotNullable()
             .WithColumn(nameof(ForumTopic.CustomerId)).AsInt32().ForeignKey<Customer>(onDelete: Rule.None)
             .WithColumn(nameof(ForumTopic.ForumId)).AsInt32().ForeignKey<Forum>();
-    }
 
     #endregion
 }

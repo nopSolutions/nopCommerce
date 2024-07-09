@@ -15,14 +15,12 @@ public partial class LocalizedPropertyBuilder : NopEntityBuilder<LocalizedProper
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) => 
         table
             .WithColumn(nameof(LocalizedProperty.LocaleKeyGroup)).AsString(400).NotNullable()
             .WithColumn(nameof(LocalizedProperty.LocaleKey)).AsString(400).NotNullable()
             .WithColumn(nameof(LocalizedProperty.LocaleValue)).AsString(int.MaxValue).NotNullable()
             .WithColumn(nameof(LocalizedProperty.LanguageId)).AsInt32().ForeignKey<Language>();
-    }
 
     #endregion
 }

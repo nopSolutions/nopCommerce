@@ -16,15 +16,12 @@ public partial class PerRequestCacheManager : CacheKeyService, IShortTermCacheMa
 
     #region Ctor
 
-    public PerRequestCacheManager(AppSettings appSettings) : base(appSettings)
-    {
-        _concurrentCollection = new ConcurrentTrie<object>();
-    }
+    public PerRequestCacheManager(AppSettings appSettings) : base(appSettings) => _concurrentCollection = new ConcurrentTrie<object>();
 
     #endregion
 
     #region Methods
-        
+
     /// <summary>
     /// Get a cached item. If it's not in the cache yet, then load and cache it
     /// </summary>
@@ -61,16 +58,14 @@ public partial class PerRequestCacheManager : CacheKeyService, IShortTermCacheMa
         var keyPrefix = PrepareKeyPrefix(prefix, prefixParameters);
         _concurrentCollection.Prune(keyPrefix, out _);
     }
-        
+
     /// <summary>
     /// Remove the value with the specified key from the cache
     /// </summary>
     /// <param name="cacheKey">Cache key</param>
     /// <param name="cacheKeyParameters">Parameters to create cache key</param>
-    public virtual void Remove(string cacheKey, params object[] cacheKeyParameters)
-    {
+    public virtual void Remove(string cacheKey, params object[] cacheKeyParameters) =>
         _concurrentCollection.Remove(PrepareKey(new CacheKey(cacheKey), cacheKeyParameters).Key);
-    }
 
     #endregion
 }

@@ -15,14 +15,12 @@ public partial class ProductProductTagMappingBuilder : NopEntityBuilder<ProductP
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) => 
         table
             .WithColumn(NameCompatibilityManager.GetColumnName(typeof(ProductProductTagMapping), nameof(ProductProductTagMapping.ProductId)))
             .AsInt32().PrimaryKey().ForeignKey<Product>()
             .WithColumn(NameCompatibilityManager.GetColumnName(typeof(ProductProductTagMapping), nameof(ProductProductTagMapping.ProductTagId)))
             .AsInt32().PrimaryKey().ForeignKey<ProductTag>();
-    }
 
     #endregion
 }

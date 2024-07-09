@@ -5,10 +5,7 @@
 /// </summary>
 public partial class BaseSingleton
 {
-    static BaseSingleton()
-    {
-        AllSingletons = new Dictionary<Type, object>();
-    }
+    static BaseSingleton() => AllSingletons = new Dictionary<Type, object>();
 
     /// <summary>
     /// Dictionary of type to singleton instances.

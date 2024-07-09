@@ -14,13 +14,11 @@ public partial class MeasureWeightBuilder : NopEntityBuilder<MeasureWeight>
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) =>
         table
             .WithColumn(nameof(MeasureWeight.Name)).AsString(100).NotNullable()
             .WithColumn(nameof(MeasureWeight.SystemKeyword)).AsString(100).NotNullable()
             .WithColumn(nameof(MeasureWeight.Ratio)).AsDecimal(18, 8);
-    }
 
     #endregion
 }

@@ -8,40 +8,26 @@ namespace Nop.Core.Caching;
 /// <remarks>
 /// This class should be registered on IoC as singleton instance
 /// </remarks>
-public partial class CacheKeyManager : ICacheKeyManager
+public partial class CacheKeyManager(IConcurrentCollection<byte> keys) : ICacheKeyManager
 {
-    protected readonly IConcurrentCollection<byte> _keys;
-
-    public CacheKeyManager(IConcurrentCollection<byte> keys)
-    {
-        _keys = keys;
-    }
+    protected readonly IConcurrentCollection<byte> _keys = keys;
 
     /// <summary>
     /// Add the key
     /// </summary>
     /// <param name="key">The key to add</param>
-    public void AddKey(string key)
-    {
-        _keys.Add(key, default);
-    }
+    public void AddKey(string key) => _keys.Add(key, default);
 
     /// <summary>
     /// Remove the key
     /// </summary>
     /// <param name="key">The key to remove</param>
-    public void RemoveKey(string key)
-    {
-        _keys.Remove(key);
-    }
+    public void RemoveKey(string key) => _keys.Remove(key);
 
     /// <summary>
     /// Remove all keys
     /// </summary>
-    public void Clear()
-    {
-        _keys.Clear();
-    }
+    public void Clear() => _keys.Clear();
 
     /// <summary>
     /// Remove keys by prefix

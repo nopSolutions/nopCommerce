@@ -288,10 +288,8 @@ public partial class MsSqlNopDataProvider : BaseDataProvider, INopDataProvider
     /// <param name="primaryTable">Primary table</param>
     /// <param name="primaryColumn">Primary key column name</param>
     /// <returns>Name of a foreign key</returns>
-    public virtual string CreateForeignKeyName(string foreignTable, string foreignColumn, string primaryTable, string primaryColumn)
-    {
-        return $"FK_{foreignTable}_{foreignColumn}_{primaryTable}_{primaryColumn}";
-    }
+    public virtual string CreateForeignKeyName(string foreignTable, string foreignColumn, string primaryTable, string primaryColumn) =>
+        $"FK_{foreignTable}_{foreignColumn}_{primaryTable}_{primaryColumn}";
 
     /// <summary>
     /// Gets the name of an index
@@ -299,10 +297,7 @@ public partial class MsSqlNopDataProvider : BaseDataProvider, INopDataProvider
     /// <param name="targetTable">Target table name</param>
     /// <param name="targetColumn">Target column name</param>
     /// <returns>Name of an index</returns>
-    public virtual string GetIndexName(string targetTable, string targetColumn)
-    {
-        return $"IX_{targetTable}_{targetColumn}";
-    }
+    public virtual string GetIndexName(string targetTable, string targetColumn) => $"IX_{targetTable}_{targetColumn}";
 
     /// <summary>
     /// Updates records in table, using values from entity parameter.

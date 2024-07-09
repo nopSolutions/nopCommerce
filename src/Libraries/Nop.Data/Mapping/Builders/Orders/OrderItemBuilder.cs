@@ -16,12 +16,10 @@ public partial class OrderItemBuilder : NopEntityBuilder<OrderItem>
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) =>
         table
             .WithColumn(nameof(OrderItem.OrderId)).AsInt32().ForeignKey<Order>()
             .WithColumn(nameof(OrderItem.ProductId)).AsInt32().ForeignKey<Product>();
-    }
 
     #endregion
 }

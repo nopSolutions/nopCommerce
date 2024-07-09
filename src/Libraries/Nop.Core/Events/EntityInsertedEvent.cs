@@ -10,10 +10,7 @@ public partial class EntityInsertedEvent<T> where T : BaseEntity
     /// Ctor
     /// </summary>
     /// <param name="entity">Entity</param>
-    public EntityInsertedEvent(T entity)
-    {
-        Entity = entity;
-    }
+    public EntityInsertedEvent(T entity) => Entity = entity;
 
     /// <summary>
     /// Entity

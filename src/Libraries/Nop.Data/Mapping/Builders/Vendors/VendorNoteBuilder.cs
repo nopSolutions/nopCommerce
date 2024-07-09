@@ -15,12 +15,10 @@ public partial class VendorNoteBuilder : NopEntityBuilder<VendorNote>
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) => 
         table
             .WithColumn(nameof(VendorNote.Note)).AsString(int.MaxValue).NotNullable()
             .WithColumn(nameof(VendorNote.VendorId)).AsInt32().ForeignKey<Vendor>();
-    }
 
     #endregion
 }

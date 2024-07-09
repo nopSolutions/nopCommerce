@@ -15,9 +15,8 @@ public partial class FluentMigratorMetadataReader : IMetadataReader
 {
     #region Utilities
 
-    private static DataType DbTypeToDataType(DbType dbType)
-    {
-        return dbType switch
+    private static DataType DbTypeToDataType(DbType dbType) =>
+        dbType switch
         {
             DbType.AnsiString => DataType.VarChar,
             DbType.AnsiStringFixedLength => DataType.VarChar,
@@ -48,7 +47,6 @@ public partial class FluentMigratorMetadataReader : IMetadataReader
             DbType.Xml => DataType.Xml,
             _ => DataType.Undefined
         };
-    }
 
     #endregion
 
@@ -125,10 +123,7 @@ public partial class FluentMigratorMetadataReader : IMetadataReader
     /// </summary>
     /// <param name="type">The type.</param>
     /// <returns>All dynamic columns defined on given type.</returns>
-    public MemberInfo[] GetDynamicColumns(Type type)
-    {
-        return [];
-    }
+    public MemberInfo[] GetDynamicColumns(Type type) => [];
 
     /// <summary>
     /// Should return a unique ID for cache purposes. If the implemented Metadata reader returns instance-specific
@@ -136,10 +131,7 @@ public partial class FluentMigratorMetadataReader : IMetadataReader
     /// e.g. $".{nameof(YourMetadataReader)}."
     /// </summary>
     /// <returns>The object ID as string</returns>
-    public string GetObjectID()
-    {
-        return $".{nameof(FluentMigratorMetadataReader)}.";
-    }
+    public string GetObjectID() => $".{nameof(FluentMigratorMetadataReader)}.";
 
     #endregion
 

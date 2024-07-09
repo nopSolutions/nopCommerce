@@ -16,14 +16,12 @@ public partial class CustomerAddressMappingBuilder : NopEntityBuilder<CustomerAd
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) => 
         table
             .WithColumn(NameCompatibilityManager.GetColumnName(typeof(CustomerAddressMapping), nameof(CustomerAddressMapping.AddressId)))
             .AsInt32().ForeignKey<Address>().PrimaryKey()
             .WithColumn(NameCompatibilityManager.GetColumnName(typeof(CustomerAddressMapping), nameof(CustomerAddressMapping.CustomerId)))
             .AsInt32().ForeignKey<Customer>().PrimaryKey();
-    }
 
     #endregion
 }

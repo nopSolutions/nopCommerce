@@ -14,13 +14,11 @@ public partial class CampaignBuilder : NopEntityBuilder<Campaign>
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) => 
         table
             .WithColumn(nameof(Campaign.Name)).AsString(int.MaxValue).NotNullable()
             .WithColumn(nameof(Campaign.Subject)).AsString(int.MaxValue).NotNullable()
             .WithColumn(nameof(Campaign.Body)).AsString(int.MaxValue).NotNullable();
-    }
 
     #endregion
 }

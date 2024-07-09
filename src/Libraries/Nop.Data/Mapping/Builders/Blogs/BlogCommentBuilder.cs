@@ -17,13 +17,11 @@ public partial class BlogCommentBuilder : NopEntityBuilder<BlogComment>
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) => 
         table
             .WithColumn(nameof(BlogComment.StoreId)).AsInt32().ForeignKey<Store>()
             .WithColumn(nameof(BlogComment.CustomerId)).AsInt32().ForeignKey<Customer>()
             .WithColumn(nameof(BlogComment.BlogPostId)).AsInt32().ForeignKey<BlogPost>();
-    }
 
     #endregion
 }

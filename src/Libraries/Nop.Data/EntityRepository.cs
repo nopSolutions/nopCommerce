@@ -504,11 +504,9 @@ public partial class EntityRepository<TEntity> : IRepository<TEntity> where TEnt
     /// A task that represents the asynchronous operation
     /// The task result contains the copy of the passed entity
     /// </returns>
-    public virtual async Task<TEntity> LoadOriginalCopyAsync(TEntity entity)
-    {
-        return await _dataProvider.GetTable<TEntity>()
+    public virtual async Task<TEntity> LoadOriginalCopyAsync(TEntity entity) => 
+        await _dataProvider.GetTable<TEntity>()
             .FirstOrDefaultAsync(e => e.Id == Convert.ToInt32(entity.Id));
-    }
 
     /// <summary>
     /// Update the entity entry

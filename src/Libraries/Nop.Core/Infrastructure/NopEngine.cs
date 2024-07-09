@@ -162,10 +162,7 @@ public partial class NopEngine : IEngine
     /// <param name="scope">Scope</param>
     /// <typeparam name="T">Type of resolved service</typeparam>
     /// <returns>Resolved service</returns>
-    public virtual T Resolve<T>(IServiceScope scope = null) where T : class
-    {
-        return (T)Resolve(typeof(T), scope);
-    }
+    public virtual T Resolve<T>(IServiceScope scope = null) where T : class => (T)Resolve(typeof(T), scope);
 
     /// <summary>
     /// Resolve dependency
@@ -173,20 +170,14 @@ public partial class NopEngine : IEngine
     /// <param name="type">Type of resolved service</param>
     /// <param name="scope">Scope</param>
     /// <returns>Resolved service</returns>
-    public virtual object Resolve(Type type, IServiceScope scope = null)
-    {
-        return GetServiceProvider(scope)?.GetService(type);
-    }
+    public virtual object Resolve(Type type, IServiceScope scope = null) => GetServiceProvider(scope)?.GetService(type);
 
     /// <summary>
     /// Resolve dependencies
     /// </summary>
     /// <typeparam name="T">Type of resolved services</typeparam>
     /// <returns>Collection of resolved services</returns>
-    public virtual IEnumerable<T> ResolveAll<T>()
-    {
-        return (IEnumerable<T>)GetServiceProvider().GetServices(typeof(T));
-    }
+    public virtual IEnumerable<T> ResolveAll<T>() => (IEnumerable<T>)GetServiceProvider().GetServices(typeof(T));
 
     /// <summary>
     /// Resolve unregistered service

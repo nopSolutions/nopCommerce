@@ -16,10 +16,7 @@ public partial class SecureRandomNumberGenerator : RandomNumberGenerator
 
     #region Ctor
 
-    public SecureRandomNumberGenerator()
-    {
-        _rng = Create();
-    }
+    public SecureRandomNumberGenerator() => _rng = Create();
 
     #endregion
 
@@ -32,10 +29,7 @@ public partial class SecureRandomNumberGenerator : RandomNumberGenerator
         return BitConverter.ToInt32(data, 0) & (int.MaxValue - 1);
     }
 
-    public int Next(int maxValue)
-    {
-        return Next(0, maxValue);
-    }
+    public int Next(int maxValue) => Next(0, maxValue);
 
     public int Next(int minValue, int maxValue)
     {
@@ -51,15 +45,9 @@ public partial class SecureRandomNumberGenerator : RandomNumberGenerator
         return randUint / (uint.MaxValue + 1.0);
     }
 
-    public override void GetBytes(byte[] data)
-    {
-        _rng.GetBytes(data);
-    }
+    public override void GetBytes(byte[] data) => _rng.GetBytes(data);
 
-    public override void GetNonZeroBytes(byte[] data)
-    {
-        _rng.GetNonZeroBytes(data);
-    }
+    public override void GetNonZeroBytes(byte[] data) => _rng.GetNonZeroBytes(data);
 
     /// <summary>
     /// Dispose secure random

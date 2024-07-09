@@ -18,10 +18,7 @@ public static class AsyncIQueryableExtensions
     /// </returns>
     /// <returns>A task that represents the asynchronous operation</returns>
     public static Task<bool> AllAsync<TSource>(this IQueryable<TSource> source,
-        Expression<Func<TSource, bool>> predicate)
-    {
-        return AsyncExtensions.AllAsync(source, predicate);
-    }
+        Expression<Func<TSource, bool>> predicate) => AsyncExtensions.AllAsync(source, predicate);
 
     /// <summary>
     /// Determines whether any element of a sequence satisfies a condition
@@ -34,10 +31,8 @@ public static class AsyncIQueryableExtensions
     /// otherwise, false
     /// </returns>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public static Task<bool> AnyAsync<TSource>(this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate = null)
-    {
-        return predicate == null ? AsyncExtensions.AnyAsync(source) : AsyncExtensions.AnyAsync(source, predicate);
-    }
+    public static Task<bool> AnyAsync<TSource>(this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate = null) => 
+        predicate == null ? AsyncExtensions.AnyAsync(source) : AsyncExtensions.AnyAsync(source, predicate);
 
     #region Average
 
@@ -53,10 +48,7 @@ public static class AsyncIQueryableExtensions
     /// The task result contains the average of the sequence of values
     /// </returns>
     public static Task<double> AverageAsync<TSource>(this IQueryable<TSource> source,
-        Expression<Func<TSource, int>> predicate)
-    {
-        return AsyncExtensions.AverageAsync(source, predicate);
-    }
+        Expression<Func<TSource, int>> predicate) => AsyncExtensions.AverageAsync(source, predicate);
 
     /// <summary>
     /// Computes the average of a sequence that is obtained by
@@ -70,10 +62,7 @@ public static class AsyncIQueryableExtensions
     /// The task result contains the average of the sequence of values
     /// </returns>
     public static Task<double?> AverageAsync<TSource>(this IQueryable<TSource> source,
-        Expression<Func<TSource, int?>> predicate)
-    {
-        return AsyncExtensions.AverageAsync(source, predicate);
-    }
+        Expression<Func<TSource, int?>> predicate) => AsyncExtensions.AverageAsync(source, predicate);
 
     /// <summary>
     /// Computes the average of a sequence that is obtained by
@@ -87,10 +76,7 @@ public static class AsyncIQueryableExtensions
     /// The task result contains the average of the sequence of values
     /// </returns>
     public static Task<double> AverageAsync<TSource>(this IQueryable<TSource> source,
-        Expression<Func<TSource, long>> predicate)
-    {
-        return AsyncExtensions.AverageAsync(source, predicate);
-    }
+        Expression<Func<TSource, long>> predicate) => AsyncExtensions.AverageAsync(source, predicate);
 
     /// <summary>
     /// Computes the average of a sequence that is obtained by
@@ -104,10 +90,7 @@ public static class AsyncIQueryableExtensions
     /// The task result contains the average of the sequence of values
     /// </returns>
     public static Task<double?> AverageAsync<TSource>(this IQueryable<TSource> source,
-        Expression<Func<TSource, long?>> predicate)
-    {
-        return AsyncExtensions.AverageAsync(source, predicate);
-    }
+        Expression<Func<TSource, long?>> predicate) => AsyncExtensions.AverageAsync(source, predicate);
 
     /// <summary>
     /// Computes the average of a sequence that is obtained by
@@ -121,10 +104,7 @@ public static class AsyncIQueryableExtensions
     /// The task result contains the average of the sequence of values
     /// </returns>
     public static Task<float> AverageAsync<TSource>(this IQueryable<TSource> source,
-        Expression<Func<TSource, float>> predicate)
-    {
-        return AsyncExtensions.AverageAsync(source, predicate);
-    }
+        Expression<Func<TSource, float>> predicate) => AsyncExtensions.AverageAsync(source, predicate);
 
     /// <summary>
     /// Computes the average of a sequence that is obtained by
@@ -138,10 +118,7 @@ public static class AsyncIQueryableExtensions
     /// The task result contains the average of the sequence of values
     /// </returns>
     public static Task<float?> AverageAsync<TSource>(this IQueryable<TSource> source,
-        Expression<Func<TSource, float?>> predicate)
-    {
-        return AsyncExtensions.AverageAsync(source, predicate);
-    }
+        Expression<Func<TSource, float?>> predicate) => AsyncExtensions.AverageAsync(source, predicate);
 
     /// <summary>
     /// Computes the average of a sequence that is obtained by
@@ -155,10 +132,7 @@ public static class AsyncIQueryableExtensions
     /// The task result contains the average of the sequence of values
     /// </returns>
     public static Task<double> AverageAsync<TSource>(this IQueryable<TSource> source,
-        Expression<Func<TSource, double>> predicate)
-    {
-        return AsyncExtensions.AverageAsync(source, predicate);
-    }
+        Expression<Func<TSource, double>> predicate) => AsyncExtensions.AverageAsync(source, predicate);
 
     /// <summary>
     /// Computes the average of a sequence that is obtained by
@@ -172,10 +146,7 @@ public static class AsyncIQueryableExtensions
     /// The task result contains the average of the sequence of values
     /// </returns>
     public static Task<double?> AverageAsync<TSource>(this IQueryable<TSource> source,
-        Expression<Func<TSource, double?>> predicate)
-    {
-        return AsyncExtensions.AverageAsync(source, predicate);
-    }
+        Expression<Func<TSource, double?>> predicate) => AsyncExtensions.AverageAsync(source, predicate);
 
     /// <summary>
     /// Computes the average of a sequence that is obtained by
@@ -189,10 +160,7 @@ public static class AsyncIQueryableExtensions
     /// The task result contains the average of the sequence of values
     /// </returns>
     public static Task<decimal> AverageAsync<TSource>(this IQueryable<TSource> source,
-        Expression<Func<TSource, decimal>> predicate)
-    {
-        return AsyncExtensions.AverageAsync(source, predicate);
-    }
+        Expression<Func<TSource, decimal>> predicate) => AsyncExtensions.AverageAsync(source, predicate);
 
     /// <summary>
     /// Computes the average of a sequence that is obtained by
@@ -206,10 +174,7 @@ public static class AsyncIQueryableExtensions
     /// The task result contains the average of the sequence of values
     /// </returns>
     public static Task<decimal?> AverageAsync<TSource>(this IQueryable<TSource> source,
-        Expression<Func<TSource, decimal?>> predicate)
-    {
-        return AsyncExtensions.AverageAsync(source, predicate);
-    }
+        Expression<Func<TSource, decimal?>> predicate) => AsyncExtensions.AverageAsync(source, predicate);
 
     #endregion
 
@@ -225,10 +190,8 @@ public static class AsyncIQueryableExtensions
     /// otherwise, false
     /// </returns>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public static Task<bool> ContainsAsync<TSource>(this IQueryable<TSource> source, TSource item)
-    {
-        return AsyncExtensions.ContainsAsync(source, item);
-    }
+    public static Task<bool> ContainsAsync<TSource>(this IQueryable<TSource> source, TSource item) =>
+        AsyncExtensions.ContainsAsync(source, item);
 
     /// <summary>
     /// Returns the number of elements in the specified sequence that satisfies a condition
@@ -243,9 +206,7 @@ public static class AsyncIQueryableExtensions
     /// <returns>A task that represents the asynchronous operation</returns>
     public static Task<int> CountAsync<TSource>(this IQueryable<TSource> source,
         Expression<Func<TSource, bool>> predicate = null)
-    {
-        return predicate == null ? AsyncExtensions.CountAsync(source) : AsyncExtensions.CountAsync(source, predicate);
-    }
+    => predicate == null ? AsyncExtensions.CountAsync(source) : AsyncExtensions.CountAsync(source, predicate);
 
     /// <summary>
     /// Returns the first element of a sequence that satisfies a specified condition
@@ -259,9 +220,7 @@ public static class AsyncIQueryableExtensions
     /// </returns>
     public static Task<TSource> FirstAsync<TSource>(this IQueryable<TSource> source,
         Expression<Func<TSource, bool>> predicate = null)
-    {
-        return predicate == null ? AsyncExtensions.FirstAsync(source) : AsyncExtensions.FirstAsync(source, predicate);
-    }
+    => predicate == null ? AsyncExtensions.FirstAsync(source) : AsyncExtensions.FirstAsync(source, predicate);
 
     /// <summary>
     /// Returns the first element of a sequence, or a default value if the sequence contains no elements
@@ -275,9 +234,7 @@ public static class AsyncIQueryableExtensions
     /// </returns>
     public static Task<TSource> FirstOrDefaultAsync<TSource>(this IQueryable<TSource> source,
         Expression<Func<TSource, bool>> predicate = null)
-    {
-        return predicate == null ? AsyncExtensions.FirstOrDefaultAsync(source) : AsyncExtensions.FirstOrDefaultAsync(source, predicate);
-    }
+    => predicate == null ? AsyncExtensions.FirstOrDefaultAsync(source) : AsyncExtensions.FirstOrDefaultAsync(source, predicate);
 
     /// <summary>
     /// Returns an System.Int64 that represents the number of elements in a sequence
@@ -293,9 +250,7 @@ public static class AsyncIQueryableExtensions
     /// <returns>A task that represents the asynchronous operation</returns>
     public static Task<long> LongCountAsync<TSource>(this IQueryable<TSource> source,
         Expression<Func<TSource, bool>> predicate = null)
-    {
-        return predicate == null ? AsyncExtensions.LongCountAsync(source) : AsyncExtensions.LongCountAsync(source, predicate);
-    }
+    => predicate == null ? AsyncExtensions.LongCountAsync(source) : AsyncExtensions.LongCountAsync(source, predicate);
 
     /// <summary>
     /// Returns the maximum value in a generic sequence
@@ -306,10 +261,7 @@ public static class AsyncIQueryableExtensions
     /// A task that represents the asynchronous operation
     /// The task result contains the maximum value in the sequence
     /// </returns>
-    public static Task<TSource> MaxAsync<TSource>(this IQueryable<TSource> source)
-    {
-        return AsyncExtensions.MaxAsync(source);
-    }
+    public static Task<TSource> MaxAsync<TSource>(this IQueryable<TSource> source) => AsyncExtensions.MaxAsync(source);
 
     /// <summary>
     /// Invokes a projection function on each element of a generic sequence
@@ -325,9 +277,7 @@ public static class AsyncIQueryableExtensions
     /// </returns>
     public static Task<TResult> MaxAsync<TSource, TResult>(this IQueryable<TSource> source,
         Expression<Func<TSource, TResult>> predicate)
-    {
-        return AsyncExtensions.MaxAsync(source, predicate);
-    }
+    => AsyncExtensions.MaxAsync(source, predicate);
 
     /// <summary>
     /// Returns the minimum value in a generic sequence
@@ -338,10 +288,7 @@ public static class AsyncIQueryableExtensions
     /// A task that represents the asynchronous operation
     /// The task result contains the minimum value in the sequence
     /// </returns>
-    public static Task<TSource> MinAsync<TSource>(this IQueryable<TSource> source)
-    {
-        return AsyncExtensions.MinAsync(source);
-    }
+    public static Task<TSource> MinAsync<TSource>(this IQueryable<TSource> source) => AsyncExtensions.MinAsync(source);
 
     /// <summary>
     /// Invokes a projection function on each element of a generic sequence
@@ -357,9 +304,7 @@ public static class AsyncIQueryableExtensions
     /// </returns>
     public static Task<TResult> MinAsync<TSource, TResult>(this IQueryable<TSource> source,
         Expression<Func<TSource, TResult>> predicate)
-    {
-        return AsyncExtensions.MinAsync(source, predicate);
-    }
+    => AsyncExtensions.MinAsync(source, predicate);
 
     /// <summary>
     /// Returns the only element of a sequence that satisfies a specified condition,
@@ -374,9 +319,7 @@ public static class AsyncIQueryableExtensions
     /// </returns>
     public static Task<TSource> SingleAsync<TSource>(this IQueryable<TSource> source,
         Expression<Func<TSource, bool>> predicate = null)
-    {
-        return predicate == null ? AsyncExtensions.SingleAsync(source) : AsyncExtensions.SingleAsync(source, predicate);
-    }
+    => predicate == null ? AsyncExtensions.SingleAsync(source) : AsyncExtensions.SingleAsync(source, predicate);
 
     /// <summary>
     /// Returns the only element of a sequence that satisfies a specified condition or
@@ -393,9 +336,7 @@ public static class AsyncIQueryableExtensions
     /// <returns>A task that represents the asynchronous operation</returns>
     public static Task<TSource> SingleOrDefaultAsync<TSource>(this IQueryable<TSource> source,
         Expression<Func<TSource, bool>> predicate = null)
-    {
-        return predicate == null ? AsyncExtensions.SingleOrDefaultAsync(source) : AsyncExtensions.SingleOrDefaultAsync(source, predicate);
-    }
+    => predicate == null ? AsyncExtensions.SingleOrDefaultAsync(source) : AsyncExtensions.SingleOrDefaultAsync(source, predicate);
 
     #region Sum
 
@@ -412,9 +353,7 @@ public static class AsyncIQueryableExtensions
     /// </returns>
     public static Task<decimal> SumAsync<TSource>(this IQueryable<TSource> source,
         Expression<Func<TSource, decimal>> predicate)
-    {
-        return AsyncExtensions.SumAsync(source, predicate);
-    }
+    => AsyncExtensions.SumAsync(source, predicate);
 
     /// <summary>
     /// Computes the sum of the sequence that is obtained
@@ -429,9 +368,7 @@ public static class AsyncIQueryableExtensions
     /// </returns>
     public static Task<decimal?> SumAsync<TSource>(this IQueryable<TSource> source,
         Expression<Func<TSource, decimal?>> predicate)
-    {
-        return AsyncExtensions.SumAsync(source, predicate);
-    }
+    => AsyncExtensions.SumAsync(source, predicate);
 
     /// <summary>
     /// Computes the sum of the sequence that is obtained
@@ -446,9 +383,7 @@ public static class AsyncIQueryableExtensions
     /// </returns>
     public static Task<double?> SumAsync<TSource>(this IQueryable<TSource> source,
         Expression<Func<TSource, double?>> predicate)
-    {
-        return AsyncExtensions.SumAsync(source, predicate);
-    }
+    => AsyncExtensions.SumAsync(source, predicate);
 
     /// <summary>
     /// Computes the sum of the sequence that is obtained
@@ -463,9 +398,7 @@ public static class AsyncIQueryableExtensions
     /// </returns>
     public static Task<float?> SumAsync<TSource>(this IQueryable<TSource> source,
         Expression<Func<TSource, float?>> predicate)
-    {
-        return AsyncExtensions.SumAsync(source, predicate);
-    }
+    => AsyncExtensions.SumAsync(source, predicate);
 
     /// <summary>
     /// Computes the sum of the sequence that is obtained
@@ -480,9 +413,7 @@ public static class AsyncIQueryableExtensions
     /// </returns>
     public static Task<double> SumAsync<TSource>(this IQueryable<TSource> source,
         Expression<Func<TSource, double>> predicate)
-    {
-        return AsyncExtensions.SumAsync(source, predicate);
-    }
+    => AsyncExtensions.SumAsync(source, predicate);
 
     /// <summary>
     /// Computes the sum of the sequence that is obtained
@@ -497,9 +428,7 @@ public static class AsyncIQueryableExtensions
     /// </returns>
     public static Task<int> SumAsync<TSource>(this IQueryable<TSource> source,
         Expression<Func<TSource, int>> predicate)
-    {
-        return AsyncExtensions.SumAsync(source, predicate);
-    }
+    => AsyncExtensions.SumAsync(source, predicate);
 
     /// <summary>
     /// Computes the sum of the sequence that is obtained
@@ -514,9 +443,7 @@ public static class AsyncIQueryableExtensions
     /// </returns>
     public static Task<int?> SumAsync<TSource>(this IQueryable<TSource> source,
         Expression<Func<TSource, int?>> predicate)
-    {
-        return AsyncExtensions.SumAsync(source, predicate);
-    }
+    => AsyncExtensions.SumAsync(source, predicate);
 
     /// <summary>
     /// Computes the sum of the sequence that is obtained
@@ -531,9 +458,7 @@ public static class AsyncIQueryableExtensions
     /// </returns>
     public static Task<long> SumAsync<TSource>(this IQueryable<TSource> source,
         Expression<Func<TSource, long>> predicate)
-    {
-        return AsyncExtensions.SumAsync(source, predicate);
-    }
+    => AsyncExtensions.SumAsync(source, predicate);
 
     /// <summary>
     /// Computes the sum of the sequence that is obtained
@@ -548,9 +473,7 @@ public static class AsyncIQueryableExtensions
     /// </returns>
     public static Task<long?> SumAsync<TSource>(this IQueryable<TSource> source,
         Expression<Func<TSource, long?>> predicate)
-    {
-        return AsyncExtensions.SumAsync(source, predicate);
-    }
+    => AsyncExtensions.SumAsync(source, predicate);
 
     /// <summary>
     /// Computes the sum of the sequence that is obtained
@@ -565,9 +488,7 @@ public static class AsyncIQueryableExtensions
     /// </returns>
     public static Task<float> SumAsync<TSource>(this IQueryable<TSource> source,
         Expression<Func<TSource, float>> predicate)
-    {
-        return AsyncExtensions.SumAsync(source, predicate);
-    }
+    => AsyncExtensions.SumAsync(source, predicate);
 
     #endregion
 
@@ -587,12 +508,10 @@ public static class AsyncIQueryableExtensions
     /// </returns>
     public static Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TSource, TKey, TElement>(
         this IQueryable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector,
-        IEqualityComparer<TKey> comparer = null) where TKey : notnull
-    {
-        return comparer == null
+        IEqualityComparer<TKey> comparer = null) where TKey : notnull =>
+            comparer == null
             ? AsyncExtensions.ToDictionaryAsync(source, keySelector, elementSelector)
             : AsyncExtensions.ToDictionaryAsync(source, keySelector, elementSelector, comparer);
-    }
 
     /// <summary>
     /// Asynchronously loads data from query to a dictionary
@@ -607,12 +526,10 @@ public static class AsyncIQueryableExtensions
     /// The task result contains the dictionary with query results
     /// </returns>
     public static Task<Dictionary<TKey, TSource>> ToDictionaryAsync<TSource, TKey>(this IQueryable<TSource> source,
-        Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer = null) where TKey : notnull
-    {
-        return comparer == null
+        Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer = null) where TKey : notnull =>
+            comparer == null
             ? AsyncExtensions.ToDictionaryAsync(source, keySelector)
             : AsyncExtensions.ToDictionaryAsync(source, keySelector, comparer);
-    }
 
     /// <summary>
     /// Asynchronously loads data from query to a list
@@ -623,10 +540,8 @@ public static class AsyncIQueryableExtensions
     /// A task that represents the asynchronous operation
     /// The task result contains the list with query results
     /// </returns>
-    public static Task<List<TSource>> ToListAsync<TSource>(this IQueryable<TSource> source)
-    {
-        return AsyncExtensions.ToListAsync(source);
-    }
+    public static Task<List<TSource>> ToListAsync<TSource>(this IQueryable<TSource> source) =>
+        AsyncExtensions.ToListAsync(source);
 
     /// <summary>
     /// Asynchronously loads data from query to an array
@@ -637,10 +552,8 @@ public static class AsyncIQueryableExtensions
     /// A task that represents the asynchronous operation
     /// The task result contains the array with query results
     /// </returns>
-    public static Task<TSource[]> ToArrayAsync<TSource>(this IQueryable<TSource> source)
-    {
-        return AsyncExtensions.ToArrayAsync(source);
-    }
+    public static Task<TSource[]> ToArrayAsync<TSource>(this IQueryable<TSource> source) => 
+        AsyncExtensions.ToArrayAsync(source);
 
     /// <summary>
     /// Ctor

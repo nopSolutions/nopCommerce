@@ -12,4 +12,8 @@ public partial interface IEntityBuilder
     /// </summary>
     /// <param name="table">Create table expression builder</param>
     void MapEntity(CreateTableExpressionBuilder table);
+    void MapEntity(CreateTableExpressionBuilder table);
+    void MapEntity(CreateTableExpressionBuilder table);
+    void MapEntity(CreateTableExpressionBuilder table);
+    void MapEntity(CreateTableExpressionBuilder table);
 }

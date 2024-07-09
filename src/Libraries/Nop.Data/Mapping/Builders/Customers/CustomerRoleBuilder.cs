@@ -14,12 +14,10 @@ public partial class CustomerRoleBuilder : NopEntityBuilder<CustomerRole>
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) =>
         table
             .WithColumn(nameof(CustomerRole.Name)).AsString(255).NotNullable()
             .WithColumn(nameof(CustomerRole.SystemName)).AsString(255).Nullable();
-    }
 
     #endregion
 }

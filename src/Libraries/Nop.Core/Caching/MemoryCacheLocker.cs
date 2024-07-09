@@ -15,10 +15,7 @@ public partial class MemoryCacheLocker : ILocker
 
     #region Ctor
 
-    public MemoryCacheLocker(IMemoryCache memoryCache)
-    {
-        _memoryCache = memoryCache;
-    }
+    public MemoryCacheLocker(IMemoryCache memoryCache) => _memoryCache = memoryCache;
 
     #endregion
 
@@ -70,10 +67,8 @@ public partial class MemoryCacheLocker : ILocker
     /// <param name="expirationTime">The time after which the lock will automatically be expired</param>
     /// <param name="action">Asynchronous task to be performed with locking</param>
     /// <returns>A task that resolves true if lock was acquired and action was performed; otherwise false</returns>
-    public async Task<bool> PerformActionWithLockAsync(string resource, TimeSpan expirationTime, Func<Task> action)
-    {
-        return await RunAsync(resource, expirationTime, _ => action());
-    }
+    public async Task<bool> PerformActionWithLockAsync(string resource, TimeSpan expirationTime, Func<Task> action) => 
+        await RunAsync(resource, expirationTime, _ => action());
 
     /// <summary>
     /// Starts a background task with "heartbeat": a status flag that will be periodically updated to signal to
@@ -85,12 +80,10 @@ public partial class MemoryCacheLocker : ILocker
     /// <param name="action">Asynchronous background task to be performed</param>
     /// <param name="cancellationTokenSource">A CancellationTokenSource for manually canceling the task</param>
     /// <returns>A task that resolves true if lock was acquired and action was performed; otherwise false</returns>
-    public async Task RunWithHeartbeatAsync(string key, TimeSpan expirationTime, TimeSpan heartbeatInterval, Func<CancellationToken, Task> action, CancellationTokenSource cancellationTokenSource = default)
-    {
+    public async Task RunWithHeartbeatAsync(string key, TimeSpan expirationTime, TimeSpan heartbeatInterval, Func<CancellationToken, Task> action, CancellationTokenSource cancellationTokenSource = default) =>
         // We ignore expirationTime and heartbeatInterval here, as the cache is not shared with other instances,
         // and will be cleared on system failure anyway. The task is guaranteed to still be running as long as it is in the cache.
         await RunAsync(key, null, action, cancellationTokenSource);
-    }
 
     /// <summary>
     /// Tries to cancel a background task by flagging it for cancellation on the next heartbeat.
@@ -113,10 +106,7 @@ public partial class MemoryCacheLocker : ILocker
     /// </summary>
     /// <param name="key">The task's key</param>
     /// <returns>A task that resolves to true if the background task is running; otherwise false</returns>
-    public Task<bool> IsTaskRunningAsync(string key)
-    {
-        return Task.FromResult(_memoryCache.TryGetValue(key, out _));
-    }
+    public Task<bool> IsTaskRunningAsync(string key) => Task.FromResult(_memoryCache.TryGetValue(key, out _));
 
     #endregion
 }

@@ -7,10 +7,7 @@ public partial class AppSettingsSavingEvent
 {
     #region Ctor
 
-    public AppSettingsSavingEvent(IList<IConfig> configurations)
-    {
-        Configurations = configurations;
-    }
+    public AppSettingsSavingEvent(IList<IConfig> configurations) => Configurations = configurations;
 
     #endregion
 

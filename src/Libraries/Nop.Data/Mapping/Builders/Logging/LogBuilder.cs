@@ -16,13 +16,11 @@ public partial class LogBuilder : NopEntityBuilder<Log>
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) => 
         table
             .WithColumn(nameof(Log.ShortMessage)).AsString(int.MaxValue).NotNullable()
             .WithColumn(nameof(Log.IpAddress)).AsString(100).Nullable()
             .WithColumn(nameof(Log.CustomerId)).AsInt32().Nullable().ForeignKey<Customer>();
-    }
 
     #endregion
 }

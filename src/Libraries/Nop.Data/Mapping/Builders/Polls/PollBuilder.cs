@@ -16,12 +16,10 @@ public partial class PollBuilder : NopEntityBuilder<Poll>
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) =>
         table
             .WithColumn(nameof(Poll.Name)).AsString(int.MaxValue).NotNullable()
             .WithColumn(nameof(Poll.LanguageId)).AsInt32().ForeignKey<Language>();
-    }
 
     #endregion
 }

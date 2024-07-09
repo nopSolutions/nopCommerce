@@ -15,12 +15,10 @@ public partial class ProductCategoryBuilder : NopEntityBuilder<ProductCategory>
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) =>
         table
             .WithColumn(nameof(ProductCategory.CategoryId)).AsInt32().ForeignKey<Category>()
             .WithColumn(nameof(ProductCategory.ProductId)).AsInt32().ForeignKey<Product>();
-    }
 
     #endregion
 }

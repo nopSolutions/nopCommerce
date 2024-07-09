@@ -26,10 +26,8 @@ public partial class GenericListTypeConverter<T> : TypeConverter
     /// </summary>
     /// <param name="input">Input</param>
     /// <returns>Array</returns>
-    protected virtual string[] GetStringArray(string input)
-    {
-        return string.IsNullOrEmpty(input) ? Array.Empty<string>() : input.Split(',').Select(x => x.Trim()).ToArray();
-    }
+    protected virtual string[] GetStringArray(string input) =>
+        string.IsNullOrEmpty(input) ? Array.Empty<string>() : input.Split(',').Select(x => x.Trim()).ToArray();
 
     /// <summary>
     /// Gets a value indicating whether this converter can        

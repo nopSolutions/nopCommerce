@@ -6,10 +6,7 @@
 /// <typeparam name="T">The type of list to store.</typeparam>
 public partial class SingletonList<T> : Singleton<IList<T>>
 {
-    static SingletonList()
-    {
-        Singleton<IList<T>>.Instance = new List<T>();
-    }
+    static SingletonList() => Singleton<IList<T>>.Instance = new List<T>();
 
     /// <summary>
     /// The singleton instance for the specified type T. Only one instance (at the time) of this list for each type of T.

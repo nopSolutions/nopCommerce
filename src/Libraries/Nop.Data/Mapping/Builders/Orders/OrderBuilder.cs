@@ -18,8 +18,7 @@ public partial class OrderBuilder : NopEntityBuilder<Order>
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) => 
         table
             .WithColumn(nameof(Order.CustomOrderNumber)).AsString(int.MaxValue).NotNullable()
             .WithColumn(nameof(Order.BillingAddressId)).AsInt32().ForeignKey<Address>(onDelete: Rule.None)
@@ -27,7 +26,6 @@ public partial class OrderBuilder : NopEntityBuilder<Order>
             .WithColumn(nameof(Order.PickupAddressId)).AsInt32().Nullable().ForeignKey<Address>(onDelete: Rule.None)
             .WithColumn(nameof(Order.ShippingAddressId)).AsInt32().Nullable().ForeignKey<Address>(onDelete: Rule.None)
             .WithColumn(nameof(Order.CustomerIp)).AsString(100).Nullable();
-    }
 
     #endregion
 }

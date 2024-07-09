@@ -154,10 +154,7 @@ public partial class DataSettingsManager
     /// <value>
     /// Number of seconds. Negative timeout value means that a default timeout will be used. 0 timeout value corresponds to infinite timeout.
     /// </value>
-    public static int GetSqlCommandTimeout()
-    {
-        return LoadSettings()?.SQLCommandTimeout ?? -1;
-    }
+    public static int GetSqlCommandTimeout() => LoadSettings()?.SQLCommandTimeout ?? -1;
 
     /// <summary>
     /// Gets a value that indicates whether to add NoLock hint to SELECT statements (applies only to SQL Server, otherwise returns false)

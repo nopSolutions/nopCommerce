@@ -15,12 +15,10 @@ public partial class ProductManufacturerBuilder : NopEntityBuilder<ProductManufa
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) => 
         table
             .WithColumn(nameof(ProductManufacturer.ManufacturerId)).AsInt32().ForeignKey<Manufacturer>()
             .WithColumn(nameof(ProductManufacturer.ProductId)).AsInt32().ForeignKey<Product>();
-    }
 
     #endregion
 }

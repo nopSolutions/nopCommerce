@@ -16,12 +16,10 @@ public partial class ProductAttributeValuePictureBuilder : NopEntityBuilder<Prod
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) => 
         table
             .WithColumn(nameof(ProductAttributeValuePicture.ProductAttributeValueId)).AsInt32().ForeignKey<ProductAttributeValue>()
             .WithColumn(nameof(ProductAttributeValuePicture.PictureId)).AsInt32();
-    }
 
     #endregion
 }

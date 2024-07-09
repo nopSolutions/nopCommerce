@@ -17,16 +17,14 @@ public partial class DataProviderManager : IDataProviderManager
     /// </summary>
     /// <param name="dataProviderType">Data provider type</param>
     /// <returns></returns>
-    public static INopDataProvider GetDataProvider(DataProviderType dataProviderType)
-    {
-        return dataProviderType switch
+    public static INopDataProvider GetDataProvider(DataProviderType dataProviderType) =>
+        dataProviderType switch
         {
             DataProviderType.SqlServer => new MsSqlNopDataProvider(),
             DataProviderType.MySql => new MySqlNopDataProvider(),
             DataProviderType.PostgreSQL => new PostgreSqlDataProvider(),
             _ => throw new NopException($"Not supported data provider name: '{dataProviderType}'"),
         };
-    }
 
     #endregion
 

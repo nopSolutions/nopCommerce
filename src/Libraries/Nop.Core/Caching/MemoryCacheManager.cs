@@ -186,10 +186,7 @@ public partial class MemoryCacheManager : CacheKeyService, IStaticCacheManager
     /// A task that represents the asynchronous operation
     /// The task result contains the cached value associated with the specified key
     /// </returns>
-    public async Task<T> GetAsync<T>(CacheKey key, Func<T> acquire)
-    {
-        return await GetAsync(key, () => Task.FromResult(acquire()));
-    }
+    public async Task<T> GetAsync<T>(CacheKey key, Func<T> acquire) => await GetAsync(key, () => Task.FromResult(acquire()));
 
     /// <summary>
     /// Get a cached item as an <see cref="object"/> instance, or null on a cache miss.

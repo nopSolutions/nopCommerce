@@ -20,10 +20,7 @@ public partial class ConcurrentTrie<TValue> : IConcurrentCollection<TValue>
     /// <summary>
     /// Initializes a new instance of <see cref="ConcurrentTrie{TValue}" />
     /// </summary>
-    protected ConcurrentTrie(TrieNode subtreeRoot)
-    {
-        _root.Children[subtreeRoot.Label[0]] = subtreeRoot;
-    }
+    protected ConcurrentTrie(TrieNode subtreeRoot) => _root.Children[subtreeRoot.Label[0]] = subtreeRoot;
 
     /// <summary>
     /// Initializes a new empty instance of <see cref="ConcurrentTrie{TValue}" />
@@ -54,10 +51,7 @@ public partial class ConcurrentTrie<TValue> : IConcurrentCollection<TValue>
     /// <remarks>
     /// May return the same lock for two different nodes, so the user needs to check to avoid lock recursion exceptions
     /// </remarks>
-    protected virtual ReaderWriterLockSlim GetLock(TrieNode node)
-    {
-        return _locks.GetLock(node.Children);
-    }
+    protected virtual ReaderWriterLockSlim GetLock(TrieNode node) => _locks.GetLock(node.Children);
 
     protected virtual bool Find(string key, TrieNode subtreeRoot, out TrieNode node)
     {
@@ -437,10 +431,7 @@ public partial class ConcurrentTrie<TValue> : IConcurrentCollection<TValue>
     /// <summary>
     /// Clears the trie
     /// </summary>
-    public virtual void Clear()
-    {
-        _root = new TrieNode();
-    }
+    public virtual void Clear() => _root = new TrieNode();
 
     /// <summary>
     /// Gets all key-value pairs for keys starting with the given prefix
@@ -625,10 +616,7 @@ public partial class ConcurrentTrie<TValue> : IConcurrentCollection<TValue>
         /// <summary>
         /// Gets a lock on the object
         /// </summary>
-        public ReaderWriterLockSlim GetLock(object obj)
-        {
-            return _locks[obj.GetHashCode() % _locks.Length];
-        }
+        public ReaderWriterLockSlim GetLock(object obj) => _locks[obj.GetHashCode() % _locks.Length];
 
         #endregion
     }
@@ -707,10 +695,7 @@ public partial class ConcurrentTrie<TValue> : IConcurrentCollection<TValue>
             return true;
         }
 
-        public void SetValue(TValue value)
-        {
-            _value = new ValueWrapper(value);
-        }
+        public void SetValue(TValue value) => _value = new ValueWrapper(value);
 
         public TValue GetOrAddValue(TValue value)
         {
@@ -719,10 +704,7 @@ public partial class ConcurrentTrie<TValue> : IConcurrentCollection<TValue>
             return wrapper != null ? wrapper.Value : value;
         }
 
-        public void Delete()
-        {
-            _value = _deleted;
-        }
+        public void Delete() => _value = _deleted;
 
         #endregion
 
@@ -744,10 +726,7 @@ public partial class ConcurrentTrie<TValue> : IConcurrentCollection<TValue>
         {
             public readonly TValue Value;
 
-            public ValueWrapper(TValue value)
-            {
-                Value = value;
-            }
+            public ValueWrapper(TValue value) => Value = value;
         }
 
         #endregion

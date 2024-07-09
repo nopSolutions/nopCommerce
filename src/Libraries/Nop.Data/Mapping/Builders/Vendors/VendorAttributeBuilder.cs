@@ -14,10 +14,8 @@ public partial class VendorAttributeBuilder : NopEntityBuilder<VendorAttribute>
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) =>
         table.WithColumn(nameof(VendorAttribute.Name)).AsString(400).NotNullable();
-    }
 
     #endregion
 }

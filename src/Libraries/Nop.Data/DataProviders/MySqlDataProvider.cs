@@ -40,10 +40,8 @@ public partial class MySqlNopDataProvider : BaseDataProvider, INopDataProvider
     /// Gets the connection string builder
     /// </summary>
     /// <returns>The connection string builder</returns>
-    protected static MySqlConnectionStringBuilder GetConnectionStringBuilder()
-    {
-        return new MySqlConnectionStringBuilder(GetCurrentConnectionString());
-    }
+    protected static MySqlConnectionStringBuilder GetConnectionStringBuilder() => 
+        new MySqlConnectionStringBuilder(GetCurrentConnectionString());
 
     /// <summary>
     /// Gets a connection to the database for a current data provider
@@ -224,20 +222,16 @@ public partial class MySqlNopDataProvider : BaseDataProvider, INopDataProvider
     /// Creates a backup of the database
     /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual Task BackupDatabaseAsync(string fileName)
-    {
+    public virtual Task BackupDatabaseAsync(string fileName) => 
         throw new DataException("This database provider does not support backup");
-    }
 
     /// <summary>
     /// Restores the database from a backup
     /// </summary>
     /// <param name="backupFileName">The name of the backup file</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual Task RestoreDatabaseAsync(string backupFileName)
-    {
+    public virtual Task RestoreDatabaseAsync(string backupFileName) =>
         throw new DataException("This database provider does not support backup");
-    }
 
     /// <summary>
     /// Re-index database tables
@@ -286,13 +280,11 @@ public partial class MySqlNopDataProvider : BaseDataProvider, INopDataProvider
     /// <param name="primaryTable">Primary table</param>
     /// <param name="primaryColumn">Primary key column name</param>
     /// <returns>Name of a foreign key</returns>
-    public virtual string CreateForeignKeyName(string foreignTable, string foreignColumn, string primaryTable, string primaryColumn)
-    {
+    public virtual string CreateForeignKeyName(string foreignTable, string foreignColumn, string primaryTable, string primaryColumn) =>
         //mySql support only 64 chars for constraint name
         //that is why we use hash function for create unique name
         //see details on this topic: https://dev.mysql.com/doc/refman/8.0/en/identifier-length.html
-        return "FK_" + HashHelper.CreateHash(Encoding.UTF8.GetBytes($"{foreignTable}_{foreignColumn}_{primaryTable}_{primaryColumn}"), HASH_ALGORITHM);
-    }
+        "FK_" + HashHelper.CreateHash(Encoding.UTF8.GetBytes($"{foreignTable}_{foreignColumn}_{primaryTable}_{primaryColumn}"), HASH_ALGORITHM);
 
     /// <summary>
     /// Gets the name of an index
@@ -300,10 +292,8 @@ public partial class MySqlNopDataProvider : BaseDataProvider, INopDataProvider
     /// <param name="targetTable">Target table name</param>
     /// <param name="targetColumn">Target column name</param>
     /// <returns>Name of an index</returns>
-    public virtual string GetIndexName(string targetTable, string targetColumn)
-    {
-        return "IX_" + HashHelper.CreateHash(Encoding.UTF8.GetBytes($"{targetTable}_{targetColumn}"), HASH_ALGORITHM);
-    }
+    public virtual string GetIndexName(string targetTable, string targetColumn) => 
+        "IX_" + HashHelper.CreateHash(Encoding.UTF8.GetBytes($"{targetTable}_{targetColumn}"), HASH_ALGORITHM);
 
     #endregion
 

@@ -14,12 +14,10 @@ public partial class ScheduleTaskBuilder : NopEntityBuilder<ScheduleTask>
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) =>
         table
             .WithColumn(nameof(ScheduleTask.Name)).AsString(int.MaxValue).NotNullable()
             .WithColumn(nameof(ScheduleTask.Type)).AsString(int.MaxValue).NotNullable();
-    }
 
     #endregion
 }

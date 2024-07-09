@@ -15,13 +15,11 @@ public partial class LocaleStringResourceBuilder : NopEntityBuilder<LocaleString
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) =>
         table
             .WithColumn(nameof(LocaleStringResource.ResourceName)).AsString(200).NotNullable()
             .WithColumn(nameof(LocaleStringResource.ResourceValue)).AsString(int.MaxValue).NotNullable()
             .WithColumn(nameof(LocaleStringResource.LanguageId)).AsInt32().ForeignKey<Language>();
-    }
 
     #endregion
 }

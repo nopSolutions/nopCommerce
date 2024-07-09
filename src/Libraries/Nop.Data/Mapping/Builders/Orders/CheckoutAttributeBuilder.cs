@@ -14,10 +14,8 @@ public partial class CheckoutAttributeBuilder : NopEntityBuilder<CheckoutAttribu
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) => 
         table.WithColumn(nameof(CheckoutAttribute.Name)).AsString(400).NotNullable();
-    }
 
     #endregion
 }

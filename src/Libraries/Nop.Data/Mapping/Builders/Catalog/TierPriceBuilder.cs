@@ -16,12 +16,10 @@ public partial class TierPriceBuilder : NopEntityBuilder<TierPrice>
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) =>
         table
             .WithColumn(nameof(TierPrice.CustomerRoleId)).AsInt32().Nullable().ForeignKey<CustomerRole>()
             .WithColumn(nameof(TierPrice.ProductId)).AsInt32().ForeignKey<Product>();
-    }
 
     #endregion
 }

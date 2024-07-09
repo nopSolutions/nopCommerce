@@ -14,12 +14,10 @@ public partial class PictureBuilder : NopEntityBuilder<Picture>
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) =>
         table
             .WithColumn(nameof(Picture.MimeType)).AsString(40).NotNullable()
             .WithColumn(nameof(Picture.SeoFilename)).AsString(300).Nullable();
-    }
 
     #endregion
 }

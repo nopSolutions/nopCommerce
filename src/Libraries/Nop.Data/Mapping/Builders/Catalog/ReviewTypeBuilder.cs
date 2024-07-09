@@ -14,12 +14,10 @@ public partial class ReviewTypeBuilder : NopEntityBuilder<ReviewType>
     /// Apply entity configuration
     /// </summary>
     /// <param name="table">Create table expression builder</param>
-    public override void MapEntity(CreateTableExpressionBuilder table)
-    {
+    public override void MapEntity(CreateTableExpressionBuilder table) =>
         table
             .WithColumn(nameof(ReviewType.Name)).AsString(400).NotNullable()
             .WithColumn(nameof(ReviewType.Description)).AsString(400).NotNullable();
-    }
 
     #endregion
 }
