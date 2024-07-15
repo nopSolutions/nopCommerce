@@ -181,7 +181,8 @@ public partial class WebWorkContext : IWorkContext
             return null;
 
         //try to get language by culture name
-        var requestLanguage = (await _languageService.GetAllLanguagesAsync()).FirstOrDefault(language =>
+        var store = await _storeContext.GetCurrentStoreAsync();
+        var requestLanguage = (await _languageService.GetAllLanguagesAsync(storeId: store?.Id ?? 0)).FirstOrDefault(language =>
             language.LanguageCulture.Equals(requestCultureFeature.RequestCulture.Culture.Name, StringComparison.InvariantCultureIgnoreCase));
 
         //check language availability
