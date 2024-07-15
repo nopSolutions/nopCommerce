@@ -3731,6 +3731,33 @@ label, label + * {
   padding: 30px 0;
 }
 
+.login-page .login-password {
+  position: relative;
+  width: max-content;
+  max-width: 100%;
+  display: inline-block;
+}
+
+.login-page .password-eye {
+  content: "";
+  display: block;
+  height: 24px;
+  width: 24px;
+  background-image: url('../images/eye-closed.png');
+  position: absolute;
+  top: calc(50% - 12px);
+  right: 10px;
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index: 2;
+  cursor: pointer;
+  opacity: .75
+}
+
+.login-page .password-eye-open {
+  background-image: url('../images/eye.png');
+}
+
 .external-authentication {
   margin: 0 0 50px;
   overflow: hidden;
