@@ -59,6 +59,8 @@ namespace AbcWarehouse.Plugin.Widgets.UniFi.Components
 
         public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData = null)
         {
+            if (!_settings.IsEnabled) { return Content(string.Empty); }
+
             if (widgetZone == PublicWidgetZones.BodyEndHtmlTagBefore)
             {
                 var partnerId = _settings.PartnerId;

@@ -70,6 +70,8 @@ namespace AbcWarehouse.Plugin.Widgets.UniFi
             await _localizationService.AddLocaleResourceAsync(
                 new Dictionary<string, string>
                 {
+                    [UniFiLocales.IsEnabled] = "Is Enabled",
+                    [UniFiLocales.IsEnabledHint] = "Turns Unifi on or off.",
                     [UniFiLocales.PartnerId] = "Partner ID",
                     [UniFiLocales.PartnerIdHint] = "The partner ID provided by SYF.",
                     [UniFiLocales.UseIntegration] = "Use Integration",

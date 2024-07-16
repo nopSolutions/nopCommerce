@@ -6,13 +6,25 @@
     Layout = "_ConfigurePlugin";
 }
 
+@await Component.InvokeAsync("StoreScopeConfiguration")
+
 <form asp-controller="UniFi" asp-action="Configure" method="post">
-	<section class="content">
-		<div class="container-fluid">			
-			<div class="card card-default">
-				<div class="card-body">
+	<div class="cards-group">
+		<div class="card card-default">
+			<div class="card-body">
 					<div class="form-group row">
 						<div class="col-md-3">
+							<nop-override-store-checkbox asp-for="IsEnabled_OverrideForStore" asp-input="IsEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+							<nop-label asp-for="IsEnabled" />
+						</div>
+						<div class="col-md-9">
+							<nop-editor asp-for="IsEnabled" />
+							<span asp-validation-for="IsEnabled"></span>
+						</div>
+					</div>
+					<div class="form-group row">
+						<div class="col-md-3">
+							<nop-override-store-checkbox asp-for="PartnerId_OverrideForStore" asp-input="PartnerId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
 							<nop-label asp-for="PartnerId" />
 						</div>
 						<div class="col-md-9">
@@ -22,6 +34,7 @@
 					</div>
 					<div class="form-group row">
 						<div class="col-md-3">
+							<nop-override-store-checkbox asp-for="UseIntegration_OverrideForStore" asp-input="UseIntegration" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
 							<nop-label asp-for="UseIntegration" />
 						</div>
 						<div class="col-md-9">
@@ -37,5 +50,4 @@
 				</div>
 			</div>			
 		</div>
-	</section>
 </form>
