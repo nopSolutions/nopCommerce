@@ -16,7 +16,6 @@ using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.ScheduleTasks;
-using Nop.Services.Stores;
 using Nop.Services.Vendors;
 using Nop.Web.Framework.Globalization;
 
@@ -39,7 +38,6 @@ public partial class WebWorkContext : IWorkContext
     protected readonly IHttpContextAccessor _httpContextAccessor;
     protected readonly ILanguageService _languageService;
     protected readonly IStoreContext _storeContext;
-    protected readonly IStoreMappingService _storeMappingService;
     protected readonly IUserAgentHelper _userAgentHelper;
     protected readonly IVendorService _vendorService;
     protected readonly IWebHelper _webHelper;
@@ -67,7 +65,6 @@ public partial class WebWorkContext : IWorkContext
         IHttpContextAccessor httpContextAccessor,
         ILanguageService languageService,
         IStoreContext storeContext,
-        IStoreMappingService storeMappingService,
         IUserAgentHelper userAgentHelper,
         IVendorService vendorService,
         IWebHelper webHelper,
@@ -84,7 +81,6 @@ public partial class WebWorkContext : IWorkContext
         _httpContextAccessor = httpContextAccessor;
         _languageService = languageService;
         _storeContext = storeContext;
-        _storeMappingService = storeMappingService;
         _userAgentHelper = userAgentHelper;
         _vendorService = vendorService;
         _webHelper = webHelper;
@@ -162,11 +158,12 @@ public partial class WebWorkContext : IWorkContext
     /// <summary>
     /// Get language from the request
     /// </summary>
+    /// <param name="storeId">Get a language that is only allowed for the specified store; pass 0 to ignore limitations</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the found language
     /// </returns>
-    protected virtual async Task<Language> GetLanguageFromRequestAsync()
+    protected virtual async Task<Language> GetLanguageFromRequestAsync(int storeId = 0)
     {
         var requestCultureFeature = _httpContextAccessor.HttpContext?.Features.Get<IRequestCultureFeature>();
         if (requestCultureFeature is null)
@@ -181,12 +178,9 @@ public partial class WebWorkContext : IWorkContext
             return null;
 
         //try to get language by culture name
-        var requestLanguage = (await _languageService.GetAllLanguagesAsync()).FirstOrDefault(language =>
+        var store = await _storeContext.GetCurrentStoreAsync();
+        var requestLanguage = (await _languageService.GetAllLanguagesAsync(storeId: storeId)).FirstOrDefault(language =>
             language.LanguageCulture.Equals(requestCultureFeature.RequestCulture.Culture.Name, StringComparison.InvariantCultureIgnoreCase));
-
-        //check language availability
-        if (requestLanguage == null || !requestLanguage.Published || !await _storeMappingService.AuthorizeAsync(requestLanguage))
-            return null;
 
         return requestLanguage;
     }
@@ -360,7 +354,7 @@ public partial class WebWorkContext : IWorkContext
         var store = await _storeContext.GetCurrentStoreAsync();
 
         //whether we should detect the language from the request
-        var detectedLanguage = await GetLanguageFromRequestAsync();
+        var detectedLanguage = await GetLanguageFromRequestAsync(store.Id);
 
         //get current saved language identifier
         var currentLanguageId = customer.LanguageId;
