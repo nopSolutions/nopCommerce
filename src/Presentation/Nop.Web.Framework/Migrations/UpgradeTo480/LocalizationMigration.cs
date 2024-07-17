@@ -7,7 +7,7 @@ using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo480;
 
-[NopUpdateMigration("2023-11-01 00:00:00", "4.80", UpdateMigrationType.Localization)]
+[NopUpdateMigration("2023-11-07 00:00:00", "4.80", UpdateMigrationType.Localization)]
 public class LocalizationMigration : MigrationBase
 {
     /// <summary>Collect the UP migration expressions</summary>
@@ -280,6 +280,14 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Configuration.Settings.Catalog.ShowSearchBoxCategories"] = "Show product categories for the search box",
             ["Admin.Configuration.Settings.Catalog.ShowSearchBoxCategories.Hint"] = "Check to display the drop-down list with product categories next to the search box.",
             ["Search.SearchBox.AllCategories"] = "All categories",
+
+            //#7243
+            ["Admin.Vendors.PmCustomer.Choose"] = "Choose",
+            ["Admin.Vendors.Fields.PmCustomerId"] = "Customer for PM",
+            ["Admin.Vendors.Fields.PmCustomerId.Hint"] = "Choose the customer for receiving private messages. Customers will see the \"Send private message\" button on the vendor details page.",
+            ["Admin.Vendors.Fields.PmCustomerId.Choose"] = "Choose",
+            ["Admin.Vendors.Fields.PmCustomerId.Remove"] = "Remove",
+            ["SendPmToVendor"] = "Send private message",
         }, languageId);
 
         #endregion

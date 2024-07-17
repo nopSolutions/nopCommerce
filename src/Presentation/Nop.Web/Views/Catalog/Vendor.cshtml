@@ -47,6 +47,11 @@
         {
             <div class="contact-vendor">
                 <button type="button" class="button-2 contact-vendor-button" onclick="setLocation('@Url.RouteUrl("ContactVendor", new { vendorId = Model.Id })')">@T("ContactVendor")</button>
+
+                @if(Model.PmCustomerId > 0)
+                {
+                    <button type="button" class="button-2 pm-vendor-button" onclick="setLocation('@Url.RouteUrl("SendPM", new { toCustomerId = Model.PmCustomerId })')">@T("SendPmToVendor")</button>
+                }
             </div>
         }
         @await Html.PartialAsync("_CatalogSelectors", Model.CatalogProductsModel)

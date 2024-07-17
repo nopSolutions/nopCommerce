@@ -9,6 +9,26 @@ namespace Nop.Web.Areas.Admin.Factories;
 public partial interface IVendorModelFactory
 {
     /// <summary>
+    /// Prepare vendor customer search model
+    /// </summary>
+    /// <param name="searchModel">Vendor customer search model</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the vendor customer search model
+    /// </returns>
+    Task<VendorCustomerSearchModel> PrepareVendorCustomerSearchModelAsync(VendorCustomerSearchModel searchModel);
+
+    /// <summary>
+    /// Prepare paged vendor customer list model
+    /// </summary>
+    /// <param name="searchModel">Vendor customer search model</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the vendor customer list model
+    /// </returns>
+    Task<VendorCustomerListModel> PrepareVendorCustomerListModelAsync(VendorCustomerSearchModel searchModel);
+
+    /// <summary>
     /// Prepare vendor search model
     /// </summary>
     /// <param name="searchModel">Vendor search model</param>

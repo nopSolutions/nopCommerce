@@ -1699,7 +1699,8 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(model => model.SeName, options => options.Ignore())
             .ForMember(model => model.VendorAttributes, options => options.Ignore())
             .ForMember(model => model.VendorNoteSearchModel, options => options.Ignore())
-            .ForMember(model => model.PrimaryStoreCurrencyCode, options => options.Ignore());
+            .ForMember(model => model.PrimaryStoreCurrencyCode, options => options.Ignore())
+            .ForMember(model => model.PmCustomerInfo, options => options.Ignore());
         CreateMap<VendorModel, Vendor>()
             .ForMember(entity => entity.Deleted, options => options.Ignore());
 
