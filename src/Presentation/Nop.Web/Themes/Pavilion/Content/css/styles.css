@@ -6140,6 +6140,17 @@ h1.search-page-title {
     cursor: pointer;
 }
 
+@media screen and (max-width: 570px) {
+.content__Block-sc-3iczmu-0.cFzLkk {
+    text-align: center;
+}
+.elfsight-app-0939552e-738a-40b7-99ae-c6b3a185dada {
+	width: 100% !important;
+}
+.elfsight-app-0939552e-738a-40b7-99ae-c6b3a185dada .hortui {
+	max-width: none;
+}
+}
 
 @media screen and (max-width: 1024px) {
 	div#mobile-header-logo {
@@ -6156,6 +6167,8 @@ h1.search-page-title {
 	}
 	.categories-details-top img {
 		width: 100% !important;
+		height: auto;
+        max-width: 110px;
 	}
 	body .master-wrapper-content {
 		padding-top: 0px;
