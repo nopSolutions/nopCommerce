@@ -496,10 +496,7 @@ public partial class AttributeParser<TAttribute, TAttributeValue> : IAttributePa
         if (string.IsNullOrEmpty(conditionAttributeXml))
             //no condition
             return null;
-
-        if (string.IsNullOrEmpty(selectedAttributesXml))
-            return null;
-
+        
         //load an attribute this one depends on
         var dependOnAttribute = (await ParseAttributesAsync(conditionAttributeXml)).FirstOrDefault();
         if (dependOnAttribute == null)
