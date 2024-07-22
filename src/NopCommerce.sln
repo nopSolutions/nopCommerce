@@ -65,6 +65,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nop.Plugin.Misc.NopMobileAp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nop.Plugin.Misc.Omnisend", "Plugins\Nop.Plugin.Misc.Omnisend\Nop.Plugin.Misc.Omnisend.csproj", "{48003279-FC5E-43F4-B683-E28B34BAECEB}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nop.Plugin.Payments.AmazonPay", "Plugins\Nop.Plugin.Payments.AmazonPay\Nop.Plugin.Payments.AmazonPay.csproj", "{6C596948-C94E-40A8-81AE-F96D75E7624B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -377,6 +379,18 @@ Global
 		{48003279-FC5E-43F4-B683-E28B34BAECEB}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{48003279-FC5E-43F4-B683-E28B34BAECEB}.Release|x86.ActiveCfg = Release|Any CPU
 		{48003279-FC5E-43F4-B683-E28B34BAECEB}.Release|x86.Build.0 = Release|Any CPU
+		{6C596948-C94E-40A8-81AE-F96D75E7624B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C596948-C94E-40A8-81AE-F96D75E7624B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C596948-C94E-40A8-81AE-F96D75E7624B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{6C596948-C94E-40A8-81AE-F96D75E7624B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6C596948-C94E-40A8-81AE-F96D75E7624B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6C596948-C94E-40A8-81AE-F96D75E7624B}.Debug|x86.Build.0 = Debug|Any CPU
+		{6C596948-C94E-40A8-81AE-F96D75E7624B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C596948-C94E-40A8-81AE-F96D75E7624B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C596948-C94E-40A8-81AE-F96D75E7624B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{6C596948-C94E-40A8-81AE-F96D75E7624B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{6C596948-C94E-40A8-81AE-F96D75E7624B}.Release|x86.ActiveCfg = Release|Any CPU
+		{6C596948-C94E-40A8-81AE-F96D75E7624B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -409,6 +423,7 @@ Global
 		{80D363F0-C1C1-41CF-B7E0-11C6F6302D33} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 		{B3DBB095-6CF0-4A6D-AD40-CFCD8D17AF1D} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 		{48003279-FC5E-43F4-B683-E28B34BAECEB} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
+		{6C596948-C94E-40A8-81AE-F96D75E7624B} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EE72A8B2-332A-4175-9319-6726D36E9D25}
