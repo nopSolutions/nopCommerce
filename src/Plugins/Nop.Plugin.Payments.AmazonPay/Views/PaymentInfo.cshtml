@@ -1,0 +1,161 @@
+﻿@model PaymentInfoModel
+
+@{
+    var amazonPayButtonId = $"AmazonPayButton-{Guid.NewGuid().ToString().ToLower()}";
+    var description = Model.Placement == ButtonPlacement.Checkout || Model.Placement == ButtonPlacement.PaymentMethod
+        ? null
+        : T("Plugins.Payments.AmazonPay.CheckoutWithAmazon").Text;
+}
+
+<script src="@Model.AmazonPayScript" asp-location="Footer"></script>
+
+<style type="text/css">
+    div.pay-with-amazon {
+        max-width: 450px
+    }
+
+    div.pay-with-amazon ul {
+        text-align: left;
+        list-style: disc;
+        padding: 20px 0 30px 0;
+        font-size: 80%;
+    }
+
+    div.pay-with-amazon h2 {
+        text-align: @(Model.Placement == ButtonPlacement.Product ? "left" : "center");
+        padding-top: @(Model.Placement == ButtonPlacement.Product ? "10px" : "0px");
+    }
+</style>
+
+<div id="amazonPayDescription"></div>
+<div><div style='@(Model.Placement == ButtonPlacement.Product ? "width: 195px; max-width: 195 px; display: inline-block;" : "");margin:0 auto;' id="@amazonPayButtonId"></div></div>
+
+@{
+    if (Model.Placement == ButtonPlacement.Checkout)
+        await Html.PartialAsync("~/Plugins/Payments.AmazonPay/Views/_Checkout.cshtml", amazonPayButtonId);
+}
+
+<script asp-location="Footer">
+    $(function () {
+
+        var isCartContainsNoAllowedProducts = @Model.IsCartContainsNoAllowedProducts.ToString().ToLower();
+        if (isCartContainsNoAllowedProducts) {
+            $('#@amazonPayButtonId').html('@Html.Raw(T("Plugins.Payments.AmazonPay.CantUseAmazonPay"))');
+            return;
+        }
+
+        var nextButton = $('button.button-1.payment-info-next-step-button');
+        if (nextButton.length > 0) {
+            nextButton.hide();
+        }
+
+        var amazonPayButton = amazon.Pay.renderButton('#@amazonPayButtonId', {
+            merchantId: '@Html.Raw(settings.MerchantId)',
+            publicKeyId: '@Html.Raw(settings.PublicKeyId)',
+            ledgerCurrency: '@Html.Raw(Model.LedgerCurrency)',
+            productType: '@Html.Raw(Model.ProductType)',
+            placement: '@Html.Raw(Model.AmazonPayPlacement)',
+            buttonColor: '@Html.Raw(Model.ButtonColor)'
+        });
+
+        if (amazonPayButton) {
+            $('#amazonPayDescription').html(`@Html.Raw(description)`);
+        }
+
+        amazonPayButton.onClick(function () {
+            var sendRequest = false;
+
+            //terms of service
+            if ($('#termsofservice').length > 0) {
+                //terms of service element exists
+                if (!$('#termsofservice').is(':checked')) {
+                    $('#terms-of-service-warning-box').dialog();
+                } else {
+                    sendRequest = true;
+                }
+            }
+            else {
+                if ($('#add-to-cart-button-@Model.ProductId').length > 0) {
+                    AddProductToCart(amazonPayButton);
+                } else {
+                    sendRequest = true;
+                }
+            }
+
+            if (sendRequest) {
+                StartCheckout(amazonPayButton);
+            }
+        });
+    });
+
+    function AddProductToCart(amazonPayButton) {
+
+        var urladd = '@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })';
+
+        if (AjaxCart.loadWaiting !== false) {
+            return;
+        }
+        AjaxCart.setLoadWaiting(true);
+
+        $.ajax({
+            cache: false,
+            url: urladd,
+            data: $('#product-details-form').serialize(),
+            type: 'POST',
+            success: (response) => success_process(response, amazonPayButton),
+            complete: AjaxCart.resetLoadWaiting,
+            error: AjaxCart.ajaxFailure
+        });
+    }
+
+    function StartCheckout(amazonPayButton) {
+        var postData = {
+            placement: '@((int)Model.Placement)'
+        };
+        addAntiForgeryToken(postData);
+
+        $.ajax({
+            cache: false,
+            type: 'POST',
+            url: '@(Url.Action("GetPaymentInfo", "AmazonPayCheckout"))',
+            data: postData,
+            success: function (data, textStatus, jqXHR) {
+                if (data.error) {
+                    alert(data.error);
+                }
+                else {
+                    amazonPayButton.initCheckout({
+                        estimatedOrderAmount: { 'amount': data.amount, 'currencyCode': '@Html.Raw(Model.Currency)' },
+                        createCheckoutSessionConfig: {
+                            payloadJSON: data.payload,
+                            signature: data.signature,
+                            algorithm: 'AMZN-PAY-RSASSA-PSS-V2',
+                            publicKeyId: '@Html.Raw(settings.PublicKeyId)'
+                        }
+                    });
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    }
+
+    function success_process(response, amazonPayButton) {
+
+        var redirect = false;
+        if (response.redirect) {
+            response.redirect = '';
+            redirect = true;
+        }
+
+        AjaxCart.success_process(response);
+
+        if ((response.message && response.success === true) || redirect) {
+            StartCheckout(amazonPayButton)
+        }
+
+        return false;
+    }
+
+</script>

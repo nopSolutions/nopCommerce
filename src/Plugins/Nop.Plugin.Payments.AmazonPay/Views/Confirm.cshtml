@@ -1,0 +1,128 @@
+﻿@model CheckoutConfirmModel
+
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.Checkout").Text);
+}
+
+<script src="@Model.AmazonPayScript" asp-location="Footer"></script>
+
+<div class="page checkout-page">
+    <div class="page-title">
+        <h1>@T("Checkout.ConfirmYourOrder")</h1>
+    </div>
+    <div class="page-body checkout-data">
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutConfirmTop })
+        <div class="section confirm-order">
+            <form asp-controller="AmazonPayCheckout" asp-action="Confirm" method="post" id="confirm-order-form">
+                <script asp-location="Footer">
+                    $(function () {
+                        $('#confirm-order-form').submit(function () {
+                            $('input[type=submit]', this).attr('disabled', 'disabled');
+                        });
+                    });
+
+                    function sendRequest() {
+                        var postData = {
+                            BuyerId: '@Model.BuyerId',
+                            BuyerEmail: '@Model.BuyerEmail',
+                            BuyerName: '@Model.BuyerName'
+                        };
+                        addAntiForgeryToken(postData);
+
+                        $.ajax({
+                            cache: false,
+                            type: 'POST',
+                            url: '@Url.Action("AssociateOrCreateAccount", "AmazonPayCustomer")',
+                            data: postData,
+                            complete: function (data, textStatus, jqXHR) {
+                                $('#associateButton').hide();
+                                $('#createButton').hide();
+                                if (data.responseJSON.Redirect) {
+                                    window.location = '@(Url.RouteUrl("Login", new { returnUrl = webHelper.GetRawUrl(Context.Request) }))';
+                                }
+                                else {
+                                    window.location = window.location.href;
+                                }
+                            }
+                        });
+                    }
+                </script>
+                @if (!string.IsNullOrEmpty(Model.MinOrderTotalWarning))
+                {
+                    <span class="min-order-warning">@Model.MinOrderTotalWarning</span>
+                }
+                else
+                {
+                    <div class="buttons">
+                        <input type="submit" name="nextstep" value="@T("Plugins.Payments.AmazonPay.Confirm.PlaceOrder")" class="button-1 confirm-order-next-step-button"/>
+
+                        @if (Model.CanCreateAccount)
+                        {
+                            <button id="createButton" type="button" class="button-1" onclick="sendRequest()">@T("Plugins.Payments.AmazonPay.SignIn.CreateButton")</button>
+                        }
+                        @if (Model.CanAssociateAccount)
+                        {
+                            <button id="associateButton" type="button" class="button-1" onclick="sendRequest()">@T("Plugins.Payments.AmazonPay.SignIn.AssociateButton")</button>
+                        }
+                    </div>
+                }
+                @if (Model.Warnings.Count > 0)
+                {
+                    <div class="message-error">
+                        <ul>
+                            @foreach (var warning in Model.Warnings)
+                            {
+                                <li>@warning</li>
+                            }
+                        </ul>
+                    </div>
+                }
+                else
+                {
+                    <div hidden="@(!Model.RequiresShipping)">
+                        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutShippingMethodTop })
+                        <div class="section shipping-method">
+                            @if (Model.Warnings.Count == 0)
+                            {
+                                <ul class="method-list">
+                                    @for (var i = 0; i < Model.ShippingMethods.Count; i++)
+                                    {
+                                        var shippingMethod = Model.ShippingMethods[i];
+                                        <li>
+                                            <div class="method-name">
+                                                <input id="shippingoption_@(i)" type="radio" name="shippingoption" value="@(shippingMethod.Name)___@(shippingMethod.ShippingRateComputationMethodSystemName)" checked="@shippingMethod.Selected" />
+                                                <label for="shippingoption_@(i)">@shippingMethod.Name (@shippingMethod.Fee)</label>
+                                            </div>
+                                            @if (!string.IsNullOrEmpty(shippingMethod.Description))
+                                            {
+                                                <div class="method-description">
+                                                    @Html.Raw(shippingMethod.Description)
+                                                </div>
+                                            }
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                        </div>
+                        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutShippingMethodBottom })
+                    </div>
+                }
+            </form>
+        </div>
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutConfirmBottom })
+        <div class="order-summary-body">
+            @await Component.InvokeAsync(typeof(OrderSummaryViewComponent), new { prepareAndDisplayOrderReviewData = true })
+        </div>
+    </div>
+</div>
+
+<script asp-location="Footer">
+    //TODO: do something with displaying the order amount
+    $(function () {
+        $(".cart-footer").hide();
+    });
+
+</script>
