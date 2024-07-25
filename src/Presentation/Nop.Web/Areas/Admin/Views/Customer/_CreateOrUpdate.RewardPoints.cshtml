@@ -142,12 +142,12 @@
                             //reload grid
                             updateTable('#customer-rewardpoints-grid');
 
-                            $("#@Html.IdFor(model => model.AddRewardPoints.Points)").value(0);
+                            $("#@Html.IdFor(model => model.AddRewardPoints.Points)").val(0);
                             $("#@Html.IdFor(model => model.AddRewardPoints.Message)").val('@JavaScriptEncoder.Default.Encode(Model.AddRewardPoints.Message)');
                             $("#@Html.IdFor(model => model.AddRewardPoints.StoreId)").val(@Model.AddRewardPoints.StoreId);
                             $("#@Html.IdFor(model => model.AddRewardPoints.ActivationDelayPeriodId)").val(@Model.AddRewardPoints.ActivationDelayPeriodId);
-                            $("#@Html.IdFor(model => model.AddRewardPoints.ActivationDelay)").value(@Model.AddRewardPoints.ActivationDelay);
-                            $("#@Html.IdFor(model => model.AddRewardPoints.PointsValidity)").value(0);
+                            $("#@Html.IdFor(model => model.AddRewardPoints.ActivationDelay)").val(@Model.AddRewardPoints.ActivationDelay);
+                            $("#@Html.IdFor(model => model.AddRewardPoints.PointsValidity)").val(0);
                             $("#@Html.IdFor(model => model.AddRewardPoints.ActivatePointsImmediately)").prop('checked', @(Model.AddRewardPoints.ActivatePointsImmediately.ToString().ToLowerInvariant()));
 
                             activatePointsImmediately();
