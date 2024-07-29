@@ -102,6 +102,16 @@ public class OmnisendDefaults
     /// </summary>
     public static string ContactIdQueryParamName => "omnisendContactID";
 
+    /// <summary>
+    /// Gets an OrderCanceled attribute name
+    /// </summary>
+    public static string OrderCanceledAttribute => "Omnisen.OrderCanceledEvent.IsSent";
+
+    /// <summary>
+    /// Gets an OrderFulfilled attribute name
+    /// </summary>
+    public static string OrderFulfilledAttribute => "Omnisen.OrderFulfilledEvent.IsSent";
+
     #region Batch
 
     /// <summary>
