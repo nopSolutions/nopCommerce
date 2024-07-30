@@ -105,12 +105,12 @@ public class OmnisendDefaults
     /// <summary>
     /// Gets an OrderCanceled attribute name
     /// </summary>
-    public static string OrderCanceledAttribute => "Omnisen.OrderCanceledEvent.IsSent";
+    public static string OrderCanceledAttribute => "Omnisend.OrderCanceledEvent.IsSent";
 
     /// <summary>
     /// Gets an OrderFulfilled attribute name
     /// </summary>
-    public static string OrderFulfilledAttribute => "Omnisen.OrderFulfilledEvent.IsSent";
+    public static string OrderFulfilledAttribute => "Omnisend.OrderFulfilledEvent.IsSent";
 
     #region Batch
 
