@@ -113,7 +113,7 @@
     
 
     <div class="two-columns-area @homePageSliderCss">
-        @if (isHomeSliderFullWidth && false)
+        @if (isHomeSliderFullWidth && storeId != 8  )
         {
             @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_main_slider" });
             @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_search_widget" })
