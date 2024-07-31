@@ -1,0 +1,32 @@
+﻿@model VendorProductReviewsListModel
+
+@{
+    Layout = "_ColumnsTwo";
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.VendorReviews").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-vendor-reviews-list-page");
+}
+
+<div class="page vendor-page">
+    <div class="block">
+        <div class="title">
+            <a href="@Model.VendorUrl">@T("Vendors.Reviews.BackTo", Model.VendorName)</a>
+        </div>
+    </div>
+    <div class="page-body">
+        @await Html.PartialAsync("_VendorProductReviews", Model.Reviews)
+
+        @{
+            var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
+            if (!(await pager.IsEmpty()))
+            {
+                <div class="pager">
+                    @pager
+                </div>
+            }
+        }
+
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.VendorDetailsBottom, additionalData = Model })
+    </div>
+</div>

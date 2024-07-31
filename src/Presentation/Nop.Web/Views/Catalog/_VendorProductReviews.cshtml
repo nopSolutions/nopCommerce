@@ -1,0 +1,94 @@
+﻿@using Nop.Core.Domain.Catalog
+@using Nop.Services.Helpers
+@using Nop.Services.Html
+
+@model List<VendorProductReviewModel>
+
+@inject IDateTimeHelper dateTimeHelper
+@inject IHtmlFormatter htmlFormatter
+
+@if (Model.Count > 0)
+{
+    <div class="vendor-product-reviews">
+        <div class="vendor-product-reviews-title">
+            <strong>@T("Vendors.ExistingReviews")</strong>
+        </div>
+        @foreach (var review in Model)
+        {
+            var ratingPercent = review.Rating * 20;
+            <div class="product-review-item">
+                <div class="review-item-head">
+                    <div class="review-item-info">
+                        <div class="product-info">
+                            <div class="review-product-name">
+                                <a href="@(Url.RouteUrl<Product>(new { SeName = review.ProductSeName }))">@review.ProductName</a>
+                            </div>
+                        </div>
+                        <div class="product-review-box">
+                            <div class="rating">
+                                <div style="width: @(ratingPercent)%">
+                                    @review.Rating
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="review-title">
+                        <strong>@review.Title</strong>
+                    </div>
+                </div>
+                <div class="review-content">
+                    <div class="review-text">
+                        @if (!string.IsNullOrEmpty(review.CustomerAvatarUrl))
+                        {
+                            <div class="avatar">
+                                @if (review.AllowViewingProfiles)
+                                {
+                                    <a href="@Url.RouteUrl("CustomerProfile", new { id = review.CustomerId })" class="avatar-img-link">
+                                        <img src="@(review.CustomerAvatarUrl)" class="avatar-img" alt="Avatar" />
+                                    </a>
+                                }
+                                else
+                                {
+                                    <img src="@(review.CustomerAvatarUrl)" class="avatar-img" alt="Avatar" />
+                                }
+                            </div>
+                        }
+                        <div class="text-body">
+                            @Html.Raw(htmlFormatter.FormatText(review.ReviewText, false, true, false, false, false, false))
+                        </div>
+                    </div>
+                    <div class="review-info">
+                        <span class="user">
+                            <label>@T("Reviews.From"):</label>
+                            @if (review.AllowViewingProfiles)
+                            {
+                                <a href="@Url.RouteUrl("CustomerProfile", new { id = review.CustomerId })">@(review.CustomerName)</a>
+                            }
+                            else
+                            {
+                                <span>@review.CustomerName</span>
+                            }
+                        </span>
+                        <span class="separator">|</span>
+                        <span class="date">
+                            <label>@T("Reviews.Date"):</label>
+                            <span>@((await dateTimeHelper.ConvertToUserTimeAsync(review.CreatedOnUtc)).ToString("g"))</span>
+                        </span>
+                    </div>
+                    @await Html.PartialAsync("_ProductReviewHelpfulness", review.Helpfulness)
+                    @if (!string.IsNullOrEmpty(review.ReplyText))
+                    {
+                        <div class="reply">
+                            <div class="reply-header">
+                                @T("Reviews.Reply")
+                            </div>
+                            <div class="reply-text">
+                                @Html.Raw(htmlFormatter.FormatText(review.ReplyText, false, true, false, false, false, false))
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}

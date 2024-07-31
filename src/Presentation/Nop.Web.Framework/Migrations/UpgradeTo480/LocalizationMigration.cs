@@ -7,7 +7,7 @@ using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo480;
 
-[NopUpdateMigration("2024-05-15 00:00:00", "4.80", UpdateMigrationType.Localization)]
+[NopUpdateMigration("2024-08-01 00:00:01", "4.80", UpdateMigrationType.Localization)]
 public class LocalizationMigration : MigrationBase
 {
     /// <summary>Collect the UP migration expressions</summary>
@@ -63,6 +63,12 @@ public class LocalizationMigration : MigrationBase
             //#7208
             ["Admin.Customers.Customers.List.SearchIsActive"] = "Is active",
             ["Admin.Customers.Customers.List.SearchIsActive.Hint"] = "Search customers by an account status.",
+
+            //#7244
+            ["Vendors.ExistingReviews"] = "Existing reviews",
+            ["Vendors.Reviews.All"] = "View all",
+            ["Vendors.Reviews.BackTo"] = "Back to {0}",
+            ["PageTitle.VendorReviews"] = "Reviews of the vendor's products",
         }, languageId);
 
         #endregion

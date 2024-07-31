@@ -57,6 +57,16 @@
             };
         }
         @await Html.PartialAsync("_CatalogProducts", Model.CatalogProductsModel, catalogProductsViewData)
+        
+        @await Html.PartialAsync("_VendorProductReviews", Model.ProductReviews.Reviews)
+
+        @if (Model.ProductReviews.PagingFilteringContext.TotalPages > 1)
+        {
+            <div class="block">
+                <a href="@Url.RouteUrl("VendorReviews", new { vendorId = Model.Id })">@T("Vendors.Reviews.All")</a>
+            </div>
+        }
+
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.VendorDetailsBottom, additionalData = Model })
     </div>
 </div>

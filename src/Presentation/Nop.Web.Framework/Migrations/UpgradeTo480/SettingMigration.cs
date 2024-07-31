@@ -1,4 +1,5 @@
 ﻿using FluentMigrator;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -6,7 +7,7 @@ using Nop.Services.Configuration;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo480;
 
-[NopUpdateMigration("2024-05-15 00:00:00", "4.80.0", UpdateMigrationType.Settings)]
+[NopUpdateMigration("2024-08-01 00:00:00", "4.80.0", UpdateMigrationType.Settings)]
 public class SettingMigration : MigrationBase
 {
     /// <summary>Collect the UP migration expressions</summary>
@@ -22,6 +23,15 @@ public class SettingMigration : MigrationBase
         var displayAttributeCombinationImagesOnly = settingService.GetSetting("producteditorsettings.displayattributecombinationimagesonly");
         if (displayAttributeCombinationImagesOnly is not null) 
             settingService.DeleteSetting(displayAttributeCombinationImagesOnly);
+
+        //#7244
+        var catalogSettings = settingService.LoadSetting<CatalogSettings>();
+        if (!settingService.SettingExists(catalogSettings, settings => settings.VendorProductReviewsPageSize))
+        {
+            catalogSettings.VendorProductReviewsPageSize = 6;
+            settingService.SaveSetting(catalogSettings, settings => settings.VendorProductReviewsPageSize);
+        }
+        
     }
 
     public override void Down()

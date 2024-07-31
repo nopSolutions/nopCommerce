@@ -2188,6 +2188,34 @@ label, label + * {
   transform: scaleX(-1);
 }
 
+.review-item-info {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px !important;
+}
+
+.vendor-product-reviews .product-review-box {
+  width: auto;
+}
+
+.vendor-product-reviews-title {
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.vendor-page .block {
+  max-width: 100%;
+  text-align: right;
+}
+
+.review-item-info .review-product-name a,
+.vendor-page .block a {
+  display: inline-block;
+  color: #4ab2f1;
+  cursor: pointer;
+}
+
 .product-review-box .rating div {
   height: 14px;
   background: url('../images/rating2.png') repeat-x;
@@ -3092,7 +3120,7 @@ label, label + * {
 }
 
 .product-review-item {
-  margin: 0 0 40px;
+  margin: 0 0 20px;
 }
 
 .product-review-item .review-item-head {

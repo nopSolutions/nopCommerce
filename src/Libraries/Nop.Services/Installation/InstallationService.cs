@@ -2873,7 +2873,8 @@ namespace Nop.Services.Installation
                 DisplayAllPicturesOnCatalogPages = false,
                 ProductUrlStructureTypeId = (int)ProductUrlStructureType.Product,
                 ActiveSearchProviderSystemName = string.Empty,
-                UseStandardSearchWhenSearchProviderThrowsException = true
+                UseStandardSearchWhenSearchProviderThrowsException = true,
+                VendorProductReviewsPageSize = 6
             });
 
             await settingService.SaveSettingAsync(new LocalizationSettings

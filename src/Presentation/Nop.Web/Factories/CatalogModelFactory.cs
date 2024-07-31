@@ -9,6 +9,7 @@ using Nop.Core.Caching;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Seo;
@@ -37,6 +38,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
 
     protected readonly BlogSettings _blogSettings;
     protected readonly CatalogSettings _catalogSettings;
+    protected readonly CustomerSettings _customerSettings;
     protected readonly DisplayDefaultMenuItemSettings _displayDefaultMenuItemSettings;
     protected readonly ForumSettings _forumSettings;
     protected readonly ICategoryService _categoryService;
@@ -44,6 +46,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
     protected readonly ICurrencyService _currencyService;
     protected readonly ICustomerService _customerService;
     protected readonly IEventPublisher _eventPublisher;
+    protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly IHttpContextAccessor _httpContextAccessor;
     protected readonly IJsonLdModelFactory _jsonLdModelFactory;
     protected readonly ILocalizationService _localizationService;
@@ -74,6 +77,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
 
     public CatalogModelFactory(BlogSettings blogSettings,
         CatalogSettings catalogSettings,
+        CustomerSettings customerSettings,
         DisplayDefaultMenuItemSettings displayDefaultMenuItemSettings,
         ForumSettings forumSettings,
         ICategoryService categoryService,
@@ -81,6 +85,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         ICurrencyService currencyService,
         ICustomerService customerService,
         IEventPublisher eventPublisher,
+        IGenericAttributeService genericAttributeService,
         IHttpContextAccessor httpContextAccessor,
         IJsonLdModelFactory jsonLdModelFactory,
         ILocalizationService localizationService,
@@ -106,6 +111,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
     {
         _blogSettings = blogSettings;
         _catalogSettings = catalogSettings;
+        _customerSettings = customerSettings;
         _displayDefaultMenuItemSettings = displayDefaultMenuItemSettings;
         _forumSettings = forumSettings;
         _categoryService = categoryService;
@@ -113,6 +119,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         _currencyService = currencyService;
         _customerService = customerService;
         _eventPublisher = eventPublisher;
+        _genericAttributeService = genericAttributeService;
         _httpContextAccessor = httpContextAccessor;
         _jsonLdModelFactory = jsonLdModelFactory;
         _localizationService = localizationService;
@@ -648,7 +655,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         var doc = await PrepareCategoryXmlDocumentAsync();
 
         var models = from xe in doc.Root.XPathSelectElements("CategorySimpleModel")
-            select GetCategorySimpleModel(xe);
+                     select GetCategorySimpleModel(xe);
 
         return models.ToList();
     }
@@ -666,11 +673,11 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         var doc = await PrepareCategoryXmlDocumentAsync();
 
         var model = from xe in doc.Descendants("CategorySimpleModel")
-            where xe.XPathSelectElement("Id").Value == id.ToString()
-            select xe;
+                    where xe.XPathSelectElement("Id").Value == id.ToString()
+                    select xe;
 
         var models = from xe in model.First().XPathSelectElements("SubCategories/CategorySimpleModel")
-            select GetCategorySimpleModel(xe);
+                     select GetCategorySimpleModel(xe);
 
         return models.ToList();
     }
@@ -1195,7 +1202,8 @@ public partial class CatalogModelFactory : ICatalogModelFactory
             MetaTitle = await _localizationService.GetLocalizedAsync(vendor, x => x.MetaTitle),
             SeName = await _urlRecordService.GetSeNameAsync(vendor),
             AllowCustomersToContactVendors = _vendorSettings.AllowCustomersToContactVendors,
-            CatalogProductsModel = await PrepareVendorProductsModelAsync(vendor, command)
+            CatalogProductsModel = await PrepareVendorProductsModelAsync(vendor, command),
+            ProductReviews = await PrepareVendorProductReviewsModelAsync(vendor, new VendorReviewsPagingFilteringModel())
         };
 
         return model;
@@ -1371,6 +1379,89 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         });
 
         return cachedModel;
+    }
+
+
+    /// <summary>
+    /// Prepare review models for vendor products
+    /// </summary>
+    /// <returns>
+    /// <param name="vendor">Vendor</param>
+    /// <param name="pagingModel">Model to filter product reviews</param>
+    /// A task that represents the asynchronous operation
+    /// The task result contains a list of product reviews
+    /// </returns>
+    public virtual async Task<VendorProductReviewsListModel> PrepareVendorProductReviewsModelAsync(Vendor vendor, VendorReviewsPagingFilteringModel pagingModel)
+    {
+        ArgumentNullException.ThrowIfNull(vendor);
+        ArgumentNullException.ThrowIfNull(pagingModel);
+
+        if (pagingModel.PageSize <= 0)
+            pagingModel.PageSize = _catalogSettings.VendorProductReviewsPageSize;
+        if (pagingModel.PageNumber <= 0)
+            pagingModel.PageNumber = 1;
+
+        var model = new VendorProductReviewsListModel { 
+            VendorId = vendor.Id,
+            VendorName = await _localizationService.GetLocalizedAsync(vendor, x => x.Name),
+            VendorUrl = await _nopUrlHelper.RouteGenericUrlAsync<Vendor>(new { SeName = await _urlRecordService.GetSeNameAsync(vendor) })
+        };
+
+        var currentStore = await _storeContext.GetCurrentStoreAsync();
+        var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.VendorReviewsModelKey, vendor, currentStore);
+        var vendorReviewModels = await _staticCacheManager.GetAsync(cacheKey, async () =>
+        {
+            var vendorReviews = await _productService.GetAllProductReviewsAsync(
+                vendorId: vendor.Id,
+                approved: true,
+                storeId: currentStore.Id);
+
+            return await vendorReviews.SelectAwait(async pr =>
+            {
+                var customer = await _customerService.GetCustomerByIdAsync(pr.CustomerId);
+                var product = await _productService.GetProductByIdAsync(pr.ProductId);
+
+                var model = new VendorProductReviewModel
+                {
+                    ProductName = await _localizationService.GetLocalizedAsync(product, x => x.Name),
+                    ProductSeName = await _urlRecordService.GetSeNameAsync(product),
+                    CustomerId = pr.CustomerId,
+                    CustomerName = await _customerService.FormatUsernameAsync(customer),
+                    AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !await _customerService.IsGuestAsync(customer),
+                    Title = pr.Title,
+                    ReviewText = pr.ReviewText,
+                    ReplyText = pr.ReplyText,
+                    Rating = pr.Rating,
+                    Helpfulness = new ProductReviewHelpfulnessModel
+                    {
+                        ProductReviewId = pr.Id,
+                        HelpfulYesTotal = pr.HelpfulYesTotal,
+                        HelpfulNoTotal = pr.HelpfulNoTotal,
+                    },
+                    CreatedOnUtc = pr.CreatedOnUtc,
+                };
+
+                if (_customerSettings.AllowCustomersToUploadAvatars)
+                {
+                    model.CustomerAvatarUrl = await _pictureService.GetPictureUrlAsync(
+                        await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute),
+                        _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
+                }
+
+                return model;
+            })
+            .OrderBy(m => m.CreatedOnUtc)
+            .ToListAsync();
+        });
+
+        var pagedVendorReviews = new PagedList<VendorProductReviewModel>(vendorReviewModels, pagingModel.PageNumber - 1, pagingModel.PageSize);
+
+        //re-init pager
+        model.PagingFilteringContext.LoadPagedList(pagedVendorReviews);
+
+        model.Reviews = pagedVendorReviews;
+
+        return model;
     }
 
     #endregion
