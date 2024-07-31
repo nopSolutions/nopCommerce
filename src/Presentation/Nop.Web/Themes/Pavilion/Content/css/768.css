@@ -952,6 +952,13 @@ body .header-menu .mobile-sidebar-category.second {
 .appliances-list .water-heater-link {
 	display: block !important;
 }
+body a {
+	text-decoration: none;
+	color: initial;
+}
+body ul {
+	padding-left: 0px;
+}
 
 @media screen and (max-width: 1024px) {
 	div#mobile-header-logo {
