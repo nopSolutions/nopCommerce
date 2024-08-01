@@ -376,7 +376,7 @@
                                                 //clear input value
                                                 $("#@Html.IdFor(model => model.CustomEventSearchModel.AddCustomEvent.EventName)").val('');
                                                 var input = $('#@Html.IdFor(model => model.CustomEventSearchModel.AddCustomEvent.WidgetZonesIds)').select2();
-                                                input.value("");
+                                                input.val("");
                                                 input.trigger("change");
                                             } else {
                                                 //display errors if returned
