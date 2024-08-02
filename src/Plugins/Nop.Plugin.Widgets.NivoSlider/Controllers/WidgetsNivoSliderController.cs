@@ -39,11 +39,9 @@ public class WidgetsNivoSliderController : BasePluginController
         _storeContext = storeContext;
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_WIDGETS)]
     public async Task<IActionResult> Configure()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
-            return AccessDeniedView();
-
         //load settings for a chosen store scope
         var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
         var nivoSliderSettings = await _settingService.LoadSettingAsync<NivoSliderSettings>(storeScope);
@@ -100,11 +98,9 @@ public class WidgetsNivoSliderController : BasePluginController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_WIDGETS)]
     public async Task<IActionResult> Configure(ConfigurationModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
-            return AccessDeniedView();
-
         //load settings for a chosen store scope
         var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
         var nivoSliderSettings = await _settingService.LoadSettingAsync<NivoSliderSettings>(storeScope);

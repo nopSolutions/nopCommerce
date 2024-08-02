@@ -47,7 +47,7 @@ public partial interface IAclService
     /// <param name="entity">Entity</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the aCL records
+    /// The task result contains the ACL records
     /// </returns>
     Task<IList<AclRecord>> GetAclRecordsAsync<TEntity>(TEntity entity) where TEntity : BaseEntity, IAclSupported;
 
@@ -63,13 +63,13 @@ public partial interface IAclService
     /// <summary>
     /// Find customer role identifiers with granted access
     /// </summary>
-    /// <typeparam name="TEntity">Type of entity that supports the ACL</typeparam>
-    /// <param name="entity">Entity</param>
+    /// <param name="entityId">Entity ID</param>
+    /// <param name="entityName">Entity name</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the customer role identifiers
     /// </returns>
-    Task<int[]> GetCustomerRoleIdsWithAccessAsync<TEntity>(TEntity entity) where TEntity : BaseEntity, IAclSupported;
+    Task<int[]> GetCustomerRoleIdsWithAccessAsync(int entityId, string entityName);
 
     /// <summary>
     /// Authorize ACL permission
@@ -93,4 +93,36 @@ public partial interface IAclService
     /// The task result contains true - authorized; otherwise, false
     /// </returns>
     Task<bool> AuthorizeAsync<TEntity>(TEntity entity, Customer customer) where TEntity : BaseEntity, IAclSupported;
+
+    /// <summary>
+    /// Authorize ACL permission
+    /// </summary>
+    /// <param name="entityTypeName">Type name of entity that supports the ACL</param>
+    /// <param name="entityId">Entity ID</param>
+    /// <param name="customer">Customer</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains true - authorized; otherwise, false
+    /// </returns>
+    Task<bool> AuthorizeAsync(string entityTypeName, int entityId, Customer customer);
+
+    /// <summary>
+    /// Authorize ACL permission
+    /// </summary>
+    /// <param name="customer">Customer</param>
+    /// <param name="allowedCustomerRoleIds">List of allowed customer role IDs</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains true - authorized; otherwise, false
+    /// </returns>
+    Task<bool> AuthorizeAsync(Customer customer, IList<int> allowedCustomerRoleIds);
+
+    /// <summary>
+    /// Save ACL mapping
+    /// </summary>
+    /// <typeparam name="TEntity">Type of entity</typeparam>
+    /// <param name="entity">Entity</param>
+    /// <param name="selectedCustomerRoleIds">Customer roles for mapping</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task SaveAclAsync<TEntity>(TEntity entity, IList<int> selectedCustomerRoleIds) where TEntity : BaseEntity, IAclSupported;
 }

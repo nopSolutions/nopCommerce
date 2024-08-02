@@ -1561,13 +1561,13 @@ public partial class ShoppingCartService : IShoppingCartService
         ArgumentNullException.ThrowIfNull(product);
 
         var warnings = new List<string>();
-        if (shoppingCartType == ShoppingCartType.ShoppingCart && !await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableShoppingCart, customer))
+        if (shoppingCartType == ShoppingCartType.ShoppingCart && !await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_SHOPPING_CART, customer))
         {
             warnings.Add("Shopping cart is disabled");
             return warnings;
         }
 
-        if (shoppingCartType == ShoppingCartType.Wishlist && !await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableWishlist, customer))
+        if (shoppingCartType == ShoppingCartType.Wishlist && !await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_WISHLIST, customer))
         {
             warnings.Add("Wishlist is disabled");
             return warnings;

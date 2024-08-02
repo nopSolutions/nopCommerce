@@ -90,11 +90,9 @@ public class ZettleAdminController : BasePluginController
 
     #region Configuration
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public async Task<IActionResult> Configure()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-            return AccessDeniedView();
-
         var model = new ConfigurationModel
         {
             ClientId = _zettleSettings.ClientId,
@@ -222,11 +220,9 @@ public class ZettleAdminController : BasePluginController
 
     [HttpPost, ActionName("Configure")]
     [FormValueRequired("credentials")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public async Task<IActionResult> SaveCredentials(ConfigurationModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-            return AccessDeniedView();
-
         if (!ModelState.IsValid)
             return await Configure();
 
@@ -260,11 +256,9 @@ public class ZettleAdminController : BasePluginController
 
     [HttpPost, ActionName("Configure")]
     [FormValueRequired("sync")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public async Task<IActionResult> SaveSync(ConfigurationModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-            return AccessDeniedView();
-
         if (!ModelState.IsValid)
             return await Configure();
 
@@ -296,11 +290,9 @@ public class ZettleAdminController : BasePluginController
 
     [HttpPost, ActionName("Configure")]
     [FormValueRequired("revoke")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public async Task<IActionResult> RevokeAccess()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-            return AccessDeniedView();
-
         if (!ZettleService.IsConfigured(_zettleSettings))
             return await Configure();
 
@@ -335,11 +327,9 @@ public class ZettleAdminController : BasePluginController
     #region Synchronization
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public async Task<IActionResult> SyncRecordList(SyncRecordSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-            return await AccessDeniedJsonAsync();
-
         var records = await _zettleRecordService.GetAllRecordsAsync(productOnly: true,
             pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
         var products = await _productService.GetProductsByIdsAsync(records.Select(record => record.ProductId).Distinct().ToArray());
@@ -364,11 +354,9 @@ public class ZettleAdminController : BasePluginController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public async Task<IActionResult> SyncRecordUpdate(SyncRecordModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-            return await AccessDeniedJsonAsync();
-
         var productRecord = await _zettleRecordService.GetRecordByIdAsync(model.Id)
                             ?? throw new ArgumentException("No record found");
 
@@ -387,11 +375,9 @@ public class ZettleAdminController : BasePluginController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public async Task<IActionResult> SyncRecordDelete(ICollection<int> selectedIds)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-            return await AccessDeniedJsonAsync();
-
         if (!selectedIds?.Any() ?? true)
             return NoContent();
 
@@ -408,14 +394,10 @@ public class ZettleAdminController : BasePluginController
         return new NullJsonResult();
     }
 
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public async Task<IActionResult> ProductToSync()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-            return AccessDeniedView();
-
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return AccessDeniedView();
-
         var model = new AddProductToSyncSearchModel();
         await _baseAdminModelFactory.PrepareProductTypesAsync(model.AvailableProductTypes);
         await _baseAdminModelFactory.PrepareCategoriesAsync(model.AvailableCategories);
@@ -428,14 +410,10 @@ public class ZettleAdminController : BasePluginController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public async Task<IActionResult> ProductListToSync(AddProductToSyncSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-            return await AccessDeniedJsonAsync();
-
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedJsonAsync();
-
         var products = await _productService.SearchProductsAsync(showHidden: true,
             keywords: searchModel.SearchProductName,
             productType: searchModel.SearchProductTypeId > 0 ? (ProductType?)searchModel.SearchProductTypeId : null,
@@ -462,14 +440,10 @@ public class ZettleAdminController : BasePluginController
 
     [HttpPost]
     [FormValueRequired("save")]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public async Task<IActionResult> ProductToSync(AddProductToSyncModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-            return AccessDeniedView();
-
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return AccessDeniedView();
-
         var invalidProducts = await _zettleRecordService.AddRecordsAsync(model.SelectedProductIds?.ToList());
         if (invalidProducts > 0)
         {
@@ -484,21 +458,17 @@ public class ZettleAdminController : BasePluginController
         return View("~/Plugins/Misc.Zettle/Views/ProductToSync.cshtml", new AddProductToSyncSearchModel());
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public async Task<IActionResult> SyncStart()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-            return await AccessDeniedJsonAsync();
-
         await _zettleService.ImportAsync();
 
         return new NullJsonResult();
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public async Task<IActionResult> SyncUpdate()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-            return await AccessDeniedJsonAsync();
-
         if (string.IsNullOrEmpty(_zettleSettings.ImportId))
             return ErrorJson("Synchronization not found");
 

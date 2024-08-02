@@ -21,7 +21,7 @@
     adminPageTitle += T("Admin.PageTitle").Text;
 
     //has "Manage Maintenance" permission?
-    var canManageMaintenance = await permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance);
+    var canManageMaintenance = await permissionService.AuthorizeAsync(StandardPermission.System.MANAGE_MAINTENANCE);
 
     //avatar
     var currentCustomer = await workContext.GetCurrentCustomerAsync();

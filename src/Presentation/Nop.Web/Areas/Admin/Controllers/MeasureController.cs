@@ -9,6 +9,7 @@ using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Directory;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Controllers;
@@ -50,11 +51,9 @@ public partial class MeasureController : BaseAdminController
 
     #region Methods
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SHIPPING_SETTINGS)]
     public virtual async Task<IActionResult> List()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _measureModelFactory.PrepareMeasureSearchModelAsync(new MeasureSearchModel());
 
@@ -64,11 +63,9 @@ public partial class MeasureController : BaseAdminController
     #region Weights
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SHIPPING_SETTINGS)]
     public virtual async Task<IActionResult> Weights(MeasureWeightSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _measureModelFactory.PrepareMeasureWeightListModelAsync(searchModel);
 
@@ -76,11 +73,9 @@ public partial class MeasureController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SHIPPING_SETTINGS)]
     public virtual async Task<IActionResult> WeightUpdate(MeasureWeightModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return await AccessDeniedJsonAsync();
-
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
 
@@ -96,11 +91,9 @@ public partial class MeasureController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SHIPPING_SETTINGS)]
     public virtual async Task<IActionResult> WeightAdd(MeasureWeightModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return await AccessDeniedJsonAsync();
-
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
 
@@ -116,11 +109,9 @@ public partial class MeasureController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SHIPPING_SETTINGS)]
     public virtual async Task<IActionResult> WeightDelete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return await AccessDeniedJsonAsync();
-
         //try to get a weight with the specified id
         var weight = await _measureService.GetMeasureWeightByIdAsync(id)
             ?? throw new ArgumentException("No weight found with the specified id", nameof(id));
@@ -140,11 +131,9 @@ public partial class MeasureController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SHIPPING_SETTINGS)]
     public virtual async Task<IActionResult> MarkAsPrimaryWeight(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return await AccessDeniedJsonAsync();
-
         //try to get a weight with the specified id
         var weight = await _measureService.GetMeasureWeightByIdAsync(id)
             ?? throw new ArgumentException("No weight found with the specified id", nameof(id));
@@ -160,11 +149,9 @@ public partial class MeasureController : BaseAdminController
     #region Dimensions
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SHIPPING_SETTINGS)]
     public virtual async Task<IActionResult> Dimensions(MeasureDimensionSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _measureModelFactory.PrepareMeasureDimensionListModelAsync(searchModel);
 
@@ -172,11 +159,9 @@ public partial class MeasureController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SHIPPING_SETTINGS)]
     public virtual async Task<IActionResult> DimensionUpdate(MeasureDimensionModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return await AccessDeniedJsonAsync();
-
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
 
@@ -192,11 +177,9 @@ public partial class MeasureController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SHIPPING_SETTINGS)]
     public virtual async Task<IActionResult> DimensionAdd(MeasureDimensionModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return await AccessDeniedJsonAsync();
-
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
 
@@ -212,11 +195,9 @@ public partial class MeasureController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SHIPPING_SETTINGS)]
     public virtual async Task<IActionResult> DimensionDelete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return await AccessDeniedJsonAsync();
-
         //try to get a dimension with the specified id
         var dimension = await _measureService.GetMeasureDimensionByIdAsync(id)
             ?? throw new ArgumentException("No dimension found with the specified id", nameof(id));
@@ -236,11 +217,9 @@ public partial class MeasureController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SHIPPING_SETTINGS)]
     public virtual async Task<IActionResult> MarkAsPrimaryDimension(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return await AccessDeniedJsonAsync();
-
         //try to get a dimension with the specified id
         var dimension = await _measureService.GetMeasureDimensionByIdAsync(id)
             ?? throw new ArgumentException("No dimension found with the specified id", nameof(id));

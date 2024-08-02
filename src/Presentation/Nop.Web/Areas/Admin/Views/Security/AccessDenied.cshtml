@@ -1,4 +1,10 @@
-﻿<div class="alert alert-danger alert-dismissable">
+﻿@model string
+
+@{
+    NopHtml.SetActiveMenuItemSystemName(Model);
+}
+
+<div class="alert alert-danger alert-dismissable">
     @T("Admin.AccessDenied.Description")
 </div>
 <div class="content-header">

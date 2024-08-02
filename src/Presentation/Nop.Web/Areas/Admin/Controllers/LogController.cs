@@ -6,6 +6,7 @@ using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Logging;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Mvc.Filters;
 using ILogger = Nop.Services.Logging.ILogger;
 
 namespace Nop.Web.Areas.Admin.Controllers;
@@ -49,11 +50,9 @@ public partial class LogController : BaseAdminController
         return RedirectToAction("List");
     }
 
+    [CheckPermission(StandardPermission.System.MANAGE_SYSTEM_LOG)]
     public virtual async Task<IActionResult> List()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSystemLog))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _logModelFactory.PrepareLogSearchModelAsync(new LogSearchModel());
 
@@ -61,11 +60,9 @@ public partial class LogController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.System.MANAGE_SYSTEM_LOG)]
     public virtual async Task<IActionResult> LogList(LogSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSystemLog))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _logModelFactory.PrepareLogListModelAsync(searchModel);
 
@@ -74,11 +71,9 @@ public partial class LogController : BaseAdminController
 
     [HttpPost, ActionName("List")]
     [FormValueRequired("clearall")]
+    [CheckPermission(StandardPermission.System.MANAGE_SYSTEM_LOG)]
     public virtual async Task<IActionResult> ClearAll()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSystemLog))
-            return AccessDeniedView();
-
         await _logger.ClearLogAsync();
 
         //activity log
@@ -89,11 +84,9 @@ public partial class LogController : BaseAdminController
         return RedirectToAction("List");
     }
 
+    [CheckPermission(StandardPermission.System.MANAGE_SYSTEM_LOG)]
     public virtual async Task<IActionResult> View(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSystemLog))
-            return AccessDeniedView();
-
         //try to get a log with the specified id
         var log = await _logger.GetLogByIdAsync(id);
         if (log == null)
@@ -106,11 +99,9 @@ public partial class LogController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.System.MANAGE_SYSTEM_LOG)]
     public virtual async Task<IActionResult> Delete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSystemLog))
-            return AccessDeniedView();
-
         //try to get a log with the specified id
         var log = await _logger.GetLogByIdAsync(id);
         if (log == null)
@@ -127,11 +118,9 @@ public partial class LogController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.System.MANAGE_SYSTEM_LOG)]
     public virtual async Task<IActionResult> DeleteSelected(ICollection<int> selectedIds)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSystemLog))
-            return await AccessDeniedJsonAsync();
-
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();
 

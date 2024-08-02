@@ -8,6 +8,7 @@ using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Cms;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Areas.Admin.Controllers;
 
@@ -50,11 +51,9 @@ public partial class WidgetController : BaseAdminController
         return RedirectToAction("List");
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_WIDGETS)]
     public virtual async Task<IActionResult> List()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _widgetModelFactory.PrepareWidgetSearchModelAsync(new WidgetSearchModel());
 
@@ -62,11 +61,9 @@ public partial class WidgetController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_WIDGETS)]
     public virtual async Task<IActionResult> List(WidgetSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _widgetModelFactory.PrepareWidgetListModelAsync(searchModel);
 
@@ -74,11 +71,9 @@ public partial class WidgetController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_WIDGETS)]
     public virtual async Task<IActionResult> WidgetUpdate(WidgetModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
-            return await AccessDeniedJsonAsync();
-
         var widget = await _widgetPluginManager.LoadPluginBySystemNameAsync(model.SystemName);
         if (_widgetPluginManager.IsPluginActive(widget, _widgetSettings.ActiveWidgetSystemNames))
         {

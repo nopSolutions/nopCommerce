@@ -86,11 +86,9 @@ public partial class AddressAttributeController : BaseAdminController
         return PartialView("ListBlock");
     }
 
-    public virtual async Task<IActionResult> List()
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
+    public virtual IActionResult List()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //select an appropriate card
         SaveSelectedCardName("customersettings-addressformfields");
 
@@ -99,22 +97,18 @@ public partial class AddressAttributeController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> List(AddressAttributeSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _addressAttributeModelFactory.PrepareAddressAttributeListModelAsync(searchModel);
 
         return Json(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Create()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _addressAttributeModelFactory.PrepareAddressAttributeModelAsync(new AddressAttributeModel(), null);
 
@@ -122,11 +116,9 @@ public partial class AddressAttributeController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Create(AddressAttributeModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         if (ModelState.IsValid)
         {
             var addressAttribute = model.ToEntity<AddressAttribute>();
@@ -155,11 +147,9 @@ public partial class AddressAttributeController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Edit(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //try to get an address attribute with the specified id
         var addressAttribute = await _addressAttributeService.GetAttributeByIdAsync(id);
         if (addressAttribute == null)
@@ -172,11 +162,9 @@ public partial class AddressAttributeController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Edit(AddressAttributeModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //try to get an address attribute with the specified id
         var addressAttribute = await _addressAttributeService.GetAttributeByIdAsync(model.Id);
         if (addressAttribute == null)
@@ -211,11 +199,9 @@ public partial class AddressAttributeController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Delete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //try to get an address attribute with the specified id
         var addressAttribute = await _addressAttributeService.GetAttributeByIdAsync(id);
         if (addressAttribute == null)
@@ -238,11 +224,9 @@ public partial class AddressAttributeController : BaseAdminController
     #region Address attribute values
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> ValueList(AddressAttributeValueSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return await AccessDeniedJsonAsync();
-
         //try to get an address attribute with the specified id
         var addressAttribute = await _addressAttributeService.GetAttributeByIdAsync(searchModel.AddressAttributeId)
             ?? throw new ArgumentException("No address attribute found with the specified id");
@@ -253,11 +237,9 @@ public partial class AddressAttributeController : BaseAdminController
         return Json(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> ValueCreatePopup(int addressAttributeId)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //try to get an address attribute with the specified id
         var addressAttribute = await _addressAttributeService.GetAttributeByIdAsync(addressAttributeId);
         if (addressAttribute == null)
@@ -271,11 +253,9 @@ public partial class AddressAttributeController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> ValueCreatePopup(AddressAttributeValueModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //try to get an address attribute with the specified id
         var addressAttribute = await _addressAttributeService.GetAttributeByIdAsync(model.AttributeId);
         if (addressAttribute == null)
@@ -305,11 +285,9 @@ public partial class AddressAttributeController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> ValueEditPopup(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //try to get an address attribute value with the specified id
         var addressAttributeValue = await _addressAttributeService.GetAttributeValueByIdAsync(id);
         if (addressAttributeValue == null)
@@ -327,11 +305,9 @@ public partial class AddressAttributeController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> ValueEditPopup(AddressAttributeValueModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //try to get an address attribute value with the specified id
         var addressAttributeValue = await _addressAttributeService.GetAttributeValueByIdAsync(model.Id);
         if (addressAttributeValue == null)
@@ -367,11 +343,9 @@ public partial class AddressAttributeController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> ValueDelete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return await AccessDeniedJsonAsync();
-
         //try to get an address attribute value with the specified id
         var addressAttributeValue = await _addressAttributeService.GetAttributeValueByIdAsync(id)
             ?? throw new ArgumentException("No address attribute value found with the specified id", nameof(id));

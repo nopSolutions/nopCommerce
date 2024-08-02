@@ -9,6 +9,7 @@ using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Controllers;
 using Nop.Web.Framework.Models.Extensions;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.Tax.Avalara.Controllers;
 
@@ -50,11 +51,9 @@ public class TaxTransactionLogController : BaseAdminController
     #region Methods
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
     public async Task<IActionResult> LogList(TaxTransactionLogSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return await AccessDeniedJsonAsync();
-
         //prepare filter parameters
         var createdFromValue = searchModel.CreatedFrom.HasValue
             ? (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedFrom.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync())
@@ -84,11 +83,9 @@ public class TaxTransactionLogController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
     public async Task<IActionResult> DeleteSelected(ICollection<int> selectedIds)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return await AccessDeniedJsonAsync();
-
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();
 
@@ -97,11 +94,9 @@ public class TaxTransactionLogController : BaseAdminController
         return Json(new { Result = true });
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
     public async Task<IActionResult> View(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return AccessDeniedView();
-
         //try to get log item with the passed identifier
         var logItem = await _taxTransactionLogService.GetTaxTransactionLogByIdAsync(id);
         if (logItem == null)
@@ -123,11 +118,9 @@ public class TaxTransactionLogController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
     public async Task<IActionResult> Delete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return AccessDeniedView();
-
         //try to get log item with the passed identifier
         var logItem = await _taxTransactionLogService.GetTaxTransactionLogByIdAsync(id);
         if (logItem != null)
@@ -139,11 +132,9 @@ public class TaxTransactionLogController : BaseAdminController
         return RedirectToAction("Configure", "Avalara");
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
     public async Task<IActionResult> ClearAll()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return await AccessDeniedJsonAsync();
-
         await _taxTransactionLogService.ClearLogAsync();
 
         return Json(new { Result = true });

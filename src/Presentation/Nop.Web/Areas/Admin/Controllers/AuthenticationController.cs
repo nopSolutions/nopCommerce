@@ -10,6 +10,7 @@ using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.ExternalAuthentication;
 using Nop.Web.Areas.Admin.Models.MultiFactorAuthentication;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Areas.Admin.Controllers;
 
@@ -56,11 +57,9 @@ public partial class AuthenticationController : BaseAdminController
 
     #region External Authentication
 
-    public virtual async Task<IActionResult> ExternalMethods()
+    [CheckPermission(StandardPermission.Configuration.MANAGE_EXTERNAL_AUTHENTICATION_METHODS)]
+    public virtual IActionResult ExternalMethods()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageExternalAuthenticationMethods))
-            return AccessDeniedView();
-
         //prepare model
         var model = _externalAuthenticationMethodModelFactory
             .PrepareExternalAuthenticationMethodSearchModel(new ExternalAuthenticationMethodSearchModel());
@@ -69,11 +68,9 @@ public partial class AuthenticationController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_EXTERNAL_AUTHENTICATION_METHODS)]
     public virtual async Task<IActionResult> ExternalMethods(ExternalAuthenticationMethodSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageExternalAuthenticationMethods))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _externalAuthenticationMethodModelFactory.PrepareExternalAuthenticationMethodListModelAsync(searchModel);
 
@@ -81,11 +78,9 @@ public partial class AuthenticationController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_EXTERNAL_AUTHENTICATION_METHODS)]
     public virtual async Task<IActionResult> ExternalMethodUpdate(ExternalAuthenticationMethodModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageExternalAuthenticationMethods))
-            return await AccessDeniedJsonAsync();
-
         var method = await _authenticationPluginManager.LoadPluginBySystemNameAsync(model.SystemName);
         if (_authenticationPluginManager.IsPluginActive(method))
         {
@@ -122,11 +117,9 @@ public partial class AuthenticationController : BaseAdminController
 
     #region Multi-factor Authentication
 
-    public virtual async Task<IActionResult> MultiFactorMethods()
+    [CheckPermission(StandardPermission.Configuration.MANAGE_MULTIFACTOR_AUTHENTICATION_METHODS)]
+    public virtual IActionResult MultiFactorMethods()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
-            return AccessDeniedView();
-
         //prepare model
         var model = _multiFactorAuthenticationMethodModelFactory
             .PrepareMultiFactorAuthenticationMethodSearchModel(new MultiFactorAuthenticationMethodSearchModel());
@@ -135,11 +128,9 @@ public partial class AuthenticationController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_MULTIFACTOR_AUTHENTICATION_METHODS)]
     public virtual async Task<IActionResult> MultiFactorMethods(MultiFactorAuthenticationMethodSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _multiFactorAuthenticationMethodModelFactory.PrepareMultiFactorAuthenticationMethodListModelAsync(searchModel);
 
@@ -147,11 +138,9 @@ public partial class AuthenticationController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_MULTIFACTOR_AUTHENTICATION_METHODS)]
     public virtual async Task<IActionResult> MultiFactorMethodUpdate(MultiFactorAuthenticationMethodModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
-            return await AccessDeniedJsonAsync();
-
         var method = await _multiFactorAuthenticationPluginManager.LoadPluginBySystemNameAsync(model.SystemName);
         if (_multiFactorAuthenticationPluginManager.IsPluginActive(method))
         {

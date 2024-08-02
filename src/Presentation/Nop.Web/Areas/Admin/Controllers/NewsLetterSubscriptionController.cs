@@ -11,6 +11,7 @@ using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Messages;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Controllers;
@@ -60,11 +61,9 @@ public partial class NewsLetterSubscriptionController : BaseAdminController
         return RedirectToAction("List");
     }
 
+    [CheckPermission(StandardPermission.Promotions.SUBSCRIBERS_VIEW)]
     public virtual async Task<IActionResult> List()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNewsletterSubscribers))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _newsletterSubscriptionModelFactory.PrepareNewsletterSubscriptionSearchModelAsync(new NewsletterSubscriptionSearchModel());
 
@@ -72,11 +71,9 @@ public partial class NewsLetterSubscriptionController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Promotions.SUBSCRIBERS_VIEW)]
     public virtual async Task<IActionResult> SubscriptionList(NewsletterSubscriptionSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNewsletterSubscribers))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _newsletterSubscriptionModelFactory.PrepareNewsletterSubscriptionListModelAsync(searchModel);
 
@@ -84,11 +81,9 @@ public partial class NewsLetterSubscriptionController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Promotions.SUBSCRIBERS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> SubscriptionUpdate(NewsletterSubscriptionModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNewsletterSubscribers))
-            return await AccessDeniedJsonAsync();
-
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
 
@@ -102,11 +97,9 @@ public partial class NewsLetterSubscriptionController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Promotions.SUBSCRIBERS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> SubscriptionDelete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNewsletterSubscribers))
-            return await AccessDeniedJsonAsync();
-
         var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByIdAsync(id)
             ?? throw new ArgumentException("No subscription found with the specified id", nameof(id));
 
@@ -117,11 +110,9 @@ public partial class NewsLetterSubscriptionController : BaseAdminController
 
     [HttpPost, ActionName("ExportCSV")]
     [FormValueRequired("exportcsv")]
+    [CheckPermission(StandardPermission.Promotions.SUBSCRIBERS_IMPORT_EXPORT)]
     public virtual async Task<IActionResult> ExportCsv(NewsletterSubscriptionSearchModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNewsletterSubscribers))
-            return AccessDeniedView();
-
         bool? isActive = null;
         if (model.ActiveId == 1)
             isActive = true;
@@ -144,11 +135,9 @@ public partial class NewsLetterSubscriptionController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Promotions.SUBSCRIBERS_IMPORT_EXPORT)]
     public virtual async Task<IActionResult> ImportCsv(IFormFile importcsvfile)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNewsletterSubscribers))
-            return AccessDeniedView();
-
         try
         {
             if (importcsvfile != null && importcsvfile.Length > 0)

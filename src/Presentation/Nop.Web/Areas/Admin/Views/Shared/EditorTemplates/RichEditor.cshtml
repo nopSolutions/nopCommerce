@@ -8,7 +8,7 @@
     // tinyMCE language
     var language = await tinyMceHelper.GetTinyMceLanguageAsync();
 
-    var allowRoxyFileman = await permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures);
+    var allowRoxyFileman = await permissionService.AuthorizeAsync(StandardPermission.System.HTML_EDITOR_MANAGE_PICTURES);
 
     var random = CommonHelper.GenerateRandomInteger();
 

@@ -21,7 +21,6 @@ using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Tax;
 using Nop.Web.Framework.Models.Cms;
-using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Catalog;
 
 namespace Nop.Plugin.Widgets.FacebookPixel.Services;

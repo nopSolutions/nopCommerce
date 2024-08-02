@@ -92,11 +92,9 @@ public class FacebookPixelController : BasePluginController
 
     #region Methods
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_WIDGETS)]
     public async Task<IActionResult> Configure()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
-            return AccessDeniedView();
-
         //prepare plugin configuration model
         var model = new ConfigurationModel();
         await _baseAdminModelFactory.PrepareStoresAsync(model.FacebookPixelSearchModel.AvailableStores);
@@ -110,11 +108,9 @@ public class FacebookPixelController : BasePluginController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_WIDGETS)]
     public virtual async Task<IActionResult> List(FacebookPixelSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
-            return await AccessDeniedJsonAsync();
-
         var configurations = await _facebookPixelService.GetPagedConfigurationsAsync(searchModel.StoreId, searchModel.Page - 1, searchModel.PageSize);
         var model = await new FacebookPixelListModel().PrepareToGridAsync(searchModel, configurations, () =>
         {
@@ -134,11 +130,9 @@ public class FacebookPixelController : BasePluginController
         return Json(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_WIDGETS)]
     public virtual async Task<IActionResult> Create()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
-            return AccessDeniedView();
-
         //set default values
         var model = new FacebookPixelModel
         {
@@ -157,11 +151,9 @@ public class FacebookPixelController : BasePluginController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_WIDGETS)]
     public virtual async Task<IActionResult> Create(FacebookPixelModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
-            return AccessDeniedView();
-
         if (ModelState.IsValid)
         {
             //save configuration
@@ -182,11 +174,9 @@ public class FacebookPixelController : BasePluginController
         return View("~/Plugins/Widgets.FacebookPixel/Views/Configuration/Create.cshtml", model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_WIDGETS)]
     public virtual async Task<IActionResult> Edit(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
-            return AccessDeniedView();
-
         var configuration = await _facebookPixelService.GetConfigurationByIdAsync(id);
         if (configuration == null)
             return RedirectToAction("Configure", "FacebookPixel");
@@ -206,11 +196,9 @@ public class FacebookPixelController : BasePluginController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_WIDGETS)]
     public virtual async Task<IActionResult> Edit(FacebookPixelModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
-            return AccessDeniedView();
-
         var configuration = await _facebookPixelService.GetConfigurationByIdAsync(model.Id);
         if (configuration == null)
             return RedirectToAction("Configure", "FacebookPixel");
@@ -242,11 +230,9 @@ public class FacebookPixelController : BasePluginController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_WIDGETS)]
     public virtual async Task<IActionResult> Delete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
-            return AccessDeniedView();
-
         var configuration = await _facebookPixelService.GetConfigurationByIdAsync(id);
         if (configuration == null)
             return RedirectToAction("Configure", "FacebookPixel");
@@ -260,11 +246,9 @@ public class FacebookPixelController : BasePluginController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_WIDGETS)]
     public virtual async Task<IActionResult> CustomEventList(CustomEventSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
-            return await AccessDeniedJsonAsync();
-
         var configuration = await _facebookPixelService.GetConfigurationByIdAsync(searchModel.ConfigurationId)
             ?? throw new ArgumentException("No configuration found with the specified id", nameof(searchModel.ConfigurationId));
 
@@ -285,11 +269,9 @@ public class FacebookPixelController : BasePluginController
 
     //ValidateAttribute is used to force model validation
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_WIDGETS)]
     public virtual async Task<IActionResult> CustomEventAdd(int configurationId, [Validate] CustomEventModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
-            return await AccessDeniedJsonAsync();
-
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
 
@@ -300,11 +282,9 @@ public class FacebookPixelController : BasePluginController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_WIDGETS)]
     public virtual async Task<IActionResult> CustomEventDelete(int configurationId, string id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
-            return await AccessDeniedJsonAsync();
-
         //save custom events configuration
         var eventName = id;
         await _facebookPixelService.SaveCustomEventsAsync(configurationId, eventName, null);
@@ -312,11 +292,9 @@ public class FacebookPixelController : BasePluginController
         return new NullJsonResult();
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_WIDGETS)]
     public async Task<IActionResult> CookieSettingsWarning(bool disableForUsersNotAcceptingCookieConsent)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
-            return await AccessDeniedJsonAsync();
-
         if (!disableForUsersNotAcceptingCookieConsent || _storeInformationSettings.DisplayEuCookieLawWarning)
             return Json(new { Result = string.Empty });
 

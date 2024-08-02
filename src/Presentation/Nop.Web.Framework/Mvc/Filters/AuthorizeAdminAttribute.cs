@@ -86,7 +86,7 @@ public sealed class AuthorizeAdminAttribute : TypeFilterAttribute
             if (context.Filters.Any(filter => filter is AuthorizeAdminFilter))
             {
                 //authorize permission of access to the admin area
-                if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel))
+                if (!await _permissionService.AuthorizeAsync(StandardPermission.Security.ACCESS_ADMIN_PANEL))
                     context.Result = new ChallengeResult();
             }
         }

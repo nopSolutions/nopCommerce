@@ -63,7 +63,7 @@ public partial class InstallController : Controller
 
     #endregion
 
-    #region Utilites
+    #region Utilities
 
     protected virtual InstallModel PrepareCountryList(InstallModel model)
     {
@@ -303,15 +303,7 @@ public partial class InstallController : Controller
             {
                 await _pluginService.Value.PreparePluginToInstallAsync(plugin.SystemName, checkDependencies: false);
             }
-
-            //register default permissions
-            var permissionProviders = new List<Type> { typeof(StandardPermissionProvider) };
-            foreach (var providerType in permissionProviders)
-            {
-                var provider = (IPermissionProvider)Activator.CreateInstance(providerType);
-                await _permissionService.Value.InstallPermissionsAsync(provider);
-            }
-
+            
             return View(new InstallModel { RestartUrl = Url.RouteUrl("Homepage") });
 
         }

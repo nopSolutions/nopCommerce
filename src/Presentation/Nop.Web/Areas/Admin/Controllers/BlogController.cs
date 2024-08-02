@@ -98,11 +98,9 @@ public partial class BlogController : BaseAdminController
         return RedirectToAction("BlogPosts");
     }
 
+    [CheckPermission(StandardPermission.ContentManagement.BLOG_VIEW)]
     public virtual async Task<IActionResult> BlogPosts(int? filterByBlogPostId)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _blogModelFactory.PrepareBlogContentModelAsync(new BlogContentModel(), filterByBlogPostId);
 
@@ -110,22 +108,18 @@ public partial class BlogController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.ContentManagement.BLOG_VIEW)]
     public virtual async Task<IActionResult> List(BlogPostSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _blogModelFactory.PrepareBlogPostListModelAsync(searchModel);
 
         return Json(model);
     }
 
+    [CheckPermission(StandardPermission.ContentManagement.BLOG_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> BlogPostCreate()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _blogModelFactory.PrepareBlogPostModelAsync(new BlogPostModel(), null);
 
@@ -133,11 +127,9 @@ public partial class BlogController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.ContentManagement.BLOG_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> BlogPostCreate(BlogPostModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
-            return AccessDeniedView();
-
         if (ModelState.IsValid)
         {
             var blogPost = model.ToEntity<BlogPost>();
@@ -170,11 +162,9 @@ public partial class BlogController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.ContentManagement.BLOG_VIEW)]
     public virtual async Task<IActionResult> BlogPostEdit(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
-            return AccessDeniedView();
-
         //try to get a blog post with the specified id
         var blogPost = await _blogService.GetBlogPostByIdAsync(id);
         if (blogPost == null)
@@ -187,11 +177,9 @@ public partial class BlogController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.ContentManagement.BLOG_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> BlogPostEdit(BlogPostModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
-            return AccessDeniedView();
-
         //try to get a blog post with the specified id
         var blogPost = await _blogService.GetBlogPostByIdAsync(model.Id);
         if (blogPost == null)
@@ -229,11 +217,9 @@ public partial class BlogController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.ContentManagement.BLOG_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Delete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
-            return AccessDeniedView();
-
         //try to get a blog post with the specified id
         var blogPost = await _blogService.GetBlogPostByIdAsync(id);
         if (blogPost == null)
@@ -254,11 +240,9 @@ public partial class BlogController : BaseAdminController
 
     #region Comments
 
+    [CheckPermission(StandardPermission.ContentManagement.BLOG_COMMENTS_VIEW)]
     public virtual async Task<IActionResult> BlogComments(int? filterByBlogPostId)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
-            return AccessDeniedView();
-
         //try to get a blog post with the specified id
         var blogPost = await _blogService.GetBlogPostByIdAsync(filterByBlogPostId ?? 0);
         if (blogPost == null && filterByBlogPostId.HasValue)
@@ -271,11 +255,9 @@ public partial class BlogController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.ContentManagement.BLOG_COMMENTS_VIEW)]
     public virtual async Task<IActionResult> Comments(BlogCommentSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _blogModelFactory.PrepareBlogCommentListModelAsync(searchModel, searchModel.BlogPostId);
 
@@ -283,11 +265,9 @@ public partial class BlogController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.ContentManagement.BLOG_COMMENTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> CommentUpdate(BlogCommentModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
-            return await AccessDeniedJsonAsync();
-
         //try to get a blog comment with the specified id
         var comment = await _blogService.GetBlogCommentByIdAsync(model.Id)
             ?? throw new ArgumentException("No comment found with the specified id");
@@ -310,11 +290,9 @@ public partial class BlogController : BaseAdminController
         return new NullJsonResult();
     }
 
+    [CheckPermission(StandardPermission.ContentManagement.BLOG_COMMENTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> CommentDelete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
-            return await AccessDeniedJsonAsync();
-
         //try to get a blog comment with the specified id
         var comment = await _blogService.GetBlogCommentByIdAsync(id)
             ?? throw new ArgumentException("No comment found with the specified id", nameof(id));
@@ -329,11 +307,9 @@ public partial class BlogController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.ContentManagement.BLOG_COMMENTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> DeleteSelectedComments(ICollection<int> selectedIds)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
-            return await AccessDeniedJsonAsync();
-
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();
 
@@ -351,11 +327,9 @@ public partial class BlogController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.ContentManagement.BLOG_COMMENTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> ApproveSelected(ICollection<int> selectedIds)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
-            return await AccessDeniedJsonAsync();
-
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();
 
@@ -380,11 +354,9 @@ public partial class BlogController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.ContentManagement.BLOG_COMMENTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> DisapproveSelected(ICollection<int> selectedIds)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
-            return await AccessDeniedJsonAsync();
-
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();
 

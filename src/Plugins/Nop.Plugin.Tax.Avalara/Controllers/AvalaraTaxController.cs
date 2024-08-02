@@ -17,6 +17,7 @@ using Nop.Web.Areas.Admin.Models.Tax;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Models.Extensions;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Plugin.Tax.Avalara.Controllers;
@@ -64,6 +65,7 @@ public class AvalaraTaxController : TaxController
 
     #region Methods
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
     public override async Task<IActionResult> Categories()
     {
         //ensure that Avalara tax provider is active
@@ -73,9 +75,6 @@ public class AvalaraTaxController : TaxController
             RouteData.Values["controller"] = "Tax";
             return await base.Categories();
         }
-
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return AccessDeniedView();
 
         //prepare model
         var model = new Models.Tax.TaxCategorySearchModel();
@@ -91,15 +90,13 @@ public class AvalaraTaxController : TaxController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
     public override async Task<IActionResult> Categories(TaxCategorySearchModel searchModel)
     {
         //ensure that Avalara tax provider is active
         if (!await _taxPluginManager.IsPluginActiveAsync(AvalaraTaxDefaults.SystemName))
             return await base.Categories(searchModel);
-
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return await AccessDeniedJsonAsync();
-
+        
         //get tax categories
         var taxCategories = (await _taxCategoryService.GetAllTaxCategoriesAsync()).ToPagedList(searchModel);
 
@@ -147,16 +144,14 @@ public class AvalaraTaxController : TaxController
         return await base.CategoryUpdate(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
     [HttpPost]
     public async Task<IActionResult> TaxCategoryAdd(Models.Tax.TaxCategoryModel model)
     {
         //ensure that Avalara tax provider is active
         if (!await _taxPluginManager.IsPluginActiveAsync(AvalaraTaxDefaults.SystemName))
             return new NullJsonResult();
-
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return await AccessDeniedJsonAsync();
-
+        
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
 
@@ -172,15 +167,13 @@ public class AvalaraTaxController : TaxController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
     public override async Task<IActionResult> CategoryDelete(int id)
     {
         //ensure that Avalara tax provider is active
         if (!await _taxPluginManager.IsPluginActiveAsync(AvalaraTaxDefaults.SystemName))
             return new NullJsonResult();
-
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return await AccessDeniedJsonAsync();
-
+        
         //try to get a tax category with the specified id
         var taxCategory = await _taxCategoryService.GetTaxCategoryByIdAsync(id)
             ?? throw new ArgumentException("No tax category found with the specified id");
@@ -196,15 +189,13 @@ public class AvalaraTaxController : TaxController
 
     [HttpPost, ActionName("Categories")]
     [FormValueRequired("importTaxCodes")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
     public async Task<IActionResult> ImportTaxCodes()
     {
         //ensure that Avalara tax provider is active
         if (!await _taxPluginManager.IsPluginActiveAsync(AvalaraTaxDefaults.SystemName))
             return await Categories();
-
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return AccessDeniedView();
-
+        
         //import tax caodes
         var importedTaxCodesNumber = await _avalaraTaxManager.ImportTaxCodesAsync();
         if (importedTaxCodesNumber.HasValue)
@@ -221,15 +212,13 @@ public class AvalaraTaxController : TaxController
 
     [HttpPost, ActionName("Categories")]
     [FormValueRequired("exportTaxCodes")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
     public async Task<IActionResult> ExportTaxCodes()
     {
         //ensure that Avalara tax provider is active
         if (!await _taxPluginManager.IsPluginActiveAsync(AvalaraTaxDefaults.SystemName))
             return await Categories();
-
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return AccessDeniedView();
-
+        
         //export tax codes
         var exportedTaxCodes = await _avalaraTaxManager.ExportTaxCodesAsync();
         if (exportedTaxCodes.HasValue)
@@ -247,15 +236,13 @@ public class AvalaraTaxController : TaxController
 
     [HttpPost, ActionName("Categories")]
     [FormValueRequired("deleteTaxCodes")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
     public async Task<IActionResult> DeleteSystemTaxCodes()
     {
         //ensure that Avalara tax provider is active
         if (!await _taxPluginManager.IsPluginActiveAsync(AvalaraTaxDefaults.SystemName))
             return await Categories();
-
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return AccessDeniedView();
-
+        
         var deleted = await _avalaraTaxManager.DeleteSystemTaxCodesAsync();
         if (deleted)
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Tax.Avalara.TaxCodes.Delete.Success"));

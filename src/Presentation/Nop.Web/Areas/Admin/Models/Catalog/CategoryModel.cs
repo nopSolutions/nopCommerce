@@ -108,8 +108,6 @@ public partial record CategoryModel : BaseNopEntityModel, IAclSupportedModel, ID
 
     public string Breadcrumb { get; set; }
 
-    //ACL (customer roles)
-    [NopResourceDisplayName("Admin.Catalog.Categories.Fields.AclCustomerRoles")]
     public IList<int> SelectedCustomerRoleIds { get; set; }
     public IList<SelectListItem> AvailableCustomerRoles { get; set; }
 

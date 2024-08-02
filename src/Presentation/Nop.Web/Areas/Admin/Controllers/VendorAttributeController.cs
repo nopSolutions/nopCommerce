@@ -81,32 +81,26 @@ public partial class VendorAttributeController : BaseAdminController
         return RedirectToAction("List");
     }
 
-    public virtual async Task<IActionResult> List()
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
+    public virtual IActionResult List()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //we just redirect a user to the vendor settings page
         return RedirectToAction("Vendor", "Setting");
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> List(VendorAttributeSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _vendorAttributeModelFactory.PrepareVendorAttributeListModelAsync(searchModel);
 
         return Json(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Create()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _vendorAttributeModelFactory.PrepareVendorAttributeModelAsync(new VendorAttributeModel(), null);
 
@@ -114,11 +108,9 @@ public partial class VendorAttributeController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Create(VendorAttributeModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         if (ModelState.IsValid)
         {
             var vendorAttribute = model.ToEntity<VendorAttribute>();
@@ -146,11 +138,9 @@ public partial class VendorAttributeController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Edit(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //try to get a vendor attribute with the specified id
         var vendorAttribute = await _vendorAttributeService.GetAttributeByIdAsync(id);
         if (vendorAttribute == null)
@@ -163,11 +153,9 @@ public partial class VendorAttributeController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Edit(VendorAttributeModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //try to get a vendor attribute with the specified id
         var vendorAttribute = await _vendorAttributeService.GetAttributeByIdAsync(model.Id);
         if (vendorAttribute == null)
@@ -200,11 +188,9 @@ public partial class VendorAttributeController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Delete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //try to get a vendor attribute with the specified id
         var vendorAttribute = await _vendorAttributeService.GetAttributeByIdAsync(id);
         if (vendorAttribute == null)
@@ -226,11 +212,9 @@ public partial class VendorAttributeController : BaseAdminController
     #region Vendor attribute values
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> ValueList(VendorAttributeValueSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return await AccessDeniedJsonAsync();
-
         //try to get a vendor attribute with the specified id
         var vendorAttribute = await _vendorAttributeService.GetAttributeByIdAsync(searchModel.VendorAttributeId)
             ?? throw new ArgumentException("No vendor attribute found with the specified id");
@@ -241,11 +225,9 @@ public partial class VendorAttributeController : BaseAdminController
         return Json(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> ValueCreatePopup(int vendorAttributeId)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //try to get a vendor attribute with the specified id
         var vendorAttribute = await _vendorAttributeService.GetAttributeByIdAsync(vendorAttributeId);
         if (vendorAttribute == null)
@@ -258,11 +240,9 @@ public partial class VendorAttributeController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> ValueCreatePopup(VendorAttributeValueModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //try to get a vendor attribute with the specified id
         var vendorAttribute = await _vendorAttributeService.GetAttributeByIdAsync(model.AttributeId);
         if (vendorAttribute == null)
@@ -293,11 +273,9 @@ public partial class VendorAttributeController : BaseAdminController
     }
 
     //edit
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> ValueEditPopup(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //try to get a vendor attribute value with the specified id
         var vendorAttributeValue = await _vendorAttributeService.GetAttributeValueByIdAsync(id);
         if (vendorAttributeValue == null)
@@ -315,11 +293,9 @@ public partial class VendorAttributeController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> ValueEditPopup(VendorAttributeValueModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //try to get a vendor attribute value with the specified id
         var vendorAttributeValue = await _vendorAttributeService.GetAttributeValueByIdAsync(model.Id);
         if (vendorAttributeValue == null)
@@ -355,11 +331,9 @@ public partial class VendorAttributeController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> ValueDelete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return await AccessDeniedJsonAsync();
-
         //try to get a vendor attribute value with the specified id
         var value = await _vendorAttributeService.GetAttributeValueByIdAsync(id)
             ?? throw new ArgumentException("No vendor attribute value found with the specified id", nameof(id));

@@ -395,8 +395,6 @@ public partial record ProductModel : BaseNopEntityModel,
 
     public IList<ProductLocalizedModel> Locales { get; set; }
 
-    //ACL (customer roles)
-    [NopResourceDisplayName("Admin.Catalog.Products.Fields.AclCustomerRoles")]
     public IList<int> SelectedCustomerRoleIds { get; set; }
     public IList<SelectListItem> AvailableCustomerRoles { get; set; }
 

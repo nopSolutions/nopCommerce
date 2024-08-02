@@ -1,11 +1,9 @@
-﻿using Nop.Core;
-using Nop.Core.Domain.Security;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
 
-namespace Nop.Web.Framework.Factories;
+namespace Nop.Web.Areas.Admin.Factories;
 
 /// <summary>
-/// Represents the factory of model which supports access control list (ACL)
+/// Represents the model factory which supports access control list (ACL)
 /// </summary>
 public partial interface IAclSupportedModelFactory
 {
@@ -21,11 +19,9 @@ public partial interface IAclSupportedModelFactory
     /// Prepare selected and all available customer roles for the passed model by ACL mappings
     /// </summary>
     /// <typeparam name="TModel">ACL supported model type</typeparam>
-    /// <typeparam name="TEntity">ACL supported entity type</typeparam>
     /// <param name="model">Model</param>
-    /// <param name="entity">Entity</param>
-    /// <param name="ignoreAclMappings">Whether to ignore existing ACL mappings</param>
+    /// <param name="entityName">Entity name</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    Task PrepareModelCustomerRolesAsync<TModel, TEntity>(TModel model, TEntity entity, bool ignoreAclMappings)
-        where TModel : IAclSupportedModel where TEntity : BaseEntity, IAclSupported;
+    Task PrepareModelCustomerRolesAsync<TModel>(TModel model, string entityName)
+        where TModel : BaseNopEntityModel, IAclSupportedModel;
 }

@@ -678,7 +678,7 @@ public partial class LocalizationService : ILocalizationService
 
         //set default value if required
         if (string.IsNullOrEmpty(result))
-            result = CommonHelper.ConvertEnum(enumValue.ToString());
+            result = CommonHelper.SplitCamelCaseWord(enumValue.ToString());
 
         return result;
     }

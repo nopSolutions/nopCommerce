@@ -51,11 +51,9 @@ public partial class QueuedEmailController : BaseAdminController
         return RedirectToAction("List");
     }
 
+    [CheckPermission(StandardPermission.System.MANAGE_MESSAGE_QUEUE)]
     public virtual async Task<IActionResult> List()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageQueue))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _queuedEmailModelFactory.PrepareQueuedEmailSearchModelAsync(new QueuedEmailSearchModel());
 
@@ -63,11 +61,9 @@ public partial class QueuedEmailController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.System.MANAGE_MESSAGE_QUEUE)]
     public virtual async Task<IActionResult> QueuedEmailList(QueuedEmailSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageQueue))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _queuedEmailModelFactory.PrepareQueuedEmailListModelAsync(searchModel);
 
@@ -86,11 +82,9 @@ public partial class QueuedEmailController : BaseAdminController
         return RedirectToAction("Edit", "QueuedEmail", new { id = queuedEmail.Id });
     }
 
+    [CheckPermission(StandardPermission.System.MANAGE_MESSAGE_QUEUE)]
     public virtual async Task<IActionResult> Edit(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageQueue))
-            return AccessDeniedView();
-
         //try to get a queued email with the specified id
         var email = await _queuedEmailService.GetQueuedEmailByIdAsync(id);
         if (email == null)
@@ -105,11 +99,9 @@ public partial class QueuedEmailController : BaseAdminController
     [HttpPost, ActionName("Edit")]
     [ParameterBasedOnFormName("save-continue", "continueEditing")]
     [FormValueRequired("save", "save-continue")]
+    [CheckPermission(StandardPermission.System.MANAGE_MESSAGE_QUEUE)]
     public virtual async Task<IActionResult> Edit(QueuedEmailModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageQueue))
-            return AccessDeniedView();
-
         //try to get a queued email with the specified id
         var email = await _queuedEmailService.GetQueuedEmailByIdAsync(model.Id);
         if (email == null)
@@ -135,11 +127,9 @@ public partial class QueuedEmailController : BaseAdminController
     }
 
     [HttpPost, ActionName("Edit"), FormValueRequired("requeue")]
+    [CheckPermission(StandardPermission.System.MANAGE_MESSAGE_QUEUE)]
     public virtual async Task<IActionResult> Requeue(QueuedEmailModel queuedEmailModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageQueue))
-            return AccessDeniedView();
-
         //try to get a queued email with the specified id
         var queuedEmail = await _queuedEmailService.GetQueuedEmailByIdAsync(queuedEmailModel.Id);
         if (queuedEmail == null)
@@ -174,11 +164,9 @@ public partial class QueuedEmailController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.System.MANAGE_MESSAGE_QUEUE)]
     public virtual async Task<IActionResult> Delete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageQueue))
-            return AccessDeniedView();
-
         //try to get a queued email with the specified id
         var email = await _queuedEmailService.GetQueuedEmailByIdAsync(id);
         if (email == null)
@@ -192,11 +180,9 @@ public partial class QueuedEmailController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.System.MANAGE_MESSAGE_QUEUE)]
     public virtual async Task<IActionResult> DeleteSelected(ICollection<int> selectedIds)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageQueue))
-            return await AccessDeniedJsonAsync();
-
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();
 
@@ -207,11 +193,9 @@ public partial class QueuedEmailController : BaseAdminController
 
     [HttpPost, ActionName("List")]
     [FormValueRequired("delete-all")]
+    [CheckPermission(StandardPermission.System.MANAGE_MESSAGE_QUEUE)]
     public virtual async Task<IActionResult> DeleteAll()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageQueue))
-            return AccessDeniedView();
-
         await _queuedEmailService.DeleteAllEmailsAsync();
 
         _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.System.QueuedEmails.DeletedAll"));

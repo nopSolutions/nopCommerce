@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
-using Nop.Core.Domain.Localization;
+﻿using Nop.Core.Domain.Localization;
 using Nop.Core.Infrastructure;
-using Nop.Data.Extensions;
-using Nop.Services;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Localization;

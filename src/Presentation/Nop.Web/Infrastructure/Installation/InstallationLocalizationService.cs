@@ -233,7 +233,7 @@ public partial class InstallationLocalizationService : IInstallationLocalization
             .Where(enumValue => enumValue != DataProviderType.Unknown && (valuesToExclude == null || !valuesToExclude.Contains(Convert.ToInt32(enumValue))))
             .ToDictionary(
                 enumValue => Convert.ToInt32(enumValue),
-                enumValue => useLocalization ? GetResource(enumValue.ToString()) : CommonHelper.ConvertEnum(enumValue.ToString()));
+                enumValue => useLocalization ? GetResource(enumValue.ToString()) : CommonHelper.SplitCamelCaseWord(enumValue.ToString()));
     }
 
     #endregion

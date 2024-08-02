@@ -176,13 +176,13 @@ public class ProductModelFactoryTests : WebTest
             {
                 //add to cart button
                 priceModel.DisableBuyButton = product.DisableBuyButton ||
-                                              !await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableShoppingCart) ||
-                                              !await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices);
+                                              !await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_SHOPPING_CART) ||
+                                              !await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.DISPLAY_PRICES);
 
                 //add to wishlist button
                 priceModel.DisableWishlistButton = product.DisableWishlistButton ||
-                                                   !await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableWishlist) ||
-                                                   !await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices);
+                                                   !await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_WISHLIST) ||
+                                                   !await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.DISPLAY_PRICES);
                 //compare products
                 priceModel.DisableAddToCompareListButton = !_catalogSettings.CompareProductsEnabled;
 
@@ -199,7 +199,7 @@ public class ProductModelFactoryTests : WebTest
                 }
 
                 //prices
-                if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices))
+                if (await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.DISPLAY_PRICES))
                 {
                     if (product.CustomerEntersPrice)
                     {
@@ -388,13 +388,13 @@ public class ProductModelFactoryTests : WebTest
 
                 //add to cart button (ignore "DisableBuyButton" property for grouped products)
                 priceModel.DisableBuyButton =
-                    !await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableShoppingCart) ||
-                    !await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices);
+                    !await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_SHOPPING_CART) ||
+                    !await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.DISPLAY_PRICES);
 
                 //add to wishlist button (ignore "DisableWishlistButton" property for grouped products)
                 priceModel.DisableWishlistButton =
-                    !await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableWishlist) ||
-                    !await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices);
+                    !await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_WISHLIST) ||
+                    !await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.DISPLAY_PRICES);
 
                 //compare products
                 priceModel.DisableAddToCompareListButton = !_catalogSettings.CompareProductsEnabled;
@@ -402,7 +402,7 @@ public class ProductModelFactoryTests : WebTest
                     return;
 
                 //we have at least one associated product
-                if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices))
+                if (await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.DISPLAY_PRICES))
                 {
                     //find a minimum possible price
                     decimal? minPossiblePrice = null;
@@ -511,7 +511,7 @@ public class ProductModelFactoryTests : WebTest
                 CurrencyCode = currentCurrency.CurrencyCode
             };
 
-            if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices))
+            if (await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.DISPLAY_PRICES))
             {
                 model.HidePrices = false;
                 if (product.CustomerEntersPrice)

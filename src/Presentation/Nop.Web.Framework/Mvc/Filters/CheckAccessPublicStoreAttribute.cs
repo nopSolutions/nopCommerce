@@ -83,7 +83,7 @@ public sealed class CheckAccessPublicStoreAttribute : TypeFilterAttribute
                 return;
 
             //check whether current customer has access to a public store
-            if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.PublicStoreAllowNavigation))
+            if (await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.PUBLIC_STORE_ALLOW_NAVIGATION))
                 return;
 
             //customer hasn't access to a public store

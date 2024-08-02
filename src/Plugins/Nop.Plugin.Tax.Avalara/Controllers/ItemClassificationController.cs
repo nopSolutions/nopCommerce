@@ -15,6 +15,7 @@ using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Models.Extensions;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.Tax.Avalara.Controllers;
 
@@ -65,11 +66,9 @@ public class ItemClassificationController : BaseAdminController
     #region Methods
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
     public async Task<IActionResult> List(ItemClassificationSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return await AccessDeniedJsonAsync();
-
         //get item classification
         var itemClassification = await _itemClassificationService.GetItemClassificationAsync(
             pageIndex: searchModel.Page - 1,
@@ -97,11 +96,9 @@ public class ItemClassificationController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
     public async Task<IActionResult> Update(ItemClassificationModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return await AccessDeniedJsonAsync();
-
         var item = await _itemClassificationService.GetItemClassificationByIdAsync(model.Id)
             ?? throw new ArgumentException("No record found");
 
@@ -113,11 +110,9 @@ public class ItemClassificationController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
     public async Task<IActionResult> DeleteSelected(List<int> selectedIds)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return await AccessDeniedJsonAsync();
-
         if (!selectedIds?.Any() ?? true)
             return NoContent();
 
@@ -136,24 +131,18 @@ public class ItemClassificationController : BaseAdminController
         return new NullJsonResult();
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
     public async Task<IActionResult> ClearAll()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return await AccessDeniedJsonAsync();
-
         await _itemClassificationService.ClearItemClassificationAsync();
 
         return Json(new { Result = true });
     }
 
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
     public async Task<IActionResult> ProductToClassification()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return AccessDeniedView();
-
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return AccessDeniedView();
-
         var model = new AddProductToClassificationSearchModel();
         await _baseAdminModelFactory.PrepareProductTypesAsync(model.AvailableProductTypes);
         await _baseAdminModelFactory.PrepareCategoriesAsync(model.AvailableCategories);
@@ -166,14 +155,10 @@ public class ItemClassificationController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
     public async Task<IActionResult> ProductListToClassification(AddProductToClassificationSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return await AccessDeniedJsonAsync();
-
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedJsonAsync();
-
         var products = await _productService.SearchProductsAsync(showHidden: true,
             keywords: searchModel.SearchProductName,
             productType: searchModel.SearchProductTypeId > 0 ? (ProductType?)searchModel.SearchProductTypeId : null,
@@ -200,14 +185,10 @@ public class ItemClassificationController : BaseAdminController
 
     [HttpPost]
     [FormValueRequired("save")]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
     public async Task<IActionResult> ProductToClassification(AddProductToClassificationModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return AccessDeniedView();
-
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return AccessDeniedView();
-
         await _itemClassificationService.AddItemClassificationAsync(model.SelectedProductIds?.ToList());
 
         ViewBag.RefreshPage = true;
@@ -215,11 +196,9 @@ public class ItemClassificationController : BaseAdminController
         return View("~/Plugins/Tax.Avalara/Views/ItemClassification/ProductToClassification.cshtml", new AddProductToClassificationSearchModel());
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
     public async Task<IActionResult> StartClassification()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return await AccessDeniedJsonAsync();
-
         var items = (await _itemClassificationService.GetItemClassificationAsync())
             .Where(x => string.IsNullOrEmpty(x.HSClassificationRequestId))
             .ToList();

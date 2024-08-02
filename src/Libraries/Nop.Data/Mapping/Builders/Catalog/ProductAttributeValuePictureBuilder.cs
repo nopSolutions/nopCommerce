@@ -1,6 +1,5 @@
 ﻿using FluentMigrator.Builders.Create.Table;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Media;
 using Nop.Data.Extensions;
 
 namespace Nop.Data.Mapping.Builders.Catalog;

@@ -65,11 +65,9 @@ public class GoogleAuthenticatorController : BasePluginController
 
     #region Methods
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_MULTIFACTOR_AUTHENTICATION_METHODS)]
     public async Task<IActionResult> Configure()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
-            return AccessDeniedView();
-
         //prepare model
         var model = new ConfigurationModel
         {
@@ -83,11 +81,9 @@ public class GoogleAuthenticatorController : BasePluginController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_MULTIFACTOR_AUTHENTICATION_METHODS)]
     public async Task<IActionResult> Configure(ConfigurationModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
-            return AccessDeniedView();
-
         if (!ModelState.IsValid)
             return await Configure();
 
@@ -102,11 +98,9 @@ public class GoogleAuthenticatorController : BasePluginController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_MULTIFACTOR_AUTHENTICATION_METHODS)]
     public async Task<IActionResult> GoogleAuthenticatorList(GoogleAuthenticatorSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
-            return await AccessDeniedJsonAsync();
-
         //get GoogleAuthenticator configuration records
         var configurations = await _googleAuthenticatorService.GetPagedConfigurationsAsync(searchModel.SearchEmail,
             searchModel.Page - 1, searchModel.PageSize);

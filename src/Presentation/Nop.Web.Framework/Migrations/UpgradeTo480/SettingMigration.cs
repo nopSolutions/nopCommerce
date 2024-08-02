@@ -20,7 +20,7 @@ public class SettingMigration : MigrationBase
 
         //#7215
         var displayAttributeCombinationImagesOnly = settingService.GetSetting("producteditorsettings.displayattributecombinationimagesonly");
-        if (displayAttributeCombinationImagesOnly is not null) 
+        if (displayAttributeCombinationImagesOnly is not null)
             settingService.DeleteSetting(displayAttributeCombinationImagesOnly);
     }
 

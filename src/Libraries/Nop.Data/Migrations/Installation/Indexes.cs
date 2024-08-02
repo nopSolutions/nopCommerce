@@ -90,7 +90,7 @@ public class Indexes : ForwardOnlyMigration
             .OnColumn(nameof(ProductTag.Name)).Ascending()
             .WithOptions().NonClustered();
 
-        Create.Index("IX_Product_Name").OnTable(nameof (Product))
+        Create.Index("IX_Product_Name").OnTable(nameof(Product))
             .OnColumn(nameof(Product.Name)).Ascending()
             .WithOptions().NonClustered();
 

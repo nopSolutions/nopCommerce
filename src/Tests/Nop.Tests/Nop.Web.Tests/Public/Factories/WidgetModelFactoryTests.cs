@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Routing;
 using Nop.Core.Domain.Cms;
 using Nop.Services.Configuration;
-using Nop.Web.Factories;
 using Nop.Web.Framework.Factories;
 using NUnit.Framework;
 

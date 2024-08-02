@@ -1,9 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
+﻿using System.Net;
 using System.Reflection;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Nop.Core.Http;
 using NUnit.Framework;

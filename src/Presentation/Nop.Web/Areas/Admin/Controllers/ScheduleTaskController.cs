@@ -8,6 +8,7 @@ using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Tasks;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Controllers;
@@ -54,11 +55,9 @@ public partial class ScheduleTaskController : BaseAdminController
         return RedirectToAction("List");
     }
 
+    [CheckPermission(StandardPermission.System.MANAGE_SCHEDULE_TASKS)]
     public virtual async Task<IActionResult> List()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageScheduleTasks))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _scheduleTaskModelFactory.PrepareScheduleTaskSearchModelAsync(new ScheduleTaskSearchModel());
 
@@ -66,11 +65,9 @@ public partial class ScheduleTaskController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.System.MANAGE_SCHEDULE_TASKS)]
     public virtual async Task<IActionResult> List(ScheduleTaskSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageScheduleTasks))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _scheduleTaskModelFactory.PrepareScheduleTaskListModelAsync(searchModel);
 
@@ -78,11 +75,9 @@ public partial class ScheduleTaskController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.System.MANAGE_SCHEDULE_TASKS)]
     public virtual async Task<IActionResult> TaskUpdate(ScheduleTaskModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageScheduleTasks))
-            return await AccessDeniedJsonAsync();
-
         //try to get a schedule task with the specified id
         var scheduleTask = await _scheduleTaskService.GetTaskByIdAsync(model.Id)
             ?? throw new ArgumentException("Schedule task cannot be loaded");
@@ -112,11 +107,9 @@ public partial class ScheduleTaskController : BaseAdminController
         return new NullJsonResult();
     }
 
+    [CheckPermission(StandardPermission.System.MANAGE_SCHEDULE_TASKS)]
     public virtual async Task<IActionResult> RunNow(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageScheduleTasks))
-            return AccessDeniedView();
-
         try
         {
             //try to get a schedule task with the specified id

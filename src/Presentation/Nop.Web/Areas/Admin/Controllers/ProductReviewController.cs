@@ -68,11 +68,9 @@ public partial class ProductReviewController : BaseAdminController
         return RedirectToAction("List");
     }
 
+    [CheckPermission(StandardPermission.Catalog.PRODUCT_REVIEWS_VIEW)]
     public virtual async Task<IActionResult> List()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProductReviews))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _productReviewModelFactory.PrepareProductReviewSearchModelAsync(new ProductReviewSearchModel());
 
@@ -80,22 +78,18 @@ public partial class ProductReviewController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Catalog.PRODUCT_REVIEWS_VIEW)]
     public virtual async Task<IActionResult> List(ProductReviewSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProductReviews))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _productReviewModelFactory.PrepareProductReviewListModelAsync(searchModel);
 
         return Json(model);
     }
 
+    [CheckPermission(StandardPermission.Catalog.PRODUCT_REVIEWS_VIEW)]
     public virtual async Task<IActionResult> Edit(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProductReviews))
-            return AccessDeniedView();
-
         //try to get a product review with the specified id
         var productReview = await _productService.GetProductReviewByIdAsync(id);
         if (productReview == null)
@@ -113,11 +107,9 @@ public partial class ProductReviewController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.Catalog.PRODUCT_REVIEWS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Edit(ProductReviewModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProductReviews))
-            return AccessDeniedView();
-
         //try to get a product review with the specified id
         var productReview = await _productService.GetProductReviewByIdAsync(model.Id);
         if (productReview == null)
@@ -187,11 +179,9 @@ public partial class ProductReviewController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Catalog.PRODUCT_REVIEWS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Delete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProductReviews))
-            return AccessDeniedView();
-
         //try to get a product review with the specified id
         var productReview = await _productService.GetProductReviewByIdAsync(id);
         if (productReview == null)
@@ -218,11 +208,9 @@ public partial class ProductReviewController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Catalog.PRODUCT_REVIEWS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> ApproveSelected(ICollection<int> selectedIds)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProductReviews))
-            return await AccessDeniedJsonAsync();
-
         //a vendor does not have access to this functionality
         if (await _workContext.GetCurrentVendorAsync() != null)
             return RedirectToAction("List");
@@ -251,11 +239,9 @@ public partial class ProductReviewController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Catalog.PRODUCT_REVIEWS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> DisapproveSelected(ICollection<int> selectedIds)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProductReviews))
-            return await AccessDeniedJsonAsync();
-
         //a vendor does not have access to this functionality
         if (await _workContext.GetCurrentVendorAsync() != null)
             return RedirectToAction("List");
@@ -281,11 +267,9 @@ public partial class ProductReviewController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Catalog.PRODUCT_REVIEWS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> DeleteSelected(ICollection<int> selectedIds)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProductReviews))
-            return await AccessDeniedJsonAsync();
-
         //a vendor does not have access to this functionality
         if (await _workContext.GetCurrentVendorAsync() != null)
             return RedirectToAction("List");
@@ -308,10 +292,9 @@ public partial class ProductReviewController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Catalog.PRODUCT_REVIEWS_VIEW)]
     public virtual async Task<IActionResult> ProductReviewReviewTypeMappingList(ProductReviewReviewTypeMappingSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProductReviews))
-            return await AccessDeniedJsonAsync();
         var productReview = await _productService.GetProductReviewByIdAsync(searchModel.ProductReviewId)
             ?? throw new ArgumentException("No product review found with the specified id");
 

@@ -107,11 +107,9 @@ public partial class CurrencyController : BaseAdminController
         return RedirectToAction("List");
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_CURRENCIES)]
     public virtual async Task<IActionResult> List(bool liveRates = false)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrencies))
-            return AccessDeniedView();
-
         var model = new CurrencySearchModel();
 
         try
@@ -129,11 +127,9 @@ public partial class CurrencyController : BaseAdminController
 
     [HttpPost]
     [FormValueRequired("save")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_CURRENCIES)]
     public virtual async Task<IActionResult> List(CurrencySearchModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrencies))
-            return AccessDeniedView();
-
         _currencySettings.ActiveExchangeRateProviderSystemName = model.ExchangeRateProviderModel.ExchangeRateProvider;
         _currencySettings.AutoUpdateEnabled = model.ExchangeRateProviderModel.AutoUpdateEnabled;
         await _settingService.SaveSettingAsync(_currencySettings);
@@ -142,11 +138,9 @@ public partial class CurrencyController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_CURRENCIES)]
     public virtual async Task<IActionResult> ListGrid(CurrencySearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrencies))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _currencyModelFactory.PrepareCurrencyListModelAsync(searchModel);
 
@@ -154,11 +148,9 @@ public partial class CurrencyController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_CURRENCIES)]
     public virtual async Task<IActionResult> ApplyRates(IEnumerable<CurrencyExchangeRateModel> rateModels)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrencies))
-            return await AccessDeniedJsonAsync();
-
         foreach (var rate in rateModels)
         {
             var currency = await _currencyService.GetCurrencyByCodeAsync(rate.CurrencyCode);
@@ -174,11 +166,9 @@ public partial class CurrencyController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_CURRENCIES)]
     public virtual async Task<IActionResult> MarkAsPrimaryExchangeRateCurrency(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrencies))
-            return await AccessDeniedJsonAsync();
-
         _currencySettings.PrimaryExchangeRateCurrencyId = id;
         await _settingService.SaveSettingAsync(_currencySettings);
 
@@ -186,11 +176,9 @@ public partial class CurrencyController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_CURRENCIES)]
     public virtual async Task<IActionResult> MarkAsPrimaryStoreCurrency(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrencies))
-            return await AccessDeniedJsonAsync();
-
         _currencySettings.PrimaryStoreCurrencyId = id;
         await _settingService.SaveSettingAsync(_currencySettings);
 
@@ -201,11 +189,9 @@ public partial class CurrencyController : BaseAdminController
 
     #region Create / Edit / Delete
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_CURRENCIES)]
     public virtual async Task<IActionResult> Create()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrencies))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _currencyModelFactory.PrepareCurrencyModelAsync(new CurrencyModel(), null);
 
@@ -213,11 +199,9 @@ public partial class CurrencyController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_CURRENCIES)]
     public virtual async Task<IActionResult> Create(CurrencyModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrencies))
-            return AccessDeniedView();
-
         if (ModelState.IsValid)
         {
             var currency = model.ToEntity<Currency>();
@@ -250,11 +234,9 @@ public partial class CurrencyController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_CURRENCIES)]
     public virtual async Task<IActionResult> Edit(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrencies))
-            return AccessDeniedView();
-
         //try to get a currency with the specified id
         var currency = await _currencyService.GetCurrencyByIdAsync(id);
         if (currency == null)
@@ -267,11 +249,9 @@ public partial class CurrencyController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_CURRENCIES)]
     public virtual async Task<IActionResult> Edit(CurrencyModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrencies))
-            return AccessDeniedView();
-
         //try to get a currency with the specified id
         var currency = await _currencyService.GetCurrencyByIdAsync(model.Id);
         if (currency == null)
@@ -317,11 +297,9 @@ public partial class CurrencyController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_CURRENCIES)]
     public virtual async Task<IActionResult> Delete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrencies))
-            return AccessDeniedView();
-
         //try to get a currency with the specified id
         var currency = await _currencyService.GetCurrencyByIdAsync(id);
         if (currency == null)

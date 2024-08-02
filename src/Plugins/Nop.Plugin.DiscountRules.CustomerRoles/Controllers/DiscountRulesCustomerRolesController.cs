@@ -62,11 +62,9 @@ public class DiscountRulesCustomerRolesController : BasePluginController
 
     #region Methods
 
+    [CheckPermission(StandardPermission.Promotions.DISCOUNTS_VIEW)]
     public async Task<IActionResult> Configure(int discountId, int? discountRequirementId)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
-            return Content("Access denied");
-
         //load the discount
         var discount = await _discountService.GetDiscountByIdAsync(discountId)
                        ?? throw new ArgumentException("Discount could not be loaded");
@@ -104,11 +102,9 @@ public class DiscountRulesCustomerRolesController : BasePluginController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Promotions.DISCOUNTS_CREATE_EDIT_DELETE)]
     public async Task<IActionResult> Configure(RequirementModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
-            return Content("Access denied");
-
         if (ModelState.IsValid)
         {
             //load the discount

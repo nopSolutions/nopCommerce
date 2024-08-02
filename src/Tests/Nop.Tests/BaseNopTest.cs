@@ -115,12 +115,13 @@ public partial class BaseNopTest
         var cultureInfo = new CultureInfo(NopCommonDefaults.DefaultLanguageCulture);
         var regionInfo = new RegionInfo(NopCommonDefaults.DefaultLanguageCulture);
 
-        _serviceProvider.GetService<IInstallationService>()
-            .InstallRequiredDataAsync(NopTestsDefaults.AdminEmail, NopTestsDefaults.AdminPassword, languagePackInfo, regionInfo, cultureInfo).Wait();
-        _serviceProvider.GetService<IInstallationService>().InstallSampleDataAsync(NopTestsDefaults.AdminEmail).Wait();
+        var installationService = _serviceProvider.GetService<IInstallationService>();
 
-        var provider = (IPermissionProvider)Activator.CreateInstance(typeof(StandardPermissionProvider));
-        EngineContext.Current.Resolve<IPermissionService>().InstallPermissionsAsync(provider).Wait();
+        installationService.InstallRequiredDataAsync(NopTestsDefaults.AdminEmail, NopTestsDefaults.AdminPassword, languagePackInfo, regionInfo, cultureInfo).Wait();
+        installationService.InstallSampleDataAsync(NopTestsDefaults.AdminEmail).Wait();
+
+        var permissionService = EngineContext.Current.Resolve<IPermissionService>();
+        permissionService.InsertPermissionsAsync().Wait();
     }
 
     protected static void PropertiesShouldEqual<T1, T2>(T1 obj1, T2 obj2, params string[] filter) 
@@ -200,7 +201,7 @@ public partial class BaseNopTest
 
         var hostApplicationLifetime = new Mock<IHostApplicationLifetime>();
         services.AddSingleton(hostApplicationLifetime.Object);
-            
+
         services.AddWebEncoders();
 
         var httpContext = new DefaultHttpContext();
@@ -235,7 +236,7 @@ public partial class BaseNopTest
 
         services.AddSingleton<ITypeFinder>(typeFinder);
         Singleton<ITypeFinder>.Instance = typeFinder;
-            
+
         //web helper
         services.AddTransient<IWebHelper, WebHelper>();
 
@@ -437,6 +438,7 @@ public partial class BaseNopTest
         services.AddTransient<IStoreContext, WebStoreContext>();
         services.AddTransient<Lazy<IStoreContext>>();
         services.AddTransient<IWorkContext, WebWorkContext>();
+        services.AddTransient<Lazy<IWorkContext>>();
         services.AddTransient<IThemeContext, ThemeContext>();
         services.AddTransient<Lazy<ILocalizationService>>();
         services.AddTransient<INopHtmlHelper, NopHtmlHelper>();
@@ -449,12 +451,12 @@ public partial class BaseNopTest
         services.AddWebOptimizer();
 
         //common factories
-        services.AddTransient<IAclSupportedModelFactory, AclSupportedModelFactory>();
         services.AddTransient<IDiscountSupportedModelFactory, DiscountSupportedModelFactory>();
         services.AddTransient<ILocalizedModelFactory, LocalizedModelFactory>();
         services.AddTransient<IStoreMappingSupportedModelFactory, StoreMappingSupportedModelFactory>();
 
         //admin factories
+        services.AddTransient<IAclSupportedModelFactory, AclSupportedModelFactory>();
         services.AddTransient<IBaseAdminModelFactory, BaseAdminModelFactory>();
         services.AddTransient<IActivityLogModelFactory, ActivityLogModelFactory>();
         services.AddTransient<IAddressAttributeModelFactory, AddressAttributeModelFactory>();

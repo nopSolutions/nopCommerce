@@ -6,6 +6,7 @@ using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Logging;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Areas.Admin.Controllers;
 
@@ -41,11 +42,9 @@ public partial class ActivityLogController : BaseAdminController
 
     #region Methods
 
+    [CheckPermission(StandardPermission.Customers.ACTIVITY_LOG_VIEW)]
     public virtual async Task<IActionResult> ActivityTypes()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageActivityLog))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _activityLogModelFactory.PrepareActivityLogTypeSearchModelAsync(new ActivityLogTypeSearchModel());
 
@@ -53,11 +52,9 @@ public partial class ActivityLogController : BaseAdminController
     }
 
     [HttpPost, ActionName("SaveTypes")]
+    [CheckPermission(StandardPermission.Customers.ACTIVITY_LOG_MANAGE_TYPES)]
     public virtual async Task<IActionResult> SaveTypes(IFormCollection form)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageActivityLog))
-            return AccessDeniedView();
-
         //activity log
         await _customerActivityService.InsertActivityAsync("EditActivityLogTypes", await _localizationService.GetResourceAsync("ActivityLog.EditActivityLogTypes"));
 
@@ -80,11 +77,9 @@ public partial class ActivityLogController : BaseAdminController
         return RedirectToAction("ActivityTypes");
     }
 
+    [CheckPermission(StandardPermission.Customers.ACTIVITY_LOG_VIEW)]
     public virtual async Task<IActionResult> ActivityLogs()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageActivityLog))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _activityLogModelFactory.PrepareActivityLogSearchModelAsync(new ActivityLogSearchModel());
 
@@ -92,11 +87,9 @@ public partial class ActivityLogController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Customers.ACTIVITY_LOG_VIEW)]
     public virtual async Task<IActionResult> ListLogs(ActivityLogSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageActivityLog))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _activityLogModelFactory.PrepareActivityLogListModelAsync(searchModel);
 
@@ -104,11 +97,9 @@ public partial class ActivityLogController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Customers.ACTIVITY_LOG_DELETE)]
     public virtual async Task<IActionResult> ActivityLogDelete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageActivityLog))
-            return await AccessDeniedJsonAsync();
-
         //try to get a log item with the specified id
         var logItem = await _customerActivityService.GetActivityByIdAsync(id)
             ?? throw new ArgumentException("No activity log found with the specified id", nameof(id));
@@ -123,11 +114,9 @@ public partial class ActivityLogController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Customers.ACTIVITY_LOG_DELETE)]
     public virtual async Task<IActionResult> ClearAll()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageActivityLog))
-            return AccessDeniedView();
-
         await _customerActivityService.ClearAllActivitiesAsync();
 
         //activity log

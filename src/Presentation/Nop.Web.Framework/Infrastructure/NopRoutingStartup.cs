@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
-using Nop.Web.Framework.Infrastructure.Extensions;
 
 namespace Nop.Web.Framework.Infrastructure;
 

@@ -43,10 +43,10 @@ public partial class CommonStatisticsViewComponent : NopViewComponent
     /// </returns>
     public async Task<IViewComponentResult> InvokeAsync()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers) ||
-            !await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders) ||
-            !await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageReturnRequests) ||
-            !await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+        if (!await _permissionService.AuthorizeAsync(StandardPermission.Customers.CUSTOMERS_VIEW) ||
+            !await _permissionService.AuthorizeAsync(StandardPermission.Orders.ORDERS_VIEW) ||
+            !await _permissionService.AuthorizeAsync(StandardPermission.Orders.RETURN_REQUESTS_VIEW) ||
+            !await _permissionService.AuthorizeAsync(StandardPermission.Catalog.PRODUCTS_VIEW))
         {
             return Content(string.Empty);
         }

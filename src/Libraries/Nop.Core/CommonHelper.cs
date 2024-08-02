@@ -253,23 +253,22 @@ public partial class CommonHelper
     }
 
     /// <summary>
-    /// Convert enum for front-end
+    /// Splits the camel-case word into separate one
     /// </summary>
     /// <param name="str">Input string</param>
-    /// <returns>Converted string</returns>
-    public static string ConvertEnum(string str)
+    /// <returns>Splitted string</returns>
+    public static string SplitCamelCaseWord(string str)
     {
         if (string.IsNullOrEmpty(str))
             return string.Empty;
-        var result = string.Empty;
-        foreach (var c in str)
-            if (c.ToString() != c.ToString().ToLowerInvariant())
-                result += " " + c.ToString();
-            else
-                result += c.ToString();
+
+        var result = str.ToCharArray()
+            .Select(p => p.ToString())
+            .Aggregate(string.Empty, (current, c) => current + (c == c.ToUpperInvariant() ? $" {c}" : c));
 
         //ensure no spaces (e.g. when the first letter is upper case)
         result = result.TrimStart();
+
         return result;
     }
 

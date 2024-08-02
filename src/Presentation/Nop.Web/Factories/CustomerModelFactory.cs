@@ -729,7 +729,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
             });
         }
 
-        if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableMultiFactorAuthentication) &&
+        if (await _permissionService.AuthorizeAsync(StandardPermission.Security.ENABLE_MULTI_FACTOR_AUTHENTICATION) &&
             await _multiFactorAuthenticationPluginManager.HasActivePluginsAsync())
         {
             model.CustomerNavigationItems.Add(new CustomerNavigationItemModel

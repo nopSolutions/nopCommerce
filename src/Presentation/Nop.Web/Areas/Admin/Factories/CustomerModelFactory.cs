@@ -29,7 +29,6 @@ using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Customers;
 using Nop.Web.Areas.Admin.Models.ShoppingCart;
-using Nop.Web.Framework.Factories;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories;
@@ -46,7 +45,6 @@ public partial class CustomerModelFactory : ICustomerModelFactory
     protected readonly DateTimeSettings _dateTimeSettings;
     protected readonly GdprSettings _gdprSettings;
     protected readonly ForumSettings _forumSettings;
-    protected readonly IAclSupportedModelFactory _aclSupportedModelFactory;
     protected readonly IAddressModelFactory _addressModelFactory;
     protected readonly IAddressService _addressService;
     protected readonly IAffiliateService _affiliateService;
@@ -91,7 +89,6 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         DateTimeSettings dateTimeSettings,
         GdprSettings gdprSettings,
         ForumSettings forumSettings,
-        IAclSupportedModelFactory aclSupportedModelFactory,
         IAddressModelFactory addressModelFactory,
         IAddressService addressService,
         IAffiliateService affiliateService,
@@ -132,7 +129,6 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         _dateTimeSettings = dateTimeSettings;
         _gdprSettings = gdprSettings;
         _forumSettings = forumSettings;
-        _aclSupportedModelFactory = aclSupportedModelFactory;
         _addressModelFactory = addressModelFactory;
         _addressService = addressService;
         _affiliateService = affiliateService;
@@ -528,9 +524,6 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         if (registeredRole != null)
             searchModel.SelectedCustomerRoleIds.Add(registeredRole.Id);
 
-        //prepare available customer roles
-        await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(searchModel);
-
         searchModel.AvailableActiveValues = new List<SelectListItem> {
             new(await _localizationService.GetResourceAsync("Admin.Common.All"), string.Empty),
             new(await _localizationService.GetResourceAsync("Admin.Common.Yes"), true.ToString(), true),
@@ -788,8 +781,14 @@ public partial class CustomerModelFactory : ICustomerModelFactory
             Selected = model.SelectedNewsletterSubscriptionStoreIds.Contains(store.Id)
         }).ToList();
 
-        //prepare model customer roles
-        await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(model);
+        //prepare available customer roles
+        var availableRoles = await _customerService.GetAllCustomerRolesAsync(showHidden: true);
+        model.AvailableCustomerRoles = availableRoles.Select(role => new SelectListItem
+        {
+            Text = role.Name,
+            Value = role.Id.ToString(),
+            Selected = model.SelectedCustomerRoleIds.Contains(role.Id)
+        }).ToList();
 
         //prepare available time zones
         await _baseAdminModelFactory.PrepareTimeZonesAsync(model.AvailableTimeZones, false);

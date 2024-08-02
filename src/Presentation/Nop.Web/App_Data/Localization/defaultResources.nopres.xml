@@ -2121,12 +2121,6 @@
   <LocaleResource Name="Admin.Catalog.Categories.EditCategoryDetails">
     <Value>Edit category details</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Categories.Fields.AclCustomerRoles">
-    <Value>Limited to customer roles</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Categories.Fields.AclCustomerRoles.Hint">
-    <Value>Select customer roles for which the category will be shown. Leave empty if you want this category to be visible to all users.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.AllowCustomersToSelectPageSize">
     <Value>Allow customers to select page size</Value>
   </LocaleResource>
@@ -2366,12 +2360,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.EditManufacturerDetails">
     <Value>Edit manufacturer details</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.AclCustomerRoles">
-    <Value>Limited to customer roles</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.AclCustomerRoles.Hint">
-    <Value>Select customer roles for which the manufacturer will be shown. Leave empty if you want this manufacturer to be visible to all users.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.AllowCustomersToSelectPageSize">
     <Value>Allow customers to select page size</Value>
@@ -2789,12 +2777,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ExceededMaximumNumber">
     <Value>The maximum allowed number of products has been exceeded ({0})</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.AclCustomerRoles">
-    <Value>Customer roles</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.AclCustomerRoles.Hint">
-    <Value>Choose one or several customer roles i.e. administrators, vendors, guests, who will be able to see this product in catalog. If you don't need this option just leave this field empty. In order to use this functionality, you have to disable the following setting: Configuration &gt; Settings &gt; Catalog &gt; Ignore ACL rules (sitewide).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.AdditionalShippingCharge">
     <Value>Additional shipping charge</Value>
@@ -4401,7 +4383,22 @@
   <LocaleResource Name="Admin.Configuration.ACL.Description">
     <Value>Access control list is a list of permissions attached to customer roles. This list specifies the access rights of users to objects.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ACL.NoCustomerRolesAvailable">
+    <Value>No customer roles available</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ACL.NoPermissionsDefined">
+     <Value>No permissions defined</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.ACL.Permission">
+    <Value>Permission name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ACL.Permission.CategoryName">
+    <Value>Category of permissions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ACL.Permission.Edit">
+    <Value>Edit permission rules</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ACL.Permission.PermissionName">
     <Value>Permission name</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.ACL.Updated">
@@ -5498,12 +5495,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.EditDetails">
     <Value>Edit plugin details</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Plugins.Fields.AclCustomerRoles">
-    <Value>Limited to customer roles</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Plugins.Fields.AclCustomerRoles.Hint">
-    <Value>Choose one or several customer roles i.e. administrators, vendors, guests, who will be able to use this plugin. If you don't need this option just leave this field empty.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Fields.Author">
     <Value>Author</Value>
@@ -11280,12 +11271,6 @@
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.AccessibleWhenStoreClosed.Hint">
     <Value>Check to allow customer to view this topic details page when the store is closed.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.AclCustomerRoles">
-    <Value>Customer roles</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.AclCustomerRoles.Hint">
-    <Value>Select customer roles for which the topic will be shown. Leave empty if you want this topic to be visible to all users.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Body">
     <Value>Body</Value>
   </LocaleResource>
@@ -12902,6 +12887,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Home">
     <Value>Home</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.IAclSupportedModel.Fields.AclCustomerRoles">
+    <Value>Limited to customer roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.IAclSupportedModel.Fields.AclCustomerRoles.Hint">
+    <Value>Choose one or several customer roles i.e. administrators, vendors, guests, who will be able to use or see this item. If you don't need this option just leave this field empty.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Menu.Search">
     <Value>Search</Value>
@@ -18699,174 +18690,6 @@
   <LocaleResource Name="Pdf.TaxRate">
     <Value>Tax {0}%</Value>
   </LocaleResource>
-  <LocaleResource Name="Permission.AccessAdminPanel">
-    <Value>Access admin area</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.AccessWebService">
-    <Value>Plugins. Access Web Service</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.AllowCustomerImpersonation">
-    <Value>Admin area. Allow Customer Impersonation</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.Authentication.EnableMultiFactorAuthentication">
-    <Value>Security. Enable Multi-factor authentication</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.Authentication.ManageExternalMethods">
-    <Value>Admin area. Manage External Authentication Methods</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.Authentication.ManageMultifactorMethods">
-    <Value>Admin area. Manage Multi-factor Authentication Methods</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.DisplayPrices">
-    <Value>Public store. Display Prices</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.EnableShoppingCart">
-    <Value>Public store. Enable shopping cart</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.EnableWishlist">
-    <Value>Public store. Enable wishlist</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.HtmlEditor.ManagePictures">
-    <Value>Admin area. HTML Editor. Manage pictures</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageACL">
-    <Value>Admin area. Manage ACL</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageActivityLog">
-    <Value>Admin area. Manage Activity Log</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageAffiliates">
-    <Value>Admin area. Manage Affiliates</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageAppSettings">
-    <Value>Admin area. Manage App Settings</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageAttributes">
-    <Value>Admin area. Manage Attributes</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageBlog">
-    <Value>Admin area. Manage Blog</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageCampaigns">
-    <Value>Admin area. Manage Campaigns</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageCategories">
-    <Value>Admin area. Manage Categories</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageCountries">
-    <Value>Admin area. Manage Countries</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageCurrencies">
-    <Value>Admin area. Manage Currencies</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageCurrentCarts">
-    <Value>Admin area. Manage Current Carts</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageCustomers">
-    <Value>Admin area. Manage Customers</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageDiscounts">
-    <Value>Admin area. Manage Discounts</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageEmailAccounts">
-    <Value>Admin area. Manage Email Accounts</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageExternalAuthenticationMethods">
-    <Value>Admin area. Manage External Authentication Methods</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageForums">
-    <Value>Admin area. Manage Forums</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageGiftCards">
-    <Value>Admin area. Manage Gift Cards</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageLanguages">
-    <Value>Admin area. Manage Languages</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageMaintenance">
-    <Value>Admin area. Manage Maintenance</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageManufacturers">
-    <Value>Admin area. Manage Manufacturers</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageMessageQueue">
-    <Value>Admin area. Manage Message Queue</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageMessageTemplates">
-    <Value>Admin area. Manage Message Templates</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageMultifactorAuthenticationMethods">
-    <Value>Admin area. Manage Multifactor Authentication Methods</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageNews">
-    <Value>Admin area. Manage News</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageNewsletterSubscribers">
-    <Value>Admin area. Manage Newsletter Subscribers</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageOrders">
-    <Value>Admin area. Manage Orders</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManagePaymentMethods">
-    <Value>Admin area. Manage Payment Methods</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManagePlugins">
-    <Value>Admin area. Manage Plugins</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManagePolls">
-    <Value>Admin area. Manage Polls</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageProductReviews">
-    <Value>Admin area. Manage Product Reviews</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageProducts">
-    <Value>Admin area. Manage Products</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageProductTags">
-    <Value>Admin area. Manage Product Tags</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageRecurringPayments">
-    <Value>Admin area. Manage Recurring Payments</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageReturnRequests">
-    <Value>Admin area. Manage Return Requests</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageScheduleTasks">
-    <Value>Admin area. Manage Schedule Tasks</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageSettings">
-    <Value>Admin area. Manage Settings</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageShippingSettings">
-    <Value>Admin area. Manage Shipping Settings</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageStores">
-    <Value>Admin area. Manage Stores</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageSystemLog">
-    <Value>Admin area. Manage System Log</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageTaxSettings">
-    <Value>Admin area. Manage Tax Settings</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageTopics">
-    <Value>Admin area. Manage Topics</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageVendors">
-    <Value>Admin area. Manage Vendors</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageWidgets">
-    <Value>Admin area. Manage Widgets</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.OrderCountryReport">
-    <Value>Admin area. Access order country report.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.PublicStoreAllowNavigation">
-    <Value>Public store. Allow navigation</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.SalesSummaryReport">
-    <Value>Admin area. Access sales summary report</Value>
-  </LocaleResource>
   <LocaleResource Name="Polls.OnlyRegisteredUsersVote">
     <Value>Only registered users can vote.</Value>
   </LocaleResource>
@@ -19565,6 +19388,321 @@
   </LocaleResource>
   <LocaleResource Name="Search.Vendor">
     <Value>Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Catalog.CategoriesCreateEditDelete">
+    <Value>Admin area. Categories. Create, edit, delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Catalog.CategoriesImportExport">
+    <Value>Admin area. Categories. Import and export</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Catalog.CategoriesView">
+    <Value>Admin area. Categories. View</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Catalog.CheckoutAttributesCreateEditDelete">
+    <Value>Admin area. Checkout attributes. Create, edit, delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Catalog.CheckoutAttributesView">
+    <Value>Admin area. Checkout attributes. View</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Catalog.ManufacturerCreateEditDelete">
+    <Value>Admin area. Manufacturer. Create, edit, delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Catalog.ManufacturerImportExport">
+    <Value>Admin area. Manufacturer. Import and export</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Catalog.ManufacturerView">
+    <Value>Admin area. Manufacturer. View</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Catalog.ProductAttributesCreateEditDelete">
+    <Value>Admin area. Product attributes. Create, edit, delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Catalog.ProductAttributesView">
+    <Value>Admin area. Product attributes. View</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Catalog.ProductReviewsCreateEditDelete">
+    <Value>Admin area. Product reviews. Create, edit, delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Catalog.ProductReviewsView">
+    <Value>Admin area. Product reviews. View</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Catalog.ProductsCreateEditDelete">
+    <Value>Admin area. Products. Create, edit, delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Catalog.ProductsImportExport">
+    <Value>Admin area. Products. Import and export</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Catalog.ProductsView">
+    <Value>Admin area. Products. View</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Catalog.ProductTagsCreateEditDelete">
+    <Value>Admin area. Product tags. Create, edit, delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Catalog.ProductTagsView">
+    <Value>Admin area. Product tags. View</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Catalog.SpecificationAttributesCreateEditDelete">
+    <Value>Admin area. Specification attributes. Create, edit, delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Catalog.SpecificationAttributesView">
+    <Value>Admin area. Specification attributes. View</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Configuration.ManageACL">
+    <Value>Admin area. ACL. Manage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Configuration.ManageCountries">
+    <Value>Admin area. Countries. Manage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Configuration.ManageCurrencies">
+    <Value>Admin area. Currencies. Manage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Configuration.ManageEmailAccounts">
+    <Value>Admin area. Email Accounts. Manage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Configuration.ManageExternalAuthenticationMethods">
+    <Value>Admin area. External Authentication Methods. Manage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Configuration.ManageLanguages">
+    <Value>Admin area. Languages. Manage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Configuration.ManageMultifactorAuthenticationMethods">
+    <Value>Admin area. Multi-factor Authentication Methods. Manage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Configuration.ManagePaymentMethods">
+    <Value>Admin area. Payment Methods. Manage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Configuration.ManagePlugins">
+    <Value>Admin area. Plugins. Manage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Configuration.ManageSettings">
+    <Value>Admin area. Settings. Manage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Configuration.ManageShippingSettings">
+    <Value>Admin area. Shipping Settings. Manage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Configuration.ManageStores">
+    <Value>Admin area. Stores. Manage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Configuration.ManageTaxSettings">
+    <Value>Admin area. Tax Settings. Manage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Configuration.ManageWidgets">
+    <Value>Admin area. Widgets. Manage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.ContentManagement.BlogCommentsCreateEditDelete">
+    <Value>Admin area. Blog comments. Create, edit, delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.ContentManagement.BlogCommentsView">
+    <Value>Admin area. Blog comments. View</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.ContentManagement.BlogCreateEditDelete">
+    <Value>Admin area. Blog. Create, edit, delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.ContentManagement.BlogView">
+    <Value>Admin area. Blog. View</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.ContentManagement.ForumsCreateEditDelete">
+    <Value>Admin area. Forums. Create, edit, delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.ContentManagement.ForumsView">
+    <Value>Admin area. Forums. View</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.ContentManagement.MessageTemplatesCreateEditDelete">
+    <Value>Admin area. Message Templates. Create, edit, delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.ContentManagement.MessageTemplatesView">
+    <Value>Admin area. Message Templates. View</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.ContentManagement.NewsCommentsCreateEditDelete">
+    <Value>Admin area. News comments. Create, edit, delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.ContentManagement.NewsCommentsView">
+    <Value>Admin area. News comments. View</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.ContentManagement.NewsCreateEditDelete">
+    <Value>Admin area. News. Create, edit, delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.ContentManagement.NewsView">
+    <Value>Admin area. News. View</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.ContentManagement.PollsCreateEditDelete">
+    <Value>Admin area. Polls. Create, edit, delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.ContentManagement.PollsView">
+    <Value>Admin area. Polls. View</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.ContentManagement.TopicsCreateEditDelete">
+    <Value>Admin area. Topics. Create, edit, delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.ContentManagement.TopicsView">
+    <Value>Admin area. Topics. View</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Customers.ActivityLogDelete">
+    <Value>Admin area. Activity Log. Delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Customers.ActivityLogManageTypes">
+    <Value>Admin area. Activity Log. Manage types</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Customers.ActivityLogView">
+    <Value>Admin area. Activity Log. View</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Customers.CustomerRolesCreateEditDelete">
+    <Value>Admin area. Customer roles. Create, edit, delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Customers.CustomerRolesView">
+    <Value>Admin area. Customer roles. View</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Customers.CustomersCreateEditDelete">
+    <Value>Admin area. Customers. Create, edit, delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Customers.CustomersImpersonation">
+    <Value>Admin area. Customers. Allow impersonation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Customers.CustomersImportExport">
+    <Value>Admin area. Customers. Import and export</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Customers.customersView">
+    <Value>Admin area. Customers. View</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Customers.GdprManage">
+    <Value>Admin area. GDPR. Manage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Customers.VendorsCreateEditDelete">
+    <Value>Admin area. Vendors. Create, edit, delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Customers.VendorsView">
+    <Value>Admin area. Vendors. View</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Orders.CurrentCartsManage">
+    <Value>Admin area. Current Carts. Manage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Orders.GiftCardsCreateEditDelete">
+    <Value>Admin area. Gift cards. Create, edit, delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Orders.GiftCardsView">
+    <Value>Admin area. Gift cards. View</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Orders.OrdersCreateEditDelete">
+    <Value>Admin area. Orders. Create, edit, delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Orders.OrdersImportExport">
+    <Value>Admin area. Orders. Import and export</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Orders.OrdersView">
+    <Value>Admin area. Orders. View</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Orders.RecurringPaymentsCreateEditDelete">
+    <Value>Admin area. Recurring payments. Create, edit, delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Orders.RecurringPaymentsView">
+    <Value>Admin area. Recurring payments. View</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Orders.ReturnRequestsCreateEditDelete">
+    <Value>Admin area. Return requests. Create, edit, delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Orders.ReturnRequestsView">
+    <Value>Admin area. Return requests. View</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Orders.ShipmentsCreateEditDelete">
+    <Value>Admin area. Shipments. Create, edit, delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Orders.ShipmentsView">
+    <Value>Admin area. Shipments. View</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Promotions.AffiliatesCreateEditDelete">
+    <Value>Admin area. Affiliates. Create, edit, delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Promotions.AffiliatesView">
+    <Value>Admin area. Affiliates. View</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Promotions.CampaignsCreateEdit">
+    <Value>Admin area. Campaigns. Create and Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Promotions.CampaignsDelete">
+    <Value>Admin area. Campaigns. Delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Promotions.CampaignsSendEmails">
+    <Value>Admin area. Campaigns. Send emails</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Promotions.CampaignsView">
+    <Value>Admin area. Campaigns. View</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Promotions.DiscountsCreateEditDelete">
+    <Value>Admin area. Discounts. Create, edit, delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Promotions.DiscountsView">
+    <Value>Admin area. Discounts. View</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Promotions.SubscribersCreateEditDelete">
+    <Value>Admin area. Newsletter Subscribers. Create, edit, delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Promotions.SubscribersImportExport">
+    <Value>Admin area. Newsletter Subscribers. Import and export</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Promotions.SubscribersView">
+    <Value>Admin area. Newsletter Subscribers. View</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.PublicStore.AccessClosedStore">
+    <Value>Public store. Access a closed store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.PublicStore.DisplayPrices">
+    <Value>Public store. Display Prices</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.PublicStore.EnableShoppingCart">
+    <Value>Public store. Enable shopping cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.PublicStore.EnableWishlist">
+    <Value>Public store. Enable wishlist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.PublicStore.PublicStoreAllowNavigation">
+    <Value>Public store. Allow navigation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Reports.Bestsellers">
+    <Value>Admin area. Reports. Bestsellers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Reports.CountrySales">
+    <Value>Admin area. Reports. Country sales</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Reports.CustomersByNumberOfOrders">
+    <Value>Admin area. Reports. Customers by number of orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Reports.CustomersByOrderTotal">
+    <Value>Admin area. Reports. Customers by order total</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Reports.Lowstock">
+    <Value>Admin area. Reports. Low stock</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Reports.ProductsNeverPurchased">
+    <Value>Admin area. Reports. Products never purchased</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Reports.RegisteredCustomers">
+    <Value>Admin area. Reports. Registered customers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.Reports.SalesSummary">
+    <Value>Admin area. Reports. Sales summary</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.security.AccessAdminPanel">
+    <Value>Access admin area</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.security.EnableMultiFactorSuthentication">
+    <Value>Security. Enable Multi-factor authentication</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.System.HtmlEditor.ManagePictures">
+    <Value>Admin area. HTML Editor. Manage pictures</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.System.ManageAppSettings">
+    <Value>Admin area. App Settings. Manage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.System.ManageMaintenance">
+    <Value>Admin area. Maintenance. Manage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.System.ManageMessageQueue">
+    <Value>Admin area. Message Queue. Manage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.System.ManageScheduleTasks">
+    <Value>Admin area. Schedule Tasks. Manage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Security.Permission.System.ManageSystemLog">
+    <Value>Admin area. System Log. Manage</Value>
   </LocaleResource>
   <LocaleResource Name="Shipping.EstimateShipping.City.Required">
     <Value>City is required</Value>

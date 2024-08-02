@@ -210,11 +210,9 @@ public partial class VendorController : BaseAdminController
         return RedirectToAction("List");
     }
 
+    [CheckPermission(StandardPermission.Customers.VENDORS_VIEW)]
     public virtual async Task<IActionResult> List()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _vendorModelFactory.PrepareVendorSearchModelAsync(new VendorSearchModel());
 
@@ -222,22 +220,18 @@ public partial class VendorController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Customers.VENDORS_VIEW)]
     public virtual async Task<IActionResult> List(VendorSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _vendorModelFactory.PrepareVendorListModelAsync(searchModel);
 
         return Json(model);
     }
 
+    [CheckPermission(StandardPermission.Customers.VENDORS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Create()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _vendorModelFactory.PrepareVendorModelAsync(new VendorModel(), null);
 
@@ -246,11 +240,9 @@ public partial class VendorController : BaseAdminController
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
     [FormValueRequired("save", "save-continue")]
+    [CheckPermission(StandardPermission.Customers.VENDORS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Create(VendorModel model, bool continueEditing, IFormCollection form)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
-            return AccessDeniedView();
-
         //parse vendor attributes
         var vendorAttributesXml = await ParseVendorAttributesAsync(form);
         var warnings = (await _vendorAttributeParser.GetAttributeWarningsAsync(vendorAttributesXml)).ToList();
@@ -309,11 +301,9 @@ public partial class VendorController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.Customers.VENDORS_VIEW)]
     public virtual async Task<IActionResult> Edit(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
-            return AccessDeniedView();
-
         //try to get a vendor with the specified id
         var vendor = await _vendorService.GetVendorByIdAsync(id);
         if (vendor == null || vendor.Deleted)
@@ -326,11 +316,9 @@ public partial class VendorController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.Customers.VENDORS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Edit(VendorModel model, bool continueEditing, IFormCollection form)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
-            return AccessDeniedView();
-
         //try to get a vendor with the specified id
         var vendor = await _vendorService.GetVendorByIdAsync(model.Id);
         if (vendor == null || vendor.Deleted)
@@ -430,11 +418,9 @@ public partial class VendorController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Customers.VENDORS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Delete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
-            return AccessDeniedView();
-
         //try to get a vendor with the specified id
         var vendor = await _vendorService.GetVendorByIdAsync(id);
         if (vendor == null)
@@ -465,11 +451,9 @@ public partial class VendorController : BaseAdminController
     #region Vendor notes
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Customers.VENDORS_VIEW)]
     public virtual async Task<IActionResult> VendorNotesSelect(VendorNoteSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
-            return await AccessDeniedJsonAsync();
-
         //try to get a vendor with the specified id
         var vendor = await _vendorService.GetVendorByIdAsync(searchModel.VendorId)
             ?? throw new ArgumentException("No vendor found with the specified id");
@@ -480,11 +464,9 @@ public partial class VendorController : BaseAdminController
         return Json(model);
     }
 
+    [CheckPermission(StandardPermission.Customers.VENDORS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> VendorNoteAdd(int vendorId, string message)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
-            return await AccessDeniedJsonAsync();
-
         if (string.IsNullOrEmpty(message))
             return ErrorJson(await _localizationService.GetResourceAsync("Admin.Vendors.VendorNotes.Fields.Note.Validation"));
 
@@ -504,11 +486,9 @@ public partial class VendorController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Customers.VENDORS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> VendorNoteDelete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
-            return await AccessDeniedJsonAsync();
-
         //try to get a vendor note with the specified id
         var vendorNote = await _vendorService.GetVendorNoteByIdAsync(id)
             ?? throw new ArgumentException("No vendor note found with the specified id", nameof(id));

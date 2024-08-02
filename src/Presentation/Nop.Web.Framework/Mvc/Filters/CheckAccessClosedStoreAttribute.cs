@@ -131,7 +131,7 @@ public sealed class CheckAccessClosedStoreAttribute : TypeFilterAttribute
             }
 
             //check whether current customer has access to a closed store
-            if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessClosedStore))
+            if (await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ACCESS_CLOSED_STORE))
                 return;
 
             //store is closed and no access, so redirect to 'StoreClosed' page

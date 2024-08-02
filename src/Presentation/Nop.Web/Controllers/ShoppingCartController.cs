@@ -827,7 +827,7 @@ public partial class ShoppingCartController : BasePublicController
         var price = string.Empty;
         //base price
         var basepricepangv = string.Empty;
-        if (!product.CustomerEntersPrice && await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices))
+        if (!product.CustomerEntersPrice && await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.DISPLAY_PRICES))
         {
             var currentStore = await _storeContext.GetCurrentStoreAsync();
             var currentCustomer = await _workContext.GetCurrentCustomerAsync();
@@ -1148,7 +1148,7 @@ public partial class ShoppingCartController : BasePublicController
 
     public virtual async Task<IActionResult> Cart()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableShoppingCart))
+        if (!await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_SHOPPING_CART))
             return RedirectToRoute("Homepage");
 
         var store = await _storeContext.GetCurrentStoreAsync();
@@ -1162,7 +1162,7 @@ public partial class ShoppingCartController : BasePublicController
     [FormValueRequired("updatecart")]
     public virtual async Task<IActionResult> UpdateCart(IFormCollection form)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableShoppingCart))
+        if (!await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_SHOPPING_CART))
             return RedirectToRoute("Homepage");
 
         var customer = await _workContext.GetCurrentCustomerAsync();
@@ -1484,7 +1484,7 @@ public partial class ShoppingCartController : BasePublicController
 
     public virtual async Task<IActionResult> Wishlist(Guid? customerGuid)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableWishlist))
+        if (!await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_WISHLIST))
             return RedirectToRoute("Homepage");
 
         var customer = customerGuid.HasValue ?
@@ -1505,7 +1505,7 @@ public partial class ShoppingCartController : BasePublicController
     [FormValueRequired("updatecart")]
     public virtual async Task<IActionResult> UpdateWishlist(IFormCollection form)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableWishlist))
+        if (!await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_WISHLIST))
             return RedirectToRoute("Homepage");
 
         var customer = await _workContext.GetCurrentCustomerAsync();
@@ -1569,10 +1569,10 @@ public partial class ShoppingCartController : BasePublicController
     [FormValueRequired("addtocartbutton")]
     public virtual async Task<IActionResult> AddItemsToCartFromWishlist(Guid? customerGuid, IFormCollection form)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableShoppingCart))
+        if (!await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_SHOPPING_CART))
             return RedirectToRoute("Homepage");
 
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableWishlist))
+        if (!await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_WISHLIST))
             return RedirectToRoute("Homepage");
 
         var customer = await _workContext.GetCurrentCustomerAsync();
@@ -1646,7 +1646,7 @@ public partial class ShoppingCartController : BasePublicController
 
     public virtual async Task<IActionResult> EmailWishlist()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableWishlist) || !_shoppingCartSettings.EmailWishlistEnabled)
+        if (!await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_WISHLIST) || !_shoppingCartSettings.EmailWishlistEnabled)
             return RedirectToRoute("Homepage");
 
         var store = await _storeContext.GetCurrentStoreAsync();
@@ -1665,7 +1665,7 @@ public partial class ShoppingCartController : BasePublicController
     [ValidateCaptcha]
     public virtual async Task<IActionResult> EmailWishlistSend(WishlistEmailAFriendModel model, bool captchaValid)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableWishlist) || !_shoppingCartSettings.EmailWishlistEnabled)
+        if (!await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_WISHLIST) || !_shoppingCartSettings.EmailWishlistEnabled)
             return RedirectToRoute("Homepage");
 
         var customer = await _workContext.GetCurrentCustomerAsync();

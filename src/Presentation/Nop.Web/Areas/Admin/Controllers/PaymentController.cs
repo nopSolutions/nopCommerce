@@ -15,6 +15,7 @@ using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Payments;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Areas.Admin.Controllers;
 
@@ -73,11 +74,9 @@ public partial class PaymentController : BaseAdminController
         return RedirectToAction("Methods");
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PAYMENT_METHODS)]
     public virtual async Task<IActionResult> Methods(bool showtour = false)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _paymentModelFactory.PreparePaymentMethodsModelAsync(new PaymentMethodsModel());
 
@@ -96,11 +95,9 @@ public partial class PaymentController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PAYMENT_METHODS)]
     public virtual async Task<IActionResult> Methods(PaymentMethodSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _paymentModelFactory.PreparePaymentMethodListModelAsync(searchModel);
 
@@ -108,11 +105,9 @@ public partial class PaymentController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PAYMENT_METHODS)]
     public virtual async Task<IActionResult> MethodUpdate(PaymentMethodModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
-            return await AccessDeniedJsonAsync();
-
         var pm = await _paymentPluginManager.LoadPluginBySystemNameAsync(model.SystemName);
         if (_paymentPluginManager.IsPluginActive(pm))
         {
@@ -146,11 +141,9 @@ public partial class PaymentController : BaseAdminController
         return new NullJsonResult();
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PAYMENT_METHODS)]
     public virtual async Task<IActionResult> MethodRestrictions()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _paymentModelFactory.PreparePaymentMethodsModelAsync(new PaymentMethodsModel());
 
@@ -162,11 +155,9 @@ public partial class PaymentController : BaseAdminController
     //we use 2048 value because in some cases default value (1024) is too small for this action
     [RequestFormLimits(ValueCountLimit = 2048)]
     [HttpPost, ActionName("MethodRestrictions")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PAYMENT_METHODS)]
     public virtual async Task<IActionResult> MethodRestrictionsSave(PaymentMethodsModel model, IFormCollection form)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
-            return AccessDeniedView();
-
         var paymentMethods = await _paymentPluginManager.LoadAllPluginsAsync();
         var countries = await _countryService.GetAllCountriesAsync(showHidden: true);
 
