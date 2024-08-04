@@ -1227,13 +1227,13 @@ NO,Troms,19,True,19
 NO,Finnmark,20,True,20
 NO,Svalbard,21,True,21
 NO,Jan Mayen,22,True,22
-NP,Province No. 1,,TRUE,1
-NP,Province No. 2,,TRUE,2
-NP,Province No. 3,,TRUE,3
-NP,Gandaki Pradesh,,TRUE,4
-NP,Province No. 5,,TRUE,5
-NP,Karnali Pradesh,,TRUE,6
-NP,Sudurpashchim Pradesh,,TRUE,7
+NP,Koshi,,TRUE,1
+NP,Madhesh,,TRUE,2
+NP,Bagmati,,TRUE,3
+NP,Gandaki,,TRUE,4
+NP,Lumbini,,TRUE,5
+NP,Karnali,,TRUE,6
+NP,Sudurpashchim,,TRUE,7
 NZ, Northland,,True,0
 NZ, Auckland,,True,0
 NZ, Waikato,,True,0
