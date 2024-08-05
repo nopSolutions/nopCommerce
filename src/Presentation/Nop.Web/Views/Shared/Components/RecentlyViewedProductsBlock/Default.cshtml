@@ -18,7 +18,7 @@
                         @if (picture != null && !string.IsNullOrEmpty(picture.ImageUrl))
                         {
                             <a class="product-picture" href="@(Url.RouteUrl<Product>(new { SeName = product.SeName }))" title="@picture.Title">
-                                <img alt="@picture.AlternateText" src="@picture.ImageUrl" title="@picture.Title" width="100%" />
+                                <img alt="@picture.AlternateText" src="@picture.ImageUrl" title="@picture.Title" />
                             </a>
                         }
                         <a class="product-name" href="@(Url.RouteUrl<Product>(new { SeName = product.SeName }))">@product.Name</a>

@@ -1947,6 +1947,10 @@ div.dataTables_wrapper > div.row.margin-t-5 > div.col-lg-1.col-xs-12 > div > div
   background-color: white;
 }
 
+.table .preview img {
+    max-width: 100%;
+}
+
 tr.even, div.dataTables_scrollHead > div > table > thead > tr {
   background-color: #f4f4f4;
 }

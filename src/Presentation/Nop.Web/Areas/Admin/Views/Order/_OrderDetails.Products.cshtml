@@ -110,10 +110,10 @@
                     @foreach (var item in Model.Items)
                     {
                         <tr>
-                        <td class="text-center">
-                            <img src="@item.PictureThumbnailUrl" alt="" title="" width="100%"/>
+                        <td class="text-center preview">
+                            <img src="@item.PictureThumbnailUrl" alt="" title=""/>
                         </td>
-                        <td style="width: 15%;" class="text-left">
+                        <td style="width: 25%;" class="text-left">
                             <em><a asp-controller="Product" asp-action="Edit" asp-route-id="@item.ProductId">@item.ProductName</a></em>
                             @if (!string.IsNullOrEmpty(item.AttributeInfo))
                             {
