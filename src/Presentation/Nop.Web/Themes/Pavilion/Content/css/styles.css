@@ -6177,9 +6177,10 @@ h1.search-page-title {
 }
 img.hawthorne-logo {
     padding-left: 30px;
+	max-width: 100%;
 }
 .hawthorne-lower .search-cart-wrapper {
-    width: 80%;
+    width: 70%;
 }
 .hawthorne-lower .close-button.close-search {
     display: none;
