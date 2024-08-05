@@ -6217,6 +6217,12 @@ img.hawthorne-logo {
 .hawthorne-lower .header-menu>ul>li {
 	vertical-align: initial;
 }
+.hawthorne-lower li.has-sublist a span {
+    color: #000;
+}
+.hawthorne-lower .header-menu>ul>li>.sublist-wrap {
+	margin: 0px;
+}
 
 @media screen and (max-width: 570px) {
 .content__Block-sc-3iczmu-0.cFzLkk {
