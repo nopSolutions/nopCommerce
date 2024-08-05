@@ -60,11 +60,9 @@ public class AmazonPayController : BasePaymentController
 
     #region Methods
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PAYMENT_METHODS)]
     public async Task<IActionResult> Configure()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermission.Configuration.MANAGE_PAYMENT_METHODS))
-            return Content(string.Empty);
-
         var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
         var settings = await _settingService.LoadSettingAsync<AmazonPaySettings>(storeId);
 
@@ -119,11 +117,9 @@ public class AmazonPayController : BasePaymentController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PAYMENT_METHODS)]
     public async Task<IActionResult> Configure(ConfigurationModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermission.Configuration.MANAGE_PAYMENT_METHODS))
-            return AccessDeniedView();
-
         if (!ModelState.IsValid)
             return await Configure();
 
@@ -186,11 +182,9 @@ public class AmazonPayController : BasePaymentController
 
     [HttpPost, ActionName("Configure")]
     [FormValueRequired("onboarding")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PAYMENT_METHODS)]
     public async Task<IActionResult> Onboarding(OnboardingModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermission.Configuration.MANAGE_PAYMENT_METHODS))
-            return AccessDeniedView();
-
         if (!ModelState.IsValid)
             return await Configure();
 
