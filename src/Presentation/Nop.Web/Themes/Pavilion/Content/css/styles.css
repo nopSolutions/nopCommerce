@@ -6258,4 +6258,10 @@ img.hawthorne-logo {
 	body .master-wrapper-content {
 		padding-top: 0px;
 	}
+	.header-lower.hawthorne-lower {
+		display: none;
+	}
+	.hawthorne.top-menu {
+		display: none;
+	}
 }
