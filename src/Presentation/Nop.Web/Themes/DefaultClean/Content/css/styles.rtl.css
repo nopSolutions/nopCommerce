@@ -8931,7 +8931,7 @@ label, label + * {
 a.skip {
   position: absolute;
   top: -1000px;
-  left: -1000px;
+  right: -1000px;
   height: 1px;
   width: 1px;
   text-align: left;
@@ -8943,7 +8943,7 @@ a.skip:focus,
 a.skip:hover {
   position: initial;
   top: 0;
-  left: 0;
+  right: 0;
   display: block;
   height: auto;
   margin: 3px 0;
