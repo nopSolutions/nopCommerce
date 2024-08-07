@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Globalization;
 using System.Net;
+using System.Text;
 using System.Text.RegularExpressions;
 using Nop.Core.Infrastructure;
 
@@ -262,14 +263,21 @@ public partial class CommonHelper
         if (string.IsNullOrEmpty(str))
             return string.Empty;
 
-        var result = str.ToCharArray()
-            .Select(p => p.ToString())
-            .Aggregate(string.Empty, (current, c) => current + (c == c.ToUpperInvariant() ? $" {c}" : c));
+        var sb = new StringBuilder(str.Length);
+        var space = ' ';
 
-        //ensure no spaces (e.g. when the first letter is upper case)
-        result = result.TrimStart();
+        for (var i = 0; i < str.Length; i++)
+        {
+            if (char.IsWhiteSpace(str[i]))
+                continue;
 
-        return result;
+            if (char.IsUpper(str[i]) && sb.Length != 0)
+                sb.Append(space);
+
+            sb.Append(str[i]);
+        }
+
+        return sb.ToString();
     }
 
     /// <summary>
