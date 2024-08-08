@@ -18,11 +18,11 @@
     bool isHawthorne = frontEndService.StoreIsHawthorne(await storeContext.GetCurrentStoreAsync());
 
     string url = isHawthorne ?
-                "https://appliances.hawthorneonline.com/search?w=" :
+                "https://hawthorne.abcwarehouse.com/search?w=" :
                 "https://appliances.abcwarehouse.com/search?w=";
 
     string action = isHawthorne ?
-        "//appliances.hawthorneonline.com/search" :
+        "//hawthorne.abcwarehouse.com/search" :
         "//appliances.abcwarehouse.com/search";
 }
 
