@@ -394,8 +394,8 @@ public partial class PermissionService : IPermissionService
     /// <returns>A task that represents the asynchronous operation</returns>
     public virtual async Task DeletePermissionRecordCustomerRoleMappingAsync(int permissionId, int customerRoleId)
     {
-        var mapping = _permissionRecordCustomerRoleMappingRepository.Table
-            .FirstOrDefault(prcm => prcm.CustomerRoleId == customerRoleId && prcm.PermissionRecordId == permissionId);
+        var mapping = await _permissionRecordCustomerRoleMappingRepository.Table
+            .FirstOrDefaultAsync(prcm => prcm.CustomerRoleId == customerRoleId && prcm.PermissionRecordId == permissionId);
         if (mapping is null)
             return;
 
