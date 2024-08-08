@@ -6222,8 +6222,11 @@ img.hawthorne-logo {
 }
 .hawthorne-lower .header-menu>ul>li>.sublist-wrap {
 	margin: 0px;
-	margin-left: 230px;
+	margin-left: 320px;
 	left: 20px;
+}
+.hawthorne-lower .header-menu>ul>li>.sublist-wrap .sublist-wrap {
+	display: none;
 }
 
 @media screen and (max-width: 570px) {
