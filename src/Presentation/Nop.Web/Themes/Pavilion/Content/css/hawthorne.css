@@ -103,6 +103,12 @@ a.video-button {
 .video-text h2 {
     text-shadow: 3px 3px 3px black;
 }
+.hawthorne-lower .cart-trigger:before {
+    border-radius: 25px 0 0 25px;
+}
+.hawthorne-lower .cart-trigger {
+    border-radius: 0 25px 25px 0;
+}
 
 @media screen and (max-width: 767px) {
     img.haw-main-img {
