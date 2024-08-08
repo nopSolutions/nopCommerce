@@ -785,8 +785,8 @@ namespace Nop.Services.Installation
                     Address1 = "750 Bel Air Rd.",
                     Address2 = string.Empty,
                     City = "Los Angeles",
-                    StateProvinceId = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "California")?.Id,
-                    CountryId = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA")?.Id,
+                    StateProvinceId = (await _stateProvinceRepository.Table.FirstOrDefaultAsync(sp => sp.Name == "California"))?.Id,
+                    CountryId = (await _countryRepository.Table.FirstOrDefaultAsync(c => c.ThreeLetterIsoCode == "USA"))?.Id,
                     ZipPostalCode = "90077",
                     CreatedOnUtc = DateTime.UtcNow
                 });
@@ -836,7 +836,7 @@ namespace Nop.Services.Installation
                     Address1 = "221B Baker Street",
                     Address2 = string.Empty,
                     City = "London",
-                    CountryId = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "GBR")?.Id,
+                    CountryId = (await _countryRepository.Table.FirstOrDefaultAsync(c => c.ThreeLetterIsoCode == "GBR"))?.Id,
                     ZipPostalCode = "NW1 6XE",
                     CreatedOnUtc = DateTime.UtcNow
                 });
@@ -885,7 +885,7 @@ namespace Nop.Services.Installation
                     Address1 = "St Katharine’s West 16",
                     Address2 = string.Empty,
                     City = "St Andrews",
-                    CountryId = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "GBR")?.Id,
+                    CountryId = (await _countryRepository.Table.FirstOrDefaultAsync(c => c.ThreeLetterIsoCode == "GBR"))?.Id,
                     ZipPostalCode = "KY16 9AX",
                     CreatedOnUtc = DateTime.UtcNow
                 });
@@ -934,8 +934,8 @@ namespace Nop.Services.Installation
                     Address1 = "1249 Tongass Avenue, Suite B",
                     Address2 = string.Empty,
                     City = "Ketchikan",
-                    StateProvinceId = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "Alaska")?.Id,
-                    CountryId = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA")?.Id,
+                    StateProvinceId = (await _stateProvinceRepository.Table.FirstOrDefaultAsync(sp => sp.Name == "Alaska"))?.Id,
+                    CountryId = (await _countryRepository.Table.FirstOrDefaultAsync(c => c.ThreeLetterIsoCode == "USA"))?.Id,
                     ZipPostalCode = "99901",
                     CreatedOnUtc = DateTime.UtcNow
                 });
@@ -1089,8 +1089,8 @@ namespace Nop.Services.Installation
                     Address1 = "21 West 52nd Street",
                     Address2 = string.Empty,
                     City = "New York",
-                    StateProvinceId = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "New York")?.Id,
-                    CountryId = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA")?.Id,
+                    StateProvinceId = (await _stateProvinceRepository.Table.FirstOrDefaultAsync(sp => sp.Name == "New York"))?.Id,
+                    CountryId = (await _countryRepository.Table.FirstOrDefaultAsync(c => c.ThreeLetterIsoCode == "USA"))?.Id,
                     ZipPostalCode = "10021",
                     CreatedOnUtc = DateTime.UtcNow
                 });
@@ -1192,7 +1192,7 @@ namespace Nop.Services.Installation
                 StoreId = defaultStore.Id,
                 OrderGuid = Guid.NewGuid(),
                 CustomerId = firstCustomer.Id,
-                CustomerLanguageId = _languageRepository.Table.First().Id,
+                CustomerLanguageId = (await _languageRepository.Table.FirstAsync()).Id,
                 CustomerIp = "127.0.0.1",
                 OrderSubtotalInclTax = 1855M,
                 OrderSubtotalExclTax = 1855M,
@@ -1251,7 +1251,7 @@ namespace Nop.Services.Installation
             {
                 OrderItemGuid = Guid.NewGuid(),
                 OrderId = firstOrder.Id,
-                ProductId = _productRepository.Table.First(p => p.Name == "Apple iCam").Id,
+                ProductId = (await _productRepository.Table.FirstAsync(p => p.Name == "Apple iCam")).Id,
                 UnitPriceInclTax = 1300M,
                 UnitPriceExclTax = 1300M,
                 PriceInclTax = 1300M,
@@ -1277,7 +1277,7 @@ namespace Nop.Services.Installation
             {
                 OrderItemGuid = Guid.NewGuid(),
                 OrderId = firstOrder.Id,
-                ProductId = _productRepository.Table.First(p => p.Name == "Leica T Mirrorless Digital Camera").Id,
+                ProductId = (await _productRepository.Table.FirstAsync(p => p.Name == "Leica T Mirrorless Digital Camera")).Id,
                 UnitPriceInclTax = 530M,
                 UnitPriceExclTax = 530M,
                 PriceInclTax = 530M,
@@ -1303,7 +1303,7 @@ namespace Nop.Services.Installation
             {
                 OrderItemGuid = Guid.NewGuid(),
                 OrderId = firstOrder.Id,
-                ProductId = _productRepository.Table.First(p => p.Name == "$25 Virtual Gift Card").Id,
+                ProductId = (await _productRepository.Table.FirstAsync(p => p.Name == "$25 Virtual Gift Card")).Id,
                 UnitPriceInclTax = 25M,
                 UnitPriceExclTax = 25M,
                 PriceInclTax = 25M,
@@ -1368,7 +1368,7 @@ namespace Nop.Services.Installation
                 StoreId = defaultStore.Id,
                 OrderGuid = Guid.NewGuid(),
                 CustomerId = secondCustomer.Id,
-                CustomerLanguageId = _languageRepository.Table.First().Id,
+                CustomerLanguageId = (await _languageRepository.Table.FirstAsync()).Id,
                 CustomerIp = "127.0.0.1",
                 OrderSubtotalInclTax = 2460M,
                 OrderSubtotalExclTax = 2460M,
@@ -1435,7 +1435,7 @@ namespace Nop.Services.Installation
             {
                 OrderItemGuid = Guid.NewGuid(),
                 OrderId = secondOrder.Id,
-                ProductId = _productRepository.Table.First(p => p.Name == "Vintage Style Engagement Ring").Id,
+                ProductId = (await _productRepository.Table.FirstAsync(p => p.Name == "Vintage Style Engagement Ring")).Id,
                 UnitPriceInclTax = 2100M,
                 UnitPriceExclTax = 2100M,
                 PriceInclTax = 2100M,
@@ -1461,7 +1461,7 @@ namespace Nop.Services.Installation
             {
                 OrderItemGuid = Guid.NewGuid(),
                 OrderId = secondOrder.Id,
-                ProductId = _productRepository.Table.First(p => p.Name == "Flower Girl Bracelet").Id,
+                ProductId = (await _productRepository.Table.FirstAsync(p => p.Name == "Flower Girl Bracelet")).Id,
                 UnitPriceInclTax = 360M,
                 UnitPriceExclTax = 360M,
                 PriceInclTax = 360M,
@@ -1558,7 +1558,7 @@ namespace Nop.Services.Installation
             {
                 OrderItemGuid = Guid.NewGuid(),
                 OrderId = thirdOrder.Id,
-                ProductId = _productRepository.Table.First(p => p.Name == "If You Wait (donation)").Id,
+                ProductId = (await _productRepository.Table.FirstAsync(p => p.Name == "If You Wait (donation)")).Id,
                 UnitPriceInclTax = 3M,
                 UnitPriceExclTax = 3M,
                 PriceInclTax = 3M,
@@ -1584,7 +1584,7 @@ namespace Nop.Services.Installation
             {
                 OrderItemGuid = Guid.NewGuid(),
                 OrderId = thirdOrder.Id,
-                ProductId = _productRepository.Table.First(p => p.Name == "Night Visions").Id,
+                ProductId = (await _productRepository.Table.FirstAsync(p => p.Name == "Night Visions")).Id,
                 UnitPriceInclTax = 2.8M,
                 UnitPriceExclTax = 2.8M,
                 PriceInclTax = 2.8M,
@@ -1610,7 +1610,7 @@ namespace Nop.Services.Installation
             {
                 OrderItemGuid = Guid.NewGuid(),
                 OrderId = thirdOrder.Id,
-                ProductId = _productRepository.Table.First(p => p.Name == "Science & Faith").Id,
+                ProductId = (await _productRepository.Table.FirstAsync(p => p.Name == "Science & Faith")).Id,
                 UnitPriceInclTax = 3M,
                 UnitPriceExclTax = 3M,
                 PriceInclTax = 3M,
@@ -1643,7 +1643,7 @@ namespace Nop.Services.Installation
                 StoreId = defaultStore.Id,
                 OrderGuid = Guid.NewGuid(),
                 CustomerId = fourthCustomer.Id,
-                CustomerLanguageId = _languageRepository.Table.First().Id,
+                CustomerLanguageId = (await _languageRepository.Table.FirstAsync()).Id,
                 CustomerIp = "127.0.0.1",
                 OrderSubtotalInclTax = 102M,
                 OrderSubtotalExclTax = 102M,
@@ -1725,7 +1725,7 @@ namespace Nop.Services.Installation
             {
                 OrderItemGuid = Guid.NewGuid(),
                 OrderId = fourthOrder.Id,
-                ProductId = _productRepository.Table.First(p => p.Name == "Pride and Prejudice").Id,
+                ProductId = (await _productRepository.Table.FirstAsync(p => p.Name == "Pride and Prejudice")).Id,
                 UnitPriceInclTax = 24M,
                 UnitPriceExclTax = 24M,
                 PriceInclTax = 24M,
@@ -1751,7 +1751,7 @@ namespace Nop.Services.Installation
             {
                 OrderItemGuid = Guid.NewGuid(),
                 OrderId = fourthOrder.Id,
-                ProductId = _productRepository.Table.First(p => p.Name == "First Prize Pies").Id,
+                ProductId = (await _productRepository.Table.FirstAsync(p => p.Name == "First Prize Pies")).Id,
                 UnitPriceInclTax = 51M,
                 UnitPriceExclTax = 51M,
                 PriceInclTax = 51M,
@@ -1777,7 +1777,7 @@ namespace Nop.Services.Installation
             {
                 OrderItemGuid = Guid.NewGuid(),
                 OrderId = fourthOrder.Id,
-                ProductId = _productRepository.Table.First(p => p.Name == "Fahrenheit 451 by Ray Bradbury").Id,
+                ProductId = (await _productRepository.Table.FirstAsync(p => p.Name == "Fahrenheit 451 by Ray Bradbury")).Id,
                 UnitPriceInclTax = 27M,
                 UnitPriceExclTax = 27M,
                 PriceInclTax = 27M,
@@ -1858,7 +1858,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(fourthOrderShipment2Item1);
 
             //fifth order
-            var fifthCustomer = _customerRepository.Table.First(c => c.Email == "victoria_victoria@nopCommerce.com");
+            var fifthCustomer = await _customerRepository.Table.FirstAsync(c => c.Email == "victoria_victoria@nopCommerce.com");
 
             var fifthCustomerBillingAddress = await InsertInstallationDataAsync(cloneAddress(await _addressRepository.GetByIdAsync(fifthCustomer.BillingAddressId)));
             var fifthCustomerShippingAddress = await InsertInstallationDataAsync(cloneAddress(await _addressRepository.GetByIdAsync(fifthCustomer.ShippingAddressId)));
@@ -1868,7 +1868,7 @@ namespace Nop.Services.Installation
                 StoreId = defaultStore.Id,
                 OrderGuid = Guid.NewGuid(),
                 CustomerId = fifthCustomer.Id,
-                CustomerLanguageId = _languageRepository.Table.First().Id,
+                CustomerLanguageId = (await _languageRepository.Table.FirstAsync()).Id,
                 CustomerIp = "127.0.0.1",
                 OrderSubtotalInclTax = 43.50M,
                 OrderSubtotalExclTax = 43.50M,
@@ -1956,7 +1956,7 @@ namespace Nop.Services.Installation
             {
                 OrderItemGuid = Guid.NewGuid(),
                 OrderId = fifthOrder.Id,
-                ProductId = _productRepository.Table.First(p => p.Name == "Levi's 511 Jeans").Id,
+                ProductId = (await _productRepository.Table.FirstAsync(p => p.Name == "Levi's 511 Jeans")).Id,
                 UnitPriceInclTax = 43.50M,
                 UnitPriceExclTax = 43.50M,
                 PriceInclTax = 43.50M,
@@ -2006,11 +2006,11 @@ namespace Nop.Services.Installation
         protected virtual async Task InstallActivityLogAsync(string defaultUserEmail)
         {
             //default customer/user
-            var defaultCustomer = _customerRepository.Table.FirstOrDefault(x => x.Email == defaultUserEmail) ?? throw new Exception("Cannot load default customer");
+            var defaultCustomer = await _customerRepository.Table.FirstOrDefaultAsync(x => x.Email == defaultUserEmail) ?? throw new Exception("Cannot load default customer");
 
             await InsertInstallationDataAsync(new ActivityLog
             {
-                ActivityLogTypeId = _activityLogTypeRepository.Table.FirstOrDefault(alt => alt.SystemKeyword == "EditCategory")?.Id ?? throw new Exception("Cannot load LogType: EditCategory"),
+                ActivityLogTypeId = (await _activityLogTypeRepository.Table.FirstOrDefaultAsync(alt => alt.SystemKeyword == "EditCategory"))?.Id ?? throw new Exception("Cannot load LogType: EditCategory"),
                 Comment = "Edited a category ('Computers')",
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomerId = defaultCustomer.Id,
@@ -2019,7 +2019,7 @@ namespace Nop.Services.Installation
 
             await InsertInstallationDataAsync(new ActivityLog
             {
-                ActivityLogTypeId = _activityLogTypeRepository.Table.FirstOrDefault(alt => alt.SystemKeyword == "EditDiscount")?.Id ?? throw new Exception("Cannot load LogType: EditDiscount"),
+                ActivityLogTypeId = (await _activityLogTypeRepository.Table.FirstOrDefaultAsync(alt => alt.SystemKeyword == "EditDiscount"))?.Id ?? throw new Exception("Cannot load LogType: EditDiscount"),
                 Comment = "Edited a discount ('Sample discount with coupon code')",
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomerId = defaultCustomer.Id,
@@ -2028,7 +2028,7 @@ namespace Nop.Services.Installation
 
             await InsertInstallationDataAsync(new ActivityLog
             {
-                ActivityLogTypeId = _activityLogTypeRepository.Table.FirstOrDefault(alt => alt.SystemKeyword == "EditSpecAttribute")?.Id ?? throw new Exception("Cannot load LogType: EditSpecAttribute"),
+                ActivityLogTypeId = (await _activityLogTypeRepository.Table.FirstOrDefaultAsync(alt => alt.SystemKeyword == "EditSpecAttribute"))?.Id ?? throw new Exception("Cannot load LogType: EditSpecAttribute"),
                 Comment = "Edited a specification attribute ('CPU Type')",
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomerId = defaultCustomer.Id,
@@ -2037,7 +2037,7 @@ namespace Nop.Services.Installation
 
             await InsertInstallationDataAsync(new ActivityLog
             {
-                ActivityLogTypeId = _activityLogTypeRepository.Table.FirstOrDefault(alt => alt.SystemKeyword == "AddNewProductAttribute")?.Id ?? throw new Exception("Cannot load LogType: AddNewProductAttribute"),
+                ActivityLogTypeId = (await _activityLogTypeRepository.Table.FirstOrDefaultAsync(alt => alt.SystemKeyword == "AddNewProductAttribute"))?.Id ?? throw new Exception("Cannot load LogType: AddNewProductAttribute"),
                 Comment = "Added a new product attribute ('Some attribute')",
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomerId = defaultCustomer.Id,
@@ -2046,7 +2046,7 @@ namespace Nop.Services.Installation
 
             await InsertInstallationDataAsync(new ActivityLog
             {
-                ActivityLogTypeId = _activityLogTypeRepository.Table.FirstOrDefault(alt => alt.SystemKeyword == "DeleteGiftCard")?.Id ?? throw new Exception("Cannot load LogType: DeleteGiftCard"),
+                ActivityLogTypeId = (await _activityLogTypeRepository.Table.FirstOrDefaultAsync(alt => alt.SystemKeyword == "DeleteGiftCard"))?.Id ?? throw new Exception("Cannot load LogType: DeleteGiftCard"),
                 Comment = "Deleted a gift card ('bdbbc0ef-be57')",
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomerId = defaultCustomer.Id,
@@ -2058,7 +2058,7 @@ namespace Nop.Services.Installation
         protected virtual async Task InstallSearchTermsAsync()
         {
             //default store
-            var defaultStore = _storeRepository.Table.FirstOrDefault() ?? throw new Exception("No default store could be loaded");
+            var defaultStore = await _storeRepository.Table.FirstOrDefaultAsync() ?? throw new Exception("No default store could be loaded");
 
             await InsertInstallationDataAsync(new SearchTerm
             {
@@ -2125,7 +2125,7 @@ namespace Nop.Services.Installation
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallMessageTemplatesAsync()
         {
-            var eaGeneral = _emailAccountRepository.Table.FirstOrDefault() ?? throw new Exception("Default email account cannot be loaded");
+            var eaGeneral = await _emailAccountRepository.Table.FirstOrDefaultAsync() ?? throw new Exception("Default email account cannot be loaded");
 
             var messageTemplates = new List<MessageTemplate>
             {
@@ -2497,7 +2497,7 @@ namespace Nop.Services.Installation
         protected virtual async Task InstallTopicsAsync()
         {
             var defaultTopicTemplate =
-                _topicTemplateRepository.Table.FirstOrDefault(tt => tt.Name == "Default template") ?? throw new Exception("Topic template cannot be loaded");
+                await _topicTemplateRepository.Table.FirstOrDefaultAsync(tt => tt.Name == "Default template") ?? throw new Exception("Topic template cannot be loaded");
 
             var topics = new List<Topic>
             {
@@ -2878,9 +2878,9 @@ namespace Nop.Services.Installation
 
             await settingService.SaveSettingAsync(new LocalizationSettings
             {
-                DefaultAdminLanguageId =
+                DefaultAdminLanguageId = (await
                     _languageRepository.Table
-                        .Single(l => l.LanguageCulture == NopCommonDefaults.DefaultLanguageCulture).Id,
+                        .SingleAsync(l => l.LanguageCulture == NopCommonDefaults.DefaultLanguageCulture)).Id,
                 UseImagesForLanguageSelection = false,
                 SeoFriendlyUrlsForLanguagesEnabled = false,
                 AutomaticallyDetectLanguage = false,
@@ -2960,7 +2960,7 @@ namespace Nop.Services.Installation
                 PhoneNumberValidationEnabled = false,
                 PhoneNumberValidationUseRegex = false,
                 PhoneNumberValidationRule = "^[0-9]{1,14}?$",
-                DefaultCountryId = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == regionInfo.ThreeLetterISORegionName)?.Id
+                DefaultCountryId = (await _countryRepository.Table.FirstOrDefaultAsync(c => c.ThreeLetterIsoCode == regionInfo.ThreeLetterISORegionName))?.Id
             });
 
             await settingService.SaveSettingAsync(new MultiFactorAuthenticationSettings
@@ -2985,7 +2985,7 @@ namespace Nop.Services.Installation
                 PhoneEnabled = true,
                 PhoneRequired = true,
                 FaxEnabled = true,
-                DefaultCountryId = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == regionInfo.ThreeLetterISORegionName)?.Id
+                DefaultCountryId = (await _countryRepository.Table.FirstOrDefaultAsync(c => c.ThreeLetterIsoCode == regionInfo.ThreeLetterISORegionName))?.Id
             });
 
             await settingService.SaveSettingAsync(new MediaSettings
@@ -3060,9 +3060,9 @@ namespace Nop.Services.Installation
             {
                 DisplayCurrencyLabel = false,
                 PrimaryStoreCurrencyId =
-                    _currencyRepository.Table.Single(c => c.CurrencyCode == primaryCurrency).Id,
+                    (await _currencyRepository.Table.SingleAsync(c => c.CurrencyCode == primaryCurrency)).Id,
                 PrimaryExchangeRateCurrencyId =
-                    _currencyRepository.Table.Single(c => c.CurrencyCode == primaryCurrency).Id,
+                    (await _currencyRepository.Table.SingleAsync(c => c.CurrencyCode == primaryCurrency)).Id,
                 ActiveExchangeRateProviderSystemName = "CurrencyExchange.ECB",
                 AutoUpdateEnabled = false
             });
@@ -3073,8 +3073,8 @@ namespace Nop.Services.Installation
             await settingService.SaveSettingAsync(new MeasureSettings
             {
                 BaseDimensionId =
-                    _measureDimensionRepository.Table.Single(m => m.SystemKeyword == baseDimension).Id,
-                BaseWeightId = _measureWeightRepository.Table.Single(m => m.SystemKeyword == baseWeight).Id
+                    (await _measureDimensionRepository.Table.SingleAsync(m => m.SystemKeyword == baseDimension)).Id,
+                BaseWeightId = (await _measureWeightRepository.Table.SingleAsync(m => m.SystemKeyword == baseWeight)).Id
             });
 
             await settingService.SaveSettingAsync(new MessageTemplatesSettings
@@ -3224,7 +3224,7 @@ namespace Nop.Services.Installation
                 EuVatEnabledForGuests = false,
                 EuVatShopCountryId =
                     isEurope
-                        ? (_countryRepository.Table.FirstOrDefault(x => x.TwoLetterIsoCode == country)?.Id ?? 0)
+                        ? ((await _countryRepository.Table.FirstOrDefaultAsync(x => x.TwoLetterIsoCode == country))?.Id ?? 0)
                         : 0,
                 EuVatAllowVatExemption = true,
                 EuVatUseWebService = false,
@@ -3314,7 +3314,7 @@ namespace Nop.Services.Installation
                 AllowVendorsToImportProducts = true
             });
 
-            var eaGeneral = _emailAccountRepository.Table.FirstOrDefault() ?? throw new Exception("Default email account cannot be loaded");
+            var eaGeneral = await _emailAccountRepository.Table.FirstOrDefaultAsync() ?? throw new Exception("Default email account cannot be loaded");
             await settingService.SaveSettingAsync(new EmailAccountSettings { DefaultEmailAccountId = eaGeneral.Id });
 
             await settingService.SaveSettingAsync(new WidgetSettings
@@ -3740,8 +3740,8 @@ namespace Nop.Services.Installation
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
             var sampleImagesPath = GetSamplesPath();
 
-            var categoryTemplateInGridAndLines = _categoryTemplateRepository
-                .Table.FirstOrDefault(pt => pt.Name == "Products in Grid or Lines") ?? throw new Exception("Category template cannot be loaded");
+            var categoryTemplateInGridAndLines = await _categoryTemplateRepository
+                .Table.FirstOrDefaultAsync(pt => pt.Name == "Products in Grid or Lines") ?? throw new Exception("Category template cannot be loaded");
 
             //categories
             var allCategories = new List<Category>();
@@ -4094,7 +4094,7 @@ namespace Nop.Services.Installation
             var sampleImagesPath = GetSamplesPath();
 
             var manufacturerTemplateInGridAndLines =
-                _manufacturerTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Products in Grid or Lines") ?? throw new Exception("Manufacturer template cannot be loaded");
+                await _manufacturerTemplateRepository.Table.FirstOrDefaultAsync(pt => pt.Name == "Products in Grid or Lines") ?? throw new Exception("Manufacturer template cannot be loaded");
 
             var allManufacturers = new List<Manufacturer>();
             var manufacturerAsus = new Manufacturer
@@ -4192,7 +4192,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Electronics & Software")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -4216,7 +4216,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productBuildComputer.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Desktops").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Desktops")).Id,
                 DisplayOrder = 1
             });
 
@@ -4240,7 +4240,7 @@ namespace Nop.Services.Installation
             var pamProcessor = await InsertInstallationDataAsync(new ProductAttributeMapping
             {
                 ProductId = productBuildComputer.Id,
-                ProductAttributeId = _productAttributeRepository.Table.Single(x => x.Name == "Processor").Id,
+                ProductAttributeId = (await _productAttributeRepository.Table.SingleAsync(x => x.Name == "Processor")).Id,
                 AttributeControlType = AttributeControlType.DropdownList,
                 IsRequired = true
             });
@@ -4266,7 +4266,7 @@ namespace Nop.Services.Installation
             var pamRam = await InsertInstallationDataAsync(new ProductAttributeMapping
             {
                 ProductId = productBuildComputer.Id,
-                ProductAttributeId = _productAttributeRepository.Table.Single(x => x.Name == "RAM").Id,
+                ProductAttributeId = (await _productAttributeRepository.Table.SingleAsync(x => x.Name == "RAM")).Id,
                 AttributeControlType = AttributeControlType.DropdownList,
                 IsRequired = true
             });
@@ -4300,7 +4300,7 @@ namespace Nop.Services.Installation
                 new ProductAttributeMapping
                 {
                     ProductId = productBuildComputer.Id,
-                    ProductAttributeId = _productAttributeRepository.Table.Single(x => x.Name == "HDD").Id,
+                    ProductAttributeId = (await _productAttributeRepository.Table.SingleAsync(x => x.Name == "HDD")).Id,
                     AttributeControlType = AttributeControlType.RadioList,
                     IsRequired = true
                 });
@@ -4326,7 +4326,7 @@ namespace Nop.Services.Installation
                 new ProductAttributeMapping
                 {
                     ProductId = productBuildComputer.Id,
-                    ProductAttributeId = _productAttributeRepository.Table.Single(x => x.Name == "OS").Id,
+                    ProductAttributeId = (await _productAttributeRepository.Table.SingleAsync(x => x.Name == "OS")).Id,
                     AttributeControlType = AttributeControlType.RadioList,
                     IsRequired = true
                 });
@@ -4353,7 +4353,7 @@ namespace Nop.Services.Installation
             var pamSoftware = await InsertInstallationDataAsync(new ProductAttributeMapping
             {
                 ProductId = productBuildComputer.Id,
-                ProductAttributeId = _productAttributeRepository.Table.Single(x => x.Name == "Software").Id,
+                ProductAttributeId = (await _productAttributeRepository.Table.SingleAsync(x => x.Name == "Software")).Id,
                 AttributeControlType = AttributeControlType.Checkboxes
             });
 
@@ -4404,7 +4404,7 @@ namespace Nop.Services.Installation
                 Length = 7,
                 Width = 7,
                 Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Electronics & Software")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -4425,7 +4425,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productDigitalStorm.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Desktops").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Desktops")).Id,
                 DisplayOrder = 1
             });
 
@@ -4458,7 +4458,7 @@ namespace Nop.Services.Installation
                 Length = 7,
                 Width = 7,
                 Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Electronics & Software")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -4479,7 +4479,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productLenovoIdeaCentre.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Desktops").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Desktops")).Id,
                 DisplayOrder = 1
             });
 
@@ -4513,7 +4513,7 @@ namespace Nop.Services.Installation
                 Length = 3,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Electronics & Software")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -4535,14 +4535,14 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productAppleMacBookPro.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Notebooks").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Notebooks")).Id,
                 DisplayOrder = 1
             });
 
             await InsertInstallationDataAsync(new ProductManufacturer
             {
                 ProductId = productAppleMacBookPro.Id,
-                ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Apple").Id,
+                ManufacturerId = (await _manufacturerRepository.Table.SingleAsync(c => c.Name == "Apple")).Id,
                 DisplayOrder = 2
             });
 
@@ -4608,7 +4608,7 @@ namespace Nop.Services.Installation
                 Length = 7,
                 Width = 7,
                 Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Electronics & Software")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -4630,7 +4630,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productAsusN551JK.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Notebooks").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Notebooks")).Id,
                 DisplayOrder = 1
             });
 
@@ -4698,7 +4698,7 @@ namespace Nop.Services.Installation
                 Length = 7,
                 Width = 7,
                 Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Electronics & Software")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -4720,7 +4720,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productSamsungSeries.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Notebooks").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Notebooks")).Id,
                 DisplayOrder = 1
             });
 
@@ -4788,7 +4788,7 @@ namespace Nop.Services.Installation
                 Length = 7,
                 Width = 7,
                 Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Electronics & Software")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -4809,14 +4809,14 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productHpSpectre.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Notebooks").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Notebooks")).Id,
                 DisplayOrder = 1
             });
 
             await InsertInstallationDataAsync(new ProductManufacturer
             {
                 ProductId = productHpSpectre.Id,
-                ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "HP").Id,
+                ManufacturerId = (await _manufacturerRepository.Table.SingleAsync(c => c.Name == "HP")).Id,
                 DisplayOrder = 3
             });
 
@@ -4890,7 +4890,7 @@ namespace Nop.Services.Installation
                 Length = 7,
                 Width = 7,
                 Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Electronics & Software")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -4911,14 +4911,14 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productHpEnvy.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Notebooks").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Notebooks")).Id,
                 DisplayOrder = 1
             });
 
             await InsertInstallationDataAsync(new ProductManufacturer
             {
                 ProductId = productHpEnvy.Id,
-                ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "HP").Id,
+                ManufacturerId = (await _manufacturerRepository.Table.SingleAsync(c => c.Name == "HP")).Id,
                 DisplayOrder = 4
             });
 
@@ -4986,7 +4986,7 @@ namespace Nop.Services.Installation
                 Length = 7,
                 Width = 7,
                 Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Electronics & Software")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -5007,7 +5007,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productLenovoThinkpad.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Notebooks").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Notebooks")).Id,
                 DisplayOrder = 1
             });
 
@@ -5059,7 +5059,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 3,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Electronics & Software")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -5080,7 +5080,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productAdobePhotoshop.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Software").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Software")).Id,
                 DisplayOrder = 1
             });
 
@@ -5106,7 +5106,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 3,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Electronics & Software")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -5127,7 +5127,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productWindows8Pro.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Software").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Software")).Id,
                 DisplayOrder = 1
             });
 
@@ -5157,7 +5157,7 @@ namespace Nop.Services.Installation
                 Length = 7,
                 Width = 7,
                 Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Electronics & Software")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -5178,7 +5178,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productSoundForge.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Software").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Software")).Id,
                 DisplayOrder = 1
             });
 
@@ -5375,7 +5375,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Electronics & Software")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -5395,7 +5395,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productNikonD5500DSLR.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Camera & photo").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Camera & photo")).Id,
                 DisplayOrder = 1
             });
 
@@ -5422,7 +5422,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Electronics & Software")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -5458,7 +5458,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Electronics & Software")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -5494,7 +5494,7 @@ namespace Nop.Services.Installation
                 Length = 7,
                 Width = 7,
                 Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Electronics & Software")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -5515,7 +5515,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productLeica.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Camera & photo").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Camera & photo")).Id,
                 DisplayOrder = 3
             });
 
@@ -5541,7 +5541,7 @@ namespace Nop.Services.Installation
                 Length = 7,
                 Width = 7,
                 Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Electronics & Software")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -5562,14 +5562,14 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productAppleICam.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Camera & photo").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Camera & photo")).Id,
                 DisplayOrder = 2
             });
 
             await InsertInstallationDataAsync(new ProductManufacturer
             {
                 ProductId = productAppleICam.Id,
-                ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Apple").Id,
+                ManufacturerId = (await _manufacturerRepository.Table.SingleAsync(c => c.Name == "Apple")).Id,
                 DisplayOrder = 1
             });
 
@@ -5592,7 +5592,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Electronics & Software")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -5615,7 +5615,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productHtcOne.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Cell phones").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Cell phones")).Id,
                 DisplayOrder = 1
             });
 
@@ -5642,7 +5642,7 @@ namespace Nop.Services.Installation
                 Length = 7,
                 Width = 7,
                 Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Electronics & Software")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -5664,7 +5664,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productHtcOneMini.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Cell phones").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Cell phones")).Id,
                 DisplayOrder = 1
             });
 
@@ -5692,7 +5692,7 @@ namespace Nop.Services.Installation
                 Length = 7,
                 Width = 7,
                 Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Electronics & Software")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -5713,7 +5713,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productNokiaLumia.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Cell phones").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Cell phones")).Id,
                 DisplayOrder = 1
             });
 
@@ -5741,7 +5741,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 3,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Electronics & Software")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -5763,7 +5763,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productBeatsPill.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Others").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Others")).Id,
                 DisplayOrder = 1
             });
 
@@ -5811,7 +5811,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 3,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Electronics & Software")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -5832,7 +5832,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productUniversalTabletCover.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Others").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Others")).Id,
                 DisplayOrder = 1
             });
 
@@ -5858,7 +5858,7 @@ namespace Nop.Services.Installation
                 Length = 7,
                 Width = 7,
                 Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Electronics & Software")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -5879,7 +5879,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productPortableSoundSpeakers.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Others").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Others")).Id,
                 DisplayOrder = 1
             });
 
@@ -5990,7 +5990,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Apparel")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -6011,14 +6011,14 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productNikeFloral.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Shoes").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Shoes")).Id,
                 DisplayOrder = 1
             });
 
             await InsertInstallationDataAsync(new ProductManufacturer
             {
                 ProductId = productNikeFloral.Id,
-                ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Nike").Id,
+                ManufacturerId = (await _manufacturerRepository.Table.SingleAsync(c => c.Name == "Nike")).Id,
                 DisplayOrder = 2
             });
 
@@ -6038,7 +6038,7 @@ namespace Nop.Services.Installation
                 new ProductAttributeMapping
                 {
                     ProductId = productNikeFloral.Id,
-                    ProductAttributeId = _productAttributeRepository.Table.Single(x => x.Name == "Size").Id,
+                    ProductAttributeId = (await _productAttributeRepository.Table.SingleAsync(x => x.Name == "Size")).Id,
                     AttributeControlType = AttributeControlType.DropdownList,
                     IsRequired = true
                 });
@@ -6077,7 +6077,7 @@ namespace Nop.Services.Installation
                 new ProductAttributeMapping
                 {
                     ProductId = productNikeFloral.Id,
-                    ProductAttributeId = _productAttributeRepository.Table.Single(x => x.Name == "Color").Id,
+                    ProductAttributeId = (await _productAttributeRepository.Table.SingleAsync(x => x.Name == "Color")).Id,
                     AttributeControlType = AttributeControlType.DropdownList,
                     IsRequired = true
                 });
@@ -6102,7 +6102,7 @@ namespace Nop.Services.Installation
                 new ProductAttributeMapping
                 {
                     ProductId = productNikeFloral.Id,
-                    ProductAttributeId = _productAttributeRepository.Table.Single(x => x.Name == "Print").Id,
+                    ProductAttributeId = (await _productAttributeRepository.Table.SingleAsync(x => x.Name == "Print")).Id,
                     AttributeControlType = AttributeControlType.ImageSquares,
                     IsRequired = true
                 });
@@ -6163,7 +6163,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Apparel")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -6185,7 +6185,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productAdidas.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Shoes").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Shoes")).Id,
                 DisplayOrder = 1
             });
 
@@ -6223,7 +6223,7 @@ namespace Nop.Services.Installation
                 new ProductAttributeMapping
                 {
                     ProductId = productAdidas.Id,
-                    ProductAttributeId = _productAttributeRepository.Table.Single(x => x.Name == "Size").Id,
+                    ProductAttributeId = (await _productAttributeRepository.Table.SingleAsync(x => x.Name == "Size")).Id,
                     AttributeControlType = AttributeControlType.DropdownList,
                     IsRequired = true
                 });
@@ -6262,7 +6262,7 @@ namespace Nop.Services.Installation
                 new ProductAttributeMapping
                 {
                     ProductId = productAdidas.Id,
-                    ProductAttributeId = _productAttributeRepository.Table.Single(x => x.Name == "Color").Id,
+                    ProductAttributeId = (await _productAttributeRepository.Table.SingleAsync(x => x.Name == "Color")).Id,
                     AttributeControlType = AttributeControlType.ColorSquares,
                     IsRequired = true
                 });
@@ -6341,7 +6341,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Apparel")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -6363,14 +6363,14 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productNikeZoom.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Shoes").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Shoes")).Id,
                 DisplayOrder = 1
             });
 
             await InsertInstallationDataAsync(new ProductManufacturer
             {
                 ProductId = productNikeZoom.Id,
-                ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Nike").Id,
+                ManufacturerId = (await _manufacturerRepository.Table.SingleAsync(c => c.Name == "Nike")).Id,
                 DisplayOrder = 2
             });
 
@@ -6407,7 +6407,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 3,
                 Height = 3,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Apparel")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -6427,14 +6427,14 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productNikeTailwind.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Clothing").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Clothing")).Id,
                 DisplayOrder = 1
             });
 
             await InsertInstallationDataAsync(new ProductManufacturer
             {
                 ProductId = productNikeTailwind.Id,
-                ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Nike").Id,
+                ManufacturerId = (await _manufacturerRepository.Table.SingleAsync(c => c.Name == "Nike")).Id,
                 DisplayOrder = 2
             });
 
@@ -6444,7 +6444,7 @@ namespace Nop.Services.Installation
                 new ProductAttributeMapping
                 {
                     ProductId = productNikeTailwind.Id,
-                    ProductAttributeId = _productAttributeRepository.Table.Single(x => x.Name == "Size").Id,
+                    ProductAttributeId = (await _productAttributeRepository.Table.SingleAsync(x => x.Name == "Size")).Id,
                     AttributeControlType = AttributeControlType.DropdownList,
                     IsRequired = true
                 });
@@ -6514,7 +6514,7 @@ namespace Nop.Services.Installation
                 Length = 3,
                 Width = 3,
                 Height = 3,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Apparel")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -6536,7 +6536,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productOversizedWomenTShirt.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Clothing").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Clothing")).Id,
                 DisplayOrder = 1
             });
 
@@ -6582,7 +6582,7 @@ namespace Nop.Services.Installation
                 Length = 3,
                 Width = 3,
                 Height = 3,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Apparel")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -6603,7 +6603,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productCustomTShirt.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Clothing").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Clothing")).Id,
                 DisplayOrder = 1
             });
 
@@ -6613,7 +6613,7 @@ namespace Nop.Services.Installation
                 new ProductAttributeMapping
                 {
                     ProductId = productCustomTShirt.Id,
-                    ProductAttributeId = _productAttributeRepository.Table.Single(x => x.Name == "Custom Text").Id,
+                    ProductAttributeId = (await _productAttributeRepository.Table.SingleAsync(x => x.Name == "Custom Text")).Id,
                     TextPrompt = "Enter your text:",
                     AttributeControlType = AttributeControlType.TextBox,
                     IsRequired = true
@@ -6641,7 +6641,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Apparel")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -6662,7 +6662,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productLeviJeans.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Clothing").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Clothing")).Id,
                 DisplayOrder = 1
             });
 
@@ -6709,7 +6709,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Apparel")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -6730,7 +6730,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productObeyHat.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Accessories").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Accessories")).Id,
                 DisplayOrder = 1
             });
 
@@ -6740,7 +6740,7 @@ namespace Nop.Services.Installation
                 new ProductAttributeMapping
                 {
                     ProductId = productObeyHat.Id,
-                    ProductAttributeId = _productAttributeRepository.Table.Single(x => x.Name == "Size").Id,
+                    ProductAttributeId = (await _productAttributeRepository.Table.SingleAsync(x => x.Name == "Size")).Id,
                     AttributeControlType = AttributeControlType.DropdownList,
                     IsRequired = true
                 });
@@ -6795,7 +6795,7 @@ namespace Nop.Services.Installation
                 Length = 7,
                 Width = 7,
                 Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Apparel")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 ProductAvailabilityRangeId = productAvailabilityRange.Id,
                 StockQuantity = 0,
@@ -6817,7 +6817,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productBelt.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Accessories").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Accessories")).Id,
                 DisplayOrder = 1
             });
 
@@ -6840,7 +6840,7 @@ namespace Nop.Services.Installation
                 Length = 7,
                 Width = 7,
                 Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Apparel")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -6861,7 +6861,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productSunglasses.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Accessories").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Accessories")).Id,
                 DisplayOrder = 1
             });
 
@@ -6971,7 +6971,7 @@ namespace Nop.Services.Installation
                 //SeName = "poker-face",
                 AllowCustomerReviews = true,
                 Price = 2.8M,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Downloadable Products").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Downloadable Products")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -6999,7 +6999,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productNightVision.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Digital downloads").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Digital downloads")).Id,
                 DisplayOrder = 1
             });
 
@@ -7042,7 +7042,7 @@ namespace Nop.Services.Installation
                 MinimumCustomerEnteredPrice = 0.5M,
                 MaximumCustomerEnteredPrice = 100M,
                 AllowCustomerReviews = true,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Downloadable Products").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Downloadable Products")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -7070,7 +7070,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productIfYouWait.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Digital downloads").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Digital downloads")).Id,
                 DisplayOrder = 1
             });
 
@@ -7104,7 +7104,7 @@ namespace Nop.Services.Installation
                 MinimumCustomerEnteredPrice = 0.5M,
                 MaximumCustomerEnteredPrice = 1000M,
                 Price = decimal.Zero,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Downloadable Products").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Downloadable Products")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -7130,7 +7130,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productScienceAndFaith.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Digital downloads").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Digital downloads")).Id,
                 DisplayOrder = 1
             });
 
@@ -7186,7 +7186,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Books").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Books")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -7207,7 +7207,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productFahrenheit.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Books").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Books")).Id,
                 DisplayOrder = 1
             });
 
@@ -7235,7 +7235,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Books").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Books")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -7256,7 +7256,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productFirstPrizePies.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Books").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Books")).Id,
                 DisplayOrder = 1
             });
 
@@ -7282,7 +7282,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Books").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Books")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -7303,7 +7303,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productPrideAndPrejudice.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Books").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Books")).Id,
                 DisplayOrder = 1
             });
 
@@ -7369,7 +7369,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Jewelry").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Jewelry")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -7391,7 +7391,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productElegantGemstoneNecklace.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Jewelry").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Jewelry")).Id,
                 DisplayOrder = 1
             });
 
@@ -7418,7 +7418,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Jewelry").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Jewelry")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -7439,7 +7439,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productFlowerGirlBracelet.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Jewelry").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Jewelry")).Id,
                 DisplayOrder = 1
             });
 
@@ -7465,7 +7465,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Jewelry").Id,
+                TaxCategoryId = (await _taxCategoryRepository.Table.SingleAsync(tc => tc.Name == "Jewelry")).Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -7486,7 +7486,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productEngagementRing.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Jewelry").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Jewelry")).Id,
                 DisplayOrder = 1
             });
 
@@ -7565,7 +7565,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = product25GiftCard.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Gift Cards").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Gift Cards")).Id,
                 DisplayOrder = 2
             });
 
@@ -7613,7 +7613,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = product50GiftCard.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Gift Cards").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Gift Cards")).Id,
                 DisplayOrder = 3
             });
 
@@ -7656,7 +7656,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = product100GiftCard.Id,
-                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Gift Cards").Id,
+                CategoryId = (await _categoryRepository.Table.SingleAsync(c => c.Name == "Gift Cards")).Id,
                 DisplayOrder = 4
             });
 
@@ -7666,20 +7666,20 @@ namespace Nop.Services.Installation
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallProductsAsync(string defaultUserEmail)
         {
-            var productTemplateSimple = _productTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Simple product") ?? throw new Exception("Simple product template could not be loaded");
-            var productTemplateGrouped = _productTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Grouped product (with variants)") ?? throw new Exception("Grouped product template could not be loaded");
+            var productTemplateSimple = await _productTemplateRepository.Table.FirstOrDefaultAsync(pt => pt.Name == "Simple product") ?? throw new Exception("Simple product template could not be loaded");
+            var productTemplateGrouped = await _productTemplateRepository.Table.FirstOrDefaultAsync(pt => pt.Name == "Grouped product (with variants)") ?? throw new Exception("Grouped product template could not be loaded");
 
             //delivery date
-            var deliveryDate = _deliveryDateRepository.Table.FirstOrDefault() ?? throw new Exception("No default deliveryDate could be loaded");
+            var deliveryDate = await _deliveryDateRepository.Table.FirstOrDefaultAsync() ?? throw new Exception("No default deliveryDate could be loaded");
 
             //product availability range
-            var productAvailabilityRange = _productAvailabilityRangeRepository.Table.FirstOrDefault() ?? throw new Exception("No default product availability range could be loaded");
+            var productAvailabilityRange = await _productAvailabilityRangeRepository.Table.FirstOrDefaultAsync() ?? throw new Exception("No default product availability range could be loaded");
 
             //default customer/user
-            var defaultCustomer = _customerRepository.Table.FirstOrDefault(x => x.Email == defaultUserEmail) ?? throw new Exception("Cannot load default customer");
+            var defaultCustomer = await _customerRepository.Table.FirstOrDefaultAsync(x => x.Email == defaultUserEmail) ?? throw new Exception("Cannot load default customer");
 
             //default store
-            var defaultStore = _storeRepository.Table.FirstOrDefault() ?? throw new Exception("No default store could be loaded");
+            var defaultStore = await _storeRepository.Table.FirstOrDefaultAsync() ?? throw new Exception("No default store could be loaded");
 
             //pictures
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
@@ -7871,7 +7871,7 @@ namespace Nop.Services.Installation
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallBlogPostsAsync(string defaultUserEmail)
         {
-            var defaultLanguage = _languageRepository.Table.FirstOrDefault() ?? throw new Exception("Default language could not be loaded");
+            var defaultLanguage = await _languageRepository.Table.FirstOrDefaultAsync() ?? throw new Exception("Default language could not be loaded");
 
             var blogService = EngineContext.Current.Resolve<IBlogService>();
 
@@ -7911,10 +7911,10 @@ namespace Nop.Services.Installation
                 });
 
             //comments
-            var defaultCustomer = _customerRepository.Table.FirstOrDefault(x => x.Email == defaultUserEmail) ?? throw new Exception("Cannot load default customer");
+            var defaultCustomer = await _customerRepository.Table.FirstOrDefaultAsync(x => x.Email == defaultUserEmail) ?? throw new Exception("Cannot load default customer");
 
             //default store
-            var defaultStore = _storeRepository.Table.FirstOrDefault() ?? throw new Exception("No default store could be loaded");
+            var defaultStore = await _storeRepository.Table.FirstOrDefaultAsync() ?? throw new Exception("No default store could be loaded");
 
             foreach (var blogPost in blogPosts)
                 await blogService.InsertBlogCommentAsync(new BlogComment
@@ -7933,7 +7933,7 @@ namespace Nop.Services.Installation
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallNewsAsync(string defaultUserEmail)
         {
-            var defaultLanguage = _languageRepository.Table.FirstOrDefault() ?? throw new Exception("Default language could not be loaded");
+            var defaultLanguage = await _languageRepository.Table.FirstOrDefaultAsync() ?? throw new Exception("Default language could not be loaded");
 
             var newsService = EngineContext.Current.Resolve<INewsService>();
 
@@ -7982,10 +7982,10 @@ namespace Nop.Services.Installation
                 });
 
             //comments
-            var defaultCustomer = _customerRepository.Table.FirstOrDefault(x => x.Email == defaultUserEmail) ?? throw new Exception("Cannot load default customer");
+            var defaultCustomer = await _customerRepository.Table.FirstOrDefaultAsync(x => x.Email == defaultUserEmail) ?? throw new Exception("Cannot load default customer");
 
             //default store
-            var defaultStore = _storeRepository.Table.FirstOrDefault() ?? throw new Exception("No default store could be loaded");
+            var defaultStore = await _storeRepository.Table.FirstOrDefaultAsync() ?? throw new Exception("No default store could be loaded");
 
             foreach (var newsItem in news)
                 await newsService.InsertNewsCommentAsync(new NewsComment
@@ -8005,7 +8005,7 @@ namespace Nop.Services.Installation
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallPollsAsync()
         {
-            var defaultLanguage = _languageRepository.Table.FirstOrDefault() ?? throw new Exception("Default language could not be loaded");
+            var defaultLanguage = await _languageRepository.Table.FirstOrDefaultAsync() ?? throw new Exception("Default language could not be loaded");
 
             var poll1 = new Poll
             {
@@ -9066,8 +9066,8 @@ namespace Nop.Services.Installation
             {
                 Address1 = "21 West 52nd Street",
                 City = "New York",
-                StateProvinceId = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "New York")?.Id,
-                CountryId = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA")?.Id,
+                StateProvinceId = (await _stateProvinceRepository.Table.FirstOrDefaultAsync(sp => sp.Name == "New York"))?.Id,
+                CountryId = (await _countryRepository.Table.FirstOrDefaultAsync(c => c.ThreeLetterIsoCode == "USA"))?.Id,
                 ZipPostalCode = "10021",
                 CreatedOnUtc = DateTime.UtcNow
             };
@@ -9078,8 +9078,8 @@ namespace Nop.Services.Installation
             {
                 Address1 = "300 South Spring Stree",
                 City = "Los Angeles",
-                StateProvinceId = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "California")?.Id,
-                CountryId = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA")?.Id,
+                StateProvinceId = (await _stateProvinceRepository.Table.FirstOrDefaultAsync(sp => sp.Name == "California"))?.Id,
+                CountryId = (await _countryRepository.Table.FirstOrDefaultAsync(c => c.ThreeLetterIsoCode == "USA"))?.Id,
                 ZipPostalCode = "90013",
                 CreatedOnUtc = DateTime.UtcNow
             };
@@ -9163,8 +9163,8 @@ namespace Nop.Services.Installation
                 Address1 = "21 West 52nd Street",
                 ZipPostalCode = "10021",
                 PhoneNumber = "123456789",
-                StateProvinceId = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "New York")?.Id,
-                CountryId = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA")?.Id,
+                StateProvinceId = (await _stateProvinceRepository.Table.FirstOrDefaultAsync(sp => sp.Name == "New York"))?.Id,
+                CountryId = (await _countryRepository.Table.FirstOrDefaultAsync(c => c.ThreeLetterIsoCode == "USA"))?.Id,
                 CreatedOnUtc = DateTime.UtcNow
             };
 
@@ -9182,7 +9182,7 @@ namespace Nop.Services.Installation
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task AddProductTagAsync(Product product, string tag)
         {
-            var productTag = _productTagRepository.Table.FirstOrDefault(pt => pt.Name == tag);
+            var productTag = await _productTagRepository.Table.FirstOrDefaultAsync(pt => pt.Name == tag);
 
             if (productTag is null)
             {

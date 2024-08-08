@@ -167,7 +167,7 @@ public partial class QueuedEmailService : IQueuedEmailService
         if (createdToUtc.HasValue)
             query = query.Where(qe => qe.CreatedOnUtc <= createdToUtc);
 
-        var emails = query.ToArray();
+        var emails = await query.ToArrayAsync();
 
         await DeleteQueuedEmailsAsync(emails);
 
