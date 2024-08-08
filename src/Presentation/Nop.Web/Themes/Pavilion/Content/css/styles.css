@@ -6228,6 +6228,12 @@ img.hawthorne-logo {
 .hawthorne-lower .header-menu>ul>li>.sublist-wrap .sublist-wrap {
 	display: none;
 }
+.hawthorne-lower .cart-trigger:before {
+    border-radius: 25px 0 0 25px;
+}
+.hawthorne-lower .cart-trigger {
+    border-radius: 0 25px 25px 0;
+}
 
 @media screen and (max-width: 570px) {
 .content__Block-sc-3iczmu-0.cFzLkk {
