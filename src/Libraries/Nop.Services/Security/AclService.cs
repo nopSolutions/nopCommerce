@@ -209,7 +209,7 @@ public partial class AclService : IAclService
                   ur.EntityName == entityName
             select ur.CustomerRoleId;
 
-        return await _staticCacheManager.GetAsync(key, () => query.ToArray());
+        return await _staticCacheManager.GetAsync(key, () => query.ToArrayAsync());
     }
 
     /// <summary>

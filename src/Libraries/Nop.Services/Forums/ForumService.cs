@@ -323,14 +323,14 @@ public partial class ForumService : IForumService
             where queryTopicIds.Contains(fs.TopicId)
             select fs;
 
-        await _forumSubscriptionRepository.DeleteAsync(queryFs1.ToList());
+        await _forumSubscriptionRepository.DeleteAsync(await queryFs1.ToListAsync());
 
         //delete forum subscriptions (forum)
         var queryFs2 = from fs in _forumSubscriptionRepository.Table
             where fs.ForumId == forum.Id
             select fs;
 
-        await _forumSubscriptionRepository.DeleteAsync(queryFs2.ToList());
+        await _forumSubscriptionRepository.DeleteAsync(await queryFs2.ToListAsync());
 
         //delete forum
         await _forumRepository.DeleteAsync(forum);
@@ -415,7 +415,7 @@ public partial class ForumService : IForumService
         var queryFs = from ft in _forumSubscriptionRepository.Table
             where ft.TopicId == forumTopic.Id
             select ft;
-        var forumSubscriptions = queryFs.ToList();
+        var forumSubscriptions = await queryFs.ToListAsync();
 
         await _forumSubscriptionRepository.DeleteAsync(forumSubscriptions);
 

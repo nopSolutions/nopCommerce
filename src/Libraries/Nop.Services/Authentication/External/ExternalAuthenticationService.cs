@@ -388,7 +388,7 @@ public partial class ExternalAuthenticationService : IExternalAuthenticationServ
     {
         ArgumentNullException.ThrowIfNull(parameters);
 
-        var associationRecord = _externalAuthenticationRecordRepository.Table.FirstOrDefault(record =>
+        var associationRecord = await _externalAuthenticationRecordRepository.Table.FirstOrDefaultAsync(record =>
             record.ExternalIdentifier.Equals(parameters.ExternalIdentifier) && record.ProviderSystemName.Equals(parameters.ProviderSystemName));
         if (associationRecord == null)
             return null;

@@ -183,7 +183,7 @@ public partial class StoreMappingService : IStoreMappingService
                   sm.EntityName == entityName
             select sm.StoreId;
 
-        return await _staticCacheManager.GetAsync(key, () => query.ToArray());
+        return await _staticCacheManager.GetAsync(key, () => query.ToArrayAsync());
     }
 
     /// <summary>

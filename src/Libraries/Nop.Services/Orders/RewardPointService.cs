@@ -109,9 +109,9 @@ public partial class RewardPointService : IRewardPointService
 
         //get current points balance
         //LINQ to entities does not support Last method, thus order by desc and use First one
-        var currentPointsBalance = query
+        var currentPointsBalance = (await query
             .OrderByDescending(historyEntry => historyEntry.CreatedOnUtc).ThenByDescending(historyEntry => historyEntry.Id)
-            .FirstOrDefault(historyEntry => historyEntry.PointsBalance.HasValue)
+            .FirstOrDefaultAsync(historyEntry => historyEntry.PointsBalance.HasValue))
             ?.PointsBalance ?? 0;
 
         //update appropriate records
