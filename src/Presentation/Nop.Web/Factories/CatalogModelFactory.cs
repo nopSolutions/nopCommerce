@@ -1197,6 +1197,29 @@ public partial class CatalogModelFactory : ICatalogModelFactory
             AllowCustomersToContactVendors = _vendorSettings.AllowCustomersToContactVendors,
             CatalogProductsModel = await PrepareVendorProductsModelAsync(vendor, command)
         };
+        
+        //prepare picture model
+        var pictureSize = _mediaSettings.VendorThumbPictureSize;
+        var pictureCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.VendorPictureModelKey,
+            vendor, pictureSize, true, await _workContext.GetWorkingLanguageAsync(), _webHelper.IsCurrentConnectionSecured(), await _storeContext.GetCurrentStoreAsync());
+        model.PictureModel = await _staticCacheManager.GetAsync(pictureCacheKey, async () =>
+        {
+            var picture = await _pictureService.GetPictureByIdAsync(vendor.PictureId);
+            string fullSizeImageUrl, imageUrl;
+
+            (fullSizeImageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture);
+            (imageUrl, _) = await _pictureService.GetPictureUrlAsync(picture, pictureSize);
+
+            var pictureModel = new PictureModel
+            {
+                FullSizeImageUrl = fullSizeImageUrl,
+                ImageUrl = imageUrl,
+                Title = string.Format(await _localizationService.GetResourceAsync("Media.Vendor.ImageLinkTitleFormat"), model.Name),
+                AlternateText = string.Format(await _localizationService.GetResourceAsync("Media.Vendor.ImageAlternateTextFormat"), model.Name)
+            };
+
+            return pictureModel;
+        });
 
         return model;
     }
