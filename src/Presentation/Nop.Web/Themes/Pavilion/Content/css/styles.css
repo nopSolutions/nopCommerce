@@ -6234,6 +6234,9 @@ img.hawthorne-logo {
 .hawthorne-lower .cart-trigger {
     border-radius: 0 25px 25px 0;
 }
+.hawthorne-lower input#sli_search_1 {
+    font-size: 14px;
+}
 
 @media screen and (max-width: 570px) {
 .content__Block-sc-3iczmu-0.cFzLkk {
