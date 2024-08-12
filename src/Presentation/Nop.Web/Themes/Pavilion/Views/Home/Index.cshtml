@@ -84,23 +84,23 @@
                     @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HomepageBeforePoll })
                     @await Component.InvokeAsync("HomepagePolls")
 
+                    <div class="homepage-bottom-wrapper">
+                        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HomepageBottom })
+                        <div class="widget-min">
+                            @await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.HomepageBottomBelow480px })
+                        </div>
+                        <div class="widget-480">
+                            @await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.HomepageBottomMin480px })
+                        </div>
+                        <div class="widget-768">
+                            @await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.HomepageBottomMin768px })
+                        </div>
+                        <div class="widget-1000">
+                            @await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.HomepageBottomAbove1000px })
+                        </div>
+                    </div>
+
                 </div>
             </div>
         }
-
-            <div class="homepage-bottom-wrapper">
-                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HomepageBottom })
-                <div class="widget-min">
-                    @await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.HomepageBottomBelow480px })
-                </div>
-                <div class="widget-480">
-                    @await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.HomepageBottomMin480px })
-                </div>
-                <div class="widget-768">
-                    @await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.HomepageBottomMin768px })
-                </div>
-                <div class="widget-1000">
-                    @await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.HomepageBottomAbove1000px })
-                </div>
-            </div>
 }
