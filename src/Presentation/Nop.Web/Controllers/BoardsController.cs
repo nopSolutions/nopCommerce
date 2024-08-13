@@ -315,6 +315,9 @@ public partial class BoardsController : BasePublicController
         if (forumTopic == null)
             return RedirectToRoute("Boards");
 
+        if (!await _forumService.IsCustomerAllowedToMoveTopicAsync(await _workContext.GetCurrentCustomerAsync(), forumTopic))
+            return Challenge();
+
         var model = await _forumModelFactory.PrepareTopicMoveAsync(forumTopic);
 
         return View(model);
