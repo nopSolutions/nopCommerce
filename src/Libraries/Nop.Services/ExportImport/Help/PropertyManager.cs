@@ -71,6 +71,32 @@ public partial class PropertyManager<T, L> where L : Language
     }
 
     /// <summary>
+    /// Sets the cell's value.
+    /// </summary>
+    /// <param name="cell">The cell to set value</param>
+    /// <param name="value">The cell value</param>
+    protected void SetCellValue(IXLCell cell, object value)
+    {
+        if (value == null)
+        {
+            cell.SetValue(Blank.Value);
+
+            return;
+        }
+
+        cell.Value = value switch
+        {
+            int intValue => intValue,
+            bool boolValue => boolValue,
+            DateTime dateTimeValue => dateTimeValue,
+            decimal decimalValue => decimalValue,
+            double doubleValue => doubleValue,
+            float floatValue => floatValue,
+            _ => value.ToString()
+        };
+    }
+
+    /// <summary>
     /// Export objects to XLSX
     /// </summary>
     /// <typeparam name="T">Type of object</typeparam>
@@ -218,7 +244,7 @@ public partial class PropertyManager<T, L> where L : Language
             else
             {
                 var value = await prop.GetProperty(CurrentObject, CurrentLanguage);
-                cell.SetValue((XLCellValue)value?.ToString());
+                SetCellValue(cell, value);
             }
             cell.Style.Alignment.WrapText = false;
         }
@@ -280,7 +306,7 @@ public partial class PropertyManager<T, L> where L : Language
             else
             {
                 var value = await prop.GetProperty(CurrentObject, CurrentLanguage);
-                cell.SetValue((XLCellValue)value?.ToString());
+                SetCellValue(cell, value);
             }
             cell.Style.Alignment.WrapText = false;
         }
