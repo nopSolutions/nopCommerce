@@ -165,5 +165,9 @@ public class SchemaMigration : ForwardOnlyMigration
         Create.TableFor<VendorAttribute>();
         Create.TableFor<VendorAttributeValue>();
         Create.TableFor<VendorNote>();
+
+        // Alter Topic.SystemName column to nvarchar(400)
+        Alter.Table(nameof(Topic))
+            .AlterColumn(nameof(Topic.SystemName)).AsString(400).NotNullable();
     }
 }
