@@ -46,7 +46,9 @@
     {
         <div class="header-lower hawthorne-lower">
             <div class="header-logo desktop">
-                <img class="hawthorne-logo" src="https://www.abcwarehouse.com/images/hawthorne/Hawthorne%20Logo%20Gold.png" alt="hawthorne logo">
+                <a href="https://hawthorne.abcwarehouse.com">
+                    <img class="hawthorne-logo" src="https://www.abcwarehouse.com/images/hawthorne/Hawthorne%20Logo%20Gold.png" alt="hawthorne logo">
+                </a>
             </div>
             <div class="header-menu nav-panel">
                 <div class="close-button close-menu">
@@ -64,6 +66,11 @@
                     @menu
                 }
             </div>
+            
+            <div class="hours-desktop">
+                @await Component.InvokeAsync("Widget", new { widgetZone = "store_hours" })
+            </div>
+
             <div class="search-cart-wrapper">
                 <div class="search-box store-search-box nav-panel">
                     <div class="close-button close-search">
