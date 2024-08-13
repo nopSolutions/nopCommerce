@@ -104,7 +104,10 @@ a.video-button {
     text-shadow: 3px 3px 3px black;
 }
 .home-page-body .nop-jcarousel.manufacturer-grid {
-    border: none;
+    border: none !important;
+}
+.manufacturer-item {
+    background: transparent;
 }
 
 @media screen and (max-width: 767px) {
