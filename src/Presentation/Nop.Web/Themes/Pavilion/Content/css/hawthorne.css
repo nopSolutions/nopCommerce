@@ -103,6 +103,9 @@ a.video-button {
 .video-text h2 {
     text-shadow: 3px 3px 3px black;
 }
+.home-page-body .nop-jcarousel.manufacturer-grid {
+    border: none;
+}
 
 @media screen and (max-width: 767px) {
     img.haw-main-img {

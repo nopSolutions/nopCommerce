@@ -35,7 +35,7 @@
     int storeId = (await storeContext.GetCurrentStoreAsync()).Id;
     bool defaultFeaturedProductsEnabled = await settingService.GetSettingByKeyAsync("pavilionthemesettings.EnableFeaturedProducts", false, storeId, true);
 
-        if (storeId == 8 ) 
+        if (storeId != 8 ) 
         {
             Html.AppendPageCssClassParts("html-home-page hawthorne-home-content");
 
@@ -48,6 +48,9 @@
                     <a href="#" class="video-button">Explore Brands</a>
                 </div>
             </div>
+            @await Component.InvokeAsync("Widget", new { widgetZone = "homepage_content_after" })
+
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HawthorneVideo })
             Html.AppendCssFileParts("~/Themes/Pavilion/Content/css/hawthorne.css");
             <div class="page home-page hawthorne-home">
                 <div class="page-body hawthorne">
