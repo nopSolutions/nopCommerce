@@ -109,11 +109,14 @@ a.video-button {
 .manufacturer-item {
     background: transparent;
 }
-div#jcarousel-8-306 {
+div.jCarouselMainWrapper {
     margin-top: -6px;
 }
 .manufacturer-item img {
     padding: 15px;
+}
+.store-search-box input.search-box-text {
+    height: 50px;
 }
 
 @media screen and (max-width: 767px) {
