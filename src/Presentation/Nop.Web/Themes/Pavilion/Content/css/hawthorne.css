@@ -112,13 +112,8 @@ a.video-button {
 div#jcarousel-8-306 {
     margin-top: -6px;
 }
-.hours-desktop {
-    float: right;
-    height: 0px;
-    margin-top: -20px;
-}
-.header-lower {
-    padding: 30px 0;
+.manufacturer-item img {
+    padding: 15px;
 }
 
 @media screen and (max-width: 767px) {
