@@ -347,9 +347,13 @@ public partial class ExportManager : IExportManager
     protected virtual async Task<object> GetLimitedToStoresAsync(Product product)
     {
         string limitedToStores = null;
+
         foreach (var storeMapping in await _storeMappingService.GetStoreMappingsAsync(product))
         {
             var store = await _storeService.GetStoreByIdAsync(storeMapping.StoreId);
+
+            if (store == null)
+                continue;
 
             limitedToStores += _catalogSettings.ExportImportRelatedEntitiesByName ? store.Name : store.Id.ToString();
 
