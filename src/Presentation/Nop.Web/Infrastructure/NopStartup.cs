@@ -1,4 +1,5 @@
 ﻿using Nop.Core.Infrastructure;
+using Nop.Services.Books;
 using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Helpers;
@@ -21,6 +22,7 @@ public partial class NopStartup : INopStartup
     {
         //installation localization service
         services.AddScoped<IInstallationLocalizationService, InstallationLocalizationService>();
+        services.AddScoped<IBookService, BookService>();
 
         //common factories
         services.AddScoped<IDiscountSupportedModelFactory, DiscountSupportedModelFactory>();

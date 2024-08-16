@@ -1,0 +1,74 @@
+﻿@model List<Nop.Web.Areas.Admin.Models.Books.BookModel>
+@using Nop.Web.Framework.Models.AdminAreaTour
+
+@{
+    //page title
+    ViewBag.PageTitle = "Books";
+}
+
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            Books
+        </h1>
+        <div class="float-right">
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="fas fa-plus-square"></i>
+                AddNew
+            </a>
+        </div>
+    </div>
+
+    <div asp-validation-summary="All"></div>
+    <form asp-controller="Book" asp-action="List" method="post" id="book-form">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card card-default">
+                <div class="card-body">
+                    <div id="book-form" class="search-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <div class="label-wrapper"><label class="col-form-label" for="SearchBookName">Name</label></div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input class="form-control text-box single-line" id="SearchBookName" name="name" type="text" value="@ViewBag.SearchName">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card card-default">
+                <div class="card-body">
+                    <table name="book-grid" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>@Html.DisplayNameFor(model => model[0].Id)</th>
+                                <th>@Html.DisplayNameFor(model => model[0].Name)</th>
+                                <th>@Html.DisplayNameFor(model => model[0].CreatedOn)</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var book in Model)
+                            {
+                                <tr>
+                                    <td>@book.Id</td>
+                                    <td>@book.Name</td>
+                                    <td>@book.CreatedOn.ToString("yyyy-MM-dd")</td>
+                                    <td>
+                                        <a href="@Url.Action("Edit", new { id = book.Id })" class="btn btn-secondary">Edit</a>
+                                        <a href="@Url.Action("Delete", new { id = book.Id })" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this book?');">Delete</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+    </form>
+

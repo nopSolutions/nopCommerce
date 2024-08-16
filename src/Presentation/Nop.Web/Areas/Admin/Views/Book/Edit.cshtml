@@ -1,0 +1,41 @@
+﻿@model Nop.Web.Areas.Admin.Models.Books.BookModel
+@using Nop.Web.Framework.Models.AdminAreaTour
+
+@{
+    //page title
+    ViewBag.PageTitle = "Edit book";
+}
+
+<form asp-controller="Book" asp-action="Edit" method="post" id="book-form">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            Edit book
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="List">Back to book list</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                Save
+            </button>
+        </div>
+    </div>
+
+    <div asp-validation-summary="All"></div>
+    <input asp-for="Id" type="hidden" />
+    <input asp-for="CreatedOn" type="hidden" />
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Name)
+                    @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Name)
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
