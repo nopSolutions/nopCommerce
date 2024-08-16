@@ -92,7 +92,7 @@
         </div>
         @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ContentAfter })
     </div>
-    @if (isHomePage)
+    @if (isHomePage && storeId != 8)
     {
 		@await Component.InvokeAsync("Widget", new { widgetZone = "homepage_content_after" })
     }

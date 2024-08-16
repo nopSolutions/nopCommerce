@@ -46,6 +46,7 @@
   <WidgetZone>footer</WidgetZone>
   <WidgetZone>hawthorne_video</WidgetZone>
   <WidgetZone>hawthorne_home</WidgetZone>
+  <WidgetZone>hawthorne_hours</WidgetZone>
   <WidgetZone>head_html_tag</WidgetZone>
   <WidgetZone>header</WidgetZone>
   <WidgetZone>header_after</WidgetZone>

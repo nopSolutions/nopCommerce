@@ -59,7 +59,8 @@
     </div>
     <div class="footer-middle">
         <div class="center">
-
+            @if(storeId == 8)
+            {
                 @* custom *@
                 <div class="widget-min">
                     @await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.FooterBelow480px })
@@ -73,6 +74,7 @@
                 <div class="widget-1000">
                     @await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.FooterAbove1000px })
                 </div>
+            }
 
             @* custom end *@
             <div class="footer-block">

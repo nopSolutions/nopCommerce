@@ -83,6 +83,7 @@
         public static string Footer => "footer";
         public static string HawthorneVideo => "hawthorne_video";
         public static string HawthorneHome => "hawthorne_home";
+        public static string HawthorneHours => "hawthorne_hours";
         public static string HeaderAfter => "header_after";
         public static string HeaderBefore => "header_before";
         public static string HeaderLinksAfter => "header_links_after";
