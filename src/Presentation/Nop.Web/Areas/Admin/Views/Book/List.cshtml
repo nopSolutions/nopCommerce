@@ -1,75 +1,123 @@
-﻿@model List<Nop.Web.Areas.Admin.Models.Books.BookModel>
-@using Nop.Web.Framework.Models.AdminAreaTour
-
+﻿@model Nop.Web.Areas.Admin.Models.Books.BookContentModel
+@using Nop.Web.Areas.Admin.Models.Books
 @{
     //page title
     ViewBag.PageTitle = "Books";
 }
 
-    <div class="content-header clearfix">
-        <h1 class="float-left">
-            Books
-        </h1>
-        <div class="float-right">
-            <a asp-action="Create" class="btn btn-primary">
-                <i class="fas fa-plus-square"></i>
-                AddNew
-            </a>
-        </div>
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        Books
+    </h1>
+    <div class="float-right">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus-square"></i>
+            AddNew
+        </a>
     </div>
+</div>
 
-    <div asp-validation-summary="All"></div>
-    <form asp-controller="Book" asp-action="List" method="post" id="book-form">
-    <section class="content">
-        <div class="container-fluid">
-            <div class="card card-default">
-                <div class="card-body">
-                    <div id="book-form" class="search-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group row">
-                                    <div class="col-md-4">
-                                        <div class="label-wrapper"><label class="col-form-label" for="SearchBookName">Name</label></div>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <input class="form-control text-box single-line" id="SearchBookName" name="name" type="text" value="@ViewBag.SearchName">
-                                        <p>Press Enter Key to search books.</p>
-                                    </div>
+<div asp-validation-summary="All"></div>
+<section class="content">
+    <div class="container-fluid">
+        <div class="card card-default">
+            <div class="card-body">
+                <div id="book-form" class="search-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="SearchName" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-editor asp-for="SearchName" />
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="card card-default">
-                <div class="card-body">
-                    <table name="book-grid" class="table table-bordered table-striped">
-                        <thead>
-                            <tr>
-                                <th>@Html.DisplayNameFor(model => model[0].Id)</th>
-                                <th>@Html.DisplayNameFor(model => model[0].Name)</th>
-                                <th>@Html.DisplayNameFor(model => model[0].CreatedOn)</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var book in Model)
-                            {
-                                <tr>
-                                    <td>@book.Id</td>
-                                    <td>@book.Name</td>
-                                    <td>@book.CreatedOn.ToString("yyyy-MM-dd")</td>
-                                    <td>
-                                        <a href="@Url.Action("Edit", new { id = book.Id })" class="btn btn-secondary">Edit</a>
-                                        <a href="@Url.Action("Delete", new { id = book.Id })" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this book?');">Delete</a>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                    <div class="row">
+                        <div class="col-md-8 offset-md-4">
+                            <button type="button" id="search-book" class="btn btn-primary btn-search">
+                                <i class="fas fa-search"></i>
+                                @T("Admin.Common.Search")
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </section>
-    </form>
+        <div class="card card-default">
+            <div class="card-body">
+                @await Html.PartialAsync("Table", new DataTablesModel
+           {
+               Name = "book-grid",
+               UrlRead = new DataUrl("List", "Book", null),
+               SearchButtonId = "search-book",
+               Length = Model.Book.PageSize,
+               LengthMenu = Model.Book.AvailablePageSizes,
+               Filters = new List<FilterParameter>
+                {
+                new FilterParameter(nameof(Model.SearchName))
+                },
+               ColumnCollection = new List<ColumnProperty>
+                {
+                new ColumnProperty(nameof(BookModel.Id))
+                {
+                Title = "Id",
+                Width = "10%"
+                },
+                new ColumnProperty(nameof(BookModel.Name))
+                {
+                Title = "Name",
+                Width = "50%"
+                },
+                new ColumnProperty(nameof(BookModel.CreatedOn))
+                {
+                Title = "Name",
+                Width = "20%",
+                Render = new RenderDate()
+                },
+                new ColumnProperty(nameof(BookModel.Id))
+                {
+                Title = "Edit",
+                Width = "10%",
+                ClassName = NopColumnClassDefaults.Button,
+                Render = new RenderButtonEdit(new DataUrl("Edit"))
+
+                },
+                new ColumnProperty(nameof(BookModel.Id))
+                {
+                Title = "Delete",
+                Width = "10%",
+                ClassName = NopColumnClassDefaults.Button,
+                Render = new RenderButtonRemove("Delete")
+
+                }
+
+                }
+           })
+                <script>
+                function table_deletedata_book_grid(id) {
+                        $.ajax({
+                            cache: false,
+                            type: "get",
+                            url: `delete/${id}`,
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                showAlert('deleteSelectedFailed', errorThrown);
+                            },
+                            complete: function (jqXHR, textStatus) {
+                                if (jqXHR.status === 204) {
+                                    showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                                    return;
+                                }
+                                $('#book-grid').DataTable().ajax.reload();
+                            }
+                        });
+                }
+                </script>
+            </div>
+        </div>
+    </div>
+</section>
+
 

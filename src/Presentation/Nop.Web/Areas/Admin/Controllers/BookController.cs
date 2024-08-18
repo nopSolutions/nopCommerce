@@ -1,26 +1,8 @@
-﻿using System;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc;
-using Nop.Web.Areas.Admin.Models.Books;
-using Nop.Core.Domain.Books;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Books;
 using Nop.Services.Localization;
-using Nop.Services.Security;
-using Nop.Web.Framework.Controllers;
-using Nop.Web.Controllers;
-using Nop.Web.Framework.Mvc.Filters;
-using Nop.Core.Caching;
-using Nop.Core;
-using Nop.Services.Catalog;
-using Nop.Services.Customers;
-using Nop.Services.Discounts;
-using Nop.Services.ExportImport;
-using Nop.Services.Logging;
-using Nop.Services.Media;
-using Nop.Services.Messages;
-using Nop.Services.Seo;
-using Nop.Services.Stores;
-using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Models.Books;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Controllers;
 
@@ -37,17 +19,28 @@ public class BookController : BaseAdminController
 
     public IActionResult List()
     {
-        var books = _bookService.GetAllBooks().Select(b => b.ToModel()).ToList();
-        return View(books);
+        var model = new BookContentModel();
+        model.Book.AvailablePageSizes = "10, 20, 50, 100";
+        return View(model);
     }
 
     [HttpPost]
-    public IActionResult List(BookSearchModel searchModel)
+    public async Task<IActionResult> List(BookSearchModel searchModel)
     {
-        ViewBag.SearchName = searchModel.Name;
-        //prepare model
-        var books = _bookService.GetAllBooks().Where(b=>b.Name.Contains(searchModel.Name)).Select(b => b.ToModel()).ToList();
-        return View(books);
+        var books = await _bookService.GetAllBooksAsync(pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize,name:searchModel.SearchName);
+
+        //prepare list model
+        var model = new BookListModel().PrepareToGrid(searchModel, books, () =>
+        {
+            return books.Select(book =>
+            {
+                //fill in model values from the entity
+                var bookModel = book.ToModel();
+                return bookModel;
+            });
+        });
+
+        return Json(model);
     }
 
     #region Create / Edit / Delete

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Nop.Core.Domain.Blogs;
+using Nop.Core;
 using Nop.Core.Domain.Books;
 using Nop.Data;
 
@@ -42,5 +44,18 @@ public partial class BookService: IBookService
         if (!string.IsNullOrEmpty(name))
             query = query.Where(b => b.Name.Contains(name));
         return query.ToList();
+    }
+
+    public virtual async Task<IPagedList<Book>> GetAllBooksAsync(int pageIndex = 0, int pageSize = int.MaxValue, string name = null)
+    {
+        return await _bookRepository.GetAllPagedAsync(query =>
+        {
+            if (!string.IsNullOrEmpty(name))
+                query = query.Where(b => b.Name.Contains(name));
+
+            query = query.OrderByDescending(b => b.Id);
+
+            return query;
+        }, pageIndex, pageSize);
     }
 }
