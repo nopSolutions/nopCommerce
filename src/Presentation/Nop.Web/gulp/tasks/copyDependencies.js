@@ -128,7 +128,7 @@ export default function copyDependencies()
 
     //Admin LTE plugins: select2
     gulp
-    .src(nodeModules + '/admin-lte/plugins/select2/**/*.{css,min.js}')
+    .src(nodeModules + 'admin-lte/plugins/select2/**/*.{css,min.js}')
     .pipe(gulp.dest(`${targetPath}admin-lte/plugins/select2`)),
 
     //Chart.js
@@ -137,7 +137,13 @@ export default function copyDependencies()
       .pipe(rename({
         suffix: '.min'
       }))
-      .pipe(gulp.dest(`${targetPath}chart.js`)),
+        .pipe(gulp.dest(`${targetPath}chart.js`)),
+
+    //jQuery Migrate
+    gulp
+      .src(nodeModules + 'jquery-migrate/dist/*.{js,js.map}')
+      .pipe(gulp.dest(`${targetPath}jquery-migrate`)),
+
     ]);
 
     
