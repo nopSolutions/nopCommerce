@@ -32,10 +32,12 @@
                     <li>
                         <a href="/sale-ad">Weekly Ad</a>
                     </li>
+                    <li>
+                        <a href="/customer/info"><label>@T("SevenSpikes.Themes.Pavilion.Header.MyAccount")</label></a>
+                        @await Component.InvokeAsync("HeaderLinks")
+                    </li>
                 </ul>
-                @await Component.InvokeAsync("AdminHeaderLinks")
             </div>
-            @await Component.InvokeAsync("HeaderLinks")
         </div>
     }
         
