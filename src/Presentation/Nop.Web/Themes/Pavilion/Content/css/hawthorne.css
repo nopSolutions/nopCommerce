@@ -118,6 +118,9 @@ div.jCarouselMainWrapper {
 .store-search-box input.search-box-text {
     height: 50px;
 }
+.col-md-6.pic-mobile {
+    display: none;
+}
 
 @media screen and (max-width: 767px) {
     img.haw-main-img {
@@ -128,13 +131,21 @@ div.jCarouselMainWrapper {
         padding: 0;
     }
     .video-text-container {
-        top: 20px;
+        top: -6px;
+        background: #000;
+        padding: 15px 0px 5px 0px;
     }
     .first-section img {
         padding-top: 30px;
     }
     .pic-left .col-md-6 {
         text-align: center;
+    }
+    .col-md-6.pic-desktop {
+        display: none;
+    }
+    .col-md-6.pic-mobile {
+        display: block;
     }
 }
 
@@ -146,7 +157,7 @@ div.jCarouselMainWrapper {
         text-align: center;
     }
     .first-section.pic-right {
-        margin-top: 60px;
+        margin-top: 40px;
     }
     .pic-left, .pic-right {
         margin: 100px 0;

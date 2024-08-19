@@ -6118,6 +6118,9 @@ h1.search-page-title {
 .hawthorne-lower.header-lower {
     padding: 40px 0;
 }
+.hawthorne.top-menu li a label:hover {
+    cursor: pointer;
+}
 
 @media screen and (max-width: 720px) {
 	.search-category-container {
