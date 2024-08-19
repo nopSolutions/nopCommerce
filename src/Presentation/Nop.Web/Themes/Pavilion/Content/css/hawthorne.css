@@ -121,6 +121,7 @@ div.jCarouselMainWrapper {
 .col-md-6.pic-mobile {
     display: none;
 }
+
 @media screen and (max-width: 1863px) {
     .hawthorne-lower .search-cart-wrapper {
         width: 60%;

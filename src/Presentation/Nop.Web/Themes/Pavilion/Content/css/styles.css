@@ -6121,6 +6121,9 @@ h1.search-page-title {
 .hawthorne.top-menu li a label:hover {
     cursor: pointer;
 }
+.hawthorne-lower .OWUAV svg {
+    fill: #fff !important;
+}
 
 @media screen and (max-width: 720px) {
 	.search-category-container {
