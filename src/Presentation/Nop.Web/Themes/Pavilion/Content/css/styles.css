@@ -6124,6 +6124,9 @@ h1.search-page-title {
 .hawthorne-lower .OWUAV svg {
     fill: #fff !important;
 }
+.hawthorne-home-content .mobile-header-content-row {
+    background-color: #02463b;
+}
 
 @media screen and (max-width: 720px) {
 	.search-category-container {
