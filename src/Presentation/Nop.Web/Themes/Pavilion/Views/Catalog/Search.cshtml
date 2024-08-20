@@ -6,9 +6,12 @@
 @inject ISitemapGenerator sitemapGenerator;
 @inject IUrlRecordService urlRecordService;
 
-<div class="search-page-banner">
-    <a href="/sale-ad"><img src="/images/SaleAdShop.jpg" alt ="Shop Sale Ad"/></a>
-</div>
+@if(storeId == 8)
+{
+    <div class="search-page-banner">
+        <a href="/sale-ad"><img src="/images/SaleAdShop.jpg" alt ="Shop Sale Ad"/></a>
+    </div>
+}
 <div class="search-page-container">
 @{
     Layout = "_ColumnsTwo";
