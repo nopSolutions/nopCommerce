@@ -6197,7 +6197,10 @@ img.hawthorne-logo {
 	max-width: 100%;
 }
 .hawthorne-lower .search-cart-wrapper {
-    width: 70%;
+    width: 80%;
+}
+.header-logo.desktop {
+    width: 20%;
 }
 .hawthorne-lower .close-button.close-search {
     display: none;
