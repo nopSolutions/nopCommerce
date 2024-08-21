@@ -2,6 +2,7 @@
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
+using System.Globalization;
 
 namespace Nop.Core.Domain.Orders;
 
@@ -291,6 +292,25 @@ public partial class Order : BaseEntity, ISoftDeletedEntity
     /// Gets or sets the reward points history record (spent by a customer when placing this order)
     /// </summary>
     public virtual int? RedeemedRewardPointsEntryId { get; set; }
+
+    /// <summary>
+    /// Ensures proper handling of order totals
+    /// </summary>
+    public void EnsureProperHandlingOfOrderTotals()
+    {
+        OrderSubtotalInclTax = decimal.Parse(OrderSubtotalInclTax.ToString(CultureInfo.InvariantCulture));
+        OrderSubtotalExclTax = decimal.Parse(OrderSubtotalExclTax.ToString(CultureInfo.InvariantCulture));
+        OrderSubTotalDiscountInclTax = decimal.Parse(OrderSubTotalDiscountInclTax.ToString(CultureInfo.InvariantCulture));
+        OrderSubTotalDiscountExclTax = decimal.Parse(OrderSubTotalDiscountExclTax.ToString(CultureInfo.InvariantCulture));
+        OrderShippingInclTax = decimal.Parse(OrderShippingInclTax.ToString(CultureInfo.InvariantCulture));
+        OrderShippingExclTax = decimal.Parse(OrderShippingExclTax.ToString(CultureInfo.InvariantCulture));
+        PaymentMethodAdditionalFeeInclTax = decimal.Parse(PaymentMethodAdditionalFeeInclTax.ToString(CultureInfo.InvariantCulture));
+        PaymentMethodAdditionalFeeExclTax = decimal.Parse(PaymentMethodAdditionalFeeExclTax.ToString(CultureInfo.InvariantCulture));
+        OrderTax = decimal.Parse(OrderTax.ToString(CultureInfo.InvariantCulture));
+        OrderDiscount = decimal.Parse(OrderDiscount.ToString(CultureInfo.InvariantCulture));
+        OrderTotal = decimal.Parse(OrderTotal.ToString(CultureInfo.InvariantCulture));
+        RefundedAmount = decimal.Parse(RefundedAmount.ToString(CultureInfo.InvariantCulture));
+    }
 
     #endregion
 

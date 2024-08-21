@@ -753,6 +753,15 @@ public partial class OrderService : IOrderService
     /// <returns>A task that represents the asynchronous operation</returns>
     public virtual async Task InsertOrderItemAsync(OrderItem orderItem)
     {
+        // Ensure proper handling of unit prices and total prices
+        orderItem.UnitPriceInclTax = decimal.Parse(orderItem.UnitPriceInclTax.ToString(CultureInfo.InvariantCulture));
+        orderItem.UnitPriceExclTax = decimal.Parse(orderItem.UnitPriceExclTax.ToString(CultureInfo.InvariantCulture));
+        orderItem.PriceInclTax = decimal.Parse(orderItem.PriceInclTax.ToString(CultureInfo.InvariantCulture));
+        orderItem.PriceExclTax = decimal.Parse(orderItem.PriceExclTax.ToString(CultureInfo.InvariantCulture));
+        orderItem.DiscountAmountInclTax = decimal.Parse(orderItem.DiscountAmountInclTax.ToString(CultureInfo.InvariantCulture));
+        orderItem.DiscountAmountExclTax = decimal.Parse(orderItem.DiscountAmountExclTax.ToString(CultureInfo.InvariantCulture));
+        orderItem.OriginalProductCost = decimal.Parse(orderItem.OriginalProductCost.ToString(CultureInfo.InvariantCulture));
+
         await _orderItemRepository.InsertAsync(orderItem);
     }
 
@@ -763,6 +772,15 @@ public partial class OrderService : IOrderService
     /// <returns>A task that represents the asynchronous operation</returns>
     public virtual async Task UpdateOrderItemAsync(OrderItem orderItem)
     {
+        // Ensure proper handling of unit prices and total prices
+        orderItem.UnitPriceInclTax = decimal.Parse(orderItem.UnitPriceInclTax.ToString(CultureInfo.InvariantCulture));
+        orderItem.UnitPriceExclTax = decimal.Parse(orderItem.UnitPriceExclTax.ToString(CultureInfo.InvariantCulture));
+        orderItem.PriceInclTax = decimal.Parse(orderItem.PriceInclTax.ToString(CultureInfo.InvariantCulture));
+        orderItem.PriceExclTax = decimal.Parse(orderItem.PriceExclTax.ToString(CultureInfo.InvariantCulture));
+        orderItem.DiscountAmountInclTax = decimal.Parse(orderItem.DiscountAmountInclTax.ToString(CultureInfo.InvariantCulture));
+        orderItem.DiscountAmountExclTax = decimal.Parse(orderItem.DiscountAmountExclTax.ToString(CultureInfo.InvariantCulture));
+        orderItem.OriginalProductCost = decimal.Parse(orderItem.OriginalProductCost.ToString(CultureInfo.InvariantCulture));
+
         await _orderItemRepository.UpdateAsync(orderItem);
     }
 

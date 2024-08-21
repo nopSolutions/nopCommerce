@@ -100,4 +100,18 @@ public partial class OrderItem : BaseEntity
     /// Gets or sets the rental product end date (null if it's not a rental product)
     /// </summary>
     public DateTime? RentalEndDateUtc { get; set; }
+
+    /// <summary>
+    /// Ensures proper handling of unit prices and total prices
+    /// </summary>
+    public void EnsureProperHandlingOfPrices()
+    {
+        UnitPriceInclTax = decimal.Parse(UnitPriceInclTax.ToString(CultureInfo.InvariantCulture));
+        UnitPriceExclTax = decimal.Parse(UnitPriceExclTax.ToString(CultureInfo.InvariantCulture));
+        PriceInclTax = decimal.Parse(PriceInclTax.ToString(CultureInfo.InvariantCulture));
+        PriceExclTax = decimal.Parse(PriceExclTax.ToString(CultureInfo.InvariantCulture));
+        DiscountAmountInclTax = decimal.Parse(DiscountAmountInclTax.ToString(CultureInfo.InvariantCulture));
+        DiscountAmountExclTax = decimal.Parse(DiscountAmountExclTax.ToString(CultureInfo.InvariantCulture));
+        OriginalProductCost = decimal.Parse(OriginalProductCost.ToString(CultureInfo.InvariantCulture));
+    }
 }
