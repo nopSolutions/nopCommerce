@@ -6,10 +6,10 @@
     <div class="card card-default">
         <div class="card-body">
             @{
-                const string startDateControlId = "rental_start_date";
-                const string endDateControlId = "rental_end_date";
+                var startDateControlId = $"rental_start_date_{Model.ProductId}";
+                var endDateControlId = $"rental_end_date_{Model.ProductId}";
                 //currenly we support only this format
-                const string datePickerFormat = "mm/dd/yy";
+                var datePickerFormat = Html.GetJQueryDateFormat();
 
                 <div class="form-group row">
                     <div class="col-md-3">
