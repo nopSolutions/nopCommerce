@@ -62,6 +62,14 @@
                                         <nop-select asp-for="IsActiveId" asp-items="Model.AvailableActiveOptions" />
                                     </div>
                                 </div>
+                                <div class="form-group row" @(Model.HideEmailAccount ? Html.Raw("style=\"display:none\"") : null)>
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="EmailAccountId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="EmailAccountId" asp-items="Model.AvailableEmailAccounts" />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
@@ -91,7 +99,8 @@
                         {
                             new FilterParameter(nameof(Model.SearchKeywords)),
                             new FilterParameter(nameof(Model.SearchStoreId)),
-                            new FilterParameter(nameof(Model.IsActiveId))
+                            new FilterParameter(nameof(Model.IsActiveId)),
+                            new FilterParameter(nameof(Model.EmailAccountId))
                         },
                         ColumnCollection = new List<ColumnProperty>
                         {

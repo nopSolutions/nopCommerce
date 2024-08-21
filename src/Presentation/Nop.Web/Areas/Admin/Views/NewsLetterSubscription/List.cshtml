@@ -1,11 +1,10 @@
 ﻿@model NewsletterSubscriptionSearchModel
 
 @using Nop.Services.Stores
+
 @inject IStoreService storeService
 
 @{
-    var stores = await storeService.GetAllStoresAsync();
-
     //page title
     ViewBag.PageTitle = T("Admin.Promotions.newsLetterSubscriptions").Text;
     //active menu item (system name)
@@ -159,6 +158,11 @@
                                         Title = T("Admin.Promotions.NewsLetterSubscriptions.Fields.Store").Text,
                                         Width = "150",
                                         Visible = (await storeService.GetAllStoresAsync()).Count > 1
+                                    },
+                                    new ColumnProperty(nameof(NewsletterSubscriptionModel.LanguageName))
+                                    {
+                                        Title = T("Admin.Promotions.NewsLetterSubscriptions.Fields.Language").Text,
+                                        Width = "150"
                                     },
                                     new ColumnProperty(nameof(NewsletterSubscriptionModel.CreatedOn))
                                     {

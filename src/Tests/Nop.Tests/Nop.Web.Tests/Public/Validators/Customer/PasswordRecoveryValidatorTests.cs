@@ -1,51 +1,51 @@
 ﻿using FluentValidation.TestHelper;
+using Nop.Services.Localization;
 using Nop.Web.Models.Customer;
 using Nop.Web.Validators.Customer;
 using NUnit.Framework;
 
-namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Customer
+namespace Nop.Tests.Nop.Web.Tests.Public.Validators.Customer;
+
+[TestFixture]
+public class PasswordRecoveryValidatorTests : BaseNopTest
 {
-    [TestFixture]
-    public class PasswordRecoveryValidatorTests : BaseNopTest
+    private PasswordRecoveryValidator _validator;
+
+    [OneTimeSetUp]
+    public void Setup()
     {
-        private PasswordRecoveryValidator _validator;
+        _validator = new PasswordRecoveryValidator(GetService<ILocalizationService>());
+    }
 
-        [OneTimeSetUp]
-        public void Setup()
+    [Test]
+    public void ShouldHaveErrorWhenEmailIsNullOrEmpty()
+    {
+        var model = new PasswordRecoveryModel
         {
-            _validator = GetService<PasswordRecoveryValidator>();
-        }
+            Email = null
+        };
+        _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Email);
+        model.Email = string.Empty;
+        _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Email);
+    }
 
-        [Test]
-        public void ShouldHaveErrorWhenEmailIsNullOrEmpty()
+    [Test]
+    public void ShouldHaveErrorWhenEmailIsWrongFormat()
+    {
+        var model = new PasswordRecoveryModel
         {
-            var model = new PasswordRecoveryModel
-            {
-                Email = null
-            };
-            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Email);
-            model.Email = string.Empty;
-            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Email);
-        }
+            Email = "adminexample.com"
+        };
+        _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Email);
+    }
 
-        [Test]
-        public void ShouldHaveErrorWhenEmailIsWrongFormat()
+    [Test]
+    public void ShouldNotHaveErrorWhenEmailIsCorrectFormat()
+    {
+        var model = new PasswordRecoveryModel
         {
-            var model = new PasswordRecoveryModel
-            {
-                Email = "adminexample.com"
-            };
-            _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Email);
-        }
-
-        [Test]
-        public void ShouldNotHaveErrorWhenEmailIsCorrectFormat()
-        {
-            var model = new PasswordRecoveryModel
-            {
-                Email = "admin@example.com"
-            };
-            _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.Email);
-        }
+            Email = "admin@example.com"
+        };
+        _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.Email);
     }
 }

@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Misc",
+  "FriendlyName": "Omnisend",
+  "SystemName": "Misc.Omnisend",
+  "Version": "4.80.2",
+  "SupportedVersions": [ "4.80" ],
+  "Author": "nopCommerce team",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Misc.Omnisend.dll",
+  "Description": "This plugin allows to integrate with Omnisend - email and omnichannel marketing platform"
+}

@@ -1,29 +1,28 @@
-﻿namespace Nop.Core.Domain.Orders
+﻿namespace Nop.Core.Domain.Orders;
+
+/// <summary>
+/// Order status changed event
+/// </summary>
+public partial class OrderStatusChangedEvent
 {
     /// <summary>
-    /// Order status changed event
+    /// Ctor
     /// </summary>
-    public partial class OrderStatusChangedEvent
+    /// <param name="order">Order</param>
+    /// <param name="previousOrderStatus">Previous order status</param>
+    public OrderStatusChangedEvent(Order order, OrderStatus previousOrderStatus)
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="order">Order</param>
-        /// <param name="previousOrderStatus">Previous order status</param>
-        public OrderStatusChangedEvent(Order order, OrderStatus previousOrderStatus)
-        {
-            Order = order;
-            PreviousOrderStatus = previousOrderStatus;
-        }
-
-        /// <summary>
-        /// Order
-        /// </summary>
-        public Order Order { get; }
-
-        /// <summary>
-        /// Previous order status
-        /// </summary>
-        public OrderStatus PreviousOrderStatus { get; set; }
+        Order = order;
+        PreviousOrderStatus = previousOrderStatus;
     }
+
+    /// <summary>
+    /// Order
+    /// </summary>
+    public Order Order { get; }
+
+    /// <summary>
+    /// Previous order status
+    /// </summary>
+    public OrderStatus PreviousOrderStatus { get; set; }
 }

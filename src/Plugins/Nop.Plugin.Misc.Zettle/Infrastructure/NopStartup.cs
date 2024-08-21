@@ -5,36 +5,35 @@ using Nop.Core.Infrastructure;
 using Nop.Plugin.Misc.Zettle.Services;
 using Nop.Web.Framework.Infrastructure.Extensions;
 
-namespace Nop.Plugin.Misc.Zettle.Infrastructure
+namespace Nop.Plugin.Misc.Zettle.Infrastructure;
+
+/// <summary>
+/// Represents object for the configuring services on application startup
+/// </summary>
+public class NopStartup : INopStartup
 {
     /// <summary>
-    /// Represents object for the configuring services on application startup
+    /// Add and configure any of the middleware
     /// </summary>
-    public class NopStartup : INopStartup
+    /// <param name="services">Collection of service descriptors</param>
+    /// <param name="configuration">Configuration of the application</param>
+    public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
-        /// <summary>
-        /// Add and configure any of the middleware
-        /// </summary>
-        /// <param name="services">Collection of service descriptors</param>
-        /// <param name="configuration">Configuration of the application</param>
-        public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
-        {
-            services.AddHttpClient<ZettleHttpClient>().WithProxy();
-            services.AddScoped<ZettleRecordService>();
-            services.AddScoped<ZettleService>();
-        }
-
-        /// <summary>
-        /// Configure the using of added middleware
-        /// </summary>
-        /// <param name="application">Builder for configuring an application's request pipeline</param>
-        public void Configure(IApplicationBuilder application)
-        {
-        }
-
-        /// <summary>
-        /// Gets order of this startup configuration implementation
-        /// </summary>
-        public int Order => 1;
+        services.AddHttpClient<ZettleHttpClient>().WithProxy();
+        services.AddScoped<ZettleRecordService>();
+        services.AddScoped<ZettleService>();
     }
+
+    /// <summary>
+    /// Configure the using of added middleware
+    /// </summary>
+    /// <param name="application">Builder for configuring an application's request pipeline</param>
+    public void Configure(IApplicationBuilder application)
+    {
+    }
+
+    /// <summary>
+    /// Gets order of this startup configuration implementation
+    /// </summary>
+    public int Order => 1;
 }

@@ -59,7 +59,7 @@
                                             </div>
                                         }
                                         <script>
-                                            $(document).ready(function() {
+                                            $(function() {
                                                 showHideDropdownQuantity("@controlId");
                                             });
                                         </script>
@@ -87,7 +87,7 @@
                                                 }
                                             </div>
                                             <script>
-                                                $(document).ready(function() {
+                                                $(function() {
                                                     showHideRadioQuantity("@controlId");
                                                 });
                                             </script>
@@ -112,7 +112,7 @@
                                                         <label class="margin-l-10 margin-r-5" for="@(controlId)_@(attributeValue.Id)_qty">@(T("Products.ProductAttributes.PriceAdjustment.Quantity").Text)</label>
                                                         <input class="qty-box form-control" type="text" name="@(controlId)_@(attributeValue.Id)_qty" id="@(controlId)_@(attributeValue.Id)_qty" value="@(attributeValue.Quantity)" />
                                                         <script>
-                                                            $(document).ready(function() {
+                                                            $(function() {
                                                                 showHideCheckboxQuantity('@(controlId)_@(attributeValue.Id)');
                                                             })
                                                         </script>
@@ -138,97 +138,69 @@
                                                          asp-month-name="@(controlId + "_month")"
                                                          asp-year-name="@(controlId + "_year")"
                                                          asp-begin-year="@(DateTime.UtcNow)"
-                                                         asp-end-year="@(DateTime.UtcNow.AddYears(catalogSettings.CountDisplayedYearsDatePicker))" />
+                                        asp-end-year="@(DateTime.UtcNow.AddYears(catalogSettings.CountDisplayedYearsDatePicker))" />
                                     }
                                     break;
                                 case AttributeControlType.FileUpload:
                                     {
+                                        var allowedFileTypes = string.Empty;
+
+                                        if (attribute.AllowedFileExtensions.Any())
+                                        {
+                                            var fileTypeList = attribute.AllowedFileExtensions
+                                                .Select(x => new FileExtensionContentTypeProvider().TryGetContentType($".{x}", out var contentType) ? $"'{contentType}'" : null)
+                                                .Where(ft => !string.IsNullOrEmpty(ft))
+                                                .ToList();
+
+                                            allowedFileTypes = string.Join(", ", fileTypeList);
+                                        }
+
                                         @* register CSS and JS *@
-                                        <link rel="stylesheet" href="~/lib_npm/fine-uploader/fine-uploader/fine-uploader.min.css" />
-                                        <script asp-exclude-from-bundle="true" src="~/lib_npm/fine-uploader/jquery.fine-uploader/jquery.fine-uploader.min.js" asp-location="Footer"></script>
+                                        <link rel="stylesheet" href="~/lib_npm/filepond/filepond.min.css" />
+                                        <link rel="stylesheet" href="~/lib_npm/filepond-plugin-get-file/filepond-plugin-get-file.min.css" />
+                                        <script asp-exclude-from-bundle="true" src="~/lib_npm/filepond/filepond.min.js" asp-location="Footer"></script>
+                                        <script asp-exclude-from-bundle="true" src="~/lib_npm/filepond-plugin-file-validate-type/filepond-plugin-file-validate-type.min.js" asp-location="Footer"></script>
+                                        <script asp-exclude-from-bundle="true" src="~/lib_npm/filepond-plugin-get-file/filepond-plugin-get-file.min.js" asp-location="Footer"></script>
 
-                                        //ex. ['jpg', 'jpeg', 'png', 'gif'] or []
-                                        var allowedFileExtensions = attribute.AllowedFileExtensions != null && attribute.AllowedFileExtensions.Any()
-                                            ? string.Join(", ", attribute.AllowedFileExtensions.Select(x => "'" + x.Trim() + "'").ToList())
-                                            : null;
-
+                                        <div class="file-upload-container">
+                                            <div id="@(controlId + "element")" class="filepond"></div>
+                                        </div>
                                         <input id="@(controlId)" name="@(controlId)" type="hidden" />
 
-                                        @*fine uploader container*@
-                                        <div id="@(controlId)uploader"></div>
-                                        @*fine uploader template (keep it synchronized to \Content\fineuploader\templates\default.html)*@
-                                        <script asp-location="Footer" type="text/template" id="@(controlId)-qq-template">
-                                            <div class="qq-uploader-selector qq-uploader">
-                                                <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
-                                                    <span>@T("Common.FileUploader.DropFiles")</span>
-                                                </div>
-                                                <div class="qq-upload-button-selector qq-upload-button">
-                                                    <div>@T("Common.FileUploader.Upload")</div>
-                                                </div>
-                                                <span class="qq-drop-processing-selector qq-drop-processing">
-                                                    <span>@T("Common.FileUploader.Processing")</span>
-                                                    <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
-                                                </span>
-                                                <ul class="qq-upload-list-selector qq-upload-list">
-                                                    <li>
-                                                        <div class="qq-progress-bar-container-selector">
-                                                            <div class="qq-progress-bar-selector qq-progress-bar"></div>
-                                                        </div>
-                                                        <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
-                                                        <span class="qq-edit-filename-icon-selector qq-edit-filename-icon"></span>
-                                                        <span class="qq-upload-file-selector qq-upload-file"></span>
-                                                        <input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">
-                                                        <span class="qq-upload-size-selector qq-upload-size"></span>
-                                                        <a class="qq-upload-cancel-selector qq-upload-cancel" href="#">@T("Common.FileUploader.Cancel")</a>
-                                                        <a class="qq-upload-retry-selector qq-upload-retry" href="#">@T("Common.FileUploader.Retry")</a>
-                                                        <a class="qq-upload-delete-selector qq-upload-delete" href="#">@T("Common.FileUploader.Delete")</a>
-                                                        <span class="qq-upload-status-text-selector qq-upload-status-text"></span>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </script>
-                                        <script>
-                                            $(document).ready(function() {
-                                                $("#@(controlId)uploader").fineUploader({
-                                                    request: {
-                                                        endpoint: '@(Url.RouteUrl("UploadFileProductAttribute", new {attributeId = attribute.Id}))'
-                                                    },
-                                                    template: "@(controlId)-qq-template",
-                                                    multiple: false,
-                                                    validation: {
-                                                        @{
-                                                            if (!string.IsNullOrEmpty(allowedFileExtensions))
-                                                            {
-                                                                @Html.Raw("allowedExtensions: [" + allowedFileExtensions + "]")
-                                                                ;
+
+                                        <script asp-location="Footer">
+                                            $(function () {
+                                                // Register the plugins
+                                                FilePond.registerPlugin(FilePondPluginFileValidateType);
+                                                FilePond.registerPlugin(FilePondPluginGetFile);
+
+                                                // Create a FilePond instance
+                                                FilePond.create(document.querySelector('#@(controlId + "element")'), {
+                                                    credits: false,
+                                                    acceptedFileTypes: [@Html.Raw(allowedFileTypes)],
+                                                    allowMultiple: false,
+                                                    maxFiles: 1,
+                                                    allowDownloadByUrl: true,
+                                                    server: {
+                                                        process: {
+                                                            url: '@(Url.RouteUrl("UploadFileProductAttribute", new {attributeId = attribute.Id}))',
+                                                            onload: function(response) {
+                                                                $("#@(controlId)").val(JSON.parse(response).downloadGuid);
                                                             }
+                                                        },
+                                                        revert: null,
+                                                    },
+                                                    onprocessfiles: (error) => {
+                                                        if (error) {
+                                                            alert(error);
+                                                            return;
                                                         }
-                                                    }
-                                                }).on("complete", function(event, id, name, responseJSON, xhr) {
-                                                    $("#@(controlId)").val(responseJSON.downloadGuid);
-                                                    if (responseJSON.success) {
-                                                        $("#@(controlId + "downloadurl")").html("<a href='" + responseJSON.downloadUrl + "'>@T("Common.FileUploader.DownloadUploadedFile")</a>");
-                                                        $("#@(controlId + "remove")").show();
-                                                    }
-
-                                                    if (responseJSON.message) {
-                                                        $('#uploadFileProductAttributeFailed-info').text((responseJSON.message).Text.replace(/<[^>]+>/g, ''));
-                                                        $("#uploadFileProductAttributeFailed").click();
-                                                    }
-                                                });
-
-                                                $("#@(controlId + "remove")").click(function(e) {
-                                                    $("#@(controlId + "downloadurl")").html("");
-                                                    $("#@(controlId)").val('');
-                                                    $(this).hide();
+                                                    },
+                                                    labelIdle: '@T("Common.FileUploader.DropFiles") / <span class="filepond--label-action">@T("Common.FileUploader.Browse")</span>',
+                                                    labelFileProcessing: '@T("Common.FileUploader.Processing")',
                                                 });
                                             });
                                         </script>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <span id="@(controlId + "remove")" class="btn btn-default margin-t-5" style="display: none;">@T("Admin.Download.RemoveDownload")</span>
-                                            </div>
-                                        </div>
                                         <nop-alert asp-alert-id="uploadFileProductAttributeFailed" />
                                     }
                                     break;
@@ -305,13 +277,13 @@
                             }
                             if (data.message) {
                                 $('#productdetails_attributechangeMessage-info').text(data.message);
-                                $("#productdetails_attributechangeMessage").click();
+                                $("#productdetails_attributechangeMessage").trigger("click");
                             }
                         }
                     });
                 }
 
-                $(document).ready(function() {
+                $(function() {
                     @(attributeChangeHandlerFuncName)();
                     @Html.Raw(attributeChangeScriptsBuilder.ToString())
                 });

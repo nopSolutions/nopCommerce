@@ -6,7 +6,7 @@
     var hideCard = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCardAttributeName);
 }
 
-<script src="~/lib_npm/chart.js/Chart.min.js" asp-location="Head"></script>
+<script src="~/lib_npm/chart.js/chart.umd.min.js"></script>
 
 <div class="card card-primary card-outline @if (hideCard){<text>collapsed-card</text>}" id="@(prefix)-card">
     <div class="card-header with-border">
@@ -38,7 +38,7 @@
 </div>
 
 <script>
-    $(document).ready(function () {
+    $(function() {
         var osCurrentPeriod;
 
         $('#@(prefix)-card').on('click', 'button[data-card-widget="collapse"]', function () {
@@ -61,63 +61,65 @@
                 labels: [],
                 datasets: [
                     {
-                        label: "@T("Admin.SalesReport.OrderStatistics")",
-                        fillColor: "rgba(60,141,188,0.9)",
-                        strokeColor: "rgba(60,141,188,0.8)",
-                        pointColor: "#3b8bba",
-                        pointStrokeColor: "rgba(60,141,188,1)",
-                        pointHighlightFill: "#fff",
-                        pointHighlightStroke: "rgba(60,141,188,1)",
-                        borderColor: 'rgba(60, 141, 188, 0.7)',
                         backgroundColor: 'rgba(44, 152, 214, 0.5)',
+                        fill: 'origin',
+                        label: "@T("Admin.SalesReport.OrderStatistics")",
+                        borderColor: 'rgba(44, 152, 214, .5)',
                         pointBorderColor: 'rgba(37, 103, 142, 0.9)',
-                        pointBackgroundColor: 'rgba(60, 141, 188, 0.4)',
-                        pointBorderWidth: 1,
+                        pointBackgroundColor: 'rgba(60, 141, 188, 0.2)',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(60,141,188,1)',
                         data: []
                     }
                 ]
             },
             options: {
-                legend: {
-                    display: false
+                plugins: {
+                    legend: {
+                        display: false,
+                    },
                 },
                 scales: {
-                    xAxes: [{
+                    x: {
                         display: true,
                         ticks: {
-                            userCallback: function (dataLabel, index) {
-                                if (window.orderStatistics && window.orderStatistics.config.data.labels.length > 12) {
-                                    return index % 5 === 0 ? dataLabel : '';
-                                }
-                                return dataLabel;
+                            callback: function (dataLabel, index) {
+                                var labels = this.chart.config.data.labels;
+                                return labels.length <= 12 || index % 5 === 0 ? labels[index] : '';
                             }
-                        }
-                    }],
-                    yAxes: [{
+                        },
+                        grid: {
+                            display: true,
+                            color: 'rgba(0,0,0,.05)',
+                            lineWidth: 1,
+                        },
+                    },
+                    y: {
                         display: true,
                         ticks: {
-                            userCallback: function (dataLabel, index) {
-                                return (dataLabel ^ 0) === dataLabel ? dataLabel : '';
-                            },
-                            min: 0
-                        }
-                    }]
+                            stepSize: 1
+                        },
+                        grid: {
+                            display: true,
+                            color: 'rgba(0,0,0,.05)',
+                            lineWidth: 1,
+                        },
+                    }
                 },
-                showScale: true,
-                scaleShowGridLines: false,
-                scaleGridLineColor: "rgba(0,0,0,.05)",
-                scaleGridLineWidth: 1,
-                scaleShowHorizontalLines: true,
-                scaleShowVerticalLines: true,
-                bezierCurve: true,
-                pointDot: false,
-                pointDotRadius: 4,
-                pointDotStrokeWidth: 1,
-                pointHitDetectionRadius: 20,
-                datasetStroke: true,
-                datasetFill: true,
+                elements: {
+                    line: {
+                        borderWidth: 1,
+                        tension: 0.3
+                    },
+                    point: {
+                        pointStyle: 'circle',
+                        radius: 4,
+                        borderWidth: 1,
+                        hitRadius: 20,
+                        hoverRadius: 6,
+                    },
+                },
                 maintainAspectRatio: false,
-                responsive: true
             }
         };
 
@@ -150,7 +152,7 @@
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    $("#loadOrderStatisticsAlert").click();
+                    $("#loadOrderStatisticsAlert").trigger("click");
                 }
             });
         }

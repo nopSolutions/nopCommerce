@@ -1,18 +1,17 @@
-﻿namespace Nop.Plugin.Tax.Avalara.Domain
+﻿namespace Nop.Plugin.Tax.Avalara.Domain;
+
+/// <summary>
+/// Represents the tax origin address type enumeration
+/// </summary>
+public enum TaxOriginAddressType
 {
     /// <summary>
-    /// Represents the tax origin address type enumeration
+    /// Tax origin based on the shipping origin address
     /// </summary>
-    public enum TaxOriginAddressType
-    {
-        /// <summary>
-        /// Tax origin based on the shipping origin address
-        /// </summary>
-        ShippingOrigin = 1,
+    ShippingOrigin = 1,
 
-        /// <summary>
-        /// Tax origin based on the default tax address
-        /// </summary>
-        DefaultTaxAddress = 2
-    }
+    /// <summary>
+    /// Tax origin based on the default tax address
+    /// </summary>
+    DefaultTaxAddress = 2
 }

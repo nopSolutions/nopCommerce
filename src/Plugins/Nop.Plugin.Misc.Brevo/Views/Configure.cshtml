@@ -1,8 +1,5 @@
 ﻿@model ConfigurationModel
 
-@using Nop.Plugin.Misc.Brevo
-@using Nop.Plugin.Misc.Brevo.Models
-
 @{
     Layout = "_ConfigurePlugin";
 }
@@ -71,14 +68,14 @@
                                         </li>
                                     </ul>
                                     <div>
-                                        <a href="https://www.brevo.com/?tap_a=30591-fb13f0&tap_s=840216-5153c7" class="btn btn-primary mt-1" target="_blank">Create Free Account</a>
+                                        <a href="https://get.brevo.com/5f897rrc6cwa" class="btn btn-primary mt-1" target="_blank">Create Free Account</a>
                                     </div>
                                 </div>
                                 <div class="form-group row mt-3">
                                     <h2>Step 2. Connect your store to Brevo </h2>
                                 </div>
                                 <div class="form-group">
-                                    <p>Copy your API v3 key from your Brevo account on <a href="https://account.brevo.com/advanced/api/?tap_a=30591-fb13f0&tap_s=840216-5153c7" target="_blank">SMTP & API</a> page, then paste it in the field below and save.</p>
+                                    <p>Copy your API v3 key from your Brevo account on <a href="https://get.brevo.com/nopcommerce" target="_blank">SMTP & API</a> page, then paste it in the field below and save.</p>
                                     <div class="apikey">
                                         <input class="form-control text-box single-line" id="ApiKey" name="ApiKey" type="text" value="" placeholder="xkeysib-xxxxxxxxxxx">
                                         <span asp-validation-for="ApiKey"></span>
@@ -92,13 +89,13 @@
                                     <p>Take a look at our tutorials:</p>
                                     <ul class="list">
                                         <li>
-                                            <a href="https://help.brevo.com/hc/en-us/articles/115000433809/?tap_a=30591-fb13f0&tap_s=840216-5153c7" target="_blank">nopCommerce - 1. Set up the plugin</a>
+                                            <a href="https://get.brevo.com/yyhs3x" target="_blank">nopCommerce - 1. Set up the plugin</a>
                                         </li>
                                         <li>
-                                            <a href="https://help.brevo.com/hc/en-us/articles/360004172899/?tap_a=30591-fb13f0&tap_s=840216-5153c7" target="_blank">nopCommerce - 2. Recover abandoned carts</a>
+                                            <a href="https://get.brevo.com/tv7it" target="_blank">nopCommerce - 2. Recover abandoned carts</a>
                                         </li>
                                         <li>
-                                            <a href="https://help.brevo.com/hc/en-us/articles/360004172939/?tap_a=30591-fb13f0&tap_s=840216-5153c7" target="_blank">nopCommerce - 3. Send an order confirmation email</a>
+                                            <a href="https://get.brevo.com/ut1q2p" target="_blank">nopCommerce - 3. Send an order confirmation email</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -112,9 +109,6 @@
                                         <li>
                                             <i><a href="https://www.nopcommerce.com/nopcommerce-premium-support-services/?utm_source=admin-panel&utm_medium=sendinblue&utm_campaign=admin-panel" target="_blank">nopCommerce premium support services</a>. Paid, fast and provided by nopCommerce team.</i>
                                         </li>
-                                        <li>
-                                            <i>Post the issue on nopCommerce <a href="https://github.com/nopSolutions/sendinblue-plugin-for-nopcommerce/issues" target="_blank">plugin repository</a>.</i>
-                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -127,7 +121,7 @@
         {
             <nop-card asp-name="brevo-synchronization" asp-icon="fas fa-exchange" asp-title="@T("Plugins.Misc.Brevo.Synchronization")" asp-hide-block-attribute-name="@BrevoDefaults.HideSynchronizationBlock" asp-hide="@Model.HideSynchronizationBlock" asp-advanced="false">
                 <script>
-                    $(document).ready(function () {
+                    $(function() {
                         //$("#progressBar").hide();
                         if (@((ViewData["synchronizationStart"] != null && (bool)ViewData["synchronizationStart"]).ToString().ToLowerInvariant())) {
                             $("#progressBar").show();
@@ -161,7 +155,7 @@
                             </p>
                             <div class="form-group row">
                                 <div class="col-md-9 offset-md-3">
-                                    <a href="https://my.brevo.com/lists/?tap_a=30591-fb13f0&tap_s=840216-5153c7" class="btn btn-primary" target="_blank">Create a list</a>
+                                    <a href="https://get.brevo.com/ypp8fp" class="btn btn-primary" target="_blank">Create a list</a>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -208,7 +202,7 @@
                         <div class="card-body">
                             <p>
                                 Brevo SMTP is the transactional email service of Brevo. When it is enabled, all transactional emails (e.g. account creation emails, order confirmation emails, recovery password emails, etc) of your store will be sent from your Brevo account.<br />
-                                Copy your SMTP key from your Brevo account on <a href="https://account.brevo.com/advanced/api/?tap_a=30591-fb13f0&tap_s=840216-5153c7" target="_blank">SMTP & API</a> page > SMTP tab, then paste it in the field below and save.
+                                Copy your SMTP key from your Brevo account on <a href="https://get.brevo.com/nopcommerce" target="_blank">SMTP & API</a> page > SMTP tab, then paste it in the field below and save.
                             </p>
                             <div class="form-group row">
                                 <div class="col-md-3">
@@ -314,7 +308,7 @@
                     <div class="card card-default">
                         <div class="card-body">
                             <p>
-                                You can send personalized SMS notifications to your customers or the store owner. Simply make sure that you have SMS credits (estimate how many SMS credits you need with this <a href="https://www.brevo.com/pricing?tap_a=30591-fb13f0&tap_s=840216-5153c7" target="_blank">calculator</a> - the cost of an SMS depends on the recipient’s country) and that sending transactional SMS is enabled on your Brevo account.
+                                You can send personalized SMS notifications to your customers or the store owner. Simply make sure that you have SMS credits (estimate how many SMS credits you need with this <a href="https://get.brevo.com/5f897rrc6cwa" target="_blank">calculator</a> - the cost of an SMS depends on the recipient’s country) and that sending transactional SMS is enabled on your Brevo account.
                             </p>
                             <div class="form-group row">
                                 <div class="col-md-3">
@@ -451,7 +445,7 @@
                                         </div>
                                     </div>
                                     <script>
-                                        $(document).ready(function () {
+                                        $(function() {
                                             $('#addSms').click(function () {
                                                 $('#addSms').attr('disabled', true);
                                                 var postData = {
@@ -541,7 +535,7 @@
                             @if (Model.MarketingAutomationDisabled)
                             {
                                 <p>
-                                    Your Marketing Automation platform is disabled, to activate it, go to this <a href="https://automation.brevo.com/?tap_a=30591-fb13f0&tap_s=840216-5153c7" target="_blank">page</a> and click on the TRY AUTOMATION FOR FREE button.
+                                    Your Marketing Automation platform is disabled, to activate it, go to this <a href="https://get.brevo.com/tvl7ng" target="_blank">page</a> and click on the TRY AUTOMATION FOR FREE button.
                                 </p>
                             }
                             else
@@ -576,7 +570,7 @@
                                 <div class="col-md-9">
                                     <nop-textarea asp-for="TrackingScript" />
                                     <script>
-                                        $(document).ready(function() {
+                                        $(function() {
                                             $('#@Html.IdFor(model => model.TrackingScript)').height($('#@Html.IdFor(model => model.TrackingScript)')[0].scrollHeight);
                                         });
                                     </script>

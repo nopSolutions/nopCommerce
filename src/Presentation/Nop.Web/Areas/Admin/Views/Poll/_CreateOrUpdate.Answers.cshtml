@@ -79,7 +79,7 @@
                 </div>
             </div>
             <script>
-            $(document).ready(function () {
+            $(function() {
                 $('#addPollAnswer').click(function () {
                     $('#addPollAnswer').attr('disabled', true);
                     var postData = {
@@ -100,7 +100,7 @@
 
                                 //clear input value
                                 $("#@Html.IdFor(model => model.PollAnswerSearchModel.AddPollAnswer.Name)").val('');
-                                $("#@Html.IdFor(model => model.PollAnswerSearchModel.AddPollAnswer.DisplayOrder)").value(0);
+                                $("#@Html.IdFor(model => model.PollAnswerSearchModel.AddPollAnswer.DisplayOrder)").val(0);
 
                             } else {
                                 //display errors if returned

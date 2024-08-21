@@ -69,10 +69,6 @@
                         }
                     </script>
                     <div class="buttons" id="billing-buttons-container">
-                        <button id="edit-billing-address-button" type="button" class="button-1" style="display: none" onclick="Billing.editAddress('@(storeLocation)checkout/GetAddressById/'); return false;">@T("Common.Edit")</button>
-
-                        <button id="delete-billing-address-button" type="button" class="button-1" style="display: none" onclick="Billing.deleteAddress('@(storeLocation)checkout/DeleteEditBillingAddress/'); return false;">@T("Common.Delete")</button>
-
                         <button id="save-billing-address-button" type="button" class="button-1" style="display: none" onclick="Billing.saveEditAddress('@(storeLocation)checkout/SaveEditBillingAddress/'); return false;">@T("Common.Save")</button>
 
                         <button type="button" name="save" class="button-1 new-address-next-step-button" onclick="Billing.save()">@T("Common.Continue")</button>
@@ -109,10 +105,6 @@
                             }
 
                             <span id="edit-shipping-address-buttons">
-                                <button id="edit-shipping-address-button" type="button" class="button-1" style="display: none" onclick="Shipping.editAddress('@(storeLocation)checkout/GetAddressById/'); return false;">@T("Common.Edit")</button>
-
-                                <button id="delete-shipping-address-button" type="button" class="button-1" style="display: none" onclick="Shipping.deleteAddress('@(storeLocation)checkout/DeleteEditShippingAddress/'); return false;">@T("Common.Delete")</button>
-
                                 <button id="save-shipping-address-button" type="button" class="button-1" style="display: none" onclick="Shipping.saveEditAddress('@(storeLocation)checkout/SaveEditShippingAddress/'); return false;">@T("Common.Save")</button>
                             </span>
 

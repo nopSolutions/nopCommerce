@@ -1,23 +1,22 @@
-namespace Nop.Core.Domain.Catalog
+namespace Nop.Core.Domain.Catalog;
+
+/// <summary>
+/// Represents a low stock activity
+/// </summary>
+public enum LowStockActivity
 {
     /// <summary>
-    /// Represents a low stock activity
+    /// Nothing
     /// </summary>
-    public enum LowStockActivity
-    {
-        /// <summary>
-        /// Nothing
-        /// </summary>
-        Nothing = 0,
+    Nothing = 0,
 
-        /// <summary>
-        /// Disable buy button
-        /// </summary>
-        DisableBuyButton = 1,
+    /// <summary>
+    /// Disable buy button
+    /// </summary>
+    DisableBuyButton = 1,
 
-        /// <summary>
-        /// Unpublish
-        /// </summary>
-        Unpublish = 2,
-    }
+    /// <summary>
+    /// Unpublish
+    /// </summary>
+    Unpublish = 2,
 }

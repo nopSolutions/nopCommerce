@@ -19,7 +19,7 @@
         <div class="section confirm-order">
             <form asp-route="CheckoutConfirm" method="post" id="confirm-order-form">
                 <script asp-location="Footer">
-                    $(document).ready(function () {
+                    $(function() {
                         $('.confirm-order-next-step-button').on('click', function () {
                             //terms of service
                             var termOfServiceOk = true;
@@ -60,7 +60,7 @@
                             {
                                 <a class="read" id="read-terms">@T("Checkout.TermsOfService.Read")</a>
                                 <script asp-location="Footer">
-                                    $(document).ready(function() {
+                                    $(function() {
                                         $('#read-terms').on('click',
                                             function(e) {
                                                 e.preventDefault();

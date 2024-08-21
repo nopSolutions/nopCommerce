@@ -15,7 +15,7 @@
 else
 {
     <script asp-location="Footer">
-        $(document).ready(function () {
+        $(function() {
             $('#checkout').after('<div id="paypal-button-container"></div>');
             $('#checkout').hide();
 
@@ -25,15 +25,15 @@ else
 }
 
 <script asp-location="Footer">
-    $(document).ready(function() {
+    $(function() {
         var paymentForm = paypal.Buttons({
             fundingSource: paypal.FUNDING.PAYPAL,
             onClick: function (e, n) {
                 if ($('#checkout').length > 0) {
-                    $('#checkout').click();
+                    $('#checkout').trigger("click");
                 }
                 if ($('#add-to-cart-button-@Model.ProductId').length > 0) {
-                    $('#add-to-cart-button-@Model.ProductId').click();
+                    $('#add-to-cart-button-@Model.ProductId').trigger('click');
                 }
                 return false;
             },

@@ -1,38 +1,37 @@
-﻿namespace Nop.Plugin.Misc.Brevo.Domain
+﻿namespace Nop.Plugin.Misc.Brevo.Domain;
+
+/// <summary>
+/// Represents Brevo account language enumeration
+/// </summary>
+public enum BrevoAccountLanguage
 {
     /// <summary>
-    /// Represents Brevo account language enumeration
+    /// English (default)
     /// </summary>
-    public enum BrevoAccountLanguage
-    {
-        /// <summary>
-        /// English (default)
-        /// </summary>
-        English = 0,
+    English = 0,
 
-        /// <summary>
-        /// French
-        /// </summary>
-        French = 1,
+    /// <summary>
+    /// French
+    /// </summary>
+    French = 1,
 
-        /// <summary>
-        /// Italian
-        /// </summary>
-        Italian = 2,
+    /// <summary>
+    /// Italian
+    /// </summary>
+    Italian = 2,
 
-        /// <summary>
-        /// Spanish
-        /// </summary>
-        Spanish = 3,
+    /// <summary>
+    /// Spanish
+    /// </summary>
+    Spanish = 3,
 
-        /// <summary>
-        /// German
-        /// </summary>
-        German = 4,
+    /// <summary>
+    /// German
+    /// </summary>
+    German = 4,
 
-        /// <summary>
-        /// Portuguese
-        /// </summary>
-        Portuguese = 5
-    }
+    /// <summary>
+    /// Portuguese
+    /// </summary>
+    Portuguese = 5
 }

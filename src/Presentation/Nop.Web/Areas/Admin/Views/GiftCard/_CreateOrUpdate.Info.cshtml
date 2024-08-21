@@ -63,7 +63,7 @@
                 <div class="input-group-append">
                     <button type="button" id="generateCouponCode" class="btn btn-info">@T("Admin.GiftCards.Fields.GiftCardCouponCode.Generate")</button>
                     <script>
-                        $(document).ready(function() {
+                        $(function() {
                             $('#generateCouponCode').click(function() {
                                 var postData = {};
 
@@ -79,7 +79,7 @@
                                     },
                                     error: function (jqXHR, textStatus, errorThrown) {
                                         $('#generateCouponCodeFailed-info').text(errorThrown);
-                                        $("#generateCouponCodeFailed").click();                                                
+                                        $("#generateCouponCodeFailed").trigger("click");                                                
                                     }
                                 });
                             });
@@ -170,7 +170,7 @@
 <nop-alert asp-alert-id="generateCouponCodeFailed" asp-alert-message="@T("Admin.GiftCards.Fields.GiftCardCouponCode.Alert.FailedGenerate")" />
 
 <script>
-    $(document).ready(function() {
+    $(function() {
         $("#@Html.IdFor(model => model.GiftCardTypeId)").change(toggleGiftCardType);
         toggleGiftCardType();
     });

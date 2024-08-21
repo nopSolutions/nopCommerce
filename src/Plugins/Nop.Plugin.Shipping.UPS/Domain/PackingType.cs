@@ -1,23 +1,22 @@
-﻿namespace Nop.Plugin.Shipping.UPS.Domain
+﻿namespace Nop.Plugin.Shipping.UPS.Domain;
+
+/// <summary>
+/// Represents packing type
+/// </summary>
+public enum PackingType
 {
     /// <summary>
-    /// Represents packing type
+    /// Pack by dimensions
     /// </summary>
-    public enum PackingType
-    {
-        /// <summary>
-        /// Pack by dimensions
-        /// </summary>
-        PackByDimensions = 0,
+    PackByDimensions = 0,
 
-        /// <summary>
-        /// Pack by one item per package
-        /// </summary>
-        PackByOneItemPerPackage = 1,
+    /// <summary>
+    /// Pack by one item per package
+    /// </summary>
+    PackByOneItemPerPackage = 1,
 
-        /// <summary>
-        /// Pack by volume
-        /// </summary>
-        PackByVolume = 2
-    }
+    /// <summary>
+    /// Pack by volume
+    /// </summary>
+    PackByVolume = 2
 }

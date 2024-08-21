@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Payment methods",
+  "FriendlyName": "Amazon Pay",
+  "SystemName": "Payments.AmazonPay",
+  "Version": "4.80.2",
+  "SupportedVersions": [ "4.80" ],
+  "Author": "nopCommerce team",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Payments.AmazonPay.dll",
+  "Description": "Amazon Pay is a full checkout solution, effectively replacing the standard checkout of a merchant’s website"
+}

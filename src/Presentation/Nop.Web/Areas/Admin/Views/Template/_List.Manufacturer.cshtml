@@ -91,7 +91,7 @@
             </div>
         </div>
         <script>
-            $(document).ready(function () {
+            $(function() {
                 $('#addManufacturerTemplate').click(function () {
                     $('#addManufacturerTemplate').attr('disabled', true);
                     var postData = {
@@ -114,7 +114,7 @@
                                 //clear input value
                                 $("#@Html.IdFor(model => model.AddManufacturerTemplate.Name)").val('');
                                 $("#@Html.IdFor(model => model.AddManufacturerTemplate.ViewPath)").val('');
-                                $("#@Html.IdFor(model => model.AddManufacturerTemplate.DisplayOrder)").value(0);
+                                $("#@Html.IdFor(model => model.AddManufacturerTemplate.DisplayOrder)").val(0);
 
                             } else {
                                 //display errors if returned

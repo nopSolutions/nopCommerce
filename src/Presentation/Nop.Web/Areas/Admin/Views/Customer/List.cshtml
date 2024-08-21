@@ -117,6 +117,14 @@
                                                 <nop-editor asp-for="SearchLastName" />
                                             </div>
                                         </div>
+                                        <div class="form-group row">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SearchIsActive" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-select asp-for="SearchIsActive" class="form-control" asp-items="Model.AvailableActiveValues" />
+                                            </div>
+                                        </div>
                                         @if (Model.DateOfBirthEnabled)
                                         {
                                             <div class="form-group row">
@@ -231,7 +239,7 @@
                                             <div class="col-md-8">                                               
                                                     <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true" />                                                                                                                                              
                                                 <script>
-                                                    $(document).ready(function() {
+                                                    $(function() {
                                                         var rolesIdsInput =
                                                             $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').select2({
                                                                 closeOnSelect: false,
@@ -274,22 +282,23 @@
                                     Length = Model.PageSize,
                                     LengthMenu = Model.AvailablePageSizes,
                                     Filters = new List<FilterParameter>
-                                                        {
-                                    new FilterParameter(nameof(Model.SelectedCustomerRoleIds)),
-                                    new FilterParameter(nameof(Model.SearchEmail)),
-                                    new FilterParameter(nameof(Model.SearchUsername)),
-                                    new FilterParameter(nameof(Model.SearchFirstName)),
-                                    new FilterParameter(nameof(Model.SearchLastName)),
-                                    new FilterParameter(nameof(Model.SearchDayOfBirth)),
-                                    new FilterParameter(nameof(Model.SearchMonthOfBirth)),
-                                    new FilterParameter(nameof(Model.SearchCompany)),
-                                    new FilterParameter(nameof(Model.SearchRegistrationDateFrom)),
-                                    new FilterParameter(nameof(Model.SearchRegistrationDateTo)),
-                                    new FilterParameter(nameof(Model.SearchLastActivityFrom)),
-                                    new FilterParameter(nameof(Model.SearchLastActivityTo)),
-                                    new FilterParameter(nameof(Model.SearchPhone)),
-                                    new FilterParameter(nameof(Model.SearchZipPostalCode)),
-                                    new FilterParameter(nameof(Model.SearchIpAddress)),
+                                    {
+                                        new FilterParameter(nameof(Model.SelectedCustomerRoleIds)),
+                                        new FilterParameter(nameof(Model.SearchEmail)),
+                                        new FilterParameter(nameof(Model.SearchUsername)),
+                                        new FilterParameter(nameof(Model.SearchFirstName)),
+                                        new FilterParameter(nameof(Model.SearchLastName)),
+                                        new FilterParameter(nameof(Model.SearchDayOfBirth)),
+                                        new FilterParameter(nameof(Model.SearchMonthOfBirth)),
+                                        new FilterParameter(nameof(Model.SearchCompany)),
+                                        new FilterParameter(nameof(Model.SearchRegistrationDateFrom)),
+                                        new FilterParameter(nameof(Model.SearchRegistrationDateTo)),
+                                        new FilterParameter(nameof(Model.SearchLastActivityFrom)),
+                                        new FilterParameter(nameof(Model.SearchLastActivityTo)),
+                                        new FilterParameter(nameof(Model.SearchPhone)),
+                                        new FilterParameter(nameof(Model.SearchZipPostalCode)),
+                                        new FilterParameter(nameof(Model.SearchIpAddress)),
+                                        new FilterParameter(nameof(Model.SearchIsActive)),
                                     }
                                 };
 
@@ -379,13 +388,13 @@
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
 <script>
-    $(document).ready(function () {
+    $(function() {
         $('#exportxml-selected').click(function (e) {
             e.preventDefault();
             var ids = selectedIds.join(",");
             if (!ids) {
                 $('#exportXmlSelected-info').text("@T("Admin.Customers.NoCustomers")");
-                $("#exportXmlSelected").click();
+                $("#exportXmlSelected").trigger("click");
             }
             else {
                 $('#export-xml-selected-form #selectedIds').val(ids);
@@ -446,13 +455,13 @@
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
 <script>
-    $(document).ready(function () {
+    $(function() {
         $('#exportexcel-selected').click(function (e) {
             e.preventDefault();
             var ids = selectedIds.join(",");
             if (!ids) {
                 $('#exportExcelSelected-info').text("@T("Admin.Customers.NoCustomers")");
-                $("#exportExcelSelected").click();
+                $("#exportExcelSelected").trigger("click");
             }
             else {
                 $('#export-excel-selected-form #selectedIds').val(ids);

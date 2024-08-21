@@ -4,18 +4,19 @@ using Nop.Services.Localization;
 using Nop.Web.Framework.Validators;
 using Nop.Web.Models.Customer;
 
-namespace Nop.Web.Validators.Customer
+namespace Nop.Web.Validators.Customer;
+
+public partial class LoginValidator : BaseNopValidator<LoginModel>
 {
-    public partial class LoginValidator : BaseNopValidator<LoginModel>
+    public LoginValidator(ILocalizationService localizationService, CustomerSettings customerSettings)
     {
-        public LoginValidator(ILocalizationService localizationService, CustomerSettings customerSettings)
+        if (!customerSettings.UsernamesEnabled)
         {
-            if (!customerSettings.UsernamesEnabled)
-            {
-                //login by email
-                RuleFor(x => x.Email).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Account.Login.Fields.Email.Required"));
-                RuleFor(x => x.Email).EmailAddress().WithMessageAwait(localizationService.GetResourceAsync("Common.WrongEmail"));
-            }
+            //login by email
+            RuleFor(x => x.Email).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Account.Login.Fields.Email.Required"));
+            RuleFor(x => x.Email)
+                .IsEmailAddress()
+                .WithMessageAwait(localizationService.GetResourceAsync("Common.WrongEmail"));
         }
     }
 }

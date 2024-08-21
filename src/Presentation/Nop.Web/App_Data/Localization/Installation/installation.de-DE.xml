@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Language Name="Deutsch" IsDefault="false" IsRightToLeft="false">
+<Language Name="German" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>E-Mail des Administrators</Value>
   </LocaleResource>
   <LocaleResource Name="AdminEmailRequired">
-    <Value>E-Mail für Admin eingeben</Value>
+    <Value>E-Mail des Admins eingeben</Value>
   </LocaleResource>
   <LocaleResource Name="AdminPassword">
     <Value>Administrator Passwort</Value>
@@ -133,7 +133,7 @@
     <Value>Shop Information</Value>
   </LocaleResource>
   <LocaleResource Name="SubscribeNewsletters">
-    <Value>Subscribe to nopCommerce newsletter</Value>
+    <Value>Abonnieren Sie den nopCommerce Newsletter</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
     <Value>nopCommerce-Installation</Value>

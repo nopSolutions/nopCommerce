@@ -2,28 +2,27 @@
 using Nop.Web.Factories;
 using Nop.Web.Framework.Components;
 
-namespace Nop.Web.Components
+namespace Nop.Web.Components;
+
+public partial class PollBlockViewComponent : NopViewComponent
 {
-    public partial class PollBlockViewComponent : NopViewComponent
+    protected readonly IPollModelFactory _pollModelFactory;
+
+    public PollBlockViewComponent(IPollModelFactory pollModelFactory)
     {
-        protected readonly IPollModelFactory _pollModelFactory;
+        _pollModelFactory = pollModelFactory;
+    }
 
-        public PollBlockViewComponent(IPollModelFactory pollModelFactory)
-        {
-            _pollModelFactory = pollModelFactory;
-        }
+    public async Task<IViewComponentResult> InvokeAsync(string systemKeyword)
+    {
 
-        public async Task<IViewComponentResult> InvokeAsync(string systemKeyword)
-        {
+        if (string.IsNullOrWhiteSpace(systemKeyword))
+            return Content("");
 
-            if (string.IsNullOrWhiteSpace(systemKeyword))
-                return Content("");
+        var model = await _pollModelFactory.PreparePollModelBySystemNameAsync(systemKeyword);
+        if (model == null)
+            return Content("");
 
-            var model = await _pollModelFactory.PreparePollModelBySystemNameAsync(systemKeyword);
-            if (model == null)
-                return Content("");
-
-            return View(model);
-        }
+        return View(model);
     }
 }

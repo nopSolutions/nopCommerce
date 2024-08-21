@@ -8,7 +8,7 @@
     // tinyMCE language
     var language = await tinyMceHelper.GetTinyMceLanguageAsync();
 
-    var allowRoxyFileman = await permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures);
+    var allowRoxyFileman = await permissionService.AuthorizeAsync(StandardPermission.System.HTML_EDITOR_MANAGE_PICTURES);
 
     var random = CommonHelper.GenerateRandomInteger();
 
@@ -44,7 +44,7 @@
 <script src="~/lib_npm/tinymce/tinymce.min.js" asp-location="Head"></script>
 
 <script>
-    $(document).ready(function() {
+    $(function() {
         @* wooncherk contribution *@
         function RoxyFileBrowser@(random)(callback, value, type) {
             //we manually generate the configuration file to ensure that it works fine in virtual directory
@@ -74,7 +74,7 @@
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     $('#createConfigurationFailed-info').text(errorThrown);
-                    $("#createConfigurationFailed").click();
+                    $("#createConfigurationFailed").trigger("click");
                 }
             });
         }

@@ -1,13 +1,12 @@
-﻿namespace Nop.Web.Framework
+﻿namespace Nop.Web.Framework;
+
+/// <summary>
+/// Represents a list of area names
+/// </summary>
+public static class AreaNames
 {
     /// <summary>
-    /// Represents a list of area names
+    /// Admin area
     /// </summary>
-    public static class AreaNames
-    {
-        /// <summary>
-        /// Admin area
-        /// </summary>
-        public const string Admin = "Admin";
-    }
+    public const string ADMIN = "Admin";
 }

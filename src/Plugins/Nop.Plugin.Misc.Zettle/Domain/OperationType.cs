@@ -1,33 +1,32 @@
-﻿namespace Nop.Plugin.Misc.Zettle.Domain
+﻿namespace Nop.Plugin.Misc.Zettle.Domain;
+
+/// <summary>
+/// Represents an operation type enumeration
+/// </summary>
+public enum OperationType
 {
     /// <summary>
-    /// Represents an operation type enumeration
+    /// None
     /// </summary>
-    public enum OperationType
-    {
-        /// <summary>
-        /// None
-        /// </summary>
-        None,
+    None,
 
-        /// <summary>
-        /// Create
-        /// </summary>
-        Create,
+    /// <summary>
+    /// Create
+    /// </summary>
+    Create,
 
-        /// <summary>
-        /// Update
-        /// </summary>
-        Update,
+    /// <summary>
+    /// Update
+    /// </summary>
+    Update,
 
-        /// <summary>
-        /// Delete
-        /// </summary>
-        Delete,
+    /// <summary>
+    /// Delete
+    /// </summary>
+    Delete,
 
-        /// <summary>
-        /// Image changed
-        /// </summary>
-        ImageChanged
-    }
+    /// <summary>
+    /// Image changed
+    /// </summary>
+    ImageChanged
 }

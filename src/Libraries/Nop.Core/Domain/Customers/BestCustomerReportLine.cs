@@ -1,23 +1,22 @@
-namespace Nop.Core.Domain.Customers
+namespace Nop.Core.Domain.Customers;
+
+/// <summary>
+/// Represents a best customer report line
+/// </summary>
+public partial class BestCustomerReportLine
 {
     /// <summary>
-    /// Represents a best customer report line
+    /// Gets or sets the customer identifier
     /// </summary>
-    public partial class BestCustomerReportLine
-    {
-        /// <summary>
-        /// Gets or sets the customer identifier
-        /// </summary>
-        public int CustomerId { get; set; }
+    public int CustomerId { get; set; }
 
-        /// <summary>
-        /// Gets or sets the order total
-        /// </summary>
-        public decimal OrderTotal { get; set; }
+    /// <summary>
+    /// Gets or sets the order total
+    /// </summary>
+    public decimal OrderTotal { get; set; }
 
-        /// <summary>
-        /// Gets or sets the order count
-        /// </summary>
-        public int OrderCount { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the order count
+    /// </summary>
+    public int OrderCount { get; set; }
 }

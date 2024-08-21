@@ -10,6 +10,7 @@
             <span asp-validation-for="HostingConfigModel.UseProxy"></span>
         </div>
     </div>
+    <nop-nested-setting asp-for="HostingConfigModel.UseProxy">
     <div class="form-group row advanced-setting">
         <div class="col-md-3">
             <nop-label asp-for="HostingConfigModel.ForwardedForHeaderName" />
@@ -46,4 +47,5 @@
             <span asp-validation-for="HostingConfigModel.KnownNetworks"></span>
         </div>
     </div>
+    </nop-nested-setting>
 </div>

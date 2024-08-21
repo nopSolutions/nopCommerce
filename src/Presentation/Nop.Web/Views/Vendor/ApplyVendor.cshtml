@@ -55,7 +55,7 @@
                         @if (Model.TermsOfServiceEnabled)
                         {
                             <script asp-location="Footer">
-                                $(document).ready(function() {
+                                $(function() {
                                     $('#apply-vendor').on('click', function() {
                                         if ($('#termsofservice').is(':checked')) {
                                             //do some stuff
@@ -75,7 +75,7 @@
                                 {
                                     <span class="read" id="read-acceptterms">@T("Vendors.ApplyAccount.AcceptTermsOfService.Read")</span>
                                     <script asp-location="Footer">
-                                        $(document).ready(function() {
+                                        $(function() {
                                             $('#read-acceptterms').on('click',
                                                 function (e) {
                                                     displayPopupContentFromUrl(

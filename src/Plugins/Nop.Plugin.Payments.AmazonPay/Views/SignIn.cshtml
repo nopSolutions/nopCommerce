@@ -1,0 +1,27 @@
+﻿@model SignInModel
+
+<script src="@Model.AmazonPayScript" asp-location="Footer"></script>
+
+<div style="margin:0 auto;" id="amazonPayButton"></div>
+
+<script asp-location="Footer">
+    $(function () {
+
+        amazon.Pay.renderButton('#amazonPayButton', {
+            // set checkout environment
+            merchantId: '@Html.Raw(settings.MerchantId)',
+            ledgerCurrency: '@Html.Raw(Model.LedgerCurrency)',
+            sandbox: Boolean('@settings.UseSandbox'),
+            productType: 'SignIn',
+            placement: 'Other',
+            buttonColor: '@Html.Raw(Model.ButtonColor)',
+            // configure sign in
+            signInConfig: {
+                payloadJSON: '@Html.Raw(Model.Payload)',
+                signature: '@Html.Raw(Model.Signature)',
+                algorithm: 'AMZN-PAY-RSASSA-PSS-V2',
+                publicKeyId: '@Html.Raw(settings.PublicKeyId)'
+            }
+        });
+    });
+</script>

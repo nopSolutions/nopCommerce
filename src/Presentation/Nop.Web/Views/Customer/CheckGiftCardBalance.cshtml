@@ -64,10 +64,10 @@
             <div class="buttons">
                 <button type="submit" name="checkbalancegiftcard" id="checkbalancegiftcard" class="button-1 check-gift-card-balance-button">@T("CheckGiftCard.GiftCardCouponCode.Button")</button>
                 <script asp-location="Footer">
-                    $(document).ready(function () {
+                    $(function() {
                         $('#giftcardcouponcode').keydown(function (event) {
                             if (event.keyCode == 13) {
-                                $('#checkbalancegiftcard').click();
+                                $('#checkbalancegiftcard').trigger('click');
                                 return false;
                             }
                         });

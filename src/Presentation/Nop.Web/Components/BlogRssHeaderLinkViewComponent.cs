@@ -2,23 +2,22 @@
 using Nop.Core.Domain.Blogs;
 using Nop.Web.Framework.Components;
 
-namespace Nop.Web.Components
+namespace Nop.Web.Components;
+
+public partial class BlogRssHeaderLinkViewComponent : NopViewComponent
 {
-    public partial class BlogRssHeaderLinkViewComponent : NopViewComponent
+    protected readonly BlogSettings _blogSettings;
+
+    public BlogRssHeaderLinkViewComponent(BlogSettings blogSettings)
     {
-        protected readonly BlogSettings _blogSettings;
+        _blogSettings = blogSettings;
+    }
 
-        public BlogRssHeaderLinkViewComponent(BlogSettings blogSettings)
-        {
-            _blogSettings = blogSettings;
-        }
+    public IViewComponentResult Invoke(int currentCategoryId, int currentProductId)
+    {
+        if (!_blogSettings.Enabled || !_blogSettings.ShowHeaderRssUrl)
+            return Content("");
 
-        public IViewComponentResult Invoke(int currentCategoryId, int currentProductId)
-        {
-            if (!_blogSettings.Enabled || !_blogSettings.ShowHeaderRssUrl)
-                return Content("");
-
-            return View();
-        }
+        return View();
     }
 }

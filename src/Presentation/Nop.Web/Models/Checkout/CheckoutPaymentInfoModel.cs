@@ -1,14 +1,13 @@
 ﻿using Nop.Web.Framework.Models;
 
-namespace Nop.Web.Models.Checkout
-{
-    public partial record CheckoutPaymentInfoModel : BaseNopModel
-    {
-        public Type PaymentViewComponent { get; set; }
+namespace Nop.Web.Models.Checkout;
 
-        /// <summary>
-        /// Used on one-page checkout page
-        /// </summary>
-        public bool DisplayOrderTotals { get; set; }
-    }
+public partial record CheckoutPaymentInfoModel : BaseNopModel
+{
+    public Type PaymentViewComponent { get; set; }
+
+    /// <summary>
+    /// Used on one-page checkout page
+    /// </summary>
+    public bool DisplayOrderTotals { get; set; }
 }

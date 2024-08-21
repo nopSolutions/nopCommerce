@@ -1,22 +1,21 @@
-namespace Nop.Core.Domain.Blogs
+namespace Nop.Core.Domain.Blogs;
+
+/// <summary>
+/// Blog post comment approved event
+/// </summary>
+public partial class BlogCommentApprovedEvent
 {
     /// <summary>
-    /// Blog post comment approved event
+    /// Ctor
     /// </summary>
-    public partial class BlogCommentApprovedEvent
+    /// <param name="blogComment">Blog comment</param>
+    public BlogCommentApprovedEvent(BlogComment blogComment)
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="blogComment">Blog comment</param>
-        public BlogCommentApprovedEvent(BlogComment blogComment)
-        {
-            BlogComment = blogComment;
-        }
-
-        /// <summary>
-        /// Blog post comment
-        /// </summary>
-        public BlogComment BlogComment { get; }
+        BlogComment = blogComment;
     }
+
+    /// <summary>
+    /// Blog post comment
+    /// </summary>
+    public BlogComment BlogComment { get; }
 }

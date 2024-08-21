@@ -16,7 +16,7 @@
     <div class="card card-default card-popup">
 
         <script>
-            $(document).ready(function() {
+            $(function() {
                 $("#@Html.IdFor(model => model.Address.CountryId)").change(function(){
                     var selectedItem = $(this).val();
                     var ddlStates = $("#@Html.IdFor(model => model.Address.StateProvinceId)");
@@ -34,7 +34,7 @@
                             });
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
-                            $("#getStatesByCountryIdAlert").click();
+                            $("#getStatesByCountryIdAlert").trigger("click");
                         }
                     });
                 });
@@ -155,7 +155,7 @@
                     <nop-label asp-for="Latitude" />
                 </div>
                 <div class="col-sm-9">
-                    <nop-editor asp-for="Latitude" asp-render-form-control-class="true" />
+                    <nop-editor asp-for="Latitude" />
                     <span asp-validation-for="Latitude"></span>
                 </div>
             </div>
@@ -164,7 +164,7 @@
                     <nop-label asp-for="Longitude" />
                 </div>
                 <div class="col-sm-9">
-                    <nop-editor asp-for="Longitude" asp-render-form-control-class="true" />
+                    <nop-editor asp-for="Longitude" />
                     <span asp-validation-for="Longitude"></span>
                 </div>
             </div>

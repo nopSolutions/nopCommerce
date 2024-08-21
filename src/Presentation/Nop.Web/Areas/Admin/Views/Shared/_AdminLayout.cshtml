@@ -24,7 +24,7 @@
     adminPageTitle += T("Admin.PageTitle").Text;
 
     //has "Manage Maintenance" permission?
-    var canManageMaintenance = await permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance);
+    var canManageMaintenance = await permissionService.AuthorizeAsync(StandardPermission.System.MANAGE_MAINTENANCE);
 
     //avatar
     var currentCustomer = await workContext.GetCurrentCustomerAsync();
@@ -122,7 +122,7 @@
                                 </a>
                                 <ul class="maintenance-menu dropdown-menu dropdown-menu-right" role="menu">
                                     <li class="dropdown-item">
-                                        <form asp-controller="Common" asp-action="ClearCache" asp-area="@AreaNames.Admin">
+                                        <form asp-controller="Common" asp-action="ClearCache" asp-area="@AreaNames.ADMIN">
                                             <input name="returnurl" type="hidden" value="@returnUrl">
                                             <div class="input-group-append">
                                                 <button type="submit" style="width:210px;background-color: Transparent;">
@@ -132,13 +132,13 @@
                                         </form>
                                     </li>
                                     <li class="dropdown-item">
-                                        <form asp-controller="Common" asp-action="RestartApplication" asp-area="@AreaNames.Admin">
+                                        <form asp-controller="Common" asp-action="RestartApplication" asp-area="@AreaNames.ADMIN">
                                             <input name="returnurl" type="hidden" value="@returnUrl">
                                             <button id="restart-application" type="submit" style="width:210px;background-color: Transparent;">
                                                 <span>@T("Admin.Header.RestartApplication")</span>
                                             </button>
                                             <script>
-                                                $(document).ready(function () {
+                                                $(function() {
                                                     $("#restart-application").click(function (e) {
                                                         showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Header.RestartApplication.Progress").Text))');
                                                     });
@@ -177,7 +177,7 @@
                     <nav class="mt-2">
                         @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.SearchBoxBefore })
                         <script>
-                            $(document).ready(function () {
+                            $(function() {
                                 Admin.Search.init();
                             });
                         </script>
@@ -243,7 +243,7 @@
     }
     <a id="backTop" class="btn btn-back-top bg-teal"></a>
     <script>
-        $(document).ready(function () {
+        $(function() {
             //enable "back top" arrow
             $('#backTop').backTop();
 

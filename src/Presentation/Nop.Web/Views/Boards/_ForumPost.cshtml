@@ -98,7 +98,7 @@
             @if (Model.AllowPostVoting)
             {
                 <script asp-location="Footer">
-                    $(document).ready(function () {
+                    $(function() {
                         var post = '#post-vote-' + @Model.Id;
                         $(post + ' span.vote').on('click', function () {
                             var postData = {

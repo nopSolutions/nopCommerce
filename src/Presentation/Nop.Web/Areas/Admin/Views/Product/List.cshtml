@@ -282,7 +282,7 @@
                                 return (row.ProductTypeId != @((int)ProductType.GroupedProduct) ) ? data : null;
                             }
 
-                            $(document).ready(function () {
+                            $(function() {
                                 $('#delete-selected-action-confirmation-submit-button').bind('click', function () {
                                     var postData = {
                                         selectedIds: selectedIds
@@ -320,10 +320,10 @@
         </div>
       </section>
     <script>
-        $(document).ready(function () {
+        $(function() {
             $("#@Html.IdFor(model => model.GoDirectlyToSku)").keydown(function (event) {
                 if (event.keyCode === 13) {
-                    $("#go-to-product-by-sku").click();
+                    $("#go-to-product-by-sku").trigger("click");
                     return false;
                 }
             });
@@ -333,7 +333,7 @@
 }
 
 <script>
-    $(document).ready(function () {
+    $(function() {
         var displayModal = @((Model.LicenseCheckModel?.DisplayWarning == true || Model.LicenseCheckModel?.BlockPages == true).ToString().ToLower());
         if (displayModal) {
             $('#license-window').modal({
@@ -421,13 +421,13 @@
     </form>
 
 <script>
-    $(document).ready(function () {
+    $(function() {
         $('#exportxml-selected').click(function (e) {
             e.preventDefault();
             var ids = selectedIds.join(",");
             if (!ids) {
                 $('#exportXmlSelected-info').text("@T("Admin.Products.NoProducts")");
-                $("#exportXmlSelected").click();
+                $("#exportXmlSelected").trigger("click");
             }
             else {
                 $('#export-xml-selected-form #selectedIds').val(ids);
@@ -446,13 +446,13 @@
     </form>
 
     <script>
-        $(document).ready(function () {
+        $(function() {
             $('#exportexcel-selected').click(function (e) {
                 e.preventDefault();
                 var ids = selectedIds.join(",");
                 if (!ids) {
                     $('#exportExcelSelected-info').text("@T("Admin.Products.NoProducts")");
-                    $("#exportExcelSelected").click();
+                    $("#exportExcelSelected").trigger("click");
                 }
                 else {
                     $('#export-excel-selected-form #selectedIds').val(ids);

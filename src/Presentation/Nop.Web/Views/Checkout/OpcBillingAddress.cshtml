@@ -1,4 +1,10 @@
 ﻿@model CheckoutBillingAddressModel
+@using Nop.Core;
+@inject IWebHelper webHelper
+
+@{
+    var storeLocation = webHelper.GetStoreLocation();
+}
 
 <div class="checkout-data">
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OpCheckoutBillingAddressTop, additionalData = Model })
@@ -13,15 +19,15 @@
     }
     @if (Model.ExistingAddresses.Count > 0)
     {
-            <div class="section select-billing-address">
-                <label for="billing-address-select">@T("Checkout.SelectBillingAddressOrEnterNewOne")</label>
-                @if (Model.InvalidExistingAddresses.Count > 0)
-                {
-                    <label class="min-amount-warning">
-                        @string.Format(T("Checkout.Addresses.Invalid").Text, Model.InvalidExistingAddresses.Count)
-                    </label>
-                }
-            <div>
+        <div class="section select-billing-address">
+            <label for="billing-address-select">@T("Checkout.SelectBillingAddressOrEnterNewOne")</label>
+            @if (Model.InvalidExistingAddresses.Count > 0)
+            {
+                <label class="min-amount-warning">
+                    @string.Format(T("Checkout.Addresses.Invalid").Text, Model.InvalidExistingAddresses.Count)
+                </label>
+            }
+            <div class="opc-select-address-container">
                 <select name="billing_address_id" id="billing-address-select" class="address-select"
                     title="" onchange="Billing.resetBillingForm();Billing.setDefaultCountry(@(Model.BillingNewAddress.DefaultCountryId??0));Billing.newAddress(!this.value)">
                     @foreach (var address in Model.ExistingAddresses)
@@ -35,6 +41,11 @@
                     }
                     <option value="" selected="@Model.NewAddressPreselected">@T("Checkout.NewAddress")</option>
                 </select>
+
+                <button id="edit-billing-address-button" type="button" class="button-1" style="display: none" onclick="Billing.editAddress('@(storeLocation)checkout/GetAddressById/'); return false;">@T("Common.Edit")</button>
+
+                <button id="delete-billing-address-button" type="button" class="button-1" style="display: none" onclick="Billing.deleteAddress('@(storeLocation)checkout/DeleteEditBillingAddress/'); return false;">@T("Common.Delete")</button>
+        
             </div>
         </div>
     }

@@ -1,22 +1,21 @@
-﻿namespace Nop.Core.Domain.Orders
+﻿namespace Nop.Core.Domain.Orders;
+
+/// <summary>
+/// Shopping cart cleared event
+/// </summary>
+public partial class ClearShoppingCartEvent
 {
     /// <summary>
-    /// Shopping cart cleared event
+    /// Ctor
     /// </summary>
-    public partial class ClearShoppingCartEvent
+    /// <param name="cart">Shopping cart</param>
+    public ClearShoppingCartEvent(IList<ShoppingCartItem> cart)
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="cart">Shopping cart</param>
-        public ClearShoppingCartEvent(IList<ShoppingCartItem> cart)
-        {
-            Cart = cart;
-        }
-
-        /// <summary>
-        /// Shopping cart
-        /// </summary>
-        public IList<ShoppingCartItem> Cart { get; }
+        Cart = cart;
     }
+
+    /// <summary>
+    /// Shopping cart
+    /// </summary>
+    public IList<ShoppingCartItem> Cart { get; }
 }

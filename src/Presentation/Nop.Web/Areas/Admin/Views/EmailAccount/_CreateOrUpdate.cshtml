@@ -1,4 +1,8 @@
+@using Nop.Core.Domain.Messages
+@using Nop.Web.Areas.Admin.Controllers
 @model EmailAccountModel
+
+@inject IWebHelper webHelper
 
 <div asp-validation-summary="ModelOnly"></div>
 <input asp-for="Id" type="hidden" />
@@ -12,86 +16,159 @@
                     <div class="card-body">
                         <div class="form-group row" id="email-area">
                             <div class="col-md-3">
-                                <nop-label asp-for="Email"/>
+                                <nop-label asp-for="Email" />
                             </div>
                             <div class="col-md-9">
-                                <nop-editor asp-for="Email" asp-required="true"/>
+                                <nop-editor asp-for="Email" asp-required="true" />
                                 <span asp-validation-for="Email"></span>
                             </div>
                         </div>
                         <div class="form-group row" id="display-name-area">
                             <div class="col-md-3">
-                                <nop-label asp-for="DisplayName"/>
+                                <nop-label asp-for="DisplayName" />
                             </div>
                             <div class="col-md-9">
-                                <nop-editor asp-for="DisplayName" asp-required="true"/>
+                                <nop-editor asp-for="DisplayName" asp-required="true" />
                                 <span asp-validation-for="DisplayName"></span>
                             </div>
                         </div>
                         <div class="form-group row" id="host-area">
                             <div class="col-md-3">
-                                <nop-label asp-for="Host"/>
+                                <nop-label asp-for="Host" />
                             </div>
                             <div class="col-md-9">
-                                <nop-editor asp-for="Host"/>
+                                <nop-editor asp-for="Host" />
                                 <span asp-validation-for="Host"></span>
                             </div>
                         </div>
                         <div class="form-group row" id="port-area">
                             <div class="col-md-3">
-                                <nop-label asp-for="Port"/>
+                                <nop-label asp-for="Port" />
                             </div>
                             <div class="col-md-9">
-                                <nop-editor asp-for="Port"/>
+                                <nop-editor asp-for="Port" />
                                 <span asp-validation-for="Port"></span>
                             </div>
                         </div>
-                        <div class="form-group row" id="username-area">
-                            <div class="col-md-3">
-                                <nop-label asp-for="Username"/>
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="Username"/>
-                                <span asp-validation-for="Username"></span>
-                            </div>
-                        </div>
-                        <div class="form-group row" id="password-area">
-                            <div class="col-md-3">
-                                <nop-label asp-for="Password"/>
-                            </div>
-                            <div class="col-md-9">
-                                <div class="input-group">
-                                    <nop-editor asp-for="Password" html-attributes="@(new { autocomplete = "new-password" })"/>
-                                    <div class="input-group-append">
-                                        @if (Model.Id > 0)
-                                        {
-                                            <button type="submit" name="changepassword" class="btn btn-info">
-                                                @T("Admin.Configuration.EmailAccounts.Fields.Password.Change")
-                                            </button>
-                                        }
-                                    </div>
-                                </div>
-                                <span asp-validation-for="Password"></span>
-                            </div>
-                        </div>
+
                         <div class="form-group row" id="ssl-area">
                             <div class="col-md-3">
-                                <nop-label asp-for="EnableSsl"/>
+                                <nop-label asp-for="EnableSsl" />
                             </div>
                             <div class="col-md-9">
-                                <nop-editor asp-for="EnableSsl"/>
+                                <nop-editor asp-for="EnableSsl" />
                                 <span asp-validation-for="EnableSsl"></span>
                             </div>
                         </div>
-                        <div class="form-group row" id="default-area">
+                        <div class="form-group row" id="number-of-emails-area">
                             <div class="col-md-3">
-                                <nop-label asp-for="UseDefaultCredentials"/>
+                                <nop-label asp-for="MaxNumberOfEmails" />
                             </div>
                             <div class="col-md-9">
-                                <nop-editor asp-for="UseDefaultCredentials"/>
-                                <span asp-validation-for="UseDefaultCredentials"></span>
+                                <nop-editor asp-for="MaxNumberOfEmails" />
+                                <span asp-validation-for="MaxNumberOfEmails"></span>
                             </div>
                         </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="EmailAuthenticationMethod" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="EmailAuthenticationMethod" asp-items="Model.AvailableEmailAuthenticationMethods" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row auth-method-row gmail-auth">
+                            <div class="offset-md-3 col-md-9">
+                                <div class="callout">
+                                    <p>@T("Admin.Configuration.EmailAccounts.RedirectUrl.Info", Url.Action(nameof(EmailAccountController.AuthReturn), null, null, webHelper.GetCurrentRequestProtocol()))</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row auth-method-row login-auth" id="username-area">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Username" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="Username" />
+                                <span asp-validation-for="Username"></span>
+                            </div>
+                        </div>
+                        @if (Model.Id > 0)
+                        {
+                            <div class="form-group row auth-method-row login-auth" id="password-area">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="Password" />
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="input-group">
+                                        <nop-editor asp-for="Password" html-attributes="@(new {  autocomplete = "new-password", value = Model.Password })" />
+                                        <div class="input-group-append">
+                                            @if (Model.Id > 0)
+                                            {
+                                                <button type="submit" name="changepassword" class="btn btn-info">
+                                                    @T("Admin.Configuration.EmailAccounts.Fields.Password.Change")
+                                                </button>
+                                            }
+                                        </div>
+                                    </div>
+                                    <span asp-validation-for="Password"></span>
+                                </div>
+                            </div>
+                        }
+                        <div class="form-group row auth-method-row ms-auth" id="tenant-id-area">
+                            <div class="col-md-3">
+                                <nop-label asp-for="TenantId" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="TenantId" />
+                                <span asp-validation-for="TenantId"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row auth-method-row gmail-auth ms-auth" id="client-id-area">
+                            <div class="col-md-3">
+                                <nop-label asp-for="ClientId" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ClientId" />
+                                <span asp-validation-for="ClientId"></span>
+                            </div>
+                        </div>
+                        
+                        @if (Model.Id > 0)
+                        {
+                            <div class="form-group row auth-method-row gmail-auth ms-auth" id="client-secret-area">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="ClientSecret" />
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="input-group">
+                                        <nop-editor asp-for="ClientSecret" html-attributes="@(new { value = Model.ClientSecret })" />
+                                        <div class="input-group-append">
+                                            <button type="submit" name="changesecret" class="btn btn-info">
+                                                @T("Admin.Configuration.EmailAccounts.Fields.ClientSecret.Change")
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <span asp-validation-for="ClientSecret"></span>
+                                </div>
+                            </div>
+                            @if (!string.IsNullOrEmpty(Model.AuthUrl))
+                            {
+                                <div class="form-group row auth-method-row gmail-auth ms-auth">
+                                    <div class="offset-md-3 col-md-9">
+                                        <div class="callout callout-danger">
+                                            <p>@T("Admin.Configuration.EmailAccounts.AuthorizationRequest.Info", T("Admin.Configuration.EmailAccounts.AuthorizationRequest.Text").Text)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row auth-method-row gmail-auth ms-auth">
+                                    <div class="offset-md-3 col-md-9">
+                                        <a class="btn btn-primary" href="@Model.AuthUrl">@T("Admin.Configuration.EmailAccounts.AuthorizationRequest.Text")</a>
+                                    </div>
+                                </div>
+                            }
+                        }
                     </div>
                 </div>
                 @if (Model.Id > 0)
@@ -103,11 +180,11 @@
                         <div class="card-body">
                             <div class="form-group row">
                                 <div class="col-md-3">
-                                    <nop-label asp-for="SendTestEmailTo"/>
+                                    <nop-label asp-for="SendTestEmailTo" />
                                 </div>
                                 <div class="col-md-9">
                                     <div class="input-group">
-                                        <nop-editor asp-for="SendTestEmailTo"/>
+                                        <nop-editor asp-for="SendTestEmailTo" />
                                         <div class="input-group-append">
                                             <button type="submit" name="sendtestemail" class="btn btn-info">
                                                 @T("Admin.Configuration.EmailAccounts.SendTestEmail.Button")
@@ -125,3 +202,29 @@
         </div>
     </div>
 </section>
+
+<script asp-location="Footer">
+    $(function () {
+        var authSelectEl = $('#@Html.IdFor(model => model.EmailAuthenticationMethod)');
+        authSelectEl.change(toggleAuthMethod);
+        authSelectEl.trigger('change');
+    });
+
+    function toggleAuthMethod(event) {
+        $('.auth-method-row').hideElement();
+
+        switch (event.target.value) {
+            case '@((int)EmailAuthenticationMethod.Login)':
+                $('.login-auth').showElement();
+                break;
+            case '@((int)EmailAuthenticationMethod.GmailOAuth2)':
+                $('.gmail-auth').showElement();
+                break;
+            case '@((int)EmailAuthenticationMethod.MicrosoftOAuth2)':
+                $('.ms-auth').showElement();
+                break;
+            default:
+                break;
+        }
+    }
+</script>

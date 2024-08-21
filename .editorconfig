@@ -193,6 +193,8 @@ csharp_style_deconstructed_variable_declaration     = true:suggestion
 csharp_prefer_simple_default_expression             = true:suggestion
 csharp_style_pattern_local_over_anonymous_function  = true:suggestion
 csharp_style_inlined_variable_declaration           = true:suggestion
+csharp_style_prefer_primary_constructors            = false:suggestion
+dotnet_style_prefer_collection_expression			= false:suggestion
 
 ###############################
 # C# Formatting Rules         #
@@ -230,3 +232,4 @@ csharp_space_after_dot                                                      = fa
 # Wrapping preferences
 csharp_preserve_single_line_statements  = false
 csharp_preserve_single_line_blocks      = true
+csharp_style_namespace_declarations 	= file_scoped:suggestion

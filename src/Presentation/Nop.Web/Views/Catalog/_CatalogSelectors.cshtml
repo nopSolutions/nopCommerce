@@ -24,7 +24,7 @@
             }
         </div>
         <script asp-location="Footer">
-            $(document).ready(function () {
+            $(function() {
                 var $viewModeEls = $('[data-viewmode]');
                 $viewModeEls.on('click', function () {
                     if (!$(this).hasClass('selected')) {
@@ -52,7 +52,7 @@
             @Html.DropDownList("products-orderby", Model.AvailableSortOptions, new { aria_label = T("Catalog.OrderBy.Label") })
         </div>
         <script asp-location="Footer">
-            $(document).ready(function () {
+            $(function() {
                 var $orderByEl = $('#products-orderby');
                 $orderByEl.on('change', function () {
                     CatalogProducts.getProducts();
@@ -74,7 +74,7 @@
             <span>@T("Catalog.PageSize.PerPage")</span>
         </div>
         <script asp-location="Footer">
-            $(document).ready(function () {
+            $(function() {
                 var $pageSizeEl = $('#products-pagesize');
                 $pageSizeEl.on('change', function () {
                     CatalogProducts.getProducts();

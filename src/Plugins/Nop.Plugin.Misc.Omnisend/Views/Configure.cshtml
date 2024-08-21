@@ -1,0 +1,113 @@
+﻿@model ConfigurationModel
+
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+<form asp-controller="OmnisendAdmin" asp-action="Configure" method="post">
+    <nop-cards>
+        <nop-card asp-name="omnisend-general" asp-icon="fas fa-info" asp-title="@T("Plugins.Misc.Omnisend.Credentials")" asp-hide-block-attribute-name="omnisend-general" asp-hide="false" asp-advanced="false">
+            <div class="card-body">
+                <div class="card card-default">
+                    <div class="card-body">
+                        <p>
+                            To enable this plugin, you'll need to:<br />
+                            <br />
+                            1. Please <a href="https://your.omnisend.com/g1K9y2" target="_blank">sign up</a> on omnisend.com <br />
+                            2. Follow steps provided here - <a href='https://app.omnisend.com/apps/connect-store/nopcommerce' target="_blank">instructions</a>.<br />
+                            3. Fill in your account details below<br />
+                        </p>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="ApiKey"/>
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ApiKey" asp-required="true" html-attributes="@(new { value = Model.ApiKey })"/>
+                                <span asp-validation-for="ApiKey"></span>
+                            </div>
+                        </div>
+                        @*//recommended not to change this setting*@
+                        @*<div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="UseTracking"/>
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="UseTracking"/>
+                                <span asp-validation-for="UseTracking"></span>
+                            </div>
+                        </div>*@
+                        <div class="form-group row">
+                            <button type="submit" name="save" class="btn btn-primary">
+                                @T("Admin.Common.Save")
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nop-card>
+        <nop-card asp-name="omnisend-synchronization" asp-icon="fas fa-refresh" asp-title="@T("Plugins.Misc.Omnisend.Synchronization")" asp-hide-block-attribute-name="omnisend-synchronization" asp-hide="false" asp-advanced="false">
+            <div class="card-body">
+                <div class="card card-default">
+                    <div class="card-body">
+                        <div class="content-header clearfix">
+                            <div class="float-right">
+                                <button type="submit" name="sync-contacts" class="btn bg-blue" @(Model.BlockSyncContacts ? "disabled=\"disabled\"" : string.Empty)>
+                                    @T("Plugins.Misc.Omnisend.SyncContacts")
+                                </button>
+                                <button type="submit" name="sync-products" class="btn bg-purple" @(Model.BlockSyncProducts ? "disabled=\"disabled\"" : string.Empty)>
+                                    @T("Plugins.Misc.Omnisend.SyncProducts")
+                                </button>
+                                @*//order history not supported at this moment*@
+                                @*<button type="submit" name="sync-orders" class="btn bg-olive" @(Model.BlockSyncOrders ? "disabled=\"disabled\"" : string.Empty)>
+                                    @T("Plugins.Misc.Omnisend.SyncOrders")
+                                </button>*@
+                            </div>
+                        </div>
+                        <p>
+                            For full integration with the service, you need to perform data synchronization. For your convenience, synchronization is divided into two blocks:
+                        </p>
+                        <ul>
+                            <li><strong>@T("Plugins.Misc.Omnisend.SyncContacts")</strong> - Performs synchronization of customers who have subscribed to the Newsletter</li>
+                            <li><strong>@T("Plugins.Misc.Omnisend.SyncProducts")</strong> - Performs category and product synchronization</li>
+                            @*//order history not supported at this moment*@
+                            @*<li><strong>@T("Plugins.Misc.Omnisend.SyncOrders")</strong> - Performs synchronization of existing orders and current user carts</li>*@
+                        </ul>
+                        @if (Model.Batches.Any())
+                        {
+                            <p><b>@T("Plugins.Misc.Omnisend.BatchesInProcess")</b></p>
+
+                            <table class="table table-hover table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>@T("Plugins.Misc.Omnisend.BatchesInProcess.SyncType")</th>
+                                    <th>@T("Plugins.Misc.Omnisend.BatchesInProcess.StartedAt")</th>
+                                    <th>@T("Plugins.Misc.Omnisend.BatchesInProcess.Status")</th>
+                                    <th>@T("Plugins.Misc.Omnisend.BatchesInProcess.TotalCount")</th>
+                                    <th>@T("Plugins.Misc.Omnisend.BatchesInProcess.FinishedCount")</th>
+                                    <th>@T("Plugins.Misc.Omnisend.BatchesInProcess.ErrorsCount")</th>
+                                    <th>@T("Plugins.Misc.Omnisend.BatchesInProcess.EndedAt")</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach (var batch in Model.Batches)
+                                {
+                                    <tr>
+                                        <td>@T(batch.SyncType)</td>
+                                        <td>@batch.StartedAt</td>
+                                        <td>@batch.Status</td>
+                                        <td>@batch.TotalCount</td>
+                                        <td>@batch.FinishedCount</td>
+                                        <td>@batch.ErrorsCount</td>
+                                        <td>@batch.EndedAt</td>
+                                    </tr>
+                                }
+                                </tbody>
+                            </table>
+                        }
+                        <p><strong>Note:</strong> Manual synchronization should be performed only once, with multiple synchronization, batch insert will report data insert errors. Further synchronization will go automatically and will not require the participation of an administrator</p>
+                    </div>
+                </div>
+            </div>
+        </nop-card>
+    </nop-cards>
+</form>

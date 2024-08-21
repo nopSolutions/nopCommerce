@@ -1,23 +1,22 @@
-namespace Nop.Core.Domain.Tax
+namespace Nop.Core.Domain.Tax;
+
+/// <summary>
+/// Represents the tax based on
+/// </summary>
+public enum TaxBasedOn
 {
     /// <summary>
-    /// Represents the tax based on
+    /// Billing address
     /// </summary>
-    public enum TaxBasedOn
-    {
-        /// <summary>
-        /// Billing address
-        /// </summary>
-        BillingAddress = 1,
+    BillingAddress = 1,
 
-        /// <summary>
-        /// Shipping address
-        /// </summary>
-        ShippingAddress = 2,
+    /// <summary>
+    /// Shipping address
+    /// </summary>
+    ShippingAddress = 2,
 
-        /// <summary>
-        /// Default address
-        /// </summary>
-        DefaultAddress = 3
-    }
+    /// <summary>
+    /// Default address
+    /// </summary>
+    DefaultAddress = 3
 }

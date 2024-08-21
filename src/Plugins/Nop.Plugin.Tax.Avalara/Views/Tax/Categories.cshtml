@@ -147,7 +147,7 @@
                                     </div>
                                 </div>
                                 <script>
-                                    $(document).ready(function () {
+                                    $(function() {
                                         $('#addTaxCategory').click(function () {
                                             $('#addTaxCategory').attr('disabled', true);
                                             var postData = {
@@ -166,7 +166,7 @@
                                                     if (data.Result) {
                                                         updateTable('#tax-categories-grid');
                                                         $('#@Html.IdFor(model => model.AddTaxCategory.Name)').val('');
-                                                        $('#@Html.IdFor(model => model.AddTaxCategory.DisplayOrder)').value(0);
+                                                        $('#@Html.IdFor(model => model.AddTaxCategory.DisplayOrder)').val(0);
                                                         $('#@Html.IdFor(model => model.AddTaxCategory.TypeId)').val('');
                                                     } else {
                                                         display_nop_error(data);

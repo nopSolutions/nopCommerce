@@ -33,18 +33,18 @@
                     <div class="card card-default">
                         <div class="card-body" style="overflow-x: auto;">
                             <p>@T("Admin.Configuration.Shipping.Restrictions.Description")</p>
-                            @if (Model.AvailableCountries.Count == 0)
+                            @if (!Model.AvailableCountries.Any())
                             {
                                 <text>No countries defined</text>
                             }
-                            else if (Model.AvailableShippingMethods.Count == 0)
+                            else if (!Model.AvailableShippingMethods.Any())
                             {
                                 <text>No shipping methods available</text>
                             }
                             else
                             {
                                 <script>
-                                $(document).ready(function () {
+                                $(function() {
                                     @foreach (var sm in Model.AvailableShippingMethods)
                                     {
                                         <text>

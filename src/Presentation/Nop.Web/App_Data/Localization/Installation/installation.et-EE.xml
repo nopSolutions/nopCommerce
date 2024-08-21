@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="Eesti" IsDefault="false" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>Admini kasutaja e-post</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>Sisesta admini e-post</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>Admini kasutaja parool</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>Sisesta admini parool</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>Nn '{0}' "konto ei ole antud koos Muuda loata kausta" '{1}' "Palun seadistada need õigused."</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>Nn '{0}' "konto ei ole antud koos Muuda luba faili" '{1}' "Palun seadistada need õigused."</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>Kinnita parool</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>Sisesta kinnituse parool</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>Ühenduse string</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>SQL ühenduse string on nõutav</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>Vale SQL ühenduse stringi formaat</Value>
+  </LocaleResource>
+  <LocaleResource Name="Country">
+    <Value>Riik</Value>
+  </LocaleResource>
+  <LocaleResource Name="CountrySelect">
+    <Value>Vali riik...</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>Loo andmebaas kui seda ei eksisteeri</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>Loo näidisandmed</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>Määrake kohandatud sortimine</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>Andmebaas</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>Tekkis viga andmebaasi loomisel: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>Andmebaasi informatsioon</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>Andmebaasi nimi</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>Andmebaasi ei eksisteeri või teil pole õigusi sellega ühendamiseks</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>Vali andmepakkuja</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>Kui vajate teavet nopCommerce'i kasutamise kohta, külastage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>dokumentatsiooni sektsiooni nopCommerce.com-is</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>Näide</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>paigaldama</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>Paigaldamine nopCommerce...</Value>
+  </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>Kasutage integreeritud Windowsi autentimist</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>Paroolid ei ühti</Value>
+  </LocaleResource>
+  <LocaleResource Name="PostgreSQL">
+    <Value>PostgreSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>Sisesta toores ühenduse string (edasi arenenud)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>Taaskäivita paigaldamine</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>Klõpsake, et taaskäivitada paigaldusprotsess (kustutage kõik vahemällu salvestatud väärtused)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartProgress">
+    <Value>Taaskäivitamine...</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>Serveri nimi</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>Serveri nimi on nõutav</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>Paigaldus ebaõnnestus: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPassword">
+    <Value>SQL parool</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPasswordRequired">
+    <Value>SQL parool on nõutav</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsername">
+    <Value>SQL kasutajanimi</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsernameRequired">
+    <Value>SQL kasutajanimi on nõutav</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>Poe teave</Value>
+  </LocaleResource>
+  <LocaleResource Name="SubscribeNewsletters">
+    <Value>Subscribe to nopCommerce newsletter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>nopCommerce paigaldamine</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>Selle viisardi lõpetamiseks peate teadma mõningaid andmeid oma andmebaasi serveri kohta ("ühenduse string"). Kui vaja, võtke ühendust oma ISP-ga. Kui paigaldate kohalikule masinale või serverile, võib teil olla vaja teavet oma süsteemi administraatori käest.</Value>
+  </LocaleResource>
+</Language>

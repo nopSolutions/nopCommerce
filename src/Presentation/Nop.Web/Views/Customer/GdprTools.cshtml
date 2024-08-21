@@ -47,7 +47,7 @@
                     <button type="submit" id="delete-account" name="delete-account" class="button-1 gdpr-delete-account-button">@T("Account.Gdpr.Delete.Button")</button>
 
                     <script asp-location="Footer">
-                        $(document).ready(function() {
+                        $(function() {
                             $('#delete-account').on('click', function() {
                                 return confirm('@T("Common.AreYouSure")');
                             });

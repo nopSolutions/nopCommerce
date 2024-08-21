@@ -1,18 +1,16 @@
 ﻿using Newtonsoft.Json;
-using Nop.Web.Framework.Models;
 
-namespace Nop.Web.Models.JsonLD
+namespace Nop.Web.Models.JsonLD;
+
+public record JsonLdBrandModel : JsonLdModel
 {
-    public record JsonLdBrandModel : BaseNopModel
-    {
-        #region Properties
+    #region Properties
 
-        [JsonProperty("@type")]
-        public static string Type => "Brand";
+    [JsonProperty("@type")]
+    public static string Type => "Brand";
 
-        [JsonProperty("name")]
-        public string Name { get; set; }
+    [JsonProperty("name")]
+    public string Name { get; set; }
 
-        #endregion
-    }
+    #endregion
 }

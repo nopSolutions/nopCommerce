@@ -113,7 +113,7 @@
                     return row.Id ? '<a href="@Url.Action("EditSpecificationAttributeGroup", "SpecificationAttribute")/' + row.Id +'">' + name + '</a>' : name;
                 }
 
-                $(document).ready(function () {
+                $(function() {
                     $('#delete-selected-specification-attributes-action-confirmation-submit-button').bind('click', function () {
                         var postData = {
                             selectedIds: selectedIds

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Copyright>Copyright © Nop Solutions, Ltd</Copyright>
     <Company>Nop Solutions, Ltd</Company>
     <Authors>Nop Solutions, Ltd</Authors>
@@ -54,8 +54,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="sib_api_v3_sdk" Version="3.3.0" />
-    <PackageReference Include="RestSharp" Version="106.12.0" />
+    <PackageReference Include="brevo_csharp" Version="1.0.0" />
   </ItemGroup>
 
   <!-- This target execute after "Build" target -->

@@ -34,10 +34,10 @@
     <Value>Forma e gabuar e lidhjes SQL të gabuar.</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Country</Value>
+    <Value>Държава</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Select your country...</Value>
+    <Value>Valitse maasi...</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>Krijoni bazën e të dhënave nëse nuk ekziston.</Value>
@@ -133,7 +133,7 @@
     <Value>Informacioni i dyqanit</Value>
   </LocaleResource>
   <LocaleResource Name="SubscribeNewsletters">
-    <Value>Subscribe to nopCommerce newsletter</Value>
+    <Value>Regjistrohu në buletinin e nopCommerce</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
     <Value>Instalimi i tregtisë nopCommerce</Value>

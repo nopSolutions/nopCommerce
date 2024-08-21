@@ -133,7 +133,7 @@
     <Value>Ինֆորմացիա խանութի մասին</Value>
   </LocaleResource>
   <LocaleResource Name="SubscribeNewsletters">
-    <Value>Subscribe to nopCommerce newsletter</Value>
+    <Value>Բաժանորդագրվել nopCommerce նորություններին</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
     <Value>nopCommerce տեղադրում</Value>

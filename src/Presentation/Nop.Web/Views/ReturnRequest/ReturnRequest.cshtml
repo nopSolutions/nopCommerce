@@ -105,86 +105,76 @@
                             }
                             <label asp-for="ReturnRequestActionId" asp-postfix=":"></label>
                             <select asp-for="ReturnRequestActionId" asp-items="@actionsSelectList" class="return-actions"></select>
-                        </div>
-                        @if (Model.AllowFiles)
-                        {
-                            @* register CSS and JS *@
-                            <link rel="stylesheet" href="~/lib_npm/fine-uploader/fine-uploader/fine-uploader.min.css" />
-                            <script asp-exclude-from-bundle="true" src="~/lib_npm/fine-uploader/jquery.fine-uploader/jquery.fine-uploader.min.js" asp-location="Footer"></script>
-
-
-                            var allowedFileExtensionsList = new List<string>();
-                            //allowedFileExtensionsList.Add("jpg");
-                            //allowedFileExtensionsList.Add("jpeg");
-                            //allowedFileExtensionsList.Add("jpeg");
-                            //ex. ['jpg', 'jpeg', 'jpeg', 'gif'] or []
-                            var allowedFileExtensions = string.Join(", ", allowedFileExtensionsList.Select(x => "'" + x.Trim() + "'").ToList());
-                            var controlId = Html.IdFor(model => model.UploadedFileGuid);
-                            <div class="inputs return-request-file">
-                                <label asp-for="UploadedFileGuid" asp-postfix=":"></label>
-                                <input id="@(controlId)" name="@(controlId)" type="hidden"/>
-
-                                @*fine uploader container*@
-                                <div id="@(controlId)uploader" class="uploadedfileinput"></div>
-                                @*fine uploader template (keep it synchronized to \Content\fineuploader\templates\default.html)*@
-                                <script type="text/template" asp-location="Footer" id="@(controlId)-qq-template">
-                                    <div class="qq-uploader-selector qq-uploader">
-                                        <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
-                                            <span>@T("Common.FileUploader.DropFiles")</span>
-                                        </div>
-                                        <div class="qq-upload-button-selector qq-upload-button">
-                                            <div>@T("Common.FileUploader.Upload")</div>
-                                        </div>
-                                        <span class="qq-drop-processing-selector qq-drop-processing">
-                                            <span>@T("Common.FileUploader.Processing")</span>
-                                            <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
-                                        </span>
-                                        <ul class="qq-upload-list-selector qq-upload-list">
-                                            <li>
-                                                <div class="qq-progress-bar-container-selector">
-                                                    <div class="qq-progress-bar-selector qq-progress-bar"></div>
-                                                </div>
-                                                <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
-                                                <span class="qq-edit-filename-icon-selector qq-edit-filename-icon"></span>
-                                                <span class="qq-upload-file-selector qq-upload-file"></span>
-                                                <input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">
-                                                <span class="qq-upload-size-selector qq-upload-size"></span>
-                                                <a class="qq-upload-cancel-selector qq-upload-cancel" href="#">@T("Common.FileUploader.Cancel")</a>
-                                                <a class="qq-upload-retry-selector qq-upload-retry" href="#">@T("Common.FileUploader.Retry")</a>
-                                                <a class="qq-upload-delete-selector qq-upload-delete" href="#">@T("Common.FileUploader.Delete")</a>
-                                                <span class="qq-upload-status-text-selector qq-upload-status-text"></span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </script>
-                                <script asp-location="Footer">
-                                    $(document).ready(function() {
-                                        $("#@(controlId)uploader").fineUploader({
-                                            request: {
-                                                endpoint: '@(Url.RouteUrl("UploadFileReturnRequest"))'
-                                            },
-                                            template: "@(controlId)-qq-template",
-                                            multiple: false,
-                                            validation: {
-                                                allowedExtensions: [@Html.Raw(allowedFileExtensions)]
-                                            }
-                                        }).on("complete",
-                                            function(event, id, name, responseJSON, xhr) {
-                                                $("#@(controlId)").val(responseJSON.downloadGuid);
-
-                                                if (responseJSON.message) {
-                                                    alert(responseJSON.message);
-                                                }
-                                            });
-                                    });
-                                </script>
-                            </div>
-                        }
+                        </div>                        
                         <div class="inputs">
                             <label asp-for="Comments" asp-postfix=":"></label>
                             <textarea asp-for="Comments" class="comment"></textarea>
                             <span asp-validation-for="Comments"></span>
                         </div>
+                        @if (Model.AllowFiles)
+                        {
+                            //ex. ['jpg', 'txt', 'zip'] or []
+                            var allowedFileExtensionsList = new List<string>();
+                            var allowedFileTypes = string.Empty;
+
+                            if (allowedFileExtensionsList.Any())
+                            {
+                                var fileTypeList = allowedFileExtensionsList
+                                    .Select(x => new FileExtensionContentTypeProvider().TryGetContentType($".{x}", out var contentType) ? $"'{contentType}'" : null)
+                                    .Where(ft => !string.IsNullOrEmpty(ft))
+                                    .ToList();
+
+                                allowedFileTypes = string.Join(", ", fileTypeList);
+                            }
+
+                            var controlId = Html.IdFor(model => model.UploadedFileGuid);
+
+                            @* register CSS and JS *@
+                            <link rel="stylesheet" href="~/lib_npm/filepond/filepond.min.css" />
+                            <script asp-exclude-from-bundle="true" src="~/lib_npm/filepond/filepond.min.js" asp-location="Footer"></script>
+                            <script asp-exclude-from-bundle="true" src="~/lib_npm/filepond-plugin-file-validate-type/filepond-plugin-file-validate-type.min.js" asp-location="Footer"></script>
+
+                            <div class="inputs return-request-file">
+                                <input id="@(controlId)" name="@(controlId)" type="hidden"/>
+                                <div id="@(controlId)element" class="filepond"></div>
+                            </div>
+
+                            <script asp-location="Footer">
+                                $(function () {
+                                    // Register the plugin
+                                    FilePond.registerPlugin(FilePondPluginFileValidateType);
+
+                                    // Create a FilePond instance
+                                    FilePond.create(document.querySelector("#@(controlId)element"), {
+                                        credits: false,
+                                        acceptedFileTypes: [@Html.Raw(allowedFileTypes)],
+                                        allowRemove: false,
+                                        allowMultiple: false,
+                                        maxFiles: 1,
+                                        server: {
+                                            process: {
+                                                url:'@(Url.RouteUrl("UploadFileReturnRequest"))',
+                                                onload: function(response) {
+                                                    var r = JSON.parse(response);
+
+                                                    $("#@(controlId)").val(r.downloadGuid);
+
+                                                    if (r.message) {
+                                                        alert(r.message);
+                                                    }
+                                                }
+                                            },
+                                            revert: (uniqueFileId, load, error) => {
+                                                $("#@(controlId)").val('');
+                                                load();
+                                            },
+                                        },
+                                        labelIdle: '<span class="filepond--label-action">@T("ReturnRequests.UploadedFile")</span>',
+                                        labelFileProcessing: '@T("Common.FileUploader.Processing")',
+                                    });
+                                });
+                            </script>
+                        }
                     </div>
                 </div>
                 <div class="buttons">

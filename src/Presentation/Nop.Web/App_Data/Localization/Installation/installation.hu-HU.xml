@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Language Name="Magyar" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
-    <Value>Admin felhasználó e-mail</Value>
+    <Value>Adminisztrátor e-mail cím</Value>
   </LocaleResource>
   <LocaleResource Name="AdminEmailRequired">
     <Value>Adja meg a rendszergazda emailt</Value>
   </LocaleResource>
   <LocaleResource Name="AdminPassword">
-    <Value>Rendszergazda felhasználó jelszó</Value>
+    <Value>Adminisztrátor jelszó</Value>
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>Írja be rendszergazdai jelszót</Value>
@@ -31,7 +31,7 @@
     <Value>A SQL kapcsolat string szükséges</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringWrongFormat">
-    <Value>Hibás az  SQL kapcsolat string formátuma</Value>
+    <Value>Hibás az SQL kapcsolat string formátuma</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
     <Value>Ország</Value>
@@ -67,10 +67,10 @@
     <Value>Válassza az adatszolgáltatót</Value>
   </LocaleResource>
   <LocaleResource Name="Documentation1">
-    <Value>Ha információra van szüksége, hogyan kell használni nopCommerce-t, látogasson el a</Value>
+    <Value>Ha információra van szüksége a nopCommerce használatával kapcsolatban, látogasson el</Value>
   </LocaleResource>
   <LocaleResource Name="Documentation2">
-    <Value>A dokumentáció szakasz nopCommerce.com-on</Value>
+    <Value>a nopCommerce.com dokumentációs részéhez</Value>
   </LocaleResource>
   <LocaleResource Name="Example">
     <Value>Példa</Value>
@@ -133,12 +133,12 @@
     <Value>Áruház információk</Value>
   </LocaleResource>
   <LocaleResource Name="SubscribeNewsletters">
-    <Value>Subscribe to nopCommerce newsletter</Value>
+    <Value>Iratkozzon fel a nopCommerce hírlevélre</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
     <Value>nopCommerce telepítés</Value>
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
-    <Value> A varázsló befejezéséhez, tudnia kell néhány információt az adatbázis szerver ("kapcsolat string"). Kérjük, lépjen kapcsolatba az internetszolgáltatóval, ha szükséges. Ha a telepítés helyi gépen vagy a szerveren, akkor szüksége lehet információkra a Rendszer Admin-tol.</Value>
+    <Value>A varázsló befejezéséhez ismernie kell néhány információt az adatbázis-kiszolgálóról ("kapcsolati karakterlánc/connection string"). Ha szükséges, forduljon internetszolgáltatójához. Ha helyi gépre vagy kiszolgálóra telepít, akkor szükség lehet a rendszeradminisztrátor információira.</Value>
   </LocaleResource>
 </Language>

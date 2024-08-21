@@ -1,23 +1,25 @@
-﻿namespace Nop.Services.ScheduleTasks
+﻿namespace Nop.Services.ScheduleTasks;
+
+/// <summary>
+/// Task manager interface
+/// </summary>
+public partial interface ITaskScheduler
 {
     /// <summary>
-    /// Task manager interface
+    /// Initializes task scheduler
     /// </summary>
-    public interface ITaskScheduler
-    {
-        /// <summary>
-        /// Initializes task scheduler
-        /// </summary>
-        Task InitializeAsync();
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task InitializeAsync();
 
-        /// <summary>
-        /// Starts the task scheduler
-        /// </summary>
-        public void StartScheduler();
+    /// <summary>
+    /// Starts the task scheduler
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task StartSchedulerAsync();
 
-        /// <summary>
-        /// Stops the task scheduler
-        /// </summary>
-        public void StopScheduler();
-    }
+    /// <summary>
+    /// Stops the task scheduler
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task StopSchedulerAsync();
 }

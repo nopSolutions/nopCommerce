@@ -94,7 +94,7 @@
                             </div>
                         </div>
                         <script>
-                            $(document).ready(function () {
+                            $(function() {
                                 $('#addTaxCategory').click(function () {
                                     $('#addTaxCategory').attr('disabled', true);
                                     var postData = {
@@ -115,7 +115,7 @@
 
                                                 //clear input value
                                                 $("#@Html.IdFor(model => model.AddTaxCategory.Name)").val('');
-                                                $("#@Html.IdFor(model => model.AddTaxCategory.DisplayOrder)").value(0);
+                                                $("#@Html.IdFor(model => model.AddTaxCategory.DisplayOrder)").val(0);
                                             } else {
                                                 //display errors if returned
                                                 display_nop_error(data);

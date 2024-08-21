@@ -75,35 +75,7 @@
             </div>
         </div>
     </nop-nested-setting>
-    <div class="form-group row advanced-setting">
-        <div class="col-md-3">
-            <nop-label asp-for="SelectedCustomerRoleIds" />
-        </div>
-        <div class="col-md-9">
-            <div class="row">
-                <div class="col-md-4">
-                    <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true" />
-                    <script>
-                        $(document).ready(function() {
-                            var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').select2({
-                                closeOnSelect: false,
-                                @if (!Model.AvailableCustomerRoles.Any())
-                                {
-                                <text>
-                                disabled: true,
-                                placeholder: 'No customer roles available',
-                                </text>
-                                }
-                            });
-                        });
-                    </script>
-                </div>
-                <div class="col-md-8">
-                    @await Component.InvokeAsync(typeof(AclDisabledWarningViewComponent))
-                </div>
-            </div>
-        </div>
-    </div>
+    @await Component.InvokeAsync(typeof(AclCustomerRolesViewComponent), Model)
     <div class="form-group row advanced-setting">
         <div class="col-md-3">
             <nop-label asp-for="SelectedStoreIds" />
@@ -113,7 +85,7 @@
                 <div class="col-md-4">
                     <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
                     <script>
-                        $(document).ready(function() {
+                        $(function() {
                             var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').select2({
                                 closeOnSelect: false,
                                 @if (!Model.AvailableStores.Any())

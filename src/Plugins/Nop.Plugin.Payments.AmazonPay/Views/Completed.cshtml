@@ -1,0 +1,69 @@
+﻿@model CheckoutCompletedModel
+
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.Checkout").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-checkout-page");
+    NopHtml.AppendPageCssClassParts("html-order-completed-page");
+}
+
+<script src="@Model.AmazonPayScript" asp-location="Footer"></script>
+
+<div class="page checkout-page order-completed-page">
+    <div class="page-title">
+        <h1>@T("Checkout.ThankYou")</h1>
+    </div>
+    <div class="page-body checkout-data">
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutCompletedTop, additionalData = Model })
+        <div class="section order-completed">
+            <div class="title">
+                <strong>@T("Checkout.YourOrderHasBeenSuccessfullyProcessed")</strong>
+            </div>
+            <div class="details">
+                <div class="order-number">
+                    <strong>@T("Checkout.OrderNumber"): @Model.CustomOrderNumber</strong>
+                </div>
+                <div class="details-link">
+                    <a href="@Url.RouteUrl("OrderDetails", new { orderID = Model.OrderId })">@T("Checkout.PlacedOrderDetails")</a>
+                </div>
+            </div>
+            <div class="buttons">
+                <div><button type="button" class="button-1 order-completed-continue-button" onclick="setLocation('@Url.RouteUrl("Homepage")')">@T("Checkout.ThankYou.Continue")</button></div>
+                <div><button id="signout" type="button" class="button-1" style="margin-top: 5px;">@T("Plugins.Payments.AmazonPay.SignIn.SignOutButton")</button></div>
+            </div>
+        </div>
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutCompletedBottom, additionalData = Model })
+    </div>
+</div>
+
+<script asp-location="Footer">
+    $(function () {
+        var signoutElement = document.getElementById('signout');
+        signoutElement.onclick = function () {
+            amazon.Pay.signout();
+            signOut();
+            $(this).hide();
+        };
+    });
+
+    function signOut() {
+        var postData = {
+            BuyerId: '@Model.BuyerId'
+        };
+        addAntiForgeryToken(postData);
+
+        $.ajax({
+            cache: false,
+            type: 'POST',
+            url: '@Url.Action("SignOut", "AmazonPayCustomer")',
+            data: postData,
+            success: function (data, textStatus, jqXHR) {
+                setLocation('@Url.RouteUrl("Homepage")')
+            },
+        });
+    }
+
+</script>	

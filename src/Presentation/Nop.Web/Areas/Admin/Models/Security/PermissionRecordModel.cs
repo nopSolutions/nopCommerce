@@ -1,18 +1,17 @@
 ﻿using Nop.Web.Framework.Models;
 
-namespace Nop.Web.Areas.Admin.Models.Security
+namespace Nop.Web.Areas.Admin.Models.Security;
+
+/// <summary>
+/// Represents a permission record model
+/// </summary>
+public partial record PermissionRecordModel : BaseNopModel
 {
-    /// <summary>
-    /// Represents a permission record model
-    /// </summary>
-    public partial record PermissionRecordModel : BaseNopModel
-    {
-        #region Properties
+    #region Properties
 
-        public string Name { get; set; }
+    public string Name { get; set; }
 
-        public string SystemName { get; set; }
+    public string SystemName { get; set; }
 
-        #endregion
-    }
+    #endregion
 }

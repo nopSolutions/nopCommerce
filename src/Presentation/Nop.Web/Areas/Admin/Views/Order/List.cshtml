@@ -136,7 +136,7 @@
                                                     <button type="button" id="search-product-clear" class="btn bg-gray" style="display: none; margin-top: 5px;">@T("Admin.Common.Clear")</button>
                                                     <input asp-for="ProductId" autocomplete="off" style="display: none;" />
                                                     <script>
-                                                    $(document).ready(function() {
+                                                    $(function() {
                                                         $('#search-product-name').autocomplete({
                                                             delay: 500,
                                                             minLength: 3,
@@ -415,14 +415,15 @@
 
                                 function renderColumnCustomer(data, type, row, meta) {
                                     var link = '@Url.Content("~/Admin/Customer/Edit/")' + row.CustomerId;
-                                    return `${row.CustomerFullName}<br /><a href="${link}">${data}</a>`;
+                                    var textRenderer = $.fn.dataTable.render.text().display;
+                                    return `${textRenderer(row.CustomerFullName)} <br /><a href="${link}">${data}</a > `;
                                 }
 
-                                $(document).ready(function() {
+                                $(function() {
                                     $("#@Html.IdFor(model => model.GoDirectlyToCustomOrderNumber)").keydown(
                                         function(event) {
                                             if (event.keyCode === 13) {
-                                                $("#go-to-order-by-number").click();
+                                                $("#go-to-order-by-number").trigger("click");
                                                 return false;
                                             }
                                         });
@@ -457,10 +458,10 @@
                                             if (data) {
                                                 for (var key in data) {
                                                     var reportSummary = '<div><strong>@T("Admin.Orders.Report.Summary").Text</strong></div>' +
-                                                        '<div>@T("Admin.Orders.Report.Profit").Text <span>' + data['aggregatorprofit'] +'</span></div>' +
-                                                        '<div>@T("Admin.Orders.Report.Shipping").Text <span>' + data['aggregatorshipping'] + '</span></div>' +
-                                                        '<div>@T("Admin.Orders.Report.Tax").Text <span>' +  data['aggregatortax'] + '</span></div>' +
-                                                        '<div>@T("Admin.Orders.Report.Total").Text <span>' + data['aggregatortotal'] + '</span></div>'
+                                                        '<div>@T("Admin.Orders.Report.Profit").Text <span>' + data['AggregatorProfit'] +'</span></div>' +
+                                                        '<div>@T("Admin.Orders.Report.Shipping").Text <span>' + data['AggregatorShipping'] + '</span></div>' +
+                                                        '<div>@T("Admin.Orders.Report.Tax").Text <span>' +  data['AggregatorTax'] + '</span></div>' +
+                                                        '<div>@T("Admin.Orders.Report.Total").Text <span>' + data['AggregatorTotal'] + '</span></div>'
                                                     var orderTotalsColumn = $('#orders-grid').DataTable().column(@(orderSummaryColumnNumber));
                                                     $(orderTotalsColumn.footer()).html(reportSummary);
                                                 }
@@ -479,7 +480,7 @@
 }
 
 <script>
-    $(document).ready(function () {
+    $(function() {
         var displayModal = @((Model.LicenseCheckModel.DisplayWarning == true || Model.LicenseCheckModel?.BlockPages == true).ToString().ToLower());
         if (displayModal){
             $('#license-window').modal({
@@ -524,13 +525,13 @@
 </form>
 
 <script>
-    $(document).ready(function () {
+    $(function() {
         $('#exportxml-selected').click(function (e) {
             e.preventDefault();
             var ids = selectedIds.join(",");
             if (!ids) {
                 $('#exportXmlSelected-info').text("@T("Admin.Orders.NoOrders")");
-                $("#exportXmlSelected").click();
+                $("#exportXmlSelected").trigger("click");
             }
             else {
                 $('#export-xml-selected-form #selectedIds').val(ids);
@@ -549,13 +550,13 @@
 </form>
 
 <script>
-    $(document).ready(function () {
+    $(function() {
         $('#exportexcel-selected').click(function (e) {
             e.preventDefault();
             var ids = selectedIds.join(",");
              if (!ids) {
                 $('#exportExcelSelected-info').text("@T("Admin.Orders.NoOrders")");
-                $("#exportExcelSelected").click();
+                $("#exportExcelSelected").trigger("click");
             }
             else {
                 $('#export-excel-selected-form #selectedIds').val(ids);
@@ -574,13 +575,13 @@
 </form>
 
 <script>
-    $(document).ready(function () {
+    $(function() {
         $('#pdf-invoice-selected').click(function (e) {
             e.preventDefault();
             var ids = selectedIds.join(",");
            if (!ids) {
                 $('#pdfInvoiceSelected-info').text("@T("Admin.Orders.NoOrders")");
-                $("#pdfInvoiceSelected").click();
+                $("#pdfInvoiceSelected").trigger("click");
             }
             else {
                 $('#pdf-invoice-selected-form #selectedIds').val(ids);

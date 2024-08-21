@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Controllers
 @using Nop.Services.Authentication.External
 @using Nop.Services.Authentication.MultiFactor
+@using Nop.Services.Catalog
 @using Nop.Services.Cms
 @using Nop.Services.Payments
 @using Nop.Services.Plugins
@@ -91,6 +92,15 @@
         activeMenuSystemName = "Local plugins";
         configureLocale = "Admin.Configuration.Plugins.Misc.Configure";
         backToLocale = "Admin.Configuration.Plugins.Misc.BackToList";
+        listActionMethodName = "List";
+        listControllerName = "Plugin";
+    }
+    else if (plugin is ISearchProvider)
+    {
+        //search provider
+        activeMenuSystemName = "Local plugins";
+        configureLocale = "Admin.Configuration.Plugins.SearchProvider.Configure";
+        backToLocale = "Admin.Configuration.Plugins.SearchProvider.BackToList";
         listActionMethodName = "List";
         listControllerName = "Plugin";
     }

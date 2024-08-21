@@ -107,7 +107,7 @@
             </div>
         </div>
         <script>
-            $(document).ready(function () {
+            $(function() {
                 $('#addProductTemplate').click(function () {
                     $('#addProductTemplate').attr('disabled', true);
                     var postData = {
@@ -131,7 +131,7 @@
                                 //clear input value
                                 $("#@Html.IdFor(model => model.AddProductTemplate.Name)").val('');
                                 $("#@Html.IdFor(model => model.AddProductTemplate.ViewPath)").val('');
-                                $("#@Html.IdFor(model => model.AddProductTemplate.DisplayOrder)").value(0);
+                                $("#@Html.IdFor(model => model.AddProductTemplate.DisplayOrder)").val(0);
                                 $("#@Html.IdFor(model => model.AddProductTemplate.IgnoredProductTypes)").val('');
 
                             } else {

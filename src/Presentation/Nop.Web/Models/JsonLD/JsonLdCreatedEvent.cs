@@ -1,32 +1,29 @@
-﻿using Nop.Web.Framework.Models;
+﻿namespace Nop.Web.Models.JsonLD;
 
-namespace Nop.Web.Models.JsonLD
+/// <summary>
+/// Represents JSON-LD model created event
+/// </summary>
+public partial class JsonLdCreatedEvent<T> where T : JsonLdModel
 {
+    #region Ctor
+
     /// <summary>
-    /// Represents JSON-LD model created event
+    /// Ctor
     /// </summary>
-    public class JsonLdCreatedEvent
+    /// <param name="model">Created model</param>
+    public JsonLdCreatedEvent(T model)
     {
-        #region Ctor
-
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="model">Created model</param>
-        public JsonLdCreatedEvent(BaseNopModel model)
-        {
-            Model = model;
-        }
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Created model
-        /// </summary>
-        public BaseNopModel Model { get; }
-
-        #endregion
+        Model = model;
     }
+
+    #endregion
+
+    #region Properties
+
+    /// <summary>
+    /// Created model
+    /// </summary>
+    public T Model { get; }
+
+    #endregion
 }

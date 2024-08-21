@@ -113,7 +113,7 @@
             <nop-action-confirmation asp-button-id="btnGenerateAllCombinations" />
             <button type="submit" id="btnRefreshCombinations" style="display: none"></button>
             <script>
-                $(document).ready(function() {
+                $(function() {
                     $('#btnRefreshCombinations').click(function() {
                         //refresh grid
                         $("#attributecombinations-grid").DataTable().ajax.reload();
@@ -139,7 +139,7 @@
                                 updateTable('#attributecombinations-grid');
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
-                                $("#generateAllAttributeCombinationsAlert").click();
+                                $("#generateAllAttributeCombinationsAlert").trigger("click");
                             }
                         });
                         $('#btnGenerateAllCombinations-action-confirmation').modal('toggle');
