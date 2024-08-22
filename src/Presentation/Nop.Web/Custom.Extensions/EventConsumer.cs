@@ -36,6 +36,7 @@ namespace Nop.CustomExtensions.Services
     public class EventConsumer : IConsumer<OrderPaidEvent>,
         IConsumer<CustomerRegisteredEvent>,
         IConsumer<CustomerActivatedEvent>,
+        IConsumer<EntityInsertedEvent<Category>>,
         IConsumer<EntityInsertedEvent<GenericAttribute>>,
         IConsumer<EntityUpdatedEvent<GenericAttribute>>,
         IConsumer<EntityDeletedEvent<GenericAttribute>>,
@@ -298,6 +299,28 @@ namespace Nop.CustomExtensions.Services
 
             #endregion
             //return Task.FromResult(0);
+        }
+
+        public async Task HandleEventAsync(EntityInsertedEvent<Category> eventMessage)
+        {
+            var specificationAttributeId = (int)ProductAndCustomerAttributeEnum.PrimaryTechnology;
+            var specificationAttributeOptions = await _specificationAttributeService.GetSpecificationAttributeOptionsByNameAsync(specificationAttributeId, eventMessage.Entity.Name);
+
+            if (specificationAttributeOptions == null || specificationAttributeOptions.Count == 0)
+            {
+                //technology doesnt exist for this category. Lets create one.
+
+                var spao = new SpecificationAttributeOption()
+                {
+                    Name = eventMessage.Entity.Name.Trim(),
+                    SpecificationAttributeId = specificationAttributeId,
+                    DisplayOrder = 0
+                };
+
+                await _specificationAttributeService.InsertSpecificationAttributeOptionAsync(spao);
+
+                await _logger.InsertLogAsync(Core.Domain.Logging.LogLevel.Information, "Created technology from category created (EntityInsertedEvent) event");
+            }
         }
 
         #endregion

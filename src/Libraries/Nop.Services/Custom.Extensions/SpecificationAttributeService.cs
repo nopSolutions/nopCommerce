@@ -14,6 +14,7 @@ namespace Nop.Services.Catalog
     public partial interface ISpecificationAttributeService
     {
         Task<IList<ProductSpecificationAttribute>> GetProductSpecificationsBySpecificationAttributeIdAsync(int productId, int specificationAttributeId);
+        Task<IList<SpecificationAttributeOption>> GetSpecificationAttributeOptionsByNameAsync(int specificationAttributeId, string specificationAttributeOptionName);
     }
 
     public partial class SpecificationAttributeService
@@ -34,6 +35,16 @@ namespace Nop.Services.Catalog
                         select psam;
 
             query = query.Where(psam => psam.ProductId == productId);
+            return await query.ToListAsync();
+        }
+
+        public virtual async Task<IList<SpecificationAttributeOption>> GetSpecificationAttributeOptionsByNameAsync(int specificationAttributeId, string specificationAttributeOptionName)
+        {
+            var query = from spao in _specificationAttributeOptionRepository.Table
+                        where spao.Name.Contains(specificationAttributeOptionName)
+                        select spao;
+
+            query = query.Where(spao => spao.SpecificationAttributeId == specificationAttributeId);
             return await query.ToListAsync();
         }
 
