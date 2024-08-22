@@ -401,7 +401,7 @@ public partial class AddressService : IAddressService
             indexItem++;
         }
 
-        var formatString = string.Format(format, fieldsList.Select(x => !string.IsNullOrEmpty(x.Value) ? $"{x.Value}{separator}" : x.Value).ToArray())
+        var formatString = string.Join("", fieldsList.Select(x => !string.IsNullOrEmpty(x.Value) ? $"{x.Value}{separator}" : x.Value).ToArray())
             .TrimEnd(separator.ToArray());
 
         return (formatString, fieldsList);
