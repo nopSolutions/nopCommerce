@@ -1558,7 +1558,7 @@ public partial class OrderController : BaseAdminController
 
     [HttpPost]
     [CheckPermission(StandardPermission.Orders.ORDERS_CREATE_EDIT_DELETE)]
-    public virtual async Task<IActionResult> AddProductToOrderDetails(int orderId, int productId, IFormCollection form)
+    public virtual async Task<IActionResult> AddProductToOrderDetails(int orderId, int productId, AddProductToOrderModel model, IFormCollection form)
     {
         //a vendor does not have access to this functionality
         if (await _workContext.GetCurrentVendorAsync() != null)
@@ -1576,13 +1576,6 @@ public partial class OrderController : BaseAdminController
         var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId)
             ?? throw new ArgumentException("No customer found with the specified id");
 
-        //basic properties
-        _ = decimal.TryParse(form["UnitPriceInclTax"], out var unitPriceInclTax);
-        _ = decimal.TryParse(form["UnitPriceExclTax"], out var unitPriceExclTax);
-        _ = int.TryParse(form["Quantity"], out var quantity);
-        _ = decimal.TryParse(form["SubTotalInclTax"], out var priceInclTax);
-        _ = decimal.TryParse(form["SubTotalExclTax"], out var priceExclTax);
-
         //warnings
         var warnings = new List<string>();
 
@@ -1593,7 +1586,7 @@ public partial class OrderController : BaseAdminController
         _productAttributeParser.ParseRentalDates(product, form, out var rentalStartDate, out var rentalEndDate);
 
         //warnings
-        warnings.AddRange(await _shoppingCartService.GetShoppingCartItemAttributeWarningsAsync(customer, ShoppingCartType.ShoppingCart, product, quantity, attributesXml));
+        warnings.AddRange(await _shoppingCartService.GetShoppingCartItemAttributeWarningsAsync(customer, ShoppingCartType.ShoppingCart, product, model.Quantity, attributesXml));
         warnings.AddRange(await _shoppingCartService.GetShoppingCartItemGiftCardWarningsAsync(ShoppingCartType.ShoppingCart, product, attributesXml));
         warnings.AddRange(await _shoppingCartService.GetRentalProductWarningsAsync(product, rentalStartDate, rentalEndDate));
         if (!warnings.Any())
@@ -1613,14 +1606,14 @@ public partial class OrderController : BaseAdminController
                 OrderItemGuid = Guid.NewGuid(),
                 OrderId = order.Id,
                 ProductId = product.Id,
-                UnitPriceInclTax = unitPriceInclTax,
-                UnitPriceExclTax = unitPriceExclTax,
-                PriceInclTax = priceInclTax,
-                PriceExclTax = priceExclTax,
+                UnitPriceInclTax = model.UnitPriceInclTax,
+                UnitPriceExclTax = model.UnitPriceExclTax,
+                PriceInclTax = model.SubTotalInclTax,
+                PriceExclTax = model.SubTotalExclTax,
                 OriginalProductCost = await _priceCalculationService.GetProductCostAsync(product, attributesXml),
                 AttributeDescription = attributeDescription,
                 AttributesXml = attributesXml,
-                Quantity = quantity,
+                Quantity = model.Quantity,
                 DiscountAmountInclTax = decimal.Zero,
                 DiscountAmountExclTax = decimal.Zero,
                 DownloadCount = 0,
@@ -1640,11 +1633,11 @@ public partial class OrderController : BaseAdminController
             //update order totals
             var updateOrderParameters = new UpdateOrderParameters(order, orderItem)
             {
-                PriceInclTax = unitPriceInclTax,
-                PriceExclTax = unitPriceExclTax,
-                SubTotalInclTax = priceInclTax,
-                SubTotalExclTax = priceExclTax,
-                Quantity = quantity
+                PriceInclTax = model.UnitPriceInclTax,
+                PriceExclTax = model.UnitPriceExclTax,
+                SubTotalInclTax = model.SubTotalInclTax,
+                SubTotalExclTax = model.SubTotalExclTax,
+                Quantity = model.Quantity
             };
             await _orderProcessingService.UpdateOrderTotalsAsync(updateOrderParameters);
 
@@ -1671,7 +1664,7 @@ public partial class OrderController : BaseAdminController
                     {
                         GiftCardType = product.GiftCardType,
                         PurchasedWithOrderItemId = orderItem.Id,
-                        Amount = unitPriceExclTax,
+                        Amount = model.UnitPriceExclTax,
                         IsGiftCardActivated = false,
                         GiftCardCouponCode = _giftCardService.GenerateGiftCardCode(),
                         RecipientName = recipientName,
@@ -1696,7 +1689,6 @@ public partial class OrderController : BaseAdminController
         }
 
         //prepare model
-        var model = await _orderModelFactory.PrepareAddProductToOrderModelAsync(new AddProductToOrderModel(), order, product);
         model.Warnings.AddRange(warnings);
 
         return View(model);
