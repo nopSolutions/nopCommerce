@@ -239,7 +239,7 @@ public partial class OrderController : BasePublicController
         if (_webHelper.IsRequestBeingRedirected || _webHelper.IsPostBeingDone)
         {
             //redirection or POST has been done in PostProcessPayment
-            return Content("Redirected");
+            return new EmptyResult();
         }
 
         //if no redirection has been done (to a third-party payment page)
