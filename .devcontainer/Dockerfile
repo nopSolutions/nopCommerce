@@ -24,6 +24,9 @@ RUN sudo ln -s /opt/mssql-tools/bin/* /usr/local/bin/
 # Remove yarn (it's producing GPG error)
 RUN rm /etc/apt/sources.list.d/yarn.list
 
-# Install Java
-RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -y install --no-install-recommends openjdk-11-jdk
+# Install Google Cloud CLI
+RUN curl https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz > /tmp/google-cloud-sdk.tar.gz
+RUN mkdir -p /usr/local/gcloud \
+  && tar -C /usr/local/gcloud -xvf /tmp/google-cloud-sdk.tar.gz \
+  && /usr/local/gcloud/google-cloud-sdk/install.sh -q
+ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin

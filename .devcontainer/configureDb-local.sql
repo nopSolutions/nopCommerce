@@ -27,3 +27,7 @@ WHERE Name = 'synchronypaymentsettings.merchantpassword'
 
 UPDATE ScheduleTask
 SET Enabled = 0
+
+UPDATE Setting
+SET Value = 'AIzaSyDUDi-Nroi5soRN8d41Kf2Tr7t_aE-TNGg'
+WHERE Name = 'coresettings.googlemapsgeocodingapikey'
