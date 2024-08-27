@@ -1,6 +1,14 @@
 @model MissingImageProductSearchModel
 
 @using Nop.Plugin.Misc.AbcCore.Areas.Admin.Models
+@using Nop.Services.Common
+@using Nop.Core
+
+@inject IGenericAttributeService genericAttributeService
+@inject IWorkContext workContext
+
+<!-- imports T -->
+@inherits Nop.Web.Framework.Mvc.Razor.NopRazorPage<TModel>
 
 @{
     //page title
@@ -11,44 +19,100 @@
     Layout = "_AdminLayout";
 }
 
-<div class="content-header clearfix">
-    <h1 class="pull-left">
-        Products with Missing Images
-    </h1>
-</div>
+@{
+    const string hideSearchBlockAttributeName = "MissingImageProductListPage.HideSearchBlock";
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
+}
 
-<div class="content">
-    <div class="form-horizontal">
-        <div class="panel-group">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    @await Html.PartialAsync("Table", new DataTablesModel
-                    {
-                        Name = "missingimageproducts-grid",
-                        UrlRead = new DataUrl("List", "MissingImageProduct", null),
-                        Length = Model.PageSize,
-                        LengthMenu = Model.AvailablePageSizes,
-                        ColumnCollection = new List<ColumnProperty>
-                        {
-                            new ColumnProperty(nameof(MissingImageProductModel.ItemNumber))
-                            {
-                                Title = "Item Number",
-                                Width = "100"
-                            },
-                            new ColumnProperty(nameof(MissingImageProductModel.Sku))
-                            {
-                                Title = "Sku",
-                                Width = "100"
-                            },
-                            new ColumnProperty(nameof(MissingImageProductModel.Name))
-                            {
-                                Title = "Name",
-                                Width = "100"
-                            }
-                        }
-                    })                    
+<form asp-controller="MissingImageProduct" asp-action="List" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            Missing Image Products
+        </h1>
+    </div>
+
+      <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div class="cards-group">
+                      <div class="card card-default card-search">
+                        <div class="card-body">
+                            <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                                <div class="search-text">@T("Admin.Common.Search")</div>
+                                <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                                <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                            </div>
+
+                            <div class="search-body @(hideSearchBlock ? "closed" : "")">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <div class="form-group row">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SearchProductName" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-editor asp-for="SearchProductName" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="text-center col-12">
+                                        <button type="button" id="search-products" class="btn btn-primary btn-search">
+                                            <i class="fas fa-search"></i>
+                                            @T("Admin.Common.Search")
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                      <div class="card card-default">
+                          <div class="card-body">
+
+                              @await Html.PartialAsync("Table", new DataTablesModel
+                         {
+                             Name = "missingimageproducts-grid",
+                             UrlRead = new DataUrl("List", "MissingImageProduct", null),
+                             SearchButtonId = "search-products",
+                             Length = Model.PageSize,
+                             LengthMenu = Model.AvailablePageSizes,
+                             Filters = new List<FilterParameter>
+                                  {
+                                      new FilterParameter(nameof(Model.SearchProductName))
+                                  },
+                             ColumnCollection = new List<ColumnProperty>
+                                  {
+                                      new ColumnProperty(nameof(MissingImageProductModel.ItemNumber))
+                                      {
+                                          Title = "Item Number",
+                                          Width = "100"
+                                      },
+                                      new ColumnProperty(nameof(MissingImageProductModel.Name))
+                                      {
+                                          Title = T("Admin.Catalog.Products.Fields.Name").Text
+                                      },
+                                      new ColumnProperty(nameof(MissingImageProductModel.Sku))
+                                      {
+                                          Title = T("Admin.Catalog.Products.Fields.Sku").Text,
+                                          Width = "100"
+                                      },
+                                      new ColumnProperty(nameof(MissingImageProductModel.Id))
+                                      {
+                                          Title = T("Admin.Common.Edit").Text,
+                                          Width = "80",
+                                          ClassName =  NopColumnClassDefaults.Button,
+                                          Render = new RenderButtonEdit(new DataUrl("~/Admin/Product/Edit/"))
+                                      }
+                                  }
+                         })
+                          </div>
+                      </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
+      </section>
+</form>

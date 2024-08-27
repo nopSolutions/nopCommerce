@@ -90,9 +90,12 @@ namespace Nop.Plugin.Misc.AbcCore.Services.Custom
             return await GetProductsByIdsAsync(GetAllPublishedProductsIds().ToArray());
         }
 
-        public async Task<IList<Product>> GetProductsWithoutImagesAsync()
+        public async Task<IList<Product>> GetProductsWithoutImagesAsync(string productName)
         {
-            var productIds = await _nopDataProvider.QueryAsync<int>(@"
+            var productNameString = productName != null ?
+                                            $" and pr.Name LIKE '%{productName}%'" :
+                                            "";
+            var productIds = await _nopDataProvider.QueryAsync<int>(@$"
                 IF OBJECT_ID('tempdb..#nonPromoPpmIds') IS NOT NULL
                 DROP TABLE #nonPromoPpmIds;
 
@@ -101,12 +104,13 @@ namespace Nop.Plugin.Misc.AbcCore.Services.Custom
                 INTO #nonPromoPpmIds
                 from Product_Picture_Mapping ppm
                 join Picture pi on pi.Id = ppm.PictureId
-                where SeoFilename not like '%promo%'
+                where TitleAttribute not like '%promo%'
 
                 -- get products without images
                 select pr.Id from Product pr
                 left join #nonPromoPpmIds ppm on ppm.ProductId = pr.Id
                 where Published = 1 and ppm.ProductId is null
+                {productNameString}
             ");
 
             return await GetProductsByIdsAsync(productIds.ToArray());
