@@ -1,0 +1,164 @@
+#background-video {
+    width: 100vw;
+    object-fit: cover;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: -1;
+}
+.center {
+    text-align: center;
+}
+.hawthorne-home-content .master-wrapper-page {
+    background-image: url("https://www.abcwarehouse.com/images/hawthorne/green_pattern_bg.jpg");
+    width: 100%;
+}
+.hawthorne-home-content .master-wrapper-content {
+    width: 100%;
+}
+.hawthorne-home img {
+    max-width: 100%;
+}
+.hawthorne-home h2 {
+    color: #fff;
+}
+.hawthorne-home h3 {
+    color: #fff;
+}
+.hawthorne-home h4 {
+    color: #fff;
+}
+.pic-left, .pic-right {
+    background: #02463b;
+}
+.row.hawthorne-row {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.hawthorne-home-content .header {
+    margin-bottom: 0;
+}
+.pic-left, .pic-right {
+    margin: 200px 0px;
+}
+.first-section.pic-right {
+    margin-top: 100px;
+}
+.hawthorne-home-button a {
+    background: #fff;
+    color: #000;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 15px 80px;
+    border-radius: 5px;
+    line-height: 6em;
+}
+.hawthorne-banner h2 {
+    margin-top: 40px;
+}
+.hawthorne-row .col-md-6 {
+    align-content: center;
+}
+img.haw-main-img {
+    height: 111%;
+    margin-top: -4%;
+}
+.carousel-item {
+    margin-left: auto;
+}
+.hawthorne-home-content .home-page-body .nop-jcarousel.manufacturer-grid {
+    background-color: #000;
+}
+.pic-left .col-md-6 {
+    text-align: right;
+}
+.video-text-container {
+    position: absolute;
+    top: 6%;
+    width: 100%;
+    text-align: center;
+}
+.video-text {
+    text-align: right;
+    color: #fff;
+    display: inline-block;
+}
+a.video-button {
+    background: #02463b;
+    color: #fff;
+    font-weight: bold;
+    padding: 10px 30px;
+    line-height: 5em;
+    border-radius: 5px;
+    font-size: 18px;
+}
+.hawthorne-home-content .carousel-item {
+    margin-right: auto;
+}
+.hawthorne-home-content .home-page-body .nop-jcarousel.manufacturer-grid {
+    background-color: #000;
+}
+.video-text h2 {
+    text-shadow: 3px 3px 3px black;
+}
+.home-page-body .nop-jcarousel.manufacturer-grid {
+    border: none !important;
+}
+.manufacturer-item {
+    background: transparent;
+}
+div.jCarouselMainWrapper {
+    margin-top: -6px;
+}
+.manufacturer-item img {
+    padding: 15px;
+}
+.store-search-box input.search-box-text {
+    height: 50px;
+}
+.col-md-6.pic-mobile {
+    display: none;
+}
+@media screen and (max-width: 767px) {
+    img.haw-main-img {
+        height: auto;
+        margin-top: 30px;
+    }
+    .master-wrapper-content {
+        padding: 0;
+    }
+    .video-text-container {
+        top: -6px;
+        background: #000;
+        padding: 15px 0px 5px 0px;
+    }
+    .first-section img {
+        padding-top: 30px;
+    }
+    .pic-left .col-md-6 {
+        text-align: center;
+    }
+    .col-md-6.pic-desktop {
+        display: none;
+    }
+    .col-md-6.pic-mobile {
+        display: block;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .video-text-container {
+        position: relative;
+    }
+    .video-text {
+        text-align: center;
+    }
+    .first-section.pic-right {
+        margin-top: 40px;
+    }
+    .pic-left, .pic-right {
+        margin: 100px 0;
+    }
+}

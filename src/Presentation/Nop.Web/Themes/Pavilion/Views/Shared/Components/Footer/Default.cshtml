@@ -59,19 +59,23 @@
     </div>
     <div class="footer-middle">
         <div class="center">
-            @* custom *@
-            <div class="widget-min">
-                @await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.FooterBelow480px })
-            </div>
-            <div class="widget-480">
-                @await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.FooterMin480px })
-            </div>
-            <div class="widget-768">
-                @await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.FooterMin768px })
-            </div>
-            <div class="widget-1000">
-                @await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.FooterAbove1000px })
-            </div>
+            @if(storeId != 8)
+            {
+                @* custom *@
+                <div class="widget-min">
+                    @await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.FooterBelow480px })
+                </div>
+                <div class="widget-480">
+                    @await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.FooterMin480px })
+                </div>
+                <div class="widget-768">
+                    @await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.FooterMin768px })
+                </div>
+                <div class="widget-1000">
+                    @await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.FooterAbove1000px })
+                </div>
+            }
+
             @* custom end *@
             <div class="footer-block">
                 <div class="title">

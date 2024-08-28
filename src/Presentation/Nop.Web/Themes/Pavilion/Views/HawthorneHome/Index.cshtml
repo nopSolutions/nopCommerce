@@ -1,0 +1,81 @@
+﻿@using Nop.Core
+@using Nop.Services.Configuration
+@using Nop.Core.Domain.Seo
+@* custom *@
+@using Nop.Web.Framework.Infrastructure;
+@using Nop.Plugin.Misc.AbcCore.Infrastructure;
+
+@inject SeoSettings seoSettings
+@inject IStoreContext storeContext
+@inject ISettingService settingService
+
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    if (!string.IsNullOrEmpty(seoSettings.HomepageTitle))
+    {
+        Html.AddTitleParts(seoSettings.HomepageTitle);
+    }
+
+    //meta
+    if (!string.IsNullOrEmpty(seoSettings.HomepageDescription))
+    {
+        Html.AddMetaDescriptionParts(seoSettings.HomepageDescription);
+    }
+
+    var controllerName = Url.ActionContext.RouteData.Values["controller"].ToString();
+    var actionName = Url.ActionContext.RouteData.Values["action"].ToString();
+    var isHomePage = controllerName.Equals("home", StringComparison.InvariantCultureIgnoreCase) &&
+                        actionName.Equals("index", StringComparison.InvariantCultureIgnoreCase);
+    //page class
+    Html.AppendPageCssClassParts("html-home-page test444444444");
+
+    int storeId = (await storeContext.GetCurrentStoreAsync()).Id;
+    bool defaultFeaturedProductsEnabled = await settingService.GetSettingByKeyAsync("pavilionthemesettings.EnableFeaturedProducts", false, storeId, true);
+    
+}
+else
+{
+    <div class="page home-page">
+        <div class="page-body">
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HomepageTop })
+            @await Component.InvokeAsync("TopicBlock", new { systemName = "HomepageText" })
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HomepageBeforeCategories })
+            <div class="widget-min">@await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.HomepageBeforeCategoriesBelow480px })</div>
+            <div class="widget-480">@await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.HomepageBeforeCategoriesMin480px })</div>
+            <div class="widget-768">@await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.HomepageBeforeCategoriesMin768px })</div>
+            <div class="widget-1000">@await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.HomepageBeforeCategoriesAbove1000px })</div>
+            @await Component.InvokeAsync("HomepageCategories")
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HomepageBeforeProducts })
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HomepageBeforeBestSellers })
+
+            <div class="homepage-middle-wrapper">
+                @await Component.InvokeAsync("HomepageBestSellers")
+                @await Component.InvokeAsync("Widget", new { widgetZone = "pavilion_home_page_richblog" })
+            </div>
+
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HomepageBeforeNews })
+            @await Component.InvokeAsync("HomepageNews")
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HomepageBeforePoll })
+            @await Component.InvokeAsync("HomepagePolls")
+
+            <div class="homepage-bottom-wrapper">
+                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HomepageBottom })
+                <div class="widget-min">
+                    @await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.HomepageBottomBelow480px })
+                </div>
+                <div class="widget-480">
+                    @await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.HomepageBottomMin480px })
+                </div>
+                <div class="widget-768">
+                    @await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.HomepageBottomMin768px })
+                </div>
+                <div class="widget-1000">
+                    @await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.HomepageBottomAbove1000px })
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
