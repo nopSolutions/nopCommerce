@@ -276,9 +276,13 @@
                     if (element.Editable == true) {
                         var input = $($($(currentCells).children("[data-columnname='" + element.Data + "']")).children('input')[0]);
                         var value = input.val();
-                        if (!/^\d+$/.test(value) && input.attr('type') == 'number')
-                            value = new Intl.NumberFormat("@CultureInfo.CurrentUICulture.Name", { minimumFractionDigits: 10 }).format(value);
-
+                        if (input.attr('type') == 'number') { 
+                            value = new Intl.NumberFormat("@CultureInfo.CurrentUICulture.Name", { useGrouping: false }).formatToParts(value)
+                                .map(({type, value: vpart}) => //for some locales dotnet accepts latin digits, but still requires localized signs and separators
+                                    type == "integer" || type == "fraction" ? 
+                                        Globalize("@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName").numberParser()(vpart) : vpart)
+                                .reduce((string, part) => string + part);
+                        }
                         updateRowData.push({
                             'pname': element.Data, 'pvalue': value
                         });

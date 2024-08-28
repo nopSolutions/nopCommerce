@@ -1,0 +1,87 @@
+﻿@model PaymentInfoModel
+
+@{
+    var amazonPayButtonId = $"AmazonPayButton-{Guid.NewGuid().ToString().ToLower()}";
+}
+
+<script src="@Model.AmazonPayScript" asp-location="Footer"></script>
+
+<script asp-location="Footer">
+    $(function () {
+
+        var targetNode = $(document.getElementById('flyout-cart')).find('.buttons');
+
+        if (targetNode.length == 0) {
+            return;
+        }
+
+        $(targetNode).append('<div style="margin-top:5px" id="@amazonPayButtonId"></div>');
+        var isCartContainsNoAllowedProducts = @Model.IsCartContainsNoAllowedProducts.ToString().ToLower();
+        if (isCartContainsNoAllowedProducts) {
+            $('#@amazonPayButtonId').html('@Html.Raw(T("Plugins.Payments.AmazonPay.CantUseAmazonPay"))');
+            return;
+        }
+
+        var amazonPayButton = amazon.Pay.renderButton('#@amazonPayButtonId', {
+            merchantId: '@Html.Raw(settings.MerchantId)',
+            publicKeyId: '@Html.Raw(settings.PublicKeyId)',
+            ledgerCurrency: '@Html.Raw(Model.LedgerCurrency)',
+            productType: '@Html.Raw(Model.ProductType)',
+            placement: '@Html.Raw(Model.AmazonPayPlacement)',
+            buttonColor: '@Html.Raw(Model.ButtonColor)'
+        });
+
+        amazonPayButton.onClick(function () {
+            var sendRequest = false;
+            //terms of service
+            if ($('#termsofservice').length > 0) {
+                //terms of service element exists
+                if (!$('#termsofservice').is(':checked')) {
+                    $('#terms-of-service-warning-box').dialog();
+                } else {
+                    sendRequest = true;
+                }
+            }
+            else {
+                if ($('#add-to-cart-button-@Model.ProductId').length > 0) {
+                    AddProductToCart(amazonPayButton);
+                } else {
+                    sendRequest = true;
+                }
+            }
+
+            if (sendRequest) {
+                var postData = {
+                    placement: '@((int)Model.Placement)'
+                };
+                addAntiForgeryToken(postData);
+
+                $.ajax({
+                    cache: false,
+                    type: 'POST',
+                    url: '@(Url.Action("GetPaymentInfo", "AmazonPayCheckout"))',
+                    data: postData,
+                    success: function (data, textStatus, jqXHR) {
+                        if (data.error) {
+                            alert(data.error);
+                        }
+                        else {
+                            amazonPayButton.initCheckout({
+                                estimatedOrderAmount: { 'amount': data.amount, 'currencyCode': '@Html.Raw(Model.Currency)' },
+                                createCheckoutSessionConfig: {
+                                    payloadJSON: data.payload,
+                                    signature: data.signature,
+                                    algorithm: 'AMZN-PAY-RSASSA-PSS-V2',
+                                    publicKeyId: '@Html.Raw(settings.PublicKeyId)'
+                                }
+                            });
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert(errorThrown);
+                    }
+                });
+            }
+        });
+    });
+</script>

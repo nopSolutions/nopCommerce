@@ -1,0 +1,34 @@
+﻿@model string
+
+<script asp-location="Footer">
+    $(function () {
+
+        // Select the node that will be observed for mutations
+        const targetNode = document.getElementById('checkout-steps');
+
+        // Options for the observer (which mutations to observe)
+        const config = { attributes: true, childList: false, subtree: true };
+
+        // Callback function to execute when mutations are observed
+        const callback = (mutationList, observer) => {
+            var pos = $('.tab-section.active').find('span.number').text();
+            button = $('#@Model');
+
+            if (button == underfine)
+                return;
+
+            if (pos == underfinde || pos == 1)
+            {
+                button.show();
+                return;
+            }
+
+            button.hide();
+        };
+
+        // Create an observer instance linked to the callback function
+        const observer = new MutationObserver(callback);
+
+        // Start observing the target node for configured mutations
+    });
+</script>
