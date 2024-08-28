@@ -1,0 +1,280 @@
+﻿@model ConfigurationModel
+
+@{
+    Layout = "_ConfigurePlugin";
+    var registrationLink = (PaymentRegion)Model.Region switch
+    {
+        PaymentRegion.Eu => AmazonPayDefaults.Onboarding.RegistrationLink.Eu,
+        PaymentRegion.Uk => AmazonPayDefaults.Onboarding.RegistrationLink.Uk,
+        PaymentRegion.Jp => AmazonPayDefaults.Onboarding.RegistrationLink.Jp,
+        _ => AmazonPayDefaults.Onboarding.RegistrationLink.Us
+    };
+}
+
+@await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
+
+<style type="text/css">
+    .password {
+        color: transparent;
+        text-shadow: 0 0 8px rgba(0,0,0,0.5);
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-12 clearfix">
+        <div class="float-left">
+            @await Component.InvokeAsync(typeof(SettingModeViewComponent), new { modeName = "amazonPay-advanced-mode" })
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('#@Html.IdFor(model => model.PaymentRegion)').change(togglePaymentRegion);
+        $('#@Html.IdFor(model => model.SetCredentialsManually)').click(toggleCredentials);
+        toggleCredentials();
+    });
+
+    function toggleCredentials() {
+        var isConnected = @Model.IsConnected.ToString().ToLower();
+
+        if ($('#@Html.IdFor(model => model.SetCredentialsManually)').is(':checked') || isConnected) {
+            $('#amazonPayCredentials').showElement();
+
+            if ($('#@Html.IdFor(model => model.SetCredentialsManually)').is(':checked')) {
+                $('#amazonPayOnboarding').hideElement();
+            }
+            else {
+                $('#amazonPayOnboarding').showElement();
+            }
+        }
+        else {
+            $('#amazonPayOnboarding').showElement();
+            $('#amazonPayCredentials').hideElement();
+        }
+    }
+
+    function togglePaymentRegion() {
+        var usRegion = "@((int)PaymentRegion.Us)";
+        var euRegion = "@((int)PaymentRegion.Eu)";
+        var ukRegion = "@((int)PaymentRegion.Uk)";
+        var jpRegion = "@((int)PaymentRegion.Jp)";
+        var selectedRegion = $('#@Html.IdFor(model => model.PaymentRegion)').val();
+        if (!selectedRegion || selectedRegion == usRegion) {
+            $('#registrationLink').attr('href', '@AmazonPayDefaults.Onboarding.RegistrationLink.Us');
+        } else if (selectedRegion == euRegion) {
+            $('#registrationLink').attr('href', '@AmazonPayDefaults.Onboarding.RegistrationLink.Eu');
+        } else if (selectedRegion == ukRegion) {
+            $('#registrationLink').attr('href', '@AmazonPayDefaults.Onboarding.RegistrationLink.Uk');
+        } else if (selectedRegion == jpRegion) {
+            $('#registrationLink').attr('href', '@AmazonPayDefaults.Onboarding.RegistrationLink.Jp');
+        }
+    }
+</script>
+
+<form asp-controller="AmazonPay" asp-action="Configure" method="post">
+    <div class="cards-group">
+        <div class="card card-default">
+            <div class="card-body">
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="SetCredentialsManually_OverrideForStore" asp-input="SetCredentialsManually" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="SetCredentialsManually" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="SetCredentialsManually" />
+                        <span asp-validation-for="SetCredentialsManually"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <nop-cards id="amazonPay-cards">
+        <nop-card asp-name="amazonPayOnboarding" asp-icon="fas fa-key" asp-title="@T("Plugins.Payments.AmazonPay.Onboarding")" asp-hide-block-attribute-name="Onboarding" asp-hide="false" asp-advanced="false">
+            <div class="card-body">
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="Region_OverrideForStore" asp-input="Region" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="Region" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="Region" asp-items="@await ((PaymentRegion)Model.Region).ToSelectListAsync()" />
+                        <span asp-validation-for="Region"></span>
+                    </div>
+                </div>
+                @if (Model.PaymentRegion == (int)PaymentRegion.Us && !string.IsNullOrEmpty(Model.PrivateKey))
+                {
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="Payload_OverrideForStore" asp-input="Payload" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="Payload" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-textarea asp-for="Payload" />
+                            <span asp-validation-for="Payload"></span>
+                        </div>
+                    </div>
+                }
+                <div class="form-group row">
+                    <div class="col-md-9 offset-md-3 mb-3">
+                        <button type="submit" name="onboarding" class="btn btn-info">@T("Plugins.Payments.AmazonPay.Onboarding.Button")</button>
+                        @if (Model.PaymentRegion == (int)PaymentRegion.Us && !string.IsNullOrEmpty(Model.PrivateKey))
+                        {
+                            <button type="submit" name="save" class="btn btn-primary">@T("Admin.Common.Save")</button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </nop-card>
+        <nop-card asp-name="amazonPayCredentials" asp-icon="fas fa-key" asp-title="@T("Plugins.Payments.AmazonPay.Credentials")" asp-hide-block-attribute-name="@AmazonPayDefaults.HideCredentialsBlock" asp-hide="@Model.HideCredentialsBlock" asp-advanced="false">
+            <div class="card-body">
+                <p>
+                    Get started selling on <a href="@registrationLink" target="_blank" id="registrationLink">Amazon</a><br />
+                    Amazon Pay uses asymmetric encryption to secure communication. You will need a public/private key pair and a corresponding Public Key ID (a unique Amazon Pay identifier for the key pair) to access Amazon Pay APIs. You can generate a public/private key pair and access the Public Key ID using Amazon Pay Integration Central.<br />
+                    <em>Read more about it in <a href="https://developer.amazon.com/docs/amazon-pay-checkout/get-set-up-for-integration.html#5-get-your-public-key-id" target="_blank">this instruction</a>.</em><br />
+                    If you do have questions on the registration process, please contact Amazon Pay merchant support at <a href="https://sellercentral.amazon.com/cu/contact-us" target="_blank">https://sellercentral.amazon.com/cu/contact-us</a>.
+                </p>
+                <hr />
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="PaymentRegion_OverrideForStore" asp-input="PaymentRegion" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="PaymentRegion" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="PaymentRegion" asp-items="@await ((PaymentRegion)Model.PaymentRegion).ToSelectListAsync()" />
+                        <span asp-validation-for="PaymentRegion"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="PrivateKey_OverrideForStore" asp-input="PrivateKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="PrivateKey" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-textarea class="password" asp-for="PrivateKey" />
+                        <span asp-validation-for="PrivateKey"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="PublicKeyId_OverrideForStore" asp-input="PublicKeyId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="PublicKeyId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="PublicKeyId" />
+                        <span asp-validation-for="PublicKeyId"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="MerchantId_OverrideForStore" asp-input="MerchantId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="MerchantId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="MerchantId" />
+                        <span asp-validation-for="MerchantId"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="StoreId_OverrideForStore" asp-input="StoreId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="StoreId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="StoreId" />
+                        <span asp-validation-for="StoreId"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-9 offset-md-3">
+                        <button type="submit" name="save" class="btn btn-primary">@T("Admin.Common.Save")</button>
+                    </div>
+                </div>
+            </div>
+        </nop-card>
+        @if (Model.IsConnected)
+        {
+            <nop-card asp-name="amazonPayConfiguration" asp-icon="fas fa-cog" asp-title="@T("Plugins.Payments.AmazonPay.Configure")" asp-hide-block-attribute-name="@AmazonPayDefaults.HideConfigurationBlock" asp-hide="@Model.HideConfigurationBlock" asp-advanced="false">
+                <div class="card-body">
+                    <div class="form-group row">
+                        @if (Model.PaymentRegion == (int)PaymentRegion.Eu || Model.PaymentRegion == (int)PaymentRegion.Uk)
+                        {
+                            <span>NOTE: Before starting work, please make sure that the currencies of your store are <a href="https://developer.amazon.com/docs/amazon-pay-checkout/multi-currency-integration.html#supported-currencies" target="_blank">supported</a> by AmazonPay</span>
+                        }
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="UseSandbox_OverrideForStore" asp-input="UseSandbox" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="UseSandbox" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="UseSandbox" />
+                            <span asp-validation-for="UseSandbox"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="PaymentType_OverrideForStore" asp-input="PaymentType" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="PaymentType" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="PaymentType" asp-items="@await ((PaymentType)Model.PaymentType).ToSelectListAsync()" />
+                            <span asp-validation-for="PaymentType"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row advanced-setting">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="ButtonPlacement_OverrideForStore" asp-input="ButtonPlacement" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="ButtonPlacement" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="ButtonPlacement" asp-items="@await ButtonPlacement.Cart.ToSelectListAsync(false)" asp-multiple="true" />
+                            <script>
+                                $(function () {
+                                    var categoryIdsInput = $('#@Html.IdFor(model => model.ButtonPlacement)').select2({
+                                        closeOnSelect: false,
+                                    });
+                                });
+                            </script>
+                            <span asp-validation-for="ButtonPlacement"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row advanced-setting">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="ButtonColor_OverrideForStore" asp-input="ButtonColor" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="ButtonColor" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="ButtonColor" asp-items="@await ((ButtonColor)Model.ButtonColor).ToSelectListAsync()" />
+                            <span asp-validation-for="ButtonColor"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row advanced-setting">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="EnableLogging_OverrideForStore" asp-input="EnableLogging" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="EnableLogging" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="EnableLogging" />
+                            <span asp-validation-for="EnableLogging"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="IpnUrl" />
+                        </div>
+                        <div class="col-md-9">
+                            <div class="form-text-row">@Model.IpnUrl</div>
+                            <div class="form-text-row">you may see how to setting up an IPN endpoint for AmazonPay on <a href="https://developer.amazon.com/docs/amazon-pay-checkout/set-up-instant-payment-notifications.html#setting-up-an-ipn-endpoint" target="_blank">this instruction</a></div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-9 offset-md-3">
+                            <button type="submit" name="save" class="btn btn-primary">@T("Admin.Common.Save")</button>
+                        </div>
+                    </div>
+                </div>
+            </nop-card>
+        }
+    </nop-cards>
+</form>
