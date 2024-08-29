@@ -49,7 +49,7 @@ namespace Nop.Plugin.Misc.AbcCore
 
         public async System.Threading.Tasks.Task ExecuteAsync()
         {
-            var prodsInfo = from prod in (await _customProductService.GetProductsWithoutImagesAsync(null))
+            var prodsInfo = from prod in (await _customProductService.GetProductsWithoutImagesAsync())
                             from pAbc in _productAbcRepository.Table.Where(pA => pA.Product_Id == prod.Id).ToList()
                             select new
                             {

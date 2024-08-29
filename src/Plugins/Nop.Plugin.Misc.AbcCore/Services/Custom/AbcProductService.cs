@@ -90,27 +90,21 @@ namespace Nop.Plugin.Misc.AbcCore.Services.Custom
             return await GetProductsByIdsAsync(GetAllPublishedProductsIds().ToArray());
         }
 
-        public async Task<IList<Product>> GetProductsWithoutImagesAsync(string productName)
+        public async Task<IList<Product>> GetProductsWithoutImagesAsync()
         {
-            var productNameString = productName != null ?
-                                            $" and pr.Name LIKE '%{productName}%'" :
-                                            "";
             var productIds = await _nopDataProvider.QueryAsync<int>(@$"
-                IF OBJECT_ID('tempdb..#nonPromoPpmIds') IS NOT NULL
-                DROP TABLE #nonPromoPpmIds;
-
-                -- get non-promo picture mappings 
-                select ppm.Id, ppm.ProductId
-                INTO #nonPromoPpmIds
-                from Product_Picture_Mapping ppm
-                join Picture pi on pi.Id = ppm.PictureId
-                where TitleAttribute not like '%promo%'
-
-                -- get products without images
-                select pr.Id from Product pr
-                left join #nonPromoPpmIds ppm on ppm.ProductId = pr.Id
-                where Published = 1 and ppm.ProductId is null
-                {productNameString}
+                select p.Id from Product p
+                where Deleted = 0 and Published = 1 and p.Id not in
+                (
+                    select distinct ppm.ProductId from Product p
+                    join Product_Picture_Mapping ppm on ppm.ProductId = p.Id
+                    join Picture pi on pi.Id = ppm.PictureId
+                    where Deleted = 0 and Published = 1 and pi.Id not in
+                    (
+                        select Id from Picture p
+                        where TitleAttribute like '%promo%'
+                    )
+                )
             ");
 
             return await GetProductsByIdsAsync(productIds.ToArray());

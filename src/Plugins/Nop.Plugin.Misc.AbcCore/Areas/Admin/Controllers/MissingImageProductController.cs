@@ -38,7 +38,7 @@ namespace Nop.Plugin.Misc.AbcCore.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> List(MissingImageProductSearchModel searchModel)
         {
-            var productsWithoutImages = await _customProductService.GetProductsWithoutImagesAsync(searchModel.SearchProductName);
+            var productsWithoutImages = await _customProductService.GetProductsWithoutImagesAsync();
             var pagedList = productsWithoutImages.ToPagedList(searchModel);
             var model = await new MissingImageProductListModel().PrepareToGridAsync(searchModel, pagedList, () =>
             {

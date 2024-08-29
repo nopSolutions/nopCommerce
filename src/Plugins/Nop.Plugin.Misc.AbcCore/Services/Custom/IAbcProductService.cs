@@ -9,7 +9,7 @@ namespace Nop.Plugin.Misc.AbcCore.Services.Custom
     {
         Task<IList<Product>> GetAllPublishedProductsAsync();
 
-        Task<IList<Product>> GetProductsWithoutImagesAsync(string productName);
+        Task<IList<Product>> GetProductsWithoutImagesAsync();
         Task<IList<Product>> GetNewProductsAsync();
     }
 }

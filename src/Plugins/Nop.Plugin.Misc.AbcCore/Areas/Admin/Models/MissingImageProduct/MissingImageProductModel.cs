@@ -5,7 +5,6 @@ namespace Nop.Plugin.Misc.AbcCore.Areas.Admin.Models
 {
     public partial record MissingImageProductModel : BaseNopEntityModel
     {
-        public int Id { get; set; }
         public string ItemNumber { get; set; }
         public string Sku { get; set; }
         public string Name { get; set; }
