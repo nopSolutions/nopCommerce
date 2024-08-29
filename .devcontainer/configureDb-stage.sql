@@ -27,3 +27,6 @@ WHERE Name = 'synchronypaymentsettings.merchantpassword'
 
 UPDATE ScheduleTask
 SET Enabled = 0
+
+UPDATE EmailAccount
+SET Host = 'email.abcwarehouse.com'
