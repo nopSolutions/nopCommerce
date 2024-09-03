@@ -19,9 +19,8 @@ SET Value = 'WithoutWww'
 WHERE Name = 'seosettings.wwwrequirement'
 
 UPDATE Setting
-SET Value = ''
-WHERE Name = 'synchronypaymentsettings.merchantpassword'
-    OR Name = 'storelocatorsettings.googleapikey'
+SET Value = 'TS2_'
+WHERE Name = 'exportordersettings.tableprefix'
 
 UPDATE EmailAccount
 SET Host = 'email.abcwarehouse.com'
