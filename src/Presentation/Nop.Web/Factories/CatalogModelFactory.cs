@@ -368,6 +368,115 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         }
     }
 
+    /// <summary>
+    /// Prepare category picture model
+    /// </summary>
+    /// <param name="category">Category</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the picture model
+    /// </returns>
+    protected virtual async Task<PictureModel> PrepareCategoryPictureModelAsync(Category category)
+    {
+        var pictureSize = _mediaSettings.CategoryThumbPictureSize;
+        var categoryPictureCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryPictureModelKey,
+            category, pictureSize, true, await _workContext.GetWorkingLanguageAsync(), _webHelper.IsCurrentConnectionSecured(), await _storeContext.GetCurrentStoreAsync());
+
+        return await _staticCacheManager.GetAsync(categoryPictureCacheKey, async () =>
+        {
+            var picture = await _pictureService.GetPictureByIdAsync(category.PictureId);
+            string fullSizeImageUrl, imageUrl;
+
+            (fullSizeImageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture);
+            (imageUrl, _) = await _pictureService.GetPictureUrlAsync(picture, pictureSize);
+
+            var titleLocale = await _localizationService.GetResourceAsync("Media.Category.ImageLinkTitleFormat");
+            var altLocale = await _localizationService.GetResourceAsync("Media.Category.ImageAlternateTextFormat");
+            var localizedName = await _localizationService.GetLocalizedAsync(category, x => x.Name);
+
+            return new PictureModel
+            {
+                FullSizeImageUrl = fullSizeImageUrl,
+                ImageUrl = imageUrl,
+                Title = string.Format(titleLocale, localizedName),
+                AlternateText = string.Format(altLocale, localizedName)
+            };
+        });
+    }
+
+    /// <summary>
+    /// Prepare manufacturer picture model
+    /// </summary>
+    /// <param name="manufacturer">Manufacturer</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the picture model
+    /// </returns>
+    protected virtual async Task<PictureModel> PrepareManufacturerPictureModelAsync(Manufacturer manufacturer)
+    {
+        var pictureSize = _mediaSettings.ManufacturerThumbPictureSize;
+        var manufacturerPictureCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ManufacturerPictureModelKey,
+            manufacturer, pictureSize, true, await _workContext.GetWorkingLanguageAsync(),
+            _webHelper.IsCurrentConnectionSecured(), await _storeContext.GetCurrentStoreAsync());
+
+        return await _staticCacheManager.GetAsync(manufacturerPictureCacheKey, async () =>
+        {
+            var picture = await _pictureService.GetPictureByIdAsync(manufacturer.PictureId);
+            string fullSizeImageUrl, imageUrl;
+
+            (fullSizeImageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture);
+            (imageUrl, _) = await _pictureService.GetPictureUrlAsync(picture, pictureSize);
+
+            var localizedName = await _localizationService.GetLocalizedAsync(manufacturer, x => x.Name);
+
+            var pictureModel = new PictureModel
+            {
+                FullSizeImageUrl = fullSizeImageUrl,
+                ImageUrl = imageUrl,
+                Title = string.Format(await _localizationService.GetResourceAsync("Media.Manufacturer.ImageLinkTitleFormat"), localizedName),
+                AlternateText = string.Format(await _localizationService.GetResourceAsync("Media.Manufacturer.ImageAlternateTextFormat"), localizedName)
+            };
+
+            return pictureModel;
+        });
+    }
+
+    /// <summary>
+    /// Prepare vendor picture model
+    /// </summary>
+    /// <param name="vendor">Vendor</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the picture model
+    /// </returns>
+    protected virtual async Task<PictureModel> PrepareVendorPictureModelAsync(Vendor vendor)
+    {
+        var pictureSize = _mediaSettings.VendorThumbPictureSize;
+        var pictureCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.VendorPictureModelKey,
+            vendor, pictureSize, true, await _workContext.GetWorkingLanguageAsync(), _webHelper.IsCurrentConnectionSecured(), await _storeContext.GetCurrentStoreAsync());
+
+        return await _staticCacheManager.GetAsync(pictureCacheKey, async () =>
+        {
+            var picture = await _pictureService.GetPictureByIdAsync(vendor.PictureId);
+            string fullSizeImageUrl, imageUrl;
+
+            (fullSizeImageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture);
+            (imageUrl, _) = await _pictureService.GetPictureUrlAsync(picture, pictureSize);
+
+            var localizedName = await _localizationService.GetLocalizedAsync(vendor, x => x.Name);
+
+            var pictureModel = new PictureModel
+            {
+                FullSizeImageUrl = fullSizeImageUrl,
+                ImageUrl = imageUrl,
+                Title = string.Format(await _localizationService.GetResourceAsync("Media.Vendor.ImageLinkTitleFormat"), localizedName),
+                AlternateText = string.Format(await _localizationService.GetResourceAsync("Media.Vendor.ImageAlternateTextFormat"), localizedName)
+            };
+
+            return pictureModel;
+        });
+    }
+
     #endregion
 
     #region Categories
@@ -396,7 +505,8 @@ public partial class CatalogModelFactory : ICatalogModelFactory
             MetaDescription = await _localizationService.GetLocalizedAsync(category, x => x.MetaDescription),
             MetaTitle = await _localizationService.GetLocalizedAsync(category, x => x.MetaTitle),
             SeName = await _urlRecordService.GetSeNameAsync(category),
-            CatalogProductsModel = await PrepareCategoryProductsModelAsync(category, command)
+            CatalogProductsModel = await PrepareCategoryProductsModelAsync(category, command),
+            PictureModel = await PrepareCategoryPictureModelAsync(category)
         };
 
         //category breadcrumb
@@ -421,53 +531,24 @@ public partial class CatalogModelFactory : ICatalogModelFactory
             }
         }
 
-        var currentStore = await _storeContext.GetCurrentStoreAsync();
-        var pictureSize = _mediaSettings.CategoryThumbPictureSize;
-
         //subcategories
         model.SubCategories = await (await _categoryService.GetAllCategoriesByParentCategoryIdAsync(category.Id))
             .SelectAwait(async curCategory =>
             {
-                var subCatModel = new CategoryModel.SubCategoryModel
+                return new CategoryModel.SubCategoryModel
                 {
                     Id = curCategory.Id,
                     Name = await _localizationService.GetLocalizedAsync(curCategory, y => y.Name),
                     SeName = await _urlRecordService.GetSeNameAsync(curCategory),
-                    Description = await _localizationService.GetLocalizedAsync(curCategory, y => y.Description)
+                    Description = await _localizationService.GetLocalizedAsync(curCategory, y => y.Description),
+                    PictureModel = await PrepareCategoryPictureModelAsync(category)
                 };
-
-                //prepare picture model
-                var categoryPictureCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryPictureModelKey, curCategory,
-                    pictureSize, true, await _workContext.GetWorkingLanguageAsync(), _webHelper.IsCurrentConnectionSecured(),
-                    currentStore);
-
-                subCatModel.PictureModel = await _staticCacheManager.GetAsync(categoryPictureCacheKey, async () =>
-                {
-                    var picture = await _pictureService.GetPictureByIdAsync(curCategory.PictureId);
-                    string fullSizeImageUrl, imageUrl;
-
-                    (fullSizeImageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture);
-                    (imageUrl, _) = await _pictureService.GetPictureUrlAsync(picture, pictureSize);
-
-                    var pictureModel = new PictureModel
-                    {
-                        FullSizeImageUrl = fullSizeImageUrl,
-                        ImageUrl = imageUrl,
-                        Title = string.Format(await _localizationService
-                            .GetResourceAsync("Media.Category.ImageLinkTitleFormat"), subCatModel.Name),
-                        AlternateText = string.Format(await _localizationService
-                            .GetResourceAsync("Media.Category.ImageAlternateTextFormat"), subCatModel.Name)
-                    };
-
-                    return pictureModel;
-                });
-
-                return subCatModel;
             }).ToListAsync();
 
         //featured products
         if (!_catalogSettings.IgnoreFeaturedProducts)
         {
+            var currentStore = await _storeContext.GetCurrentStoreAsync();
             var featuredProducts = await _productService.GetCategoryFeaturedProductsAsync(category.Id, currentStore.Id);
             if (featuredProducts != null)
                 model.FeaturedProducts = (await _productModelFactory.PrepareProductOverviewModelsAsync(featuredProducts)).ToList();
@@ -604,30 +685,8 @@ public partial class CatalogModelFactory : ICatalogModelFactory
                     MetaDescription = await _localizationService.GetLocalizedAsync(category, x => x.MetaDescription),
                     MetaTitle = await _localizationService.GetLocalizedAsync(category, x => x.MetaTitle),
                     SeName = await _urlRecordService.GetSeNameAsync(category),
+                    PictureModel = await PrepareCategoryPictureModelAsync(category)
                 };
-
-                //prepare picture model
-                var secured = _webHelper.IsCurrentConnectionSecured();
-                var categoryPictureCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryPictureModelKey,
-                    category, pictureSize, true, language, secured, store);
-                catModel.PictureModel = await _staticCacheManager.GetAsync(categoryPictureCacheKey, async () =>
-                {
-                    var picture = await _pictureService.GetPictureByIdAsync(category.PictureId);
-                    string fullSizeImageUrl, imageUrl;
-
-                    (fullSizeImageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture);
-                    (imageUrl, _) = await _pictureService.GetPictureUrlAsync(picture, pictureSize);
-
-                    var titleLocale = await _localizationService.GetResourceAsync("Media.Category.ImageLinkTitleFormat");
-                    var altLocale = await _localizationService.GetResourceAsync("Media.Category.ImageAlternateTextFormat");
-                    return new PictureModel
-                    {
-                        FullSizeImageUrl = fullSizeImageUrl,
-                        ImageUrl = imageUrl,
-                        Title = string.Format(titleLocale, catModel.Name),
-                        AlternateText = string.Format(altLocale, catModel.Name)
-                    };
-                });
 
                 return catModel;
             }).ToListAsync();
@@ -648,7 +707,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         var doc = await PrepareCategoryXmlDocumentAsync();
 
         var models = from xe in doc.Root.XPathSelectElements("CategorySimpleModel")
-            select GetCategorySimpleModel(xe);
+                     select GetCategorySimpleModel(xe);
 
         return models.ToList();
     }
@@ -666,11 +725,11 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         var doc = await PrepareCategoryXmlDocumentAsync();
 
         var model = from xe in doc.Descendants("CategorySimpleModel")
-            where xe.XPathSelectElement("Id").Value == id.ToString()
-            select xe;
+                    where xe.XPathSelectElement("Id").Value == id.ToString()
+                    select xe;
 
         var models = from xe in model.First().XPathSelectElements("SubCategories/CategorySimpleModel")
-            select GetCategorySimpleModel(xe);
+                     select GetCategorySimpleModel(xe);
 
         return models.ToList();
     }
@@ -933,15 +992,16 @@ public partial class CatalogModelFactory : ICatalogModelFactory
             MetaDescription = await _localizationService.GetLocalizedAsync(manufacturer, x => x.MetaDescription),
             MetaTitle = await _localizationService.GetLocalizedAsync(manufacturer, x => x.MetaTitle),
             SeName = await _urlRecordService.GetSeNameAsync(manufacturer),
-            CatalogProductsModel = await PrepareManufacturerProductsModelAsync(manufacturer, command)
+            CatalogProductsModel = await PrepareManufacturerProductsModelAsync(manufacturer, command),
+            PictureModel = await PrepareManufacturerPictureModelAsync(manufacturer)
         };
+
+        var store = await _storeContext.GetCurrentStoreAsync();
 
         //featured products
         if (!_catalogSettings.IgnoreFeaturedProducts)
         {
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var storeId = store.Id;
-            var featuredProducts = await _productService.GetManufacturerFeaturedProductsAsync(manufacturer.Id, storeId);
+            var featuredProducts = await _productService.GetManufacturerFeaturedProductsAsync(manufacturer.Id, store.Id);
             if (featuredProducts != null)
                 model.FeaturedProducts = (await _productModelFactory.PrepareProductOverviewModelsAsync(featuredProducts)).ToList();
         }
@@ -1089,31 +1149,9 @@ public partial class CatalogModelFactory : ICatalogModelFactory
                 MetaDescription = await _localizationService.GetLocalizedAsync(manufacturer, x => x.MetaDescription),
                 MetaTitle = await _localizationService.GetLocalizedAsync(manufacturer, x => x.MetaTitle),
                 SeName = await _urlRecordService.GetSeNameAsync(manufacturer),
+                //prepare picture model
+                PictureModel = await PrepareManufacturerPictureModelAsync(manufacturer)
             };
-
-            //prepare picture model
-            var pictureSize = _mediaSettings.ManufacturerThumbPictureSize;
-            var manufacturerPictureCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ManufacturerPictureModelKey,
-                manufacturer, pictureSize, true, await _workContext.GetWorkingLanguageAsync(),
-                _webHelper.IsCurrentConnectionSecured(), currentStore);
-            modelMan.PictureModel = await _staticCacheManager.GetAsync(manufacturerPictureCacheKey, async () =>
-            {
-                var picture = await _pictureService.GetPictureByIdAsync(manufacturer.PictureId);
-                string fullSizeImageUrl, imageUrl;
-
-                (fullSizeImageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture);
-                (imageUrl, _) = await _pictureService.GetPictureUrlAsync(picture, pictureSize);
-
-                var pictureModel = new PictureModel
-                {
-                    FullSizeImageUrl = fullSizeImageUrl,
-                    ImageUrl = imageUrl,
-                    Title = string.Format(await _localizationService.GetResourceAsync("Media.Manufacturer.ImageLinkTitleFormat"), modelMan.Name),
-                    AlternateText = string.Format(await _localizationService.GetResourceAsync("Media.Manufacturer.ImageAlternateTextFormat"), modelMan.Name)
-                };
-
-                return pictureModel;
-            });
 
             model.Add(modelMan);
         }
@@ -1195,31 +1233,9 @@ public partial class CatalogModelFactory : ICatalogModelFactory
             MetaTitle = await _localizationService.GetLocalizedAsync(vendor, x => x.MetaTitle),
             SeName = await _urlRecordService.GetSeNameAsync(vendor),
             AllowCustomersToContactVendors = _vendorSettings.AllowCustomersToContactVendors,
-            CatalogProductsModel = await PrepareVendorProductsModelAsync(vendor, command)
+            CatalogProductsModel = await PrepareVendorProductsModelAsync(vendor, command),
+            PictureModel = await PrepareVendorPictureModelAsync(vendor)
         };
-        
-        //prepare picture model
-        var pictureSize = _mediaSettings.VendorThumbPictureSize;
-        var pictureCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.VendorPictureModelKey,
-            vendor, pictureSize, true, await _workContext.GetWorkingLanguageAsync(), _webHelper.IsCurrentConnectionSecured(), await _storeContext.GetCurrentStoreAsync());
-        model.PictureModel = await _staticCacheManager.GetAsync(pictureCacheKey, async () =>
-        {
-            var picture = await _pictureService.GetPictureByIdAsync(vendor.PictureId);
-            string fullSizeImageUrl, imageUrl;
-
-            (fullSizeImageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture);
-            (imageUrl, _) = await _pictureService.GetPictureUrlAsync(picture, pictureSize);
-
-            var pictureModel = new PictureModel
-            {
-                FullSizeImageUrl = fullSizeImageUrl,
-                ImageUrl = imageUrl,
-                Title = string.Format(await _localizationService.GetResourceAsync("Media.Vendor.ImageLinkTitleFormat"), model.Name),
-                AlternateText = string.Format(await _localizationService.GetResourceAsync("Media.Vendor.ImageAlternateTextFormat"), model.Name)
-            };
-
-            return pictureModel;
-        });
 
         return model;
     }
@@ -1330,31 +1346,9 @@ public partial class CatalogModelFactory : ICatalogModelFactory
                 MetaDescription = await _localizationService.GetLocalizedAsync(vendor, x => x.MetaDescription),
                 MetaTitle = await _localizationService.GetLocalizedAsync(vendor, x => x.MetaTitle),
                 SeName = await _urlRecordService.GetSeNameAsync(vendor),
-                AllowCustomersToContactVendors = _vendorSettings.AllowCustomersToContactVendors
+                AllowCustomersToContactVendors = _vendorSettings.AllowCustomersToContactVendors,
+                PictureModel = await PrepareVendorPictureModelAsync(vendor)
             };
-
-            //prepare picture model
-            var pictureSize = _mediaSettings.VendorThumbPictureSize;
-            var pictureCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.VendorPictureModelKey,
-                vendor, pictureSize, true, await _workContext.GetWorkingLanguageAsync(), _webHelper.IsCurrentConnectionSecured(), await _storeContext.GetCurrentStoreAsync());
-            vendorModel.PictureModel = await _staticCacheManager.GetAsync(pictureCacheKey, async () =>
-            {
-                var picture = await _pictureService.GetPictureByIdAsync(vendor.PictureId);
-                string fullSizeImageUrl, imageUrl;
-
-                (fullSizeImageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture);
-                (imageUrl, _) = await _pictureService.GetPictureUrlAsync(picture, pictureSize);
-
-                var pictureModel = new PictureModel
-                {
-                    FullSizeImageUrl = fullSizeImageUrl,
-                    ImageUrl = imageUrl,
-                    Title = string.Format(await _localizationService.GetResourceAsync("Media.Vendor.ImageLinkTitleFormat"), vendorModel.Name),
-                    AlternateText = string.Format(await _localizationService.GetResourceAsync("Media.Vendor.ImageAlternateTextFormat"), vendorModel.Name)
-                };
-
-                return pictureModel;
-            });
 
             model.Add(vendorModel);
         }
