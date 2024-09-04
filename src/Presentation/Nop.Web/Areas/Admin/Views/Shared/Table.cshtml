@@ -226,7 +226,7 @@
                     });
 
                     if (columnType == 'number') {
-                        $($(curRow).children("[data-columnname='" + cellName + "']")[0]).html('<input value="' + editRowData_@(tableName)[cellName] + '" class="userinput" type="number" step="any" min="@int.MinValue" max="@int.MaxValue"/>');
+                        $($(curRow).children("[data-columnname='" + cellName + "']")[0]).html('<input value="' + editRowData_@(tableName)[cellName] + '" class="userinput form-control" type="number" step="any" min="@int.MinValue" max="@int.MaxValue"/>');
                     }
                     if (columnType == 'checkbox') {
                         var cellValue = editRowData_@(tableName)[cellName];
@@ -239,7 +239,7 @@
                     }
                     if (columnType == 'string') {
                         var strValue = editRowData_@(tableName)[cellName];
-                        $($(curRow).children("[data-columnname='" + cellName + "']")[0]).html('<input value="' + escapeQuotHtml(strValue) + '" class="userinput"  style="width: 99% " />');
+                        $($(curRow).children("[data-columnname='" + cellName + "']")[0]).html('<input value="' + escapeQuotHtml(strValue) + '" class="userinput form-control"  style="width: 99% " />');
                     }
                     $('#@Model.Name').DataTable().columns.adjust();
                 }
