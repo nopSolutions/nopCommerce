@@ -336,30 +336,6 @@ public partial class ProductController : BasePublicController
 
     #region Product reviews
 
-    public virtual async Task<IActionResult> ProductReviews(int productId)
-    {
-        var product = await _productService.GetProductByIdAsync(productId);
-        if (product == null || product.Deleted || !product.Published || !product.AllowCustomerReviews)
-            return RedirectToRoute("Homepage");
-
-        var model = new ProductReviewsModel();
-        model = await _productModelFactory.PrepareProductReviewsModelAsync(product);
-
-        await ValidateProductReviewAvailabilityAsync(product);
-
-        //default value
-        model.AddProductReview.Rating = _catalogSettings.DefaultProductRatingValue;
-
-        //default value for all additional review types
-        if (model.ReviewTypeList.Count > 0)
-            foreach (var additionalProductReview in model.AddAdditionalProductReviewList)
-            {
-                additionalProductReview.Rating = additionalProductReview.IsRequired ? _catalogSettings.DefaultProductRatingValue : 0;
-            }
-
-        return View(model);
-    }
-
     [HttpPost, ActionName("ProductReviews")]
     [ValidateCaptcha]
     public virtual async Task<IActionResult> ProductReviewsAdd(int productId, ProductReviewsModel model, bool captchaValid)
