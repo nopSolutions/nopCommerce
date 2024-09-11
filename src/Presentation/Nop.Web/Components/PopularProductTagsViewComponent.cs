@@ -18,8 +18,10 @@ public partial class PopularProductTagsViewComponent : NopViewComponent
 
     public async Task<IViewComponentResult> InvokeAsync()
     {
-        var model = await _catalogModelFactory.PreparePopularProductTagsModelAsync(_catalogSettings.NumberOfProductTags);
+        if (_catalogSettings.NumberOfProductTags == 0)
+            return Content("");
 
+        var model = await _catalogModelFactory.PreparePopularProductTagsModelAsync(_catalogSettings.NumberOfProductTags);
         if (!model.Tags.Any())
             return Content("");
 
