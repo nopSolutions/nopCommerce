@@ -95,6 +95,8 @@
     <meta name="generator" content="nopCommerce" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,700&display=swap' rel='stylesheet' type='text/css'>
+
+    <link href='https://www.abcwarehouse.com/bootstrap/css/bootstrap-theme.css' rel='stylesheet' type='text/css'>
     
     @* ABC: link SLI stylesheet based on store *@
     @if (!isHawthorne)
@@ -127,7 +129,20 @@
     <!--Powered by nopCommerce - https://www.nopCommerce.com-->
     <script type="text/javascript" src="//script.crazyegg.com/pages/scripts/0122/3303.js" async="async" ></script>
 </head>
-<body class="@isAndroid23Class @currentPageClass @if (supportRtl){<text>rtl</text>}">
+
+@functions {
+    public string GetBodyClass()
+    {
+        var routeData = ViewContext.RouteData;
+        var controller = routeData.Values["controller"]?.ToString() ?? "home";
+        var action = routeData.Values["action"]?.ToString() ?? "index";
+        
+        // Combine controller and action to create a unique class
+        return $"{controller.ToLowerInvariant()}-{action.ToLowerInvariant()}";
+    }
+}
+
+<body class="@GetBodyClass() @isAndroid23Class @currentPageClass @if (supportRtl){<text>rtl</text>}">
     @* ABC: A bunch of custom styles *@
     <style>
         .flyout-cart-wrapper:hover .flyout-cart {
