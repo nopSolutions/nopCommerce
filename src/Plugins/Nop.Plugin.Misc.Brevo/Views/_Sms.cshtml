@@ -1,0 +1,225 @@
+﻿@model ConfigurationModel
+
+<div class="card-body">
+    <div class="card card-default">
+        <div class="card-body">
+            <p>
+                You can send personalized SMS notifications to your customers or the store owner. Simply make sure that you have SMS credits (estimate how many SMS credits you need with this <a href="https://get.brevo.com/5f897rrc6cwa" target="_blank">calculator</a> - the cost of an SMS depends on the recipient’s country) and that sending transactional SMS is enabled on your Brevo account.
+            </p>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="UseSmsNotifications_OverrideForStore" asp-input="UseSmsNotifications" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="UseSmsNotifications" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="UseSmsNotifications" />
+                    <span asp-validation-for="UseSmsNotifications"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="SmsSenderName_OverrideForStore" asp-input="SmsSenderName" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="SmsSenderName" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="SmsSenderName" />
+                    <span asp-validation-for="SmsSenderName"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="StoreOwnerPhoneNumber" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="StoreOwnerPhoneNumber" />
+                    <span asp-validation-for="StoreOwnerPhoneNumber"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-9 offset-md-3">
+                    <button type="submit" name="saveSMS" class="btn btn-primary">@T("Admin.Common.Save")</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.UseSmsNotifications)
+    {
+        <div class="card card-default">
+            <div class="card-body">
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="AllowedTokens" />
+                    </div>
+                    <div class="col-md-9">
+                        <a id="allowedTokensShowHide" href="javascript:toggleLoadedAllowedTokens();">@T("Admin.Common.Show")</a>
+                        <div id="pnlAllowedTokens" class="d-none" style="white-space: pre-line">
+                            <div class="form-text-row">@Model.AllowedTokens</div>
+                        </div>
+                    </div>
+                </div>
+                <script>
+                    function toggleLoadedAllowedTokens() {
+                        $('#pnlAllowedTokens').toggleClass('d-none');
+                        if ($('#pnlAllowedTokens').hasClass('d-none')) {
+                            $('#allowedTokensShowHide').html('@T("Admin.Common.Show")');
+                        } else {
+                            $('#allowedTokensShowHide').html('@T("Admin.Common.Hide")');
+                        }
+                    }
+                </script>
+
+                @await Html.PartialAsync("Table", new DataTablesModel
+       {
+           Name = "sms-grid",
+           UrlRead = new DataUrl("SMSList", "Brevo", null),
+           UrlDelete = new DataUrl("SMSDelete", "Brevo", null),
+           Length = Model.SmsSearchModel.PageSize,
+           LengthMenu = Model.SmsSearchModel.AvailablePageSizes,
+           ColumnCollection = new List<ColumnProperty>
+            {
+            new ColumnProperty(nameof(SmsModel.Name))
+            {
+            Title = T("Admin.ContentManagement.MessageTemplates.Fields.Name").Text,
+            Width = "300",
+            },
+            new ColumnProperty(nameof(SmsModel.PhoneType))
+            {
+            Title = T("Plugins.Misc.Brevo.PhoneType").Text,
+            Width = "200",
+            },
+            new ColumnProperty(nameof(SmsModel.Text))
+            {
+            Title = T("Plugins.Misc.Brevo.SMSText").Text,
+            Width = "500"
+            },
+            new ColumnProperty(nameof(SmsModel.Id))
+            {
+            Title = T("Admin.Common.Delete").Text,
+            Width = "100",
+            ClassName =  NopColumnClassDefaults.Button,
+            Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+            }
+            }
+       })
+                <div class="card card-default no-margin">
+                    <div class="card-header">
+                        @T("Admin.Common.AddNewRecord")
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="@Model.AddSms.MessageId" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="@Model.AddSms.MessageId" asp-items="@Model.AddSms.AvailableMessages" />
+                                <span asp-validation-for="@Model.AddSms.MessageId"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="@Model.AddSms.PhoneTypeId" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="@Model.AddSms.PhoneTypeId" asp-items="@Model.AddSms.AvailablePhoneTypes" />
+                                <span asp-validation-for="@Model.AddSms.PhoneTypeId"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="@Model.AddSms.Text" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-textarea asp-for="@Model.AddSms.Text" />
+                                <span asp-validation-for="@Model.AddSms.Text"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-9 offset-md-3">
+                                <button type="button" id="addSms" class="btn btn-primary">@T("Admin.Common.AddNewRecord")</button>
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                        $(function () {
+                            $('#addSms').click(function () {
+                                $('#addSms').attr('disabled', true);
+                                var postData = {
+                                    MessageId: $("#@Html.IdFor(model => model.AddSms.MessageId)").val(),
+                                    PhoneTypeId: $("#@Html.IdFor(model => model.AddSms.PhoneTypeId)").val(),
+                                    Text: $("#@Html.IdFor(model => model.AddSms.Text)").val()
+                                };
+                                addAntiForgeryToken(postData);
+                                $.ajax({
+                                    cache: false,
+                                    type: "POST",
+                                    url: "@Html.Raw(Url.Action("SMSAdd", "Brevo"))",
+                                    data: postData,
+                                    success: function (data, textStatus, jqXHR) {
+                                        if (data.Result) {
+                                            updateTable('#sms-grid');
+
+                                            //clear input value
+                                            $("#@Html.IdFor(model => model.AddSms.MessageId)").val(@(Model.AddSms.DefaultSelectedMessageId));
+                                            $("#@Html.IdFor(model => model.AddSms.PhoneTypeId)").val(@(Model.AddSms.DefaultSelectedPhoneTypeId));
+                                            $("#@Html.IdFor(model => model.AddSms.Text)").val('');
+
+                                        } else {
+                                            display_nop_error(data);
+                                        }
+                                    },
+                                    complete: function (jqXHR, textStatus) {
+                                        $('#addSms').attr('disabled', false);
+                                    }
+                                });
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="card card-default">
+        <div class="card-header">
+            @T("Plugins.Misc.Brevo.SMS.Campaigns")
+        </div>
+        <div class="card-body">
+            <p>
+                Send a SMS campaign to a Brevo list.
+            </p>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="CampaignListId" />
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="CampaignListId" asp-items="Model.AvailableLists" />
+                    <span asp-validation-for="CampaignListId"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="CampaignSenderName" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="CampaignSenderName" />
+                    <span asp-validation-for="CampaignSenderName"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="CampaignText" />
+                </div>
+                <div class="col-md-9">
+                    <nop-textarea asp-for="CampaignText" />
+                    <span asp-validation-for="CampaignText"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-9 offset-md-3">
+                    <button type="submit" name="submitCampaign" class="btn btn-primary">@T("Plugins.Misc.Brevo.SMS.Campaigns.Submit")</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

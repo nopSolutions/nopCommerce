@@ -33,6 +33,36 @@ public class BrevoSettings : ISettings
     public bool UseSmtp { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating to activate time of eCommerce functionality
+    /// </summary>
+    public DateTime? ActivateTimeEcommerce { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to use eCommerce
+    /// </summary>
+    public bool UseEcommerce { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to sync categories and products
+    /// </summary>
+    public bool SyncProducts { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to sync orders
+    /// </summary>
+    public bool SyncOrders { get; set; }
+
+    /// <summary>
+    /// Gets or sets a page size to synchronize (eCommerce)
+    /// </summary>
+    public int PageSize { get; set; }
+
+    /// <summary>
+    /// Gets or sets a page size to synchronize for orders (eCommerce) 
+    /// </summary>
+    public int OrdersPageSize { get; set; }
+
+    /// <summary>
     /// Gets or sets the identifier of sender (for transactional emails)
     /// </summary>
     public string SenderId { get; set; }

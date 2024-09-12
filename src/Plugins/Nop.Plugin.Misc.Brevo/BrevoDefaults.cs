@@ -39,24 +39,19 @@ public static class BrevoDefaults
     public static string UnsubscribeContactRoute => "Plugin.Misc.Brevo.Unsubscribe";
 
     /// <summary>
-    /// Gets a name of the synchronization schedule task
-    /// </summary>
-    public static string SynchronizationTaskName => "Synchronization (Brevo plugin)";
-
-    /// <summary>
-    /// Gets a type of the synchronization schedule task
-    /// </summary>
-    public static string SynchronizationTask => "Nop.Plugin.Misc.Brevo.Services.SynchronizationTask";
-
-    /// <summary>
-    /// Gets a default synchronization period in hours
-    /// </summary>
-    public static int DefaultSynchronizationPeriod => 12;
-
-    /// <summary>
     /// Gets a default synchronization limit of Lists
     /// </summary>
     public static int DefaultSynchronizationListsLimit => 50;
+
+    /// <summary>
+    /// The batch page size for product and categories
+    /// </summary>
+    public static int PageSize => 100;
+
+    /// <summary>
+    /// The batch page size for orders
+    /// </summary>
+    public static int OrdersPageSize => 1000;
 
     /// <summary>
     /// Gets a header of the API key authorization: api-key

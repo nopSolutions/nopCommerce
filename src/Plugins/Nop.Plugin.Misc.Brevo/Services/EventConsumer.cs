@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Customers;
+﻿using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Stores;
@@ -20,7 +21,16 @@ public class EventConsumer :
     IConsumer<OrderPaidEvent>,
     IConsumer<OrderPlacedEvent>,
     IConsumer<EntityTokensAddedEvent<Store, Token>>,
-    IConsumer<EntityTokensAddedEvent<Customer, Token>>
+    IConsumer<EntityTokensAddedEvent<Customer, Token>>,
+    IConsumer<EntityInsertedEvent<Category>>,
+    IConsumer<EntityUpdatedEvent<Category>>,
+    IConsumer<EntityDeletedEvent<Category>>,
+    IConsumer<EntityInsertedEvent<Product>>,
+    IConsumer<EntityUpdatedEvent<Product>>,
+    IConsumer<EntityDeletedEvent<Product>>,
+    IConsumer<EntityInsertedEvent<Order>>,
+    IConsumer<EntityUpdatedEvent<Order>>,
+    IConsumer<EntityDeletedEvent<Order>>
 {
     #region Fields
 
@@ -145,6 +155,97 @@ public class EventConsumer :
 
         return Task.CompletedTask;
     }
+
+    /// <summary>
+    /// Handle the add category event
+    /// </summary>
+    /// <param name="eventMessage">The event message.</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public async Task HandleEventAsync(EntityInsertedEvent<Category> eventMessage)
+    {
+        await _brevoEmailManager.SyncCategoryAsync(eventMessage.Entity);
+    }
+
+    /// <summary>
+    /// Handle the update category event
+    /// </summary>
+    /// <param name="eventMessage">The event message.</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public async Task HandleEventAsync(EntityUpdatedEvent<Category> eventMessage)
+    {
+        await _brevoEmailManager.SyncCategoryAsync(eventMessage.Entity);
+    }
+
+    /// <summary>
+    /// Handle the delete category event
+    /// </summary>
+    /// <param name="eventMessage">The event message.</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public async Task HandleEventAsync(EntityDeletedEvent<Category> eventMessage)
+    {
+        await _brevoEmailManager.SyncCategoryAsync(eventMessage.Entity, deletedAt: DateTime.UtcNow.ToString("s") + "Z");
+    }
+
+    /// <summary>
+    /// Handle the add product event
+    /// </summary>
+    /// <param name="eventMessage">The event message.</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public async Task HandleEventAsync(EntityInsertedEvent<Product> eventMessage)
+    {
+        await _brevoEmailManager.SyncProductAsync(eventMessage.Entity);
+    }
+
+    /// <summary>
+    /// Handle the update product event
+    /// </summary>
+    /// <param name="eventMessage">The event message.</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public async Task HandleEventAsync(EntityUpdatedEvent<Product> eventMessage)
+    {
+        await _brevoEmailManager.SyncProductAsync(eventMessage.Entity);
+    }
+
+    /// <summary>
+    /// Handle the delete product event
+    /// </summary>
+    /// <param name="eventMessage">The event message.</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public async Task HandleEventAsync(EntityDeletedEvent<Product> eventMessage)
+    {
+        await _brevoEmailManager.SyncProductAsync(eventMessage.Entity, deletedAt: DateTime.UtcNow.ToString("s") + "Z");
+    }
+
+    /// <summary>
+    /// Handle the add order event
+    /// </summary>
+    /// <param name="eventMessage">The event message.</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public async Task HandleEventAsync(EntityInsertedEvent<Order> eventMessage)
+    {
+        await _brevoEmailManager.SyncOrderAsync(eventMessage.Entity);
+    }
+
+    /// <summary>
+    /// Handle the update order event
+    /// </summary>
+    /// <param name="eventMessage">The event message.</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public async Task HandleEventAsync(EntityUpdatedEvent<Order> eventMessage)
+    {
+        await _brevoEmailManager.SyncOrderAsync(eventMessage.Entity, updatedAt: DateTime.UtcNow.ToString("s") + "Z");
+    }
+
+    /// <summary>
+    /// Handle the delete order event
+    /// </summary>
+    /// <param name="eventMessage">The event message.</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public async Task HandleEventAsync(EntityDeletedEvent<Order> eventMessage)
+    {
+        await _brevoEmailManager.SyncOrderAsync(eventMessage.Entity);
+    }
+
 
     #endregion
 }

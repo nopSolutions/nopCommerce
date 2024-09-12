@@ -151,8 +151,8 @@ public class BrevoMigration : MigrationBase
         var sendinblueTask = _dataProvider.GetTable<ScheduleTask>().FirstOrDefault(x => x.Type == "Nop.Plugin.Misc.Sendinblue.Services.SynchronizationTask");
         if (sendinblueTask != null)
         {
-            sendinblueTask.Type = BrevoDefaults.SynchronizationTask;
-            sendinblueTask.Name = BrevoDefaults.SynchronizationTaskName;
+            sendinblueTask.Type = "Nop.Plugin.Misc.Brevo.Services.SynchronizationTask";
+            sendinblueTask.Name = "Synchronization (Brevo plugin)";
 
             _dataProvider.UpdateEntity(sendinblueTask);
         }

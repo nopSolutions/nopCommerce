@@ -99,12 +99,23 @@ public class BrevoController : BasePluginController
         if (string.IsNullOrEmpty(brevoSettings.ApiKey))
             return;
 
+        if (brevoSettings.ActivateTimeEcommerce != null &&
+            brevoSettings.ActivateTimeEcommerce.Value.AddMinutes(5) < DateTime.UtcNow &&
+            !brevoSettings.UseEcommerce)
+        {
+            brevoSettings.UseEcommerce = true;
+            await _settingService.SaveSettingAsync(brevoSettings, settings => settings.UseEcommerce, clearCache: false);
+        }
+
         //prepare common properties
         model.ActiveStoreScopeConfiguration = storeId;
         model.ApiKey = brevoSettings.ApiKey;
         model.ListId = brevoSettings.ListId;
         model.SmtpKey = brevoSettings.SmtpKey;
         model.SenderId = brevoSettings.SenderId;
+        model.UseEcommerce = brevoSettings.UseEcommerce;
+        model.SyncProducts = brevoSettings.SyncProducts;
+        model.SyncOrders = brevoSettings.SyncOrders;
         model.UseSmsNotifications = brevoSettings.UseSmsNotifications;
         model.SmsSenderName = brevoSettings.SmsSenderName;
         model.StoreOwnerPhoneNumber = brevoSettings.StoreOwnerPhoneNumber;
@@ -162,6 +173,8 @@ public class BrevoController : BasePluginController
         {
             model.ListId_OverrideForStore = await _settingService.SettingExistsAsync(brevoSettings, settings => settings.ListId, storeId);
             model.UseSmtp_OverrideForStore = await _settingService.SettingExistsAsync(brevoSettings, settings => settings.UseSmtp, storeId);
+            model.SyncProducts_OverrideForStore = await _settingService.SettingExistsAsync(brevoSettings, settings => settings.SyncProducts, storeId);
+            model.SyncOrders_OverrideForStore = await _settingService.SettingExistsAsync(brevoSettings, settings => settings.SyncOrders, storeId);
             model.SenderId_OverrideForStore = await _settingService.SettingExistsAsync(brevoSettings, settings => settings.SenderId, storeId);
             model.UseSmsNotifications_OverrideForStore = await _settingService.SettingExistsAsync(brevoSettings, settings => settings.UseSmsNotifications, storeId);
             model.SmsSenderName_OverrideForStore = await _settingService.SettingExistsAsync(brevoSettings, settings => settings.SmsSenderName, storeId);
@@ -205,7 +218,7 @@ public class BrevoController : BasePluginController
     public async Task<IActionResult> Configure()
     {
         var model = new ConfigurationModel();
-        await PrepareModelAsync(model);
+        await PrepareModelAsync(model);       
 
         return View("~/Plugins/Misc.Brevo/Views/Configure.cshtml", model);
     }
@@ -263,14 +276,14 @@ public class BrevoController : BasePluginController
     [AuthorizeAdmin]
     [Area(AreaNames.ADMIN)]
     [HttpPost, ActionName("Configure")]
-    [FormValueRequired("sync")]
+    [FormValueRequired("sync-contacts")]
     public async Task<IActionResult> Synchronization(ConfigurationModel model)
     {
         if (!ModelState.IsValid)
             return await Configure();
 
         //synchronize contacts of selected store
-        var messages = await _brevoEmailManager.SynchronizeAsync(false, await _storeContext.GetActiveStoreScopeConfigurationAsync());
+        var messages = await _brevoEmailManager.SynchronizeAsync(await _storeContext.GetActiveStoreScopeConfigurationAsync());
         foreach (var message in messages)
         {
             _notificationService.Notification(message.Type, message.Message, false);
@@ -293,6 +306,94 @@ public class BrevoController : BasePluginController
         await _staticCacheManager.RemoveAsync(BrevoDefaults.SyncKeyCache);
 
         return res;
+    }
+
+    [AuthorizeAdmin]
+    [Area(AreaNames.ADMIN)]
+    [HttpPost, ActionName("Configure")]
+    [FormValueRequired("saveEcommerce")]
+    public async Task<IActionResult> ConfigureEcommerce(ConfigurationModel model)
+    {
+        if (!ModelState.IsValid)
+            return await Configure();
+
+        var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+        var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>(storeId);
+
+        if (model.UseEcommerce)
+        {
+            //activate the eCommerce app
+            if (!brevoSettings.UseEcommerce)
+            {
+                var (isActive, activateErrors) = await _brevoEmailManager.ActivateEcommerceAsync();
+                if (isActive)
+                {
+                    brevoSettings.ActivateTimeEcommerce = DateTime.UtcNow;
+                    await _settingService.SaveSettingAsync(brevoSettings, settings => settings.ActivateTimeEcommerce, clearCache: false);
+                    _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Misc.Brevo.ActivateEcommerce"));
+                }
+                else
+                {
+                    //need to activate eCommerce
+                    _notificationService.WarningNotification(await _localizationService.GetResourceAsync("Plugins.Misc.Brevo.NotActivateEcommerce"));
+                }
+                if (!string.IsNullOrEmpty(activateErrors))
+                    _notificationService.ErrorNotification($"{BrevoDefaults.NotificationMessage} {activateErrors}");
+            }
+        }
+        
+        brevoSettings.SyncProducts = model.SyncProducts;
+        brevoSettings.SyncOrders = model.SyncOrders;
+        await _settingService.SaveSettingOverridablePerStoreAsync(brevoSettings, settings => settings.SyncProducts, model.SyncProducts_OverrideForStore, storeId, false);
+        await _settingService.SaveSettingOverridablePerStoreAsync(brevoSettings, settings => settings.SyncOrders, model.SyncOrders_OverrideForStore, storeId, false);
+
+        //now clear settings cache
+        await _settingService.ClearCacheAsync();
+
+        _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
+
+        return await Configure();
+    }
+
+    [AuthorizeAdmin]
+    [Area(AreaNames.ADMIN)]
+    [HttpPost, ActionName("Configure")]
+    [FormValueRequired("sync-products")]
+    public async Task<IActionResult> SyncProducts()
+    {
+        if (!ModelState.IsValid)
+            return await Configure();
+
+        var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+        var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>(storeId);
+
+        if (!brevoSettings.UseEcommerce)
+            return await Configure();
+
+        await _brevoEmailManager.SyncCategoriesAsync();
+        await _brevoEmailManager.SyncProductsAsync();
+
+        return await Configure();
+    }
+
+    [AuthorizeAdmin]
+    [Area(AreaNames.ADMIN)]
+    [HttpPost, ActionName("Configure")]
+    [FormValueRequired("sync-orders")]
+    public async Task<IActionResult> SyncOrders()
+    {
+        if (!ModelState.IsValid)
+            return await Configure();
+
+        var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+        var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>(storeId);
+
+        if (!brevoSettings.UseEcommerce)
+            return await Configure();
+
+        await _brevoEmailManager.SyncOrdersAsync();
+
+        return await Configure();
     }
 
     [AuthorizeAdmin]

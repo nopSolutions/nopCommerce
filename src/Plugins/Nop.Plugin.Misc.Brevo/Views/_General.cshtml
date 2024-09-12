@@ -1,0 +1,107 @@
+﻿@model ConfigurationModel
+
+<div class="card-body">
+    <div class="card card-default">
+        <div class="card-body">
+            @if (!string.IsNullOrEmpty(Model.AccountInfo))
+            {
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="ApiKey" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ApiKey" />
+                        <span asp-validation-for="ApiKey"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="AccountInfo" />
+                    </div>
+                    <div class="col-md-9" style="white-space: pre-line">
+                        @Html.Raw(Model.AccountInfo)
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-9 offset-md-3">
+                        <button type="submit" name="save" class="btn btn-primary">@T("Admin.Common.Save")</button>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="custombody">
+                    <div class="form-group row">
+                        <div class="logo">
+                            <img src="@Url.Content("~/Plugins/Misc.Brevo/logo.png")" alt="" />
+                        </div>
+                    </div>
+                    <div class="form-group row mt-2">
+                        <h2>Step 1. Create a Brevo account</h2>
+                    </div>
+                    <div class="form-group">
+                        <p>
+                            Drive more sales with all-in-one marketing software platform.
+                        </p>
+                    </div>
+                    <div class="form-group">
+                        <ul class="list-unstyled">
+                            <li>
+                                <i class="fas fa-check"></i><b>Design</b> clean and professional newsletters
+                            </li>
+                            <li>
+                                <i class="fas fa-check"></i>Build and <b>target</b> your audience
+                            </li>
+                            <li>
+                                <i class="fas fa-check"></i><b>Automate</b> your marketing (e.g. abandoned cart recovery)
+                            </li>
+                        </ul>
+                        <div>
+                            <a href="https://get.brevo.com/5f897rrc6cwa" class="btn btn-primary mt-1" target="_blank">Create Free Account</a>
+                        </div>
+                    </div>
+                    <div class="form-group row mt-3">
+                        <h2>Step 2. Connect your store to Brevo </h2>
+                    </div>
+                    <div class="form-group">
+                        <p>Copy your API v3 key from your Brevo account on <a href="https://get.brevo.com/nopcommerce" target="_blank">SMTP & API</a> page, then paste it in the field below and save.</p>
+                        <div class="apikey">
+                            <input class="form-control text-box single-line" id="ApiKey" name="ApiKey" type="text" value="" placeholder="xkeysib-xxxxxxxxxxx">
+                            <span asp-validation-for="ApiKey"></span>
+                        </div>
+                        <button type="submit" name="save" class="btn btn-primary mt-1">@T("Admin.Common.Save")</button>
+                    </div>
+                    <div class="form-group row mt-3">
+                        <h2>Need help?</h2>
+                    </div>
+                    <div class="form-group">
+                        <p>Take a look at our tutorials:</p>
+                        <ul class="list">
+                            <li>
+                                <a href="https://get.brevo.com/yyhs3x" target="_blank">nopCommerce - 1. Set up the plugin</a>
+                            </li>
+                            <li>
+                                <a href="https://get.brevo.com/tv7it" target="_blank">nopCommerce - 2. Recover abandoned carts</a>
+                            </li>
+                            <li>
+                                <a href="https://get.brevo.com/ut1q2p" target="_blank">nopCommerce - 3. Send an order confirmation email</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <br />
+                    <div class="form-group">
+                        <p><b><i>Don’t see your question answered?</i></b></p>
+                        <ul class="list">
+                            <li>
+                                <i>Visit <a href="https://www.nopcommerce.com/boards/?utm_source=admin-panel&utm_medium=sendinblue&utm_campaign=admin-panel" target="_blank">nopCommerce forums</a>. They are free and mostly provided by nopCommerce community (sometimes by nopCommerce team).</i>
+                            </li>
+                            <li>
+                                <i><a href="https://www.nopcommerce.com/nopcommerce-premium-support-services/?utm_source=admin-panel&utm_medium=sendinblue&utm_campaign=admin-panel" target="_blank">nopCommerce premium support services</a>. Paid, fast and provided by nopCommerce team.</i>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

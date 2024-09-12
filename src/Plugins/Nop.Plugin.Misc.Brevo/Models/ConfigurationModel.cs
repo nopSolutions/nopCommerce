@@ -43,6 +43,17 @@ public record ConfigurationModel : BaseNopModel
     public bool UseSmtp { get; set; }
     public bool UseSmtp_OverrideForStore { get; set; }
 
+    [NopResourceDisplayName("Plugins.Misc.Brevo.Fields.UseEcommerce")]
+    public bool UseEcommerce { get; set; }
+
+    [NopResourceDisplayName("Plugins.Misc.Brevo.Fields.SyncProducts")]
+    public bool SyncProducts { get; set; }
+    public bool SyncProducts_OverrideForStore { get; set; }
+
+    [NopResourceDisplayName("Plugins.Misc.Brevo.Fields.SyncOrders")]
+    public bool SyncOrders { get; set; }
+    public bool SyncOrders_OverrideForStore { get; set; }
+
     [NopResourceDisplayName("Plugins.Misc.Brevo.Fields.Sender")]
     public string SenderId { get; set; }
     public bool SenderId_OverrideForStore { get; set; }

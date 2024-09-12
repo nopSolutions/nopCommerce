@@ -1,0 +1,107 @@
+﻿@model ConfigurationModel
+
+<div class="card-body">
+    <div class="card card-default">
+        <div class="card-body">
+            <p>
+                Brevo SMTP is the transactional email service of Brevo. When it is enabled, all transactional emails (e.g. account creation emails, order confirmation emails, recovery password emails, etc) of your store will be sent from your Brevo account.<br />
+                Copy your SMTP key from your Brevo account on <a href="https://get.brevo.com/nopcommerce" target="_blank">SMTP & API</a> page > SMTP tab, then paste it in the field below and save.
+            </p>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="UseSmtp_OverrideForStore" asp-input="UseSmtp" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="UseSmtp" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="UseSmtp" />
+                    <span asp-validation-for="UseSmtp"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="SmtpKey" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="SmtpKey" />
+                    <span asp-validation-for="SmtpKey"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="SenderId_OverrideForStore" asp-input="SenderId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="SenderId" />
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="SenderId" asp-items=" Model.AvailableSenders" />
+                    <span asp-validation-for="SenderId"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-9 offset-md-3">
+                    <button type="submit" name="saveSMTP" class="btn btn-primary">@T("Admin.Common.Save")</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.UseSmtp)
+    {
+        <div class="card card-default">
+            <div class="card-body">
+                @await Html.PartialAsync("Table", new DataTablesModel
+       {
+           Name = "messages-grid",
+           UrlRead = new DataUrl("MessageList", "Brevo", null),
+           UrlUpdate = new DataUrl("MessageUpdate", "Brevo", null),
+           Length = Model.MessageTemplateSearchModel.PageSize,
+           LengthMenu = Model.MessageTemplateSearchModel.AvailablePageSizes,
+           ColumnCollection = new List<ColumnProperty>
+            {
+            new ColumnProperty(nameof(BrevoMessageTemplateModel.Name))
+            {
+            Title = T("Admin.ContentManagement.MessageTemplates.Fields.Name").Text
+            },
+            new ColumnProperty(nameof(BrevoMessageTemplateModel.IsActive))
+            {
+            Title = T("Admin.ContentManagement.MessageTemplates.Fields.IsActive").Text,
+            Width = "100",
+            ClassName = NopColumnClassDefaults.CenterAll,
+            Render = new RenderBoolean(),
+            Editable = true,
+            EditType = EditType.Checkbox
+            },
+            new ColumnProperty(nameof(BrevoMessageTemplateModel.ListOfStores))
+            {
+            Title = T("Admin.ContentManagement.MessageTemplates.Fields.LimitedToStores").Text
+            },
+            new ColumnProperty(nameof(BrevoMessageTemplateModel.UseBrevoTemplate))
+            {
+            Title = T("Plugins.Misc.Brevo.UseBrevoTemplate").Text,
+            Width = "100",
+            ClassName = NopColumnClassDefaults.CenterAll,
+            Render = new RenderBoolean(),
+            Editable = true,
+            EditType = EditType.Checkbox
+            },
+            new ColumnProperty(nameof(BrevoMessageTemplateModel.Id))
+            {
+            Title = T("Plugins.Misc.Brevo.EditTemplate").Text,
+            Width = "150",
+            Render = new RenderLink(new DataUrl(string.Empty, nameof(BrevoMessageTemplateModel.EditLink)))
+            {
+            Title = T("Plugins.Misc.Brevo.EditTemplate").Text
+            }
+            },
+            new ColumnProperty(nameof(BrevoMessageTemplateModel.Id))
+            {
+            Title = T("Admin.Common.Edit").Text,
+            Width = "200",
+            ClassName =  NopColumnClassDefaults.Button,
+            Render = new RenderButtonsInlineEdit()
+            }
+            }
+       })
+            </div>
+        </div>
+    }
+</div>

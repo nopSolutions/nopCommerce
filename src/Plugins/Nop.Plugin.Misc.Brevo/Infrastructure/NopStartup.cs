@@ -25,6 +25,7 @@ public class NopStartup : INopStartup
         //register custom services
         services.AddScoped<BrevoManager>();
         services.AddScoped<MarketingAutomationManager>();
+        services.AddScoped<BrevoHelper>();
 
         //override services
         services.AddScoped<IWorkflowMessageService, BrevoMessageService>();

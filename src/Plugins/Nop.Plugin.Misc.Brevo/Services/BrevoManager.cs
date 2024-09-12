@@ -8,9 +8,12 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Newtonsoft.Json;
 using Nop.Core;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Domain.Orders;
 using Nop.Plugin.Misc.Brevo.Domain;
+using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
@@ -19,6 +22,7 @@ using Nop.Services.Installation;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
+using Nop.Services.Orders;
 using Nop.Services.Stores;
 using static brevo_csharp.Model.GetAttributesAttributes;
 
@@ -31,7 +35,10 @@ public partial class BrevoManager
 {
     #region Fields
 
+    protected readonly BrevoHelper _brevoHelper;
     protected readonly IActionContextAccessor _actionContextAccessor;
+    protected readonly IAddressService _addressService;
+    protected readonly ICategoryService _categoryService;
     protected readonly ICountryService _countryService;
     protected readonly ICustomerService _customerService;
     protected readonly IEmailAccountService _emailAccountService;
@@ -39,6 +46,8 @@ public partial class BrevoManager
     protected readonly ILanguageService _languageService;
     protected readonly ILogger _logger;
     protected readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+    protected readonly IOrderService _orderService;
+    protected readonly IProductService _productService;
     protected readonly ISettingService _settingService;
     protected readonly IStateProvinceService _stateProvinceService;
     protected readonly IStoreService _storeService;
@@ -50,7 +59,10 @@ public partial class BrevoManager
 
     #region Ctor
 
-    public BrevoManager(IActionContextAccessor actionContextAccessor,
+    public BrevoManager(BrevoHelper brevoHelper,
+        IActionContextAccessor actionContextAccessor,
+        IAddressService addressService,
+        ICategoryService categoryService,
         ICountryService countryService,
         ICustomerService customerService,
         IEmailAccountService emailAccountService,
@@ -58,6 +70,8 @@ public partial class BrevoManager
         ILanguageService languageService,
         ILogger logger,
         INewsLetterSubscriptionService newsLetterSubscriptionService,
+        IOrderService orderService,
+        IProductService productService,
         ISettingService settingService,
         IStateProvinceService stateProvinceService,
         IStoreService storeService,
@@ -65,7 +79,10 @@ public partial class BrevoManager
         IWebHelper webHelper,
         IWorkContext workContext)
     {
+        _brevoHelper = brevoHelper;
         _actionContextAccessor = actionContextAccessor;
+        _addressService = addressService;
+        _categoryService = categoryService;
         _countryService = countryService;
         _customerService = customerService;
         _emailAccountService = emailAccountService;
@@ -73,6 +90,8 @@ public partial class BrevoManager
         _languageService = languageService;
         _logger = logger;
         _newsLetterSubscriptionService = newsLetterSubscriptionService;
+        _orderService = orderService;
+        _productService = productService;
         _settingService = settingService;
         _stateProvinceService = stateProvinceService;
         _storeService = storeService;
@@ -84,6 +103,131 @@ public partial class BrevoManager
     #endregion
 
     #region Utilities
+
+    #region Category
+
+    private CreateUpdateCategories CategoryToBatchDto(Category category)
+    {
+        var brevoCategory = new CreateUpdateCategories(id: category.Id.ToString())
+        {
+            Name = category.Name,
+            Url = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext)
+                .RouteUrl("GetCategoryProducts", new { categoryId = category.Id }, _webHelper.GetCurrentRequestProtocol())
+        };
+        return brevoCategory;
+    }
+
+    private async Task<CreateUpdateCategory> CategoryToDto(Category category, string deletedAt)
+    {
+        return new CreateUpdateCategory(id: category.Id.ToString())
+        {
+            Name = category.Name,
+            Url = await _brevoHelper.GetCategoryUrlAsync(category),
+            DeletedAt = deletedAt,
+            UpdateEnabled = true
+        };
+    }
+
+    #endregion
+
+    #region Product
+
+    private async Task<CreateUpdateProducts> ProductToBatchDto(Product product)
+    {
+        return new CreateUpdateProducts(id: product.Id.ToString(), name: product.Name)
+        {
+            Categories = await _brevoHelper.getProductCategories(product),
+            ImageUrl = await _brevoHelper.GetProductPictureUrlAsync(product),
+            MetaInfo = _brevoHelper.ProductMetaInfo(product),
+            Sku = product.Sku,
+            Price = (float?)product.Price,
+            Url = await _brevoHelper.GetProductUrlAsync(product),
+            ParentId = product.ParentGroupedProductId.ToString(),
+        };
+    }
+
+    private async Task<CreateUpdateProduct> ProductToDto(Product product, string deletedAt = "")
+    {
+        return new CreateUpdateProduct(id: product.Id.ToString(), name: product.Name)
+        {
+            Categories = await _brevoHelper.getProductCategories(product),
+            ImageUrl = await _brevoHelper.GetProductPictureUrlAsync(product),
+            MetaInfo = _brevoHelper.ProductMetaInfo(product),
+            Sku = product.Sku,
+            Price = (float?)product.Price,
+            Url = await _brevoHelper.GetProductUrlAsync(product),
+            ParentId = product.ParentGroupedProductId.ToString(),
+            UpdateEnabled = true,
+            DeletedAt = deletedAt,
+        };
+    }
+
+    #endregion
+
+    #region Order
+
+    private async Task<OrderProducts> OrderItemToDtoAsync(OrderItem orderItem)
+    {
+        var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
+
+        var (_, variantId) = await _brevoHelper.GetSkuAndVariantIdAsync(product, orderItem.AttributesXml);
+
+        var dto = new OrderProducts(
+            productId: orderItem.ProductId.ToString(), 
+            quantity: orderItem.Quantity,
+            price: orderItem.PriceInclTax)
+        {
+            VariantId = variantId.ToString(),
+        };
+
+        return dto;
+    }
+
+    /// <summary>
+    /// Convert Order to Brevo Order
+    /// </summary>
+    /// <param name="order">Order</param>
+    private async Task<brevo_csharp.Model.Order> OrderToBatchDtoAsync(Core.Domain.Orders.Order order)
+    {
+        var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
+        var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
+
+        return new brevo_csharp.Model.Order(
+            id: order.Id.ToString(),
+            createdAt: order.CreatedOnUtc.ToString("s") + "Z",
+            updatedAt: order.CreatedOnUtc.ToString("s") + "Z",
+            status: order.OrderStatus.ToString(),
+            amount: order.OrderTotal,
+            products: await (await _orderService.GetOrderItemsAsync(order.Id)).SelectAwait(async oi => await OrderItemToDtoAsync(oi)).ToListAsync())
+        {
+            Email = customer.Email,
+            Billing = new OrderBilling
+            {
+                Address = billingAddress.ToString(),
+                PaymentMethod = order.PaymentMethodSystemName,
+                PostCode = billingAddress.ZipPostalCode,
+                City = billingAddress.City,
+                Phone = billingAddress.PhoneNumber,
+                CountryCode = (await _countryService.GetCountryByIdAsync(billingAddress.CountryId ?? 0))?.TwoLetterIsoCode,
+            },            
+        };
+    }
+
+    /// <summary>
+    /// Convert Order to Brevo Order
+    /// </summary>
+    /// <param name="order">Order</param>
+    /// <param name="updatedAt">Order updated UTC date-time (YYYY-MM-DDTHH:mm:ssZ)</param>
+    /// <returns></returns>
+    private async Task<brevo_csharp.Model.Order> OrderToDtoAsync(Core.Domain.Orders.Order order, string updatedAt = "")
+    {
+        var brevoOrder = await OrderToBatchDtoAsync(order);
+        brevoOrder.UpdatedAt = updatedAt;
+
+        return brevoOrder;
+    }
+
+    #endregion
 
     /// <summary>
     /// Handle function and get result
@@ -452,18 +596,17 @@ public partial class BrevoManager
 
     #region Methods
 
-    #region Synchronization
+    #region Contacts synchronization
 
     /// <summary>
     /// Synchronize contacts 
     /// </summary>
-    /// <param name="synchronizationTask">Whether it's a scheduled synchronization</param>
     /// <param name="storeId">Store identifier; pass 0 to synchronize contacts for all stores</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the list of messages
     /// </returns>
-    public async Task<IList<(NotifyType Type, string Message)>> SynchronizeAsync(bool synchronizationTask = true, int storeId = 0)
+    public async Task<IList<(NotifyType Type, string Message)>> SynchronizeAsync(int storeId = 0)
     {
         var messages = new List<(NotifyType, string)>();
         try
@@ -472,16 +615,10 @@ public partial class BrevoManager
             var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>();
             if (!string.IsNullOrEmpty(brevoSettings.ApiKey))
             {
-                //use only passed store identifier for the manual synchronization
-                //use all store ids for the synchronization task
-                var storeIds = !synchronizationTask
-                        ? [storeId]
-                    : new List<int> { 0 }.Union((await _storeService.GetAllStoresAsync()).Select(store => store.Id)).ToList();
-
-                var importMessages = await ImportContactsAsync(storeIds);
+                var importMessages = await ImportContactsAsync([storeId]);
                 messages.AddRange(importMessages);
 
-                var exportMessages = await ExportContactsAsync(storeIds);
+                var exportMessages = await ExportContactsAsync([storeId]);
                 messages.AddRange(exportMessages);
             }
 
@@ -820,6 +957,212 @@ public partial class BrevoManager
             var updateContact = new UpdateContact { Attributes = attributes };
             await client.UpdateContactAsync(customer.Email, updateContact);
 
+        }
+        catch (Exception exception)
+        {
+            //log full error
+            await _logger.ErrorAsync($"Brevo error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
+        }
+    }
+
+    #endregion
+
+    #region eCommerce
+
+    /// <summary>
+    /// Activate the eCommerce app in Brevo account
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the result of check; errors if exist
+    /// </returns>
+    public async Task<(bool Enabled, string Errors)> ActivateEcommerceAsync()
+    {
+        try
+        {
+            //create API client
+            var client = await CreateApiClientAsync(config => new EcommerceApi(config));
+
+            //get account
+            var response = await client.EcommerceActivatePostAsyncWithHttpInfo();
+            if (response != null && response.StatusCode == 200)
+            {
+                return (true, null);
+            }
+
+            return (false, response.Data.ToString());
+        }
+        catch (Exception exception)
+        {
+            //log full error
+            await _logger.ErrorAsync($"Brevo error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
+            return (false, exception.Message);
+        }
+    }
+
+    /// <summary>
+    /// Synchronize categories
+    /// </summary>
+    public async System.Threading.Tasks.Task SyncCategoriesAsync()
+    {
+        var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>();
+        if (string.IsNullOrEmpty(brevoSettings.ApiKey) || !brevoSettings.UseEcommerce)
+            return;
+
+        var categories = await _categoryService.GetAllCategoriesAsync(null, pageSize: brevoSettings.PageSize);
+        
+        var page = 0;
+        while (page < categories.TotalPages)
+        {
+            categories = await _categoryService.GetAllCategoriesAsync(null, pageIndex: page, pageSize: brevoSettings.PageSize);
+            var brevoCategories = categories.Select(category => CategoryToBatchDto(category)).ToList();
+            var createUpdateBatchCategory = new CreateUpdateBatchCategory(brevoCategories, true);
+
+            try
+            {
+                //create API client
+                var client = await CreateApiClientAsync(config => new EcommerceApi(config));
+                var result = await client.CreateUpdateBatchCategoryAsync(createUpdateBatchCategory);
+            }
+            catch(Exception exception)
+            {
+                //log full error
+                await _logger.ErrorAsync($"Brevo error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
+            }
+
+            page++;
+        }
+    }
+
+    /// <summary>
+    /// Synchronize category
+    /// </summary>
+    /// <param name="category">Category/param>
+    /// <param name="deletedAt">Product delete UTC date-time (YYYY-MM-DDTHH:mm:ssZ)</param>
+    public async System.Threading.Tasks.Task SyncCategoryAsync(Category category, string deletedAt = "")
+    {
+        var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>();
+        if (string.IsNullOrEmpty(brevoSettings.ApiKey) || !brevoSettings.UseEcommerce || !brevoSettings.SyncProducts)
+            return;
+
+        try
+        {
+            //create API client
+            var client = await CreateApiClientAsync(config => new EcommerceApi(config));
+            var result = await client.CreateUpdateCategoryAsync(await CategoryToDto(category, deletedAt));
+        }
+        catch (Exception exception)
+        {
+            //log full error
+            await _logger.ErrorAsync($"Brevo error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
+        }
+    }
+
+    /// <summary>
+    /// Synchronize products
+    /// </summary>
+    public async System.Threading.Tasks.Task SyncProductsAsync()
+    {
+        var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>();
+        if (string.IsNullOrEmpty(brevoSettings.ApiKey) || !brevoSettings.UseEcommerce)
+            return;
+
+        var products = await _productService.SearchProductsAsync(pageSize: brevoSettings.PageSize);        
+        var page = 0;
+       
+        while (page < products.TotalPages)
+        {
+            products = await _productService.SearchProductsAsync(pageIndex: page, pageSize: brevoSettings.PageSize);
+            var brevoProducts = await products.SelectAwait(async product => await ProductToBatchDto(product)).ToListAsync();
+            var createUpdateBatchProducts = new CreateUpdateBatchProducts(brevoProducts, true);
+            try
+            {
+                //create API client
+                var client = await CreateApiClientAsync(config => new EcommerceApi(config));
+                var response = await client.CreateUpdateBatchProductsAsyncWithHttpInfo(createUpdateBatchProducts);
+            }
+            catch (Exception exception)
+            {
+                //log full error
+                await _logger.ErrorAsync($"Brevo error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
+            }
+            page++;
+        }
+    }
+
+    /// <summary>
+    /// Synchronize products
+    /// </summary>
+    /// <param name="product">Product</param>
+    /// <param name="deletedAt">Product delete UTC date-time (YYYY-MM-DDTHH:mm:ssZ)</param>
+    public async System.Threading.Tasks.Task SyncProductAsync(Product product, string deletedAt = "")
+    {
+        var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>();
+        if (string.IsNullOrEmpty(brevoSettings.ApiKey) || !brevoSettings.UseEcommerce || !brevoSettings.SyncProducts)
+            return;
+
+        try
+        {
+            //create API client
+            var client = await CreateApiClientAsync(config => new EcommerceApi(config));
+            var result = await client.CreateUpdateProductAsync(await ProductToDto(product, deletedAt));
+        }
+        catch (Exception exception)
+        {
+            //log full error
+            await _logger.ErrorAsync($"Brevo error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
+        }
+    }
+
+    /// <summary>
+    /// Synchronize orders
+    /// </summary>
+    public async System.Threading.Tasks.Task SyncOrdersAsync()
+    {
+        var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>();
+        if (string.IsNullOrEmpty(brevoSettings.ApiKey) || !brevoSettings.UseEcommerce)
+            return;
+
+        var orders = await _orderService.SearchOrdersAsync(pageSize: brevoSettings.OrdersPageSize);
+
+        var page = 0;
+        while (page < orders.TotalPages)
+        {
+            orders = await _orderService.SearchOrdersAsync(pageIndex: page, pageSize: brevoSettings.OrdersPageSize);
+            var brevoOrders = await orders.SelectAwait(async order => await OrderToBatchDtoAsync(order)).ToListAsync();
+            var orderBatch = new OrderBatch(brevoOrders);
+
+            try
+            {
+                //create API client
+                var client = await CreateApiClientAsync(config => new EcommerceApi(config));
+                var response = await client.CreateBatchOrderAsyncWithHttpInfo(orderBatch);
+            }
+            catch (Exception exception)
+            {
+                //log full error
+                await _logger.ErrorAsync($"Brevo error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
+            }
+            page++;
+        }
+    }
+
+    /// <summary>
+    /// Synchronize order
+    /// </summary>
+    /// <param name="order">Order</param>
+    /// <param name="updatedAt">Order updated UTC date-time (YYYY-MM-DDTHH:mm:ssZ)</param>
+    public async System.Threading.Tasks.Task SyncOrderAsync(Core.Domain.Orders.Order order, string updatedAt = "")
+    {
+        var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>();
+        if (string.IsNullOrEmpty(brevoSettings.ApiKey) || !brevoSettings.UseEcommerce || !brevoSettings.SyncOrders)
+            return;
+
+        try
+        {
+            //create API client
+            var client = await CreateApiClientAsync(config => new EcommerceApi(config));
+            await client.CreateOrderAsync(await OrderToDtoAsync(order, updatedAt));
         }
         catch (Exception exception)
         {
@@ -1404,6 +1747,6 @@ public partial class BrevoManager
     }
 
     #endregion
-
+    
     #endregion
 }
