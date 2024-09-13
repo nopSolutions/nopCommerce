@@ -19887,6 +19887,9 @@
   <LocaleResource Name="ShoppingCart.GiftCardCouponCode.DontWorkWithAutoshipProducts">
     <Value>You cannot use gift cards with auto-ship (recurring) items.</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.GiftCardCouponCode.DontWorkWithGiftCards">
+    <Value>You cannot use gift cards with other gift cards.</Value>
+  </LocaleResource>
   <LocaleResource Name="ShoppingCart.GiftCardCouponCode.Label">
     <Value>Enter gift card code</Value>
   </LocaleResource>
