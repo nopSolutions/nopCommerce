@@ -5723,6 +5723,99 @@ namespace Nop.Services.Installation
             await AddProductTagAsync(productNokiaLumia, "cool");
             await AddProductTagAsync(productNokiaLumia, "camera");
 
+            var productIphone = new Product
+            {
+                ProductType = ProductType.SimpleProduct,
+                VisibleIndividually = true,
+                Name = "Apple iPhone 16 128GB",
+                Sku = "A_16_128T",
+                ShortDescription = "Apple iPhone 16 128GB Teal with 6.1 inches screen and 48 megapixels rear-facing camera",
+                FullDescription = "<p>iPhone 16 brings you Dynamic Island, a 48MP Main camera and USB-C — all in a durable colour-infused glass and aluminium design. iPhone 16 has the Dynamic Island, an innovative way to interact with important alerts and Live Activities.</p>",
+                ProductTemplateId = productTemplateSimple.Id,
+                AllowCustomerReviews = true,
+                Price = 799M,
+                IsShipEnabled = true,
+                Weight = 7,
+                Length = 7,
+                Width = 7,
+                Height = 7,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                Published = true,
+                MarkAsNew = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productIphone);
+
+            await InsertInstallationDataAsync(productIphone);
+
+            await InsertInstallationDataAsync(new ProductCategory
+            {
+                ProductId = productIphone.Id,
+                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Cell phones").Id,
+                DisplayOrder = 1
+            });
+
+            await InsertProductPictureAsync(productIphone, "product_iphone_16_128.png");
+            await AddProductTagAsync(productIphone, "cool");
+            await AddProductTagAsync(productIphone, "cell");
+
+            var productSamsungGalaxy = new Product
+            {
+                ProductType = ProductType.SimpleProduct,
+                VisibleIndividually = true,
+                Name = "Samsung Galaxy S24 256GB",
+                Sku = "SG_24_256B",
+                ShortDescription = "Samsung - Galaxy S24 256GB - Onyx Black with Dynamic LTPO AMOLED 2X, 120Hz, HDR10+",
+                FullDescription = "<p>The Samsung Galaxy S24 combines a fast processor, a bright display, sharp cameras, and helpful AI tools in a pocket-friendly size for a reasonable price. In addition to a top-end Qualcomm processor and excellent cameras, the Galaxy S24 gets all of Samsung’s cutting-edge AI features.</p>",
+                ProductTemplateId = productTemplateSimple.Id,
+                AllowCustomerReviews = true,
+                Price = 859M,
+                IsShipEnabled = true,
+                Weight = 7,
+                Length = 7,
+                Width = 7,
+                Height = 7,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                Published = true,
+                MarkAsNew = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productSamsungGalaxy);
+
+            await InsertInstallationDataAsync(productSamsungGalaxy);
+
+            await InsertInstallationDataAsync(new ProductCategory
+            {
+                ProductId = productSamsungGalaxy.Id,
+                CategoryId = _categoryRepository.Table.Single(c => c.Name == "Cell phones").Id,
+                DisplayOrder = 1
+            });
+
+            await InsertProductPictureAsync(productSamsungGalaxy, "product_samsung_galaxy_s24.png");
+            await AddProductTagAsync(productSamsungGalaxy, "awesome");
+            await AddProductTagAsync(productSamsungGalaxy, "cell");
+
+
             var productBeatsPill = new Product
             {
                 ProductType = ProductType.SimpleProduct,
