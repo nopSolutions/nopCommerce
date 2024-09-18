@@ -58,7 +58,7 @@ namespace AbcWarehouse.Plugin.Widgets.PercentOffAppliancesMessageViewComponent.C
                 "GE MONOGRAM",
                 "GE PROFILE",
                 "GENERAL ELECTRIC"
-            }
+            };
 
             // exclude LG and GE
             var pms = await _manufacturerService.GetProductManufacturersByProductIdAsync(productId);
