@@ -15,6 +15,7 @@ namespace AbcWarehouse.Plugin.Widgets.PercentOffAppliancesMessageViewComponent.C
     {
         private readonly ILogger _logger;
         private readonly IAbcCategoryService  _abcCategoryService;
+        private readonly IManufacturerService _manufacturerService;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IProductService _productService;
@@ -22,6 +23,7 @@ namespace AbcWarehouse.Plugin.Widgets.PercentOffAppliancesMessageViewComponent.C
         public PercentOffAppliancesMessageViewComponent(
             ILogger logger,
             IAbcCategoryService abcCategoryService,
+            IManufacturerService manufacturerService,
             IPriceCalculationService priceCalculationService,
             IPriceFormatter priceFormatter,
             IProductService productService
@@ -29,6 +31,7 @@ namespace AbcWarehouse.Plugin.Widgets.PercentOffAppliancesMessageViewComponent.C
         {
             _logger = logger;
             _abcCategoryService = abcCategoryService;
+            _manufacturerService = manufacturerService;
             _priceCalculationService = priceCalculationService;
             _priceFormatter = priceFormatter;
             _productService = productService;
@@ -41,6 +44,31 @@ namespace AbcWarehouse.Plugin.Widgets.PercentOffAppliancesMessageViewComponent.C
             if (product == null)
             {
                 await _logger.WarningAsync($"Percent Off Appliances Message Widget: Unable to find product with ID '{productId}', was the product ID passed in?");
+            }
+
+            var exceptionBrands = new string[] {
+                "LG",
+                "LG SIGNATURE",
+                "LG STUDIO",
+                "LG XBOOM",
+                "\"C\" BY GE",
+                "GE APPLIANCES",
+                "GE",
+                "GE CAFE",
+                "GE MONOGRAM",
+                "GE PROFILE",
+                "GENERAL ELECTRIC"
+            }
+
+            // exclude LG and GE
+            var pms = await _manufacturerService.GetProductManufacturersByProductIdAsync(productId);
+            foreach (var pm in pms)
+            {
+                var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(pm.ManufacturerId);
+                if (manufacturer.Published && exceptionBrands.Contains(manufacturer.Name))
+                {
+                    return Content("");
+                }
             }
 
             var pcs = await _abcCategoryService.GetProductCategoriesByProductIdAsync(productId);
