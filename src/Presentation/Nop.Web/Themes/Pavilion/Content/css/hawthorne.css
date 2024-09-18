@@ -121,6 +121,10 @@ div.jCarouselMainWrapper {
 .col-md-6.pic-mobile {
     display: none;
 }
+.header-lower.hawthorne-lower .mega-menu-categories {
+    width: 60px;
+}
+
 @media screen and (max-width: 767px) {
     img.haw-main-img {
         height: auto;

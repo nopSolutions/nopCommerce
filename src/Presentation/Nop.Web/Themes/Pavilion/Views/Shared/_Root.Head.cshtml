@@ -127,7 +127,20 @@
     <!--Powered by nopCommerce - https://www.nopCommerce.com-->
     <script type="text/javascript" src="//script.crazyegg.com/pages/scripts/0122/3303.js" async="async" ></script>
 </head>
-<body class="@isAndroid23Class @currentPageClass @if (supportRtl){<text>rtl</text>}">
+
+@functions {
+    public string GetBodyClass()
+    {
+        var routeData = ViewContext.RouteData;
+        var controller = routeData.Values["controller"]?.ToString() ?? "home";
+        var action = routeData.Values["action"]?.ToString() ?? "index";
+        
+        // Combine controller and action to create a unique class
+        return $"{controller.ToLowerInvariant()}-{action.ToLowerInvariant()}";
+    }
+}
+
+<body class="@GetBodyClass() @isAndroid23Class @currentPageClass @if (supportRtl){<text>rtl</text>}">
     @* ABC: A bunch of custom styles *@
     <style>
         .flyout-cart-wrapper:hover .flyout-cart {
