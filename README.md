@@ -19,11 +19,6 @@ NOPCommerce codebase that runs both abcwarehouse.com and hawthorneonline.com
     1. CRON Tasks
     1. PowerReviews
 
-## Handling Fatal Error
-
-
-3. Add to project with: `dotnet sln src/NopCommerce.sln add src/Plugins/PLUGIN_FOLDER/PLUGIN_CSPROJ
-
 ## Creating a BACPAC
 
 1. RDP into database server.

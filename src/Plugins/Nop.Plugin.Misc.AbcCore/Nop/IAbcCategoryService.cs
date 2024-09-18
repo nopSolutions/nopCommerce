@@ -9,5 +9,6 @@ namespace Nop.Plugin.Misc.AbcCore.Nop
     {
         Task<Category> GetCategoryByNameAsync(string name);
         Task<bool> IsCategoryIdClearance(int categoryId);
+        Task<bool> HasApplianceTopLevelCategoryAsync(int categoryId);
     }
 }

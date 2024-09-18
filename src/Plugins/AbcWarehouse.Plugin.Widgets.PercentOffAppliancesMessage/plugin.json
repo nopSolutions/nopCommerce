@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Widgets",
+  "FriendlyName": "Percent Off Appliances Message",
+  "SystemName": "Widgets.PercentOffAppliancesMessage",
+  "Version": "4.40.0",
+  "SupportedVersions": [ "4.40" ],
+  "Author": "Dave Farinelli",
+  "DisplayOrder": 1,
+  "FileName": "AbcWarehouse.Plugin.Widgets.PercentOffAppliancesMessage.dll",
+  "Description": "Provides a message for all Appliance products and their children."
+}

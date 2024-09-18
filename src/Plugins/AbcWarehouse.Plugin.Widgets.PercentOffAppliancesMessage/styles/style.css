@@ -1,0 +1,19 @@
+#percent-off-appliances-message {
+    display: inline-block;
+    font-variant: all-small-caps;
+    line-height: 1;
+    border: 1px solid #d3d3d3;
+    padding: 0.5rem;
+    font-size: 1.15rem;
+    margin: 0.25rem 0;
+}
+
+#percent-off-appliances-message span {
+    color: #B70000;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+#percent-off-appliances-message a {
+    text-decoration: underline;
+}
