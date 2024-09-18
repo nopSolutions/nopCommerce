@@ -67,5 +67,21 @@ namespace Nop.Plugin.Misc.AbcCore.Nop
 
             return category.Name == "Clearance";
         }
+
+        public async Task<bool> HasApplianceTopLevelCategoryAsync(int categoryId)
+        {
+            var category = await GetCategoryByIdAsync(categoryId);
+            if (category.ParentCategoryId == 0 && category.Name == "Appliances")
+            {
+                return true;
+            }
+            else if (category.ParentCategoryId == 0)
+            {
+                return false;
+            }
+            else {
+                return await HasApplianceTopLevelCategoryAsync(category.ParentCategoryId);
+            }
+        }
     }
 }
