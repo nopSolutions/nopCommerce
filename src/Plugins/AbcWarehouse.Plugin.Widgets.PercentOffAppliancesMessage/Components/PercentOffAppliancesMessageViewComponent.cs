@@ -7,6 +7,7 @@ using Nop.Web.Framework.Components;
 using Nop.Web.Models.Catalog;
 using System.Threading.Tasks;
 using Nop.Plugin.Misc.AbcCore.Nop;
+using System.Linq;
 
 namespace AbcWarehouse.Plugin.Widgets.PercentOffAppliancesMessageViewComponent.Components
 {
