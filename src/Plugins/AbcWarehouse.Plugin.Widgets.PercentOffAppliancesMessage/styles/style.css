@@ -8,12 +8,12 @@
     margin: 0.25rem 0;
 }
 
-#percent-off-appliances-message span {
+#percent-off-appliances-message .discounted-price {
     color: #B70000;
     font-weight: bold;
     font-size: 1.1em;
 }
 
-#percent-off-appliances-message a {
+#percent-off-appliances-message .learn-more-text {
     text-decoration: underline;
 }
