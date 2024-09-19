@@ -37,7 +37,7 @@ public partial class NopDbStartup : INopStartup
             .AddScoped<IProcessorAccessor, NopProcessorAccessor>()
             // set accessor for the connection string
             .AddScoped<IConnectionStringAccessor>(x => DataSettingsManager.LoadSettings())
-            .AddSingleton<IMigrationManager, MigrationManager>()
+            .AddScoped<IMigrationManager, MigrationManager>()
             .AddSingleton<IConventionSet, NopConventionSet>()
             .ConfigureRunner(rb =>
                 rb.WithVersionTable(new MigrationVersionInfo()).AddSqlServer().AddMySql5().AddPostgres()
