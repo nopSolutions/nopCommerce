@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using LinqToDB.Data;
 using Nop.Core;
+using static LinqToDB.Common.Configuration;
 
 namespace Nop.Data;
 
@@ -10,6 +11,11 @@ namespace Nop.Data;
 public partial interface INopDataProvider
 {
     #region Methods
+
+    /// <summary>
+    //// Returns a DataConnection object that supports transactions that include commit and rollback operations.
+    /// </summary>
+    DataConnection CreateDataConnection();
 
     /// <summary>
     /// Create the database

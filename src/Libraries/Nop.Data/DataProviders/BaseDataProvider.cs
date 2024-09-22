@@ -27,7 +27,7 @@ public abstract partial class BaseDataProvider
     /// <summary>
     /// Creates the database connection
     /// </summary>
-    protected virtual DataConnection CreateDataConnection()
+    public virtual DataConnection CreateDataConnection()
     {
         return CreateDataConnection(LinqToDbDataProvider);
     }
@@ -37,7 +37,7 @@ public abstract partial class BaseDataProvider
     /// </summary>
     /// <param name="dataProvider">Data provider</param>
     /// <returns>Database connection</returns>
-    protected virtual DataConnection CreateDataConnection(IDataProvider dataProvider)
+    public virtual DataConnection CreateDataConnection(IDataProvider dataProvider)
     {
         ArgumentNullException.ThrowIfNull(dataProvider);
 

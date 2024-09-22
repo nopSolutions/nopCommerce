@@ -26,7 +26,7 @@ public partial class MySqlNopDataProvider : BaseDataProvider, INopDataProvider
     /// <summary>
     /// Creates the database connection
     /// </summary>
-    protected override DataConnection CreateDataConnection()
+    public override DataConnection CreateDataConnection()
     {
         var dataContext = CreateDataConnection(LinqToDbDataProvider);
 

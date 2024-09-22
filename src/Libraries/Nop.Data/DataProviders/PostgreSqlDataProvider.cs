@@ -25,7 +25,7 @@ public partial class PostgreSqlDataProvider : BaseDataProvider, INopDataProvider
     /// <summary>
     /// Creates the database connection by the current data configuration
     /// </summary>
-    protected override DataConnection CreateDataConnection()
+    public override DataConnection CreateDataConnection()
     {
         var dataContext = CreateDataConnection(LinqToDbDataProvider);
         dataContext.MappingSchema.SetDataType(
