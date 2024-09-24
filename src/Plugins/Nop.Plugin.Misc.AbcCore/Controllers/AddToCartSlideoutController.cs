@@ -118,7 +118,7 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
             var shoppingCartItem = shoppingCart.FirstOrDefault(sci => sci.Id == shoppingCartItemId);
             var product = await _productService.GetProductByIdAsync(shoppingCartItem.ProductId);
 
-            var slideoutInfo = await GetSlideoutInfoAsync(product, shoppingCartItem);
+            var slideoutInfo = await GetSlideoutInfoAsync(product, shoppingCartItem, 0.0M);
 
             return Json(new
             {
@@ -141,7 +141,17 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
                 ProductId = product.Id
             };
 
-            var slideoutInfo = await GetSlideoutInfoAsync(product, sci);
+            decimal customerEnteredPrice = 0.0M;
+            foreach (var formKey in form.Keys)
+            {
+                if (formKey.Equals($"addtocart_{productId}.CustomerEnteredPrice", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    decimal.TryParse(form[formKey], out customerEnteredPrice);
+                    break;
+                }
+            }
+
+            var slideoutInfo = await GetSlideoutInfoAsync(product, sci, customerEnteredPrice);
 
             return Json(new
             {
@@ -159,12 +169,13 @@ namespace Nop.Plugin.Misc.AbcCore.Controllers
 
         private async Task<CartSlideoutInfo> GetSlideoutInfoAsync(
             Product product,
-            ShoppingCartItem sci)
+            ShoppingCartItem sci,
+            decimal customerEnteredPrice)
         {
             var productId = product.Id;
 
             return new CartSlideoutInfo() {
-                ProductInfoHtml = await RenderViewComponentToStringAsync("CartSlideoutProductInfo", new { productId = productId } ),
+                ProductInfoHtml = await RenderViewComponentToStringAsync("CartSlideoutProductInfo", new { productId = productId, customerEnteredPrice = customerEnteredPrice } ),
                 DeliveryOptionsHtml = await RenderViewComponentToStringAsync(
                     "CartSlideoutProductAttributes",
                     new {

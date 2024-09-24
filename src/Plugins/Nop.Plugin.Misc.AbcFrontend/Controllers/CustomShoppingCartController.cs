@@ -744,7 +744,7 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
                 attXml
             );
             
-            var slideoutInfo = await GetSlideoutInfoAsync(product, sci);
+            var slideoutInfo = await GetSlideoutInfoAsync(product, sci.Id);
 
             return Json(new
             {
@@ -762,13 +762,15 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
 
         private async Task<CartSlideoutInfo> GetSlideoutInfoAsync(
             Product product,
-            ShoppingCartItem sci)
+            int shoppingCartItemId)
         {
             var isSlideoutActive = await _widgetPluginManager.IsPluginActiveAsync("Widgets.CartSlideout");
             if (!isSlideoutActive) { return null; }
 
+            var productId = product.Id;
+
             return new CartSlideoutInfo() {
-                ProductInfoHtml = await RenderViewComponentToStringAsync("CartSlideoutProductInfo", new { productId = product.Id } ),
+                ProductInfoHtml = await RenderViewComponentToStringAsync("CartSlideoutProductInfo", new { productId = productId} ),
                 DeliveryOptionsHtml = await RenderViewComponentToStringAsync(
                     "CartSlideoutProductAttributes",
                     new {
@@ -784,8 +786,8 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
                             AbcDeliveryConsts.PickupAccessoriesProductAttributeName
                         }
                     }),
-                ShoppingCartItemId = sci.Id,
-                ProductId = sci.ProductId
+                ShoppingCartItemId = shoppingCartItemId,
+                ProductId = productId
             };
         }
     }

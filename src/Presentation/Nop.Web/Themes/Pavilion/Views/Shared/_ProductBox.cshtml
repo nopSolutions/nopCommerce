@@ -185,6 +185,8 @@
     {
         openBoxPrice = productFlag.CalculateOpenBoxPrice(Model.ProductPrice.PriceValue);
     }
+
+    var isGiftCard = Model.Sku == "GIFT CARDS - ADD VAL";
 }
 
 @* ABC: both style and script should be moved *@
@@ -434,7 +436,13 @@
             }
         </div>
         <div class="buttons-lower">
-            @if (productFlag != null && productFlag.IsInStoreOnly())
+            @if (isGiftCard)
+            {
+                <form action="@productUrl">
+                    <button type="submit" class="button-2 product-box-add-to-cart-button"><span class="no-cart-image">@T("ShoppingCart.SeeDetails")</span></button>
+                </form>
+            }
+            else if (productFlag != null && productFlag.IsInStoreOnly())
             {
                 <form action="@productUrl">
                     <button type="submit" class="button-2 product-box-add-to-cart-button"><span class="no-cart-image">@T("ShoppingCart.InStoreOnly").Text</span></button>
