@@ -1,5 +1,5 @@
 UPDATE Store
-SET Url = 'https://stage.abcwarehouse.com'
+SET Url = 'https://stage.abcwarehouse.com/'
 WHERE Url = 'https://www.abcwarehouse.com/'
 
 UPDATE Store
@@ -7,7 +7,7 @@ SET Hosts = 'stage.abcwarehouse.com'
 WHERE Hosts = 'www.abcwarehouse.com'
 
 UPDATE Store
-SET Url = 'https://stagehawthorne.abcwarehouse.com'
+SET Url = 'https://stagehawthorne.abcwarehouse.com/'
 WHERE Url = 'https://hawthorne.abcwarehouse.com/'
 
 UPDATE Store
@@ -24,3 +24,19 @@ WHERE Name = 'exportordersettings.tableprefix'
 
 UPDATE EmailAccount
 SET Host = 'email.abcwarehouse.com'
+
+-- Geocoding
+UPDATE Setting
+SET Value = 'GEOCODING_API_KEY'
+WHERE Name = 'coresettings.googlemapsgeocodingapikey'
+
+-- Unifi
+UPDATE Setting
+SET Value = 'True'
+WHERE Name = 'unifipaymentssettings.useintegration' or Name = 'unifisettings.useintegration'
+UPDATE Setting
+SET Value = 'CLIENT_ID'
+WHERE Name = 'unifipaymentssettings.clientid'
+UPDATE Setting
+SET Value = 'CLIENT_SECRET'
+WHERE Name = 'unifipaymentssettings.clientsecret'

@@ -1,6 +1,11 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.209.6/containers/dotnet-mssql
 {
+	"hostRequirements": {
+		"cpus": 16,
+		"memory": "64gb",
+		"storage": "128gb"
+	},
 	"name": "C# (.NET) and MS SQL",
 	"dockerComposeFile": "docker-compose.yml",
 	"service": "app",
