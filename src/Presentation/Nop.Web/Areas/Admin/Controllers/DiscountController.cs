@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
 using Nop.Services.Catalog;
@@ -32,6 +33,7 @@ public partial class DiscountController : BaseAdminController
     protected readonly INotificationService _notificationService;
     protected readonly IPermissionService _permissionService;
     protected readonly IProductService _productService;
+    protected readonly IWorkContext _workContext;
 
     #endregion
 
@@ -47,7 +49,8 @@ public partial class DiscountController : BaseAdminController
         IManufacturerService manufacturerService,
         INotificationService notificationService,
         IPermissionService permissionService,
-        IProductService productService)
+        IProductService productService,
+        IWorkContext workContext)
     {
         _catalogSettings = catalogSettings;
         _categoryService = categoryService;
@@ -60,6 +63,7 @@ public partial class DiscountController : BaseAdminController
         _notificationService = notificationService;
         _permissionService = permissionService;
         _productService = productService;
+        _workContext = workContext;
     }
 
     #endregion
@@ -111,6 +115,10 @@ public partial class DiscountController : BaseAdminController
     {
         if (ModelState.IsValid)
         {
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null)
+                model.VendorId = currentVendor.Id;
+
             var discount = model.ToEntity<Discount>();
             await _discountService.InsertDiscountAsync(discount);
 
@@ -141,6 +149,11 @@ public partial class DiscountController : BaseAdminController
         if (discount == null)
             return RedirectToAction("List");
 
+        //a vendor should have access only to his discounts
+        var currentVendor = await _workContext.GetCurrentVendorAsync();
+        if (currentVendor != null && discount.VendorId != currentVendor.Id)
+            return RedirectToAction("List");
+
         //prepare model
         var model = await _discountModelFactory.PrepareDiscountModelAsync(null, discount);
 
@@ -154,6 +167,11 @@ public partial class DiscountController : BaseAdminController
         //try to get a discount with the specified id
         var discount = await _discountService.GetDiscountByIdAsync(model.Id);
         if (discount == null)
+            return RedirectToAction("List");
+
+        //a vendor should have access only to his discounts
+        var currentVendor = await _workContext.GetCurrentVendorAsync();
+        if (currentVendor != null && discount.VendorId != currentVendor.Id)
             return RedirectToAction("List");
 
         if (ModelState.IsValid)
@@ -207,6 +225,11 @@ public partial class DiscountController : BaseAdminController
         //try to get a discount with the specified id
         var discount = await _discountService.GetDiscountByIdAsync(id);
         if (discount == null)
+            return RedirectToAction("List");
+
+        //a vendor should have access only to his discounts
+        var currentVendor = await _workContext.GetCurrentVendorAsync();
+        if (currentVendor != null && discount.VendorId != currentVendor.Id)
             return RedirectToAction("List");
 
         //applied to products

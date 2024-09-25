@@ -111,15 +111,31 @@
             <span asp-validation-for="Name"></span>
         </div>
     </div>
-    <div class="form-group row">
-        <div class="col-md-3">
-            <nop-label asp-for="DiscountTypeId" />
+    @if (!Model.IsLoggedInAsVendor) {
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="DiscountTypeId" />
+            </div>
+            <div class="col-md-9">
+                <nop-select asp-for="DiscountTypeId" asp-items="@(await ((DiscountType) Model.DiscountTypeId).ToSelectListAsync())" />
+                <span asp-validation-for="DiscountTypeId"></span>
+            </div>
         </div>
-        <div class="col-md-9">
-            <nop-select asp-for="DiscountTypeId" asp-items="@(await ((DiscountType) Model.DiscountTypeId).ToSelectListAsync())" />
-            <span asp-validation-for="DiscountTypeId"></span>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="VendorId" />
+            </div>
+            <div class="col-md-9">
+                <nop-select asp-for="VendorId" asp-items="Model.AvailableVendors" />
+                <span asp-validation-for="VendorId"></span>
+            </div>
         </div>
-    </div>
+    }
+    else
+    {
+        <input type="hidden" asp-for="DiscountTypeId" />
+        <input type="hidden" asp-for="VendorId" />
+    }
     <div class="form-group row" id="pnlAppliedToSubCategories">
         <div class="col-md-3">
             <nop-label asp-for="AppliedToSubCategories" />
