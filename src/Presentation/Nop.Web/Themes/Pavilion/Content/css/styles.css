@@ -6110,6 +6110,17 @@ label, label + * {
 h1.search-page-title {
     text-align: center;
 }
+
+.header-middle .hours-desktop {
+    padding-top: 18px;
+}
+.header-logo.header-logo img {
+	width: 270px;
+}
+.header-upper .header-links-wrapper {
+    padding-top: 10px;
+}
+
 .hawthorne-lower .hours-desktop {
     float: right;
     height: 0px;
