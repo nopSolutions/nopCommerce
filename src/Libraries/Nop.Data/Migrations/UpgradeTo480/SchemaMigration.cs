@@ -3,7 +3,7 @@ using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Migrations.UpgradeTo480;
 
-[NopSchemaMigration("2024-06-10 00:00:01", "SchemaMigration for 4.80.0")]
+[NopSchemaMigration("2024-06-10 00:00:03", "SchemaMigration for 4.80.0")]
 public class SchemaMigration : ForwardOnlyMigration
 {
     /// <summary>
@@ -21,5 +21,18 @@ public class SchemaMigration : ForwardOnlyMigration
         var hasDiscountsAppliedColumnName = "HasDiscountsApplied";
         if (Schema.Table(ptoductTableName).Column(hasDiscountsAppliedColumnName).Exists())
             Delete.Column(hasDiscountsAppliedColumnName).FromTable(ptoductTableName);
+
+        //#7241
+        var categoryTableName = nameof(Category);
+        var restrictFromVendorsColumnName = nameof(Category.RestrictFromVendors);
+
+        if (!Schema.Table(categoryTableName).Column(restrictFromVendorsColumnName).Exists())
+        {
+            Alter.Table(categoryTableName)
+                .AddColumn(restrictFromVendorsColumnName)
+                .AsBoolean()
+                .NotNullable()
+                .WithDefaultValue(false);
+        }
     }
 }

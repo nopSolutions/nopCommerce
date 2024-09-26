@@ -2265,6 +2265,12 @@
   <LocaleResource Name="Admin.Catalog.Categories.Fields.Published.Hint">
     <Value>Check to publish this category (visible in store). Uncheck to unpublish (category not available in store).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.RestrictFromVendors">
+    <Value>Restrict from vendors</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.RestrictFromVendors.Hint">
+    <Value>Check to restrict vendors from adding products to this category. This option is useful when you have multi-vendors enabled in your store.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.SeName">
     <Value>Search engine friendly page name</Value>
   </LocaleResource>
