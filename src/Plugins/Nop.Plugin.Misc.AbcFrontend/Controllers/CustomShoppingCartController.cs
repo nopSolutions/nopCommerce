@@ -645,14 +645,15 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
             await SaveItemAsync(updatecartitem, addToCartWarnings, product, cartType, attributes, customerEnteredPriceConverted, rentalStartDate, rentalEndDate, quantity);
 
             //return result
-            return await GetProductToCartDetails(addToCartWarnings, cartType, product, attributes);
+            return await GetProductToCartDetails(addToCartWarnings, cartType, product, attributes, customerEnteredPriceConverted);
         }
 
         protected async virtual Task<IActionResult> GetProductToCartDetails(
             List<string> addToCartWarnings,
             ShoppingCartType cartType,
             Product product,
-            string attXml)
+            string attXml,
+            decimal customerEnteredPriceConverted)
         {
             if (addToCartWarnings.Any())
             {
@@ -716,12 +717,15 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
                             });
                         }
 
-                        return await SlideoutJson(product, attXml);
+                        return await SlideoutJson(product, attXml, customerEnteredPriceConverted);
                     }
             }
         }
 
-        private async Task<IActionResult> SlideoutJson(Product product, string attXml = "")
+        private async Task<IActionResult> SlideoutJson(
+            Product product,
+            string attXml = "",
+            decimal customerEnteredPriceConverted = decimal.Zero)
         {
             //display notification message and update appropriate blocks
             var shoppingCarts = await _shoppingCartService.GetShoppingCartAsync(
@@ -741,7 +745,8 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
                 shoppingCarts,
                 ShoppingCartType.ShoppingCart,
                 product,
-                attXml
+                attXml,
+                customerEnteredPriceConverted
             );
             
             var slideoutInfo = await GetSlideoutInfoAsync(product, sci.Id);

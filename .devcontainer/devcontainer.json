@@ -30,8 +30,8 @@
 
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
-		"ms-dotnettools.csharp",
-		"ms-mssql.mssql"
+		"ms-mssql.mssql",
+		"ms-dotnettools.csdevkit"
 	],
 
 	// [Optional] To reuse of your local HTTPS dev cert:
