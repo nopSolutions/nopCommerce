@@ -147,7 +147,7 @@ body {
 }
 
 /* Customer Info page */
-.customer-info a {
+.customer-info > a {
     background-color: #1f2021 !important;
 }
 
