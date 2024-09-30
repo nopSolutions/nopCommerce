@@ -334,7 +334,8 @@
                         <label asp-for="Password" asp-postfix=":"></label>
                         <input asp-for="Password" />
                         <nop-required />
-                        <span asp-validation-for="Password"></span>
+                        @Html.Raw(HttpUtility.HtmlDecode(
+                            await Html.ValidationMessageFor(m => m.Password).RenderHtmlContentAsync()))
                     </div>
                     <div class="inputs">
                         <label asp-for="ConfirmPassword" asp-postfix=":"></label>
