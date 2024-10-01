@@ -110,7 +110,9 @@ namespace Nop.Web.Framework.Mvc.Routing
             switch (urlRecord.EntityName.ToLowerInvariant())
             {
                 case "product":
-                    values[NopPathRouteDefaults.ControllerFieldKey] = "Product";
+                    // ABC: using AbcProduct controller
+                    // values[NopPathRouteDefaults.ControllerFieldKey] = "Product";
+                    values[NopPathRouteDefaults.ControllerFieldKey] = "AbcProduct";
                     values[NopPathRouteDefaults.ActionFieldKey] = "ProductDetails";
                     values[NopPathRouteDefaults.ProductIdFieldKey] = urlRecord.EntityId;
                     values[NopPathRouteDefaults.SeNameFieldKey] = urlRecord.Slug;
