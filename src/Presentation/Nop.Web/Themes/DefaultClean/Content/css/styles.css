@@ -1364,6 +1364,10 @@ label, label + * {
   display: none;
 }
 
+.block a.product-picture img {
+  max-width: 100%;
+}
+
 .block a.product-picture:before {
   display: none;
 }
@@ -8262,6 +8266,7 @@ label, label + * {
     width: 30%;
     margin: 0 0 0 -15px;
     vertical-align: middle;
+    text-align: center;
   }
 
   .block a.product-name {
