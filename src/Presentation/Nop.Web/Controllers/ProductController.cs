@@ -62,6 +62,9 @@ namespace Nop.Web.Controllers
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly ShippingSettings _shippingSettings;
 
+        // ABC: custom
+        private readonly IStoreService _storeService;
+
         #endregion
 
         #region Ctor
@@ -91,7 +94,8 @@ namespace Nop.Web.Controllers
             IWorkflowMessageService workflowMessageService,
             LocalizationSettings localizationSettings,
             ShoppingCartSettings shoppingCartSettings,
-            ShippingSettings shippingSettings)
+            ShippingSettings shippingSettings,
+            IStoreService storeService)
         {
             _captchaSettings = captchaSettings;
             _catalogSettings = catalogSettings;
@@ -119,6 +123,8 @@ namespace Nop.Web.Controllers
             _localizationSettings = localizationSettings;
             _shoppingCartSettings = shoppingCartSettings;
             _shippingSettings = shippingSettings;
+
+            _storeService = storeService;
         }
 
         #endregion
@@ -173,9 +179,10 @@ namespace Nop.Web.Controllers
                 !_productService.ProductIsAvailable(product);
             //Check whether the current user has a "Manage products" permission (usually a store owner)
             //We should allows him (her) to use "Preview" functionality
-            var hasAdminAccess = await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts);
-            if (notAvailable && !hasAdminAccess)
-                return InvokeHttp404();
+            // ABC: remove this functionality, and check other store
+            //var hasAdminAccess = await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts);
+            if (notAvailable)// && !hasAdminAccess)
+                return await CheckOtherStoreAsync(product);
 
             //visible individually?
             if (!product.VisibleIndividually)
@@ -696,5 +703,22 @@ namespace Nop.Web.Controllers
         }
 
         #endregion
+
+        // ABC: custom method
+        private async Task<IActionResult> CheckOtherStoreAsync(Product product)
+        {
+            var activeStore = await _storeContext.GetCurrentStoreAsync();
+            var storeMappings = await _storeMappingService.GetStoreMappingsAsync(product);
+            foreach (var storeMapping in storeMappings.Where(sm => sm.Id != activeStore.Id))
+            {
+                var store = await _storeService.GetStoreByIdAsync(storeMapping.StoreId);
+                var url = store.Url;
+                var slug = await _urlRecordService.GetActiveSlugAsync(product.Id, "Product", 0);
+                var redirectUrl = $"{url}{slug}";
+                return RedirectPermanent(redirectUrl);
+            }
+
+            return InvokeHttp404();
+        } 
     }
 }
