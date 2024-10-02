@@ -3317,11 +3317,6 @@ namespace Nop.Services.Installation
             var eaGeneral = _emailAccountRepository.Table.FirstOrDefault() ?? throw new Exception("Default email account cannot be loaded");
             await settingService.SaveSettingAsync(new EmailAccountSettings { DefaultEmailAccountId = eaGeneral.Id });
 
-            await settingService.SaveSettingAsync(new WidgetSettings
-            {
-                ActiveWidgetSystemNames = ["Widgets.NivoSlider"]
-            });
-
             await settingService.SaveSettingAsync(new DisplayDefaultMenuItemSettings
             {
                 DisplayHomepageMenuItem = true,
