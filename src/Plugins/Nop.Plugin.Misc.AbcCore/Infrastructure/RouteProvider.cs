@@ -1,18 +1,16 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Nop.Web.Framework.Mvc.Routing;
-using Nop.Web.Infrastructure;
 
 namespace Nop.Plugin.Misc.AbcCore.Infrastructure
 {
-    public class RouteProvider : BaseRouteProvider, IRouteProvider
+    public class RouteProvider : IRouteProvider
     {
         public int Priority
         {
             get
             {
-                // negative to make sure this is the last route provider applied
-                return -int.MaxValue;
+                return int.MaxValue;
             }
         }
 
@@ -44,14 +42,6 @@ namespace Nop.Plugin.Misc.AbcCore.Infrastructure
             endpointRouteBuilder.MapControllerRoute("CartSlideout_GetAddCartItemInfo",
                             "AddToCart/GetAddCartItemInfo",
                             new { controller = "CartSlideout", action = "GetAddCartItemInfo"});
-
-            // generic routes
-            var lang = GetLanguageRoutePattern();
-            var genericPattern = $"{lang}/{{SeName}}";
-
-            endpointRouteBuilder.MapControllerRoute(name: "AbcProduct",
-                pattern: genericPattern,
-                defaults: new { controller = "AbcProduct", action = "ProductDetails" });
         }
     }
 }

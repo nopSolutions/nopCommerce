@@ -1,0 +1,98 @@
+﻿<Language Name="English" IsRightToLeft="false">
+  <LocaleResource Name="Admin.FoxNetSoft.Plugin.Misc.WebPImages.IsRegisted">
+    <Value>Registered version.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.FoxNetSoft.Plugin.Misc.WebPImages.IsNoRegisted">
+    <Value>Unregistered version (trial period 15 days and 500 pictures).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.FoxNetSoft.Plugin.Misc.WebPImages.IsExpired">
+    <Value>Your license has expired, you should renew the license with a 50% discount.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.FoxNetSoft.Plugin.Misc.WebPImages.StoreUrl">
+    <Value>Website address (for registration)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.FoxNetSoft.Plugin.Misc.WebPImages.StoreUrl.Hint">
+    <Value>Website address (for registration).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.FoxNetSoft.Plugin.Misc.WebPImages.showDebugInfo">
+    <Value>Enable Debugging</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.FoxNetSoft.Plugin.Misc.WebPImages.showDebugInfo.Hint">
+    <Value>Write debugging information into file. In ~/App_Data/ folder.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.FoxNetSoft.Plugin.Misc.WebPImages.SerialNumber">
+    <Value>Serial number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.FoxNetSoft.Plugin.Misc.WebPImages.SerialNumber.Hint">
+    <Value>Serial number.</Value>
+  </LocaleResource>
+   <LocaleResource Name="Admin.FoxNetSoft.Plugin.Misc.WebPImages.UseAVIFImages">
+    <Value>Enable AVIF Images</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.FoxNetSoft.Plugin.Misc.WebPImages.UseAVIFImages.Hint">
+    <Value>Enable/Disable AVIF images.</Value>
+  </LocaleResource>
+	<LocaleResource Name="Admin.FoxNetSoft.Plugin.Misc.WebPImages.UseWebImages">
+    <Value>Enable WebP Images</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.FoxNetSoft.Plugin.Misc.WebPImages.UseWebImages.Hint">
+    <Value>Enable/Disable WebP images.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.FoxNetSoft.Plugin.Misc.WebPImages.LossyCompression">
+    <Value>Enable lossy compression</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.FoxNetSoft.Plugin.Misc.WebPImages.LossyCompression.Hint">
+    <Value>Enable lossy compression, by default plugin uses lossless compression.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.FoxNetSoft.Plugin.Misc.WebPImages.LossyCompressionQuality">
+    <Value>Lossy Compression Quality (0-100)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.FoxNetSoft.Plugin.Misc.WebPImages.LossyCompressionQuality.Hint">
+    <Value>Configure Lossy Compression Quality, default value 90.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.FoxNetSoft.Plugin.Misc.WebPImages.EnableCDN">
+    <Value>Enable CDN</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.FoxNetSoft.Plugin.Misc.WebPImages.EnableCDN.Hint">
+    <Value>Enable CDN for pictures.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.FoxNetSoft.Plugin.Misc.WebPImages.CDNPictureUrl">
+    <Value>CDN URL for pictures</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.FoxNetSoft.Plugin.Misc.WebPImages.CDNPictureUrl.Hint">
+    <Value>Provide CDN URL for pictures.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.FoxNetSoft.Plugin.Misc.WebPImages.Configure">
+    <Value>WebP Images module configuration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.FoxNetSoft.Plugin.Misc.WebPImages.Updated">
+    <Value>The settings have been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.FoxNetSoft.Plugin.Misc.WebPImages.ClearLogFile">
+    <Value>Clear the log-file</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.FoxNetSoft.Plugin.Misc.WebPImages.GetLogFile">
+    <Value>Download the log-file</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.FoxNetSoft.Plugin.Misc.WebPImages.Menu.Name">
+    <Value>WebP Images</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.FoxNetSoft.Plugin.Misc.WebPImages.Menu.Brand">
+    <Value>FoxNetSoft</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.FoxNetSoft.Plugin.Misc.WebPImages.Error.OverWrittenClass.IStaticCacheManager">
+    <Value>Error. The class IStaticCacheManager was overwriten the new class '{0}'. Uninstall another plugin or change it.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.FoxNetSoft.Plugin.Misc.WebPImages.Error.OverWrittenClass.IPictureService">
+    <Value>Error. The class IPictureService was overwriten the new class '{0}'. Uninstall another plugin or change it.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.FoxNetSoft.Plugin.Misc.WebPImages.RestartNopcommerce">
+    <Value>Don't forget to restart your nopcommerce when you changed settings.</Value>
+  </LocaleResource>
+	<LocaleResource Name="Admin.FoxNetSoft.Plugin.Misc.WebPImages.Download">
+		<Value>Download the lastest Magick.NET libraries.</Value>
+	</LocaleResource>
+	<LocaleResource Name="Admin.FoxNetSoft.Plugin.Misc.WebPImages.Download.Error">
+		<Value>Error. Please disable the plugin on this page. The plugin can't download the lastest Magick.NET libraries because they are locked by nopcommerce.</Value>
+	</LocaleResource>
+</Language>
