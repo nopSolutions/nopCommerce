@@ -343,7 +343,7 @@ public class ExportManagerTests : ServiceTest
             "CustomerCustomerRoleMappings", "CustomerAddressMappings", "EntityCacheKey", "VendorId",
             "DateOfBirth", "CountryId",
             "StateProvinceId", "VatNumberStatusId", "TimeZoneId",
-            "CurrencyId", "LanguageId", "TaxDisplayTypeId", "TaxDisplayType", "TaxDisplayType", "VatNumberStatusId" };
+            "CurrencyId", "LanguageId", "TaxDisplayTypeId", "TaxDisplayType", "TaxDisplayType", "VatNumberStatusId", "MustChangePassword" };
 
         if (!_customerSettings.FirstNameEnabled) 
             ignore.Add("FirstName");

@@ -404,6 +404,12 @@ public partial class CustomerRegistrationService : ICustomerRegistrationService
 
         await _customerService.InsertCustomerPasswordAsync(customerPassword);
 
+        if (customer.MustChangePassword)
+        {
+            customer.MustChangePassword = false;
+            await _customerService.UpdateCustomerAsync(customer);
+        }
+
         //publish event
         await _eventPublisher.PublishAsync(new CustomerPasswordChangedEvent(customerPassword));
 

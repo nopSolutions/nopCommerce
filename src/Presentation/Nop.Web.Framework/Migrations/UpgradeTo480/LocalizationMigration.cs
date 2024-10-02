@@ -247,6 +247,11 @@ public class LocalizationMigration : MigrationBase
             ["Security.Permission.System.ManageMessageQueue"] = "Admin area. Message Queue. Manage",
             ["Security.Permission.System.ManageScheduleTasks"] = "Admin area. Schedule Tasks. Manage",
             ["Security.Permission.System.ManageSystemLog"] = "Admin area. System Log. Manage",
+
+            //#7281
+            ["Account.ChangePassword.MustBeChanged"] = "Your password must be changed for security purposes.",
+            ["Admin.Customers.Customers.Fields.MustChangePassword"] = "Customer must change password",
+            ["Admin.Customers.Customers.Fields.MustChangePassword.Hint"] = "Check to require the customer to change their password.",
         }, languageId);
 
         #endregion

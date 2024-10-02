@@ -111,11 +111,12 @@ public partial interface ICustomerModelFactory
     /// <summary>
     /// Prepare the change password model
     /// </summary>
+    /// <param name="customer">Customer</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the change password model
     /// </returns>
-    Task<ChangePasswordModel> PrepareChangePasswordModelAsync();
+    Task<ChangePasswordModel> PrepareChangePasswordModelAsync(Customer customer);
 
     /// <summary>
     /// Prepare the customer avatar model

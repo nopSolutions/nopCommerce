@@ -1,9 +1,10 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
 
 namespace Nop.Data.Migrations.UpgradeTo480;
 
-[NopSchemaMigration("2024-06-10 00:00:01", "SchemaMigration for 4.80.0")]
+[NopSchemaMigration("2024-06-10 00:00:02", "SchemaMigration for 4.80.0")]
 public class SchemaMigration : ForwardOnlyMigration
 {
     /// <summary>
@@ -21,5 +22,18 @@ public class SchemaMigration : ForwardOnlyMigration
         var hasDiscountsAppliedColumnName = "HasDiscountsApplied";
         if (Schema.Table(ptoductTableName).Column(hasDiscountsAppliedColumnName).Exists())
             Delete.Column(hasDiscountsAppliedColumnName).FromTable(ptoductTableName);
+
+        //#7281
+        var customerTableName = nameof(Customer);
+        var mustChangePasswordColumnName = nameof(Customer.MustChangePassword);
+
+        if (!Schema.Table(customerTableName).Column(mustChangePasswordColumnName).Exists())
+        {
+            Alter.Table(customerTableName)
+                .AddColumn(mustChangePasswordColumnName)
+                .AsBoolean()
+                .NotNullable()
+                .WithDefaultValue(false);
+        }
     }
 }
