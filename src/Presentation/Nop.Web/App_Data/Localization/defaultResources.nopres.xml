@@ -10767,6 +10767,12 @@
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.QuantityBelow.StoreOwnerNotification">
     <Value><![CDATA[This message template is used to notify a store owner that the certain product is getting low stock. You can set up the minimum product quantity when creating or editing the product in Inventory section, <strong>Minimum stock qty field</strong>.]]></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.QuantityBelow.AttributeCombination.VendorNotification">
+    <Value>This message template is used to notify a vendor that the certain product attribute combination is getting low stock. You can set up the combination minimum quantity when creating or editing the product in Product attribute tab - Attributes combinations tab in Notify admin for quantity below field.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.QuantityBelow.VendorNotification">
+    <Value><![CDATA[This message template is used to notify a vendor that the certain product is getting low stock. You can set up the minimum product quantity when creating or editing the product in Inventory section, <strong>Minimum stock qty field</strong>.]]></Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.RecurringPaymentCancelled.CustomerNotification">
     <Value>This message template is used to notify a customer that the certain recurring payment is cancelled. Payment can be cancelled by a customer in the account page or by a store owner in Sales - Recurring payments in History tab by clicking "Cancel recurring payment" button.</Value>
   </LocaleResource>
