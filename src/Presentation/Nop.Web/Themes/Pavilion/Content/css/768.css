@@ -959,6 +959,11 @@ body a {
 body ul {
 	padding-left: 0px;
 }
+@media (min-width: 1001px) {
+    .header-menu-parent {
+        padding-top: 0px;
+    }
+}
 
 @media screen and (max-width: 1024px) {
 	div#mobile-header-logo {
