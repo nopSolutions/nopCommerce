@@ -104,6 +104,7 @@ public class FixedByWeightByTotalController : BasePluginController
         foreach (var warehouses in await _shippingService.GetAllWarehousesAsync())
             model.AvailableWarehouses.Add(new SelectListItem { Text = warehouses.Name, Value = warehouses.Id.ToString() });
         //shipping methods
+        model.AvailableShippingMethods.Add(new SelectListItem { Text = "*", Value = "0" });
         foreach (var sm in await _shippingService.GetAllShippingMethodsAsync())
             model.AvailableShippingMethods.Add(new SelectListItem { Text = sm.Name, Value = sm.Id.ToString() });
         //countries
