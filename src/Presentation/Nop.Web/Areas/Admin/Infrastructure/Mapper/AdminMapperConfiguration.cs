@@ -539,7 +539,8 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(model => model.StockQuantityStr, options => options.Ignore())
             .ForMember(model => model.TierPriceSearchModel, options => options.Ignore())
             .ForMember(model => model.SelectedProductTags, options => options.Ignore())
-            .ForMember(model => model.AvailableProductTags, options => options.Ignore());
+            .ForMember(model => model.AvailableProductTags, options => options.Ignore())
+            .ForMember(model => model.FormattedPrice, options => options.Ignore());
         CreateMap<ProductModel, Product>()
             .ForMember(entity => entity.ApprovedRatingSum, options => options.Ignore())
             .ForMember(entity => entity.ApprovedTotalReviews, options => options.Ignore())
@@ -691,7 +692,8 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(model => model.Store, options => options.Ignore())
             .ForMember(model => model.AvailableCustomerRoles, options => options.Ignore())
             .ForMember(model => model.AvailableStores, options => options.Ignore())
-            .ForMember(model => model.CustomerRole, options => options.Ignore());
+            .ForMember(model => model.CustomerRole, options => options.Ignore())
+            .ForMember(model => model.FormattedPrice, options => options.Ignore());
         CreateMap<TierPriceModel, TierPrice>()
             .ForMember(entity => entity.CustomerRoleId, options => options.Ignore())
             .ForMember(entity => entity.ProductId, options => options.Ignore());

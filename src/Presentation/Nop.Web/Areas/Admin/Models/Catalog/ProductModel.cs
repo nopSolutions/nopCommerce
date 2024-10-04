@@ -318,6 +318,9 @@ public partial record ProductModel : BaseNopEntityModel,
     [NopResourceDisplayName("Admin.Catalog.Products.Fields.Price")]
     public decimal Price { get; set; }
 
+    [NopResourceDisplayName("Admin.Catalog.Products.Fields.Price")]
+    public string FormattedPrice { get; set; }
+
     [NopResourceDisplayName("Admin.Catalog.Products.Fields.OldPrice")]
     public decimal OldPrice { get; set; }
 

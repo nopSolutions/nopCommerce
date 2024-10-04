@@ -44,6 +44,9 @@ public partial record TierPriceModel : BaseNopEntityModel
     [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.Price")]
     public decimal Price { get; set; }
 
+    [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.Price")]
+    public string FormattedPrice { get; set; }
+
     [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.StartDateTimeUtc")]
     [UIHint("DateTimeNullable")]
     public DateTime? StartDateTimeUtc { get; set; }

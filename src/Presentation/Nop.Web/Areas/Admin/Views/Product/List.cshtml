@@ -251,10 +251,9 @@
                                           Title = T("Admin.Catalog.Products.Fields.Sku").Text,
                                           Width = "100"
                                       },
-                                      new ColumnProperty(nameof(ProductModel.Price))
+                                      new ColumnProperty(nameof(ProductModel.FormattedPrice))
                                       {
-                                          Title = T("Admin.Catalog.Products.Fields.Price").Text,
-                                          Render = new RenderCustom("renderColumnPrice")
+                                          Title = T("Admin.Catalog.Products.Fields.Price").Text
                                       },
                                       new ColumnProperty(nameof(ProductModel.StockQuantityStr))
                                       {
@@ -277,10 +276,7 @@
                                   }
                          })
 
-                              <script>
-                            function renderColumnPrice(data, type, row, meta) {
-                                return (row.ProductTypeId != @((int)ProductType.GroupedProduct) ) ? data : null;
-                            }
+                              <script>                           
 
                             $(function() {
                                 $('#delete-selected-action-confirmation-submit-button').bind('click', function () {
