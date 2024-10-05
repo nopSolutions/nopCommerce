@@ -479,6 +479,9 @@ public partial record ProductModel : BaseNopEntityModel,
 
     public ProductAttributeCombinationSearchModel ProductAttributeCombinationSearchModel { get; set; }
 
+    [NopResourceDisplayName("Admin.Catalog.Products.Fields.RequireApproval")]
+    public bool RequireApproval { get; set; }
+
     #endregion
 }
 

@@ -593,4 +593,9 @@ public partial class Product : BaseEntity, ILocalizedEntity, ISlugSupported, IAc
         get => (RentalPricePeriod)RentalPricePeriodId;
         set => RentalPricePeriodId = (int)value;
     }
+
+    #region Custom Code
+    public bool RequireApproval { get; set; }
+
+    #endregion
 }

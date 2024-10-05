@@ -1,4 +1,4 @@
-namespace Nop.Core.Domain.Orders;
+﻿namespace Nop.Core.Domain.Orders;
 
 /// <summary>
 /// Represents an order status enumeration
@@ -23,5 +23,10 @@ public enum OrderStatus
     /// <summary>
     /// Cancelled
     /// </summary>
-    Cancelled = 40
+    Cancelled = 40,
+
+    /// <summary>
+    /// PendingApproval
+    /// </summary>
+    PendingApproval = 50
 }
