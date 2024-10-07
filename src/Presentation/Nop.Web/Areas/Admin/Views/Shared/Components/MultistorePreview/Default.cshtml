@@ -1,0 +1,22 @@
+﻿@model IList<MultistorePreviewModel>
+
+<div class="btn-group" id="multiStorePreview">
+    <button type="button" class="btn btn-info">
+        <i class="far fa-eye"></i>
+        @T("Admin.Common.Preview")
+    </button>
+    <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+        <span class="caret"></span>
+        <span class="sr-only">&nbsp;</span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+        @foreach (var multistorePreview in Model)
+        {
+            <li class="dropdown-item">
+                <button type="button" onclick="javascript:OpenWindow('@multistorePreview.Url', 800, 600, true); return false;">
+                    @multistorePreview.StoreName
+                </button>
+            </li>
+        }
+    </ul>
+</div>
