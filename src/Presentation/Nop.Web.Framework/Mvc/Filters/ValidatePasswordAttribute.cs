@@ -2,8 +2,12 @@
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
+using Nop.Core.Domain.Customers;
 using Nop.Data;
+using Nop.Services.Common;
 using Nop.Services.Customers;
+using Nop.Services.Localization;
+using Nop.Services.Messages;
 
 namespace Nop.Web.Framework.Mvc.Filters;
 
@@ -33,6 +37,9 @@ public sealed class ValidatePasswordAttribute : TypeFilterAttribute
         #region Fields
 
         protected readonly ICustomerService _customerService;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly INotificationService _notificationService;
         protected readonly IWebHelper _webHelper;
         protected readonly IWorkContext _workContext;
 
@@ -41,10 +48,16 @@ public sealed class ValidatePasswordAttribute : TypeFilterAttribute
         #region Ctor
 
         public ValidatePasswordFilter(ICustomerService customerService,
+            IGenericAttributeService genericAttributeService,
+            ILocalizationService localizationService,
+            INotificationService notificationService,
             IWebHelper webHelper,
             IWorkContext workContext)
         {
             _customerService = customerService;
+            _genericAttributeService = genericAttributeService;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
             _webHelper = webHelper;
             _workContext = workContext;
         }
@@ -80,14 +93,20 @@ public sealed class ValidatePasswordAttribute : TypeFilterAttribute
             if (string.IsNullOrEmpty(actionName) || string.IsNullOrEmpty(controllerName))
                 return;
 
-            //don't validate on the 'Change Password' page
+            //don't validate on 'Change Password' & 'Logout' pages
             if (controllerName.Equals("Customer", StringComparison.InvariantCultureIgnoreCase) &&
-                actionName.Equals("ChangePassword", StringComparison.InvariantCultureIgnoreCase))
+                new[] { "ChangePassword", "Logout" }.Contains(actionName, StringComparer.InvariantCultureIgnoreCase))
                 return;
 
-            //check password expiration
             var customer = await _workContext.GetCurrentCustomerAsync();
-            if (!await _customerService.IsPasswordExpiredAsync(customer) && !customer.MustChangePasswordAtNextLogin)
+
+            if (customer.MustChangePasswordAtNextLogin)
+                _notificationService.WarningNotification(await _localizationService.GetResourceAsync("Account.ChangePassword.MustBeChanged"));
+
+            //check password expiration
+            if (!await _customerService.IsPasswordExpiredAsync(customer) && 
+                (!customer.MustChangePasswordAtNextLogin ||
+                !await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.PasswordMustBeChangedAttribute)))
                 return;
 
             var returnUrl = _webHelper.GetRawUrl(context.HttpContext.Request);

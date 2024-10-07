@@ -86,6 +86,11 @@ public static partial class NopCustomerDefaults
     public static string PasswordRecoveryTokenDateGeneratedAttribute => "PasswordRecoveryTokenDateGenerated";
 
     /// <summary>
+    /// Gets a name of generic attribute to store the value of 'PasswordMustBeChanged'
+    /// </summary>
+    public static string PasswordMustBeChangedAttribute => "PasswordMustBeChanged";
+
+    /// <summary>
     /// Gets a name of generic attribute to store the value of 'AccountActivationToken'
     /// </summary>
     public static string AccountActivationTokenAttribute => "AccountActivationToken";

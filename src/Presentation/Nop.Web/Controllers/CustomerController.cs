@@ -463,6 +463,9 @@ public partial class CustomerController : BasePublicController
                         ? await _customerService.GetCustomerByUsernameAsync(customerUserName)
                         : await _customerService.GetCustomerByEmailAsync(customerEmail);
 
+                    if (customer.MustChangePasswordAtNextLogin)
+                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.PasswordMustBeChangedAttribute, true);
+
                     return await _customerRegistrationService.SignInCustomerAsync(customer, returnUrl, model.RememberMe);
                 }
                 case CustomerLoginResults.MultiFactorAuthenticationRequired:

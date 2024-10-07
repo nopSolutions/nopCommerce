@@ -249,6 +249,7 @@ public class LocalizationMigration : MigrationBase
             ["Security.Permission.System.ManageSystemLog"] = "Admin area. System Log. Manage",
 
             //#7281
+            ["Account.ChangePassword.MustBeChanged"] = "Your password must be changed",
             ["Admin.Customers.Customers.Fields.MustChangePasswordAtNextLogin"] = "Customer must change password at next login",
             ["Admin.Customers.Customers.Fields.MustChangePasswordAtNextLogin.Hint"] = "Check to require the customer to change their password at next login.",
         }, languageId);

@@ -408,6 +408,7 @@ public partial class CustomerRegistrationService : ICustomerRegistrationService
         {
             customer.MustChangePasswordAtNextLogin = false;
             await _customerService.UpdateCustomerAsync(customer);
+            await _genericAttributeService.SaveAttributeAsync<bool?>(customer, NopCustomerDefaults.PasswordMustBeChangedAttribute, null);
         }
 
         //publish event

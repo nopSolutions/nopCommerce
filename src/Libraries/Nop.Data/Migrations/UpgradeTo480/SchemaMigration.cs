@@ -4,7 +4,7 @@ using Nop.Core.Domain.Customers;
 
 namespace Nop.Data.Migrations.UpgradeTo480;
 
-[NopSchemaMigration("2024-06-10 00:00:01", "SchemaMigration for 4.80.0")]
+[NopSchemaMigration("2024-06-10 00:00:02", "SchemaMigration for 4.80.0")]
 public class SchemaMigration : ForwardOnlyMigration
 {
     /// <summary>
@@ -24,13 +24,13 @@ public class SchemaMigration : ForwardOnlyMigration
             Delete.Column(hasDiscountsAppliedColumnName).FromTable(ptoductTableName);
 
         //#7281
-        var categoryTableName = nameof(Customer);
-        var restrictFromVendorsColumnName = nameof(Customer.MustChangePasswordAtNextLogin);
+        var customerTableName = nameof(Customer);
+        var mustChangePasswordAtNextLoginColumnName = nameof(Customer.MustChangePasswordAtNextLogin);
 
-        if (!Schema.Table(categoryTableName).Column(restrictFromVendorsColumnName).Exists())
+        if (!Schema.Table(customerTableName).Column(mustChangePasswordAtNextLoginColumnName).Exists())
         {
-            Alter.Table(categoryTableName)
-                .AddColumn(restrictFromVendorsColumnName)
+            Alter.Table(customerTableName)
+                .AddColumn(mustChangePasswordAtNextLoginColumnName)
                 .AsBoolean()
                 .NotNullable()
                 .WithDefaultValue(false);
