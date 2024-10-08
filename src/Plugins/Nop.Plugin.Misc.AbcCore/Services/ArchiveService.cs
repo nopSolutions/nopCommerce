@@ -17,10 +17,6 @@ namespace Nop.Plugin.Misc.AbcCore.Services
         private static readonly string _backendInvItemNum = "ITEM_NUMBER";
         private static readonly string _backendInvTable = "DA1_INVENTORY_MASTER";
 
-        private static readonly string _deleteArchivedProductPictures = @"DELETE pic FROM [Picture] pic
-	                JOIN Product_Picture_Mapping ppm ON pic.Id = ppm.PictureId JOIN Product p ON p.Id = ppm.ProductId
-                    WHERE p.Deleted = 1";
-
         private readonly EmailAccountSettings _emailAccountSettings;
         private readonly IEmailAccountService _emailAccountService;
         private readonly IEmailSender _emailSender;
@@ -110,9 +106,6 @@ namespace Nop.Plugin.Misc.AbcCore.Services
             ArchiveFiles(allowedItemNumbers, ImportSettings.GetSpecificationPdfPath(), GetFileNames(ImportSettings.GetSpecificationPdfPath()), ref archivedItemsSet);
             ArchiveFiles(allowedItemNumbers, ProcessedImageDirectory, GetFileNames(ProcessedImageDirectory, "*_large.*"),
                 ref archivedItemsSet, $"{ImportSettings.GetLocalPicturesDirectory()}/Archive");
-
-            //deleting old pictures from archived products
-            await _nopDbContext.ExecuteNonQueryAsync(_deleteArchivedProductPictures);
 
             bool hasArchivedItems = archivedItemsSet.Any();
             if (hasArchivedItems)
