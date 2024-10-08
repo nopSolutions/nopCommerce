@@ -49,6 +49,8 @@ namespace Nop.Web.Models.Customer
         public bool FirstNameEnabled { get; set; }
         [NopResourceDisplayName("Account.Fields.FirstName")]
         public string FirstName { get; set; }
+        [Required(ErrorMessage = "First name is required")]
+        [RegularExpression("^[a-zA-Z]*$", ErrorMessage = "First name cannot contain symbols or numbers.")]
         public bool FirstNameRequired { get; set; }
         public bool LastNameEnabled { get; set; }
         [NopResourceDisplayName("Account.Fields.LastName")]
