@@ -6277,6 +6277,9 @@ img.hawthorne-logo {
 	div#flyout-cart {
 		padding-top: 20px;
 	}
+	.header-middle .header-menu-parent .header-menu-parent {
+        padding-top: 5px;
+    }
 }
 @media (min-width: 1001px) {
     .header-menu-parent {
