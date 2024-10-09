@@ -6270,6 +6270,14 @@ img.hawthorne-logo {
 }
 
 /* Fireworks Logo Changes */
+@media (min-width: 1020px) {
+	.header-upper .header-links-wrapper {
+		padding-top: 20px;
+	}
+	div#flyout-cart {
+		padding-top: 20px;
+	}
+}
 @media (min-width: 1001px) {
     .header-menu-parent {
         padding-top: 0px;
@@ -6289,8 +6297,12 @@ img.hawthorne-logo {
 }
 
 /* Fireworks Logo Changes */
+
 .categories-details-top img {
     max-width: 100%;
+}
+.header-middle .header-menu-parent li a {
+    padding: 5px 5px !important;
 }
 
 @media screen and (max-width: 570px) {
