@@ -2,6 +2,7 @@
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
 
 namespace Nop.Services.Customers;
@@ -577,14 +578,14 @@ public partial interface ICustomerService
     Task<bool> IsPasswordRecoveryLinkExpiredAsync(Customer customer);
 
     /// <summary>
-    /// Check whether customer password is expired 
+    /// Gets the status of current customer's password
     /// </summary>
     /// <param name="customer">Customer</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains true if password is expired; otherwise false
+    /// The task result contains password status
     /// </returns>
-    Task<bool> IsPasswordExpiredAsync(Customer customer);
+    Task<PasswordStatus> GetPasswordStatusAsync(Customer customer);
 
     #endregion
 

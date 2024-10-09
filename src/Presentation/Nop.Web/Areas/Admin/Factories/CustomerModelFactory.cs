@@ -8,6 +8,7 @@ using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Affiliates;
 using Nop.Services.Attributes;
@@ -699,7 +700,9 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                                                  (await _storeService.GetAllStoresAsync()).Select(x => x.Id).Count() > 1;
                 model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(customer.CreatedOnUtc, DateTimeKind.Utc);
 
-                model.MustChangePasswordAtNextLogin = customer.MustChangePasswordAtNextLogin;
+                var passwordStatus = await _genericAttributeService.GetAttributeAsync(customer, NopCustomerDefaults.PasswordMustBeChangedAttribute, defaultValue: PasswordStatus.Valid);
+
+                model.MustChangePasswordAtNextLogin = passwordStatus is PasswordStatus.NeedToBeChanged;
 
                 //prepare model affiliate
                 var affiliate = await _affiliateService.GetAffiliateByIdAsync(customer.AffiliateId);

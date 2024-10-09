@@ -9,6 +9,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Events;
 using Nop.Services.Attributes;
@@ -429,6 +430,9 @@ public partial class CustomerController : BaseAdminController
             }
 
             //password
+            if (model.MustChangePasswordAtNextLogin)
+                await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.PasswordMustBeChangedAttribute, PasswordStatus.MustToBeChanged);
+
             if (!string.IsNullOrWhiteSpace(model.Password))
             {
                 var changePassRequest = new ChangePasswordRequest(model.Email, false, _customerSettings.DefaultPasswordFormat, model.Password);
@@ -554,7 +558,13 @@ public partial class CustomerController : BaseAdminController
             {
                 customer.AdminComment = model.AdminComment;
                 customer.IsTaxExempt = model.IsTaxExempt;
-                customer.MustChangePasswordAtNextLogin = model.MustChangePasswordAtNextLogin;
+
+                var passwordStatus = await _genericAttributeService.GetAttributeAsync(customer, NopCustomerDefaults.PasswordMustBeChangedAttribute, defaultValue: PasswordStatus.Valid);
+                
+                if (passwordStatus != PasswordStatus.MustToBeChanged && model.MustChangePasswordAtNextLogin) 
+                    await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.PasswordMustBeChangedAttribute, PasswordStatus.NeedToBeChanged);
+                else if (!model.MustChangePasswordAtNextLogin)
+                    await _genericAttributeService.SaveAttributeAsync<object>(customer, NopCustomerDefaults.PasswordMustBeChangedAttribute, null);
 
                 //prevent deactivation of the last active administrator
                 if (!await _customerService.IsAdminAsync(customer) || model.Active || await SecondAdminAccountExistsAsync(customer))

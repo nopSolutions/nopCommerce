@@ -888,7 +888,8 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(model => model.CustomerOrderSearchModel, options => options.Ignore())
             .ForMember(model => model.CustomerShoppingCartSearchModel, options => options.Ignore())
             .ForMember(model => model.CustomerActivityLogSearchModel, options => options.Ignore())
-            .ForMember(model => model.CustomerBackInStockSubscriptionSearchModel, options => options.Ignore());
+            .ForMember(model => model.CustomerBackInStockSubscriptionSearchModel, options => options.Ignore())
+            .ForMember(model => model.MustChangePasswordAtNextLogin, options => options.Ignore());
 
         CreateMap<CustomerModel, Customer>()
             .ForMember(entity => entity.CustomerGuid, options => options.Ignore())

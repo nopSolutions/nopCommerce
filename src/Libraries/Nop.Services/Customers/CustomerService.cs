@@ -9,6 +9,7 @@ using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Polls;
+using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Events;
@@ -1514,28 +1515,31 @@ public partial class CustomerService : ICustomerService
     }
 
     /// <summary>
-    /// Check whether customer password is expired 
+    /// Gets the status of current customer's password
     /// </summary>
     /// <param name="customer">Customer</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains true if password is expired; otherwise false
+    /// The task result contains password status
     /// </returns>
-    public virtual async Task<bool> IsPasswordExpiredAsync(Customer customer)
+    public virtual async Task<PasswordStatus> GetPasswordStatusAsync(Customer customer)
     {
         ArgumentNullException.ThrowIfNull(customer);
 
+        var status = await _genericAttributeService.GetAttributeAsync(customer,
+            NopCustomerDefaults.PasswordMustBeChangedAttribute, defaultValue: PasswordStatus.Valid);
+
         //the guests don't have a password
         if (await IsGuestAsync(customer))
-            return false;
+            return status;
 
         //password lifetime is disabled for user
         if (!(await GetCustomerRolesAsync(customer)).Any(role => role.Active && role.EnablePasswordLifetime))
-            return false;
+            return status;
 
         //setting disabled for all
         if (_customerSettings.PasswordLifetime == 0)
-            return false;
+            return status;
 
         //get current password usage time
         var currentLifetime = await _shortTermCacheManager.GetAsync(async () =>
@@ -1548,7 +1552,7 @@ public partial class CustomerService : ICustomerService
             return (DateTime.UtcNow - customerPassword.CreatedOnUtc).Days;
         }, NopCustomerServicesDefaults.CustomerPasswordLifetimeCacheKey, customer);
 
-        return currentLifetime >= _customerSettings.PasswordLifetime;
+        return currentLifetime >= _customerSettings.PasswordLifetime ? PasswordStatus.Expired : status;
     }
 
     #endregion

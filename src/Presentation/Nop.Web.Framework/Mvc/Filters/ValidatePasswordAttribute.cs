@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Security;
 using Nop.Data;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -98,15 +99,13 @@ public sealed class ValidatePasswordAttribute : TypeFilterAttribute
                 new[] { "ChangePassword", "Logout" }.Contains(actionName, StringComparer.InvariantCultureIgnoreCase))
                 return;
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
+            var passwordStatus = await _customerService.GetPasswordStatusAsync(await _workContext.GetCurrentCustomerAsync());
 
-            if (customer.MustChangePasswordAtNextLogin)
+            if (passwordStatus == PasswordStatus.NeedToBeChanged)
                 _notificationService.WarningNotification(await _localizationService.GetResourceAsync("Account.ChangePassword.MustBeChanged"));
 
             //check password expiration
-            if (!await _customerService.IsPasswordExpiredAsync(customer) && 
-                (!customer.MustChangePasswordAtNextLogin ||
-                !await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.PasswordMustBeChangedAttribute)))
+            if (passwordStatus == PasswordStatus.Valid || passwordStatus == PasswordStatus.NeedToBeChanged)
                 return;
 
             var returnUrl = _webHelper.GetRawUrl(context.HttpContext.Request);

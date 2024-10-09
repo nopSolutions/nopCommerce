@@ -22,18 +22,5 @@ public class SchemaMigration : ForwardOnlyMigration
         var hasDiscountsAppliedColumnName = "HasDiscountsApplied";
         if (Schema.Table(ptoductTableName).Column(hasDiscountsAppliedColumnName).Exists())
             Delete.Column(hasDiscountsAppliedColumnName).FromTable(ptoductTableName);
-
-        //#7281
-        var customerTableName = nameof(Customer);
-        var mustChangePasswordAtNextLoginColumnName = nameof(Customer.MustChangePasswordAtNextLogin);
-
-        if (!Schema.Table(customerTableName).Column(mustChangePasswordAtNextLoginColumnName).Exists())
-        {
-            Alter.Table(customerTableName)
-                .AddColumn(mustChangePasswordAtNextLoginColumnName)
-                .AsBoolean()
-                .NotNullable()
-                .WithDefaultValue(false);
-        }
     }
 }

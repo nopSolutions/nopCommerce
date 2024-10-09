@@ -463,8 +463,12 @@ public partial class CustomerController : BasePublicController
                         ? await _customerService.GetCustomerByUsernameAsync(customerUserName)
                         : await _customerService.GetCustomerByEmailAsync(customerEmail);
 
-                    if (customer.MustChangePasswordAtNextLogin)
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.PasswordMustBeChangedAttribute, true);
+                    var mustChangePassword = await _genericAttributeService.GetAttributeAsync(customer,
+                            NopCustomerDefaults.PasswordMustBeChangedAttribute, defaultValue: PasswordStatus.Valid) ==
+                        PasswordStatus.NeedToBeChanged;
+
+                    if (mustChangePassword)
+                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.PasswordMustBeChangedAttribute, PasswordStatus.MustToBeChanged);
 
                     return await _customerRegistrationService.SignInCustomerAsync(customer, returnUrl, model.RememberMe);
                 }
@@ -1634,8 +1638,11 @@ public partial class CustomerController : BasePublicController
         var model = await _customerModelFactory.PrepareChangePasswordModelAsync();
 
         //display the cause of the change password 
-        if (await _customerService.IsPasswordExpiredAsync(customer))
+        if (await _customerService.GetPasswordStatusAsync(customer) == PasswordStatus.Expired)
             ModelState.AddModelError(string.Empty, await _localizationService.GetResourceAsync("Account.ChangePassword.PasswordIsExpired"));
+
+        if (await _customerService.GetPasswordStatusAsync(customer) == PasswordStatus.MustToBeChanged)
+            ModelState.AddModelError(string.Empty, await _localizationService.GetResourceAsync("Account.ChangePassword.MustBeChanged"));
 
         return View(model);
     }

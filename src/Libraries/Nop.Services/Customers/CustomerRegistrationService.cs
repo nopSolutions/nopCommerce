@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Security;
 using Nop.Core.Events;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.MultiFactor;
@@ -404,13 +405,8 @@ public partial class CustomerRegistrationService : ICustomerRegistrationService
 
         await _customerService.InsertCustomerPasswordAsync(customerPassword);
 
-        if (customer.MustChangePasswordAtNextLogin)
-        {
-            customer.MustChangePasswordAtNextLogin = false;
-            await _customerService.UpdateCustomerAsync(customer);
-            await _genericAttributeService.SaveAttributeAsync<bool?>(customer, NopCustomerDefaults.PasswordMustBeChangedAttribute, null);
-        }
-
+        await _genericAttributeService.SaveAttributeAsync<object>(customer, NopCustomerDefaults.PasswordMustBeChangedAttribute, null);
+        
         //publish event
         await _eventPublisher.PublishAsync(new CustomerPasswordChangedEvent(customerPassword));
 
