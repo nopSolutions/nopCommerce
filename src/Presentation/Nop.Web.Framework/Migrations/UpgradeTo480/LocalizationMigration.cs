@@ -247,6 +247,11 @@ public class LocalizationMigration : MigrationBase
             ["Security.Permission.System.ManageMessageQueue"] = "Admin area. Message Queue. Manage",
             ["Security.Permission.System.ManageScheduleTasks"] = "Admin area. Schedule Tasks. Manage",
             ["Security.Permission.System.ManageSystemLog"] = "Admin area. System Log. Manage",
+
+            //4306
+            ["Admin.Configuration.Settings.Catalog.ShowSearchBoxCategories"] = "Show product categories for the search box",
+            ["Admin.Configuration.Settings.Catalog.ShowSearchBoxCategories.Hint"] = "Check to display the drop-down list with product categories next to the search box.",
+            ["Search.SearchBox.AllCategories"] = "All categories",
         }, languageId);
 
         #endregion

@@ -6372,6 +6372,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductsFromSubcategories.Hint">
     <Value>Check if you want a category details page to include products from subcategories.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowSearchBoxCategories">
+    <Value>Show categories for the search box</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowSearchBoxCategories.Hint">
+    <Value>Check to display the category drop-down list next to the search box.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowShareButton">
     <Value>Show a share button</Value>
   </LocaleResource>
@@ -19376,6 +19382,9 @@
   </LocaleResource>
   <LocaleResource Name="Search.Manufacturer">
     <Value>Manufacturer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Search.SearchBox.AllCategories">
+    <Value>All categories</Value>
   </LocaleResource>
   <LocaleResource Name="Search.SearchBox.SearchPageLink">
     <Value>View all results...</Value>

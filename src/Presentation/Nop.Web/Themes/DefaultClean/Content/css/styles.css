@@ -1007,25 +1007,26 @@ label, label + * {
   opacity: 1;
 }
 
-.search-box form {
-  display: inline-block;
-}
+/* Search box */
 
-.search-box form:after {
-  content: "";
-  display: block;
-  clear: both;
+.search-box form {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  gap: 10px 0;
 }
 
 .search-box input.search-box-text {
-  float: left;
   width: 200px;
   height: 36px;
   margin: 0 -1px 0 0;
 }
 
+.search-box .search-box-category {
+  height: 36px;
+}
+
 .search-box .search-box-button {
-  float: left;
   min-width: 86px;
   height: 36px;
   border: none;
@@ -8033,14 +8034,13 @@ label, label + * {
     font-size: 0;
   }
 
-  .search-box {
-    display: table-cell;
-    text-align: right;
-    vertical-align: middle;
+  .search-box form{
+    justify-content: flex-end;
   }
 
   .search-box input.search-box-text,
-  .search-box .search-box-button {
+  .search-box .search-box-button,
+  .search-box .search-box-category {
     height: 40px;
   }
 

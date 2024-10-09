@@ -1,4 +1,5 @@
 ﻿using FluentMigrator;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -22,6 +23,14 @@ public class SettingMigration : MigrationBase
         var displayAttributeCombinationImagesOnly = settingService.GetSetting("producteditorsettings.displayattributecombinationimagesonly");
         if (displayAttributeCombinationImagesOnly is not null)
             settingService.DeleteSetting(displayAttributeCombinationImagesOnly);
+
+        //#4306
+        var catalogSettings = settingService.LoadSetting<CatalogSettings>();
+        if (!settingService.SettingExists(catalogSettings, settings => settings.ShowSearchBoxCategories))
+        {
+            catalogSettings.ShowSearchBoxCategories = false;
+            settingService.SaveSetting(catalogSettings, settings => settings.ShowSearchBoxCategories);
+        }
     }
 
     public override void Down()

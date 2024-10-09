@@ -2811,6 +2811,7 @@ namespace Nop.Services.Installation
                 ShowProductImagesInSearchAutoComplete = false,
                 ShowBestsellersOnHomepage = false,
                 NumberOfBestsellersOnHomepage = 4,
+                ShowSearchBoxCategories = false,
                 SearchPageProductsPerPage = 6,
                 SearchPageAllowCustomersToSelectPageSize = true,
                 SearchPagePageSizeOptions = "6, 3, 9, 18",
