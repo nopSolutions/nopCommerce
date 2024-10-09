@@ -923,7 +923,7 @@ opacity: 1 !important;
 	left: -20px !important;
   }
 
-body .header-menu>ul>li>a {
+  body .header-menu .first li>a {
 	padding: 5px 5px;
 	padding-bottom: 10px;
 }
@@ -959,26 +959,6 @@ body a {
 body ul {
 	padding-left: 0px;
 }
-/* Fireworks Logo Changes */
-@media (min-width: 1001px) {
-    .header-menu-parent {
-        padding-top: 0px;
-    }
-}
-@media (min-width: 769px) {
-    .responsive-nav-wrapper>div>a.logo img {
-        width: 140px;
-        margin-top: -10px;
-    }
-}
-@media (max-width: 769px) {
-	.responsive-nav-wrapper>div>a.logo img {
-		width: 140px;
-		margin-top: -10px;
-	}
-}
-
-/* Fireworks Logo Changes */
 
 @media screen and (max-width: 1024px) {
 	div#mobile-header-logo {

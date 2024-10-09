@@ -6269,6 +6269,30 @@ img.hawthorne-logo {
     font-size: 14px;
 }
 
+/* Fireworks Logo Changes */
+@media (min-width: 1001px) {
+    .header-menu-parent {
+        padding-top: 0px;
+    }
+}
+@media (min-width: 769px) {
+    .responsive-nav-wrapper>div>a.logo img {
+        width: 140px;
+        margin-top: -10px;
+    }
+}
+@media (max-width: 769px) {
+	.responsive-nav-wrapper>div>a.logo img {
+		width: 140px;
+		margin-top: -10px;
+	}
+}
+
+/* Fireworks Logo Changes */
+.categories-details-top img {
+    max-width: 100%;
+}
+
 @media screen and (max-width: 570px) {
 .content__Block-sc-3iczmu-0.cFzLkk {
     text-align: center;
