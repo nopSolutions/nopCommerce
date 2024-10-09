@@ -103,7 +103,6 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected readonly IManufacturerService _manufacturerService;
     protected readonly INewsService _newsService;
     protected readonly ITopicService _topicService;
-    protected readonly IStoreMappingService _storeMappingService;
 
     #endregion
 
@@ -153,8 +152,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         ICategoryService categoryService,
         IManufacturerService manufacturerService,
         INewsService newsService,
-        ITopicService topicService,
-        IStoreMappingService storeMappingService)
+        ITopicService topicService)
     {
         _appSettings = appSettings;
         _catalogSettings = catalogSettings;
@@ -201,7 +199,6 @@ public partial class CommonModelFactory : ICommonModelFactory
         _manufacturerService = manufacturerService;
         _newsService = newsService;
         _topicService = topicService;
-        _storeMappingService = storeMappingService;
     }
 
     #endregion
@@ -730,9 +727,6 @@ public partial class CommonModelFactory : ICommonModelFactory
 
         foreach (var store in stores)
         {
-            if (!await _storeMappingService.AuthorizeAsync(entity, store.Id))
-                continue;
-
             models.Add(new MultistorePreviewModel
             {
                 StoreName = store.Name,
