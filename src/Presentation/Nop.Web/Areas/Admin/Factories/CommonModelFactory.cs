@@ -13,11 +13,14 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
+using Nop.Core.Domain.Seo;
+using Nop.Core.Domain.Stores;
 using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Authentication.External;
 using Nop.Services.Authentication.MultiFactor;
+using Nop.Services.Blogs;
 using Nop.Services.Catalog;
 using Nop.Services.Cms;
 using Nop.Services.Common;
@@ -26,6 +29,7 @@ using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.News;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
@@ -34,9 +38,14 @@ using Nop.Services.Shipping;
 using Nop.Services.Shipping.Pickup;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
+using Nop.Services.Topics;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
+using Nop.Web.Areas.Admin.Models.Blogs;
+using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Localization;
+using Nop.Web.Areas.Admin.Models.News;
+using Nop.Web.Areas.Admin.Models.Topics;
 using Nop.Web.Framework.Models.Extensions;
 using Nop.Web.Framework.Security;
 
@@ -89,6 +98,11 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected readonly MeasureSettings _measureSettings;
     protected readonly NopHttpClient _nopHttpClient;
     protected readonly ProxySettings _proxySettings;
+    protected readonly IBlogService _blogService;
+    protected readonly ICategoryService _categoryService;
+    protected readonly IManufacturerService _manufacturerService;
+    protected readonly INewsService _newsService;
+    protected readonly ITopicService _topicService;
 
     #endregion
 
@@ -133,7 +147,12 @@ public partial class CommonModelFactory : ICommonModelFactory
         IWorkContext workContext,
         MeasureSettings measureSettings,
         NopHttpClient nopHttpClient,
-        ProxySettings proxySettings)
+        ProxySettings proxySettings,
+        IBlogService blogService,
+        ICategoryService categoryService,
+        IManufacturerService manufacturerService,
+        INewsService newsService,
+        ITopicService topicService)
     {
         _appSettings = appSettings;
         _catalogSettings = catalogSettings;
@@ -175,6 +194,11 @@ public partial class CommonModelFactory : ICommonModelFactory
         _measureSettings = measureSettings;
         _nopHttpClient = nopHttpClient;
         _proxySettings = proxySettings;
+        _blogService = blogService;
+        _categoryService = categoryService;
+        _manufacturerService = manufacturerService;
+        _newsService = newsService;
+        _topicService = topicService;
     }
 
     #endregion
@@ -685,6 +709,34 @@ public partial class CommonModelFactory : ICommonModelFactory
         }
     }
 
+    /// <summary>
+    /// Prepare multistore preview models for an entity
+    /// </summary>
+    /// <typeparam name="TEntity"></typeparam>
+    /// <param name="entity"></param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the list of multistore preview models for an entity
+    /// </returns>
+    protected virtual async Task<IList<MultistorePreviewModel>> PrepareMultistorePreviewModelsForEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity, IStoreMappingSupported, ISlugSupported
+    {
+        var models = new List<MultistorePreviewModel>();
+
+        var seName = await _urlRecordService.GetSeNameAsync(entity, ensureTwoPublishedLanguages: false);
+        var stores = await _storeService.GetAllStoresAsync();
+
+        foreach (var store in stores)
+        {
+            models.Add(new MultistorePreviewModel
+            {
+                StoreName = store.Name,
+                Url = store.Url.TrimEnd('/') + $"/{seName}",
+            });
+        }
+
+        return models;
+    }
+
     #endregion
 
     #region Methods
@@ -1151,6 +1203,47 @@ public partial class CommonModelFactory : ICommonModelFactory
             (await _productService.GetLowStockProductCombinationsAsync(getOnlyTotalCount: true)).TotalCount;
 
         return model;
+    }
+
+    /// <summary>
+    /// Prepare multistore preview models
+    /// </summary>
+    /// <param name="model">An admin BaseNopEntityModel</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the list of multistore preview models
+    /// </returns>
+    public virtual async Task<IList<MultistorePreviewModel>> PrepareMultistorePreviewModelsAsync(object model)
+    {
+        switch (model)
+        {
+            case BlogPostModel blogPostModel:
+                var blogPost = await _blogService.GetBlogPostByIdAsync(blogPostModel.Id);
+                return await PrepareMultistorePreviewModelsForEntityAsync(blogPost);
+
+            case CategoryModel categoryModel:
+                var category = await _categoryService.GetCategoryByIdAsync(categoryModel.Id);
+                return await PrepareMultistorePreviewModelsForEntityAsync(category);
+
+            case ManufacturerModel manufacturerModel:
+                var manufacturerEntity = await _manufacturerService.GetManufacturerByIdAsync(manufacturerModel.Id);
+                return await PrepareMultistorePreviewModelsForEntityAsync(manufacturerEntity);
+
+            case NewsItemModel newsItemModel:
+                var newsItem = await _newsService.GetNewsByIdAsync(newsItemModel.Id);
+                return await PrepareMultistorePreviewModelsForEntityAsync(newsItem);
+
+            case ProductModel productModel:
+                var product = await _productService.GetProductByIdAsync(productModel.Id);
+                return await PrepareMultistorePreviewModelsForEntityAsync(product);
+
+            case TopicModel topicModel:
+                var topic = await _topicService.GetTopicByIdAsync(topicModel.Id);
+                return await PrepareMultistorePreviewModelsForEntityAsync(topic);
+
+            default:
+                throw new NotImplementedException("Unknown entity type");
+        }
     }
 
     #endregion

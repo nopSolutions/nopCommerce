@@ -1,4 +1,5 @@
 ﻿using Nop.Web.Areas.Admin.Models.Common;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Factories;
 
@@ -110,4 +111,14 @@ public partial interface ICommonModelFactory
     /// <param name="models">List of system warning models</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     Task PreparePluginsWarningModelAsync(IList<SystemWarningModel> models);
+
+    /// <summary>
+    /// Prepare multistore preview models
+    /// </summary>
+    /// <param name="model">An admin BaseNopEntityModel</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the list of multistore preview models
+    /// </returns>
+    Task<IList<MultistorePreviewModel>> PrepareMultistorePreviewModelsAsync(object model);
 }
