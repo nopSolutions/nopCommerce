@@ -390,7 +390,7 @@ public class LocalizationMigration : MigrationBase
             ["Admin.ConfigurationSteps.Product.SettingsButton.Title"] = "“Settings” button",
             ["Admin.ConfigurationSteps.Product.SettingsButton.Text"] = "This “Settings” button allows you to set up the basic mode to choose which fields you want to be shown exactly on the product edit page.",
             ["Admin.ConfigurationSteps.Product.Details.Title"] = "Product details",
-            ["Admin.ConfigurationSteps.Product.Details.Text"] = "Enter the relevant product details in these fields. The screenshot below shows how they will be displayed on the product page with the default nopCommerce theme: <div><img src=\"../../js/admintour/images/product-page.jpg\"/></div>",
+            ["Admin.ConfigurationSteps.Product.Details.Text"] = "Enter the relevant product details in these fields. The screenshot below shows how they will be displayed on the product page with the default nopCommerce theme: <div><img src=\"js/admintour/images/product-page.jpg\"/></div>",
             ["Admin.ConfigurationSteps.Product.Price.Title"] = "Product price",
             ["Admin.ConfigurationSteps.Product.Price.Text"] = "Enter the product price in a predefined currency here. Read more on how to manage currencies <a href=\"{0}\" target=\"_blank\">here</a>.",
             ["Admin.ConfigurationSteps.Product.Tax.Title"] = "Product tax category",

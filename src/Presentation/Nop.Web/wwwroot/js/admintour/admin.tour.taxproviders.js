@@ -9,9 +9,13 @@
     var avalaraMethodExists = $('#' + avalaraMethodRowId).length;
 
     if (manualMethodExists) {
-      AdminTourNextPageButton.action = function () { window.location = '/Admin/FixedOrByCountryStateZip/Configure?showtour=true' };
+      AdminTourNextPageButton.action = function () {
+        window.location = ((document.querySelector('base') || {}).getAttribute('href') + '/Admin/FixedOrByCountryStateZip/Configure?showtour=true').replace(/\/\//g, "/");
+      };
     } else {
-      AdminTourNextPageButton.action = function () { window.location = '/Admin/Product/Create?showtour=True' };
+      AdminTourNextPageButton.action = function () {
+        window.location = ((document.querySelector('base') || {}).getAttribute('href') + '/Admin/Product/Create?showtour=True').replace(/\/\//g, "/");
+      };
     }
 
     //'Tax providers' step

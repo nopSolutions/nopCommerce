@@ -6,7 +6,9 @@
 
     const tour = new Shepherd.Tour(AdminTourCommonTourOptions);
 
-    AdminTourNextPageButton.action = function () { window.location = '/Admin/Product/Create?showtour=True' };
+    AdminTourNextPageButton.action = function () {
+      window.location = ((document.querySelector('base') || {}).getAttribute('href') + '/Admin/Product/Create?showtour=True').replace(/\/\//g, "/");
+    };
 
     //'Fixed Rate/By country' switch steps
     tour.addStep({
