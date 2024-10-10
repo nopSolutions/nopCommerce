@@ -18,7 +18,8 @@ public partial class TopicTemplateBuilder : NopEntityBuilder<TopicTemplate>
     {
         table
             .WithColumn(nameof(TopicTemplate.Name)).AsString(400).NotNullable()
-            .WithColumn(nameof(TopicTemplate.ViewPath)).AsString(400).NotNullable();
+            .WithColumn(nameof(TopicTemplate.ViewPath)).AsString(400).NotNullable()
+            .WithColumn(nameof(TopicTemplate.SystemName)).AsString(400).NotNullable();
     }
 
     #endregion
