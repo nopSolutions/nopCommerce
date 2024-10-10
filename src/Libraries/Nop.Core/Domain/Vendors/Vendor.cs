@@ -1,6 +1,8 @@
 ﻿using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Seo;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Nop.Core.Domain.Vendors;
 
@@ -103,4 +105,21 @@ public partial class Vendor : BaseEntity, ILocalizedEntity, ISlugSupported, ISof
     /// Gets or sets a value indicating whether the price range should be entered manually
     /// </summary>
     public bool ManuallyPriceRange { get; set; }
+
+    /// <summary>
+    /// Gets or sets the list of vendor reviews
+    /// </summary>
+    public virtual ICollection<VendorReview> VendorReviews { get; set; } = new List<VendorReview>();
+
+    /// <summary>
+    /// Calculates the average rating from the vendor reviews
+    /// </summary>
+    /// <returns>The average rating</returns>
+    public double CalculateAverageRating()
+    {
+        if (VendorReviews == null || !VendorReviews.Any())
+            return 0;
+
+        return VendorReviews.Average(r => r.Rating);
+    }
 }

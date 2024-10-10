@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -41,6 +41,7 @@ public partial class VendorController : BaseAdminController
     protected readonly IUrlRecordService _urlRecordService;
     protected readonly IVendorModelFactory _vendorModelFactory;
     protected readonly IVendorService _vendorService;
+    protected readonly IVendorReviewService _vendorReviewService;
     private static readonly char[] _separator = [','];
 
     #endregion
@@ -61,7 +62,8 @@ public partial class VendorController : BaseAdminController
         IPictureService pictureService,
         IUrlRecordService urlRecordService,
         IVendorModelFactory vendorModelFactory,
-        IVendorService vendorService)
+        IVendorService vendorService,
+        IVendorReviewService vendorReviewService)
     {
         _addressService = addressService;
         _addressAttributeParser = addressAttributeParser;
@@ -78,6 +80,7 @@ public partial class VendorController : BaseAdminController
         _urlRecordService = urlRecordService;
         _vendorModelFactory = vendorModelFactory;
         _vendorService = vendorService;
+        _vendorReviewService = vendorReviewService;
     }
 
     #endregion
@@ -494,6 +497,63 @@ public partial class VendorController : BaseAdminController
             ?? throw new ArgumentException("No vendor note found with the specified id", nameof(id));
 
         await _vendorService.DeleteVendorNoteAsync(vendorNote);
+
+        return new NullJsonResult();
+    }
+
+    #endregion
+
+    #region Vendor reviews
+
+    [HttpPost]
+    [CheckPermission(StandardPermission.Customers.VENDORS_VIEW)]
+    public virtual async Task<IActionResult> VendorReviewsSelect(VendorReviewSearchModel searchModel)
+    {
+        //try to get a vendor with the specified id
+        var vendor = await _vendorService.GetVendorByIdAsync(searchModel.VendorId)
+            ?? throw new ArgumentException("No vendor found with the specified id");
+
+        //prepare model
+        var model = await _vendorModelFactory.PrepareVendorReviewListModelAsync(searchModel, vendor);
+
+        return Json(model);
+    }
+
+    [CheckPermission(StandardPermission.Customers.VENDORS_CREATE_EDIT_DELETE)]
+    public virtual async Task<IActionResult> VendorReviewAdd(int vendorId, VendorReviewModel model)
+    {
+        if (model == null)
+            return ErrorJson(await _localizationService.GetResourceAsync("Admin.Vendors.VendorReviews.Fields.Review.Validation"));
+
+        //try to get a vendor with the specified id
+        var vendor = await _vendorService.GetVendorByIdAsync(vendorId);
+        if (vendor == null)
+            return ErrorJson("Vendor cannot be loaded");
+
+        var vendorReview = new VendorReview
+        {
+            VendorId = vendor.Id,
+            CustomerId = model.CustomerId,
+            Rating = model.Rating,
+            ReviewText = model.ReviewText,
+            IsApproved = model.IsApproved,
+            CreatedOnUtc = DateTime.UtcNow
+        };
+
+        await _vendorReviewService.InsertVendorReviewAsync(vendorReview);
+
+        return Json(new { Result = true });
+    }
+
+    [HttpPost]
+    [CheckPermission(StandardPermission.Customers.VENDORS_CREATE_EDIT_DELETE)]
+    public virtual async Task<IActionResult> VendorReviewDelete(int id)
+    {
+        //try to get a vendor review with the specified id
+        var vendorReview = await _vendorReviewService.GetVendorReviewByIdAsync(id)
+            ?? throw new ArgumentException("No vendor review found with the specified id", nameof(id));
+
+        await _vendorReviewService.DeleteVendorReviewAsync(vendorReview);
 
         return new NullJsonResult();
     }
