@@ -667,4 +667,15 @@ public static class AsyncIQueryableExtensions
 
         return new PagedList<T>(data, pageIndex, pageSize, count);
     }
+
+    /// <summary>
+    /// Returns an <see cref="IAsyncEnumerable{T}"/> that can be enumerated asynchronously.
+    /// </summary>
+    /// <typeparam name="T">Source sequence element type.</typeparam>
+    /// <param name="source">Source sequence.</param>
+    /// <returns>A query that can be enumerated asynchronously.</returns>
+    public static IAsyncEnumerable<T> ToAsyncEnumerable<T>(this IQueryable<T> source)
+    {
+        return AsyncExtensions.AsAsyncEnumerable(source);
+    }
 }

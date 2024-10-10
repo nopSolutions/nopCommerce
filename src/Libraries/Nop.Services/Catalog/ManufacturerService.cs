@@ -80,7 +80,7 @@ public partial class ManufacturerService : IManufacturerService
 
         var mappings = _discountManufacturerMappingRepository.Table.Where(dcm => dcm.DiscountId == discount.Id);
 
-        await _discountManufacturerMappingRepository.DeleteAsync(mappings.ToList());
+        await _discountManufacturerMappingRepository.DeleteAsync(await mappings.ToListAsync());
     }
 
     /// <summary>
@@ -488,7 +488,7 @@ public partial class ManufacturerService : IManufacturerService
         var query = _manufacturerRepository.Table;//.Where(m => !m.Deleted);
         var queryFilter = manufacturerIdsNames.Distinct().ToArray();
         //filtering by name
-        var filter = query.Select(m => m.Name).Where(m => queryFilter.Contains(m)).ToList();
+        var filter = await query.Select(m => m.Name).Where(m => queryFilter.Contains(m)).ToListAsync();
         queryFilter = queryFilter.Except(filter).ToArray();
 
         //if some names not found

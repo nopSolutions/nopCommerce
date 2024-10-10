@@ -326,7 +326,7 @@ public partial class LocalizationService : ILocalizationService
 
         if (!loadPublicLocales.HasValue || allLocales != null)
         {
-            var rez = allLocales ?? await _staticCacheManager.GetAsync(key, () =>
+            var rez = allLocales ?? await _staticCacheManager.GetAsync(key, async () =>
             {
                 //we use no tracking here for performance optimization
                 //anyway records are loaded only for read-only operations
@@ -335,7 +335,7 @@ public partial class LocalizationService : ILocalizationService
                     where l.LanguageId == languageId
                     select l;
 
-                return ResourceValuesToDictionary(query);
+                return ResourceValuesToDictionary(await query.ToListAsync());
             });
 
             //remove separated resource 
@@ -351,7 +351,7 @@ public partial class LocalizationService : ILocalizationService
                 : NopLocalizationDefaults.LocaleStringResourcesAllAdminCacheKey,
             languageId);
 
-        return await _staticCacheManager.GetAsync(key, () =>
+        return await _staticCacheManager.GetAsync(key, async () =>
         {
             //we use no tracking here for performance optimization
             //anyway records are loaded only for read-only operations
@@ -361,7 +361,7 @@ public partial class LocalizationService : ILocalizationService
                 select l;
             query = loadPublicLocales.Value ? query.Where(r => !r.ResourceName.StartsWith(NopLocalizationDefaults.AdminLocaleStringResourcesPrefix)) : query.Where(r => r.ResourceName.StartsWith(NopLocalizationDefaults.AdminLocaleStringResourcesPrefix));
 
-            return ResourceValuesToDictionary(query);
+            return ResourceValuesToDictionary(await query.ToListAsync());
         });
     }
 
