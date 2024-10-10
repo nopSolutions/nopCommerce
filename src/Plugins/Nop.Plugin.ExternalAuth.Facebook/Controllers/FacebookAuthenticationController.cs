@@ -66,7 +66,7 @@ public class FacebookAuthenticationController : BasePluginController
     [AuthorizeAdmin]
     [Area(AreaNames.ADMIN)]
     [CheckPermission(StandardPermission.Configuration.MANAGE_EXTERNAL_AUTHENTICATION_METHODS)]
-    public async Task<IActionResult> Configure()
+    public IActionResult Configure()
     {
         var model = new ConfigurationModel
         {
@@ -84,7 +84,7 @@ public class FacebookAuthenticationController : BasePluginController
     public async Task<IActionResult> Configure(ConfigurationModel model)
     {
         if (!ModelState.IsValid)
-            return await Configure();
+            return Configure();
 
         //save settings
         _facebookExternalAuthSettings.ClientKeyIdentifier = model.ClientId;
@@ -96,7 +96,7 @@ public class FacebookAuthenticationController : BasePluginController
 
         _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
 
-        return await Configure();
+        return Configure();
     }
 
     public async Task<IActionResult> Login(string returnUrl)

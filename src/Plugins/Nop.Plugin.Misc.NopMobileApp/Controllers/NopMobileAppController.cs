@@ -29,7 +29,7 @@ public class NopMobileAppController : BasePluginController
     #region Methods
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
-    public virtual async Task<IActionResult> Configure()
+    public virtual IActionResult Configure()
     {
         return View("~/Plugins/Misc.NopMobileApp/Views/Configure.cshtml");
     }
