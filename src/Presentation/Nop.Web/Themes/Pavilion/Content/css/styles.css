@@ -6280,6 +6280,9 @@ img.hawthorne-logo {
 	.header-middle .header-menu-parent .header-menu-parent {
         padding-top: 5px;
     }
+	body .header-menu-parent {
+        padding-top: 0;
+    }
 }
 @media (min-width: 1001px) {
     .header-menu-parent {
@@ -6301,7 +6304,7 @@ img.hawthorne-logo {
 
 /* Fireworks Logo Changes */
 
-.categories-details-top img {
+body .categories-details-top img {
     max-width: 100%;
 }
 .header-middle .header-menu-parent li a {
