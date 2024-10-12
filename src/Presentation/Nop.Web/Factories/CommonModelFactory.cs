@@ -466,7 +466,7 @@ public partial class CommonModelFactory : ICommonModelFactory
             NewProductsEnabled = _catalogSettings.NewProductsEnabled,
             DisplayTaxShippingInfoFooter = _catalogSettings.DisplayTaxShippingInfoFooter,
             HidePoweredByNopCommerce = _storeInformationSettings.HidePoweredByNopCommerce,
-            IsHomePage = _webHelper.GetStoreLocation().Equals(_webHelper.GetThisPageUrl(false), StringComparison.InvariantCultureIgnoreCase),
+            IsHomePage = _webHelper.GetThisPageUrl(false).StartsWith(_webHelper.GetStoreLocation(), StringComparison.InvariantCultureIgnoreCase),
             AllowCustomersToApplyForVendorAccount = _vendorSettings.AllowCustomersToApplyForVendorAccount,
             AllowCustomersToCheckGiftCardBalance = _customerSettings.AllowCustomersToCheckGiftCardBalance && _captchaSettings.Enabled,
             Topics = topicModels,
