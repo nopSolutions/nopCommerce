@@ -247,6 +247,10 @@ public class LocalizationMigration : MigrationBase
             ["Security.Permission.System.ManageMessageQueue"] = "Admin area. Message Queue. Manage",
             ["Security.Permission.System.ManageScheduleTasks"] = "Admin area. Schedule Tasks. Manage",
             ["Security.Permission.System.ManageSystemLog"] = "Admin area. System Log. Manage",
+
+            //#7241
+            ["Admin.Catalog.Categories.Fields.RestrictFromVendors"] = "Restrict from vendors",
+            ["Admin.Catalog.Categories.Fields.RestrictFromVendors.Hint"] = "Check to restrict vendors from adding products to this category. This option is useful when you have multi-vendors enabled in your store.",
         }, languageId);
 
         #endregion

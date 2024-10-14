@@ -256,6 +256,13 @@ public partial class ProductController : BaseAdminController
         //add categories
         foreach (var categoryId in model.SelectedCategoryIds)
         {
+            var category = await _categoryService.GetCategoryByIdAsync(categoryId);
+            if (category is null)
+                continue;
+
+            if (!await _categoryService.CanVendorAddProductsAsync(category))
+                continue;
+
             if (_categoryService.FindProductCategory(existingProductCategories, product.Id, categoryId) == null)
             {
                 //find next display order
