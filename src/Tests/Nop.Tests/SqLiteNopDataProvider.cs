@@ -166,7 +166,7 @@ public partial class SqLiteNopDataProvider : BaseDataProvider, INopDataProvider
     public override Task BulkInsertEntitiesAsync<TEntity>(IEnumerable<TEntity> entities)
     {
         using (new ReaderWriteLockDisposable(_locker))
-            DataContext.BulkCopy(new BulkCopyOptions(), entities.RetrieveIdentity(DataContext));
+            DataContext.BulkCopy(new BulkCopyOptions() { KeepIdentity = true }, entities.RetrieveIdentity(DataContext));
 
         return Task.CompletedTask;
     }
