@@ -15,33 +15,32 @@ public partial class SecurityController : BaseAdminController
 {
     #region Fields
 
+    protected readonly IAdminMenu _adminMenu;
     protected readonly ICustomerService _customerService;
     protected readonly ILogger _logger;
     protected readonly IPermissionService _permissionService;
     protected readonly ISecurityModelFactory _securityModelFactory;
     protected readonly IWorkContext _workContext;
-    protected readonly IXmlSiteMap _xmlSiteMap;
 
-    private static readonly char[] _separator = [','];
-    private static Dictionary<string, string> _menuSystemNames = new();
+    private static readonly Dictionary<string, string> _menuSystemNames = new();
 
     #endregion
 
     #region Ctor
 
-    public SecurityController(ICustomerService customerService,
+    public SecurityController(IAdminMenu adminMenu,
+        ICustomerService customerService,
         ILogger logger,
         IPermissionService permissionService,
         ISecurityModelFactory securityModelFactory,
-        IWorkContext workContext,
-        IXmlSiteMap xmlSiteMap)
+        IWorkContext workContext)
     {
+        _adminMenu = adminMenu;
         _customerService = customerService;
         _logger = logger;
         _permissionService = permissionService;
         _securityModelFactory = securityModelFactory;
         _workContext = workContext;
-        _xmlSiteMap = xmlSiteMap;
     }
     
     #endregion
@@ -52,13 +51,8 @@ public partial class SecurityController : BaseAdminController
     {
         if (!_menuSystemNames.Any())
         {
-            await _xmlSiteMap.LoadFromAsync("~/Areas/Admin/sitemap.config");
-
-            void fillSystemNames(SiteMapNode node)
+            void fillSystemNames(AdminMenuItem node)
             {
-                if (!string.IsNullOrEmpty(node.Url))
-                    return;
-
                 if (!string.IsNullOrEmpty(node.ControllerName) && !string.IsNullOrEmpty(node.ActionName))
                 {
                     var key = $"{node.ControllerName}.{node.ActionName}";
@@ -69,15 +63,15 @@ public partial class SecurityController : BaseAdminController
                     fillSystemNames(childNode);
             }
 
-            fillSystemNames(_xmlSiteMap.RootNode);
+            fillSystemNames(await _adminMenu.GetRootNodeAsync(true));
         }
 
         var currentCustomer = await _workContext.GetCurrentCustomerAsync();
 
         var menuSystemName = "Home";
 
-        if (_menuSystemNames.ContainsKey(pageSystemNameKey))
-            menuSystemName = _menuSystemNames[pageSystemNameKey];
+        if (_menuSystemNames.TryGetValue(pageSystemNameKey, out var value))
+            menuSystemName = value;
         else
         {
             var systemName =
