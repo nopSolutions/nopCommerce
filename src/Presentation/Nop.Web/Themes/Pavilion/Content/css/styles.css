@@ -6302,18 +6302,6 @@ img.hawthorne-logo {
 	}
 }
 
-/* Fireworks Logo Changes */
-
-body .categories-details-top img {
-    max-width: 100%;
-}
-.header-middle .header-menu-parent li a {
-    padding: 5px 5px !important;
-}
-.header-middle .header-menu-parent .mobile-sidebar-category li a {
-    padding: 5px 5px !important;
-}
-
 @media screen and (max-width: 570px) {
 .content__Block-sc-3iczmu-0.cFzLkk {
     text-align: center;
