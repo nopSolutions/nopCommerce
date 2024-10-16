@@ -5,13 +5,7 @@ NOPCommerce codebase that runs both abcwarehouse.com and hawthorneonline.com
 ## Getting Started with Codespace
 
 1. Create Codespace
-2. Initialize setup
-    
-    ```bash
-    . ./.devcontainer/initialize.sh
-    ```
-    
-3. Connect to DB within Codespace, run contents of `configureDb-local.sql`
+2. Connect to DB within Codespace, run contents of `configureDb-local.sql`
 
 ### Post-Restore App Configuration
 
@@ -22,3 +16,12 @@ NOPCommerce codebase that runs both abcwarehouse.com and hawthorneonline.com
     4. PowerReviewsUpDate
     5. AJAX Filters
 2. Reinstall AJAX Filters
+
+## Running E2E tests
+
+To run Playwright E2E tests:
+
+```
+cd e2e
+npx playwright test
+```
