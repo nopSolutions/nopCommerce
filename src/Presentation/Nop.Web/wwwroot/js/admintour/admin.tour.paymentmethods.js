@@ -11,9 +11,13 @@
     var paypalCommerceMethodExists = $('#' + paypalCommerceMethodRowId).length;
 
     if (paypalCommerceMethodExists) {
-      AdminTourNextPageButton.action = function () { window.location = '/Admin/PayPalCommerce/Configure?showtour=true' };
+      AdminTourNextPageButton.action = function () {
+        window.location = ((document.querySelector('base') || {}).getAttribute('href') + '/Admin/PayPalCommerce/Configure?showtour=true').replace(/\/\//g, "/");
+      };
     } else {
-      AdminTourNextPageButton.action = function () { window.location = '/Admin/Tax/Providers?showtour=True' }
+      AdminTourNextPageButton.action = function () {
+        window.location = ((document.querySelector('base') || {}).getAttribute('href') + '/Admin/Tax/Providers?showtour=True').replace(/\/\//g, "/");
+      };
     }
 
     //'Payment methods' step

@@ -7,9 +7,13 @@
     var manualMethodExists = $('#' + manualMethodRowId).length;
 
     if (manualMethodExists) {
-      AdminTourNextPageButton.action = function () { window.location = '/Admin/FixedByWeightByTotal/Configure?showtour=true' };
+      AdminTourNextPageButton.action = function () {
+        window.location = ((document.querySelector('base') || {}).getAttribute('href') + '/Admin/FixedByWeightByTotal/Configure?showtour=true').replace(/\/\//g, "/");
+      };
     } else {
-      AdminTourNextPageButton.action = function () { window.location = '/Admin/Payment/Methods?showtour=True' };
+      AdminTourNextPageButton.action = function () {
+        window.location = ((document.querySelector('base') || {}).getAttribute('href') + '/Admin/Payment/Methods?showtour=True').replace(/\/\//g, "/");
+      };
     }
 
     //'Set up shipping' step
