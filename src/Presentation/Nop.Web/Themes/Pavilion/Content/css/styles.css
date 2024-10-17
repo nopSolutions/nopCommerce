@@ -6139,6 +6139,13 @@ h1.search-page-title {
     background-color: #02463b;
 }
 
+.header-menu>ul li>.with-subcategories {
+    width: auto;
+}
+.center ul.mega-menu a {
+    padding: 5px;
+}
+
 @media (min-width: 1001px) {
     .master-wrapper-page .header-middle {
         padding-bottom: 0;
