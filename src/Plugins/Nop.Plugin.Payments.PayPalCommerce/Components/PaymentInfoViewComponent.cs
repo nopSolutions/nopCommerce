@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Http.Extensions;
 using Nop.Plugin.Payments.PayPalCommerce.Models;
 using Nop.Plugin.Payments.PayPalCommerce.Services;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
+using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Web.Framework.Components;
 
@@ -19,6 +19,7 @@ public class PaymentInfoViewComponent : NopViewComponent
 
     protected readonly ILocalizationService _localizationService;
     protected readonly INotificationService _notificationService;
+    protected readonly IOrderProcessingService _orderProcessingService;
     protected readonly IPaymentService _paymentService;
     protected readonly OrderSettings _orderSettings;
     protected readonly PayPalCommerceSettings _settings;
@@ -30,6 +31,7 @@ public class PaymentInfoViewComponent : NopViewComponent
 
     public PaymentInfoViewComponent(ILocalizationService localizationService,
         INotificationService notificationService,
+        IOrderProcessingService orderProcessingService,
         IPaymentService paymentService,
         OrderSettings orderSettings,
         PayPalCommerceSettings settings,
@@ -37,6 +39,7 @@ public class PaymentInfoViewComponent : NopViewComponent
     {
         _localizationService = localizationService;
         _notificationService = notificationService;
+        _orderProcessingService = orderProcessingService;
         _paymentService = paymentService;
         _orderSettings = orderSettings;
         _settings = settings;
@@ -62,14 +65,14 @@ public class PaymentInfoViewComponent : NopViewComponent
 
         //prepare order GUID
         var paymentRequest = new ProcessPaymentRequest();
-        await _paymentService.GenerateOrderGuidAsync(paymentRequest);
+        await _orderProcessingService.GenerateOrderGuidAsync(paymentRequest);
 
         //try to create an order
         var (order, error) = await _serviceManager.CreateOrderAsync(_settings, paymentRequest.OrderGuid);
         if (order != null)
         {
             model.OrderId = order.Id;
-            model.OrderTotal = order.PurchaseUnits.FirstOrDefault().AmountWithBreakdown.Value;
+            model.OrderTotal = order.PurchaseUnits.FirstOrDefault().AmountWithBreakdown.Value ;
 
             //save order details for future using
             var key = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.OrderId");
@@ -84,7 +87,7 @@ public class PaymentInfoViewComponent : NopViewComponent
                 _notificationService.ErrorNotification(error);
         }
 
-        await HttpContext.Session.SetAsync(PayPalCommerceDefaults.PaymentRequestSessionKey, paymentRequest);
+        await _orderProcessingService.SavePaymentInfoAsync(paymentRequest);
 
         return View("~/Plugins/Payments.PayPalCommerce/Views/PaymentInfo.cshtml", model);
     }

@@ -9,7 +9,6 @@ using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
-using Nop.Core.Http.Extensions;
 using Nop.Plugin.Payments.PayPalCommerce.Components;
 using Nop.Plugin.Payments.PayPalCommerce.Domain;
 using Nop.Plugin.Payments.PayPalCommerce.Models;
@@ -19,6 +18,7 @@ using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
+using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
 using Nop.Services.Stores;
@@ -38,6 +38,7 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
     protected readonly ICurrencyService _currencyService;
     protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly ILocalizationService _localizationService;
+    protected readonly IOrderProcessingService _orderProcessingService;
     protected readonly IPaymentService _paymentService;
     protected readonly ISettingService _settingService;
     protected readonly IStoreService _storeService;
@@ -56,6 +57,7 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
         ICurrencyService currencyService,
         IGenericAttributeService genericAttributeService,
         ILocalizationService localizationService,
+        IOrderProcessingService orderProcessingService,
         IPaymentService paymentService,
         ISettingService settingService,
         IStoreService storeService,
@@ -70,6 +72,7 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
         _currencyService = currencyService;
         _genericAttributeService = genericAttributeService;
         _localizationService = localizationService;
+        _orderProcessingService = orderProcessingService;
         _paymentService = paymentService;
         _settingService = settingService;
         _storeService = storeService;
@@ -353,9 +356,7 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
     {
         ArgumentNullException.ThrowIfNull(form);
 
-        //already set
-        return await _actionContextAccessor.ActionContext.HttpContext.Session
-            .GetAsync<ProcessPaymentRequest>(PayPalCommerceDefaults.PaymentRequestSessionKey);
+        return await _orderProcessingService.GetPaymentInfoAsync();
     }
 
     /// <summary>

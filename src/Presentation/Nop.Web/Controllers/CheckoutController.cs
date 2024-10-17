@@ -1155,10 +1155,8 @@ public partial class CheckoutController : BasePublicController
         {
             //skip payment info page
             var paymentInfo = new ProcessPaymentRequest();
-
-            //session save
-            await HttpContext.Session.SetAsync("OrderPaymentInfo", paymentInfo);
-
+            await _orderProcessingService.SavePaymentInfoAsync(paymentInfo);
+            
             return RedirectToRoute("CheckoutConfirm");
         }
 
@@ -1211,10 +1209,9 @@ public partial class CheckoutController : BasePublicController
             //get payment info
             var paymentInfo = await paymentMethod.GetPaymentInfoAsync(form);
             //set previous order GUID (if exists)
-            await _paymentService.GenerateOrderGuidAsync(paymentInfo);
+            await _orderProcessingService.GenerateOrderGuidAsync(paymentInfo);
+            await _orderProcessingService.SavePaymentInfoAsync(paymentInfo);
 
-            //session save
-            await HttpContext.Session.SetAsync("OrderPaymentInfo", paymentInfo);
             return RedirectToRoute("CheckoutConfirm");
         }
 
@@ -1289,25 +1286,27 @@ public partial class CheckoutController : BasePublicController
                 throw new Exception(await _localizationService.GetResourceAsync("Checkout.MinOrderPlacementInterval"));
 
             //place order
-            var processPaymentRequest = await HttpContext.Session.GetAsync<ProcessPaymentRequest>("OrderPaymentInfo");
+            var processPaymentRequest = await _orderProcessingService.GetPaymentInfoAsync();
+            
             if (processPaymentRequest == null)
             {
-                //Check whether payment workflow is required
+                //check whether payment workflow is required
                 if (await _orderProcessingService.IsPaymentWorkflowRequiredAsync(cart))
                     return RedirectToRoute("CheckoutPaymentInfo");
 
                 processPaymentRequest = new ProcessPaymentRequest();
             }
-            await _paymentService.GenerateOrderGuidAsync(processPaymentRequest);
+
+            await _orderProcessingService.GenerateOrderGuidAsync(processPaymentRequest);
             processPaymentRequest.StoreId = store.Id;
             processPaymentRequest.CustomerId = customer.Id;
-            processPaymentRequest.PaymentMethodSystemName = await _genericAttributeService.GetAttributeAsync<string>(customer,
-                NopCustomerDefaults.SelectedPaymentMethodAttribute, store.Id);
-            await HttpContext.Session.SetAsync("OrderPaymentInfo", processPaymentRequest);
+            processPaymentRequest.PaymentMethodSystemName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedPaymentMethodAttribute, store.Id);
+            await _orderProcessingService.SavePaymentInfoAsync(processPaymentRequest);
+            
             var placeOrderResult = await _orderProcessingService.PlaceOrderAsync(processPaymentRequest);
             if (placeOrderResult.Success)
             {
-                await HttpContext.Session.SetAsync<ProcessPaymentRequest>("OrderPaymentInfo", null);
+                await _orderProcessingService.ClearPaymentInfoAsync();
                 var postProcessPaymentRequest = new PostProcessPaymentRequest
                 {
                     Order = placeOrderResult.PlacedOrder
@@ -1444,7 +1443,7 @@ public partial class CheckoutController : BasePublicController
             var paymentInfo = new ProcessPaymentRequest();
 
             //session save
-            await HttpContext.Session.SetAsync("OrderPaymentInfo", paymentInfo);
+            await _orderProcessingService.SavePaymentInfoAsync(paymentInfo);
 
             var confirmOrderModel = await _checkoutModelFactory.PrepareConfirmOrderModelAsync(cart);
             return Json(new
@@ -1959,10 +1958,8 @@ public partial class CheckoutController : BasePublicController
                 //get payment info
                 var paymentInfo = await paymentMethod.GetPaymentInfoAsync(form);
                 //set previous order GUID (if exists)
-                await _paymentService.GenerateOrderGuidAsync(paymentInfo);
-
-                //session save
-                await HttpContext.Session.SetAsync("OrderPaymentInfo", paymentInfo);
+                await _orderProcessingService.GenerateOrderGuidAsync(paymentInfo);
+                await _orderProcessingService.SavePaymentInfoAsync(paymentInfo);
 
                 var confirmOrderModel = await _checkoutModelFactory.PrepareConfirmOrderModelAsync(cart);
                 return Json(new
@@ -2034,27 +2031,27 @@ public partial class CheckoutController : BasePublicController
                     throw new Exception(await _localizationService.GetResourceAsync("Checkout.MinOrderPlacementInterval"));
 
                 //place order
-                var processPaymentRequest = await HttpContext.Session.GetAsync<ProcessPaymentRequest>("OrderPaymentInfo");
+                var processPaymentRequest = await _orderProcessingService.GetPaymentInfoAsync();
+                
                 if (processPaymentRequest == null)
                 {
-                    //Check whether payment workflow is required
-                    if (await _orderProcessingService.IsPaymentWorkflowRequiredAsync(cart))
-                    {
+                    //check whether payment workflow is required
+                    if (await _orderProcessingService.IsPaymentWorkflowRequiredAsync(cart)) 
                         throw new Exception("Payment information is not entered");
-                    }
 
                     processPaymentRequest = new ProcessPaymentRequest();
                 }
-                await _paymentService.GenerateOrderGuidAsync(processPaymentRequest);
+
+                await _orderProcessingService.GenerateOrderGuidAsync(processPaymentRequest);
                 processPaymentRequest.StoreId = store.Id;
                 processPaymentRequest.CustomerId = customer.Id;
-                processPaymentRequest.PaymentMethodSystemName = await _genericAttributeService.GetAttributeAsync<string>(customer,
-                    NopCustomerDefaults.SelectedPaymentMethodAttribute, store.Id);
-                await HttpContext.Session.SetAsync("OrderPaymentInfo", processPaymentRequest);
+                processPaymentRequest.PaymentMethodSystemName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedPaymentMethodAttribute, store.Id);
+                await _orderProcessingService.SavePaymentInfoAsync(processPaymentRequest);
                 var placeOrderResult = await _orderProcessingService.PlaceOrderAsync(processPaymentRequest);
+                
                 if (placeOrderResult.Success)
                 {
-                    await HttpContext.Session.SetAsync<ProcessPaymentRequest>("OrderPaymentInfo", null);
+                    await _orderProcessingService.ClearPaymentInfoAsync();
                     var postProcessPaymentRequest = new PostProcessPaymentRequest
                     {
                         Order = placeOrderResult.PlacedOrder

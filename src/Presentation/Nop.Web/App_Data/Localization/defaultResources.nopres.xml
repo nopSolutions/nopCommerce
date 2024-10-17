@@ -16683,9 +16683,6 @@
   <LocaleResource Name="Checkout.NoPaymentMethods">
     <Value>No payment methods available</Value>
   </LocaleResource>
-  <LocaleResource Name="Checkout.OrderIsPlacedError">
-    <Value>The same order has been placed already</Value>
-  </LocaleResource>
   <LocaleResource Name="Checkout.OrderNumber">
     <Value>Order number</Value>
   </LocaleResource>

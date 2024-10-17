@@ -415,37 +415,5 @@ public partial class PaymentService : IPaymentService
         return [];
     }
 
-    /// <summary>
-    /// Generate an order GUID
-    /// </summary>
-    /// <param name="processPaymentRequest">Process payment request</param>
-    public virtual async Task GenerateOrderGuidAsync(ProcessPaymentRequest processPaymentRequest)
-    {
-        if (processPaymentRequest == null)
-            return;
-
-        //we should use the same GUID for multiple payment attempts
-        //this way a payment gateway can prevent security issues such as credit card brute-force attacks
-        //in order to avoid any possible limitations by payment gateway we reset GUID periodically
-        var previousPaymentRequest = await _httpContextAccessor.HttpContext.Session.GetAsync<ProcessPaymentRequest>("OrderPaymentInfo");
-        if (_paymentSettings.RegenerateOrderGuidInterval > 0 &&
-            previousPaymentRequest != null &&
-            previousPaymentRequest.OrderGuidGeneratedOnUtc.HasValue)
-        {
-            var interval = DateTime.UtcNow - previousPaymentRequest.OrderGuidGeneratedOnUtc.Value;
-            if (interval.TotalSeconds < _paymentSettings.RegenerateOrderGuidInterval)
-            {
-                processPaymentRequest.OrderGuid = previousPaymentRequest.OrderGuid;
-                processPaymentRequest.OrderGuidGeneratedOnUtc = previousPaymentRequest.OrderGuidGeneratedOnUtc;
-            }
-        }
-
-        if (processPaymentRequest.OrderGuid == Guid.Empty)
-        {
-            processPaymentRequest.OrderGuid = Guid.NewGuid();
-            processPaymentRequest.OrderGuidGeneratedOnUtc = DateTime.UtcNow;
-        }
-    }
-
     #endregion
 }

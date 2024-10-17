@@ -745,9 +745,9 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
             : string.Empty;
 
         //custom values
-        var processPaymentRequestTask = _httpContextAccessor.HttpContext?.Session?.GetAsync<ProcessPaymentRequest>("OrderPaymentInfo");
+        var processPaymentRequestTask = await _orderProcessingService.GetPaymentInfoAsync();
         if (processPaymentRequestTask != null)
-            model.CustomValues = (await processPaymentRequestTask)?.CustomValues;
+            model.CustomValues = processPaymentRequestTask.CustomValues;
 
         return model;
     }

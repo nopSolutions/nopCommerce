@@ -3145,8 +3145,7 @@ namespace Nop.Services.Installation
                 AllowAdminsToBuyCallForPriceProducts = true,
                 ShowProductThumbnailInOrderDetailsPage = true,
                 DisplayCustomerCurrencyOnOrders = false,
-                DisplayOrderSummary = true,
-                PlaceOrderWithLock = false
+                DisplayOrderSummary = true
             });
 
             await settingService.SaveSettingAsync(new SecuritySettings

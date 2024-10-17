@@ -49,5 +49,18 @@ public static partial class NopOrderDefaults
 
     #endregion
 
+    #region Payment info
+
+    /// <summary>
+    /// Gets a key of cache PaymentInfo
+    /// </summary>
+    /// /// <remarks>
+    /// {0} : current store ID
+    /// {1} : customer GUID
+    /// </remarks>
+    public static CacheKey PaymentInfoKeyCache => new("Nop.paymentinfo-{0}-{1}");
+
+    #endregion
+
     #endregion
 }

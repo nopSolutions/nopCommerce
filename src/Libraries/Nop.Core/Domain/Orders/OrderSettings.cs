@@ -187,9 +187,4 @@ public partial class OrderSettings : ISettings
     /// Gets or sets a value indicating whether "Summary" block should be displayed on the order list table
     /// </summary>
     public bool DisplayOrderSummary { get; set; }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether to place order with lock
-    /// </summary>
-    public bool PlaceOrderWithLock { get; set; }
 }

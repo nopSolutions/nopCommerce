@@ -41,12 +41,7 @@ public class PayPalCommerceDefaults
     /// Gets the shopping cart route name
     /// </summary>
     public static string ShoppingCartRouteName => "ShoppingCart";
-
-    /// <summary>
-    /// Gets the session key to get process payment request
-    /// </summary>
-    public static string PaymentRequestSessionKey => "OrderPaymentInfo";
-
+    
     /// <summary>
     /// Gets the name of a generic attribute to store the refund identifier
     /// </summary>

@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using System.Text;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -75,6 +74,7 @@ public partial class OrderProcessingService : IOrderProcessingService
     protected readonly IShoppingCartService _shoppingCartService;
     protected readonly IStateProvinceService _stateProvinceService;
     protected readonly IStaticCacheManager _staticCacheManager;
+    protected readonly IStoreContext _storeContext;
     protected readonly IStoreMappingService _storeMappingService;
     protected readonly IStoreService _storeService;
     protected readonly ITaxService _taxService;
@@ -128,6 +128,7 @@ public partial class OrderProcessingService : IOrderProcessingService
         IShoppingCartService shoppingCartService,
         IStateProvinceService stateProvinceService,
         IStaticCacheManager staticCacheManager,
+        IStoreContext storeContext,
         IStoreMappingService storeMappingService,
         IStoreService storeService,
         ITaxService taxService,
@@ -177,6 +178,7 @@ public partial class OrderProcessingService : IOrderProcessingService
         _shoppingCartService = shoppingCartService;
         _stateProvinceService = stateProvinceService;
         _staticCacheManager = staticCacheManager;
+        _storeContext = storeContext;
         _storeMappingService = storeMappingService;
         _storeService = storeService;
         _taxService = taxService;
@@ -195,6 +197,19 @@ public partial class OrderProcessingService : IOrderProcessingService
     #endregion
 
     #region Utilities
+
+    /// <summary>
+    /// Prepare payment info cash key
+    /// </summary>
+    /// <returns>Cache key</returns>
+    protected virtual async Task<CacheKey> PreparePaymentInfoCacheKeyAsync()
+    {
+        var customer = await _workContext.GetCurrentCustomerAsync();
+
+        var key = _staticCacheManager.PrepareKeyForDefaultCache(NopOrderDefaults.PaymentInfoKeyCache, await _storeContext.GetCurrentStoreAsync(), customer.CustomerGuid);
+
+        return key;
+    }
 
     /// <summary>
     /// Books the inventory by specified shipment
@@ -1542,122 +1557,73 @@ public partial class OrderProcessingService : IOrderProcessingService
         //prepare order details
         var details = await PreparePlaceOrderDetailsAsync(processPaymentRequest);
 
-        async Task<PlaceOrderResult> placeOrder(PlaceOrderContainer placeOrderContainer)
-        {
-            var result = new PlaceOrderResult();
-
-            try
-            {
-                var processPaymentResult =
-                    await GetProcessPaymentResultAsync(processPaymentRequest, placeOrderContainer)
-                    ?? throw new NopException("processPaymentResult is not available");
-
-                if (processPaymentResult.Success)
-                {
-                    var order = await SaveOrderDetailsAsync(processPaymentRequest, processPaymentResult,
-                        placeOrderContainer);
-                    result.PlacedOrder = order;
-
-                    //move shopping cart items to order items
-                    await MoveShoppingCartItemsToOrderItemsAsync(placeOrderContainer, order);
-
-                    //discount usage history
-                    await SaveDiscountUsageHistoryAsync(placeOrderContainer, order);
-
-                    //gift card usage history
-                    await SaveGiftCardUsageHistoryAsync(placeOrderContainer, order);
-
-                    //recurring orders
-                    if (placeOrderContainer.IsRecurringShoppingCart)
-                        await CreateFirstRecurringPaymentAsync(processPaymentRequest, order);
-
-                    //notifications
-                    await SendNotificationsAndSaveNotesAsync(order);
-
-                    //reset checkout data
-                    await _customerService.ResetCheckoutDataAsync(placeOrderContainer.Customer,
-                        processPaymentRequest.StoreId, clearCouponCodes: true, clearCheckoutAttributes: true);
-                    await _customerActivityService.InsertActivityAsync("PublicStore.PlaceOrder",
-                        string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.PlaceOrder"),
-                            order.Id), order);
-
-                    //raise event       
-                    await _eventPublisher.PublishAsync(new OrderPlacedEvent(order));
-
-                    //check order status
-                    await CheckOrderStatusAsync(order);
-
-                    if (order.PaymentStatus == PaymentStatus.Paid)
-                        await ProcessOrderPaidAsync(order);
-                }
-                else
-                    foreach (var paymentError in processPaymentResult.Errors)
-                        result.AddError(string.Format(
-                            await _localizationService.GetResourceAsync("Checkout.PaymentError"), paymentError));
-            }
-            catch (Exception exc)
-            {
-                await _logger.ErrorAsync(exc.Message, exc);
-                result.AddError(exc.Message);
-            }
-
-            if (result.Success)
-                return result;
-
-            //log errors
-            var logError = result.Errors.Aggregate("Error while placing order. ",
-                (current, next) => $"{current}Error {result.Errors.IndexOf(next) + 1}: {next}. ");
-            var customer = await _customerService.GetCustomerByIdAsync(processPaymentRequest.CustomerId);
-            await _logger.ErrorAsync(logError, customer: customer);
-
-            return result;
-        }
-
-        if (!_orderSettings.PlaceOrderWithLock)
-            return await placeOrder(details);
-
-        var resource = string.Empty;
+        var result = new PlaceOrderResult();
 
         try
         {
-            (var lockObj, resource) = details.GetLock();
-            lock (lockObj)
-            {
-                var key = new CacheKey(resource)
-                {
-                    CacheTime = 1
-                };
+            var processPaymentResult =
+                await GetProcessPaymentResultAsync(processPaymentRequest, details)
+                ?? throw new NopException("processPaymentResult is not available");
 
-                if (_staticCacheManager.Get(key, () => true))
-                {
-                    _staticCacheManager.SetAsync(key, false).Wait();
-                    return placeOrder(details).Result;
-                }
-            }
-        }
-        catch
-        {
-            //ignore
-        }
-        finally
-        {
-            try
+            if (processPaymentResult.Success)
             {
-                details.DeleteLock(resource);
+                var order = await SaveOrderDetailsAsync(processPaymentRequest, processPaymentResult,
+                    details);
+                result.PlacedOrder = order;
+
+                //move shopping cart items to order items
+                await MoveShoppingCartItemsToOrderItemsAsync(details, order);
+
+                //discount usage history
+                await SaveDiscountUsageHistoryAsync(details, order);
+
+                //gift card usage history
+                await SaveGiftCardUsageHistoryAsync(details, order);
+
+                //recurring orders
+                if (details.IsRecurringShoppingCart)
+                    await CreateFirstRecurringPaymentAsync(processPaymentRequest, order);
+
+                //notifications
+                await SendNotificationsAndSaveNotesAsync(order);
+
+                //reset checkout data
+                await _customerService.ResetCheckoutDataAsync(details.Customer,
+                    processPaymentRequest.StoreId, clearCouponCodes: true, clearCheckoutAttributes: true);
+                await _customerActivityService.InsertActivityAsync("PublicStore.PlaceOrder",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.PlaceOrder"),
+                        order.Id), order);
+
+                //raise event       
+                await _eventPublisher.PublishAsync(new OrderPlacedEvent(order));
+
+                //check order status
+                await CheckOrderStatusAsync(order);
+
+                if (order.PaymentStatus == PaymentStatus.Paid)
+                    await ProcessOrderPaidAsync(order);
             }
-            catch 
-            {
-               //ignore
-            }
+            else
+                foreach (var paymentError in processPaymentResult.Errors)
+                    result.AddError(string.Format(
+                        await _localizationService.GetResourceAsync("Checkout.PaymentError"), paymentError));
+        }
+        catch (Exception exc)
+        {
+            await _logger.ErrorAsync(exc.Message, exc);
+            result.AddError(exc.Message);
         }
 
-        return new PlaceOrderResult
-        {
-            Errors = new List<string>
-            {
-                await _localizationService.GetResourceAsync("Checkout.OrderIsPlacedError")
-            }
-        };
+        if (result.Success)
+            return result;
+
+        //log errors
+        var logError = result.Errors.Aggregate("Error while placing order. ",
+            (current, next) => $"{current}Error {result.Errors.IndexOf(next) + 1}: {next}. ");
+        var customer = await _customerService.GetCustomerByIdAsync(processPaymentRequest.CustomerId);
+        await _logger.ErrorAsync(logError, customer: customer);
+
+        return result;
     }
 
     /// <summary>
@@ -3239,6 +3205,66 @@ public partial class OrderProcessingService : IOrderProcessingService
         return result;
     }
 
+    /// <summary>
+    /// Generate an order GUID
+    /// </summary>
+    /// <param name="processPaymentRequest">Process payment request</param>
+    public virtual async Task GenerateOrderGuidAsync(ProcessPaymentRequest processPaymentRequest)
+    {
+        if (processPaymentRequest == null)
+            return;
+
+        //we should use the same GUID for multiple payment attempts
+        //this way a payment gateway can prevent security issues such as credit card brute-force attacks
+        //in order to avoid any possible limitations by payment gateway we reset GUID periodically
+        var previousPaymentRequest = await GetPaymentInfoAsync();
+        if (_paymentSettings.RegenerateOrderGuidInterval > 0 && previousPaymentRequest is { OrderGuidGeneratedOnUtc: not null })
+        {
+            var interval = DateTime.UtcNow - previousPaymentRequest.OrderGuidGeneratedOnUtc.Value;
+            if (interval.TotalSeconds < _paymentSettings.RegenerateOrderGuidInterval)
+            {
+                processPaymentRequest.OrderGuid = previousPaymentRequest.OrderGuid;
+                processPaymentRequest.OrderGuidGeneratedOnUtc = previousPaymentRequest.OrderGuidGeneratedOnUtc;
+            }
+        }
+
+        if (processPaymentRequest.OrderGuid == Guid.Empty)
+        {
+            processPaymentRequest.OrderGuid = Guid.NewGuid();
+            processPaymentRequest.OrderGuidGeneratedOnUtc = DateTime.UtcNow;
+        }
+    }
+
+    /// <summary>
+    /// Save process payment request
+    /// </summary>
+    /// <param name="processPaymentRequest">Process payment request</param>
+    public virtual async Task SavePaymentInfoAsync(ProcessPaymentRequest processPaymentRequest)
+    {
+        var key = await PreparePaymentInfoCacheKeyAsync();
+        await _staticCacheManager.SetAsync(key, processPaymentRequest);
+    }
+
+    /// <summary>
+    /// Get process payment request
+    /// </summary>
+    /// <returns>Process payment request</returns>
+    public virtual async Task<ProcessPaymentRequest> GetPaymentInfoAsync()
+    {
+        var key = await PreparePaymentInfoCacheKeyAsync();
+
+        return await _staticCacheManager.GetAsync<ProcessPaymentRequest>(key);
+    }
+
+    /// <summary>
+    /// Clear payment info
+    /// </summary>
+    public virtual async Task ClearPaymentInfoAsync()
+    {
+        var key = await PreparePaymentInfoCacheKeyAsync();
+        await _staticCacheManager.RemoveAsync(key);
+    }
+
     #endregion
 
     #region Nested class
@@ -3248,8 +3274,6 @@ public partial class OrderProcessingService : IOrderProcessingService
     /// </summary>
     protected partial class PlaceOrderContainer
     {
-        private static Dictionary<string, object> _locks = new Dictionary<string, object>();
-
         public PlaceOrderContainer()
         {
             Cart = new List<ShoppingCartItem>();
@@ -3431,30 +3455,6 @@ public partial class OrderProcessingService : IOrderProcessingService
         /// Order total
         /// </summary>
         public decimal OrderTotal { get; set; }
-
-        public (object, string) GetLock()
-        {
-            var keyBuilder = new StringBuilder();
-            keyBuilder.Append(string.Join(", ", Cart.Select(p => p.Id).Order()));
-            keyBuilder.Append(string.Join(", ", AppliedDiscounts.Select(p => p.Id).Order()));
-            keyBuilder.Append(string.Join(", ", AppliedGiftCards.Select(p => p.GiftCard.Id).Order()));
-            keyBuilder.Append(AffiliateId);
-            keyBuilder.Append(Customer.Id);
-            keyBuilder.Append(InitialOrder?.Id ?? 0);
-            keyBuilder.Append(RedeemedRewardPointsAmount);
-
-            var resource = HashHelper.CreateHash(Encoding.UTF32.GetBytes(keyBuilder.ToString()), "SHA512");
-
-            if (!_locks.ContainsKey(resource))
-                _locks.Add(resource, new());
-
-            return (_locks[resource], resource);
-        }
-
-        public void DeleteLock(string resource)
-        {
-            _locks.Remove(resource);
-        }
     }
 
     #endregion
