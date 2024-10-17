@@ -6139,6 +6139,12 @@ h1.search-page-title {
     background-color: #02463b;
 }
 
+@media (min-width: 1001px) {
+    .master-wrapper-page .header-middle {
+        padding-bottom: 0;
+    }
+}
+
 @media screen and (max-width: 720px) {
 	.search-category-container {
 		width: 49%;
@@ -6267,6 +6273,9 @@ img.hawthorne-logo {
 }
 .hawthorne-lower input#sli_search_1 {
     font-size: 14px;
+}
+.header-menu ul.mega-menu {
+    padding-top: 35px;
 }
 
 /* Fireworks Logo Changes */
