@@ -21,4 +21,7 @@ public partial record ChangePasswordModel : BaseNopModel
     [NoTrim]
     [NopResourceDisplayName("Account.ChangePassword.Fields.ConfirmNewPassword")]
     public string ConfirmNewPassword { get; set; }
+
+    public bool PasswordMustBeChanged { get; set; }
+    public bool PasswordExpiered { get; set; }
 }

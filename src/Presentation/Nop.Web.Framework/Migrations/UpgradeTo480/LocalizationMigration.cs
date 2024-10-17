@@ -251,6 +251,11 @@ public class LocalizationMigration : MigrationBase
             //#7241
             ["Admin.Catalog.Categories.Fields.RestrictFromVendors"] = "Restrict from vendors",
             ["Admin.Catalog.Categories.Fields.RestrictFromVendors.Hint"] = "Check to restrict vendors from adding products to this category. This option is useful when you have multi-vendors enabled in your store.",
+
+            //#7281
+            ["Account.ChangePassword.MustBeChanged"] = "Your password must be changed for security purposes.",
+            ["Admin.Customers.Customers.Fields.MustChangePassword"] = "Customer must change password",
+            ["Admin.Customers.Customers.Fields.MustChangePassword.Hint"] = "Check to require the customer to change their password.",
         }, languageId);
 
         #endregion

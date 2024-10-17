@@ -1,5 +1,6 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
 
 namespace Nop.Data.Migrations.UpgradeTo480;
 
@@ -30,6 +31,19 @@ public class SchemaMigration : ForwardOnlyMigration
         {
             Alter.Table(categoryTableName)
                 .AddColumn(restrictFromVendorsColumnName)
+                .AsBoolean()
+                .NotNullable()
+                .WithDefaultValue(false);
+        }
+
+        //#7281
+        var customerTableName = nameof(Customer);
+        var mustChangePasswordColumnName = nameof(Customer.MustChangePassword);
+
+        if (!Schema.Table(customerTableName).Column(mustChangePasswordColumnName).Exists())
+        {
+            Alter.Table(customerTableName)
+                .AddColumn(mustChangePasswordColumnName)
                 .AsBoolean()
                 .NotNullable()
                 .WithDefaultValue(false);

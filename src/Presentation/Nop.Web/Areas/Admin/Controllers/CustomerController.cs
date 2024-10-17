@@ -554,6 +554,7 @@ public partial class CustomerController : BaseAdminController
             {
                 customer.AdminComment = model.AdminComment;
                 customer.IsTaxExempt = model.IsTaxExempt;
+                customer.MustChangePassword = model.MustChangePassword;
 
                 //prevent deactivation of the last active administrator
                 if (!await _customerService.IsAdminAsync(customer) || model.Active || await SecondAdminAccountExistsAsync(customer))

@@ -283,6 +283,12 @@ label, label + * {
   font-weight: normal;
 }
 
+.fieldset .warnings {
+  text-align: center;
+  margin-block-end: 30px;
+  color: #e4444c;
+}
+
 .form-fields {
   position: relative;
   border-top: 1px solid #e6e6e6;

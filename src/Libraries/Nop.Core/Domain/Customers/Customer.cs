@@ -234,6 +234,11 @@ public partial class Customer : BaseEntity, ISoftDeletedEntity
     public int? BillingAddressId { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether the customer is required to change password
+    /// </summary>
+    public bool MustChangePassword { get; set; }
+
+    /// <summary>
     /// Gets or sets the shipping address identifier
     /// </summary>
     public int? ShippingAddressId { get; set; }

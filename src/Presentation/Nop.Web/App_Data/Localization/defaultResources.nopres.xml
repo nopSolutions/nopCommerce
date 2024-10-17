@@ -105,6 +105,9 @@
   <LocaleResource Name="Account.ChangePassword.Fields.OldPassword.Required">
     <Value>Old password is required.</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.ChangePassword.MustBeChanged">
+    <Value>Your password must be changed</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.ChangePassword.PasswordIsExpired">
     <Value>Your password has expired, please create a new one</Value>
   </LocaleResource>
@@ -11978,6 +11981,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.MultiFactorAuthenticationProvider.Hint">
     <Value>Name of the multi-factor authentication provider to which the customer is associated.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.MustChangePassword">
+    <Value>Customer must change password</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.MustChangePassword.Hint">
+    <Value>Check to require the customer to change their password.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.Newsletter">
     <Value>Newsletter</Value>
