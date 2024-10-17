@@ -11,10 +11,12 @@ UPDATE Setting
 SET Value = 'WithoutWww'
 WHERE Name = 'seosettings.wwwrequirement'
 
+-- Minification
 UPDATE Setting
 SET Value = 'False'
 WHERE Name = 'commonsettings.enablehtmlminification'
     OR Name = 'commonsettings.minificationenabled'
+    OR Name = 'commonsettings.enablecssbundling'
 
 UPDATE Setting
 SET Value = 'True'

@@ -40,3 +40,10 @@ WHERE Name = 'unifipaymentssettings.clientid'
 UPDATE Setting
 SET Value = 'CLIENT_SECRET'
 WHERE Name = 'unifipaymentssettings.clientsecret'
+
+-- Minification
+UPDATE Setting
+SET Value = 'False'
+WHERE Name = 'commonsettings.enablehtmlminification'
+    OR Name = 'commonsettings.minificationenabled'
+    OR Name = 'commonsettings.enablecssbundling'
