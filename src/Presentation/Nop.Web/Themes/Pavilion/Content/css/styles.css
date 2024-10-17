@@ -6139,7 +6139,7 @@ h1.search-page-title {
     background-color: #02463b;
 }
 
-.header-menu>ul li>.with-subcategories {
+.header .header-menu>ul li>.with-subcategories {
     width: auto;
 }
 .center ul.mega-menu a {
