@@ -99,9 +99,9 @@ public partial class TopicService : ITopicService
             //apply ACL constraints
             query = await _aclService.ApplyAcl(query, customerRoleIds);
 
-            return query.Where(t => t.SystemName == systemName)
+            return await query.Where(t => t.SystemName == systemName)
                 .OrderBy(t => t.Id)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
         });
     }
 

@@ -238,8 +238,8 @@ public class ZettleRecordService
         if (productId == 0 && attributeCombinationId == 0)
             return;
 
-        var existingRecord = _repository.Table.
-            FirstOrDefault(record => record.ProductId == productId && record.CombinationId == attributeCombinationId);
+        var existingRecord = await _repository.Table.
+            FirstOrDefaultAsync(record => record.ProductId == productId && record.CombinationId == attributeCombinationId);
 
         if (existingRecord is null)
         {
@@ -249,7 +249,7 @@ public class ZettleRecordService
             if (!_zettleSettings.AutoAddRecordsEnabled)
                 return;
 
-            if (attributeCombinationId == 0 || _repository.Table.FirstOrDefault(record => record.ProductId == productId) is not ZettleRecord productRecord)
+            if (attributeCombinationId == 0 || (await _repository.Table.FirstOrDefaultAsync(record => record.ProductId == productId)) is not ZettleRecord productRecord)
             {
                 var (records, _) = await PrepareRecordsToAddAsync([productId]);
                 await InsertRecordsAsync(records);
@@ -317,7 +317,7 @@ public class ZettleRecordService
         if (!productIds?.Any() ?? true)
             return 0;
 
-        var newProductIds = productIds.Except(_repository.Table.Select(record => record.ProductId)).ToList();
+        var newProductIds = productIds.Except(await _repository.Table.Select(record => record.ProductId).ToListAsync()).ToList();
         
         if (!newProductIds.Any())
             return 0;
