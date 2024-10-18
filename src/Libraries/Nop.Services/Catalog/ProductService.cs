@@ -662,7 +662,7 @@ public partial class ProductService : IProductService
             //apply ACL constraints
             query = await _aclService.ApplyAcl(query, customerRoleIds);
 
-            featuredProducts = query.ToList();
+            featuredProducts = await query.ToListAsync();
 
             return featuredProducts.Select(p => p.Id).ToList();
         });
@@ -709,7 +709,7 @@ public partial class ProductService : IProductService
             //apply ACL constraints
             query = await _aclService.ApplyAcl(query, customerRoleIds);
 
-            return query.Select(p => p.Id).ToList();
+            return await query.Select(p => p.Id).ToListAsync();
         });
 
         if (!featuredProducts.Any() && featuredProductIds.Any())
@@ -786,7 +786,7 @@ public partial class ProductService : IProductService
             .PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryProductsNumberCacheKey, customerRoleIds, storeId, categoryIds);
 
         //only distinct products
-        return await _staticCacheManager.GetAsync(cacheKey, () => query.Select(p => p.Id).Count());
+        return await _staticCacheManager.GetAsync(cacheKey, () => query.Select(p => p.Id).CountAsync());
     }
 
     /// <summary>
@@ -2545,8 +2545,8 @@ public partial class ProductService : IProductService
         ArgumentNullException.ThrowIfNull(productReview);
 
         var customer = await _workContext.GetCurrentCustomerAsync();
-        var prh = _productReviewHelpfulnessRepository.Table
-            .SingleOrDefault(h => h.ProductReviewId == productReview.Id && h.CustomerId == customer.Id);
+        var prh = await _productReviewHelpfulnessRepository.Table
+            .SingleOrDefaultAsync(h => h.ProductReviewId == productReview.Id && h.CustomerId == customer.Id);
 
         if (prh is null)
         {

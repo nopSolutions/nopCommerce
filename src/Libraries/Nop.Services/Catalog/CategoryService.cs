@@ -192,7 +192,7 @@ public partial class CategoryService : ICategoryService
 
         var mappings = _discountCategoryMappingRepository.Table.Where(dcm => dcm.DiscountId == discount.Id);
 
-        await _discountCategoryMappingRepository.DeleteAsync(mappings.ToList());
+        await _discountCategoryMappingRepository.DeleteAsync(await mappings.ToListAsync());
     }
 
     /// <summary>
