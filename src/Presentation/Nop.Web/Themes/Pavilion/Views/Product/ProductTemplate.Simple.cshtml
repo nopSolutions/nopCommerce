@@ -163,7 +163,7 @@
             <div data-productid="@Model.Id">
                 <div class="product-essential">
                     <!-- ABC: for clearance -->
-                    <span class="corner-picture"><img src="~/Plugins/Misc.AbcFrontend/Images/clearance_banner.png" /></span>
+                    <span class="corner-picture"><img src="~/Plugins/Misc.AbcFrontend/Images/clearance_banner.png" alt="Clearance Banner"/></span>
                     @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsEssentialTop, additionalData = Model })
                     @{
                         var cloudZoom = await Component.InvokeAsync("Widget", new { widgetZone = "sevenspikes_cloud_zoom", additionalData = Model });

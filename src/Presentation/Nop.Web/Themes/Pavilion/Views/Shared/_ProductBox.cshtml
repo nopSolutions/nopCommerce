@@ -282,7 +282,7 @@
                         @await Component.InvokeAsync("LazyLoadImage", new(string Key, string Value)[] 
                         {
                             ("src", Model.DefaultPictureModel.HoverImageUrl),
-                            ("alt", Model.DefaultPictureModel.HoverAlternateText),
+                            ("alt", Model.DefaultPictureModel.HoverAlternateText + " Hover"),
                             ("title", Model.DefaultPictureModel.HoverTitle),
                         });
 
