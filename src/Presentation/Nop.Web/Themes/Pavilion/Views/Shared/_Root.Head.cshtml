@@ -34,7 +34,7 @@
     var iosFixFilePath = "~/Plugins/SevenSpikes.Core/Scripts/iOS-12-array-reverse-fix.min.js";
     var iosFixContentFilePath = CommonHelper.DefaultFileProvider.MapPath(iosFixFilePath);
 
-    string fullTitle = Html.NopTitle().ToString();
+    string fullTitle = Html.NopTitle();
 
     if (System.IO.File.Exists(iosFixContentFilePath))
     {
