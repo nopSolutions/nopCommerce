@@ -246,6 +246,10 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Promotions.NewsLetterSubscriptions.Fields.Language"] = "Language",
 
             ["Honeypot.BotDetected"] ="A bot detected. Honeypot.",
+
+            //#7326
+            ["Validation.Password.LengthValidation"] = "must have at least {0} characters and not greater than {1} characters",
+            ["Validation.Password.Rule"] = "Password must meet the following rules:",
         }, languageId);
 
         #endregion

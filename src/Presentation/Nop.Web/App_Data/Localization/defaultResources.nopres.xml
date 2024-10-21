@@ -20020,22 +20020,22 @@
     <Value>Password is required.</Value>
   </LocaleResource>
   <LocaleResource Name="Validation.Password.LengthValidation">
-    <Value><![CDATA[<li>must have at least {0} characters and not greater than {1} characters</li>]]></Value>
+    <Value>must have at least {0} characters and not greater than {1} characters</Value>
   </LocaleResource>
   <LocaleResource Name="Validation.Password.RequireDigit">
-    <Value><![CDATA[<li>must have at least one digit</li>]]></Value>
+    <Value>must have at least one digit</Value>
   </LocaleResource>
   <LocaleResource Name="Validation.Password.RequireLowercase">
-    <Value><![CDATA[<li>must have at least one lowercase</li>]]></Value>
+    <Value>must have at least one lowercase</Value>
   </LocaleResource>
   <LocaleResource Name="Validation.Password.RequireNonAlphanumeric">
-    <Value><![CDATA[<li>must have at least one special character (e.g. #?!@$%^&*-)</li>]]></Value>
+    <Value><![CDATA[must have at least one special character (e.g. #?!@$%^&*-)]]></Value>
   </LocaleResource>
   <LocaleResource Name="Validation.Password.RequireUppercase">
-    <Value><![CDATA[<li>must have at least one uppercase</li>]]></Value>
+    <Value>must have at least one uppercase</Value>
   </LocaleResource>
   <LocaleResource Name="Validation.Password.Rule">
-    <Value><![CDATA[<p>must meet the following rules: </p><ul>{0}{1}{2}{3}{4}</ul>]]></Value>
+    <Value>Password must meet the following rules: </Value>
   </LocaleResource>
   <LocaleResource Name="Vendors">
     <Value>Vendors</Value>
