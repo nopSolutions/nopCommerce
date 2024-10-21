@@ -333,6 +333,7 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(model => model.ExportImportProductAttributes_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.ExportImportProductCategoryBreadcrumb_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.ExportImportProductSpecificationAttributes_OverrideForStore, options => options.Ignore())
+            .ForMember(model => model.ExportImportTierPrises_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.ExportImportRelatedEntitiesByName_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.ExportImportProductUseLimitedToStores_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.ExportImportSplitProductsFile_OverrideForStore, options => options.Ignore())

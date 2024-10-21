@@ -1,4 +1,6 @@
 ﻿using FluentMigrator;
+using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Seo;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -22,6 +24,11 @@ public class SettingMigration : MigrationBase
         var displayAttributeCombinationImagesOnly = settingService.GetSetting("producteditorsettings.displayattributecombinationimagesonly");
         if (displayAttributeCombinationImagesOnly is not null)
             settingService.DeleteSetting(displayAttributeCombinationImagesOnly);
+
+        //#2388
+        var exportImportTierPrisesKey = $"{nameof(CatalogSettings)}.{nameof(CatalogSettings.ExportImportTierPrises)}".ToLower();
+        if (settingService.GetSetting(exportImportTierPrisesKey) == null)
+            settingService.SetSetting(exportImportTierPrisesKey, true);
     }
 
     public override void Down()

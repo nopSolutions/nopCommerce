@@ -18,6 +18,7 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Attributes;
@@ -553,10 +554,34 @@ public partial class ExportManager : IExportManager
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    protected virtual async Task<byte[]> ExportProductsToXlsxWithAttributesAsync(PropertyByName<Product, Language>[] properties, PropertyByName<Product, Language>[] localizedProperties, IEnumerable<Product> itemsToExport, IList<Language> languages)
+    protected virtual async Task<PropertyManager<ExportTierPrice, Language>> GetTierPriceManagerAsync(IList<Language> languages)
+    {
+        var tierPriceProperties = new[]
+        {
+            new PropertyByName<ExportTierPrice, Language>("TierPriceId", (p, _) => p.Id),
+            new PropertyByName<ExportTierPrice, Language>("Store", (p, _) => p.StoreId)
+            {
+                DropDownElements = (await _storeService.GetAllStoresAsync()).ToSelectList(p=>(p as Store)?.Name ?? string.Empty)
+            },
+            new PropertyByName<ExportTierPrice, Language>("CustomerRole", (p, _) => p.CustomerRoleId ?? 0)
+            {
+                DropDownElements = (await _customerService.GetAllCustomerRolesAsync()).ToSelectList(p=>(p as CustomerRole)?.Name ?? string.Empty)
+            },
+            new PropertyByName<ExportTierPrice, Language>("Quantity", (p, _) => p.Quantity),
+            new PropertyByName<ExportTierPrice, Language>("Price", (p, _) => p.Price),
+            new PropertyByName<ExportTierPrice, Language>("StartDateTimeUtc", (p, _) => p.StartDateTimeUtc),
+            new PropertyByName<ExportTierPrice, Language>("EndDateTimeUtc", (p, _) => p.EndDateTimeUtc)
+        };
+
+        return new PropertyManager<ExportTierPrice, Language>(tierPriceProperties, _catalogSettings, languages: languages);
+    }
+
+    /// <returns>A task that represents the asynchronous operation</returns>
+    protected virtual async Task<byte[]> ExportProductsToXlsxWithAdditionalInfoAsync(PropertyByName<Product, Language>[] properties, PropertyByName<Product, Language>[] localizedProperties, IEnumerable<Product> itemsToExport, IList<Language> languages)
     {
         var productAttributeManager = await GetProductAttributeManagerAsync(languages);
         var specificationAttributeManager = await GetSpecificationAttributeManagerAsync(languages);
+        var tierPriceManager = await GetTierPriceManagerAsync(languages);
 
         await using var stream = new MemoryStream();
         // ok, we can run the real code of the sample now
@@ -567,7 +592,7 @@ public partial class ExportManager : IExportManager
 
             // get handles to the worksheets
             // Worksheet names cannot be more than 31 characters
-            var worksheet = workbook.Worksheets.Add(typeof(Product).Name);
+            var worksheet = workbook.Worksheets.Add(nameof(Product));
             var fpWorksheet = workbook.Worksheets.Add("ProductsFilters");
             fpWorksheet.Visibility = XLWorksheetVisibility.VeryHidden;
             var fbaWorksheet = workbook.Worksheets.Add("ProductAttributesFilters");
@@ -608,6 +633,9 @@ public partial class ExportManager : IExportManager
 
                 if (_catalogSettings.ExportImportProductSpecificationAttributes)
                     row = await ExportSpecificationAttributesAsync(item, specificationAttributeManager, worksheet, localizedWorksheets, row, fsaWorksheet);
+
+                if (_catalogSettings.ExportImportTierPrises)
+                    row = await ExportTierPrisesAsync(item, tierPriceManager, worksheet, localizedWorksheets, row, fsaWorksheet);
             }
 
             workbook.SaveAs(stream);
@@ -688,13 +716,13 @@ public partial class ExportManager : IExportManager
         if (!attributes.Any())
             return row;
 
-        attributeManager.WriteDefaultCaption(worksheet, row, ExportProductAttribute.ProductAttributeCellOffset);
+        attributeManager.WriteDefaultCaption(worksheet, row, ExportImportDefaults.ProductAdditionalInfoCellOffset);
         worksheet.Row(row).OutlineLevel = 1;
         worksheet.Row(row).Collapse();
 
         foreach (var lws in localizedWorksheets)
         {
-            attributeManager.WriteLocalizedCaption(lws.Worksheet, row, ExportProductAttribute.ProductAttributeCellOffset);
+            attributeManager.WriteLocalizedCaption(lws.Worksheet, row, ExportImportDefaults.ProductAdditionalInfoCellOffset);
             lws.Worksheet.Row(row).OutlineLevel = 1;
             lws.Worksheet.Row(row).Collapse();
         }
@@ -703,14 +731,14 @@ public partial class ExportManager : IExportManager
         {
             row++;
             attributeManager.CurrentObject = exportProductAttribute;
-            await attributeManager.WriteDefaultToXlsxAsync(worksheet, row, ExportProductAttribute.ProductAttributeCellOffset, faWorksheet);
+            await attributeManager.WriteDefaultToXlsxAsync(worksheet, row, ExportImportDefaults.ProductAdditionalInfoCellOffset, faWorksheet);
             worksheet.Row(row).OutlineLevel = 1;
             worksheet.Row(row).Collapse();
 
             foreach (var lws in localizedWorksheets)
             {
                 attributeManager.CurrentLanguage = lws.Language;
-                await attributeManager.WriteLocalizedToXlsxAsync(lws.Worksheet, row, ExportProductAttribute.ProductAttributeCellOffset, faWorksheet);
+                await attributeManager.WriteLocalizedToXlsxAsync(lws.Worksheet, row, ExportImportDefaults.ProductAdditionalInfoCellOffset, faWorksheet);
                 lws.Worksheet.Row(row).OutlineLevel = 1;
                 lws.Worksheet.Row(row).Collapse();
             }
@@ -730,13 +758,13 @@ public partial class ExportManager : IExportManager
         if (!attributes.Any())
             return row;
 
-        attributeManager.WriteDefaultCaption(worksheet, row, ExportProductAttribute.ProductAttributeCellOffset);
+        attributeManager.WriteDefaultCaption(worksheet, row, ExportImportDefaults.ProductAdditionalInfoCellOffset);
         worksheet.Row(row).OutlineLevel = 1;
         worksheet.Row(row).Collapse();
 
         foreach (var lws in localizedWorksheets)
         {
-            attributeManager.WriteLocalizedCaption(lws.Worksheet, row, ExportProductAttribute.ProductAttributeCellOffset);
+            attributeManager.WriteLocalizedCaption(lws.Worksheet, row, ExportImportDefaults.ProductAdditionalInfoCellOffset);
             lws.Worksheet.Row(row).OutlineLevel = 1;
             lws.Worksheet.Row(row).Collapse();
         }
@@ -745,17 +773,51 @@ public partial class ExportManager : IExportManager
         {
             row++;
             attributeManager.CurrentObject = exportProductAttribute;
-            await attributeManager.WriteDefaultToXlsxAsync(worksheet, row, ExportProductAttribute.ProductAttributeCellOffset, faWorksheet);
+            await attributeManager.WriteDefaultToXlsxAsync(worksheet, row, ExportImportDefaults.ProductAdditionalInfoCellOffset, faWorksheet);
             worksheet.Row(row).OutlineLevel = 1;
             worksheet.Row(row).Collapse();
 
             foreach (var lws in localizedWorksheets)
             {
                 attributeManager.CurrentLanguage = lws.Language;
-                await attributeManager.WriteLocalizedToXlsxAsync(lws.Worksheet, row, ExportProductAttribute.ProductAttributeCellOffset, faWorksheet);
+                await attributeManager.WriteLocalizedToXlsxAsync(lws.Worksheet, row, ExportImportDefaults.ProductAdditionalInfoCellOffset, faWorksheet);
                 lws.Worksheet.Row(row).OutlineLevel = 1;
                 lws.Worksheet.Row(row).Collapse();
             }
+        }
+
+        return row + 1;
+    }
+
+    /// <returns>A task that represents the asynchronous operation</returns>
+    protected virtual async Task<int> ExportTierPrisesAsync(Product item, PropertyManager<ExportTierPrice, Language> tierPriceManager,
+        IXLWorksheet worksheet, IList<(Language Language, IXLWorksheet Worksheet)> localizedWorksheets, int row, IXLWorksheet faWorksheet)
+    {
+        var tierPrices = (await _productService.GetTierPricesByProductAsync(item.Id)).Select(p=>new ExportTierPrice
+        {
+            Id = p.Id,
+            CustomerRoleId = p.CustomerRoleId,
+            Quantity = p.Quantity,
+            Price = p.Price,
+            StartDateTimeUtc = p.StartDateTimeUtc,
+            EndDateTimeUtc = p.EndDateTimeUtc,
+            StoreId = p.StoreId
+        }).ToList();
+
+        if (!tierPrices.Any())
+            return row;
+
+        tierPriceManager.WriteDefaultCaption(worksheet, row, ExportImportDefaults.ProductAdditionalInfoCellOffset);
+        worksheet.Row(row).OutlineLevel = 1;
+        worksheet.Row(row).Collapse();
+
+        foreach (var tierPrice in tierPrices)
+        {
+            row++;
+            tierPriceManager.CurrentObject = tierPrice;
+            await tierPriceManager.WriteDefaultToXlsxAsync(worksheet, row, ExportImportDefaults.ProductAdditionalInfoCellOffset, faWorksheet);
+            worksheet.Row(row).OutlineLevel = 1;
+            worksheet.Row(row).Collapse();
         }
 
         return row + 1;
@@ -1005,7 +1067,7 @@ public partial class ExportManager : IExportManager
     /// </summary>
     /// <param name="manufacturers">Manufactures</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task<byte[]> ExportManufacturersToXlsxAsync(IEnumerable<Manufacturer> manufacturers)
+    public virtual async Task<byte[]> ExportManufacturersToXlsxAsync(IList<Manufacturer> manufacturers)
     {
         var languages = await _languageService.GetAllLanguagesAsync(showHidden: true);
 
@@ -1683,8 +1745,8 @@ public partial class ExportManager : IExportManager
         await _customerActivityService.InsertActivityAsync("ExportProducts",
             string.Format(await _localizationService.GetResourceAsync("ActivityLog.ExportProducts"), productList.Count));
 
-        if (productAdvancedMode || _productEditorSettings.ProductAttributes)
-            return await ExportProductsToXlsxWithAttributesAsync(properties, localizedProperties, productList, languages);
+        if (productAdvancedMode || _productEditorSettings.ProductAttributes || _productEditorSettings.SpecificationAttributes || _productEditorSettings.TierPrices)
+            return await ExportProductsToXlsxWithAdditionalInfoAsync(properties, localizedProperties, productList, languages);
 
         return await new PropertyManager<Product, Language>(properties, _catalogSettings, localizedProperties, languages).ExportToXlsxAsync(productList);
     }

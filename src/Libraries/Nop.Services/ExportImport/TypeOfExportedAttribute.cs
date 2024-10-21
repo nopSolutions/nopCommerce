@@ -1,9 +1,9 @@
 ﻿namespace Nop.Services.ExportImport;
 
 /// <summary>
-/// Represents the type of the exported attribute
+/// Represents the type of the exported additional product info
 /// </summary>
-public enum ExportedAttributeType
+public enum ExportedAdditionalProductInfoType
 {
     /// <summary>
     /// Not specified
@@ -18,5 +18,10 @@ public enum ExportedAttributeType
     /// <summary>
     /// Specification attribute
     /// </summary>
-    SpecificationAttribute = 20
+    SpecificationAttribute = 20,
+
+    /// <summary>
+    /// Tier prices
+    /// </summary>
+    TierPrices = 30
 }

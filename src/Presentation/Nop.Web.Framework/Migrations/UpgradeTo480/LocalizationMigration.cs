@@ -256,6 +256,10 @@ public class LocalizationMigration : MigrationBase
             ["Account.ChangePassword.MustBeChanged"] = "Your password must be changed for security purposes.",
             ["Admin.Customers.Customers.Fields.MustChangePassword"] = "Customer must change password",
             ["Admin.Customers.Customers.Fields.MustChangePassword.Hint"] = "Check to require the customer to change their password.",
+
+            //#2388
+            ["Admin.Configuration.Settings.Catalog.ExportImportTierPrises"] = "Export/Import products with tier prices",
+            ["Admin.Configuration.Settings.Catalog.ExportImportTierPrises.Hint"] = "Check if products should be exported/imported with tier prices.",
         }, languageId);
 
         #endregion

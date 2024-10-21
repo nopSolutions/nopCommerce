@@ -3,11 +3,6 @@
 public partial class ExportProductAttribute
 {
     /// <summary>
-    ///  Gets or sets the cell offset
-    /// </summary>
-    public static int ProductAttributeCellOffset { get; } = 2;
-
-    /// <summary>
     /// Gets or sets the attribute identifier
     /// </summary>
     public int AttributeId { get; set; }

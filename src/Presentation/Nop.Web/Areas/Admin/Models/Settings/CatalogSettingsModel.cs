@@ -314,6 +314,10 @@ public partial record CatalogSettingsModel : BaseNopModel, ISettingsModel
     public bool ExportImportProductSpecificationAttributes { get; set; }
     public bool ExportImportProductSpecificationAttributes_OverrideForStore { get; set; }
 
+    [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ExportImportTierPrises")]
+    public bool ExportImportTierPrises { get; set; }
+    public bool ExportImportTierPrises_OverrideForStore { get; set; }
+
     [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ExportImportProductCategoryBreadcrumb")]
     public bool ExportImportProductCategoryBreadcrumb { get; set; }
     public bool ExportImportProductCategoryBreadcrumb_OverrideForStore { get; set; }
