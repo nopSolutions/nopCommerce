@@ -34,9 +34,6 @@
     var iosFixFilePath = "~/Plugins/SevenSpikes.Core/Scripts/iOS-12-array-reverse-fix.min.js";
     var iosFixContentFilePath = CommonHelper.DefaultFileProvider.MapPath(iosFixFilePath);
 
-    string fullTitle = Html.NopTitle().ToString();
-    var shortTitle = fullTitle.Substring(0, 60);
-
     if (System.IO.File.Exists(iosFixContentFilePath))
     {
         Html.AppendScriptParts(ResourceLocation.Footer, iosFixFilePath);
