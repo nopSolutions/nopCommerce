@@ -1644,6 +1644,7 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(model => model.EuVatEmailAdminWhenNewVatSubmitted_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.EuVatEnabled_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.EuVatEnabledForGuests_OverrideForStore, options => options.Ignore())
+            .ForMember(model => model.EuVatRequired_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.EuVatShopCountries, options => options.Ignore())
             .ForMember(model => model.EuVatShopCountryId_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.EuVatUseWebService_OverrideForStore, options => options.Ignore())

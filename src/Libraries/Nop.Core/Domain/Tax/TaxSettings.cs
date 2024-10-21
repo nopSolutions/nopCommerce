@@ -113,6 +113,11 @@ public partial class TaxSettings : ISettings
     public bool EuVatEnabled { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether EU VAT (Europe Union Value Added Tax) is required
+    /// </summary>
+    public bool EuVatRequired { get; set; }
+
+    /// <summary>
     /// Gets or sets a value indicating whether EU VAT (Europe Union Value Added Tax) for guest customers is enabled
     /// </summary>
     public bool EuVatEnabledForGuests { get; set; }

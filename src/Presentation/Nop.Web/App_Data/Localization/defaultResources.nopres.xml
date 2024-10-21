@@ -435,6 +435,9 @@
   <LocaleResource Name="Account.Fields.VatNumber.Note">
     <Value>NOTE: Enter VAT number with country code (e.g. GB 111 111 11)</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Fields.VatNumber.Required">
+    <Value>VAT number is required</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.Fields.ZipPostalCode">
     <Value>Zip / postal code</Value>
   </LocaleResource>
@@ -9158,6 +9161,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.EuVatShopCountry.Hint">
     <Value>Select your shop country for VAT calculation.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.EuVatRequired">
+    <Value>VAT number required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.EuVatRequired.Hint">
+    <Value>Check if 'EU VAT number' is required.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.EuVatUseWebService">
     <Value>Use web service</Value>

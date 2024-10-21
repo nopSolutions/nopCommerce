@@ -133,6 +133,7 @@ public partial record CustomerInfoModel : BaseNopModel
     public string VatNumber { get; set; }
     public string VatNumberStatusNote { get; set; }
     public bool DisplayVatNumber { get; set; }
+    public bool VatNumberRequired { get; set; }
 
     //external authentication
     [NopResourceDisplayName("Account.AssociatedExternalAuth")]

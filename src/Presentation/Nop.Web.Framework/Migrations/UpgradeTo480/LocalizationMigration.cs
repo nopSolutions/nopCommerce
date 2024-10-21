@@ -256,6 +256,11 @@ public class LocalizationMigration : MigrationBase
             ["Account.ChangePassword.MustBeChanged"] = "Your password must be changed for security purposes.",
             ["Admin.Customers.Customers.Fields.MustChangePassword"] = "Customer must change password",
             ["Admin.Customers.Customers.Fields.MustChangePassword.Hint"] = "Check to require the customer to change their password.",
+
+            //#7265
+            ["Admin.Configuration.Settings.Tax.EuVatRequired"] = "VAT number required",
+            ["Admin.Configuration.Settings.Tax.EuVatRequired.Hint"] = "Check if 'EU VAT number' is required.",
+            ["Account.Fields.VatNumber.Required"] = "VAT number is required",
         }, languageId);
 
         #endregion
