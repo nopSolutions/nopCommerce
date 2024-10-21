@@ -514,6 +514,10 @@ namespace Nop.Web.Factories
             var customer = await _workContext.GetCurrentCustomerAsync();
             var targetProfile = await _customerService.GetCustomerByIdAsync(product.VendorId);
 
+            //if logged in customer is admin then he can see any profile
+            if (await _customerService.IsInCustomerRoleAsync(customer, NopCustomerDefaults.AdministratorsRoleName))
+                return true;
+
             if (targetProfile == null || (customer.CustomerProfileTypeId == targetProfile.CustomerProfileTypeId))
                 return false;
 
