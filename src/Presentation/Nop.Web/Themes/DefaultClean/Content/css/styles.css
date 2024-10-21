@@ -369,6 +369,7 @@ label, label + * {
   font-size: 13px;
   color: #e4434b;
   margin-top: 5px;
+  white-space: normal;
 }
 
 .field-validation-valid,
