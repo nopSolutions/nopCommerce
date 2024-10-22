@@ -1,9 +1,10 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Topics;
 
 namespace Nop.Data.Migrations.UpgradeTo480;
 
-[NopSchemaMigration("2024-06-21 19:53:00", "AddIndexesMigration for 4.80.0")]
+[NopSchemaMigration("2024-06-21 19:53:01", "AddIndexesMigration for 4.80.0")]
 public class AddIndexesMigration : ForwardOnlyMigration
 {
     /// <summary>
@@ -15,6 +16,12 @@ public class AddIndexesMigration : ForwardOnlyMigration
             Create.Index("IX_Customer_Deleted")
                 .OnTable(nameof(Customer))
                 .OnColumn(nameof(Customer.Deleted)).Ascending()
+                .WithOptions().NonClustered();
+
+        if (!Schema.Table(nameof(Topic)).Index("IX_Topic_SystemName").Exists())
+            Create.Index("IX_Topic_SystemName")
+                .OnTable(nameof(Topic))
+                .OnColumn(nameof(Topic.SystemName)).Ascending()
                 .WithOptions().NonClustered();
     }
 }
