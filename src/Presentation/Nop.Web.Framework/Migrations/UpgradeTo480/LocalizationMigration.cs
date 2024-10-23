@@ -256,6 +256,9 @@ public class LocalizationMigration : MigrationBase
             ["Account.ChangePassword.MustBeChanged"] = "Your password must be changed for security purposes.",
             ["Admin.Customers.Customers.Fields.MustChangePassword"] = "Customer must change password",
             ["Admin.Customers.Customers.Fields.MustChangePassword.Hint"] = "Check to require the customer to change their password.",
+            
+			//#7318
+            ["ShoppingCart.GiftCardCouponCode.DontWorkWithGiftCards"] = "You cannot use gift cards with other gift cards.",
         }, languageId);
 
         #endregion
