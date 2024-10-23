@@ -24,6 +24,16 @@ public static class BrevoDefaults
     public static string UserAgent => $"nopCommerce-{NopVersion.CURRENT_VERSION}";
 
     /// <summary>
+    /// Gets a user agent used to request Brevo services
+    /// </summary>
+    public static string UserAgentAccountAPI => "sendinblue_plugins/nopcommerce";
+
+    /// <summary>
+    /// Gets the plugin version (only major versions)
+    /// </summary>
+    public static string PluginVersion => "4.80";
+
+    /// <summary>
     /// Gets a URL to edit message template on Brevo account
     /// </summary>
     public static string EditMessageTemplateUrl => "https://my.brevo.com/camp/template/{0}/message-setup?tap_a=30591-fb13f0&tap_s=840216-5153c7";
@@ -277,6 +287,16 @@ public static class BrevoDefaults
     /// Gets the marketing automation services URL
     /// </summary>
     public static string MarketingAutomationUrl => "https://in-automate.brevo.com/api/v2/";
+
+    /// <summary>
+    /// Gets the Account services URL
+    /// </summary>
+    public static string AccountApiUrl => "https://api.brevo.com/v3/account/";
+
+    /// <summary>
+    /// Gets a name of sib plugin header
+    /// </summary>
+    public static string SibPluginHeader => "sib-plugin";
 
     /// <summary>
     /// Gets a key of the attribute to store template identifier
