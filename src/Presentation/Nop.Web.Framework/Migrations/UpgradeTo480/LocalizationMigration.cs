@@ -7,7 +7,7 @@ using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo480;
 
-[NopUpdateMigration("2024-05-15 00:00:00", "4.80", UpdateMigrationType.Localization)]
+[NopUpdateMigration("2024-10-23 00:00:00", "4.80", UpdateMigrationType.Localization)]
 public class LocalizationMigration : MigrationBase
 {
     /// <summary>Collect the UP migration expressions</summary>
@@ -259,6 +259,10 @@ public class LocalizationMigration : MigrationBase
             
 			//#7318
             ["ShoppingCart.GiftCardCouponCode.DontWorkWithGiftCards"] = "You cannot use gift cards with other gift cards.",
+
+            //#7375
+            ["Admin.Configuration.Settings.CustomerUser.PasswordMaxLength.GreaterThanOrEqualMinLength"] = "Password maximum length must be greater than or equal to minimum length",
+            ["Admin.Configuration.Settings.CustomerUser.PasswordMinLength.GreaterThanZero"] = "Password minimum length must be greater than 0",
         }, languageId);
 
         #endregion
