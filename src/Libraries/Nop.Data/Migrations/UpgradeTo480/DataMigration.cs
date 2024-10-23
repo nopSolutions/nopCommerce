@@ -3,7 +3,7 @@ using Nop.Core.Domain.Messages;
 
 namespace Nop.Data.Migrations.UpgradeTo480;
 
-[NopUpdateMigration("2023-05-21 12:00:00", "4.80", UpdateMigrationType.Data)]
+[NopUpdateMigration("2024-05-15 01:00:00", "4.80", UpdateMigrationType.Data)]
 public class DataMigration : Migration
 {
     private readonly INopDataProvider _dataProvider;

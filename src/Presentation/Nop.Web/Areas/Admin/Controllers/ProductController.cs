@@ -3,10 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
@@ -14,6 +17,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
+using Nop.Services.Directory;
 using Nop.Services.Discounts;
 using Nop.Services.ExportImport;
 using Nop.Services.Localization;
@@ -39,10 +43,12 @@ public partial class ProductController : BaseAdminController
 {
     #region Fields
 
+    protected readonly AdminAreaSettings _adminAreaSettings;
     protected readonly IAclService _aclService;
     protected readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
     protected readonly ICategoryService _categoryService;
     protected readonly ICopyProductService _copyProductService;
+    protected readonly ICurrencyService _currencyService;
     protected readonly ICustomerActivityService _customerActivityService;
     protected readonly ICustomerService _customerService;
     protected readonly IDiscountService _discountService;
@@ -75,6 +81,8 @@ public partial class ProductController : BaseAdminController
     protected readonly IVideoService _videoService;
     protected readonly IWebHelper _webHelper;
     protected readonly IWorkContext _workContext;
+    protected readonly CurrencySettings _currencySettings;
+    protected readonly TaxSettings _taxSettings;
     protected readonly VendorSettings _vendorSettings;
     private static readonly char[] _separator = [','];
 
@@ -82,10 +90,12 @@ public partial class ProductController : BaseAdminController
 
     #region Ctor
 
-    public ProductController(IAclService aclService,
+    public ProductController(AdminAreaSettings adminAreaSettings,
+        IAclService aclService,
         IBackInStockSubscriptionService backInStockSubscriptionService,
         ICategoryService categoryService,
         ICopyProductService copyProductService,
+        ICurrencyService currencyService,
         ICustomerActivityService customerActivityService,
         ICustomerService customerService,
         IDiscountService discountService,
@@ -118,12 +128,16 @@ public partial class ProductController : BaseAdminController
         IVideoService videoService,
         IWebHelper webHelper,
         IWorkContext workContext,
+        CurrencySettings currencySettings,
+        TaxSettings taxSettings,
         VendorSettings vendorSettings)
     {
+        _adminAreaSettings = adminAreaSettings;
         _aclService = aclService;
         _backInStockSubscriptionService = backInStockSubscriptionService;
         _categoryService = categoryService;
         _copyProductService = copyProductService;
+        _currencyService = currencyService;
         _customerActivityService = customerActivityService;
         _customerService = customerService;
         _discountService = discountService;
@@ -156,6 +170,8 @@ public partial class ProductController : BaseAdminController
         _videoService = videoService;
         _webHelper = webHelper;
         _workContext = workContext;
+        _currencySettings = currencySettings;
+        _taxSettings = taxSettings;
         _vendorSettings = vendorSettings;
     }
 
@@ -766,6 +782,87 @@ public partial class ProductController : BaseAdminController
         }
     }
 
+    protected virtual async Task<List<BulkEditData>> ParseBulkEditDataAsync()
+    {
+        var rez = new Dictionary<int, BulkEditData>();
+        var currentVendor = await _workContext.GetCurrentVendorAsync();
+
+        foreach (var item in Request.Form)
+        {
+            if (getData(item, "product-select-", out var productId))
+                setData(productId, data =>
+                {
+                    data.IsSelected = true;
+                });
+
+            if (getData(item, "name-", out productId))
+                setData(productId, data =>
+                {
+                    data.Name = item.Value;
+                });
+
+            if (getData(item, "sku-", out productId))
+                setData(productId, data =>
+                {
+                    data.Sku = item.Value;
+                });
+
+            if (getData(item, "price-", out productId))
+                setData(productId, data =>
+                {
+                    data.Price = decimal.Parse(item.Value);
+                });
+
+            if (getData(item, "old-price-", out productId))
+                setData(productId, data =>
+                {
+                    data.OldPrice = decimal.Parse(item.Value);
+                });
+
+            if (getData(item, "quantity-", out productId))
+                setData(productId, data =>
+                {
+                    data.Quantity = int.Parse(item.Value);
+                });
+
+            if (getData(item, "published-", out productId))
+                setData(productId, data =>
+                {
+                    data.IsPublished = true;
+                });
+        }
+
+        var productIds = rez.Select(p => p.Key).ToArray();
+
+        var products = await _productService.GetProductsByIdsAsync(productIds);
+
+        foreach (var product in products) 
+            rez[product.Id].Product = product;
+
+        return rez.Values.ToList();
+
+        bool getData(KeyValuePair<string, StringValues> item, string selector, out int productId)
+        {
+            var key = item.Key;
+            productId = 0;
+
+            if (!key.StartsWith(selector))
+                return false;
+
+            productId = int.Parse(key.Replace(selector, string.Empty));
+
+            return true;
+        }
+
+        void setData(int productId, Action<BulkEditData> action)
+        {
+            if (!rez.ContainsKey(productId))
+                rez.Add(productId, new BulkEditData(_taxSettings.DefaultTaxCategoryId, currentVendor?.Id ?? 0));
+
+            action(rez[productId]);
+        }
+    }
+
     #endregion
 
     #region Methods
@@ -786,6 +883,35 @@ public partial class ProductController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
+    public virtual async Task<IActionResult> BulkEdit()
+    {
+        //prepare model
+        var model = await _productModelFactory.PrepareProductSearchModelAsync(new ProductSearchModel());
+        model.Length = _adminAreaSettings.ProductsBulkEditGridPageSize;
+
+        return View(model);
+    }
+
+    [HttpPost, ActionName("BulkEdit"), ParameterBasedOnFormName("bulk-edit-save-selected", "selected")]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
+    public async Task<IActionResult> BulkEditSave(ProductSearchModel searchModel, bool selected)
+    {
+        var data = await ParseBulkEditDataAsync();
+
+        var productsToUpdate = data.Where(d => d.NeedToUpdate(selected)).ToList();
+        await _productService.UpdateProductsAsync(productsToUpdate.Select(d=>d.UpdateProduct(selected)).ToList());
+
+        var productsToInsert = data.Where(d => d.NeedToCreate(selected)).ToList();
+        await _productService.InsertProductsAsync(productsToInsert.Select(d => d.CreateProduct(selected)).ToList());
+
+        //prepare model
+        var model = await _productModelFactory.PrepareProductSearchModelAsync(searchModel);
+        model.Length = _adminAreaSettings.ProductsBulkEditGridPageSize;
+
+        return View(model);
+    }
+
     [HttpPost]
     [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
     public virtual async Task<IActionResult> ProductList(ProductSearchModel searchModel)
@@ -794,6 +920,36 @@ public partial class ProductController : BaseAdminController
         var model = await _productModelFactory.PrepareProductListModelAsync(searchModel);
 
         return Json(model);
+    }
+
+    [HttpPost]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
+    public virtual async Task<IActionResult> BulkEditProducts(ProductSearchModel searchModel)
+    {
+        //prepare model
+        var model = await _productModelFactory.PrepareProductListModelAsync(searchModel);
+        var html = await RenderPartialViewToStringAsync("_BulkEdit.Products", model.Data.ToList());
+
+        return Json(new Dictionary<string, object> { { "Html", html }, { "Products", model } });
+    }
+
+    [HttpPost]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
+    public virtual async Task<IActionResult> BulkEditNewProduct(int id)
+    {
+        var primaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
+
+        //prepare model
+        var model = new List<ProductModel> { new()
+        {
+            Id = id,
+            PrimaryStoreCurrencyCode = primaryStoreCurrencyCode,
+            Published = true
+        } };
+
+        var html = await RenderPartialViewToStringAsync("_BulkEdit.Products", model);
+
+        return Json(html);
     }
 
     [HttpPost, ActionName("List")]
@@ -3575,6 +3731,116 @@ public partial class ProductController : BaseAdminController
     }
 
     #endregion
+
+    #endregion
+
+    #region Nested class
+
+    protected class BulkEditData
+    {
+        protected bool _updated;
+        protected bool _created;
+        protected int _defaultTaxCategoryId;
+        protected int _vendorId;
+
+        public BulkEditData(int defaultTaxCategoryId, int vendorId)
+        {
+            _defaultTaxCategoryId = defaultTaxCategoryId;
+            _vendorId = vendorId;
+        }
+
+        public bool IsSelected { get; set; }
+        public string Name { get; set; }
+        public string Sku { get; set; }
+        public decimal Price { get; set; }
+        public decimal OldPrice { get; set; }
+        public int Quantity { get; set; }
+        public bool IsPublished { get; set; }
+        public Product Product { get; set; }
+
+        public bool NeedToUpdate(bool selected)
+        {
+            if (selected && !IsSelected)
+                return false;
+
+            if (Product == null)
+                return false;
+
+            if (_updated)
+                return true;
+
+            return !Product.Name.Equals(Name) ||
+                !Product.Sku.Equals(Sku) ||
+                !Product.Price.Equals(Price) ||
+                !Product.OldPrice.Equals(OldPrice) ||
+                !Product.StockQuantity.Equals(Quantity) ||
+                !Product.Published.Equals(IsPublished);
+        }
+
+        public bool NeedToCreate(bool selected)
+        {
+            if (selected && !IsSelected)
+                return false;
+
+            if (Product != null)
+                return false;
+
+            return true;
+        }
+
+        public Product UpdateProduct(bool selected)
+        {
+            if (!NeedToUpdate(selected) || _updated)
+                return Product;
+
+            Product.Name = Name;
+            Product.Sku = Sku;
+            Product.Price = Price;
+            Product.OldPrice = OldPrice;
+            Product.StockQuantity = Quantity;
+            Product.Published = IsPublished;
+
+            _updated = true;
+
+            return Product;
+        }
+
+        public Product CreateProduct(bool selected)
+        {
+            if (!NeedToCreate(selected) || _created)
+                return Product;
+
+            Product = new Product
+            {
+                Name = Name,
+                Sku = Sku,
+                Price = Price,
+                OldPrice = OldPrice,
+                StockQuantity = Quantity,
+                Published = IsPublished,
+                //set default values for the new model
+                MaximumCustomerEnteredPrice = 1000,
+                MaxNumberOfDownloads = 10,
+                RecurringCycleLength = 100,
+                RecurringTotalCycles = 10,
+                RentalPriceLength = 1,
+                NotifyAdminForQuantityBelow = 1,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                TaxCategoryId = _defaultTaxCategoryId,
+                UnlimitedDownloads = true,
+                IsShipEnabled = true,
+                AllowCustomerReviews = true,
+                VisibleIndividually = true,
+                ProductType = ProductType.SimpleProduct,
+                VendorId = _vendorId
+            };
+
+            _created = true;
+
+            return Product;
+        }
+    }
 
     #endregion
 }

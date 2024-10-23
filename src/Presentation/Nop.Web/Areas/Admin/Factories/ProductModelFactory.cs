@@ -743,6 +743,8 @@ public partial class ProductModelFactory : IProductModelFactory
             pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize,
             overridePublished: overridePublished);
 
+        var primaryStoreCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
+
         //prepare list model
         var model = await new ProductListModel().PrepareToGridAsync(searchModel, products, () =>
         {
@@ -756,6 +758,8 @@ public partial class ProductModelFactory : IProductModelFactory
 
                 //fill formatted price
                 productModel.FormattedPrice = product.ProductType == ProductType.GroupedProduct ? null : await _priceFormatter.FormatPriceAsync(product.Price);
+
+                productModel.PrimaryStoreCurrencyCode = primaryStoreCurrency.CurrencyCode;
 
                 //fill in additional values (not existing in the entity)
                 productModel.SeName = await _urlRecordService.GetSeNameAsync(product, 0, true, false);

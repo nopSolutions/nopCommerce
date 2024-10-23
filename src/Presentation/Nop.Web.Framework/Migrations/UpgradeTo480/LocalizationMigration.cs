@@ -7,7 +7,7 @@ using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo480;
 
-[NopUpdateMigration("2024-05-15 00:00:00", "4.80", UpdateMigrationType.Localization)]
+[NopUpdateMigration("2024-05-15 01:00:00", "4.80", UpdateMigrationType.Localization)]
 public class LocalizationMigration : MigrationBase
 {
     /// <summary>Collect the UP migration expressions</summary>
@@ -256,6 +256,11 @@ public class LocalizationMigration : MigrationBase
             ["Account.ChangePassword.MustBeChanged"] = "Your password must be changed for security purposes.",
             ["Admin.Customers.Customers.Fields.MustChangePassword"] = "Customer must change password",
             ["Admin.Customers.Customers.Fields.MustChangePassword.Hint"] = "Check to require the customer to change their password.",
+
+            //#7228
+            ["Admin.Catalog.Products.BulkEdit"] = "Bulk edit products",
+            ["Admin.Catalog.Products.BulkEdit.SaveSelected"] = "Save selected",
+            ["Admin.Catalog.Products.BulkEdit.SaveAll"] = "Save all",
         }, languageId);
 
         #endregion
