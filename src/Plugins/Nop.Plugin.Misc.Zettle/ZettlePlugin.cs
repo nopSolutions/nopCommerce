@@ -80,36 +80,23 @@ public class ZettlePlugin : BasePlugin, IAdminMenuPlugin, IMiscPlugin
         if (configurationItem is null)
             return;
 
-        var shippingItem = configurationItem.ChildNodes.FirstOrDefault(node => node.SystemName.Equals("Shipping"));
-        var widgetsItem = configurationItem.ChildNodes.FirstOrDefault(node => node.SystemName.Equals("Widgets"));
-        if (shippingItem is null && widgetsItem is null)
+        var pluginsItem = configurationItem.ChildNodes.FirstOrDefault(node => node.SystemName.Equals("Local plugins"));
+        if (pluginsItem is null)
             return;
 
-        var index = shippingItem is not null ? configurationItem.ChildNodes.IndexOf(shippingItem) : -1;
-        if (index < 0)
-            index = widgetsItem is not null ? configurationItem.ChildNodes.IndexOf(widgetsItem) : -1;
+        var index = configurationItem.ChildNodes.IndexOf(pluginsItem);
         if (index < 0)
             return;
 
         configurationItem.ChildNodes.Insert(index + 1, new SiteMapNode
         {
             Visible = true,
-            SystemName = "POS plugins",
-            Title = await _localizationService.GetResourceAsync("Plugins.Misc.Zettle.Menu.Pos"),
+            SystemName = PluginDescriptor.SystemName,
+            Title = PluginDescriptor.FriendlyName,
+            ControllerName = "ZettleAdmin",
+            ActionName = "Configure",
             IconClass = "far fa-dot-circle",
-            ChildNodes = new List<SiteMapNode>
-            {
-                new()
-                {
-                    Visible = true,
-                    SystemName = PluginDescriptor.SystemName,
-                    Title = PluginDescriptor.FriendlyName,
-                    ControllerName = "ZettleAdmin",
-                    ActionName = "Configure",
-                    IconClass = "far fa-circle",
-                    RouteValues = new RouteValueDictionary { { "area", AreaNames.ADMIN } }
-                }
-            }
+            RouteValues = new RouteValueDictionary { { "area", AreaNames.ADMIN } }
         });
     }
 
@@ -151,8 +138,6 @@ public class ZettlePlugin : BasePlugin, IAdminMenuPlugin, IMiscPlugin
 
         await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
         {
-            ["Plugins.Misc.Zettle.Menu.Pos"] = "POS",
-
             ["Plugins.Misc.Zettle.Credentials"] = "Credentials",
             ["Plugins.Misc.Zettle.Credentials.AccessRevoked"] = "Access to PayPal Zettle organization has been revoked. You need to reconfigure the plugin.",
             ["Plugins.Misc.Zettle.Credentials.Connected"] = "Connected",
