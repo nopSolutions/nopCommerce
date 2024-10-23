@@ -259,6 +259,9 @@ public class LocalizationMigration : MigrationBase
             
 			//#7318
             ["ShoppingCart.GiftCardCouponCode.DontWorkWithGiftCards"] = "You cannot use gift cards with other gift cards.",
+
+            //#7299
+            ["Admin.Catalog.Products.Multimedia.Videos.Description"] = "How to embed a video: Find your video in your library (on any video hosting) and select it to open the video settings page. Select the privacy icon from your \"Share\" button. Click on \"Embed\" from the window that opens up. You can copy the <strong>src</strong> from the embed option and use it.",
         }, languageId);
 
         #endregion
