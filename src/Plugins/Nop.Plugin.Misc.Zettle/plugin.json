@@ -1,6 +1,6 @@
 ﻿{
   "Group": "Misc",
-  "FriendlyName": "PayPal Zettle",
+  "FriendlyName": "PayPal Zettle (POS)",
   "SystemName": "Misc.Zettle",
   "Version": "4.80.2",
   "SupportedVersions": [ "4.80" ],
