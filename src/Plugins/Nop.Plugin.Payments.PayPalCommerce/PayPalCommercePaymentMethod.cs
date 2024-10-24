@@ -336,7 +336,7 @@ public class PayPalCommercePaymentMethod : BasePlugin, IAdminMenuPlugin, IPaymen
         if (configurationItem is null)
             return;
 
-        var nextItem = configurationItem.ChildNodes.FirstOrDefault(node => node.SystemName.Equals("nopCommerce Web API plugin"))
+        var nextItem = configurationItem.ChildNodes.FirstOrDefault(node => node.SystemName.Equals("PayPal Zettle (POS)"))
             ?? configurationItem.ChildNodes.FirstOrDefault(node => node.SystemName.Equals("Local plugins"));
         if (nextItem is null)
             return;
