@@ -245,7 +245,15 @@ public class LocalizationMigration : MigrationBase
             //#6978
             ["Admin.Promotions.NewsLetterSubscriptions.Fields.Language"] = "Language",
 
-            ["Honeypot.BotDetected"] ="A bot detected. Honeypot.",
+            ["Honeypot.BotDetected"] = "A bot detected. Honeypot.",
+
+            //#7326
+            ["Validation.Password.Rule"] = "Password must meet the following rules:",
+            ["Validation.Password.LengthValidation"] = "must have at least {0} characters and not greater than {1} characters",
+            ["Validation.Password.RequireDigit"] = "must have at least one digit",
+            ["Validation.Password.RequireLowercase"] = "must have at least one lowercase",
+            ["Validation.Password.RequireNonAlphanumeric"] = "must have at least one special character (e.g. #?!@$%^&*-)",
+            ["Validation.Password.RequireUppercase"] = "must have at least one uppercase",
         }, languageId);
 
         #endregion
