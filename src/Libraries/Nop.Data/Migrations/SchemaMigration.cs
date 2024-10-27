@@ -1,6 +1,7 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Blogs;
+using Nop.Core.Domain.Books;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Configuration;
@@ -209,6 +210,7 @@ namespace Nop.Data.Migrations
             _migrationManager.BuildTable<VendorAttribute>(Create);
             _migrationManager.BuildTable<VendorAttributeValue>(Create);
             _migrationManager.BuildTable<VendorNote>(Create);
+            _migrationManager.BuildTable<Book>(Create);
         }
     }
 }

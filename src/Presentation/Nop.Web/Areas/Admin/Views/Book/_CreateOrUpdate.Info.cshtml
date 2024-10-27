@@ -1,0 +1,14 @@
+﻿@using Nop.Web.Areas.Admin.Models.Books
+@model BookModel
+
+<div class="panel-body"> 
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="Name" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Name" asp-required="true" />
+            <span asp-validation-for="Name"></span>
+        </div>
+    </div>
+</div>

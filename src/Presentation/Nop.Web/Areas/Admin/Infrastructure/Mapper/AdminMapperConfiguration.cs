@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Blogs;
+using Nop.Core.Domain.Books;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Configuration;
@@ -34,6 +35,7 @@ using Nop.Services.Shipping.Pickup;
 using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Models.Affiliates;
 using Nop.Web.Areas.Admin.Models.Blogs;
+using Nop.Web.Areas.Admin.Models.Books;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Models.Cms;
 using Nop.Web.Areas.Admin.Models.Common;
@@ -102,6 +104,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateTopicsMaps();
             CreateVendorsMaps();
             CreateWarehouseMaps();
+            CreateBooksMaps();
 
             //add some generic mapping rules
             ForAllMaps((mapConfiguration, map) =>
@@ -240,6 +243,18 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.PostsPageSize_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ShowHeaderRssUrl_OverrideForStore, options => options.Ignore());
             CreateMap<BlogSettingsModel, BlogSettings>();
+        }
+
+        /// <summary>
+        /// Create Book maps
+        /// </summary>
+        protected virtual void CreateBooksMaps()
+        {
+            CreateMap<Book, BookModel>()
+                .ForMember(model => model.CreatedOn, options => options.Ignore());
+
+            CreateMap<BookModel, Book>()
+                .ForMember(model => model.CreatedOnUtc, options => options.Ignore());
         }
 
         /// <summary>

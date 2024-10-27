@@ -1,0 +1,29 @@
+﻿@using Nop.Web.Areas.Admin.Models.Books
+@model BookModel
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.ContentManagement.Book.Books.AddNew").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Books");
+}
+
+<form asp-controller="Book" asp-action="BookCreate" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.ContentManagement.Book.Books.AddNew")
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="Books">@T("Admin.ContentManagement.Book.Books.BackToList")</a>
+            </small>
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button> 
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.BookDetailsButtons })
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdate", Model)
+</form>
+

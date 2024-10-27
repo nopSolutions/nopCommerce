@@ -27,7 +27,7 @@
         public static string CampaignListButtons => "admin_campaign_list_buttons";
         public static string CatalogSettingsDetailsBlock => "admin_catalog_settings_details_block";
         public static string CatalogSettingsButtons => "admin_catalog_settings_buttons";
-        public static string CategoryDetailsBlock => "admin_category_details_block"; 
+        public static string CategoryDetailsBlock => "admin_category_details_block";
         public static string CategoryDetailsButtons => "admin_category_details_buttons";
         public static string CategoryListButtons => "admin_category_list_buttons";
         public static string CategoryTemplateListButtons => "admin_category_template_list_buttons";
@@ -286,5 +286,8 @@
         public static string WarningsButtons => "admin_warnings_buttons";
         public static string WarningsTop => "admin_warnings_top";
         public static string WidgetListButtons => "admin_widget_list_buttons";
+        public static string BookDetailsBlock => "admin_book_details_block";
+        public static string BookDetailsButtons => "admin_book_details_buttons";
+        public static string BookListButtons => "admin_book_list_buttons";
     }
 }

@@ -1,0 +1,19 @@
+﻿@using Nop.Web.Areas.Admin.Models.Books
+@model BookModel
+
+@{
+    const string hideInfoBlockAttributeName = "BookPage.HideInfoBlock";
+    var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName); 
+}
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<div class="content">
+    <div class="form-horizontal">
+        <nop-panels id="book-panels">
+            <nop-panel asp-name="book-info" asp-icon="fa fa-info" asp-title="@T("Admin.ContentManagement.Book.Books.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-panel>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.BookDetailsBlock, additionalData = Model })
+        </nop-panels>
+    </div>
+</div>

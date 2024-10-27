@@ -12227,6 +12227,24 @@ namespace Nop.Services.Installation
                     SystemKeyword = "UploadIcons",
                     Enabled = true,
                     Name = "Upload a favicon and app icons"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewBook",
+                    Enabled = true,
+                    Name = "Add a new book"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditBook",
+                    Enabled = true,
+                    Name = "Edit a new book"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteBook",
+                    Enabled = true,
+                    Name = "Delete a new book"
                 }
             };
             _activityLogTypeRepository.Insert(activityLogTypes);
