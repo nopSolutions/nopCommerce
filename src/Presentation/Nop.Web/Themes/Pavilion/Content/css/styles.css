@@ -6359,7 +6359,11 @@ img.hawthorne-logo {
 	}
 }
 
-
+@media screen and (max-width: 1024px) {
+	body div.sync-price {
+		height: auto;
+	}
+}
 
 /* Bootstrap */
 .row {
