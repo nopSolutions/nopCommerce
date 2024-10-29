@@ -2,7 +2,7 @@
 
 @{
     Layout = "_ConfigurePlugin";
-    NopHtml.SetActiveMenuItemSystemName("POS plugins");
+    NopHtml.SetActiveMenuItemSystemName(ZettleDefaults.SystemName);
 
     var signUpUrl = $"https://my.zettle.com/apps/api-keys?name={ZettleDefaults.ApplicationName}&scopes=READ:FINANCE%20READ:PURCHASE%20READ:USERINFO%20READ:PRODUCT%20WRITE:PRODUCT&utm_source=local_partnership&utm_medium=ecommerce&utm_campaign=nopcommerce";
 }
