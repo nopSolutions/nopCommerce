@@ -6365,6 +6365,12 @@ img.hawthorne-logo {
 	}
 }
 
+@media screen and (max-width: 767px) {
+	.responsive-nav-wrapper>div>a.logo img {
+		margin-top: 0px;
+	}
+}
+
 /* Bootstrap */
 .row {
 	margin-right: -15px;
