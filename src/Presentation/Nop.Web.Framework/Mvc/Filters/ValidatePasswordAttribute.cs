@@ -86,6 +86,7 @@ public sealed class ValidatePasswordAttribute : TypeFilterAttribute
                 return;
 
             //check whether this filter has been overridden for the Action
+            //we're checking CheckAccessPublicStore attribute because it applies to all required actions that should be available regardless of password validation
             var actionFilter = context.ActionDescriptor.FilterDescriptors
                 .Where(filterDescriptor => filterDescriptor.Scope == FilterScope.Action)
                 .Select(filterDescriptor => filterDescriptor.Filter)

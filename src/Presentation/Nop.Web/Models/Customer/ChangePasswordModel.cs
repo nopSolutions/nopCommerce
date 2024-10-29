@@ -23,5 +23,5 @@ public partial record ChangePasswordModel : BaseNopModel
     public string ConfirmNewPassword { get; set; }
 
     public bool PasswordMustBeChanged { get; set; }
-    public bool PasswordExpiered { get; set; }
+    public bool PasswordExpired { get; set; }
 }

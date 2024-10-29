@@ -854,7 +854,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
 
         return new ChangePasswordModel()
         {
-            PasswordExpiered = await _customerService.IsPasswordExpiredAsync(customer),
+            PasswordExpired = await _customerService.IsPasswordExpiredAsync(customer),
             PasswordMustBeChanged = customer.MustChangePassword
         };
     }

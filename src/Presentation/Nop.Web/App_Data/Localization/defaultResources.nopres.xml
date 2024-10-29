@@ -106,7 +106,7 @@
     <Value>Old password is required.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.ChangePassword.MustBeChanged">
-    <Value>Your password must be changed</Value>
+    <Value>Your password must be changed for security purposes.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.ChangePassword.PasswordIsExpired">
     <Value>Your password has expired, please create a new one</Value>
