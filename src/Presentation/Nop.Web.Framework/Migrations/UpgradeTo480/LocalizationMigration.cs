@@ -259,6 +259,11 @@ public class LocalizationMigration : MigrationBase
             
 			//#7318
             ["ShoppingCart.GiftCardCouponCode.DontWorkWithGiftCards"] = "You cannot use gift cards with other gift cards.",
+
+            //#7265
+            ["Admin.Configuration.Settings.Tax.EuVatRequired"] = "VAT number required",
+            ["Admin.Configuration.Settings.Tax.EuVatRequired.Hint"] = "Check if 'EU VAT number' is required.",
+            ["Account.Fields.VatNumber.Required"] = "VAT number is required",
         }, languageId);
 
         #endregion

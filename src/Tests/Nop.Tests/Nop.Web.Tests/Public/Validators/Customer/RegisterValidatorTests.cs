@@ -1,5 +1,6 @@
 ﻿using FluentValidation.TestHelper;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Tax;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Web.Models.Customer;
@@ -16,7 +17,7 @@ public class RegisterValidatorTests : BaseNopTest
     [OneTimeSetUp]
     public void SetUp()
     {
-        _validator = new RegisterValidator(GetService<ILocalizationService>(), GetService<IStateProvinceService>(), GetService<CustomerSettings>());
+        _validator = new RegisterValidator(GetService<ILocalizationService>(), GetService<IStateProvinceService>(), GetService<CustomerSettings>(), GetService<TaxSettings>());
     }
 
     [Test]
@@ -60,7 +61,7 @@ public class RegisterValidatorTests : BaseNopTest
             FirstNameRequired = true
         };
 
-        var validator = new RegisterValidator(GetService<ILocalizationService>(), GetService<IStateProvinceService>(), customerSettings);
+        var validator = new RegisterValidator(GetService<ILocalizationService>(), GetService<IStateProvinceService>(), customerSettings, GetService<TaxSettings>());
         var model = new RegisterModel
         {
             FirstName = null
@@ -78,7 +79,7 @@ public class RegisterValidatorTests : BaseNopTest
             FirstNameEnabled = true
         };
 
-        var validator = new RegisterValidator(GetService<ILocalizationService>(), GetService<IStateProvinceService>(), customerSettings);
+        var validator = new RegisterValidator(GetService<ILocalizationService>(), GetService<IStateProvinceService>(), customerSettings, GetService<TaxSettings>());
 
         var model = new RegisterModel
         {
@@ -96,7 +97,7 @@ public class RegisterValidatorTests : BaseNopTest
             LastNameRequired = true
         };
 
-        var validator = new RegisterValidator(GetService<ILocalizationService>(), GetService<IStateProvinceService>(), customerSettings);
+        var validator = new RegisterValidator(GetService<ILocalizationService>(), GetService<IStateProvinceService>(), customerSettings, GetService<TaxSettings>());
 
         var model = new RegisterModel
         {
@@ -116,7 +117,7 @@ public class RegisterValidatorTests : BaseNopTest
             LastNameEnabled = true
         };
 
-        var validator = new RegisterValidator(GetService<ILocalizationService>(), GetService<IStateProvinceService>(), customerSettings);
+        var validator = new RegisterValidator(GetService<ILocalizationService>(), GetService<IStateProvinceService>(), customerSettings, GetService<TaxSettings>());
 
         var model = new RegisterModel
         {

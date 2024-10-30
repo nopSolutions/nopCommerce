@@ -111,6 +111,10 @@ public partial record TaxSettingsModel : BaseNopModel, ISettingsModel
     public bool EuVatEnabledForGuests { get; set; }
     public bool EuVatEnabledForGuests_OverrideForStore { get; set; }
 
+    [NopResourceDisplayName("Admin.Configuration.Settings.Tax.EuVatRequired")]
+    public bool EuVatRequired { get; set; }
+    public bool EuVatRequired_OverrideForStore { get; set; }
+
     [NopResourceDisplayName("Admin.Configuration.Settings.Tax.EuVatShopCountry")]
     public int EuVatShopCountryId { get; set; }
     public bool EuVatShopCountryId_OverrideForStore { get; set; }

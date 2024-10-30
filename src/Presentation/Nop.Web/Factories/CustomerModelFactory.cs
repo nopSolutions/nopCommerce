@@ -298,6 +298,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         }
 
         model.DisplayVatNumber = _taxSettings.EuVatEnabled;
+        model.VatNumberRequired = _taxSettings.EuVatRequired;
         model.VatNumberStatusNote = await _localizationService.GetLocalizedEnumAsync(customer.VatNumberStatus);
         model.FirstNameEnabled = _customerSettings.FirstNameEnabled;
         model.LastNameEnabled = _customerSettings.LastNameEnabled;
@@ -399,6 +400,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
 
         //VAT
         model.DisplayVatNumber = _taxSettings.EuVatEnabled;
+        model.VatNumberRequired = _taxSettings.EuVatRequired;
         if (_taxSettings.EuVatEnabled && _taxSettings.EuVatEnabledForGuests)
             model.VatNumber = customer.VatNumber;
 

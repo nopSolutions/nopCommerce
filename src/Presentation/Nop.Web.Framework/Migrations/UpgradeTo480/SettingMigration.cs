@@ -1,5 +1,6 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -36,6 +37,14 @@ public class SettingMigration : MigrationBase
         {
             orderSettings.PlaceOrderWithLockInterval = 1;
             settingService.SaveSetting(orderSettings, settings => settings.PlaceOrderWithLockInterval);
+        }
+
+        //#7265
+        var taxSetting = settingService.LoadSetting<TaxSettings>();
+        if (!settingService.SettingExists(taxSetting, settings => settings.EuVatRequired))
+        {
+            taxSetting.EuVatRequired = false;
+            settingService.SaveSetting(taxSetting, settings => settings.EuVatRequired);
         }
     }
 

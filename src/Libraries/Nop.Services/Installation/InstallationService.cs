@@ -3224,6 +3224,7 @@ namespace Nop.Services.Installation
                 PaymentMethodAdditionalFeeTaxClassId = 0,
                 EuVatEnabled = isEurope,
                 EuVatEnabledForGuests = false,
+                EuVatRequired = false,
                 EuVatShopCountryId =
                     isEurope
                         ? ((await _countryRepository.Table.FirstOrDefaultAsync(x => x.TwoLetterIsoCode == country))?.Id ?? 0)

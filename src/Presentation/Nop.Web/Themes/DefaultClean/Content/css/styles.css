@@ -8516,6 +8516,7 @@ label, label + * {
   }
 
   .customer-info-page .vat-note,
+  .customer-info-page .vat-status,
   .customer-info-page .email-to-revalidate-note {
     margin-left: 150px;
   }
@@ -8793,6 +8794,7 @@ label, label + * {
   }
 
   .customer-info-page .vat-note,
+  .customer-info-page .vat-status,
   .customer-info-page .email-to-revalidate-note {
     margin-left: 225px;
   }

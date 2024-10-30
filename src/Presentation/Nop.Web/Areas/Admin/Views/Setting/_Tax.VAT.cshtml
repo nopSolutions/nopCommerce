@@ -24,6 +24,16 @@
         </div>
         <div class="form-group row">
             <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="EuVatRequired_OverrideForStore" asp-input="EuVatRequired" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="EuVatRequired" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="EuVatRequired" />
+                <span asp-validation-for="EuVatRequired"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="EuVatShopCountryId_OverrideForStore" asp-input="EuVatShopCountryId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="EuVatShopCountryId" />
             </div>

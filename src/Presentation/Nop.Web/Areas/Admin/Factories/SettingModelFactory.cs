@@ -1147,6 +1147,7 @@ public partial class SettingModelFactory : ISettingModelFactory
             model.PaymentMethodAdditionalFeeTaxClassId_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.PaymentMethodAdditionalFeeTaxClassId, storeId);
             model.EuVatEnabled_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.EuVatEnabled, storeId);
             model.EuVatEnabledForGuests_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.EuVatEnabledForGuests, storeId);
+            model.EuVatRequired_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.EuVatRequired, storeId);
             model.EuVatShopCountryId_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.EuVatShopCountryId, storeId);
             model.EuVatAllowVatExemption_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.EuVatAllowVatExemption, storeId);
             model.EuVatUseWebService_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.EuVatUseWebService, storeId);
