@@ -248,6 +248,24 @@ public class LocalizationMigration : MigrationBase
             ["Security.Permission.System.ManageScheduleTasks"] = "Admin area. Schedule Tasks. Manage",
             ["Security.Permission.System.ManageSystemLog"] = "Admin area. System Log. Manage",
 
+            //#7241
+            ["Admin.Catalog.Categories.Fields.RestrictFromVendors"] = "Restrict from vendors",
+            ["Admin.Catalog.Categories.Fields.RestrictFromVendors.Hint"] = "Check to restrict vendors from adding products to this category. This option is useful when you have multi-vendors enabled in your store.",
+            //#7281
+            ["Account.ChangePassword.MustBeChanged"] = "Your password must be changed for security purposes.",
+            ["Admin.Customers.Customers.Fields.MustChangePassword"] = "Customer must change password",
+            ["Admin.Customers.Customers.Fields.MustChangePassword.Hint"] = "Check to require the customer to change their password.",
+
+            //#7318
+            ["ShoppingCart.GiftCardCouponCode.DontWorkWithGiftCards"] = "You cannot use gift cards with other gift cards.",
+            //#7265
+            ["Admin.Configuration.Settings.Tax.EuVatRequired"] = "VAT number required",
+            ["Admin.Configuration.Settings.Tax.EuVatRequired.Hint"] = "Check if 'EU VAT number' is required.",
+            ["Account.Fields.VatNumber.Required"] = "VAT number is required",
+            //#7375
+            ["Admin.Configuration.Settings.CustomerUser.PasswordMaxLength.GreaterThanOrEqualMinLength"] = "Password maximum length must be greater than or equal to minimum length",
+            ["Admin.Configuration.Settings.CustomerUser.PasswordMinLength.GreaterThanZero"] = "Password minimum length must be greater than 0",
+
             //#5898
             ["Admin.ContentManagement.MessageTemplates.Description.QuantityBelow.VendorNotification"] = "This message template is used to notify a vendor that the certain product is getting low stock. You can set up the minimum product quantity when creating or editing the product in Inventory section, <strong>Minimum stock qty field</strong>.",
             ["Admin.ContentManagement.MessageTemplates.Description.QuantityBelow.AttributeCombination.VendorNotification"] = "This message template is used to notify a vendor that the certain product attribute combination is getting low stock. You can set up the combination minimum quantity when creating or editing the product in Product attribute tab - Attributes combinations tab in Notify admin for quantity below field.",
