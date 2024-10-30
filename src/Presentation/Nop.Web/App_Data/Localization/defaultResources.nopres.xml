@@ -6843,11 +6843,17 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordMaxLength.Hint">
     <Value>Specify password maximum length.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordMaxLength.GreaterThanOrEqualMinLength">
+    <Value>Password maximum length must be greater than or equal to minimum length</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordMinLength">
     <Value>Password minimum length</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordMinLength.Hint">
     <Value>Specify password minimum length.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordMinLength.GreaterThanZero">
+    <Value>Password minimum length must be greater than 0</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordRecoveryLinkDaysValid">
     <Value>Password recovery link. Days valid</Value>
