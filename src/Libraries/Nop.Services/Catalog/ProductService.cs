@@ -17,6 +17,7 @@ using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Services.Shipping.Date;
 using Nop.Services.Stores;
+using Nop.Services.Vendors;
 
 namespace Nop.Services.Catalog;
 
@@ -62,6 +63,7 @@ public partial class ProductService : IProductService
     protected readonly IStaticCacheManager _staticCacheManager;
     protected readonly IStoreMappingService _storeMappingService;
     protected readonly IStoreService _storeService;
+    protected readonly IVendorService _vendorService;
     protected readonly IWorkContext _workContext;
     protected readonly LocalizationSettings _localizationSettings;
     private static readonly char[] _separator = [','];
@@ -104,6 +106,7 @@ public partial class ProductService : IProductService
         ISearchPluginManager searchPluginManager,
         IStaticCacheManager staticCacheManager,
         IStoreService storeService,
+        IVendorService vendorService,
         IStoreMappingService storeMappingService,
         IWorkContext workContext,
         LocalizationSettings localizationSettings)
@@ -143,6 +146,7 @@ public partial class ProductService : IProductService
         _staticCacheManager = staticCacheManager;
         _storeMappingService = storeMappingService;
         _storeService = storeService;
+        _vendorService = vendorService;
         _workContext = workContext;
         _localizationSettings = localizationSettings;
     }
@@ -1822,6 +1826,12 @@ public partial class ProductService : IProductService
                 //do not inject IWorkflowMessageService via constructor because it'll cause circular references
                 var workflowMessageService = EngineContext.Current.Resolve<IWorkflowMessageService>();
                 await workflowMessageService.SendQuantityBelowStoreOwnerNotificationAsync(product, _localizationSettings.DefaultAdminLanguageId);
+
+                if (product.VendorId != 0)
+                {
+                    var vendor = await _vendorService.GetVendorByIdAsync(product.VendorId);
+                    await workflowMessageService.SendQuantityBelowVendorNotificationAsync(product, vendor, _localizationSettings.DefaultAdminLanguageId);
+                }
             }
         }
 
@@ -1851,6 +1861,12 @@ public partial class ProductService : IProductService
                     //do not inject IWorkflowMessageService via constructor because it'll cause circular references
                     var workflowMessageService = EngineContext.Current.Resolve<IWorkflowMessageService>();
                     await workflowMessageService.SendQuantityBelowStoreOwnerNotificationAsync(combination, _localizationSettings.DefaultAdminLanguageId);
+
+                    if (product.VendorId != 0)
+                    {
+                        var vendor = await _vendorService.GetVendorByIdAsync(product.VendorId);
+                        await workflowMessageService.SendQuantityBelowVendorNotificationAsync(combination, vendor, _localizationSettings.DefaultAdminLanguageId);
+                    }
                 }
             }
         }
