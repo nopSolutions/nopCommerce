@@ -704,7 +704,7 @@ public partial class ProductController : BaseAdminController
 
     protected virtual async Task PingVideoUrlAsync(string videoUrl)
     {
-        var path = videoUrl.StartsWith("/")
+        var path = videoUrl.StartsWith('/')
             ? $"{_webHelper.GetStoreLocation()}{videoUrl.TrimStart('/')}"
             : videoUrl;
 
