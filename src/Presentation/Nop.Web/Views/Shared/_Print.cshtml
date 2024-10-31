@@ -7,7 +7,7 @@
 @{
     var themeName = await themeContext.GetWorkingThemeNameAsync();
     var title = await NopHtml.GenerateTitleAsync();
-    var usePathBase = appSettings.Get<HostingConfig>().UsePathBase;
+    var usePathBase = appSettings.Get<HostingConfig>().PathBase;
 }
 <!DOCTYPE html>
 <html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" class="@NopHtml.GeneratePageCssClasses()">

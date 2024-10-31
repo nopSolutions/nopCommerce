@@ -9,7 +9,7 @@
     string adminPageTitle = !string.IsNullOrWhiteSpace(ViewBag.PageTitle) ? ViewBag.PageTitle + " / " : "";
     adminPageTitle += T("Admin.PageTitle").Text;
 
-    var usePathBase = appSettings.Get<HostingConfig>().UsePathBase;
+    var usePathBase = appSettings.Get<HostingConfig>().PathBase;
 
     //event
     await eventPublisher.PublishAsync(new PageRenderingEvent(NopHtml));

@@ -144,9 +144,9 @@ public partial class NopEngine : IEngine
 
         var settings = ServiceProvider.GetService<AppSettings>().Get<HostingConfig>();
 
-        // Use Path Base
-        if (!string.IsNullOrEmpty(settings.UsePathBase))
-            application.UsePathBase(settings.UsePathBase);
+        //use path base
+        if (!string.IsNullOrEmpty(settings.PathBase))
+            application.UsePathBase(settings.PathBase);
         
         //find startup configurations provided by other assemblies
         var typeFinder = Singleton<ITypeFinder>.Instance;

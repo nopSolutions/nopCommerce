@@ -30,7 +30,7 @@
     var currentCustomer = await workContext.GetCurrentCustomerAsync();
 
     // Custom path base
-    var usePathBase = appSettings.Get<HostingConfig>().UsePathBase;
+    var usePathBase = appSettings.Get<HostingConfig>().PathBase;
 
     //event
     await eventPublisher.PublishAsync(new PageRenderingEvent(NopHtml));

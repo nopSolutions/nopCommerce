@@ -40,16 +40,14 @@
         NopHtml.AppendHeadCustomParts(seoSettings.CustomHeadTags);
     }
 
-    var usePathBase = appSettings.Get<HostingConfig>().UsePathBase;
-    var displayMiniProfiler = appSettings.Get<CommonConfig>().MiniProfilerEnabled && await permissionService.AuthorizeAsync(StandardPermissionProvider.AccessProfiling);
-
+    var usePathBase = appSettings.Get<HostingConfig>().PathBase;
+   
     //event
     await eventPublisher.PublishAsync(new PageRenderingEvent(NopHtml));
 
     var title = await NopHtml.GenerateTitleAsync();
     var description = await @NopHtml.GenerateMetaDescriptionAsync();
     var keywords = await NopHtml.GenerateMetaKeywordsAsync();
-
 }
 <!DOCTYPE html>
 <html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" dir="@Html.GetUIDirection(!await Html.ShouldUseRtlThemeAsync())" class="@NopHtml.GeneratePageCssClasses()">

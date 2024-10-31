@@ -33,5 +33,5 @@ public partial class HostingConfig : IConfig
     /// <summary>
     /// Ability to set a custom path base, for example domain.com/path/
     /// </summary>
-    public string UsePathBase { get; protected set; } = "/";
+    public string PathBase { get; protected set; } = "/";
 }
