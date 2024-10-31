@@ -3161,7 +3161,6 @@ namespace Nop.Services.Installation
                 DisplayCustomerCurrencyOnOrders = false,
                 DisplayOrderSummary = true,
                 PlaceOrderWithLock = false,
-                PlaceOrderWithLockInterval = 1
             });
 
             await settingService.SaveSettingAsync(new SecuritySettings
