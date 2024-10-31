@@ -10,7 +10,7 @@
     var usePathBase = appSettings.Get<HostingConfig>().PathBase;
 }
 <!DOCTYPE html>
-<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" class="@NopHtml.GeneratePageCssClasses()">
+<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" dir="@Html.GetUIDirection(!await Html.ShouldUseRtlThemeAsync())" class="@NopHtml.GeneratePageCssClasses()">
 <head>
     <title>@title</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
