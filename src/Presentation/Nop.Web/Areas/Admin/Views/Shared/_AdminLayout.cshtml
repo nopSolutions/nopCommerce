@@ -6,8 +6,11 @@
 @inject LocalizationSettings localizationSettings
 @inject StoreInformationSettings storeInformationSettings
 @inject Nop.Services.Localization.ILanguageService languageService
+@inject AppSettings appSettings
+
 @using Nop.Core.Domain
 @using Nop.Core.Domain.Localization
+@using Nop.Core.Configuration
 @using Nop.Services.Customers
 @using Nop.Services.Helpers
 @using Nop.Services.Security
@@ -26,6 +29,9 @@
     //avatar
     var currentCustomer = await workContext.GetCurrentCustomerAsync();
 
+    // Custom path base
+    var usePathBase = appSettings.Get<HostingConfig>().UsePathBase;
+
     //event
     await eventPublisher.PublishAsync(new PageRenderingEvent(NopHtml));
 
@@ -37,6 +43,9 @@
     <title>@adminPageTitle</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+    <base href="@usePathBase" />
+    
     @NopHtml.GenerateHeadCustom()
 
     @* CSS & Script resources *@
