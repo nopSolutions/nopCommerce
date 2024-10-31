@@ -8,7 +8,7 @@ using Nop.Services.Configuration;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo480;
 
-[NopUpdateMigration("2024-05-15 00:00:00", "4.80.0", UpdateMigrationType.Settings)]
+[NopUpdateMigration("2024-05-15 00:00:00", "4.80", UpdateMigrationType.Settings)]
 public class SettingMigration : MigrationBase
 {
     /// <summary>Collect the UP migration expressions</summary>
@@ -32,11 +32,16 @@ public class SettingMigration : MigrationBase
             orderSettings.PlaceOrderWithLock = false;
             settingService.SaveSetting(orderSettings, settings => settings.PlaceOrderWithLock);
         }
-
-        if (!settingService.SettingExists(orderSettings, settings => settings.PlaceOrderWithLockInterval))
+        
+        //#7394
+        if (orderSettings.MinimumOrderPlacementInterval > 10)
         {
-            orderSettings.PlaceOrderWithLockInterval = 1;
-            settingService.SaveSetting(orderSettings, settings => settings.PlaceOrderWithLockInterval);
+            if (orderSettings.MinimumOrderPlacementInterval < 60)
+                orderSettings.MinimumOrderPlacementInterval = 1;
+            else
+                orderSettings.MinimumOrderPlacementInterval = Math.Truncate(orderSettings.MinimumOrderPlacementInterval / 60.0) + (orderSettings.MinimumOrderPlacementInterval % 60) == 0 ? 0 : 1;
+
+            settingService.SaveSetting(orderSettings, settings => settings.MinimumOrderPlacementInterval);
         }
 
         //#7265

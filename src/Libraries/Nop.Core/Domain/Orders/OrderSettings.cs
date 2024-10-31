@@ -144,7 +144,7 @@ public partial class OrderSettings : ISettings
     public bool DeactivateGiftCardsAfterDeletingOrder { get; set; }
 
     /// <summary>
-    /// Gets or sets an order placement interval in seconds (prevent 2 orders being placed within an X seconds time frame).
+    /// Gets or sets an order placement interval in minutes (prevent 2 orders being placed within an X minutes time frame).
     /// </summary>
     public int MinimumOrderPlacementInterval { get; set; }
 
@@ -192,9 +192,4 @@ public partial class OrderSettings : ISettings
     /// Gets or sets a value indicating whether to place order with lock
     /// </summary>
     public bool PlaceOrderWithLock { get; set; }
-
-    /// <summary>
-    /// Gets or sets the time in minutes for order lock
-    /// </summary>
-    public int PlaceOrderWithLockInterval { get; set; }
 }

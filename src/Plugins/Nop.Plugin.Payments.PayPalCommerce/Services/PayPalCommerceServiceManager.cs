@@ -2036,7 +2036,7 @@ public class PayPalCommerceServiceManager
             if (_orderSettings.MinimumOrderPlacementInterval > 0)
             {
                 var lastOrder = (await _orderService.SearchOrdersAsync(storeId: store.Id, customerId: customer.Id, pageSize: 1)).FirstOrDefault();
-                if (lastOrder is not null && (DateTime.UtcNow - lastOrder.CreatedOnUtc).TotalSeconds < _orderSettings.MinimumOrderPlacementInterval)
+                if (lastOrder is not null && (DateTime.UtcNow - lastOrder.CreatedOnUtc).TotalMinutes < _orderSettings.MinimumOrderPlacementInterval)
                     throw new NopException(await _localizationService.GetResourceAsync("Checkout.MinOrderPlacementInterval"));
             }
 

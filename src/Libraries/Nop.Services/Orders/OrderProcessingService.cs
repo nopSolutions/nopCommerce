@@ -1626,7 +1626,7 @@ public partial class OrderProcessingService : IOrderProcessingService
         try
         {
             var cacheKey = _staticCacheManager.PrepareKey(NopOrderDefaults.OrderWithLockCacheKey, resource);
-            cacheKey.CacheTime = _orderSettings.PlaceOrderWithLockInterval;
+            cacheKey.CacheTime = _orderSettings.MinimumOrderPlacementInterval;
 
             var exist = _staticCacheManager.Get(cacheKey, () => false);
 

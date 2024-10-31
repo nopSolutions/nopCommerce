@@ -3149,7 +3149,7 @@ namespace Nop.Services.Installation
                 ReturnRequestsAllowFiles = false,
                 ReturnRequestsFileMaximumSize = 2048,
                 NumberOfDaysReturnRequestAvailable = 365,
-                MinimumOrderPlacementInterval = 30,
+                MinimumOrderPlacementInterval = 1,
                 ActivateGiftCardsAfterCompletingOrder = false,
                 DeactivateGiftCardsAfterCancellingOrder = false,
                 DeactivateGiftCardsAfterDeletingOrder = false,
