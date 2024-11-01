@@ -399,7 +399,7 @@ public partial class CatalogController : BasePublicController
     }
 
     [CheckLanguageSeoCode(ignore: true)]
-    public virtual async Task<IActionResult> SearchTermAutoComplete(string term)
+    public virtual async Task<IActionResult> SearchTermAutoComplete(string term, int categoryId)
     {
         if (string.IsNullOrWhiteSpace(term))
             return Content("");
@@ -413,7 +413,13 @@ public partial class CatalogController : BasePublicController
         var productNumber = _catalogSettings.ProductSearchAutoCompleteNumberOfProducts > 0 ?
             _catalogSettings.ProductSearchAutoCompleteNumberOfProducts : 10;
         var store = await _storeContext.GetCurrentStoreAsync();
+
+        var categoryIds = new List<int>();
+        if (categoryId > 0)
+            categoryIds.AddRange([categoryId, ..await _categoryService.GetChildCategoryIdsAsync(categoryId, store.Id)]);
+
         var products = await _productService.SearchProductsAsync(0,
+            categoryIds: categoryIds,
             storeId: store.Id,
             keywords: term,
             languageId: (await _workContext.GetWorkingLanguageAsync()).Id,

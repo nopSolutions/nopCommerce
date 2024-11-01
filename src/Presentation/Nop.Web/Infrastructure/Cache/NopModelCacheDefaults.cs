@@ -156,6 +156,16 @@ public static partial class NopModelCacheDefaults
     public static string CategoryPicturePrefixCacheKeyById => "Nop.pres.category.picture-{0}-";
 
     /// <summary>
+    /// Cache key for category list of the search box
+    /// </summary>
+    /// <remarks>
+    /// {0} : store id
+    /// {1} : language id
+    /// </remarks>
+    public static CacheKey SearchBoxCategoryListModelKey => new("Nop.pres.searchbox.categories-{0}-{1}", SearchBoxCategoryListPrefixCacheKey);
+    public static string SearchBoxCategoryListPrefixCacheKey => "Nop.pres.searchbox.categories";
+
+    /// <summary>
     /// Key for manufacturer picture caching
     /// </summary>
     /// <remarks>

@@ -1872,17 +1872,53 @@ public partial class CatalogModelFactory : ICatalogModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the search box model
     /// </returns>
-    public virtual Task<SearchBoxModel> PrepareSearchBoxModelAsync()
+    public virtual async Task<SearchBoxModel> PrepareSearchBoxModelAsync()
     {
         var model = new SearchBoxModel
         {
             AutoCompleteEnabled = _catalogSettings.ProductSearchAutoCompleteEnabled,
+            AutoCompleteSearchThumbPictureSize = _mediaSettings.AutoCompleteSearchThumbPictureSize,
             ShowProductImagesInSearchAutoComplete = _catalogSettings.ShowProductImagesInSearchAutoComplete,
             SearchTermMinimumLength = _catalogSettings.ProductSearchTermMinimumLength,
-            ShowSearchBox = _catalogSettings.ProductSearchEnabled
+            ShowSearchBox = _catalogSettings.ProductSearchEnabled,
+            ShowSearchBoxCategories = _catalogSettings.ShowSearchBoxCategories,
         };
 
-        return Task.FromResult(model);
+        if (_catalogSettings.ShowSearchBoxCategories)
+        {
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var language = await _workContext.GetWorkingLanguageAsync();
+            var categoriesCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.SearchBoxCategoryListModelKey, store, language);
+
+            model.AvailableCategories = await _staticCacheManager.GetAsync(categoriesCacheKey, async () =>
+            {
+                var allCategories = await _categoryService.GetAllCategoriesAsync(storeId: store.Id);
+                var result = new List<SelectListItem>
+                {
+                    //empty entry
+                    new() 
+                    {
+                        Value = "0",
+                        Text = await _localizationService.GetResourceAsync("Search.SearchBox.AllCategories")
+                    }
+                };
+
+                //add top categories
+                foreach (var c in allCategories.Where(c => c.ParentCategoryId == 0).OrderBy(c => c.DisplayOrder).ToList())
+                {
+                    result.Add(new()
+                    {
+                        Value = c.Id.ToString(),
+                        Text = await _localizationService.GetLocalizedAsync(c, x => x.Name, language.Id),
+                        Selected = model.SearchCategoryId == c.Id
+                    });
+                }
+
+                return result;
+            });
+        }
+
+        return model;
     }
 
     #endregion

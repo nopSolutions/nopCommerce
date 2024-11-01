@@ -250,6 +250,11 @@ public partial class CatalogSettings : ISettings
     public int NumberOfBestsellersOnHomepage { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether the category dropdown is displayed with the search box
+    /// </summary>
+    public bool ShowSearchBoxCategories { get; set; }
+
+    /// <summary>
     /// Gets or sets a number of products per page on the search products page
     /// </summary>
     public int SearchPageProductsPerPage { get; set; }
