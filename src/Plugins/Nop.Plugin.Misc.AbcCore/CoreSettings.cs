@@ -12,6 +12,7 @@ namespace Nop.Plugin.Misc.AbcCore
         public string MobilePhoneNumber { get; private set; }
         public string GoogleMapsGeocodingAPIKey { get; private set; }
         public bool IsFedExMode { get; private set; }
+        public string StagingDbConnectionString { get; private set; }
 
         public bool IsValid()
         {
@@ -26,7 +27,8 @@ namespace Nop.Plugin.Misc.AbcCore
                 IsDebugMode = model.IsDebugMode,
                 MobilePhoneNumber = model.MobilePhoneNumber,
                 GoogleMapsGeocodingAPIKey = model.GoogleMapsGeocodingAPIKey,
-                IsFedExMode = model.IsFedExMode
+                IsFedExMode = model.IsFedExMode,
+                StagingDbConnectionString = model.StagingDbConnectionString
             };
         }
 
@@ -38,7 +40,8 @@ namespace Nop.Plugin.Misc.AbcCore
                 IsDebugMode = IsDebugMode,
                 MobilePhoneNumber = MobilePhoneNumber,
                 GoogleMapsGeocodingAPIKey = GoogleMapsGeocodingAPIKey,
-                IsFedExMode = IsFedExMode
+                IsFedExMode = IsFedExMode,
+                StagingDbConnectionString = StagingDbConnectionString
             };
         }
     }

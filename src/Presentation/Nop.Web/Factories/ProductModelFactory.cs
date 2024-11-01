@@ -1210,6 +1210,13 @@ namespace Nop.Web.Factories
                     pictureModels.Add(pictureModel);
                 }
 
+                // ABC: Need to add product videos
+                // var exampleVideoThumbnail = new PictureModel();
+                // exampleVideoThumbnail.Title = "video";
+                // exampleVideoThumbnail.ThumbImageUrl = "https://picsum.photos/100";
+                // exampleVideoThumbnail.FullSizeImageUrl = "https://www.youtube.com/watch?v=YGQBm9Mnad8";
+                // pictureModels.Add(exampleVideoThumbnail);
+
                 return new { DefaultPictureModel = defaultPictureModel, PictureModels = pictureModels };
             });
 

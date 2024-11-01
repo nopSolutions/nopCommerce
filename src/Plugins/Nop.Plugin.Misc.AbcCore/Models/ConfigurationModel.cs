@@ -18,5 +18,8 @@ namespace Nop.Plugin.Misc.AbcCore.Models
 
         [NopResourceDisplayName(CoreLocales.IsFedExMode)]
         public bool IsFedExMode { get; set; }
+
+        [NopResourceDisplayName(CoreLocales.StagingDbConnectionString)]
+        public string StagingDbConnectionString { get; set; }
     }
 }

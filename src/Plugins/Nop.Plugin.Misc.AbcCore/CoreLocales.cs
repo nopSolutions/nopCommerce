@@ -33,5 +33,10 @@ namespace Nop.Plugin.Misc.AbcCore
             Base + "IsFedExMode";
         public const string IsFedExModeHint =
             IsFedExMode + ".Hint";
+
+        public const string StagingDbConnectionString =
+            Base + "StagingDbConnectionString";
+        public const string StagingDbConnectionStringHint =
+            StagingDbConnectionString + ".Hint";
     }
 }
