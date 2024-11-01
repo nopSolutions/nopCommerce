@@ -216,6 +216,7 @@ public partial class ModelCacheEventConsumer :
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryHomepagePrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
+        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SearchBoxCategoryListPrefixCacheKey);
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
@@ -226,6 +227,7 @@ public partial class ModelCacheEventConsumer :
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryHomepagePrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.CategoryPicturePrefixCacheKeyById, eventMessage.Entity.Id));
+        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SearchBoxCategoryListPrefixCacheKey);
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
@@ -235,6 +237,7 @@ public partial class ModelCacheEventConsumer :
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryHomepagePrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
+        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SearchBoxCategoryListPrefixCacheKey);
     }
 
     #endregion

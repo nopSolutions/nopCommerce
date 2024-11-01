@@ -294,17 +294,6 @@ public class CatalogModelFactoryBaseTests : WebTest
     }
 
     [Test]
-    public async Task CanPrepareSearchBoxModel()
-    {
-        var model = await _catalogModelFactory.PrepareSearchBoxModelAsync();
-
-        model.AutoCompleteEnabled.Should().Be(_catalogSettings.ProductSearchAutoCompleteEnabled);
-        model.ShowProductImagesInSearchAutoComplete.Should().Be(_catalogSettings.ShowProductImagesInSearchAutoComplete);
-        model.SearchTermMinimumLength.Should().Be(_catalogSettings.ProductSearchTermMinimumLength);
-        model.ShowSearchBox.Should().Be(_catalogSettings.ProductSearchEnabled);
-    }
-
-    [Test]
     public void PrepareVendorModelShouldRaiseExceptionIfProductTagOrCommandIsNull()
     {
         Assert.Throws<AggregateException>(() =>

@@ -157,25 +157,6 @@ public partial class CommonModelFactory : ICommonModelFactory
 
     #region Utilities
 
-    private async Task DisallowAjaxRoutesAsync(StringBuilder stringBuilder)
-    {
-        var routes = new[] { "/category/products", "/manufacturer/products", "/tag/products", "/product/search", "/vendor/products", "/newproducts/products" };
-        foreach (var route in routes)
-        {
-            stringBuilder.AppendLine($"Disallow: {route}");
-        }
-
-        if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
-        {
-            var store = await _storeContext.GetCurrentStoreAsync();
-            foreach (var language in await _languageService.GetAllLanguagesAsync(storeId: store.Id))
-            {
-                foreach (var route in routes)
-                    stringBuilder.AppendLine($"Disallow: /{language.UniqueSeoCode}{route}");
-            }
-        }
-    }
-
     /// <summary>
     /// Get the number of unread private messages
     /// </summary>
@@ -655,12 +636,6 @@ public partial class CommonModelFactory : ICommonModelFactory
                 sb.Append(robotsFileContent);
             }
         }
-
-        #region Issue 7286 Version 4.70 (bug fixes)
-
-        await DisallowAjaxRoutesAsync(sb);
-
-        #endregion
 
         return sb.ToString();
     }

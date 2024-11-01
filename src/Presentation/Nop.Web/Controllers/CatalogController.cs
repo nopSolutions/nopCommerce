@@ -133,8 +133,7 @@ public partial class CatalogController : BasePublicController
         return View(templateViewPath, model);
     }
 
-    //ignore SEO friendly URLs checks
-    [CheckLanguageSeoCode(ignore: true)]
+    [HttpPost]
     public virtual async Task<IActionResult> GetCategoryProducts(int categoryId, CatalogProductsCommand command)
     {
         var category = await _categoryService.GetCategoryByIdAsync(categoryId);
@@ -199,8 +198,7 @@ public partial class CatalogController : BasePublicController
         return View(templateViewPath, model);
     }
 
-    //ignore SEO friendly URLs checks
-    [CheckLanguageSeoCode(ignore: true)]
+    [HttpPost]
     public virtual async Task<IActionResult> GetManufacturerProducts(int manufacturerId, CatalogProductsCommand command)
     {
         var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(manufacturerId);
@@ -249,8 +247,7 @@ public partial class CatalogController : BasePublicController
         return View(model);
     }
 
-    //ignore SEO friendly URLs checks
-    [CheckLanguageSeoCode(ignore: true)]
+    [HttpPost]
     public virtual async Task<IActionResult> GetVendorProducts(int vendorId, CatalogProductsCommand command)
     {
         var vendor = await _vendorService.GetVendorByIdAsync(vendorId);
@@ -288,8 +285,7 @@ public partial class CatalogController : BasePublicController
         return View(model);
     }
 
-    //ignore SEO friendly URLs checks
-    [CheckLanguageSeoCode(ignore: true)]
+    [HttpPost]
     public virtual async Task<IActionResult> GetTagProducts(int tagId, CatalogProductsCommand command)
     {
         var productTag = await _productTagService.GetProductTagByIdAsync(tagId);
@@ -325,8 +321,7 @@ public partial class CatalogController : BasePublicController
         return View(model);
     }
 
-    //ignore SEO friendly URLs checks
-    [CheckLanguageSeoCode(ignore: true)]
+    [HttpPost]
     public virtual async Task<IActionResult> GetNewProducts(CatalogProductsCommand command)
     {
         if (!_catalogSettings.NewProductsEnabled)
@@ -399,7 +394,7 @@ public partial class CatalogController : BasePublicController
     }
 
     [CheckLanguageSeoCode(ignore: true)]
-    public virtual async Task<IActionResult> SearchTermAutoComplete(string term)
+    public virtual async Task<IActionResult> SearchTermAutoComplete(string term, int categoryId)
     {
         if (string.IsNullOrWhiteSpace(term))
             return Content("");
@@ -413,7 +408,13 @@ public partial class CatalogController : BasePublicController
         var productNumber = _catalogSettings.ProductSearchAutoCompleteNumberOfProducts > 0 ?
             _catalogSettings.ProductSearchAutoCompleteNumberOfProducts : 10;
         var store = await _storeContext.GetCurrentStoreAsync();
+
+        var categoryIds = new List<int>();
+        if (categoryId > 0)
+            categoryIds.AddRange([categoryId, ..await _categoryService.GetChildCategoryIdsAsync(categoryId, store.Id)]);
+
         var products = await _productService.SearchProductsAsync(0,
+            categoryIds: categoryIds,
             storeId: store.Id,
             keywords: term,
             languageId: (await _workContext.GetWorkingLanguageAsync()).Id,
@@ -435,8 +436,7 @@ public partial class CatalogController : BasePublicController
         return Json(result);
     }
 
-    //ignore SEO friendly URLs checks
-    [CheckLanguageSeoCode(ignore: true)]
+    [HttpPost]
     public virtual async Task<IActionResult> SearchProducts(SearchModel searchModel, CatalogProductsCommand command)
     {
         if (searchModel == null)

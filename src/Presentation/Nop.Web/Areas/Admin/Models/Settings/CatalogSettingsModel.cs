@@ -186,6 +186,10 @@ public partial record CatalogSettingsModel : BaseNopModel, ISettingsModel
     public bool SearchPageAllowCustomersToSelectPageSize { get; set; }
     public bool SearchPageAllowCustomersToSelectPageSize_OverrideForStore { get; set; }
 
+    [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ShowSearchBoxCategories")]
+    public bool ShowSearchBoxCategories { get; set; }
+    public bool ShowSearchBoxCategories_OverrideForStore { get; set; }
+
     [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.SearchPagePageSizeOptions")]
     public string SearchPagePageSizeOptions { get; set; }
     public bool SearchPagePageSizeOptions_OverrideForStore { get; set; }

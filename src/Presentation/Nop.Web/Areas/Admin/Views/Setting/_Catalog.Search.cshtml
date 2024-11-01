@@ -11,6 +11,18 @@
             <span asp-validation-for="ProductSearchEnabled"></span>
         </div>
     </div>
+    <nop-nested-setting asp-for="ProductSearchEnabled">
+        <div class="form-group row advanced-setting">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="ShowSearchBoxCategories_OverrideForStore" asp-input="ShowSearchBoxCategories" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="ShowSearchBoxCategories" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ShowSearchBoxCategories" />
+                <span asp-validation-for="ShowSearchBoxCategories"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
     <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="ProductSearchAutoCompleteEnabled_OverrideForStore" asp-input="ProductSearchAutoCompleteEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />

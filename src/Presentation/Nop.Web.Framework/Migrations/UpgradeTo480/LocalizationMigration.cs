@@ -7,7 +7,7 @@ using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo480;
 
-[NopUpdateMigration("2023-10-30 00:00:00", "4.80", UpdateMigrationType.Localization)]
+[NopUpdateMigration("2023-11-01 00:00:00", "4.80", UpdateMigrationType.Localization)]
 public class LocalizationMigration : MigrationBase
 {
     /// <summary>Collect the UP migration expressions</summary>
@@ -276,6 +276,10 @@ public class LocalizationMigration : MigrationBase
             //path base
             ["Admin.Configuration.AppSettings.Hosting.PathBase"] = "Path base",
             ["Admin.Configuration.AppSettings.Hosting.PathBase.Hint"] = "Ability to set a custom path base, for example domain.com/path/",
+            //4306
+            ["Admin.Configuration.Settings.Catalog.ShowSearchBoxCategories"] = "Show product categories for the search box",
+            ["Admin.Configuration.Settings.Catalog.ShowSearchBoxCategories.Hint"] = "Check to display the drop-down list with product categories next to the search box.",
+            ["Search.SearchBox.AllCategories"] = "All categories",
         }, languageId);
 
         #endregion
