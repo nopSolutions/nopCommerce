@@ -81,12 +81,6 @@
                             <div class="col-md-9">
                                 @if (adminAreaSettings.UseRichEditorInMessageTemplates)
                                 {
-                                    //we use rich editor with BODY tag supported
-                                    //it could be a better practice to implement one more editor (similar to RichEditor.cshtml)
-                                    //with "enableFullPage" property set to "true". but we do not want to duplicate source code
-                                    //that's why we use this workaround
-                                    //we store a value into "ViewData" and then use it in the RichEditor.cshtml file
-                                    ViewData["nop.RichEditor.EnableFullPage"] = true;
                                 <div class="input-group-append input-group-required">                                    
                                     <div class="input-group">
                                         <nop-editor asp-for="Body" asp-template="RichEditor" />
