@@ -87,6 +87,16 @@ public class TaxServiceTests : ServiceTest
     }
 
     [Test]
+    public async Task CanCheckIsPluginActive()
+    {
+        var provider = await _taxPluginManager.LoadPrimaryPluginAsync();
+        provider.Should().NotBeNull();
+        _taxPluginManager.IsPluginActive(provider).Should().BeTrue();
+        var isActive = await _taxPluginManager.IsPluginActiveAsync(provider.PluginDescriptor.SystemName);
+        isActive.Should().BeTrue();
+    }
+
+    [Test]
     public async Task CanGetProductPricePriceIncludesTaxIncludingTaxTaxable()
     {
         var customer = new Customer();

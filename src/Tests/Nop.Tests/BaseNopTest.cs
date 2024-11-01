@@ -264,7 +264,7 @@ public partial class BaseNopTest
 
         services.AddTransient(typeof(IConcurrentCollection<>), typeof(ConcurrentTrie<>));
 
-        var memoryDistributedCache = new MemoryDistributedCache(new TestMemoryDistributedCacheoptions());
+        var memoryDistributedCache = new MemoryDistributedCache(new TestMemoryDistributedCacheOptions());
         services.AddSingleton<IDistributedCache>(memoryDistributedCache);
         services.AddScoped<MemoryDistributedCacheManager>();
         services.AddSingleton(new DistributedCacheLocker(memoryDistributedCache));
@@ -557,25 +557,6 @@ public partial class BaseNopTest
         return scope.ServiceProvider.GetService<T>();
     }
 
-    public async Task TestCrud<TEntity>(TEntity baseEntity, Func<TEntity, Task> insert, TEntity updateEntity, Func<TEntity, Task> update, Func<int, Task<TEntity>> getById, Func<TEntity, TEntity, bool> equals, Func<TEntity, Task> delete) where TEntity : BaseEntity
-    {
-        baseEntity.Id = 0;
-
-        await insert(baseEntity);
-        baseEntity.Id.Should().BeGreaterThan(0);
-
-        updateEntity.Id = baseEntity.Id;
-        await update(updateEntity);
-
-        var item = await getById(baseEntity.Id);
-        item.Should().NotBeNull();
-        equals(updateEntity, item).Should().BeTrue();
-
-        await delete(baseEntity);
-        item = await getById(baseEntity.Id);
-        item.Should().BeNull();
-    }
-
     public static bool SetDataProviderType(DataProviderType type)
     {
         var dataConfig = Singleton<DataConfig>.Instance ?? new DataConfig();
@@ -618,7 +599,7 @@ public partial class BaseNopTest
     }
 
     #region Nested classes
-
+    
     protected class NopTestUrlHelper : UrlHelperBase
     {
         public NopTestUrlHelper(ActionContext actionContext) : base(actionContext)
@@ -808,7 +789,7 @@ public partial class BaseNopTest
         }
     }
 
-    private class TestMemoryDistributedCacheoptions : IOptions<MemoryDistributedCacheOptions>
+    private class TestMemoryDistributedCacheOptions : IOptions<MemoryDistributedCacheOptions>
     {
         public MemoryDistributedCacheOptions Value => new();
     }
