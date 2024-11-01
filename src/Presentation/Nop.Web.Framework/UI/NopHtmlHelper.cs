@@ -330,8 +330,6 @@ public partial class NopHtmlHelper : INopHtmlHelper
         var result = new StringBuilder();
         var woConfig = _appSettings.Get<WebOptimizerConfig>();
 
-        var pathBase = _actionContextAccessor.ActionContext?.HttpContext.Request.PathBase ?? PathString.Empty;
-
         if (woConfig.EnableJavaScriptBundling && value.Any(item => !item.ExcludeFromBundle))
         {
             var sources = value.Where(item => !item.ExcludeFromBundle && item.IsLocal)
@@ -343,8 +341,8 @@ public partial class NopHtmlHelper : INopHtmlHelper
             var bundleAsset = _bundleHelper.GetOrCreateJavaScriptAsset(bundleKey, sources);
             var route = _bundleHelper.CacheBusting(bundleAsset);
 
-            result.AppendFormat("<script type=\"{0}\" src=\"{1}{2}\"></script>",
-                MimeTypes.TextJavascript, pathBase, route);
+            result.AppendFormat("<script type=\"{0}\" src=\"{1}\"></script>",
+                MimeTypes.TextJavascript, route);
         }
 
         var scripts = value.Where(item => !woConfig.EnableJavaScriptBundling || item.ExcludeFromBundle || !item.IsLocal)
@@ -362,8 +360,8 @@ public partial class NopHtmlHelper : INopHtmlHelper
             var asset = _bundleHelper.GetOrCreateJavaScriptAsset(item.Src);
             var route = _bundleHelper.CacheBusting(asset);
 
-            result.AppendFormat("<script type=\"{0}\" src=\"{1}{2}\"></script>",
-                MimeTypes.TextJavascript, pathBase, route);
+            result.AppendFormat("<script type=\"{0}\" src=\"{1}\"></script>",
+                MimeTypes.TextJavascript, route);
 
             result.Append(Environment.NewLine);
         }
@@ -497,8 +495,7 @@ public partial class NopHtmlHelper : INopHtmlHelper
         var result = new StringBuilder();
 
         var woConfig = _appSettings.Get<WebOptimizerConfig>();
-        var pathBase = _actionContextAccessor.ActionContext?.HttpContext.Request.PathBase ?? PathString.Empty;
-
+        
         if (woConfig.EnableCssBundling && _cssParts.Any(item => !item.ExcludeFromBundle))
         {
             var bundleSuffix = woConfig.CssBundleSuffix;
@@ -517,8 +514,8 @@ public partial class NopHtmlHelper : INopHtmlHelper
             var bundleAsset = _bundleHelper.GetOrCreateCssAsset(bundleKey, sources);
             var route = _bundleHelper.CacheBusting(bundleAsset);
 
-            result.AppendFormat("<link rel=\"stylesheet\" type=\"{0}\" href=\"{1}{2}\" />",
-                MimeTypes.TextCss, pathBase, route);
+            result.AppendFormat("<link rel=\"stylesheet\" type=\"{0}\" href=\"{1}\" />",
+                MimeTypes.TextCss, route);
         }
 
         var styles = _cssParts
@@ -537,8 +534,8 @@ public partial class NopHtmlHelper : INopHtmlHelper
             var asset = _bundleHelper.GetOrCreateCssAsset(item.Src);
             var route = _bundleHelper.CacheBusting(asset);
 
-            result.AppendFormat("<link rel=\"stylesheet\" type=\"{0}\" href=\"{1}{2}\" />",
-                MimeTypes.TextCss, pathBase, route);
+            result.AppendFormat("<link rel=\"stylesheet\" type=\"{0}\" href=\"{1}\" />",
+                MimeTypes.TextCss, route);
             result.AppendLine();
         }
 

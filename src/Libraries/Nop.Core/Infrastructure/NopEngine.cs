@@ -141,12 +141,6 @@ public partial class NopEngine : IEngine
     public virtual void ConfigureRequestPipeline(IApplicationBuilder application)
     {
         ServiceProvider = application.ApplicationServices;
-
-        var settings = ServiceProvider.GetService<AppSettings>().Get<HostingConfig>();
-
-        //use path base
-        if (!string.IsNullOrEmpty(settings.PathBase))
-            application.UsePathBase(settings.PathBase);
         
         //find startup configurations provided by other assemblies
         var typeFinder = Singleton<ITypeFinder>.Instance;
