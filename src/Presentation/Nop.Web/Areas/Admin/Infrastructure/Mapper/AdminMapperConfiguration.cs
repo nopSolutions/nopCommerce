@@ -1358,7 +1358,8 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(settings => settings.MinimumOrderPlacementInterval, options => options.Ignore())
             .ForMember(settings => settings.DisplayCustomerCurrencyOnOrders, options => options.Ignore())
             .ForMember(settings => settings.ReturnRequestsFileMaximumSize, options => options.Ignore())
-            .ForMember(settings => settings.DisplayOrderSummary, options => options.Ignore());
+            .ForMember(settings => settings.DisplayOrderSummary, options => options.Ignore())
+            .ForMember(settings => settings.PlaceOrderWithLock, options => options.Ignore());
 
         CreateMap<ReturnRequestAction, ReturnRequestActionModel>();
         CreateMap<ReturnRequestActionModel, ReturnRequestAction>();
