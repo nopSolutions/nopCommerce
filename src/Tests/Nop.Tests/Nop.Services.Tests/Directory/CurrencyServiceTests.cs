@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace Nop.Tests.Nop.Services.Tests.Directory;
 
 [TestFixture]
-public class CurrencyServiceTests : ServiceTest
+public class CurrencyServiceTests : ServiceTest<Currency>
 {
     private ICurrencyService _currencyService;
     private IExchangeRatePluginManager _exchangeRatePluginManager;
@@ -77,21 +77,32 @@ public class CurrencyServiceTests : ServiceTest
         newCurrency.Should().Be(759M);
     }
 
-    [Test]
-    public async Task TestCrud()
+    protected override CrudData<Currency> CrudData
     {
-        var insertItem = new Currency
+        get
         {
-            Name = "Test name",
-            CurrencyCode = "tn"
-        };
+            var insertItem = new Currency
+            {
+                Name = "Test name",
+                CurrencyCode = "tn"
+            };
 
-        var updateItem = new Currency
-        {
-            Name = "Test name 1",
-            CurrencyCode = "tn"
-        };
+            var updateItem = new Currency
+            {
+                Name = "Test name 1",
+                CurrencyCode = "tn"
+            };
 
-        await TestCrud(insertItem, _currencyService.InsertCurrencyAsync, updateItem, _currencyService.UpdateCurrencyAsync, _currencyService.GetCurrencyByIdAsync, (item, other) => item.Name.Equals(other.Name), _currencyService.DeleteCurrencyAsync);
+            return new CrudData<Currency>
+            {
+                BaseEntity = insertItem,
+                UpdatedEntity = updateItem,
+                Insert = _currencyService.InsertCurrencyAsync,
+                Update = _currencyService.UpdateCurrencyAsync,
+                GetById = _currencyService.GetCurrencyByIdAsync,
+                IsEqual = (item, other) => item.Name.Equals(other.Name),
+                Delete = _currencyService.DeleteCurrencyAsync
+            };
+        }
     }
 }

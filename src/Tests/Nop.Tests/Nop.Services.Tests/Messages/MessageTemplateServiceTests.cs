@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace Nop.Tests.Nop.Services.Tests.Messages;
 
 [TestFixture]
-public class MessageTemplateServiceTests : BaseNopTest
+public class MessageTemplateServiceTests : ServiceTest<MessageTemplate>
 {
     private IMessageTemplateService _messageTemplateService;
 
@@ -15,27 +15,7 @@ public class MessageTemplateServiceTests : BaseNopTest
     {
         _messageTemplateService = GetService<IMessageTemplateService>();
     }
-
-    [Test]
-    public async Task CanCRUD()
-    {
-        var message = new MessageTemplate { Body = "Test body", Name = "Test template" };
-        await _messageTemplateService.InsertMessageTemplateAsync(message);
-        message.Id.Should().BeGreaterThan(0);
-        message = await _messageTemplateService.GetMessageTemplateByIdAsync(message.Id);
-        message.Should().NotBeNull();
-        var namedMessage = (await _messageTemplateService.GetMessageTemplatesByNameAsync(message.Name)).FirstOrDefault(t => t.Id == message.Id);
-        namedMessage.Should().NotBeNull();
-        message.Subject = "Test subject";
-        await _messageTemplateService.UpdateMessageTemplateAsync(message);
-        namedMessage = (await _messageTemplateService.GetMessageTemplatesByNameAsync(message.Name)).FirstOrDefault(t => t.Id == message.Id);
-        namedMessage.Should().NotBeNull();
-        namedMessage.Subject.Should().Be(message.Subject);
-        await _messageTemplateService.DeleteMessageTemplateAsync(namedMessage);
-        message = await _messageTemplateService.GetMessageTemplateByIdAsync(message.Id);
-        message.Should().BeNull();
-    }
-
+    
     [Test]
     public async Task CanGetAllMessageTemplates()
     {
@@ -59,4 +39,23 @@ public class MessageTemplateServiceTests : BaseNopTest
         message.Name.Should().BeEquivalentTo(initMessage.Name);
     }
 
+    protected override CrudData<MessageTemplate> CrudData
+    {
+        get
+        {
+            var basTemplate = new MessageTemplate { Body = "Test body", Name = "Test template" };
+            var updatedTemplate = new MessageTemplate { Body = "Test body", Name = "Test template", Subject = "Test subject" };
+
+            return new CrudData<MessageTemplate>
+            {
+                BaseEntity = basTemplate,
+                UpdatedEntity = updatedTemplate,
+                Insert = _messageTemplateService.InsertMessageTemplateAsync,
+                Update = _messageTemplateService.UpdateMessageTemplateAsync,
+                Delete = _messageTemplateService.DeleteMessageTemplateAsync,
+                GetById = _messageTemplateService.GetMessageTemplateByIdAsync,
+                IsEqual = (first, second) => first.Body.Equals(second.Body) && first.Name.Equals(second.Name) && first.Subject.Equals(second.Subject)
+            };
+        }
+    }
 }

@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace Nop.Tests.Nop.Services.Tests.Directory;
 
 [TestFixture]
-public class MeasureServiceTests : ServiceTest
+public class MeasureServiceTests: ServiceTest
 {
     private IMeasureService _measureService;
 
@@ -68,41 +68,88 @@ public class MeasureServiceTests : ServiceTest
         newWeight = await _measureService.ConvertWeightAsync(10, _measureWeightKg, _measureWeightGrams);
         newWeight.Should().Be(10000);
     }
+    
+}
 
+[TestFixture]
+public class MeasureDimensionCrudTests : ServiceTest<MeasureDimension>
+{
+    private IMeasureService _measureService;
 
-    [Test]
-    public async Task TestMeasureDimensionCrud()
+    [OneTimeSetUp]
+    public void SetUp()
     {
-        var insertItem = new MeasureDimension
-        {
-            Name = "Test name",
-            SystemKeyword = "test"
-        };
-
-        var updateItem = new MeasureDimension
-        {
-            Name = "Test name 1",
-            SystemKeyword = "test"
-        };
-
-        await TestCrud(insertItem, _measureService.InsertMeasureDimensionAsync, updateItem, _measureService.UpdateMeasureDimensionAsync, _measureService.GetMeasureDimensionByIdAsync, (item, other) => item.Name.Equals(other.Name), _measureService.DeleteMeasureDimensionAsync);
+        _measureService = GetService<IMeasureService>();
     }
 
-    [Test]
-    public async Task TestMeasureWeightCrud()
+    protected override CrudData<MeasureDimension> CrudData
     {
-        var insertItem = new MeasureWeight
+        get
         {
-            Name = "Test name",
-            SystemKeyword = "test"
-        };
+            var insertItem = new MeasureDimension
+            {
+                Name = "Test name",
+                SystemKeyword = "test"
+            };
 
-        var updateItem = new MeasureWeight
-        {
-            Name = "Test name 1",
-            SystemKeyword = "test"
-        };
+            var updateItem = new MeasureDimension
+            {
+                Name = "Test name 1",
+                SystemKeyword = "test"
+            };
 
-        await TestCrud(insertItem, _measureService.InsertMeasureWeightAsync, updateItem, _measureService.UpdateMeasureWeightAsync, _measureService.GetMeasureWeightByIdAsync, (item, other) => item.Name.Equals(other.Name), _measureService.DeleteMeasureWeightAsync);
+            return new CrudData<MeasureDimension>
+            {
+                BaseEntity = insertItem,
+                UpdatedEntity = updateItem,
+                Insert = _measureService.InsertMeasureDimensionAsync,
+                Update = _measureService.UpdateMeasureDimensionAsync,
+                GetById = _measureService.GetMeasureDimensionByIdAsync,
+                IsEqual = (item, other) => item.Name.Equals(other.Name),
+                Delete = _measureService.DeleteMeasureDimensionAsync
+            };
+        }
     }
+}
+
+[TestFixture]
+public class MeasureWeightCrudTests : ServiceTest<MeasureWeight>
+{
+    private IMeasureService _measureService;
+
+    [OneTimeSetUp]
+    public void SetUp()
+    {
+        _measureService = GetService<IMeasureService>();
+    }
+    
+    protected override CrudData<MeasureWeight> CrudData
+    {
+        get
+        {
+            var insertItem = new MeasureWeight
+            {
+                Name = "Test name",
+                SystemKeyword = "test"
+            };
+
+            var updateItem = new MeasureWeight
+            {
+                Name = "Test name 1",
+                SystemKeyword = "test"
+            };
+
+            return new CrudData<MeasureWeight>
+            {
+                BaseEntity = insertItem,
+                UpdatedEntity = updateItem,
+                Insert = _measureService.InsertMeasureWeightAsync,
+                Update = _measureService.UpdateMeasureWeightAsync,
+                GetById = _measureService.GetMeasureWeightByIdAsync,
+                IsEqual = (item, other) => item.Name.Equals(other.Name),
+                Delete = _measureService.DeleteMeasureWeightAsync
+            };
+        }
+    }
+
 }
