@@ -275,7 +275,7 @@ i.false-icon {
   position: absolute;
   right: 15px;
   top: 15px;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .card.card-secondary .card-container .cards-group {
@@ -746,7 +746,7 @@ i.false-icon {
 /*override font-awesome styles*/
 .fa, .far, .fas {
   padding-right: 5px;
-  font-size: 0.9em;
+  font-size: 1.01em;
 }
 
 /*typeahead*/

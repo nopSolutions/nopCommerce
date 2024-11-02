@@ -191,7 +191,7 @@ ordering: @Model.Ordering.ToString().ToLowerInvariant(),
     <text>
     buttons: [{
         name: 'refresh',
-        text: '<i class="fas fa-sync-alt" style="padding-left: 5px"></i>',
+        text: '<i class="fas fa-rotate" style="padding-left: 5px"></i>',
         action: function() {
             @if (Model.ServerSide)
             {
@@ -308,7 +308,7 @@ columns: [
                 case RenderButtonRemove button:
                     <text>
                     render: function (data, type, row, meta) {
-                        return '<a href="#" class="@button.ClassName" onclick="table_deletedata_@(model_name)(\'' + data + '\');return false;"><i class="far fa-trash-alt"></i>@button.Title</a>';
+                        return '<a href="#" class="@button.ClassName" onclick="table_deletedata_@(model_name)(\'' + data + '\');return false;"><i class="far fa-trash-can"></i>@button.Title</a>';
                     },
                     </text>
                     break;
@@ -320,7 +320,7 @@ columns: [
                         if (typeof data == 'string') {
                             modData = data.replace(/[.*+?^${}()|[\]\\]/g, "_");
                         }
-                        return '<a href="#" class="@button.ClassName" id="buttonEdit_@(model_name)'+ modData + '" onclick="editData_@(model_name)($(this).parent().parent(), \'' + origData + '\');return false;"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit")</a>' +
+                        return '<a href="#" class="@button.ClassName" id="buttonEdit_@(model_name)'+ modData + '" onclick="editData_@(model_name)($(this).parent().parent(), \'' + origData + '\');return false;"><i class="fas fa-pencil"></i>@T("Admin.Common.Edit")</a>' +
                         '<a href="#" class="@button.ClassName" id="buttonConfirm_@(model_name)'+ modData + '" style="display:none" onclick="confirmEditData_@(model_name)($(this).parent().parent(), \'' + origData + '\', \'@column.Data\');return false;"><i class="fas fa-check"></i>@T("Admin.Common.Update")</a>' +
                         '<a href="#" class="@button.ClassName" id="buttonCancel_@(model_name)'+ modData + '" style="display:none" onclick="cancelEditData_@(model_name)(\'' + row + '\', \'' + origData + '\');updateTableWidth(\'' + '#@Model.Name' + '\');return false;"><i class="fas fa-ban"></i>@T("Admin.Common.Cancel")</a>';
                     },                         
@@ -329,7 +329,7 @@ columns: [
                 case RenderButtonEdit buttonEdit:
                     <text>
                     render: function (data, type, row, meta) {
-                        return '<a class="@buttonEdit.ClassName" href="@GetUrl(buttonEdit.Url)' + data + '"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit").Text</a>';
+                        return '<a class="@buttonEdit.ClassName" href="@GetUrl(buttonEdit.Url)' + data + '"><i class="fas fa-pencil"></i>@T("Admin.Common.Edit").Text</a>';
                     },
                     </text>
                     break;

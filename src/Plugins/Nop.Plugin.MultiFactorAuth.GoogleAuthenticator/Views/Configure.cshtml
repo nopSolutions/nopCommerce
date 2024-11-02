@@ -44,7 +44,7 @@
                 <div class="card-body">
                     <div class="row search-row @(!Model.GoogleAuthenticatorSearchModel.HideSearchBlock ? "opened" : "")" data-hideAttribute="@GoogleAuthenticatorDefaults.HideSearchBlockAttribute">
                         <div class="search-text">@T("Admin.Common.Search")</div>
-                        <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                        <div class="icon-search"><i class="fas fa-magnifying-glass" aria-hidden="true"></i></div>
                         <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
                     </div>
                     <div class="search-body @(Model.GoogleAuthenticatorSearchModel.HideSearchBlock ? "closed" : "")">
@@ -63,7 +63,7 @@
                         <div class="row">
                             <div class="text-center col-12">
                                 <button type="button" id="search-customers" class="btn btn-primary btn-search">
-                                    <i class="fas fa-search"></i>
+                                    <i class="fas fa-magnifying-glass"></i>
                                     @T("Admin.Common.Search")
                                 </button>
                             </div>

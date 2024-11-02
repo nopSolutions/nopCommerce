@@ -21,7 +21,7 @@
         
             <nop-cards id="product-attribute-mapping-cards">
                 <nop-card asp-name="product-attribute-mapping-info" asp-icon="fas fa-info" asp-title="@T("Admin.Catalog.Products.ProductAttributes.Attributes.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdateProductAttributeMapping.Info", Model)</nop-card>
-                <nop-card asp-name="product-attribute-mapping-values" asp-icon="fas fa-check-square" asp-title="@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values")" asp-hide-block-attribute-name="@hideValuesBlockAttributeName" asp-hide="@hideValuesBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdateProductAttributeMapping.Values", Model)</nop-card>
+                <nop-card asp-name="product-attribute-mapping-values" asp-icon="fas fa-square-check" asp-title="@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values")" asp-hide-block-attribute-name="@hideValuesBlockAttributeName" asp-hide="@hideValuesBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdateProductAttributeMapping.Values", Model)</nop-card>
 
                 @if (Model.ConditionAllowed)
                 {

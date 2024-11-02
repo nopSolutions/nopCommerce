@@ -103,7 +103,7 @@
                     <div class="card-body">
                         <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
                             <div class="search-text">@T("Admin.Common.Search")</div>
-                            <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                            <div class="icon-search"><i class="fas fa-magnifying-glass" aria-hidden="true"></i></div>
                             <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
                         </div>
 
@@ -162,7 +162,7 @@
                             <div class="row">
                                 <div class="text-center col-12">
                                     <button type="button" id="search-plugins-local" class="btn btn-primary btn-search">
-                                        <i class="fas fa-search"></i>
+                                        <i class="fas fa-magnifying-glass"></i>
                                         @T("Admin.Common.Search")
                                     </button>
                                 </div>
@@ -236,10 +236,10 @@
                                 res = res + '<br />';
                                 //allow configuration only when a plugin has a configuration URL specified
                                 if (row.ConfigurationUrl && row.ConfigurationUrl.length > 0) {
-                                    res = res + '<a class="btn btn-default margin-r-5" href="' + row.ConfigurationUrl + '"><i class="fas fa-cog"></i>@T("Admin.Configuration.Plugins.Fields.Configure").Text</a>';
+                                    res = res + '<a class="btn btn-default margin-r-5" href="' + row.ConfigurationUrl + '"><i class="fas fa-gear"></i>@T("Admin.Configuration.Plugins.Fields.Configure").Text</a>';
                                 }
                                 if (row.Installed) {
-                                    res = res + '<a class="btn btn-default" href="javascript:OpenWindow(\'@Url.Content("~/Admin/Plugin/EditPopup")?systemName=' + row.SystemName + '&btnId=btnRefreshList&formId=plugins-form-local\', 800, 500, true);"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit").Text</a>';
+                                    res = res + '<a class="btn btn-default" href="javascript:OpenWindow(\'@Url.Content("~/Admin/Plugin/EditPopup")?systemName=' + row.SystemName + '&btnId=btnRefreshList&formId=plugins-form-local\', 800, 500, true);"><i class="fas fa-pencil"></i>@T("Admin.Common.Edit").Text</a>';
                                 }
 
                                 return res;

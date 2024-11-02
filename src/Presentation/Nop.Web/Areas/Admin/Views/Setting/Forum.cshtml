@@ -29,7 +29,7 @@
         </h1>
         <div class="float-right">
             <button type="submit" name="save" class="btn btn-primary">
-                <i class="far fa-save"></i>
+                <i class="far fa-floppy-disk"></i>
                 @T("Admin.Common.Save")
             </button>
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ForumSettingsButtons, additionalData = Model })
@@ -45,7 +45,7 @@
 
                 <nop-cards id="forumsettings-cards">
                     <nop-card asp-name="forumsettings-common" asp-icon="fas fa-info" asp-title="@T("Admin.Configuration.Settings.Forums.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_Forum.Common", Model)</nop-card>
-                    <nop-card asp-name="forumsettings-permissions" asp-icon="fas fa-shield-alt" asp-title="@T("Admin.Configuration.Settings.Forums.BlockTitle.Permissions")" asp-hide-block-attribute-name="@hidePermissionsBlockAttributeName" asp-hide="@hidePermissionsBlock" asp-advanced="false">@await Html.PartialAsync("_Forum.Permissions", Model)</nop-card>
+                    <nop-card asp-name="forumsettings-permissions" asp-icon="fas fa-shield-halved" asp-title="@T("Admin.Configuration.Settings.Forums.BlockTitle.Permissions")" asp-hide-block-attribute-name="@hidePermissionsBlockAttributeName" asp-hide="@hidePermissionsBlock" asp-advanced="false">@await Html.PartialAsync("_Forum.Permissions", Model)</nop-card>
                     <nop-card asp-name="forumsettings-page-sizes" asp-icon="fas fa-file" asp-title="@T("Admin.Configuration.Settings.Forums.BlockTitle.PageSizes")" asp-hide-block-attribute-name="@hidePageSizesBlockAttributeName" asp-hide="@hidePageSizesBlock" asp-advanced="true">@await Html.PartialAsync("_Forum.PageSizes", Model)</nop-card>
                     <nop-card asp-name="forumsettings-feeds" asp-icon="fas fa-rss" asp-title="@T("Admin.Configuration.Settings.Forums.BlockTitle.Feeds")" asp-hide-block-attribute-name="@hideFeedsBlockAttributeName" asp-hide="@hideFeedsBlock" asp-advanced="true">@await Html.PartialAsync("_Forum.Feeds", Model)</nop-card>
 

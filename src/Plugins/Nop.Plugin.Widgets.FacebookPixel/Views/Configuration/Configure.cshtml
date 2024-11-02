@@ -19,7 +19,7 @@
                     <div class="card-body">
                         <div class="row search-row @(!Model.FacebookPixelSearchModel.HideSearchBlock ? "opened" : "")" data-hideAttribute="@FacebookPixelDefaults.HideSearchBlockAttribute">
                             <div class="search-text">@T("Admin.Common.Search")</div>
-                            <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                            <div class="icon-search"><i class="fas fa-magnifying-glass" aria-hidden="true"></i></div>
                             <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
                         </div>
 
@@ -37,7 +37,7 @@
                                     <div class="form-group row">
                                         <div class="col-md-8 offset-md-4">
                                             <button type="button" id="search" class="btn btn-primary btn-search">
-                                                <i class="fas fa-search"></i>
+                                                <i class="fas fa-magnifying-glass"></i>
                                                 @T("Admin.Common.Search")
                                             </button>
                                         </div>
@@ -102,7 +102,7 @@
                 }
                 <div class="card-footer">
                     <a asp-controller="FacebookPixel" asp-action="Create" class="btn btn-primary">
-                        <i class="fas fa-plus-square"></i>
+                        <i class="fas fa-square-plus"></i>
                         @T("Admin.Common.AddNew") @T("Plugins.Widgets.FacebookPixel.Configuration")
                     </a>
                 </div>

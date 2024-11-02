@@ -194,7 +194,7 @@
         </nop-card>
         @if (Model.IsConnected)
         {
-            <nop-card asp-name="amazonPayConfiguration" asp-icon="fas fa-cog" asp-title="@T("Plugins.Payments.AmazonPay.Configure")" asp-hide-block-attribute-name="@AmazonPayDefaults.HideConfigurationBlock" asp-hide="@Model.HideConfigurationBlock" asp-advanced="false">
+            <nop-card asp-name="amazonPayConfiguration" asp-icon="fas fa-gear" asp-title="@T("Plugins.Payments.AmazonPay.Configure")" asp-hide-block-attribute-name="@AmazonPayDefaults.HideConfigurationBlock" asp-hide="@Model.HideConfigurationBlock" asp-advanced="false">
                 <div class="card-body">
                     <div class="form-group row">
                         @if (Model.PaymentRegion == (int)PaymentRegion.Eu || Model.PaymentRegion == (int)PaymentRegion.Uk)
