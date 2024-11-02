@@ -4027,6 +4027,12 @@ label, label + * {
   margin: 0 0 30px;
 }
 
+.change-password-recovery-link {
+  text-align: right;
+  font-size: 13px;
+  margin-top: 5px;
+}
+
 .avatar-page .page-title {
   margin: 0;
 }

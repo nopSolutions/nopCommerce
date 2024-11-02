@@ -353,6 +353,11 @@ label, label + * {
   margin: 0 0 0 5px;
 }
 
+.inputs .form-input-wrapper {
+  display: inline-block;
+  max-width: 100%;
+}
+
 .inputs.reversed {
   margin: 0 0 20px;
   text-align: center;
@@ -3993,6 +3998,12 @@ label, label + * {
 
 .change-password-page .fieldset {
   margin: 0 0 30px;
+}
+
+.change-password-recovery-link {
+    text-align: right;
+    font-size: 13px;
+    margin-top: 5px;
 }
 
 .avatar-page .page-title {
