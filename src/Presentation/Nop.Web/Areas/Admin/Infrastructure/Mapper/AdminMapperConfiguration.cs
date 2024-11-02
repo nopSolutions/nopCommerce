@@ -406,7 +406,8 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(model => model.AllowCustomersToSearchWithCategoryName_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.DisplayAllPicturesOnCatalogPages_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.ProductUrlStructureTypeId_OverrideForStore, mo => mo.Ignore())
-            .ForMember(model => model.ProductUrlStructureTypes, mo => mo.Ignore());
+            .ForMember(model => model.ProductUrlStructureTypes, mo => mo.Ignore())
+            .ForMember(model => model.ShowSearchBoxCategories_OverrideForStore, mo => mo.Ignore());
         CreateMap<CatalogSettingsModel, CatalogSettings>()
             .ForMember(settings => settings.AjaxProcessAttributeChange, options => options.Ignore())
             .ForMember(settings => settings.CompareProductsNumber, options => options.Ignore())

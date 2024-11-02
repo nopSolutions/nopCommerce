@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Concurrent;
+using System.ComponentModel;
 using System.Globalization;
 using System.Resources;
 using FluentAssertions;
@@ -206,6 +207,7 @@ public partial class BaseNopTest
 
         var httpContext = new DefaultHttpContext();
         httpContext.Request.Headers.Append(HeaderNames.Host, NopTestsDefaults.HostIpAddress);
+        httpContext.Session = new TestSeesion();
 
         var httpContextAccessor = new Mock<IHttpContextAccessor>();
         httpContextAccessor.Setup(p => p.HttpContext).Returns(httpContext);
@@ -792,6 +794,48 @@ public partial class BaseNopTest
     private class TestMemoryDistributedCacheOptions : IOptions<MemoryDistributedCacheOptions>
     {
         public MemoryDistributedCacheOptions Value => new();
+    }
+
+    private class TestSeesion:ISession
+    {
+        private static ConcurrentDictionary<string, byte[]> _sessison = new();
+
+        public Task LoadAsync(CancellationToken cancellationToken = new())
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task CommitAsync(CancellationToken cancellationToken = new())
+        {
+            return Task.CompletedTask;
+        }
+
+        public bool TryGetValue(string key, out byte[] value)
+        {
+            return _sessison.TryGetValue(key, out value);
+        }
+
+        public void Set(string key, byte[] value)
+        {
+            if(!_sessison.ContainsKey(key))
+                _sessison.TryAdd(key, value);
+            else
+                _sessison[key] = value;
+        }
+
+        public void Remove(string key)
+        {
+            _sessison.Remove(key, out _);
+        }
+
+        public void Clear()
+        {
+            _sessison.Clear();
+        }
+
+        public bool IsAvailable => true;
+        public string Id => "nop_test_session";
+        public IEnumerable<string> Keys => _sessison.Keys;
     }
 
     #endregion

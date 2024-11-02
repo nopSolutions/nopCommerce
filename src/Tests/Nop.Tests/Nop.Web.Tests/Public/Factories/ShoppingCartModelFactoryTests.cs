@@ -98,10 +98,12 @@ public class ShoppingCartModelFactoryTests : WebTest
         model.Items.Count.Should().Be(1);
         model.Warnings.Count.Should().Be(0);
 
-        model.OrderReviewData.Should().BeNull();
+        model.OrderReviewData.Should().NotBeNull();
+        model.OrderReviewData.Display.Should().BeFalse();
         model = await _shoppingCartModelFactory.PrepareShoppingCartModelAsync(new ShoppingCartModel(),
             new List<ShoppingCartItem> { _shoppingCartItem }, true, true, true);
         model.OrderReviewData.Should().NotBeNull();
+        model.OrderReviewData.Display.Should().BeTrue();
     }
 
     [Test]

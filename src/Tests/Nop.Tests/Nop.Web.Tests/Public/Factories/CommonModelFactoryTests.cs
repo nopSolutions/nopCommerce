@@ -290,10 +290,7 @@ public class CommonModelFactoryTests : BaseNopTest
     {
         var model = await _commonModelFactory.PrepareRobotsTextFileAsync();
         model.Should().NotBeNullOrEmpty();
-<<<<<<< HEAD
-        model.Trim().Split(Environment.NewLine).Length.Should().Be(101);
-=======
-        model.Trim().Split(Environment.NewLine).Length.Should().Be(176);
->>>>>>> issue-405-new-unit-tests
+
+        model.Trim().Split(Environment.NewLine).Length.Should().Be(164);
     }
 }
