@@ -1037,7 +1037,7 @@ div.dataTables_wrapper div.dataTables_processing .fa {
   border-bottom: 1px solid #f4f4f4;
 }
 
-.dataTables_wrapper thead {
+div.row.justify-content-between.dt-layout-table thead {
   background-color: #f4f4f4;
 }
 
@@ -1874,7 +1874,7 @@ span.grid-report-item.red {
 }
 
 
-/* JQUERY DATA TABLES */
+/* JQUERY DATATABLES */
 .button-column {
   text-align: center;
 }
@@ -1905,7 +1905,7 @@ div.dataTables_wrapper .data-tables-refresh > div {
   width: auto;
 }
 
-div.dataTables_wrapper > div.row.margin-t-5 > div.col-lg-1.col-xs-12 > div > div > button {
+div.dt-buttons.btn-group.flex-wrap > button {
   background-color: #f4f4f4;
   color: #444;
   border-color: #ddd;
