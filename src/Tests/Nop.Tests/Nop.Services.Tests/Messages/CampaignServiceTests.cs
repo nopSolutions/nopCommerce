@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace Nop.Tests.Nop.Services.Tests.Messages;
 
 [TestFixture]
-public class CampaignServiceTests : BaseNopTest
+public class CampaignServiceTests : ServiceTest<Campaign>
 {
     private ICampaignService _campaignService;
     private IRepository<Campaign> _campaignRepository;
@@ -21,26 +21,37 @@ public class CampaignServiceTests : BaseNopTest
         _cueuedEmailRepository = GetService<IRepository<QueuedEmail>>();
     }
 
-    [Test]
-    public async Task TestCrud()
+    protected override CrudData<Campaign> CrudData
     {
-        var insertItem = new Campaign
+        get
         {
-            Name = "Test name",
-            Subject = "Test subject",
-            Body = "Test body"
-        };
+            var insertItem = new Campaign
+            {
+                Name = "Test name",
+                Subject = "Test subject",
+                Body = "Test body"
+            };
 
-        var updateItem = new Campaign
-        {
-            Name = "Test name",
-            Subject = "Test subject",
-            Body = "Test body"
-        };
+            var updateItem = new Campaign
+            {
+                Name = "Test name",
+                Subject = "Test subject",
+                Body = "Test body"
+            };
 
-        await TestCrud(insertItem, _campaignService.InsertCampaignAsync, updateItem, _campaignService.UpdateCampaignAsync, _campaignService.GetCampaignByIdAsync, (item, other) => item.Subject.Equals(other.Subject) && item.Body.Equals(other.Body) && item.Name.Equals(other.Name), _campaignService.DeleteCampaignAsync);
+            return new CrudData<Campaign>
+            {
+                BaseEntity = insertItem,
+                UpdatedEntity = updateItem,
+                Insert = _campaignService.InsertCampaignAsync,
+                Update = _campaignService.UpdateCampaignAsync,
+                GetById = _campaignService.GetCampaignByIdAsync,
+                IsEqual = (item, other) => item.Subject.Equals(other.Subject) && item.Body.Equals(other.Body) && item.Name.Equals(other.Name),
+                Delete = _campaignService.DeleteCampaignAsync
+            };
+        }
     }
-
+    
     [Test]
     public async Task CanGetAllCampaigns()
     {
