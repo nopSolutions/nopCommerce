@@ -145,7 +145,7 @@ public partial class CheckoutController : BasePublicController
             return true;
 
         var interval = DateTime.UtcNow - lastOrder.CreatedOnUtc;
-        return interval.TotalSeconds > _orderSettings.MinimumOrderPlacementInterval;
+        return interval.TotalMinutes > _orderSettings.MinimumOrderPlacementInterval;
     }
 
     /// <summary>

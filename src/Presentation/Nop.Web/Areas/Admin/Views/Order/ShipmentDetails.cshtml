@@ -80,7 +80,7 @@
                 @T("Admin.Orders.Shipments.PrintPackagingSlip")
             </a>
             <span id="shipment-delete" class="btn btn-danger">
-                <i class="far fa-trash-alt"></i>
+                <i class="far fa-trash-can"></i>
                 @T("Admin.Common.Delete")
             </span>
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.OrderShipmentDetailsButtons, additionalData = Model })

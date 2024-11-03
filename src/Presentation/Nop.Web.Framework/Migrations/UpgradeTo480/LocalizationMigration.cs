@@ -7,7 +7,7 @@ using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo480;
 
-[NopUpdateMigration("2024-05-15 00:00:00", "4.80", UpdateMigrationType.Localization)]
+[NopUpdateMigration("2023-11-01 00:00:00", "4.80", UpdateMigrationType.Localization)]
 public class LocalizationMigration : MigrationBase
 {
     /// <summary>Collect the UP migration expressions</summary>
@@ -247,6 +247,39 @@ public class LocalizationMigration : MigrationBase
             ["Security.Permission.System.ManageMessageQueue"] = "Admin area. Message Queue. Manage",
             ["Security.Permission.System.ManageScheduleTasks"] = "Admin area. Schedule Tasks. Manage",
             ["Security.Permission.System.ManageSystemLog"] = "Admin area. System Log. Manage",
+
+            //#7241
+            ["Admin.Catalog.Categories.Fields.RestrictFromVendors"] = "Restrict from vendors",
+            ["Admin.Catalog.Categories.Fields.RestrictFromVendors.Hint"] = "Check to restrict vendors from adding products to this category. This option is useful when you have multi-vendors enabled in your store.",
+            //#7281
+            ["Account.ChangePassword.MustBeChanged"] = "Your password must be changed for security purposes.",
+            ["Admin.Customers.Customers.Fields.MustChangePassword"] = "Customer must change password",
+            ["Admin.Customers.Customers.Fields.MustChangePassword.Hint"] = "Check to require the customer to change their password.",
+
+            //#7318
+            ["ShoppingCart.GiftCardCouponCode.DontWorkWithGiftCards"] = "You cannot use gift cards with other gift cards.",
+            //#7265
+            ["Admin.Configuration.Settings.Tax.EuVatRequired"] = "VAT number required",
+            ["Admin.Configuration.Settings.Tax.EuVatRequired.Hint"] = "Check if 'EU VAT number' is required.",
+            ["Account.Fields.VatNumber.Required"] = "VAT number is required",
+            //#7375
+            ["Admin.Configuration.Settings.CustomerUser.PasswordMaxLength.GreaterThanOrEqualMinLength"] = "Password maximum length must be greater than or equal to minimum length",
+            ["Admin.Configuration.Settings.CustomerUser.PasswordMinLength.GreaterThanZero"] = "Password minimum length must be greater than 0",
+
+            //#5898
+            ["Admin.ContentManagement.MessageTemplates.Description.QuantityBelow.VendorNotification"] = "This message template is used to notify a vendor that the certain product is getting low stock. You can set up the minimum product quantity when creating or editing the product in Inventory section, <strong>Minimum stock qty field</strong>.",
+            ["Admin.ContentManagement.MessageTemplates.Description.QuantityBelow.AttributeCombination.VendorNotification"] = "This message template is used to notify a vendor that the certain product attribute combination is getting low stock. You can set up the combination minimum quantity when creating or editing the product in Product attribute tab - Attributes combinations tab in Notify admin for quantity below field.",
+
+            //#7299
+            ["Admin.Catalog.Products.Multimedia.Videos.Description"] = "How to embed a video: Find your video in your library (on any video hosting) and select it to open the video settings page. Select the privacy icon from your \"Share\" button. Click on \"Embed\" from the window that opens up. You can copy the <strong>src</strong> from the embed option and use it.",
+
+            //path base
+            ["Admin.Configuration.AppSettings.Hosting.PathBase"] = "Path base",
+            ["Admin.Configuration.AppSettings.Hosting.PathBase.Hint"] = "Ability to set a custom path base, for example domain.com/path/",
+            //4306
+            ["Admin.Configuration.Settings.Catalog.ShowSearchBoxCategories"] = "Show product categories for the search box",
+            ["Admin.Configuration.Settings.Catalog.ShowSearchBoxCategories.Hint"] = "Check to display the drop-down list with product categories next to the search box.",
+            ["Search.SearchBox.AllCategories"] = "All categories",
         }, languageId);
 
         #endregion

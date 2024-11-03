@@ -2,13 +2,14 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
+using Nop.Plugin.Payments.PayPalCommerce.Factories;
 using Nop.Plugin.Payments.PayPalCommerce.Services;
 using Nop.Web.Framework.Infrastructure.Extensions;
 
 namespace Nop.Plugin.Payments.PayPalCommerce.Infrastructure;
 
 /// <summary>
-/// Represents object for the configuring services on application startup
+/// Represents the object for the configuring services on application startup
 /// </summary>
 public class NopStartup : INopStartup
 {
@@ -20,7 +21,10 @@ public class NopStartup : INopStartup
     public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
         services.AddHttpClient<OnboardingHttpClient>().WithProxy();
-        services.AddScoped<ServiceManager>();
+        services.AddHttpClient<PayPalCommerceHttpClient>().WithProxy();
+        services.AddScoped<PayPalCommerceModelFactory>();
+        services.AddScoped<PayPalCommerceServiceManager>();
+        services.AddScoped<PayPalTokenService>();
     }
 
     /// <summary>
@@ -34,5 +38,5 @@ public class NopStartup : INopStartup
     /// <summary>
     /// Gets order of this startup configuration implementation
     /// </summary>
-    public int Order => 3000;
+    public int Order => 1;
 }

@@ -303,7 +303,7 @@ public partial class ProductTagService : IProductTagService
                     ProductCount = ptmGrouped.Count()
                 };
 
-            return pTagCount.ToDictionary(item => item.ProductTagId, item => item.ProductCount);
+            return await pTagCount.ToDictionaryAsync(item => item.ProductTagId, item => item.ProductCount);
         });
     }
 

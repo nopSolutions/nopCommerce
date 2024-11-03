@@ -14,7 +14,7 @@ public class LuceneController : BasePluginController
     #region Methods
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
-    public async Task<IActionResult> Configure()
+    public IActionResult Configure()
     {
         return View("~/Plugins/Search.Lucene/Views/Configure.cshtml");
     }

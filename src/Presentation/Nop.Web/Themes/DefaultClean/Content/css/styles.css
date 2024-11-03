@@ -283,6 +283,12 @@ label, label + * {
   font-weight: normal;
 }
 
+.fieldset .warnings {
+  text-align: center;
+  margin-block-end: 30px;
+  color: #e4444c;
+}
+
 .form-fields {
   position: relative;
   border-top: 1px solid #e6e6e6;
@@ -347,6 +353,11 @@ label, label + * {
   margin: 0 0 0 5px;
 }
 
+.inputs .form-input-wrapper {
+  display: inline-block;
+  max-width: 100%;
+}
+
 .inputs.reversed {
   margin: 0 0 20px;
   text-align: center;
@@ -369,6 +380,7 @@ label, label + * {
   font-size: 13px;
   color: #e4434b;
   margin-top: 5px;
+  white-space: normal;
 }
 
 .field-validation-valid,
@@ -1007,25 +1019,26 @@ label, label + * {
   opacity: 1;
 }
 
-.search-box form {
-  display: inline-block;
-}
+/* Search box */
 
-.search-box form:after {
-  content: "";
-  display: block;
-  clear: both;
+.search-box form {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  gap: 10px 0;
 }
 
 .search-box input.search-box-text {
-  float: left;
   width: 200px;
   height: 36px;
   margin: 0 -1px 0 0;
 }
 
+.search-box .search-box-category {
+  height: 36px;
+}
+
 .search-box .search-box-button {
-  float: left;
   min-width: 86px;
   height: 36px;
   border: none;
@@ -3985,6 +3998,12 @@ label, label + * {
 
 .change-password-page .fieldset {
   margin: 0 0 30px;
+}
+
+.change-password-recovery-link {
+    text-align: right;
+    font-size: 13px;
+    margin-top: 5px;
 }
 
 .avatar-page .page-title {
@@ -8033,14 +8052,13 @@ label, label + * {
     font-size: 0;
   }
 
-  .search-box {
-    display: table-cell;
-    text-align: right;
-    vertical-align: middle;
+  .search-box form{
+    justify-content: flex-end;
   }
 
   .search-box input.search-box-text,
-  .search-box .search-box-button {
+  .search-box .search-box-button,
+  .search-box .search-box-category {
     height: 40px;
   }
 
@@ -8509,6 +8527,7 @@ label, label + * {
   }
 
   .customer-info-page .vat-note,
+  .customer-info-page .vat-status,
   .customer-info-page .email-to-revalidate-note {
     margin-left: 150px;
   }
@@ -8786,6 +8805,7 @@ label, label + * {
   }
 
   .customer-info-page .vat-note,
+  .customer-info-page .vat-status,
   .customer-info-page .email-to-revalidate-note {
     margin-left: 225px;
   }

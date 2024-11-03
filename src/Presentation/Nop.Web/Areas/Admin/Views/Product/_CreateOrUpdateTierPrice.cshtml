@@ -34,7 +34,7 @@
                                     <nop-label asp-for="Price" />
                                 </div>
                                 <div class="col-sm-9">
-                                    <nop-editor asp-for="Price" />
+                                    <nop-editor asp-for="Price" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
                                     <span asp-validation-for="Price"></span>
                                 </div>
                             </div>

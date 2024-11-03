@@ -85,9 +85,21 @@ public sealed class ValidatePasswordAttribute : TypeFilterAttribute
                 actionName.Equals("ChangePassword", StringComparison.InvariantCultureIgnoreCase))
                 return;
 
-            //check password expiration
+            //check whether this filter has been overridden for the Action
+            //we're checking CheckAccessPublicStore attribute because it applies to all required actions that should be available regardless of password validation
+            var actionFilter = context.ActionDescriptor.FilterDescriptors
+                .Where(filterDescriptor => filterDescriptor.Scope == FilterScope.Action)
+                .Select(filterDescriptor => filterDescriptor.Filter)
+                .OfType<CheckAccessPublicStoreAttribute>()
+                .FirstOrDefault();
+
+            //don't validate actions that are available even if navigation is not allowed
+            if (actionFilter?.IgnoreFilter == true)
+                return;
+
             var customer = await _workContext.GetCurrentCustomerAsync();
-            if (!await _customerService.IsPasswordExpiredAsync(customer))
+
+            if (!await _customerService.IsPasswordExpiredAsync(customer) && !customer.MustChangePassword)
                 return;
 
             var returnUrl = _webHelper.GetRawUrl(context.HttpContext.Request);

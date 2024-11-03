@@ -2000,13 +2000,17 @@ public partial class ImportManager : IImportManager
         var allProductsCategoryIds = await _categoryService.GetProductCategoryIdsAsync(allProductsBySku.Select(p => p.Id).ToArray());
 
         //performance optimization, load all categories in one SQL request
-        Dictionary<CategoryKey, Category> allCategories;
+        Dictionary<CategoryKey, Category> allCategories = new();
         try
         {
             var allCategoryList = await _categoryService.GetAllCategoriesAsync(showHidden: true);
 
             allCategories = await allCategoryList
-                .ToDictionaryAwaitAsync(async c => await CategoryKey.CreateCategoryKeyAsync(c, _categoryService, allCategoryList, _storeMappingService), c => new ValueTask<Category>(c));
+                .WhereAwait(async c => await _categoryService.CanVendorAddProductsAsync(c, allCategoryList))
+                .ToDictionaryAwaitAsync(async c => {
+                    var keyName = await _categoryService.GetFormattedBreadCrumbAsync(c, allCategoryList);
+                    return new CategoryKey(keyName, c, c.LimitedToStores ? (await _storeMappingService.GetStoresIdsWithAccessAsync(c)).ToList() : new List<int>());
+                });
         }
         catch (ArgumentException)
         {
@@ -2445,7 +2449,7 @@ public partial class ImportManager : IImportManager
                     : new List<int>();
 
                 var importedCategories = await categoryList.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(categoryName => new CategoryKey(categoryName, storesIds))
+                    .Select(categoryName => new CategoryKey(categoryName, storesIds: storesIds))
                     .SelectAwait(async categoryKey =>
                     {
                         var rez = (allCategories.TryGetValue(categoryKey, out var value) ? value.Id : allCategories.Values.FirstOrDefault(c => c.Name == categoryKey.Key)?.Id) ??
@@ -3340,26 +3344,18 @@ public partial class ImportManager : IImportManager
         public bool IsNew { get; set; }
     }
 
-    public partial class CategoryKey
+    protected partial class CategoryKey
     {
-        /// <returns>A task that represents the asynchronous operation</returns>
-        public static async Task<CategoryKey> CreateCategoryKeyAsync(Category category, ICategoryService categoryService, IList<Category> allCategories, IStoreMappingService storeMappingService)
-        {
-            return new CategoryKey(await categoryService.GetFormattedBreadCrumbAsync(category, allCategories), category.LimitedToStores ? (await storeMappingService.GetStoresIdsWithAccessAsync(category)).ToList() : new List<int>())
-            {
-                Category = category
-            };
-        }
-
-        public CategoryKey(string key, List<int> storesIds = null)
+        public CategoryKey(string key, Category category = null, List<int> storesIds = null)
         {
             Key = key.Trim();
             StoresIds = storesIds ?? new List<int>();
+            Category = category;
         }
 
         public List<int> StoresIds { get; }
 
-        public Category Category { get; protected set; }
+        public Category Category { get; }
 
         public string Key { get; }
 

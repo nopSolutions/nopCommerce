@@ -55,5 +55,7 @@ public partial record TierPriceModel : BaseNopEntityModel
     [UIHint("DateTimeNullable")]
     public DateTime? EndDateTimeUtc { get; set; }
 
+    public string PrimaryStoreCurrencyCode { get; set; }
+
     #endregion
 }

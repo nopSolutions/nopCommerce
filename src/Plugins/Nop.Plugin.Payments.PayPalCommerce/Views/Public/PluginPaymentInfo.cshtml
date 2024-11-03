@@ -1,0 +1,28 @@
+﻿@model Nop.Web.Models.Checkout.CheckoutPaymentInfoModel
+
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    NopHtml.AddTitleParts(T("PageTitle.Checkout").Text);
+}
+
+<div class="page checkout-page payment-info-page">
+    <div class="page-title">
+        <h1>@T("Checkout.PaymentInfo")</h1>
+    </div>
+    <div class="page-body checkout-data">
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutPaymentInfoTop, additionalData = Model })
+        <div class="section payment-info">
+            <div class="info">
+                @await Component.InvokeAsync(typeof(ButtonsViewComponent), new { widgetZone = "paypal_payment_info" })
+            </div>
+        </div>
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutPaymentInfoBottom, additionalData = Model })
+        <div class="section order-summary">
+            <div class="title">
+                <strong>@T("Checkout.OrderSummary")</strong>
+            </div>
+            @await Component.InvokeAsync(typeof(OrderSummaryViewComponent))
+        </div>
+    </div>
+</div>

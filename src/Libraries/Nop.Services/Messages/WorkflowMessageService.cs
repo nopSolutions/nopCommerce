@@ -2293,6 +2293,95 @@ public partial class WorkflowMessageService : IWorkflowMessageService
     }
 
     /// <summary>
+    /// Sends a "quantity below" notification to a vendor
+    /// </summary>
+    /// <param name="product">Product</param>
+    /// <param name="vendor">Vendor</param>
+    /// <param name="languageId">Message language identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the queued email identifier
+    /// </returns>
+    public virtual async Task<IList<int>> SendQuantityBelowVendorNotificationAsync(Product product, Vendor vendor, int languageId)
+    {
+        ArgumentNullException.ThrowIfNull(product);
+        ArgumentNullException.ThrowIfNull(vendor);
+
+        var store = await _storeContext.GetCurrentStoreAsync();
+        languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
+
+        var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.QUANTITY_BELOW_VENDOR_NOTIFICATION, store.Id);
+        if (!messageTemplates.Any())
+            return new List<int>();
+
+        var commonTokens = new List<Token>();
+        await _messageTokenProvider.AddProductTokensAsync(commonTokens, product, languageId);
+
+        return await messageTemplates.SelectAwait(async messageTemplate =>
+        {
+            //email account
+            var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
+
+            var tokens = new List<Token>(commonTokens);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
+
+            //event notification
+            await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+
+            var toEmail = vendor.Email;
+            var toName = vendor.Name;
+
+            return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+        }).ToListAsync();
+    }
+
+    /// <summary>
+    /// Sends a "quantity below" notification to a vendor
+    /// </summary>
+    /// <param name="combination">Attribute combination</param>
+    /// <param name="vendor">Vendor</param>
+    /// <param name="languageId">Message language identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the queued email identifier
+    /// </returns>
+    public virtual async Task<IList<int>> SendQuantityBelowVendorNotificationAsync(ProductAttributeCombination combination, Vendor vendor, int languageId)
+    {
+        ArgumentNullException.ThrowIfNull(combination);
+        ArgumentNullException.ThrowIfNull(vendor);
+
+        var store = await _storeContext.GetCurrentStoreAsync();
+        languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
+
+        var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.QUANTITY_BELOW_ATTRIBUTE_COMBINATION_VENDOR_NOTIFICATION, store.Id);
+        if (!messageTemplates.Any())
+            return new List<int>();
+
+        var commonTokens = new List<Token>();
+        var product = await _productService.GetProductByIdAsync(combination.ProductId);
+
+        await _messageTokenProvider.AddProductTokensAsync(commonTokens, product, languageId);
+        await _messageTokenProvider.AddAttributeCombinationTokensAsync(commonTokens, combination, languageId);
+
+        return await messageTemplates.SelectAwait(async messageTemplate =>
+        {
+            //email account
+            var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
+
+            var tokens = new List<Token>(commonTokens);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
+
+            //event notification
+            await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+
+            var toEmail = vendor.Email;
+            var toName = vendor.Name;
+
+            return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+        }).ToListAsync();
+    }
+
+    /// <summary>
     /// Sends a "new VAT submitted" notification to a store owner
     /// </summary>
     /// <param name="customer">Customer</param>

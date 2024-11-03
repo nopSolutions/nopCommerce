@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace Nop.Tests.Nop.Services.Tests.Gdpr;
 
 [TestFixture]
-public class GdprServiceTests : BaseNopTest
+public class GdprServiceTests : ServiceTest<GdprConsent>
 {
     private IGdprService _gdprService;
 
@@ -15,19 +15,30 @@ public class GdprServiceTests : BaseNopTest
         _gdprService = GetService<IGdprService>();
     }
 
-    [Test]
-    public async Task TestCrud()
+    protected override CrudData<GdprConsent> CrudData
     {
-        var insertItem = new GdprConsent
+        get
         {
-            Message = "Test message"
-        };
+            var insertItem = new GdprConsent
+            {
+                Message = "Test message"
+            };
 
-        var updateItem = new GdprConsent
-        {
-            Message = "Update test message"
-        };
+            var updateItem = new GdprConsent
+            {
+                Message = "Update test message"
+            };
 
-        await TestCrud(insertItem, _gdprService.InsertConsentAsync, updateItem, _gdprService.UpdateConsentAsync, _gdprService.GetConsentByIdAsync, (item, other) => item.Message.Equals(other.Message), _gdprService.DeleteConsentAsync);
+            return new CrudData<GdprConsent>
+            {
+                BaseEntity = insertItem,
+                UpdatedEntity = updateItem,
+                Insert = _gdprService.InsertConsentAsync,
+                Update = _gdprService.UpdateConsentAsync,
+                GetById = _gdprService.GetConsentByIdAsync,
+                IsEqual = (item, other) => item.Message.Equals(other.Message),
+                Delete = _gdprService.DeleteConsentAsync
+            };
+        }
     }
 }

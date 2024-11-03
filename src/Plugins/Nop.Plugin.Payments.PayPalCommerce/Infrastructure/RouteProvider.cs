@@ -1,13 +1,15 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc.Routing;
+using Nop.Web.Infrastructure;
 
 namespace Nop.Plugin.Payments.PayPalCommerce.Infrastructure;
 
 /// <summary>
-/// Represents plugin route provider
+/// Represents the plugin route provider
 /// </summary>
-public class RouteProvider : IRouteProvider
+public class RouteProvider : BaseRouteProvider, IRouteProvider
 {
     /// <summary>
     /// Register routes
@@ -15,13 +17,32 @@ public class RouteProvider : IRouteProvider
     /// <param name="endpointRouteBuilder">Route builder</param>
     public void RegisterRoutes(IEndpointRouteBuilder endpointRouteBuilder)
     {
-        endpointRouteBuilder.MapControllerRoute(PayPalCommerceDefaults.ConfigurationRouteName,
-            "Admin/PayPalCommerce/Configure",
-            new { controller = "PayPalCommerce", action = "Configure" });
+        var lang = GetLanguageRoutePattern();
 
-        endpointRouteBuilder.MapControllerRoute(PayPalCommerceDefaults.WebhookRouteName,
-            "Plugins/PayPalCommerce/Webhook",
-            new { controller = "PayPalCommerceWebhook", action = "WebhookHandler" });
+        endpointRouteBuilder.MapControllerRoute(name: PayPalCommerceDefaults.Route.Configuration,
+            pattern: "Admin/PayPalCommerce/Configure",
+            defaults: new { controller = "PayPalCommerce", action = "Configure", area = AreaNames.ADMIN });
+
+        endpointRouteBuilder.MapControllerRoute(name: PayPalCommerceDefaults.Route.OnboardingCallback,
+            pattern: "Admin/PayPalCommerce/Onboarding/{storeId:int}",
+            defaults: new { controller = "PayPalCommerce", action = "OnboardingCallback", area = AreaNames.ADMIN });
+
+        endpointRouteBuilder.MapControllerRoute(name: PayPalCommerceDefaults.Route.Webhook,
+            pattern: "Plugins/PayPalCommerce/Webhook",
+            defaults: new { controller = "PayPalCommerceWebhook", action = "WebhookHandler" });
+
+        endpointRouteBuilder.MapControllerRoute(name: PayPalCommerceDefaults.Route.PaymentInfo,
+            pattern: $"{lang}/paypal/payment-info",
+            defaults: new { controller = "PayPalCommercePublic", action = "PluginPaymentInfo" });
+
+        endpointRouteBuilder.MapControllerRoute(name: PayPalCommerceDefaults.Route.ConfirmOrder,
+            pattern: $"{lang}/paypal/confirm-order",
+            defaults: new { controller = "PayPalCommercePublic", action = "ConfirmOrder" });
+
+        endpointRouteBuilder.MapControllerRoute(name: PayPalCommerceDefaults.Route.PaymentTokens,
+            pattern: $"{lang}/customer/paypal-payment-methods",
+            defaults: new { controller = "PayPalCommercePublic", action = "PaymentTokens" });
+
     }
 
     /// <summary>

@@ -1628,11 +1628,7 @@ public partial class CustomerController : BasePublicController
         if (!await _customerService.IsRegisteredAsync(customer))
             return Challenge();
 
-        var model = await _customerModelFactory.PrepareChangePasswordModelAsync();
-
-        //display the cause of the change password 
-        if (await _customerService.IsPasswordExpiredAsync(customer))
-            ModelState.AddModelError(string.Empty, await _localizationService.GetResourceAsync("Account.ChangePassword.PasswordIsExpired"));
+        var model = await _customerModelFactory.PrepareChangePasswordModelAsync(customer);
 
         return View(model);
     }
@@ -1672,6 +1668,8 @@ public partial class CustomerController : BasePublicController
         }
 
         //If we got this far, something failed, redisplay form
+        model = await _customerModelFactory.PrepareChangePasswordModelAsync(customer);
+
         return View(model);
     }
 

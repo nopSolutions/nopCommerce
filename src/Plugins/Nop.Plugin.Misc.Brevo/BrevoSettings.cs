@@ -23,6 +23,11 @@ public class BrevoSettings : ISettings
     public int UnsubscribeWebhookId { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether partner value already set
+    /// </summary>
+    public bool PartnerValueSet { get; set; }
+
+    /// <summary>
     /// Gets or sets the SMTP key (Master password)
     /// </summary>
     public string SmtpKey { get; set; }

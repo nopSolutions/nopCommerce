@@ -699,6 +699,8 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                                                  (await _storeService.GetAllStoresAsync()).Select(x => x.Id).Count() > 1;
                 model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(customer.CreatedOnUtc, DateTimeKind.Utc);
 
+                model.MustChangePassword = customer.MustChangePassword;
+
                 //prepare model affiliate
                 var affiliate = await _affiliateService.GetAffiliateByIdAsync(customer.AffiliateId);
                 if (affiliate != null)

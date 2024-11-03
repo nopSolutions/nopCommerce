@@ -226,7 +226,7 @@ public partial class DiscountService : IDiscountService
             discounts = discounts.Where(discount =>
                 !discount.EndDateUtc.HasValue || discount.EndDateUtc <= endDateUtc.Value);
 
-        return discounts.ToList();
+        return await discounts.ToListAsync();
     }
 
     /// <summary>

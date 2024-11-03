@@ -14,12 +14,12 @@
     </h1>
     <div class="float-right">
         <a asp-action="Create" class="btn btn-primary">
-            <i class="fas fa-plus-square"></i>
+            <i class="fas fa-square-plus"></i>
             @T("Admin.Common.AddNew")
         </a>
         @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductAttributeListButtons, additionalData = Model })
         <button type="button" id="delete-selected" class="btn btn-danger">
-            <i class="far fa-trash-alt"></i>
+            <i class="far fa-trash-can"></i>
             @T("Admin.Common.Delete.Selected")
         </button>
         <nop-action-confirmation asp-button-id="delete-selected" />
@@ -59,7 +59,7 @@
                             Title = T("Admin.Common.Edit").Text,
                             Width = "100",
                             ClassName =  NopColumnClassDefaults.Button,
-                            Render = new RenderButtonEdit(new DataUrl("Edit"))
+                            Render = new RenderButtonEdit(new DataUrl("~/Admin/ProductAttribute/Edit"))
                         }
                     }
                 })

@@ -26,11 +26,17 @@ public partial class NopRoutingStartup : INopStartup
     /// <param name="application">Builder for configuring an application's request pipeline</param>
     public void Configure(IApplicationBuilder application)
     {
-        //Add the RoutingMiddleware
+        var hostingConfig = Singleton<AppSettings>.Instance.Get<HostingConfig>();
+
+        //use path base
+        if (!string.IsNullOrEmpty(hostingConfig.PathBase))
+            application.UsePathBase(hostingConfig.PathBase);
+
+        //add the RoutingMiddleware
         application.UseRouting();
 
-        var settings = Singleton<AppSettings>.Instance.Get<CommonConfig>();
-        if (settings.PermitLimit > 0)
+        var commonConfig = Singleton<AppSettings>.Instance.Get<CommonConfig>();
+        if (commonConfig.PermitLimit > 0)
             application.UseRateLimiter();
     }
 

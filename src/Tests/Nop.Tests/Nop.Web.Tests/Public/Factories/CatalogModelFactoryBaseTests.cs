@@ -294,17 +294,6 @@ public class CatalogModelFactoryBaseTests : WebTest
     }
 
     [Test]
-    public async Task CanPrepareSearchBoxModel()
-    {
-        var model = await _catalogModelFactory.PrepareSearchBoxModelAsync();
-
-        model.AutoCompleteEnabled.Should().Be(_catalogSettings.ProductSearchAutoCompleteEnabled);
-        model.ShowProductImagesInSearchAutoComplete.Should().Be(_catalogSettings.ShowProductImagesInSearchAutoComplete);
-        model.SearchTermMinimumLength.Should().Be(_catalogSettings.ProductSearchTermMinimumLength);
-        model.ShowSearchBox.Should().Be(_catalogSettings.ProductSearchEnabled);
-    }
-
-    [Test]
     public void PrepareVendorModelShouldRaiseExceptionIfProductTagOrCommandIsNull()
     {
         Assert.Throws<AggregateException>(() =>
@@ -436,5 +425,30 @@ public class CatalogModelFactoryBaseTests : WebTest
 
         foreach (var categoryModel in model)
             categoryModel.Name.Should().BeOneOf(categories);
+    }
+
+    [Test]
+    public async Task CanPrepareCategoryProductsModelAsync()
+    {
+        var model = await _catalogModelFactory.PrepareCategoryProductsModelAsync(await _categoryService.GetCategoryByIdAsync(3), new CatalogProductsCommand());
+        model.UseAjaxLoading.Should().Be(_catalogSettings.UseAjaxCatalogProductsLoading);
+        model.AvailableSortOptions.Should().NotBeEmpty();
+        model.AvailableViewModes.Should().NotBeEmpty();
+        model.Products.Should().NotBeEmpty();
+        model.Products.Count.Should().Be(6);
+        model.ManufacturerFilter.Manufacturers.Should().NotBeEmpty();
+        model.ManufacturerFilter.Manufacturers.Count.Should().Be(2);
+        model.SpecificationFilter.Attributes.Should().NotBeEmpty();
+        model.SpecificationFilter.Attributes.Count.Should().Be(2);
+        model.TotalItems.Should().Be(model.Products.Count);
+    }
+
+    [Test]
+    public async Task CanPrepareNewProductsModelAsync()
+    {
+        var model = await _catalogModelFactory.PrepareNewProductsModelAsync(new CatalogProductsCommand());
+        model.Products.Any().Should().BeTrue();
+        model.Products.Count.Should().Be(6);
+        model.UseAjaxLoading.Should().Be(_catalogSettings.UseAjaxCatalogProductsLoading);
     }
 }

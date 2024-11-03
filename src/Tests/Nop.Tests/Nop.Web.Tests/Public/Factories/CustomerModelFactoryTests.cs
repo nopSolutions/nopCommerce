@@ -3,6 +3,7 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Attributes;
+using Nop.Services.Configuration;
 using Nop.Web.Factories;
 using Nop.Web.Models.Customer;
 using NUnit.Framework;
@@ -16,14 +17,23 @@ public class CustomerModelFactoryTests : WebTest
     private ICustomerModelFactory _customerModelFactory;
     private Customer _customer;
     private CustomerAttribute[] _customerAttributes;
+    private CustomerSettings _customerSettings;
+    private ISettingService _settingService;
 
     [OneTimeSetUp]
     public async Task SetUp()
     {
+        _customerSettings = GetService<CustomerSettings>();
+        _settingService = GetService<ISettingService>();
+
+        _customerSettings.CountryEnabled = true;
+        _customerSettings.StateProvinceEnabled = true;
+        await _settingService.SaveSettingAsync(_customerSettings);
+
         _customerAttributeService = GetService<IAttributeService<CustomerAttribute, CustomerAttributeValue>>();
         _customerModelFactory = GetService<ICustomerModelFactory>();
         _customer = await GetService<IWorkContext>().GetCurrentCustomerAsync();
-
+        
         _customerAttributes =
         [
             new CustomerAttribute
@@ -75,6 +85,10 @@ public class CustomerModelFactoryTests : WebTest
     [OneTimeTearDown]
     public async Task TearDown()
     {
+        _customerSettings.CountryEnabled = false;
+        _customerSettings.StateProvinceEnabled = false;
+        await _settingService.SaveSettingAsync(_customerSettings);
+
         foreach (var customerAttribute in _customerAttributes)
             await _customerAttributeService.DeleteAttributeAsync(customerAttribute);
     }

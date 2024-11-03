@@ -49,5 +49,17 @@ public static partial class NopOrderDefaults
 
     #endregion
 
+    #region Perform order with lock
+
+    /// <summary>
+    /// Gets a key for caching
+    /// </summary>
+    /// <remarks>
+    /// {0} : customer identifier
+    /// </remarks>
+    public static CacheKey OrderWithLockCacheKey => new("Nop.Order.With.Lock.{0}");
+
+    #endregion
+
     #endregion
 }

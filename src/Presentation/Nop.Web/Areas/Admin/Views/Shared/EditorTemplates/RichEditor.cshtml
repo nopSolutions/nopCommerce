@@ -19,10 +19,6 @@
     //is java-script supported?
     var allowJavaScript = adminAreaSettings.RichEditorAllowJavaScript;
 
-    //allow HTML body? Full page? - http://www.tinymce.com/wiki.php/Plugin:fullpage
-    //false by default
-    var enableFullPage = Convert.ToBoolean(ViewData["nop.RichEditor.EnableFullPage"] ?? false);
-
     var extended_valid_elements = new List<string>();
     var valid_children = new List<string>();
     
@@ -57,8 +53,8 @@
                     roxyFileman += (roxyFileman.indexOf("?") < 0 ? "?" : "&") + "type=" + type.filetype;
                     if (value)
                         roxyFileman += '&value=' + value; // a link to already chosen image if it exists
-                    if (tinyMCE.activeEditor.settings.language)
-                        roxyFileman += '&langCode=' + tinyMCE.activeEditor.settings.language;
+                    if (tinyMCE.activeEditor.options.language)
+                        roxyFileman += '&langCode=' + tinyMCE.activeEditor.options.language;
                     const instanceApi = tinyMCE.activeEditor.windowManager.openUrl({
                         title: 'Roxy Fileman',
                         url: roxyFileman,
@@ -80,17 +76,18 @@
         }
 
         var defaultEditorSettings@(random) = {
+            promotion: false,
             selector: "#@Html.IdForModel()",
             fontsize_formats: "8pt 9pt 10pt 11pt 12pt 26pt 36pt",
             height: 200,
             width: '100%',
             resize: true,
             min_height: 200,
-            max_height: '100%',
+            max_height: 800,
             plugins: [
-                "advlist autolink autoresize directionality lists link image charmap preview anchor",
-                "searchreplace visualblocks code fullscreen",
-                "insertdatetime media table paste@(enableFullPage ? " fullpage" : null)"
+                'advlist', 'autolink', 'autoresize', 'directionality', 'lists', 'link', 'image', 'charmap', 'preview', 'anchor',
+                'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                'insertdatetime', 'media', 'table'
             ],
             toolbar: "ltr rtl | insertfile undo redo | styleselect | fontselect | fontsizeselect | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
             relative_urls: false,

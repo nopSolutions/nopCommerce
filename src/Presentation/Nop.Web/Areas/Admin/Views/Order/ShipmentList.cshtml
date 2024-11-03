@@ -50,7 +50,7 @@
                 @T("Admin.Orders.Shipments.ReadyForPickupSelected")
             </button>
             <button type="button" id="deliver-selected" class="btn btn-success" onclick="uploadSelectedShipments('@(Url.Action("SetAsDeliveredSelected", "Order"))', 'setAsDeliveredSelectedFailed');return false;">
-                <i class="fas fa-check-square"></i>
+                <i class="fas fa-square-check"></i>
                 @T("Admin.Orders.Shipments.DeliverySelected")
             </button>
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.OrderShipmentListButtons, additionalData = Model })
@@ -65,7 +65,7 @@
                             <div class="card-body">
                                 <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
                                     <div class="search-text">@T("Admin.Common.Search")</div>
-                                    <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                                    <div class="icon-search"><i class="fas fa-magnifying-glass" aria-hidden="true"></i></div>
                                     <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
                                 </div>
 
@@ -167,7 +167,7 @@
                                     <div class="row">
                                         <div class="text-center col-12">
                                             <button type="button" id="search-shipments" class="btn btn-primary btn-search">
-                                                <i class="fas fa-search"></i>
+                                                <i class="fas fa-magnifying-glass"></i>
                                                 @T("Admin.Common.Search")
                                             </button>
                                         </div>

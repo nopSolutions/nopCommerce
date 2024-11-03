@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace Nop.Tests.Nop.Services.Tests.Affiliates;
 
 [TestFixture]
-public class AffiliateServiceTests : ServiceTest
+public class AffiliateServiceTests : ServiceTest<Affiliate>
 {
     private IAffiliateService _affiliateService;
     private IAddressService _addressService;
@@ -136,4 +136,35 @@ public class AffiliateServiceTests : ServiceTest
         friendlyUrlName = await _affiliateService.ValidateFriendlyUrlNameAsync(_activeAffiliate1, "not/valid/url*name");
         friendlyUrlName.Should().Be("notvalidurlname");
     }
+
+    protected override CrudData<Affiliate> CrudData
+    {
+        get
+        {
+            var baseEntity = new Affiliate
+            {
+                Active = true,
+                AddressId = 1,
+                AdminComment = "Test admin comment",
+                FriendlyUrlName = "TestActiveAffiliate"
+            };
+
+            var updatedEntity = new Affiliate
+            {
+                Active = true, AddressId = 1, AdminComment = "Test comment", FriendlyUrlName = "TestActiveAffiliate"
+            };
+
+            return new CrudData<Affiliate>
+            {
+                BaseEntity = baseEntity,
+                UpdatedEntity = updatedEntity,
+                Insert = _affiliateService.InsertAffiliateAsync,
+                Update = _affiliateService.UpdateAffiliateAsync,
+                Delete = _affiliateService.DeleteAffiliateAsync,
+                GetById = _affiliateService.GetAffiliateByIdAsync,
+                IsEqual = (first, second) => first.Active == second.Active && first.AddressId == second.AddressId && first.AdminComment.Equals(second.AdminComment) && first.FriendlyUrlName.Equals(second.FriendlyUrlName) && first.Deleted == second.Deleted
+            };
+        }
+    }
+
 }

@@ -42,7 +42,7 @@
                 <nop-card asp-name="discount-applied-to-manufacturers" asp-icon="fas fa-industry" asp-title="@T("Admin.Promotions.Discounts.AppliedToManufacturers")" asp-hide-block-attribute-name="@hideAppliedToManufacturersBlockAttributeName" asp-hide="@hideAppliedToManufacturersBlock">@await Html.PartialAsync("_CreateOrUpdate.AppliedToManufacturers", Model)</nop-card>
                 @if (Model.Id > 0)
                 {
-                    <nop-card asp-name="discount-usage-history" asp-icon="fas fa-history" asp-title="@T("Admin.Promotions.Discounts.History")" asp-hide-block-attribute-name="@hideUsageHistoryBlockAttributeName" asp-hide="@hideUsageHistoryBlock">@await Html.PartialAsync("_CreateOrUpdate.History", Model)</nop-card>
+                    <nop-card asp-name="discount-usage-history" asp-icon="fas fa-clock-rotate-left" asp-title="@T("Admin.Promotions.Discounts.History")" asp-hide-block-attribute-name="@hideUsageHistoryBlockAttributeName" asp-hide="@hideUsageHistoryBlock">@await Html.PartialAsync("_CreateOrUpdate.History", Model)</nop-card>
                 }
 
                 @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.DiscountDetailsBlock, additionalData = Model })

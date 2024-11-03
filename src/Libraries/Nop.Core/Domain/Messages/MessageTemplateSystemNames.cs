@@ -252,6 +252,16 @@ public static partial class MessageTemplateSystemNames
     public const string QUANTITY_BELOW_ATTRIBUTE_COMBINATION_STORE_OWNER_NOTIFICATION = "QuantityBelow.AttributeCombination.StoreOwnerNotification";
 
     /// <summary>
+    /// Represents system name of notification vendor about below quantity of product
+    /// </summary>
+    public const string QUANTITY_BELOW_VENDOR_NOTIFICATION = "QuantityBelow.VendorNotification";
+
+    /// <summary>
+    /// Represents system name of notification vendor about below quantity of product attribute combination
+    /// </summary>
+    public const string QUANTITY_BELOW_ATTRIBUTE_COMBINATION_VENDOR_NOTIFICATION = "QuantityBelow.AttributeCombination.VendorNotification";
+
+    /// <summary>
     /// Represents system name of notification store owner about submitting new VAT
     /// </summary>
     public const string NEW_VAT_SUBMITTED_STORE_OWNER_NOTIFICATION = "NewVATSubmitted.StoreOwnerNotification";

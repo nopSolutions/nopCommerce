@@ -199,7 +199,7 @@ public partial class ShoppingCartController : BasePublicController
                     }
                 }
 
-                    break;
+                break;
                 case AttributeControlType.Checkboxes:
                 {
                     var cblAttributes = form[controlId];
@@ -215,7 +215,7 @@ public partial class ShoppingCartController : BasePublicController
                     }
                 }
 
-                    break;
+                break;
                 case AttributeControlType.ReadonlyCheckboxes:
                 {
                     //load read-only (already server-side selected) values
@@ -230,7 +230,7 @@ public partial class ShoppingCartController : BasePublicController
                     }
                 }
 
-                    break;
+                break;
                 case AttributeControlType.TextBox:
                 case AttributeControlType.MultilineTextbox:
                 {
@@ -243,7 +243,7 @@ public partial class ShoppingCartController : BasePublicController
                     }
                 }
 
-                    break;
+                break;
                 case AttributeControlType.Datepicker:
                 {
                     var date = form[controlId + "_day"];
@@ -264,7 +264,7 @@ public partial class ShoppingCartController : BasePublicController
                             attribute, selectedDate.Value.ToString("D"));
                 }
 
-                    break;
+                break;
                 case AttributeControlType.FileUpload:
                 {
                     _ = Guid.TryParse(form[controlId], out var downloadGuid);
@@ -276,7 +276,7 @@ public partial class ShoppingCartController : BasePublicController
                     }
                 }
 
-                    break;
+                break;
                 default:
                     break;
             }
@@ -421,6 +421,25 @@ public partial class ShoppingCartController : BasePublicController
                 });
             }
         }
+    }
+
+    protected virtual async Task<string> GetGiftCardValidationErrorAsync(IList<ShoppingCartItem> cart, string giftcardcouponcode)
+    {
+        if (string.IsNullOrWhiteSpace(giftcardcouponcode))
+            return await _localizationService.GetResourceAsync("ShoppingCart.GiftCardCouponCode.WrongGiftCard");
+
+        if (await _shoppingCartService.ShoppingCartIsRecurringAsync(cart))
+            return await _localizationService.GetResourceAsync("ShoppingCart.GiftCardCouponCode.DontWorkWithAutoshipProducts");
+
+        var giftCard = (await _giftCardService.GetAllGiftCardsAsync(giftCardCouponCode: giftcardcouponcode)).FirstOrDefault();
+
+        if (giftCard == null || !await _giftCardService.IsGiftCardValidAsync(giftCard))
+            return await _localizationService.GetResourceAsync("ShoppingCart.GiftCardCouponCode.WrongGiftCard");
+
+        if (await _productService.HasAnyGiftCardProductAsync(cart.Select(c => c.ProductId).ToArray()))
+            return await _localizationService.GetResourceAsync("ShoppingCart.GiftCardCouponCode.DontWorkWithGiftCards");
+
+        return string.Empty;
     }
 
     #endregion
@@ -1364,33 +1383,18 @@ public partial class ShoppingCartController : BasePublicController
         await ParseAndSaveCheckoutAttributesAsync(cart, form);
 
         var model = new ShoppingCartModel();
-        if (!await _shoppingCartService.ShoppingCartIsRecurringAsync(cart))
+
+        var validationError = await GetGiftCardValidationErrorAsync(cart, giftcardcouponcode);
+
+        if (string.IsNullOrEmpty(validationError))
         {
-            if (!string.IsNullOrWhiteSpace(giftcardcouponcode))
-            {
-                var giftCard = (await _giftCardService.GetAllGiftCardsAsync(giftCardCouponCode: giftcardcouponcode)).FirstOrDefault();
-                var isGiftCardValid = giftCard != null && await _giftCardService.IsGiftCardValidAsync(giftCard);
-                if (isGiftCardValid)
-                {
-                    await _customerService.ApplyGiftCardCouponCodeAsync(customer, giftcardcouponcode);
-                    model.GiftCardBox.Message = await _localizationService.GetResourceAsync("ShoppingCart.GiftCardCouponCode.Applied");
-                    model.GiftCardBox.IsApplied = true;
-                }
-                else
-                {
-                    model.GiftCardBox.Message = await _localizationService.GetResourceAsync("ShoppingCart.GiftCardCouponCode.WrongGiftCard");
-                    model.GiftCardBox.IsApplied = false;
-                }
-            }
-            else
-            {
-                model.GiftCardBox.Message = await _localizationService.GetResourceAsync("ShoppingCart.GiftCardCouponCode.WrongGiftCard");
-                model.GiftCardBox.IsApplied = false;
-            }
+            await _customerService.ApplyGiftCardCouponCodeAsync(customer, giftcardcouponcode);
+            model.GiftCardBox.Message = await _localizationService.GetResourceAsync("ShoppingCart.GiftCardCouponCode.Applied");
+            model.GiftCardBox.IsApplied = true;
         }
         else
         {
-            model.GiftCardBox.Message = await _localizationService.GetResourceAsync("ShoppingCart.GiftCardCouponCode.DontWorkWithAutoshipProducts");
+            model.GiftCardBox.Message = validationError;
             model.GiftCardBox.IsApplied = false;
         }
 

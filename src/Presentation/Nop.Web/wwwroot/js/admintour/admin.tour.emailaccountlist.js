@@ -2,7 +2,9 @@
   $('#email-accounts-grid').on('draw.dt', function () {
     const tour = new Shepherd.Tour(AdminTourCommonTourOptions);
 
-    AdminTourNextPageButton.action = function () { window.location = '/Admin/EmailAccount/Edit/' + AdminTourDataProvider.next_button_entity_id + '?showtour=True' };
+    AdminTourNextPageButton.action = function () {
+        window.location = ((document.querySelector('base') || {}).getAttribute('href') + '/Admin/EmailAccount/Edit/' + AdminTourDataProvider.next_button_entity_id + '?showtour=True').replace(/\/\//g, "/");
+    };
 
     //'Email accounts' step
     tour.addStep({

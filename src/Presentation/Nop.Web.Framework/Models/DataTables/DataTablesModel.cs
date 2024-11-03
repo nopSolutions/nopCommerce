@@ -115,11 +115,6 @@ public partial record DataTablesModel : BaseNopModel
     public string LengthMenu { get; set; }
 
     /// <summary>
-    /// Indicates where particular features appears in the DOM
-    /// </summary>
-    public string Dom { get; set; }
-
-    /// <summary>
     /// Feature control ordering (sorting) abilities in DataTables
     /// </summary>
     public bool Ordering { get; set; }

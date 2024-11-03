@@ -105,6 +105,9 @@
   <LocaleResource Name="Account.ChangePassword.Fields.OldPassword.Required">
     <Value>Old password is required.</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.ChangePassword.MustBeChanged">
+    <Value>Your password must be changed for security purposes.</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.ChangePassword.PasswordIsExpired">
     <Value>Your password has expired, please create a new one</Value>
   </LocaleResource>
@@ -431,6 +434,9 @@
   </LocaleResource>
   <LocaleResource Name="Account.Fields.VatNumber.Note">
     <Value>NOTE: Enter VAT number with country code (e.g. GB 111 111 11)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.VatNumber.Required">
+    <Value>VAT number is required</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Fields.ZipPostalCode">
     <Value>Zip / postal code</Value>
@@ -2265,6 +2271,12 @@
   <LocaleResource Name="Admin.Catalog.Categories.Fields.Published.Hint">
     <Value>Check to publish this category (visible in store). Uncheck to unpublish (category not available in store).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.RestrictFromVendors">
+    <Value>Restrict from vendors</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.RestrictFromVendors.Hint">
+    <Value>Check to restrict vendors from adding products to this category. This option is useful when you have multi-vendors enabled in your store.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.SeName">
     <Value>Search engine friendly page name</Value>
   </LocaleResource>
@@ -3576,6 +3588,9 @@
   <LocaleResource Name="Admin.Catalog.Products.Multimedia.Videos.Alert.VideoUpdate">
      <Value>Failed to update product video.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Multimedia.Videos.Description">
+     <Value><![CDATA[How to embed a video: Find your video in your library (on any video hosting) and select it to open the video settings page. Select the privacy icon from your "Share" button. Click on "Embed" from the window that opens up. You can copy the <strong>src</strong> from the embed option and use it.]]></Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Multimedia.Videos.Fields.DisplayOrder">
     <Value>Display order</Value>
   </LocaleResource>
@@ -4653,6 +4668,12 @@
   <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.KnownNetworks.Hint">
     <Value>Specify a list of IP CIDR notations (comma separated) to accept forwarded headers. e.g. 172.64.0.0/13,162.158.0.0/15</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.PathBase">
+    <Value>Path base</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.PathBase.Hint">
+    <Value>Ability to set a custom path base, for example domain.com/path/</Value>
+  </LocaleResource>    
   <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.UseProxy">
     <Value>Use proxy servers</Value>
   </LocaleResource>
@@ -6372,6 +6393,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductsFromSubcategories.Hint">
     <Value>Check if you want a category details page to include products from subcategories.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowSearchBoxCategories">
+    <Value>Show categories for the search box</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowSearchBoxCategories.Hint">
+    <Value>Check to display the category drop-down list next to the search box.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowShareButton">
     <Value>Show a share button</Value>
   </LocaleResource>
@@ -6831,11 +6858,17 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordMaxLength.Hint">
     <Value>Specify password maximum length.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordMaxLength.GreaterThanOrEqualMinLength">
+    <Value>Password maximum length must be greater than or equal to minimum length</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordMinLength">
     <Value>Password minimum length</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordMinLength.Hint">
     <Value>Specify password minimum length.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordMinLength.GreaterThanZero">
+    <Value>Password minimum length must be greater than 0</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordRecoveryLinkDaysValid">
     <Value>Password recovery link. Days valid</Value>
@@ -9150,6 +9183,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Tax.EuVatShopCountry.Hint">
     <Value>Select your shop country for VAT calculation.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.EuVatRequired">
+    <Value>VAT number required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.EuVatRequired.Hint">
+    <Value>Check if 'EU VAT number' is required.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.EuVatUseWebService">
     <Value>Use web service</Value>
   </LocaleResource>
@@ -10105,7 +10144,7 @@
     <Value>“Powered by” link</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.Product.Details.Text">
-    <Value><![CDATA[Enter the relevant product details in these fields. The screenshot below shows how they will be displayed on the product page with the default nopCommerce theme: <div><img src="../../js/admintour/images/product-page.jpg"/></div>]]></Value>
+    <Value><![CDATA[Enter the relevant product details in these fields. The screenshot below shows how they will be displayed on the product page with the default nopCommerce theme: <div><img src="js/admintour/images/product-page.jpg"/></div>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.Product.Details.Title">
     <Value>Product details</Value>
@@ -10742,6 +10781,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.QuantityBelow.StoreOwnerNotification">
     <Value><![CDATA[This message template is used to notify a store owner that the certain product is getting low stock. You can set up the minimum product quantity when creating or editing the product in Inventory section, <strong>Minimum stock qty field</strong>.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.QuantityBelow.AttributeCombination.VendorNotification">
+    <Value>This message template is used to notify a vendor that the certain product attribute combination is getting low stock. You can set up the combination minimum quantity when creating or editing the product in Product attribute tab - Attributes combinations tab in Notify admin for quantity below field.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.QuantityBelow.VendorNotification">
+    <Value><![CDATA[This message template is used to notify a vendor that the certain product is getting low stock. You can set up the minimum product quantity when creating or editing the product in Inventory section, <strong>Minimum stock qty field</strong>.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.RecurringPaymentCancelled.CustomerNotification">
     <Value>This message template is used to notify a customer that the certain recurring payment is cancelled. Payment can be cancelled by a customer in the account page or by a store owner in Sales - Recurring payments in History tab by clicking "Cancel recurring payment" button.</Value>
@@ -11972,6 +12017,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.MultiFactorAuthenticationProvider.Hint">
     <Value>Name of the multi-factor authentication provider to which the customer is associated.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.MustChangePassword">
+    <Value>Customer must change password</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.MustChangePassword.Hint">
+    <Value>Check to require the customer to change their password.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.Newsletter">
     <Value>Newsletter</Value>
@@ -19377,6 +19428,9 @@
   <LocaleResource Name="Search.Manufacturer">
     <Value>Manufacturer</Value>
   </LocaleResource>
+  <LocaleResource Name="Search.SearchBox.AllCategories">
+    <Value>All categories</Value>
+  </LocaleResource>
   <LocaleResource Name="Search.SearchBox.SearchPageLink">
     <Value>View all results...</Value>
   </LocaleResource>
@@ -19887,6 +19941,9 @@
   <LocaleResource Name="ShoppingCart.GiftCardCouponCode.DontWorkWithAutoshipProducts">
     <Value>You cannot use gift cards with auto-ship (recurring) items.</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.GiftCardCouponCode.DontWorkWithGiftCards">
+    <Value>You cannot use gift cards with other gift cards.</Value>
+  </LocaleResource>
   <LocaleResource Name="ShoppingCart.GiftCardCouponCode.Label">
     <Value>Enter gift card code</Value>
   </LocaleResource>
@@ -20158,22 +20215,22 @@
     <Value>Password is required.</Value>
   </LocaleResource>
   <LocaleResource Name="Validation.Password.LengthValidation">
-    <Value><![CDATA[<li>must have at least {0} characters and not greater than {1} characters</li>]]></Value>
+    <Value>must have at least {0} characters and not greater than {1} characters</Value>
   </LocaleResource>
   <LocaleResource Name="Validation.Password.RequireDigit">
-    <Value><![CDATA[<li>must have at least one digit</li>]]></Value>
+    <Value>must have at least one digit</Value>
   </LocaleResource>
   <LocaleResource Name="Validation.Password.RequireLowercase">
-    <Value><![CDATA[<li>must have at least one lowercase</li>]]></Value>
+    <Value>must have at least one lowercase</Value>
   </LocaleResource>
   <LocaleResource Name="Validation.Password.RequireNonAlphanumeric">
-    <Value><![CDATA[<li>must have at least one special character (e.g. #?!@$%^&*-)</li>]]></Value>
+    <Value><![CDATA[must have at least one special character (e.g. #?!@$%^&*-)]]></Value>
   </LocaleResource>
   <LocaleResource Name="Validation.Password.RequireUppercase">
-    <Value><![CDATA[<li>must have at least one uppercase</li>]]></Value>
+    <Value>must have at least one uppercase</Value>
   </LocaleResource>
   <LocaleResource Name="Validation.Password.Rule">
-    <Value><![CDATA[<p>must meet the following rules: </p><ul>{0}{1}{2}{3}{4}</ul>]]></Value>
+    <Value>Password must meet the following rules: </Value>
   </LocaleResource>
   <LocaleResource Name="Vendors">
     <Value>Vendors</Value>

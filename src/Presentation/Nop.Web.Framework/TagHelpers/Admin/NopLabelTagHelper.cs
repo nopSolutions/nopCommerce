@@ -95,7 +95,7 @@ public partial class NopLabelTagHelper : TagHelper
 
                 if (!string.IsNullOrEmpty(hintResource))
                 {
-                    var hintContent = $"<div title='{WebUtility.HtmlEncode(hintResource)}' data-toggle='tooltip' class='ico-help'><i class='fas fa-question-circle'></i></div>";
+                    var hintContent = $"<div title='{WebUtility.HtmlEncode(hintResource)}' data-toggle='tooltip' class='ico-help'><i class='fas fa-circle-question'></i></div>";
                     output.Content.AppendHtml(hintContent);
                 }
             }

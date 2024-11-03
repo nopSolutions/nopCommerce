@@ -1840,6 +1840,8 @@ public partial class ProductModelFactory : IProductModelFactory
                 model = tierPrice.ToModel<TierPriceModel>();
         }
 
+        model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
+
         //prepare available stores
         await _baseAdminModelFactory.PrepareStoresAsync(model.AvailableStores);
 

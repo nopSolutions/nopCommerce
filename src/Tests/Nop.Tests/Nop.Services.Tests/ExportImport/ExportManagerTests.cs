@@ -343,7 +343,7 @@ public class ExportManagerTests : ServiceTest
             "CustomerCustomerRoleMappings", "CustomerAddressMappings", "EntityCacheKey", "VendorId",
             "DateOfBirth", "CountryId",
             "StateProvinceId", "VatNumberStatusId", "TimeZoneId",
-            "CurrencyId", "LanguageId", "TaxDisplayTypeId", "TaxDisplayType", "TaxDisplayType", "VatNumberStatusId" };
+            "CurrencyId", "LanguageId", "TaxDisplayTypeId", "TaxDisplayType", "TaxDisplayType", "VatNumberStatusId", "MustChangePassword" };
 
         if (!_customerSettings.FirstNameEnabled) 
             ignore.Add("FirstName");
@@ -404,7 +404,7 @@ public class ExportManagerTests : ServiceTest
         manager.ReadDefaultFromXlsx(worksheet, 2);
         var category = categories.First();
 
-        var ignore = new List<string> { "CreatedOnUtc", "EntityCacheKey", "Picture", "PictureId", "AppliedDiscounts", "UpdatedOnUtc", "SubjectToAcl", "LimitedToStores", "Deleted", "DiscountCategoryMappings" };
+        var ignore = new List<string> { "CreatedOnUtc", "EntityCacheKey", "Picture", "PictureId", "AppliedDiscounts", "UpdatedOnUtc", "SubjectToAcl", "LimitedToStores", "Deleted", "DiscountCategoryMappings", "RestrictFromVendors" };
 
         AreAllObjectPropertiesPresent(category, manager, ignore.ToArray());
         PropertiesShouldEqual(category, manager, new Dictionary<string, string>());

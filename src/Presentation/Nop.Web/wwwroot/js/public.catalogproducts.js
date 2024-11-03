@@ -36,11 +36,15 @@
     } else {
       this.setLoadWaiting(1);
 
+      var postData = { ...beforePayload.urlBuilder.params.query };
+      addAntiForgeryToken(postData)
+
       var self = this;
       this.params.jqXHR = $.ajax({
         cache: false,
-        url: urlBuilder.addBasePath(this.settings.fetchUrl).build(),
-        type: 'GET',
+        url: this.settings.fetchUrl,
+        type: 'POST',
+        data: postData,
         success: function (response) {
           $('.products-wrapper').html(response);
           $('html, body').animate({ scrollTop: $('.center-2 .page').offset().top }, 'slow');
