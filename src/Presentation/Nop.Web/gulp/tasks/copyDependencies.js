@@ -67,8 +67,7 @@ export default function copyDependencies()
 
     //OverlayScrollbars
     gulp
-      .src(`${nodeModules}overlayscrollbars/**`)
-      .pipe(filter('**/{css,js}/*.min*'))
+      .src(`${nodeModules}overlayscrollbars/**/*.min.*`)
       .pipe(gulp.dest(`${targetPath}overlayscrollbars`)),
 
     //Swiper
