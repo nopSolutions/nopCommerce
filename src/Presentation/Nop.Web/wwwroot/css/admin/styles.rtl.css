@@ -1037,7 +1037,7 @@ div.row.justify-content-between.dt-layout-table thead {
   background-color: #f4f4f4;
 }
 
-.dataTables_wrapper tbody td {
+.dt-container tbody td {
   vertical-align: middle !important;
 }
 
