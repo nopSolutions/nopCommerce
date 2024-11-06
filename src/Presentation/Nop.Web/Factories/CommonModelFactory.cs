@@ -157,6 +157,19 @@ public partial class CommonModelFactory : ICommonModelFactory
 
     #region Utilities
 
+    private async Task<bool> IsHomePageAsync()
+    {
+        var storeLocationUri = new Uri(_webHelper.GetStoreLocation().TrimEnd('/'));
+        var currentPageUri = new Uri(_webHelper.GetThisPageUrl(false).TrimEnd('/'));
+
+        if (!_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+            return storeLocationUri.Equals(currentPageUri);
+
+        var currentLanguage = await _workContext.GetWorkingLanguageAsync();
+
+        return Uri.TryCreate(storeLocationUri, currentLanguage.UniqueSeoCode, out var result) && result.Equals(currentPageUri);
+    }
+
     /// <summary>
     /// Get the number of unread private messages
     /// </summary>
@@ -447,7 +460,7 @@ public partial class CommonModelFactory : ICommonModelFactory
             NewProductsEnabled = _catalogSettings.NewProductsEnabled,
             DisplayTaxShippingInfoFooter = _catalogSettings.DisplayTaxShippingInfoFooter,
             HidePoweredByNopCommerce = _storeInformationSettings.HidePoweredByNopCommerce,
-            IsHomePage = _webHelper.GetStoreLocation().Equals(_webHelper.GetThisPageUrl(false), StringComparison.InvariantCultureIgnoreCase),
+            IsHomePage = await IsHomePageAsync(),
             AllowCustomersToApplyForVendorAccount = _vendorSettings.AllowCustomersToApplyForVendorAccount,
             AllowCustomersToCheckGiftCardBalance = _customerSettings.AllowCustomersToCheckGiftCardBalance && _captchaSettings.Enabled,
             Topics = topicModels,
