@@ -275,12 +275,13 @@ public partial class NopHtmlHelper : INopHtmlHelper
         ArgumentNullException.ThrowIfNull(_actionContextAccessor.ActionContext);
 
         var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+        var pathBase = _actionContextAccessor.ActionContext.HttpContext.Request.PathBase;
 
         _scriptParts[location].Add(new ScriptReferenceMeta
         {
             ExcludeFromBundle = excludeFromBundle,
             IsLocal = urlHelper.IsLocalUrl(src),
-            Src = urlHelper.Content(src)
+            Src = urlHelper.Content(src).RemoveApplicationPathFromRawUrl(pathBase)
         });
     }
 
@@ -305,12 +306,13 @@ public partial class NopHtmlHelper : INopHtmlHelper
         ArgumentNullException.ThrowIfNull(_actionContextAccessor.ActionContext);
 
         var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+        var pathBase = _actionContextAccessor.ActionContext.HttpContext.Request.PathBase;
 
         _scriptParts[location].Insert(0, new ScriptReferenceMeta
         {
             ExcludeFromBundle = excludeFromBundle,
             IsLocal = urlHelper.IsLocalUrl(src),
-            Src = urlHelper.Content(src)
+            Src = urlHelper.Content(src).RemoveApplicationPathFromRawUrl(pathBase)
         });
     }
 
@@ -329,6 +331,7 @@ public partial class NopHtmlHelper : INopHtmlHelper
 
         var result = new StringBuilder();
         var woConfig = _appSettings.Get<WebOptimizerConfig>();
+        var pathBase = _actionContextAccessor.ActionContext?.HttpContext.Request.PathBase ?? PathString.Empty;
 
         if (woConfig.EnableJavaScriptBundling && value.Any(item => !item.ExcludeFromBundle))
         {
@@ -336,13 +339,13 @@ public partial class NopHtmlHelper : INopHtmlHelper
                 .Select(item => item.Src)
                 .Distinct().ToArray();
 
-            var bundleKey = string.Concat("/js/", GetAssetKey(sources, woConfig.JavaScriptBundleSuffix), ".js");
+            var bundleKey = $"/js/{GetAssetKey(sources, woConfig.JavaScriptBundleSuffix)}.js";
 
             var bundleAsset = _bundleHelper.GetOrCreateJavaScriptAsset(bundleKey, sources);
             var route = _bundleHelper.CacheBusting(bundleAsset);
 
-            result.AppendFormat("<script type=\"{0}\" src=\"{1}\"></script>",
-                MimeTypes.TextJavascript, route);
+            result.AppendFormat("<script type=\"{0}\" src=\"{1}{2}\"></script>",
+                MimeTypes.TextJavascript, pathBase, route);
         }
 
         var scripts = value.Where(item => !woConfig.EnableJavaScriptBundling || item.ExcludeFromBundle || !item.IsLocal)
@@ -360,8 +363,8 @@ public partial class NopHtmlHelper : INopHtmlHelper
             var asset = _bundleHelper.GetOrCreateJavaScriptAsset(item.Src);
             var route = _bundleHelper.CacheBusting(asset);
 
-            result.AppendFormat("<script type=\"{0}\" src=\"{1}\"></script>",
-                MimeTypes.TextJavascript, route);
+            result.AppendFormat("<script type=\"{0}\" src=\"{1}{2}\"></script>",
+                MimeTypes.TextJavascript, pathBase, route);
 
             result.Append(Environment.NewLine);
         }
@@ -446,12 +449,13 @@ public partial class NopHtmlHelper : INopHtmlHelper
         ArgumentNullException.ThrowIfNull(_actionContextAccessor.ActionContext);
 
         var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+        var pathBase = _actionContextAccessor.ActionContext.HttpContext.Request.PathBase;
 
         _cssParts.Add(new CssReferenceMeta
         {
             ExcludeFromBundle = excludeFromBundle,
             IsLocal = urlHelper.IsLocalUrl(src),
-            Src = urlHelper.Content(src)
+            Src = urlHelper.Content(src).RemoveApplicationPathFromRawUrl(pathBase)
         });
     }
 
@@ -472,12 +476,13 @@ public partial class NopHtmlHelper : INopHtmlHelper
         ArgumentNullException.ThrowIfNull(_actionContextAccessor.ActionContext);
 
         var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+        var pathBase = _actionContextAccessor.ActionContext.HttpContext.Request.PathBase;
 
         _cssParts.Insert(0, new CssReferenceMeta
         {
             ExcludeFromBundle = excludeFromBundle,
             IsLocal = urlHelper.IsLocalUrl(src),
-            Src = urlHelper.Content(src)
+            Src = urlHelper.Content(src).RemoveApplicationPathFromRawUrl(pathBase)
         });
     }
 
@@ -495,7 +500,8 @@ public partial class NopHtmlHelper : INopHtmlHelper
         var result = new StringBuilder();
 
         var woConfig = _appSettings.Get<WebOptimizerConfig>();
-        
+        var pathBase = _actionContextAccessor.ActionContext?.HttpContext.Request.PathBase ?? PathString.Empty;
+
         if (woConfig.EnableCssBundling && _cssParts.Any(item => !item.ExcludeFromBundle))
         {
             var bundleSuffix = woConfig.CssBundleSuffix;
@@ -509,13 +515,14 @@ public partial class NopHtmlHelper : INopHtmlHelper
                 //remove the application path from the generated URL if exists
                 .Select(item => item.Src).ToArray();
 
-            var bundleKey = string.Concat("/css/", GetAssetKey(sources, bundleSuffix), ".css");
+            var bundleKey = $"/css/{GetAssetKey(sources, bundleSuffix)}.css";
 
             var bundleAsset = _bundleHelper.GetOrCreateCssAsset(bundleKey, sources);
             var route = _bundleHelper.CacheBusting(bundleAsset);
 
-            result.AppendFormat("<link rel=\"stylesheet\" type=\"{0}\" href=\"{1}\" />",
-                MimeTypes.TextCss, route);
+
+            result.AppendFormat("<link rel=\"stylesheet\" type=\"{0}\" href=\"{1}{2}\" />",
+                MimeTypes.TextCss, pathBase, route);
         }
 
         var styles = _cssParts
