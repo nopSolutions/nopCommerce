@@ -727,11 +727,21 @@ public partial class CheckoutController : BasePublicController
             return RedirectToRoute("CheckoutShippingAddress");
         }
 
-        //If we got this far, something failed, redisplay form
-        model = await _checkoutModelFactory.PrepareBillingAddressModelAsync(cart,
+        //if we got this far, something failed, redisplay form
+        var resultModel = await _checkoutModelFactory.PrepareBillingAddressModelAsync(cart,
             selectedCountryId: newAddress.CountryId,
             overrideAttributesXml: customAttributes);
-        return View(model);
+
+        resultModel.BillingNewAddress = model.BillingNewAddress;
+        await _addressModelFactory.PrepareAddressModelAsync(resultModel.BillingNewAddress,
+            address: null,
+            excludeProperties: false,
+            addressSettings: _addressSettings,
+            loadCountries: async () => await _countryService.GetAllCountriesForBillingAsync((await _workContext.GetWorkingLanguageAsync()).Id),
+            customer: customer,
+            overrideAttributesXml: customAttributes);
+
+        return View(resultModel);
     }
 
     public virtual async Task<IActionResult> ShippingAddress()
@@ -869,11 +879,21 @@ public partial class CheckoutController : BasePublicController
             return RedirectToRoute("CheckoutShippingMethod");
         }
 
-        //If we got this far, something failed, redisplay form
-        model = await _checkoutModelFactory.PrepareShippingAddressModelAsync(cart,
+        //if we got this far, something failed, redisplay form
+        var resultModel = await _checkoutModelFactory.PrepareShippingAddressModelAsync(cart,
             selectedCountryId: newAddress.CountryId,
             overrideAttributesXml: customAttributes);
-        return View(model);
+
+        resultModel.ShippingNewAddress = model.ShippingNewAddress;
+        await _addressModelFactory.PrepareAddressModelAsync(model.ShippingNewAddress,
+            address: null,
+            excludeProperties: false,
+            addressSettings: _addressSettings,
+            loadCountries: async () => await _countryService.GetAllCountriesForShippingAsync((await _workContext.GetWorkingLanguageAsync()).Id),
+            customer: customer,
+            overrideAttributesXml: customAttributes);
+        
+        return View(resultModel);
     }
 
     public virtual async Task<IActionResult> ShippingMethod()
