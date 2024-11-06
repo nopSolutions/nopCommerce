@@ -104,7 +104,8 @@ public class CheckoutModelFactoryTests : ServiceTest
     [Test]
     public async Task CanPrepareBillingAddressModel()
     {
-        var model = await _checkoutModelFactory.PrepareBillingAddressModelAsync(_cart);
+        var model = new CheckoutBillingAddressModel();
+        await _checkoutModelFactory.PrepareBillingAddressModelAsync(model, _cart);
 
         model.ShipToSameAddressAllowed.Should().Be(_shippingSettings.ShipToSameAddress &&
                                                    await _shoppingCartService.ShoppingCartRequiresShippingAsync(_cart));
@@ -122,7 +123,8 @@ public class CheckoutModelFactoryTests : ServiceTest
     [Test]
     public async Task CanPrepareShippingAddressModel()
     {
-        var model = await _checkoutModelFactory.PrepareShippingAddressModelAsync(_cart);
+        var model = new CheckoutShippingAddressModel();
+        await _checkoutModelFactory.PrepareShippingAddressModelAsync(model, _cart);
 
         model.DisplayPickupInStore.Should().Be(!_orderSettings.DisplayPickupInStoreOnShippingMethodPage);
 
