@@ -1000,11 +1000,11 @@ i.false-icon {
 }
 
 /*CSS loader */
-div.dataTables_wrapper {
+div.dt-container {
   position: relative;
 }
 
-div.dataTables_wrapper div.dataTables_processing {
+div.dt-container div.dt-processing {
   border: none;
   top: 0;
   right: 0;
@@ -1018,7 +1018,7 @@ div.dataTables_wrapper div.dataTables_processing {
   border-radius: 3px;
 }
 
-div.dataTables_wrapper div.dataTables_processing .fa {
+div.dt-container div.dt-processing .fa {
   padding-left: 0 !important;
   position: absolute;
   top: 50%;
@@ -1029,7 +1029,11 @@ div.dataTables_wrapper div.dataTables_processing .fa {
   font-size: 30px;
 }
 
-.dataTables_wrapper.no-footer .dataTables_scrollBody {
+div.dt-processing > div {
+  display: none;
+}
+
+.dt-container.dt-empty-footer .dt-scroll-body {
   border-bottom: 1px solid #f4f4f4;
 }
 
@@ -1935,16 +1939,7 @@ span.grid-report-item.red {
   white-space: nowrap;
 }
 
-div.dataTables_wrapper div.dataTables_length {
-  margin: 5px 5px 0 5px;
-}
-
-div.dataTables_wrapper div.dataTables_info {
-  padding-top: 0;
-  margin-top: 10px;
-}
-
-div.dataTables_wrapper .data-tables-refresh > div {
+div.dt-container .data-tables-refresh > div {
   float: none;
   margin-top: 2px;
   width: auto;
@@ -1990,17 +1985,17 @@ tr.even {
   background-color: #f4f4f4;
 }
 
-.dataTables_scrollBody .dataTables_wrapper {
+.dt-scroll-body .dt-container {
   width: 95%;
   margin-right: 3%;
 }
 
-.dataTables_scroll > .dataTables_scrollBody > .table,
-.dataTables_scroll > .dataTables_scrollHead > .dataTables_scrollHeadInner > .table {
+.dt-scroll > .dt-scroll-body > .table,
+.dt-scroll > .dt-scroll-head > .dt-scroll-headInner > .table {
   padding-right: 0 !important;
 }
 
-div.dataTables_wrapper div.dataTables_paginate {
+div.dt-container div.dt-paging {
   text-align: center;
 }
 
@@ -2117,17 +2112,9 @@ div.dataTables_wrapper div.dataTables_paginate {
     padding-bottom: 0;
   }
 
-  .dataTables_scrollBody .dataTables_wrapper {
+  .dt-scroll-body .dt-container {
     width: 100%;
     margin-right: 0;
-  }
-
-  div.dataTables_wrapper div.dataTables_info {
-    margin-top: 0;
-  }
-
-  div.dataTables_wrapper .data-tables-refresh {
-    margin-top: 8px;
   }
 
   .float-lg-left {
@@ -2167,7 +2154,7 @@ div.dataTables_wrapper div.dataTables_paginate {
     max-width: 100%;
   }
 
-  div.dataTables_wrapper div.dataTables_length {
+  div.dt-container div.dt-length {
     margin-left: 0;
   }
 }
@@ -2187,7 +2174,7 @@ div.dataTables_wrapper div.dataTables_paginate {
     text-align: right;
   }
 
-  div.dataTables_wrapper div.dataTables_length {
+  div.dt-container div.dt-length {
     text-align: center;
   }
 
@@ -2202,7 +2189,7 @@ div.dataTables_wrapper div.dataTables_paginate {
     vertical-align: top;
   }
 
-  div.dataTables_wrapper div.dataTables_length {
+  div.dt-container div.dt-length {
     text-align: center;
   }
 
