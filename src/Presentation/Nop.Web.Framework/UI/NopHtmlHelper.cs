@@ -276,12 +276,13 @@ public partial class NopHtmlHelper : INopHtmlHelper
 
         var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
         var pathBase = _actionContextAccessor.ActionContext.HttpContext.Request.PathBase;
+        var isLocal = urlHelper.IsLocalUrl(src);
 
         _scriptParts[location].Add(new ScriptReferenceMeta
         {
             ExcludeFromBundle = excludeFromBundle,
-            IsLocal = urlHelper.IsLocalUrl(src),
-            Src = urlHelper.Content(src).RemoveApplicationPathFromRawUrl(pathBase)
+            IsLocal = isLocal,
+            Src = isLocal ? urlHelper.Content(src).RemoveApplicationPathFromRawUrl(pathBase) : src
         });
     }
 
@@ -307,12 +308,13 @@ public partial class NopHtmlHelper : INopHtmlHelper
 
         var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
         var pathBase = _actionContextAccessor.ActionContext.HttpContext.Request.PathBase;
+        var isLocal = urlHelper.IsLocalUrl(src);
 
         _scriptParts[location].Insert(0, new ScriptReferenceMeta
         {
             ExcludeFromBundle = excludeFromBundle,
-            IsLocal = urlHelper.IsLocalUrl(src),
-            Src = urlHelper.Content(src).RemoveApplicationPathFromRawUrl(pathBase)
+            IsLocal = isLocal,
+            Src = isLocal ? urlHelper.Content(src).RemoveApplicationPathFromRawUrl(pathBase) : src
         });
     }
 
@@ -450,12 +452,13 @@ public partial class NopHtmlHelper : INopHtmlHelper
 
         var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
         var pathBase = _actionContextAccessor.ActionContext.HttpContext.Request.PathBase;
+        var isLocal = urlHelper.IsLocalUrl(src);
 
         _cssParts.Add(new CssReferenceMeta
         {
             ExcludeFromBundle = excludeFromBundle,
-            IsLocal = urlHelper.IsLocalUrl(src),
-            Src = urlHelper.Content(src).RemoveApplicationPathFromRawUrl(pathBase)
+            IsLocal = isLocal,
+            Src = isLocal ? urlHelper.Content(src).RemoveApplicationPathFromRawUrl(pathBase) : src
         });
     }
 
@@ -477,12 +480,13 @@ public partial class NopHtmlHelper : INopHtmlHelper
 
         var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
         var pathBase = _actionContextAccessor.ActionContext.HttpContext.Request.PathBase;
+        var isLocal = urlHelper.IsLocalUrl(src);
 
         _cssParts.Insert(0, new CssReferenceMeta
         {
             ExcludeFromBundle = excludeFromBundle,
-            IsLocal = urlHelper.IsLocalUrl(src),
-            Src = urlHelper.Content(src).RemoveApplicationPathFromRawUrl(pathBase)
+            IsLocal = isLocal,
+            Src = isLocal ? urlHelper.Content(src).RemoveApplicationPathFromRawUrl(pathBase) : src
         });
     }
 
