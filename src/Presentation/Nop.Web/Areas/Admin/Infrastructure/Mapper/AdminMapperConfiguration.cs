@@ -562,7 +562,8 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
 
         CreateMap<Product, DiscountProductModel>()
             .ForMember(model => model.ProductId, options => options.Ignore())
-            .ForMember(model => model.ProductName, options => options.Ignore());
+            .ForMember(model => model.ProductName, options => options.Ignore())
+            .ForMember(model => model.VendorId, options => options.Ignore());
 
         CreateMap<Product, AssociatedProductModel>()
             .ForMember(model => model.ProductName, options => options.Ignore());
@@ -971,6 +972,7 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(model => model.AddDiscountRequirement, options => options.Ignore())
             .ForMember(model => model.AvailableDiscountRequirementRules, options => options.Ignore())
             .ForMember(model => model.AvailableRequirementGroups, options => options.Ignore())
+            .ForMember(model => model.AvailableVendors, options => options.Ignore())
             .ForMember(model => model.DiscountCategorySearchModel, options => options.Ignore())
             .ForMember(model => model.DiscountManufacturerSearchModel, options => options.Ignore())
             .ForMember(model => model.DiscountProductSearchModel, options => options.Ignore())
@@ -980,7 +982,8 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(model => model.GroupName, options => options.Ignore())
             .ForMember(model => model.PrimaryStoreCurrencyCode, options => options.Ignore())
             .ForMember(model => model.RequirementGroupId, options => options.Ignore())
-            .ForMember(model => model.TimesUsed, options => options.Ignore());
+            .ForMember(model => model.TimesUsed, options => options.Ignore())
+            .ForMember(model => model.IsLoggedInAsVendor, options => options.Ignore());
         CreateMap<DiscountModel, Discount>()
             .ForMember(entity => entity.DiscountLimitation, options => options.Ignore())
             .ForMember(entity => entity.DiscountType, options => options.Ignore());

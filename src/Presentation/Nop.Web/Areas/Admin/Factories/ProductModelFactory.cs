@@ -873,9 +873,11 @@ public partial class ProductModelFactory : IProductModelFactory
         model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
         model.BaseWeightIn = (await _measureService.GetMeasureWeightByIdAsync(_measureSettings.BaseWeightId)).Name;
         model.BaseDimensionIn = (await _measureService.GetMeasureDimensionByIdAsync(_measureSettings.BaseDimensionId)).Name;
-        model.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
         model.HasAvailableSpecificationAttributes =
             (await _specificationAttributeService.GetSpecificationAttributesWithOptionsAsync()).Any();
+
+        var currentVendor = await _workContext.GetCurrentVendorAsync();
+        model.IsLoggedInAsVendor = currentVendor != null;
 
         //prepare localized models
         if (!excludeProperties)
@@ -949,7 +951,11 @@ public partial class ProductModelFactory : IProductModelFactory
         }
 
         //prepare model discounts
-        var availableDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToSkus, showHidden: true, isActive: null);
+        var availableDiscounts = await _discountService.GetAllDiscountsAsync(
+            discountType: DiscountType.AssignedToSkus,
+            showHidden: true, isActive: null,
+            vendorId: currentVendor?.Id ?? 0);
+
         await _discountSupportedModelFactory.PrepareModelDiscountsAsync(model, product, availableDiscounts, excludeProperties);
         
         //prepare model stores

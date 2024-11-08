@@ -13,5 +13,7 @@ public partial record DiscountProductModel : BaseNopEntityModel
 
     public string ProductName { get; set; }
 
+    public int VendorId { get; set; }
+
     #endregion
 }

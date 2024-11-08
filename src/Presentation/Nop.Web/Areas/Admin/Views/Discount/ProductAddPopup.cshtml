@@ -55,14 +55,17 @@ else
                                                     <nop-select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" />
                                                 </div>
                                             </div>
-                                            <div class="form-group row" @(Model.AvailableVendors.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
-                                                <div class="col-sm-5">
-                                                    <nop-label asp-for="SearchVendorId" />
+                                            @if (!Model.IsLoggedInAsVendor)
+                                            {
+                                                <div class="form-group row" @(Model.AvailableVendors.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                                    <div class="col-sm-5">
+                                                        <nop-label asp-for="SearchVendorId" />
+                                                    </div>
+                                                    <div class="col-sm-7">
+                                                        <nop-select asp-for="SearchVendorId" asp-items="Model.AvailableVendors" />
+                                                    </div>
                                                 </div>
-                                                <div class="col-sm-7">
-                                                    <nop-select asp-for="SearchVendorId" asp-items="Model.AvailableVendors" />
-                                                </div>
-                                            </div>
+                                            }
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group row" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>

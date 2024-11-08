@@ -14322,6 +14322,15 @@
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.UsePercentage.Hint">
     <Value>Determines whether to apply a percentage discount to the order/SKUs. If not enabled, a set value is discounted.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.Vendor">
+    <Value>Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.Vendor.Hint">
+    <Value>Choose a vendor associated with this discount. The associated vendor is given the ability to manage this discount.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.Vendor.None">
+    <Value>No vendor</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.History">
     <Value>Usage history</Value>
   </LocaleResource>
@@ -14384,6 +14393,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.List.SearchStartDate.Hint">
     <Value>The start date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.List.SearchVendor">
+    <Value>Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.List.SearchVendor.Hint">
+    <Value>Search by a specific vendor.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Requirements">
     <Value>Requirements</Value>
