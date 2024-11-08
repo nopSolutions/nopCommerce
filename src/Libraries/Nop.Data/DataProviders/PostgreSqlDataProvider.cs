@@ -5,6 +5,7 @@ using LinqToDB.Common;
 using LinqToDB.Data;
 using LinqToDB.DataProvider;
 using LinqToDB.SqlQuery;
+using LinqToDB.Tools;
 using Nop.Core;
 using Nop.Data.DataProviders.LinqToDB;
 using Nop.Data.Mapping;
@@ -82,6 +83,29 @@ public partial class PostgreSqlDataProvider : BaseDataProvider, INopDataProvider
     #endregion
 
     #region Methods
+
+    /// <summary>
+    /// Performs bulk insert operation for entity collection.
+    /// </summary>
+    /// <param name="entities">Entities for insert operation</param>
+    /// <typeparam name="TEntity">Entity type</typeparam>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public override async Task BulkInsertEntitiesAsync<TEntity>(IEnumerable<TEntity> entities)
+    {
+        using var dataContext = CreateDataConnection(LinqToDbDataProvider);
+        await dataContext.BulkCopyAsync(new BulkCopyOptions() { KeepIdentity = true }, entities.RetrieveIdentity(dataContext, useSequenceName: true));
+    }
+
+    /// <summary>
+    /// Performs bulk insert operation for entity collection.
+    /// </summary>
+    /// <param name="entities">Entities for insert operation</param>
+    /// <typeparam name="TEntity">Entity type</typeparam>
+    public override void BulkInsertEntities<TEntity>(IEnumerable<TEntity> entities)
+    {
+        using var dataContext = CreateDataConnection(LinqToDbDataProvider);
+        dataContext.BulkCopy(new BulkCopyOptions() { KeepIdentity = true }, entities.RetrieveIdentity(dataContext, useSequenceName: true));
+    }
 
     /// <summary>
     /// Creates the database by using the loaded connection string
