@@ -9,7 +9,7 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.UpgradeTo480;
 
-[NopSchemaMigration("2024-06-10 00:00:04", "SchemaMigration for 4.80.0")]
+[NopSchemaMigration("2024-11-08 00:00:00", "SchemaMigration for 4.80.0")]
 public class SchemaMigration : ForwardOnlyMigration
 {
     /// <summary>
