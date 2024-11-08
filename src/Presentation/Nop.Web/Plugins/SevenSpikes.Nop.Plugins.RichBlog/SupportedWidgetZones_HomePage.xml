@@ -7,4 +7,6 @@
   <WidgetZone>home_page_before_news</WidgetZone>
   <WidgetZone>home_page_before_poll</WidgetZone>
   <WidgetZone>home_page_bottom</WidgetZone>
+  <WidgetZone>AboutUs</WidgetZone>
+  <WidgetZone>AboutUsBottom</WidgetZone>
 </SupportedWidgetZones>
