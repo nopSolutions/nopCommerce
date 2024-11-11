@@ -50,19 +50,6 @@ public class OmnisendAdminController : BasePluginController
         if (!_omnisendSettings.BatchesIds.Any())
             return;
 
-        var batches = await _omnisendSettings.BatchesIds.SelectAwait(_omnisendService.GetBatchInfoAsync)
-            .ToListAsync();
-
-        batches = batches.Where(p => p != null).ToList();
-
-        if (!batches.Any())
-        {
-            _omnisendSettings.BatchesIds.Clear();
-            await _settingService.SaveSettingAsync(_omnisendSettings);
-        }
-
-        model.Batches = batches;
-
         bool needBlock(BatchResponse response, string endpoint)
         {
             return response.Endpoint.Equals(endpoint, StringComparison.InvariantCultureIgnoreCase) &&
@@ -70,17 +57,13 @@ public class OmnisendAdminController : BasePluginController
                     StringComparison.InvariantCultureIgnoreCase);
         }
 
-        model.BlockSyncContacts = batches.Any(p => needBlock(p, OmnisendDefaults.ContactsEndpoint));
-        model.BlockSyncOrders = batches.Any(p => needBlock(p, OmnisendDefaults.OrdersEndpoint));
-        model.BlockSyncProducts = batches.Any(p => needBlock(p, OmnisendDefaults.ProductsEndpoint)) || batches.Any(p => needBlock(p, OmnisendDefaults.CategoriesEndpoint));
+        var batches = await _omnisendService.GetStoredBatchesAsync();
+        model.Batches = batches;
 
-        foreach (var batchResponse in batches.Where(p =>
-                     p.Status.Equals(OmnisendDefaults.BatchFinishedStatus,
-                         StringComparison.InvariantCultureIgnoreCase)))
-        {
-            _omnisendSettings.BatchesIds.Remove(batchResponse.BatchId);
-            await _settingService.SaveSettingAsync(_omnisendSettings);
-        }
+        model.BlockSyncContacts = model.Batches.Any(p => needBlock(p, OmnisendDefaults.ContactsEndpoint));
+        model.BlockSyncOrders = model.Batches.Any(p => needBlock(p, OmnisendDefaults.OrdersEndpoint));
+        model.BlockSyncProducts = model.Batches.Any(p => needBlock(p, OmnisendDefaults.ProductsEndpoint)) ||
+            batches.Any(p => needBlock(p, OmnisendDefaults.CategoriesEndpoint));
     }
 
     #endregion
