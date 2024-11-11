@@ -6357,6 +6357,14 @@ img.hawthorne-logo {
 	.hawthorne.top-menu {
 		display: none;
 	}
+	body .master-wrapper-page .mobile-header-content-row {
+		background-color: #ff0314 !important;
+	}
+	.eJVeap {
+		max-width: none !important;
+		margin-left: auto;
+		margin-right: auto;
+	  }
 }
 
 @media screen and (max-width: 1024px) {
