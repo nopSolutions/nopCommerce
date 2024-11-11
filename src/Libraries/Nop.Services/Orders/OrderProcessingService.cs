@@ -3053,7 +3053,8 @@ public partial class OrderProcessingService : IOrderProcessingService
 
             warnings.AddRange(await _shoppingCartService.AddToCartAsync(customer, product,
                 ShoppingCartType.ShoppingCart, order.StoreId,
-                orderItem.AttributesXml, orderItem.UnitPriceExclTax,
+                orderItem.AttributesXml,
+                _taxSettings.PricesIncludeTax ? orderItem.UnitPriceInclTax : orderItem.UnitPriceExclTax,
                 orderItem.RentalStartDateUtc, orderItem.RentalEndDateUtc,
                 orderItem.Quantity, false));
         }
