@@ -1,5 +1,4 @@
 ﻿using Nop.Web.Areas.Admin.Models.Common;
-using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Factories;
 

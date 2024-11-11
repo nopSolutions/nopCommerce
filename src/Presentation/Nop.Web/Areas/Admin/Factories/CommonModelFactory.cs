@@ -64,18 +64,22 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected readonly IActionContextAccessor _actionContextAccessor;
     protected readonly IAuthenticationPluginManager _authenticationPluginManager;
     protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
+    protected readonly IBlogService _blogService;
+    protected readonly ICategoryService _categoryService;
     protected readonly ICurrencyService _currencyService;
     protected readonly ICustomerService _customerService;
-    protected readonly IEventPublisher _eventPublisher;
-    protected readonly INopDataProvider _dataProvider;
     protected readonly IDateTimeHelper _dateTimeHelper;
+    protected readonly IEventPublisher _eventPublisher;
     protected readonly IExchangeRatePluginManager _exchangeRatePluginManager;
     protected readonly IHttpContextAccessor _httpContextAccessor;
     protected readonly ILanguageService _languageService;
     protected readonly ILocalizationService _localizationService;
     protected readonly IMaintenanceService _maintenanceService;
+    protected readonly IManufacturerService _manufacturerService;
     protected readonly IMeasureService _measureService;
     protected readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
+    protected readonly INewsService _newsService;
+    protected readonly INopDataProvider _dataProvider;
     protected readonly INopFileProvider _fileProvider;
     protected readonly IOrderService _orderService;
     protected readonly IPaymentPluginManager _paymentPluginManager;
@@ -90,6 +94,7 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected readonly IStoreContext _storeContext;
     protected readonly IStoreService _storeService;
     protected readonly ITaxPluginManager _taxPluginManager;
+    protected readonly ITopicService _topicService;
     protected readonly IUrlHelperFactory _urlHelperFactory;
     protected readonly IUrlRecordService _urlRecordService;
     protected readonly IWebHelper _webHelper;
@@ -98,11 +103,6 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected readonly MeasureSettings _measureSettings;
     protected readonly NopHttpClient _nopHttpClient;
     protected readonly ProxySettings _proxySettings;
-    protected readonly IBlogService _blogService;
-    protected readonly ICategoryService _categoryService;
-    protected readonly IManufacturerService _manufacturerService;
-    protected readonly INewsService _newsService;
-    protected readonly ITopicService _topicService;
 
     #endregion
 
@@ -114,19 +114,23 @@ public partial class CommonModelFactory : ICommonModelFactory
         IActionContextAccessor actionContextAccessor,
         IAuthenticationPluginManager authenticationPluginManager,
         IBaseAdminModelFactory baseAdminModelFactory,
+        IBlogService blogService,
+        ICategoryService categoryService,
         ICurrencyService currencyService,
         ICustomerService customerService,
-        IEventPublisher eventPublisher,
-        INopDataProvider dataProvider,
         IDateTimeHelper dateTimeHelper,
-        INopFileProvider fileProvider,
+        IEventPublisher eventPublisher,
         IExchangeRatePluginManager exchangeRatePluginManager,
         IHttpContextAccessor httpContextAccessor,
         ILanguageService languageService,
         ILocalizationService localizationService,
         IMaintenanceService maintenanceService,
+        IManufacturerService manufacturerService,
         IMeasureService measureService,
         IMultiFactorAuthenticationPluginManager multiFactorAuthenticationPluginManager,
+        INewsService newsService,
+        INopDataProvider dataProvider,
+        INopFileProvider fileProvider,
         IOrderService orderService,
         IPaymentPluginManager paymentPluginManager,
         IPickupPluginManager pickupPluginManager,
@@ -140,6 +144,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         IStoreContext storeContext,
         IStoreService storeService,
         ITaxPluginManager taxPluginManager,
+        ITopicService topicService,
         IUrlHelperFactory urlHelperFactory,
         IUrlRecordService urlRecordService,
         IWebHelper webHelper,
@@ -147,12 +152,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         IWorkContext workContext,
         MeasureSettings measureSettings,
         NopHttpClient nopHttpClient,
-        ProxySettings proxySettings,
-        IBlogService blogService,
-        ICategoryService categoryService,
-        IManufacturerService manufacturerService,
-        INewsService newsService,
-        ITopicService topicService)
+        ProxySettings proxySettings)
     {
         _appSettings = appSettings;
         _catalogSettings = catalogSettings;
@@ -160,6 +160,8 @@ public partial class CommonModelFactory : ICommonModelFactory
         _actionContextAccessor = actionContextAccessor;
         _authenticationPluginManager = authenticationPluginManager;
         _baseAdminModelFactory = baseAdminModelFactory;
+        _blogService = blogService;
+        _categoryService = categoryService;
         _currencyService = currencyService;
         _customerService = customerService;
         _eventPublisher = eventPublisher;
@@ -170,8 +172,10 @@ public partial class CommonModelFactory : ICommonModelFactory
         _languageService = languageService;
         _localizationService = localizationService;
         _maintenanceService = maintenanceService;
-        _measureService = measureService;
+        _manufacturerService = manufacturerService;
+        _measureService = measureService;        
         _multiFactorAuthenticationPluginManager = multiFactorAuthenticationPluginManager;
+        _newsService = newsService;
         _fileProvider = fileProvider;
         _orderService = orderService;
         _paymentPluginManager = paymentPluginManager;
@@ -186,6 +190,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         _storeContext = storeContext;
         _storeService = storeService;
         _taxPluginManager = taxPluginManager;
+        _topicService = topicService;
         _urlHelperFactory = urlHelperFactory;
         _urlRecordService = urlRecordService;
         _webHelper = webHelper;
@@ -194,11 +199,6 @@ public partial class CommonModelFactory : ICommonModelFactory
         _measureSettings = measureSettings;
         _nopHttpClient = nopHttpClient;
         _proxySettings = proxySettings;
-        _blogService = blogService;
-        _categoryService = categoryService;
-        _manufacturerService = manufacturerService;
-        _newsService = newsService;
-        _topicService = topicService;
     }
 
     #endregion
