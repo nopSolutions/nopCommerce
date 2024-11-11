@@ -274,9 +274,6 @@ public class LocalizationMigration : MigrationBase
             //#7299
             ["Admin.Catalog.Products.Multimedia.Videos.Description"] = "How to embed a video: Find your video in your library (on any video hosting) and select it to open the video settings page. Select the privacy icon from your \"Share\" button. Click on \"Embed\" from the window that opens up. You can copy the <strong>src</strong> from the embed option and use it.",
 
-            //path base
-            ["Admin.Configuration.AppSettings.Hosting.PathBase"] = "Path base",
-            ["Admin.Configuration.AppSettings.Hosting.PathBase.Hint"] = "Ability to set a custom path base, for example domain.com/path/",
             //4306
             ["Admin.Configuration.Settings.Catalog.ShowSearchBoxCategories"] = "Show product categories for the search box",
             ["Admin.Configuration.Settings.Catalog.ShowSearchBoxCategories.Hint"] = "Check to display the drop-down list with product categories next to the search box.",

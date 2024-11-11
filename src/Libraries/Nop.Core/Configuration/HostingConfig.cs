@@ -28,10 +28,5 @@ public partial class HostingConfig : IConfig
     /// <summary>
     /// Gets or sets addresses of known networks to accept forwarded headers from
     /// </summary>
-    public string KnownNetworks { get; protected set; } = string.Empty;   
-        
-    /// <summary>
-    /// Ability to set a custom path base, for example domain.com/path/
-    /// </summary>
-    public string PathBase { get; protected set; } = "/";
+    public string KnownNetworks { get; protected set; } = string.Empty;
 }

@@ -4667,13 +4667,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.KnownNetworks.Hint">
     <Value>Specify a list of IP CIDR notations (comma separated) to accept forwarded headers. e.g. 172.64.0.0/13,162.158.0.0/15</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.PathBase">
-    <Value>Path base</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.PathBase.Hint">
-    <Value>Ability to set a custom path base, for example domain.com/path/</Value>
-  </LocaleResource>    
+  </LocaleResource>   
   <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.UseProxy">
     <Value>Use proxy servers</Value>
   </LocaleResource>
