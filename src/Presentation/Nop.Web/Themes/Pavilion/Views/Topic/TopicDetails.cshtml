@@ -118,6 +118,13 @@
                 additionalData = Model.SystemName
             }
         )
-
+        @Html.Raw(Model.Body)
+        @await Component.InvokeAsync(
+            "Widget",
+            new {
+                widgetZone = CustomPublicWidgetZones.TopicPageAfterBody,
+                additionalData = Model.SystemName
+            }
+        )
     </div>
 </div>
