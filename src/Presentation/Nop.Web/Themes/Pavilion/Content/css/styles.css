@@ -6366,7 +6366,11 @@ img.hawthorne-logo {
 		margin-right: auto;
 	  }
 }
-
+@media (min-width: 1025px) {
+    body .header-lower {
+        background-color: #ff0314 !important;
+    }
+}
 @media screen and (max-width: 1024px) {
 	body div.sync-price {
 		height: auto;
