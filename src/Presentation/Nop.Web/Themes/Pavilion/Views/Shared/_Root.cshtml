@@ -31,6 +31,8 @@
     )).Count();
 
     var primaryColor = await HtmlHelpers.GetPavilionPrimaryColorAsync();
+
+    Html.AddCssFileParts("~/Themes/Pavilion/Content/css/black-friday.css");
 }
 
 <style>
@@ -45,7 +47,6 @@
 @await Html.PartialAsync("_OldInternetExplorerWarning")
 
 <div class="master-wrapper-page @stickyLogoClass">
-    @* ABC: customizing mobile nav. - header moved below *@
     <div class="responsive-nav-wrapper-parent">
         <div class="responsive-nav-wrapper">
             <div id="mobile-header-logo">
@@ -82,7 +83,7 @@
         AjaxCart.init(false, '.header-links .cart-qty', '.header-links .wishlist-qty', '#flyout-cart', localized_data);
     </script>
     <div class="overlayOffCanvas"></div>
-    
+
     <div class="master-wrapper-content">
         @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ContentBefore })
 		@await Component.InvokeAsync("Widget", new { widgetZone = "pavilion_color_squares" })
