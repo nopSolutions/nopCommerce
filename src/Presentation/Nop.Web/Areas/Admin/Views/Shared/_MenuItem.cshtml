@@ -1,25 +1,16 @@
-﻿@model SiteMapNode
-@using Nop.Core.Domain.Localization
+﻿@using Nop.Core.Domain.Localization
+@model Nop.Web.Framework.Menu.AdminMenuItem
 @inject IWorkContext workContext
 @inject LocalizationSettings localizationSettings
 @{
     var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl && !localizationSettings.IgnoreRtlPropertyForAdminArea;
-    string url = null;
-    if (!string.IsNullOrEmpty(Model.ControllerName) && !string.IsNullOrEmpty(Model.ActionName))
-    {
-        url = Url.Action(Model.ActionName, Model.ControllerName, Model.RouteValues, null, null);
-    }
-    else if (!string.IsNullOrEmpty(Model.Url))
-    {
-        url = Model.Url.StartsWith("~/", StringComparison.Ordinal) ? Url.Content(Model.Url) : Model.Url;
-    }
     var isActive = Model.ContainsSystemName(NopHtml.GetActiveMenuItemSystemName());
 }
-@if (!string.IsNullOrEmpty(url))
+@if (!string.IsNullOrEmpty(Model.Url))
 {
     <li class="nav-item">
 
-        <a href="@url" @(isActive ? Html.Raw("class=\"nav-link active\"") : Html.Raw("class=\"nav-link\"")) @(Model.OpenUrlInNewTab ? Html.Raw(" target=\"_blank\"") : null)>
+        <a href="@Model.Url" @(isActive ? Html.Raw("class=\"nav-link active\"") : Html.Raw("class=\"nav-link\"")) @(Model.OpenUrlInNewTab ? Html.Raw(" target=\"_blank\"") : null)>
             @if (!string.IsNullOrEmpty(Model.IconClass))
             {
                 <text>
@@ -38,7 +29,6 @@ else
     var hasChildNodes = childNodes.Any();
     var liCssClass = "";
 
-
     if (hasChildNodes)
     {
         liCssClass = "nav-item has-treeview";
@@ -46,10 +36,9 @@ else
 
     if (isActive)
     {
-        if (!String.IsNullOrEmpty(liCssClass))
-        {
+        if (!string.IsNullOrEmpty(liCssClass))
             liCssClass += " ";
-        }
+
         liCssClass += "menu-open";
     }
 
@@ -76,14 +65,12 @@ else
         </a>
         @if (hasChildNodes)
         {
-
             <ul class="nav nav-treeview">
                 @foreach (var childItem in childNodes)
                 {
                     @await Html.PartialAsync("_MenuItem", childItem)
                 }
             </ul>
-
         }
     </li>
 }
