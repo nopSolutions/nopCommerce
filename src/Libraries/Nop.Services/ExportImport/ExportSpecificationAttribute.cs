@@ -17,7 +17,6 @@ public partial class ExportSpecificationAttribute : ProductSpecificationAttribut
     /// </summary>
     /// <param name="specificationAttribute">The product specification attribute to export</param>
     /// <param name="specificationAttributeService">Specification attribute service</param>
-    /// <param name="localizationService"></param>
     /// <returns></returns>
     public static async Task<ExportSpecificationAttribute> CreateAsync(ProductSpecificationAttribute specificationAttribute, ISpecificationAttributeService specificationAttributeService)
     {

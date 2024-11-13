@@ -23,6 +23,16 @@
     </div>
     <div class="form-group row">
         <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ExportImportTierPrises_OverrideForStore" asp-input="ExportImportTierPrises" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ExportImportTierPrises" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ExportImportTierPrises" />
+            <span asp-validation-for="ExportImportTierPrises"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
             <nop-override-store-checkbox asp-for="ExportImportProductCategoryBreadcrumb_OverrideForStore" asp-input="ExportImportProductCategoryBreadcrumb" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="ExportImportProductCategoryBreadcrumb" />
         </div>

@@ -60,6 +60,11 @@ public class SettingMigration : MigrationBase
             catalogSettings.ShowSearchBoxCategories = false;
             settingService.SaveSetting(catalogSettings, settings => settings.ShowSearchBoxCategories);
         }
+
+        //#2388
+        var exportImportTierPrisesKey = $"{nameof(CatalogSettings)}.{nameof(CatalogSettings.ExportImportTierPrises)}".ToLower();
+        if (settingService.GetSetting(exportImportTierPrisesKey) == null)
+            settingService.SetSetting(exportImportTierPrisesKey, true);
     }
 
     public override void Down()

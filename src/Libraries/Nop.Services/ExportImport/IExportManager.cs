@@ -26,7 +26,7 @@ public partial interface IExportManager
     /// </summary>
     /// <param name="manufacturers">Manufactures</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    Task<byte[]> ExportManufacturersToXlsxAsync(IEnumerable<Manufacturer> manufacturers);
+    Task<byte[]> ExportManufacturersToXlsxAsync(IList<Manufacturer> manufacturers);
 
     /// <summary>
     /// Export category list to XML

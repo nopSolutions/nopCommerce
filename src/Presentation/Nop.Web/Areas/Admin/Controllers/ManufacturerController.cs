@@ -411,7 +411,7 @@ public partial class ManufacturerController : BaseAdminController
     {
         try
         {
-            var bytes = await _exportManager.ExportManufacturersToXlsxAsync((await _manufacturerService.GetAllManufacturersAsync(showHidden: true)).Where(p => !p.Deleted));
+            var bytes = await _exportManager.ExportManufacturersToXlsxAsync((await _manufacturerService.GetAllManufacturersAsync(showHidden: true)).Where(p => !p.Deleted).ToList());
 
             return File(bytes, MimeTypes.TextXlsx, "manufacturers.xlsx");
         }

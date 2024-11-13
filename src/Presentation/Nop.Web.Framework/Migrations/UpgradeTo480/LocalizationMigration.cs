@@ -285,6 +285,9 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Promotions.Discounts.Fields.Vendor.None"] = "No vendor",
             ["Admin.Promotions.Discounts.List.SearchVendor"] = "Vendor",
             ["Admin.Promotions.Discounts.List.SearchVendor.Hint"] = "Search by a specific vendor.",
+            //#2388
+            ["Admin.Configuration.Settings.Catalog.ExportImportTierPrises"] = "Export/Import products with tier prices",
+            ["Admin.Configuration.Settings.Catalog.ExportImportTierPrises.Hint"] = "Check if products should be exported/imported with tier prices.",
         }, languageId);
 
         #endregion

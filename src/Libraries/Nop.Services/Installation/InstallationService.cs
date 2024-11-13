@@ -2871,6 +2871,7 @@ namespace Nop.Services.Installation
                 ProductReviewsSortByCreatedDateAscending = false,
                 ExportImportProductAttributes = true,
                 ExportImportProductSpecificationAttributes = true,
+                ExportImportTierPrises = true,
                 ExportImportUseDropdownlistsForAssociatedEntities = true,
                 ExportImportProductsCountInOneFile = 500,
                 ExportImportSplitProductsFile = false,

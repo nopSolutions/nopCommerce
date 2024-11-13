@@ -6039,6 +6039,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportSplitProductsFile.Hint">
     <Value>Check if you want to import products from individual files of the optimal size, which were automatically created from the main file. This function will help you import a large amount of data with a smaller delay.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportTierPrises">
+    <Value>Export/Import products with tier prices</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportTierPrises.Hint">
+    <Value>Check if products should be exported/imported with tier prices.</Value>
+  </LocaleResource>    
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.IgnoreAcl">
     <Value>Ignore ACL rules (sitewide)</Value>
   </LocaleResource>
