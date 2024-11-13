@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Orders;
@@ -18,16 +17,14 @@ using Nop.Services.Payments;
 using Nop.Services.Plugins;
 using Nop.Services.Security;
 using Nop.Services.Stores;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Infrastructure;
-using Nop.Web.Framework.Menu;
 
 namespace Nop.Plugin.Payments.PayPalCommerce;
 
 /// <summary>
 /// Represents the PayPal Commerce payment method
 /// </summary>
-public class PayPalCommercePaymentMethod : BasePlugin, IAdminMenuPlugin, IPaymentMethod, IWidgetPlugin
+public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPlugin
 {
     #region Fields
 
@@ -321,62 +318,7 @@ public class PayPalCommercePaymentMethod : BasePlugin, IAdminMenuPlugin, IPaymen
 
         return null;
     }
-
-    /// <summary>
-    /// Manage sitemap. You can use "SystemName" of menu items to manage existing sitemap or add a new menu item.
-    /// </summary>
-    /// <param name="rootNode">Root node of the sitemap.</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task ManageSiteMapAsync(SiteMapNode rootNode)
-    {
-        if (!await _permissionService.AuthorizeAsync(StandardPermission.Configuration.MANAGE_PAYMENT_METHODS))
-            return;
-
-        var configurationItem = rootNode.ChildNodes.FirstOrDefault(node => node.SystemName.Equals("Configuration"));
-        if (configurationItem is null)
-            return;
-
-        var nextItem = configurationItem.ChildNodes.FirstOrDefault(node => node.SystemName.Equals("PayPal Zettle (POS)"))
-            ?? configurationItem.ChildNodes.FirstOrDefault(node => node.SystemName.Equals("Local plugins"));
-        if (nextItem is null)
-            return;
-
-        var index = configurationItem.ChildNodes.IndexOf(nextItem);
-        if (index < 0)
-            return;
-
-        configurationItem.ChildNodes.Insert(index + 1, new SiteMapNode
-        {
-            Visible = true,
-            SystemName = PluginDescriptor.SystemName,
-            Title = await _localizationService.GetLocalizedFriendlyNameAsync(this, (await _workContext.GetWorkingLanguageAsync()).Id),
-            IconClass = "far fa-dot-circle",
-            ChildNodes = new List<SiteMapNode>
-            {
-                new()
-                {
-                    Visible = true,
-                    SystemName = $"{PayPalCommerceDefaults.SystemName} Configuration",
-                    Title = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Configuration"),
-                    ControllerName = "PayPalCommerce",
-                    ActionName = "Configure",
-                    IconClass = "far fa-circle",
-                    RouteValues = new RouteValueDictionary { { "area", AreaNames.ADMIN } }
-                },
-                new()
-                {
-                    Visible = _settings.UseSandbox || _settings.ConfiguratorSupported,
-                    SystemName = $"{PayPalCommerceDefaults.SystemName} Pay Later",
-                    Title = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.PayLater"),
-                    ControllerName = "PayPalCommerce",
-                    ActionName = "PayLater",
-                    IconClass = "far fa-circle",
-                    RouteValues = new RouteValueDictionary { { "area", AreaNames.ADMIN } }
-                }
-            }
-        });
-    }
-
+    
     /// <summary>
     /// Install the plugin
     /// </summary>
