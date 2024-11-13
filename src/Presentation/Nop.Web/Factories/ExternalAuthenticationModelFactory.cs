@@ -48,7 +48,7 @@ public partial class ExternalAuthenticationModelFactory : IExternalAuthenticatio
             .Select(authenticationMethod => new ExternalAuthenticationMethodModel
             {
                 ViewComponent = authenticationMethod.GetPublicViewComponent()
-            })
+            }).Where(p => p.ViewComponent != null)
             .ToList();
     }
 
