@@ -288,6 +288,11 @@ public class LocalizationMigration : MigrationBase
             //#2388
             ["Admin.Configuration.Settings.Catalog.ExportImportTierPrises"] = "Export/Import products with tier prices",
             ["Admin.Configuration.Settings.Catalog.ExportImportTierPrises.Hint"] = "Check if products should be exported/imported with tier prices.",
+
+            //#7228
+            ["Admin.Catalog.Products.BulkEdit"] = "Bulk edit products",
+            ["Admin.Catalog.Products.BulkEdit.SaveSelected"] = "Save selected",
+            ["Admin.Catalog.Products.BulkEdit.SaveAll"] = "Save all",
         }, languageId);
 
         #endregion

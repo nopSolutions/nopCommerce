@@ -621,6 +621,16 @@ public partial class ProductService : IProductService
     }
 
     /// <summary>
+    /// Inserts products
+    /// </summary>
+    /// <param name="products">Products to insert</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task InsertProductsAsync(IList<Product> products)
+    {
+        await _productRepository.InsertAsync(products);
+    }
+
+    /// <summary>
     /// Updates the product
     /// </summary>
     /// <param name="product">Product</param>
@@ -628,6 +638,16 @@ public partial class ProductService : IProductService
     public virtual async Task UpdateProductAsync(Product product)
     {
         await _productRepository.UpdateAsync(product);
+    }
+
+    /// <summary>
+    /// Update products
+    /// </summary>
+    /// <param name="products">Products to update</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task UpdateProductsAsync(IList<Product> products)
+    {
+        await _productRepository.UpdateAsync(products);
     }
 
     /// <summary>
