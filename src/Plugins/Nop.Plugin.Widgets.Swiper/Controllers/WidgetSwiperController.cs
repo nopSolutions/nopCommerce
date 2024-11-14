@@ -1,5 +1,5 @@
-﻿using System.Text.Json;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Plugin.Widgets.Swiper.Domain;
 using Nop.Plugin.Widgets.Swiper.Models;
@@ -60,7 +60,7 @@ public class WidgetSwiperController : BasePluginController
         if (string.IsNullOrEmpty(slidesSetting))
             return new List<Slide>();
 
-        return JsonSerializer.Deserialize<List<Slide>>(slidesSetting);
+        return JsonConvert.DeserializeObject<List<Slide>>(slidesSetting);
     }
 
     #endregion
@@ -149,7 +149,7 @@ public class WidgetSwiperController : BasePluginController
             LinkUrl = model.LinkUrl
         });
 
-        sliderSettings.Slides = JsonSerializer.Serialize(slides);
+        sliderSettings.Slides = JsonConvert.SerializeObject(slides);
         await _settingService.SaveSettingOverridablePerStoreAsync(sliderSettings, x => x.Slides, true, storeScope);
 
         return RedirectToAction(nameof(Configure));
@@ -215,7 +215,7 @@ public class WidgetSwiperController : BasePluginController
         }
         else
         {
-            sliderSettings.Slides = JsonSerializer.Serialize(slides);
+            sliderSettings.Slides = JsonConvert.SerializeObject(slides);
             await _settingService.SaveSettingOverridablePerStoreAsync(sliderSettings, x => x.Slides, true, storeScope);
         }
 
@@ -242,7 +242,7 @@ public class WidgetSwiperController : BasePluginController
         slide.LinkUrl = model.LinkUrl;
 
         var sliderSettings = await _settingService.LoadSettingAsync<SwiperSettings>(storeScope);
-        sliderSettings.Slides = JsonSerializer.Serialize(slides);
+        sliderSettings.Slides = JsonConvert.SerializeObject(slides);
         await _settingService.SaveSettingOverridablePerStoreAsync(sliderSettings, x => x.Slides, true, storeScope);
 
         return new NullJsonResult();
