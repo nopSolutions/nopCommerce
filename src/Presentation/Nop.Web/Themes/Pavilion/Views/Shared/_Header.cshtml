@@ -15,6 +15,10 @@
     bool isHomeSliderFullWidth = await settingService.GetSettingByKeyAsync("pavilionthemesettings.ishomepagemainsliderfullwidth", false, storeId, true);
     bool stickyCategoryMenuFlyout = await settingService.GetSettingByKeyAsync("pavilionthemesettings.StickyCategoryMenuFlyout", true, storeId, true);
     bool showCategoriesInSideMenu = await settingService.GetSettingByKeyAsync("pavilionthemesettings.ShowCategoriesInSideMenu", true, storeId, true);
+
+    var clearanceUrl = currentStore.Url.Contains("stage") ?
+        "https://stage.abcwarehouse.com/clearance" :
+        "https://www.abcwarehouse.com/clearance";
 }
     @if (storeId == 8 )
     {
@@ -27,7 +31,7 @@
                         <a href="https://www.abcwarehouse.com/"><img class="hawthorne-logo" src="https://www.abcwarehouse.com/images/thumbs/1200766_abc_web-logo_60th_2.png" alt="Hawthorne"/></a>
                     </li>
                     <li class="red">
-                        <a href="/clearance">Clearance</a>
+                        <a href="@clearanceUrl">Clearance</a>
                     </li>
                     <li>
                         <a href="/sale-ad">Weekly Ad</a>
