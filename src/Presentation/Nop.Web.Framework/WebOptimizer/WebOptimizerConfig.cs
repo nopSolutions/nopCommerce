@@ -1,5 +1,5 @@
-﻿using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Http.Features;
+﻿using Microsoft.AspNetCore.Http.Features;
+using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
