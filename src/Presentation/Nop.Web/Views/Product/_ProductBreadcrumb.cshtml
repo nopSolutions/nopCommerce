@@ -2,13 +2,13 @@
 
 @using Nop.Core.Domain.Catalog
 @using Nop.Core.Domain.Common
-@using Nop.Core.Domain.Seo
 
 @inject CommonSettings commonSettings
-@inject SeoSettings seoSettings
 
 @{
     var breadcrumbDelimiter = commonSettings.BreadcrumbDelimiter;
+    
+    NopHtml.AddJsonLdParts(Model.JsonLd);
 }
 @if (Model.Enabled)
 {
@@ -38,11 +38,5 @@
                 @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductBreadcrumbAfter, additionalData = Model })
             </li>
         </ul>
-        @if (seoSettings.MicrodataEnabled)
-        {
-            <script type="application/ld+json">
-                @Html.Raw(Model.JsonLd)
-            </script>
-        }
     </div>
 }

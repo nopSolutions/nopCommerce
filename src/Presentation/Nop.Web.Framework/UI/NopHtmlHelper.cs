@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.WebUtilities;
@@ -31,6 +32,7 @@ public partial class NopHtmlHelper : INopHtmlHelper
     protected readonly AppSettings _appSettings;
     protected readonly HtmlEncoder _htmlEncoder;
     protected readonly IActionContextAccessor _actionContextAccessor;
+    protected readonly IHtmlHelper _htmlHelper;
     protected readonly INopAssetHelper _bundleHelper;
     protected readonly Lazy<ILocalizationService> _localizationService;
     protected readonly IStoreContext _storeContext;
@@ -59,6 +61,7 @@ public partial class NopHtmlHelper : INopHtmlHelper
     public NopHtmlHelper(AppSettings appSettings,
         HtmlEncoder htmlEncoder,
         IActionContextAccessor actionContextAccessor,
+        IHtmlHelper htmlHelper,
         INopAssetHelper bundleHelper,
         Lazy<ILocalizationService> localizationService,
         IStoreContext storeContext,
@@ -69,6 +72,7 @@ public partial class NopHtmlHelper : INopHtmlHelper
         _appSettings = appSettings;
         _htmlEncoder = htmlEncoder;
         _actionContextAccessor = actionContextAccessor;
+        _htmlHelper = htmlHelper;
         _bundleHelper = bundleHelper;
         _localizationService = localizationService;
         _storeContext = storeContext;
@@ -755,6 +759,16 @@ public partial class NopHtmlHelper : INopHtmlHelper
             };
 
         return routeName;
+    }
+
+    /// <summary>
+    /// Add JSON-LD to the <![CDATA[<head>]]> element
+    /// </summary>
+    /// <param name="jsonLd">The JSON-LD serialized model></param>
+    public virtual void AddJsonLdParts(string jsonLd)
+    {
+        if(_seoSettings.MicrodataEnabled) 
+            AddHeadCustomParts("<script type=\"application/ld+json\">" +  _htmlHelper.Raw(jsonLd) + "</script>");
     }
 
     #endregion
