@@ -1,9 +1,15 @@
 ﻿@model TopicModel
+
+@using Nop.Core
 @using Nop.Core.Domain.Seo
-@inject Nop.Core.IWebHelper webHelper
+@using Nop.Core.Domain.Topics
+
+@inject IWebHelper webHelper
 @inject SeoSettings seoSettings
 
 @{
+    <script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.window.min.js"></script>
+
     var isPopup = ViewBag.IsPopup ?? false;
     if (!isPopup)
     {
@@ -21,7 +27,7 @@
 
     if (seoSettings.CanonicalUrlsEnabled)
     {
-        var topicUrl = Url.RouteUrl("Topic", new { SeName = Model.SeName }, webHelper.GetCurrentRequestProtocol()).ToLowerInvariant();
+        var topicUrl = Url.RouteUrl<Topic>(new { SeName = Model.SeName }, webHelper.GetCurrentRequestProtocol()).ToLowerInvariant();
         NopHtml.AddCanonicalUrlParts(topicUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
     }
 
@@ -31,7 +37,7 @@
 @if (Model.IsPasswordProtected)
 {
     <script asp-location="Footer">
-        $(document).ready(function () {
+        $(function () {
             $('#button-password').on('click', function () {
                 var postData = {
                     id: $("#topic-@Model.Id").val(),
@@ -67,7 +73,7 @@
             });
         });
 
-        $(document).ready(function () {
+        $(function () {
             $('#ph-topic').hide();
             $('#ph-password #password').select().focus();
         });
@@ -86,7 +92,9 @@
         </form>
     </div>
 }
+<div id="GoogleWindow"></div>
 <div class="page topic-page" id="ph-topic">
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerTopicDetailsTop, additionalData = Model })
     <div id="ph-title">
         <div class="page-title panel-heading">
             <h1>
@@ -97,4 +105,55 @@
     <div class="page-body panel-body">
         @Html.Raw(Model.Body)
     </div>
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerTopicDetailsBottom, additionalData = Model })
+
 </div>
+
+@* css customization *@
+<style>
+    @@media (max-width: 767px) {
+        .page.topic-page .panel-body {
+            font-size: 15px;
+            margin-top: 5px !important;
+            padding: 5px 0px 5px 0px;
+        }
+
+        .panel .panel-body {
+            padding: 15px !important;
+        }
+    }
+
+    .page.topic-page .page-body ul {
+        padding-left: 0px !important;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+
+        var myWindow = $("#GoogleWindow");
+
+        myWindow.kendoWindow({
+            // position: {
+            //     top: 20, // or "100px"
+            //     //left: "20%"
+            // },
+            width: "90%",
+            height: "90%",
+            maxWidth: 800,
+            title: "Apply For JOB",
+            actions: ["Maximize", "Close"],
+            //content: "https://docs.google.com/forms/d/e/1FAIpQLSfV7Tf2IC7ywsBmqPmn4-0irIdXBJEJFlJqXhYcGzIR8o_NtA/viewform?usp=sf_link",
+            content: "https://docs.google.com/forms/d/e/1FAIpQLSfV7Tf2IC7ywsBmqPmn4-0irIdXBJEJFlJqXhYcGzIR8o_NtA/viewform?embedded=true",
+            modal: true,
+            visible: false,
+            iframe: true
+        });
+
+        $(".btnApply").click(function (e) {
+            //myWindow.data("kendoWindow").center();
+            myWindow.data("kendoWindow").open();
+        });
+
+    });
+</script>

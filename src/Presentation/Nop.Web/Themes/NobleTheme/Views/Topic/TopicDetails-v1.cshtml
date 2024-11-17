@@ -1,0 +1,46 @@
+﻿@model TopicModel
+@using Nop.Core.Domain.Seo
+@inject Nop.Core.IWebHelper webHelper
+@inject SeoSettings seoSettings
+
+@{
+    var isPopup = ViewBag.IsPopup ?? false;
+    if (!isPopup)
+    {
+        Layout = "_ColumnsOne";
+    }
+    //page class
+    NopHtml.AppendPageCssClassParts("html-topic-page");
+}
+
+<div class="page topic-page" id="ph-topic">
+    <div id="ph-title">
+        <div class="page-title panel-heading">
+            <h1>
+                @Model.Title
+            </h1>
+        </div>
+    </div>
+    <div class="page-body panel-body">
+        @Html.Raw(Model.Body)
+    </div>
+</div>
+
+@* css customization *@
+<style>
+    @@media (max-width: 767px) {
+        .page.topic-page .panel-body {
+            font-size: 15px;
+            margin-top: 5px !important;
+            padding: 5px 0px 5px 0px;
+        }
+
+        .panel .panel-body {
+            padding: 15px !important;
+        }
+    }
+
+    .page.topic-page .page-body ul {
+        padding-left: 0px !important;
+    }
+</style>
