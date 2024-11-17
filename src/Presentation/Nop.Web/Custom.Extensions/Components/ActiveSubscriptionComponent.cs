@@ -25,6 +25,7 @@ namespace Nop.Web.Components
         private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IProductService _productService;
+        private readonly IRewardPointService _rewardPointService;
 
 
         public ActiveSubscriptionViewComponent(IShoppingCartModelFactory shoppingCartModelFactory,
@@ -35,7 +36,8 @@ namespace Nop.Web.Components
             ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
             IWorkContext workContext,
-            IProductService productService)
+            IProductService productService,
+            IRewardPointService rewardPointService)
         {
             _shoppingCartModelFactory = shoppingCartModelFactory;
             _shoppingCartService = shoppingCartService;
@@ -46,6 +48,7 @@ namespace Nop.Web.Components
             _customerService = customerService;
             _genericAttributeService = genericAttributeService;
             _productService = productService;
+            _rewardPointService = rewardPointService;
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
@@ -76,7 +79,26 @@ namespace Nop.Web.Components
             if (product != null)
                 model.SubscriptionProduct = product.Name;
 
-            return View(model);
+            //get customer latest paid order
+            //var activeOrderItems = await _orderService.GetOrderItemsAsync(order.Id);
+            //var customerSubscribedProductId = activeOrderItems.FirstOrDefault().ProductId;
+
+            var modelNew = new SubscriptionModel
+            {
+                SubscriptionId = subscriptionProductId,
+
+                SubscriptionDate = await _rewardPointService.GetSubscriptionStartDateAsync(customer.Id, storeId),
+                SubscriptionExpiryDate = await _rewardPointService.GetSubscriptionExpiryDateAsync(customer.Id, storeId),
+
+                AllottedCreditCount = await _rewardPointService.GetSubscriptionAlottedCreditCountAsync(customer.Id, storeId),
+                BalanceCreditCount = await _rewardPointService.GetRewardPointsBalanceAsync(customer.Id, storeId),
+                UsedCreditCount = await _rewardPointService.GetSubscriptionUsedCreditCountAsync(customer.Id, storeId),
+
+                IsPaidCustomer = await _customerService.IsInCustomerRoleAsync(customer, "PaidCustomer"),
+                CustomerProfileTypeId = customer.CustomerProfileTypeId
+            };
+
+            return View(modelNew);
 
         }
     }

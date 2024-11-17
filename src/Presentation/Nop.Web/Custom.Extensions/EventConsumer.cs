@@ -1,11 +1,13 @@
-﻿using DocumentFormat.OpenXml.EMMA;
+﻿
 using Nop.Core;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Payments;
 using Nop.Core.Events;
 using Nop.Services.Affiliates;
 using Nop.Services.Attributes;
@@ -37,9 +39,12 @@ namespace Nop.CustomExtensions.Services
         IConsumer<CustomerRegisteredEvent>,
         IConsumer<CustomerActivatedEvent>,
         IConsumer<EntityInsertedEvent<Category>>,
+        IConsumer<EntityUpdatedEvent<Category>>,
         IConsumer<EntityInsertedEvent<GenericAttribute>>,
         IConsumer<EntityUpdatedEvent<GenericAttribute>>,
         IConsumer<EntityDeletedEvent<GenericAttribute>>,
+        IConsumer<EntityTokensAddedEvent<Customer, Token>>,
+        IConsumer<MessageTokensAddedEvent<Token>>,
         IConsumer<ModelPreparedEvent<BaseNopModel>>
     {
         #region Fields
@@ -65,6 +70,7 @@ namespace Nop.CustomExtensions.Services
         protected readonly IWebHelper _webHelper;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly LocalizationSettings _localizationSettings;
+        private readonly IRewardPointService _rewardPointService;
 
         #endregion
 
@@ -90,7 +96,8 @@ namespace Nop.CustomExtensions.Services
              IWorkContext workContext,
              IWebHelper webHelper,
              IWorkflowMessageService workflowMessageService,
-             LocalizationSettings localizationSettings
+             LocalizationSettings localizationSettings,
+             IRewardPointService rewardPointService
             )
         {
             _genericAttributeService = genericAttributeService;
@@ -114,6 +121,7 @@ namespace Nop.CustomExtensions.Services
             _webHelper = webHelper;
             _workflowMessageService = workflowMessageService;
             _localizationSettings = localizationSettings;
+            _rewardPointService = rewardPointService;
         }
 
         #endregion
@@ -123,7 +131,12 @@ namespace Nop.CustomExtensions.Services
         public async Task HandleEventAsync(OrderPaidEvent eventMessage)
         {
             await AddCustomerToPaidCustomerRole(eventMessage.Order.CustomerId);
-            await AddCustomerSubscriptionInfoToGenericAttributes(eventMessage.Order);
+
+            //await AddCustomerSubscriptionInfoToGenericAttributes(eventMessage.Order);
+            await AddCustomerSubscriptionInfoToOrderAsync(eventMessage.Order);
+
+            //new method to use reward (credit) point system for credits
+            await AddCustomerSubscriptionInfoToRewardPointsAsync(eventMessage.Order);
         }
 
         public async Task HandleEventAsync(CustomerRegisteredEvent eventMessage)
@@ -175,12 +188,6 @@ namespace Nop.CustomExtensions.Services
             await Task.FromResult(0);
         }
 
-        /// <summary>
-        /// This method is used to modify the model and its properties via events
-        /// -- Adding custom navigation items to My Account page with out modifying customermodelfactory class
-        /// </summary>
-        /// <param name="eventMessage"></param>
-        /// <returns></returns>
         public async Task HandleEventAsync(ModelPreparedEvent<BaseNopModel> eventMessage)
         {
             if (eventMessage.Model is CustomerNavigationModel model)
@@ -189,7 +196,7 @@ namespace Nop.CustomExtensions.Services
                 model.CustomerNavigationItems.Insert(1, new CustomerNavigationItemModel
                 {
                     RouteName = "PrivateMessages",
-                    Title = "Mails and Messages ",
+                    Title = "Mails & Messages ",
                     Tab = (int)CustomerNavigationEnum.PrivateMessages,
                     ItemClass = "customer-PrivateMessages"
                 });
@@ -281,6 +288,33 @@ namespace Nop.CustomExtensions.Services
 
             }
 
+            //account activation model
+            if (eventMessage.Model is AccountActivationModel accountActivationModel)
+            {
+                var customerProfileTypeId = (await _workContext.GetCurrentCustomerAsync()).Id;
+
+                //wants to give support. Return url must be give support page
+                if (customerProfileTypeId == 1)
+                {
+                    //accountActivationModel.ReturnUrl= string.Empty;
+                }
+                else if (customerProfileTypeId == 2)
+                {
+                    //wants to take support.  Return url must be take support page
+                    //accountActivationModel.ReturnUrl = string.Empty;
+                }
+
+                accountActivationModel.CustomProperties = new Dictionary<string, string> { };
+            }
+
+            //top menu model
+            if (eventMessage.Model is TopMenuModel topMenuModel)
+            {
+                var customerProfileTypeId = (await _workContext.GetCurrentCustomerAsync()).Id;
+
+                //topMenuModel.Categories=
+
+            }
 
             #region Admin functionality
 
@@ -299,6 +333,37 @@ namespace Nop.CustomExtensions.Services
 
             #endregion
             //return Task.FromResult(0);
+        }
+
+        public async Task HandleEventAsync(EntityTokensAddedEvent<Customer, Token> eventMessage)
+        {
+            //add customer phone number
+            eventMessage.Tokens.Add(new Token("Customer.Phone", eventMessage.Entity.Phone));
+
+            var product = await _productService.GetProductByIdAsync(eventMessage.Entity.VendorId);
+            var customer = eventMessage.Entity;
+
+            //add product specification attributes
+            eventMessage.Tokens.Add(new Token("Customer.ProfileType", await GetCustomerSpecificationAttributesAsync(customer, (int)ProductAndCustomerAttributeEnum.ProfileType)));
+            eventMessage.Tokens.Add(new Token("Customer.PrimaryTechnology", await GetCustomerSpecificationAttributesAsync(customer, (int)ProductAndCustomerAttributeEnum.PrimaryTechnology)));
+            eventMessage.Tokens.Add(new Token("Customer.MotherTongue", await GetCustomerSpecificationAttributesAsync(customer, (int)ProductAndCustomerAttributeEnum.MotherTongue)));
+            eventMessage.Tokens.Add(new Token("Customer.Gender", await GetCustomerSpecificationAttributesAsync(customer, (int)ProductAndCustomerAttributeEnum.Gender)));
+            eventMessage.Tokens.Add(new Token("Customer.ShortDescription", await GetCustomerSpecificationAttributesAsync(customer, (int)ProductAndCustomerAttributeEnum.ShortDescription)));
+            eventMessage.Tokens.Add(new Token("Customer.FullDescription", await GetCustomerSpecificationAttributesAsync(customer, (int)ProductAndCustomerAttributeEnum.FullDescription)));
+        }
+
+        public Task HandleEventAsync(MessageTokensAddedEvent<Token> eventMessage)
+        {
+            if (eventMessage?.Message?.Name == MessageTemplateSystemNames.CUSTOMER_REGISTERED_STORE_OWNER_NOTIFICATION)
+            {
+                //var list = eventMessage.Tokens.Select(x => x.Key == "Customer.ProfileType").ToList();
+
+                //if (list.Count != 0)
+                //    _logger.Information("Customer Token ProfileType found");
+
+            }
+
+            return Task.CompletedTask;
         }
 
         public async Task HandleEventAsync(EntityInsertedEvent<Category> eventMessage)
@@ -321,6 +386,11 @@ namespace Nop.CustomExtensions.Services
 
                 await _logger.InsertLogAsync(Core.Domain.Logging.LogLevel.Information, "Created technology from category created (EntityInsertedEvent) event");
             }
+        }
+
+        public async Task HandleEventAsync(EntityUpdatedEvent<Category> eventMessage)
+        {
+            await Task.CompletedTask;
         }
 
         #endregion
@@ -434,6 +504,127 @@ namespace Nop.CustomExtensions.Services
 
             //customer activity
             await _customerActivityService.InsertActivityAsync(customer, "PublicStore.CustomerSubscriptionInfo", newSubscriptionInfo, customer);
+
+        }
+
+        public async Task AddCustomerSubscriptionInfoToOrderAsync(Order order)
+        {
+            var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
+
+            //get order product id
+            var activeOrderItems = await _orderService.GetOrderItemsAsync(order.Id);
+            var customerSubscribedProductId = activeOrderItems.FirstOrDefault().ProductId;
+
+            DateTime? subscriptionExpiryDate;
+            int allottedCount;
+
+            if (customerSubscribedProductId == _shoppingCartSettings.FreeSubscriptionProductId)
+            {
+                allottedCount = _shoppingCartSettings.FreeSubscriptionAllottedCount;
+                //free subscription
+                subscriptionExpiryDate = order.CreatedOnUtc.AddMonths(1);
+            }
+            else if (customerSubscribedProductId == _shoppingCartSettings.OneMonthSubscriptionProductId)
+            {
+                allottedCount = _shoppingCartSettings.OneMonthSubscriptionAllottedCount;
+                //1 Month Subscription
+                subscriptionExpiryDate = order.CreatedOnUtc.AddMonths(1);
+            }
+            else if (customerSubscribedProductId == _shoppingCartSettings.ThreeMonthSubscriptionProductId)
+            {
+                allottedCount = _shoppingCartSettings.ThreeMonthSubscriptionAllottedCount;
+                //3 months subscription
+                subscriptionExpiryDate = order.CreatedOnUtc.AddMonths(3);
+            }
+            else if (customerSubscribedProductId == _shoppingCartSettings.SixMonthSubscriptionProductId)
+            {
+                allottedCount = _shoppingCartSettings.SixMonthSubscriptionAllottedCount;
+                //6 months subscription
+                subscriptionExpiryDate = order.CreatedOnUtc.AddMonths(6);
+            }
+            else
+            {
+                allottedCount = 0;
+                //default expiry date
+                subscriptionExpiryDate = order.CreatedOnUtc.AddMonths(1);
+            }
+
+            order.CardType = customerSubscribedProductId.ToString(); // subscriptionId
+            order.CardName = allottedCount.ToString(); // subscription AllottedCount
+            order.CardNumber = order.PaidDateUtc?.ToString(); // subscription Date
+            order.CardCvv2 = subscriptionExpiryDate?.ToString(); // subscription ExpiryDate
+
+            //get customer previous paid order if any
+            var previousOrder = (await _orderService.SearchOrdersAsync(customerId: order.CustomerId, psIds: new List<int> { (int)PaymentStatus.Paid })).Skip(1).FirstOrDefault();
+
+            if (previousOrder != null)
+            {
+                order.CardExpirationMonth = previousOrder.CardExpirationMonth; // Previous un-used count
+
+                int.TryParse(previousOrder.CardExpirationMonth, out var unUsedCount);
+
+                //total allotted count now.
+                order.CardExpirationYear = (allottedCount + unUsedCount).ToString();
+            }
+
+            //save current order subscription data
+            await _orderService.UpdateOrderAsync(order);
+
+        }
+
+        public async Task AddCustomerSubscriptionInfoToRewardPointsAsync(Order order)
+        {
+            var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
+            var storeId = (await _storeContext.GetCurrentStoreAsync()).Id;
+
+            //get order product id
+            var activeOrderItems = await _orderService.GetOrderItemsAsync(order.Id);
+            var customerSubscribedProductId = activeOrderItems.FirstOrDefault().ProductId;
+
+            DateTime? subscriptionExpiryDate;
+            int allottedCount;
+
+            if (customerSubscribedProductId == _shoppingCartSettings.FreeSubscriptionProductId)
+            {
+                allottedCount = _shoppingCartSettings.FreeSubscriptionAllottedCount;
+                //free subscription
+                subscriptionExpiryDate = order.CreatedOnUtc.AddMonths(1);
+            }
+            else if (customerSubscribedProductId == _shoppingCartSettings.OneMonthSubscriptionProductId)
+            {
+                allottedCount = _shoppingCartSettings.OneMonthSubscriptionAllottedCount;
+                //1 Month Subscription
+                subscriptionExpiryDate = order.CreatedOnUtc.AddMonths(1);
+            }
+            else if (customerSubscribedProductId == _shoppingCartSettings.ThreeMonthSubscriptionProductId)
+            {
+                allottedCount = _shoppingCartSettings.ThreeMonthSubscriptionAllottedCount;
+                //3 months subscription
+                subscriptionExpiryDate = order.CreatedOnUtc.AddMonths(3);
+            }
+            else if (customerSubscribedProductId == _shoppingCartSettings.SixMonthSubscriptionProductId)
+            {
+                allottedCount = _shoppingCartSettings.SixMonthSubscriptionAllottedCount;
+                //6 months subscription
+                subscriptionExpiryDate = order.CreatedOnUtc.AddMonths(6);
+            }
+            else
+            {
+                allottedCount = 0;
+                //default expiry date
+                subscriptionExpiryDate = order.CreatedOnUtc.AddMonths(1);
+            }
+
+            var now = DateTime.UtcNow;
+            var startDate = new DateTime(now.Year, now.Month, 1);
+            //var expiryDate = startDate.AddMonths(1).AddDays(-1);
+            var orderItems = await _orderService.GetOrderItemsAsync(order.Id);
+            var subscriptionProductId = orderItems.FirstOrDefault().ProductId;
+
+            var product = await _productService.GetProductByIdAsync(subscriptionProductId);
+            var message = $"Customer Buy Credits with Plan: {product.Id} - {product.Name}";
+
+            await _rewardPointService.AddRewardPointsHistoryEntryAsync(customer, allottedCount, storeId, message, order, endDate: subscriptionExpiryDate);
 
         }
 
@@ -790,6 +981,28 @@ namespace Nop.CustomExtensions.Services
 
             //update product
             await _productService.UpdateProductAsync(product);
+        }
+
+        private async Task<string> GetCustomerSpecificationAttributesAsync(Customer customer, int specificationAttributeId)
+        {
+            var result = string.Empty;
+
+            if (specificationAttributeId == (int)(int)ProductAndCustomerAttributeEnum.ShortDescription ||
+                specificationAttributeId == (int)(int)ProductAndCustomerAttributeEnum.FullDescription)
+            {
+                var description = _customerAttributeParser.ParseValues(customer.CustomCustomerAttributesXML, specificationAttributeId);
+                if (description.Any())
+                    return description[0];
+            }
+            else
+            {
+                var specificationOptionIds = _customerAttributeParser.ParseValues(customer.CustomCustomerAttributesXML, specificationAttributeId).Select(int.Parse).ToList();
+                var specOptions = await _specificationAttributeService.GetSpecificationAttributeOptionsByIdsAsync(specificationOptionIds.ToArray());
+
+                result = string.Join(", ", specOptions.Select(x => x.Name).ToArray());
+            }
+
+            return result;
         }
 
         #endregion
