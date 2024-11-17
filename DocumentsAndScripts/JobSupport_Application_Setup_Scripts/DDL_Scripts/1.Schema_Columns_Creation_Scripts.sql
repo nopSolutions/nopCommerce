@@ -1,6 +1,10 @@
 
 USE [nopcommerce46]
 
+-- USE [qaonjobsupport47]
+
+-- USE [onjobsupport47]
+
 -- nop 4.6 version related schema scripts
 
 -- Author : Sateesh Munagala
@@ -76,6 +80,13 @@ BEGIN
 END
 GO
 
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[Affiliate]') AND NAME = 'CustomerId')
+BEGIN
+	ALTER TABLE [Affiliate]
+	ADD CustomerId [int] NULL
+END
+GO
 
 ---------------------------------------------------------
 -- ***  END SCHEMA SCRIPTS ****

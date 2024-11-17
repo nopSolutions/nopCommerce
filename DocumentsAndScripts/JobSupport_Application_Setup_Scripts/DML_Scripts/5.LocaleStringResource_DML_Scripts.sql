@@ -1,6 +1,8 @@
 
 -- use onjobsupport47
 
+-- use  [qaonjobsupport47]
+
 
 -- SELECT * FROM [dbo].[LocaleStringResource] WHERE ResourceValue like '%options%'
 -- SELECT * FROM [dbo].[LocaleStringResource] WHERE ResourceName like '%ContactUs.YourEnquiryHasBeenSent'
@@ -99,4 +101,110 @@ Update [LocaleStringResource] SET ResourceValue='Public store. Viewed a profile 
 update LocaleStringResource SET ResourceValue='Your subscription has been successfully processed!' Where ResourceName='checkout.yourorderhasbeensuccessfullyprocessed'
 
 update LocaleStringResource SET ResourceValue='Skills!' Where ResourceName='search.category'
+
+IF NOT EXISTS (SELECT * FROM [LocaleStringResource] WHERE [ResourceName]='admin.contentmanagement.messagetemplates.description.newcustomer.notifytargetcustomers')
+   BEGIN
+		INSERT INTO [dbo].[LocaleStringResource]([ResourceName],[ResourceValue],[LanguageId]) 
+		VALUES('admin.contentmanagement.messagetemplates.description.newcustomer.notifytargetcustomers','This message template is used to notify give support users when a new take support customer is registered.',1)
+   END
+
+
+UPDATE [dbo].[LocaleStringResource] 
+SET [ResourceValue]='<div class="panel panel-danger"><div class="panel-heading"><h3 class="panel-title">No Results!</h3></div><div class="panel-body">No profiles were found that matched your criteria. Please adjust your filter criteria to see more profiles. </br> (OR) </br> Send an email using Contact us form, our team will try best to get the relavent profiles.</div></div>' 
+WHERE resourcename = 'catalog.products.noresult';
+
+--Update LocaleStringResource 
+--SET ResourceValue='<div class="panel panel-danger"><div class="panel-heading"><h3 class="panel-title">Login/Register!</h3></div><div class="panel-body">Please <a href="https://onjobsupport.in/login">Login/Register</a> to see the profiles</br>This helps us to show the relavent profiles</div></div>'  
+--WHERE ResourceName='Catalog.Products.GuestCustomerResult'
+
+Update LocaleStringResource 
+SET ResourceValue='<div class="panel panel-danger"><div class="panel-heading"><h3 class="panel-title">Login/Register!</h3></div><div class="panel-body">Please <a href="https://onjobsupport.in/login" class="btn btn-default">Login/Register</a> to see the profiles </br>This helps us to show the relavent profiles</div></div>'  
+WHERE ResourceName='Catalog.Products.GuestCustomerResult'
+
+update LocaleStringResource SET ResourceValue='Profiles tagged with ''{0}''' Where ResourceName='pagetitle.productsbytag'
+update LocaleStringResource SET ResourceValue='Profiles tagged with ''{0}''' Where ResourceName='products.tags.productstaggedwith'
+
+IF NOT EXISTS (SELECT * FROM [LocaleStringResource] WHERE [ResourceName]='account.register.errors.phonealreadyexists')
+   BEGIN
+		INSERT INTO [dbo].[LocaleStringResource]([ResourceName],[ResourceValue],[LanguageId]) 
+		VALUES('account.register.errors.phonealreadyexists','The specified phone already exists.',1)
+   END
+
+
+IF NOT EXISTS (SELECT * FROM [LocaleStringResource] WHERE [ResourceName]='admin.configuration.emailaccounts.redirecturl.info')
+BEGIN
+	INSERT INTO [dbo].[LocaleStringResource]([ResourceName],[ResourceValue],[LanguageId]) 
+	VALUES('admin.configuration.emailaccounts.redirecturl.info','<![CDATA[<b>{0}</b> - enter this "Authorized redirect URI" when creating your credentials in the Google Cloud console. You will be redirected to this path after authenticating with Google.]]>',1)
+END
+
+IF NOT EXISTS (SELECT * FROM [LocaleStringResource] WHERE [ResourceName]='Admin.Configuration.EmailAccounts.Fields.EmailAuthenticationMethod')
+BEGIN
+	INSERT INTO [dbo].[LocaleStringResource]([ResourceName],[ResourceValue],[LanguageId]) 
+	VALUES('Admin.Configuration.EmailAccounts.Fields.EmailAuthenticationMethod','Authentication method',1)
+END
+
+IF NOT EXISTS (SELECT * FROM [LocaleStringResource] WHERE [ResourceName]='admin.configuration.emailaccounts.fields.clientid')
+BEGIN
+	INSERT INTO [dbo].[LocaleStringResource]([ResourceName],[ResourceValue],[LanguageId]) 
+	VALUES('admin.configuration.emailaccounts.fields.clientid','Client ID',1)
+END
+
+IF NOT EXISTS (SELECT * FROM [LocaleStringResource] WHERE [ResourceName]='admin.configuration.emailaccounts.fields.clientsecret')
+BEGIN
+	INSERT INTO [dbo].[LocaleStringResource]([ResourceName],[ResourceValue],[LanguageId]) 
+	VALUES('admin.configuration.emailaccounts.fields.clientsecret','Client Secret',1)
+END
+
+IF NOT EXISTS (SELECT * FROM [LocaleStringResource] WHERE [ResourceName]='admin.configuration.emailaccounts.fields.tenantid')
+BEGIN
+	INSERT INTO [dbo].[LocaleStringResource]([ResourceName],[ResourceValue],[LanguageId]) 
+	VALUES('admin.configuration.emailaccounts.fields.tenantid','Tenant identifier',1)
+END
+
+IF NOT EXISTS (SELECT * FROM [LocaleStringResource] WHERE [ResourceName]='admin.configuration.emailaccounts.fields.clientsecret.change')
+BEGIN
+	INSERT INTO [dbo].[LocaleStringResource]([ResourceName],[ResourceValue],[LanguageId]) 
+	VALUES('admin.configuration.emailaccounts.fields.clientsecret.change','Change',1)
+END
+
+IF NOT EXISTS (SELECT * FROM [LocaleStringResource] WHERE [ResourceName]='Admin.Configuration.EmailAccounts.Fields.ClientSecret.ClientSecretChanged')
+BEGIN
+	INSERT INTO [dbo].[LocaleStringResource]([ResourceName],[ResourceValue],[LanguageId]) 
+	VALUES('Admin.Configuration.EmailAccounts.Fields.ClientSecret.ClientSecretChanged','The client Secret has been changed successfully.',1)
+END
+
+update LocaleStringResource SET ResourceValue='The specified mobile number already exists.' Where ResourceName='account.register.errors.phonealreadyexists'
+
+-- 4.7.5 insert/upgrade scrips
+
+IF NOT EXISTS (SELECT * FROM [LocaleStringResource] WHERE [ResourceName]='Admin.Configuration.EmailAccounts.Fields.TenantId.Required')
+BEGIN
+	INSERT INTO [dbo].[LocaleStringResource]([ResourceName],[ResourceValue],[LanguageId]) 
+	VALUES('Admin.Configuration.EmailAccounts.Fields.TenantId.Required','The tenant identifier is required',1)
+END
+
+IF NOT EXISTS (SELECT * FROM [LocaleStringResource] WHERE [ResourceName]='Admin.Configuration.EmailAccounts.Fields.ClientId.Required')
+BEGIN
+	INSERT INTO [dbo].[LocaleStringResource]([ResourceName],[ResourceValue],[LanguageId]) 
+	VALUES('Admin.Configuration.EmailAccounts.Fields.ClientId.Required','The client identifier is required',1)
+END
+
+IF NOT EXISTS (SELECT * FROM [LocaleStringResource] WHERE [ResourceName]='Admin.Configuration.EmailAccounts.Fields.ClientSecret.Required')
+BEGIN
+	INSERT INTO [dbo].[LocaleStringResource]([ResourceName],[ResourceValue],[LanguageId]) 
+	VALUES('Admin.Configuration.EmailAccounts.Fields.ClientSecret.Required','The client Secret is required',1)
+END
+
+IF NOT EXISTS (SELECT * FROM [LocaleStringResource] WHERE [ResourceName]='Admin.Configuration.EmailAccounts.AuthorizationRequest.Text')
+BEGIN
+	INSERT INTO [dbo].[LocaleStringResource]([ResourceName],[ResourceValue],[LanguageId]) 
+	VALUES('Admin.Configuration.EmailAccounts.AuthorizationRequest.Text','Authorization request',1)
+END
+
+IF NOT EXISTS (SELECT * FROM [LocaleStringResource] WHERE [ResourceName]='Admin.Configuration.EmailAccounts.AuthorizationRequest.Info')
+BEGIN
+	INSERT INTO [dbo].[LocaleStringResource]([ResourceName],[ResourceValue],[LanguageId]) 
+	VALUES('Admin.Configuration.EmailAccounts.AuthorizationRequest.Info','Your application must have that consent before it can execute a Google API request that requires user authorization. Click the {0} button below and follow the steps to perform API requests.',1)
+END
+
 

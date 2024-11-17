@@ -2,6 +2,7 @@
 --use [itjobsupport]
 --use [nopcommerce46]
 -- use [onjobsupport47]
+-- use [qaonjobsupport47]
 
 SELECT * FROM [dbo].[LocaleStringResource] WHERE ResourceValue like '%options%'
 SELECT * FROM [dbo].[LocaleStringResource] WHERE ResourceName like '%.product(s)'
