@@ -11,14 +11,15 @@
 }
 @section left
 {
-    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.RewardPoints })
+    @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = CustomerNavigationEnum.RewardPoints })
 }
 <div class="page account-page reward-points-page">
     <div class="page-title panel-heading">
         <h1>@T("Account.MyAccount") - @T("Account.RewardPoints")</h1>
     </div>
-    <div class="page-body panel-body from-panel">
-        <div class="reward-points-overview">
+    <div class="page-body panel-body from-panel px-3">
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerRewardPointsTop, additionalData = Model })
+        <div class="reward-points-overview pt-3">
             <div class="current-balance alert alert-info">@T("RewardPoints.CurrentBalance", Model.RewardPointsBalance, Model.RewardPointsAmount)</div>
             @if (Model.MinimumRewardPointsBalance > 0)
             {
@@ -63,23 +64,23 @@
                             @for (var i = 0; i < Model.RewardPoints.Count; i++)
                             {
                                 var item = Model.RewardPoints[i];
-                            <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
-                                <td class="a-center date">
-                                    @item.CreatedOn
-                                </td>
-                                <td class="a-center points">
-                                    @item.Points
-                                </td>
-                                <td class="a-center points-balance">
-                                    @item.PointsBalance
-                                </td>
-                                <td class="a-center message">
-                                    @item.Message
-                                </td>
-                                <td class="endDate">
-                                    @item.EndDate
-                                </td>
-                            </tr>
+                                <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
+                                    <td class="a-center date">
+                                        @item.CreatedOn
+                                    </td>
+                                    <td class="a-center points">
+                                        @item.Points
+                                    </td>
+                                    <td class="a-center points-balance">
+                                        @item.PointsBalance
+                                    </td>
+                                    <td class="a-center message">
+                                        @item.Message
+                                    </td>
+                                    <td class="endDate">
+                                        @item.EndDate
+                                    </td>
+                                </tr>
                             }
                         </tbody>
                     </table>
@@ -98,4 +99,5 @@
             }
         </div>
     </div>
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerRewardPointsBottom, additionalData = Model })
 </div>

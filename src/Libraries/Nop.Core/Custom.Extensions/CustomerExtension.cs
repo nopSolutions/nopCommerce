@@ -6,7 +6,7 @@ namespace Nop.Core.Domain.Customers
     /// <summary>
     /// Represents a customer
     /// </summary>
-    public partial class Customer : BaseEntity, ISoftDeletedEntity
+    public partial class Customer
     {
         public int CustomerProfileTypeId { get; set; }
     }

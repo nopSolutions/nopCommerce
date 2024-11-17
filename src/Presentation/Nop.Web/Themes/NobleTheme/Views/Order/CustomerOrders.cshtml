@@ -136,40 +136,41 @@
             }
         }
         <div class="order-list">
-            @if (Model.Orders.Count > 0)
+        @if (Model.Orders.Count > 0)
+        {
+            foreach (var order in Model.Orders)
             {
-                foreach (var order in Model.Orders)
-                {
-                    <div class="section order-item clearfix">
-                        <div class="title">
-                            <strong>@T("Account.CustomerOrders.OrderNumber"): @order.CustomOrderNumber</strong>
-                        </div>
-                        <ul class="nav">
-                            <li>
-                                @T("Account.CustomerOrders.OrderStatus"): <span class="order-status @order.OrderStatusEnum.ToString().ToLowerInvariant()">@order.OrderStatus</span>
-                            </li>
-                            <li>
-                                @T("Account.CustomerOrders.OrderDate"):<span class="order-date">@order.CreatedOn.ToString()</span>
-                            </li>
-                            <li>
-                                @T("Account.CustomerOrders.OrderTotal"): <span class="order-total">@order.OrderTotal</span>
-                            </li>
-                        </ul>
-                        <div class="buttons pull-right">
-                            @if (order.IsReturnRequestAllowed)
-                            {
-                                <button type="button" class="btn btn-default return-items-button" onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = order.Id })')">@T("Account.CustomerOrders.ReturnItems")</button>
-                                <text>&nbsp;&nbsp;&nbsp;</text>
-                            }
-                            <button type="button" class="btn btn-default order-details-button" onclick="setLocation('@Url.RouteUrl("OrderDetails", new { orderId = order.Id })')">@T("Account.CustomerOrders.OrderDetails")</button>
-                        </div>
+                <div class="section order-item clearfix">
+                    <div class="title">
+                        <strong>@T("Account.CustomerOrders.OrderNumber"): @order.CustomOrderNumber</strong>
                     </div>
-                }
+                        <ul class="nav">
+                        <li>
+                            @T("Account.CustomerOrders.OrderStatus"): <span class="order-status @order.OrderStatusEnum.ToString().ToLowerInvariant()">@order.OrderStatus</span>
+                        </li>
+                        <li>
+                            @T("Account.CustomerOrders.OrderDate"):<span class="order-date">@order.CreatedOn.ToString()</span>
+                        </li>
+                        <li>
+                            @T("Account.CustomerOrders.OrderTotal"): <span class="order-total">@order.OrderTotal</span>
+                        </li>
+                    </ul>
+                    <div class="buttons pull-right">
+                        @if (order.IsReturnRequestAllowed)
+                        {
+                            <button type="button" class="btn btn-default return-items-button" onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = order.Id })')">@T("Account.CustomerOrders.ReturnItems")</button>
+                            <text>&nbsp;&nbsp;&nbsp;</text>
+                        }
+                        <button type="button" class="btn btn-default order-details-button" onclick="setLocation('@Url.RouteUrl("OrderDetails", new { orderId = order.Id })')">@T("Account.CustomerOrders.OrderDetails")</button>
+                    </div>
+                </div>
             }
-            else
-            {
-                @T("Account.CustomerOrders.NoOrders")
-            }
-        </div>
+        }
+        else
+        {
+            @T("Account.CustomerOrders.NoOrders")
+        }
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerOrdersBottom, additionalData = Model })
+    </div>
     </div>
 </div>

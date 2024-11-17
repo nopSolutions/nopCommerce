@@ -16,6 +16,8 @@ namespace Nop.Services.Orders
     public partial interface IOrderService
     {
         IQueryable<CustomerOrderTemp> GetCustomerOrderTempTable();
+
+        //Task<int> GetCustomerLatestValidOrder(int customerId);
     }
 
     public partial class OrderService
@@ -60,6 +62,27 @@ namespace Nop.Services.Orders
 
             return true;
         }
+
+        //public virtual async Task<int> GetSubscriptionAlottedCreditCountAsync(int customerId)
+        //{
+        //    var query = _orderRepository.Table;
+
+        //    //filter by customer
+        //    if (customerId > 0)
+        //        query = query.Where(historyEntry => historyEntry.CustomerId == customerId);
+
+        //    //filter by store
+        //    if (!_rewardPointsSettings.PointsAccumulatedForAllStores && storeId > 0)
+        //        query = query.Where(historyEntry => historyEntry.StoreId == storeId);
+
+        //    //whether to show only the points that already activated
+        //    if (!showNotActivated)
+        //        query = query.Where(historyEntry => historyEntry.CreatedOnUtc < DateTime.UtcNow);
+
+        //    query = query.Where(entry => entry.EndDateUtc.HasValue).OrderByDescending(entry => entry.CreatedOnUtc);
+
+        //    return (await query.FirstOrDefaultAsync()).Points;
+        //}
 
         #endregion
     }

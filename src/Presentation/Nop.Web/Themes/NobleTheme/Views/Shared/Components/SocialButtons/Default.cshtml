@@ -11,10 +11,14 @@
     }
     @if (Model.NewsEnabled)
     {
-        <li class="rss"><a href="@Url.RouteUrl("NewsRSS", new { languageId = Model.WorkingLanguageId })"><i class="fa  fa-rss"></i></a></li>
+        <li class="rss"><a href="@Url.RouteUrl("NewsRSS", new { languageId = Model.WorkingLanguageId })"><i class="fa fa-rss"></i></a></li>
     }
     @if (!string.IsNullOrEmpty(Model.YoutubeLink))
     {
         <li class="youtube"><a href="@Model.YoutubeLink" target="_blank" rel="noopener noreferrer"><i class="fa fa-youtube"></i></a></li>
+    }
+    @if (!string.IsNullOrEmpty(Model.InstagramLink))
+    {
+        <li class="instagram"><a href="@Model.InstagramLink" target="_blank" rel="noopener noreferrer"><i class="fa fa-instagram"></i></a></li>
     }
 </ul>

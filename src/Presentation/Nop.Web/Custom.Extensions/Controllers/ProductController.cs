@@ -36,10 +36,17 @@ namespace Nop.Web.Controllers
                 return View(model);
             }
 
+            //get user latest order
+            var acitveOrder = (await _orderService.SearchOrdersAsync(customerId: currentCustomer.Id, psIds: new List<int> { (int)PaymentStatus.Paid })).FirstOrDefault();
+
+            if (acitveOrder != null)
+            {
+                var allottedCreditCount1 = int.Parse(acitveOrder.CardType);
+                var usedCreditCount1 = int.Parse(acitveOrder.CardType);
+            }
+
             //check view count is valid ie under below allotted count from customer activity log
             var customerActivity = await _customerActivityService.GetAllActivitiesAsync(customerId: currentCustomer.Id, activityLogTypeId: 154, entityName: "Product");
-
-            //var viewedData = await _genericAttributeService.GetAttributeAsync<string>(currentCustomer, "PublicStore.ViewContactDetail", storeId);
 
             var props = (await _genericAttributeService.GetAttributesForEntityAsync(currentCustomer.Id, "Customer"))
                         .Where(x => x.StoreId == storeId && x.Key == "PublicStore.ViewContactDetail")
@@ -72,7 +79,7 @@ namespace Nop.Web.Controllers
                     KeyGroup = "Customer",
                     Value = targetCustomer.Id.ToString(),
                     EntityId = currentCustomer.Id,
-                    StoreId= storeId,
+                    StoreId = storeId,
                     CreatedOrUpdatedDateUTC = DateTime.Now
                 };
 

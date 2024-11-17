@@ -32,10 +32,10 @@
                                     Used Credit Count: <strong>@Model.UsedCreditCount</strong>
                                 </li>
                                 <li class="order-total">
-                                    Avaialable Credit Count: <strong> @(@Model.AllottedCreditCount - @Model.UsedCreditCount)</strong>
+                                    Avaialable Credit Count: <strong> @Model.BalanceCreditCount</strong>
                                 </li>
                                 <li class="order-total">
-                                    Subscription Valid Upto: <strong> @Model.SubscriptionExpiryDate.ToString("d")</strong>
+                                    Subscription Valid Upto: <strong> @Model.SubscriptionExpiryDate</strong>
                                 </li>
                             </ul>
                         </div>
@@ -64,7 +64,7 @@ else
                             </div>
                         </div>
                     </div>
-                   
+
                     @* <div class="alert alert-danger" role="alert">
             <strong>Note: </strong> Registration is necessary as we need to show the relevant profiles based on whether you are a job-support seeker or provider.
             <br />
