@@ -31,6 +31,7 @@
         </h1>
     </div>
     <div class="page-body">
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.WishlistTop, additionalData = Model })
         <div class="wishlist-content">
             @if (Model.Items.Count > 0)
             {
@@ -271,5 +272,6 @@
                 <a href="@wishlistUrl" class="share-link">@wishlistUrl</a>
             </div>
         }
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.WishlistBottom, additionalData = Model })
     </div>
 </div>
