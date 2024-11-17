@@ -19,7 +19,10 @@
     </div>
     <div class="page-body panel-body from-panel">
         <div class="reward-points-overview">
-            @* <div class="current-balance alert alert-info">@T("RewardPoints.CurrentBalance", Model.RewardPointsBalance, Model.RewardPointsAmount)</div> *@
+            <div class="current-balance alert alert-info">
+                Below are the users who registerd with your referal link.<br />
+                <strong>You will get upto 40% commisssion when they buy on this website.</strong>
+            </div>
             @*  @if (Model.MinimumRewardPointsBalance > 0)
             {
             <div class="min-balance alert alert-info">@T("RewardPoints.MinimumBalance", Model.MinimumRewardPointsBalance, Model.MinimumRewardPointsAmount)</div>
@@ -27,8 +30,6 @@
         </div>
         <div class="reward-points-history">
             <div class="title">
-                Below are the users who registerd with your referal link.<br />
-                <strong>You will get 10% commisssion when they buy on this website.</strong>
             </div>
             @if (Model.Count > 0)
             {
@@ -39,7 +40,7 @@
                             <col width="30%" />
                             @* <col width="10%" /> *@
                             <col />
-                           @*  <col width="20%" /> *@
+                            @*  <col width="20%" /> *@
                         </colgroup>
                         <thead>
                             <tr>
@@ -72,17 +73,17 @@
                         </tbody>
                     </table>
                 </div>
-               @*  var pager = await Html.PagerAsync(Model.PagerModel);
-                if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
-                {
-                    <div class="pager">
-                        @pager
-                    </div>
-                } *@
+                @*  var pager = await Html.PagerAsync(Model.PagerModel);
+            if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
+            {
+            <div class="pager">
+            @pager
+            </div>
+            } *@
             }
             else
             {
-                <p>  No Affiliated Customers -- Refer your friends and earn money </p>
+                <p> You have No Affiliated Customers -- Refer your friends and earn money. </p>
             }
         </div>
     </div>

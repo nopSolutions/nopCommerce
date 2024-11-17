@@ -1,6 +1,14 @@
 ﻿@{
     Layout = "_Root";
 }
+
+@if (IsSectionDefined("HomePageSlider"))
+{
+    @section HomePageSlider {
+    @RenderSection("HomePageSlider")
+    }
+}
+
 @await RenderSectionAsync("Breadcrumb", false)
 <div class="col-md-12">
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.MainColumnBefore })

@@ -19,6 +19,7 @@
     </div>*@
     @await Html.PartialAsync("_ExternalAuthentication.Errors")
     <div class="page-body">
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.LoginTop, additionalData = Model })
         <div class="customer-blocks">
             <div class="row">
                 @if (Model.RegistrationType == UserRegistrationType.Disabled)
@@ -61,7 +62,7 @@
                             <fieldset>
                                 <legend>@T("Account.Login.NewCustomer")</legend>
                                 <div class="text">
-                                    @T("Account.Login.NewCustomerText")
+                                    @await Component.InvokeAsync(typeof(TopicBlockViewComponent), new { systemName = "LoginPageNewCustomerText" })
                                     <div class="form-group">
                                         <label class="control-label"></label>
                                         <div class="controls">
@@ -103,7 +104,7 @@
                                     <div class="form-group">
                                         <label asp-for="Password" class="col-md-2 control-label" asp-postfix=":"></label>
                                         <div class="col-md-12">
-                                            <input asp-for="Password" class="password form-control" />
+                                            <input asp-for="Password" class="password form-control" autocomplete="on" />
                                             <span asp-validation-for="Password"></span>
                                         </div>
                                     </div>
@@ -151,6 +152,7 @@
 </div>
 <div class="row">
     <div class="col-sm-12 col-md-12 login-abouts">
-        @await Component.InvokeAsync(typeof(TopicBlockViewComponent), new { systemName = "LoginRegistrationInfo" })
+        @await Component.InvokeAsync(typeof(HomepageNewsViewComponent))
+        @* @await Component.InvokeAsync(typeof(TopicBlockViewComponent), new { systemName = "LoginRegistrationInfo" }) *@
     </div>
 </div>
