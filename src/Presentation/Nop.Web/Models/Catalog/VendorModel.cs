@@ -18,6 +18,7 @@ public partial record VendorModel : BaseNopEntityModel
     public string MetaTitle { get; set; }
     public string SeName { get; set; }
     public bool AllowCustomersToContactVendors { get; set; }
+    public int? PmCustomerId { get; set; }
 
     public PictureModel PictureModel { get; set; }
 
