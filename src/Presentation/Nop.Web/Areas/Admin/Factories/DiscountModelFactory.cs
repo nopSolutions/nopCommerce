@@ -331,8 +331,9 @@ public partial class DiscountModelFactory : IDiscountModelFactory
         else
         {
             //prepare available vendors
-            await _baseAdminModelFactory.PrepareVendorsAsync(model.AvailableVendors,
-                defaultItemText: await _localizationService.GetResourceAsync("Admin.Promotions.Discounts.Fields.Vendor.None"));
+            model.AvailableVendors.Add(new SelectListItem { Value = string.Empty, Text = await _localizationService.GetResourceAsync("Admin.Promotions.Discounts.Fields.Vendor.None") });
+            await _baseAdminModelFactory.PrepareVendorsAsync(model.AvailableVendors, withSpecialDefaultItem: false);
+
         }
 
         model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;

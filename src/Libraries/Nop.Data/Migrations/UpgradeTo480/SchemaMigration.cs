@@ -9,7 +9,7 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.UpgradeTo480;
 
-[NopSchemaMigration("2024-11-08 00:00:00", "SchemaMigration for 4.80.0")]
+[NopSchemaMigration("2024-11-18 00:00:00", "SchemaMigration for 4.80.0")]
 public class SchemaMigration : ForwardOnlyMigration
 {
     /// <summary>
@@ -75,5 +75,11 @@ public class SchemaMigration : ForwardOnlyMigration
             Alter.Table(discountTableName)
                 .AddColumn(vendorIdDiscountColumnName).AsInt32().ForeignKey<Vendor>(onDelete: Rule.SetNull).Nullable();
         }
+
+        //#7243
+        var vendorTableName = nameof(Vendor);
+        var pmCustomerIdColumnName = nameof(Vendor.PmCustomerId);
+        if (!Schema.Table(vendorTableName).Column(pmCustomerIdColumnName).Exists())
+            Alter.Table(vendorTableName).AddColumn(pmCustomerIdColumnName).AsInt32().Nullable();
     }
 }
