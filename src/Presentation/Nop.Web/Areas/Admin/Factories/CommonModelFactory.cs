@@ -14,7 +14,6 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
-using Nop.Core.Domain.Stores;
 using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Data;
@@ -46,7 +45,9 @@ using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Localization;
 using Nop.Web.Areas.Admin.Models.News;
 using Nop.Web.Areas.Admin.Models.Topics;
+using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Models.Extensions;
+using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.Security;
 
 namespace Nop.Web.Areas.Admin.Factories;
@@ -81,6 +82,7 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected readonly INewsService _newsService;
     protected readonly INopDataProvider _dataProvider;
     protected readonly INopFileProvider _fileProvider;
+    protected readonly INopUrlHelper _nopUrlHelper;
     protected readonly IOrderService _orderService;
     protected readonly IPaymentPluginManager _paymentPluginManager;
     protected readonly IPickupPluginManager _pickupPluginManager;
@@ -131,6 +133,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         INewsService newsService,
         INopDataProvider dataProvider,
         INopFileProvider fileProvider,
+        INopUrlHelper nopUrlHelper,
         IOrderService orderService,
         IPaymentPluginManager paymentPluginManager,
         IPickupPluginManager pickupPluginManager,
@@ -173,10 +176,11 @@ public partial class CommonModelFactory : ICommonModelFactory
         _localizationService = localizationService;
         _maintenanceService = maintenanceService;
         _manufacturerService = manufacturerService;
-        _measureService = measureService;        
+        _measureService = measureService;
         _multiFactorAuthenticationPluginManager = multiFactorAuthenticationPluginManager;
         _newsService = newsService;
         _fileProvider = fileProvider;
+        _nopUrlHelper = nopUrlHelper;
         _orderService = orderService;
         _paymentPluginManager = paymentPluginManager;
         _pickupPluginManager = pickupPluginManager;
@@ -712,13 +716,13 @@ public partial class CommonModelFactory : ICommonModelFactory
     /// <summary>
     /// Prepare multistore preview models for an entity
     /// </summary>
-    /// <typeparam name="TEntity"></typeparam>
-    /// <param name="entity"></param>
+    /// <typeparam name="TEntity">Entity type</typeparam>
+    /// <param name="entity">Entity</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the list of multistore preview models for an entity
     /// </returns>
-    protected virtual async Task<IList<MultistorePreviewModel>> PrepareMultistorePreviewModelsForEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity, IStoreMappingSupported, ISlugSupported
+    protected virtual async Task<IList<MultistorePreviewModel>> PrepareMultistorePreviewModelsForEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity, ISlugSupported
     {
         var models = new List<MultistorePreviewModel>();
 
@@ -727,10 +731,14 @@ public partial class CommonModelFactory : ICommonModelFactory
 
         foreach (var store in stores)
         {
+            if (!Uri.TryCreate(store.Url, UriKind.Absolute, out var url))
+                continue;
+
             models.Add(new MultistorePreviewModel
             {
                 StoreName = store.Name,
-                Url = store.Url.TrimEnd('/') + $"/{seName}",
+                Url = await _nopUrlHelper
+                    .RouteGenericUrlAsync<TEntity>(new { SeName = seName }, url.Scheme, url.IsDefaultPort ? url.Host : $"{url.Host}:{url.Port}"),
             });
         }
 
@@ -1208,12 +1216,13 @@ public partial class CommonModelFactory : ICommonModelFactory
     /// <summary>
     /// Prepare multistore preview models
     /// </summary>
-    /// <param name="model">An admin BaseNopEntityModel</param>
+    /// <typeparam name="TModel">Model type</typeparam>
+    /// <param name="model">Entity model</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the list of multistore preview models
     /// </returns>
-    public virtual async Task<IList<MultistorePreviewModel>> PrepareMultistorePreviewModelsAsync(object model)
+    public virtual async Task<IList<MultistorePreviewModel>> PrepareMultistorePreviewModelsAsync<TModel>(TModel model) where TModel : BaseNopEntityModel
     {
         switch (model)
         {

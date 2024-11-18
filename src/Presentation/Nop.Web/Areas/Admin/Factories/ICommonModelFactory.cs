@@ -1,4 +1,5 @@
 ﻿using Nop.Web.Areas.Admin.Models.Common;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Factories;
 
@@ -114,10 +115,11 @@ public partial interface ICommonModelFactory
     /// <summary>
     /// Prepare multistore preview models
     /// </summary>
-    /// <param name="model">An admin BaseNopEntityModel</param>
+    /// <typeparam name="TModel">Model type</typeparam>
+    /// <param name="model">Entity model</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the list of multistore preview models
     /// </returns>
-    Task<IList<MultistorePreviewModel>> PrepareMultistorePreviewModelsAsync(object model);
+    Task<IList<MultistorePreviewModel>> PrepareMultistorePreviewModelsAsync<TModel>(TModel model) where TModel : BaseNopEntityModel;
 }
