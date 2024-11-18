@@ -6440,6 +6440,13 @@ div#video-popup {
 	
 }
 
+div#storeDropDown div {
+    clear: both;
+}
+.contact-us-header {
+    clear: both;
+}
+
 
 /* End Black Friday */
 
