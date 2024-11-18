@@ -95,7 +95,7 @@ public partial record DiscountModel : BaseNopEntityModel
     public bool AppliedToSubCategories { get; set; }
 
     [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.Vendor")]
-    public int VendorId { get; set; }
+    public int? VendorId { get; set; }
     public IList<SelectListItem> AvailableVendors { get; set; }
 
     [NopResourceDisplayName("Admin.Promotions.Discounts.Requirements.DiscountRequirementType")]

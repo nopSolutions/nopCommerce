@@ -95,7 +95,7 @@ public partial class Discount : BaseEntity
     /// <summary>
     /// Gets or sets a vendor identifier
     /// </summary>
-    public int VendorId { get; set; }
+    public int? VendorId { get; set; }
 
     /// <summary>
     /// Gets or sets the discount type
