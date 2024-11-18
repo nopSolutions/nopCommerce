@@ -815,7 +815,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
 
         if (_catalogSettings.EnableSpecificationAttributeFiltering)
         {
-            model.SpecificationFilter = await PrepareSpecificationFilterModel(command.SpecificationOptionIds, filterableOptions);
+            model.SpecificationFilter = await PrepareSpecificationFilterModel(command.Specs, filterableOptions);
         }
 
         //filterable manufacturers
@@ -823,10 +823,10 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         {
             var manufacturers = await _manufacturerService.GetManufacturersByCategoryIdAsync(category.Id);
 
-            model.ManufacturerFilter = await PrepareManufacturerFilterModel(command.ManufacturerIds, manufacturers);
+            model.ManufacturerFilter = await PrepareManufacturerFilterModel(command.Ms, manufacturers);
         }
 
-        var filteredSpecs = command.SpecificationOptionIds is null ? null : filterableOptions.Where(fo => command.SpecificationOptionIds.Contains(fo.Id)).ToList();
+        var filteredSpecs = command.Specs is null ? null : filterableOptions.Where(fo => command.Specs.Contains(fo.Id)).ToList();
 
         //products
         var products = await _productService.SearchProductsAsync(
@@ -838,7 +838,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
             excludeFeaturedProducts: !_catalogSettings.IgnoreFeaturedProducts && !_catalogSettings.IncludeFeaturedProductsInNormalLists,
             priceMin: selectedPriceRange?.From,
             priceMax: selectedPriceRange?.To,
-            manufacturerIds: command.ManufacturerIds,
+            manufacturerIds: command.Ms,
             filteredSpecOptions: filteredSpecs,
             orderBy: (ProductSortingEnum)command.OrderBy);
 
@@ -1085,10 +1085,10 @@ public partial class CatalogModelFactory : ICatalogModelFactory
 
         if (_catalogSettings.EnableSpecificationAttributeFiltering)
         {
-            model.SpecificationFilter = await PrepareSpecificationFilterModel(command.SpecificationOptionIds, filterableOptions);
+            model.SpecificationFilter = await PrepareSpecificationFilterModel(command.Specs, filterableOptions);
         }
 
-        var filteredSpecs = command.SpecificationOptionIds is null ? null : filterableOptions.Where(fo => command.SpecificationOptionIds.Contains(fo.Id)).ToList();
+        var filteredSpecs = command.Specs is null ? null : filterableOptions.Where(fo => command.Specs.Contains(fo.Id)).ToList();
 
         //products
         var products = await _productService.SearchProductsAsync(
