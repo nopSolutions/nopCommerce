@@ -1,4 +1,14 @@
 ﻿@model MiniShoppingCartModel
+
+@* ABC: Cart eligibility *@
+@using Nop.Web.Models.ShoppingCart;
+@using Nop.Plugin.Misc.AbcCore.Nop;
+@inject IAbcShoppingCartService abcShoppingCartService;
+
+@{
+    var isCartEligible = await abcShoppingCartService.IsCartEligibleForCheckoutAsync(Model);
+}
+
 <div class="flyout-cart-wrapper" id="flyout-cart">
     <a href="@Url.RouteUrl("ShoppingCart")" class="cart-trigger">
         <span class="cart-qty">@T("ShoppingCart.HeaderQuantity", Model.TotalProducts)</span>
@@ -60,16 +70,26 @@
                     }
                     @if (Model.DisplayCheckoutButton)
                     {
-                        var checkoutUrl = "";
-                        if (Model.AnonymousCheckoutAllowed && Model.CurrentCustomerIsGuest)
+                        @* ABC: Need to disable if ineligible *@
+                        if (!isCartEligible)
                         {
-                            checkoutUrl = Url.RouteUrl("LoginCheckoutAsGuest", new { returnUrl = Url.RouteUrl("ShoppingCart") });
+                            <div class="checkout-disabled">
+                                Please remove ineligible items from cart to checkout.
+                            </div>
                         }
                         else
                         {
-                            checkoutUrl = Url.RouteUrl("Checkout");
+                            var checkoutUrl = "";
+                            if (Model.AnonymousCheckoutAllowed && Model.CurrentCustomerIsGuest)
+                            {
+                                checkoutUrl = Url.RouteUrl("LoginCheckoutAsGuest", new { returnUrl = Url.RouteUrl("ShoppingCart") });
+                            }
+                            else
+                            {
+                                checkoutUrl = Url.RouteUrl("Checkout");
+                            }
+                            <button type="button" class="button-1 checkout-button" onclick="setLocation('@checkoutUrl')">@T("Checkout.Button")</button>
                         }
-                    	<button type="button" class="button-1 checkout-button" onclick="setLocation('@checkoutUrl')">@T("Checkout.Button")</button>
                     }
                 </div>
             }
