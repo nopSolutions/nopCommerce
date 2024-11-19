@@ -144,11 +144,11 @@ namespace Nop.Plugin.Widgets.AbcHomeDeliveryStatus.Controllers
                     await _logger.WarningAsync($"AbcContactUs: shopAbc not found for shop {shop.Id}:{shop.Name}, sending to base contact email {_settings.ContactUsEmail}.");
                 }
 
-                toAddress = shopAbc != null ? shopAbc.AbcEmail : _settings.ContactUsEmail;
+                toAddress = shopAbc != null ? shopAbc.ManagerEmail : _settings.ContactUsEmail;
                 ccEmails.Add(_settings.ContactUsEmail);
                 ccEmails.Add("bjohnson@abcwarehouse.com");
                 ccEmails.Add("ms22418@abcwarehouse.com");
-                ccEmails.Add(shopAbc.ManagerEmail);
+                ccEmails.Add(shopAbc.AbcEmail);
             }
 
             var subject = "Customer " + model.Reason + "- " + model.SelectedStore + "/" + model.Name + "  " + model.PhoneNumber;
@@ -175,5 +175,3 @@ namespace Nop.Plugin.Widgets.AbcHomeDeliveryStatus.Controllers
         }
     }
 }
-
-
