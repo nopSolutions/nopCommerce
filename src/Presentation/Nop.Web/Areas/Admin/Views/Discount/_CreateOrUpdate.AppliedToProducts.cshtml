@@ -57,7 +57,7 @@
     <script asp-location="Footer">
         function renderColumnViewProduct(data, type, row, meta) {
             let isLoggedAsVendor = @(Model.IsLoggedInAsVendor.ToString().ToLower());
-            let currentVendor = @(Model.VendorId);
+            let currentVendor = @(Model.VendorId ?? 0);
 
             if (isLoggedAsVendor && currentVendor != row.VendorId)
                 return '';
