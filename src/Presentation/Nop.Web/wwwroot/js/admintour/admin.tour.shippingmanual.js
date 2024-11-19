@@ -6,9 +6,7 @@
 
     const tour = new Shepherd.Tour(AdminTourCommonTourOptions);
 
-    AdminTourNextPageButton.action = function () {
-      window.location = ((document.querySelector('base') || {}).getAttribute('href') + '/Admin/Payment/Methods?showtour=True').replace(/\/\//g, "/");
-    };
+    AdminTourNextPageButton.action = function () { window.location = '/Admin/Payment/Methods?showtour=True' };
 
     //'Fixed Rate/By Weight' switch steps
     tour.addStep({

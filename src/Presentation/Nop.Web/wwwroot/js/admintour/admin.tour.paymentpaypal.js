@@ -1,31 +1,18 @@
-﻿$(function() {
+﻿$(function () {
   if ($('body').hasClass('basic-settings-mode')) {
     //$('.onoffswitch-checkbox').trigger('click');
   }
 
-  var isConfigured = $('#SetCredentialsManually').attr('Checked');
+  var isConfigured = $('#onboardingButton').length == 0;
 
   const tour = new Shepherd.Tour(AdminTourCommonTourOptions);
 
-  AdminTourNextPageButton.action = function () {
-    window.location = ((document.querySelector('base') || {}).getAttribute('href') + '/Admin/Tax/Providers?showtour=True').replace(/\/\//g, "/");
-  };
+  AdminTourNextPageButton.action = function () { window.location = '/Admin/Tax/Providers?showtour=True' };
 
   if (isConfigured) {
     tour.addStep({
       title: AdminTourDataProvider.localized_data.PaymentPayPalConfiguredTitle,
       text: AdminTourDataProvider.localized_data.PaymentPayPalConfiguredText,
-      attachTo: {
-        element: '#SetCredentialsManually',
-        on: 'bottom'
-      },
-      buttons: [AdminTourNextPageButton]
-    });
-  }
-  else {
-    tour.addStep({
-      title: AdminTourDataProvider.localized_data.PaymentPayPalSignUpTitle,
-      text: AdminTourDataProvider.localized_data.PaymentPayPalSignUpText,
       attachTo: {
         element: '#pnlOnboarding',
         on: 'bottom'
@@ -33,21 +20,53 @@
       buttons: [AdminTourNextButton]
     });
 
+    var isAdvancedMode = $('#advanced-settings-mode').is(':checked');
+    var paymentTypeSelector = $('#PaymentTypeId');
+    if (paymentTypeSelector.length) {
+      tour.addStep({
+        title: AdminTourDataProvider.localized_data.PaymentPayPalPaymentTypeTitle,
+        text: AdminTourDataProvider.localized_data.PaymentPayPalPaymentTypeText,
+        attachTo: {
+          element: '#PaymentTypeId',
+          on: 'bottom'
+        },
+        buttons: [AdminTourBackButton, isAdvancedMode ? AdminTourNextButton : AdminTourNextPageButton]
+      });
+    }
+
+    if (isAdvancedMode) {
+      tour.addStep({
+        title: AdminTourDataProvider.localized_data.PaymentPayPalProminentlyTitle,
+        text: AdminTourDataProvider.localized_data.PaymentPayPalProminentlyText,
+        attachTo: {
+          element: '#prominently-card',
+          on: 'bottom'
+        },
+        beforeShowPromise: function () {
+          return new Promise(function (resolve) {
+            resolve();
+          });
+        },
+        buttons: [AdminTourBackButton, AdminTourNextPageButton]
+      });
+    }
+  }
+  else {
     tour.addStep({
       title: AdminTourDataProvider.localized_data.PaymentPayPalRegisterTitle,
       text: AdminTourDataProvider.localized_data.PaymentPayPalRegisterText,
       attachTo: {
-        element: '#Email',
+        element: '#onboardingButton',
         on: 'bottom'
       },
-      buttons: [AdminTourBackButton, AdminTourNextButton]
+      buttons: [AdminTourNextButton]
     });
 
     tour.addStep({
-      title: AdminTourDataProvider.localized_data.PaymentPayPalRegisterTitle,
-      text: AdminTourDataProvider.localized_data.PaymentPayPalRegisterText2,
+      title: AdminTourDataProvider.localized_data.PaymentPayPalSandboxTitle,
+      text: AdminTourDataProvider.localized_data.PaymentPayPalSandboxText,
       attachTo: {
-        element: '#Email',
+        element: '#UseSandbox',
         on: 'bottom'
       },
       buttons: [AdminTourBackButton, AdminTourNextButton]
@@ -69,17 +88,7 @@
           resolve();
         });
       },
-      buttons: [AdminTourNextButton]
-    });
-
-    tour.addStep({
-      title: AdminTourDataProvider.localized_data.PaymentPayPalSandboxTitle,
-      text: AdminTourDataProvider.localized_data.PaymentPayPalSandboxText,
-      attachTo: {
-        element: '#pnlCredentials > div:nth-child(2)',
-        on: 'bottom'
-      },
-      buttons: [AdminTourNextButton]
+      buttons: [AdminTourBackButton, AdminTourNextButton]
     });
 
     tour.addStep({
@@ -89,44 +98,8 @@
         element: '#pnlCredentials',
         on: 'bottom'
       },
-      buttons: [AdminTourBackButton, AdminTourNextButton]
+      buttons: [AdminTourBackButton, AdminTourNextPageButton]
     });
-
-    var firstEditButtonSelector = 'body > div.wrapper > div.content-wrapper > section > div > div > form > div > div:nth-child(2) > div > div.card.card-default.advanced-setting';
-    var buttons = [];
-
-    if ($(firstEditButtonSelector).length) {
-      buttons = [AdminTourBackButton, AdminTourNextButton]
-    } else {
-      buttons = [AdminTourBackButton, AdminTourNextPageButton]
-    }
-
-    tour.addStep({
-      title: AdminTourDataProvider.localized_data.PaymentPayPalPaymentTypeTitle,
-      text: AdminTourDataProvider.localized_data.PaymentPayPalPaymentTypeText,
-      attachTo: {
-        element: '#PaymentTypeId',
-        on: 'bottom'
-      },
-      buttons: buttons
-    });
-
-    if ($(firstEditButtonSelector).length) {
-      tour.addStep({
-        title: AdminTourDataProvider.localized_data.PaymentPayPalProminentlyTitle,
-        text: AdminTourDataProvider.localized_data.PaymentPayPalProminentlyText,
-        attachTo: {
-          element: firstEditButtonSelector,
-          on: 'bottom'
-        },
-        beforeShowPromise: function () {
-          return new Promise(function (resolve) {
-            resolve();
-          });
-        },
-        buttons: [AdminTourBackButton, AdminTourNextPageButton]
-      });
-    }
   }
 
   tour.start();
