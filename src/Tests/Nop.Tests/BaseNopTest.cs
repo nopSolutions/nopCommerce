@@ -670,7 +670,7 @@ public partial class BaseNopTest
         {
         }
 
-        // Travis doesn't support named semaphore, that's why we use implementation without it 
+        // Not all CI/CD support working with named semaphore, that's why we use implementation without it 
         public override async Task<(string Url, Picture Picture)> GetPictureUrlAsync(Picture picture,
             int targetSize = 0,
             bool showDefaultPicture = true,
