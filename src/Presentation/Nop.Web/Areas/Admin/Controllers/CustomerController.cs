@@ -890,13 +890,17 @@ public partial class CustomerController : BaseAdminController
                 return RedirectToAction("Edit", new { id = customer.Id });
             }
 
+            //get customer email before deleting customer entity to avoid problems with the changed email after deleting see CustomerSettings.SuffixDeletedCustomers settings
+            var customerEmail = customer.Email;
+
             //delete
             await _customerService.DeleteCustomerAsync(customer);
 
             //remove newsletter subscription (if exists)
             foreach (var store in await _storeService.GetAllStoresAsync())
             {
-                var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id);
+                var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customerEmail, store.Id);
+                
                 if (subscription != null)
                     await _newsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(subscription);
             }
