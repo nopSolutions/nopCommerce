@@ -96,7 +96,7 @@ namespace Nop.Plugin.Widgets.AbcContactUs.Components
             model.Reason = model.ReasonsForContact.First().Value;
 
             model.Stores.Add(new SelectListItem { Text = "Select Location", Value = "" });
-            model.Stores.Add(new SelectListItem { Text = "Website", Value = "Website" });
+            model.Stores.Add(new SelectListItem { Text = "Online Orders", Value = "Website" });
             foreach (var shop in _shopRepository.Table)
             {
                 model.Stores.Add(new SelectListItem { Text = shop.Name, Value = shop.Name });
