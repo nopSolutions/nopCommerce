@@ -249,84 +249,105 @@ public partial class ProductModelFactory : IProductModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the minimum possible product price
     /// </returns>
-    protected async Task<(bool hasMultiplePrices, decimal minPossiblePriceWithoutDiscount, decimal minPossiblePriceWithDiscount)> GetFromPrice(Product product, Customer customer, Store store)
+    protected async Task<(bool hasMultiplePrices, decimal minPossiblePriceWithoutDiscount, decimal minPossiblePriceWithDiscount)> GetFromPriceAsync(Product product, Customer customer, Store store)
     {
-        var (minPossiblePriceWithoutDiscount, minPossiblePriceWithDiscount) = (decimal.Zero, decimal.Zero);
         var hasMultiplePrices = false;
 
-        var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
-        var cacheKey = _staticCacheManager
-            .PrepareKeyForDefaultCache(NopCatalogDefaults.ProductMultiplePriceCacheKey, product, customerRoleIds, store);
-        if (!_catalogSettings.CacheProductPrices || product.IsRental)
-            cacheKey.CacheTime = 0;
+        //calculate the base product price
+        var (minPossiblePriceWithoutDiscount, minPossiblePriceWithDiscount, _, _) = await _priceCalculationService
+            .GetFinalPriceAsync(product, customer, store);
 
-        var cachedPrice = await _staticCacheManager.GetAsync(cacheKey, async () =>
+        //calculate price based on price adjustments of combinations and attributes
+        if (_catalogSettings.DisplayFromPrices)
         {
-            var prices = new List<(decimal PriceWithoutDiscount, decimal PriceWithDiscount)>();
+            //prepare cache key
+            var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+            var cacheKey = _staticCacheManager
+                .PrepareKeyForDefaultCache(NopCatalogDefaults.ProductMultiplePriceCacheKey, product, customerRoleIds, store);
+            if (!_catalogSettings.CacheProductPrices || product.IsRental)
+                cacheKey.CacheTime = 0;
 
-            // price when there are no required attributes
-            var attributesMappings = await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id);
-            if (!attributesMappings.Any(am => !am.IsNonCombinable() && am.IsRequired))
+            //try to cache the min price
+            var cachedPrice = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
-                var (priceWithoutDiscount, priceWithDiscount, _, _) = await _priceCalculationService
-                    .GetFinalPriceAsync(product, customer, store);
-                prices.Add((priceWithoutDiscount, priceWithDiscount));
-            }
+                var prices = new List<(decimal PriceWithoutDiscount, decimal PriceWithDiscount)>();
 
-            var allAttributesXml = await _productAttributeParser.GenerateAllCombinationsAsync(product, true);
-            foreach (var attributesXml in allAttributesXml)
-            {
-                var warnings = new List<string>();
-                warnings.AddRange(await _shoppingCartService.GetShoppingCartItemAttributeWarningsAsync(customer,
-                    ShoppingCartType.ShoppingCart, product, 1, attributesXml, true, true, true));
-                if (warnings.Any())
-                    continue;
+                //we shouldn't use the base product price if there is at least one required attribute
+                var ignoreBasePrice = (await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id))
+                    .Any(am => !am.IsNonCombinable() && am.IsRequired);
 
-                //get price with additional charge
-                var combination = await _productAttributeParser.FindProductAttributeCombinationAsync(product, attributesXml);
-                if (combination?.OverriddenPrice.HasValue ?? false)
+                //check all possible attribute combinations for min price
+                var allAttributesXml = await _productAttributeParser.GenerateAllCombinationsAsync(product, true);
+                foreach (var attributesXml in allAttributesXml)
                 {
-                    var (priceWithoutDiscount, priceWithDiscount, _, _) = await _priceCalculationService
-                        .GetFinalPriceAsync(product, customer, store, combination.OverriddenPrice.Value, decimal.Zero, true, 1, null, null);
-                    prices.Add((priceWithoutDiscount, priceWithDiscount));
-                }
-                else
-                {
-                    var additionalCharge = decimal.Zero;
+                    var warnings = await _shoppingCartService
+                        .GetShoppingCartItemAttributeWarningsAsync(customer, ShoppingCartType.ShoppingCart, product, 1, attributesXml, true, true, true);
+                    if (warnings.Any())
+                        continue;
+
+                    //check for overridden combination price, we should use it instead of the base product price if it exists
+                    var combination = await _productAttributeParser.FindProductAttributeCombinationAsync(product, attributesXml);
+                    if (combination?.OverriddenPrice.HasValue ?? false)
+                    {
+                        var (priceWithoutDiscount, priceWithDiscount, _, _) = await _priceCalculationService
+                            .GetFinalPriceAsync(product, customer, store, combination.OverriddenPrice.Value, decimal.Zero, true, 1, null, null);
+                        prices.Add((priceWithoutDiscount, priceWithDiscount));
+                        continue;
+                    }
+
+                    //or check for attribute price adjustment, in this case we should add it to the base product price
                     var attributeValues = await _productAttributeParser.ParseProductAttributeValuesAsync(attributesXml);
-                    foreach (var attributeValue in attributeValues)
-                        additionalCharge += await _priceCalculationService.
-                            GetProductAttributeValuePriceAdjustmentAsync(product, attributeValue, customer, store);
+                    var additionalCharge = await attributeValues.SumAwaitAsync(async attributeValue =>
+                        await _priceCalculationService.GetProductAttributeValuePriceAdjustmentAsync(product, attributeValue, customer, store));
                     if (additionalCharge != decimal.Zero)
                     {
                         var (priceWithoutDiscount, priceWithDiscount, _, _) = await _priceCalculationService
                             .GetFinalPriceAsync(product, customer, store, additionalCharge);
                         prices.Add((priceWithoutDiscount, priceWithDiscount));
+                        continue;
                     }
+
+                    //there are no price adjustments of combinations and attributes, so add the base product price in the list as possible
+                    prices.Add((minPossiblePriceWithoutDiscount, minPossiblePriceWithDiscount));
+                }
+
+                //don't cache (return null) if there are no multiple prices
+                if (prices.Distinct().Count() < 2)
+                    return null;
+
+                //find the min price
+                var (minPriceWithoutDiscount, minPriceWithDiscount) = prices.OrderBy(p => p.PriceWithDiscount).First();
+                return new { PriceWithoutDiscount = minPriceWithoutDiscount, PriceWithDiscount = minPriceWithDiscount, IgnoreBasePrice = ignoreBasePrice };
+            });
+
+            if (cachedPrice is not null)
+            {
+                hasMultiplePrices = true;
+
+                //change min product price
+                if (cachedPrice.IgnoreBasePrice || cachedPrice.PriceWithDiscount < minPossiblePriceWithDiscount)
+                {
+                    minPossiblePriceWithoutDiscount = cachedPrice.PriceWithoutDiscount;
+                    minPossiblePriceWithDiscount = cachedPrice.PriceWithDiscount;
                 }
             }
+        }
 
-            if (prices.Distinct().Count() > 1)
-            {
-                (minPossiblePriceWithoutDiscount, minPossiblePriceWithDiscount) = prices.OrderBy(p => p.PriceWithDiscount).First();
-                return new
-                {
-                    PriceWithoutDiscount = minPossiblePriceWithoutDiscount,
-                    PriceWithDiscount = minPossiblePriceWithDiscount
-                };
-            }
-
-            // show default price when required attributes available but no values added
-            (minPossiblePriceWithoutDiscount, minPossiblePriceWithDiscount, _, _) = await _priceCalculationService.GetFinalPriceAsync(product, customer, store);
-
-            //don't cache (return null) if there are no multiple prices
-            return null;
-        });
-
-        if (cachedPrice is not null)
+        //calculate price for the maximum quantity (in case if we have tier prices)
+        //when there is just one tier price (with  qty 1), there are no actual savings in the list.
+        var tierPrices = await _productService.GetTierPricesAsync(product, customer, store);
+        if (tierPrices.Any() && (tierPrices.Count > 1 || tierPrices[0].Quantity > 1))
         {
             hasMultiplePrices = true;
-            (minPossiblePriceWithoutDiscount, minPossiblePriceWithDiscount) = (cachedPrice.PriceWithoutDiscount, cachedPrice.PriceWithDiscount);
+
+            var (minTierPriceWithoutDiscount, minTierPriceWithDiscount, _, _) = await _priceCalculationService
+                .GetFinalPriceAsync(product, customer, store, quantity: int.MaxValue);
+            if (minTierPriceWithDiscount < minPossiblePriceWithDiscount)
+            {
+                //change min product price
+                minPossiblePriceWithoutDiscount = minTierPriceWithoutDiscount;
+                minPossiblePriceWithDiscount = minTierPriceWithDiscount;
+            }
         }
 
         return (hasMultiplePrices, minPossiblePriceWithoutDiscount, minPossiblePriceWithDiscount);
@@ -347,7 +368,7 @@ public partial class ProductModelFactory : IProductModelFactory
         ArgumentNullException.ThrowIfNull(product);
 
         var currentCurrency = await _workContext.GetWorkingCurrencyAsync();
-        
+
         var model = new ProductPriceModel
         {
             ProductId = product.Id,
@@ -425,27 +446,10 @@ public partial class ProductModelFactory : IProductModelFactory
         decimal minPossiblePriceWithDiscount;
         var hasMultiplePrices = false;
 
-        if (addPriceRangeFrom && _catalogSettings.DisplayFromPrices)
-            (hasMultiplePrices, minPossiblePriceWithoutDiscount, minPossiblePriceWithDiscount) = await GetFromPrice(product, customer, store);
+        if (addPriceRangeFrom)
+            (hasMultiplePrices, minPossiblePriceWithoutDiscount, minPossiblePriceWithDiscount) = await GetFromPriceAsync(product, customer, store);
         else
             (minPossiblePriceWithoutDiscount, minPossiblePriceWithDiscount, _, _) = await _priceCalculationService.GetFinalPriceAsync(product, customer, store);
-
-        var priceModifiersExist = false;
-
-        if (addPriceRangeFrom)
-        {
-            //calculate price for the maximum quantity if we have tier prices, and choose minimal
-            var (minPriceWithoutDiscount, minPriceWithDiscount, _, _)
-                = await _priceCalculationService.GetFinalPriceAsync(product, customer, store, quantity: int.MaxValue);
-
-            priceModifiersExist = minPriceWithoutDiscount < minPossiblePriceWithDiscount;
-
-            if (priceModifiersExist)
-            {
-                minPossiblePriceWithoutDiscount = minPriceWithoutDiscount;
-                minPossiblePriceWithDiscount = minPriceWithDiscount;
-            }
-        }
 
         var (oldPriceBase, _) = await _taxService.GetProductPriceAsync(product, product.OldPrice);
         var (finalPriceWithoutDiscountBase, _) = await _taxService.GetProductPriceAsync(product, minPossiblePriceWithoutDiscount);
@@ -474,23 +478,8 @@ public partial class ProductModelFactory : IProductModelFactory
         }
 
         model.Price = await _priceFormatter.FormatPriceAsync(finalPriceWithDiscount);
-
-        if (addPriceRangeFrom)
-        {
-            if (hasMultiplePrices)
-                model.Price = string.Format(await _localizationService.GetResourceAsync("Products.PriceRangeFrom"), model.Price);
-            else if (priceModifiersExist)
-            {
-                //do we have tier prices configured?
-                var tierPrices = await _productService.GetTierPricesAsync(product, customer, store);
-
-                //when there is just one tier price (with  qty 1), there are no actual savings in the list.
-                var hasTierPrices = tierPrices.Any() && !(tierPrices.Count == 1 && tierPrices[0].Quantity <= 1);
-
-                if (hasTierPrices)
-                    model.Price = string.Format(await _localizationService.GetResourceAsync("Products.PriceRangeFrom"), model.Price);
-            }
-        }
+        if (hasMultiplePrices)
+            model.Price = string.Format(await _localizationService.GetResourceAsync("Products.PriceRangeFrom"), model.Price);
 
         if (finalPriceWithoutDiscountBase != finalPriceWithDiscountBase)
         {
@@ -625,7 +614,7 @@ public partial class ProductModelFactory : IProductModelFactory
 
         return productReview;
     }
-    
+
     /// <summary>
     /// Prepare the product overview picture model
     /// </summary>
@@ -763,7 +752,7 @@ public partial class ProductModelFactory : IProductModelFactory
 
         return model;
     }
-    
+
     /// <summary>
     /// Prepare the product add to cart model
     /// </summary>
