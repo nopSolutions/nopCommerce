@@ -118,7 +118,16 @@
                 additionalData = Model.SystemName
             }
         )
+        
+        @if (string.Equals(Model.SystemName, "AboutUs", StringComparison.OrdinalIgnoreCase))
+        {
+            @await Component.InvokeAsync("Widget", new { widgetZone = "AboutUs" });
+        }
         @Html.Raw(Model.Body)
+        @if (string.Equals(Model.SystemName, "AboutUs", StringComparison.OrdinalIgnoreCase))
+        {
+            @await Component.InvokeAsync("Widget", new { widgetZone = "AboutUsBottom" });
+        }
         @await Component.InvokeAsync(
             "Widget",
             new {
