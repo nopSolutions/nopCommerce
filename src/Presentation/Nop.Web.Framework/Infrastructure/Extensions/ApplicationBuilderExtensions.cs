@@ -34,7 +34,7 @@ using Nop.Web.Framework.Globalization;
 using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.WebOptimizer;
 using QuestPDF.Drawing;
-using WebMarkupMin.AspNetCore8;
+using WebMarkupMin.AspNetCoreLatest;
 using WebOptimizer;
 using IPNetwork = Microsoft.AspNetCore.HttpOverrides.IPNetwork;
 
