@@ -655,6 +655,40 @@ public partial class EntityRepository<TEntity> : IRepository<TEntity> where TEnt
     }
 
     /// <summary>
+    /// Delete entity entries
+    /// </summary>
+    /// <param name="entities">Entity entries</param>
+    /// <param name="publishEvent">Whether to publish event notification</param>
+    public virtual void Delete(IList<TEntity> entities, bool publishEvent = true)
+    {
+        ArgumentNullException.ThrowIfNull(entities);
+
+        if (!entities.Any())
+            return;
+
+        using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+
+        if (typeof(TEntity).GetInterface(nameof(ISoftDeletedEntity)) == null)
+            _dataProvider.BulkDeleteEntities(entities);
+        else
+        {
+            foreach (var entity in entities)
+                ((ISoftDeletedEntity)entity).Deleted = true;
+
+            _dataProvider.UpdateEntities(entities);
+        }
+
+        transaction.Complete();
+
+        //event notification
+        if (!publishEvent)
+            return;
+
+        foreach (var entity in entities)
+            _eventPublisher.EntityDeleted(entity);
+    }
+
+    /// <summary>
     /// Delete entity entries by the passed predicate
     /// </summary>
     /// <param name="predicate">A function to test each element for a condition</param>
