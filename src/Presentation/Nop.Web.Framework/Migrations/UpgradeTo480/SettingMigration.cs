@@ -1,8 +1,8 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
-using Nop.Core.Domain.Common;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -74,6 +74,14 @@ public class SettingMigration : MigrationBase
             adminAreaSettings.ProductsBulkEditGridPageSize = 100;
             settingService.SaveSetting(adminAreaSettings, settings => settings.ProductsBulkEditGridPageSize);
         }
+
+        //#7244
+        if (!settingService.SettingExists(catalogSettings, settings => settings.VendorProductReviewsPageSize))
+        {
+            catalogSettings.VendorProductReviewsPageSize = 6;
+            settingService.SaveSetting(catalogSettings, settings => settings.VendorProductReviewsPageSize);
+        }
+        
     }
 
     public override void Down()

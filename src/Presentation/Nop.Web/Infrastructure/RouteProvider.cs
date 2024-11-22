@@ -178,6 +178,10 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             pattern: $"{lang}/vendor/all/",
             defaults: new { controller = "Catalog", action = "VendorAll" });
 
+        endpointRouteBuilder.MapControllerRoute(name: "VendorReviews",
+            pattern: $"{lang}/vendor/{{vendorId:min(0)}}/reviews",
+            defaults: new { controller = "Catalog", action = "VendorReviews" });
+
         //add product to cart (without any attributes and options). used on catalog pages. (AJAX)
         endpointRouteBuilder.MapControllerRoute(name: "AddProductToCart-Catalog",
             pattern: $"addproducttocart/catalog/{{productId:min(0)}}/{{shoppingCartTypeId:min(0)}}/{{quantity:min(0)}}",
