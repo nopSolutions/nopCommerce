@@ -35,6 +35,11 @@
             }
             var reason = $('#Reason').val();
             var selectedStore = $('#SelectedStore').val();
+            if (!selectedStore.replace(/\s/g, '').length)
+            {
+                alert('Please Select a Store');
+                return;
+            }
             var comments = $('#Comments').val();
             if (!comments.replace(/\s/g, '').length)
             {
@@ -159,6 +164,7 @@
                             </div>
                             <div class="col-md-9">
                                 <nop-select asp-for="SelectedStore" asp-items="Model.Stores" />
+                                @Html.ValidationMessageFor(model => model.Stores)
                             </div>
                         </div>
                         <div>

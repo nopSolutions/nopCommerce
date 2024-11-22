@@ -21,7 +21,9 @@ namespace Nop.Plugin.Widgets.AbcContactUs.Models
         [Required(ErrorMessage = "Required")]
         public string Reason { get; set; }
         public IList<SelectListItem> ReasonsForContact { get; set; }
+        [Required(ErrorMessage = "Please select a reason for contact.")]
         public string SelectedStore { get; set; }
+        [Required(ErrorMessage = "Please select a store.")]
         public IList<SelectListItem> Stores { get; set; }
         [Required(ErrorMessage = "Required")]
         public string Comments { get; set; }

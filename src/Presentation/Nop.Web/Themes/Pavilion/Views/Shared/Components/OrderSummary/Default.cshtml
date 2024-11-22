@@ -21,6 +21,7 @@
 @using Nop.Web.Models.ShoppingCart
 @using Nop.Plugin.Misc.AbcCore.Infrastructure
 @using Nop.Services.Configuration
+@using Nop.Plugin.Misc.AbcCore.Nop
 
 @inject IWebHelper webHelper
 @inject IWorkContext workContext
@@ -39,6 +40,8 @@
 @inject IProductAttributeParser productAttributeParser
 @inject IProductAttributeService productAttributeService
 @inject IPriceFormatter priceFormatter
+@* ABC: checking cart eligibility *@
+@inject IAbcShoppingCartService abcShoppingCartService
 
 
 @* ABC: custom *@
@@ -51,6 +54,8 @@
 
     Html.AddCssFileParts("~/Plugins/AbcWarehouse.HomeDeliveryStatusWidget/Content/loading.css");
     var isFedExMode = await settingService.GetSettingByKeyAsync<bool>("coresettings.isfedexmode");
+
+    var isCartEligibleForCheckout = await abcShoppingCartService.IsCartEligibleForCheckoutAsync(Model);
 }
 <style>
    .spinner > div {
@@ -701,6 +706,13 @@
                                 {
                                     <div class="checkout-disabled">
                                         @T("Checkout.Disabled")
+                                    </div>
+                                }
+                                @* ABC: Need to disable if ineligible *@
+                                else if (!isCartEligibleForCheckout)
+                                {
+                                    <div class="checkout-disabled">
+                                        Please remove ineligible items from cart to checkout.
                                     </div>
                                 }
                                 else

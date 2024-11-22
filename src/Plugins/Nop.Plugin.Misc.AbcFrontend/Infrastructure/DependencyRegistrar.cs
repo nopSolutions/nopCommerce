@@ -20,7 +20,6 @@ namespace Nop.Plugin.Misc.AbcFrontend.Infrastructure
                AppSettings appSettings
         ) {
             services.AddScoped<IWarrantyService, WarrantyService>();
-            services.AddScoped<IShoppingCartService, CustomShoppingCartService>();
         }
 
         /// <summary>
