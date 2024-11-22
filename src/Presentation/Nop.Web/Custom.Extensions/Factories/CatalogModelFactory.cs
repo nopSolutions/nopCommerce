@@ -57,72 +57,72 @@ namespace Nop.Web.Factories
             return productsCustomSimple;
         }
 
-        public virtual async Task<List<CategorySimpleModel>> PrepareCategorySimpleModelsAsync(int rootCategoryId, int loadSubCategories = 1)
-        {
-            var result = new List<CategorySimpleModel>();
+        //public virtual async Task<List<CategorySimpleModel>> PrepareCategorySimpleModelsAsync(int rootCategoryId, int loadSubCategories = 1)
+        //{
+        //    var result = new List<CategorySimpleModel>();
 
-            var store = await _storeContext.GetCurrentStoreAsync();
-            //var allCategories = await _categoryService.GetAllCategoriesAsync(storeId: store.Id);
-            //var categories = allCategories.Where(c => c.ParentCategoryId == rootCategoryId).OrderBy(c => c.DisplayOrder).ToList();
+        //    var store = await _storeContext.GetCurrentStoreAsync();
+        //    //var allCategories = await _categoryService.GetAllCategoriesAsync(storeId: store.Id);
+        //    //var categories = allCategories.Where(c => c.ParentCategoryId == rootCategoryId).OrderBy(c => c.DisplayOrder).ToList();
 
-            //customization start
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            IEnumerable<Category> categories = null;
+        //    //customization start
+        //    var customer = await _workContext.GetCurrentCustomerAsync();
+        //    IEnumerable<Category> categories = null;
 
-            if (!await _customerService.IsGuestAsync(customer))
-            {
-                var customerProductCategories = await _categoryService.GetProductCategoryIdsAsync(new int[] { customer.VendorId });
-                categories = await _categoryService.GetCategoriesByIdsAsync(customerProductCategories.First().Value);
-            }
-            else
-            {
-                var allCategories = await _categoryService.GetAllCategoriesAsync(storeId: store.Id);
-                categories = allCategories.Where(c => c.ParentCategoryId == rootCategoryId).OrderBy(c => c.DisplayOrder).ToList();
-            }
+        //    if (!await _customerService.IsGuestAsync(customer))
+        //    {
+        //        var customerProductCategories = await _categoryService.GetProductCategoryIdsAsync(new int[] { customer.VendorId });
+        //        categories = await _categoryService.GetCategoriesByIdsAsync(customerProductCategories.First().Value);
+        //    }
+        //    else
+        //    {
+        //        var allCategories = await _categoryService.GetAllCategoriesAsync(storeId: store.Id);
+        //        categories = allCategories.Where(c => c.ParentCategoryId == rootCategoryId).OrderBy(c => c.DisplayOrder).ToList();
+        //    }
 
-            var customerProfileTypeId = 0;
+        //    var customerProfileTypeId = 0;
 
-            //If customer belongs to give support, hide Take support category and vice versa
-            if (customer.CustomerProfileTypeId == 1) //give support
-                customerProfileTypeId = 2;
-            else if (customer.CustomerProfileTypeId == 2) //take support
-                customerProfileTypeId = 1;
+        //    //If customer belongs to give support, hide Take support category and vice versa
+        //    if (customer.CustomerProfileTypeId == 1) //give support
+        //        customerProfileTypeId = 2;
+        //    else if (customer.CustomerProfileTypeId == 2) //take support
+        //        customerProfileTypeId = 1;
 
-            foreach (var category in categories)
-            {
-                //remove give support/take support when user logged in
-                if (category.Id == customerProfileTypeId)
-                    continue;
+        //    foreach (var category in categories)
+        //    {
+        //        //remove give support/take support when user logged in
+        //        if (category.Id == customerProfileTypeId)
+        //            continue;
 
-                var categoryModel = new CategorySimpleModel
-                {
-                    Id = category.Id,
-                    Name = await _localizationService.GetLocalizedAsync(category, x => x.Name),
-                    SeName = await _urlRecordService.GetSeNameAsync(category),
-                    IncludeInTopMenu = category.IncludeInTopMenu
-                };
+        //        var categoryModel = new CategorySimpleModel
+        //        {
+        //            Id = category.Id,
+        //            Name = await _localizationService.GetLocalizedAsync(category, x => x.Name),
+        //            SeName = await _urlRecordService.GetSeNameAsync(category),
+        //            IncludeInTopMenu = category.IncludeInTopMenu
+        //        };
 
-                //number of products in each category
-                if (_catalogSettings.ShowCategoryProductNumber)
-                {
-                    var categoryIds = new List<int> { category.Id };
-                    //include subcategories
-                    if (_catalogSettings.ShowCategoryProductNumberIncludingSubcategories)
-                        categoryIds.AddRange(
-                            await _categoryService.GetChildCategoryIdsAsync(category.Id, store.Id));
+        //        //number of products in each category
+        //        if (_catalogSettings.ShowCategoryProductNumber)
+        //        {
+        //            var categoryIds = new List<int> { category.Id };
+        //            //include subcategories
+        //            if (_catalogSettings.ShowCategoryProductNumberIncludingSubcategories)
+        //                categoryIds.AddRange(
+        //                    await _categoryService.GetChildCategoryIdsAsync(category.Id, store.Id));
 
-                    categoryModel.NumberOfProducts =
-                        await _productService.GetNumberOfProductsInCategoryAsync(categoryIds, store.Id);
-                }
+        //            categoryModel.NumberOfProducts =
+        //                await _productService.GetNumberOfProductsInCategoryAsync(categoryIds, store.Id);
+        //        }
 
-                categoryModel.HaveSubCategories = categoryModel.SubCategories.Count > 0 &
-                                                  categoryModel.SubCategories.Any(x => x.IncludeInTopMenu);
+        //        categoryModel.HaveSubCategories = categoryModel.SubCategories.Count > 0 &
+        //                                          categoryModel.SubCategories.Any(x => x.IncludeInTopMenu);
 
-                result.Add(categoryModel);
-            }
+        //        result.Add(categoryModel);
+        //    }
 
-            return result;
-        }
+        //    return result;
+        //}
 
     }
 }
