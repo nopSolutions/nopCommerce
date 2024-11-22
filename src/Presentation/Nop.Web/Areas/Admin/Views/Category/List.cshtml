@@ -17,6 +17,10 @@
         @T("Admin.Catalog.Categories")
     </h1>
     <div class="float-right">
+        @* customization *@
+        <a target="_blank" class="btn btn-primary" role="button" href="/Admin/SpecificationAttribute/EditSpecificationAttribute/7">
+            View Skill Specs
+        </a>
         <a asp-action="Create" class="btn btn-primary">
             <i class="fas fa-plus-square"></i>
             @T("Admin.Common.AddNew")
@@ -143,7 +147,7 @@
                                 //customization
                                 new ColumnProperty(nameof(CategoryModel.NumberOfProducts))
                                 {
-                                    Title = "Product Count",
+                                    Title = "Profile Count",
                                     Width = "150"
                                 },
                                 new ColumnProperty(nameof(CategoryModel.Published))

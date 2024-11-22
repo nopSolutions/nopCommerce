@@ -352,7 +352,8 @@
                                         gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.ShippingStatus))
                                         {
                                             Title = T("Admin.Orders.Fields.ShippingStatus").Text,
-                                            Width = "150"
+                                            Width = "150",
+                                            Visible=false //customization
                                         });
                                     }
                                     gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CustomerEmail))
