@@ -9,6 +9,14 @@
     //page class
     NopHtml.AppendPageCssClassParts("html-account-page");
     NopHtml.AppendPageCssClassParts("html-customer-info-page");
+
+    //phone number format widget
+    //NopHtml.AppendScriptParts(ResourceLocation.Head, "~/Themes/NobleTheme/Content/js/intlTelInput.min.js");
+    //<link rel="stylesheet" href="~/Themes/NobleTheme/Content/css/intlTelInput.css" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@24.7.0/build/css/intlTelInput.css" />
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@24.7.0/build/js/intlTelInput.min.js"></script>
+
 }
 @section left
 {
@@ -610,10 +618,14 @@
     const phoneInputField = document.querySelector("#phone");
 
     const phoneInput = window.intlTelInput(phoneInputField, {
-        utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@19.5.6/build/js/utils.js",
+        loadUtilsOnInit: "https://cdn.jsdelivr.net/npm/intl-tel-input@24.7.0/build/js/utils.js",
         initialCountry: "in",
+        strictMode: true,
+        countryOrder: ["in", "us", "ca", "au", "gb"],
+        countrySearch: true,
+        useFullscreenPopup: true,
         autoHideDialCode: false,
-        preferredCountries: ["in", "us"],
+        preferredCountries: ["in", "us", "ca", "au", "gb"],
         // onlyCountries: ["in", "us", "ca", "au", "gb"],
         separateDialCode: true,
         nationalMode: true,

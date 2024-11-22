@@ -6,6 +6,13 @@
     NopHtml.AddTitleParts(T("PageTitle.Register").Text);
     //page class
     NopHtml.AppendPageCssClassParts("html-registration-page");
+
+    //phone number format widget
+    // NopHtml.AppendScriptParts(ResourceLocation.Head, "~/Themes/NobleTheme/Content/js/intlTelInput.min.js");
+    // <link rel="stylesheet" href="~/Themes/NobleTheme/Content/css/intlTelInput.css" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@24.7.0/build/css/intlTelInput.css" />
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@24.7.0/build/js/intlTelInput.min.js"></script>
 }
 
 <div class="page registration-page">
@@ -13,6 +20,7 @@
         <h1>@T("Account.Register")</h1>
     </div>
     <div class="page-body form-horizontal panel-body from-panel">
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.RegisterTop, additionalData = Model })
         <form id="registrationform" asp-route="Register" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post">
             <div asp-validation-summary="ModelOnly" class="message-error"></div>
             <div class="fieldset">
@@ -403,7 +411,7 @@
                     <label asp-for="Password" class="col-sm-2 col-md-2 control-label" asp-postfix=":"></label>
                     <div class="visible-xs form-title-rquired"><nop-required /></div>
                     <div class="col-sm-6 col-md-6 col-xs-12">
-                        <input asp-for="Password" class="form-control" Type="password" />
+                        <input asp-for="Password" class="form-control" Type="password" autocomplete="on" />
                     </div>
                     <div class="col-sm-4 col-md-4 col-xs-12">
                         <div class="visible-lg visible-md visible-sm form-title-rquired"><nop-required /></div>
@@ -414,7 +422,7 @@
                     <label asp-for="ConfirmPassword" class="col-sm-2 col-md-2 control-label" asp-postfix=":"></label>
                     <div class="visible-xs form-title-rquired"><nop-required /></div>
                     <div class="col-sm-6 col-md-6 col-xs-12">
-                        <input asp-for="ConfirmPassword" class="form-control" Type="password" />
+                        <input asp-for="ConfirmPassword" class="form-control" Type="password" autocomplete="on" />
                     </div>
                     <div class="col-sm-4 col-md-4 col-xs-12">
                         <div class="visible-lg visible-md visible-sm form-title-rquired"><nop-required /></div>
@@ -526,9 +534,10 @@
                 </div>
             </div>
             <div class="external-authentication">
-                @await Component.InvokeAsync("ExternalMethods", "ExternalAuthentication")
+                @await Component.InvokeAsync(typeof(ExternalMethodsViewComponent), "ExternalAuthentication")
             </div>
         </form>
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.RegisterBottom, additionalData = Model })
     </div>
 </div>
 
@@ -555,8 +564,12 @@
     const phoneInputField = document.querySelector("#phone");
 
     const phoneInput = window.intlTelInput(phoneInputField, {
-        utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@19.5.6/build/js/utils.js",
+        loadUtilsOnInit: "https://cdn.jsdelivr.net/npm/intl-tel-input@24.7.0/build/js/utils.js",
         initialCountry: "in",
+        strictMode: true,
+        countryOrder: ["in", "us", "ca", "au", "gb"],
+        countrySearch: true,
+        useFullscreenPopup: true,
         autoHideDialCode: false,
         preferredCountries: ["in", "us", "ca", "au", "gb"],
         // onlyCountries: ["in", "us", "ca", "au", "gb"],
