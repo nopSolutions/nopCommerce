@@ -129,6 +129,7 @@ ClientBin/
 *.[Pp]ublish.xml
 *.pfx
 *.publishsettings
+*.idea
 
 # RIA/Silverlight projects
 Generated_Code/
@@ -205,3 +206,5 @@ src/Presentation/Nop.Web/wwwroot/sitemaps/*
 !src/Presentation/Nop.Web/wwwroot/sitemaps/Index.htm
 src/packages/*
 src/Tests/Nop.Tests/Connections.resx
+
+
