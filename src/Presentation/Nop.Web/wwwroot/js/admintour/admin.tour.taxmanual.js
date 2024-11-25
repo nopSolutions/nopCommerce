@@ -15,7 +15,7 @@
       title: AdminTourDataProvider.localized_data.TaxManualSwitchTitle,
       text: AdminTourDataProvider.localized_data.TaxManualSwitchText,
       attachTo: {
-        element: '.onoffswitch',
+        element: '#onoffswitch-rate',
         on: 'bottom'
       },
       buttons: [AdminTourNextButton]
@@ -25,7 +25,7 @@
       title: AdminTourDataProvider.localized_data.TaxManualFixedTitle,
       text: AdminTourDataProvider.localized_data.TaxManualFixedText,
       attachTo: {
-        element: '.onoffswitch',
+        element: '#onoffswitch-rate',
         on: 'bottom'
       },
       buttons: [AdminTourBackButton, AdminTourNextButton]
@@ -35,7 +35,7 @@
       title: AdminTourDataProvider.localized_data.TaxManualByCountryTitle,
       text: AdminTourDataProvider.localized_data.TaxManualByCountryText,
       attachTo: {
-        element: '.onoffswitch',
+        element: '#onoffswitch-rate',
         on: 'bottom'
       },
       buttons: [AdminTourBackButton, AdminTourNextButton]
