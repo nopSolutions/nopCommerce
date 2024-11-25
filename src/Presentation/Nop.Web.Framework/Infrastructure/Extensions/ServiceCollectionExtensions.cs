@@ -51,10 +51,6 @@ public static class ServiceCollectionExtensions
     public static void ConfigureApplicationSettings(this IServiceCollection services,
         WebApplicationBuilder builder)
     {
-        //let the operating system decide what TLS protocol version to use
-        //see https://docs.microsoft.com/dotnet/framework/network-programming/tls
-        ServicePointManager.SecurityProtocol = SecurityProtocolType.SystemDefault;
-
         //create default file provider
         CommonHelper.DefaultFileProvider = new NopFileProvider(builder.Environment);
 
