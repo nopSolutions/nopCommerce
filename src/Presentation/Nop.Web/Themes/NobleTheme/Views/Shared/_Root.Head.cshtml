@@ -15,6 +15,8 @@
 @inject IWebHelper webHelper
 @{
     var thisPageUrl = webHelper.GetThisPageUrl(true);
+    var split_parts = thisPageUrl.Split("/", StringSplitOptions.RemoveEmptyEntries);
+    var isHomePage = split_parts.Length == 2;
 }
 @{
 
@@ -23,8 +25,9 @@
         NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/swiper/swiper-bundle.min.js");
     }
 
-    <script src="https://kendo.cdn.telerik.com/2021.2.616/js/jquery.min.js"></script>
+    //<script src="https://kendo.cdn.telerik.com/2021.2.616/js/jquery.min.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js" crossorigin="anonymous"></script>    
     //resources
     NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Themes/NobleTheme/Content/js/noble.js");
     NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Themes/NobleTheme/Content/js/bootstrap.min.js");
@@ -34,28 +37,7 @@
     NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/js/public.ajaxcart.js");
     NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/js/public.common.js");
 
-    //<script src="lib_npm/jquery/jquery.min.js"></script>
-
-
-    //resources to avoid bundling
-    //<!script src="~/Themes/NobleTheme/Content/js/noble.js"></!script>
-    //<!script src="Themes/NobleTheme/Content/js/bootstrap.min.js"></!script>
-    //<!script src="Themes/NobleTheme/Content/js/head.min.js"></!script>
-    //<!script src="Themes/NobleTheme/Content/js/owl.carousel.min.js"></!script>
-    //<!script src="js/public.countryselect.js"></!script>
-    //<!script src="js/public.ajaxcart.js"></!script>
-    //<!script src="js/public.common.js"></!script>
-
-
-    //resources to avoid bundling
-    // <script src="https://onjobsupport.blob.core.windows.net/nop-cdn/js/noble.js"></script>
-    // <script src="https://onjobsupport.blob.core.windows.net/nop-cdn/js/bootstrap.min.js"></script>
-    // <script src="https://onjobsupport.blob.core.windows.net/nop-cdn/js/head.min.js"></script>
-    // <script src="https://onjobsupport.blob.core.windows.net/nop-cdn/js/owl.carousel.min.js"></script>
-    // <script src="https://onjobsupport.blob.core.windows.net/nop-cdn/js/public.countryselect.js"></script>
-    // <script src="https://onjobsupport.blob.core.windows.net/nop-cdn/js/public.ajaxcart.js"></script>
-    // <script src="https://onjobsupport.blob.core.windows.net/nop-cdn/js/public.common.js"></script>
-
+    // <script src="lib_npm/jquery/jquery.min.js"></script>
     //when jQuery migrate script logging is active you will see the log in the browser console
     if (commonSettings.JqueryMigrateScriptLoggingActive)
     {
@@ -75,44 +57,54 @@
 
     var kendoVersion = "2021.2.616";
 
-    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/@kendoVersion/styles/kendo.common.min.css" />
-    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/@kendoVersion/styles/kendo.bootstrap.min.css" />
-    @*<link rel="stylesheet" href="https://kendo.cdn.telerik.com/@kendoVersion/styles/kendo.default.mobile.min.css" />*@
-            //<script src="https://kendo.cdn.telerik.com/2021.2.616/js/jquery.min.js"></script>
+    if (!isHomePage)
+    {
+        <link rel="stylesheet" href="https://kendo.cdn.telerik.com/@kendoVersion/styles/kendo.common.min.css" />
+        <link rel="stylesheet" href="https://kendo.cdn.telerik.com/@kendoVersion/styles/kendo.bootstrap.min.css" />
+    }
 
-    @*<script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.all.min.js"></script>*@
-    @*<script src="https://kendo.cdn.telerik.com/@kendoVersion/js/kendo.ui.core.min.js"></script>*@
+    if (!isHomePage)
+    {
+        //Kendo drawer widget
+        <script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.core.min.js"></script>
+        <script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.userevents.min.js"></script>
+        <script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.drawer.min.js"></script>
+    }
 
-    //Kendo drawer widget
-    <script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.core.min.js"></script>
-    <script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.userevents.min.js"></script>
-    <script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.drawer.min.js"></script>
+    if (thisPageUrl.Contains("login", StringComparison.InvariantCultureIgnoreCase) ||
+        thisPageUrl.Contains("register", StringComparison.InvariantCultureIgnoreCase) ||
+        thisPageUrl.Contains("info", StringComparison.InvariantCultureIgnoreCase))
+    {
+        //Kendo multiselect widget
+        <script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.data.min.js"></script>
+        <script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.popup.min.js"></script>
+        <script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.list.min.js"></script>
+        <script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.fx.min.js"></script>
+        <script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.draganddrop.min.js"></script>
+        <script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.mobile.scroller.min.js"></script>
+        <script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.virtuallist.min.js"></script>
+        <script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.multiselect.min.js"></script>
+    }
 
-    //Kendo multiselect widget
-    <script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.data.min.js"></script>
-    <script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.popup.min.js"></script>
-    <script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.list.min.js"></script>
-    <script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.fx.min.js"></script>
-    <script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.draganddrop.min.js"></script>
-    <script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.mobile.scroller.min.js"></script>
-    <script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.virtuallist.min.js"></script>
-    <script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.multiselect.min.js"></script>
-
+    if (thisPageUrl.Contains("register", StringComparison.InvariantCultureIgnoreCase) ||
+        thisPageUrl.Contains("info", StringComparison.InvariantCultureIgnoreCase))
+    {
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@24.7.0/build/css/intlTelInput.css" />
+        <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@24.7.0/build/js/intlTelInput.min.js"></script>
+    }
 
     @*Bootstrap icons*@
     @*<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">*@
 
-    NopHtml.AppendScriptParts(ResourceLocation.Head, "~/Themes/NobleTheme/Content/js/mmenu-light.js");
+    //mmenu
+    <script src="https://cdn.jsdelivr.net/npm/mmenu-light@3.2.2/dist/mmenu-light.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mmenu-light@3.2.2/dist/mmenu-light.min.css" />
 
-    @*<script src="https://onjobsupport.blob.core.windows.net/nop-cdn/js/mmenu-light.js"></script>*@
-
-    //phone number format widget
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@19.5.6/build/css/intlTelInput.css" />
-    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@19.5.6/build/js/intlTelInput.min.js"></script>
+    // NopHtml.AppendScriptParts(ResourceLocation.Head, "~/Themes/NobleTheme/Content/js/mmenu-light.js");
 
     if (thisPageUrl.Contains("Login", StringComparison.InvariantCultureIgnoreCase))
     {
-        <script src="https://cdn.tailwindcss.com"></script>
+        // <script rel="preload" src="https://cdn.tailwindcss.com"></script>
     }
 
     <script>
@@ -125,8 +117,6 @@
     {
         NopHtml.AppendHeadCustomParts(seoSettings.CustomHeadTags);
     }
-
-    //var displayMiniProfiler = appSettings.Get<CommonConfig>().MiniProfilerEnabled && await permissionService.AuthorizeAsync(StandardPermissionProvider.AccessProfiling);
 
     //event
     await eventPublisher.PublishAsync(new PageRenderingEvent(NopHtml));
@@ -145,7 +135,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="generator" content="nopCommerce" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="preload" as="font" href="@Url.Content($"~/Themes/NobleTheme/Content/fonts/fontawesome-webfont.woff2")" crossorigin>
+    <link as="font" href="@Url.Content($"~/Themes/NobleTheme/Content/fonts/fontawesome-webfont.woff2")" crossorigin>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap" rel="stylesheet" />
     @NopHtml.GenerateHeadCustom()
     @*This is used so that themes can inject content into the header*@
@@ -157,10 +147,6 @@
     @await Component.InvokeAsync(typeof(BlogRssHeaderLinkViewComponent))
     @*Insert favicon and app icons head code*@
     @await Component.InvokeAsync(typeof(FaviconViewComponent))
-    @* @if (displayMiniProfiler)
-    {
-    <mini-profiler />
-    } *@
 
     @NopHtml.GenerateScripts(ResourceLocation.Head)
     @NopHtml.GenerateInlineScripts(ResourceLocation.Head)
