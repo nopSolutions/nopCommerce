@@ -1,6 +1,6 @@
 ﻿@model bool
 
-<div class="card card-default">
+<div id="card-paypalcommerce" class="card card-default">
     <div class="card-body">
         <div class="form-group row">
             @if (!Model)
@@ -22,7 +22,7 @@
                         <li>Securely accept all major credit/debit cards and local payment methods with the strength of the PayPal network.</li>
                     </ul>
                     <br />
-                    <a href="@Url.Action("Configure", "PayPalCommerce")" class="btn btn-primary">
+                    <a id="configure-paypalcommerce-button" href="@Url.Action("Configure", "PayPalCommerce")" class="btn btn-primary">
                         Get started
                     </a>
                 </div>

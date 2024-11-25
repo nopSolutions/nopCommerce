@@ -1,9 +1,7 @@
 ﻿$(function() {
   const tour = new Shepherd.Tour(AdminTourCommonTourOptions);
 
-  AdminTourNextPageButton.action = function () {
-    window.location = ((document.querySelector('base') || {}).getAttribute('href') + '/Admin/EmailAccount/List?showtour=True').replace(/\/\//g, "/");
-  };
+  AdminTourNextPageButton.action = function () { window.location = '/Admin/EmailAccount/List?showtour=True' };
 
   //'Settings button' step
   tour.addStep({

@@ -87,7 +87,7 @@
 
 <form asp-controller="PayPalCommerce" asp-action="Configure" method="post">
     <div class="cards-group">
-        <div class="card card-default card-outline card-info d-none" id="pnlOnboarding">
+        <div class="card card-default card-outline card-info" id="pnlOnboarding">
             <div class="card-header">
                 @T("Plugins.Payments.PayPalCommerce.Onboarding.Title")
             </div>
@@ -386,7 +386,7 @@
                             <span asp-validation-for="UseShipmentTracking"></span>
                         </div>
                     </div>
-                    <div class="card card-default advanced-setting">
+                    <div id="prominently-card" class="card card-default advanced-setting">
                         <div class="card-header">
                             @T("Plugins.Payments.PayPalCommerce.Prominently")
                         </div>

@@ -10021,16 +10021,22 @@
     <Value>Check/money order</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.PaymentMethods.Configure.Text">
-    <Value><![CDATA[You can configure each payment method by clicking the appropriate <b>Configure</b> button. Now we’ll configure the PayPal Commerce payment method.]]></Value>
+    <Value><![CDATA[You can configure each payment method by clicking the appropriate <b>Configure</b> button.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.PaymentMethods.Configure.Title">
-    <Value>Configure PayPal Commerce</Value>
+    <Value>Configure a payment method</Value>
   </LocaleResource>  
   <LocaleResource Name="Admin.ConfigurationSteps.PaymentMethods.Manual.Text">
     <Value><![CDATA[This is a special payment plugin that allows all orders to be successfully entered on the website, but it does NOT really charge a customer or make any calls to any live payment gateway. This payment method is recommended if you want to perform one of the following: <ul><li>Process all orders offline</li><li>Process them manually via another back-office system</li><li>Test the site end-to-end before going live</li></ul>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.PaymentMethods.Manual.Title">
     <Value>Credit card (manual)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ConfigurationSteps.PaymentMethods.PayPalCommerce.Configure.Text">
+    <Value>Now we’ll configure the PayPal Commerce payment method.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ConfigurationSteps.PaymentMethods.PayPalCommerce.Configure.Title">
+    <Value>Configure PayPal Commerce</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.PaymentPayPal.ApiCredentials.Text">
     <Value><![CDATA[If you already have an app created in your PayPal account or would like to test it in the sandbox mode, follow these steps.]]></Value>
@@ -10045,7 +10051,7 @@
     <Value>Configured</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.PaymentPayPal.Credentials.Text">
-    <Value><![CDATA[After you create and set up your application in your <b>PayPal</b> account, you need to copy the <b>Client ID</b> and <b>Secret</b>, and paste them into these fields.]]></Value>
+    <Value><![CDATA[After you create and set up your application in your <b>PayPal</b> account, you need to copy the <b>Client ID</b>, <b>Secret</b> and <b>Merchant ID</b>, and paste them into these fields.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.PaymentPayPal.Credentials.Title">
     <Value>Credentials</Value>
@@ -10063,10 +10069,7 @@
     <Value>Feature PayPal Prominently</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.PaymentPayPal.Register.Text">
-    <Value><![CDATA[Enter your email address and let PayPal check everything out by clicking the <b>Save</b> button.]]></Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ConfigurationSteps.PaymentPayPal.Register.Text2">
-    <Value><![CDATA[If everything is OK, you will see the green notification and a newly added <b>Sign up for PayPal</b> button. Click this button to register an account. You need to go through a few steps to fill in all the required data. The last step will be to verify your email address in order to activate your account.]]></Value>
+    <Value>Click this button to register an account. You need to go through a few steps to fill in all the required data. The last step will be to verify your email address in order to activate your account.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.PaymentPayPal.Register.Title">
     <Value>Register an account</Value>
@@ -10076,12 +10079,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.PaymentPayPal.Sandbox.Title">
     <Value>Sandbox</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ConfigurationSteps.PaymentPayPal.SignUp.Text">
-    <Value><![CDATA[You have two options to do this: you can either register an account on the PayPal website or you can do this from the plugin configuration page. Let’s register an account from the plugin configuration page.]]></Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ConfigurationSteps.PaymentPayPal.SignUp.Title">
-    <Value>Create a PayPal account</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.PaymentMethods.PaymentMethods.Text">
     <Value>You can see all the payment methods (plugins) allowed to use in your store on this page. However, you can always find much more in our marketplace.</Value>

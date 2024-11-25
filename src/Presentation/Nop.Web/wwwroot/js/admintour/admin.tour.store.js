@@ -1,9 +1,7 @@
 ﻿$(function() {
   const tour = new Shepherd.Tour(AdminTourCommonTourOptions);
 
-  AdminTourNextPageButton.action = function () {
-    window.location = ((document.querySelector('base') || {}).getAttribute('href') + '/Admin/Shipping/Providers?showtour=True').replace(/\/\//g, "/");
-  };
+  AdminTourNextPageButton.action = function () { window.location = '/Admin/Shipping/Providers?showtour=True' };
 
   //'Your store name' step
   tour.addStep({
