@@ -39,7 +39,7 @@ public class AmazonPayCustomerController : BasePaymentController
     }
 
     [HttpPost]
-    public new async Task<IActionResult> SignOut(string buyerId)
+    public async Task<IActionResult> SignOut(string buyerId)
     {
         await _amazonPayCustomerService.SignOutAsync(buyerId);
 
