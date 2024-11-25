@@ -22,7 +22,7 @@
     <PackageReference Include="Microsoft.Identity.Client" Version="4.66.2" />
     <PackageReference Include="QuestPDF" Version="2022.12.15" />
     <PackageReference Include="System.ServiceModel.Http" Version="8.0.0" />
-    <PackageReference Include="SkiaSharp" Version="2.88.8" />
+    <PackageReference Include="SkiaSharp" Version="2.88.9" />
     <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.88.8" />
     <PackageReference Include="Svg.Skia" Version="2.0.0.2" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.4.9" />
