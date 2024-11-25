@@ -9909,11 +9909,11 @@
   <LocaleResource Name="Admin.ConfigurationSteps.EditServicesInfo.Title">
     <Value>Edit services info</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.ConfigurationSteps.EmailAccount.DefaultCredentials.Text">
-    <Value>Check to use default credentials for the connection.</Value>
+  <LocaleResource Name="Admin.ConfigurationSteps.EmailAccount.AuthenticationMethod.Text">
+    <Value>Select one of the available authentication methods and enter your credentials if required.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.ConfigurationSteps.EmailAccount.DefaultCredentials.Title">
-    <Value>Use default credentials</Value>
+  <LocaleResource Name="Admin.ConfigurationSteps.EmailAccount.AuthenticationMethod.Title">
+    <Value>Authentication method</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.EmailAccount.DisplayName.Text">
     <Value>Enter the displayed name for outgoing emails of your store. For example, “Your store sales department”.</Value>
@@ -9933,12 +9933,6 @@
   <LocaleResource Name="Admin.ConfigurationSteps.EmailAccount.Host.Title">
     <Value>Host</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.ConfigurationSteps.EmailAccount.Password.Text">
-    <Value>This is the password you use to authenticate to your mail server.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ConfigurationSteps.EmailAccount.Password.Title">
-    <Value>Password</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.EmailAccount.Port.Text">
     <Value>Enter the SMTP port of your email server. This is usually port 25.</Value>
   </LocaleResource>
@@ -9950,12 +9944,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.EmailAccount.TestEmail.Title">
     <Value>Send test email</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ConfigurationSteps.EmailAccount.Username.Text">
-    <Value>Enter the user name which is used to authenticate to your email server.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ConfigurationSteps.EmailAccount.Username.Title">
-    <Value>Username</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.EmailAccount.UseSsl.Text">
     <Value>Check to use Secure Sockets Layer (SSL) to encrypt the SMTP connection.</Value>
