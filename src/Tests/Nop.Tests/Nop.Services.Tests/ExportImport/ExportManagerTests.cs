@@ -1,5 +1,6 @@
 ﻿using ClosedXML.Excel;
 using FluentAssertions;
+using Microsoft.IdentityModel.Tokens;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
@@ -125,6 +126,9 @@ public class ExportManagerTests : ServiceTest
             if (propertyValue is XLCellValue { IsBlank: true }) 
                 propertyValue = null;
 
+            if (string.IsNullOrEmpty(propertyValue?.ToString() ?? string.Empty) && objectPropertyValue is null) 
+                continue;
+
             switch (objectPropertyValue)
             {
                 case int:
@@ -151,7 +155,7 @@ public class ExportManagerTests : ServiceTest
                     break;
             }   
 
-            if (objectProperty.PropertyType.IsEnum)
+            if (objectProperty.PropertyType.IsEnum && objectPropertyValue != null)
             {
                 objectPropertyValue = (int)objectPropertyValue;
                 propertyValue = property.IntValue;

@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
@@ -173,6 +174,9 @@ public partial class BaseNopTest
         webHostEnvironment.Setup(p => p.EnvironmentName).Returns("test");
         webHostEnvironment.Setup(p => p.ApplicationName).Returns("nopCommerce");
         services.AddSingleton(webHostEnvironment.Object);
+
+        var htmlHelper = new Mock<IHtmlHelper>();
+        services.AddSingleton(htmlHelper.Object);
 
         //file provider
         services.AddTransient<INopFileProvider, NopFileProvider>();
