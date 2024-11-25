@@ -5,7 +5,7 @@ using Nop.Core.Domain.Topics;
 
 namespace Nop.Data.Migrations.UpgradeTo480;
 
-[NopSchemaMigration("2024-10-29 20:02:00", "AddIndexesMigration for 4.80.0")]
+[NopSchemaMigration("2024-11-25 00:00:00", "AddIndexesMigration for 4.80.0")]
 public class AddIndexesMigration : ForwardOnlyMigration
 {
     private readonly INopDataProvider _dataProvider;
