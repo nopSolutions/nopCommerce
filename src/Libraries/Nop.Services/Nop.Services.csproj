@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="Azure.Storage.Blobs" Version="12.23.0" />
-    <PackageReference Include="ClosedXML" Version="0.102.2" />
+    <PackageReference Include="ClosedXML" Version="0.104.2" />
     <PackageReference Include="Google.Apis.Auth" Version="1.68.0" />
     <!--Do not remove this reference. HarfBuzzSharp.NativeAssets.Linux library need for properly work SkiaSharp.HarfBuzz on the UNIX system-->
     <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="2.8.2.3" />
