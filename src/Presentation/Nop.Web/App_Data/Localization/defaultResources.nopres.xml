@@ -2733,6 +2733,15 @@
   <LocaleResource Name="Admin.Catalog.Products.BackToList">
     <Value>back to product list</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.BulkEdit">
+    <Value>Bulk edit products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.BulkEdit.SaveSelected">
+    <Value>Save selected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.BulkEdit.SaveAll">
+    <Value>Save all</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Copied">
     <Value>The product has been copied successfully</Value>
   </LocaleResource>
