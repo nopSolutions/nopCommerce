@@ -19,7 +19,7 @@ public class SupportRequestController : BaseAdminController
     }
     
     // List action to display notes for a specific customer
-    public async Task<IActionResult> RequestsList()
+    public async Task<IActionResult> List()
     {
         var requestList = _supportRequestService.GetSupportRequests();
         

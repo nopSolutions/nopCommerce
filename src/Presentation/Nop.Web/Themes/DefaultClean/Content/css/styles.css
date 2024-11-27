@@ -8961,3 +8961,78 @@ a.skip:hover {
   width: 100%;
   font-size: 16px;
 }
+
+
+/*********** Support Request *************/
+
+#support-request-page,
+#support-request-create-page{
+
+  .content{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 2rem;
+  }
+
+  .btn-primary {
+    min-width: 140px;
+    border: none;
+    background-color: #4ab2f1;
+    padding: 10px 30px;
+    text-align: center;
+    font-size: 15px;
+    color: #fff;
+    text-transform: uppercase;
+    margin: 2rem;
+  }
+
+  .btn-primary:hover {
+    background-color: #248ece;
+  }
+  
+  .action-btn-cntr{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    padding: 1rem 5rem;
+  }
+  
+  table {
+    width: 50%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+  }
+
+  th, td {
+    text-align: left;
+    padding: 8px;
+  }
+
+  th {
+    background-color: #f9f9f9;
+    font-weight: bold;
+    border-bottom: 2px solid #ddd;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+
+  tr:nth-child(odd) {
+    background-color: #ffffff;
+  }
+
+  tr:hover {
+    background-color: #f1f1f1;
+  }
+
+  td {
+    border-bottom: 1px solid #ddd;
+  }
+  
+  input[type=text] {
+    width: 100%;
+  }
+}

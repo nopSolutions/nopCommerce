@@ -1,0 +1,49 @@
+@model IList<SupportRequestModel>
+
+@{
+    Layout = "_ColumnsOne";
+}
+
+<div id="support-request-page">
+
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            Support Requests
+        </h1>
+    </div>
+    
+    <section class="content">
+        @if (!Model.Any())
+        {
+            <p>No support requests available.</p>
+        }
+        else
+        {
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Subject</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var request in Model)
+                {
+                    <tr>
+                        <td>@request.Id</td>
+                        <td>@request.Subject</td>
+                        <td>@request.Status</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+            <div class="action-btn-cntr">
+                <a asp-action="Create" class="btn-primary">
+                    <i class="fas fa-plus-square"></i>
+                    Add New Request
+                </a>
+            </div>
+        }
+    </section>
+</div>

@@ -1,0 +1,30 @@
+@model SupportRequestModel
+
+@{
+    Layout = "_ColumnsOne";
+}
+
+<div id="support-request-create-page">
+
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            Create New Request
+        </h1>
+    </div>
+
+    <section class="content">
+        <form asp-action="Create">
+
+            <div class="form-group">
+                <label asp-for="Subject" class="control-label"></label>
+                <input type="text" asp-for="Subject" class="form-control" rows="4"/>
+                <span asp-validation-for="Subject" class="text-danger"></span>
+            </div>
+            
+            <div class="action-btn-cntr">
+                <a asp-action="List" class="btn-primary">Back to List</a>
+                <button type="submit" class="btn-primary">Create</button>
+            </div>
+        </form>
+    </section>
+</div>
