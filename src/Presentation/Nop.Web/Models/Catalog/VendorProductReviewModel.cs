@@ -1,6 +1,8 @@
-﻿namespace Nop.Web.Models.Catalog;
+﻿using Nop.Web.Framework.Models;
 
-public partial record VendorProductReviewModel
+namespace Nop.Web.Models.Catalog;
+
+public partial record VendorProductReviewModel : BaseNopModel
 {
     public int CustomerId { get; set; }
     public string CustomerAvatarUrl { get; set; }
