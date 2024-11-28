@@ -1301,9 +1301,19 @@ public partial class ProductController : BaseAdminController
             return NoContent();
 
         var currentVendor = await _workContext.GetCurrentVendorAsync();
-        await _productService.DeleteProductsAsync((await _productService.GetProductsByIdsAsync(selectedIds.ToArray()))
-            .Where(p => currentVendor == null || p.VendorId == currentVendor.Id).ToList());
 
+        var products = (await _productService.GetProductsByIdsAsync(selectedIds.ToArray()))
+            .Where(p => currentVendor == null || p.VendorId == currentVendor.Id).ToList();
+
+        await _productService.DeleteProductsAsync(products);
+        
+        //activity log
+        var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.DeleteProduct");
+        
+        foreach (var product in products)
+            await _customerActivityService.InsertActivityAsync("DeleteProduct",
+                string.Format(activityLogFormat, product.Name), product);
+        
         return Json(new { Result = true });
     }
 

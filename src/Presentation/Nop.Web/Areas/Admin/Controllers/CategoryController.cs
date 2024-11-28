@@ -384,7 +384,16 @@ public partial class CategoryController : BaseAdminController
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();
 
-        await _categoryService.DeleteCategoriesAsync(await (await _categoryService.GetCategoriesByIdsAsync(selectedIds.ToArray())).WhereAwait(async p => await _workContext.GetCurrentVendorAsync() == null).ToListAsync());
+        var categories = await _categoryService.GetCategoriesByIdsAsync(selectedIds.ToArray());
+
+        await _categoryService.DeleteCategoriesAsync(categories);
+
+        //activity log
+        var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.DeleteCategory");
+
+        foreach (var category in categories)
+            await _customerActivityService.InsertActivityAsync("DeleteCategory",
+                string.Format(activityLogFormat, category.Name), category);
 
         return Json(new { Result = true });
     }
