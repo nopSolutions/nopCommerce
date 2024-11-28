@@ -1,30 +1,74 @@
+@using Nop.Core
 @model SupportRequestModel
-
+@inject Nop.Core.IWebHelper webHelper
 @{
-    Layout = "_ColumnsOne";
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts("Create Support Request");
+    //page class
+    // NopHtml.AppendPageCssClassParts("html-account-page");
+    // NopHtml.AppendPageCssClassParts("html-customer-info-page");
 }
 
-<div id="support-request-create-page">
+@section left
+{
+    @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = CustomerNavigationEnum.SupportRequests })
+}
 
-    <div class="content-header clearfix">
-        <h1 class="float-left">
-            Create New Request
-        </h1>
+<div class="page account-page customer-info-page">
+    <div class="page-title">
+        <h1>@T("Account.MyAccount") - Support Requests</h1>
     </div>
+    <div class="page-body">
+        <div id="support-request-create-page">
 
-    <section class="content">
-        <form asp-action="Create">
+            <div class="content-header clearfix">
+                <h2 class="float-left">
+                    Create New Request
+                </h2>
+            </div>
 
-            <div class="form-group">
-                <label asp-for="Subject" class="control-label"></label>
-                <input type="text" asp-for="Subject" class="form-control" rows="4"/>
-                <span asp-validation-for="Subject" class="text-danger"></span>
-            </div>
-            
-            <div class="action-btn-cntr">
-                <a asp-action="List" class="btn-primary">Back to List</a>
-                <button type="submit" class="btn-primary">Create</button>
-            </div>
-        </form>
-    </section>
+            <section class="content">
+                <form asp-action="Create">
+
+                    <div class="form-group">
+                        <label asp-for="Subject" class="control-label"></label>
+                        <input type="text" asp-for="Subject" class="form-control" rows="4"/>
+                        <span asp-validation-for="Subject" class="text-danger"></span>
+                    </div>
+
+                    <div class="action-btn-cntr">
+                        <a asp-action="List" class="btn-primary">Back to List</a>
+                        <button type="submit" class="btn-primary">Create</button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
 </div>
+
+<script asp-location="Footer">
+    function removeexternalassociation(itemId) {
+        if (confirm('@T("Common.AreYouSure")')) {
+            var postData = {
+                id: itemId
+            };
+            addAntiForgeryToken(postData);
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "@Url.RouteUrl("CustomerRemoveExternalAssociation")",
+                data: postData,
+                dataType: "json",
+                success: function (data, textStatus, jqXHR) {
+                    location.href = data.redirect;
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert('Failed to delete');
+                }
+            });
+        }
+        return false;
+    }
+</script>
