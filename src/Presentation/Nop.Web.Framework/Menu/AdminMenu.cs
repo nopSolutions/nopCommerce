@@ -287,6 +287,14 @@ public partial class AdminMenu : IAdminMenu
                             PermissionNames = new List<string> { StandardPermission.Customers.GDPR_MANAGE },
                             Url = GetMenuItemUrl("Customer", "GdprLog"),
                             IconClass = "far fa-dot-circle"
+                        },
+                        new()
+                            {
+                            SystemName = "Support requests",
+                            Title = "Support Requests",
+                            PermissionNames = new List<string> { StandardPermission.Customers.GDPR_MANAGE },
+                            Url = GetMenuItemUrl("SupportRequest", "List"),
+                            IconClass = "far fa-dot-circle"
                         }
                     }
                 },
