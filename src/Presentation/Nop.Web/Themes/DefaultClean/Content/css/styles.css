@@ -8966,20 +8966,19 @@ a.skip:hover {
 /*********** Support Request *************/
 
 #support-request-page,
-#support-request-create-page{
+#support-request-create-page {
 
-  .content{
+  .content {
     display: flex;
     justify-content: center;
     flex-direction: column;
     align-items: center;
     margin-top: 2rem;
   }
-
-  .btn-primary {
+  
+  .btn {
     min-width: 140px;
     border: none;
-    background-color: #4ab2f1;
     padding: 10px 30px;
     text-align: center;
     font-size: 15px;
@@ -8988,11 +8987,23 @@ a.skip:hover {
     margin: 2rem;
   }
 
-  .btn-primary:hover {
-    background-color: #248ece;
+  .btn-primary {
+    background-color: #4ab2f1;
+
+    &:hover {
+      background-color: #248ece;
+    }
   }
   
-  .action-btn-cntr{
+  .btn-secondary {
+    background-color: #888;
+
+    &:hover {
+      background-color: #ccc;
+    }
+  }
+  
+  .action-btn-cntr {
     display: flex;
     width: 100%;
     justify-content: center;
@@ -9015,19 +9026,21 @@ a.skip:hover {
     font-weight: bold;
     border-bottom: 2px solid #ddd;
   }
+  
+  tr {
+    &:nth-child(even) {
+      background-color: #f9f9f9;
+    }
 
-  tr:nth-child(even) {
-    background-color: #f9f9f9;
+    &:nth-child(odd) {
+      background-color: #ffffff;
+    }
+
+    &:hover {
+      background-color: #f1f1f1;
+    }  
   }
-
-  tr:nth-child(odd) {
-    background-color: #ffffff;
-  }
-
-  tr:hover {
-    background-color: #f1f1f1;
-  }
-
+  
   td {
     border-bottom: 1px solid #ddd;
   }
