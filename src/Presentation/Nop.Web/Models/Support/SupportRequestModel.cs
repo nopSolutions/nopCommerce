@@ -4,13 +4,13 @@ namespace Nop.Web.Models.Support;
 
 public class SupportRequestModel
 {
-    public int Id { get; set; }
-    public int CustomerId { get; set; }
-    public StatusEnum Status { get; set; }
+    public int Id { get; private set; }
+    public int CustomerId { get; private set; }
+    public StatusEnum Status { get; private set; }
     public string Subject { get; set; }
-    public bool Read { get; set; }
-    public DateTime CreatedOnUtc { get; set; }
-    public DateTime UpdatedOnUtc { get; set; }
+    public bool Read { get; private set; }
+    public DateTime CreatedOnUtc { get; private set; }
+    public DateTime UpdatedOnUtc { get; private set; }
     
     public SupportRequestModel(){}
     

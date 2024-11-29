@@ -48,12 +48,8 @@ public class SupportRequestController : BasePublicController
         {
             var request = new SupportRequest()
             {
-                CustomerId = _workContext.GetCurrentCustomerAsync().Result.Id,
+                CustomerId = _currentUserId,
                 Subject = model.Subject,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                Read = false,
-                Status = StatusEnum.AwaitingSupport
             };
 
             _supportRequestService.CreateSupportRequest(request);
@@ -71,7 +67,6 @@ public class SupportRequestController : BasePublicController
     { 
         var supportRequest = _supportRequestService.GetSupportRequestById(requestId);
         var baseMessages = _supportRequestService.GetSupportRequestMessages(requestId);
-        
         var viewModel = new SupportChatViewModel()
         {
             RequestId = supportRequest.Id,
@@ -90,8 +85,6 @@ public class SupportRequestController : BasePublicController
         {
             RequestId = model.RequestId,
             AuthorId = _currentUserId,
-            IsAdmin = false,
-            CreatedOnUtc = DateTime.UtcNow,
             Message = model.NewMessage
         };
         

@@ -26,16 +26,7 @@ public class SupportRequestController : BaseAdminController
     {
         var requestList = _supportRequestService.GetAllSupportRequests();
         
-        var requests = requestList.Select(request => new SupportRequestModel
-        {
-            Id = request.Id,
-            CustomerId = request.CustomerId,
-            Status = request.Status,
-            Subject = request.Subject,
-            Read = request.Read,
-            CreatedOnUtc = request.CreatedOnUtc,
-            UpdatedOnUtc = request.UpdatedOnUtc
-        }).ToList();
+        var requests = requestList.Select(request => new SupportRequestModel(request)).ToList();
         
         return View(requests);
     }
@@ -48,26 +39,16 @@ public class SupportRequestController : BaseAdminController
     { 
         var supportRequest = _supportRequestService.GetSupportRequestById(requestId);
         var baseMessages = _supportRequestService.GetSupportRequestMessages(requestId);
-        
-        var messages = baseMessages.Select(message => new SupportMessageModel
-        {
-            Id = message.Id ,
-            RequestId = message.RequestId,
-            AuthorId = message.AuthorId, 
-            IsAdmin = message.IsAdmin, 
-            CreatedOnUtc = message.CreatedOnUtc,
-            Message = message.Message
-        }).ToList();
-
         var viewModel = new SupportChatViewModel()
         {
             RequestId = supportRequest.Id,
             Subject = supportRequest.Subject,
             Status = supportRequest.Status,
-            Messages = messages
+            Messages = baseMessages.Select(message => new SupportMessageModel(message)).ToList()
         };
         
         return View(viewModel);
+        
     }
 
     [HttpPost]
@@ -77,8 +58,6 @@ public class SupportRequestController : BaseAdminController
         {
             RequestId = model.RequestId,
             AuthorId = _currentUserId,
-            IsAdmin = true,
-            CreatedOnUtc = DateTime.UtcNow,
             Message = model.NewMessage
         };
         
