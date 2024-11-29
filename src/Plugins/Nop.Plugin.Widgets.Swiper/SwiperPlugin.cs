@@ -134,6 +134,7 @@ public class SwiperPlugin : BasePlugin, IWidgetPlugin
             ["Plugins.Widgets.Swiper.Settings"] = "Settings",
             ["Plugins.Widgets.Swiper.Picture"] = "Picture",
             ["Plugins.Widgets.Swiper.Picture.Hint"] = "Upload picture.",
+            ["Plugins.Widgets.Swiper.Picture.Required"] = "Picture is required",
             ["Plugins.Widgets.Swiper.TitleText"] = "Title",
             ["Plugins.Widgets.Swiper.TitleText.Hint"] = "Enter title for picture. Leave empty if you don't want to display any text.",
             ["Plugins.Widgets.Swiper.LinkUrl"] = "URL",

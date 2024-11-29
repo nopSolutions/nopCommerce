@@ -132,8 +132,8 @@ public class WidgetSwiperController : BasePluginController
     [FormValueRequired("add-slide")]
     public virtual async Task<IActionResult> SlideAdd(SlidePictureModel model)
     {
-        if (model.PictureId == 0)
-            RedirectToAction(nameof(Configure));
+        if (!ModelState.IsValid)
+            return await Configure();
 
         //load settings for a chosen store scope
         var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
@@ -167,20 +167,22 @@ public class WidgetSwiperController : BasePluginController
 
         var model = await new SlideListModel().PrepareToGridAsync(slidesSearchModel, slides.ToPagedList(slidesSearchModel), () =>
         {
-            return slides.SelectAwait(async item =>
-            {
-                var picture = (await _pictureService.GetPictureByIdAsync(item.PictureId))
-                    ?? throw new Exception("Picture cannot be loaded");
-
-                return new PublicSlideModel
+            return slides
+                .Where(s => s.PictureId != 0)
+                .SelectAwait(async item =>
                 {
-                    PictureId = item.PictureId,
-                    PictureUrl = (await _pictureService.GetPictureUrlAsync(picture, 200)).Url,
-                    TitleText = item.TitleText,
-                    AltText = item.AltText,
-                    LinkUrl = item.LinkUrl
-                };
-            });
+                    var picture = (await _pictureService.GetPictureByIdAsync(item.PictureId))
+                        ?? throw new Exception("Picture cannot be loaded");
+
+                    return new PublicSlideModel
+                    {
+                        PictureId = item.PictureId,
+                        PictureUrl = (await _pictureService.GetPictureUrlAsync(picture, 200)).Url,
+                        TitleText = item.TitleText,
+                        AltText = item.AltText,
+                        LinkUrl = item.LinkUrl
+                    };
+                });
         });
 
         return Json(model);

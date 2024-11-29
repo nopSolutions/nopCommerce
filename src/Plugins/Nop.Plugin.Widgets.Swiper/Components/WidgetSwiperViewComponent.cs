@@ -45,6 +45,9 @@ public class WidgetSwiperViewComponent : NopViewComponent
     /// <returns>A task that represents the asynchronous operation</returns>
     private async Task<string> GetPictureUrlAsync(int pictureId)
     {
+        if (pictureId == 0)
+            return string.Empty;
+
         var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(ModelCacheEventConsumer.PictureUrlModelKey,
             pictureId, _webHelper.IsCurrentConnectionSecured());
 
