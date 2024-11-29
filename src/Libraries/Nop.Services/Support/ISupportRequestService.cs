@@ -10,7 +10,7 @@ public partial interface ISupportRequestService
     
     // Read
     public SupportRequest GetSupportRequestById(int id);
-    public IList<SupportRequest> GetAllSupportRequests(bool sortByCreatedDateDsc = true, string filterByStatus = "");
+    public IList<SupportRequest> GetAllSupportRequests(bool sortByCreatedDateDsc = true, string filterByStatus = "", string searchQuery = "");
     public IList<SupportRequest> GetUserSupportRequests(int userId);
     public IList<SupportMessage> GetSupportRequestMessages(int supportRequestId);
     
