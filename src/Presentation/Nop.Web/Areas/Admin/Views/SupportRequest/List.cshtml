@@ -22,13 +22,18 @@
                         <form method="get" action="@Url.Action("List")">
                             <div class="request-list-options-cntr">
                                 <div class="request-list-option">
-                                    <label for="@Model.SelectedSortOption">Sort by:</label>
+                                    <label for="@Model.SelectedSortOption">Sort</label>
                                     <select asp-for="SelectedSortOption" asp-items="@Model.SortOptions" name="sortBy"></select>
                                 </div>
                                 <div class="request-list-option">
-                                    <label for="@Model.FilterByStatus">Filter by status:</label>
+                                    <label for="@Model.FilterByStatus">Status</label>
                                     <select asp-for="FilterByStatus" asp-items="@Model.AvailableStatuses" name="filterByStatus"></select>
-                                </div>    
+                                </div>
+                                <div class="request-list-option">
+                                    <label for="@Model.SearchTerm">Search</label>
+                                    <input type="text" asp-for="SearchTerm" name="searchTerm" class="form-control"/>
+                                    <span asp-validation-for="SearchTerm" class="text-danger"></span>
+                                </div>
                             </div>
                             <div class="action-btn-cntr">
                                 <button type="submit" class="btn btn-primary">Update</button>

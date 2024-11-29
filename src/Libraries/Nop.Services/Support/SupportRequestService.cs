@@ -39,7 +39,7 @@ public partial class SupportRequestService : ISupportRequestService
         return _supportRequestRepository.Table.FirstOrDefault(x => x.Id == id);
     }
 
-    public IList<SupportRequest> GetAllSupportRequests(bool sortByCreatedDateDsc = true, string filterByStatus = "")
+    public IList<SupportRequest> GetAllSupportRequests(bool sortByCreatedDateDsc = true, string filterByStatus = "", string searchQuery = "")
     {
         var query = _supportRequestRepository.Table;
         
@@ -52,6 +52,14 @@ public partial class SupportRequestService : ISupportRequestService
             {
                 query = query.Where(sr => sr.Status == status);
             }
+        }
+        
+        // filter by search term
+        if (!string.IsNullOrEmpty(searchQuery))
+        {
+            query = query.Where(sr => sr.Id.ToString().Contains(searchQuery) ||
+                                      sr.CustomerId.ToString().Contains(searchQuery) ||
+                                      sr.Subject.Contains(searchQuery));
         }
         
         // sort by created date

@@ -23,7 +23,7 @@ public class SupportRequestController : BaseAdminController
     
     #region utilities
 
-    private List<SelectListItem> GetAvailableStatuses()
+    private static List<SelectListItem> GetAvailableStatuses()
     {
         var availableStatuses = new List<SelectListItem>();
         var enumValues = Enum.GetValues(typeof(StatusEnum));
@@ -43,12 +43,13 @@ public class SupportRequestController : BaseAdminController
     
     #region Request List
     
-    public async Task<IActionResult> List(string sortBy = "date_dsc", string filterByStatus = "")
+    public async Task<IActionResult> List(string sortBy = "date_dsc", string filterByStatus = "", string searchTerm = "")
     {
         
         var requestList = _supportRequestService.GetAllSupportRequests(
             sortByCreatedDateDsc: sortBy == "date_dsc",
-            filterByStatus: filterByStatus
+            filterByStatus: filterByStatus,
+            searchQuery: searchTerm
             );
 
         var viewModel = new SupportListViewModel()
@@ -56,7 +57,8 @@ public class SupportRequestController : BaseAdminController
             Requests = requestList.Select(request => new SupportRequestModel(request)).ToList(),
             SelectedSortOption = sortBy,
             AvailableStatuses = GetAvailableStatuses(),
-            FilterByStatus = filterByStatus
+            FilterByStatus = filterByStatus,
+            SearchTerm = searchTerm
         };
         
         return View(viewModel);
