@@ -87,6 +87,10 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
         endpointRouteBuilder.MapControllerRoute(name: "CustomerSupportRequests",
             pattern: $"{lang}/customer/support",
             defaults: new { controller = "SupportRequest", action = "List" });
+        
+        endpointRouteBuilder.MapControllerRoute(name: "CustomerCreateSupportRequest",
+            pattern: $"{lang}/customer/support/new",
+            defaults: new { controller = "SupportRequest", action = "Create" });
 
         //customer address delete (AJAX)
         endpointRouteBuilder.MapControllerRoute(name: "CustomerAddressDelete",
