@@ -22,13 +22,17 @@ public class SupportRequestController : BaseAdminController
     
     #region Request List
     
-    public async Task<IActionResult> List()
+    public async Task<IActionResult> List(string sortBy = "date_dsc")
     {
-        var requestList = _supportRequestService.GetAllSupportRequests();
+        var requestList = _supportRequestService.GetAllSupportRequests(sortBy == "date_dsc");
+
+        var viewModel = new SupportListViewModel()
+        {
+            Requests = requestList.Select(request => new SupportRequestModel(request)).ToList(),
+            SelectedSortOption = sortBy
+        };
         
-        var requests = requestList.Select(request => new SupportRequestModel(request)).ToList();
-        
-        return View(requests);
+        return View(viewModel);
     }
     
     #endregion

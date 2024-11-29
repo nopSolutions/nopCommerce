@@ -1,4 +1,4 @@
-﻿@model IList<SupportRequestModel>
+﻿@model SupportListViewModel
 
 @{
     Layout = "_AdminLayout";
@@ -18,9 +18,17 @@
         <div class="form-horizontal">
             <div class="cards-group">
                 <div class="card card-default">
+                    <div class="card-body request-list-options-cntr">
+                        <form method="get" action="@Url.Action("List")" class="request-list-option">
+                            <label for="@Model.SelectedSortOption">Sort by:</label>
+                            <select asp-for="SelectedSortOption" asp-items="@Model.SortOptions" name="sortBy" onchange="this.form.submit()"></select>
+                        </form>
+                    </div>
+                </div>
+                <div class="card card-default">
                     <div class="card-body">
 
-                        @if (!Model.Any())
+                        @if (!Model.Requests.Any())
                         {
                             <p>No support requests available.</p>
                         }
@@ -36,7 +44,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach (var request in Model)
+                                @foreach (var request in Model.Requests)
                                 {
                                     <tr>
                                         <td>@request.Id</td>
