@@ -1994,6 +1994,23 @@ div.dt-container div.dt-paging {
   }
 }
 
+.request-list-options-cntr {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.request-list-option {
+  display: flex;
+  flex-direction: column;
+  
+  select {
+    height: 2rem;
+    width: 100%;
+  }
+}
+
 @media (max-width: 1500px) {
   /* CONFIGURATION STEPS */
   .configuration-step-icon {

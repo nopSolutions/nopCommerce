@@ -39,9 +39,14 @@ public partial class SupportRequestService : ISupportRequestService
         return _supportRequestRepository.Table.FirstOrDefault(x => x.Id == id);
     }
 
-    public IList<SupportRequest> GetAllSupportRequests()
+    public IList<SupportRequest> GetAllSupportRequests(bool sortByCreatedDateDsc = true)
     {
-        return _supportRequestRepository.Table.ToList();
+        var query = _supportRequestRepository.Table;
+        
+        // sort by created date
+        query = sortByCreatedDateDsc ? query.OrderByDescending(x => x.CreatedOnUtc) : query.OrderBy(x => x.CreatedOnUtc);
+        
+        return query.ToList();
     }
     
     public IList<SupportRequest> GetUserSupportRequests(int userId)
