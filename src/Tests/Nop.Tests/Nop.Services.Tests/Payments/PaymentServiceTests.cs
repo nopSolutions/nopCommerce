@@ -1,5 +1,7 @@
 ﻿using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Http.Extensions;
 using Nop.Services.Payments;
 using NUnit.Framework;
 
@@ -10,12 +12,37 @@ public class PaymentServiceTests : ServiceTest
 {
     private IPaymentPluginManager _paymentPluginManager;
     private IPaymentService _paymentService;
+    private IHttpContextAccessor _httpContextAccessor;
 
     [OneTimeSetUp]
     public void SetUp()
     {
         _paymentService = GetService<IPaymentService>();
         _paymentPluginManager = GetService<IPaymentPluginManager>();
+        _httpContextAccessor = GetService<IHttpContextAccessor>();
+    }
+
+    [Test]
+    public async Task CanGenerateOrderGuid()
+    {
+        var request = new ProcessPaymentRequest();
+        request.OrderGuid.Should().Be(Guid.Empty);
+        await _paymentService.GenerateOrderGuidAsync(request);
+        request.OrderGuid.Should().NotBe(Guid.Empty);
+        var oldGuid = request.OrderGuid;
+        await _paymentService.GenerateOrderGuidAsync(request);
+        request.OrderGuid.Should().Be(oldGuid);
+        request = new ProcessPaymentRequest();
+        await _paymentService.GenerateOrderGuidAsync(request);
+        request.OrderGuid.Should().NotBe(oldGuid);
+        oldGuid = request.OrderGuid;
+        ArgumentNullException.ThrowIfNull(_httpContextAccessor.HttpContext);
+        await _httpContextAccessor.HttpContext.Session.SetAsync("OrderPaymentInfo", request);
+        await _paymentService.GenerateOrderGuidAsync(request);
+        request.OrderGuid.Should().Be(oldGuid);
+        request = new ProcessPaymentRequest();
+        await _paymentService.GenerateOrderGuidAsync(request);
+        request.OrderGuid.Should().Be(oldGuid);
     }
 
     [Test]
