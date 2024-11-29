@@ -18,10 +18,21 @@
         <div class="form-horizontal">
             <div class="cards-group">
                 <div class="card card-default">
-                    <div class="card-body request-list-options-cntr">
-                        <form method="get" action="@Url.Action("List")" class="request-list-option">
-                            <label for="@Model.SelectedSortOption">Sort by:</label>
-                            <select asp-for="SelectedSortOption" asp-items="@Model.SortOptions" name="sortBy" onchange="this.form.submit()"></select>
+                    <div class="card-body">
+                        <form method="get" action="@Url.Action("List")">
+                            <div class="request-list-options-cntr">
+                                <div class="request-list-option">
+                                    <label for="@Model.SelectedSortOption">Sort by:</label>
+                                    <select asp-for="SelectedSortOption" asp-items="@Model.SortOptions" name="sortBy"></select>
+                                </div>
+                                <div class="request-list-option">
+                                    <label for="@Model.FilterByStatus">Filter by status:</label>
+                                    <select asp-for="FilterByStatus" asp-items="@Model.AvailableStatuses" name="filterByStatus"></select>
+                                </div>    
+                            </div>
+                            <div class="action-btn-cntr">
+                                <button type="submit" class="btn btn-primary">Update</button>
+                            </div>
                         </form>
                     </div>
                 </div>

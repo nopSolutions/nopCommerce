@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Core.Domain.Support;
 
 namespace Nop.Web.Areas.Admin.Models.Support;
 
@@ -11,4 +12,6 @@ public class SupportListViewModel
         new SelectListItem() { Text = "Date Created Dsc.", Value = "date_dsc" },
     };
     public string SelectedSortOption { get; set; }
+    public List<SelectListItem> AvailableStatuses { get; set; }
+    public string FilterByStatus { get; set; }
 }
