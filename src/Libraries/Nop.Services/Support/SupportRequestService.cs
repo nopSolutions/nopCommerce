@@ -39,12 +39,23 @@ public partial class SupportRequestService : ISupportRequestService
         return _supportRequestRepository.Table.FirstOrDefault(x => x.Id == id);
     }
 
-    public IList<SupportRequest> GetAllSupportRequests(bool sortByCreatedDateDsc = true)
+    public IList<SupportRequest> GetAllSupportRequests(bool sortByCreatedDateDsc = true, string filterByStatus = "")
     {
         var query = _supportRequestRepository.Table;
         
+        // filter by status
+        if (!string.IsNullOrEmpty(filterByStatus))
+        {
+            var validStatus = Enum.TryParse(filterByStatus, out StatusEnum status);
+
+            if (validStatus)
+            {
+                query = query.Where(sr => sr.Status == status);
+            }
+        }
+        
         // sort by created date
-        query = sortByCreatedDateDsc ? query.OrderByDescending(x => x.CreatedOnUtc) : query.OrderBy(x => x.CreatedOnUtc);
+        query = sortByCreatedDateDsc ? query.OrderByDescending(sr => sr.CreatedOnUtc) : query.OrderBy(sr => sr.CreatedOnUtc);
         
         return query.ToList();
     }

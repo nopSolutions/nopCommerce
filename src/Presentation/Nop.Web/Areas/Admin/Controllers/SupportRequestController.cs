@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Support;
 using Nop.Web.Areas.Admin.Models.Support;
@@ -20,16 +21,42 @@ public class SupportRequestController : BaseAdminController
         _currentUserId = _workContext.GetCurrentCustomerAsync().Result.Id;
     }
     
+    #region utilities
+
+    private List<SelectListItem> GetAvailableStatuses()
+    {
+        var availableStatuses = new List<SelectListItem>();
+        var enumValues = Enum.GetValues(typeof(StatusEnum));
+
+        foreach (var status in enumValues)
+        {
+            availableStatuses.Add(new SelectListItem(status.ToString(), status.ToString()));
+        }
+        
+        // Empty status to allow removal of filter
+        availableStatuses.Add(new SelectListItem("", ""));
+        
+        return availableStatuses;
+    }
+    
+    #endregion
+    
     #region Request List
     
-    public async Task<IActionResult> List(string sortBy = "date_dsc")
+    public async Task<IActionResult> List(string sortBy = "date_dsc", string filterByStatus = "")
     {
-        var requestList = _supportRequestService.GetAllSupportRequests(sortBy == "date_dsc");
+        
+        var requestList = _supportRequestService.GetAllSupportRequests(
+            sortByCreatedDateDsc: sortBy == "date_dsc",
+            filterByStatus: filterByStatus
+            );
 
         var viewModel = new SupportListViewModel()
         {
             Requests = requestList.Select(request => new SupportRequestModel(request)).ToList(),
-            SelectedSortOption = sortBy
+            SelectedSortOption = sortBy,
+            AvailableStatuses = GetAvailableStatuses(),
+            FilterByStatus = filterByStatus
         };
         
         return View(viewModel);

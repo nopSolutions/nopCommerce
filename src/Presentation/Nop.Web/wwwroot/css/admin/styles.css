@@ -2011,6 +2011,13 @@ div.dt-container div.dt-paging {
   }
 }
 
+.action-btn-cntr {
+  display: flex;
+  width: 100%;
+  justify-content: end;
+  padding: 1rem 0;
+}
+
 @media (max-width: 1500px) {
   /* CONFIGURATION STEPS */
   .configuration-step-icon {
