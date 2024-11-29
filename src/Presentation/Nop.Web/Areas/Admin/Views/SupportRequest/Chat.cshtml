@@ -1,0 +1,87 @@
+@model SupportChatViewModel
+
+@{
+    Layout = "_AdminLayout";
+    ViewBag.PageTitle = "Customer Support Chat";
+    NopHtml.SetActiveMenuItemSystemName("Support requests");
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        Support Request Chat
+    </h1>
+</div>
+
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="column">
+
+                                <a asp-action="List" class="btn btn-secondary">Back</a>
+
+                                <ol class="chat-info-list">
+                                    <li class="heading">Request No.</li>
+                                    <li class="info">@Model.RequestId</li>
+                                    <li class="heading">Subject</li>
+                                    <li class="info">@Model.Subject</li>
+                                    <li class="heading">Status</li>
+                                    <li class="info">@Model.Status</li>
+                                </ol>
+
+                                <form asp-action="AddMessage" method="post">
+                                    <input type="hidden" asp-for="RequestId" value="@Model.RequestId"/>
+                                    <div class="form-group">
+                                        <textarea asp-for="NewMessage" class="form-control" placeholder="Type your message here..."></textarea>
+                                        <span asp-validation-for="NewMessage" class="text-danger"></span>
+                                    </div>
+                                    <div class="action-btn-cntr">
+                                        <button type="submit" class="btn btn-primary">Send</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="column">
+                                @if (!Model.Messages.Any())
+                                {
+                                    <p>No support requests available.</p>
+                                }
+                                else
+                                {
+                                    <table class="table table-striped table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Request ID</th>
+                                            <th>Author ID</th>
+                                            <th>IsAdmin</th>
+                                            <th>CreatedOnUtc</th>
+                                            <th>Message</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        @foreach (var message in Model.Messages)
+                                        {
+                                            <tr>
+                                                <td>@message.Id</td>
+                                                <td>@message.RequestId</td>
+                                                <td>@message.AuthorId</td>
+                                                <td>@message.IsAdmin</td>
+                                                <td>@message.CreatedOnUtc</td>
+                                                <td>@message.Message</td>
+                                            </tr>
+                                        }
+                                        </tbody>
+                                    </table>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

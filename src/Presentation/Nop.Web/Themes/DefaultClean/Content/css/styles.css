@@ -8961,3 +8961,115 @@ a.skip:hover {
   width: 100%;
   font-size: 16px;
 }
+
+
+/*********** Support Request *************/
+
+#support-request-page,
+#support-request-create-page,
+#support-chat-page {
+
+  .content {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 2rem;
+  }
+
+  .row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .column {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 100%;
+    flex: 1;
+    padding: 0 2rem;
+  }
+
+  .btn {
+    min-width: 140px;
+    border: none;
+    padding: 10px 30px;
+    text-align: center;
+    font-size: 15px;
+    color: #fff;
+    text-transform: uppercase;
+    margin: 2rem;
+  }
+
+  .btn-primary {
+    background-color: #4ab2f1;
+
+    &:hover {
+      background-color: #248ece;
+    }
+  }
+
+  .btn-secondary {
+    background-color: #888;
+
+    &:hover {
+      background-color: #ccc;
+    }
+  }
+
+  .action-btn-cntr {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    padding: 1rem 0;
+  }
+
+  table {
+    width: 50%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    
+    th, td {
+      text-align: left;
+      padding: 8px;
+    }
+  
+    th {
+      background-color: #f9f9f9;
+      font-weight: bold;
+      border-bottom: 2px solid #ddd;
+    }
+  
+    tr {
+      &:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+  
+      &:nth-child(odd) {
+        background-color: #ffffff;
+      }
+  
+      &:hover {
+        background-color: #f1f1f1;
+      }
+    }
+
+    td {
+      border-bottom: 1px solid #ddd;
+    }
+}
+  
+  input[type=text],
+  textarea {
+    width: 100%;
+  }
+
+  .chat-info-list {
+    .info {
+      margin-bottom: 1rem;
+      font-size: large;
+    }
+  }
+}

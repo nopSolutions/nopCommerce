@@ -1,0 +1,93 @@
+@using Nop.Core
+@model IList<SupportRequestModel>
+@inject Nop.Core.IWebHelper webHelper
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts("Support Requests");
+    //page class
+    // NopHtml.AppendPageCssClassParts("html-account-page");
+    // NopHtml.AppendPageCssClassParts("html-customer-info-page");
+}
+
+@section left
+{
+    @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = CustomerNavigationEnum.SupportRequests })
+}
+
+<div class="page account-page customer-info-page">
+    <div class="page-title">
+        <h1>@T("Account.MyAccount") - Support Requests</h1>
+    </div>
+    <div class="page-body">
+        <div id="support-request-page">
+            
+            <section class="content">
+                @if (!Model.Any())
+                {
+                    <p>No support requests available.</p>
+                }
+                else
+                {
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Subject</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var request in Model)
+                        {
+                            <tr>
+                                <td>@request.Id</td>
+                                <td>@request.Subject</td>
+                                <td>@request.Status</td>
+                                <td>
+                                    <a asp-action="Chat" asp-route-requestId="@request.Id" class="btn btn-primary">
+                                        View
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                }
+                <div class="action-btn-cntr">
+                    <a asp-action="Create" class="btn btn-primary">
+                        <i class="fas fa-plus-square"></i>
+                        Add New Request
+                    </a>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<script asp-location="Footer">
+    function removeexternalassociation(itemId) {
+        if (confirm('@T("Common.AreYouSure")')) {
+            var postData = {
+                id: itemId
+            };
+            addAntiForgeryToken(postData);
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "@Url.RouteUrl("CustomerRemoveExternalAssociation")",
+                data: postData,
+                dataType: "json",
+                success: function (data, textStatus, jqXHR) {
+                    location.href = data.redirect;
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert('Failed to delete');
+                }
+            });
+        }
+        return false;
+    }
+</script>

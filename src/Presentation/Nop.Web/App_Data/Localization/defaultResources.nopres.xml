@@ -252,6 +252,9 @@
   <LocaleResource Name="Account.CustomerReturnRequests.UploadedFile.Download">
     <Value>Download</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.CustomerSupport">
+    <Value>Support</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.DownloadableProducts">
     <Value>Downloadable products</Value>
   </LocaleResource>

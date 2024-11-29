@@ -667,6 +667,14 @@ public partial class CustomerModelFactory : ICustomerModelFactory
             Tab = (int)CustomerNavigationEnum.ChangePassword,
             ItemClass = "change-password"
         });
+        
+        model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+        {
+            RouteName = "CustomerSupportRequests",
+            Title = "Support", // TODO: add migration to DB for localisation title
+            Tab = (int)CustomerNavigationEnum.SupportRequests,
+            ItemClass = "change-password"
+        });
 
         if (_customerSettings.AllowCustomersToUploadAvatars)
         {

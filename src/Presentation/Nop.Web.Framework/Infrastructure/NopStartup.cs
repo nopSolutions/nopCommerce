@@ -47,6 +47,7 @@ using Nop.Services.Shipping;
 using Nop.Services.Shipping.Date;
 using Nop.Services.Shipping.Pickup;
 using Nop.Services.Stores;
+using Nop.Services.Support;
 using Nop.Services.Tax;
 using Nop.Services.Themes;
 using Nop.Services.Topics;
@@ -234,6 +235,7 @@ public partial class NopStartup : INopStartup
         services.AddScoped<IVideoService, VideoService>();
         services.AddScoped<INopUrlHelper, NopUrlHelper>();
         services.AddScoped<IWidgetModelFactory, WidgetModelFactory>();
+        services.AddScoped<ISupportRequestService, SupportRequestService>();
 
         //attribute services
         services.AddScoped(typeof(IAttributeService<,>), typeof(AttributeService<,>));
