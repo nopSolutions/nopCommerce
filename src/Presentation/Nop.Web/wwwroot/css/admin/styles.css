@@ -1966,6 +1966,34 @@ div.dt-container div.dt-paging {
   border: 1px solid #eaeaea;
 }
 
+/****** Support Requests *******/
+.row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex: 1;
+  padding: 0 2rem;
+}
+
+.chat-info-list {
+  
+  ol & {
+    list-style: none;
+  }
+  
+  .info {
+    margin-bottom: 1rem;
+    font-size: large;
+  }
+}
+
 @media (max-width: 1500px) {
   /* CONFIGURATION STEPS */
   .configuration-step-icon {

@@ -5,18 +5,19 @@ namespace Nop.Services.Support;
 public partial interface ISupportRequestService
 {
     // Create
-    void CreateSupportRequest(SupportRequest request);
-    void CreateSupportMessage(SupportMessage message);
+    public void CreateSupportRequest(SupportRequest request);
+    public void CreateSupportMessage(SupportMessage message);
     
     // Read
-    SupportRequest GetSupportRequestById(int id);
-    IList<SupportRequest> GetSupportRequests();
-    IList<SupportMessage> GetSupportRequestMessages(int SupportRequestId);
+    public SupportRequest GetSupportRequestById(int id);
+    public IList<SupportRequest> GetAllSupportRequests();
+    public IList<SupportRequest> GetUserSupportRequests(int userId);
+    public IList<SupportMessage> GetSupportRequestMessages(int supportRequestId);
     
     // Update
-    void UpdateSupportRequest(SupportRequest request);
+    public void UpdateSupportRequest(SupportRequest request);
     
     // Delete
-    void DeleteSupportRequest(SupportRequest request);
-    void DeleteSupportRequestMessages(int SupportRequestId);
+    public void DeleteSupportRequest(SupportRequest request);
+    public void DeleteSupportRequestMessages(int supportRequestId);
 }

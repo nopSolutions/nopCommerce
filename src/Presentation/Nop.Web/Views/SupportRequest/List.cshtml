@@ -36,6 +36,7 @@
                             <th>ID</th>
                             <th>Subject</th>
                             <th>Status</th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -45,17 +46,22 @@
                                 <td>@request.Id</td>
                                 <td>@request.Subject</td>
                                 <td>@request.Status</td>
+                                <td>
+                                    <a asp-action="Chat" asp-route-requestId="@request.Id" class="btn btn-primary">
+                                        View
+                                    </a>
+                                </td>
                             </tr>
                         }
                         </tbody>
                     </table>
-                    <div class="action-btn-cntr">
-                        <a asp-action="Create" class="btn btn-primary">
-                            <i class="fas fa-plus-square"></i>
-                            Add New Request
-                        </a>
-                    </div>
                 }
+                <div class="action-btn-cntr">
+                    <a asp-action="Create" class="btn btn-primary">
+                        <i class="fas fa-plus-square"></i>
+                        Add New Request
+                    </a>
+                </div>
             </section>
         </div>
     </div>

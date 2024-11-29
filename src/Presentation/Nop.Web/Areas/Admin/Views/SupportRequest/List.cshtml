@@ -30,6 +30,7 @@
                                 <thead>
                                 <tr>
                                     <th>ID</th>
+                                    <th>Customer ID</th>
                                     <th>Subject</th>
                                     <th>Status</th>
                                 </tr>
@@ -39,8 +40,14 @@
                                 {
                                     <tr>
                                         <td>@request.Id</td>
+                                        <td>@request.CustomerId</td>
                                         <td>@request.Subject</td>
                                         <td>@request.Status</td>
+                                        <td>
+                                            <a asp-action="Chat" asp-route-requestId="@request.Id" class="btn btn-primary">
+                                                View
+                                            </a>
+                                        </td>
                                     </tr>
                                 }
                                 </tbody>

@@ -28,9 +28,14 @@ public partial class SupportRequestService : ISupportRequestService
         return _supportRequestRepository.Table.FirstOrDefault(x => x.Id == id);
     }
 
-    public IList<SupportRequest> GetSupportRequests()
+    public IList<SupportRequest> GetAllSupportRequests()
     {
         return _supportRequestRepository.Table.ToList();
+    }
+    
+    public IList<SupportRequest> GetUserSupportRequests(int userId)
+    {
+        return _supportRequestRepository.Table.Where(sr => sr.CustomerId == userId).ToList();
     }
 
     public void UpdateSupportRequest(SupportRequest request)
@@ -52,14 +57,14 @@ public partial class SupportRequestService : ISupportRequestService
         _supportMessageRepository.Insert(message);
     }
     
-    public IList<SupportMessage> GetSupportRequestMessages(int SupportRequestId)
+    public IList<SupportMessage> GetSupportRequestMessages(int supportRequestId)
     {
-        return _supportMessageRepository.Table.Where(sm => sm.Id == SupportRequestId).ToList();
+        return _supportMessageRepository.Table.Where(sm => sm.RequestId == supportRequestId).ToList();
     }
     
-    public void DeleteSupportRequestMessages(int SupportRequestId)
+    public void DeleteSupportRequestMessages(int supportRequestId)
     {
-        _supportMessageRepository.Table.Where(sm => sm.Id == SupportRequestId).Delete();
+        _supportMessageRepository.Table.Where(sm => sm.RequestId == supportRequestId).Delete();
     }
     
     #endregion
