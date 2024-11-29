@@ -1,4 +1,6 @@
-﻿namespace Nop.Web.Models.Support;
+﻿using Nop.Core.Domain.Support;
+
+namespace Nop.Web.Models.Support;
 
 public class SupportMessageModel
 {
@@ -8,4 +10,16 @@ public class SupportMessageModel
     public bool IsAdmin { get; set; }
     public DateTime CreatedOnUtc { get; set; }
     public string Message { get; set; }
+
+    public SupportMessageModel() { }
+
+    public SupportMessageModel(SupportMessage supportMessage)
+    {
+        Id = supportMessage.Id;
+        RequestId = supportMessage.RequestId;
+        AuthorId = supportMessage.AuthorId;
+        IsAdmin = supportMessage.IsAdmin;
+        CreatedOnUtc = supportMessage.CreatedOnUtc;
+        Message = supportMessage.Message;
+    }
 }

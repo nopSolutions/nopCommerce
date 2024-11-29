@@ -22,21 +22,11 @@ public class SupportRequestController : BasePublicController
     
     #region Request List
     
-    // List action to display notes for a specific customer
     public async Task<IActionResult> List()
     {
         var requestList = _supportRequestService.GetUserSupportRequests(_currentUserId);
         
-        var requests = requestList.Select(request => new SupportRequestModel
-        {
-            Id = request.Id,
-            CustomerId = request.CustomerId,
-            Status = request.Status,
-            Subject = request.Subject,
-            Read = request.Read,
-            CreatedOnUtc = request.CreatedOnUtc,
-            UpdatedOnUtc = request.UpdatedOnUtc
-        }).ToList();
+        var requests = requestList.Select(request => new SupportRequestModel(request)).ToList();
         
         return View(requests);
     }
@@ -45,14 +35,12 @@ public class SupportRequestController : BasePublicController
     
     #region Create New Request
     
-    // GET Create action to render the form
     public IActionResult Create()
     {
-        var model = new SupportRequestModel() { CustomerId = _currentUserId };
+        var model = new SupportRequestModel();
         return View(model);
     }
 
-    // POST Create action to handle form submission
     [HttpPost]
     public IActionResult Create(SupportRequestModel model)
     {
@@ -69,6 +57,7 @@ public class SupportRequestController : BasePublicController
             };
 
             _supportRequestService.CreateSupportRequest(request);
+            
             return RedirectToAction("Chat", new { requestId = request.Id });
         }
         return View(model);
@@ -83,22 +72,12 @@ public class SupportRequestController : BasePublicController
         var supportRequest = _supportRequestService.GetSupportRequestById(requestId);
         var baseMessages = _supportRequestService.GetSupportRequestMessages(requestId);
         
-        var messages = baseMessages.Select(message => new SupportMessageModel
-        {
-            Id = message.Id ,
-            RequestId = message.RequestId,
-            AuthorId = message.AuthorId, 
-            IsAdmin = message.IsAdmin, 
-            CreatedOnUtc = message.CreatedOnUtc,
-            Message = message.Message
-        }).ToList();
-
         var viewModel = new SupportChatViewModel()
         {
             RequestId = supportRequest.Id,
             Subject = supportRequest.Subject,
             Status = supportRequest.Status,
-            Messages = messages
+            Messages = baseMessages.Select(message => new SupportMessageModel(message)).ToList()
         };
         
         return View(viewModel);

@@ -11,4 +11,17 @@ public class SupportRequestModel
     public bool Read { get; set; }
     public DateTime CreatedOnUtc { get; set; }
     public DateTime UpdatedOnUtc { get; set; }
+    
+    public SupportRequestModel(){}
+    
+    public SupportRequestModel(SupportRequest supportRequest)
+    {
+        Id = supportRequest.Id;
+        CustomerId = supportRequest.CustomerId;
+        Status = supportRequest.Status;
+        Subject = supportRequest.Subject;
+        Read = supportRequest.Read;
+        CreatedOnUtc = supportRequest.CreatedOnUtc;
+        UpdatedOnUtc = supportRequest.UpdatedOnUtc;
+    }
 }
