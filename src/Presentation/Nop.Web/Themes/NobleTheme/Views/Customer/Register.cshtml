@@ -569,7 +569,7 @@
         strictMode: true,
         countryOrder: ["in", "us", "ca", "au", "gb"],
         countrySearch: true,
-        useFullscreenPopup: true,
+        //useFullscreenPopup: false,
         autoHideDialCode: false,
         preferredCountries: ["in", "us", "ca", "au", "gb"],
         // onlyCountries: ["in", "us", "ca", "au", "gb"],
@@ -599,4 +599,27 @@
     }
 
 </script>
+
+@* styles to fix the input search box height for intlTelInput *@
+<style>
+    .iti__search-input {
+        height: 32px;
+        padding-left: 10px;
+        border-bottom-width: 1px;
+    }
+
+    .iti--fullscreen-popup.iti--container {
+        padding-top: 20px !important;
+        padding-right: 40px !important;
+    }
+
+    .iti--fullscreen-popup .iti__dropdown-content {
+        display: block;
+    }
+
+    .iti--fullscreen-popup .iti__dropdown-content .iti__search-input {
+        height: 38px;
+    }
+
+</style>
 
