@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Support;
+﻿using Nop.Core;
+using Nop.Core.Domain.Support;
 
 namespace Nop.Services.Support;
 
@@ -10,7 +11,12 @@ public partial interface ISupportRequestService
     
     // Read
     public SupportRequest GetSupportRequestById(int id);
-    public IList<SupportRequest> GetAllSupportRequests(bool sortByCreatedDateDsc = true, string filterByStatus = "", string searchQuery = "");
+    public Task<IPagedList<SupportRequest>> GetAllSupportRequests(
+        bool sortByCreatedDateDsc = true,
+        string filterByStatus = "",
+        string searchQuery = "",
+        int pageIndex = 0,
+        int pageSize = 5);
     public IList<SupportRequest> GetUserSupportRequests(int userId);
     public IList<SupportMessage> GetSupportRequestMessages(int supportRequestId);
     

@@ -23,20 +23,19 @@
                             <div class="request-list-options-cntr">
                                 <div class="request-list-option">
                                     <label for="@Model.SelectedSortOption">Sort</label>
-                                    <select asp-for="SelectedSortOption" asp-items="@Model.SortOptions" name="sortBy"></select>
+                                    <select asp-for="SelectedSortOption" asp-items="@Model.SortOptions" name="sortBy" onchange="this.form.submit()"></select>
+                                    <span asp-validation-for="SelectedSortOption" class="text-danger"></span>
                                 </div>
                                 <div class="request-list-option">
                                     <label for="@Model.FilterByStatus">Status</label>
-                                    <select asp-for="FilterByStatus" asp-items="@Model.AvailableStatuses" name="filterByStatus"></select>
+                                    <select asp-for="FilterByStatus" asp-items="@Model.AvailableStatuses" name="filterByStatus" onchange="this.form.submit()"></select>
+                                    <span asp-validation-for="FilterByStatus" class="text-danger"></span>
                                 </div>
                                 <div class="request-list-option">
                                     <label for="@Model.SearchTerm">Search</label>
-                                    <input type="text" asp-for="SearchTerm" name="searchTerm" class="form-control"/>
+                                    <input type="text" asp-for="SearchTerm" name="searchTerm" class="form-control" onfocusout="this.form.submit()" onkeydown="if (event.key === 'Enter') {this.form.submit()}"/>
                                     <span asp-validation-for="SearchTerm" class="text-danger"></span>
                                 </div>
-                            </div>
-                            <div class="action-btn-cntr">
-                                <button type="submit" class="btn btn-primary">Update</button>
                             </div>
                         </form>
                     </div>
@@ -77,6 +76,29 @@
                                 </tbody>
                             </table>
                         }
+
+                        <div class="support-request-pagination">
+                            @if (Model.TotalPages > 1)
+                            {
+                                <ul>
+                                    @for (int i = 0; i < Model.TotalPages; i++)
+                                    {
+                                        <li>
+                                            <a href="@Url.Action("List", new
+                                                     {
+                                                         sortBy = @Model.SelectedSortOption,
+                                                         filterByStatus = @Model.FilterByStatus,
+                                                         searchTerm = @Model.SearchTerm,
+                                                         pageIndex = i,
+                                                         pageSize = @Model.PageSize
+                                                     })" class="@(i == Model.CurrentPage ? "active" : "")">
+                                                @(i + 1)
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>   
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
