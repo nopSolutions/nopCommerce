@@ -43,18 +43,30 @@ public class SupportRequestController : BaseAdminController
     
     #region Request List
     
-    public async Task<IActionResult> List(string sortBy = "date_dsc", string filterByStatus = "", string searchTerm = "")
+    public async Task<IActionResult> List(
+        string sortBy = "date_dsc",
+        string filterByStatus = "",
+        string searchTerm = "",
+        int pageIndex = 0,
+        int pageSize = 5)
     {
         
         var requestList = _supportRequestService.GetAllSupportRequests(
             sortByCreatedDateDsc: sortBy == "date_dsc",
             filterByStatus: filterByStatus,
-            searchQuery: searchTerm
+            searchQuery: searchTerm,
+            pageIndex: pageIndex,
+            pageSize: pageSize
             );
 
         var viewModel = new SupportListViewModel()
         {
-            Requests = requestList.Select(request => new SupportRequestModel(request)).ToList(),
+            Requests = requestList.Result.Select(request => new SupportRequestModel(request)).ToList(),
+            CurrentPage = pageIndex,
+            PageSize = pageSize,
+            HasPreviousPage = requestList.Result.HasPreviousPage,
+            HasNextPage = requestList.Result.HasNextPage,
+            TotalPages = requestList.Result.TotalPages,
             SelectedSortOption = sortBy,
             AvailableStatuses = GetAvailableStatuses(),
             FilterByStatus = filterByStatus,

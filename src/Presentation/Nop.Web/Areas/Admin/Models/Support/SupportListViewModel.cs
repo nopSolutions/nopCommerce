@@ -6,6 +6,12 @@ namespace Nop.Web.Areas.Admin.Models.Support;
 public class SupportListViewModel
 {
     public List<SupportRequestModel> Requests { get; set; }
+    public bool HasPreviousPage { get; set; }
+    public bool HasNextPage { get; set; }
+    public int TotalPages { get; set; }
+    public int CurrentPage { get; set; }
+    public int PageSize { get; set; }
+
     public List<SelectListItem> SortOptions { get; } = new List<SelectListItem>()
     {
         new SelectListItem() { Text = "Oldest", Value = "date_asc" },

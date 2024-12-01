@@ -1,4 +1,5 @@
 ﻿using LinqToDB;
+using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Support;
 using Nop.Data;
@@ -39,33 +40,40 @@ public partial class SupportRequestService : ISupportRequestService
         return _supportRequestRepository.Table.FirstOrDefault(x => x.Id == id);
     }
 
-    public IList<SupportRequest> GetAllSupportRequests(bool sortByCreatedDateDsc = true, string filterByStatus = "", string searchQuery = "")
+    public Task<IPagedList<SupportRequest>> GetAllSupportRequests(
+        bool sortByCreatedDateDsc = true,
+        string filterByStatus = "",
+        string searchQuery = "",
+        int pageIndex = 0,
+        int pageSize = 5)
     {
-        var query = _supportRequestRepository.Table;
-        
-        // filter by status
-        if (!string.IsNullOrEmpty(filterByStatus))
+        return _supportRequestRepository.GetAllPagedAsync(query =>
         {
-            var validStatus = Enum.TryParse(filterByStatus, out StatusEnum status);
-
-            if (validStatus)
+            // filter by status
+            if (!string.IsNullOrEmpty(filterByStatus))
             {
-                query = query.Where(sr => sr.Status == status);
+                var validStatus = Enum.TryParse(filterByStatus, out StatusEnum status);
+
+                if (validStatus)
+                {
+                    query = query.Where(sr => sr.Status == status);
+                }
             }
-        }
         
-        // filter by search term
-        if (!string.IsNullOrEmpty(searchQuery))
-        {
-            query = query.Where(sr => sr.Id.ToString().Contains(searchQuery) ||
-                                      sr.CustomerId.ToString().Contains(searchQuery) ||
-                                      sr.Subject.Contains(searchQuery));
-        }
+            // filter by search term
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                query = query.Where(sr => sr.Id.ToString().Contains(searchQuery) ||
+                                          sr.CustomerId.ToString().Contains(searchQuery) ||
+                                          sr.Subject.Contains(searchQuery));
+            }
         
-        // sort by created date
-        query = sortByCreatedDateDsc ? query.OrderByDescending(sr => sr.CreatedOnUtc) : query.OrderBy(sr => sr.CreatedOnUtc);
-        
-        return query.ToList();
+            // sort by created date
+            query = sortByCreatedDateDsc ? query.OrderByDescending(sr => sr.CreatedOnUtc) : query.OrderBy(sr => sr.CreatedOnUtc);
+
+            return query;
+        }, pageIndex, pageSize);
+
     }
     
     public IList<SupportRequest> GetUserSupportRequests(int userId)

@@ -1966,58 +1966,6 @@ div.dt-container div.dt-paging {
   border: 1px solid #eaeaea;
 }
 
-/****** Support Requests *******/
-.row {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  width: 100%;
-}
-
-.column {
-  display: flex;
-  flex-direction: column;
-  flex-basis: 100%;
-  flex: 1;
-  padding: 0 2rem;
-}
-
-.chat-info-list {
-  
-  ol & {
-    list-style: none;
-  }
-  
-  .info {
-    margin-bottom: 1rem;
-    font-size: large;
-  }
-}
-
-.request-list-options-cntr {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-evenly;
-}
-
-.request-list-option {
-  display: flex;
-  flex-direction: column;
-  
-  select {
-    height: 2rem;
-    width: 100%;
-  }
-}
-
-.action-btn-cntr {
-  display: flex;
-  width: 100%;
-  justify-content: end;
-  padding: 1rem 0;
-}
-
 @media (max-width: 1500px) {
   /* CONFIGURATION STEPS */
   .configuration-step-icon {
@@ -2218,5 +2166,103 @@ div.dt-container div.dt-paging {
 
   .float-lg-right {
     float: none;
+  }
+}
+
+/****** Support Requests *******/
+.row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex: 1;
+  padding: 0 2rem;
+}
+
+.chat-info-list {
+
+  ol & {
+    list-style: none;
+  }
+
+  .info {
+    margin-bottom: 1rem;
+    font-size: large;
+  }
+}
+
+.request-list-options-cntr {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.request-list-option {
+  display: flex;
+  flex-direction: column;
+  width: 10rem;
+
+  select {
+    height: 2rem;
+    width: 100%;
+  }
+}
+
+.action-btn-cntr {
+  display: flex;
+  width: 100%;
+  justify-content: end;
+  padding: 1rem 0;
+}
+
+/* Pagination container */
+.support-request-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  font-family: Arial, sans-serif;
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 5px;
+  }
+
+  ul li {
+    display: inline-block;
+  }
+
+  ul li a {
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #3c8dbc;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+  }
+
+  ul li a:hover {
+    color: #ffffff;
+    background-color: #3c8dbc;
+    border-color: #367fa9;
+  }
+
+  ul li a.active {
+    color: #ffffff;
+    background-color: #3c8dbc;
+    border-color: #367fa9;
+    pointer-events: none;
   }
 }
