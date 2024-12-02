@@ -72,7 +72,7 @@
         @if (isMasterCheckBoxUsed)
         {
             <text>
-            $('.mastercheckbox', $('#@Model.Name').parents('.dataTables_scroll').first()).first().click(function () {
+            $('.mastercheckbox', $('#@Model.Name').parents('.dt-scroll').first()).first().click(function () {
                 $('#@Model.Name .checkboxGroups').prop('checked', $(this).is(':checked')).change();
             });
 
@@ -88,7 +88,7 @@
                         return item != $check.val();
                     });
                 }
-                updateMasterCheckbox($('#@Model.Name').parents('.dataTables_scroll').first());
+                updateMasterCheckbox($('#@Model.Name').parents('.dt-scroll').first());
             });
             </text>
         }
@@ -412,7 +412,7 @@
                             tdi.first().removeClass('fa-caret-right');
                             tdi.first().addClass(' fa-caret-down');
                             ///
-                            $('.mastercheckbox', $(classid).parents('.dataTables_scroll').first()).first().click(function () {
+                                $('.mastercheckbox', $(classid).parents('.dt-scroll').first()).first().click(function () {
                                 $(classid + ' .checkboxGroups').prop('checked', $(this).is(':checked')).change();
                             });
 
@@ -428,7 +428,7 @@
                                         return item != $check.val();
                                     });
                                 }
-                                updateMasterCheckbox($(classid).parents('.dataTables_scroll').first());
+                                updateMasterCheckbox($(classid).parents('.dt-scroll').first());
                             });
                             ///
                         }
