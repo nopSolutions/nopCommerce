@@ -66,6 +66,7 @@ public partial class ProductController : BasePublicController
     //customization
     private readonly IGenericAttributeService _genericAttributeService;
     private readonly IPrivateMessagesModelFactory _privateMessagesModelFactory;
+    private readonly IRewardPointService _rewardPointService;
 
     #endregion
 
@@ -101,7 +102,8 @@ public partial class ProductController : BasePublicController
         ShippingSettings shippingSettings,
         //customization
         IGenericAttributeService genericAttributeService,
-        IPrivateMessagesModelFactory privateMessagesModelFactory)
+        IPrivateMessagesModelFactory privateMessagesModelFactory,
+        IRewardPointService rewardPointService)
     {
         _captchaSettings = captchaSettings;
         _catalogSettings = catalogSettings;
@@ -135,6 +137,7 @@ public partial class ProductController : BasePublicController
         //customization
         _genericAttributeService = genericAttributeService;
         _privateMessagesModelFactory = privateMessagesModelFactory;
+        _rewardPointService = rewardPointService;
     }
 
     #endregion

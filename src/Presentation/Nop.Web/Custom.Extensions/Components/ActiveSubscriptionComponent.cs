@@ -11,6 +11,7 @@ using Nop.Services.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Web.Models.Customer;
 using Nop.Services.Catalog;
+using Nop.Core.Domain.Payments;
 
 namespace Nop.Web.Components
 {
@@ -73,19 +74,27 @@ namespace Nop.Web.Components
                 CustomerProfileTypeId = customer.CustomerProfileTypeId
             };
 
-            //get subscription product name
-            var product = await _productService.GetProductByIdAsync(subscriptionProductId);
+            //New implemenation based on Reward Point system
+            
+            //get subscription product id from latest orders
+            var activeOrder = (await _orderService.SearchOrdersAsync(customerId: customer.Id, psIds: new List<int> { (int)PaymentStatus.Paid }, pageSize: 1)).FirstOrDefault();
 
-            if (product != null)
-                model.SubscriptionProduct = product.Name;
+            string subscriptionPlan = "Free Subscription Plan";
 
-            //get customer latest paid order
-            //var activeOrderItems = await _orderService.GetOrderItemsAsync(order.Id);
-            //var customerSubscribedProductId = activeOrderItems.FirstOrDefault().ProductId;
+            if (activeOrder != null)
+            {
+                var activeOrderItems = await _orderService.GetOrderItemsAsync(activeOrder.Id);
+                var customerSubscribedProductId = activeOrderItems.FirstOrDefault().ProductId;
+
+                //get subscription product name
+                var product = await _productService.GetProductByIdAsync(customerSubscribedProductId);
+                subscriptionPlan = product != null ? product.Name : "Free Subscription Plan";
+            }
 
             var modelNew = new SubscriptionModel
             {
-                SubscriptionId = subscriptionProductId,
+                //SubscriptionId = subscriptionProductId,
+                SubscriptionProduct = subscriptionPlan,
 
                 SubscriptionDate = await _rewardPointService.GetSubscriptionStartDateAsync(customer.Id, storeId),
                 SubscriptionExpiryDate = await _rewardPointService.GetSubscriptionExpiryDateAsync(customer.Id, storeId),

@@ -210,8 +210,12 @@ namespace Nop.CustomExtensions.Services
                     ItemClass = "customer-shortlisted"
                 });
 
+                //get address item
+                var itemAddress = model.CustomerNavigationItems.Where(x => x.Title.Contains("address", StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+
                 //remove address item
-                model.CustomerNavigationItems.RemoveAt(3);
+                if (itemAddress != null)
+                    model.CustomerNavigationItems.Remove(itemAddress);
 
                 //add customer affiliations
                 model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
@@ -221,6 +225,13 @@ namespace Nop.CustomExtensions.Services
                     Tab = (int)CustomerNavigationEnum.Affiliations,
                     ItemClass = "customer-affiliations"
                 });
+
+                //get reward point history item
+                var itemRewardPointHistory = model.CustomerNavigationItems.Where(x => x.Title.Contains("reward", StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+
+                //remove reward point history item
+                if (itemRewardPointHistory != null)
+                    model.CustomerNavigationItems.Remove(itemRewardPointHistory);
 
                 //sort by name
                 //model.CustomerNavigationItems = model.CustomerNavigationItems.OrderBy(x => x.Title).ToList();
