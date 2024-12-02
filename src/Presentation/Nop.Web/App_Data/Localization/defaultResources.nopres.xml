@@ -5679,6 +5679,12 @@
   <LocaleResource Name="Admin.Configuration.Plugins.ReloadList.Progress">
     <Value>Reloading plugin list...</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.SearchProvider.BackToList">
+    <Value>back to plugin list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.SearchProvider.Configure">
+    <Value>Configure</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Upload">
     <Value>Upload plugin or theme</Value>
   </LocaleResource>

@@ -265,7 +265,11 @@ public class LocalizationMigration : MigrationBase
 
             //#7420
             ["Admin.ConfigurationSteps.EmailAccount.AuthenticationMethod.Title"] = "Authentication method",
-            ["Admin.ConfigurationSteps.EmailAccount.AuthenticationMethod.Text"] = "Select one of the available authentication methods and enter your credentials if required."
+            ["Admin.ConfigurationSteps.EmailAccount.AuthenticationMethod.Text"] = "Select one of the available authentication methods and enter your credentials if required.",
+
+            //#7437
+            ["Admin.Configuration.Plugins.SearchProvider.BackToList"] = "back to plugin list",
+            ["Admin.Configuration.Plugins.SearchProvider.Configure"] = "Configure",
 
         }, languageId);
 
