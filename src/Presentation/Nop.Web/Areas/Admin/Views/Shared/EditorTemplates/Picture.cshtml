@@ -90,12 +90,12 @@
                     }
                 },
                 remove: (source, load, error) => {                                      
-                    $("#@(Html.IdForModel())").val('');
+                    $("#@(Html.IdForModel())").val('0');
                     $("#@(clientId + "image")").attr("src","@await pictureService.GetDefaultPictureUrlAsync(pictureSize)");
                     load();
                 },
                 revert: (uniqueFileId, load, error) => {
-                    $("#@(Html.IdForModel())").val('');
+                    $("#@(Html.IdForModel())").val('0');
                     $("#@(clientId + "image")").attr("src","@await pictureService.GetDefaultPictureUrlAsync(pictureSize)");
                     load();
                 },
