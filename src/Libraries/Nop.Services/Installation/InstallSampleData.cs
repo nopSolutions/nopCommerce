@@ -34,10 +34,12 @@ public partial class InstallationService
     #endregion
 
     #region Utilities
-    
+
     /// <summary>
     /// Gets default language identifier
     /// </summary>
+    /// <returns>A task that represents the asynchronous operation
+    /// The task result contains the identifier of default language</returns>
     protected virtual async Task<int> GetDefaultLanguageIdAsync()
     {
         if (_defaultLanguageId.HasValue)
@@ -53,6 +55,8 @@ public partial class InstallationService
     /// <summary>
     /// Gets default store identifier
     /// </summary>
+    /// <returns>A task that represents the asynchronous operation
+    /// The task result contains the identifier of default store</returns>
     protected virtual async Task<int> GetDefaultStoreIdAsync()
     {
         if (_defaultStoreId.HasValue)
@@ -68,6 +72,8 @@ public partial class InstallationService
     /// <summary>
     /// Gets default customer identifier
     /// </summary>
+    /// <returns>A task that represents the asynchronous operation
+    /// The task result contains the identifier of default customer</returns>
     protected virtual async Task<int> GetDefaultCustomerIdAsync()
     {
         if (_defaultCustomerId.HasValue)

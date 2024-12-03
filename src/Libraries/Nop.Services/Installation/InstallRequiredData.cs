@@ -42,7 +42,12 @@ public partial class InstallationService
 {
     #region Utilities
 
-    /// <returns>A task that represents the asynchronous operation</returns>
+    /// <summary>
+    /// Installs a default stores
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// </returns>
     protected virtual async Task InstallStoresAsync()
     {
         var storeUrl = _webHelper.GetStoreLocation();
@@ -70,7 +75,12 @@ public partial class InstallationService
         await _dataProvider.BulkInsertEntitiesAsync(stores);
     }
 
-    /// <returns>A task that represents the asynchronous operation</returns>
+    /// <summary>
+    /// Installs a default measures
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// </returns>
     protected virtual async Task InstallMeasuresAsync(RegionInfo regionInfo)
     {
         var isMetric = regionInfo?.IsMetric ?? false;
@@ -136,7 +146,12 @@ public partial class InstallationService
         await _dataProvider.BulkInsertEntitiesAsync(measureWeights);
     }
 
-    /// <returns>A task that represents the asynchronous operation</returns>
+    /// <summary>
+    /// Installs a default tax categories
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// </returns>
     protected virtual async Task InstallTaxCategoriesAsync()
     {
         var taxCategories = new List<TaxCategory>
@@ -151,6 +166,12 @@ public partial class InstallationService
         await _dataProvider.BulkInsertEntitiesAsync(taxCategories);
     }
 
+    /// <summary>
+    /// Installs a default languages
+    /// </summary>
+    /// <param name="languagePackInfo">Language pack download link</param>
+    /// <param name="cultureInfo">Culture info</param>
+    /// <param name="regionInfo">Region info</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     protected virtual async Task InstallLanguagesAsync((string languagePackDownloadLink, int languagePackProgress) languagePackInfo, CultureInfo cultureInfo, RegionInfo regionInfo)
     {
@@ -225,7 +246,12 @@ public partial class InstallationService
             // ignored
         }
     }
-
+    
+    /// <summary>
+    /// Installs a default currencies
+    /// </summary>
+    /// <param name="cultureInfo">Culture info</param>
+    /// <param name="regionInfo">Region info</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     protected virtual async Task InstallCurrenciesAsync(CultureInfo cultureInfo, RegionInfo regionInfo)
     {
@@ -397,7 +423,12 @@ public partial class InstallationService
         await _dataProvider.BulkInsertEntitiesAsync(currencies);
     }
 
-    /// <returns>A task that represents the asynchronous operation</returns>
+    /// <summary>
+    /// Installs a default countries and states
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// </returns>
     protected virtual async Task InstallCountriesAndStatesAsync()
     {
         var countries = ISO3166.GetCollection().Select(country => new Country
@@ -430,6 +461,9 @@ public partial class InstallationService
         }
     }
 
+    /// <summary>
+    /// Installs a default shipping methods
+    /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>
     protected virtual async Task InstallShippingMethodsAsync()
     {
@@ -456,6 +490,9 @@ public partial class InstallationService
         await _dataProvider.BulkInsertEntitiesAsync(shippingMethods);
     }
 
+    /// <summary>
+    /// Installs a default delivery dates
+    /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>
     protected virtual async Task InstallDeliveryDatesAsync()
     {
@@ -478,6 +515,9 @@ public partial class InstallationService
         await _dataProvider.BulkInsertEntitiesAsync(deliveryDates);
     }
 
+    /// <summary>
+    /// Installs a default product availability ranges
+    /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>
     protected virtual async Task InstallProductAvailabilityRangesAsync()
     {
@@ -500,6 +540,9 @@ public partial class InstallationService
         await _dataProvider.BulkInsertEntitiesAsync(productAvailabilityRanges);
     }
 
+    /// <summary>
+    /// Installs a default email accounts
+    /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>
     protected virtual async Task InstallEmailAccountsAsync()
     {
@@ -519,6 +562,9 @@ public partial class InstallationService
         await _dataProvider.BulkInsertEntitiesAsync(emailAccounts);
     }
 
+    /// <summary>
+    /// Installs a default message templates
+    /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>
     protected virtual async Task InstallMessageTemplatesAsync()
     {
@@ -904,6 +950,9 @@ public partial class InstallationService
         await _dataProvider.BulkInsertEntitiesAsync(messageTemplates);
     }
 
+    /// <summary>
+    /// Installs a default topic templates
+    /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>
     protected virtual async Task InstallTopicTemplatesAsync()
     {
@@ -919,6 +968,10 @@ public partial class InstallationService
         await _dataProvider.BulkInsertEntitiesAsync(topicTemplates);
     }
 
+    /// <summary>
+    /// Installs a default settings
+    /// </summary>
+    /// <param name="regionInfo">Region info</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     protected virtual async Task InstallSettingsAsync(RegionInfo regionInfo)
     {
@@ -1773,6 +1826,10 @@ public partial class InstallationService
         });
     }
 
+    /// <summary>
+    /// Installs a default customers
+    /// </summary>
+    /// <param name="defaultUserPassword">Password for default administrator</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     protected virtual async Task InstallCustomersAndUsersAsync(string defaultUserPassword)
     {
@@ -1913,6 +1970,9 @@ public partial class InstallationService
         await _dataProvider.InsertEntityAsync(new CustomerCustomerRoleMapping { CustomerId = backgroundTaskUser.Id, CustomerRoleId = crGuests.Id });
     }
 
+    /// <summary>
+    /// Installs a default topics
+    /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>
     protected virtual async Task InstallTopicsAsync()
     {
@@ -2069,6 +2129,9 @@ public partial class InstallationService
         }
     }
 
+    /// <summary>
+    /// Installs a default types of activity log
+    /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>
     protected virtual async Task InstallActivityLogTypesAsync()
     {
@@ -2896,6 +2959,9 @@ public partial class InstallationService
         await _dataProvider.BulkInsertEntitiesAsync(activityLogTypes);
     }
 
+    /// <summary>
+    /// Installs a default product templates
+    /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>
     protected virtual async Task InstallProductTemplatesAsync()
     {
@@ -2918,6 +2984,9 @@ public partial class InstallationService
         await _dataProvider.BulkInsertEntitiesAsync(productTemplates);
     }
 
+    /// <summary>
+    /// Installs a default category templates
+    /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>
     protected virtual async Task InstallCategoryTemplatesAsync()
     {
@@ -2933,6 +3002,9 @@ public partial class InstallationService
         await _dataProvider.BulkInsertEntitiesAsync(categoryTemplates);
     }
 
+    /// <summary>
+    /// Installs a default manufacturer templates
+    /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>
     protected virtual async Task InstallManufacturerTemplatesAsync()
     {
@@ -2948,6 +3020,9 @@ public partial class InstallationService
         await _dataProvider.BulkInsertEntitiesAsync(manufacturerTemplates);
     }
 
+    /// <summary>
+    /// Installs a default schedule tasks
+    /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>
     protected virtual async Task InstallScheduleTasksAsync()
     {
@@ -3023,6 +3098,9 @@ public partial class InstallationService
         await _dataProvider.BulkInsertEntitiesAsync(tasks);
     }
 
+    /// <summary>
+    /// Installs a default reasons of return request
+    /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>
     protected virtual async Task InstallReturnRequestReasonsAsync()
     {
@@ -3045,6 +3123,9 @@ public partial class InstallationService
         await _dataProvider.BulkInsertEntitiesAsync(returnRequestReasons);
     }
 
+    /// <summary>
+    /// Installs a default actions for return request
+    /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>
     protected virtual async Task InstallReturnRequestActionsAsync()
     {

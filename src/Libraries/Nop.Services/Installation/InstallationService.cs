@@ -41,11 +41,24 @@ public partial class InstallationService : IInstallationService
 
     #region Utilities
 
+    /// <summary>
+    /// Returns queryable source for specified mapping class for current connection,
+    /// mapped to database table or view.
+    /// </summary>
+    /// <typeparam name="TEntity">Entity type</typeparam>
+    /// <returns>Queryable source</returns>
     protected virtual IQueryable<TEntity> Table<TEntity>() where TEntity : BaseEntity
     {
         return _dataProvider.GetTable<TEntity>();
     }
 
+    /// <summary>
+    /// Gets the first entity identifier
+    /// </summary>
+    /// <typeparam name="TEntity">Entity type</typeparam>
+    /// <param name="predicate">A function to test each element for a condition</param>
+    /// <returns>A task that represents the asynchronous operation
+    /// The task result contains the entity identifier or null, if entity is not exists</returns>
     protected virtual async Task<int?> GetFirstEntityIdAsync<TEntity>(Expression<Func<TEntity, bool>> predicate = null) where TEntity : BaseEntity
     {
         var entity = await Table<TEntity>().FirstOrDefaultAsync(predicate ?? (_ => true));
@@ -69,7 +82,15 @@ public partial class InstallationService : IInstallationService
         return await Table<TEntity>().FirstOrDefaultAsync(entity => entity.Id == id.Value);
     }
 
-    /// <returns>A task that represents the asynchronous operation</returns>
+    /// <summary>
+    /// Validate search engine name
+    /// </summary>
+    /// <param name="entity">Entity</param>
+    /// <param name="seName">Search engine name to validate</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the valid seName
+    /// </returns>
     protected virtual async Task<string> ValidateSeNameAsync<T>(T entity, string seName) where T : BaseEntity
     {
         //duplicate of ValidateSeName method of \Nop.Services\Seo\UrlRecordService.cs (we cannot inject it here)
