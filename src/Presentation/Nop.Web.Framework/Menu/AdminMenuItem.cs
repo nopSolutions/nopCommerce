@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace Nop.Web.Framework.Menu;
+﻿namespace Nop.Web.Framework.Menu;
 
 /// <summary>
 /// Admin menu item
@@ -11,7 +9,7 @@ public partial class AdminMenuItem
 
     protected IList<string> _permissionNames;
     protected string _url;
-    
+
     #endregion
 
     #region Ctor
@@ -34,7 +32,7 @@ public partial class AdminMenuItem
     /// <param name="itemSystemName">Menu item to get place for insert</param>
     /// <param name="newMenuItem">New menu item</param>
     /// <param name="before">The flag which indicates where to place new menu item, before (when true) or after (when false) the exist one</param>
-    /// <returns>True if a new menu item had been inserted</returns>
+    /// <returns>True if a new menu item has been inserted</returns>
     protected virtual bool Insert(string itemSystemName, AdminMenuItem newMenuItem, bool before)
     {
         var position = 0;
@@ -96,7 +94,7 @@ public partial class AdminMenuItem
     /// </summary>
     /// <param name="itemSystemName">Menu item to get place for insert</param>
     /// <param name="newMenuItem">New menu item</param>
-    /// <returns>True if a new menu item had been inserted</returns>
+    /// <returns>True if a new menu item has been inserted</returns>
     public virtual bool InsertBefore(string itemSystemName, AdminMenuItem newMenuItem)
     {
         return Insert(itemSystemName, newMenuItem, true);
@@ -107,7 +105,7 @@ public partial class AdminMenuItem
     /// </summary>
     /// <param name="itemSystemName">Menu item to get place for insert</param>
     /// <param name="newMenuItem">New menu item</param>
-    /// <returns>True if a new menu item had been inserted</returns>
+    /// <returns>True if a new menu item has been inserted</returns>
     public virtual bool InsertAfter(string itemSystemName, AdminMenuItem newMenuItem)
     {
         return Insert(itemSystemName, newMenuItem, false);

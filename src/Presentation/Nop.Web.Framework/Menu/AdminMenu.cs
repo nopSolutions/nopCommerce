@@ -1125,8 +1125,9 @@ public partial class AdminMenu : IAdminMenu
     /// <summary>
     /// Generates an admin menu item URL 
     /// </summary>
-    /// <param name="controllerName">he name of the controller</param>
+    /// <param name="controllerName">The name of the controller</param>
     /// <param name="actionName">The name of the action method</param>
+    /// <returns>Menu item URL</returns>
     public string GetMenuItemUrl(string controllerName, string actionName)
     {
         if (string.IsNullOrEmpty(controllerName) || string.IsNullOrEmpty(actionName))

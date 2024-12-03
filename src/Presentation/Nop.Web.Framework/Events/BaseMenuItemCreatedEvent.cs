@@ -17,7 +17,7 @@ public abstract partial class BaseMenuItemCreatedEvent
     /// <summary>
     /// Generates an admin menu item URL 
     /// </summary>
-    /// <param name="controllerName">he name of the controller</param>
+    /// <param name="controllerName">The name of the controller</param>
     /// <param name="actionName">The name of the action method</param>
     public virtual string GetMenuItemUrl(string controllerName, string actionName)
     {
