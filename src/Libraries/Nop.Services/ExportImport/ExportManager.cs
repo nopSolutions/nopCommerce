@@ -634,8 +634,8 @@ public partial class ExportManager : IExportManager
                 if (_catalogSettings.ExportImportProductSpecificationAttributes)
                     row = await ExportSpecificationAttributesAsync(item, specificationAttributeManager, worksheet, localizedWorksheets, row, fsaWorksheet);
 
-                if (_catalogSettings.ExportImportTierPrises)
-                    row = await ExportTierPrisesAsync(item, tierPriceManager, worksheet, localizedWorksheets, row, fsaWorksheet);
+                if (_catalogSettings.ExportImportTierPrices)
+                    row = await ExportTierPricesAsync(item, tierPriceManager, worksheet, localizedWorksheets, row, fsaWorksheet);
             }
 
             workbook.SaveAs(stream);
@@ -790,7 +790,7 @@ public partial class ExportManager : IExportManager
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    protected virtual async Task<int> ExportTierPrisesAsync(Product item, PropertyManager<ExportTierPrice, Language> tierPriceManager,
+    protected virtual async Task<int> ExportTierPricesAsync(Product item, PropertyManager<ExportTierPrice, Language> tierPriceManager,
         IXLWorksheet worksheet, IList<(Language Language, IXLWorksheet Worksheet)> localizedWorksheets, int row, IXLWorksheet faWorksheet)
     {
         var tierPrices = (await _productService.GetTierPricesByProductAsync(item.Id)).Select(p=>new ExportTierPrice

@@ -1180,7 +1180,7 @@ public partial class InstallationService
             ProductReviewsSortByCreatedDateAscending = false,
             ExportImportProductAttributes = true,
             ExportImportProductSpecificationAttributes = true,
-            ExportImportTierPrises = true,
+            ExportImportTierPrices = true,
             ExportImportUseDropdownlistsForAssociatedEntities = true,
             ExportImportProductsCountInOneFile = 500,
             ExportImportSplitProductsFile = false,

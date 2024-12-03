@@ -1039,7 +1039,7 @@ public partial class ImportManager : IImportManager
     {
         var tierPriceManager = metadata.TierPriceManager;
         
-        if (!_catalogSettings.ExportImportProductSpecificationAttributes || lastLoadedProduct == null || tierPriceManager.IsCaption)
+        if (!_catalogSettings.ExportImportTierPrices || lastLoadedProduct == null || tierPriceManager.IsCaption)
             return;
 
         var id = tierPriceManager.GetDefaultProperty("TierPriceId").IntValue;
