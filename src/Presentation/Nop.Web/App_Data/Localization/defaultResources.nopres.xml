@@ -2956,7 +2956,7 @@
     <Value>Display only uploaded images of attribute combination</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.DisplayAttributeCombinationImagesOnly.Hint">
-    <Value>You may choose pictures associated to each product attribute value or attribute combination (these pictures will replace the main product image when this product attribute value or attribute combination is selected). Enable this option if you want to display only images of a chosen product attribute value or a attribute combination (other pictures will be hidden). Otherwise, all uploaded pictures will be displayed on the product details page.</Value>
+    <Value>You may choose pictures associated to each product attribute value or attribute combination (these pictures will replace the main product image when this product attribute value or attribute combination is selected). Enable this option if you want to display only images of a chosen product attribute value or an attribute combination (other pictures will be hidden). Otherwise, all uploaded pictures will be displayed on the product details page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.DisplayOrder">
     <Value>Display order</Value>
@@ -10084,7 +10084,7 @@
     <Value>Feature PayPal Prominently</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.PaymentPayPal.Register.Text">
-    <Value>Click this button to register an account. You need to go through a few steps to fill in all the required data. The last step will be to verify your email address in order to activate your account.</Value>
+    <Value>Click this button to register an account. You need to go through a few steps to fill in all the required data. The last step will be to verify your email address to activate your account.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.PaymentPayPal.Register.Title">
     <Value>Register an account</Value>
@@ -14326,7 +14326,7 @@
     <Value>Vendor</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.Vendor.Hint">
-    <Value>Choose a vendor associated with this discount. The associated vendor is given the ability to manage this discount.</Value>
+    <Value>Choose a vendor associated with this discount. The associated vendor will have the ability to manage this discount.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.Vendor.None">
     <Value>No vendor</Value>

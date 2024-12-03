@@ -128,10 +128,10 @@ public class LocalizationMigration : MigrationBase
             ["Admin.ContentManagement.MessageTemplates.List.SearchEmailAccount.All"] = "All",
 
             //#7108
-            ["Admin.ContentManagement.MessageTemplates.Description.OrderCancelled.VendorNotification"] = "This message template is used to notify a vendor that the certain order was cancelled.The order can be cancelled by a customer on the account page or by store owner in Customers - Customers in Orders tab or in Sales - Orders.",
+            ["Admin.ContentManagement.MessageTemplates.Description.OrderCancelled.VendorNotification"] = "This message template is used to notify a vendor that the certain order was cancelled. The order can be cancelled by a customer on the account page or by store owner in Customers - Customers in Orders tab or in Sales - Orders.",
 
             //#7215
-            ["Admin.Catalog.Products.Fields.DisplayAttributeCombinationImagesOnly.Hint"] = "You may choose pictures associated to each product attribute value or attribute combination (these pictures will replace the main product image when this product attribute value or attribute combination is selected). Enable this option if you want to display only images of a chosen product attribute value or a attribute combination (other pictures will be hidden). Otherwise, all uploaded pictures will be displayed on the product details page",
+            ["Admin.Catalog.Products.Fields.DisplayAttributeCombinationImagesOnly.Hint"] = "You may choose pictures associated to each product attribute value or attribute combination (these pictures will replace the main product image when this product attribute value or attribute combination is selected). Enable this option if you want to display only images of a chosen product attribute value or an attribute combination (other pictures will be hidden). Otherwise, all uploaded pictures will be displayed on the product details page",
 
             //#7208
             ["Admin.Customers.Customers.List.SearchIsActive"] = "Is active",
@@ -284,7 +284,7 @@ public class LocalizationMigration : MigrationBase
 
             //#7241
             ["Admin.Promotions.Discounts.Fields.Vendor"] = "Vendor",
-            ["Admin.Promotions.Discounts.Fields.Vendor.Hint"] = "Choose a vendor associated with this discount. The associated vendor is given the ability to manage this discount.",
+            ["Admin.Promotions.Discounts.Fields.Vendor.Hint"] = "Choose a vendor associated with this discount. The associated vendor will have the ability to manage this discount.",
             ["Admin.Promotions.Discounts.Fields.Vendor.None"] = "No vendor",
             ["Admin.Promotions.Discounts.List.SearchVendor"] = "Vendor",
             ["Admin.Promotions.Discounts.List.SearchVendor.Hint"] = "Search by a specific vendor.",
@@ -316,7 +316,7 @@ public class LocalizationMigration : MigrationBase
 
             ["Admin.ConfigurationSteps.PaymentMethods.PayPalCommerce.Configure.Text"] = "Now we’ll configure the PayPal Commerce payment method.",
             ["Admin.ConfigurationSteps.PaymentMethods.PayPalCommerce.Configure.Title"] = "Configure PayPal Commerce",
-            ["Admin.ConfigurationSteps.PaymentPayPal.Register.Text"] = "Click this button to register an account. You need to go through a few steps to fill in all the required data. The last step will be to verify your email address in order to activate your account.",
+            ["Admin.ConfigurationSteps.PaymentPayPal.Register.Text"] = "Click this button to register an account. You need to go through a few steps to fill in all the required data. The last step will be to verify your email address to activate your account.",
             ["Admin.ConfigurationSteps.PaymentPayPal.Credentials.Text"] = "After you create and set up your application in your <b>PayPal</b> account, you need to copy the <b>Client ID</b>, <b>Secret</b> and <b>Merchant ID</b>, and paste them into these fields.",
         }, languageId);
 
