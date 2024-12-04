@@ -76,4 +76,9 @@ public partial class AdminAreaSettings : ISettings
     /// Gets or sets a value indicating whether to documantation reference links on pages
     /// </summary>
     public bool ShowDocumentationReferenceLinks { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to the content header should be sticky when scrolling
+    /// </summary>
+    public bool UseStickyHeaderLayout { get; set; }
 }

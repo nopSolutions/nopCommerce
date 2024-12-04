@@ -195,6 +195,19 @@ i.false-icon {
   background-color: #467e9f;
 }
 
+.sticky-header-layout .content-header {
+  background-color: #ecf0f5;
+  position: -webkit-sticky;
+  position: sticky;
+  top: -1px;
+  z-index: 1020;
+}
+
+.sticky-header-layout .content-header.is-pinned {
+    background-color: white;
+    border-bottom: 1px solid #f4f4f4;
+    padding: 13px 16px 0px;
+}
 
 .bg-purple {
   background-color: #605ca8 !important;
