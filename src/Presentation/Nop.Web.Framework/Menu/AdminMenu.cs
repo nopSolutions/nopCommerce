@@ -137,7 +137,6 @@ public partial class AdminMenu : IAdminMenu
                         {
                             SystemName = "Attributes",
                             Title = await _localizationService.GetResourceAsync("Admin.Catalog.Attributes"),
-                            PermissionNames = new List<string> { StandardPermission.Catalog.PRODUCT_ATTRIBUTES_VIEW },
                             IconClass = "far fa-dot-circle",
                             ChildNodes = new List<AdminMenuItem>
                             {
@@ -146,6 +145,7 @@ public partial class AdminMenu : IAdminMenu
                                     SystemName = "Product attributes",
                                     Title = await _localizationService.GetResourceAsync("Admin.Catalog.Attributes.ProductAttributes"),
                                     Url = GetMenuItemUrl("ProductAttribute", "List"),
+                                    PermissionNames = new List<string> { StandardPermission.Catalog.PRODUCT_ATTRIBUTES_VIEW },
                                     IconClass = "far fa-circle"
                                 },
                                 new()
@@ -153,12 +153,14 @@ public partial class AdminMenu : IAdminMenu
                                     SystemName = "Specification attributes",
                                     Title = await _localizationService.GetResourceAsync("Admin.Catalog.Attributes.SpecificationAttributes"),
                                     Url = GetMenuItemUrl("SpecificationAttribute", "List"),
+                                    PermissionNames = new List<string> { StandardPermission.Catalog.SPECIFICATION_ATTRIBUTES_VIEW },
                                     IconClass = "far fa-circle"
                                 },
                                 new()
                                 {
                                     SystemName = "Checkout attributes",
                                     Title = await _localizationService.GetResourceAsync("Admin.Catalog.Attributes.CheckoutAttributes"),
+                                    PermissionNames = new List<string> { StandardPermission.Catalog.CHECKOUT_ATTRIBUTES_VIEW },
                                     Url = GetMenuItemUrl("CheckoutAttribute", "List"),
                                     IconClass = "far fa-circle"
                                 }
@@ -1036,11 +1038,12 @@ public partial class AdminMenu : IAdminMenu
 
         var customer = await _workContext.GetCurrentCustomerAsync();
 
+        await _eventPublisher.PublishAsync(new AdminMenuCreatedEvent(this, root));
+
         if (await _permissionService.AuthorizeAsync(StandardPermission.Configuration.MANAGE_PLUGINS, customer))
         {
             await _eventPublisher.PublishAsync(new ThirdPartyPluginsMenuItemCreatedEvent(this, root.GetItemBySystem("Third party plugins")));
-            await _eventPublisher.PublishAsync(new AdminMenuCreatedEvent(this, root));
-
+            
             var adminMenuPlugins = await _adminMenuPluginManager.LoadAllPluginsAsync(customer);
 
             foreach (var adminMenuPlugin in adminMenuPlugins)
@@ -1049,17 +1052,15 @@ public partial class AdminMenu : IAdminMenu
 
         async ValueTask<bool> authorizePermission(string permissionName) => await _permissionService.AuthorizeAsync(permissionName.Trim());
 
-        async Task checkPermissions(AdminMenuItem menuItem)
+        async Task checkPermissions(AdminMenuItem menuItem, AdminMenuItem rootItem = null)
         {
-            var permissions = menuItem.PermissionNames.Distinct().Where(p => !string.IsNullOrEmpty(p)).ToList();
+            var permissions = (menuItem.PermissionNames.Any() ? menuItem.PermissionNames : (rootItem?.PermissionNames ?? new List<string>())).Distinct().Where(p => !string.IsNullOrEmpty(p)).ToList();
 
             if (permissions.Any())
                 menuItem.Visible = menuItem.ChildNodes.Any() ? await permissions.AnyAwaitAsync(authorizePermission) : await permissions.AllAwaitAsync(authorizePermission);
-            else
-                menuItem.Visible = true;
 
             foreach (var childNode in menuItem.ChildNodes)
-                await checkPermissions(childNode);
+                await checkPermissions(childNode, menuItem);
         }
 
         await checkPermissions(root);

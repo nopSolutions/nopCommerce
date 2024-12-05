@@ -180,7 +180,7 @@ public partial class AdminMenuItem
     /// <summary>
     /// Gets or sets the item is visible
     /// </summary>
-    public bool Visible { get; set; }
+    public bool Visible { get; set; } = true;
 
     /// <summary>
     /// Gets or sets a value indicating whether to open url in new tab (window) or not
