@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Support;
 using Nop.Web.Areas.Admin.Models.Support;
@@ -10,33 +9,20 @@ namespace Nop.Web.Areas.Admin.Controllers;
 [Area("Admin")]
 public class SupportRequestController : BaseAdminController
 {
+    #region Fields
+    
     protected readonly ISupportRequestService _supportRequestService;
     protected readonly IWorkContext _workContext;
     protected readonly int _currentUserId;
 
+    #endregion
+    
+    #region Ctor
     public SupportRequestController(ISupportRequestService supportRequestService, IWorkContext workContext)
     {
         _supportRequestService = supportRequestService;
         _workContext = workContext;
         _currentUserId = _workContext.GetCurrentCustomerAsync().Result.Id;
-    }
-    
-    #region utilities
-
-    private static List<SelectListItem> GetAvailableStatuses()
-    {
-        var availableStatuses = new List<SelectListItem>();
-        var enumValues = Enum.GetValues(typeof(StatusEnum));
-
-        foreach (var status in enumValues)
-        {
-            availableStatuses.Add(new SelectListItem(status.ToString(), status.ToString()));
-        }
-        
-        // Empty status to allow removal of filter
-        availableStatuses.Add(new SelectListItem("", ""));
-        
-        return availableStatuses;
     }
     
     #endregion
@@ -51,7 +37,7 @@ public class SupportRequestController : BaseAdminController
         int pageSize = 5)
     {
         
-        var requestList = _supportRequestService.GetAllSupportRequests(
+        var requestList = await _supportRequestService.GetAllSupportRequestsAsync(
             sortByCreatedDateDsc: sortBy == "date_dsc",
             filterByStatus: filterByStatus,
             searchQuery: searchTerm,
@@ -68,7 +54,6 @@ public class SupportRequestController : BaseAdminController
             HasNextPage = requestList.Result.HasNextPage,
             TotalPages = requestList.Result.TotalPages,
             SelectedSortOption = sortBy,
-            AvailableStatuses = GetAvailableStatuses(),
             FilterByStatus = filterByStatus,
             SearchTerm = searchTerm
         };
@@ -80,35 +65,38 @@ public class SupportRequestController : BaseAdminController
     
     #region Chat
     
-    public IActionResult Chat(int requestId)
+    public async Task<IActionResult> Chat(int requestId)
     { 
-        var supportRequest = _supportRequestService.GetSupportRequestById(requestId);
-        var baseMessages = _supportRequestService.GetSupportRequestMessages(requestId);
+        var supportRequest = await _supportRequestService.GetSupportRequestByIdAsync(requestId);
+        var baseMessages = await _supportRequestService.GetSupportRequestMessagesAsync(requestId);
         var viewModel = new SupportChatViewModel()
         {
-            RequestId = supportRequest.Id,
-            Subject = supportRequest.Subject,
-            Status = supportRequest.Status,
-            Messages = baseMessages.Select(message => new SupportMessageModel(message)).ToList()
+            RequestId = supportRequest.Result.Id,
+            Subject = supportRequest.Result.Subject,
+            Status = supportRequest.Result.Status,
+            Messages = baseMessages.Result.Select(message => new SupportMessageModel(message)).ToList()
         };
         
         return View(viewModel);
-        
     }
 
     [HttpPost]
-    public IActionResult AddMessage(SupportChatViewModel model)
+    public async Task<IActionResult> Chat(SupportChatViewModel model)
     {
-        var entityModel = new SupportMessage()
+        if (ModelState.IsValid)
         {
-            RequestId = model.RequestId,
-            AuthorId = _currentUserId,
-            Message = model.NewMessage
-        };
+            var entityModel = new SupportMessage()
+            {
+                RequestId = model.RequestId,
+                AuthorId = _currentUserId,
+                Message = model.NewMessage
+            };
         
-        _supportRequestService.CreateSupportMessage(entityModel);
+            await _supportRequestService.CreateSupportMessageAsync(entityModel);
         
-        return RedirectToAction("Chat", new { requestId = model.RequestId });
+            return RedirectToAction("Chat", new { requestId = model.RequestId });
+        }
+        return View(model);
     }
 
     

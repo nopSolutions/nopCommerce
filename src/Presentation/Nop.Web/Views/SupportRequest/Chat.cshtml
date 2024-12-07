@@ -1,6 +1,4 @@
-@using Nop.Core
 @model SupportChatViewModel
-@inject Nop.Core.IWebHelper webHelper
 @{
     Layout = "_ColumnsTwo";
 
@@ -36,7 +34,7 @@
                         <li class="info">@Model.Status</li>
                     </ol>
 
-                    <form asp-action="AddMessage" method="post">
+                    <form asp-action="Chat" method="post">
                         <input type="hidden" asp-for="RequestId" value="@Model.RequestId"/>
                         <div class="form-group">
                             <textarea asp-for="NewMessage" class="form-control" placeholder="Type your message here..."></textarea>
