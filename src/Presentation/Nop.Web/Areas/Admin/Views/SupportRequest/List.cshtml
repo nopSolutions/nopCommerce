@@ -23,12 +23,12 @@
                             <div class="request-list-options-cntr">
                                 <div class="request-list-option">
                                     <label for="@Model.SelectedSortOption">Sort</label>
-                                    <select asp-for="SelectedSortOption" asp-items="@Model.SortOptions" name="sortBy" onchange="this.form.submit()"></select>
+                                    <select asp-for="SelectedSortOption" asp-items="@SupportListViewModel.SortOptions" name="sortBy" onchange="this.form.submit()"></select>
                                     <span asp-validation-for="SelectedSortOption" class="text-danger"></span>
                                 </div>
                                 <div class="request-list-option">
                                     <label for="@Model.FilterByStatus">Status</label>
-                                    <select asp-for="FilterByStatus" asp-items="@Model.AvailableStatuses" name="filterByStatus" onchange="this.form.submit()"></select>
+                                    <select asp-for="FilterByStatus" asp-items="@SupportListViewModel.AvailableStatuses" name="filterByStatus" onchange="this.form.submit()"></select>
                                     <span asp-validation-for="FilterByStatus" class="text-danger"></span>
                                 </div>
                                 <div class="request-list-option">

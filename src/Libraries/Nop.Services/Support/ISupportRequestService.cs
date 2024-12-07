@@ -3,27 +3,50 @@ using Nop.Core.Domain.Support;
 
 namespace Nop.Services.Support;
 
-public partial interface ISupportRequestService
+public interface ISupportRequestService
 {
+    
+    #region Requests
+    
     // Create
-    public void CreateSupportRequest(SupportRequest request);
-    public void CreateSupportMessage(SupportMessage message);
+    public Task<SupportRequestResult> CreateSupportRequestAsync(SupportRequest request); 
+    
     
     // Read
-    public SupportRequest GetSupportRequestById(int id);
-    public Task<IPagedList<SupportRequest>> GetAllSupportRequests(
+    public Task<SupportRequestResult<SupportRequest>> GetSupportRequestByIdAsync(int id);
+    
+    public Task<SupportRequestResult<IPagedList<SupportRequest>>> GetAllSupportRequestsAsync(
         bool sortByCreatedDateDsc = true,
         string filterByStatus = "",
         string searchQuery = "",
         int pageIndex = 0,
         int pageSize = 5);
-    public IList<SupportRequest> GetUserSupportRequests(int userId);
-    public IList<SupportMessage> GetSupportRequestMessages(int supportRequestId);
+    
+    public Task<SupportRequestResult<IList<SupportRequest>>> GetUserSupportRequestsAsync(int userId);
+    
     
     // Update
-    public void UpdateSupportRequest(SupportRequest request);
+    public Task<SupportRequestResult<SupportRequest>> UpdateSupportRequestAsync(SupportRequest request);
+    
     
     // Delete
-    public void DeleteSupportRequest(SupportRequest request);
-    public void DeleteSupportRequestMessages(int supportRequestId);
+    public Task<SupportRequestResult> DeleteSupportRequestAsync(SupportRequest request);
+    
+    #endregion
+    
+    #region Messages
+    
+    
+    // Create
+    public Task<SupportRequestResult> CreateSupportMessageAsync(SupportMessage message);
+    
+    
+    // Read
+    public Task<SupportRequestResult<IList<SupportMessage>>> GetSupportRequestMessagesAsync(int supportRequestId);
+    
+    
+    // Delete
+    public Task<SupportRequestResult> DeleteSupportRequestMessagesAsync(int supportRequestId);
+    
+    #endregion
 }
