@@ -75,7 +75,7 @@ namespace Nop.Web.Components
             };
 
             //New implemenation based on Reward Point system
-            
+
             //get subscription product id from latest orders
             var activeOrder = (await _orderService.SearchOrdersAsync(customerId: customer.Id, psIds: new List<int> { (int)PaymentStatus.Paid }, pageSize: 1)).FirstOrDefault();
 
@@ -91,17 +91,26 @@ namespace Nop.Web.Components
                 subscriptionPlan = product != null ? product.Name : "Free Subscription Plan";
             }
 
+            var subscription = await _rewardPointService.GetCustomerSubscriptionAsync(customer.Id, storeId);
+
             var modelNew = new SubscriptionModel
             {
                 //SubscriptionId = subscriptionProductId,
                 SubscriptionProduct = subscriptionPlan,
 
-                SubscriptionDate = await _rewardPointService.GetSubscriptionStartDateAsync(customer.Id, storeId),
-                SubscriptionExpiryDate = await _rewardPointService.GetSubscriptionExpiryDateAsync(customer.Id, storeId),
+                //SubscriptionDate = await _rewardPointService.GetSubscriptionStartDateAsync(customer.Id, storeId),
+                //SubscriptionExpiryDate = await _rewardPointService.GetSubscriptionExpiryDateAsync(customer.Id, storeId),
 
-                AllottedCreditCount = await _rewardPointService.GetSubscriptionAlottedCreditCountAsync(customer.Id, storeId),
-                BalanceCreditCount = await _rewardPointService.GetRewardPointsBalanceAsync(customer.Id, storeId),
-                UsedCreditCount = await _rewardPointService.GetSubscriptionUsedCreditCountAsync(customer.Id, storeId),
+                //AllottedCreditCount = await _rewardPointService.GetSubscriptionAlottedCreditCountAsync(customer.Id, storeId),
+                //BalanceCreditCount = await _rewardPointService.GetRewardPointsBalanceAsync(customer.Id, storeId),
+                //UsedCreditCount = await _rewardPointService.GetSubscriptionUsedCreditCountAsync(customer.Id, storeId),
+
+                SubscriptionDate = subscription.CreatedOnUtc,
+                SubscriptionExpiryDate = subscription.EndDateUtc,
+
+                AllottedCreditCount = subscription.PointsBalance.Value,
+                BalanceCreditCount = subscription.ValidPoints.Value,
+                UsedCreditCount = subscription.PointsBalance.Value - subscription.ValidPoints.Value,
 
                 IsPaidCustomer = await _customerService.IsInCustomerRoleAsync(customer, "PaidCustomer"),
                 CustomerProfileTypeId = customer.CustomerProfileTypeId

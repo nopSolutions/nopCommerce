@@ -129,7 +129,8 @@ namespace Nop.Services.Orders
             if (!showNotActivated)
                 query = query.Where(historyEntry => historyEntry.CreatedOnUtc < DateTime.UtcNow);
 
-            query = query.Where(entry => entry.EndDateUtc.HasValue).OrderByDescending(entry => entry.CreatedOnUtc);
+            //get reward points associated with order
+            query = query.Where(entry => entry.EndDateUtc.HasValue & entry.UsedWithOrder.HasValue).OrderByDescending(entry => entry.CreatedOnUtc);
 
             //get reward points created with orders
             query = query.Where(entry => entry.UsedWithOrder.HasValue);
