@@ -230,6 +230,7 @@
         var vendor = $("#@Html.IdFor(model => model.SearchVendorId)").val();
         var warehouse = $("#@Html.IdFor(model => model.SearchWarehouseId)").val();
         var published = $("#@Html.IdFor(model => model.SearchPublishedId)").val();
+        var productType = $("#@Html.IdFor(model => model.SearchProductTypeId)").val();
                                         
         if (next == undefined)                                        
             start = @Model.Start;
@@ -257,6 +258,7 @@
             SearchVendorId: vendor,
             SearchWarehouseId: warehouse,
             SearchPublishedId: published,
+            SearchProductTypeId: productType,
             Start: start,
             PageSize: @Model.PageSize,
             Length: @Model.Length
