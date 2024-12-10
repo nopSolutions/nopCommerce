@@ -1,5 +1,7 @@
 ﻿using LinqToDB;
+using Microsoft.AspNetCore.Authentication;
 using Nop.Core;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Support;
 using Nop.Data;
 using Nop.Services.Customers;
@@ -15,11 +17,13 @@ public class SupportRequestService : ISupportRequestService
         IRepository<SupportRequest> supportRequestRepository,
         IRepository<SupportMessage> supportMessageRepository,
         ICustomerService customerService,
+        IWorkContext workContext,
         ILogger logger)
     {
         _supportRequestRepository = supportRequestRepository;
         _supportMessageRepository = supportMessageRepository;
         _customerService = customerService;
+        _workContext = workContext;
         _logger = logger;
     }
 
@@ -30,6 +34,7 @@ public class SupportRequestService : ISupportRequestService
     protected readonly IRepository<SupportRequest> _supportRequestRepository;
     protected readonly IRepository<SupportMessage> _supportMessageRepository;
     protected readonly ICustomerService _customerService;
+    protected readonly IWorkContext _workContext;
     protected readonly ILogger _logger;
 
     #endregion
@@ -101,7 +106,16 @@ public class SupportRequestService : ISupportRequestService
         // Catch any error that may happen when querying the database and notify user and/or admin
         try
         {
-            response.Result = await _supportRequestRepository.GetByIdAsync(id);
+            var request = await _supportRequestRepository.GetByIdAsync(id);
+            var user = await _workContext.GetCurrentCustomerAsync();
+            var isAdmin = await _customerService.IsAdminAsync(user);
+
+            if (!isAdmin && request.CustomerId != user.Id)
+            {
+                throw new AuthenticationFailureException("You do not have permission to view the support request.");
+            }
+            
+            response.Result = request;
         }
         catch (Exception exc)
         {

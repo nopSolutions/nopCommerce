@@ -45,12 +45,6 @@ public class SupportRequestController : BasePublicController
     {
         if (ModelState.IsValid)
         {
-            // var request = new SupportRequest()
-            // {
-            //     CustomerId = _currentUserId,
-            //     Subject = model.Subject,
-            // };
-
             model.CustomerId = _currentUserId;
 
             await _supportRequestService.CreateSupportRequestAsync(model);
@@ -67,6 +61,17 @@ public class SupportRequestController : BasePublicController
     public async Task<IActionResult> Chat(int requestId)
     { 
         var supportRequest = await _supportRequestService.GetSupportRequestByIdAsync(requestId);
+        
+        if (supportRequest.Success == false)
+        {
+            foreach (var error in supportRequest.Errors)
+            {
+                Console.Error.WriteLine(error);
+            }
+            
+            return NotFound();
+        }
+        
         var baseMessages = await _supportRequestService.GetSupportRequestMessagesAsync(requestId);
         var viewModel = new SupportChatViewModel()
         {

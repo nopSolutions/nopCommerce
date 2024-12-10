@@ -68,6 +68,17 @@ public class SupportRequestController : BaseAdminController
     public async Task<IActionResult> Chat(int requestId)
     { 
         var supportRequest = await _supportRequestService.GetSupportRequestByIdAsync(requestId);
+
+        if (supportRequest.Success == false)
+        {
+            foreach (var error in supportRequest.Errors)
+            {
+                Console.Error.WriteLine(error);
+            }
+
+            return NotFound();
+        }
+        
         var baseMessages = await _supportRequestService.GetSupportRequestMessagesAsync(requestId);
         var viewModel = new SupportChatViewModel()
         {
