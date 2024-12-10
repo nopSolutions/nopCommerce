@@ -47,7 +47,7 @@ public class SupportRequestController : BaseAdminController
 
         var viewModel = new SupportListViewModel()
         {
-            Requests = requestList.Result.Select(request => new SupportRequestModel(request)).ToList(),
+            Requests = requestList.Result.ToList(),
             CurrentPage = pageIndex,
             PageSize = pageSize,
             HasPreviousPage = requestList.Result.HasPreviousPage,
@@ -74,7 +74,7 @@ public class SupportRequestController : BaseAdminController
             RequestId = supportRequest.Result.Id,
             Subject = supportRequest.Result.Subject,
             Status = supportRequest.Result.Status,
-            Messages = baseMessages.Result.Select(message => new SupportMessageModel(message)).ToList()
+            Messages = baseMessages.Result.ToList()
         };
         
         return View(viewModel);

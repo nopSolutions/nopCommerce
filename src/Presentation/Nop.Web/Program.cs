@@ -21,7 +21,7 @@ public partial class Program
 
         //load application settings
         builder.Services.ConfigureApplicationSettings(builder);
-
+        
         var appSettings = Singleton<AppSettings>.Instance;
         var useAutofac = appSettings.Get<CommonConfig>().UseAutofac;
 
