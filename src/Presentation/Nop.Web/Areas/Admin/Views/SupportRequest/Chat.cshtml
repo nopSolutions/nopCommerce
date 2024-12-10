@@ -21,8 +21,11 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="column">
-
-                                <a asp-action="List" class="btn btn-secondary">Back</a>
+                                
+                                <div class="row chat-controls">
+                                    <a asp-action="List" class="btn btn-secondary">Back</a>
+                                    <a asp-action="Delete" asp-route-requestId="@Model.RequestId" class="btn btn-secondary btn-red">Delete</a>
+                                </div>
 
                                 <ol class="chat-info-list">
                                     <li class="heading">Request No.</li>
@@ -30,7 +33,12 @@
                                     <li class="heading">Subject</li>
                                     <li class="info">@Model.Subject</li>
                                     <li class="heading">Status</li>
-                                    <li class="info">@Model.Status</li>
+                                    <li class="info">
+                                        <form asp-action="UpdateRequestStatus" method="post">
+                                            <input type="hidden" asp-for="RequestId" value="@Model.RequestId"/>
+                                            <select asp-for="Status" asp-items="@SupportChatViewModel.AvailableStatuses" onchange="this.form.submit()"></select>
+                                        </form>
+                                    </li>
                                 </ol>
 
                                 <form asp-action="Chat" method="post">

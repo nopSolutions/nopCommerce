@@ -257,16 +257,17 @@ public class SupportRequestService : ISupportRequestService
     /// <summary>
     ///     Deletes a support request from the database asynchronously.
     /// </summary>
-    /// <param name="request">The <see cref="SupportRequest" /> object to delete. Must not be null.</param>
+    /// <param name="requestId">The <see cref="SupportRequest" /> object to delete. Must not be null.</param>
     /// <returns>
     ///     A <see cref="SupportRequestResult" /> indicating whether the deletion was successful or encountered an error.
     ///     If the operation fails due to exceptions or validation errors, the errors will be populated in this result.
     /// </returns>
-    /// <exception cref="ArgumentNullException">Thrown if the <paramref name="request" /> is null.</exception>
-    public async Task<SupportRequestResult> DeleteSupportRequestAsync(SupportRequest request)
+    /// <exception cref="ArgumentNullException">Thrown if the <paramref name="requestId" /> is null.</exception>
+    public async Task<SupportRequestResult> DeleteSupportRequestByIdAsync(int requestId)
     {
         // Error handling - input validation
-        ArgumentNullException.ThrowIfNull(request, nameof(request));
+        if (requestId == int.MinValue)
+            throw new ArgumentException("requestId must not be default value.", nameof(requestId));
 
         // Create new response object
         SupportRequestResult response = new();
@@ -274,7 +275,11 @@ public class SupportRequestService : ISupportRequestService
         // Catch any error that may happen when querying the database and notify user and/or admin
         try
         {
-            await _supportRequestRepository.DeleteAsync(request);
+            // Retrieve request
+            var request = await GetSupportRequestByIdAsync(requestId);
+            
+            // Delete request
+            await _supportRequestRepository.DeleteAsync(request.Result);
         }
         catch (Exception exc)
         {
