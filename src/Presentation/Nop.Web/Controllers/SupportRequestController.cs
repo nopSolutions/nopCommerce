@@ -25,9 +25,7 @@ public class SupportRequestController : BasePublicController
     {
         var requestList = await _supportRequestService.GetUserSupportRequestsAsync(_currentUserId);
         
-        var requests = requestList.Result
-            .Select(request => new SupportRequestModel(request))
-            .ToList();
+        var requests = requestList.Result.ToList();
         
         return View(requests);
     }
@@ -38,24 +36,26 @@ public class SupportRequestController : BasePublicController
     
     public IActionResult Create()
     {
-        var model = new SupportRequestModel();
+        var model = new SupportRequest();
         return View(model);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(SupportRequestModel model)
+    public async Task<IActionResult> Create(SupportRequest model)
     {
         if (ModelState.IsValid)
         {
-            var request = new SupportRequest()
-            {
-                CustomerId = _currentUserId,
-                Subject = model.Subject,
-            };
+            // var request = new SupportRequest()
+            // {
+            //     CustomerId = _currentUserId,
+            //     Subject = model.Subject,
+            // };
 
-            await _supportRequestService.CreateSupportRequestAsync(request);
+            model.CustomerId = _currentUserId;
+
+            await _supportRequestService.CreateSupportRequestAsync(model);
             
-            return RedirectToAction("Chat", new { requestId = request.Id });
+            return RedirectToAction("Chat", new { requestId = model.Id });
         }
         return View(model);
     }
@@ -73,7 +73,7 @@ public class SupportRequestController : BasePublicController
             RequestId = supportRequest.Result.Id,
             Subject = supportRequest.Result.Subject,
             Status = supportRequest.Result.Status,
-            Messages = baseMessages.Result.Select(message => new SupportMessageModel(message)).ToList()
+            Messages = baseMessages.Result.ToList()
         };
         
         return View(viewModel);

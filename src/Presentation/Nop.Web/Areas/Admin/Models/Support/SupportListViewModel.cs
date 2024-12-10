@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Support;
 
 public class SupportListViewModel
 {
-    public List<SupportRequestModel>? Requests { get; set; }
+    public List<SupportRequest>? Requests { get; set; }
     
     public bool HasPreviousPage { get; set; }
     

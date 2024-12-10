@@ -1,12 +1,11 @@
-@model SupportRequestModel
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Nop.Web.Framework.TagHelpers.Shared
+@model Nop.Core.Domain.Support.SupportRequest
 @{
     Layout = "_ColumnsTwo";
 
     //title
     NopHtml.AddTitleParts("Create Support Request");
-    //page class
-    // NopHtml.AppendPageCssClassParts("html-account-page");
-    // NopHtml.AppendPageCssClassParts("html-customer-info-page");
 }
 
 @section left
