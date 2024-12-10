@@ -30,7 +30,7 @@ public interface ISupportRequestService
     
     
     // Delete
-    public Task<SupportRequestResult> DeleteSupportRequestAsync(SupportRequest request);
+    public Task<SupportRequestResult> DeleteSupportRequestByIdAsync(int requestId);
     
     #endregion
     

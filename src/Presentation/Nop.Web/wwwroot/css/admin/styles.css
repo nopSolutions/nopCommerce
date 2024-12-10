@@ -2185,7 +2185,19 @@ div.dt-container div.dt-paging {
   padding: 0 2rem;
 }
 
+.chat-controls {
+  display: flex;
+  justify-content: space-between;
+
+  .btn-red {
+    background-color: red;
+  }
+}
+
 .chat-info-list {
+  
+  padding: 0;
+  margin: 2rem 0;
 
   ol & {
     list-style: none;

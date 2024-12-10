@@ -99,6 +99,25 @@ public class SupportRequestController : BaseAdminController
         return View(model);
     }
 
+    [HttpPost]
+    public async Task<IActionResult> UpdateRequestStatus(SupportChatViewModel model)
+    {
+        var request = await _supportRequestService.GetSupportRequestByIdAsync(model.RequestId);
+        
+        request.Result.Status = model.Status;
+        
+        var response = await _supportRequestService.UpdateSupportRequestAsync(request.Result);
+        
+        return RedirectToAction("Chat", new { requestId = response.Result.Id });
+    }
+
+    public async Task<IActionResult> Delete(int requestId)
+    {
+        await _supportRequestService.DeleteSupportRequestByIdAsync(requestId);
+        
+        return RedirectToAction("List");
+    }
+
     
     #endregion
     
