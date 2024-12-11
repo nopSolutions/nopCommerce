@@ -28,8 +28,11 @@ public class ViewLocationExpander : IViewLocationExpander
     public IEnumerable<string> ExpandViewLocations(ViewLocationExpanderContext context,
         IEnumerable<string> viewLocations)
     {
-        viewLocations = new[] { $"/Plugins/Misc.Omnisend/Views/{context.ViewName}.cshtml" }
-            .Concat(viewLocations);
+        viewLocations = new[]
+        {
+            $"/Plugins/Misc.Omnisend/Views/{{1}}/{{0}}.cshtml",
+            $"/Plugins/Misc.Omnisend/Views/Shared/{{0}}.cshtml",
+        }.Concat(viewLocations);
 
         return viewLocations;
     }
