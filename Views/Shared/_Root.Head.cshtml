@@ -1,5 +1,4 @@
-﻿@using Nop.Core.Configuration
-@using Nop.Core.Domain.Catalog
+﻿@using Nop.Core.Domain.Catalog
 @using Nop.Core.Domain.Common
 @using Nop.Core.Domain.Seo
 @using Nop.Services.Security
@@ -10,7 +9,6 @@
 @inject IEventPublisher eventPublisher
 @inject IPermissionService permissionService
 @inject SeoSettings seoSettings
-@inject AppSettings appSettings
 
 @{
     if (catalogSettings.DisplayAllPicturesOnCatalogPages)
@@ -39,7 +37,7 @@
     {
         NopHtml.AppendHeadCustomParts(seoSettings.CustomHeadTags);
     }
-
+    
     //event
     await eventPublisher.PublishAsync(new PageRenderingEvent(NopHtml));
 
@@ -51,6 +49,7 @@
 <html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" dir="@Html.GetUIDirection(!await Html.ShouldUseRtlThemeAsync())" class="@NopHtml.GeneratePageCssClasses()">
 <head>
     <title>@title</title>
+
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
     <meta name="description" content="@description" />
     <meta name="keywords" content="@keywords" />

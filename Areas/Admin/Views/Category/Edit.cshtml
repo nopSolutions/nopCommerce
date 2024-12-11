@@ -19,20 +19,17 @@
             </small>
         </h1>
         <div class="float-right">
-            <button type="button" onclick="javascript:OpenWindow('@(Url.RouteUrl<Category>(new { SeName = Model.SeName }))', 800, 600, true); return false;" class="btn btn-info">
-                <i class="far fa-eye"></i>
-                @T("Admin.Common.Preview")
-            </button>
+            @await Component.InvokeAsync(typeof(MultistorePreviewViewComponent), Model)
             <button type="submit" name="save" class="btn btn-primary">
-                <i class="far fa-save"></i>
+                <i class="far fa-floppy-disk"></i>
                 @T("Admin.Common.Save")
             </button>
             <button type="submit" name="save-continue" class="btn btn-primary">
-                <i class="far fa-save"></i>
+                <i class="far fa-floppy-disk"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
             <span id="category-delete" class="btn btn-danger">
-                <i class="far fa-trash-alt"></i>
+                <i class="far fa-trash-can"></i>
                 @T("Admin.Common.Delete")
             </span>
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CategoryDetailsButtons, additionalData = Model })

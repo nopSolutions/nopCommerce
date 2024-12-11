@@ -2,7 +2,7 @@
 
 @{
     Layout = "_ConfigurePlugin";
-    NopHtml.SetActiveMenuItemSystemName("POS plugins");
+    NopHtml.SetActiveMenuItemSystemName(ZettleDefaults.SystemName);
 
     var signUpUrl = $"https://my.zettle.com/apps/api-keys?name={ZettleDefaults.ApplicationName}&scopes=READ:FINANCE%20READ:PURCHASE%20READ:USERINFO%20READ:PRODUCT%20WRITE:PRODUCT&utm_source=local_partnership&utm_medium=ecommerce&utm_campaign=nopcommerce";
 }
@@ -243,13 +243,13 @@
                     </div>
 
                     <button type="submit" id="add-record" onclick="javascript:OpenWindow('@(Url.Action("ProductToSync", "ZettleAdmin", new { btnId = "recordsUpdate", formId = "configuration-form" }))', 800, 800, true); return false;" class="btn bg-olive ml-1">
-                        <i class="fas fa-plus-square"></i>
+                        <i class="fas fa-square-plus"></i>
                         @T("Plugins.Misc.Zettle.Sync.AddProduct")
                     </button>
                     <button type="submit" id="recordsUpdate" style="display: none"></button>
 
                     <button type="button" id="delete-selected" class="btn btn-danger ml-1">
-                        <i class="far fa-trash-alt"></i>
+                        <i class="far fa-trash-can"></i>
                         @T("Plugins.Misc.Zettle.Sync.DeleteSelected")
                     </button>
                     <nop-action-confirmation asp-button-id="delete-selected" />

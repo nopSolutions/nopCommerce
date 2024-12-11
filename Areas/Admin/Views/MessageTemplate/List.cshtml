@@ -31,7 +31,7 @@
                 <div class="card-body">
                     <div class="row search-row @(!hideSearchBlock ? "opened" : "")"  data-hideAttribute="@hideSearchBlockAttributeName">
                         <div class="search-text">@T("Admin.Common.Search")</div>
-                        <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                        <div class="icon-search"><i class="fas fa-magnifying-glass" aria-hidden="true"></i></div>
                         <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
                     </div>
 
@@ -62,12 +62,20 @@
                                         <nop-select asp-for="IsActiveId" asp-items="Model.AvailableActiveOptions" />
                                     </div>
                                 </div>
+                                <div class="form-group row" @(Model.HideEmailAccount ? Html.Raw("style=\"display:none\"") : null)>
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="EmailAccountId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="EmailAccountId" asp-items="Model.AvailableEmailAccounts" />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-8 offset-md-4">
                                 <button type="button" id="search-templates" class="btn btn-primary btn-search">
-                                    <i class="fas fa-search"></i>
+                                    <i class="fas fa-magnifying-glass"></i>
                                     @T("Admin.Common.Search")
                                 </button>
                             </div>
@@ -91,7 +99,8 @@
                         {
                             new FilterParameter(nameof(Model.SearchKeywords)),
                             new FilterParameter(nameof(Model.SearchStoreId)),
-                            new FilterParameter(nameof(Model.IsActiveId))
+                            new FilterParameter(nameof(Model.IsActiveId)),
+                            new FilterParameter(nameof(Model.EmailAccountId))
                         },
                         ColumnCollection = new List<ColumnProperty>
                         {
@@ -120,7 +129,7 @@
                                 Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
                                 ClassName =  NopColumnClassDefaults.Button,
-                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                Render = new RenderButtonEdit(new DataUrl("~/Admin/MessageTemplate/Edit"))
                             }
                         }
                     })

@@ -49,7 +49,7 @@
                 <div class="card-body">
                     <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
                         <div class="search-text">@T("Admin.Common.Search")</div>
-                        <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                        <div class="icon-search"><i class="fas fa-magnifying-glass" aria-hidden="true"></i></div>
                         <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
                     </div>
 
@@ -111,7 +111,7 @@
                         <div class="row">
                             <div class="text-center col-12">
                                 <button type="button" id="search-shipping-byweight-records" class="btn btn-primary btn-search">
-                                    <i class="fas fa-search"></i>
+                                    <i class="fas fa-magnifying-glass"></i>
                                     @T("Admin.Common.Search")
                                 </button>
                             </div>
@@ -227,7 +227,7 @@
                             <script asp-location="Footer">
 
                                 function renderColumnEdit(data, type, row, meta) {
-                                    return '<button onclick=\"javascript:OpenWindow(\'@Url.Action("EditRateByWeightByTotalPopup", "FixedByWeightByTotal")?id=' + data + '&btnId=btnRefresh&formId=shipping-byweight-form\', 800, 800, true); return false;\" class="btn btn-default"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit").Text</button>';
+                                    return '<button onclick=\"javascript:OpenWindow(\'@Url.Action("EditRateByWeightByTotalPopup", "FixedByWeightByTotal")?id=' + data + '&btnId=btnRefresh&formId=shipping-byweight-form\', 800, 800, true); return false;\" class="btn btn-default"><i class="fas fa-pencil"></i>@T("Admin.Common.Edit").Text</button>';
                                 }
 
                                 $(function() {

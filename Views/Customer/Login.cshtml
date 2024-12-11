@@ -87,7 +87,10 @@
                         }
                         <div class="inputs">
                             <label asp-for="Password" asp-postfix=":"></label>
-                            <input asp-for="Password" class="password" />
+                            <div class="login-password">
+                                <input asp-for="Password" class="password" />
+                                <span class="password-eye"></span>
+                            </div>
                             <span asp-validation-for="Password"></span>
                         </div>
                         <div class="inputs reversed">
@@ -115,3 +118,18 @@
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.LoginBottom, additionalData = Model })
     </div>
 </div>
+
+<script asp-location="Footer">
+    $(function () {
+        const password = $("#@Html.IdFor(m => m.Password)");
+
+        $(".password-eye").on("click", function () {
+            // toggle the type attribute
+            const type = password.attr("type") === "password" ? "text" : "password";
+            password.attr("type", type);
+
+            // toggle the icon
+            $(this).toggleClass("password-eye-open");
+        });
+    });
+</script>

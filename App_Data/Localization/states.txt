@@ -1227,13 +1227,13 @@ NO,Troms,19,True,19
 NO,Finnmark,20,True,20
 NO,Svalbard,21,True,21
 NO,Jan Mayen,22,True,22
-NP,Province No. 1,,TRUE,1
-NP,Province No. 2,,TRUE,2
-NP,Province No. 3,,TRUE,3
-NP,Gandaki Pradesh,,TRUE,4
-NP,Province No. 5,,TRUE,5
-NP,Karnali Pradesh,,TRUE,6
-NP,Sudurpashchim Pradesh,,TRUE,7
+NP,Koshi,,TRUE,1
+NP,Madhesh,,TRUE,2
+NP,Bagmati,,TRUE,3
+NP,Gandaki,,TRUE,4
+NP,Lumbini,,TRUE,5
+NP,Karnali,,TRUE,6
+NP,Sudurpashchim,,TRUE,7
 NZ, Northland,,True,0
 NZ, Auckland,,True,0
 NZ, Waikato,,True,0
@@ -1653,6 +1653,38 @@ TR,Van,,True,0
 TR,Yalova,,True,0
 TR,Yozgat,,True,0
 TR,Zonguldak,,True,0
+TW,基隆市,KLU,TRUE,1
+TW,新北市,TPH,TRUE,2
+TW,臺北市,TPE,TRUE,3
+TW,桃園市,TYC,TRUE,4
+TW,新竹縣,HSH,TRUE,5
+TW,新竹市,HSC,TRUE,6
+TW,苗栗市,MAC,TRUE,7
+TW,苗栗縣,MAL,TRUE,8
+TW,臺中市,TXG,TRUE,9
+TW,彰化縣,CWH,TRUE,10
+TW,彰化市,CWS,TRUE,11
+TW,南投市,NTC,TRUE,12
+TW,南投縣,NTO,TRUE,13
+TW,雲林縣,YLH,TRUE,14
+TW,嘉義縣,CHY,TRUE,15
+TW,嘉義市,CYI,TRUE,16
+TW,臺南市,TNN,TRUE,17
+TW,高雄市,KHH,TRUE,18
+TW,屏東,IUH,TRUE,19
+TW,屏東市,PTS,TRUE,20
+TW,宜闌縣,ILN,TRUE,21
+TW,宜闌市,ILC,TRUE,22
+TW,花連縣,HWA,TRUE,23
+TW,花連市,HWC,TRUE,24
+TW,台東市,TTC,TRUE,25
+TW,台東縣,TTT,TRUE,26
+TW,屏東縣,PEH,TRUE,27
+TW,綠島,GNI,TRUE,28
+TW,蘭嶼,KYD,TRUE,29
+TW,金門縣,KMN,TRUE,30
+TW,馬祖,MZW,TRUE,31
+TW,連江縣,LNN,TRUE,32
 UA,Вінницька область,Вінн. обл.,True,2
 UA,Волинська область,Волин. обл.,True,3
 UA,Дніпропетровська область,Дніпроп. обл.,True,4

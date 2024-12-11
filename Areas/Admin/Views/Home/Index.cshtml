@@ -5,10 +5,10 @@
     //page title
     ViewBag.PageTitle = T("Admin.Dashboard").Text;
 
-    var canManageOrders = await permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders);
-    var canManageCustomers = await permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers);
-    var canManageProducts = await permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts);
-    var canManageReturnRequests = await permissionService.AuthorizeAsync(StandardPermissionProvider.ManageReturnRequests);
+    var canManageOrders = await permissionService.AuthorizeAsync(StandardPermission.Orders.ORDERS_VIEW);
+    var canManageCustomers = await permissionService.AuthorizeAsync(StandardPermission.Customers.CUSTOMERS_VIEW);
+    var canManageProducts = await permissionService.AuthorizeAsync(StandardPermission.Catalog.PRODUCTS_VIEW);
+    var canManageReturnRequests = await permissionService.AuthorizeAsync(StandardPermission.Orders.RETURN_REQUESTS_VIEW);
 
     //close configuration steps value
     const string closeCardAttributeName = "CloseConfigurationSteps";

@@ -47,6 +47,11 @@
         {
             <div class="contact-vendor">
                 <button type="button" class="button-2 contact-vendor-button" onclick="setLocation('@Url.RouteUrl("ContactVendor", new { vendorId = Model.Id })')">@T("ContactVendor")</button>
+
+                @if(Model.PmCustomerId > 0)
+                {
+                    <button type="button" class="button-2 pm-vendor-button" onclick="setLocation('@Url.RouteUrl("SendPM", new { toCustomerId = Model.PmCustomerId })')">@T("SendPmToVendor")</button>
+                }
             </div>
         }
         @await Html.PartialAsync("_CatalogSelectors", Model.CatalogProductsModel)
@@ -57,6 +62,16 @@
             };
         }
         @await Html.PartialAsync("_CatalogProducts", Model.CatalogProductsModel, catalogProductsViewData)
+        
+        @await Html.PartialAsync("_VendorProductReviews", Model.ProductReviews.Reviews)
+
+        @if (Model.ProductReviews.PagingFilteringContext.TotalPages > 1)
+        {
+            <div class="block">
+                <a href="@Url.RouteUrl("VendorReviews", new { vendorId = Model.Id })">@T("Vendors.Reviews.All")</a>
+            </div>
+        }
+
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.VendorDetailsBottom, additionalData = Model })
     </div>
 </div>

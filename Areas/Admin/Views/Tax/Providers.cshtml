@@ -90,7 +90,7 @@
 
                             function renderColumnConfigure(data, type, row, meta) {
                                 if (row.ConfigurationUrl && row.ConfigurationUrl.length > 0) {
-                                    return '<a class="btn btn-default" href="' + row.ConfigurationUrl + '@(editQueryString)"><i class="fas fa-cog"></i>@T("Admin.Configuration.Tax.Providers.Configure").Text</a>';
+                                    return '<a class="btn btn-default" href="' + row.ConfigurationUrl + '@(editQueryString)"><i class="fas fa-gear"></i>@T("Admin.Configuration.Tax.Providers.Configure").Text</a>';
                                 } else {
                                     return '';
                                 }

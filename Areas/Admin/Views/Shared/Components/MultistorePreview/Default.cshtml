@@ -1,0 +1,29 @@
+﻿@model IList<MultistorePreviewModel>
+
+@if (Model.Count == 1)
+{
+    <button type="button" onclick="javascript:OpenWindow('@Model[0].Url', 800, 600, true); return false;" class="btn btn-info">
+        <i class="far fa-eye"></i>
+        @T("Admin.Common.Preview")
+    </button>
+}
+else
+{
+    <div class="btn-group" id="multiStorePreview">
+        <button type="button" class="btn btn-info">
+            <i class="far fa-eye"></i>
+            @T("Admin.Common.Preview")
+        </button>
+        <button type="button" class="btn btn-info dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false"></button>
+        <ul class="dropdown-menu" role="menu">
+            @foreach (var multistorePreview in Model)
+            {
+                <li class="dropdown-item">
+                    <button type="button" onclick="javascript:OpenWindow('@multistorePreview.Url', 800, 600, true); return false;">
+                        @multistorePreview.StoreName
+                    </button>
+                </li>
+            }
+        </ul>
+    </div>
+}

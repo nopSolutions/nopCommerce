@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Search provider",
+  "FriendlyName": "Lucene search provider",
+  "SystemName": "Search.Lucene",
+  "Version": "4.80.5",
+  "SupportedVersions": [ "4.80" ],
+  "Author": "nopCommerce team",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Search.Lucene.dll",
+  "Description": "This plugin provides full-text product search using the Lucene search engine"
+}

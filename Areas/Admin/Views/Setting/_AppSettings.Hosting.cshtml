@@ -11,41 +11,41 @@
         </div>
     </div>
     <nop-nested-setting asp-for="HostingConfigModel.UseProxy">
-    <div class="form-group row advanced-setting">
-        <div class="col-md-3">
-            <nop-label asp-for="HostingConfigModel.ForwardedForHeaderName" />
+        <div class="form-group row advanced-setting">
+            <div class="col-md-3">
+                <nop-label asp-for="HostingConfigModel.ForwardedForHeaderName" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="HostingConfigModel.ForwardedForHeaderName" />
+                <span asp-validation-for="HostingConfigModel.ForwardedForHeaderName"></span>
+            </div>
         </div>
-        <div class="col-md-9">
-            <nop-editor asp-for="HostingConfigModel.ForwardedForHeaderName" />
-            <span asp-validation-for="HostingConfigModel.ForwardedForHeaderName"></span>
+        <div class="form-group row advanced-setting">
+            <div class="col-md-3">
+                <nop-label asp-for="HostingConfigModel.ForwardedProtoHeaderName" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="HostingConfigModel.ForwardedProtoHeaderName" />
+                <span asp-validation-for="HostingConfigModel.ForwardedProtoHeaderName"></span>
+            </div>
         </div>
-    </div>
-    <div class="form-group row advanced-setting">
-        <div class="col-md-3">
-            <nop-label asp-for="HostingConfigModel.ForwardedProtoHeaderName" />
+        <div class="form-group row advanced-setting">
+            <div class="col-md-3">
+                <nop-label asp-for="HostingConfigModel.KnownProxies" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="HostingConfigModel.KnownProxies" />
+                <span asp-validation-for="HostingConfigModel.KnownProxies"></span>
+            </div>
         </div>
-        <div class="col-md-9">
-            <nop-editor asp-for="HostingConfigModel.ForwardedProtoHeaderName" />
-            <span asp-validation-for="HostingConfigModel.ForwardedProtoHeaderName"></span>
+        <div class="form-group row advanced-setting">
+            <div class="col-md-3">
+                <nop-label asp-for="HostingConfigModel.KnownNetworks" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="HostingConfigModel.KnownNetworks" />
+                <span asp-validation-for="HostingConfigModel.KnownNetworks"></span>
+            </div>
         </div>
-    </div>
-    <div class="form-group row advanced-setting">
-        <div class="col-md-3">
-            <nop-label asp-for="HostingConfigModel.KnownProxies" />
-        </div>
-        <div class="col-md-9">
-            <nop-editor asp-for="HostingConfigModel.KnownProxies" />
-            <span asp-validation-for="HostingConfigModel.KnownProxies"></span>
-        </div>
-    </div>
-    <div class="form-group row advanced-setting">
-        <div class="col-md-3">
-            <nop-label asp-for="HostingConfigModel.KnownNetworks" />
-        </div>
-        <div class="col-md-9">
-            <nop-editor asp-for="HostingConfigModel.KnownNetworks" />
-            <span asp-validation-for="HostingConfigModel.KnownNetworks"></span>
-        </div>
-    </div>
     </nop-nested-setting>
 </div>

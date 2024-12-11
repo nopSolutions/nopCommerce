@@ -1,0 +1,116 @@
+﻿@model PaymentTokenListModel
+
+@{
+    Layout = "_ColumnsTwo";
+    NopHtml.AddTitleParts(T("Plugins.Payments.PayPalCommerce.PaymentTokens").Text);
+    NopHtml.AppendPageCssClassParts("html-account-page");
+    NopHtml.AppendPageCssClassParts("paypal-payment-tokens-page");
+}
+
+@section left
+{
+    @(await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = PayPalCommerceDefaults.PaymentTokensMenuTab }))
+}
+
+<div class="page account-page order-list-page">
+    <div class="page-title">
+        <h1>@T("Account.MyAccount") - @T("Plugins.Payments.PayPalCommerce.PaymentTokens")</h1>
+    </div>
+    <div class="page-body">
+        @if (Model.PaymentTokens.Any())
+        {
+            <div class="order-list">
+                @foreach (var token in Model.PaymentTokens)
+                {
+                    <div class="section order-item">
+                        <div class="title">
+                            <strong>@token.Type</strong>
+                        </div>
+                        <ul class="info">
+                            <li>@T("Plugins.Payments.PayPalCommerce.PaymentTokens.Title"): <span class="order-status">@token.Title</span></li>
+                            <li>@T("Plugins.Payments.PayPalCommerce.PaymentTokens.Expiration"): <span class="order-date">@token.Expiration</span></li>
+                            @if (token.IsPrimaryMethod)
+                            {
+                                <li>@T("Plugins.Payments.PayPalCommerce.PaymentTokens.Default")</li>
+                            }
+                        </ul>
+                        <div class="buttons">
+                            @if (!token.IsPrimaryMethod)
+                            {
+                                <button type="button" class="button-2 edit-address-button" onclick="markDefaultPaymentToken(@(token.Id))">@T("Plugins.Payments.PayPalCommerce.PaymentTokens.MarkDefault")</button>
+                            }
+                            <button type="button" class="button-2 order-details-button" onclick="deletePaymentToken(@(token.Id))">@T("Common.Delete")</button>
+                        </div>
+                    </div>
+                }
+            </div>
+            <script asp-location="Footer">
+                function markDefaultPaymentToken(tokenId) {
+                    if (confirm('@T("Common.AreYouSure")')) {
+                        var postData = {
+                            tokenId: tokenId
+                        };
+                        addAntiForgeryToken(postData);
+                        $.ajax({
+                            async: false,
+                            type: 'POST',
+                            url: '@(Url.Action("PaymentTokensMarkDefault", "PayPalCommercePublic"))',
+                            data: postData,
+                            success: function (data, textStatus, jqXHR) {
+                                if (data.error) {
+                                    displayBarNotification(data.error, 'error', 0);
+                                }
+                                else if (data.redirect) {
+                                    setLocation(data.redirect);
+                                }
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                if (errorThrown) {
+                                    displayBarNotification(errorThrown, 'error', 0);
+                                } else {
+                                    displayBarNotification(textStatus, 'error', 0);
+                                }
+                            }
+                        });
+                    }
+                }
+
+                function deletePaymentToken(tokenId) {
+                    if (confirm('@T("Common.AreYouSure")')) {
+                        var postData = {
+                            tokenId: tokenId
+                        };
+                        addAntiForgeryToken(postData);
+                        $.ajax({
+                            async: false,
+                            type: 'POST',
+                            url: '@(Url.Action("PaymentTokensDelete", "PayPalCommercePublic"))',
+                            data: postData,
+                            success: function (data, textStatus, jqXHR) {
+                                if (data.error) {
+                                    displayBarNotification(data.error, 'error', 0);
+                                }
+                                else if (data.redirect) {
+                                    setLocation(data.redirect);
+                                }
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                if (errorThrown) {
+                                    displayBarNotification(errorThrown, 'error', 0);
+                                } else {
+                                    displayBarNotification(textStatus, 'error', 0);
+                                }
+                            }
+                        });
+                    }
+                }
+            </script>
+        }
+        else
+        {
+            <div class="no-data">
+                @T("Plugins.Payments.PayPalCommerce.PaymentTokens.None")
+            </div>
+        }
+    </div>
+</div>

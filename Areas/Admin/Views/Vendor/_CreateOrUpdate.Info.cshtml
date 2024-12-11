@@ -81,6 +81,53 @@
                     }
                 </div>
             </div>
+
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="PmCustomerId" />
+                </div>
+                <div class="col-md-9">
+                    <input type="hidden" asp-for="PmCustomerId" />
+                    <div id="customer-info">
+                        <a asp-controller="Customer" asp-action="Edit" asp-route-id="@Model.PmCustomerId">@Model.PmCustomerInfo</a>
+                    </div>
+                    <button type="submit" onclick="javascript:OpenWindow('@(Url.Action("AddCustomerToVendorPopup", new { customerIdInput = Html.IdFor(model => model.PmCustomerId), customerInfoInput = "customer-info", btnId = "btnRefreshCustomer"}))', 800, 850, true); return false;" class="btn btn-primary">
+                        @T("Admin.Vendors.Fields.PmCustomerId.Choose")
+                    </button>
+                    <button type="submit" id="customer-remove" class="btn btn-danger">
+                        @T("Admin.Vendors.Fields.PmCustomerId.Remove")
+                    </button>
+                    <button type="submit" id="btnRefreshCustomer" style="display: none"></button>
+                    <span asp-validation-for="PmCustomerId"></span>
+                </div>
+            </div>
+
+        <script asp-location="Footer">
+                $(function () {
+                    const pmCustomerInput = $("#@Html.IdFor(model => model.PmCustomerId)");
+                    toggleRemoveButton();
+
+                    $('#customer-remove').click(function () {
+                        $('#customer-info').text('');
+                        pmCustomerInput.val(0);
+                        toggleRemoveButton();
+                        return false;
+                    });
+
+                    $('#btnRefreshCustomer').click(function () {
+                        toggleRemoveButton();
+                        return false;
+                    });
+
+                    function toggleRemoveButton() {
+                        if (pmCustomerInput.val() > 0) {
+                            $('#customer-remove').show();
+                        } else {
+                            $('#customer-remove').hide();
+                        }
+                    }
+                });
+            </script>
         }
 
     <div class="form-group row">

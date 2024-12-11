@@ -1,0 +1,64 @@
+﻿@model PublicInfoModel
+@{
+    Layout = "";
+}
+
+<link href="~/Plugins/Widgets.Swiper/Content/css/swiper-bundle.min.css" rel="stylesheet">
+<link href="~/Plugins/Widgets.Swiper/Content/css/styles.css" rel="stylesheet">
+<script src="~/Plugins/Widgets.Swiper/Content/js/swiper-bundle.min.js" asp-location="Footer"></script>
+
+@if (Model.Slides?.Any() == true)
+{
+    <div class="swiper nop-slider">
+        <div class="swiper-wrapper">
+            @foreach (var slide in Model.Slides)
+            {
+                @await Html.PartialAsync("~/Plugins/Widgets.Swiper/Views/_PublicInfo.Slide.cshtml", slide)
+            }
+        </div>
+        @if (Model.ShowPagination)
+        {
+            <div class="swiper-pagination"></div>
+        }
+        @if (Model.ShowNavigation)
+        {
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+        }
+    </div>
+}
+
+<script asp-location="Footer">
+    var swiper6 = new Swiper(".nop-slider", {
+      autoHeight: true,
+        grabCursor: true,
+        effect: "fade",
+        lazy: true,
+        @if (Model.Autoplay)
+        {
+            <text>
+            autoplay: {
+                delay: @Model.AutoplayDelay
+            },
+            </text>
+        }
+        @if (Model.ShowPagination)
+        {
+            <text>
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+            </text>
+        }
+        @if (Model.ShowNavigation)
+        {
+            <text>
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+            </text>
+        }
+    });
+</script>

@@ -1,10 +1,16 @@
 ﻿@model string
 
-<tr>
-    <td>
-        @T("Plugins.Widgets.What3words.Address.Field.Label")
-    </td>
-    <td>
-        @Model
-    </td>
-</tr>
+<div class="form-group row">
+    <div class="col-md-4">
+        <div class="label-wrapper">
+            <label class="col-form-label">
+                @T("Plugins.Widgets.What3words.Address.Field.Label")
+            </label>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="form-text-row">
+            @Model
+        </div>
+    </div>
+</div>

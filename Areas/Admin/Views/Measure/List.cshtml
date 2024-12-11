@@ -30,7 +30,7 @@
             <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Measures", Docs.Measures + Utm.OnAdmin)" />
 
             <nop-cards id="category-cards">
-                <nop-card asp-name="measures-dimensions" asp-icon="fas fa-cog" asp-title="@T("Admin.Configuration.Shipping.Measures.Dimensions")" asp-hide-block-attribute-name="@hideDimensionsBlockAttributeName" asp-hide="@hideDimensionsBlock" asp-advanced="false">@await Html.PartialAsync("Dimensions", Model)</nop-card>
+                <nop-card asp-name="measures-dimensions" asp-icon="fas fa-gear" asp-title="@T("Admin.Configuration.Shipping.Measures.Dimensions")" asp-hide-block-attribute-name="@hideDimensionsBlockAttributeName" asp-hide="@hideDimensionsBlock" asp-advanced="false">@await Html.PartialAsync("Dimensions", Model)</nop-card>
                 <nop-card asp-name="measures-weights" asp-icon="fas fa-truck" asp-title="@T("Admin.Configuration.Shipping.Measures.Weights")" asp-hide-block-attribute-name="@hideWeightsBlockAttributeName" asp-hide="@hideWeightsBlock" asp-advanced="false">@await Html.PartialAsync("Weights", Model)</nop-card>
 
                 @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.MeasureListBlock, additionalData = Model })

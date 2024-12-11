@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Misc",
+  "FriendlyName": "PowerBI",
+  "SystemName": "Misc.PowerBI",
+  "Version": "4.80.5",
+  "SupportedVersions": [ "4.80" ],
+  "Author": "nopCommerce team",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Misc.PowerBI.dll",
+  "Description": "This plugin allows to sync with Microsoft Power BI. Power BI lets you easily connect to your data sources, visualize and discover what's important, and share that with anyone or everyone you want."
+}

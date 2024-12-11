@@ -1,0 +1,351 @@
+﻿@model ProductSearchModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Catalog.Products.BulkEdit").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Products");
+}
+
+@{
+    const string hideSearchBlockAttributeName = "ProductBulkEditPage.HideSearchBlock";
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
+}
+
+@if (Model.LicenseCheckModel.BlockPages != true)
+{
+    <form asp-controller="Product" asp-action="BulkEdit" method="post">
+        <div class="content-header clearfix">
+            <h1 class="float-left">
+                @T("Admin.Catalog.Products.BulkEdit")
+                <small>
+                    <i class="fas fa-arrow-circle-left"></i>
+                    <a asp-action="List">@T("Admin.Catalog.Products.BackToList")</a>
+                </small>
+            </h1>
+            <div class="float-right">
+                <button type="submit" id="bulk-edit-save-selected" name="bulk-edit-save-selected" class="btn btn-primary">
+                    <i class="far fa-save"></i>
+                    @T("Admin.Catalog.Products.BulkEdit.SaveSelected")
+                </button>
+                <button type="submit" id="bulk-edit-save-all" name="bulk-edit-save-all" class="btn btn-success">
+                    <i class="far fa-save"></i>
+                    @T("Admin.Catalog.Products.BulkEdit.SaveAll")
+                </button>
+
+                <nop-action-confirmation asp-button-id="bulk-edit-save-selected"/>
+                <nop-action-confirmation asp-button-id="bulk-edit-save-all"/>
+
+            </div>
+        </div>
+
+        <section class="content">
+            <div class="container-fluid">
+                <div class="form-horizontal">
+                    <div class="cards-group">
+                        <div class="card card-default card-search">
+                            <div class="card-body">
+                                <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                                    <div class="search-text">@T("Admin.Common.Search")</div>
+                                    <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                                    <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                                </div>
+
+                                <div class="search-body @(hideSearchBlock ? "closed" : "")">
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <div class="form-group row">
+                                                <div class="col-md-4">
+                                                    <nop-label asp-for="SearchProductName"/>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <nop-editor asp-for="SearchProductName"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row" @(Model.AvailableCategories.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                                <div class="col-md-4">
+                                                    <nop-label asp-for="SearchCategoryId"/>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <nop-select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row" @(Model.AvailableCategories.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                                <div class="col-md-4">
+                                                    <nop-label asp-for="SearchIncludeSubCategories"/>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <nop-editor asp-for="SearchIncludeSubCategories"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row" @(Model.AvailableManufacturers.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                                <div class="col-md-4">
+                                                    <nop-label asp-for="SearchManufacturerId"/>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <nop-select asp-for="SearchManufacturerId" asp-items="Model.AvailableManufacturers"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <div class="form-group row" @(Model.AvailableVendors.SelectionIsNotPossible() || Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                                                <div class="col-md-4">
+                                                    <nop-label asp-for="SearchVendorId"/>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <nop-select asp-for="SearchVendorId" asp-items="Model.AvailableVendors"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row" @(Model.HideStoresList ? Html.Raw("style=\"display:none\"") : null)>
+                                                <div class="col-md-4">
+                                                    <nop-label asp-for="SearchStoreId"/>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row" @(Model.AvailableWarehouses.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                                <div class="col-md-4">
+                                                    <nop-label asp-for="SearchWarehouseId"/>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <nop-select asp-for="SearchWarehouseId" asp-items="Model.AvailableWarehouses"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-md-4">
+                                                    <nop-label asp-for="SearchProductTypeId"/>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <nop-select asp-for="SearchProductTypeId" asp-items="Model.AvailableProductTypes"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-md-4">
+                                                    <nop-label asp-for="SearchPublishedId"/>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <nop-select asp-for="SearchPublishedId" asp-items="Model.AvailablePublishedOptions"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="text-center col-12">
+                                            <button type="button" onclick="search()" class="btn btn-primary btn-search">
+                                                <i class="fas fa-search"></i>
+                                                @T("Admin.Common.Search")
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card card-default">
+                            <div class="card-body">
+                                <table class="table table-hover table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th width="3%">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" id="selectall"/>
+                                                    <strong>@T("Admin.Common.Select")</strong>
+                                                </label>
+                                            </div>
+                                        </th>
+                                        <th>@T("Admin.Catalog.Products.Fields.Name")</th>
+                                        <th width="20%">@T("Admin.Catalog.Products.Fields.Sku")</th>
+                                        <th width="15%">@T("Admin.Catalog.Products.Fields.Price")</th>
+                                        <th width="15%">@T("Admin.Catalog.Products.Fields.OldPrice")</th>
+                                        <th width="10%">@T("Admin.Catalog.Products.Fields.StockQuantity")</th>
+                                        <th width="3%">@T("Admin.Catalog.Products.Fields.Published")</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="product-list">
+                                    <tr class="product-row">
+                                        <td colspan="7" style="text-align: center">@T("Admin.DT.EmptyTable")</td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot id="navigation">
+                                    <tr>
+                                        <td colspan="3">
+                                            <button onclick="search('first');return false;" class="btn btn-light" id="move-first">@T("Admin.DT.Paginate.First")</button>
+                                            <button onclick="search('previous');return false;" class="btn btn-light" id="move-previous">@T("Admin.DT.Paginate.Previous")</button>
+                                            <label><span id="loaded-info"></span></label>
+                                            <button onclick="search('next');return false;" class="btn btn-light" id="move-next">@T("Admin.DT.Paginate.Next")</button>
+                                            <button onclick="search('last');return false;" class="btn btn-light" id="move-last">@T("Admin.DT.Paginate.Last")</button>
+                                        </td>
+                                        <td colspan="4" style="text-align:right">
+                                            <a class="btn btn-success" onclick="addNewRow()">
+                                                <i class="fas fa-plus-square"></i>
+                                                @T("Admin.Common.AddNew")
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </form>
+}
+
+<script>
+    var newIndex = -1;
+    var start = @Model.Start;
+    var total = 0;
+
+    function addNewRow() {
+        id = newIndex--;
+
+        var postData = {
+            id
+        };
+
+        addAntiForgeryToken(postData);
+
+        $.ajax({
+            cache: false,
+            type: "POST",
+            url: "@(Url.Action("BulkEditNewProduct", "Product"))",
+            data: postData,
+            success: function (data, textStatus, jqXHR) {
+                $('#product-list').append(data);
+            }
+        });
+    };                                       
+
+    function search(next) {                                        
+        $(".product-row").remove();
+
+        var name = $("#@Html.IdFor(model => model.SearchProductName)").val();
+        var category = $("#@Html.IdFor(model => model.SearchCategoryId)").val();
+        var includeSubCategories = $("#@Html.IdFor(model => model.SearchIncludeSubCategories)")[0].checked;
+        var manufacturer = $("#@Html.IdFor(model => model.SearchManufacturerId)").val();
+        var vendor = $("#@Html.IdFor(model => model.SearchVendorId)").val();
+        var warehouse = $("#@Html.IdFor(model => model.SearchWarehouseId)").val();
+        var published = $("#@Html.IdFor(model => model.SearchPublishedId)").val();
+        var productType = $("#@Html.IdFor(model => model.SearchProductTypeId)").val();
+                                        
+        if (next == undefined)                                        
+            start = @Model.Start;
+
+        switch (next){
+            case 'first':
+                start = 0;
+                break;
+            case 'last':
+                start = total - (total%@Model.Length);
+                break;
+            case 'previous':
+                start -= @Model.Length;
+                break;
+            case 'next':
+                start += @Model.Length;
+                break;
+        };
+
+        var postData = {
+            SearchProductName: name,
+            SearchCategoryId: category,
+            SearchIncludeSubCategories: includeSubCategories,
+            SearchManufacturerId: manufacturer,
+            SearchVendorId: vendor,
+            SearchWarehouseId: warehouse,
+            SearchPublishedId: published,
+            SearchProductTypeId: productType,
+            Start: start,
+            PageSize: @Model.PageSize,
+            Length: @Model.Length
+        };
+
+        addAntiForgeryToken(postData);
+
+        $.ajax({
+            cache: false,
+            type: "POST",
+            url: "@(Url.Action("BulkEditProducts", "Product"))",
+            data: postData,
+            success: function (data, textStatus, jqXHR) {
+                var products = data.Products;
+                if (products.Data.length == 0) {
+                    $("#navigation").hide();
+                    $('#product-list').append('<tr class="product-row"><td colspan="7" style="text-align: center">@T("Admin.DT.EmptyTable")</td></tr>');
+                }
+                else {
+                    $("#navigation").show();
+                    $('#product-list').append(data.Html);
+
+                    var info = '@T("Admin.DT.Info")';
+                    total = products.recordsTotal;
+                    var begin = start + 1;
+                    var end = start + @Model.Length;
+
+                    if (end > total)
+                        end = total;
+
+                    info = info.replace("_TOTAL_", total);
+                    info = info.replace("_START_", begin);
+                    info = info.replace("_END_", end);
+
+                    $("#move-last").prop("disabled", end == total);
+                    $("#move-next").prop("disabled", end == total);
+
+                    $("#move-previous").prop("disabled", start < @Model.Length);
+                    $("#move-first").prop("disabled", start < @Model.Length);                                                   
+
+                    $("#loaded-info").text(info);
+                }                                                    
+            }
+        });
+    }
+
+    $(function () {
+        prepareTableCheckboxes('#selectall', '.product-select');
+        search();
+    });
+
+    $(function() {
+        var displayModal = @((Model.LicenseCheckModel?.DisplayWarning == true || Model.LicenseCheckModel?.BlockPages == true).ToString().ToLower());
+        if (displayModal) {
+            $('#license-window').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+
+            $('#license-window').on('shown.bs.modal', function (event) {
+                var modalCloseEl = $(this).find('button.close');
+                var closeTextEl = $('span', modalCloseEl);
+
+                var startFrom = 5;
+                closeTextEl.text(startFrom);
+
+                const timer = setInterval(function() {
+                    if (startFrom-- > 0)
+                        closeTextEl.text(startFrom);
+                }, 1000);
+
+                setTimeout(function() {
+                    closeTextEl.html('&times;');
+                    modalCloseEl.on('click', function() {
+                        $('#license-window').modal('hide')
+                    });
+                    clearInterval(timer);
+                }, startFrom*1000);
+            });
+        }
+    });
+</script>
+
+<div id="license-window" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @Html.Raw(Model.LicenseCheckModel?.WarningText)
+        </div>
+    </div>
+</div>

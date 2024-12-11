@@ -17,7 +17,7 @@
     </h1>
     <div class="float-right">
         <a asp-action="CreateMethod" class="btn btn-primary">
-            <i class="fas fa-plus-square"></i>
+            <i class="fas fa-square-plus"></i>
             @T("Admin.Common.AddNew")
         </a>
         @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ShippingMethodListButtons, additionalData = Model })
@@ -64,7 +64,7 @@
                                 Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
                                 ClassName =  NopColumnClassDefaults.Button,
-                                Render = new RenderButtonEdit(new DataUrl("EditMethod"))
+                                Render = new RenderButtonEdit(new DataUrl("~/Admin/Shipping/EditMethod"))
                             }
                         }
                     })
