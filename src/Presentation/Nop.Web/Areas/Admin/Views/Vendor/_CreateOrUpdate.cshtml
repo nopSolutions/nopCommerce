@@ -32,11 +32,11 @@
             <nop-cards id="vendor-cards">
                 <nop-card asp-name="vendor-info" asp-icon="fas fa-info" asp-title="@T("Admin.Vendors.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-card>
                 <nop-card asp-name="vendor-display" asp-icon="fas fa-tv" asp-title="@T("Admin.Vendors.Display")" asp-hide-block-attribute-name="@hideDisplayBlockAttributeName" asp-hide="@hideDisplayBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Display", Model)</nop-card>
-                <nop-card asp-name="vendor-seo" asp-icon="fas fa-search-plus" asp-title="@T("Admin.Common.SEO")" asp-hide-block-attribute-name="@hideSeoBlockAttributeName" asp-hide="@hideSeoBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Seo", Model)</nop-card>
+                <nop-card asp-name="vendor-seo" asp-icon="fas fa-magnifying-glass-plus" asp-title="@T("Admin.Common.SEO")" asp-hide-block-attribute-name="@hideSeoBlockAttributeName" asp-hide="@hideSeoBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Seo", Model)</nop-card>
 
                 @if (Model.Id > 0)
                 {
-                    <nop-card asp-name="vendor-products" asp-icon="fas fa-th-list" asp-title="@T("Admin.Vendors.VendorNotes")" asp-hide-block-attribute-name="@hideVendorNotesBlockAttributeName" asp-hide="@hideVendorNotesBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Notes", Model)</nop-card>
+                    <nop-card asp-name="vendor-products" asp-icon="fas fa-table-list" asp-title="@T("Admin.Vendors.VendorNotes")" asp-hide-block-attribute-name="@hideVendorNotesBlockAttributeName" asp-hide="@hideVendorNotesBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Notes", Model)</nop-card>
                 }
 
                 @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.VendorDetailsBlock, additionalData = Model })

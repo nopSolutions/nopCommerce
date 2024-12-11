@@ -8,6 +8,7 @@ using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Vendors;
+using Nop.Services.Configuration;
 using Nop.Services.Vendors;
 using Nop.Web.Factories;
 using Nop.Web.Models.Common;
@@ -29,15 +30,25 @@ public class CommonModelFactoryTests : BaseNopTest
     private DisplayDefaultFooterItemSettings _displayDefaultFooterItemSettings;
     private CommonSettings _commonSettings;
     private Vendor _vendor;
+    private ISettingService _settingsService;
 
     [OneTimeSetUp]
     public async Task SetUp()
     {
-        _commonModelFactory = GetService<ICommonModelFactory>();
+        _settingsService = GetService<ISettingService>();
         _localizationSettings = GetService<LocalizationSettings>();
+        _forumSettings = GetService<ForumSettings>();
+
+        _localizationSettings.SeoFriendlyUrlsForLanguagesEnabled = true;
+        await _settingsService.SaveSettingAsync(_localizationSettings);
+        _forumSettings.AllowPrivateMessages = true;
+        await _settingsService.SaveSettingAsync(_forumSettings);
+
+        _commonModelFactory = GetService<ICommonModelFactory>();
+
         _workContext = GetService<IWorkContext>();
         _customerSettings = GetService<CustomerSettings>();
-        _forumSettings = GetService<ForumSettings>();
+        
         _storeInformationSettings = GetService<StoreInformationSettings>();
         _newsSettings = GetService<NewsSettings>();
         _catalogSettings = GetService<CatalogSettings>();
@@ -45,6 +56,15 @@ public class CommonModelFactoryTests : BaseNopTest
         _displayDefaultFooterItemSettings = GetService<DisplayDefaultFooterItemSettings>();
 
         _vendor = await GetService<IVendorService>().GetVendorByIdAsync(1);
+    }
+
+    [OneTimeTearDown]
+    public async Task TearDown()
+    {
+        _localizationSettings.SeoFriendlyUrlsForLanguagesEnabled = false;
+        await _settingsService.SaveSettingAsync(_localizationSettings);
+        _forumSettings.AllowPrivateMessages = false;
+        await _settingsService.SaveSettingAsync(_forumSettings);
     }
 
     [Test]
@@ -270,6 +290,7 @@ public class CommonModelFactoryTests : BaseNopTest
     {
         var model = await _commonModelFactory.PrepareRobotsTextFileAsync();
         model.Should().NotBeNullOrEmpty();
-        model.Trim().Split(Environment.NewLine).Length.Should().Be(101);
+
+        model.Trim().Split(Environment.NewLine).Length.Should().Be(164);
     }
 }

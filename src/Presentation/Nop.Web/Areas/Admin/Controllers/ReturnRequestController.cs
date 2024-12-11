@@ -91,11 +91,9 @@ public partial class ReturnRequestController : BaseAdminController
         return RedirectToAction("List");
     }
 
+    [CheckPermission(StandardPermission.Orders.RETURN_REQUESTS_VIEW)]
     public virtual async Task<IActionResult> List()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageReturnRequests))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _returnRequestModelFactory.PrepareReturnRequestSearchModelAsync(new ReturnRequestSearchModel());
 
@@ -103,22 +101,18 @@ public partial class ReturnRequestController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Orders.RETURN_REQUESTS_VIEW)]
     public virtual async Task<IActionResult> List(ReturnRequestSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageReturnRequests))
-            return await AccessDeniedDataTablesJson();
-
         //prepare model
         var model = await _returnRequestModelFactory.PrepareReturnRequestListModelAsync(searchModel);
 
         return Json(model);
     }
 
+    [CheckPermission(StandardPermission.Orders.RETURN_REQUESTS_VIEW)]
     public virtual async Task<IActionResult> Edit(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageReturnRequests))
-            return AccessDeniedView();
-
         //try to get a return request with the specified id
         var returnRequest = await _returnRequestService.GetReturnRequestByIdAsync(id);
         if (returnRequest == null)
@@ -132,11 +126,9 @@ public partial class ReturnRequestController : BaseAdminController
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
     [FormValueRequired("save", "save-continue")]
+    [CheckPermission(StandardPermission.Orders.RETURN_REQUESTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Edit(ReturnRequestModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageReturnRequests))
-            return AccessDeniedView();
-
         //try to get a return request with the specified id
         var returnRequest = await _returnRequestService.GetReturnRequestByIdAsync(model.Id);
         if (returnRequest == null)
@@ -190,11 +182,9 @@ public partial class ReturnRequestController : BaseAdminController
 
     [HttpPost, ActionName("Edit")]
     [FormValueRequired("notify-customer")]
+    [CheckPermission(StandardPermission.Orders.RETURN_REQUESTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> NotifyCustomer(ReturnRequestModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageReturnRequests))
-            return AccessDeniedView();
-
         //try to get a return request with the specified id
         var returnRequest = await _returnRequestService.GetReturnRequestByIdAsync(model.Id);
         if (returnRequest == null)
@@ -217,11 +207,9 @@ public partial class ReturnRequestController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Orders.RETURN_REQUESTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Delete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageReturnRequests))
-            return AccessDeniedView();
-
         //try to get a return request with the specified id
         var returnRequest = await _returnRequestService.GetReturnRequestByIdAsync(id);
         if (returnRequest == null)
@@ -240,11 +228,9 @@ public partial class ReturnRequestController : BaseAdminController
 
     #region Return request reasons
 
-    public virtual async Task<IActionResult> ReturnRequestReasonList()
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
+    public virtual IActionResult ReturnRequestReasonList()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //select an appropriate card
         SaveSelectedCardName("ordersettings-return-request");
 
@@ -253,22 +239,18 @@ public partial class ReturnRequestController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> ReturnRequestReasonList(ReturnRequestReasonSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return await AccessDeniedDataTablesJson();
-
         //prepare model
         var model = await _returnRequestModelFactory.PrepareReturnRequestReasonListModelAsync(searchModel);
 
         return Json(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> ReturnRequestReasonCreate()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _returnRequestModelFactory.PrepareReturnRequestReasonModelAsync(new ReturnRequestReasonModel(), null);
 
@@ -276,11 +258,9 @@ public partial class ReturnRequestController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> ReturnRequestReasonCreate(ReturnRequestReasonModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         if (ModelState.IsValid)
         {
             var returnRequestReason = model.ToEntity<ReturnRequestReason>();
@@ -303,11 +283,9 @@ public partial class ReturnRequestController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> ReturnRequestReasonEdit(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //try to get a return request reason with the specified id
         var returnRequestReason = await _returnRequestService.GetReturnRequestReasonByIdAsync(id);
         if (returnRequestReason == null)
@@ -320,11 +298,9 @@ public partial class ReturnRequestController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> ReturnRequestReasonEdit(ReturnRequestReasonModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //try to get a return request reason with the specified id
         var returnRequestReason = await _returnRequestService.GetReturnRequestReasonByIdAsync(model.Id);
         if (returnRequestReason == null)
@@ -354,11 +330,9 @@ public partial class ReturnRequestController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> ReturnRequestReasonDelete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //try to get a return request reason with the specified id
         var returnRequestReason = await _returnRequestService.GetReturnRequestReasonByIdAsync(id)
                                   ?? throw new ArgumentException("No return request reason found with the specified id", nameof(id));
@@ -374,11 +348,9 @@ public partial class ReturnRequestController : BaseAdminController
 
     #region Return request actions
 
-    public virtual async Task<IActionResult> ReturnRequestActionList()
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
+    public virtual IActionResult ReturnRequestActionList()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //select an appropriate card
         SaveSelectedCardName("ordersettings-return-request");
 
@@ -387,22 +359,18 @@ public partial class ReturnRequestController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> ReturnRequestActionList(ReturnRequestActionSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return await AccessDeniedDataTablesJson();
-
         //prepare model
         var model = await _returnRequestModelFactory.PrepareReturnRequestActionListModelAsync(searchModel);
 
         return Json(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> ReturnRequestActionCreate()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _returnRequestModelFactory.PrepareReturnRequestActionModelAsync(new ReturnRequestActionModel(), null);
 
@@ -410,11 +378,9 @@ public partial class ReturnRequestController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> ReturnRequestActionCreate(ReturnRequestActionModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         if (ModelState.IsValid)
         {
             var returnRequestAction = model.ToEntity<ReturnRequestAction>();
@@ -437,11 +403,9 @@ public partial class ReturnRequestController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> ReturnRequestActionEdit(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //try to get a return request action with the specified id
         var returnRequestAction = await _returnRequestService.GetReturnRequestActionByIdAsync(id);
         if (returnRequestAction == null)
@@ -454,11 +418,9 @@ public partial class ReturnRequestController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> ReturnRequestActionEdit(ReturnRequestActionModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //try to get a return request action with the specified id
         var returnRequestAction = await _returnRequestService.GetReturnRequestActionByIdAsync(model.Id);
         if (returnRequestAction == null)
@@ -488,11 +450,9 @@ public partial class ReturnRequestController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> ReturnRequestActionDelete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //try to get a return request action with the specified id
         var returnRequestAction = await _returnRequestService.GetReturnRequestActionByIdAsync(id)
                                   ?? throw new ArgumentException("No return request action found with the specified id", nameof(id));

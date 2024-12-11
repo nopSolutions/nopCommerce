@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations.Schema;
 using Nop.Core.Domain.Localization;
 
 namespace Nop.Core.Domain.Catalog;

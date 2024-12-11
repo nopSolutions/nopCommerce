@@ -101,6 +101,144 @@ public class OmnisendService
 
     #region Utilities
 
+    private async Task<string> SendBatchAsync(string data)
+    {
+        var rez = await _omnisendHttpClient.PerformRequestAsync(OmnisendDefaults.BatchesApiUrl, data, HttpMethod.Post);
+
+        if (rez == null)
+            return string.Empty;
+
+        var bathId = JsonConvert.DeserializeAnonymousType(rez, new { batchID = "" })?.batchID;
+
+        if (bathId == null)
+            return string.Empty;
+
+        _omnisendSettings.BatchesIds.Add(bathId);
+        await _settingService.SaveSettingAsync(_omnisendSettings);
+
+        return bathId;
+    }
+
+    private async Task<string> SendProductBatchAsync(IEnumerable<Product> products, HttpMethod batchMethod)
+    {
+        var data = JsonConvert.SerializeObject(new BatchRequest
+        {
+            Method = batchMethod.Method.ToUpper(),
+            Endpoint = OmnisendDefaults.ProductsEndpoint,
+            Items = await products.SelectAwait(async product => await ProductToDtoAsync(product) as IBatchSupport).ToListAsync()
+        });
+
+        return await SendBatchAsync(data);
+    }
+
+    /// <summary>
+    /// Process the batch response
+    /// </summary>
+    /// <param name="batchResponse">Batch response to process</param>
+    /// <returns>New batch identifier if it placed during process the current one</returns>
+    public async Task<string> ProcessBatch(BatchResponse batchResponse)
+    {
+        var (delete, batchId) = await process();
+
+        if (!delete)
+            return batchId;
+
+        _omnisendSettings.BatchesIds.Remove(batchResponse.BatchId);
+        await _settingService.SaveSettingAsync(_omnisendSettings);
+
+        return batchId;
+
+        async Task<(bool, string)> process()
+        {
+            var newBatchId = string.Empty;
+
+            if (!batchResponse.Status.Equals(OmnisendDefaults.BatchFinishedStatus, StringComparison.InvariantCultureIgnoreCase))
+            {
+                batchResponse.ErrorsCount = 0;
+
+                return (false, newBatchId);
+            }
+
+            var endpoint = batchResponse.Endpoint;
+
+            if (!endpoint.Equals(OmnisendDefaults.ProductsEndpoint, StringComparison.InvariantCultureIgnoreCase) &&
+                !endpoint.Equals(OmnisendDefaults.CategoriesEndpoint, StringComparison.InvariantCultureIgnoreCase))
+                return (true, newBatchId);
+
+            if (batchResponse.ErrorsCount == 0)
+                return (true, newBatchId);
+
+            if (batchResponse.Method.Equals("PUT", StringComparison.InvariantCultureIgnoreCase))
+                return (false, newBatchId);
+
+            var url = OmnisendDefaults.BatchesApiUrl + $"/{batchResponse.BatchId}/items";
+
+            var result = await _omnisendHttpClient.PerformRequestAsync<BatchItemsResponse>(url, httpMethod: HttpMethod.Get);
+
+            var updateItems = new List<int>();
+
+            foreach (var resultError in result.Errors)
+            {
+                if (resultError.ResponseCode != 400)
+                    continue;
+
+                var needChangeCount = false;
+
+                if (endpoint.Equals(OmnisendDefaults.ProductsEndpoint, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    var productDto = JsonConvert.DeserializeObject<ProductDto>(resultError.Request?.ToString() ?? string.Empty);
+
+                    updateItems.Add(int.Parse(productDto.ProductId));
+                    needChangeCount = true;
+                }
+
+                if (endpoint.Equals(OmnisendDefaults.CategoriesEndpoint, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    var categoryDto = JsonConvert.DeserializeObject<CategoryDto>(resultError.Request?.ToString() ?? string.Empty);
+
+                    updateItems.Add(int.Parse(categoryDto.CategoryId));
+                    needChangeCount = true;
+                }
+
+                if (!needChangeCount)
+                    continue;
+
+                batchResponse.TotalCount--;
+                batchResponse.ErrorsCount--;
+            }
+
+            if (!updateItems.Any())
+                return (false, newBatchId);
+
+            if (endpoint.Equals(OmnisendDefaults.ProductsEndpoint, StringComparison.InvariantCultureIgnoreCase))
+                newBatchId = await UpdateProductsAsync(updateItems.ToArray());
+
+            if (endpoint.Equals(OmnisendDefaults.CategoriesEndpoint, StringComparison.InvariantCultureIgnoreCase))
+                await UpdateCategoriesAsync(updateItems.ToArray());
+
+            return (batchResponse.ErrorsCount == 0, newBatchId);
+        }
+    }
+
+    private async Task<List<BatchResponse>> GetBatchesInfoAsync(IList<string> batchesIds)
+    {
+        if (!batchesIds.Any())
+            return [];
+
+        var batches = await batchesIds.SelectAwait(GetBatchInfoAsync)
+            .ToListAsync();
+
+        batches = batches.Where(p => p != null).ToList();
+
+        if (batches.Any())
+            return batches;
+
+        _omnisendSettings.BatchesIds.Clear();
+        await _settingService.SaveSettingAsync(_omnisendSettings);
+
+        return batches;
+    }
+
     private async Task FillCustomerInfoAsync(BaseContactInfoDto dto, Customer customer)
     {
         if (customer == null)
@@ -522,15 +660,7 @@ public class OmnisendService
                     Items = categories.Select(category => CategoryToDto(category) as IBatchSupport).ToList()
                 });
 
-                var rez = await _omnisendHttpClient.PerformRequestAsync(OmnisendDefaults.BatchesApiUrl, data, HttpMethod.Post);
-
-                var bathId = JsonConvert.DeserializeAnonymousType(rez, new { batchID = "" })?.batchID;
-
-                if (bathId != null)
-                {
-                    _omnisendSettings.BatchesIds.Add(bathId);
-                    await _settingService.SaveSettingAsync(_omnisendSettings);
-                }
+                await SendBatchAsync(data);
 
                 page++;
 
@@ -546,6 +676,21 @@ public class OmnisendService
     }
 
     /// <summary>
+    /// Synchronize categories
+    /// </summary>
+    /// <param name="categoriesId">Categories identifiers list to update</param>
+    public async Task UpdateCategoriesAsync(int[] categoriesId)
+    {
+        var categories = await _categoryService.GetCategoriesByIdsAsync(categoriesId);
+
+        foreach (var category in categories)
+        {
+            var data = JsonConvert.SerializeObject(CategoryToDto(category));
+            await _omnisendHttpClient.PerformRequestAsync(OmnisendDefaults.CategoriesApiUrl + $"/{category.Id}", data, HttpMethod.Put);
+        }
+    }
+
+    /// <summary>
     /// Synchronize products
     /// </summary>
     public async Task SyncProductsAsync()
@@ -558,21 +703,7 @@ public class OmnisendService
 
             while (page < products.TotalPages)
             {
-                var data = JsonConvert.SerializeObject(new BatchRequest
-                {
-                    Endpoint = OmnisendDefaults.ProductsEndpoint,
-                    Items = await products.SelectAwait(async product => await ProductToDtoAsync(product) as IBatchSupport).ToListAsync()
-                });
-
-                var rez = await _omnisendHttpClient.PerformRequestAsync(OmnisendDefaults.BatchesApiUrl, data, HttpMethod.Post);
-
-                var bathId = JsonConvert.DeserializeAnonymousType(rez, new { batchID = "" })?.batchID;
-
-                if (bathId != null)
-                {
-                    _omnisendSettings.BatchesIds.Add(bathId);
-                    await _settingService.SaveSettingAsync(_omnisendSettings);
-                }
+                await SendProductBatchAsync(products, HttpMethod.Post);
 
                 page++;
 
@@ -640,6 +771,28 @@ public class OmnisendService
     #endregion
 
     #region Configuration
+
+    /// <summary>
+    /// Gets the stored batches
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the stored batches
+    /// </returns>
+    public async Task<IList<BatchResponse>> GetStoredBatchesAsync()
+    {
+        var batches = await GetBatchesInfoAsync(_omnisendSettings.BatchesIds);
+
+        var additionalBatches = await batches
+            .Where(p => p.Status.Equals(OmnisendDefaults.BatchFinishedStatus,
+                StringComparison.InvariantCultureIgnoreCase))
+            .SelectAwait(async batchResponse => await ProcessBatch(batchResponse))
+            .Where(newBatchId => !string.IsNullOrEmpty(newBatchId)).ToListAsync();
+        
+        batches.AddRange(await GetBatchesInfoAsync(additionalBatches));
+
+        return batches.Where(b => b.TotalCount > 0).ToList();
+    }
 
     /// <summary>
     /// Gets the brand identifier 
@@ -790,6 +943,17 @@ public class OmnisendService
         var product = await _productService.GetProductByIdAsync(productId);
 
         await CreateOrUpdateProductAsync(product);
+    }
+
+    /// <summary>
+    /// Updates products
+    /// </summary>
+    /// /// <param name="productsId">Products identifiers list to update</param>
+    public async Task<string> UpdateProductsAsync(int[] productsId)
+    {
+        var products = await _productService.GetProductsByIdsAsync(productsId);
+
+        return await SendProductBatchAsync(products, HttpMethod.Put);
     }
 
     /// <summary>
@@ -979,7 +1143,6 @@ public class OmnisendService
     }
 
     #endregion
-
-
+    
     #endregion
 }

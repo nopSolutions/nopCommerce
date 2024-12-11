@@ -26,6 +26,7 @@
     }
 
     var breadcrumbDelimiter = commonSettings.BreadcrumbDelimiter;
+    NopHtml.AddJsonLdParts(Model.JsonLd);
 }
 @*category breadcrumb*@
 @section Breadcrumb
@@ -59,12 +60,6 @@
                     position++;
                 }
             </ul>
-            @if (seoSettings.MicrodataEnabled)
-            {
-                <script type="application/ld+json">
-                    @Html.Raw(Model.JsonLd)
-                </script>
-            }
         </div>
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CategoryDetailsAfterBreadcrumb, additionalData = Model })
     }

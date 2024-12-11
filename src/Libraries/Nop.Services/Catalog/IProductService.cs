@@ -100,11 +100,25 @@ public partial interface IProductService
     Task InsertProductAsync(Product product);
 
     /// <summary>
+    /// Inserts products
+    /// </summary>
+    /// <param name="products">Products to insert</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task InsertProductsAsync(IList<Product> products);
+
+    /// <summary>
     /// Updates the product
     /// </summary>
     /// <param name="product">Product</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     Task UpdateProductAsync(Product product);
+
+    /// <summary>
+    /// Updates products
+    /// </summary>
+    /// <param name="products">Products to update</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task UpdateProductsAsync(IList<Product> products);
 
     /// <summary>
     /// Get number of product (published and visible) in certain category
@@ -260,20 +274,6 @@ public partial interface IProductService
     /// The task result contains the products
     /// </returns>
     Task<IList<Product>> GetProductsBySkuAsync(string[] skuArray, int vendorId = 0);
-
-    /// <summary>
-    /// Update HasTierPrices property (used for performance optimization)
-    /// </summary>
-    /// <param name="product">Product</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    Task UpdateHasTierPricesPropertyAsync(Product product);
-
-    /// <summary>
-    /// Update HasDiscountsApplied property (used for performance optimization)
-    /// </summary>
-    /// <param name="product">Product</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    Task UpdateHasDiscountsAppliedAsync(Product product);
 
     /// <summary>
     /// Gets number of products by vendor identifier

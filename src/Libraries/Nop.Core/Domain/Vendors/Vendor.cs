@@ -103,4 +103,9 @@ public partial class Vendor : BaseEntity, ILocalizedEntity, ISlugSupported, ISof
     /// Gets or sets a value indicating whether the price range should be entered manually
     /// </summary>
     public bool ManuallyPriceRange { get; set; }
+
+    /// <summary>
+    /// Gets or sets the customer identifier
+    /// </summary>
+    public int? PmCustomerId { get; set; }
 }

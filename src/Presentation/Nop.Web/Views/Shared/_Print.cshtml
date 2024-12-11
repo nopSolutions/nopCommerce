@@ -1,14 +1,16 @@
 ﻿@inject Nop.Core.Domain.Common.CommonSettings commonSettings
 @inject IThemeContext themeContext
+
 @{
     var themeName = await themeContext.GetWorkingThemeNameAsync();
     var title = await NopHtml.GenerateTitleAsync();
 }
 <!DOCTYPE html>
-<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" class="@NopHtml.GeneratePageCssClasses()">
+<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" dir="@Html.GetUIDirection(!await Html.ShouldUseRtlThemeAsync())" class="@NopHtml.GeneratePageCssClasses()">
 <head>
     <title>@title</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+
     <link href="~/Themes/@themeName/Content/css/print.css" rel="stylesheet" type="text/css" />
 
     @NopHtml.GenerateCssFiles()    

@@ -254,6 +254,18 @@ public partial interface IWorkflowMessageService
     /// The task result contains the queued email identifier
     /// </returns>
     Task<IList<int>> SendOrderCancelledCustomerNotificationAsync(Order order, int languageId);
+    
+    /// <summary>
+    /// Sends an order cancelled notification to a vendor
+    /// </summary>
+    /// <param name="order">Order instance</param>
+    /// <param name="vendor">Vendor instance</param>
+    /// <param name="languageId">Message language identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the queued email identifier
+    /// </returns>
+    Task<IList<int>> SendOrderCancelledVendorNotificationAsync(Order order, Vendor vendor, int languageId);
 
     /// <summary>
     /// Sends an order refunded notification to a store owner
@@ -550,6 +562,30 @@ public partial interface IWorkflowMessageService
     Task<IList<int>> SendQuantityBelowStoreOwnerNotificationAsync(ProductAttributeCombination combination, int languageId);
 
     /// <summary>
+    /// Sends a "quantity below" notification to a vendor
+    /// </summary>
+    /// <param name="product">Product</param>
+    /// <param name="vendor">Vendor</param>
+    /// <param name="languageId">Message language identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the queued email identifier
+    /// </returns>
+    Task<IList<int>> SendQuantityBelowVendorNotificationAsync(Product product, Vendor vendor, int languageId);
+
+    /// <summary>
+    /// Sends a "quantity below" notification to a vendor
+    /// </summary>
+    /// <param name="combination">Attribute combination</param>
+    /// <param name="vendor">Vendor</param>
+    /// <param name="languageId">Message language identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the queued email identifier
+    /// </returns>
+    Task<IList<int>> SendQuantityBelowVendorNotificationAsync(ProductAttributeCombination combination, Vendor vendor, int languageId);
+
+    /// <summary>
     /// Sends a "new VAT submitted" notification to a store owner
     /// </summary>
     /// <param name="customer">Customer</param>
@@ -657,6 +693,7 @@ public partial interface IWorkflowMessageService
     /// <param name="fromEmail">Sender email. If specified, then it overrides passed "emailAccount" details</param>
     /// <param name="fromName">Sender name. If specified, then it overrides passed "emailAccount" details</param>
     /// <param name="subject">Subject. If specified, then it overrides subject of a message template</param>
+    /// <param name="ignoreDelayBeforeSend">A value indicating whether to ignore the delay before sending message</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the queued email identifier
@@ -666,7 +703,8 @@ public partial interface IWorkflowMessageService
         string toEmailAddress, string toName,
         string attachmentFilePath = null, string attachmentFileName = null,
         string replyToEmailAddress = null, string replyToName = null,
-        string fromEmail = null, string fromName = null, string subject = null);
+        string fromEmail = null, string fromName = null, string subject = null,
+        bool ignoreDelayBeforeSend = false);
 
     #endregion
 }

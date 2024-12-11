@@ -43,13 +43,6 @@ export default function copyDependencies()
       .src(nodeModules + 'cldr-data/{main,segments,supplemental}/**')
       .pipe(gulp.dest(targetPath + '/cldr-data')),
 
-      
-    //Fine Uploader  
-    gulp
-      .src(nodeModules + 'fine-uploader/**')
-      .pipe(filter(['**/*.min.*', '**/*.{png,gif}', '**/lib/**']))
-      .pipe(gulp.dest(targetPath + '/fine-uploader')),
-
     //Moment.js  
     gulp
       .src(`${nodeModules}moment/min/moment-with-locales.min.js*`)
@@ -74,8 +67,7 @@ export default function copyDependencies()
 
     //OverlayScrollbars
     gulp
-      .src(`${nodeModules}overlayscrollbars/**`)
-      .pipe(filter('**/{css,js}/*.min*'))
+      .src(`${nodeModules}overlayscrollbars/**/*.min.*`)
       .pipe(gulp.dest(`${targetPath}overlayscrollbars`)),
 
     //Swiper
@@ -145,6 +137,4 @@ export default function copyDependencies()
       .pipe(gulp.dest(`${targetPath}jquery-migrate`)),
 
     ]);
-
-    
 }

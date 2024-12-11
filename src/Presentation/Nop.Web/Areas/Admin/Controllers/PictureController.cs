@@ -28,20 +28,14 @@ public partial class PictureController : BaseAdminController
     [IgnoreAntiforgeryToken]
     public virtual async Task<IActionResult> AsyncUpload()
     {
-        //if (!await _permissionService.Authorize(StandardPermissionProvider.UploadPictures))
+        //if (!await _permissionService.Authorize(StandardPermission.UploadPictures))
         //    return Json(new { success = false, error = "You do not have required permissions" }, "text/plain");
 
         var httpPostedFile = await Request.GetFirstOrDefaultFileAsync();
         if (httpPostedFile == null)
             return Json(new { success = false, message = "No file uploaded" });
 
-        const string qqFileNameParameter = "qqfilename";
-
-        var qqFileName = await Request.IsFormKeyExistsAsync(qqFileNameParameter)
-            ? (await Request.GetFormValueAsync(qqFileNameParameter)).ToString()
-            : string.Empty;
-
-        var picture = await _pictureService.InsertPictureAsync(httpPostedFile, qqFileName);
+        var picture = await _pictureService.InsertPictureAsync(httpPostedFile);
 
         //when returning JSON the mime-type must be set to text/plain
         //otherwise some browsers will pop-up a "Save As" dialog.

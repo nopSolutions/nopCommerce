@@ -62,7 +62,7 @@ public partial class RoxyFilemanController : BaseAdminController
     {
         try
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures))
+            if (!await _permissionService.AuthorizeAsync(StandardPermission.System.HTML_EDITOR_MANAGE_PICTURES))
                 throw new Exception("You don't have required permission");
 
             var directories = _roxyFilemanService.GetDirectoryList(type);
@@ -79,7 +79,7 @@ public partial class RoxyFilemanController : BaseAdminController
     {
         try
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures))
+            if (!await _permissionService.AuthorizeAsync(StandardPermission.System.HTML_EDITOR_MANAGE_PICTURES))
                 throw new Exception("You don't have required permission");
 
             var directories = _roxyFilemanService.GetFiles(d, type);
@@ -96,7 +96,7 @@ public partial class RoxyFilemanController : BaseAdminController
     {
         try
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures))
+            if (!await _permissionService.AuthorizeAsync(StandardPermission.System.HTML_EDITOR_MANAGE_PICTURES))
                 throw new Exception("You don't have required permission");
 
             var (stream, name) = _roxyFilemanService.GetFileStream(f);
@@ -117,7 +117,7 @@ public partial class RoxyFilemanController : BaseAdminController
     {
         try
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures))
+            if (!await _permissionService.AuthorizeAsync(StandardPermission.System.HTML_EDITOR_MANAGE_PICTURES))
                 throw new Exception("You don't have required permission");
 
             _roxyFilemanService.CopyDirectory(d, n);
@@ -135,7 +135,7 @@ public partial class RoxyFilemanController : BaseAdminController
     {
         try
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures))
+            if (!await _permissionService.AuthorizeAsync(StandardPermission.System.HTML_EDITOR_MANAGE_PICTURES))
                 throw new Exception("You don't have required permission");
 
             _roxyFilemanService.CopyFile(f, n);
@@ -153,7 +153,7 @@ public partial class RoxyFilemanController : BaseAdminController
     {
         try
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures))
+            if (!await _permissionService.AuthorizeAsync(StandardPermission.System.HTML_EDITOR_MANAGE_PICTURES))
                 throw new Exception("You don't have required permission");
 
             _roxyFilemanService.CreateDirectory(d, n);
@@ -171,7 +171,7 @@ public partial class RoxyFilemanController : BaseAdminController
     {
         try
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures))
+            if (!await _permissionService.AuthorizeAsync(StandardPermission.System.HTML_EDITOR_MANAGE_PICTURES))
                 throw new Exception("You don't have required permission");
 
             _roxyFilemanService.DeleteDirectory(d);
@@ -189,7 +189,7 @@ public partial class RoxyFilemanController : BaseAdminController
     {
         try
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures))
+            if (!await _permissionService.AuthorizeAsync(StandardPermission.System.HTML_EDITOR_MANAGE_PICTURES))
                 throw new Exception("You don't have required permission");
 
             _roxyFilemanService.DeleteFile(f);
@@ -204,7 +204,7 @@ public partial class RoxyFilemanController : BaseAdminController
 
     public virtual async Task<IActionResult> DownloadDirectory(string d)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures))
+        if (!await _permissionService.AuthorizeAsync(StandardPermission.System.HTML_EDITOR_MANAGE_PICTURES))
             throw new Exception("You don't have required permission");
 
         var fileContents = _roxyFilemanService.DownloadDirectory(d);
@@ -217,7 +217,7 @@ public partial class RoxyFilemanController : BaseAdminController
     {
         try
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures))
+            if (!await _permissionService.AuthorizeAsync(StandardPermission.System.HTML_EDITOR_MANAGE_PICTURES))
                 throw new Exception("You don't have required permission");
 
             _roxyFilemanService.MoveDirectory(d, n);
@@ -235,7 +235,7 @@ public partial class RoxyFilemanController : BaseAdminController
     {
         try
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures))
+            if (!await _permissionService.AuthorizeAsync(StandardPermission.System.HTML_EDITOR_MANAGE_PICTURES))
                 throw new Exception("You don't have required permission");
 
             _roxyFilemanService.MoveFile(f, n);
@@ -253,7 +253,7 @@ public partial class RoxyFilemanController : BaseAdminController
     {
         try
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures))
+            if (!await _permissionService.AuthorizeAsync(StandardPermission.System.HTML_EDITOR_MANAGE_PICTURES))
                 throw new Exception("You don't have required permission");
 
             _roxyFilemanService.RenameDirectory(d, n);
@@ -271,7 +271,7 @@ public partial class RoxyFilemanController : BaseAdminController
     {
         try
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures))
+            if (!await _permissionService.AuthorizeAsync(StandardPermission.System.HTML_EDITOR_MANAGE_PICTURES))
                 throw new Exception("You don't have required permission");
 
             _roxyFilemanService.RenameFile(f, n);
@@ -288,7 +288,7 @@ public partial class RoxyFilemanController : BaseAdminController
     {
         try
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures))
+            if (!await _permissionService.AuthorizeAsync(StandardPermission.System.HTML_EDITOR_MANAGE_PICTURES))
                 throw new Exception("You don't have required permission");
 
             var provider = new FileExtensionContentTypeProvider();
@@ -311,7 +311,7 @@ public partial class RoxyFilemanController : BaseAdminController
     {
         try
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures))
+            if (!await _permissionService.AuthorizeAsync(StandardPermission.System.HTML_EDITOR_MANAGE_PICTURES))
                 throw new Exception("You don't have required permission");
 
             var form = await HttpContext.Request.ReadFormAsync();

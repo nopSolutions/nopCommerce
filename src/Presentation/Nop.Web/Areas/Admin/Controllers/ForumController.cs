@@ -49,11 +49,9 @@ public partial class ForumController : BaseAdminController
         return RedirectToAction("List");
     }
 
+    [CheckPermission(StandardPermission.ContentManagement.FORUMS_VIEW)]
     public virtual async Task<IActionResult> List()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _forumModelFactory.PrepareForumGroupSearchModelAsync(new ForumGroupSearchModel());
 
@@ -61,11 +59,9 @@ public partial class ForumController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.ContentManagement.FORUMS_VIEW)]
     public virtual async Task<IActionResult> ForumGroupList(ForumGroupSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
-            return await AccessDeniedDataTablesJson();
-
         //prepare model
         var model = await _forumModelFactory.PrepareForumGroupListModelAsync(searchModel);
 
@@ -73,11 +69,9 @@ public partial class ForumController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.ContentManagement.FORUMS_VIEW)]
     public virtual async Task<IActionResult> ForumList(ForumSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
-            return await AccessDeniedDataTablesJson();
-
         //try to get a forum group with the specified id
         var forumGroup = await _forumService.GetForumGroupByIdAsync(searchModel.ForumGroupId)
                          ?? throw new ArgumentException("No forum group found with the specified id");
@@ -92,11 +86,9 @@ public partial class ForumController : BaseAdminController
 
     #region Create
 
+    [CheckPermission(StandardPermission.ContentManagement.FORUMS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> CreateForumGroup()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _forumModelFactory.PrepareForumGroupModelAsync(new ForumGroupModel(), null);
 
@@ -104,11 +96,9 @@ public partial class ForumController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.ContentManagement.FORUMS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> CreateForumGroup(ForumGroupModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
-            return AccessDeniedView();
-
         if (ModelState.IsValid)
         {
             var forumGroup = model.ToEntity<ForumGroup>();
@@ -128,11 +118,9 @@ public partial class ForumController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.ContentManagement.FORUMS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> CreateForum()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _forumModelFactory.PrepareForumModelAsync(new ForumModel(), null);
 
@@ -140,11 +128,9 @@ public partial class ForumController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.ContentManagement.FORUMS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> CreateForum(ForumModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
-            return AccessDeniedView();
-
         if (ModelState.IsValid)
         {
             var forum = model.ToEntity<Forum>();
@@ -168,11 +154,9 @@ public partial class ForumController : BaseAdminController
 
     #region Edit
 
+    [CheckPermission(StandardPermission.ContentManagement.FORUMS_VIEW)]
     public virtual async Task<IActionResult> EditForumGroup(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
-            return AccessDeniedView();
-
         //try to get a forum group with the specified id
         var forumGroup = await _forumService.GetForumGroupByIdAsync(id);
         if (forumGroup == null)
@@ -185,11 +169,9 @@ public partial class ForumController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.ContentManagement.FORUMS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> EditForumGroup(ForumGroupModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
-            return AccessDeniedView();
-
         //try to get a forum group with the specified id
         var forumGroup = await _forumService.GetForumGroupByIdAsync(model.Id);
         if (forumGroup == null)
@@ -213,11 +195,9 @@ public partial class ForumController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.ContentManagement.FORUMS_VIEW)]
     public virtual async Task<IActionResult> EditForum(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
-            return AccessDeniedView();
-
         //try to get a forum with the specified id
         var forum = await _forumService.GetForumByIdAsync(id);
         if (forum == null)
@@ -230,11 +210,9 @@ public partial class ForumController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.ContentManagement.FORUMS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> EditForum(ForumModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
-            return AccessDeniedView();
-
         //try to get a forum with the specified id
         var forum = await _forumService.GetForumByIdAsync(model.Id);
         if (forum == null)
@@ -263,11 +241,9 @@ public partial class ForumController : BaseAdminController
     #region Delete
 
     [HttpPost]
+    [CheckPermission(StandardPermission.ContentManagement.FORUMS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> DeleteForumGroup(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
-            return AccessDeniedView();
-
         //try to get a forum group with the specified id
         var forumGroup = await _forumService.GetForumGroupByIdAsync(id);
         if (forumGroup == null)
@@ -281,11 +257,9 @@ public partial class ForumController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.ContentManagement.FORUMS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> DeleteForum(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
-            return AccessDeniedView();
-
         //try to get a forum with the specified id
         var forum = await _forumService.GetForumByIdAsync(id);
         if (forum == null)

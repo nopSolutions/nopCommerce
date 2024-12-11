@@ -119,11 +119,9 @@ public partial class MessageTemplateController : BaseAdminController
         return RedirectToAction("List");
     }
 
+    [CheckPermission(StandardPermission.ContentManagement.MESSAGE_TEMPLATES_VIEW)]
     public virtual async Task<IActionResult> List()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageTemplates))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _messageTemplateModelFactory.PrepareMessageTemplateSearchModelAsync(new MessageTemplateSearchModel());
 
@@ -131,22 +129,18 @@ public partial class MessageTemplateController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.ContentManagement.MESSAGE_TEMPLATES_VIEW)]
     public virtual async Task<IActionResult> List(MessageTemplateSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageTemplates))
-            return await AccessDeniedDataTablesJson();
-
         //prepare model
         var model = await _messageTemplateModelFactory.PrepareMessageTemplateListModelAsync(searchModel);
 
         return Json(model);
     }
 
+    [CheckPermission(StandardPermission.ContentManagement.MESSAGE_TEMPLATES_VIEW)]
     public virtual async Task<IActionResult> Edit(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageTemplates))
-            return AccessDeniedView();
-
         //try to get a message template with the specified id
         var messageTemplate = await _messageTemplateService.GetMessageTemplateByIdAsync(id);
         if (messageTemplate == null)
@@ -160,11 +154,9 @@ public partial class MessageTemplateController : BaseAdminController
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
     [FormValueRequired("save", "save-continue")]
+    [CheckPermission(StandardPermission.ContentManagement.MESSAGE_TEMPLATES_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Edit(MessageTemplateModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageTemplates))
-            return AccessDeniedView();
-
         //try to get a message template with the specified id
         var messageTemplate = await _messageTemplateService.GetMessageTemplateByIdAsync(model.Id);
         if (messageTemplate == null)
@@ -207,11 +199,9 @@ public partial class MessageTemplateController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.ContentManagement.MESSAGE_TEMPLATES_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Delete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageTemplates))
-            return AccessDeniedView();
-
         //try to get a message template with the specified id
         var messageTemplate = await _messageTemplateService.GetMessageTemplateByIdAsync(id);
         if (messageTemplate == null)
@@ -230,11 +220,9 @@ public partial class MessageTemplateController : BaseAdminController
 
     [HttpPost, ActionName("Edit")]
     [FormValueRequired("message-template-copy")]
+    [CheckPermission(StandardPermission.ContentManagement.MESSAGE_TEMPLATES_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> CopyTemplate(MessageTemplateModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageTemplates))
-            return AccessDeniedView();
-
         //try to get a message template with the specified id
         var messageTemplate = await _messageTemplateService.GetMessageTemplateByIdAsync(model.Id);
         if (messageTemplate == null)
@@ -255,11 +243,9 @@ public partial class MessageTemplateController : BaseAdminController
         }
     }
 
+    [CheckPermission(StandardPermission.ContentManagement.MESSAGE_TEMPLATES_VIEW)]
     public virtual async Task<IActionResult> TestTemplate(int id, int languageId = 0)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageTemplates))
-            return AccessDeniedView();
-
         //try to get a message template with the specified id
         var messageTemplate = await _messageTemplateService.GetMessageTemplateByIdAsync(id);
         if (messageTemplate == null)
@@ -274,11 +260,9 @@ public partial class MessageTemplateController : BaseAdminController
 
     [HttpPost, ActionName("TestTemplate")]
     [FormValueRequired("send-test")]
+    [CheckPermission(StandardPermission.ContentManagement.MESSAGE_TEMPLATES_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> TestTemplate(TestMessageTemplateModel model, IFormCollection form)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageTemplates))
-            return AccessDeniedView();
-
         //try to get a message template with the specified id
         var messageTemplate = await _messageTemplateService.GetMessageTemplateByIdAsync(model.Id);
         if (messageTemplate == null)

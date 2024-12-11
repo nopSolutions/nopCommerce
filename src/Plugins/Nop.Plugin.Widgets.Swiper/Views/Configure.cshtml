@@ -1,0 +1,151 @@
+﻿@model ConfigurationModel
+
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+@await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
+<form asp-controller="WidgetSwiper" asp-action="Configure" method="post">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="cards-group">
+
+                <div class="card card-default">
+                    <div class="card-header">
+                        @T("Plugins.Widgets.Swiper.Settings")
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ShowNavigation_OverrideForStore" asp-input="ShowNavigation" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ShowNavigation" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ShowNavigation" />
+                                <span asp-validation-for="ShowNavigation"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ShowPagination_OverrideForStore" asp-input="ShowPagination" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ShowPagination" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ShowPagination" />
+                                <span asp-validation-for="ShowPagination"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="LazyLoading_OverrideForStore" asp-input="LazyLoading" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="LazyLoading" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="LazyLoading" />
+                                <span asp-validation-for="LazyLoading"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="Autoplay_OverrideForStore" asp-input="Autoplay" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="Autoplay" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="Autoplay" />
+                                <span asp-validation-for="Autoplay"></span>
+                            </div>
+                        </div>
+                        <nop-nested-setting asp-for="Autoplay">
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="AutoplayDelay_OverrideForStore" asp-input="AutoplayDelay" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="AutoplayDelay" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="AutoplayDelay" />
+                                    <span asp-validation-for="AutoplayDelay"></span>
+                                </div>
+                            </div>
+                        </nop-nested-setting>
+                        <div class="form-group row">
+                            <div class="offset-md-3 col-md-9">
+                                <button type="submit" name="save" class="btn btn-primary">@T("Admin.Common.Save")</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-default">
+                    <div class="card-header">
+                        @T("Plugins.Widgets.Swiper.SlideList")
+                    </div>
+                    <div class="card-body">
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "price-history-grid",
+                            UrlRead = new DataUrl("SlideList", "WidgetSwiper", null),
+                            UrlDelete = new DataUrl("SlideDelete", "WidgetSwiper", null),
+                            UrlUpdate = new DataUrl("SlideEdit", "WidgetSwiper", null),
+                            BindColumnNameActionDelete = nameof(PublicSlideModel.PictureId),
+                            Length = Model.SlidesSearchModel.PageSize,
+                            LengthMenu = Model.SlidesSearchModel.AvailablePageSizes,
+                            ColumnCollection = new List<ColumnProperty> 
+                            {
+                                new ColumnProperty(nameof(PublicSlideModel.PictureUrl))
+                                {
+                                    Title = T("Plugins.Widgets.Swiper.Picture").Text,
+                                    Render = new RenderCustom("renderPicturesColumnPictureUrl"),
+                                    Width = "200",
+                                },
+                                new ColumnProperty(nameof(PublicSlideModel.TitleText))
+                                {
+                                    Title = T("Plugins.Widgets.Swiper.TitleText").Text,
+                                    Width = "200",
+                                    Editable = true,
+                                    EditType = EditType.String
+                                },
+                                new ColumnProperty(nameof(PublicSlideModel.AltText))
+                                {
+                                    Title = T("Plugins.Widgets.Swiper.AltText").Text,
+                                    Width = "200",
+                                    Editable = true,
+                                    EditType = EditType.String
+                                },
+                                new ColumnProperty(nameof(PublicSlideModel.LinkUrl))
+                                {
+                                    Title = T("Plugins.Widgets.Swiper.LinkUrl").Text,
+                                    Width = "200",
+                                    Editable = true,
+                                    EditType = EditType.String
+                                },
+                                new ColumnProperty(nameof(PublicSlideModel.PictureId))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonsInlineEdit()
+                                },
+                                new ColumnProperty(nameof(PublicSlideModel.PictureId))
+                                {
+                                    Title = T("Admin.Common.Delete").Text,
+                                    Width = "100",
+                                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                                    ClassName = NopColumnClassDefaults.Button
+                                }
+                            }
+                        })
+
+                        <script>
+                            function renderPicturesColumnPictureUrl(data, type, row, meta) {
+                                return '<a href="' + row.PictureUrl + '" target="_blank"><img title="' + row.Text + '" alt="' + row.AltText + '" src="' + row.PictureUrl + '" /></a>';
+                            }
+                        </script>
+                    </div>
+                </div>
+
+                @await Html.PartialAsync("~/Plugins/Widgets.Swiper/Views/_Configure.AddSlide.cshtml", Model.AddSlideModel)
+
+            </div>
+        </div>
+    </section>
+</form>

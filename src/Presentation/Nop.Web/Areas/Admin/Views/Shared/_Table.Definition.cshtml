@@ -24,28 +24,8 @@
     //Model name for js function names
     var model_name = ReplaceName(Model.Name);
 
-    //dom
-    var buttonsPanel = "";
-    var infoPanel = "<'col-lg-4 col-xs-12'<'float-lg-right text-center'i>>";
-
-    if (Model.RefreshButton && !Model.IsChildTable)
-    {
-        buttonsPanel = "<'col-lg-1 col-xs-12'<'float-lg-right text-center data-tables-refresh'B>>";
-        infoPanel = "<'col-lg-3 col-xs-12'<'float-lg-right text-center'i>>";
-    }
-
-    var dom = "<'row'<'col-md-12't>>" +
-              "<'row margin-t-5'" +
-                "<'col-lg-5 col-xs-12'<'float-lg-left'p>>" +
-                "<'col-lg-3 col-xs-12'<'text-center'l>>" +
-                infoPanel +
-                buttonsPanel +
-              ">";
-
-    if (!string.IsNullOrEmpty(Model.Dom))
-    {
-        dom = Model.Dom;
-    }
+    //layout options
+    var buttons = Model.RefreshButton && !Model.IsChildTable ? "buttons" : "";
 
     //check using MasterCheckBox
     var isMasterCheckBoxUsed = Model.ColumnCollection.Any(x => x.IsMasterCheckBox);
@@ -211,7 +191,7 @@ ordering: @Model.Ordering.ToString().ToLowerInvariant(),
     <text>
     buttons: [{
         name: 'refresh',
-        text: '<i class="fas fa-sync-alt" style="padding-left: 5px"></i>',
+        text: '<i class="fas fa-rotate" style="padding-left: 5px"></i>',
         action: function() {
             @if (Model.ServerSide)
             {
@@ -229,7 +209,13 @@ ordering: @Model.Ordering.ToString().ToLowerInvariant(),
     }],
     </text>
 }
-dom: '@JavaScriptEncoder.Default.Encode(dom)',
+layout: {
+    topStart: null,
+    topEnd: null,
+    bottomStart: [],
+    bottomEnd: [],
+    bottom: ['paging', 'pageLength', 'info', '@buttons']
+},
 columns: [    
     @for (int i = 0; i < Model.ColumnCollection.Count; i++)
     {
@@ -322,7 +308,7 @@ columns: [
                 case RenderButtonRemove button:
                     <text>
                     render: function (data, type, row, meta) {
-                        return '<a href="#" class="@button.ClassName" onclick="table_deletedata_@(model_name)(\'' + data + '\');return false;"><i class="far fa-trash-alt"></i>@button.Title</a>';
+                        return '<a href="#" class="@button.ClassName" onclick="table_deletedata_@(model_name)(\'' + data + '\');return false;"><i class="far fa-trash-can"></i>@button.Title</a>';
                     },
                     </text>
                     break;
@@ -334,7 +320,7 @@ columns: [
                         if (typeof data == 'string') {
                             modData = data.replace(/[.*+?^${}()|[\]\\]/g, "_");
                         }
-                        return '<a href="#" class="@button.ClassName" id="buttonEdit_@(model_name)'+ modData + '" onclick="editData_@(model_name)($(this).parent().parent(), \'' + origData + '\');return false;"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit")</a>' +
+                        return '<a href="#" class="@button.ClassName" id="buttonEdit_@(model_name)'+ modData + '" onclick="editData_@(model_name)($(this).parent().parent(), \'' + origData + '\');return false;"><i class="fas fa-pencil"></i>@T("Admin.Common.Edit")</a>' +
                         '<a href="#" class="@button.ClassName" id="buttonConfirm_@(model_name)'+ modData + '" style="display:none" onclick="confirmEditData_@(model_name)($(this).parent().parent(), \'' + origData + '\', \'@column.Data\');return false;"><i class="fas fa-check"></i>@T("Admin.Common.Update")</a>' +
                         '<a href="#" class="@button.ClassName" id="buttonCancel_@(model_name)'+ modData + '" style="display:none" onclick="cancelEditData_@(model_name)(\'' + row + '\', \'' + origData + '\');updateTableWidth(\'' + '#@Model.Name' + '\');return false;"><i class="fas fa-ban"></i>@T("Admin.Common.Cancel")</a>';
                     },                         
@@ -343,7 +329,7 @@ columns: [
                 case RenderButtonEdit buttonEdit:
                     <text>
                     render: function (data, type, row, meta) {
-                        return '<a class="@buttonEdit.ClassName" href="@GetUrl(buttonEdit.Url)' + data + '"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit").Text</a>';
+                        return '<a class="@buttonEdit.ClassName" href="@GetUrl(buttonEdit.Url)' + data + '"><i class="fas fa-pencil"></i>@T("Admin.Common.Edit").Text</a>';
                     },
                     </text>
                     break;

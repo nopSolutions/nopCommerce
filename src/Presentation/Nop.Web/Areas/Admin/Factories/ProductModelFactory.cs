@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Net;
 using System.Text;
-using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using Nop.Core;
@@ -44,7 +43,6 @@ public partial class ProductModelFactory : IProductModelFactory
 
     protected readonly CatalogSettings _catalogSettings;
     protected readonly CurrencySettings _currencySettings;
-    protected readonly IAclSupportedModelFactory _aclSupportedModelFactory;
     protected readonly IAddressService _addressService;
     protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
     protected readonly ICategoryService _categoryService;
@@ -59,6 +57,7 @@ public partial class ProductModelFactory : IProductModelFactory
     protected readonly IMeasureService _measureService;
     protected readonly IOrderService _orderService;
     protected readonly IPictureService _pictureService;
+    protected readonly IPriceFormatter _priceFormatter;
     protected readonly IProductAttributeFormatter _productAttributeFormatter;
     protected readonly IProductAttributeParser _productAttributeParser;
     protected readonly IProductAttributeService _productAttributeService;
@@ -88,7 +87,6 @@ public partial class ProductModelFactory : IProductModelFactory
 
     public ProductModelFactory(CatalogSettings catalogSettings,
         CurrencySettings currencySettings,
-        IAclSupportedModelFactory aclSupportedModelFactory,
         IAddressService addressService,
         IBaseAdminModelFactory baseAdminModelFactory,
         ICategoryService categoryService,
@@ -103,6 +101,7 @@ public partial class ProductModelFactory : IProductModelFactory
         IMeasureService measureService,
         IOrderService orderService,
         IPictureService pictureService,
+        IPriceFormatter priceFormatter,
         IProductAttributeFormatter productAttributeFormatter,
         IProductAttributeParser productAttributeParser,
         IProductAttributeService productAttributeService,
@@ -128,7 +127,6 @@ public partial class ProductModelFactory : IProductModelFactory
     {
         _catalogSettings = catalogSettings;
         _currencySettings = currencySettings;
-        _aclSupportedModelFactory = aclSupportedModelFactory;
         _addressService = addressService;
         _baseAdminModelFactory = baseAdminModelFactory;
         _categoryService = categoryService;
@@ -143,6 +141,7 @@ public partial class ProductModelFactory : IProductModelFactory
         _measureService = measureService;
         _orderService = orderService;
         _pictureService = pictureService;
+        _priceFormatter = priceFormatter;
         _productAttributeFormatter = productAttributeFormatter;
         _productAttributeParser = productAttributeParser;
         _productAttributeService = productAttributeService;
@@ -744,6 +743,8 @@ public partial class ProductModelFactory : IProductModelFactory
             pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize,
             overridePublished: overridePublished);
 
+        var primaryStoreCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
+
         //prepare list model
         var model = await new ProductListModel().PrepareToGridAsync(searchModel, products, () =>
         {
@@ -754,6 +755,11 @@ public partial class ProductModelFactory : IProductModelFactory
 
                 //little performance optimization: ensure that "FullDescription" is not returned
                 productModel.FullDescription = string.Empty;
+
+                //fill formatted price
+                productModel.FormattedPrice = product.ProductType == ProductType.GroupedProduct ? null : await _priceFormatter.FormatPriceAsync(product.Price);
+
+                productModel.PrimaryStoreCurrencyCode = primaryStoreCurrency.CurrencyCode;
 
                 //fill in additional values (not existing in the entity)
                 productModel.SeName = await _urlRecordService.GetSeNameAsync(product, 0, true, false);
@@ -871,9 +877,11 @@ public partial class ProductModelFactory : IProductModelFactory
         model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
         model.BaseWeightIn = (await _measureService.GetMeasureWeightByIdAsync(_measureSettings.BaseWeightId)).Name;
         model.BaseDimensionIn = (await _measureService.GetMeasureDimensionByIdAsync(_measureSettings.BaseDimensionId)).Name;
-        model.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
         model.HasAvailableSpecificationAttributes =
             (await _specificationAttributeService.GetSpecificationAttributesWithOptionsAsync()).Any();
+
+        var currentVendor = await _workContext.GetCurrentVendorAsync();
+        model.IsLoggedInAsVendor = currentVendor != null;
 
         //prepare localized models
         if (!excludeProperties)
@@ -947,12 +955,13 @@ public partial class ProductModelFactory : IProductModelFactory
         }
 
         //prepare model discounts
-        var availableDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToSkus, showHidden: true, isActive: null);
+        var availableDiscounts = await _discountService.GetAllDiscountsAsync(
+            discountType: DiscountType.AssignedToSkus,
+            showHidden: true, isActive: null,
+            vendorId: currentVendor?.Id ?? 0);
+
         await _discountSupportedModelFactory.PrepareModelDiscountsAsync(model, product, availableDiscounts, excludeProperties);
-
-        //prepare model customer roles
-        await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(model, product, excludeProperties);
-
+        
         //prepare model stores
         await _storeMappingSupportedModelFactory.PrepareModelStoresAsync(model, product, excludeProperties);
 
@@ -1809,6 +1818,8 @@ public partial class ProductModelFactory : IProductModelFactory
                     ? (await _customerService.GetCustomerRoleByIdAsync(price.CustomerRoleId.Value))?.Name
                     : await _localizationService.GetResourceAsync("Admin.Catalog.Products.TierPrices.Fields.CustomerRole.All");
 
+                tierPriceModel.FormattedPrice = await _priceFormatter.FormatPriceAsync(price.Price);
+
                 return tierPriceModel;
             });
         });
@@ -1838,6 +1849,8 @@ public partial class ProductModelFactory : IProductModelFactory
             if (model == null)
                 model = tierPrice.ToModel<TierPriceModel>();
         }
+
+        model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
 
         //prepare available stores
         await _baseAdminModelFactory.PrepareStoresAsync(model.AvailableStores);

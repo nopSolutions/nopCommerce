@@ -45,7 +45,7 @@ public partial class AttributeService<TAttribute, TAttributeValue> : IAttributeS
     /// A task that represents the asynchronous operation
     /// The task result contains the attributes
     /// </returns>
-    public async Task<IList<TAttribute>> GetAllAttributesAsync()
+    public virtual async Task<IList<TAttribute>> GetAllAttributesAsync()
     {
         return await _attributeRepository.GetAllAsync(
             query => query.OrderBy(attribute => attribute.DisplayOrder)
@@ -61,7 +61,7 @@ public partial class AttributeService<TAttribute, TAttributeValue> : IAttributeS
     /// A task that represents the asynchronous operation
     /// The task result contains the attribute
     /// </returns>
-    public async Task<TAttribute> GetAttributeByIdAsync(int attributeId)
+    public virtual async Task<TAttribute> GetAttributeByIdAsync(int attributeId)
     {
         return await _attributeRepository.GetByIdAsync(attributeId, _ => default);
     }
@@ -71,7 +71,7 @@ public partial class AttributeService<TAttribute, TAttributeValue> : IAttributeS
     /// </summary>
     /// <param name="attribute"> attribute</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task InsertAttributeAsync(TAttribute attribute)
+    public virtual async Task InsertAttributeAsync(TAttribute attribute)
     {
         await _attributeRepository.InsertAsync(attribute);
     }
@@ -81,7 +81,7 @@ public partial class AttributeService<TAttribute, TAttributeValue> : IAttributeS
     /// </summary>
     /// <param name="attribute"> attribute</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task UpdateAttributeAsync(TAttribute attribute)
+    public virtual async Task UpdateAttributeAsync(TAttribute attribute)
     {
         await _attributeRepository.UpdateAsync(attribute);
     }
@@ -91,7 +91,7 @@ public partial class AttributeService<TAttribute, TAttributeValue> : IAttributeS
     /// </summary>
     /// <param name="attribute"> attribute</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task DeleteAttributeAsync(TAttribute attribute)
+    public virtual async Task DeleteAttributeAsync(TAttribute attribute)
     {
         await _attributeRepository.DeleteAsync(attribute);
     }
@@ -133,7 +133,7 @@ public partial class AttributeService<TAttribute, TAttributeValue> : IAttributeS
     /// A task that represents the asynchronous operation
     /// The task result contains the attribute values
     /// </returns>
-    public async Task<IList<TAttributeValue>> GetAttributeValuesAsync(int attributeId)
+    public virtual async Task<IList<TAttributeValue>> GetAttributeValuesAsync(int attributeId)
     {
         var key = _staticCacheManager.PrepareKeyForDefaultCache(
             NopAttributeDefaults.AttributeValuesByAttributeCacheKey, typeof(TAttribute).Name, attributeId);
@@ -154,7 +154,7 @@ public partial class AttributeService<TAttribute, TAttributeValue> : IAttributeS
     /// A task that represents the asynchronous operation
     /// The task result contains the attribute value
     /// </returns>
-    public async Task<TAttributeValue> GetAttributeValueByIdAsync(int attributeValueId)
+    public virtual async Task<TAttributeValue> GetAttributeValueByIdAsync(int attributeValueId)
     {
         return await _attributeValueRepository.GetByIdAsync(attributeValueId, _ => default);
     }
@@ -164,7 +164,7 @@ public partial class AttributeService<TAttribute, TAttributeValue> : IAttributeS
     /// </summary>
     /// <param name="attributeValue"> attribute value</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task InsertAttributeValueAsync(TAttributeValue attributeValue)
+    public virtual async Task InsertAttributeValueAsync(TAttributeValue attributeValue)
     {
         await _attributeValueRepository.InsertAsync(attributeValue);
     }
@@ -174,7 +174,7 @@ public partial class AttributeService<TAttribute, TAttributeValue> : IAttributeS
     /// </summary>
     /// <param name="attributeValue"> attribute value</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task UpdateAttributeValueAsync(TAttributeValue attributeValue)
+    public virtual async Task UpdateAttributeValueAsync(TAttributeValue attributeValue)
     {
         await _attributeValueRepository.UpdateAsync(attributeValue);
     }
@@ -184,7 +184,7 @@ public partial class AttributeService<TAttribute, TAttributeValue> : IAttributeS
     /// </summary>
     /// <param name="attributeValue"> attribute value</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task DeleteAttributeValueAsync(TAttributeValue attributeValue)
+    public virtual async Task DeleteAttributeValueAsync(TAttributeValue attributeValue)
     {
         await _attributeValueRepository.DeleteAsync(attributeValue);
     }

@@ -306,8 +306,8 @@ public partial class NopStartup : INopStartup
                  }, typeof(IConsumer<>)))
             services.AddScoped(findInterface, consumer);
 
-        //XML sitemap
-        services.AddScoped<IXmlSiteMap, XmlSiteMap>();
+        //admin menu
+        services.AddScoped<IAdminMenu, AdminMenu>();
 
         //register the Lazy resolver for .Net IoC
         var useAutofac = appSettings.Get<CommonConfig>().UseAutofac;

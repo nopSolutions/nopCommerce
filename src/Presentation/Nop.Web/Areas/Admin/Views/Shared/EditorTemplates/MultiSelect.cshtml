@@ -1,6 +1,6 @@
 ﻿@model List<int>
 <div class="select2-blue">
-    <select asp-for="@Model" asp-items="@((IEnumerable<SelectListItem>)ViewData["SelectList"])" multiple="multiple" class="form-control select2" data-dropdown-css-class="select2-blue"></select>
+    <select asp-for="@Model" asp-items="@((IEnumerable<SelectListItem>)ViewData["SelectList"])" multiple="multiple" class="form-control select2" style="width: 100%;" data-dropdown-css-class="select2-blue"></select>
 </div>
 <script>
     $(function() {

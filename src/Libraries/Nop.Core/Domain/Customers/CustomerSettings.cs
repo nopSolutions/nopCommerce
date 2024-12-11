@@ -223,7 +223,7 @@ public partial class CustomerSettings : ISettings
     public int LastActivityMinutes { get; set; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether deleted customer records should be prefixed suffixed with "-DELETED"
+    /// Gets or sets a value indicating whether deleted customer records should be suffixed with "-DELETED"
     /// </summary>
     public bool SuffixDeletedCustomers { get; set; }
 

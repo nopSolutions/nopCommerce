@@ -138,7 +138,7 @@ public partial class CampaignService : ICampaignService
                 continue;
 
             var tokens = new List<Token>();
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, await _storeContext.GetCurrentStoreAsync(), emailAccount);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, await _storeContext.GetCurrentStoreAsync(), emailAccount, subscription.LanguageId);
             await _messageTokenProvider.AddNewsLetterSubscriptionTokensAsync(tokens, subscription);
             if (customer != null)
                 await _messageTokenProvider.AddCustomerTokensAsync(tokens, customer);
@@ -171,15 +171,16 @@ public partial class CampaignService : ICampaignService
     /// <param name="campaign">Campaign</param>
     /// <param name="emailAccount">Email account</param>
     /// <param name="email">Email</param>
+    /// <param name="languageId">Language identifier</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task SendCampaignAsync(Campaign campaign, EmailAccount emailAccount, string email)
+    public virtual async Task SendCampaignAsync(Campaign campaign, EmailAccount emailAccount, string email, int languageId)
     {
         ArgumentNullException.ThrowIfNull(campaign);
 
         ArgumentNullException.ThrowIfNull(emailAccount);
 
         var tokens = new List<Token>();
-        await _messageTokenProvider.AddStoreTokensAsync(tokens, await _storeContext.GetCurrentStoreAsync(), emailAccount);
+        await _messageTokenProvider.AddStoreTokensAsync(tokens, await _storeContext.GetCurrentStoreAsync(), emailAccount, languageId);
         var customer = await _customerService.GetCustomerByEmailAsync(email);
         if (customer != null)
             await _messageTokenProvider.AddCustomerTokensAsync(tokens, customer);

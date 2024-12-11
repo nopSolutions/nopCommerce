@@ -22,8 +22,9 @@ public partial interface IMessageTokenProvider
     /// <param name="tokens">List of already added tokens</param>
     /// <param name="store">Store</param>
     /// <param name="emailAccount">Email account</param>
+    /// <param name="languageId">Language identifier</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    Task AddStoreTokensAsync(IList<Token> tokens, Store store, EmailAccount emailAccount);
+    Task AddStoreTokensAsync(IList<Token> tokens, Store store, EmailAccount emailAccount, int languageId);
 
     /// <summary>
     /// Add order tokens

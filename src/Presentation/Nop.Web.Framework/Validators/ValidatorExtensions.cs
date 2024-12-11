@@ -1,6 +1,4 @@
 ﻿using FluentValidation;
-using FluentValidation.Validators;
-using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Localization;
 

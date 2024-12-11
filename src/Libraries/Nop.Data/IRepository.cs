@@ -211,6 +211,13 @@ public partial interface IRepository<TEntity> where TEntity : BaseEntity
     Task DeleteAsync(IList<TEntity> entities, bool publishEvent = true);
 
     /// <summary>
+    /// Delete entity entries
+    /// </summary>
+    /// <param name="entities">Entity entries</param>
+    /// <param name="publishEvent">Whether to publish event notification</param>
+    void Delete(IList<TEntity> entities, bool publishEvent = true);
+
+    /// <summary>
     /// Delete entity entries by the passed predicate
     /// </summary>
     /// <param name="predicate">A function to test each element for a condition</param>

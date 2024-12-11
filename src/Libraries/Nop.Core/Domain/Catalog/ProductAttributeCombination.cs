@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Nop.Core.Domain.Catalog;
 

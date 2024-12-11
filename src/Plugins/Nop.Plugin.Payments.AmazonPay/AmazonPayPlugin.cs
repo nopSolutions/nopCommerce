@@ -24,6 +24,7 @@ public class AmazonPayPlugin : BasePlugin, IExternalAuthenticationMethod, IPayme
 {
     #region Fields
 
+    private readonly AmazonPayApiService _amazonPayApiService;
     private readonly AmazonPayPaymentService _amazonPayPaymentService;
     private readonly AmazonPaySettings _amazonPaySettings;
     private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
@@ -38,7 +39,8 @@ public class AmazonPayPlugin : BasePlugin, IExternalAuthenticationMethod, IPayme
 
     #region Ctor
 
-    public AmazonPayPlugin(AmazonPayPaymentService amazonPayPaymentService,
+    public AmazonPayPlugin(AmazonPayApiService amazonPayApiService,
+        AmazonPayPaymentService amazonPayPaymentService,
         AmazonPaySettings amazonPaySettings,
         ExternalAuthenticationSettings externalAuthenticationSettings,
         IHttpContextAccessor httpContextAccessor,
@@ -48,6 +50,7 @@ public class AmazonPayPlugin : BasePlugin, IExternalAuthenticationMethod, IPayme
         PaymentSettings paymentSettings,
         WidgetSettings widgetSettings)
     {
+        _amazonPayApiService = amazonPayApiService;
         _amazonPayPaymentService = amazonPayPaymentService;
         _amazonPaySettings = amazonPaySettings;
         _externalAuthenticationSettings = externalAuthenticationSettings;
@@ -377,6 +380,18 @@ public class AmazonPayPlugin : BasePlugin, IExternalAuthenticationMethod, IPayme
     public Type GetPublicViewComponent()
     {
         return typeof(PaymentInfoViewComponent);
+    }
+
+    /// <summary>
+    /// Gets a name of a view component for displaying plugin in public store ("payment info" checkout step)
+    /// </summary>
+    /// <returns>View component name</returns>
+    Type IExternalAuthenticationMethod.GetPublicViewComponent()
+    {
+        if (_amazonPayApiService.IsActiveAndConfiguredAsync().Result)
+            return typeof(PaymentInfoViewComponent);
+
+        return null;
     }
 
     /// <summary>

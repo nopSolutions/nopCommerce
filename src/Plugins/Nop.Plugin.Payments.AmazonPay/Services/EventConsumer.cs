@@ -146,7 +146,7 @@ public class EventConsumer :
         if (!await _amazonPayApiService.IsActiveAndConfiguredAsync())
             return;
 
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
+        if (!await _permissionService.AuthorizeAsync(StandardPermission.Configuration.MANAGE_PAYMENT_METHODS))
             return;
 
         var request = _httpContextAccessor.HttpContext?.Request;

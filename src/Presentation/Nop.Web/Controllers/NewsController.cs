@@ -142,7 +142,7 @@ public partial class NewsController : BasePublicController
             !await _storeMappingService.AuthorizeAsync(newsItem);
         //Check whether the current user has a "Manage news" permission (usually a store owner)
         //We should allows him (her) to use "Preview" functionality
-        var hasAdminAccess = await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews);
+        var hasAdminAccess = await _permissionService.AuthorizeAsync(StandardPermission.Security.ACCESS_ADMIN_PANEL) && await _permissionService.AuthorizeAsync(StandardPermission.ContentManagement.NEWS_VIEW);
         if (notAvailable && !hasAdminAccess)
             return InvokeHttp404();
 

@@ -5,6 +5,7 @@ using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Controllers;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.Tax.Avalara.Controllers;
 
@@ -40,15 +41,13 @@ public class AvalaraProductController : BaseAdminController
     #region Methods
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
     public async Task<IActionResult> ExportProducts(string selectedIds)
     {
         //ensure that Avalara tax provider is active
         if (!await _taxPluginManager.IsPluginActiveAsync(AvalaraTaxDefaults.SystemName))
             return RedirectToAction("List", "Product");
-
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return AccessDeniedView();
-
+        
         //export items
         var exportedItems = await _avalaraTaxManager.ExportProductsAsync(selectedIds);
         if (exportedItems.HasValue)

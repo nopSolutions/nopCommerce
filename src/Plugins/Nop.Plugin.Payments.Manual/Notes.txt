@@ -7,8 +7,8 @@
 
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework> 
-    <OutputPath>..\..\Presentation\Nop.Web\Plugins\PLUGIN_OUTPUT_DIRECTORY</OutputPath>
+    <TargetFramework>net9.0</TargetFramework> 
+    <OutputPath>$(SolutionDir)\Presentation\Nop.Web\Plugins\PLUGIN_OUTPUT_DIRECTORY</OutputPath>
     <OutDir>$(OutputPath)</OutDir>
 	<!--Set this parameter to true to get the dlls copied from the NuGet cache to the output of your project.
     You need to set this parameter to true if your plugin has a nuget package 
@@ -17,13 +17,13 @@
   </PropertyGroup>
 
   <ItemGroup>    
-    <ClearPluginAssemblies Include="$(MSBuildProjectDirectory)\..\..\Build\ClearPluginAssemblies.proj" />
+    <ClearPluginAssemblies Include="$(SolutionDir)\Build\ClearPluginAssemblies.proj" />
   </ItemGroup>
 
   <!-- This target execute after "Build" target -->
   <Target Name="NopTarget" AfterTargets="Build">
     <!-- Delete unnecessary libraries from plugins path -->
-    <MSBuild Projects="@(ClearPluginAssemblies)" Properties="PluginPath=$(MSBuildProjectDirectory)\$(OutDir)" Targets="NopClear" />
+    <MSBuild Projects="@(ClearPluginAssemblies)" Properties="PluginPath=$(OutDir)" Targets="NopClear" />
   </Target>
 </Project>
 

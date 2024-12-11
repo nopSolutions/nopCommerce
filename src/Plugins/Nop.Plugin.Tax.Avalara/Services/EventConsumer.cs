@@ -191,7 +191,7 @@ public class EventConsumer :
         if (!await _taxPluginManager.IsPluginActiveAsync(AvalaraTaxDefaults.SystemName))
             return;
 
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
+        if (!await _permissionService.AuthorizeAsync(StandardPermission.Configuration.MANAGE_TAX_SETTINGS))
             return;
 
         //whether there is a form value for the entity use code

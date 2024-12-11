@@ -1,0 +1,54 @@
+﻿@model MessagesModel
+
+@{
+    var paypalMessagesContainer = "paypal-messages-container";
+}
+
+<link rel="stylesheet" href="~/Plugins/Payments.PayPalCommerce/Content/styles.css" />
+@if (Model.LoadScript)
+{
+    <script asp-location="Auto" src="@PayPalCommerceDefaults.MerchantConfiguratorScriptUrl" defer></script>
+}
+<div id="@paypalMessagesContainer" class="paypal-messages-container" style="display: none;"></div>
+
+<script asp-location="Footer">
+    $(function () {
+        var loadScript = @((Model.LoadScript).ToString().ToLower());
+        if (loadScript) {
+            var script = window.merchantConfigurators?.generateHeaderScript({
+                bnCode: '@PayPalCommerceDefaults.PartnerHeader.Value',
+                clientId: '@settings.ClientId',
+                currency: '@Model.CurrencyCode'
+            });
+            $('#@paypalMessagesContainer').append(script);
+        }
+
+        var isCartPage = @((Model.Placement == ButtonPlacement.Cart).ToString().ToLower());
+        if (isCartPage) {
+            if ($('#checkout').length > 0) {
+                $('#@paypalMessagesContainer').addClass('paypal-cart');
+            } else {
+                $('#@paypalMessagesContainer').hide();
+            }
+        }
+
+        var isPaymentMethodPage = @((Model.Placement == ButtonPlacement.PaymentMethod).ToString().ToLower());
+        if (isPaymentMethodPage) {
+            $('#@paypalMessagesContainer').addClass('paypal-checkout');
+        }
+
+        $('#@paypalMessagesContainer').show();
+
+        if ($('#@paypalMessagesContainer').length > 0) {
+            var messages = window.merchantConfigurators?.generateMessagingCodeSnippet({
+                messageConfig: @Html.Raw(Model.Config),
+                productPrice: '@Model.Amount',
+            });
+            $('#@paypalMessagesContainer').append(messages);
+            $('.total-info').after($('#@paypalMessagesContainer'));
+        }
+
+        $('#@paypalMessagesContainer').addClass('pay-later-total-info');
+    });
+
+</script>

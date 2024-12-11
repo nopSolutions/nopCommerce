@@ -13,6 +13,11 @@ public partial class AdminAreaSettings : ISettings
     public int DefaultGridPageSize { get; set; }
 
     /// <summary>
+    /// Products bulk edit grid page size
+    /// </summary>
+    public int ProductsBulkEditGridPageSize { get; set; }
+
+    /// <summary>
     /// Popup grid page size (for popup pages)
     /// </summary>
     public int PopupGridPageSize { get; set; }

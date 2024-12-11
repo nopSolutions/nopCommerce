@@ -145,7 +145,7 @@ public partial class CheckoutController : BasePublicController
             return true;
 
         var interval = DateTime.UtcNow - lastOrder.CreatedOnUtc;
-        return interval.TotalSeconds > _orderSettings.MinimumOrderPlacementInterval;
+        return interval.TotalMinutes > _orderSettings.MinimumOrderPlacementInterval;
     }
 
     /// <summary>
@@ -465,8 +465,8 @@ public partial class CheckoutController : BasePublicController
             if (!opc)
                 return Json(new { redirect = Url.RouteUrl("CheckoutBillingAddress") });
 
-            var billingAddressModel =
-                await _checkoutModelFactory.PrepareBillingAddressModelAsync(cart, address.CountryId);
+            var billingAddressModel = new CheckoutBillingAddressModel();
+            await _checkoutModelFactory.PrepareBillingAddressModelAsync(billingAddressModel, cart, address.CountryId);
 
             return Json(new
             {
@@ -493,7 +493,9 @@ public partial class CheckoutController : BasePublicController
             if (!opc)
                 return Json(new { redirect = Url.RouteUrl("CheckoutBillingAddress") });
 
-            var billingAddressModel = await _checkoutModelFactory.PrepareBillingAddressModelAsync(cart);
+            var billingAddressModel = new CheckoutBillingAddressModel();
+            await _checkoutModelFactory.PrepareBillingAddressModelAsync(billingAddressModel, cart);
+
             return Json(new
             {
                 update_section = new UpdateSectionJsonModel
@@ -517,7 +519,8 @@ public partial class CheckoutController : BasePublicController
             if (!opc)
                 return Json(new { redirect = Url.RouteUrl("CheckoutShippingAddress") });
 
-            var shippingAddressModel = await _checkoutModelFactory.PrepareShippingAddressModelAsync(cart);
+            var shippingAddressModel = new CheckoutShippingAddressModel();
+            await _checkoutModelFactory.PrepareShippingAddressModelAsync(shippingAddressModel, cart);
 
             return Json(new
             {
@@ -549,7 +552,9 @@ public partial class CheckoutController : BasePublicController
                     redirect = Url.RouteUrl("CheckoutShippingAddress")
                 });
 
-            var shippingAddressModel = await _checkoutModelFactory.PrepareShippingAddressModelAsync(cart, address.CountryId);
+            var shippingAddressModel  = new CheckoutShippingAddressModel();
+            await _checkoutModelFactory.PrepareShippingAddressModelAsync(shippingAddressModel, cart, address.CountryId);
+            
             return Json(new
             {
                 selected_id = model.ShippingNewAddress.Id,
@@ -586,7 +591,8 @@ public partial class CheckoutController : BasePublicController
             return Challenge();
 
         //model
-        var model = await _checkoutModelFactory.PrepareBillingAddressModelAsync(cart, prePopulateNewAddressWithCustomerFields: true);
+        var model = new CheckoutBillingAddressModel();
+        await _checkoutModelFactory.PrepareBillingAddressModelAsync(model, cart, prePopulateNewAddressWithCustomerFields: true);
 
         //check whether "billing address" step is enabled
         if (_orderSettings.DisableBillingAddressCheckoutStep && model.ExistingAddresses.Any())
@@ -727,10 +733,11 @@ public partial class CheckoutController : BasePublicController
             return RedirectToRoute("CheckoutShippingAddress");
         }
 
-        //If we got this far, something failed, redisplay form
-        model = await _checkoutModelFactory.PrepareBillingAddressModelAsync(cart,
+        //if we got this far, something failed, redisplay form
+        await _checkoutModelFactory.PrepareBillingAddressModelAsync(model, cart,
             selectedCountryId: newAddress.CountryId,
             overrideAttributesXml: customAttributes);
+
         return View(model);
     }
 
@@ -757,7 +764,9 @@ public partial class CheckoutController : BasePublicController
             return RedirectToRoute("CheckoutShippingMethod");
 
         //model
-        var model = await _checkoutModelFactory.PrepareShippingAddressModelAsync(cart, prePopulateNewAddressWithCustomerFields: true);
+        var model = new CheckoutShippingAddressModel();
+        await _checkoutModelFactory.PrepareShippingAddressModelAsync(model, cart, prePopulateNewAddressWithCustomerFields: true);
+        
         return View(model);
     }
 
@@ -860,7 +869,6 @@ public partial class CheckoutController : BasePublicController
                 await _addressService.InsertAddressAsync(address);
 
                 await _customerService.InsertCustomerAddressAsync(customer, address);
-
             }
 
             customer.ShippingAddressId = address.Id;
@@ -869,10 +877,11 @@ public partial class CheckoutController : BasePublicController
             return RedirectToRoute("CheckoutShippingMethod");
         }
 
-        //If we got this far, something failed, redisplay form
-        model = await _checkoutModelFactory.PrepareShippingAddressModelAsync(cart,
+        //if we got this far, something failed, redisplay form
+        await _checkoutModelFactory.PrepareShippingAddressModelAsync(model, cart,
             selectedCountryId: newAddress.CountryId,
             overrideAttributesXml: customAttributes);
+        
         return View(model);
     }
 
@@ -1551,7 +1560,8 @@ public partial class CheckoutController : BasePublicController
                 if (!ModelState.IsValid)
                 {
                     //model is not valid. redisplay the form with errors
-                    var billingAddressModel = await _checkoutModelFactory.PrepareBillingAddressModelAsync(cart,
+                    var billingAddressModel = new CheckoutBillingAddressModel();
+                    await _checkoutModelFactory.PrepareBillingAddressModelAsync(billingAddressModel, cart,
                         selectedCountryId: newAddress.CountryId,
                         overrideAttributesXml: customAttributes);
                     billingAddressModel.NewAddressPreselected = true;
@@ -1622,7 +1632,8 @@ public partial class CheckoutController : BasePublicController
                 }
 
                 //do not ship to the same address
-                var shippingAddressModel = await _checkoutModelFactory.PrepareShippingAddressModelAsync(cart, prePopulateNewAddressWithCustomerFields: true);
+                var shippingAddressModel = new CheckoutShippingAddressModel();
+                await _checkoutModelFactory.PrepareShippingAddressModelAsync(shippingAddressModel, cart, prePopulateNewAddressWithCustomerFields: true);
 
                 return Json(new
                 {
@@ -1717,10 +1728,12 @@ public partial class CheckoutController : BasePublicController
                 if (!ModelState.IsValid)
                 {
                     //model is not valid. redisplay the form with errors
-                    var shippingAddressModel = await _checkoutModelFactory.PrepareShippingAddressModelAsync(cart,
+                    var shippingAddressModel = new CheckoutShippingAddressModel();
+                    await _checkoutModelFactory.PrepareShippingAddressModelAsync(shippingAddressModel, cart,
                         selectedCountryId: newAddress.CountryId,
                         overrideAttributesXml: customAttributes);
                     shippingAddressModel.NewAddressPreselected = true;
+                    
                     return Json(new
                     {
                         update_section = new UpdateSectionJsonModel

@@ -38,13 +38,14 @@ public partial interface IDiscountService
     /// <param name="startDateUtc">Discount start date; pass null to load all records</param>
     /// <param name="endDateUtc">Discount end date; pass null to load all records</param>
     /// <param name="isActive">A value indicating whether to get active discounts; "null" to load all discounts; "false" to load only inactive discounts; "true" to load only active discounts</param>
+    /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the discounts
     /// </returns>
     Task<IList<Discount>> GetAllDiscountsAsync(DiscountType? discountType = null,
         string couponCode = null, string discountName = null, bool showHidden = false,
-        DateTime? startDateUtc = null, DateTime? endDateUtc = null, bool? isActive = true);
+        DateTime? startDateUtc = null, DateTime? endDateUtc = null, bool? isActive = true, int vendorId = 0);
 
     /// <summary>
     /// Inserts a discount

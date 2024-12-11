@@ -60,11 +60,10 @@ public partial class CustomerRoleController : BaseAdminController
         return RedirectToAction("List");
     }
 
+    [CheckPermission(StandardPermission.Customers.CUSTOMERS_VIEW)]
+    [CheckPermission(StandardPermission.Customers.CUSTOMER_ROLES_VIEW)]
     public virtual async Task<IActionResult> List()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _customerRoleModelFactory.PrepareCustomerRoleSearchModelAsync(new CustomerRoleSearchModel());
 
@@ -72,22 +71,20 @@ public partial class CustomerRoleController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Customers.CUSTOMERS_VIEW)]
+    [CheckPermission(StandardPermission.Customers.CUSTOMER_ROLES_VIEW)]
     public virtual async Task<IActionResult> List(CustomerRoleSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
-            return await AccessDeniedDataTablesJson();
-
         //prepare model
         var model = await _customerRoleModelFactory.PrepareCustomerRoleListModelAsync(searchModel);
 
         return Json(model);
     }
 
+    [CheckPermission(StandardPermission.Customers.CUSTOMER_ROLES_CREATE_EDIT_DELETE)]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_ACL)]
     public virtual async Task<IActionResult> Create()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers) || !await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAcl))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _customerRoleModelFactory.PrepareCustomerRoleModelAsync(new CustomerRoleModel(), null);
 
@@ -95,11 +92,10 @@ public partial class CustomerRoleController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.Customers.CUSTOMER_ROLES_CREATE_EDIT_DELETE)]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_ACL)]
     public virtual async Task<IActionResult> Create(CustomerRoleModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers) || !await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAcl))
-            return AccessDeniedView();
-
         if (ModelState.IsValid)
         {
             var customerRole = model.ToEntity<CustomerRole>();
@@ -121,11 +117,10 @@ public partial class CustomerRoleController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.Customers.CUSTOMER_ROLES_VIEW)]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_ACL)]
     public virtual async Task<IActionResult> Edit(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers) || !await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAcl))
-            return AccessDeniedView();
-
         //try to get a customer role with the specified id
         var customerRole = await _customerService.GetCustomerRoleByIdAsync(id);
         if (customerRole == null)
@@ -138,11 +133,10 @@ public partial class CustomerRoleController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.Customers.CUSTOMER_ROLES_CREATE_EDIT_DELETE)]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_ACL)]
     public virtual async Task<IActionResult> Edit(CustomerRoleModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers) || !await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAcl))
-            return AccessDeniedView();
-
         //try to get a customer role with the specified id
         var customerRole = await _customerService.GetCustomerRoleByIdAsync(model.Id);
         if (customerRole == null)
@@ -188,11 +182,10 @@ public partial class CustomerRoleController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Customers.CUSTOMER_ROLES_CREATE_EDIT_DELETE)]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_ACL)]
     public virtual async Task<IActionResult> Delete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers) || !await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAcl))
-            return AccessDeniedView();
-
         //try to get a customer role with the specified id
         var customerRole = await _customerService.GetCustomerRoleByIdAsync(id);
         if (customerRole == null)
@@ -217,11 +210,10 @@ public partial class CustomerRoleController : BaseAdminController
         }
     }
 
+    [CheckPermission(StandardPermission.Customers.CUSTOMER_ROLES_VIEW)]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_ACL)]
     public virtual async Task<IActionResult> AssociateProductToCustomerRolePopup()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers) || !await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAcl))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _customerRoleModelFactory.PrepareCustomerRoleProductSearchModelAsync(new CustomerRoleProductSearchModel());
 
@@ -229,11 +221,10 @@ public partial class CustomerRoleController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Customers.CUSTOMER_ROLES_VIEW)]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_ACL)]
     public virtual async Task<IActionResult> AssociateProductToCustomerRolePopupList(CustomerRoleProductSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers) || !await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAcl))
-            return await AccessDeniedDataTablesJson();
-
         //prepare model
         var model = await _customerRoleModelFactory.PrepareCustomerRoleProductListModelAsync(searchModel);
 
@@ -242,11 +233,10 @@ public partial class CustomerRoleController : BaseAdminController
 
     [HttpPost]
     [FormValueRequired("save")]
+    [CheckPermission(StandardPermission.Customers.CUSTOMER_ROLES_CREATE_EDIT_DELETE)]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_ACL)]
     public virtual async Task<IActionResult> AssociateProductToCustomerRolePopup([Bind(Prefix = nameof(AddProductToCustomerRoleModel))] AddProductToCustomerRoleModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers) || !await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAcl))
-            return AccessDeniedView();
-
         //try to get a product with the specified id
         var associatedProduct = await _productService.GetProductByIdAsync(model.AssociatedToProductId);
         if (associatedProduct == null)

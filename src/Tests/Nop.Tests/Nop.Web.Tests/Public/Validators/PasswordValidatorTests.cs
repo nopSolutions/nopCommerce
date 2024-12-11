@@ -1,5 +1,6 @@
 ﻿using FluentValidation.TestHelper;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Tax;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Validators;
@@ -19,6 +20,7 @@ public class PasswordValidatorTests : BaseNopTest
     private ILocalizationService _localizationService;
     private IStateProvinceService _stateProvinceService;
     private CustomerSettings _customerSettings;
+    private TaxSettings _taxSettings;
 
     [OneTimeSetUp]
     public void Setup()
@@ -35,8 +37,9 @@ public class PasswordValidatorTests : BaseNopTest
 
         _localizationService = GetService<ILocalizationService>();
         _stateProvinceService = GetService<IStateProvinceService>();
+        _taxSettings = GetService<TaxSettings>();
         _changePasswordValidator = new ChangePasswordValidator(_localizationService, _customerSettings);
-        _registerValidator = new RegisterValidator(_localizationService, _stateProvinceService, _customerSettings);
+        _registerValidator = new RegisterValidator(_localizationService, _stateProvinceService, _customerSettings, _taxSettings);
         _passwordRecoveryConfirmValidator = new PasswordRecoveryConfirmValidator(_localizationService, _customerSettings);
 
         _person = new Person();

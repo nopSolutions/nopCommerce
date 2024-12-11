@@ -83,9 +83,8 @@ public partial interface ILogger
     /// <param name="customer">The customer to associate log record with</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains a log item
     /// </returns>
-    Task<Log> InsertLogAsync(LogLevel logLevel, string shortMessage, string fullMessage = "", Customer customer = null);
+    Task InsertLogAsync(LogLevel logLevel, string shortMessage, string fullMessage = "", Customer customer = null);
 
     /// <summary>
     /// Inserts a log item
@@ -94,10 +93,7 @@ public partial interface ILogger
     /// <param name="shortMessage">The short message</param>
     /// <param name="fullMessage">The full message</param>
     /// <param name="customer">The customer to associate log record with</param>
-    /// <returns>
-    /// Log item
-    /// </returns>
-    Log InsertLog(LogLevel logLevel, string shortMessage, string fullMessage = "", Customer customer = null);
+    void InsertLog(LogLevel logLevel, string shortMessage, string fullMessage = "", Customer customer = null);
 
     /// <summary>
     /// Information

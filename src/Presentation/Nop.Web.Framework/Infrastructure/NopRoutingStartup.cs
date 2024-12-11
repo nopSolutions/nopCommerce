@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
-using Nop.Web.Framework.Infrastructure.Extensions;
 
 namespace Nop.Web.Framework.Infrastructure;
 
@@ -27,11 +26,11 @@ public partial class NopRoutingStartup : INopStartup
     /// <param name="application">Builder for configuring an application's request pipeline</param>
     public void Configure(IApplicationBuilder application)
     {
-        //Add the RoutingMiddleware
+        //add the RoutingMiddleware
         application.UseRouting();
 
-        var settings = Singleton<AppSettings>.Instance.Get<CommonConfig>();
-        if (settings.PermitLimit > 0)
+        var commonConfig = Singleton<AppSettings>.Instance.Get<CommonConfig>();
+        if (commonConfig.PermitLimit > 0)
             application.UseRateLimiter();
     }
 

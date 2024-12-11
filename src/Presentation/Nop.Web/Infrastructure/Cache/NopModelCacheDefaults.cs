@@ -156,6 +156,16 @@ public static partial class NopModelCacheDefaults
     public static string CategoryPicturePrefixCacheKeyById => "Nop.pres.category.picture-{0}-";
 
     /// <summary>
+    /// Cache key for category list of the search box
+    /// </summary>
+    /// <remarks>
+    /// {0} : store id
+    /// {1} : language id
+    /// </remarks>
+    public static CacheKey SearchBoxCategoryListModelKey => new("Nop.pres.searchbox.categories-{0}-{1}", SearchBoxCategoryListPrefixCacheKey);
+    public static string SearchBoxCategoryListPrefixCacheKey => "Nop.pres.searchbox.categories";
+
+    /// <summary>
     /// Key for manufacturer picture caching
     /// </summary>
     /// <remarks>
@@ -184,6 +194,17 @@ public static partial class NopModelCacheDefaults
     public static CacheKey VendorPictureModelKey => new("Nop.pres.vendor.picture-{0}-{1}-{2}-{3}-{4}-{5}", VendorPicturePrefixCacheKey, VendorPicturePrefixCacheKeyById);
     public static string VendorPicturePrefixCacheKey => "Nop.pres.vendor.picture";
     public static string VendorPicturePrefixCacheKeyById => "Nop.pres.vendor.picture-{0}-";
+
+    /// <summary>
+    /// Key for vendor reviews caching
+    /// </summary>
+    /// <remarks>
+    /// {0} : vendor id
+    /// {1} : current store ID
+    /// </remarks>
+    public static CacheKey VendorReviewsModelKey => new("Nop.pres.vendor.reviews-{0}-{1}", VendorReviewsPrefixCacheKey, VendorReviewsByVendorIdPrefixCacheKey);
+    public static string VendorReviewsPrefixCacheKey => "Nop.pres.vendor.reviews";
+    public static string VendorReviewsByVendorIdPrefixCacheKey => "Nop.pres.vendor.reviews-{0}-";
 
     /// <summary>
     /// Key for cart picture caching

@@ -59,9 +59,8 @@ public class ShoppingCartModelFactoryTests : WebTest
 
         await shoppingCartRepo.InsertAsync(new List<ShoppingCartItem> { _shoppingCartItem, _wishlistItem });
 
-        var currentCustomer = await _workContext.GetCurrentCustomerAsync();
-        currentCustomer.HasShoppingCartItems = true;
-        await _customerService.UpdateCustomerAsync(currentCustomer);
+        customer.HasShoppingCartItems = true;
+        await _customerService.UpdateCustomerAsync(customer);
     }
 
     [OneTimeTearDown]
@@ -98,6 +97,13 @@ public class ShoppingCartModelFactoryTests : WebTest
         model.Items.Any().Should().BeTrue();
         model.Items.Count.Should().Be(1);
         model.Warnings.Count.Should().Be(0);
+
+        model.OrderReviewData.Should().NotBeNull();
+        model.OrderReviewData.Display.Should().BeFalse();
+        model = await _shoppingCartModelFactory.PrepareShoppingCartModelAsync(new ShoppingCartModel(),
+            new List<ShoppingCartItem> { _shoppingCartItem }, true, true, true);
+        model.OrderReviewData.Should().NotBeNull();
+        model.OrderReviewData.Display.Should().BeTrue();
     }
 
     [Test]

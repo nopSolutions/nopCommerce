@@ -2,6 +2,7 @@
 using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Customers;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Areas.Admin.Controllers;
 
@@ -27,11 +28,9 @@ public partial class OnlineCustomerController : BaseAdminController
 
     #region Methods
 
+    [CheckPermission(StandardPermission.Customers.CUSTOMERS_VIEW)]
     public virtual async Task<IActionResult> List()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _customerModelFactory.PrepareOnlineCustomerSearchModelAsync(new OnlineCustomerSearchModel());
 
@@ -39,11 +38,9 @@ public partial class OnlineCustomerController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Customers.CUSTOMERS_VIEW)]
     public virtual async Task<IActionResult> List(OnlineCustomerSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
-            return await AccessDeniedDataTablesJson();
-
         //prepare model
         var model = await _customerModelFactory.PrepareOnlineCustomerListModelAsync(searchModel);
 

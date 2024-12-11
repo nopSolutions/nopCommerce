@@ -16,6 +16,7 @@ public partial record DiscountSearchModel : BaseSearchModel
     {
         AvailableActiveOptions = new List<SelectListItem>();
         AvailableDiscountTypes = new List<SelectListItem>();
+        AvailableVendors = new List<SelectListItem>();
     }
 
     #endregion
@@ -43,8 +44,13 @@ public partial record DiscountSearchModel : BaseSearchModel
 
     [NopResourceDisplayName("Admin.Promotions.Discounts.List.IsActive")]
     public int IsActiveId { get; set; }
-
     public IList<SelectListItem> AvailableActiveOptions { get; set; }
+
+    [NopResourceDisplayName("Admin.Promotions.Discounts.List.SearchVendor")]
+    public int SearchVendorId { get; set; }
+    public IList<SelectListItem> AvailableVendors { get; set; }
+
+    public bool IsLoggedInAsVendor { get; set; }
 
     #endregion
 }

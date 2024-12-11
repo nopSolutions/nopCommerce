@@ -58,7 +58,7 @@ public partial class TopicController : BasePublicController
                            !await _storeMappingService.AuthorizeAsync(topic);
 
         //allow administrators to preview any topic
-        var hasAdminAccess = await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics);
+        var hasAdminAccess = await _permissionService.AuthorizeAsync(StandardPermission.Security.ACCESS_ADMIN_PANEL) && await _permissionService.AuthorizeAsync(StandardPermission.ContentManagement.TOPICS_VIEW);
 
         if (notAvailable && !hasAdminAccess)
             return InvokeHttp404();

@@ -35,8 +35,8 @@ public class GoogleAuthenticatorService
         _googleAuthenticatorSettings = googleAuthenticatorSettings;
     }
     #endregion
-        
-    #region Utilites
+
+    #region Utilities
 
     /// <summary>
     /// Insert the configuration

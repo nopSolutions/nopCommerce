@@ -401,15 +401,6 @@ public class SettingMigration : MigrationBase
             //delete old setting
             settingRepository.Delete(setting => setting.Name == $"{nameof(PdfSettings)}.FontFileName".ToLower());
         }
-
-        var productEditorSettings = settingService.LoadSetting<ProductEditorSettings>();
-
-        //#1934
-        if (!settingService.SettingExists(productEditorSettings, settings => settings.DisplayAttributeCombinationImagesOnly))
-        {
-            productEditorSettings.DisplayAttributeCombinationImagesOnly = false;
-            settingService.SaveSetting(productEditorSettings, settings => settings.DisplayAttributeCombinationImagesOnly);
-        }
     }
 
     public override void Down()

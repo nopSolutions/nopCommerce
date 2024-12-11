@@ -10,15 +10,13 @@ public partial interface ICheckoutModelFactory
     /// <summary>
     /// Prepare billing address model
     /// </summary>
+    /// <param name="model">Billing address model</param>
     /// <param name="cart">Cart</param>
     /// <param name="selectedCountryId">Selected country identifier</param>
     /// <param name="prePopulateNewAddressWithCustomerFields">Pre populate new address with customer fields</param>
     /// <param name="overrideAttributesXml">Override attributes xml</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the billing address model
-    /// </returns>
-    Task<CheckoutBillingAddressModel> PrepareBillingAddressModelAsync(IList<ShoppingCartItem> cart,
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task PrepareBillingAddressModelAsync(CheckoutBillingAddressModel model, IList<ShoppingCartItem> cart,
         int? selectedCountryId = null,
         bool prePopulateNewAddressWithCustomerFields = false,
         string overrideAttributesXml = "");
@@ -26,15 +24,13 @@ public partial interface ICheckoutModelFactory
     /// <summary>
     /// Prepare shipping address model
     /// </summary>
+    /// <param name="model">Shipping address model</param>
     /// <param name="cart">Cart</param>
     /// <param name="selectedCountryId">Selected country identifier</param>
     /// <param name="prePopulateNewAddressWithCustomerFields">Pre populate new address with customer fields</param>
     /// <param name="overrideAttributesXml">Override attributes xml</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the shipping address model
-    /// </returns>
-    Task<CheckoutShippingAddressModel> PrepareShippingAddressModelAsync(IList<ShoppingCartItem> cart, int? selectedCountryId = null,
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task PrepareShippingAddressModelAsync(CheckoutShippingAddressModel model, IList<ShoppingCartItem> cart, int? selectedCountryId = null,
         bool prePopulateNewAddressWithCustomerFields = false, string overrideAttributesXml = "");
 
     /// <summary>

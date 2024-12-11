@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Tax;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Validators;
@@ -12,7 +13,8 @@ public partial class RegisterValidator : BaseNopValidator<RegisterModel>
 {
     public RegisterValidator(ILocalizationService localizationService,
         IStateProvinceService stateProvinceService,
-        CustomerSettings customerSettings)
+        CustomerSettings customerSettings,
+        TaxSettings taxSettings)
     {
         RuleFor(x => x.Email).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.Email.Required"));
         RuleFor(x => x.Email)
@@ -134,5 +136,12 @@ public partial class RegisterValidator : BaseNopValidator<RegisterModel>
         {
             RuleFor(x => x.Fax).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.Fax.Required"));
         }
+
+        //Tax settings
+        if (taxSettings.EuVatEnabled && taxSettings.EuVatRequired)
+        {
+            RuleFor(x => x.VatNumber).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.VatNumber.Required"));
+        }
+
     }
 }

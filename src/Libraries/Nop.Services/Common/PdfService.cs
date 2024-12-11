@@ -1,5 +1,4 @@
 ﻿using System.IO.Compression;
-using System.Net;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;

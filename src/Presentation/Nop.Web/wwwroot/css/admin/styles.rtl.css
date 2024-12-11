@@ -271,7 +271,7 @@ i.false-icon {
   position: absolute;
   left: 15px;
   top: 15px;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .card.card-secondary .card-container .cards-group {
@@ -755,7 +755,7 @@ i.false-icon {
 /*override font-awesome styles*/
 .fa, .far, .fas {
   padding-left: 5px;
-  font-size: 0.9em;
+  font-size: 1.01em;
 }
 
 /*typeahead*/
@@ -1000,11 +1000,11 @@ i.false-icon {
 }
 
 /*CSS loader */
-div.dataTables_wrapper {
+div.dt-container {
   position: relative;
 }
 
-div.dataTables_wrapper div.dataTables_processing {
+div.dt-container div.dt-processing {
   border: none;
   top: 0;
   right: 0;
@@ -1018,7 +1018,7 @@ div.dataTables_wrapper div.dataTables_processing {
   border-radius: 3px;
 }
 
-div.dataTables_wrapper div.dataTables_processing .fa {
+div.dt-container div.dt-processing .fa {
   padding-left: 0 !important;
   position: absolute;
   top: 50%;
@@ -1029,15 +1029,19 @@ div.dataTables_wrapper div.dataTables_processing .fa {
   font-size: 30px;
 }
 
-.dataTables_wrapper.no-footer .dataTables_scrollBody {
+div.dt-processing > div {
+  display: none;
+}
+
+.dt-container.dt-empty-footer .dt-scroll-body {
   border-bottom: 1px solid #f4f4f4;
 }
 
-.dataTables_wrapper thead {
+div.row.justify-content-between.dt-layout-table thead {
   background-color: #f4f4f4;
 }
 
-.dataTables_wrapper tbody td {
+.dt-container tbody td {
   vertical-align: middle !important;
 }
 
@@ -1267,6 +1271,7 @@ div.dataTables_wrapper div.dataTables_processing .fa {
 
 .form-text-row {
   padding-top: 6px;
+  min-height: 1.5em;
 }
 
 .btn-search {
@@ -1436,7 +1441,7 @@ table td .form-group {
   margin-top: 2px;
 }
 
-div.dataTables_wrapper > div.row.margin-t-5 > div.col-lg-1.col-xs-12 > div > div > button {
+div.dt-buttons.btn-group.flex-wrap > button {
   background-color: #f4f4f4;
   color: #444;
   border-color: #ddd;
@@ -1480,46 +1485,6 @@ div.dataTables_wrapper > div.row.margin-t-5 > div.col-lg-1.col-xs-12 > div > div
 
 .table-bordered tr:hover td {
   background-color: #e3e3e3;
-}
-
-
-/* QQ */
-.sidebar-mini .qq-upload-button {
-  display: inline-block;
-  padding: 6px 12px;
-  margin-bottom: 4px;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1.42857143;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: middle;
-  -ms-touch-action: manipulation;
-  touch-action: manipulation;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  background-image: none;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  background-color: #00a65a;
-  border-color: #008d4c;
-  float: right;
-  margin-left: 5px;
-}
-
-.qq-upload-list {
-  float: right;
-}
-
-.qq-upload-list .qq-upload-success, .qq-upload-list .qq-upload-fail {
-  margin-left: 5px !important;
-}
-
-.qq-upload-list li.qq-upload-success {
-  background-color: #3c8dbc !important;
 }
 
 /*order list statuses*/
@@ -1937,11 +1902,7 @@ span.grid-report-item.red {
 /*Upload picture block*/
 .upload-picture-block {
   display: table-row;
-  width: 100%;
-}
-
-.upload-picture-block .qq-upload-success {
-  word-break: break-all;
+  width: 400px;
 }
 
 .upload-picture-block .picture-container {
@@ -1949,11 +1910,11 @@ span.grid-report-item.red {
   vertical-align: top;
 }
 
-.upload-picture-block .upload-button-container {
-  display: table-cell;
-  padding-right: 25px;
-  vertical-align: middle;
+/* Upload inputs */
+.file-upload-container {
+  width: 100%;
 }
+
 /*fix for inline-block buttons*/
 .content-header .float-right > .btn, .content-header .float-right > .btn-group {
   float: right;
@@ -1962,7 +1923,7 @@ span.grid-report-item.red {
 }
 
 
-/* JQUERY DATA TABLES */
+/* JQUERY DATATABLES */
 .button-column {
   text-align: center;
 }
@@ -1978,16 +1939,7 @@ span.grid-report-item.red {
   white-space: nowrap;
 }
 
-div.dataTables_wrapper div.dataTables_length {
-  margin: 5px 5px 0 5px;
-}
-
-div.dataTables_wrapper div.dataTables_info {
-  padding-top: 0;
-  margin-top: 10px;
-}
-
-div.dataTables_wrapper .data-tables-refresh > div {
+div.dt-container .data-tables-refresh > div {
   float: none;
   margin-top: 2px;
   width: auto;
@@ -2033,17 +1985,17 @@ tr.even {
   background-color: #f4f4f4;
 }
 
-.dataTables_scrollBody .dataTables_wrapper {
+.dt-scroll-body .dt-container {
   width: 95%;
   margin-right: 3%;
 }
 
-.dataTables_scroll > .dataTables_scrollBody > .table,
-.dataTables_scroll > .dataTables_scrollHead > .dataTables_scrollHeadInner > .table {
+.dt-scroll > .dt-scroll-body > .table,
+.dt-scroll > .dt-scroll-head > .dt-scroll-headInner > .table {
   padding-right: 0 !important;
 }
 
-div.dataTables_wrapper div.dataTables_paginate {
+div.dt-container div.dt-paging {
   text-align: center;
 }
 
@@ -2160,17 +2112,9 @@ div.dataTables_wrapper div.dataTables_paginate {
     padding-bottom: 0;
   }
 
-  .dataTables_scrollBody .dataTables_wrapper {
+  .dt-scroll-body .dt-container {
     width: 100%;
     margin-right: 0;
-  }
-
-  div.dataTables_wrapper div.dataTables_info {
-    margin-top: 0;
-  }
-
-  div.dataTables_wrapper .data-tables-refresh {
-    margin-top: 8px;
   }
 
   .float-lg-left {
@@ -2210,7 +2154,7 @@ div.dataTables_wrapper div.dataTables_paginate {
     max-width: 100%;
   }
 
-  div.dataTables_wrapper div.dataTables_length {
+  div.dt-container div.dt-length {
     margin-left: 0;
   }
 }
@@ -2230,7 +2174,7 @@ div.dataTables_wrapper div.dataTables_paginate {
     text-align: right;
   }
 
-  div.dataTables_wrapper div.dataTables_length {
+  div.dt-container div.dt-length {
     text-align: center;
   }
 
@@ -2245,13 +2189,7 @@ div.dataTables_wrapper div.dataTables_paginate {
     vertical-align: top;
   }
 
-  .upload-picture-block .upload-button-container {
-    display: block;
-    padding-right: 0;
-    vertical-align: top;
-  }
-
-  div.dataTables_wrapper div.dataTables_length {
+  div.dt-container div.dt-length {
     text-align: center;
   }
 

@@ -17,4 +17,9 @@ public static partial class ExportImportDefaults
     /// Gets the path to temporary files
     /// </summary>
     public static string UploadsTempPath => "~/App_Data/TempUploads";
+
+    /// <summary>
+    ///  Gets or sets the cell offset
+    /// </summary>
+    public static int ProductAdditionalInfoCellOffset => 2;
 }

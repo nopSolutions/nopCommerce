@@ -127,6 +127,10 @@
 
                     PaymentMethodsConfigureTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PaymentMethods.Configure.Title").Text)',
                     PaymentMethodsConfigureText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PaymentMethods.Configure.Text").Text)',
+
+                    PaymentMethodsConfigurePayPalCommerceTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PaymentMethods.PayPalCommerce.Configure.Title").Text)',
+                    PaymentMethodsConfigurePayPalCommerceText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PaymentMethods.PayPalCommerce.Configure.Text").Text)',
+
                 };
             </script>
             break;
@@ -136,12 +140,8 @@
             <script asp-exclude-from-bundle="true" src="~/js/admintour/admin.tour.paymentpaypal.js" asp-location="Footer"></script>
             <script asp-location="Footer">
                 var localized_data = {
-                    PaymentPayPalSignUpTitle: '@T("Admin.ConfigurationSteps.PaymentPayPal.SignUp.Title")',
-                    PaymentPayPalSignUpText: '@T("Admin.ConfigurationSteps.PaymentPayPal.SignUp.Text")',
-
                     PaymentPayPalRegisterTitle: '@T("Admin.ConfigurationSteps.PaymentPayPal.Register.Title")',
                     PaymentPayPalRegisterText: '@T("Admin.ConfigurationSteps.PaymentPayPal.Register.Text")',
-                    PaymentPayPalRegisterText2: '@T("Admin.ConfigurationSteps.PaymentPayPal.Register.Text2")',
 
                     PaymentPayPalApiCredentialsTitle: '@T("Admin.ConfigurationSteps.PaymentPayPal.ApiCredentials.Title")',
                     PaymentPayPalApiCredentialsText: '@T("Admin.ConfigurationSteps.PaymentPayPal.ApiCredentials.Text")',
@@ -277,17 +277,11 @@
                     EmailAccountPortTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.Port.Title").Text)',
                     EmailAccountPortText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.Port.Text").Text)',
 
-                    EmailAccountUsernameTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.Username.Title").Text)',
-                    EmailAccountUsernameText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.Username.Text").Text)',
-
-                    EmailAccountPasswordTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.Password.Title").Text)',
-                    EmailAccountPasswordText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.Password.Text").Text)',
-
                     EmailAccountUseSslTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.UseSsl.Title").Text)',
                     EmailAccountUseSslText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.UseSsl.Text").Text)',
 
-                    EmailAccountDefaultCredentialsTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.DefaultCredentials.Title").Text)',
-                    EmailAccountDefaultCredentialsText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.DefaultCredentials.Text").Text)',
+                    EmailAccountAuthenticationMethodTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.AuthenticationMethod.Title").Text)',
+                    EmailAccountAuthenticationMethodText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.AuthenticationMethod.Text").Text)',
 
                     EmailAccountTestEmailTitle: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.TestEmail.Title").Text)',
                     EmailAccountTestEmailText: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.TestEmail.Text").Text)',

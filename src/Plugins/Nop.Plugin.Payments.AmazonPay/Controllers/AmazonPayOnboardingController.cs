@@ -27,9 +27,9 @@ public class AmazonPayOnboardingController : Controller
     public async Task<IActionResult> KeyShare(KeyExchangeModel model)
     {
         if (Uri.TryCreate(Request.Headers.Origin, UriKind.Absolute, out var uri) && AmazonPayDefaults.Onboarding.OriginUrls.Contains(uri.Host))
-            Response.Headers.Add("Access-Control-Allow-Origin", $"{Uri.UriSchemeHttps}{Uri.SchemeDelimiter}{uri.Host}");
-        Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-        Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, X-CSRF-Token");
+            Response.Headers.TryAdd("Access-Control-Allow-Origin", $"{Uri.UriSchemeHttps}{Uri.SchemeDelimiter}{uri.Host}");
+        Response.Headers.TryAdd("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        Response.Headers.TryAdd("Access-Control-Allow-Headers", "Content-Type, X-CSRF-Token");
 
         var error = await _amazonPayOnboardingService.AutomaticKeyExchangeAsync(model.Payload);
 

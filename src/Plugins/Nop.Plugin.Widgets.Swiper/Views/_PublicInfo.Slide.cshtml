@@ -1,0 +1,30 @@
+﻿@model PublicSlideModel
+
+@{
+    void slideImage()
+    {
+        <img class="slider-img" src="@Model.PictureUrl" alt="@Model.AltText" title="@Model.TitleText" @(Model.LazyLoading ? "loading=lazy" : string.Empty) />
+    }
+}
+
+@if (!string.IsNullOrEmpty(Model.PictureUrl))
+{
+
+    <div class="swiper-slide">
+        @if (!string.IsNullOrEmpty(Model.LinkUrl))
+        {
+            <a href="@Model.LinkUrl" aria-label="@Model.AltText">
+                @{ slideImage(); }
+            </a>
+        }
+        else
+        {
+            slideImage();
+        }
+
+        @if (Model.LazyLoading)
+        {
+            <div class="swiper-lazy-preloader"></div>
+        }
+    </div>
+}

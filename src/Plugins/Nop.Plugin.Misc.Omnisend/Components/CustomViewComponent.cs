@@ -148,7 +148,7 @@ public class WidgetsOmnisendViewComponent : NopViewComponent
                 .Replace(OmnisendDefaults.ProductId, $"{productDetails.Id}")
                 .Replace(OmnisendDefaults.Sku, productDetails.Sku)
                 .Replace(OmnisendDefaults.Currency, productDetails.ProductPrice.CurrencyCode)
-                .Replace(OmnisendDefaults.Price, $"{(int)(productDetails.ProductPrice.PriceValue * 100)}")
+                .Replace(OmnisendDefaults.Price, $"{(int)(productDetails.ProductPrice.PriceValue ?? 0 * 100)}")
                 .Replace(OmnisendDefaults.Title, productDetails.Name)
                 .Replace(OmnisendDefaults.ImageUrl, productDetails.DefaultPictureModel.ImageUrl)
                 .Replace(OmnisendDefaults.ProductUrl,

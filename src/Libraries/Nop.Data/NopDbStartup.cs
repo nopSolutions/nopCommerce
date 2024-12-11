@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
+using Nop.Data.Extensions;
 using Nop.Data.Migrations;
 
 namespace Nop.Data;
@@ -37,12 +38,12 @@ public partial class NopDbStartup : INopStartup
             .AddScoped<IProcessorAccessor, NopProcessorAccessor>()
             // set accessor for the connection string
             .AddScoped<IConnectionStringAccessor>(x => DataSettingsManager.LoadSettings())
-            .AddSingleton<IMigrationManager, MigrationManager>()
+            .AddScoped<IMigrationManager, MigrationManager>()
             .AddSingleton<IConventionSet, NopConventionSet>()
             .ConfigureRunner(rb =>
                 rb.WithVersionTable(new MigrationVersionInfo()).AddSqlServer().AddMySql5().AddPostgres()
                     // define the assembly containing the migrations
-                    .ScanIn(mAssemblies).For.Migrations());
+                    .ScanIn(mAssemblies).For.Migrations().SetCommandTimeout());
 
         services.AddTransient(p => new Lazy<IVersionLoader>(p.GetRequiredService<IVersionLoader>()));
 

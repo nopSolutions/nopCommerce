@@ -1,82 +1,71 @@
-﻿using System.Globalization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.Extensions.Primitives;
 using Nop.Core;
 using Nop.Core.Domain.Cms;
-using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
-using Nop.Core.Http.Extensions;
-using Nop.Plugin.Payments.PayPalCommerce.Components;
+using Nop.Plugin.Payments.PayPalCommerce.Components.Admin;
+using Nop.Plugin.Payments.PayPalCommerce.Components.Public;
 using Nop.Plugin.Payments.PayPalCommerce.Domain;
-using Nop.Plugin.Payments.PayPalCommerce.Models;
 using Nop.Plugin.Payments.PayPalCommerce.Services;
 using Nop.Services.Cms;
-using Nop.Services.Common;
 using Nop.Services.Configuration;
-using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
+using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Infrastructure;
 
 namespace Nop.Plugin.Payments.PayPalCommerce;
 
 /// <summary>
-/// Represents a payment method implementation
+/// Represents the PayPal Commerce payment method
 /// </summary>
 public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPlugin
 {
     #region Fields
 
-    protected readonly CurrencySettings _currencySettings;
-    protected readonly IActionContextAccessor _actionContextAccessor;
-    protected readonly ICurrencyService _currencyService;
-    protected readonly IGenericAttributeService _genericAttributeService;
-    protected readonly ILocalizationService _localizationService;
-    protected readonly IPaymentService _paymentService;
-    protected readonly ISettingService _settingService;
-    protected readonly IStoreService _storeService;
-    protected readonly IUrlHelperFactory _urlHelperFactory;
-    protected readonly PaymentSettings _paymentSettings;
-    protected readonly PayPalCommerceSettings _settings;
-    protected readonly ServiceManager _serviceManager;
-    protected readonly WidgetSettings _widgetSettings;
+    private readonly IActionContextAccessor _actionContextAccessor;
+    private readonly ILocalizationService _localizationService;
+    private readonly IPermissionService _permissionService;
+    private readonly ISettingService _settingService;
+    private readonly IStoreService _storeService;
+    private readonly IUrlHelperFactory _urlHelperFactory;
+    private readonly IWorkContext _workContext;
+    private readonly PaymentSettings _paymentSettings;
+    private readonly PayPalCommerceServiceManager _serviceManager;
+    private readonly PayPalCommerceSettings _settings;
+    private readonly WidgetSettings _widgetSettings;
 
     #endregion
 
     #region Ctor
 
-    public PayPalCommercePaymentMethod(CurrencySettings currencySettings,
-        IActionContextAccessor actionContextAccessor,
-        ICurrencyService currencyService,
-        IGenericAttributeService genericAttributeService,
+    public PayPalCommercePaymentMethod(IActionContextAccessor actionContextAccessor,
         ILocalizationService localizationService,
-        IPaymentService paymentService,
+        IPermissionService permissionService,
         ISettingService settingService,
         IStoreService storeService,
         IUrlHelperFactory urlHelperFactory,
+        IWorkContext workContext,
         PaymentSettings paymentSettings,
+        PayPalCommerceServiceManager serviceManager,
         PayPalCommerceSettings settings,
-        ServiceManager serviceManager,
         WidgetSettings widgetSettings)
     {
-        _currencySettings = currencySettings;
         _actionContextAccessor = actionContextAccessor;
-        _currencyService = currencyService;
-        _genericAttributeService = genericAttributeService;
         _localizationService = localizationService;
-        _paymentService = paymentService;
+        _permissionService = permissionService;
         _settingService = settingService;
         _storeService = storeService;
         _urlHelperFactory = urlHelperFactory;
+        _workContext = workContext;
         _paymentSettings = paymentSettings;
-        _settings = settings;
         _serviceManager = serviceManager;
+        _settings = settings;
         _widgetSettings = widgetSettings;
     }
 
@@ -92,44 +81,9 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
     /// A task that represents the asynchronous operation
     /// The task result contains the process payment result
     /// </returns>
-    public async Task<ProcessPaymentResult> ProcessPaymentAsync(ProcessPaymentRequest processPaymentRequest)
+    public Task<ProcessPaymentResult> ProcessPaymentAsync(ProcessPaymentRequest processPaymentRequest)
     {
-        //try to get an order id from custom values
-        var orderIdKey = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.OrderId");
-        if (!processPaymentRequest.CustomValues.TryGetValue(orderIdKey, out var orderId) || string.IsNullOrEmpty(orderId?.ToString()))
-            throw new NopException("Failed to get the PayPal order ID");
-
-        //authorize or capture the order
-        var (order, error) = _settings.PaymentType == PaymentType.Capture
-            ? await _serviceManager.CaptureAsync(_settings, orderId.ToString())
-            : (_settings.PaymentType == PaymentType.Authorize
-                ? await _serviceManager.AuthorizeAsync(_settings, orderId.ToString())
-                : (default, default));
-
-        if (!string.IsNullOrEmpty(error))
-            return new ProcessPaymentResult { Errors = new[] { error } };
-
-        //request succeeded
-        var result = new ProcessPaymentResult();
-
-        var purchaseUnit = order.PurchaseUnits
-            .FirstOrDefault(item => item.ReferenceId.Equals(processPaymentRequest.OrderGuid.ToString()));
-        var authorization = purchaseUnit.Payments?.Authorizations?.FirstOrDefault();
-        if (authorization != null)
-        {
-            result.AuthorizationTransactionId = authorization.Id;
-            result.AuthorizationTransactionResult = authorization.Status;
-            result.NewPaymentStatus = PaymentStatus.Authorized;
-        }
-        var capture = purchaseUnit.Payments?.Captures?.FirstOrDefault();
-        if (capture != null)
-        {
-            result.CaptureTransactionId = capture.Id;
-            result.CaptureTransactionResult = capture.Status;
-            result.NewPaymentStatus = PaymentStatus.Paid;
-        }
-
-        return result;
+        return Task.FromResult(new ProcessPaymentResult());
     }
 
     /// <summary>
@@ -152,43 +106,13 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
     /// </returns>
     public async Task<CapturePaymentResult> CaptureAsync(CapturePaymentRequest capturePaymentRequest)
     {
-        //capture a previously approved but not completed order
-        if (capturePaymentRequest.Order.AuthorizationTransactionResult == "approved")
-        {
-            //try to get an order id from custom values
-            var orderIdKey = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.OrderId");
-            var customValues = _paymentService.DeserializeCustomValues(capturePaymentRequest.Order);
-            if (!customValues.TryGetValue(orderIdKey, out var orderId) || string.IsNullOrEmpty(orderId?.ToString()))
-                throw new NopException("Failed to get the PayPal order ID");
-
-            var (order, orderError) = await _serviceManager.CaptureAsync(_settings, orderId.ToString());
-            if (!string.IsNullOrEmpty(orderError))
-                return new CapturePaymentResult { Errors = new[] { orderError } };
-
-            var purchaseUnit = order.PurchaseUnits
-                .FirstOrDefault(item => item.ReferenceId.Equals(capturePaymentRequest.Order.OrderGuid.ToString()));
-            var orderCapture = purchaseUnit.Payments?.Captures?.FirstOrDefault();
-            if (orderCapture is null)
-                return new CapturePaymentResult { Errors = new[] { "Order capture is empty" } };
-
-            //request succeeded
-            return new CapturePaymentResult
-            {
-                CaptureTransactionId = orderCapture.Id,
-                CaptureTransactionResult = orderCapture.Status,
-                NewPaymentStatus = PaymentStatus.Paid
-            };
-        }
-
-        //or capture previously authorized payment
-        var (capture, error) = await _serviceManager
-            .CaptureAuthorizationAsync(_settings, capturePaymentRequest.Order.AuthorizationTransactionId);
-
+        //capture previously authorized payment
+        var (capture, error) = await _serviceManager.CaptureAuthorizationAsync(_settings, capturePaymentRequest.Order.AuthorizationTransactionId);
         if (!string.IsNullOrEmpty(error))
-            return new CapturePaymentResult { Errors = new[] { error } };
+            return new() { Errors = new[] { error } };
 
         //request succeeded
-        return new CapturePaymentResult
+        return new()
         {
             CaptureTransactionId = capture.Id,
             CaptureTransactionResult = capture.Status,
@@ -208,12 +132,11 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
     {
         //void previously authorized payment
         var (_, error) = await _serviceManager.VoidAsync(_settings, voidPaymentRequest.Order.AuthorizationTransactionId);
-
         if (!string.IsNullOrEmpty(error))
-            return new VoidPaymentResult { Errors = new[] { error } };
+            return new() { Errors = new[] { error } };
 
         //request succeeded
-        return new VoidPaymentResult { NewPaymentStatus = PaymentStatus.Voided };
+        return new() { NewPaymentStatus = PaymentStatus.Voided };
     }
 
     /// <summary>
@@ -231,27 +154,12 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
             ? (decimal?)refundPaymentRequest.AmountToRefund
             : null;
 
-        //get the primary store currency
-        var currency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId)
-                       ?? throw new NopException("Primary store currency cannot be loaded");
-
-        var (refund, error) = await _serviceManager.RefundAsync(
-            _settings, refundPaymentRequest.Order.CaptureTransactionId, currency.CurrencyCode, amount);
-
+        var (_, error) = await _serviceManager.RefundAsync(_settings, refundPaymentRequest.Order, amount);
         if (!string.IsNullOrEmpty(error))
-            return new RefundPaymentResult { Errors = new[] { error } };
+            return new() { Errors = new[] { error } };
 
         //request succeeded
-        var refundIds = await _genericAttributeService
-                            .GetAttributeAsync<List<string>>(refundPaymentRequest.Order, PayPalCommerceDefaults.RefundIdAttributeName)
-                        ?? [];
-        if (!refundIds.Contains(refund.Id))
-            refundIds.Add(refund.Id);
-        await _genericAttributeService.SaveAttributeAsync(refundPaymentRequest.Order, PayPalCommerceDefaults.RefundIdAttributeName, refundIds);
-        return new RefundPaymentResult
-        {
-            NewPaymentStatus = refundPaymentRequest.IsPartialRefund ? PaymentStatus.PartiallyRefunded : PaymentStatus.Refunded
-        };
+        return new() { NewPaymentStatus = refundPaymentRequest.IsPartialRefund ? PaymentStatus.PartiallyRefunded : PaymentStatus.Refunded };
     }
 
     /// <summary>
@@ -290,8 +198,8 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
     /// </returns>
     public Task<bool> HidePaymentMethodAsync(IList<ShoppingCartItem> cart)
     {
-        var notConfigured = !ServiceManager.IsConfigured(_settings);
-        return Task.FromResult(notConfigured);
+        var notConnected = !PayPalCommerceServiceManager.IsConnected(_settings);
+        return Task.FromResult(notConnected);
     }
 
     /// <summary>
@@ -330,15 +238,7 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
     /// </returns>
     public Task<IList<string>> ValidatePaymentFormAsync(IFormCollection form)
     {
-        ArgumentNullException.ThrowIfNull(form);
-
-        var errors = new List<string>();
-
-        //try to get errors from the form parameters
-        if (form.TryGetValue(nameof(PaymentInfoModel.Errors), out var errorValue) && !StringValues.IsNullOrEmpty(errorValue))
-            errors.Add(errorValue.ToString());
-
-        return Task.FromResult<IList<string>>(errors);
+        return Task.FromResult<IList<string>>(new List<string>());
     }
 
     /// <summary>
@@ -349,13 +249,9 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
     /// A task that represents the asynchronous operation
     /// The task result contains the payment info holder
     /// </returns>
-    public async Task<ProcessPaymentRequest> GetPaymentInfoAsync(IFormCollection form)
+    public Task<ProcessPaymentRequest> GetPaymentInfoAsync(IFormCollection form)
     {
-        ArgumentNullException.ThrowIfNull(form);
-
-        //already set
-        return await _actionContextAccessor.ActionContext.HttpContext.Session
-            .GetAsync<ProcessPaymentRequest>(PayPalCommerceDefaults.PaymentRequestSessionKey);
+        return Task.FromResult(new ProcessPaymentRequest());
     }
 
     /// <summary>
@@ -363,7 +259,7 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
     /// </summary>
     public override string GetConfigurationPageUrl()
     {
-        return _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext).RouteUrl(PayPalCommerceDefaults.ConfigurationRouteName);
+        return _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext).RouteUrl(PayPalCommerceDefaults.Route.Configuration);
     }
 
     /// <summary>
@@ -385,14 +281,14 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
     {
         return Task.FromResult<IList<string>>(new List<string>
         {
-            PublicWidgetZones.CheckoutPaymentInfoTop,
-            PublicWidgetZones.OpcContentBefore,
-            PublicWidgetZones.ProductDetailsTop,
             PublicWidgetZones.ProductDetailsAddInfo,
             PublicWidgetZones.OrderSummaryContentBefore,
-            PublicWidgetZones.OrderSummaryContentAfter,
             PublicWidgetZones.HeaderLinksBefore,
-            PublicWidgetZones.Footer
+            PublicWidgetZones.Footer,
+            PublicWidgetZones.OrderSummaryTotals,
+            AdminWidgetZones.OrderShipmentDetailsButtons,
+            AdminWidgetZones.OrderShipmentAddButtons,
+            AdminWidgetZones.PaymentMethodListTop
         });
     }
 
@@ -405,44 +301,72 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
     {
         ArgumentNullException.ThrowIfNull(widgetZone);
 
-        if (widgetZone.Equals(PublicWidgetZones.CheckoutPaymentInfoTop) ||
-            widgetZone.Equals(PublicWidgetZones.OpcContentBefore) ||
-            widgetZone.Equals(PublicWidgetZones.ProductDetailsTop) ||
-            widgetZone.Equals(PublicWidgetZones.OrderSummaryContentBefore))
-        {
-            return typeof(ScriptViewComponent);
-        }
-
-        if (widgetZone.Equals(PublicWidgetZones.ProductDetailsAddInfo) || widgetZone.Equals(PublicWidgetZones.OrderSummaryContentAfter))
+        if (widgetZone.Equals(PublicWidgetZones.ProductDetailsAddInfo) || widgetZone.Equals(PublicWidgetZones.OrderSummaryContentBefore))
             return typeof(ButtonsViewComponent);
 
         if (widgetZone.Equals(PublicWidgetZones.HeaderLinksBefore) || widgetZone.Equals(PublicWidgetZones.Footer))
             return typeof(LogoViewComponent);
 
+        if (widgetZone.Equals(PublicWidgetZones.OrderSummaryTotals))
+            return typeof(MessagesViewComponent);
+
+        if (widgetZone.Equals(AdminWidgetZones.OrderShipmentDetailsButtons) || widgetZone.Equals(AdminWidgetZones.OrderShipmentAddButtons))
+            return typeof(ShipmentCarrierViewComponent);
+
+        if (widgetZone.Equals(AdminWidgetZones.PaymentMethodListTop))
+            return typeof(PaymentMethodViewComponent);
+
         return null;
     }
-
+    
     /// <summary>
     /// Install the plugin
     /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>
     public override async Task InstallAsync()
     {
-        //settings
         await _settingService.SaveSettingAsync(new PayPalCommerceSettings
         {
+            SetCredentialsManually = false,
+            UseSandbox = false,
             PaymentType = PaymentType.Capture,
-            LogoInHeaderLinks = @"<!-- PayPal Logo --><li><a href=""https://www.paypal.com/webapps/mpp/paypal-popup"" title=""How PayPal Works"" onclick=""javascript:window.open('https://www.paypal.com/webapps/mpp/paypal-popup','WIPaypal','toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700'); return false;""><img style=""padding-top:10px;"" src=""https://www.paypalobjects.com/webstatic/mktg/logo/bdg_now_accepting_pp_2line_w.png"" border=""0"" alt=""Now accepting PayPal""></a></li><!-- PayPal Logo -->",
-            LogoInFooter = @"<!-- PayPal Logo --><div><a href=""https://www.paypal.com/webapps/mpp/paypal-popup"" title=""How PayPal Works"" onclick=""javascript:window.open('https://www.paypal.com/webapps/mpp/paypal-popup','WIPaypal','toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700'); return false;""><img src=""https://www.paypalobjects.com/webstatic/mktg/logo/AM_mc_vs_dc_ae.jpg"" border=""0"" alt=""PayPal Acceptance Mark""></a></div><!-- PayPal Logo -->",
-            StyleLayout = "vertical",
-            StyleColor = "blue",
-            StyleShape = "rect",
-            StyleLabel = "paypal",
+            UseCardFields = false,
+            CustomerAuthenticationRequired = true,
+            UseApplePay = false,
+            UseGooglePay = false,
+            UseAlternativePayments = false,
+            UseVault = false,
+            SkipOrderConfirmPage = false,
+            UseShipmentTracking = false,
+            DisplayButtonsOnPaymentMethod = true,
             DisplayButtonsOnProductDetails = true,
             DisplayButtonsOnShoppingCart = true,
-            DisplayPayLaterMessages = false,
+            DisplayLogoInHeaderLinks = false,
+            DisplayLogoInFooter = false,
             RequestTimeout = PayPalCommerceDefaults.RequestTimeout,
-            MinDiscountAmount = 0.5M
+            EnabledFunding = "paylater,venmo",
+            StyleLayout = "vertical",
+            StyleColor = "gold",
+            StyleShape = "rect",
+            StyleLabel = "paypal",
+            StyleTagline = "true",
+            HideCheckoutButton = false,
+            ImmediatePaymentRequired = false,
+            OrderValidityInterval = 5 * 60, //5 minutes
+            ConfiguratorSupported = false,
+            MerchantIdRequired = false,
+            LogoInHeaderLinks =
+                "<!-- PayPal Logo --><li><a href=\"https://www.paypal.com/webapps/mpp/paypal-popup\" title=\"How PayPal Works\" " +
+                "onclick=\"javascript:window.open('https://www.paypal.com/webapps/mpp/paypal-popup','WIPaypal','toolbar=no, location=no, " +
+                "directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700'); return false;\">" +
+                "<img style=\"padding-top:10px;\" src=\"https://www.paypalobjects.com/webstatic/mktg/logo/bdg_now_accepting_pp_2line_w.png\" " +
+                "border=\"0\" alt=\"Now accepting PayPal\"></a></li><!-- PayPal Logo -->",
+            LogoInFooter =
+                "<!-- PayPal Logo --><div><a href=\"https://www.paypal.com/webapps/mpp/paypal-popup\" title=\"How PayPal Works\" " +
+                "onclick=\"javascript:window.open('https://www.paypal.com/webapps/mpp/paypal-popup','WIPaypal','toolbar=no, location=no, " +
+                "directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700'); return false;\">" +
+                "<img src=\"https://www.paypalobjects.com/webstatic/mktg/logo/AM_mc_vs_dc_ae.jpg\" " +
+                "border=\"0\" alt=\"PayPal Acceptance Mark\"></a></div><!-- PayPal Logo -->",
         });
 
         if (!_paymentSettings.ActivePaymentMethodSystemNames.Contains(PayPalCommerceDefaults.SystemName))
@@ -457,17 +381,33 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
             await _settingService.SaveSettingAsync(_widgetSettings);
         }
 
-        //locales
         await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
         {
+            ["Enums.Nop.Plugin.Payments.PayPalCommerce.Domain.ButtonPlacement.Cart"] = "Shopping cart",
+            ["Enums.Nop.Plugin.Payments.PayPalCommerce.Domain.ButtonPlacement.Product"] = "Product",
+            ["Enums.Nop.Plugin.Payments.PayPalCommerce.Domain.ButtonPlacement.PaymentMethod"] = "Checkout",
             ["Enums.Nop.Plugin.Payments.PayPalCommerce.Domain.PaymentType.Authorize"] = "Authorize",
             ["Enums.Nop.Plugin.Payments.PayPalCommerce.Domain.PaymentType.Capture"] = "Capture",
+
+            ["Plugins.Payments.PayPalCommerce.ApplePay.Discount"] = "Discount",
+            ["Plugins.Payments.PayPalCommerce.ApplePay.Shipping"] = "Shipping",
+            ["Plugins.Payments.PayPalCommerce.ApplePay.Subtotal"] = "Subtotal",
+            ["Plugins.Payments.PayPalCommerce.ApplePay.Tax"] = "Tax",
+
+            ["Plugins.Payments.PayPalCommerce.Card.Button"] = "Pay now with Card",
+            ["Plugins.Payments.PayPalCommerce.Card.New"] = "Pay by new card",
+            ["Plugins.Payments.PayPalCommerce.Card.Prefix"] = "Pay by",
+            ["Plugins.Payments.PayPalCommerce.Card.Save"] = "Save your card",
+            ["Plugins.Payments.PayPalCommerce.Configuration"] = "Configuration",
             ["Plugins.Payments.PayPalCommerce.Configuration.Error"] = "Error: {0} (see details in the <a href=\"{1}\" target=\"_blank\">log</a>)",
             ["Plugins.Payments.PayPalCommerce.Credentials.Valid"] = "The specified credentials are valid",
             ["Plugins.Payments.PayPalCommerce.Credentials.Invalid"] = "The specified credentials are invalid",
+
             ["Plugins.Payments.PayPalCommerce.Fields.ClientId"] = "Client ID",
             ["Plugins.Payments.PayPalCommerce.Fields.ClientId.Hint"] = "Enter your PayPal REST API client ID. This identifies your PayPal account and determines where transactions are paid.",
             ["Plugins.Payments.PayPalCommerce.Fields.ClientId.Required"] = "Client ID is required",
+            ["Plugins.Payments.PayPalCommerce.Fields.CustomerAuthenticationRequired"] = "Use 3D Secure",
+            ["Plugins.Payments.PayPalCommerce.Fields.CustomerAuthenticationRequired.Hint"] = "3D Secure enables you to authenticate card holders through card issuers. It reduces the likelihood of fraud when you use supported cards and improves transaction performance. A successful 3D Secure authentication can shift liability for chargebacks due to fraud from you to the card issuer.",
             ["Plugins.Payments.PayPalCommerce.Fields.DisplayButtonsOnProductDetails"] = "Display buttons on product details",
             ["Plugins.Payments.PayPalCommerce.Fields.DisplayButtonsOnProductDetails.Hint"] = "Determine whether to display PayPal buttons on product details pages, clicking on them matches the behavior of the default 'Add to cart' button.",
             ["Plugins.Payments.PayPalCommerce.Fields.DisplayButtonsOnShoppingCart"] = "Display buttons on shopping cart",
@@ -476,39 +416,77 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
             ["Plugins.Payments.PayPalCommerce.Fields.DisplayLogoInFooter.Hint"] = "Determine whether to display PayPal logo in the footer. These logos and banners are a great way to let your buyers know that you choose PayPal to securely process their payments.",
             ["Plugins.Payments.PayPalCommerce.Fields.DisplayLogoInHeaderLinks"] = "Display logo in header links",
             ["Plugins.Payments.PayPalCommerce.Fields.DisplayLogoInHeaderLinks.Hint"] = "Determine whether to display PayPal logo in header links. These logos and banners are a great way to let your buyers know that you choose PayPal to securely process their payments.",
-            ["Plugins.Payments.PayPalCommerce.Fields.DisplayPayLaterMessages"] = "Display Pay Later messages",
-            ["Plugins.Payments.PayPalCommerce.Fields.DisplayPayLaterMessages.Hint"] = "Determine whether to display Pay Later messages. This message displays how much the customer pays in four payments. The message will be shown next to the PayPal buttons.",
-            ["Plugins.Payments.PayPalCommerce.Fields.Email"] = "Email",
-            ["Plugins.Payments.PayPalCommerce.Fields.Email.Hint"] = "Enter your email to get access to PayPal payments.",
             ["Plugins.Payments.PayPalCommerce.Fields.LogoInFooter"] = "Logo source code",
             ["Plugins.Payments.PayPalCommerce.Fields.LogoInFooter.Hint"] = "Enter source code of the logo. Find more logos and banners on PayPal Logo Center. You can also modify the code to fit correctly into your theme and site style.",
             ["Plugins.Payments.PayPalCommerce.Fields.LogoInHeaderLinks"] = "Logo source code",
             ["Plugins.Payments.PayPalCommerce.Fields.LogoInHeaderLinks.Hint"] = "Enter source code of the logo. Find more logos and banners on PayPal Logo Center. You can also modify the code to fit correctly into your theme and site style.",
+            ["Plugins.Payments.PayPalCommerce.Fields.MerchantId"] = "Merchant ID",
+            ["Plugins.Payments.PayPalCommerce.Fields.MerchantId.Hint"] = "PayPal account ID of the merchant.",
+            ["Plugins.Payments.PayPalCommerce.Fields.MerchantId.Required"] = "Merchant ID is required",
             ["Plugins.Payments.PayPalCommerce.Fields.PaymentType"] = "Payment type",
             ["Plugins.Payments.PayPalCommerce.Fields.PaymentType.Hint"] = "Choose a payment type to either capture payment immediately or authorize a payment for an order after order creation. Notice, that alternative payment methods don't work with the 'authorize and capture later' feature.",
             ["Plugins.Payments.PayPalCommerce.Fields.SecretKey"] = "Secret",
             ["Plugins.Payments.PayPalCommerce.Fields.SecretKey.Hint"] = "Enter your PayPal REST API secret.",
             ["Plugins.Payments.PayPalCommerce.Fields.SecretKey.Required"] = "Secret is required",
             ["Plugins.Payments.PayPalCommerce.Fields.SetCredentialsManually"] = "Specify API credentials manually",
-            ["Plugins.Payments.PayPalCommerce.Fields.SetCredentialsManually.Hint"] = "Determine whether to manually set the credentials (for example, there is already an app created, or if you want to use the sandbox mode).",
+            ["Plugins.Payments.PayPalCommerce.Fields.SetCredentialsManually.Hint"] = "Determine whether to manually set the credentials (for example, there is already the REST API application created, or if you want to use the sandbox mode).",
+            ["Plugins.Payments.PayPalCommerce.Fields.SkipOrderConfirmPage"] = "Skip 'Confirm Order' page",
+            ["Plugins.Payments.PayPalCommerce.Fields.SkipOrderConfirmPage.Hint"] = "Determine whether to skip the 'Confirm Order' step during checkout so that after approving the payment on PayPal site, customers will redirected directly to the 'Order Completed' page.",
+            ["Plugins.Payments.PayPalCommerce.Fields.UseAlternativePayments"] = "Use Alternative Payments Methods",
+            ["Plugins.Payments.PayPalCommerce.Fields.UseAlternativePayments.Hint"] = "With alternative payment methods, customers across the globe can pay with their bank accounts, wallets, and other local payment methods.",
+            ["Plugins.Payments.PayPalCommerce.Fields.UseApplePay"] = "Use Apple Pay",
+            ["Plugins.Payments.PayPalCommerce.Fields.UseApplePay.Hint"] = "Apple Pay is a mobile payment and digital wallet service provided by Apple Inc.",
+            ["Plugins.Payments.PayPalCommerce.Fields.UseApplePay.Warning"] = "Don't forget to enable 'Serve unknown types of static files' on the <a href=\"{0}\" target=\"_blank\">App settings page</a>, so that the domain association file is processed correctly.",
+            ["Plugins.Payments.PayPalCommerce.Fields.UseCardFields"] = "Use Custom Card Fields",
+            ["Plugins.Payments.PayPalCommerce.Fields.UseCardFields.Hint"] = "Advanced Credit and Debit Card Payments (Custom Card Fields) are a PCI compliant solution to accept debit and credit card payments.",
+            ["Plugins.Payments.PayPalCommerce.Fields.UseGooglePay"] = "Use Google Pay",
+            ["Plugins.Payments.PayPalCommerce.Fields.UseGooglePay.Hint"] = "Google Pay is a mobile payment and digital wallet service provided by Alphabet Inc.",
             ["Plugins.Payments.PayPalCommerce.Fields.UseSandbox"] = "Use sandbox",
             ["Plugins.Payments.PayPalCommerce.Fields.UseSandbox.Hint"] = "Determine whether to use the sandbox environment for testing purposes.",
+            ["Plugins.Payments.PayPalCommerce.Fields.UseShipmentTracking"] = "Use shipment tracking",
+            ["Plugins.Payments.PayPalCommerce.Fields.UseShipmentTracking.Hint"] = "Determine whether to use the package tracking. It allows to automatically sync orders and shipment status with PayPal.",
+            ["Plugins.Payments.PayPalCommerce.Fields.UseVault"] = "Use Vault",
+            ["Plugins.Payments.PayPalCommerce.Fields.UseVault.Hint"] = "Determine whether to use PayPal Vault. It allows to store buyers payment information and use it in subsequent transactions.",
+
+            ["Plugins.Payments.PayPalCommerce.GooglePay.Discount"] = "Discount",
+            ["Plugins.Payments.PayPalCommerce.GooglePay.Shipping"] = "Shipping",
+            ["Plugins.Payments.PayPalCommerce.GooglePay.Subtotal"] = "Subtotal",
+            ["Plugins.Payments.PayPalCommerce.GooglePay.Tax"] = "Tax",
+            ["Plugins.Payments.PayPalCommerce.GooglePay.Total"] = "Total",
+
             ["Plugins.Payments.PayPalCommerce.Onboarding.AccessRevoked"] = "Profile access has been successfully revoked.",
             ["Plugins.Payments.PayPalCommerce.Onboarding.Button"] = "Sign up for PayPal",
+            ["Plugins.Payments.PayPalCommerce.Onboarding.Button.Sandbox"] = "Sign up for PayPal (sandbox)",
             ["Plugins.Payments.PayPalCommerce.Onboarding.ButtonRevoke"] = "Revoke access",
             ["Plugins.Payments.PayPalCommerce.Onboarding.Completed"] = "Onboarding is sucessfully completed",
-            ["Plugins.Payments.PayPalCommerce.Onboarding.EmailSet"] = "Email is set, now you are ready to sign up for PayPal",
             ["Plugins.Payments.PayPalCommerce.Onboarding.Error"] = "An error occurred during the onboarding process, the credentials are empty",
             ["Plugins.Payments.PayPalCommerce.Onboarding.InProcess"] = "Onboarding is in process, see details below",
-            ["Plugins.Payments.PayPalCommerce.Onboarding.Process.Account"] = "PayPal account is created",
-            ["Plugins.Payments.PayPalCommerce.Onboarding.Process.Email"] = "Email address is confirmed",
-            ["Plugins.Payments.PayPalCommerce.Onboarding.Process.Payments"] = "Billing information is set",
-            ["Plugins.Payments.PayPalCommerce.Onboarding.Process.Permission"] = "Permissions are granted",
-            ["Plugins.Payments.PayPalCommerce.Onboarding.Title"] = "Sign up for PayPal",
-            ["Plugins.Payments.PayPalCommerce.OrderId"] = "PayPal order ID",
+            ["Plugins.Payments.PayPalCommerce.Onboarding.Process.Account.Success"] = "PayPal account is created",
+            ["Plugins.Payments.PayPalCommerce.Onboarding.Process.Email.Success"] = "Email address is confirmed",
+            ["Plugins.Payments.PayPalCommerce.Onboarding.Process.Payments.Success"] = "Billing information is set",
+            ["Plugins.Payments.PayPalCommerce.Onboarding.Sandbox"] = "After you finish testing the plugin in the PayPal sandbox, move it into the production environment so you can process live transactions. To take the plugin live: 1. Revoke access to the sandbox account, 2. Disable 'Use sandbox' setting, 3. Sign up for the live PayPal account.",
+            ["Plugins.Payments.PayPalCommerce.Onboarding.Title"] = "Connect PayPal account",
+
+            ["Plugins.Payments.PayPalCommerce.Order.Adjustment.Name"] = "Adjustment item",
+            ["Plugins.Payments.PayPalCommerce.Order.Adjustment.Description"] = "Used to adjust the order total amount when applying complex discounts or/and calculations",
+            ["Plugins.Payments.PayPalCommerce.Order.Error"] = "Failed to get order details",
+            ["Plugins.Payments.PayPalCommerce.Order.Id"] = "PayPal order ID",
+            ["Plugins.Payments.PayPalCommerce.Order.Placement"] = "PayPal component placement",
+
+            ["Plugins.Payments.PayPalCommerce.PaymentTokens"] = "Payment methods",
+            ["Plugins.Payments.PayPalCommerce.PaymentTokens.Default"] = "Default",
+            ["Plugins.Payments.PayPalCommerce.PaymentTokens.Expiration"] = "Expires",
+            ["Plugins.Payments.PayPalCommerce.PaymentTokens.None"] = "No payment methods saved yet",
+            ["Plugins.Payments.PayPalCommerce.PaymentTokens.MarkDefault"] = "Make default",
+            ["Plugins.Payments.PayPalCommerce.PaymentTokens.Title"] = "Method",
+            ["Plugins.Payments.PayPalCommerce.PayLater"] = "Pay Later",
             ["Plugins.Payments.PayPalCommerce.Prominently"] = "Feature PayPal Prominently",
             ["Plugins.Payments.PayPalCommerce.PaymentMethodDescription"] = "PayPal Checkout with using methods like Venmo, PayPal Credit, credit card payments",
             ["Plugins.Payments.PayPalCommerce.RoundingWarning"] = "It looks like you have <a href=\"{0}\" target=\"_blank\">RoundPricesDuringCalculation</a> setting disabled. Keep in mind that this can lead to a discrepancy of the order total amount, as PayPal rounds to two decimals only.",
+
+            ["Plugins.Payments.PayPalCommerce.Shipment.Carrier"] = "Carrier",
+            ["Plugins.Payments.PayPalCommerce.Shipment.Carrier.Hint"] = "Cpecify the carrier for the shipment (e.g. UPS or FEDEX_UK, see allowed values on PayPal site).",
+
             ["Plugins.Payments.PayPalCommerce.WebhookWarning"] = "Webhook was not created, so some functions may not work correctly (see details in the <a href=\"{0}\" target=\"_blank\">log</a>. Please ensure that your store is under SSL, PayPal service doesn't send requests to unsecured sites.)"
         });
 
@@ -521,17 +499,16 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
     /// <returns>A task that represents the asynchronous operation</returns>
     public override async Task UninstallAsync()
     {
-        //webhooks
+        //clear webhooks when uninstall
         var stores = await _storeService.GetAllStoresAsync();
         var storeIds = new List<int> { 0 }.Union(stores.Select(store => store.Id));
         foreach (var storeId in storeIds)
         {
             var settings = await _settingService.LoadSettingAsync<PayPalCommerceSettings>(storeId);
-            if (!string.IsNullOrEmpty(settings.WebhookUrl))
+            if (PayPalCommerceServiceManager.IsConnected(settings))
                 await _serviceManager.DeleteWebhookAsync(settings);
         }
 
-        //settings
         if (_paymentSettings.ActivePaymentMethodSystemNames.Contains(PayPalCommerceDefaults.SystemName))
         {
             _paymentSettings.ActivePaymentMethodSystemNames.Remove(PayPalCommerceDefaults.SystemName);
@@ -546,33 +523,10 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
 
         await _settingService.DeleteSettingAsync<PayPalCommerceSettings>();
 
-        //locales
         await _localizationService.DeleteLocaleResourcesAsync("Enums.Nop.Plugin.Payments.PayPalCommerce");
         await _localizationService.DeleteLocaleResourcesAsync("Plugins.Payments.PayPalCommerce");
 
         await base.UninstallAsync();
-    }
-
-    /// <summary>
-    /// Update plugin
-    /// </summary>
-    /// <param name="currentVersion">Current version of plugin</param>
-    /// <param name="targetVersion">New version of plugin</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public override async Task UpdateAsync(string currentVersion, string targetVersion)
-    {
-        var current = decimal.TryParse(currentVersion, NumberStyles.Any, CultureInfo.InvariantCulture, out var value) ? value : 1.00M;
-
-        //new setting added in 1.09
-        if (current < 1.09M)
-        {
-            var settings = await _settingService.LoadSettingAsync<PayPalCommerceSettings>();
-            if (!await _settingService.SettingExistsAsync(settings, setting => setting.MinDiscountAmount))
-            {
-                settings.MinDiscountAmount = 0.5M;
-                await _settingService.SaveSettingAsync(settings);
-            }
-        }
     }
 
     /// <summary>
@@ -586,7 +540,7 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
 
     #endregion
 
-    #region Properies
+    #region Properties
 
     /// <summary>
     /// Gets a value indicating whether capture is supported

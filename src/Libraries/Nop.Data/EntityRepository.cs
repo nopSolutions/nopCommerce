@@ -123,28 +123,6 @@ public partial class EntityRepository<TEntity> : IRepository<TEntity> where TEnt
         return query.OfType<ISoftDeletedEntity>().Where(entry => !entry.Deleted).OfType<TEntity>();
     }
 
-    /// <summary>
-    /// Transactionally deletes a list of entities
-    /// </summary>
-    /// <param name="entities">Entities to delete</param>
-    protected virtual async Task DeleteAsync(IList<TEntity> entities)
-    {
-        using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
-        await _dataProvider.BulkDeleteEntitiesAsync(entities);
-        transaction.Complete();
-    }
-
-    /// <summary>
-    /// Soft-deletes <see cref="ISoftDeletedEntity"/> entities
-    /// </summary>
-    /// <param name="entities">Entities to delete</param>
-    protected virtual async Task DeleteAsync<T>(IList<T> entities) where T : ISoftDeletedEntity, TEntity
-    {
-        foreach (var entity in entities)
-            entity.Deleted = true;
-        await _dataProvider.UpdateEntitiesAsync(entities);
-    }
-
     #endregion
 
     #region Methods
@@ -654,7 +632,19 @@ public partial class EntityRepository<TEntity> : IRepository<TEntity> where TEnt
         if (!entities.Any())
             return;
 
-        await DeleteAsync(entities);
+        using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+        
+        if (typeof(TEntity).GetInterface(nameof(ISoftDeletedEntity)) == null)
+            await _dataProvider.BulkDeleteEntitiesAsync(entities);
+        else
+        {
+            foreach (var entity in entities)
+                ((ISoftDeletedEntity)entity).Deleted = true;
+
+            await _dataProvider.UpdateEntitiesAsync(entities);
+        }
+
+        transaction.Complete();
 
         //event notification
         if (!publishEvent)
@@ -662,6 +652,40 @@ public partial class EntityRepository<TEntity> : IRepository<TEntity> where TEnt
 
         foreach (var entity in entities)
             await _eventPublisher.EntityDeletedAsync(entity);
+    }
+
+    /// <summary>
+    /// Delete entity entries
+    /// </summary>
+    /// <param name="entities">Entity entries</param>
+    /// <param name="publishEvent">Whether to publish event notification</param>
+    public virtual void Delete(IList<TEntity> entities, bool publishEvent = true)
+    {
+        ArgumentNullException.ThrowIfNull(entities);
+
+        if (!entities.Any())
+            return;
+
+        using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+
+        if (typeof(TEntity).GetInterface(nameof(ISoftDeletedEntity)) == null)
+            _dataProvider.BulkDeleteEntities(entities);
+        else
+        {
+            foreach (var entity in entities)
+                ((ISoftDeletedEntity)entity).Deleted = true;
+
+            _dataProvider.UpdateEntities(entities);
+        }
+
+        transaction.Complete();
+
+        //event notification
+        if (!publishEvent)
+            return;
+
+        foreach (var entity in entities)
+            _eventPublisher.EntityDeleted(entity);
     }
 
     /// <summary>

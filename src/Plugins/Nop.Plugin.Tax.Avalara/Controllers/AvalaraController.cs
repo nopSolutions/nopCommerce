@@ -9,6 +9,7 @@ using Nop.Plugin.Tax.Avalara.Services;
 using Nop.Services;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
@@ -16,7 +17,6 @@ using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework.Factories;
 using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.Tax.Avalara.Controllers;
@@ -28,13 +28,13 @@ public class AvalaraController : BasePluginController
 {
     #region Fields
 
-    protected readonly IAclSupportedModelFactory _aclSupportedModelFactory;
     protected readonly AvalaraTaxManager _avalaraTaxManager;
     protected readonly AvalaraTaxSettings _avalaraTaxSettings;
     protected readonly CurrencySettings _currencySettings;
     protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
     protected readonly ICountryService _countryService;
     protected readonly ICurrencyService _currencyService;
+    protected readonly ICustomerService _customerService;
     protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly ILocalizationService _localizationService;
     protected readonly INotificationService _notificationService;
@@ -46,13 +46,13 @@ public class AvalaraController : BasePluginController
 
     #region Ctor
 
-    public AvalaraController(IAclSupportedModelFactory aclSupportedModelFactory,
-        AvalaraTaxManager avalaraTaxManager,
+    public AvalaraController(AvalaraTaxManager avalaraTaxManager,
         AvalaraTaxSettings avalaraTaxSettings,
         CurrencySettings currencySettings,
         IBaseAdminModelFactory baseAdminModelFactory,
         ICountryService countryService,
         ICurrencyService currencyService,
+        ICustomerService customerService,
         IGenericAttributeService genericAttributeService,
         ILocalizationService localizationService,
         INotificationService notificationService,
@@ -60,13 +60,13 @@ public class AvalaraController : BasePluginController
         ISettingService settingService,
         IWorkContext workContext)
     {
-        _aclSupportedModelFactory = aclSupportedModelFactory;
         _avalaraTaxManager = avalaraTaxManager;
         _avalaraTaxSettings = avalaraTaxSettings;
         _currencySettings = currencySettings;
         _baseAdminModelFactory = baseAdminModelFactory;
         _countryService = countryService;
         _currencyService = currencyService;
+        _customerService = customerService;
         _genericAttributeService = genericAttributeService;
         _localizationService = localizationService;
         _notificationService = notificationService;
@@ -79,11 +79,9 @@ public class AvalaraController : BasePluginController
 
     #region Methods
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
     public async Task<IActionResult> Configure(string testTaxResult = null)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return AccessDeniedView();
-
         var customer = await _workContext.GetCurrentCustomerAsync();
 
         var model = new ConfigurationModel
@@ -114,8 +112,14 @@ public class AvalaraController : BasePluginController
         model.HideItemClassificationBlock = await _genericAttributeService.GetAttributeAsync<bool>(customer, AvalaraTaxDefaults.HideItemClassificationBlock);
         model.HideLogBlock = await _genericAttributeService.GetAttributeAsync<bool>(customer, AvalaraTaxDefaults.HideLogBlock);
 
-        //prepare model customer roles
-        await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(model);
+        //prepare available customer roles
+        var availableRoles = await _customerService.GetAllCustomerRolesAsync(showHidden: true);
+        model.AvailableCustomerRoles = availableRoles.Select(role => new SelectListItem
+        {
+            Text = role.Name,
+            Value = role.Id.ToString(),
+            Selected = model.SelectedCustomerRoleIds.Contains(role.Id)
+        }).ToList();
 
         //prepare available of item classification countries (for sync)
         await _baseAdminModelFactory.PrepareCountriesAsync(model.AvailableCountries, false);
@@ -179,11 +183,9 @@ public class AvalaraController : BasePluginController
 
     [HttpPost, ActionName("Configure")]
     [FormValueRequired("save")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
     public async Task<IActionResult> Configure(ConfigurationModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return AccessDeniedView();
-
         if (!ModelState.IsValid)
             return await Configure();
 
@@ -211,11 +213,9 @@ public class AvalaraController : BasePluginController
 
     [HttpPost, ActionName("Configure")]
     [FormValueRequired("saveIC")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
     public async Task<IActionResult> SaveItemClassification(ConfigurationModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return AccessDeniedView();
-
         if (!ModelState.IsValid)
             return await Configure();
 
@@ -230,11 +230,9 @@ public class AvalaraController : BasePluginController
 
     [HttpPost, ActionName("Configure")]
     [FormValueRequired("check-credentials")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
     public async Task<IActionResult> CheckCredentials()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return AccessDeniedView();
-
         //verify credentials
         var credentials = await _avalaraTaxManager.PingAsync();
         if (credentials?.authenticated ?? false)
@@ -271,11 +269,9 @@ public class AvalaraController : BasePluginController
 
     [HttpPost, ActionName("Configure")]
     [FormValueRequired("request-certificate-setup")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
     public async Task<IActionResult> RequestCertificateSetup()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return AccessDeniedView();
-
         //request the certificate setup and display current status
         var status = await _avalaraTaxManager.GetCertificateSetupStatusAsync(true);
         if (status is null)
@@ -299,11 +295,9 @@ public class AvalaraController : BasePluginController
 
     [HttpPost, ActionName("Configure")]
     [FormValueRequired("test-tax")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
     public async Task<IActionResult> TestTaxRequest(ConfigurationModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-            return AccessDeniedView();
-
         if (!ModelState.IsValid)
             return await Configure();
 

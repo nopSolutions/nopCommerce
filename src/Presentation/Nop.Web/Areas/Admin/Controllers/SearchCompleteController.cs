@@ -33,7 +33,7 @@ public partial class SearchCompleteController : BaseAdminController
 
     public virtual async Task<IActionResult> SearchAutoComplete(string term)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel))
+        if (!await _permissionService.AuthorizeAsync(StandardPermission.Security.ACCESS_ADMIN_PANEL))
             return Content(string.Empty);
 
         const int searchTermMinimumLength = 3;

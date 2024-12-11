@@ -222,13 +222,13 @@ public abstract partial class BaseController : Controller
     }
 
     /// <summary>
-    /// Access denied JSON data for DataTables
+    /// Access denied JSON data
     /// </summary>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the access denied JSON data
     /// </returns>
-    protected virtual async Task<JsonResult> AccessDeniedDataTablesJson()
+    protected virtual async Task<JsonResult> AccessDeniedJsonAsync()
     {
         var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
 

@@ -1,5 +1,6 @@
 ﻿using ClosedXML.Excel;
 using FluentAssertions;
+using Microsoft.IdentityModel.Tokens;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
@@ -125,6 +126,9 @@ public class ExportManagerTests : ServiceTest
             if (propertyValue is XLCellValue { IsBlank: true }) 
                 propertyValue = null;
 
+            if (string.IsNullOrEmpty(propertyValue?.ToString() ?? string.Empty) && objectPropertyValue is null) 
+                continue;
+
             switch (objectPropertyValue)
             {
                 case int:
@@ -151,7 +155,7 @@ public class ExportManagerTests : ServiceTest
                     break;
             }   
 
-            if (objectProperty.PropertyType.IsEnum)
+            if (objectProperty.PropertyType.IsEnum && objectPropertyValue != null)
             {
                 objectPropertyValue = (int)objectPropertyValue;
                 propertyValue = property.IntValue;
@@ -343,7 +347,7 @@ public class ExportManagerTests : ServiceTest
             "CustomerCustomerRoleMappings", "CustomerAddressMappings", "EntityCacheKey", "VendorId",
             "DateOfBirth", "CountryId",
             "StateProvinceId", "VatNumberStatusId", "TimeZoneId",
-            "CurrencyId", "LanguageId", "TaxDisplayTypeId", "TaxDisplayType", "TaxDisplayType", "VatNumberStatusId" };
+            "CurrencyId", "LanguageId", "TaxDisplayTypeId", "TaxDisplayType", "TaxDisplayType", "VatNumberStatusId", "MustChangePassword" };
 
         if (!_customerSettings.FirstNameEnabled) 
             ignore.Add("FirstName");
@@ -404,7 +408,7 @@ public class ExportManagerTests : ServiceTest
         manager.ReadDefaultFromXlsx(worksheet, 2);
         var category = categories.First();
 
-        var ignore = new List<string> { "CreatedOnUtc", "EntityCacheKey", "Picture", "PictureId", "AppliedDiscounts", "UpdatedOnUtc", "SubjectToAcl", "LimitedToStores", "Deleted", "DiscountCategoryMappings" };
+        var ignore = new List<string> { "CreatedOnUtc", "EntityCacheKey", "Picture", "PictureId", "AppliedDiscounts", "UpdatedOnUtc", "SubjectToAcl", "LimitedToStores", "Deleted", "DiscountCategoryMappings", "RestrictFromVendors" };
 
         AreAllObjectPropertiesPresent(category, manager, ignore.ToArray());
         PropertiesShouldEqual(category, manager, new Dictionary<string, string>());
@@ -443,13 +447,10 @@ public class ExportManagerTests : ServiceTest
             "ProductTags", "ProductAttributeMappings", "ProductAttributeCombinations", "TierPrices",
             "AppliedDiscounts", "ProductWarehouseInventory", "ApprovedRatingSum", "NotApprovedRatingSum",
             "ApprovedTotalReviews", "NotApprovedTotalReviews", "SubjectToAcl", "LimitedToStores", "Deleted",
-            "DownloadExpirationDays", "HasTierPrices", "HasDiscountsApplied", "AvailableStartDateTimeUtc",
+            "DownloadExpirationDays", "AvailableStartDateTimeUtc",
             "AvailableEndDateTimeUtc", "DisplayOrder", "CreatedOnUtc", "UpdatedOnUtc", "ProductProductTagMappings",
             "DiscountProductMappings", "EntityCacheKey" };
-
-        if (!_productEditorSettings.DisplayAttributeCombinationImagesOnly)
-            ignore.Add("DisplayAttributeCombinationImagesOnly");
-
+        
         ignore.AddRange(replacePairs.Values);
 
         var product = _productRepository.Table.ToList().First();

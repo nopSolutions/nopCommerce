@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
@@ -314,9 +313,14 @@ public class UPSService
         {
             Request = new RateRequest_Request
             {
-                //used to define the request type
-                //Shop - the server validates the shipment, and returns rates for all UPS products from the ShipFrom to the ShipTo addresses
-                RequestOption = "Shop"
+                //used to define the request type.
+                //valid values:
+                //  * Rate = the server rates(The default Request option is Rate if a Request Option is not provided).
+                //  * Shop = the server validates the shipment, and returns rates for all UPS products from the ShipFrom to the ShipTo addresses.
+                //  * Ratetimeintransit = the server rates with transit time information
+                //  * Shoptimeintransit = the server validates the shipment, and returns rates and transit times for all UPS products from the ShipFrom to the ShipTo addresses.
+                //Rate is the only valid request option for UPS Ground Freight Pricing requests.
+                RequestOption = "Shoptimeintransit"
             }
         };
 
@@ -368,6 +372,21 @@ public class UPSService
             ShipTo = new Shipment_ShipTo
             {
                 Address = addressToDetails
+            },
+            DeliveryTimeInformation = new Shipment_DeliveryTimeInformation
+            {
+                //valid values are:
+                //  * 02 - Document only
+                //  * 03 - Non-Document
+                //  * 04 - WWEF Pallet
+                //  * 07 - Domestic Pallet
+                //if 04 is included, Worldwide Express Freight and UPS Worldwide Express Freight Midday services (if applicable)
+                //will be included in the response.
+                PackageBillType = "03",
+                Pickup = new DeliveryTimeInformation_Pickup
+                {
+                    Date = DateTime.UtcNow.ToLocalTime().Date.AddDays(1).ToString("yyyyMMdd"),
+                }
             }
         };
 
@@ -405,6 +424,23 @@ public class UPSService
             PackingType.PackByOneItemPerPackage => (await GetPackagesForOneItemPerPackageAsync(shippingOptionRequest)).ToArray(),
             PackingType.PackByVolume => (await GetPackagesByCubicRootAsync(shippingOptionRequest)).ToArray(),
             _ => (await GetPackagesByDimensionsAsync(shippingOptionRequest)).ToArray()
+        };
+
+        request.Shipment.ShipmentTotalWeight = new Shipment_ShipmentTotalWeight
+        {
+            UnitOfMeasurement = new ShipmentTotalWeight_UnitOfMeasurement
+            {
+                Code = _upsSettings.WeightType,
+                Description = _upsSettings.WeightType
+            },
+            Weight = request.Shipment.Package.Sum(x => decimal.TryParse(x.PackageWeight.Weight, out var wt) ? wt : 0).ToString()
+        };
+
+        var currencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode;
+        request.Shipment.InvoiceLineTotal = new Shipment_InvoiceLineTotal
+        {
+            CurrencyCode = currencyCode,
+            MonetaryValue = shippingOptionRequest.Items.Sum(x => x.Product.Price * x.GetQuantity()).ToString("F2")
         };
 
         return request;
@@ -851,8 +887,14 @@ public class UPSService
             var serviceSummary = rate.TimeInTransit?.ServiceSummary;
 
             if (serviceSummary != null)
-                if (!string.IsNullOrWhiteSpace(serviceSummary.EstimatedArrival.BusinessDaysInTransit) && int.TryParse(serviceSummary.EstimatedArrival.BusinessDaysInTransit, out var businessDaysInTransit))
+            {
+                if (!string.IsNullOrWhiteSpace(serviceSummary.EstimatedArrival.TotalTransitDays) &&
+                    int.TryParse(serviceSummary.EstimatedArrival.TotalTransitDays, out var totalTransitDays))
+                    transitDays = totalTransitDays;
+                else if (!string.IsNullOrEmpty(serviceSummary.EstimatedArrival.BusinessDaysInTransit) &&
+                         int.TryParse(serviceSummary.EstimatedArrival.BusinessDaysInTransit, out var businessDaysInTransit))
                     transitDays = businessDaysInTransit;
+            }
 
             //add shipping option based on service rate
             shippingOptions.Add(new ShippingOption

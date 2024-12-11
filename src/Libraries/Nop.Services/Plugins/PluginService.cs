@@ -22,7 +22,7 @@ public partial class PluginService : IPluginService
     protected readonly CatalogSettings _catalogSettings;
     protected readonly ICustomerService _customerService;
     protected readonly IHttpContextAccessor _httpContextAccessor;
-    protected readonly IMigrationManager _migrationManager;
+    protected readonly Lazy<IMigrationManager> _migrationManager;
     protected readonly ILogger _logger;
     protected readonly INopFileProvider _fileProvider;
     protected readonly IPluginsInfo _pluginsInfo;
@@ -36,7 +36,7 @@ public partial class PluginService : IPluginService
     public PluginService(CatalogSettings catalogSettings,
         ICustomerService customerService,
         IHttpContextAccessor httpContextAccessor,
-        IMigrationManager migrationManager,
+        Lazy<IMigrationManager> migrationManager,
         ILogger logger,
         INopFileProvider fileProvider,
         IWebHelper webHelper,
@@ -190,12 +190,12 @@ public partial class PluginService : IPluginService
     protected virtual void InsertPluginData(Type pluginType, MigrationProcessType migrationProcessType = MigrationProcessType.NoMatter)
     {
         var assembly = Assembly.GetAssembly(pluginType);
-        _migrationManager.ApplyUpMigrations(assembly, migrationProcessType);
+        _migrationManager.Value.ApplyUpMigrations(assembly, migrationProcessType);
 
         //mark update migrations as applied
         if (migrationProcessType == MigrationProcessType.Installation)
         {
-            _migrationManager.ApplyUpMigrations(assembly, MigrationProcessType.Update, true);
+            _migrationManager.Value.ApplyUpMigrations(assembly, MigrationProcessType.Update, true);
         }
     }
 
@@ -558,7 +558,7 @@ public partial class PluginService : IPluginService
 
                 //clear plugin data on the database
                 var assembly = Assembly.GetAssembly(descriptor.pluginDescriptor.PluginType);
-                _migrationManager.ApplyDownMigrations(assembly);
+                _migrationManager.Value.ApplyDownMigrations(assembly);
 
                 //remove plugin system name from appropriate lists
                 _pluginsInfo.InstalledPlugins.Remove(descriptor.pluginDescriptor);

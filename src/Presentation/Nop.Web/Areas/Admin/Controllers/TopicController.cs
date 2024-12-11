@@ -111,32 +111,7 @@ public partial class TopicController : BaseAdminController
             await _urlRecordService.SaveSlugAsync(topic, seName, localized.LanguageId);
         }
     }
-
-    protected virtual async Task SaveTopicAclAsync(Topic topic, TopicModel model)
-    {
-        topic.SubjectToAcl = model.SelectedCustomerRoleIds.Any();
-        await _topicService.UpdateTopicAsync(topic);
-
-        var existingAclRecords = await _aclService.GetAclRecordsAsync(topic);
-        var allCustomerRoles = await _customerService.GetAllCustomerRolesAsync(true);
-        foreach (var customerRole in allCustomerRoles)
-        {
-            if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
-            {
-                //new role
-                if (!existingAclRecords.Any(acl => acl.CustomerRoleId == customerRole.Id))
-                    await _aclService.InsertAclRecordAsync(topic, customerRole.Id);
-            }
-            else
-            {
-                //remove role
-                var aclRecordToDelete = existingAclRecords.FirstOrDefault(acl => acl.CustomerRoleId == customerRole.Id);
-                if (aclRecordToDelete != null)
-                    await _aclService.DeleteAclRecordAsync(aclRecordToDelete);
-            }
-        }
-    }
-
+    
     protected virtual async Task SaveStoreMappingsAsync(Topic topic, TopicModel model)
     {
         topic.LimitedToStores = model.SelectedStoreIds.Any();
@@ -171,11 +146,9 @@ public partial class TopicController : BaseAdminController
         return RedirectToAction("List");
     }
 
+    [CheckPermission(StandardPermission.ContentManagement.TOPICS_VIEW)]
     public virtual async Task<IActionResult> List(bool showtour = false)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _topicModelFactory.PrepareTopicSearchModelAsync(new TopicSearchModel());
 
@@ -194,11 +167,9 @@ public partial class TopicController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.ContentManagement.TOPICS_VIEW)]
     public virtual async Task<IActionResult> List(TopicSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics))
-            return await AccessDeniedDataTablesJson();
-
         //prepare model
         var model = await _topicModelFactory.PrepareTopicListModelAsync(searchModel);
 
@@ -209,11 +180,9 @@ public partial class TopicController : BaseAdminController
 
     #region Create / Edit / Delete
 
+    [CheckPermission(StandardPermission.ContentManagement.TOPICS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Create()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _topicModelFactory.PrepareTopicModelAsync(new TopicModel(), null);
 
@@ -221,11 +190,9 @@ public partial class TopicController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.ContentManagement.TOPICS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Create(TopicModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics))
-            return AccessDeniedView();
-
         if (ModelState.IsValid)
         {
             if (!model.IsPasswordProtected)
@@ -237,10 +204,7 @@ public partial class TopicController : BaseAdminController
             //search engine name
             model.SeName = await _urlRecordService.ValidateSeNameAsync(topic, model.SeName, topic.Title ?? topic.SystemName, true);
             await _urlRecordService.SaveSlugAsync(topic, model.SeName, 0);
-
-            //ACL (customer roles)
-            await SaveTopicAclAsync(topic, model);
-
+            
             //stores
             await SaveStoreMappingsAsync(topic, model);
 
@@ -266,11 +230,9 @@ public partial class TopicController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.ContentManagement.TOPICS_VIEW)]
     public virtual async Task<IActionResult> Edit(int id, bool showtour = false)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics))
-            return AccessDeniedView();
-
         //try to get a topic with the specified id
         var topic = await _topicService.GetTopicByIdAsync(id);
         if (topic == null)
@@ -294,11 +256,9 @@ public partial class TopicController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.ContentManagement.TOPICS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Edit(TopicModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics))
-            return AccessDeniedView();
-
         //try to get a topic with the specified id
         var topic = await _topicService.GetTopicByIdAsync(model.Id);
         if (topic == null)
@@ -315,10 +275,7 @@ public partial class TopicController : BaseAdminController
             //search engine name
             model.SeName = await _urlRecordService.ValidateSeNameAsync(topic, model.SeName, topic.Title ?? topic.SystemName, true);
             await _urlRecordService.SaveSlugAsync(topic, model.SeName, 0);
-
-            //ACL (customer roles)
-            await SaveTopicAclAsync(topic, model);
-
+            
             //stores
             await SaveStoreMappingsAsync(topic, model);
 
@@ -345,11 +302,9 @@ public partial class TopicController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.ContentManagement.TOPICS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Delete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics))
-            return AccessDeniedView();
-
         //try to get a topic with the specified id
         var topic = await _topicService.GetTopicByIdAsync(id);
         if (topic == null)

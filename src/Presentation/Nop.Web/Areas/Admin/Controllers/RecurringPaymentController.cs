@@ -50,11 +50,9 @@ public partial class RecurringPaymentController : BaseAdminController
         return RedirectToAction("List");
     }
 
+    [CheckPermission(StandardPermission.Orders.RECURRING_PAYMENTS_VIEW)]
     public virtual async Task<IActionResult> List()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageRecurringPayments))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _recurringPaymentModelFactory.PrepareRecurringPaymentSearchModelAsync(new RecurringPaymentSearchModel());
 
@@ -62,22 +60,18 @@ public partial class RecurringPaymentController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Orders.RECURRING_PAYMENTS_VIEW)]
     public virtual async Task<IActionResult> List(RecurringPaymentSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageRecurringPayments))
-            return await AccessDeniedDataTablesJson();
-
         //prepare model
         var model = await _recurringPaymentModelFactory.PrepareRecurringPaymentListModelAsync(searchModel);
 
         return Json(model);
     }
 
+    [CheckPermission(StandardPermission.Orders.RECURRING_PAYMENTS_VIEW)]
     public virtual async Task<IActionResult> Edit(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageRecurringPayments))
-            return AccessDeniedView();
-
         //try to get a recurring payment with the specified id
         var payment = await _orderService.GetRecurringPaymentByIdAsync(id);
         if (payment == null || payment.Deleted)
@@ -91,11 +85,9 @@ public partial class RecurringPaymentController : BaseAdminController
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
     [FormValueRequired("save", "save-continue")]
+    [CheckPermission(StandardPermission.Orders.RECURRING_PAYMENTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Edit(RecurringPaymentModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageRecurringPayments))
-            return AccessDeniedView();
-
         //try to get a recurring payment with the specified id
         var payment = await _orderService.GetRecurringPaymentByIdAsync(model.Id);
         if (payment == null || payment.Deleted)
@@ -122,11 +114,9 @@ public partial class RecurringPaymentController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Orders.RECURRING_PAYMENTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Delete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageRecurringPayments))
-            return AccessDeniedView();
-
         //try to get a recurring payment with the specified id
         var payment = await _orderService.GetRecurringPaymentByIdAsync(id);
         if (payment == null)
@@ -140,11 +130,9 @@ public partial class RecurringPaymentController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Orders.RECURRING_PAYMENTS_VIEW)]
     public virtual async Task<IActionResult> HistoryList(RecurringPaymentHistorySearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageRecurringPayments))
-            return await AccessDeniedDataTablesJson();
-
         //try to get a recurring payment with the specified id
         var payment = await _orderService.GetRecurringPaymentByIdAsync(searchModel.RecurringPaymentId)
                       ?? throw new ArgumentException("No recurring payment found with the specified id");
@@ -157,11 +145,9 @@ public partial class RecurringPaymentController : BaseAdminController
 
     [HttpPost, ActionName("Edit")]
     [FormValueRequired("processnextpayment")]
+    [CheckPermission(StandardPermission.Orders.RECURRING_PAYMENTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> ProcessNextPayment(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageRecurringPayments))
-            return AccessDeniedView();
-
         //try to get a recurring payment with the specified id
         var payment = await _orderService.GetRecurringPaymentByIdAsync(id);
         if (payment == null)
@@ -204,11 +190,9 @@ public partial class RecurringPaymentController : BaseAdminController
 
     [HttpPost, ActionName("Edit")]
     [FormValueRequired("cancelpayment")]
+    [CheckPermission(StandardPermission.Orders.RECURRING_PAYMENTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> CancelRecurringPayment(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageRecurringPayments))
-            return AccessDeniedView();
-
         //try to get a recurring payment with the specified id
         var payment = await _orderService.GetRecurringPaymentByIdAsync(id);
         if (payment == null)

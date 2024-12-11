@@ -104,10 +104,8 @@ public partial class DownloadController : BaseAdminController
 
         var fileBinary = await _downloadService.GetDownloadBitsAsync(httpPostedFile);
 
-        var qqFileNameParameter = "qqfilename";
         var fileName = httpPostedFile.FileName;
-        if (string.IsNullOrEmpty(fileName) && await Request.IsFormKeyExistsAsync(qqFileNameParameter))
-            fileName = await Request.GetFormValueAsync(qqFileNameParameter);
+
         //remove path (passed in IE)
         fileName = _fileProvider.GetFileName(fileName);
 

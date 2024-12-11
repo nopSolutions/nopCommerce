@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Misc",
+  "FriendlyName": "EU Omnibus Directive",
+  "SystemName": "Misc.OmnibusDirective",
+  "Version": "4.80.4",
+  "SupportedVersions": [ "4.80" ],
+  "Author": "nopCommerce team",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Misc.OmnibusDirective.dll",
+  "Description": "This plugin keeps your pricing compliant with the EU Omnibus Directive."
+}

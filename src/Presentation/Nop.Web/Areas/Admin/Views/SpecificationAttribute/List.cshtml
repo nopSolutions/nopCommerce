@@ -13,16 +13,16 @@
     </h1>
     <div class="float-right">
         <a asp-action="CreateSpecificationAttributeGroup" class="btn btn-primary">
-            <i class="fas fa-plus-square"></i>
+            <i class="fas fa-square-plus"></i>
             @T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.Buttons.AddNew")
         </a>
         <a asp-action="CreateSpecificationAttribute" class="btn btn-primary">
-            <i class="fas fa-plus-square"></i>
+            <i class="fas fa-square-plus"></i>
             @T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Buttons.AddNew")
         </a>
         @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.SpecificationAttributeListButtons, additionalData = Model })
         <button type="button" id="delete-selected-specification-attributes" class="btn btn-danger">
-            <i class="far fa-trash-alt"></i>
+            <i class="far fa-trash-can"></i>
             @T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Buttons.DeleteSelected")
         </button>
         <nop-action-confirmation asp-button-id="delete-selected-specification-attributes" />
@@ -102,7 +102,7 @@
                                 Title = T("Admin.Common.Edit").Text,
                                 Width = "50",
                                 ClassName = NopColumnClassDefaults.Button,
-                                Render = new RenderButtonEdit(new DataUrl("EditSpecificationAttribute"))
+                                Render = new RenderButtonEdit(new DataUrl("~/Admin/SpecificationAttribute/EditSpecificationAttribute"))
                             }
                         }
                     }

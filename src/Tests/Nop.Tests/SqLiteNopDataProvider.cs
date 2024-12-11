@@ -2,6 +2,7 @@
 using System.Data.Common;
 using System.Linq.Expressions;
 using System.Text;
+using DocumentFormat.OpenXml.Vml.Office;
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider;
@@ -165,8 +166,8 @@ public partial class SqLiteNopDataProvider : BaseDataProvider, INopDataProvider
     /// <typeparam name="TEntity">Entity type</typeparam>
     public override Task BulkInsertEntitiesAsync<TEntity>(IEnumerable<TEntity> entities)
     {
-        using (new ReaderWriteLockDisposable(_locker))
-            DataContext.BulkCopy(new BulkCopyOptions(), entities.RetrieveIdentity(DataContext));
+        foreach (var entity in entities)
+            InsertEntity(entity);
 
         return Task.CompletedTask;
     }

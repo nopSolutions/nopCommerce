@@ -1,6 +1,8 @@
 ﻿@inject IEventPublisher eventPublisher
 @inject LocalizationSettings localizationSettings
+
 @using Nop.Core.Domain.Localization
+
 @{
     //page title
     string adminPageTitle = !string.IsNullOrWhiteSpace(ViewBag.PageTitle) ? ViewBag.PageTitle + " / " : "";
@@ -15,6 +17,7 @@
     <title>@adminPageTitle</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+
     @NopHtml.GenerateHeadCustom()
 
     @* CSS & Script resources *@

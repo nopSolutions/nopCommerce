@@ -77,11 +77,9 @@ public partial class ReviewTypeController : BaseAdminController
         return RedirectToAction("List");
     }
 
-    public virtual async Task<IActionResult> List()
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
+    public virtual IActionResult List()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //select an appropriate card
         SaveSelectedCardName("catalogsettings-review-types");
 
@@ -90,22 +88,18 @@ public partial class ReviewTypeController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> List(ReviewTypeSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return await AccessDeniedDataTablesJson();
-
         //prepare model
         var model = await _reviewTypeModelFactory.PrepareReviewTypeListModelAsync(searchModel);
 
         return Json(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Create()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _reviewTypeModelFactory.PrepareReviewTypeModelAsync(new ReviewTypeModel(), null);
 
@@ -113,11 +107,9 @@ public partial class ReviewTypeController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Create(ReviewTypeModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         if (ModelState.IsValid)
         {
             var reviewType = model.ToEntity<ReviewType>();
@@ -142,11 +134,9 @@ public partial class ReviewTypeController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Edit(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //try to get an product review type with the specified id
         var reviewType = await _reviewTypeService.GetReviewTypeByIdAsync(id);
         if (reviewType == null)
@@ -159,11 +149,9 @@ public partial class ReviewTypeController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Edit(ReviewTypeModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //try to get an review type with the specified id
         var reviewType = await _reviewTypeService.GetReviewTypeByIdAsync(model.Id);
         if (reviewType == null)
@@ -195,11 +183,9 @@ public partial class ReviewTypeController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Delete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-            return AccessDeniedView();
-
         //try to get an review type with the specified id
         var reviewType = await _reviewTypeService.GetReviewTypeByIdAsync(id);
         if (reviewType == null)

@@ -84,6 +84,11 @@ public partial class MigrationVersionInfo : BaseEntity, IVersionTableMetaData
     /// </summary>
     public string AppliedOnColumnName { get; }
 
+    /// <summary>
+    /// Create with primary key
+    /// </summary>
+    public bool CreateWithPrimaryKey { get; } = false;
+
     #endregion
 
     #endregion

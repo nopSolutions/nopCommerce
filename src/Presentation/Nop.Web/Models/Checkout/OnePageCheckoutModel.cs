@@ -10,5 +10,5 @@ public partial record OnePageCheckoutModel : BaseNopModel
     public bool IsReCaptchaV3 { get; set; }
     public string ReCaptchaPublicKey { get; set; }
 
-    public CheckoutBillingAddressModel BillingAddress { get; set; }
+    public CheckoutBillingAddressModel BillingAddress { get; set; } = new();
 }

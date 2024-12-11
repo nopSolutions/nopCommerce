@@ -245,7 +245,7 @@
                         {
                             Title = T("Admin.Catalog.Products.TierPrices.Fields.Quantity").Text
                         },
-                        new ColumnProperty(nameof(TierPriceModel.Price))
+                        new ColumnProperty(nameof(TierPriceModel.FormattedPrice))
                         {
                             Title = T("Admin.Catalog.Products.TierPrices.Fields.Price").Text
                         },
@@ -278,7 +278,7 @@
 
                 <script>
                     function renderPriceColumnEdit(data, type, row, meta) {
-                        return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/Product/TierPriceEditPopup/")' + data + '?btnId=btnRefreshTierPrices&formId=product-form\', 800, 600, true); return false;\" class="btn btn-default"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit").Text</button>';
+                        return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/Product/TierPriceEditPopup/")' + data + '?btnId=btnRefreshTierPrices&formId=product-form\', 800, 600, true); return false;\" class="btn btn-default"><i class="fas fa-pencil"></i>@T("Admin.Common.Edit").Text</button>';
                     }
                 </script>
             </div>

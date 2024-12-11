@@ -82,11 +82,9 @@ public partial class GiftCardController : BaseAdminController
         return RedirectToAction("List");
     }
 
+    [CheckPermission(StandardPermission.Orders.GIFT_CARDS_VIEW)]
     public virtual async Task<IActionResult> List()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageGiftCards))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _giftCardModelFactory.PrepareGiftCardSearchModelAsync(new GiftCardSearchModel());
 
@@ -94,22 +92,18 @@ public partial class GiftCardController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Orders.GIFT_CARDS_VIEW)]
     public virtual async Task<IActionResult> GiftCardList(GiftCardSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageGiftCards))
-            return await AccessDeniedDataTablesJson();
-
         //prepare model
         var model = await _giftCardModelFactory.PrepareGiftCardListModelAsync(searchModel);
 
         return Json(model);
     }
 
+    [CheckPermission(StandardPermission.Orders.GIFT_CARDS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Create()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageGiftCards))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _giftCardModelFactory.PrepareGiftCardModelAsync(new GiftCardModel(), null);
 
@@ -117,11 +111,9 @@ public partial class GiftCardController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.Orders.GIFT_CARDS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Create(GiftCardModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageGiftCards))
-            return AccessDeniedView();
-
         if (ModelState.IsValid)
         {
             var giftCard = model.ToEntity<GiftCard>();
@@ -144,11 +136,9 @@ public partial class GiftCardController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.Orders.GIFT_CARDS_VIEW)]
     public virtual async Task<IActionResult> Edit(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageGiftCards))
-            return AccessDeniedView();
-
         //try to get a gift card with the specified id
         var giftCard = await _giftCardService.GetGiftCardByIdAsync(id);
         if (giftCard == null)
@@ -162,11 +152,9 @@ public partial class GiftCardController : BaseAdminController
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
     [FormValueRequired("save", "save-continue")]
+    [CheckPermission(StandardPermission.Orders.GIFT_CARDS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Edit(GiftCardModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageGiftCards))
-            return AccessDeniedView();
-
         //try to get a gift card with the specified id
         var giftCard = await _giftCardService.GetGiftCardByIdAsync(model.Id);
         if (giftCard == null)
@@ -206,6 +194,7 @@ public partial class GiftCardController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Orders.GIFT_CARDS_CREATE_EDIT_DELETE)]
     public virtual IActionResult GenerateCouponCode()
     {
         return Json(new { CouponCode = _giftCardService.GenerateGiftCardCode() });
@@ -213,11 +202,9 @@ public partial class GiftCardController : BaseAdminController
 
     [HttpPost, ActionName("Edit")]
     [FormValueRequired("notifyRecipient")]
+    [CheckPermission(StandardPermission.Orders.GIFT_CARDS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> NotifyRecipient(GiftCardModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageGiftCards))
-            return AccessDeniedView();
-
         //try to get a gift card with the specified id
         var giftCard = await _giftCardService.GetGiftCardByIdAsync(model.Id);
         if (giftCard == null)
@@ -269,11 +256,9 @@ public partial class GiftCardController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Orders.GIFT_CARDS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Delete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageGiftCards))
-            return AccessDeniedView();
-
         //try to get a gift card with the specified id
         var giftCard = await _giftCardService.GetGiftCardByIdAsync(id);
         if (giftCard == null)
@@ -291,11 +276,9 @@ public partial class GiftCardController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Orders.GIFT_CARDS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> UsageHistoryList(GiftCardUsageHistorySearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageGiftCards))
-            return await AccessDeniedDataTablesJson();
-
         //try to get a gift card with the specified id
         var giftCard = await _giftCardService.GetGiftCardByIdAsync(searchModel.GiftCardId)
                        ?? throw new ArgumentException("No gift card found with the specified id");

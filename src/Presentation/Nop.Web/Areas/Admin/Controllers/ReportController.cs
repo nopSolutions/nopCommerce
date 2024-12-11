@@ -2,6 +2,7 @@
 using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Reports;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Areas.Admin.Controllers;
 
@@ -30,11 +31,10 @@ public partial class ReportController : BaseAdminController
 
     #region Sales summary
 
+    [CheckPermission(StandardPermission.Orders.ORDERS_VIEW)]
+    [CheckPermission(StandardPermission.Reports.SALES_SUMMARY)]
     public virtual async Task<IActionResult> SalesSummary(List<int> orderStatuses = null, List<int> paymentStatuses = null)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.SalesSummaryReport))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _reportModelFactory.PrepareSalesSummarySearchModelAsync(new SalesSummarySearchModel
         {
@@ -46,11 +46,10 @@ public partial class ReportController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Orders.ORDERS_VIEW)]
+    [CheckPermission(StandardPermission.Reports.SALES_SUMMARY)]
     public virtual async Task<IActionResult> SalesSummaryList(SalesSummarySearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.SalesSummaryReport))
-            return await AccessDeniedDataTablesJson();
-
         //prepare model
         var model = await _reportModelFactory.PrepareSalesSummaryListModelAsync(searchModel);
 
@@ -62,11 +61,10 @@ public partial class ReportController : BaseAdminController
 
     #region Low stock
 
+    [CheckPermission(StandardPermission.Reports.LOW_STOCK)]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
     public virtual async Task<IActionResult> LowStock()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _reportModelFactory.PrepareLowStockProductSearchModelAsync(new LowStockProductSearchModel());
 
@@ -74,11 +72,10 @@ public partial class ReportController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Reports.LOW_STOCK)]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
     public virtual async Task<IActionResult> LowStockList(LowStockProductSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-            return await AccessDeniedDataTablesJson();
-
         //prepare model
         var model = await _reportModelFactory.PrepareLowStockProductListModelAsync(searchModel);
 
@@ -89,11 +86,10 @@ public partial class ReportController : BaseAdminController
 
     #region Bestsellers
 
+    [CheckPermission(StandardPermission.Orders.ORDERS_VIEW)]
+    [CheckPermission(StandardPermission.Reports.BESTSELLERS)]
     public virtual async Task<IActionResult> Bestsellers()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _reportModelFactory.PrepareBestsellerSearchModelAsync(new BestsellerSearchModel());
 
@@ -101,11 +97,10 @@ public partial class ReportController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Orders.ORDERS_VIEW)]
+    [CheckPermission(StandardPermission.Reports.BESTSELLERS)]
     public virtual async Task<IActionResult> BestsellersList(BestsellerSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
-            return await AccessDeniedDataTablesJson();
-
         //prepare model
         var model = await _reportModelFactory.PrepareBestsellerListModelAsync(searchModel);
 
@@ -113,11 +108,10 @@ public partial class ReportController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Orders.ORDERS_VIEW)]
+    [CheckPermission(StandardPermission.Reports.BESTSELLERS)]
     public virtual async Task<IActionResult> BestsellersReportAggregates(BestsellerSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
-            return await AccessDeniedDataTablesJson();
-
         //prepare model
         var totalAmount = await _reportModelFactory.GetBestsellerTotalAmountAsync(searchModel);
 
@@ -128,11 +122,10 @@ public partial class ReportController : BaseAdminController
 
     #region Never Sold
 
+    [CheckPermission(StandardPermission.Orders.ORDERS_VIEW)]
+    [CheckPermission(StandardPermission.Reports.PRODUCTS_NEVER_PURCHASED)]
     public virtual async Task<IActionResult> NeverSold()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _reportModelFactory.PrepareNeverSoldSearchModelAsync(new NeverSoldReportSearchModel());
 
@@ -140,11 +133,10 @@ public partial class ReportController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Orders.ORDERS_VIEW)]
+    [CheckPermission(StandardPermission.Reports.PRODUCTS_NEVER_PURCHASED)]
     public virtual async Task<IActionResult> NeverSoldList(NeverSoldReportSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
-            return await AccessDeniedDataTablesJson();
-
         //prepare model
         var model = await _reportModelFactory.PrepareNeverSoldListModelAsync(searchModel);
 
@@ -155,11 +147,10 @@ public partial class ReportController : BaseAdminController
 
     #region Country sales
 
+    [CheckPermission(StandardPermission.Orders.ORDERS_VIEW)]
+    [CheckPermission(StandardPermission.Reports.COUNTRY_SALES)]
     public virtual async Task<IActionResult> CountrySales()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.OrderCountryReport))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _reportModelFactory.PrepareCountrySalesSearchModelAsync(new CountryReportSearchModel());
 
@@ -167,11 +158,10 @@ public partial class ReportController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Orders.ORDERS_VIEW)]
+    [CheckPermission(StandardPermission.Reports.COUNTRY_SALES)]
     public virtual async Task<IActionResult> CountrySalesList(CountryReportSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.OrderCountryReport))
-            return await AccessDeniedDataTablesJson();
-
         //prepare model
         var model = await _reportModelFactory.PrepareCountrySalesListModelAsync(searchModel);
 
@@ -182,33 +172,30 @@ public partial class ReportController : BaseAdminController
 
     #region Customer reports
 
+    [CheckPermission(StandardPermission.Customers.CUSTOMERS_VIEW)]
+    [CheckPermission(StandardPermission.Reports.REGISTERED_CUSTOMERS)]
     public virtual async Task<IActionResult> RegisteredCustomers()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _reportModelFactory.PrepareCustomerReportsSearchModelAsync(new CustomerReportsSearchModel());
 
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.Customers.CUSTOMERS_VIEW)]
+    [CheckPermission(StandardPermission.Reports.CUSTOMERS_BY_ORDER_TOTAL)]
     public virtual async Task<IActionResult> BestCustomersByOrderTotal()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _reportModelFactory.PrepareCustomerReportsSearchModelAsync(new CustomerReportsSearchModel());
 
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.Customers.CUSTOMERS_VIEW)]
+    [CheckPermission(StandardPermission.Reports.CUSTOMERS_BY_NUMBER_OF_ORDERS)]
     public virtual async Task<IActionResult> BestCustomersByNumberOfOrders()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _reportModelFactory.PrepareCustomerReportsSearchModelAsync(new CustomerReportsSearchModel());
 
@@ -216,11 +203,10 @@ public partial class ReportController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Customers.CUSTOMERS_VIEW)]
+    [CheckPermission(StandardPermission.Reports.CUSTOMERS_BY_ORDER_TOTAL)]
     public virtual async Task<IActionResult> ReportBestCustomersByOrderTotalList(BestCustomersReportSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
-            return await AccessDeniedDataTablesJson();
-
         //prepare model
         var model = await _reportModelFactory.PrepareBestCustomersReportListModelAsync(searchModel);
 
@@ -228,11 +214,10 @@ public partial class ReportController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Customers.CUSTOMERS_VIEW)]
+    [CheckPermission(StandardPermission.Reports.CUSTOMERS_BY_NUMBER_OF_ORDERS)]
     public virtual async Task<IActionResult> ReportBestCustomersByNumberOfOrdersList(BestCustomersReportSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
-            return await AccessDeniedDataTablesJson();
-
         //prepare model
         var model = await _reportModelFactory.PrepareBestCustomersReportListModelAsync(searchModel);
 
@@ -240,11 +225,10 @@ public partial class ReportController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Customers.CUSTOMERS_VIEW)]
+    [CheckPermission(StandardPermission.Reports.REGISTERED_CUSTOMERS)]
     public virtual async Task<IActionResult> ReportRegisteredCustomersList(RegisteredCustomersReportSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
-            return await AccessDeniedDataTablesJson();
-
         //prepare model
         var model = await _reportModelFactory.PrepareRegisteredCustomersReportListModelAsync(searchModel);
 

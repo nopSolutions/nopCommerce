@@ -26,7 +26,7 @@ public partial class FlyoutShoppingCartViewComponent : NopViewComponent
         if (!_shoppingCartSettings.MiniShoppingCartEnabled)
             return Content("");
 
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableShoppingCart))
+        if (!await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_SHOPPING_CART))
             return Content("");
 
         var model = await _shoppingCartModelFactory.PrepareMiniShoppingCartModelAsync();

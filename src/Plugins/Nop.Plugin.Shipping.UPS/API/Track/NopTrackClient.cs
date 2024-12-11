@@ -43,4 +43,9 @@ public partial class TrackClient
     {
         settings.ContractResolver = new NullToEmptyStringResolver();
     }
+
+    partial void ProcessResponse(HttpClient client, HttpResponseMessage response)
+    {
+        client.ProcessResponse(response, _upsSettings);
+    }
 }

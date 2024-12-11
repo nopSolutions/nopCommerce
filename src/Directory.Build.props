@@ -1,0 +1,13 @@
+<Project>
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <RepositoryType>Git</RepositoryType>
+    <!--The Implicit usings feature automatically adds common global using directives for the type of project you are building. For more information, see this implicit usings article https://aka.ms/csharp-implicit-usings.-->
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Since we are constantly updating dependent packages, we decided to disable warnings: "A package restored for your project has a known vulnerability" (nu1901-nu1904). For more information, see this article https://learn.microsoft.com/nuget/reference/errors-and-warnings/nu1901-nu1904-->
+    <NoWarn>NU1901;NU1902;NU1903;NU1904</NoWarn>
+  </PropertyGroup>
+</Project>

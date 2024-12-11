@@ -107,11 +107,9 @@ public partial class StoreController : BaseAdminController
 
     #region Methods
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_STORES)]
     public virtual async Task<IActionResult> List()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageStores))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _storeModelFactory.PrepareStoreSearchModelAsync(new StoreSearchModel());
 
@@ -119,22 +117,18 @@ public partial class StoreController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_STORES)]
     public virtual async Task<IActionResult> List(StoreSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageStores))
-            return await AccessDeniedDataTablesJson();
-
         //prepare model
         var model = await _storeModelFactory.PrepareStoreListModelAsync(searchModel);
 
         return Json(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_STORES)]
     public virtual async Task<IActionResult> Create()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageStores))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _storeModelFactory.PrepareStoreModelAsync(new StoreModel(), null);
 
@@ -142,11 +136,9 @@ public partial class StoreController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_STORES)]
     public virtual async Task<IActionResult> Create(StoreModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageStores))
-            return AccessDeniedView();
-
         if (ModelState.IsValid)
         {
             var store = model.ToEntity<Store>();
@@ -177,11 +169,9 @@ public partial class StoreController : BaseAdminController
     }
 
     [HttpsRequirement(ignore: true)]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_STORES)]
     public virtual async Task<IActionResult> SetStoreSslByCurrentRequestScheme(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageStores))
-            return AccessDeniedView();
-
         //try to get a store with the specified id
         var store = await _storeService.GetStoreByIdAsync(id);
         if (store == null)
@@ -201,11 +191,9 @@ public partial class StoreController : BaseAdminController
     }
 
     [HttpsRequirement(ignore: true)]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_STORES)]
     public virtual async Task<IActionResult> Edit(int id, bool showtour = false)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageStores))
-            return AccessDeniedView();
-
         //try to get a store with the specified id
         var store = await _storeService.GetStoreByIdAsync(id);
         if (store == null)
@@ -230,11 +218,9 @@ public partial class StoreController : BaseAdminController
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
     [FormValueRequired("save", "save-continue")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_STORES)]
     public virtual async Task<IActionResult> Edit(StoreModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageStores))
-            return AccessDeniedView();
-
         //try to get a store with the specified id
         var store = await _storeService.GetStoreByIdAsync(model.Id);
         if (store == null)
@@ -270,11 +256,9 @@ public partial class StoreController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_STORES)]
     public virtual async Task<IActionResult> Delete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageStores))
-            return AccessDeniedView();
-
         //try to get a store with the specified id
         var store = await _storeService.GetStoreByIdAsync(id);
         if (store == null)

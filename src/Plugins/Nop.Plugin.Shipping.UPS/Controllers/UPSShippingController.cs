@@ -55,12 +55,9 @@ public class UPSShippingController : BasePluginController
 
     #region Methods
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SHIPPING_SETTINGS)]
     public async Task<IActionResult> Configure()
     {
-        //whether user has the authority to manage configuration
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return AccessDeniedView();
-
         //prepare common model
         var model = new UPSShippingModel
         {
@@ -117,12 +114,9 @@ public class UPSShippingController : BasePluginController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SHIPPING_SETTINGS)]
     public async Task<IActionResult> Configure(UPSShippingModel model)
     {
-        //whether user has the authority to manage configuration
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-            return AccessDeniedView();
-
         if (!ModelState.IsValid)
             return await Configure();
 

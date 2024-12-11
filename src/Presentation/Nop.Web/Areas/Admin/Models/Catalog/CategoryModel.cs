@@ -104,12 +104,13 @@ public partial record CategoryModel : BaseNopEntityModel, IAclSupportedModel, ID
     [NopResourceDisplayName("Admin.Catalog.Categories.Fields.DisplayOrder")]
     public int DisplayOrder { get; set; }
 
+    [NopResourceDisplayName("Admin.Catalog.Categories.Fields.RestrictFromVendors")]
+    public bool RestrictFromVendors { get; set; }
+
     public IList<CategoryLocalizedModel> Locales { get; set; }
 
     public string Breadcrumb { get; set; }
 
-    //ACL (customer roles)
-    [NopResourceDisplayName("Admin.Catalog.Categories.Fields.AclCustomerRoles")]
     public IList<int> SelectedCustomerRoleIds { get; set; }
     public IList<SelectListItem> AvailableCustomerRoles { get; set; }
 

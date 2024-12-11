@@ -27,6 +27,7 @@ using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Plugins;
 using Nop.Web.Areas.Admin.Models.Plugins.Marketplace;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Areas.Admin.Controllers;
 
@@ -121,11 +122,9 @@ public partial class PluginController : BaseAdminController
 
     #region Methods
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public virtual async Task<IActionResult> List(bool showWarnings = true)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-            return AccessDeniedView();
-
         var model = await _pluginModelFactory.PreparePluginSearchModelAsync(new PluginSearchModel());
 
         if (!showWarnings)
@@ -141,22 +140,18 @@ public partial class PluginController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public virtual async Task<IActionResult> ListSelect(PluginSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-            return await AccessDeniedDataTablesJson();
-
         //prepare model
         var model = await _pluginModelFactory.PreparePluginListModelAsync(searchModel);
 
         return Json(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public virtual async Task<IActionResult> AdminNavigationPlugins()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-            return Json(new List<string>());
-
         //prepare models
         var models = await (await _pluginModelFactory.PrepareAdminNavigationPluginModelsAsync()).SelectAwait(async model => new
         {
@@ -171,11 +166,9 @@ public partial class PluginController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public virtual async Task<IActionResult> UploadPluginsAndThemes(IFormFile archivefile)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-            return AccessDeniedView();
-
         try
         {
             if (archivefile == null || archivefile.Length == 0)
@@ -221,11 +214,9 @@ public partial class PluginController : BaseAdminController
 
     [HttpPost, ActionName("List")]
     [FormValueRequired(FormValueRequirement.StartsWith, "install-plugin-link-")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public virtual async Task<IActionResult> Install(IFormCollection form)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-            return AccessDeniedView();
-
         try
         {
             //get plugin system name
@@ -257,11 +248,9 @@ public partial class PluginController : BaseAdminController
 
     [HttpPost, ActionName("List")]
     [FormValueRequired(FormValueRequirement.StartsWith, "uninstall-plugin-link-")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public virtual async Task<IActionResult> Uninstall(IFormCollection form)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-            return AccessDeniedView();
-
         try
         {
             //get plugin system name
@@ -293,11 +282,9 @@ public partial class PluginController : BaseAdminController
 
     [HttpPost, ActionName("List")]
     [FormValueRequired(FormValueRequirement.StartsWith, "delete-plugin-link-")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public virtual async Task<IActionResult> Delete(IFormCollection form)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-            return AccessDeniedView();
-
         try
         {
             //get plugin system name
@@ -326,22 +313,18 @@ public partial class PluginController : BaseAdminController
 
     [HttpPost, ActionName("List")]
     [FormValueRequired("plugin-reload-grid")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public virtual async Task<IActionResult> ReloadList()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-            return AccessDeniedView();
-
         await _pluginService.UninstallPluginsAsync();
         await _pluginService.DeletePluginsAsync();
 
         return View("RestartApplication", Url.Action("List", "Plugin"));
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public virtual async Task<IActionResult> UninstallAndDeleteUnusedPlugins(string[] names)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-            return AccessDeniedView();
-
         foreach (var name in names)
             await _pluginService.PreparePluginToUninstallAsync(name);
 
@@ -364,21 +347,17 @@ public partial class PluginController : BaseAdminController
 
     [HttpPost, ActionName("List")]
     [FormValueRequired("plugin-discard-changes")]
-    public virtual async Task<IActionResult> DiscardChanges()
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
+    public virtual IActionResult DiscardChanges()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-            return AccessDeniedView();
-
         _pluginService.ResetChanges();
 
         return RedirectToAction("List", new { showWarnings = false });
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public virtual async Task<IActionResult> EditPopup(string systemName)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-            return AccessDeniedView();
-
         //try to get a plugin with the specified system name
         var pluginDescriptor = await _pluginService.GetPluginDescriptorBySystemNameAsync<IPlugin>(systemName, LoadPluginsMode.All);
         if (pluginDescriptor == null)
@@ -391,11 +370,9 @@ public partial class PluginController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public virtual async Task<IActionResult> EditPopup(PluginModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-            return AccessDeniedView();
-
         //try to get a plugin with the specified system name
         var pluginDescriptor = await _pluginService.GetPluginDescriptorBySystemNameAsync<IPlugin>(model.SystemName, LoadPluginsMode.All);
         if (pluginDescriptor == null)
@@ -587,11 +564,9 @@ public partial class PluginController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public virtual async Task<IActionResult> OfficialFeed()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _pluginModelFactory.PrepareOfficialFeedPluginSearchModelAsync(new OfficialFeedPluginSearchModel());
 
@@ -599,11 +574,9 @@ public partial class PluginController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public virtual async Task<IActionResult> OfficialFeedSelect(OfficialFeedPluginSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-            return await AccessDeniedDataTablesJson();
-
         //prepare model
         var model = await _pluginModelFactory.PrepareOfficialFeedPluginListModelAsync(searchModel);
 

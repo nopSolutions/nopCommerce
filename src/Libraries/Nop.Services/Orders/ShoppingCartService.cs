@@ -44,6 +44,7 @@ public partial class ShoppingCartService : IShoppingCartService
     protected readonly IDateTimeHelper _dateTimeHelper;
     protected readonly IEventPublisher _eventPublisher;
     protected readonly IGenericAttributeService _genericAttributeService;
+    protected readonly IGiftCardService _giftCardService;
     protected readonly ILocalizationService _localizationService;
     protected readonly IPermissionService _permissionService;
     protected readonly IPriceCalculationService _priceCalculationService;
@@ -79,6 +80,7 @@ public partial class ShoppingCartService : IShoppingCartService
         IDateTimeHelper dateTimeHelper,
         IEventPublisher eventPublisher,
         IGenericAttributeService genericAttributeService,
+        IGiftCardService giftCardService,
         ILocalizationService localizationService,
         IPermissionService permissionService,
         IPriceCalculationService priceCalculationService,
@@ -110,6 +112,7 @@ public partial class ShoppingCartService : IShoppingCartService
         _dateTimeHelper = dateTimeHelper;
         _eventPublisher = eventPublisher;
         _genericAttributeService = genericAttributeService;
+        _giftCardService = giftCardService;
         _localizationService = localizationService;
         _permissionService = permissionService;
         _priceCalculationService = priceCalculationService;
@@ -1022,6 +1025,11 @@ public partial class ShoppingCartService : IShoppingCartService
         if (!product.IsGiftCard)
             return warnings;
 
+        var customer = await _workContext.GetCurrentCustomerAsync();
+        var giftCards = await _giftCardService.GetActiveGiftCardsAppliedByCustomerAsync(customer);
+        if (giftCards.Any())
+            warnings.Add(await _localizationService.GetResourceAsync("ShoppingCart.GiftCardCouponCode.DontWorkWithGiftCards"));
+
         _productAttributeParser.GetGiftCardAttribute(attributesXml, out var giftCardRecipientName, out var giftCardRecipientEmail, out var giftCardSenderName, out var giftCardSenderEmail, out var _);
 
         if (string.IsNullOrEmpty(giftCardRecipientName))
@@ -1561,13 +1569,13 @@ public partial class ShoppingCartService : IShoppingCartService
         ArgumentNullException.ThrowIfNull(product);
 
         var warnings = new List<string>();
-        if (shoppingCartType == ShoppingCartType.ShoppingCart && !await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableShoppingCart, customer))
+        if (shoppingCartType == ShoppingCartType.ShoppingCart && !await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_SHOPPING_CART, customer))
         {
             warnings.Add("Shopping cart is disabled");
             return warnings;
         }
 
-        if (shoppingCartType == ShoppingCartType.Wishlist && !await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableWishlist, customer))
+        if (shoppingCartType == ShoppingCartType.Wishlist && !await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_WISHLIST, customer))
         {
             warnings.Add("Wishlist is disabled");
             return warnings;

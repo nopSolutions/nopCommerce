@@ -47,28 +47,6 @@
     buttons: [AdminTourBackButton, AdminTourNextButton]
   });
 
-  //'Username' step
-  tour.addStep({
-    title: AdminTourDataProvider.localized_data.EmailAccountUsernameTitle,
-    text: AdminTourDataProvider.localized_data.EmailAccountUsernameText,
-    attachTo: {
-      element: '#username-area',
-      on: 'bottom'
-    },
-    buttons: [AdminTourBackButton, AdminTourNextButton]
-  });
-
-  //'Password' step
-  tour.addStep({
-    title: AdminTourDataProvider.localized_data.EmailAccountPasswordTitle,
-    text: AdminTourDataProvider.localized_data.EmailAccountPasswordText,
-    attachTo: {
-      element: '#password-area',
-      on: 'bottom'
-    },
-    buttons: [AdminTourBackButton, AdminTourNextButton]
-  });
-
   //'SSL' step
   tour.addStep({
     title: AdminTourDataProvider.localized_data.EmailAccountUseSslTitle,
@@ -80,12 +58,12 @@
     buttons: [AdminTourBackButton, AdminTourNextButton]
   });
 
-  //'Use default credentials' step
+  //'Authentication' step
   tour.addStep({
-    title: AdminTourDataProvider.localized_data.EmailAccountDefaultCredentialsTitle,
-    text: AdminTourDataProvider.localized_data.EmailAccountDefaultCredentialsText,
+    title: AdminTourDataProvider.localized_data.EmailAccountAuthenticationMethodTitle,
+    text: AdminTourDataProvider.localized_data.EmailAccountAuthenticationMethodText,
     attachTo: {
-      element: '#default-area',
+      element: '#authentication-method-area',
       on: 'bottom'
     },
     buttons: [AdminTourBackButton, AdminTourNextButton]

@@ -27,6 +27,11 @@ public static partial class NopCustomerServicesDefaults
     /// </summary>
     public static string CustomerAttributePrefix => "customer_attribute_";
 
+    /// <summary>
+    /// Gets default suffix for deleted customer records
+    /// </summary>
+    public static string CustomerDeletedSuffix => "-DELETED";
+
     #region Caching defaults
 
     #region Customer

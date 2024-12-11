@@ -9,6 +9,7 @@ public partial record VendorModel : BaseNopEntityModel
     {
         PictureModel = new PictureModel();
         CatalogProductsModel = new CatalogProductsModel();
+        ProductReviews = new VendorProductReviewsListModel();
     }
 
     public string Name { get; set; }
@@ -18,8 +19,11 @@ public partial record VendorModel : BaseNopEntityModel
     public string MetaTitle { get; set; }
     public string SeName { get; set; }
     public bool AllowCustomersToContactVendors { get; set; }
+    public int? PmCustomerId { get; set; }
 
     public PictureModel PictureModel { get; set; }
 
     public CatalogProductsModel CatalogProductsModel { get; set; }
+
+    public VendorProductReviewsListModel ProductReviews { get; set; }
 }

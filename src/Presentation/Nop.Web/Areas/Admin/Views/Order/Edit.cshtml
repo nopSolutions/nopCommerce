@@ -39,7 +39,7 @@
                 @if (!Model.IsLoggedInAsVendor)
                 {
                     <span id="order-delete" class="btn btn-danger">
-                        <i class="far fa-trash-alt"></i>
+                        <i class="far fa-trash-can"></i>
                         @T("Admin.Common.Delete")
                     </span>
                 }
@@ -65,7 +65,7 @@
                     <nop-cards id="order-cards">
                         <nop-card asp-name="order-info" asp-icon="fas fa-info" asp-title="@T("Admin.Orders.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_OrderDetails.Info", Model)</nop-card>
                         <nop-card asp-name="order-billing-shipping" asp-icon="fas fa-truck" asp-title="@T("Admin.Orders.BillingShippingInfo")" asp-hide-block-attribute-name="@hideBillingAndShippingBlockAttributeName" asp-hide="@hideBillingAndShippingBlock" asp-advanced="false">@await Html.PartialAsync("_OrderDetails.BillingShipping", Model)</nop-card>
-                        <nop-card asp-name="order-products" asp-icon="fas fa-th-list" asp-title="@T("Admin.Orders.Products")" asp-hide-block-attribute-name="@hideProductsBlockAttributeName" asp-hide="@hideProductsBlock" asp-advanced="true">@await Html.PartialAsync("_OrderDetails.Products", Model)</nop-card>
+                        <nop-card asp-name="order-products" asp-icon="fas fa-table-list" asp-title="@T("Admin.Orders.Products")" asp-hide-block-attribute-name="@hideProductsBlockAttributeName" asp-hide="@hideProductsBlock" asp-advanced="true">@await Html.PartialAsync("_OrderDetails.Products", Model)</nop-card>
 
                         @if (!Model.IsLoggedInAsVendor)
                         {

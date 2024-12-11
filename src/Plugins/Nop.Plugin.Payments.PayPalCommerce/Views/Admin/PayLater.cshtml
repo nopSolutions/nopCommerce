@@ -1,0 +1,62 @@
+﻿@model PayLaterConfigurationModel
+
+@{
+    Layout = "_ConfigurePlugin";
+    NopHtml.SetActiveMenuItemSystemName($"{PayPalCommerceDefaults.SystemName} Pay Later");
+}
+
+@await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
+
+<script src="@PayPalCommerceDefaults.MerchantConfiguratorScriptUrl" defer></script>
+
+<div class="cards-group">
+    <div class="card card-default">
+        <div class="card-body">
+            <div id="messaging-configurator"></div>
+        </div>
+    </div>
+</div>
+
+<script asp-asp-location="Footer">
+    $(function () {
+        window.merchantConfigurators?.Messaging({
+            config: @Html.Raw(Model.Config),
+            locale: '@Model.Locale',
+            merchantIdentifier: '@Model.ClientId',
+            partnerClientId: '@(Model.UseSandbox ? PayPalCommerceDefaults.Onboarding.ClientId.Sandbox : PayPalCommerceDefaults.Onboarding.ClientId.Live)',
+            partnerName: 'nopCommerce',
+            bnCode: '@PayPalCommerceDefaults.PartnerHeader.Value',
+            placements: ['product', 'cart', 'checkout'],
+            onSave: (data) => {
+                var postData = {
+                    config: JSON.stringify(data.config)
+                };
+                addAntiForgeryToken(postData);
+                $.ajax({
+                    async: false,
+                    type: 'POST',
+                    url: '@(Url.Action("PayLaterConfig", "PayPalCommerce"))',
+                    data: postData,
+                    success: function (response, textStatus, jqXHR) {
+                        if (response.error) {
+                            displayBarNotification(response.error, 'danger');
+                        } else {
+                            displayBarNotification(response.message, 'success');
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        if (errorThrown) {
+                            displayBarNotification(errorThrown, 'danger');
+                        } else {
+                            displayBarNotification(textStatus, 'danger');
+                        }
+                    }
+                });
+            }
+        });
+    });
+
+    function displayBarNotification(message, messagetype) {
+        $('.content-wrapper').prepend('<div class="alert alert-' + messagetype + ' alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' + message + '</div>');
+    }
+</script>

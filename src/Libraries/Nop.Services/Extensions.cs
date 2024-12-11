@@ -37,7 +37,7 @@ public static class Extensions
                 ID = Convert.ToInt32(enumValue),
                 Name = useLocalization
                     ? await localizationService.GetLocalizedEnumAsync(enumValue)
-                    : CommonHelper.ConvertEnum(enumValue.ToString())
+                    : CommonHelper.SplitCamelCaseWord(enumValue.ToString())
             }).ToListAsync();
 
         object selectedValue = null;

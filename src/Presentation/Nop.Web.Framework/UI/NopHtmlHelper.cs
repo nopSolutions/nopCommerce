@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.WebUtilities;
@@ -31,6 +32,7 @@ public partial class NopHtmlHelper : INopHtmlHelper
     protected readonly AppSettings _appSettings;
     protected readonly HtmlEncoder _htmlEncoder;
     protected readonly IActionContextAccessor _actionContextAccessor;
+    protected readonly IHtmlHelper _htmlHelper;
     protected readonly INopAssetHelper _bundleHelper;
     protected readonly Lazy<ILocalizationService> _localizationService;
     protected readonly IStoreContext _storeContext;
@@ -59,6 +61,7 @@ public partial class NopHtmlHelper : INopHtmlHelper
     public NopHtmlHelper(AppSettings appSettings,
         HtmlEncoder htmlEncoder,
         IActionContextAccessor actionContextAccessor,
+        IHtmlHelper htmlHelper,
         INopAssetHelper bundleHelper,
         Lazy<ILocalizationService> localizationService,
         IStoreContext storeContext,
@@ -69,6 +72,7 @@ public partial class NopHtmlHelper : INopHtmlHelper
         _appSettings = appSettings;
         _htmlEncoder = htmlEncoder;
         _actionContextAccessor = actionContextAccessor;
+        _htmlHelper = htmlHelper;
         _bundleHelper = bundleHelper;
         _localizationService = localizationService;
         _storeContext = storeContext;
@@ -275,12 +279,14 @@ public partial class NopHtmlHelper : INopHtmlHelper
         ArgumentNullException.ThrowIfNull(_actionContextAccessor.ActionContext);
 
         var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+        var pathBase = _actionContextAccessor.ActionContext.HttpContext.Request.PathBase;
+        var isLocal = urlHelper.IsLocalUrl(src);
 
         _scriptParts[location].Add(new ScriptReferenceMeta
         {
             ExcludeFromBundle = excludeFromBundle,
-            IsLocal = urlHelper.IsLocalUrl(src),
-            Src = urlHelper.Content(src)
+            IsLocal = isLocal,
+            Src = isLocal ? urlHelper.Content(src).RemoveApplicationPathFromRawUrl(pathBase) : src
         });
     }
 
@@ -305,12 +311,14 @@ public partial class NopHtmlHelper : INopHtmlHelper
         ArgumentNullException.ThrowIfNull(_actionContextAccessor.ActionContext);
 
         var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+        var pathBase = _actionContextAccessor.ActionContext.HttpContext.Request.PathBase;
+        var isLocal = urlHelper.IsLocalUrl(src);
 
         _scriptParts[location].Insert(0, new ScriptReferenceMeta
         {
             ExcludeFromBundle = excludeFromBundle,
-            IsLocal = urlHelper.IsLocalUrl(src),
-            Src = urlHelper.Content(src)
+            IsLocal = isLocal,
+            Src = isLocal ? urlHelper.Content(src).RemoveApplicationPathFromRawUrl(pathBase) : src
         });
     }
 
@@ -329,7 +337,6 @@ public partial class NopHtmlHelper : INopHtmlHelper
 
         var result = new StringBuilder();
         var woConfig = _appSettings.Get<WebOptimizerConfig>();
-
         var pathBase = _actionContextAccessor.ActionContext?.HttpContext.Request.PathBase ?? PathString.Empty;
 
         if (woConfig.EnableJavaScriptBundling && value.Any(item => !item.ExcludeFromBundle))
@@ -338,7 +345,7 @@ public partial class NopHtmlHelper : INopHtmlHelper
                 .Select(item => item.Src)
                 .Distinct().ToArray();
 
-            var bundleKey = string.Concat("/js/", GetAssetKey(sources, woConfig.JavaScriptBundleSuffix), ".js");
+            var bundleKey = $"/js/{GetAssetKey(sources, woConfig.JavaScriptBundleSuffix)}.js";
 
             var bundleAsset = _bundleHelper.GetOrCreateJavaScriptAsset(bundleKey, sources);
             var route = _bundleHelper.CacheBusting(bundleAsset);
@@ -448,12 +455,14 @@ public partial class NopHtmlHelper : INopHtmlHelper
         ArgumentNullException.ThrowIfNull(_actionContextAccessor.ActionContext);
 
         var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+        var pathBase = _actionContextAccessor.ActionContext.HttpContext.Request.PathBase;
+        var isLocal = urlHelper.IsLocalUrl(src);
 
         _cssParts.Add(new CssReferenceMeta
         {
             ExcludeFromBundle = excludeFromBundle,
-            IsLocal = urlHelper.IsLocalUrl(src),
-            Src = urlHelper.Content(src)
+            IsLocal = isLocal,
+            Src = isLocal ? urlHelper.Content(src).RemoveApplicationPathFromRawUrl(pathBase) : src
         });
     }
 
@@ -474,12 +483,14 @@ public partial class NopHtmlHelper : INopHtmlHelper
         ArgumentNullException.ThrowIfNull(_actionContextAccessor.ActionContext);
 
         var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+        var pathBase = _actionContextAccessor.ActionContext.HttpContext.Request.PathBase;
+        var isLocal = urlHelper.IsLocalUrl(src);
 
         _cssParts.Insert(0, new CssReferenceMeta
         {
             ExcludeFromBundle = excludeFromBundle,
-            IsLocal = urlHelper.IsLocalUrl(src),
-            Src = urlHelper.Content(src)
+            IsLocal = isLocal,
+            Src = isLocal ? urlHelper.Content(src).RemoveApplicationPathFromRawUrl(pathBase) : src
         });
     }
 
@@ -512,10 +523,11 @@ public partial class NopHtmlHelper : INopHtmlHelper
                 //remove the application path from the generated URL if exists
                 .Select(item => item.Src).ToArray();
 
-            var bundleKey = string.Concat("/css/", GetAssetKey(sources, bundleSuffix), ".css");
+            var bundleKey = $"/css/{GetAssetKey(sources, bundleSuffix)}.css";
 
             var bundleAsset = _bundleHelper.GetOrCreateCssAsset(bundleKey, sources);
             var route = _bundleHelper.CacheBusting(bundleAsset);
+
 
             result.AppendFormat("<link rel=\"stylesheet\" type=\"{0}\" href=\"{1}{2}\" />",
                 MimeTypes.TextCss, pathBase, route);
@@ -537,8 +549,8 @@ public partial class NopHtmlHelper : INopHtmlHelper
             var asset = _bundleHelper.GetOrCreateCssAsset(item.Src);
             var route = _bundleHelper.CacheBusting(asset);
 
-            result.AppendFormat("<link rel=\"stylesheet\" type=\"{0}\" href=\"{1}{2}\" />",
-                MimeTypes.TextCss, pathBase, route);
+            result.AppendFormat("<link rel=\"stylesheet\" type=\"{0}\" href=\"{1}\" />",
+                MimeTypes.TextCss, route);
             result.AppendLine();
         }
 
@@ -747,6 +759,16 @@ public partial class NopHtmlHelper : INopHtmlHelper
             };
 
         return routeName;
+    }
+
+    /// <summary>
+    /// Add JSON-LD to the <![CDATA[<head>]]> element
+    /// </summary>
+    /// <param name="jsonLd">The JSON-LD serialized model></param>
+    public virtual void AddJsonLdParts(string jsonLd)
+    {
+        if(_seoSettings.MicrodataEnabled) 
+            AddHeadCustomParts("<script type=\"application/ld+json\">" +  _htmlHelper.Raw(jsonLd) + "</script>");
     }
 
     #endregion

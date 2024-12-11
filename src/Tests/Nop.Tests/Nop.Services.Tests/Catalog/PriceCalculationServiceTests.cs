@@ -103,8 +103,6 @@ public class PriceCalculationServiceTests : ServiceTest
         foreach (var tierPrice in tierPrices)
             await _productService.InsertTierPriceAsync(tierPrice);
 
-        product.HasTierPrices = true;
-
         var (rezWithoutDiscount1, rez1, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, store, 0, false);
         var (rezWithoutDiscount2, rez2, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, store, 0, false, 2);
         var (rezWithoutDiscount3, rez3, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, store, 0, false, 3);
@@ -160,9 +158,6 @@ public class PriceCalculationServiceTests : ServiceTest
 
         await _productService.InsertDiscountProductMappingAsync(mapping);
         await _customerService.ApplyDiscountCouponCodeAsync(customer, "123");
-
-        //set HasDiscountsApplied property
-        product.HasDiscountsApplied = true;
 
         var (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, store);
 

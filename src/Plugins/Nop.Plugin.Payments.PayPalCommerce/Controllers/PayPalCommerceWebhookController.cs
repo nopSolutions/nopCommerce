@@ -7,18 +7,18 @@ public class PayPalCommerceWebhookController : Controller
 {
     #region Fields
 
-    protected readonly PayPalCommerceSettings _settings;
-    protected readonly ServiceManager _serviceManager;
+    private readonly PayPalCommerceServiceManager _serviceManager;
+    private readonly PayPalCommerceSettings _settings;
 
     #endregion
 
     #region Ctor
 
-    public PayPalCommerceWebhookController(PayPalCommerceSettings settings,
-        ServiceManager serviceManager)
+    public PayPalCommerceWebhookController(PayPalCommerceServiceManager serviceManager,
+        PayPalCommerceSettings settings)
     {
-        _settings = settings;
         _serviceManager = serviceManager;
+        _settings = settings;
     }
 
     #endregion

@@ -4,11 +4,11 @@
 
     var checkMoneyMethodRowId = 'row_paymentscheckmoneyorder';
     var manualMethodRowId = 'row_paymentsmanual';
-    var paypalCommerceMethodRowId = 'row_paymentspaypalcommerce';
+    var paypalCommerceMethodCardId = 'card-paypalcommerce';
 
     var checkMoneyMethodExists = $('#' + checkMoneyMethodRowId).length;
     var manualMethodExists = $('#' + manualMethodRowId).length;
-    var paypalCommerceMethodExists = $('#' + paypalCommerceMethodRowId).length;
+    var paypalCommerceMethodExists = $('#' + paypalCommerceMethodCardId).length;
 
     if (paypalCommerceMethodExists) {
       AdminTourNextPageButton.action = function () { window.location = '/Admin/PayPalCommerce/Configure?showtour=true' };
@@ -83,49 +83,12 @@
         buttons: [AdminTourBackButton, AdminTourNextButton]
       });
 
-      if (!paypalCommerceMethodExists) {
-        //'Activate a payment method' step
-        tour.addStep({
-          title: AdminTourDataProvider.localized_data.PaymentMethodsActivateTitle,
-          text: AdminTourDataProvider.localized_data.PaymentMethodsActivateText,
-          attachTo: {
-            element: '#' + manualMethodRowId + ' .column-edit .btn-default',
-            on: 'bottom'
-          },
-          buttons: [AdminTourBackButton, AdminTourNextButton]
-        });
-
-        //'Configure a payment method' step
-        tour.addStep({
-          title: AdminTourDataProvider.localized_data.PaymentMethodsConfigureTitle,
-          text: AdminTourDataProvider.localized_data.PaymentMethodsConfigureText,
-          attachTo: {
-            element: '#' + manualMethodRowId + ' .column-configure .btn-default',
-            on: 'bottom'
-          },
-          buttons: [AdminTourBackButton, AdminTourNextPageButton]
-        });
-      }
-    }
-
-    //'PayPal Commerce' step
-    if (paypalCommerceMethodExists) {
-      tour.addStep({
-        title: AdminTourDataProvider.localized_data.PaymentMethodsPayPalTitle,
-        text: AdminTourDataProvider.localized_data.PaymentMethodsPayPalText,
-        attachTo: {
-          element: '#' + paypalCommerceMethodRowId,
-          on: 'bottom'
-        },
-        buttons: [AdminTourBackButton, AdminTourNextButton]
-      });
-
       //'Activate a payment method' step
       tour.addStep({
         title: AdminTourDataProvider.localized_data.PaymentMethodsActivateTitle,
         text: AdminTourDataProvider.localized_data.PaymentMethodsActivateText,
         attachTo: {
-          element: '#' + paypalCommerceMethodRowId + ' .column-edit .btn-default',
+          element: '#' + manualMethodRowId + ' .column-edit .btn-default',
           on: 'bottom'
         },
         buttons: [AdminTourBackButton, AdminTourNextButton]
@@ -136,7 +99,31 @@
         title: AdminTourDataProvider.localized_data.PaymentMethodsConfigureTitle,
         text: AdminTourDataProvider.localized_data.PaymentMethodsConfigureText,
         attachTo: {
-          element: '#' + paypalCommerceMethodRowId + ' .column-configure .btn-default',
+          element: '#' + manualMethodRowId + ' .column-configure .btn-default',
+          on: 'bottom'
+        },
+        buttons: [AdminTourBackButton, paypalCommerceMethodExists ? AdminTourNextButton : AdminTourNextPageButton]
+      });
+    }
+
+    //'PayPal Commerce' step
+    if (paypalCommerceMethodExists) {
+      tour.addStep({
+        title: AdminTourDataProvider.localized_data.PaymentMethodsPayPalTitle,
+        text: AdminTourDataProvider.localized_data.PaymentMethodsPayPalText,
+        attachTo: {
+          element: '#' + paypalCommerceMethodCardId,
+          on: 'bottom'
+        },
+        buttons: [AdminTourBackButton, AdminTourNextButton]
+      });
+
+      //'Configure a payment method' step
+      tour.addStep({
+        title: AdminTourDataProvider.localized_data.PaymentMethodsConfigurePayPalCommerceTitle,
+        text: AdminTourDataProvider.localized_data.PaymentMethodsConfigurePayPalCommerceText,
+        attachTo: {
+          element: '#configure-paypalcommerce-button',
           on: 'bottom'
         },
         buttons: [AdminTourBackButton, AdminTourNextPageButton]

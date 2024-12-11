@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
@@ -57,6 +59,7 @@ public partial class BaseAdminModelFactory : IBaseAdminModelFactory
     protected readonly ITaxCategoryService _taxCategoryService;
     protected readonly ITopicTemplateService _topicTemplateService;
     protected readonly IVendorService _vendorService;
+    protected readonly IWorkContext _workContext;
 
     #endregion
 
@@ -84,7 +87,8 @@ public partial class BaseAdminModelFactory : IBaseAdminModelFactory
         IStoreService storeService,
         ITaxCategoryService taxCategoryService,
         ITopicTemplateService topicTemplateService,
-        IVendorService vendorService)
+        IVendorService vendorService,
+        IWorkContext workContext)
     {
         _categoryService = categoryService;
         _categoryTemplateService = categoryTemplateService;
@@ -109,6 +113,7 @@ public partial class BaseAdminModelFactory : IBaseAdminModelFactory
         _taxCategoryService = taxCategoryService;
         _topicTemplateService = topicTemplateService;
         _vendorService = vendorService;
+        _workContext = workContext;
     }
 
     #endregion
@@ -147,24 +152,18 @@ public partial class BaseAdminModelFactory : IBaseAdminModelFactory
     /// </returns>
     protected virtual async Task<List<SelectListItem>> GetCategoryListAsync()
     {
-        var listItems = await _staticCacheManager.GetAsync(NopModelCacheDefaults.CategoriesListKey, async () =>
-        {
-            var categories = await _categoryService.GetAllCategoriesAsync(showHidden: true);
-            return await categories.SelectAwait(async c => new SelectListItem
-            {
-                Text = await _categoryService.GetFormattedBreadCrumbAsync(c, categories),
-                Value = c.Id.ToString()
-            }).ToListAsync();
-        });
+        var categories = await _staticCacheManager.GetAsync(NopModelCacheDefaults.CategoriesListKey, async () => await _categoryService.GetAllCategoriesAsync(showHidden: true));
 
         var result = new List<SelectListItem>();
-        //clone the list to ensure that "selected" property is not set
-        foreach (var item in listItems)
+        foreach (var category in categories)
         {
+            if (!await _categoryService.CanVendorAddProductsAsync(category, categories))
+                continue;
+
             result.Add(new SelectListItem
             {
-                Text = item.Text,
-                Value = item.Value
+                Text = await _categoryService.GetFormattedBreadCrumbAsync(category, categories),
+                Value = category.Id.ToString()
             });
         }
 

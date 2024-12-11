@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Reflection;
 using System.Threading.RateLimiting;
 using Azure.Identity;
 using Azure.Storage.Blobs;
@@ -31,7 +32,7 @@ using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.Validators;
 using Nop.Web.Framework.WebOptimizer;
-using WebMarkupMin.AspNetCore8;
+using WebMarkupMin.AspNetCoreLatest;
 using WebMarkupMin.Core;
 using WebMarkupMin.NUglify;
 
@@ -50,10 +51,6 @@ public static class ServiceCollectionExtensions
     public static void ConfigureApplicationSettings(this IServiceCollection services,
         WebApplicationBuilder builder)
     {
-        //let the operating system decide what TLS protocol version to use
-        //see https://docs.microsoft.com/dotnet/framework/network-programming/tls
-        ServicePointManager.SecurityProtocol = SecurityProtocolType.SystemDefault;
-
         //create default file provider
         CommonHelper.DefaultFileProvider = new NopFileProvider(builder.Environment);
 
@@ -61,6 +58,19 @@ public static class ServiceCollectionExtensions
         var typeFinder = new WebAppTypeFinder();
         Singleton<ITypeFinder>.Instance = typeFinder;
         services.AddSingleton<ITypeFinder>(typeFinder);
+
+        //bind general configuration
+        services.BindApplicationSettings(builder);
+    }
+
+    /// <summary>
+    /// Bind application settings
+    /// </summary>
+    /// <param name="services">Collection of service descriptors</param>
+    /// <param name="builder">A builder for web applications and services</param>
+    public static void BindApplicationSettings(this IServiceCollection services, WebApplicationBuilder builder)
+    {
+        var typeFinder = Singleton<ITypeFinder>.Instance;
 
         //add configuration parameters
         var configurations = typeFinder
@@ -71,8 +81,18 @@ public static class ServiceCollectionExtensions
         foreach (var config in configurations)
             builder.Configuration.GetSection(config.Name).Bind(config, options => options.BindNonPublicProperties = true);
 
-        var appSettings = AppSettingsHelper.SaveAppSettings(configurations, CommonHelper.DefaultFileProvider, false);
-        services.AddSingleton(appSettings);
+        var appSettings = Singleton<AppSettings>.Instance;
+
+        if (appSettings == null)
+        {
+            appSettings = AppSettingsHelper.SaveAppSettings(configurations, CommonHelper.DefaultFileProvider, false);
+            services.AddSingleton(appSettings);
+        }
+        else
+        {
+            var needToUpdate = configurations.Any(conf => !appSettings.Configuration.ContainsKey(conf.Name));
+            AppSettingsHelper.SaveAppSettings(configurations, CommonHelper.DefaultFileProvider, needToUpdate);
+        }
     }
 
     /// <summary>
@@ -91,6 +111,9 @@ public static class ServiceCollectionExtensions
         var pluginConfig = new PluginConfig();
         builder.Configuration.GetSection(nameof(PluginConfig)).Bind(pluginConfig, options => options.BindNonPublicProperties = true);
         mvcCoreBuilder.PartManager.InitializePlugins(pluginConfig);
+
+        //bind plugins configurations
+        services.BindApplicationSettings(builder);
 
         //create engine and configure service provider
         var engine = EngineContext.Create();

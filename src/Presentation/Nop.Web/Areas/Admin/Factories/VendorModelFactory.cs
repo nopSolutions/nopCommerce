@@ -1,4 +1,5 @@
 ﻿using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Attributes;
@@ -11,6 +12,7 @@ using Nop.Services.Localization;
 using Nop.Services.Seo;
 using Nop.Services.Vendors;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
+using Nop.Web.Areas.Admin.Models.Customers;
 using Nop.Web.Areas.Admin.Models.Vendors;
 using Nop.Web.Framework.Factories;
 using Nop.Web.Framework.Models.Extensions;
@@ -148,38 +150,38 @@ public partial class VendorModelFactory : IVendorModelFactory
                     case AttributeControlType.DropdownList:
                     case AttributeControlType.RadioList:
                     case AttributeControlType.Checkboxes:
-                    {
-                        if (!string.IsNullOrEmpty(selectedVendorAttributes))
                         {
-                            //clear default selection
-                            foreach (var item in attributeModel.Values)
-                                item.IsPreSelected = false;
+                            if (!string.IsNullOrEmpty(selectedVendorAttributes))
+                            {
+                                //clear default selection
+                                foreach (var item in attributeModel.Values)
+                                    item.IsPreSelected = false;
 
-                            //select new values
-                            var selectedValues = await _vendorAttributeParser.ParseAttributeValuesAsync(selectedVendorAttributes);
-                            foreach (var attributeValue in selectedValues)
-                            foreach (var item in attributeModel.Values)
-                                if (attributeValue.Id == item.Id)
-                                    item.IsPreSelected = true;
+                                //select new values
+                                var selectedValues = await _vendorAttributeParser.ParseAttributeValuesAsync(selectedVendorAttributes);
+                                foreach (var attributeValue in selectedValues)
+                                    foreach (var item in attributeModel.Values)
+                                        if (attributeValue.Id == item.Id)
+                                            item.IsPreSelected = true;
+                            }
                         }
-                    }
                         break;
                     case AttributeControlType.ReadonlyCheckboxes:
-                    {
-                        //do nothing
-                        //values are already pre-set
-                    }
+                        {
+                            //do nothing
+                            //values are already pre-set
+                        }
                         break;
                     case AttributeControlType.TextBox:
                     case AttributeControlType.MultilineTextbox:
-                    {
-                        if (!string.IsNullOrEmpty(selectedVendorAttributes))
                         {
-                            var enteredText = _vendorAttributeParser.ParseValues(selectedVendorAttributes, attribute.Id);
-                            if (enteredText.Any())
-                                attributeModel.DefaultValue = enteredText[0];
+                            if (!string.IsNullOrEmpty(selectedVendorAttributes))
+                            {
+                                var enteredText = _vendorAttributeParser.ParseValues(selectedVendorAttributes, attribute.Id);
+                                if (enteredText.Any())
+                                    attributeModel.DefaultValue = enteredText[0];
+                            }
                         }
-                    }
                         break;
                     case AttributeControlType.Datepicker:
                     case AttributeControlType.ColorSquares:
@@ -218,6 +220,62 @@ public partial class VendorModelFactory : IVendorModelFactory
     #endregion
 
     #region Methods
+
+    /// <summary>
+    /// Prepare vendor customer search model
+    /// </summary>
+    /// <param name="searchModel">Vendor customer search model</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the vendor customer search model
+    /// </returns>
+    public virtual Task<VendorCustomerSearchModel> PrepareVendorCustomerSearchModelAsync(VendorCustomerSearchModel searchModel)
+    {
+        ArgumentNullException.ThrowIfNull(searchModel);
+
+        //prepare page parameters
+        searchModel.SetPopupGridPageSize();
+
+        return Task.FromResult(searchModel);
+    }
+
+    /// <summary>
+    /// Prepare paged vendor customer list model
+    /// </summary>
+    /// <param name="searchModel">Vendor customer search model</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the vendor customer list model
+    /// </returns>
+    public virtual async Task<VendorCustomerListModel> PrepareVendorCustomerListModelAsync(VendorCustomerSearchModel searchModel)
+    {
+        ArgumentNullException.ThrowIfNull(searchModel);
+
+        //get customers
+        var searchCustomerRoleIds = new[] { (await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.RegisteredRoleName)).Id };
+        var customers = await _customerService.GetAllCustomersAsync(
+            email: searchModel.SearchEmail,
+            firstName: searchModel.SearchFirstName,
+            lastName: searchModel.SearchLastName,
+            company: searchModel.SearchCompany,
+            customerRoleIds: searchCustomerRoleIds,
+            pageIndex: searchModel.Page - 1,
+            pageSize: searchModel.PageSize);
+
+        //prepare grid model
+        var model = await new VendorCustomerListModel().PrepareToGridAsync(searchModel, customers, () =>
+        {
+            return customers.SelectAwait(async customer => new CustomerModel
+            {
+                Id = customer.Id,
+                Email = customer.Email,
+                FullName = await _customerService.GetCustomerFullNameAsync(customer),
+                Company = customer.Company,
+            });
+        });
+
+        return model;
+    }
 
     /// <summary>
     /// Prepare vendor search model
@@ -308,6 +366,12 @@ public partial class VendorModelFactory : IVendorModelFactory
 
             //prepare associated customers
             await PrepareAssociatedCustomerModelsAsync(model.AssociatedCustomers, vendor);
+
+            if (vendor.PmCustomerId > 0)
+            {
+                var pmCustomer = await _customerService.GetCustomerByIdAsync(vendor.PmCustomerId.Value);
+                model.PmCustomerInfo = pmCustomer.Email;
+            }
 
             //prepare nested search models
             PrepareVendorNoteSearchModel(model.VendorNoteSearchModel, vendor);

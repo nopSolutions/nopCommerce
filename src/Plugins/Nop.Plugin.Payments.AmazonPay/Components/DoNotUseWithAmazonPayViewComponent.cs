@@ -64,7 +64,7 @@ public class DoNotUseWithAmazonPayViewComponent : NopViewComponent
         if (!await _amazonPayApiService.IsActiveAndConfiguredAsync())
             return Content(string.Empty);
 
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
+        if (!await _permissionService.AuthorizeAsync(StandardPermission.Configuration.MANAGE_PAYMENT_METHODS))
             return Content(string.Empty);
 
         //ensure that it's a proper widget zone

@@ -1,59 +1,116 @@
 ﻿@model SearchBoxModel
 
-@using Nop.Core.Domain.Media
-
-@inject MediaSettings mediaSettings
+@{
+    const string categoryFormName = "cid";
+    const string termFormName = "q";
+    const string searchBoxId = "small-searchterms";
+}
 
 <form asp-route="ProductSearch" method="get" id="small-search-box-form">
     @if (Model.ShowSearchBox)
     {
-        <input type="text" class="search-box-text" id="small-searchterms" autocomplete="off" name="q" placeholder="@T("Search.SearchBox.Tooltip")" aria-label="@T("Search.SearchBox.Text.Label")" />
-        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.SearchBoxBeforeSearchButton, additionalData = Model })
-        <button type="submit" class="button-1 search-box-button">@T("Search.Button")</button>
-        @if (Model.SearchTermMinimumLength > 0)
+        <input type="text" class="search-box-text" id="@searchBoxId" autocomplete="off" name="@termFormName" placeholder="@T("Search.SearchBox.Tooltip")" aria-label="@T("Search.SearchBox.Text.Label")" />
+        @if(Model.ShowSearchBoxCategories)
         {
+            <select asp-for="SearchCategoryId" name="@categoryFormName" asp-items="Model.AvailableCategories" class="search-box-category"></select>
             <script asp-location="Footer">
-                $("#small-search-box-form").on("submit", function(event) {
-                    if ($("#small-searchterms").val() == "") {
-                        alert('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Search.EnterSearchTerms").Text))');
-                        $("#small-searchterms").focus();
-                        event.preventDefault();
-                    }
+                $(function () {
+                    $('#@Html.IdFor(m => m.SearchCategoryId)').on('change', function () {
+                        $('#@searchBoxId').focus();
+                    });
                 });
             </script>
         }
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.SearchBoxBeforeSearchButton, additionalData = Model })
+        <button type="submit" class="button-1 search-box-button">@T("Search.Button")</button>
+
+        <script asp-location="Footer">
+            $("#small-search-box-form").on("submit", function (event) {
+
+                event.preventDefault();
+
+                @if(Model.SearchTermMinimumLength > 0)
+                {
+                    <text>
+                    if ($("#@searchBoxId").val() == "") {
+                        alert('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Search.EnterSearchTerms").Text))');
+                        $("#@searchBoxId").focus();
+                        return;
+                    }
+                    </text>
+                }
+
+                var form = document.getElementById('small-search-box-form');
+                var formData = new FormData(form);
+
+                @if(Model.ShowSearchBoxCategories)
+                {
+                    <text>
+                    var selectedCategory = formData.get('@categoryFormName');
+                    if (selectedCategory && selectedCategory != '0') {
+                        formData.append('advs', true);
+                        formData.append('isc', true);
+                    }
+                    </text>
+                }
+
+                window.location.href = `@Url.RouteUrl("ProductSearch")?${new URLSearchParams(formData).toString()}`;
+            });
+        </script>
 
         @if (Model.AutoCompleteEnabled)
         {
             <script asp-location="Footer">
                 $(function() {
+                    var cache = new Map();
                     var showLinkToResultSearch;
                     var searchText;
-                    $('#small-searchterms').autocomplete({
-                            delay: 500,
-                            minLength: @(Model.SearchTermMinimumLength.ToString()),
-                            source: '@(Url.RouteUrl("ProductSearchAutoComplete"))',
-                            appendTo: '.search-box',
-                            select: function(event, ui) {
-                                $("#small-searchterms").val(ui.item.label);
-                                setLocation(ui.item.producturl);
-                                return false;
+
+                    $('#@searchBoxId').autocomplete({
+                        delay: 500,
+                        minLength: @Model.SearchTermMinimumLength,
+                        source: function (request, response) {
+                            var term = request.term && request.term.trim().toLowerCase();
+                            var categoryElement = $('#@Html.IdFor(m => m.SearchCategoryId)');
+                            var categoryId = categoryElement.length == 0 ? 0 : categoryElement.val()
+
+                            var query = { term, categoryId };
+                            var cacheKey = JSON.stringify(query);
+
+                            if (cache.has(cacheKey)) {
+                                response(cache.get(cacheKey));
+                                return;
+                            }
+
+                            $.getJSON('@(Url.RouteUrl("ProductSearchAutoComplete"))', query, function (data, status, xhr) {
+                                cache.set(cacheKey, data);
+                                response(data);
+                            });
+                        },
+                        appendTo: '.search-box',
+                        select: function(event, ui) {
+                            $("#@searchBoxId").val(ui.item.label);
+                            setLocation(ui.item.producturl);
+                            return false;
                         },
                         //append link to the end of list
                         open: function(event, ui) {
                             //display link to search page
                             if (showLinkToResultSearch) {
-                                searchText = document.getElementById("small-searchterms").value;
+                                searchText = document.getElementById("@searchBoxId").value;
                                 $(".ui-autocomplete").append("<li class=\"ui-menu-item\" role=\"presentation\"><a href=\"/search?q=" + searchText + "\">@T("Search.SearchBox.SearchPageLink")</a></li>");
                             }
                         }
+                    })
+                    .focus(function () {
+                        $(this).autocomplete('search', $(this).val());
                     })
                     .data("ui-autocomplete")._renderItem = function(ul, item) {
                         var t = item.label;
                         showLinkToResultSearch = item.showlinktoresultsearch;
                         //html encode
                         t = htmlEncode(t);
-                        imageWidth = '@(mediaSettings.AutoCompleteSearchThumbPictureSize)';
+                        imageWidth = '@(Model.AutoCompleteSearchThumbPictureSize)';
                         return $("<li></li>")
                             .data("item.autocomplete", item)
                                 .append("<a>@(Model.ShowProductImagesInSearchAutoComplete ? Html.Raw("<img src='\" + item.productpictureurl + \"' width='\" + imageWidth + \"'>") : null)<span>" + t + "</span></a>")

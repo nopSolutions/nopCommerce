@@ -1,6 +1,8 @@
 ﻿using FluentAssertions;
 using Nop.Core;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Services.Attributes;
 using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Web.Factories;
@@ -16,6 +18,8 @@ public class AddressModelFactoryTests : BaseNopTest
     private Address _address;
     private AddressSettings _addressSettings;
     private ICountryService _countryService;
+    private IAttributeService<AddressAttribute, AddressAttributeValue> _addressAttributeService;
+    private AddressAttribute _testAddressAttribute;
 
     [OneTimeSetUp]
     public async Task SetUp()
@@ -25,6 +29,35 @@ public class AddressModelFactoryTests : BaseNopTest
         _address = await GetService<IAddressService>().GetAddressByIdAsync(1);
         _addressSettings = GetService<AddressSettings>();
         _countryService = GetService<ICountryService>();
+
+        _addressAttributeService = GetService<IAttributeService<AddressAttribute, AddressAttributeValue>>();
+        _testAddressAttribute = new AddressAttribute
+        {
+            Name = "Test address attribute",
+            AttributeControlType = AttributeControlType.Checkboxes
+        };
+
+        await _addressAttributeService.InsertAttributeAsync(_testAddressAttribute);
+
+        await _addressAttributeService.InsertAttributeValueAsync(new AddressAttributeValue
+        {
+            AttributeId = _testAddressAttribute.Id, Name = "Value 1"
+        });
+        await _addressAttributeService.InsertAttributeValueAsync(new AddressAttributeValue
+        {
+            AttributeId = _testAddressAttribute.Id, Name = "Value 2"
+        });
+        await _addressAttributeService.InsertAttributeValueAsync(new AddressAttributeValue
+        {
+            AttributeId = _testAddressAttribute.Id, Name = "Value 3"
+        });
+    }
+
+    [OneTimeTearDown]
+    public async Task TearDown()
+    {
+        var addressAttributes = await _addressAttributeService.GetAllAttributesAsync();
+        await _addressAttributeService.DeleteAttributesAsync(addressAttributes);
     }
 
     [Test]
@@ -47,6 +80,7 @@ public class AddressModelFactoryTests : BaseNopTest
         model.ZipPostalCode.Should().Be(_address.ZipPostalCode);
         model.PhoneNumber.Should().Be(_address.PhoneNumber);
         model.FaxNumber.Should().Be(_address.FaxNumber);
+        model.CustomAddressAttributes.Any().Should().BeTrue();
     }
 
     [Test]
@@ -69,6 +103,7 @@ public class AddressModelFactoryTests : BaseNopTest
         model.ZipPostalCode.Should().BeNull();
         model.PhoneNumber.Should().BeNull();
         model.FaxNumber.Should().BeNull();
+        model.CustomAddressAttributes.Any().Should().BeTrue();
     }
 
     [Test]
@@ -91,6 +126,7 @@ public class AddressModelFactoryTests : BaseNopTest
         model.ZipPostalCode.Should().BeNull();
         model.PhoneNumber.Should().BeNull();
         model.FaxNumber.Should().BeNull();
+        model.CustomAddressAttributes.Any().Should().BeTrue();
     }
 
     [Test]

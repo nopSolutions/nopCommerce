@@ -1,4 +1,3 @@
-version: "3.4"
 services:
     nopcommerce_web:
         build: .
@@ -10,7 +9,6 @@ services:
     nopcommerce_database:
         image: "mysql:latest"
         container_name: nopcommerce_mysql_server
-        command: "--default-authentication-plugin=mysql_native_password"
         restart: "always"
         environment:
           MYSQL_ROOT_PASSWORD: "nopCommerce_db_password"

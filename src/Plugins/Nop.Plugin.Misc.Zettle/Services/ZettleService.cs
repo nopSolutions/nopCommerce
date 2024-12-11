@@ -925,7 +925,7 @@ public class ZettleService
                         if (productRecord is null || !productRecord.Active || !productRecord.InventoryTrackingEnabled)
                             continue;
 
-                        //whether the сhange is initiated by the plugin (inventory balance has already been changed)
+                        //whether the change is initiated by the plugin (inventory balance has already been changed)
                         if (productRecord.ExternalUuid == balanceInfo.ExternalUuid)
                         {
                             //keep external UUID for a day in case of errors when processing webhook requests

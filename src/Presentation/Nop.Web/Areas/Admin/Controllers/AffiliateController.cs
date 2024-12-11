@@ -57,11 +57,9 @@ public partial class AffiliateController : BaseAdminController
         return RedirectToAction("List");
     }
 
+    [CheckPermission(StandardPermission.Promotions.AFFILIATES_VIEW)]
     public virtual async Task<IActionResult> List()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAffiliates))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _affiliateModelFactory.PrepareAffiliateSearchModelAsync(new AffiliateSearchModel());
 
@@ -69,22 +67,18 @@ public partial class AffiliateController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Promotions.AFFILIATES_VIEW)]
     public virtual async Task<IActionResult> List(AffiliateSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAffiliates))
-            return await AccessDeniedDataTablesJson();
-
         //prepare model
         var model = await _affiliateModelFactory.PrepareAffiliateListModelAsync(searchModel);
 
         return Json(model);
     }
 
+    [CheckPermission(StandardPermission.Promotions.AFFILIATES_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Create()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAffiliates))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _affiliateModelFactory.PrepareAffiliateModelAsync(new AffiliateModel(), null);
 
@@ -93,11 +87,9 @@ public partial class AffiliateController : BaseAdminController
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
     [FormValueRequired("save", "save-continue")]
+    [CheckPermission(StandardPermission.Promotions.AFFILIATES_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Create(AffiliateModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAffiliates))
-            return AccessDeniedView();
-
         if (ModelState.IsValid)
         {
             var address = model.Address.ToEntity<Address>();
@@ -137,11 +129,9 @@ public partial class AffiliateController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.Promotions.AFFILIATES_VIEW)]
     public virtual async Task<IActionResult> Edit(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAffiliates))
-            return AccessDeniedView();
-
         //try to get an affiliate with the specified id
         var affiliate = await _affiliateService.GetAffiliateByIdAsync(id);
         if (affiliate == null || affiliate.Deleted)
@@ -154,11 +144,9 @@ public partial class AffiliateController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.Promotions.AFFILIATES_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Edit(AffiliateModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAffiliates))
-            return AccessDeniedView();
-
         //try to get an affiliate with the specified id
         var affiliate = await _affiliateService.GetAffiliateByIdAsync(model.Id);
         if (affiliate == null || affiliate.Deleted)
@@ -207,11 +195,9 @@ public partial class AffiliateController : BaseAdminController
 
     //delete
     [HttpPost]
+    [CheckPermission(StandardPermission.Promotions.AFFILIATES_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Delete(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAffiliates))
-            return AccessDeniedView();
-
         //try to get an affiliate with the specified id
         var affiliate = await _affiliateService.GetAffiliateByIdAsync(id);
         if (affiliate == null)
@@ -229,11 +215,9 @@ public partial class AffiliateController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Promotions.AFFILIATES_VIEW)]
     public virtual async Task<IActionResult> AffiliatedOrderListGrid(AffiliatedOrderSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAffiliates))
-            return await AccessDeniedDataTablesJson();
-
         //try to get an affiliate with the specified id
         var affiliate = await _affiliateService.GetAffiliateByIdAsync(searchModel.AffliateId)
                         ?? throw new ArgumentException("No affiliate found with the specified id");
@@ -245,11 +229,9 @@ public partial class AffiliateController : BaseAdminController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Promotions.AFFILIATES_VIEW)]
     public virtual async Task<IActionResult> AffiliatedCustomerList(AffiliatedCustomerSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAffiliates))
-            return await AccessDeniedDataTablesJson();
-
         //try to get an affiliate with the specified id
         var affiliate = await _affiliateService.GetAffiliateByIdAsync(searchModel.AffliateId)
                         ?? throw new ArgumentException("No affiliate found with the specified id");

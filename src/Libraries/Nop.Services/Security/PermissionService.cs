@@ -2,6 +2,7 @@
 using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
+using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
@@ -17,9 +18,11 @@ public partial class PermissionService : IPermissionService
 
     protected readonly ICustomerService _customerService;
     protected readonly ILocalizationService _localizationService;
+    protected readonly IRepository<CustomerRole> _customerRoleRepository;
     protected readonly IRepository<PermissionRecord> _permissionRecordRepository;
     protected readonly IRepository<PermissionRecordCustomerRoleMapping> _permissionRecordCustomerRoleMappingRepository;
     protected readonly IStaticCacheManager _staticCacheManager;
+    protected readonly ITypeFinder _typeFinder;
     protected readonly IWorkContext _workContext;
 
     #endregion
@@ -28,16 +31,20 @@ public partial class PermissionService : IPermissionService
 
     public PermissionService(ICustomerService customerService,
         ILocalizationService localizationService,
+        IRepository<CustomerRole> customerRoleRepository,
         IRepository<PermissionRecord> permissionRecordRepository,
         IRepository<PermissionRecordCustomerRoleMapping> permissionRecordCustomerRoleMappingRepository,
         IStaticCacheManager staticCacheManager,
+        ITypeFinder typeFinder,
         IWorkContext workContext)
     {
         _customerService = customerService;
         _localizationService = localizationService;
+        _customerRoleRepository = customerRoleRepository;
         _permissionRecordRepository = permissionRecordRepository;
         _permissionRecordCustomerRoleMappingRepository = permissionRecordCustomerRoleMappingRepository;
         _staticCacheManager = staticCacheManager;
+        _typeFinder = typeFinder;
         _workContext = workContext;
     }
 
@@ -89,6 +96,100 @@ public partial class PermissionService : IPermissionService
         return permissionRecord;
     }
 
+    /// <summary>
+    /// Insert permissions by list of permission configs
+    /// </summary>
+    /// <param name="configs">Permission configs</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    protected virtual async Task InstallPermissionsAsync(IList<PermissionConfig> configs)
+    {
+        if (!configs?.Any() ?? true)
+            return;
+
+        var exists =
+            await _permissionRecordCustomerRoleMappingRepository.GetAllAsync(query => query, getCacheKey: _ => default);
+
+        async Task addPermissionRecordCustomerRoleMappingIfNotExists(
+            PermissionRecordCustomerRoleMapping permissionRecordCustomerRoleMapping)
+        {
+            var mapping = exists.FirstOrDefault(m =>
+                m.CustomerRoleId == permissionRecordCustomerRoleMapping.CustomerRoleId &&
+                m.PermissionRecordId == permissionRecordCustomerRoleMapping.PermissionRecordId);
+
+            if (mapping != null)
+            {
+                permissionRecordCustomerRoleMapping.Id = mapping.Id;
+
+                return;
+            }
+
+            await _permissionRecordCustomerRoleMappingRepository.InsertAsync(permissionRecordCustomerRoleMapping, false);
+            exists.Add(permissionRecordCustomerRoleMapping);
+        }
+
+        foreach (var config in configs)
+        {
+            //new permission (install it)
+            var permission = new PermissionRecord
+            {
+                Name = config.Name,
+                SystemName = config.SystemName,
+                Category = config.Category
+            };
+
+            //save new permission
+            await _permissionRecordRepository.InsertAsync(permission);
+
+            foreach (var systemRoleName in config.DefaultCustomerRoles)
+            {
+                var customerRole = await GetCustomerRoleBySystemNameAsync(systemRoleName);
+
+                if (customerRole == null)
+                {
+                    //new role (save it)
+                    customerRole = new CustomerRole
+                    {
+                        Name = systemRoleName,
+                        Active = true,
+                        SystemName = systemRoleName
+                    };
+
+                    await _customerRoleRepository.InsertAsync(customerRole);
+                }
+
+                await addPermissionRecordCustomerRoleMappingIfNotExists(new PermissionRecordCustomerRoleMapping { CustomerRoleId = customerRole.Id, PermissionRecordId = permission.Id });
+            }
+
+            //save localization
+            await _localizationService.SaveLocalizedPermissionNameAsync(permission);
+        }
+    }
+
+    /// <summary>
+    /// Gets a customer role
+    /// </summary>
+    /// <param name="systemName">Customer role system name</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the customer role
+    /// </returns>
+    protected virtual async Task<CustomerRole> GetCustomerRoleBySystemNameAsync(string systemName)
+    {
+        if (string.IsNullOrWhiteSpace(systemName))
+            return null;
+
+        var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCustomerServicesDefaults.CustomerRolesBySystemNameCacheKey, systemName);
+
+        var query = from cr in _customerRoleRepository.Table
+                    orderby cr.Id
+                    where cr.SystemName == systemName
+                    select cr;
+
+        var customerRole = await _staticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync());
+
+        return customerRole;
+    }
+    
     #endregion
 
     #region Methods
@@ -102,12 +203,9 @@ public partial class PermissionService : IPermissionService
     /// </returns>
     public virtual async Task<IList<PermissionRecord>> GetAllPermissionRecordsAsync()
     {
-        var permissions = await _permissionRecordRepository.GetAllAsync(query =>
-        {
-            return from pr in query
-                orderby pr.Name
-                select pr;
-        });
+        var permissions = await _permissionRecordRepository.GetAllAsync(query => from pr in query
+            orderby pr.Name
+            select pr);
 
         return permissions;
     }
@@ -125,7 +223,7 @@ public partial class PermissionService : IPermissionService
     /// <summary>
     /// Gets a permission record by identifier
     /// </summary>
-    /// <param name="permission">Permission</param>
+    /// <param name="permissionId">Permission identifier</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains a permission record
@@ -156,93 +254,22 @@ public partial class PermissionService : IPermissionService
     }
 
     /// <summary>
-    /// Install permissions
+    /// Delete a permission
     /// </summary>
-    /// <param name="permissionProvider">Permission provider</param>
+    /// <param name="permissionSystemName">Permission system name</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task InstallPermissionsAsync(IPermissionProvider permissionProvider)
+    public virtual async Task DeletePermissionAsync(string permissionSystemName)
     {
-        //install new permissions
-        var permissions = permissionProvider.GetPermissions();
-        //default customer role mappings
-        var defaultPermissions = permissionProvider.GetDefaultPermissions().ToList();
+        var permission = await GetPermissionRecordBySystemNameAsync(permissionSystemName);
 
-        foreach (var permission in permissions)
-        {
-            var permission1 = await GetPermissionRecordBySystemNameAsync(permission.SystemName);
-            if (permission1 != null)
-                continue;
+        if (permission == null)
+            return;
 
-            //new permission (install it)
-            permission1 = new PermissionRecord
-            {
-                Name = permission.Name,
-                SystemName = permission.SystemName,
-                Category = permission.Category
-            };
+        var mapping = await GetMappingByPermissionRecordIdAsync(permission.Id);
 
-            //save new permission
-            await InsertPermissionRecordAsync(permission1);
-
-            foreach (var defaultPermission in defaultPermissions)
-            {
-                var customerRole = await _customerService.GetCustomerRoleBySystemNameAsync(defaultPermission.systemRoleName);
-                if (customerRole == null)
-                {
-                    //new role (save it)
-                    customerRole = new CustomerRole
-                    {
-                        Name = defaultPermission.systemRoleName,
-                        Active = true,
-                        SystemName = defaultPermission.systemRoleName
-                    };
-                    await _customerService.InsertCustomerRoleAsync(customerRole);
-                }
-
-                var defaultMappingProvided = defaultPermission.permissions.Any(p => p.SystemName == permission1.SystemName);
-
-                if (!defaultMappingProvided)
-                    continue;
-
-                await InsertPermissionRecordCustomerRoleMappingAsync(new PermissionRecordCustomerRoleMapping { CustomerRoleId = customerRole.Id, PermissionRecordId = permission1.Id });
-            }
-
-            //save localization
-            await _localizationService.SaveLocalizedPermissionNameAsync(permission1);
-        }
-    }
-
-    /// <summary>
-    /// Install permissions
-    /// </summary>
-    /// <param name="permissionProvider">Permission provider</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task UninstallPermissionsAsync(IPermissionProvider permissionProvider)
-    {
-        //default customer role mappings
-        var defaultPermissions = permissionProvider.GetDefaultPermissions().ToList();
-
-        //uninstall permissions
-        foreach (var permission in permissionProvider.GetPermissions())
-        {
-            var permission1 = await GetPermissionRecordBySystemNameAsync(permission.SystemName);
-            if (permission1 == null)
-                continue;
-
-            //clear permission record customer role mapping
-            foreach (var defaultPermission in defaultPermissions)
-            {
-                var customerRole = await _customerService.GetCustomerRoleBySystemNameAsync(defaultPermission.systemRoleName);
-
-                await DeletePermissionRecordCustomerRoleMappingAsync(permission1.Id, customerRole.Id);
-            }
-
-            //delete permission
-            await DeletePermissionRecordAsync(permission1);
-
-            //save localization
-            await _localizationService.DeleteLocalizedPermissionNameAsync(permission1);
-        }
+        await _permissionRecordCustomerRoleMappingRepository.DeleteAsync(mapping);
+        await _localizationService.DeleteLocalizedPermissionNameAsync(permission);
+        await _permissionRecordRepository.DeleteAsync(permission);
     }
 
     /// <summary>
@@ -346,7 +373,10 @@ public partial class PermissionService : IPermissionService
     /// Gets a permission record-customer role mapping
     /// </summary>
     /// <param name="permissionId">Permission identifier</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains a list of mappings
+    /// </returns>
     public virtual async Task<IList<PermissionRecordCustomerRoleMapping>> GetMappingByPermissionRecordIdAsync(int permissionId)
     {
         var query = _permissionRecordCustomerRoleMappingRepository.Table;
@@ -364,8 +394,8 @@ public partial class PermissionService : IPermissionService
     /// <returns>A task that represents the asynchronous operation</returns>
     public virtual async Task DeletePermissionRecordCustomerRoleMappingAsync(int permissionId, int customerRoleId)
     {
-        var mapping = _permissionRecordCustomerRoleMappingRepository.Table
-            .FirstOrDefault(prcm => prcm.CustomerRoleId == customerRoleId && prcm.PermissionRecordId == permissionId);
+        var mapping = await _permissionRecordCustomerRoleMappingRepository.Table
+            .FirstOrDefaultAsync(prcm => prcm.CustomerRoleId == customerRoleId && prcm.PermissionRecordId == permissionId);
         if (mapping is null)
             return;
 
@@ -380,6 +410,51 @@ public partial class PermissionService : IPermissionService
     public virtual async Task InsertPermissionRecordCustomerRoleMappingAsync(PermissionRecordCustomerRoleMapping permissionRecordCustomerRoleMapping)
     {
         await _permissionRecordCustomerRoleMappingRepository.InsertAsync(permissionRecordCustomerRoleMapping);
+    }
+
+    /// <summary>
+    /// Configure permission manager
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task InsertPermissionsAsync()
+    {
+        var permissionRecords = (await _permissionRecordRepository.GetAllAsync(query => query, getCacheKey: _ => null)).Distinct().ToHashSet();
+        var exists = permissionRecords.Select(p => p.SystemName).ToHashSet();
+
+        var configs = _typeFinder.FindClassesOfType<IPermissionConfigManager>()
+            .Select(configType => (IPermissionConfigManager)Activator.CreateInstance(configType))
+            .SelectMany(config => config?.AllConfigs ?? new List<PermissionConfig>())
+            .Where(c => !exists.Contains(c.SystemName))
+            .ToList();
+
+        await InstallPermissionsAsync(configs);
+    }
+
+    /// <summary>
+    /// Inserts a permission record-customer role mappings
+    /// </summary>
+    /// <param name="customerRoleId">Customer role ID</param>
+    /// <param name="permissions">Permissions</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task InsertPermissionMappingAsync(int customerRoleId, params string[] permissions)
+    {
+        var permissionRecords = await GetAllPermissionRecordsAsync();
+
+        foreach (var permissionSystemName in permissions)
+        {
+            var permission = permissionRecords.FirstOrDefault(p =>
+                p.SystemName.Equals(permissionSystemName, StringComparison.CurrentCultureIgnoreCase));
+
+            if (permission == null)
+                continue;
+
+            await InsertPermissionRecordCustomerRoleMappingAsync(
+                new PermissionRecordCustomerRoleMapping
+                {
+                    CustomerRoleId = customerRoleId,
+                    PermissionRecordId = permission.Id
+                });
+        }
     }
 
     #endregion

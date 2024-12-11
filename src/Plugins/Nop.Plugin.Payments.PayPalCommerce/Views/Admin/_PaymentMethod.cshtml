@@ -1,0 +1,64 @@
+﻿@model bool
+
+<div id="card-paypalcommerce" class="card card-default">
+    <div class="card-body">
+        <div class="form-group row">
+            @if (!Model)
+            {
+                <div class="col-md-8">
+                    <div style="padding: 10px 0; font-style: italic; font-weight: bolder; font-size: larger;">
+                        <i class="far fa-dot-circle" style="color: #FFD140;"></i>
+                        <span>Recommended</span>
+                    </div>
+                    <div style=" display: flex; justify-content: left; padding-bottom: 10px;">
+                        <a href="https://www.paypal.com/webapps/mpp/paypal-popup" title="How PayPal Works" onclick="javascript:window.open('https://www.paypal.com/webapps/mpp/paypal-popup','WIPaypal','toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700'); return false;"><img src="https://www.paypalobjects.com/webstatic/mktg/Logo/pp-logo-200px.png" border="0" alt="PayPal Logo"></a>
+                    </div>
+                    <br />
+                    <span style="font-size: large;"><b>PayPal: The all-in-one checkout solution</b></span>
+                    <br /><br />
+                    <ul>
+                        <li>Help drive conversion by offering customers a seamless checkout experience with no setup or monthly fees.</li>
+                        <li>Provide buy now pay later solutions at no extra cost.</li>
+                        <li>Securely accept all major credit/debit cards and local payment methods with the strength of the PayPal network.</li>
+                    </ul>
+                    <br />
+                    <a id="configure-paypalcommerce-button" href="@Url.Action("Configure", "PayPalCommerce")" class="btn btn-primary">
+                        Get started
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <div style="display: flex;justify-content: right;">
+                        <a href="https://www.paypal.com/webapps/mpp/paypal-popup" title="How PayPal Works" onclick="javascript:window.open('https://www.paypal.com/webapps/mpp/paypal-popup','WIPaypal','toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700'); return false;"><img src="https://www.paypalobjects.com/webstatic/mktg/logo/AM_mc_vs_dc_ae.jpg" border="0" alt="PayPal Acceptance Mark"></a>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="col-md-3">
+                    <div style="padding: 10px 0; font-style: italic; font-weight: bolder; font-size: larger;">
+                        <i class="far fa-dot-circle" style="color: #FFD140;"></i>
+                        <span>Recommended</span>
+                    </div>
+                    <div style=" display: flex; justify-content: left; padding-bottom: 10px;">
+                        <a href="https://www.paypal.com/webapps/mpp/paypal-popup" title="How PayPal Works" onclick="javascript:window.open('https://www.paypal.com/webapps/mpp/paypal-popup','WIPaypal','toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700'); return false;"><img src="https://www.paypalobjects.com/webstatic/mktg/Logo/pp-logo-200px.png" border="0" alt="PayPal Logo"></a>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <br />
+                    <span style="font-size: large;"><b>PayPal: The all-in-one checkout solution</b></span><br /><br />
+                    <i class="fas fa-check true-icon" nop-value="true"></i><span style="padding-left: 10px;">Your PayPal account is connected</span>
+                    <br />
+                    <br />
+                    <a href="@Url.Action("Configure", "PayPalCommerce")" class="btn btn-primary">
+                        Configure
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <div style="display: flex;justify-content: right;">
+                        <a href="https://www.paypal.com/webapps/mpp/paypal-popup" title="How PayPal Works" onclick="javascript:window.open('https://www.paypal.com/webapps/mpp/paypal-popup','WIPaypal','toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700'); return false;"><img src="https://www.paypalobjects.com/webstatic/mktg/logo/AM_mc_vs_dc_ae.jpg" border="0" alt="PayPal Acceptance Mark"></a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
