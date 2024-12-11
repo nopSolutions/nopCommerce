@@ -80,7 +80,7 @@ public class OmnisendAdminController : BasePluginController
 
         await FillBatchesAsync(model);
 
-        return View(model);
+        return View("~/Plugins/Misc.Omnisend/Views/Configure.cshtml", model);
     }
 
     [HttpPost, ActionName("Configure")]
