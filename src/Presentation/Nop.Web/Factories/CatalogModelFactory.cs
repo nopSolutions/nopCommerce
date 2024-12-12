@@ -548,7 +548,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
                     Name = await _localizationService.GetLocalizedAsync(curCategory, y => y.Name),
                     SeName = await _urlRecordService.GetSeNameAsync(curCategory),
                     Description = await _localizationService.GetLocalizedAsync(curCategory, y => y.Description),
-                    PictureModel = await PrepareCategoryPictureModelAsync(category)
+                    PictureModel = await PrepareCategoryPictureModelAsync(curCategory)
                 };
             }).ToListAsync();
 
