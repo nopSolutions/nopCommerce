@@ -10,7 +10,7 @@ using Nop.Web.Framework.Extensions;
 
 namespace Nop.Plugin.Payments.PayPalCommerce.Data;
 
-[NopMigration("2024-06-06 00:00:00", "Payments.PayPalCommerce 4.70.10. Advanced cards", MigrationProcessType.Update)]
+[NopMigration("2024-06-06 00:00:01", "Payments.PayPalCommerce 4.70.10. Advanced cards", MigrationProcessType.Update)]
 public class AdvancedCardsMigration : MigrationBase
 {
     #region Fields
