@@ -1,0 +1,211 @@
+/* #Media Queries
+============================== */
+@media (max-width:1366px) {
+
+    .up .popup .close{right: -35px;}
+
+}
+@media (max-width:1199px) {
+
+    .up h3{font-size: 50px;}
+
+    .up .features .card{margin-right: 50px;}
+    .up .features .rightcolcta a{right: -50px;bottom: -40px;}
+
+    .up .bannersec .imgblk .yellowline{height: 14px;}
+
+    .up .roomcategories .col .roomcta{bottom: 21px;  right: 26px;}
+    
+    .up .slideblk .topblk{padding-left: 0px;}
+    .up .popup .popupinnerbox{max-width: 1024px;}
+    .up .popup .popup-content{border: 10px solid #FCB832;}
+    .up .popup .slide{border-radius: 10px;padding: 67px 20px 0px 19px;}
+    .up .popup .close{top: -35px; right: -25px;}
+    .up .popup .close img{max-width: 40px;}
+    .up .slideblk .topblk .innner .title{margin-top: 20px;min-width: 380px;}
+    .up .slideblk .topblk .innner .title h2{font-size: 65px;line-height: 65px;}
+    .up .slideblk .topblk .innner .offer a{margin-top: 0px;font-size: 20px;padding: 8px 18px 8px 25px;column-gap: 17px;margin-right: 0px;}
+    .up .popup .popupinnerbox::after{width: 95%;bottom: -10px;right: 10px;}
+
+}
+@media (max-width:1024px) {	
+
+    .up h3{font-size: 48px;}
+
+    .up .bannersec .imgblk .yellowline{height: 12px;}
+
+    .up .productblk .col{padding: 15px 15px 50px 15px;}
+    .up .slideblk .topblk .innner{column-gap: 25px;}
+        
+}
+@media (max-width:991px) {	
+    .up h3{font-size: 35px;}
+    .up h5{font-size: 22px;}
+    .up h6{font-size: 18px;}
+    .up p{font-size: 18px;}
+
+    .up .bannersec .imgblk .yellowline{height: 11px;}
+
+    .up .benefitsec .benefits{flex-wrap: wrap;row-gap: 30px;}
+    .up .benefitsec .benefits .col{width: calc((100% - 50px) / 2);}
+    .up .benefitsec .topblk p span{font-size: 22px;}
+
+    .up .categories ul.categoriesblk{column-gap: 16px;}
+    .up .categories ul.categoriesblk li{width: calc((100% - 32px) / 3);}
+
+    .up .roomcategories .col .roomcta::after{left: -4px;  top: 4px;}
+    .up .roomcategories .col .roomcta button{padding: 4px 10px;font-size: 16px;}
+    .up .roomcategories .col .roomcta{ bottom: 15px;right: 18px;}
+    .up .roomcategories .col .roomtitle h3.bordered-text{-webkit-text-stroke: 7px white;}
+    .up .roomcategories .col .roomtitle.rightbox{right: 26px;}
+    .up .roomcategories .col .roomtitle{top: 20px;}
+
+    
+    .up .features .text-section{width: 100%;margin-bottom: 30px;}
+    .up .features .text-section h2{margin-top: 15px;}
+    .up .features .leftcolcta{margin-top: 0px;}
+    .up .features .card{margin-right: 0px;width: 100%;justify-content: center;}
+    .up .features .innercard .details{flex-direction: column;align-items: center;justify-content: center;text-align: center;}
+    .up .features .innercard::before{top: 7px;left: -7px;}
+    .up .features .card-text{padding-bottom: 0px;}
+    .up .features .rightcolcta a{position: relative;bottom: 0;right: 0;background-color: #ffffff;color: #EC2027;padding: 8px 17px 6px;margin-top: 18px;}
+
+    .up .popup button.prev{left: 15px;}   
+    .up .popup button.next{left: auto; right: 15px;} 
+    .up .popup .popup-content button{top: 50px;}
+    .up .popup .slide{padding: 90px 19px 0px 19px;}
+    .up .slideblk .topblk .innner{flex-direction: column-reverse;justify-content: center;column-gap: 0px; align-items: center;gap: 20px;}
+    .up .slideblk .topblk .innner .title{min-width: auto; text-align: center;}
+    .up .slideblk .topblk p{text-align: center;font-size: 12px;}
+    .up .productblk .mCSB_container{flex-direction: column;}
+    .up .productblk .col{width: 100%;}
+    .up .popup .popupinnerbox::after{width: 94.5%;}
+    .up .slideblk .topblk .innner .title h2{text-align: center;}
+
+
+}
+@media (max-width:767px) {  
+    .up h5{font-size: 20px;}
+    .up h4{font-size: 41px;}
+    .up h6{font-size: 16px;}
+    .up p{font-size: 16px;}  
+
+    .up .mid-container{gap: 30px;padding-bottom: 40px;}
+
+    .up .bannersec .imgblk{padding-top: 13px;}
+    .up .bannersec .imgblk .container{padding: 0;}
+    .up .bannersec .imgblk .yellowline{display: none;}
+    .up .bannersec .imgblk .deskimg{display: none;}
+    .up .bannersec .imgblk .mobimg{display: block;}
+    .up .bannersec .textblk{margin-top: 30px;}
+
+    .up .benefitsec .row{padding: 30px 0; border-top: 2px solid #FCB832;  border-bottom: 2px solid #FCB832;}
+    .up .benefitsec .topblk p{font-weight: bold;}
+    .up .benefitsec .topblk p br{display: none;}
+    .up .benefitsec .topblk p span{font-size: 16px;}
+    .up .benefitsec .benefits .col{padding: 0 35px;}
+    
+    .up .roomcategories .col .innerroom{max-width: 350px; margin: 0 auto;}
+    .up .roomcategories h5{margin-bottom: 20px;}
+    .up .roomcategories .row{flex-direction: column;align-items: center; justify-content: center;gap: 20px;text-align: center;}
+    .up .roomcategories .col{width: 100%;}
+    .up .roomcategories .col img{max-width: 350px;width: 100%;}
+    
+
+    .up .categories h5{margin-bottom: 20px;}
+    .up .categories ul.categoriesblk{flex-direction: column;max-width: 350px;width: 100%;row-gap: 20px;margin: 0 auto;}
+    .up .categories ul.categoriesblk li{width: 100%;}
+
+    .up .features .row{flex-direction: column; align-items: center;}
+    .up .features .text-section{text-align: center;}
+    .up .features .text-section{margin-top: 5px;}
+    .up .features .card-text h6{font-size: 20px;}
+
+    .up .popup button.prev{left: 15px;}   
+    .up .popup button.next{left: auto; right: 15px;} 
+    .up .popup .popup-content button{top: 50px;}
+    .up .popup .slide{padding: 90px 10px 0px 15px;}
+    .up .slideblk .topblk .innner{flex-direction: column-reverse;justify-content: center;column-gap: 0px; align-items: center;gap: 20px;}
+    .up .slideblk .topblk .innner .title{min-width: auto; text-align: center;}
+    .up .slideblk .topblk p{text-align: center;}
+    .up .productblk .mCSB_container{flex-direction: column;padding-right: 0px;}
+    .up .productblk .col{margin-bottom: 0;padding: 20px 0px 20px 0px;border: none;border-radius: 0px;margin: 0 0 20px 0;
+        border-top: 1px solid #FCB832;}
+    .up .innerproductbox::after{display: none;}
+    .up .innerproductbox{flex-direction: column;}
+    .up .innerproductbox .leftcol{width: 100%;}
+    .up .innerproductbox .rightcol{width: 100%;margin-top: 20px;}
+    .up .innerproductbox .leftcol .producttitle{min-height: auto;}
+    .up .productblk .col .viewcta{position: relative;}
+    .up .innerproductbox .leftcol .productimg{min-height: auto;}
+    .up .slideblk .topblk .innner .title{margin-top: 10px;}
+    .up .slideblk .topblk .innner .title h2{font-size: 49px;line-height: 49px;}
+    .up .slideblk .topblk p{margin-top: 0;}
+    .up .slideblk .topblk .innner .offer a{font-size: 16px;padding: 8px 15px 8px 15px;column-gap: 15px;}
+    .up .slideblk .topblk .innner .offer a img{max-width: 32px;}
+    .up .productblk{padding-right: 0;}
+    .up .popup .close{width: 50px;height: 50px;top: -25px;}
+    .up .popup .close img{max-width: 25px;}
+
+    .up .productblkscroll._mCS_1 #mCSB_1_scrollbar_vertical{right: -10px;}
+    .up .productblkscroll._mCS_1 .mCSB_scrollTools .mCSB_draggerContainer{width: 12px;left: -7px;}
+    .up .productblkscroll._mCS_1 .mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar{width: 4px;}
+
+    .up .productblkscroll._mCS_2 #mCSB_2_scrollbar_vertical{right: -10px;}
+    .up .productblkscroll._mCS_2 .mCSB_scrollTools .mCSB_draggerContainer{width: 12px;left: -7px;}
+    .up .productblkscroll._mCS_2 .mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar{width: 4px;}
+
+    .up .productblkscroll._mCS_3 #mCSB_3_scrollbar_vertical{right: -10px;}
+    .up .productblkscroll._mCS_3 .mCSB_scrollTools .mCSB_draggerContainer{width: 12px;left: -7px;}
+    .up .productblkscroll._mCS_3 .mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar{width: 4px;}
+
+    .up .productblkscroll._mCS_4 #mCSB_4_scrollbar_vertical{right: -10px;}
+    .up .productblkscroll._mCS_4 .mCSB_scrollTools .mCSB_draggerContainer{width: 12px;left: -7px;}
+    .up .productblkscroll._mCS_4 .mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar{width: 4px;}
+
+    .up .innerproductbox .Featuring{cursor: pointer;}
+    .up .innerproductbox .rightcol ul{display: none;}
+    .up .innerproductbox .Featuring .icon{display: inline-block;}
+    .up .innerproductbox .Featuring .collon{display: none;}
+    .up .popup .popupinnerbox::after{width: 92%;}
+
+}
+@media (max-width:600px) {
+    .up .popup .popupinnerbox::after{width: 90%;}
+}
+@media (max-width:480px) {
+    .up h3{font-size: 33px;}
+
+    .up h6{font-size: 12px;}
+    .up p{font-size: 12px;}
+    .up .benefitsec .topblk p span{font-size: 12px;}
+
+    .up .popup .popup-content button{font-size: 14px;}
+
+    .up .popup .popupinnerbox::after{width: 88%;}
+
+    .up .slideblk .topblk .innner .offer a{font-size: 14px;gap: 10px;  padding: 8px 8px 8px 8px;flex-direction: row;}
+    .up .slideblk .topblk .innner .offer a img{max-width: 32px;}
+
+}
+@media (max-width:375px) {
+    .up h3{font-size: 28px;}
+
+    .up .features .rightcolcta a{padding: 8px 18px 6px;font-size: 18px;}
+    .up .popup .popupinnerbox::after{width: 87%;}
+    .up .roomcategories .col .roomcta button{padding: 2px 8px;border-radius: 5px;  font-size: 13px;  line-height: 25px;}
+    .up .roomcategories .col .roomcta::after{border-radius: 5px;}
+
+    .up .roomcategories .col .roomtitle{right: 15px;}
+    .up .roomcategories .col .roomtitle.rightbox{right: 15px;}
+
+}
+
+
+/* Angelo Changes */
+
+@media (min-width:1024px) {	       
+    .slick-slider {
+        user-select: auto !important;
+        }
+    }

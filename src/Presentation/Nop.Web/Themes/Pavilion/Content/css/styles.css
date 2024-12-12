@@ -6348,7 +6348,7 @@ body .header-lower {
 		position: absolute;
 	}
 	.categories-details-top img {
-		width: 100% !important;
+		width: 100% !important; 
 		height: auto;
         max-width: none;
 	}
