@@ -27,7 +27,8 @@ public class AddIndexesMigration : ForwardOnlyMigration
                 .WithOptions().NonClustered();
 
         //#7377
-        if (!Schema.Table(nameof(Order)).Constraint("AK_Order_OrderGuid").Exists())
+        if (!Schema.Table(nameof(Order)).Index("AK_Order_OrderGuid").Exists() &&
+            !Schema.Table(nameof(Order)).Constraint("AK_Order_OrderGuid").Exists())
         {
             var orders = _dataProvider.GetTable<Order>().GroupBy(p => p.OrderGuid, p => p)
                 .Where(p => p.Count() > 1)
