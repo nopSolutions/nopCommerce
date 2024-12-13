@@ -11,6 +11,7 @@ using Nop.Services.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Web.Models.Customer;
 using Nop.Services.Catalog;
+using Nop.Core.Domain.Payments;
 
 namespace Nop.Web.Components
 {
@@ -73,26 +74,43 @@ namespace Nop.Web.Components
                 CustomerProfileTypeId = customer.CustomerProfileTypeId
             };
 
-            //get subscription product name
-            var product = await _productService.GetProductByIdAsync(subscriptionProductId);
+            //New implemenation based on Reward Point system
 
-            if (product != null)
-                model.SubscriptionProduct = product.Name;
+            //get subscription product id from latest orders
+            var activeOrder = (await _orderService.SearchOrdersAsync(customerId: customer.Id, psIds: new List<int> { (int)PaymentStatus.Paid }, pageSize: 1)).FirstOrDefault();
 
-            //get customer latest paid order
-            //var activeOrderItems = await _orderService.GetOrderItemsAsync(order.Id);
-            //var customerSubscribedProductId = activeOrderItems.FirstOrDefault().ProductId;
+            string subscriptionPlan = "Free Subscription Plan";
+
+            if (activeOrder != null)
+            {
+                var activeOrderItems = await _orderService.GetOrderItemsAsync(activeOrder.Id);
+                var customerSubscribedProductId = activeOrderItems.FirstOrDefault().ProductId;
+
+                //get subscription product name
+                var product = await _productService.GetProductByIdAsync(customerSubscribedProductId);
+                subscriptionPlan = product != null ? product.Name : "Free Subscription Plan";
+            }
+
+            var subscription = await _rewardPointService.GetCustomerSubscriptionAsync(customer.Id, storeId);
 
             var modelNew = new SubscriptionModel
             {
-                SubscriptionId = subscriptionProductId,
+                //SubscriptionId = subscriptionProductId,
+                SubscriptionProduct = subscriptionPlan,
 
-                SubscriptionDate = await _rewardPointService.GetSubscriptionStartDateAsync(customer.Id, storeId),
-                SubscriptionExpiryDate = await _rewardPointService.GetSubscriptionExpiryDateAsync(customer.Id, storeId),
+                //SubscriptionDate = await _rewardPointService.GetSubscriptionStartDateAsync(customer.Id, storeId),
+                //SubscriptionExpiryDate = await _rewardPointService.GetSubscriptionExpiryDateAsync(customer.Id, storeId),
 
-                AllottedCreditCount = await _rewardPointService.GetSubscriptionAlottedCreditCountAsync(customer.Id, storeId),
-                BalanceCreditCount = await _rewardPointService.GetRewardPointsBalanceAsync(customer.Id, storeId),
-                UsedCreditCount = await _rewardPointService.GetSubscriptionUsedCreditCountAsync(customer.Id, storeId),
+                //AllottedCreditCount = await _rewardPointService.GetSubscriptionAlottedCreditCountAsync(customer.Id, storeId),
+                //BalanceCreditCount = await _rewardPointService.GetRewardPointsBalanceAsync(customer.Id, storeId),
+                //UsedCreditCount = await _rewardPointService.GetSubscriptionUsedCreditCountAsync(customer.Id, storeId),
+
+                SubscriptionDate = subscription.CreatedOnUtc,
+                SubscriptionExpiryDate = subscription.EndDateUtc,
+
+                AllottedCreditCount = subscription.PointsBalance.Value,
+                BalanceCreditCount = subscription.ValidPoints.Value,
+                UsedCreditCount = subscription.PointsBalance.Value - subscription.ValidPoints.Value,
 
                 IsPaidCustomer = await _customerService.IsInCustomerRoleAsync(customer, "PaidCustomer"),
                 CustomerProfileTypeId = customer.CustomerProfileTypeId

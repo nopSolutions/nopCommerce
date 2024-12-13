@@ -1,4 +1,7 @@
 ﻿@model ProductDetailsModel
+
+@using Nop.Core
+@using Nop.Core.Domain.Catalog
 @using Nop.Core.Domain.Seo;
 @inject Nop.Services.Html.IHtmlFormatter htmlFormatter
 @using Nop.Core.Domain.Orders
@@ -21,7 +24,7 @@
     //canonical URL
     if (seoSettings.CanonicalUrlsEnabled)
     {
-        var productUrl = Url.RouteUrl("Product", new { SeName = Model.SeName }, webHelper.GetCurrentRequestProtocol()).ToLowerInvariant();
+        var productUrl = Url.RouteUrl<Product>(new { SeName = Model.SeName }, webHelper.GetCurrentRequestProtocol()).ToLowerInvariant();
         NopHtml.AddCanonicalUrlParts(productUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
     }
 

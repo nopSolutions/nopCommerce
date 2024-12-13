@@ -26,8 +26,9 @@ namespace Nop.Web.Controllers
             var storeId = (await _storeContext.GetCurrentStoreAsync()).Id;
 
             var isPaidCustomer = await IsCustomerAPaidCustomer(currentCustomer);
-            var allottedCreditCount = await _genericAttributeService.GetAttributeAsync<int>(currentCustomer, NopCustomerDefaults.SubscriptionAllottedCount, storeId);
-            var usedCreditCount = await _genericAttributeService.GetAttributeAsync<int>(currentCustomer, NopCustomerDefaults.SubscriptionUsedCreditCount, storeId);
+
+            //var allottedCreditCount = await _genericAttributeService.GetAttributeAsync<int>(currentCustomer, NopCustomerDefaults.SubscriptionAllottedCount, storeId);
+            //var usedCreditCount = await _genericAttributeService.GetAttributeAsync<int>(currentCustomer, NopCustomerDefaults.SubscriptionUsedCreditCount, storeId);
 
             if (!isPaidCustomer)
             {
@@ -39,62 +40,108 @@ namespace Nop.Web.Controllers
             //get user latest order
             var acitveOrder = (await _orderService.SearchOrdersAsync(customerId: currentCustomer.Id, psIds: new List<int> { (int)PaymentStatus.Paid })).FirstOrDefault();
 
-            if (acitveOrder != null)
+            //if (acitveOrder != null)
+            //{
+            //    var allottedCreditCount1 = int.Parse(acitveOrder.CardType);
+            //    var usedCreditCount1 = int.Parse(acitveOrder.CardType);
+            //}
+
+            ////check view count is valid ie under below allotted count from customer activity log
+            //var customerActivity = await _customerActivityService.GetAllActivitiesAsync(customerId: currentCustomer.Id, activityLogTypeId: 154, entityName: "Product");
+
+            //var props = (await _genericAttributeService.GetAttributesForEntityAsync(currentCustomer.Id, "Customer"))
+            //            .Where(x => x.StoreId == storeId && x.Key == "PublicStore.ViewContactDetail")
+            //            .ToList();
+
+            //var uniqueValues = props.GroupBy(x => x.Value).Select(grp => grp.First()).ToList();
+
+            //if (usedCreditCount >= allottedCreditCount)
+            //{
+            //    //subscription limit reached
+            //    model.Result = $"You have used {usedCreditCount} of {allottedCreditCount}. Please upgrade to premium.";
+            //    return View(model);
+            //}
+
+            ////target customer
+            //var targetCustomer = await _customerService.GetCustomerByIdAsync(product.VendorId);
+            //var mobileNumber = targetCustomer.Phone;
+
+            //model.TargetCustomerMobileNumber = mobileNumber;
+            //model.TargetCustomerEmailId = targetCustomer.Email;
+
+            //if (!uniqueValues.Where(o => o.Value == targetCustomer.Id.ToString()).Any())
+            //{
+            //    //update viewed credits
+            //    await _genericAttributeService.SaveAttributeAsync(currentCustomer, NopCustomerDefaults.SubscriptionUsedCreditCount, (usedCreditCount + 1), storeId);
+
+            //    var attribute = new Nop.Core.Domain.Common.GenericAttribute
+            //    {
+            //        Key = "PublicStore.ViewContactDetail",
+            //        KeyGroup = "Customer",
+            //        Value = targetCustomer.Id.ToString(),
+            //        EntityId = currentCustomer.Id,
+            //        StoreId = storeId,
+            //        CreatedOrUpdatedDateUTC = DateTime.Now
+            //    };
+
+            //    //customer didnt view this customer contact detail previously. Insert in to generic attribute.
+            //    await _genericAttributeService.InsertAttributeAsync(attribute);
+            //    //await _genericAttributeService.SaveAttributeAsync(currentCustomer, "PublicStore.ViewContactDetail", targetCustomer.Id, storeId);
+
+            //    //customer didnt view this customer contact detail previously.
+            //    await _customerActivityService.InsertActivityAsync("PublicStore.ViewContactDetail", "Viewed Contact Details: First Time", product);
+            //}
+            //else
+            //{
+            //    //customer is viewing the already viewed contact detail
+            //    await _customerActivityService.InsertActivityAsync("PublicStore.ViewContactDetail", "Viewed Contact Details: Duplicate View", product);
+            //}
+
+
+            //start : reward points based approach
+
+            var targetCustomer = await _customerService.GetCustomerByIdAsync(product.VendorId);
+            model.TargetCustomerMobileNumber = targetCustomer.Phone;
+            model.TargetCustomerEmailId = targetCustomer.Email;
+
+            var subscription = await _rewardPointService.GetCustomerSubscriptionAsync(currentCustomer.Id, 1);
+
+            if (subscription == null || subscription.EndDateUtc < DateTime.UtcNow)
             {
-                var allottedCreditCount1 = int.Parse(acitveOrder.CardType);
-                var usedCreditCount1 = int.Parse(acitveOrder.CardType);
-            }
-
-            //check view count is valid ie under below allotted count from customer activity log
-            var customerActivity = await _customerActivityService.GetAllActivitiesAsync(customerId: currentCustomer.Id, activityLogTypeId: 154, entityName: "Product");
-
-            var props = (await _genericAttributeService.GetAttributesForEntityAsync(currentCustomer.Id, "Customer"))
-                        .Where(x => x.StoreId == storeId && x.Key == "PublicStore.ViewContactDetail")
-                        .ToList();
-
-            var uniqueValues = props.GroupBy(x => x.Value).Select(grp => grp.First()).ToList();
-
-            if (usedCreditCount >= allottedCreditCount)
-            {
-                //subscription limit reached
-                model.Result = $"You have used {usedCreditCount} of {allottedCreditCount}. Please upgrade to premium.";
+                //valid subscription not present or subscription expired
+                //Dispaly upgrade subscription View
+                model.Result = "Please upgrade to premium Subscription to View contact details.Note: Previous unused credits will be carry forwarded if any..";
                 return View(model);
             }
 
-            //target customer
-            var targetCustomer = await _customerService.GetCustomerByIdAsync(product.VendorId);
-            var mobileNumber = targetCustomer.Phone;
-
-            model.TargetCustomerMobileNumber = mobileNumber;
-            model.TargetCustomerEmailId = targetCustomer.Email;
-
-            if (!uniqueValues.Where(o => o.Value == targetCustomer.Id.ToString()).Any())
+            if (subscription.ValidPoints <= 0)
             {
-                //update viewed credits
-                await _genericAttributeService.SaveAttributeAsync(currentCustomer, NopCustomerDefaults.SubscriptionUsedCreditCount, (usedCreditCount + 1), storeId);
+                //subscription limit reached
+                model.Result = $"You have used {subscription.Points} of {subscription.Points} Credits. Please upgrade to premium.";
+                return View(model);
+            }
 
-                var attribute = new Nop.Core.Domain.Common.GenericAttribute
-                {
-                    Key = "PublicStore.ViewContactDetail",
-                    KeyGroup = "Customer",
-                    Value = targetCustomer.Id.ToString(),
-                    EntityId = currentCustomer.Id,
-                    StoreId = storeId,
-                    CreatedOrUpdatedDateUTC = DateTime.Now
-                };
+            var historyList = await _rewardPointService.GetRewardPointsHistoryAsync(currentCustomer.Id, targetCustomer.Id);
 
-                //customer didnt view this customer contact detail previously. Insert in to generic attribute.
-                await _genericAttributeService.InsertAttributeAsync(attribute);
-                //await _genericAttributeService.SaveAttributeAsync(currentCustomer, "PublicStore.ViewContactDetail", targetCustomer.Id, storeId);
+            if (!historyList.Where(x => x.Message.Contains(targetCustomer.Id.ToString())).Any())
+            {
+                //customer didnt view this customer contact detail previously so reduce the points by 1.
 
-                //customer didnt view this customer contact detail previously.
-                await _customerActivityService.InsertActivityAsync("PublicStore.ViewContactDetail", "Viewed Contact Details: First Time", product);
+                var message = $"Viewed Customer Contact Details With CustomerId: {targetCustomer.Id}";
+                var subscriptionOrder = await _orderService.GetOrderByGuidAsync(subscription.UsedWithOrder.Value);
+
+                await _rewardPointService.AddRewardPointsHistoryEntryAsync(currentCustomer, -1, 1, message, usedWithOrder: subscriptionOrder);
+
+                //insert customer activity
+                await _customerActivityService.InsertActivityAsync("PublicStore.ViewContactDetail", $"Viewed Contact Details: First Time : {targetCustomer.FirstName} {targetCustomer.LastName}", targetCustomer);
             }
             else
             {
                 //customer is viewing the already viewed contact detail
-                await _customerActivityService.InsertActivityAsync("PublicStore.ViewContactDetail", "Viewed Contact Details: Duplicate View", product);
+                await _customerActivityService.InsertActivityAsync("PublicStore.ViewContactDetail", $"Viewed Contact Details: Duplicate View : {targetCustomer.FirstName} {targetCustomer.LastName}", targetCustomer);
             }
+
+            //end : reward points based approach
 
             return View(model);
         }
