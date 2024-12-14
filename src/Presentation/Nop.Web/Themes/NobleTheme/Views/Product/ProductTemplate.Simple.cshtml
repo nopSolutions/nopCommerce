@@ -129,7 +129,7 @@
                                         }
                                         <!--gift card-->
                                         @{
-                                                                            var dataDictGiftCard = new ViewDataDictionary(ViewData);
+                                            var dataDictGiftCard = new ViewDataDictionary(ViewData);
                                             dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = $"giftcard_{Model.Id}";
                                             @await Html.PartialAsync("_GiftCardInfo", Model.GiftCard, dataDictGiftCard)
                                         }
@@ -139,7 +139,6 @@
                                                 <div class="product-price">
                                                     <div class="price-inclusive-text">
                                                         <span>
-                                                            @*<i class="fa fa-user fa-sm icon-color" title="click to unlock"></i>*@
                                                             <i class="bi bi-person icon-color icon-size"></i>
                                                         </span>
                                                         Profile Type :
@@ -169,7 +168,6 @@
                                                 <div class="product-price">
                                                     <div class="price-inclusive-text">
                                                         <span>
-                                                            @*<i class="fa fa-star icon-color" title="click to unlock"></i>*@
                                                             <i class="bi bi-cpu icon-color icon-size"></i>
                                                         </span>
                                                         Primary Technology :
@@ -192,7 +190,6 @@
                                                 <div class="product-price">
                                                     <div class="price-inclusive-text">
                                                         <span>
-                                                            @*<i class="fa fa-bookmark icon-color" title="click to unlock"></i>*@
                                                             <i class="bi bi-bookmark icon-color icon-size"></i>
                                                         </span>
                                                         Relavent Experiance :
@@ -204,7 +201,6 @@
                                                 <div class="product-price">
                                                     <div class="price-inclusive-text">
                                                         <span>
-                                                            @*<i class="fa fa-stop-circle fa-xs icon-color" title="click to unlock"></i>*@
                                                             <i class="bi bi-check-circle icon-color icon-size"></i>
                                                         </span>
                                                         Current Avalibility :
@@ -227,7 +223,6 @@
                                                 <div class="product-price">
                                                     <div class="price-inclusive-text">
                                                         <span>
-                                                            @*<i class="fa fa-map-marker fa-xs icon-color" title="click to unlock"></i>*@
                                                             <i class="bi bi-geo-alt icon-color icon-size"></i>
                                                         </span>
                                                         Location :
@@ -249,8 +244,7 @@
                                                 </div>
                                                 <div class="product-price" style="font-weight:100;">
                                                     <div class="price-inclusive-text" style="height:30px !important;">
-                                                        <div id="product-@Model.Id" class="email-a-friend">
-                                                            @*<i class="fa fa-envelope fa-1x icon-color" title="click to unlock"></i>*@
+                                                        <div id="product-@Model.Id" class="email-a-friend" style="float: left;">
                                                             <i class="bi bi-envelope icon-color icon-size"></i>
                                                             EmailId :
                                                             <a class="product-item-links profile-info-links" href="#" onclick="ShowMobileNumber();">
@@ -258,18 +252,27 @@
                                                             </a>
                                                             <i class="fa fa-lock fa-lg icon-color" title="click to unlock"></i>
                                                         </div>
+                                                        <div style="float:left;margin-left: 15px;">
+                                                            <a class="btn btn-primary btn-sm" href="#" role="button" onclick="ShowMobileNumber();">
+                                                                View Email
+                                                            </a>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="product-price" style="font-weight:100;">
                                                     <div class="price-inclusive-text" style="height:30px !important;">
-                                                        <div id="product-@Model.Id" class="email-a-friend">
-                                                            @*<i class="fa fa-mobile-phone fa-lg icon-color" title="click to unlock"></i>*@
+                                                        <div id="product-@Model.Id" class="email-a-friend" style="float: left;">
                                                             <i class="bi bi-phone icon-color icon-size"></i>
                                                             Mobile Number :
                                                             <a class="profile-info-links" href="#" onclick="ShowMobileNumber();">
                                                                 (123)456789
                                                             </a>
                                                             <i class="fa fa-lock fa-lg icon-color" title="click to unlock"></i>
+                                                        </div>
+                                                        <div style="float:left;margin-left: 15px;">
+                                                            <a class="btn btn-primary btn-sm" href="#" role="button" onclick="ShowMobileNumber();">
+                                                                View Mobile
+                                                            </a>
                                                         </div>
                                                     </div>
                                                 </div>
