@@ -18,7 +18,7 @@ public partial class AdminMenu : IAdminMenu
 {
     #region Fields
 
-    private static AdminMenuItem _baseRootMenuItem;
+    protected AdminMenuItem _baseRootMenuItem;
     protected AdminMenuItem _rootItem;
 
     protected readonly IActionContextAccessor _actionContextAccessor;
