@@ -98,7 +98,7 @@
                         <nop-label asp-for="Region" />
                     </div>
                     <div class="col-md-9">
-                        <nop-select asp-for="Region" asp-items="@await ((PaymentRegion)Model.Region).ToSelectListAsync()" />
+                        <nop-select asp-for="Region" asp-items="@(await ((PaymentRegion)Model.Region).ToSelectListAsync())" />
                         <span asp-validation-for="Region"></span>
                     </div>
                 </div>
@@ -141,7 +141,7 @@
                         <nop-label asp-for="PaymentRegion" />
                     </div>
                     <div class="col-md-9">
-                        <nop-select asp-for="PaymentRegion" asp-items="@await ((PaymentRegion)Model.PaymentRegion).ToSelectListAsync()" />
+                        <nop-select asp-for="PaymentRegion" asp-items="@(await ((PaymentRegion)Model.PaymentRegion).ToSelectListAsync())" />
                         <span asp-validation-for="PaymentRegion"></span>
                     </div>
                 </div>
@@ -218,7 +218,7 @@
                             <nop-label asp-for="PaymentType" />
                         </div>
                         <div class="col-md-9">
-                            <nop-select asp-for="PaymentType" asp-items="@await ((PaymentType)Model.PaymentType).ToSelectListAsync()" />
+                            <nop-select asp-for="PaymentType" asp-items="@(await ((PaymentType)Model.PaymentType).ToSelectListAsync())" />
                             <span asp-validation-for="PaymentType"></span>
                         </div>
                     </div>
@@ -228,7 +228,7 @@
                             <nop-label asp-for="ButtonPlacement" />
                         </div>
                         <div class="col-md-9">
-                            <nop-select asp-for="ButtonPlacement" asp-items="@await ButtonPlacement.Cart.ToSelectListAsync(false)" asp-multiple="true" />
+                            <nop-select asp-for="ButtonPlacement" asp-items="@(await ButtonPlacement.Cart.ToSelectListAsync(false))" asp-multiple="true" />
                             <script>
                                 $(function () {
                                     var categoryIdsInput = $('#@Html.IdFor(model => model.ButtonPlacement)').select2({
@@ -245,7 +245,7 @@
                             <nop-label asp-for="ButtonColor" />
                         </div>
                         <div class="col-md-9">
-                            <nop-select asp-for="ButtonColor" asp-items="@await ((ButtonColor)Model.ButtonColor).ToSelectListAsync()" />
+                            <nop-select asp-for="ButtonColor" asp-items="@(await ((ButtonColor)Model.ButtonColor).ToSelectListAsync())" />
                             <span asp-validation-for="ButtonColor"></span>
                         </div>
                     </div>
