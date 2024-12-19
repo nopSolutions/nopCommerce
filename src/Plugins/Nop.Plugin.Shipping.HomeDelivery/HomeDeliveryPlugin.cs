@@ -19,6 +19,9 @@ using Nop.Plugin.Misc.AbcCore.Delivery;
 using Nop.Plugin.Misc.AbcCore.HomeDelivery;
 using System.Threading.Tasks;
 using Nop.Plugin.Shipping.Fedex;
+using Nop.Core;
+using Nop.Services.Logging;
+using Nop.Core.Domain.Logging;
 
 namespace Nop.Plugin.Shipping.HomeDelivery
 {
@@ -34,6 +37,7 @@ namespace Nop.Plugin.Shipping.HomeDelivery
         private readonly INopDataProvider _nopContext;
         private readonly IHomeDeliveryCostService _homeDeliveryCostService;
         private readonly IProductAttributeService _productAttributeService;
+        private readonly ILogger _logger;
 
         public HomeDeliveryPlugin(
             IDeliveryService deliveryService,
@@ -41,7 +45,8 @@ namespace Nop.Plugin.Shipping.HomeDelivery
             IProductAttributeParser productAttributeParser,
             INopDataProvider nopContext,
             IHomeDeliveryCostService homeDeliveryCostService,
-            IProductAttributeService productAttributeService
+            IProductAttributeService productAttributeService,
+            ILogger logger
         )
         {
             _deliveryService = deliveryService;
@@ -51,6 +56,7 @@ namespace Nop.Plugin.Shipping.HomeDelivery
             _nopContext = nopContext;
             _homeDeliveryCostService = homeDeliveryCostService;
             _productAttributeService = productAttributeService;
+            _logger = logger;
         }
 
         /// <summary>
@@ -109,8 +115,23 @@ namespace Nop.Plugin.Shipping.HomeDelivery
                         continue;
                     }
 
-                    // Should only have one pav in all cases
-                    var pav = (await _productAttributeParser.ParseProductAttributeValuesAsync(itemAttributeXml, pam.Id)).Single();
+                    // Since this is a delivery/pickup item, it needs a single pav
+                    var pavs = await _productAttributeParser.ParseProductAttributeValuesAsync(itemAttributeXml, pam.Id);
+                    ProductAttributeValue pav = null;
+                    try {
+                        pav = pavs.Single();
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        var sci = item.ShoppingCartItem;
+                        await _logger.InsertLogAsync(
+                            LogLevel.Error,
+                            $"Delivery/Pickup shopping cart item {sci.Id} has invalid product attribute value(s). Attribute XML in full message.",
+                            $"{itemAttributeXml}",
+                            getShippingOptionRequest.Customer
+                        );
+                        throw new NopException("Failure when filtering shopping cart items for getting shipping options.");
+                    }
 
                     // Mattresses are added to legacy
                     if (pav.Name.Contains("Home Delivery (Price in Cart)"))
