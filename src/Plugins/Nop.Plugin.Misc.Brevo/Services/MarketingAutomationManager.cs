@@ -252,11 +252,13 @@ public class MarketingAutomationManager
         ArgumentNullException.ThrowIfNull(order);
 
         var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
+        var shippingAddress = await _addressService.GetAddressByIdAsync(order.ShippingAddressId ?? 0);
+        var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
 
         try
         {
             //first, try to identify current customer
-            await _marketingAutomationHttpClient.RequestAsync(new IdentifyRequest { Email = customer.Email });
+            await _marketingAutomationHttpClient.RequestAsync(new IdentifyRequest { Email = customer.Email ?? billingAddress.Email });
 
             //get URL helper
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
@@ -295,9 +297,6 @@ public class MarketingAutomationManager
                     price = item.PriceInclTax,
                 };
             }).ToArrayAsync();
-
-            var shippingAddress = await _addressService.GetAddressByIdAsync(order.ShippingAddressId ?? 0);
-            var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
 
             var shippingAddressData = new
             {
