@@ -355,7 +355,7 @@ public class MarketingAutomationManager
             //create track event object
             var trackEvent = new TrackEventRequest
             {
-                Email = customer.Email,
+                Email = customer.Email ?? billingAddress.Email,
                 EventName = BrevoDefaults.OrderCompletedEventName,
                 EventData = new { id = $"cart:{shoppingCartGuid}", data = cartData }
             };
