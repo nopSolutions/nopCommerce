@@ -1,7 +1,9 @@
 ﻿using System.Globalization;
 using System.Text;
 using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Services.Themes;
@@ -363,5 +365,23 @@ public static class HtmlExtensions
         var theme = await EngineContext.Current.Resolve<IThemeProvider>().GetThemeBySystemNameAsync(themeName);
 
         return theme?.SupportRtl ?? false;
+    }
+
+    /// <summary>
+    /// Return a value indicating whether to display the admin tour
+    /// </summary>
+    /// <param name="html">HTML helper</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the value
+    /// </returns>
+    public static async Task<bool> IsTourActiveAsync(this IHtmlHelper html)
+    {
+        var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+
+        if (webHelper.QueryString<bool?>("ShowTour") == true)
+            return await EngineContext.Current.Resolve<IWorkContext>().GetCurrentVendorAsync() is null;
+
+        return false;
     }
 }

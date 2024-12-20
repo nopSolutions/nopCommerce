@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
-using Nop.Core;
 using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Events;
 using Nop.Services.Common;
@@ -42,8 +40,6 @@ public partial class ShippingController : BaseAdminController
     protected readonly IShippingModelFactory _shippingModelFactory;
     protected readonly IShippingPluginManager _shippingPluginManager;
     protected readonly IShippingService _shippingService;
-    protected readonly IGenericAttributeService _genericAttributeService;
-    protected readonly IWorkContext _workContext;
     protected readonly ShippingSettings _shippingSettings;
     private static readonly char[] _separator = [','];
 
@@ -65,8 +61,6 @@ public partial class ShippingController : BaseAdminController
         IShippingModelFactory shippingModelFactory,
         IShippingPluginManager shippingPluginManager,
         IShippingService shippingService,
-        IGenericAttributeService genericAttributeService,
-        IWorkContext workContext,
         ShippingSettings shippingSettings)
     {
         _addressService = addressService;
@@ -83,8 +77,6 @@ public partial class ShippingController : BaseAdminController
         _shippingModelFactory = shippingModelFactory;
         _shippingPluginManager = shippingPluginManager;
         _shippingService = shippingService;
-        _genericAttributeService = genericAttributeService;
-        _workContext = workContext;
         _shippingSettings = shippingSettings;
     }
 
@@ -122,21 +114,10 @@ public partial class ShippingController : BaseAdminController
     #region Shipping rate computation methods
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_SHIPPING_SETTINGS)]
-    public virtual async Task<IActionResult> Providers(bool showtour = false)
+    public virtual async Task<IActionResult> Providers()
     {
         //prepare model
         var model = await _shippingModelFactory.PrepareShippingProviderSearchModelAsync(new ShippingProviderSearchModel());
-
-        //show configuration tour
-        if (showtour)
-        {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
-            var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
-
-            if (!hideCard && !closeCard)
-                ViewBag.ShowTour = true;
-        }
 
         return View(model);
     }

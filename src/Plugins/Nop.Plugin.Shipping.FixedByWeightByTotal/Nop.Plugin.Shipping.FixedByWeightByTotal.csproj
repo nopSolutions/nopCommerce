@@ -27,6 +27,7 @@
     <None Remove="Views\_ByWeightByTotal.cshtml" />
     <None Remove="Views\_CreateOrUpdateRateByWeightByTotal.cshtml" />
     <None Remove="Views\_FixedRate.cshtml" />
+    <None Remove="Views\_FixedRate.Tour.cshtml" />
     <None Remove="Views\_ViewImports.cshtml" />
   </ItemGroup>
 
@@ -55,13 +56,16 @@
     <Content Include="Views\_FixedRate.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\_FixedRate.Tour.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Views\_ViewImports.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="$(SolutionDir)\Presentation\Nop.Web.Framework\Nop.Web.Framework.csproj" />
+    <ProjectReference Include="$(SolutionDir)\Presentation\Nop.Web\Nop.Web.csproj" />
     <ClearPluginAssemblies Include="$(SolutionDir)\Build\ClearPluginAssemblies.proj" />
   </ItemGroup>
 

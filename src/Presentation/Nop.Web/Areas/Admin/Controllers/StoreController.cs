@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Stores;
-using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -29,9 +27,7 @@ public partial class StoreController : BaseAdminController
     protected readonly ISettingService _settingService;
     protected readonly IStoreModelFactory _storeModelFactory;
     protected readonly IStoreService _storeService;
-    protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly IWebHelper _webHelper;
-    protected readonly IWorkContext _workContext;
 
     #endregion
 
@@ -45,9 +41,7 @@ public partial class StoreController : BaseAdminController
         ISettingService settingService,
         IStoreModelFactory storeModelFactory,
         IStoreService storeService,
-        IGenericAttributeService genericAttributeService,
-        IWebHelper webHelper,
-        IWorkContext workContext)
+        IWebHelper webHelper)
     {
         _customerActivityService = customerActivityService;
         _localizationService = localizationService;
@@ -57,9 +51,7 @@ public partial class StoreController : BaseAdminController
         _settingService = settingService;
         _storeModelFactory = storeModelFactory;
         _storeService = storeService;
-        _genericAttributeService = genericAttributeService;
         _webHelper = webHelper;
-        _workContext = workContext;
 
     }
 
@@ -192,7 +184,7 @@ public partial class StoreController : BaseAdminController
 
     [HttpsRequirement(ignore: true)]
     [CheckPermission(StandardPermission.Configuration.MANAGE_STORES)]
-    public virtual async Task<IActionResult> Edit(int id, bool showtour = false)
+    public virtual async Task<IActionResult> Edit(int id)
     {
         //try to get a store with the specified id
         var store = await _storeService.GetStoreByIdAsync(id);
@@ -201,17 +193,6 @@ public partial class StoreController : BaseAdminController
 
         //prepare model
         var model = await _storeModelFactory.PrepareStoreModelAsync(null, store);
-
-        //show configuration tour
-        if (showtour)
-        {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
-            var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
-
-            if (!hideCard && !closeCard)
-                ViewBag.ShowTour = true;
-        }
 
         return View(model);
     }

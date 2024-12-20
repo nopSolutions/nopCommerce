@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Configuration;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Http.Extensions;
 using Nop.Plugin.Payments.PayPalCommerce.Domain;
@@ -11,7 +10,6 @@ using Nop.Plugin.Payments.PayPalCommerce.Factories;
 using Nop.Plugin.Payments.PayPalCommerce.Models.Admin;
 using Nop.Plugin.Payments.PayPalCommerce.Services;
 using Nop.Services;
-using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
@@ -31,10 +29,8 @@ public class PayPalCommerceController : BasePluginController
     #region Fields
 
     private readonly AppSettings _appSettings;
-    private readonly IGenericAttributeService _genericAttributeService;
     private readonly ILocalizationService _localizationService;
     private readonly INotificationService _notificationService;
-    private readonly IPermissionService _permissionService;
     private readonly ISettingService _settingService;
     private readonly IStoreContext _storeContext;
     private readonly IWorkContext _workContext;
@@ -47,10 +43,8 @@ public class PayPalCommerceController : BasePluginController
     #region Ctor
 
     public PayPalCommerceController(AppSettings appSettings,
-        IGenericAttributeService genericAttributeService,
         ILocalizationService localizationService,
         INotificationService notificationService,
-        IPermissionService permissionService,
         ISettingService settingService,
         IStoreContext storeContext,
         IWorkContext workContext,
@@ -59,10 +53,8 @@ public class PayPalCommerceController : BasePluginController
         ShoppingCartSettings shoppingCartSettings)
     {
         _appSettings = appSettings;
-        _genericAttributeService = genericAttributeService;
         _localizationService = localizationService;
         _notificationService = notificationService;
-        _permissionService = permissionService;
         _settingService = settingService;
         _storeContext = storeContext;
         _workContext = workContext;
@@ -282,7 +274,7 @@ public class PayPalCommerceController : BasePluginController
     #region Configuration
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_PAYMENT_METHODS)]
-    public async Task<IActionResult> Configure(bool showtour = false)
+    public async Task<IActionResult> Configure()
     {
         var (settings, storeId) = await LoadSettingsAsync();
 
@@ -392,17 +384,6 @@ public class PayPalCommerceController : BasePluginController
                 _notificationService.SuccessNotification(await _localizationService
                     .GetResourceAsync("Plugins.Payments.PayPalCommerce.Credentials.Valid"));
             }
-        }
-
-        //show configuration tour
-        if (showtour)
-        {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
-            var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
-
-            if (!hideCard && !closeCard)
-                ViewBag.ShowTour = true;
         }
 
         return View("~/Plugins/Payments.PayPalCommerce/Views/Admin/Configure.cshtml", model);

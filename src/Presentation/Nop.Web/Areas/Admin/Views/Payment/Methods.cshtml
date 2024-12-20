@@ -4,13 +4,10 @@
 @{
     //page title
     ViewBag.PageTitle = T("Admin.Configuration.Payment.Methods").Text;
-    //tour step
-    ViewBag.TourStep = TourStep.PaymentMethods;
+
     //active menu item (system name)
     NopHtml.SetActiveMenuItemSystemName("Payment methods");
 }
-
-@await Html.PartialAsync("_AdminTour")
 
 <div class="content-header clearfix">
     <h1 class="float-left">
@@ -135,3 +132,8 @@
         </div>
     </div>
 </section>
+
+@if (await Html.IsTourActiveAsync())
+{
+    @await Html.PartialAsync("_Methods.Tour")
+}
