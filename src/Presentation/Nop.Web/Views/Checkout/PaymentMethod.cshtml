@@ -8,7 +8,7 @@
     Html.AppendPageCssClassParts("html-checkout-page");
     Html.AppendPageCssClassParts("html-payment-method-page");
 }
-@await Component.InvokeAsync("Widget", new { widgetZone = "cart_popup" });
+@await Component.InvokeAsync("Widget", new { widgetZone = "cart_popup" })
 <div class="page checkout-page payment-method-page">
     @await Component.InvokeAsync("CheckoutProgress", new { step = CheckoutProgressStep.Payment })
     <div class="page-title">
