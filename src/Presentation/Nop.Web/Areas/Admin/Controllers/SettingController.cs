@@ -1332,21 +1332,10 @@ public partial class SettingController : BaseAdminController
     #endregion
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
-    public virtual async Task<IActionResult> GeneralCommon(bool showtour = false)
+    public virtual async Task<IActionResult> GeneralCommon()
     {
         //prepare model
         var model = await _settingModelFactory.PrepareGeneralCommonSettingsModelAsync();
-
-        //show configuration tour
-        if (showtour)
-        {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
-            var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
-
-            if (!hideCard && !closeCard)
-                ViewBag.ShowTour = true;
-        }
 
         return View(model);
     }

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Stores;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
@@ -192,7 +191,7 @@ public partial class StoreController : BaseAdminController
 
     [HttpsRequirement(ignore: true)]
     [CheckPermission(StandardPermission.Configuration.MANAGE_STORES)]
-    public virtual async Task<IActionResult> Edit(int id, bool showtour = false)
+    public virtual async Task<IActionResult> Edit(int id)
     {
         //try to get a store with the specified id
         var store = await _storeService.GetStoreByIdAsync(id);
@@ -201,17 +200,6 @@ public partial class StoreController : BaseAdminController
 
         //prepare model
         var model = await _storeModelFactory.PrepareStoreModelAsync(null, store);
-
-        //show configuration tour
-        if (showtour)
-        {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
-            var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
-
-            if (!hideCard && !closeCard)
-                ViewBag.ShowTour = true;
-        }
 
         return View(model);
     }

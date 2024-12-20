@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Configuration;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Http.Extensions;
 using Nop.Plugin.Payments.PayPalCommerce.Domain;
@@ -282,7 +281,7 @@ public class PayPalCommerceController : BasePluginController
     #region Configuration
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_PAYMENT_METHODS)]
-    public async Task<IActionResult> Configure(bool showtour = false)
+    public async Task<IActionResult> Configure()
     {
         var (settings, storeId) = await LoadSettingsAsync();
 
@@ -392,17 +391,6 @@ public class PayPalCommerceController : BasePluginController
                 _notificationService.SuccessNotification(await _localizationService
                     .GetResourceAsync("Plugins.Payments.PayPalCommerce.Credentials.Valid"));
             }
-        }
-
-        //show configuration tour
-        if (showtour)
-        {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
-            var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
-
-            if (!hideCard && !closeCard)
-                ViewBag.ShowTour = true;
         }
 
         return View("~/Plugins/Payments.PayPalCommerce/Views/Admin/Configure.cshtml", model);

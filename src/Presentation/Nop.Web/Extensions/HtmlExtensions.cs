@@ -1,7 +1,9 @@
 ﻿using System.Globalization;
 using System.Text;
 using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Services.Themes;
@@ -363,5 +365,24 @@ public static class HtmlExtensions
         var theme = await EngineContext.Current.Resolve<IThemeProvider>().GetThemeBySystemNameAsync(themeName);
 
         return theme?.SupportRtl ?? false;
+    }
+
+    public static async Task<bool> IsTourActiveAsync(this IHtmlHelper html)
+    {
+        //var customer = await _workContext.GetCurrentCustomerAsync();
+        //var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
+        //var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
+
+        //if (!hideCard && !closeCard)
+        //    ViewBag.ShowTour = true;
+
+        var actionContextAccessor = EngineContext.Current.Resolve<IActionContextAccessor>();
+        if (actionContextAccessor.ActionContext.HttpContext.Request.Query.TryGetValue("ShowTour", out var showTourValue) && bool.TryParse(showTourValue, out var showTour))
+        {
+            var workContext = EngineContext.Current.Resolve<IWorkContext>();
+            return showTour && await workContext.GetCurrentVendorAsync() is null;
+        }
+
+        return false;
     }
 }

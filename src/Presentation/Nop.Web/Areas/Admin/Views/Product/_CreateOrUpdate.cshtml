@@ -5,7 +5,7 @@
 
     const string hideInfoBlockAttributeName = "ProductPage.HideInfoBlock";
     var customer = await workContext.GetCurrentCustomerAsync();
-    var hideInfoBlock = showTour ? false : await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
+    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName) && !await Html.IsTourActiveAsync();
 
     const string hidePricesBlockAttributeName = "ProductPage.HidePricesBlock";
     var hidePricesBlock = showTour ? false : await genericAttributeService.GetAttributeAsync<bool>(customer, hidePricesBlockAttributeName);

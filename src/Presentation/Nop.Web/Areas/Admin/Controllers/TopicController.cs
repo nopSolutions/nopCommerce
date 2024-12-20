@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Topics;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -147,21 +146,10 @@ public partial class TopicController : BaseAdminController
     }
 
     [CheckPermission(StandardPermission.ContentManagement.TOPICS_VIEW)]
-    public virtual async Task<IActionResult> List(bool showtour = false)
+    public virtual async Task<IActionResult> List()
     {
         //prepare model
         var model = await _topicModelFactory.PrepareTopicSearchModelAsync(new TopicSearchModel());
-
-        //show configuration tour
-        if (showtour)
-        {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
-            var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
-
-            if (!hideCard && !closeCard)
-                ViewBag.ShowTour = true;
-        }
 
         return View(model);
     }
@@ -231,7 +219,7 @@ public partial class TopicController : BaseAdminController
     }
 
     [CheckPermission(StandardPermission.ContentManagement.TOPICS_VIEW)]
-    public virtual async Task<IActionResult> Edit(int id, bool showtour = false)
+    public virtual async Task<IActionResult> Edit(int id)
     {
         //try to get a topic with the specified id
         var topic = await _topicService.GetTopicByIdAsync(id);
@@ -240,17 +228,6 @@ public partial class TopicController : BaseAdminController
 
         //prepare model
         var model = await _topicModelFactory.PrepareTopicModelAsync(null, topic);
-
-        //show configuration tour
-        if (showtour)
-        {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
-            var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
-
-            if (!hideCard && !closeCard)
-                ViewBag.ShowTour = true;
-        }
 
         return View(model);
     }

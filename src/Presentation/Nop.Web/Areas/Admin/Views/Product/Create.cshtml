@@ -4,13 +4,10 @@
 @{
     //page title
     ViewBag.PageTitle = T("Admin.Catalog.Products.AddNew").Text;
-    //tour step
-    ViewBag.TourStep = TourStep.Product;
+
     //active menu item (system name)
     NopHtml.SetActiveMenuItemSystemName("Products");
 }
-
-@await Html.PartialAsync("_AdminTour")
 
 <form asp-controller="Product" asp-action="Create" method="post" id="product-form">
     <div class="content-header clearfix">
@@ -39,4 +36,9 @@
 {
     //product editor settings modal
     @await Html.PartialAsync("_ProductEditorSettingsModal", Model)
+}
+
+@if (await Html.IsTourActiveAsync())
+{
+    @await Html.PartialAsync("_Create.Tour")
 }

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Nop.Core;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Events;
 using Nop.Services.Common;
@@ -75,21 +74,10 @@ public partial class PaymentController : BaseAdminController
     }
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_PAYMENT_METHODS)]
-    public virtual async Task<IActionResult> Methods(bool showtour = false)
+    public virtual async Task<IActionResult> Methods()
     {
         //prepare model
         var model = await _paymentModelFactory.PreparePaymentMethodsModelAsync(new PaymentMethodsModel());
-
-        //show configuration tour
-        if (showtour)
-        {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
-            var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
-
-            if (!hideCard && !closeCard)
-                ViewBag.ShowTour = true;
-        }
 
         return View(model);
     }

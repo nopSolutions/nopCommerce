@@ -8,11 +8,9 @@
 }
 
 @{
-    var showTour = ViewBag.ShowTour ?? false;
-
     const string hideCommonBlockAttributeName = "GeneralCommonSettingsPage.HideCommonBlock";
     var customer = await workContext.GetCurrentCustomerAsync();
-    var hideCommonBlock = showTour ? false : await genericAttributeService.GetAttributeAsync<bool>(customer, hideCommonBlockAttributeName);
+    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCommonBlockAttributeName) && !await Html.IsTourActiveAsync();
 
     const string hideFaviconBlockAttributeName = "GeneralCommonSettingsPage.HideFaviconBlock";
     var hideFaviconBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideFaviconBlockAttributeName);

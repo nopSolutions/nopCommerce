@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
@@ -63,21 +62,10 @@ public partial class TaxController : BaseAdminController
     }
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
-    public virtual async Task<IActionResult> Providers(bool showtour = false)
+    public virtual async Task<IActionResult> Providers()
     {
         //prepare model
         var model = await _taxModelFactory.PrepareTaxProviderSearchModelAsync(new TaxProviderSearchModel());
-
-        //show configuration tour
-        if (showtour)
-        {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
-            var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
-
-            if (!hideCard && !closeCard)
-                ViewBag.ShowTour = true;
-        }
 
         return View(model);
     }

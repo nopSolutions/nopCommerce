@@ -1,13 +1,4 @@
 ﻿@model GeneralCommonSettingsModel
-@inject Nop.Services.Stores.IStoreService storeService
-@using Nop.Web.Framework.Models.AdminAreaTour
-
-@{
-    //tour step
-    ViewBag.TourStep = TourStep.GeneralSettings;
-}
-
-@await Html.PartialAsync("_AdminTour")
 
 <div class="card-body">
     <div class="form-group row" id="theme-area">
@@ -31,7 +22,7 @@
                     <div class="checkbox form-check">
                         <label class="form-check-label">
                             <span>
-                                <input type="radio" name="@Html.NameFor(x => x.StoreInformationSettings.DefaultStoreTheme)" value="@theme.SystemName" @if (theme.SystemName.Equals(Model.StoreInformationSettings.DefaultStoreTheme, StringComparison.InvariantCultureIgnoreCase)) { <text> checked="checked" </text> }>
+                                <input type="radio" name="@Html.NameFor(x => x.StoreInformationSettings.DefaultStoreTheme)" value="@theme.SystemName" @if (theme.SystemName.Equals(Model.StoreInformationSettings.DefaultStoreTheme, StringComparison.InvariantCultureIgnoreCase)) { <text> checked="checked" </text> }/>
                                 @theme.FriendlyName
                             </span>
                             <img src="@Url.Content(theme.PreviewImageUrl)" alt="@theme.PreviewText" title="@theme.PreviewText">
@@ -114,3 +105,8 @@
         </div>
     </div>
 </div>
+
+@if (await Html.IsTourActiveAsync())
+{
+    @await Html.PartialAsync("_GeneralCommon.Common.Tour")
+}

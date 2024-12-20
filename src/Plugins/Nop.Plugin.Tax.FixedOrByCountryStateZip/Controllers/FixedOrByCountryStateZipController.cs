@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
-using Nop.Core.Domain.Customers;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Domain;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Models;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Services;
@@ -75,7 +74,7 @@ public class FixedOrByCountryStateZipController : BasePluginController
     #region Methods
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
-    public async Task<IActionResult> Configure(bool showtour = false)
+    public async Task<IActionResult> Configure()
     {
         var taxCategories = await _taxCategoryService.GetAllTaxCategoriesAsync();
 
@@ -114,17 +113,6 @@ public class FixedOrByCountryStateZipController : BasePluginController
             var states = await _stateProvinceService.GetStateProvincesByCountryIdAsync(defaultCountry.Id);
             foreach (var s in states)
                 model.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
-        }
-
-        //show configuration tour
-        if (showtour)
-        {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
-            var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
-
-            if (!hideCard && !closeCard)
-                ViewBag.ShowTour = true;
         }
 
         return View("~/Plugins/Tax.FixedOrByCountryStateZip/Views/Configure.cshtml", model);

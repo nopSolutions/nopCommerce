@@ -1,0 +1,85 @@
+﻿@await Html.PartialAsync("_AdminTour");
+
+<script asp-location="Footer">
+    $(function(){
+        const steps = [{
+            element: "#tax-providers-area",
+            popover: {
+                title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxProviders.TaxProviders.Title").Text)',
+                description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxProviders.TaxProviders.Text", OfficialSite.TaxPlugins + Utm.OnAdminTourDocs.Replace('?', '&')).Text)',
+                side: "bottom",
+                align: "start"
+            }},
+        ];
+
+        let nextPageUrl = "@Url.Action("Create", "Product", new { showtour = true })";
+
+        if ($.fn.dataTable.isDataTable("#tax-providers-grid")) {
+            let providersDataTable = $("#tax-providers-grid").DataTable();
+
+                providersDataTable.on('init.dt', function() {
+
+                if (providersDataTable.rows().count() > 0)
+                {
+                    const manualTaxProvider = providersDataTable.row((idx, data) => data.SystemName === "Tax.FixedOrByCountryStateZip");
+                    const avalaraTaxProvider = providersDataTable.row((idx, data) => data.SystemName === "Tax.Avalara");
+
+                    const tourProvider = manualTaxProvider.any() ? manualTaxProvider : providersDataTable.row(0);
+
+                    if (avalaraTaxProvider.any())
+                    {
+                        steps.push({
+                            element: avalaraTaxProvider.node(),
+                            popover: {
+                                title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxProviders.Avalara.Title").Text)',
+                                description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxProviders.Avalara.Text", Docs.Avalara + Utm.OnAdminTourDocs).Text)',
+                                side: "bottom",
+                                align: "start"
+                            }});
+                    }
+
+                    steps.push({
+                        element: tourProvider.node().querySelector('.column-primary .btn'),
+                        popover: {
+                            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxProviders.PrimaryProvider.Title").Text)',
+                            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxProviders.PrimaryProvider.Text").Text)',
+                            side: "left",
+                            align: "start"
+                        }});
+
+                    if (manualTaxProvider.any())
+                    {
+                        steps.push({
+                            element: manualTaxProvider.node(),
+                            popover: {
+                                title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxProviders.Manual.Title").Text)',
+                                description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxProviders.Manual.Text").Text)',
+                                side: "bottom",
+                                align: "start"
+                            }});
+
+                        steps.push({
+                            element: manualTaxProvider.node().querySelector('.column-configure .btn-default'),
+                            popover: {
+                                title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxProviders.Configure.Title").Text)',
+                                description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxProviders.Configure.Text").Text)',
+                                side: "left",
+                                align: "start"
+                            }});
+
+                        nextPageUrl = manualTaxProvider.data().ConfigurationUrl + '?showtour=true'; // Redirect to Manual
+                    }
+                }
+
+                AdminTourBuilder
+                    .init(localized_data, "", nextPageUrl, steps)
+                    .drive();
+            });
+        }
+        else {
+            AdminTourBuilder
+                .init(localized_data, "", nextPageUrl, steps)
+                .drive();
+        }
+    });
+</script>

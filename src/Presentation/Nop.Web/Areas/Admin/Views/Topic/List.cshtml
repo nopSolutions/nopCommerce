@@ -5,17 +5,9 @@
 @{
     //page title
     ViewBag.PageTitle = T("Admin.ContentManagement.Topics").Text;
-    //tour step
-    ViewBag.TourStep = TourStep.TopicList;
+
     //active menu item (system name)
     NopHtml.SetActiveMenuItemSystemName("Topics");
-
-    string editQueryString = string.Empty;
-    var showTour = ViewBag.ShowTour ?? false;
-    if (showTour)
-    {
-        editQueryString = "?showtour=true";
-    }
 
     const string hideSearchBlockAttributeName = "TopicsPage.HideSearchBlock";
     var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
@@ -177,6 +169,11 @@
 
 <script>
     function renderColumnEdit(data, type, row, meta) {
-        return '<a href="@Url.Content("~/Admin/Topic/Edit/")' + data + '@(editQueryString)" class="btn btn-default"><i class="fas fa-pencil"></i>@T("Admin.Common.Edit").Text</a>';
+        return '<a href="@Url.Content("~/Admin/Topic/Edit/")' + data + '" class="btn btn-default"><i class="fas fa-pencil"></i>@T("Admin.Common.Edit").Text</a>';
     }
 </script>
+
+@if (await Html.IsTourActiveAsync())
+{
+    @await Html.PartialAsync("_List.Tour")
+}

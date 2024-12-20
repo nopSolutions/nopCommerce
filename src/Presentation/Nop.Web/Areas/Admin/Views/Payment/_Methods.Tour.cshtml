@@ -1,0 +1,109 @@
+﻿@await Html.PartialAsync("_AdminTour");
+
+<script asp-location="Footer">
+    $(function(){
+        const steps = [{
+            element: '#payment-methods-area',
+            popover: {
+                title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PaymentMethods.PaymentMethods.Title").Text)',
+                description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PaymentMethods.PaymentMethods.Text").Text)',
+                side: "top",
+                align: 'start'
+            }}
+        ];
+
+        let nextPageUrl = "@Url.Action("Providers", "Tax", new { showtour = true })";
+
+        if ($.fn.dataTable.isDataTable("#paymentmethods-grid")) {
+            let providersDataTable = $("#paymentmethods-grid").DataTable();
+
+                providersDataTable.on('init.dt', function() {
+
+                if (providersDataTable.rows().count() > 0)
+                {
+                    const manualMethod = providersDataTable.row((idx, data) => data.SystemName === "Payments.Manual");
+                    const checkMoneyMethod = providersDataTable.row((idx, data) => data.SystemName === "Payments.CheckMoneyOrder");
+                    const tourProvider = manualMethod.any() ? manualMethod : providersDataTable.row(0);
+
+                    if (checkMoneyMethod.any()) {
+                        steps.push({
+                            element: checkMoneyMethod.node(),
+                            popover: {
+                                title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PaymentMethods.CheckMoney.Title").Text)',
+                                description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PaymentMethods.CheckMoney.Text").Text)',
+                                side: "bottom",
+                                align: "start"
+                            }});
+                    }
+
+                    if (manualMethod.any()) {
+                        steps.push({
+                            element: manualMethod.node(),
+                            popover: {
+                                title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PaymentMethods.Manual.Title").Text)',
+                                description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PaymentMethods.Manual.Text").Text)',
+                                side: "bottom",
+                                align: "start"
+                            }});
+                    }
+
+                    steps.push({
+                        element: tourProvider.node().querySelector('.column-edit .btn-default'),
+                        popover: {
+                            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PaymentMethods.Activate.Title").Text)',
+                            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PaymentMethods.Activate.Text").Text)',
+                            side: "left",
+                            align: "start"
+                        }});
+
+                    steps.push({
+                        element: tourProvider.node().querySelector('.column-configure .btn-default'),
+                        popover: {
+                            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PaymentMethods.Configure.Title").Text)',
+                            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PaymentMethods.Configure.Text").Text)',
+                            side: "left",
+                            align: "start"
+                        }});
+
+                    const paypalCommerceMethodContainer = document.getElementById('card-paypalcommerce');
+                    if (paypalCommerceMethodContainer != null)
+                    {
+                        steps.push({
+                            element: paypalCommerceMethodContainer,
+                            popover: {
+                                title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PaymentMethods.PayPal.Title").Text)',
+                                description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PaymentMethods.PayPal.Text").Text)',
+                                side: "bottom",
+                                align: "start"
+                            }});
+
+                        let paypalcommerceButton = document.getElementById('configure-paypalcommerce-button');
+                        if (paypalcommerceButton != null) {
+                            steps.push({
+                                element: paypalcommerceButton,
+                                popover: {
+                                    title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PaymentMethods.PayPalCommerce.Configure.Title").Text)',
+                                    description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PaymentMethods.PayPalCommerce.Configure.Text").Text)',
+                                    side: "right",
+                                    align: "start"
+                                }});
+
+                            nextPageUrl = paypalcommerceButton.href + '?showtour=true'; // Redirect to PayPal commerce
+                        }
+
+
+                    }
+                }
+
+                AdminTourBuilder
+                    .init(localized_data, "", nextPageUrl, steps)
+                    .drive();
+            });
+        }
+        else {
+            AdminTourBuilder
+                .init(localized_data, "", nextPageUrl, steps)
+                .drive();
+        }
+    });
+</script>

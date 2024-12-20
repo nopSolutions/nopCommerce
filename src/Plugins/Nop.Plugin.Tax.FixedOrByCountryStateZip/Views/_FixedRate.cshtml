@@ -34,3 +34,8 @@
         </div>
     </div>
 </div>
+
+@if (await Html.IsTourActiveAsync())
+{
+    @await Html.PartialAsync("~/Plugins/Tax.FixedOrByCountryStateZip/Views/_FixedRate.Tour.cshtml")
+}

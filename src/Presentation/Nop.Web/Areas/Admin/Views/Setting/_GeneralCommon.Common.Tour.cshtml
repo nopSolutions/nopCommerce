@@ -1,0 +1,54 @@
+﻿@inject Nop.Services.Stores.IStoreService storeService
+@{
+    var storeTour = (await storeService.GetAllStoresAsync()).FirstOrDefault();
+}
+
+@await Html.PartialAsync("_AdminTour");
+
+<script asp-location="Footer">
+    const steps = [
+        //'Welcome' step
+        {
+            popover: {
+                title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PersonalizeStore.Intro.Title").Text)',
+                description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PersonalizeStore.Intro.Text").Text)',
+                side: "bottom",
+                align: 'start'
+            }
+        },
+        //'Basic/Advanced mode' step
+        {
+            element: '.onoffswitch',
+            popover: {
+                title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PersonalizeStore.BasicAdvanced.Title").Text)',
+                description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PersonalizeStore.BasicAdvanced.Text").Text)',
+                side: "bottom",
+                align: 'start'
+            }
+        },
+        //'Choose a theme' step
+        {
+            element: '#theme-area',
+            popover: {
+                title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PersonalizeStore.Theme.Title").Text)',
+                description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PersonalizeStore.Theme.Text", OfficialSite.Themes + Utm.OnAdminTour, Docs.Themes + Utm.OnAdminTourDocs).Text)',
+                side: "bottom",
+                align: 'start'
+            }
+        },
+        //'Upload your logo' step
+        {
+        element: '#logo-area',
+        popover: {
+            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PersonalizeStore.Logo.Title").Text)',
+            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PersonalizeStore.Logo.Text").Text)',
+            side: "bottom",
+            align: 'start'
+        }},
+    ];
+
+    AdminTourBuilder
+        .init(localized_data, '', '@Url.Action("Edit", "Store", new { showtour = true, id = storeTour?.Id ?? 0 })', steps)
+        .drive();
+
+</script>

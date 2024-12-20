@@ -42,3 +42,8 @@
         </div>
     </div>
 </div>
+
+@if(await Html.IsTourActiveAsync())
+{
+    @await Html.PartialAsync("~/Plugins/Shipping.FixedByWeightByTotal/Views/_FixedRate.Tour.cshtml")
+}

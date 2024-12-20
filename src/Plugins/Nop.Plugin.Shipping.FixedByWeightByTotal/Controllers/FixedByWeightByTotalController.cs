@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Domain;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Models;
@@ -87,7 +86,7 @@ public class FixedByWeightByTotalController : BasePluginController
     #region Methods
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_SHIPPING_SETTINGS)]
-    public async Task<IActionResult> Configure(bool showtour = false)
+    public async Task<IActionResult> Configure()
     {
         var model = new ConfigurationModel
         {
@@ -116,17 +115,6 @@ public class FixedByWeightByTotalController : BasePluginController
         model.AvailableStates.Add(new SelectListItem { Text = "*", Value = "0" });
 
         model.SetGridPageSize();
-
-        //show configuration tour
-        if (showtour)
-        {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
-            var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
-
-            if (!hideCard && !closeCard)
-                ViewBag.ShowTour = true;
-        }
 
         return View("~/Plugins/Shipping.FixedByWeightByTotal/Views/Configure.cshtml", model);
     }
