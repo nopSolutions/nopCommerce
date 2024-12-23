@@ -549,8 +549,8 @@ public partial class NopHtmlHelper : INopHtmlHelper
             var asset = _bundleHelper.GetOrCreateCssAsset(item.Src);
             var route = _bundleHelper.CacheBusting(asset);
 
-            result.AppendFormat("<link rel=\"stylesheet\" type=\"{0}\" href=\"{1}\" />",
-                MimeTypes.TextCss, route);
+            result.AppendFormat("<link rel=\"stylesheet\" type=\"{0}\" href=\"{1}{2}\" />",
+                MimeTypes.TextCss, pathBase, route);
             result.AppendLine();
         }
 
