@@ -42,6 +42,7 @@ public partial class ShippingService : IShippingService
     protected readonly IStoreContext _storeContext;
     protected readonly ShippingSettings _shippingSettings;
     protected readonly ShoppingCartSettings _shoppingCartSettings;
+    private readonly IRepository<ShippingMethodStateProvinceMapping> _shippingMethodStateProvinceMappingRepository;
 
     #endregion
 
@@ -65,7 +66,8 @@ public partial class ShippingService : IShippingService
         IStateProvinceService stateProvinceService,
         IStoreContext storeContext,
         ShippingSettings shippingSettings,
-        ShoppingCartSettings shoppingCartSettings)
+        ShoppingCartSettings shoppingCartSettings,
+        IRepository<ShippingMethodStateProvinceMapping> shippingMethodStateProvinceMappingRepository)
     {
         _addressService = addressService;
         _checkoutAttributeParser = checkoutAttributeParser;
@@ -86,6 +88,7 @@ public partial class ShippingService : IShippingService
         _storeContext = storeContext;
         _shippingSettings = shippingSettings;
         _shoppingCartSettings = shoppingCartSettings;
+        _shippingMethodStateProvinceMappingRepository = shippingMethodStateProvinceMappingRepository;
     }
 
     #endregion
@@ -208,37 +211,67 @@ public partial class ShippingService : IShippingService
     /// Gets all shipping methods
     /// </summary>
     /// <param name="filterByCountryId">The country identifier to filter by</param>
+    /// <param name="filterByStateProvinceId">The state province identifier to filter by</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the shipping methods
     /// </returns>
-    public virtual async Task<IList<ShippingMethod>> GetAllShippingMethodsAsync(int? filterByCountryId = null)
+    public virtual async Task<IList<ShippingMethod>> GetAllShippingMethodsAsync(int? filterByCountryId = null, int? filterByStateProvinceId = null)
     {
         if (filterByCountryId.HasValue && filterByCountryId.Value > 0)
         {
+            if (filterByStateProvinceId.HasValue && filterByStateProvinceId.Value > 0)
+            {
+                return await _shippingMethodRepository.GetAllAsync(query =>
+                {
+                    var query1 = from sm in query
+                                 join smcm in _shippingMethodCountryMappingRepository.Table on sm.Id equals smcm.ShippingMethodId
+                                 where smcm.CountryId == filterByCountryId.Value
+                                 select sm.Id;
+                    query1 = query1.Distinct();
+
+                    var query2 = from sm in query
+                                 join smspm in _shippingMethodStateProvinceMappingRepository.Table on sm.Id equals smspm.ShippingMethodId
+                                 where
+                                    smspm.CountryId == filterByCountryId.Value &&
+                                    smspm.StateProvinceId == filterByStateProvinceId.Value
+                                 select sm.Id;
+                    query2 = query2.Distinct();
+
+                    var query3 = from sm in query
+                                 where
+                                    !query1.Contains(sm.Id) &&
+                                    !query2.Contains(sm.Id)
+                                 orderby sm.DisplayOrder, sm.Id
+                                 select sm;
+
+                    return query3;
+                }, cache => cache.PrepareKeyForDefaultCache(NopShippingDefaults.ShippingMethodsAllCacheKey, filterByCountryId, filterByStateProvinceId));
+            }
+
             return await _shippingMethodRepository.GetAllAsync(query =>
             {
                 var query1 = from sm in query
-                    join smcm in _shippingMethodCountryMappingRepository.Table on sm.Id equals smcm.ShippingMethodId
-                    where smcm.CountryId == filterByCountryId.Value
-                    select sm.Id;
+                             join smcm in _shippingMethodCountryMappingRepository.Table on sm.Id equals smcm.ShippingMethodId
+                             where smcm.CountryId == filterByCountryId.Value
+                             select sm.Id;
 
                 query1 = query1.Distinct();
 
                 var query2 = from sm in query
-                    where !query1.Contains(sm.Id)
-                    orderby sm.DisplayOrder, sm.Id
-                    select sm;
+                             where !query1.Contains(sm.Id)
+                             orderby sm.DisplayOrder, sm.Id
+                             select sm;
 
                 return query2;
-            }, cache => cache.PrepareKeyForDefaultCache(NopShippingDefaults.ShippingMethodsAllCacheKey, filterByCountryId));
+            }, cache => cache.PrepareKeyForDefaultCache(NopShippingDefaults.ShippingMethodsAllCacheKey, filterByCountryId, 0));
         }
 
         return await _shippingMethodRepository.GetAllAsync(query =>
         {
             return from sm in query
-                orderby sm.DisplayOrder, sm.Id
-                select sm;
+                   orderby sm.DisplayOrder, sm.Id
+                   select sm;
         }, cache => default);
     }
 
@@ -319,6 +352,68 @@ public partial class ShippingService : IShippingService
         await _shippingMethodCountryMappingRepository.DeleteAsync(shippingMethodCountryMapping);
     }
 
+    /// <summary>
+    /// Does state province restriction exist
+    /// </summary>
+    /// <param name="shippingMethod">Shipping method</param>
+    /// <param name="stateProvinceId">State province identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the result
+    /// </returns>
+    public virtual async Task<bool> StateProvinceRestrictionExistsAsync(ShippingMethod shippingMethod, int countryId, int stateProvinceId)
+    {
+        if (shippingMethod == null)
+            throw new ArgumentNullException(nameof(shippingMethod));
+
+        var result = await _shippingMethodStateProvinceMappingRepository.Table
+            .AnyAsync(smcm => smcm.ShippingMethodId == shippingMethod.Id &&
+                smcm.CountryId == countryId &&
+                smcm.StateProvinceId == stateProvinceId);
+
+        return result;
+    }
+
+    /// <summary>
+    /// Gets shipping state province mappings
+    /// </summary>
+    /// <param name="shippingMethodId">The shipping method identifier</param>
+    /// <param name="countryId">Country identifier</param>
+    /// <param name="stateProvinceId">State province identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the shipping state province mappings
+    /// </returns>
+    public virtual async Task<IList<ShippingMethodStateProvinceMapping>> GetShippingMethodStateProvinceMappingAsync(int shippingMethodId, int countryId, int stateProvinceId)
+    {
+        var query = _shippingMethodStateProvinceMappingRepository.Table.Where(smcm =>
+            smcm.ShippingMethodId == shippingMethodId &&
+            smcm.CountryId == countryId &&
+            smcm.StateProvinceId == stateProvinceId);
+
+        return await query.ToListAsync();
+    }
+
+    /// <summary>
+    /// Inserts a shipping state province mapping
+    /// </summary>
+    /// <param name="shippingMethodStateProvinceMapping">Shipping state province mapping</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task InsertShippingMethodStateProvinceMappingAsync(ShippingMethodStateProvinceMapping shippingMethodStateProvinceMapping)
+    {
+        await _shippingMethodStateProvinceMappingRepository.InsertAsync(shippingMethodStateProvinceMapping);
+    }
+
+    /// <summary>
+    /// Delete the shipping state province mapping
+    /// </summary>
+    /// <param name="shippingMethodStateProvinceMapping">Shipping state province mapping</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task DeleteShippingMethodStateProvinceMappingAsync(ShippingMethodStateProvinceMapping shippingMethodStateProvinceMapping)
+    {
+        await _shippingMethodStateProvinceMappingRepository.DeleteAsync(shippingMethodStateProvinceMapping);
+    }
+
     #endregion
 
     #region Warehouses
@@ -359,8 +454,8 @@ public partial class ShippingService : IShippingService
         var warehouses = await _warehouseRepository.GetAllAsync(query =>
         {
             return from wh in query
-                orderby wh.Name
-                select wh;
+                   orderby wh.Name
+                   select wh;
         }, cache => default);
 
         if (!string.IsNullOrEmpty(name))

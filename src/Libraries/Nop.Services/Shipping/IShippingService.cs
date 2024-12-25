@@ -35,11 +35,12 @@ public partial interface IShippingService
     /// Gets all shipping methods
     /// </summary>
     /// <param name="filterByCountryId">The country identifier to filter by</param>
+    /// <param name="filterByStateProvinceId">The state province identifier to filter by</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the shipping methods
     /// </returns>
-    Task<IList<ShippingMethod>> GetAllShippingMethodsAsync(int? filterByCountryId = null);
+    Task<IList<ShippingMethod>> GetAllShippingMethodsAsync(int? filterByCountryId = null, int? filterByStateProvinceId = null);
 
     /// <summary>
     /// Inserts a shipping method
@@ -90,6 +91,43 @@ public partial interface IShippingService
     /// <param name="shippingMethodCountryMapping">Shipping country mapping</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     Task DeleteShippingMethodCountryMappingAsync(ShippingMethodCountryMapping shippingMethodCountryMapping);
+
+    /// <summary>
+    /// Does state province restriction exist
+    /// </summary>
+    /// <param name="shippingMethod">Shipping method</param>
+    /// <param name="stateProvinceId">State province identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the result
+    /// </returns>
+    Task<bool> StateProvinceRestrictionExistsAsync(ShippingMethod shippingMethod, int countryId, int stateProvinceId);
+
+    /// <summary>
+    /// Gets shipping state province mappings
+    /// </summary>
+    /// <param name="shippingMethodId">The shipping method identifier</param>
+    /// <param name="countryId">Country identifier</param>
+    /// <param name="stateProvinceId">State province identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the shipping state province mappings
+    /// </returns>
+    Task<IList<ShippingMethodStateProvinceMapping>> GetShippingMethodStateProvinceMappingAsync(int shippingMethodId, int countryId, int stateProvinceId);
+
+    /// <summary>
+    /// Inserts a shipping state province mapping
+    /// </summary>
+    /// <param name="shippingMethodStateProvinceMapping">Shipping state province mapping</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task InsertShippingMethodStateProvinceMappingAsync(ShippingMethodStateProvinceMapping shippingMethodStateProvinceMapping);
+
+    /// <summary>
+    /// Delete the shipping state province mapping
+    /// </summary>
+    /// <param name="shippingMethodStateProvinceMapping">Shipping state province mapping</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task DeleteShippingMethodStateProvinceMappingAsync(ShippingMethodStateProvinceMapping shippingMethodStateProvinceMapping);
 
     #endregion
 

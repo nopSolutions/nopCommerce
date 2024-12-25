@@ -1,17 +1,16 @@
-@model ShippingMethodRestrictionModel
+@model ShippingMethodStateProvinceRestrictionModel
 
 @{
     //page title
-    ViewBag.PageTitle = T("Admin.Configuration.Shipping.Restrictions").Text;
+    ViewBag.PageTitle = T("Admin.Configuration.Shipping.StateProvinceRestrictions").Text;
     //active menu item (system name)
     NopHtml.SetActiveMenuItemSystemName("Shipping providers");
 }
 
-
-<form asp-controller="Shipping" asp-action="Restrictions" method="post">
+<form asp-controller="Shipping" asp-action="StateProvinceRestrictions" method="post">
     <div class="content-header clearfix">
         <h1 class="float-left">
-            @T("Admin.Configuration.Shipping.Restrictions")
+            @T("Admin.Configuration.Shipping.StateProvinceRestrictions")
             <small>
                 <i class="fas fa-arrow-circle-left"></i>
                 <a asp-action="Providers">@T("Admin.Configuration.Shipping.Providers.BackToList")</a>
@@ -19,10 +18,10 @@
         </h1>
         <div class="float-right">
             <button type="submit" name="save" class="btn btn-primary">
-                <i class="far fa-floppy-disk"></i>
+                <i class="far fa-save"></i>
                 @T("Admin.Common.Save")
             </button>
-            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ShippingRestrictionListButtons, additionalData = Model })
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ShippingStateProvinceRestrictionListButtons, additionalData = Model })
         </div>
     </div>
 
@@ -32,60 +31,62 @@
                 <div class="cards-group">
                     <div class="card card-default">
                         <div class="card-body" style="overflow-x: auto;">
-                            <p>@T("Admin.Configuration.Shipping.Restrictions.Description")</p>
-                            @if (!Model.AvailableCountries.Any())
+                            <p>@T("Admin.Configuration.Shipping.StateProvinceRestrictions.Description")</p>
+
+                            <input asp-for="CountryId" type="hidden" />
+
+                            @if (Model.AvailableStateProvinces.Count == 0)
                             {
-                                <text>No countries defined</text>
+                                <text>No states/provinces defined</text>
                             }
-                            else if (!Model.AvailableShippingMethods.Any())
+                            else if (Model.AvailableShippingMethods.Count == 0)
                             {
                                 <text>No shipping methods available</text>
                             }
                             else
                             {
                                 <script>
-                                $(function() {
+                                    $(document).ready(function () {
                                     @foreach (var sm in Model.AvailableShippingMethods)
                                     {
                                         <text>
-                                            prepareTableCheckboxes('#selectall-@(sm.Id)', '.restrict_@(sm.Id)');
+                                                prepareTableCheckboxes('#selectall-@(sm.Id)', '.restrict_@(sm.Id)');
                                         </text>
                                     }
-                                });
+                                                                    });
                                 </script>
 
                                 <table class="table table-hover table-bordered">
                                     <thead>
                                         <tr>
                                             <th scope="col">
-                                                <strong>@T("Admin.Configuration.Shipping.Restrictions.Country")</strong>
+                                                <strong>@T("Admin.Configuration.Shipping.StateProvinceRestrictions.StateProvince")</strong>
                                             </th>
                                             @foreach (var sm in Model.AvailableShippingMethods)
                                             {
-                                                <th scope="col">                                                    
+                                                <th scope="col">
                                                     <div class="checkbox">
-														<label>
-															<input type="checkbox" id="selectall-@(sm.Id)" />
-															<strong>@sm.Name</strong>
-														</label>
-													</div>     
-												</th>
+                                                        <label>
+                                                            <input type="checkbox" id="selectall-@(sm.Id)" />
+                                                            <strong>@sm.Name</strong>
+                                                        </label>
+                                                    </div>
+                                                </th>
                                             }
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach (var c in Model.AvailableCountries)
+                                        @foreach (var sp in Model.AvailableStateProvinces)
                                         {
                                             <tr>
                                                 <td>
-                                                    <span>@c.Name</span>
-                                                    <em><a asp-controller="Shipping" asp-action="StateProvinceRestrictions" asp-route-countryId="@c.Id">(@T("Admin.Configuration.Shipping.StateProvinceRestrictions.Select"))</a></em>
+                                                    <span>@sp.Name</span>
                                                 </td>
                                                 @foreach (var sm in Model.AvailableShippingMethods)
                                                 {
-                                                    var restricted = Model.Restricted.ContainsKey(c.Id) && Model.Restricted[c.Id][sm.Id];
+                                                    var restricted = Model.Restricted.ContainsKey(sp.Id) && Model.Restricted[sp.Id][sm.Id];
                                                     <td>
-                                                        <input class="restrict_@(sm.Id)" type="checkbox" value="@(c.Id)" name="restrict_@(sm.Id)" @(restricted ? " checked=checked" : null) />
+                                                        <input class="restrict_@(sm.Id)" type="checkbox" value="@(sp.Id)" name="restrict_@(sm.Id)" @(restricted ? " checked=checked" : null) />
                                                     </td>
                                                 }
                                             </tr>

@@ -28,6 +28,7 @@ public partial class BaseNameCompatibility : INameCompatibility
         { typeof(DiscountProductMapping), "Discount_AppliedToProducts" },
         { typeof(PermissionRecordCustomerRoleMapping), "PermissionRecord_Role_Mapping" },
         { typeof(ShippingMethodCountryMapping), "ShippingMethodRestrictions" },
+        { typeof(ShippingMethodStateProvinceMapping), "ShippingMethodStateProvinceRestrictions" },
         { typeof(ProductCategory), "Product_Category_Mapping" },
         { typeof(ProductManufacturer), "Product_Manufacturer_Mapping" },
         { typeof(ProductPicture), "Product_Picture_Mapping" },
@@ -66,5 +67,8 @@ public partial class BaseNameCompatibility : INameCompatibility
         { (typeof(CustomerAttributeValue), "AttributeId"), "CustomerAttributeId" },
         { (typeof(AddressAttributeValue), "AttributeId"), "AddressAttributeId" },
         { (typeof(CheckoutAttributeValue), "AttributeId"), "CheckoutAttributeId" },
+        { (typeof(ShippingMethodStateProvinceMapping), "ShippingMethodId"), "ShippingMethod_Id" },
+        { (typeof(ShippingMethodStateProvinceMapping), "CountryId"), "Country_Id" },
+        { (typeof(ShippingMethodStateProvinceMapping), "StateProvinceId"), "StateProvince_Id" },
     };
 }

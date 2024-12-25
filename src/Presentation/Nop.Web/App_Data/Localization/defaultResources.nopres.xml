@@ -9663,6 +9663,21 @@
   <LocaleResource Name="Admin.Configuration.Shipping.Restrictions.Updated">
     <Value>The settings have been updated successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.StateProvinceRestrictions.Select">
+    <Value>Select states/provinces</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.StateProvinceRestrictions">
+    <Value>Shipping method state/province restrictions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.StateProvinceRestrictions.StateProvince">
+    <Value>State / Province</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.StateProvinceRestrictions.Description">
+    <Value>Please mark the checkbox(es) for the state/province or states/provinces in which you want the shipping method(s) not available</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.StateProvinceRestrictions.Updated">
+    <Value>The settings have been updated successfully.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Warehouses">
     <Value>Warehouses</Value>
   </LocaleResource>

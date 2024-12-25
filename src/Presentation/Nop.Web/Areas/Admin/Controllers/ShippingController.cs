@@ -45,6 +45,7 @@ public partial class ShippingController : BaseAdminController
     protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly IWorkContext _workContext;
     protected readonly ShippingSettings _shippingSettings;
+    private readonly IStateProvinceService _stateProvinceService;
     private static readonly char[] _separator = [','];
 
     #endregion
@@ -67,7 +68,8 @@ public partial class ShippingController : BaseAdminController
         IShippingService shippingService,
         IGenericAttributeService genericAttributeService,
         IWorkContext workContext,
-        ShippingSettings shippingSettings)
+        ShippingSettings shippingSettings,
+        IStateProvinceService stateProvinceService)
     {
         _addressService = addressService;
         _countryService = countryService;
@@ -86,6 +88,7 @@ public partial class ShippingController : BaseAdminController
         _genericAttributeService = genericAttributeService;
         _workContext = workContext;
         _shippingSettings = shippingSettings;
+        _stateProvinceService = stateProvinceService;
     }
 
     #endregion
@@ -791,6 +794,74 @@ public partial class ShippingController : BaseAdminController
         _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Shipping.Restrictions.Updated"));
 
         return RedirectToAction("Restrictions");
+    }
+
+    public virtual async Task<IActionResult> StateProvinceRestrictions(int countryId)
+    {
+        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            return AccessDeniedView();
+
+        //prepare model
+        var model = await _shippingModelFactory.PrepareShippingMethodStateProvinceRestrictionModelAsync(new ShippingMethodStateProvinceRestrictionModel() { CountryId = countryId });
+
+        return View(model);
+    }
+
+    //we ignore this filter for increase RequestFormLimits
+    [IgnoreAntiforgeryToken]
+    //we use 2048 value because in some cases default value (1024) is too small for this action
+    [RequestFormLimits(ValueCountLimit = 2048)]
+    [HttpPost, ActionName("StateProvinceRestrictions")]
+    public virtual async Task<IActionResult> StateProvinceRestrictionSave(ShippingMethodStateProvinceRestrictionModel model, IFormCollection form)
+    {
+        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+            return AccessDeniedView();
+
+        var stateProvinces = await _stateProvinceService.GetStateProvincesByCountryIdAsync(model.CountryId, showHidden: true);
+        var shippingMethods = await _shippingService.GetAllShippingMethodsAsync();
+
+        foreach (var shippingMethod in shippingMethods)
+        {
+            var formKey = "restrict_" + shippingMethod.Id;
+            var stateProvinceIdsToRestrict = !StringValues.IsNullOrEmpty(form[formKey])
+                ? form[formKey].ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(int.Parse)
+                .ToList()
+                : new List<int>();
+
+            foreach (var stateProvince in stateProvinces)
+            {
+                var restrict = stateProvinceIdsToRestrict.Contains(stateProvince.Id);
+                var shippingMethodStateProvinceMappings =
+                    await _shippingService.GetShippingMethodStateProvinceMappingAsync(shippingMethod.Id, model.CountryId, stateProvince.Id);
+
+                if (restrict)
+                {
+                    if (shippingMethodStateProvinceMappings.Any())
+                        continue;
+
+                    await _shippingService.InsertShippingMethodStateProvinceMappingAsync(new ShippingMethodStateProvinceMapping
+                    {
+                        ShippingMethodId = shippingMethod.Id,
+                        CountryId = model.CountryId,
+                        StateProvinceId = stateProvince.Id
+                    });
+                    await _shippingService.UpdateShippingMethodAsync(shippingMethod);
+                }
+                else
+                {
+                    if (!shippingMethodStateProvinceMappings.Any())
+                        continue;
+
+                    await _shippingService.DeleteShippingMethodStateProvinceMappingAsync(shippingMethodStateProvinceMappings.FirstOrDefault());
+                    await _shippingService.UpdateShippingMethodAsync(shippingMethod);
+                }
+            }
+        }
+
+        _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Shipping.StateProvinceRestrictions.Updated"));
+
+        return RedirectToAction("StateProvinceRestrictions", new { countryId = model.CountryId });
     }
 
     #endregion
