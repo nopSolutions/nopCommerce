@@ -107,6 +107,11 @@ public static partial class MessageTemplateSystemNames
     public const string ORDER_COMPLETED_CUSTOMER_NOTIFICATION = "OrderCompleted.CustomerNotification";
 
     /// <summary>
+    /// Represents system name of notification store owner about completed order
+    /// </summary>
+    public const string ORDER_COMPLETED_STORE_OWNER_NOTIFICATION = "OrderCompleted.StoreOwnerNotification";
+
+    /// <summary>
     /// Represents system name of notification customer about cancelled order
     /// </summary>
     public const string ORDER_CANCELLED_CUSTOMER_NOTIFICATION = "OrderCancelled.CustomerNotification";

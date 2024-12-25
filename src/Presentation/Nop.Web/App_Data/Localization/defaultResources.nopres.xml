@@ -10743,6 +10743,9 @@
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderCompleted.CustomerNotification">
     <Value>This message template is used to notify a customer that the certain order was completed. The order gets the order status Complete when it's paid and delivered, or it can be changed manually to Complete in Sales - Orders.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderCompleted.StoreOwnerNotification">
+    <Value>This message template is used to notify a store owner that the certain order was completed. The order gets the order status Complete when it's paid and delivered, or it can be changed manually to Complete in Sales - Orders.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderPaid.AffiliateNotification">
     <Value>This message template is used to notify an affiliate that the certain order was paid. The order gets the status Paid when the amount was charged.</Value>
   </LocaleResource>
