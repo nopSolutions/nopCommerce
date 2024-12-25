@@ -1494,7 +1494,7 @@ public class PayPalCommerceServiceManager
             if (paymentRequest is null || order is null)
             {
                 paymentRequest = new();
-                await _paymentService.GenerateOrderGuidAsync(paymentRequest);
+                await _orderProcessingService.GenerateOrderGuidAsync(paymentRequest);
             }
             var orderGuid = paymentRequest.OrderGuid.ToString();
 
