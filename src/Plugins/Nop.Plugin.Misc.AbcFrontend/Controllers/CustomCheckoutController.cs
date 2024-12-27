@@ -180,7 +180,7 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
                 {
                     var termLookup = await _termLookupService.GetTermAsync(cart);
                     HttpContext.Session.Set("TransPromo", termLookup.termNo ?? defaultTransPromo);
-                    HttpContext.Session.SetString("TransDescription", $"{termLookup.description} {termLookup.link}");
+                    HttpContext.Session.SetString("TransDescription", $"{termLookup.description}");
                 }
             }
             catch (IsamException e)
