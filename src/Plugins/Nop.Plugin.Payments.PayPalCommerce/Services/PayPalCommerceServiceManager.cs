@@ -485,6 +485,7 @@ public class PayPalCommerceServiceManager
         {
             itemAdjustment = -discountTotal;
             itemTotal += itemAdjustment;
+            discountTotal = decimal.Zero;
         }
 
         //set adjustment item if needed
@@ -1757,6 +1758,8 @@ public class PayPalCommerceServiceManager
 
             //recalculate the total and update the items, since the shipping price may have changed
             var items = unit.Items;
+            if (items.Any(item => item?.Tax is null))
+                items = await PrepareOrderItemsAsync(details);
             var orderAmount = await PrepareOrderMoneyAsync(details, items);
             var cardData = new CardData
             {
@@ -1884,6 +1887,8 @@ public class PayPalCommerceServiceManager
 
             //recalculate the total and update the items, since the amounts may have changed
             var items = unit.Items;
+            if (items.Any(item => item?.Tax is null))
+                items = await PrepareOrderItemsAsync(details);
             var orderAmount = await PrepareOrderMoneyAsync(details, items);
             var cardData = new CardData
             {
