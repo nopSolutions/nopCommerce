@@ -2426,6 +2426,12 @@ public partial class ImportManager : IImportManager
                     case "DisplayAttributeCombinationImagesOnly":
                         product.DisplayAttributeCombinationImagesOnly = property.BooleanValue;
                         break;
+                    case "AgeVerification":
+                        product.AgeVerification = property.BooleanValue;
+                        break;
+                    case "MinimumAgeToPurchase":
+                        product.MinimumAgeToPurchase = property.IntValue;
+                        break;
                 }
             }
 

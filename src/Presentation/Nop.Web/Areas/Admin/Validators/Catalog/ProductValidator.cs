@@ -24,6 +24,11 @@ public partial class ProductValidator : BaseNopValidator<ProductModel>
             .WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.Products.Fields.RentalPriceLength.ShouldBeGreaterThanZero"))
             .When(x => x.IsRental);
 
+        RuleFor(x => x.MinimumAgeToPurchase)
+            .GreaterThan(0)
+            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.Products.Fields.MinimumAgeToPurchase.ShouldBeGreaterThanZero"))
+            .When(x => x.AgeVerification);
+
         SetDatabaseValidationRules<Product>();
     }
 }

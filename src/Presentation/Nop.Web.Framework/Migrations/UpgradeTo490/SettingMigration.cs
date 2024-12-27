@@ -1,4 +1,5 @@
 ﻿using FluentMigrator;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -17,6 +18,14 @@ public class SettingMigration : MigrationBase
 
         //do not use DI, because it produces exception on the installation process
         var settingService = EngineContext.Current.Resolve<ISettingService>();
+
+        //#7387
+        var productEditorSettings = settingService.LoadSetting<ProductEditorSettings>();
+        if (!settingService.SettingExists(productEditorSettings, settings => settings.AgeVerification))
+        {
+            productEditorSettings.AgeVerification = false;
+            settingService.SaveSetting(productEditorSettings, settings => settings.AgeVerification);
+        }
     }
 
     public override void Down()

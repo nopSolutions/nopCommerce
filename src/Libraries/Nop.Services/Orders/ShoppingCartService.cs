@@ -534,6 +534,14 @@ public partial class ShoppingCartService : IShoppingCartService
             }
         }
 
+        if (product.AgeVerification && product.MinimumAgeToPurchase > 0)
+        { 
+            if (!customer.DateOfBirth.HasValue)
+                warnings.Add(await _localizationService.GetResourceAsync("ShoppingCart.DateOfBirthRequired"));
+            else if (CommonHelper.GetDifferenceInYears(customer.DateOfBirth.Value, DateTime.Today) < product.MinimumAgeToPurchase)
+                warnings.Add(string.Format(await _localizationService.GetResourceAsync("ShoppingCart.MinimumAgeToPurchase"), product.MinimumAgeToPurchase));
+        }
+
         if (!product.AvailableEndDateTimeUtc.HasValue || availableStartDateError)
             return warnings;
 

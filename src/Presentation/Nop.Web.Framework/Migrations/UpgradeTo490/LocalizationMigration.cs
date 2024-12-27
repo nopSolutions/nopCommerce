@@ -31,6 +31,20 @@ public class LocalizationMigration : MigrationBase
 
         #region Add or update locales
 
+        localizationService.AddOrUpdateLocaleResource(new Dictionary<string, string>
+        {
+            //#7387
+            ["Admin.Catalog.Products.Fields.AgeVerification"] = "Age verification",
+            ["Admin.Catalog.Products.Fields.AgeVerification.Hint"] = "Check to require customer registration with date of birth before placing an order.",
+            ["Admin.Catalog.Products.Fields.AgeVerification.DateOfBirthDisabled"] = "It looks like you have <a href=\"{0}\" target=\"_blank\">Date of Birth</a> setting disabled.",
+            ["Admin.Catalog.Products.Fields.MinimumAgeToPurchase"] = "Minimum age to purchase",
+            ["Admin.Catalog.Products.Fields.MinimumAgeToPurchase.Hint"] = "Enter the minimum age for purchasing this product.",
+            ["Admin.Catalog.Products.Fields.MinimumAgeToPurchase.ShouldBeGreaterThanZero"] = "The minimum age for purchasing should be greater 0",
+            ["ShoppingCart.DateOfBirthRequired"] = "This product has age restrictions. Please specify your age in the account details",
+            ["ShoppingCart.MinimumAgeToPurchase"] = "This product is available to customers who are {0} years of age or older",
+            ["Admin.Configuration.Settings.ProductEditor.AgeVerification"] = "Age verification",
+        });
+
         #endregion
     }
 
