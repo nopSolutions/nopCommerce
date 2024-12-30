@@ -6285,10 +6285,6 @@ img.hawthorne-logo {
     padding-top: 35px;
 }
 
-body .header-lower {
-	background-color: #ec232a !important
-}
-
 /* Fireworks Logo Changes */
 @media (min-width: 1020px) {
 	.header-upper .header-links-wrapper {
@@ -6361,19 +6357,11 @@ body .header-lower {
 	.hawthorne.top-menu {
 		display: none;
 	}
-	body .master-wrapper-page .mobile-header-content-row {
-		background-color: #ff0314 !important;
-	}
 	.eJVeap {
 		max-width: none !important;
 		margin-left: auto;
 		margin-right: auto;
 	  }
-}
-@media (min-width: 1025px) {
-    body .header-lower {
-        background-color: #ff0314 !important;
-    }
 }
 @media screen and (max-width: 1024px) {
 	body div.sync-price {
