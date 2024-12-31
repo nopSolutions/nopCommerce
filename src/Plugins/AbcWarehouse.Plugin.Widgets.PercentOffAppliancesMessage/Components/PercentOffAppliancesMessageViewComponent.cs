@@ -53,12 +53,9 @@ namespace AbcWarehouse.Plugin.Widgets.PercentOffAppliancesMessageViewComponent.C
                 "LG STUDIO",
                 "LG XBOOM",
                 "\"C\" BY GE",
-                "GE APPLIANCES",
-                "GE",
                 "GE CAFE",
                 "GE MONOGRAM",
                 "GE PROFILE",
-                "GENERAL ELECTRIC"
             };
 
             // exclude LG and GE
