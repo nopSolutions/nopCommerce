@@ -333,7 +333,7 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
 
             // this will blow up if there isn't exactly one, which is how ABC is
             // currently set up.
-            ShippingMethod shippingMethod = null;
+            Nop.Web.Models.Checkout.CheckoutShippingMethodModel.ShippingMethodModel shippingMethod = null;
             try {
                 shippingMethod = model.ShippingMethods.Single();
             }
