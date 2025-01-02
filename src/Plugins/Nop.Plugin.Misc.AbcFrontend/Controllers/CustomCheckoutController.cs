@@ -331,9 +331,17 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
                 await _customerService.GetCustomerShippingAddressAsync(await _workContext.GetCurrentCustomerAsync())
             );
 
-            // this will blow up if there's more than one, which is how ABC is
+            // this will blow up if there isn't exactly one, which is how ABC is
             // currently set up.
-            var shippingMethod = model.ShippingMethods.Single();
+            ShippingMethod shippingMethod = null;
+            try {
+                shippingMethod = model.ShippingMethods.Single();
+            }
+            catch (InvalidOperationException) {
+                throw new NopException(
+                    "Failure when determining shipping method on checkout shipping method page."
+                );
+            }
             if (shippingMethod.Fee == "$0.00")
             {
                 await _genericAttributeService.SaveAttributeAsync(
