@@ -1065,7 +1065,16 @@ public partial class PictureService : IPictureService
     {
         try
         {
-            using var image = SKBitmap.Decode(pictureBinary);
+            
+
+            if (image == null)
+                throw new ArgumentNullException(nameof(image), "Decoded image is null");
+            if (fileName.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase))
+        {
+            fileName = fileName.Substring(0, fileName.Length - 5) + ".jpg";
+        }
+        
+        using var image = SKBitmap.Decode(pictureBinary);
 
             //resize the image in accordance with the maximum size
             if (Math.Max(image.Height, image.Width) > _mediaSettings.MaximumImageSize)
