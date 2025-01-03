@@ -130,7 +130,9 @@ namespace Nop.Plugin.Shipping.HomeDelivery
                             $"{itemAttributeXml}",
                             getShippingOptionRequest.Customer
                         );
-                        throw new NopException("Failure when filtering shopping cart items for getting shipping options.");
+                        throw new NopException(
+                            "Failure when filtering shopping cart items for getting shipping options during shipping cost estimate."
+                        );
                     }
 
                     // Mattresses are added to legacy

@@ -45,3 +45,11 @@ WHERE Name = 'unifipaymentssettings.clientid'
 UPDATE Setting
 SET Value = 'CLIENT_SECRET'
 WHERE Name = 'unifipaymentssettings.clientsecret'
+
+-- reCaptcha
+UPDATE Setting
+SET Value = 'RECAPTCHA_SITE_KEY'
+WHERE Name = 'captchasettings.recaptchapublickey'
+UPDATE Setting
+SET Value = 'RECAPTCHA_SECRET_KEY'
+WHERE Name = 'captchasettings.recaptchaprivatekey'
