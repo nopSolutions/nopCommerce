@@ -121,11 +121,6 @@ span.price.you-save {
 }
 
 
-
-
-
-
-
  @media (min-width: 441px) {
 	.pr-snippet-rating-decimal.pr-rounded {
 		display: inline;
@@ -161,10 +156,6 @@ span.price.you-save {
         font-size: 1rem;
     }
 } 
-
-
-
-
 
 
 @media (min-width: 769px) {
@@ -214,54 +205,59 @@ span.price.you-save {
 
 @media (max-width: 440px)
 {
-    .product-box-description {
+    .home-page-body .product-box-description {
         font-size: 1.5em;
     }
 
-    body .item-number-style {
+    .home-page-body .item-number-style {
         font-size: 1.3em;
-
     }
     
-    .item-box .product-title {
+    .home-page-body .item-box .product-title {
 		padding: 0.25rem 1rem 0 1rem;
 	}
 	
-	.add-info {
+	.home-page-body .add-info {
 		margin: 0 1rem;
 	}
 
-    .item-box .price,
-    span.price.you-save {
+    .home-page-body .item-box .price {
         font-size: 1.3rem;
     }
 
-    .price-sale-tag,
-    .item-box .price.actual-price {
+    .home-page-body .price.you-save {
         font-size: 1.3rem;
     }
 
-    .pr-snippet-rating-decimal.pr-rounded {
+    .home-page-body .price-sale-tag {
+        font-size: 1.3rem;
+    }
+
+    .home-page-body .item-box .price.actual-price {
+        font-size: 1.3rem;
+    }
+
+    .home-page-body .pr-snippet-rating-decimal.pr-rounded {
 		display: inline;
 	}
 
-    .item-box .product-title {
+    .home-page-body .item-box .product-title {
         height: 3.5rem;
         padding: .25rem .5rem 0 .5rem;
         font-size: 1.5em;
         line-height: 1.2;
     }
 
-    body .item-box .buttons-upper {
+    .home-page-body .item-box .buttons-upper {
         background-color: transparent;
     }
 
-    body .product-box-specials {
+    .home-page-body .product-box-specials {
         font-size: 1.2em;
     }
 
 
-    .item-box .buttons-lower button span {
+    .home-page-body .item-box .buttons-lower button span {
         font-size: 17px;
     }
 
