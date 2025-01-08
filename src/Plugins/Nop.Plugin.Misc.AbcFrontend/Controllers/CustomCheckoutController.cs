@@ -321,10 +321,20 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
             );
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
+            if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
+            {
+                return Challenge();
+            }
 
+            var customerShippingAddress = await _customerService.GetCustomerShippingAddressAsync(customer);
+            // If no address, redirect back to the cart
+            if (customerShippingAddress == null)
+            {
+                return RedirectToRoute("ShoppingCart");
+            }
             var model = await _checkoutModelFactory.PrepareShippingMethodModelAsync(
                 cart,
-                await _customerService.GetCustomerShippingAddressAsync(customer)
+                customerShippingAddress
             );
 
             // this will blow up if there isn't exactly one, which is how ABC is
