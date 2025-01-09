@@ -39,6 +39,7 @@ using Nop.Plugin.Misc.AbcFrontend.Services;
 using Nop.Plugin.Misc.AbcCore.Extensions;
 using Nop.Plugin.Misc.AbcExportOrder.Services;
 using System.Threading.Tasks;
+using Nop.Core.Domain.Logging;
 
 namespace Nop.Plugin.Misc.AbcFrontend.Controllers
 {
@@ -332,6 +333,7 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
             {
                 return RedirectToRoute("ShoppingCart");
             }
+
             var model = await _checkoutModelFactory.PrepareShippingMethodModelAsync(
                 cart,
                 customerShippingAddress
@@ -340,11 +342,21 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
             // this will blow up if there isn't exactly one, which is how ABC is
             // currently set up.
             var shippingMethod = model.ShippingMethods.SingleOrDefault();
-
-            // If no shipping method found, default to base functionality
-            // which is usually not having a shipping address for a guest
             if (shippingMethod == null || shippingMethod.Fee != "$0.00")
             {
+                // Debug to see what state of shipping method might continue the
+                // "shipping address not set" issue
+                var isDebugMode = (await _settingService.GetSettingAsync("coresettings.isdebugmode"))?.Value;
+                if (isDebugMode == "True")
+                {
+                    await _logger.InsertLogAsync(
+                        LogLevel.Information,
+                        "Debug information for Shipping Method page",
+                        $"Customer Shipping Address: {customerShippingAddress}\nShipping Method: {shippingMethod}\nShipping Method Fee: {shippingMethod?.Fee}",
+                        customer
+                    );
+                }
+
                 return await base.ShippingMethod();
             }
 
