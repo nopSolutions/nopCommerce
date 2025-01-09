@@ -472,7 +472,6 @@ public partial class CategoryController : BaseAdminController
 
     [HttpPost]
     [CheckPermission(StandardPermission.Catalog.CATEGORIES_VIEW)]
-    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
     public virtual async Task<IActionResult> ProductList(CategoryProductSearchModel searchModel)
     {
         //try to get a category with the specified id
@@ -486,7 +485,6 @@ public partial class CategoryController : BaseAdminController
     }
 
     [CheckPermission(StandardPermission.Catalog.CATEGORIES_CREATE_EDIT_DELETE)]
-    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
     public virtual async Task<IActionResult> ProductUpdate(CategoryProductModel model)
     {
         //try to get a product category with the specified id
@@ -513,7 +511,6 @@ public partial class CategoryController : BaseAdminController
     }
 
     [CheckPermission(StandardPermission.Catalog.CATEGORIES_CREATE_EDIT_DELETE)]
-    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
     public virtual async Task<IActionResult> ProductAddPopup(int categoryId)
     {
         //prepare model
@@ -524,7 +521,6 @@ public partial class CategoryController : BaseAdminController
 
     [HttpPost]
     [CheckPermission(StandardPermission.Catalog.CATEGORIES_CREATE_EDIT_DELETE)]
-    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
     public virtual async Task<IActionResult> ProductAddPopupList(AddProductToCategorySearchModel searchModel)
     {
         //prepare model
@@ -536,7 +532,6 @@ public partial class CategoryController : BaseAdminController
     [HttpPost]
     [FormValueRequired("save")]
     [CheckPermission(StandardPermission.Catalog.CATEGORIES_CREATE_EDIT_DELETE)]
-    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
     public virtual async Task<IActionResult> ProductAddPopup(AddProductToCategoryModel model)
     {
         //get selected products

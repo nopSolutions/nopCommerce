@@ -239,7 +239,6 @@ public partial class ProductAttributeController : BaseAdminController
 
     [HttpPost]
     [CheckPermission(StandardPermission.Catalog.PRODUCT_ATTRIBUTES_VIEW)]
-    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
     public virtual async Task<IActionResult> UsedByProducts(ProductAttributeProductSearchModel searchModel)
     {
         //try to get a product attribute with the specified id
