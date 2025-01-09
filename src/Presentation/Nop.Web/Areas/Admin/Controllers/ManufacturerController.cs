@@ -458,7 +458,6 @@ public partial class ManufacturerController : BaseAdminController
 
     [HttpPost]
     [CheckPermission(StandardPermission.Catalog.MANUFACTURER_VIEW)]
-    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
     public virtual async Task<IActionResult> ProductList(ManufacturerProductSearchModel searchModel)
     {
         //try to get a manufacturer with the specified id
@@ -473,7 +472,6 @@ public partial class ManufacturerController : BaseAdminController
 
     [HttpPost]
     [CheckPermission(StandardPermission.Catalog.MANUFACTURER_CREATE_EDIT_DELETE)]
-    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
     public virtual async Task<IActionResult> ProductUpdate(ManufacturerProductModel model)
     {
         //try to get a product manufacturer with the specified id
@@ -501,7 +499,6 @@ public partial class ManufacturerController : BaseAdminController
     }
 
     [CheckPermission(StandardPermission.Catalog.MANUFACTURER_CREATE_EDIT_DELETE)]
-    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
     public virtual async Task<IActionResult> ProductAddPopup(int manufacturerId)
     {
         //prepare model
@@ -512,7 +509,6 @@ public partial class ManufacturerController : BaseAdminController
 
     [HttpPost]
     [CheckPermission(StandardPermission.Catalog.MANUFACTURER_CREATE_EDIT_DELETE)]
-    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
     public virtual async Task<IActionResult> ProductAddPopupList(AddProductToManufacturerSearchModel searchModel)
     {
         //prepare model
@@ -524,7 +520,6 @@ public partial class ManufacturerController : BaseAdminController
     [HttpPost]
     [FormValueRequired("save")]
     [CheckPermission(StandardPermission.Catalog.MANUFACTURER_CREATE_EDIT_DELETE)]
-    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
     public virtual async Task<IActionResult> ProductAddPopup(AddProductToManufacturerModel model)
     {
         //get selected products

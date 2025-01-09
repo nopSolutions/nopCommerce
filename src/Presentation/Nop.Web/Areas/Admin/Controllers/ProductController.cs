@@ -2307,7 +2307,6 @@ public partial class ProductController : BaseAdminController
 
     #region Product tags
 
-    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
     [CheckPermission(StandardPermission.Catalog.PRODUCT_TAGS_VIEW)]
     public virtual async Task<IActionResult> ProductTags()
     {
@@ -2404,7 +2403,6 @@ public partial class ProductController : BaseAdminController
 
     [HttpPost]
     [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
-    [CheckPermission(StandardPermission.Orders.ORDERS_VIEW)]
     public virtual async Task<IActionResult> PurchasedWithOrders(ProductOrderSearchModel searchModel)
     {
         //try to get a product with the specified id
@@ -2838,7 +2836,7 @@ public partial class ProductController : BaseAdminController
     #region Product attributes
 
     [HttpPost]
-    [CheckPermission(StandardPermission.Catalog.PRODUCT_ATTRIBUTES_VIEW)]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
     public virtual async Task<IActionResult> ProductAttributeMappingList(ProductAttributeMappingSearchModel searchModel)
     {
         //try to get a product with the specified id
@@ -2856,7 +2854,7 @@ public partial class ProductController : BaseAdminController
         return Json(model);
     }
 
-    [CheckPermission(StandardPermission.Catalog.PRODUCT_ATTRIBUTES_CREATE_EDIT_DELETE)]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> ProductAttributeMappingCreate(int productId)
     {
         //try to get a product with the specified id
@@ -2878,7 +2876,7 @@ public partial class ProductController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-    [CheckPermission(StandardPermission.Catalog.PRODUCT_ATTRIBUTES_CREATE_EDIT_DELETE)]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> ProductAttributeMappingCreate(ProductAttributeMappingModel model, bool continueEditing)
     {
         //try to get a product with the specified id
@@ -2953,7 +2951,7 @@ public partial class ProductController : BaseAdminController
         return RedirectToAction("ProductAttributeMappingEdit", new { id = productAttributeMapping.Id });
     }
 
-    [CheckPermission(StandardPermission.Catalog.PRODUCT_ATTRIBUTES_VIEW)]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
     public virtual async Task<IActionResult> ProductAttributeMappingEdit(int id)
     {
         //try to get a product attribute mapping with the specified id
@@ -2979,7 +2977,7 @@ public partial class ProductController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-    [CheckPermission(StandardPermission.Catalog.PRODUCT_ATTRIBUTES_CREATE_EDIT_DELETE)]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> ProductAttributeMappingEdit(ProductAttributeMappingModel model, bool continueEditing, IFormCollection form)
     {
         //try to get a product attribute mapping with the specified id
@@ -3031,7 +3029,7 @@ public partial class ProductController : BaseAdminController
     }
 
     [HttpPost]
-    [CheckPermission(StandardPermission.Catalog.PRODUCT_ATTRIBUTES_CREATE_EDIT_DELETE)]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> ProductAttributeMappingDelete(int id)
     {
         //try to get a product attribute mapping with the specified id
@@ -3077,7 +3075,7 @@ public partial class ProductController : BaseAdminController
     }
 
     [HttpPost]
-    [CheckPermission(StandardPermission.Catalog.PRODUCT_ATTRIBUTES_VIEW)]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
     public virtual async Task<IActionResult> ProductAttributeValueList(ProductAttributeValueSearchModel searchModel)
     {
         //try to get a product attribute mapping with the specified id
@@ -3099,7 +3097,7 @@ public partial class ProductController : BaseAdminController
         return Json(model);
     }
 
-    [CheckPermission(StandardPermission.Catalog.PRODUCT_ATTRIBUTES_CREATE_EDIT_DELETE)]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> ProductAttributeValueCreatePopup(int productAttributeMappingId)
     {
         //try to get a product attribute mapping with the specified id
@@ -3122,7 +3120,7 @@ public partial class ProductController : BaseAdminController
     }
 
     [HttpPost]
-    [CheckPermission(StandardPermission.Catalog.PRODUCT_ATTRIBUTES_CREATE_EDIT_DELETE)]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> ProductAttributeValueCreatePopup(ProductAttributeValueModel model)
     {
         //try to get a product attribute mapping with the specified id
@@ -3184,7 +3182,7 @@ public partial class ProductController : BaseAdminController
         return View(model);
     }
 
-    [CheckPermission(StandardPermission.Catalog.PRODUCT_ATTRIBUTES_VIEW)]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
     public virtual async Task<IActionResult> ProductAttributeValueEditPopup(int id)
     {
         //try to get a product attribute value with the specified id
@@ -3213,7 +3211,7 @@ public partial class ProductController : BaseAdminController
     }
 
     [HttpPost]
-    [CheckPermission(StandardPermission.Catalog.PRODUCT_ATTRIBUTES_CREATE_EDIT_DELETE)]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> ProductAttributeValueEditPopup(ProductAttributeValueModel model)
     {
         //try to get a product attribute value with the specified id
@@ -3280,7 +3278,7 @@ public partial class ProductController : BaseAdminController
     }
 
     [HttpPost]
-    [CheckPermission(StandardPermission.Catalog.PRODUCT_ATTRIBUTES_CREATE_EDIT_DELETE)]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> ProductAttributeValueDelete(int id)
     {
         //try to get a product attribute value with the specified id
@@ -3322,7 +3320,7 @@ public partial class ProductController : BaseAdminController
     }
 
     [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
-    [CheckPermission(StandardPermission.Catalog.PRODUCT_ATTRIBUTES_CREATE_EDIT_DELETE)]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> AssociateProductToAttributeValuePopup()
     {
         //prepare model
@@ -3333,7 +3331,7 @@ public partial class ProductController : BaseAdminController
 
     [HttpPost]
     [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
-    [CheckPermission(StandardPermission.Catalog.PRODUCT_ATTRIBUTES_CREATE_EDIT_DELETE)]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> AssociateProductToAttributeValuePopupList(AssociateProductToAttributeValueSearchModel searchModel)
     {
         //prepare model
@@ -3345,7 +3343,7 @@ public partial class ProductController : BaseAdminController
     [HttpPost]
     [FormValueRequired("save")]
     [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
-    [CheckPermission(StandardPermission.Catalog.PRODUCT_ATTRIBUTES_CREATE_EDIT_DELETE)]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> AssociateProductToAttributeValuePopup([Bind(Prefix = nameof(AssociateProductToAttributeValueModel))] AssociateProductToAttributeValueModel model)
     {
         //try to get a product with the specified id
@@ -3401,7 +3399,7 @@ public partial class ProductController : BaseAdminController
     #region Product attribute combinations
 
     [HttpPost]
-    [CheckPermission(StandardPermission.Catalog.PRODUCT_ATTRIBUTES_VIEW)]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
     public virtual async Task<IActionResult> ProductAttributeCombinationList(ProductAttributeCombinationSearchModel searchModel)
     {
         //try to get a product with the specified id
@@ -3420,7 +3418,7 @@ public partial class ProductController : BaseAdminController
     }
 
     [HttpPost]
-    [CheckPermission(StandardPermission.Catalog.PRODUCT_ATTRIBUTES_CREATE_EDIT_DELETE)]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> ProductAttributeCombinationDelete(int id)
     {
         //try to get a combination with the specified id
@@ -3441,7 +3439,7 @@ public partial class ProductController : BaseAdminController
         return new NullJsonResult();
     }
 
-    [CheckPermission(StandardPermission.Catalog.PRODUCT_ATTRIBUTES_CREATE_EDIT_DELETE)]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> ProductAttributeCombinationCreatePopup(int productId)
     {
         //try to get a product with the specified id
@@ -3461,7 +3459,7 @@ public partial class ProductController : BaseAdminController
     }
 
     [HttpPost]
-    [CheckPermission(StandardPermission.Catalog.PRODUCT_ATTRIBUTES_CREATE_EDIT_DELETE)]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> ProductAttributeCombinationCreatePopup(int productId, ProductAttributeCombinationModel model, IFormCollection form)
     {
         //try to get a product with the specified id
@@ -3520,7 +3518,7 @@ public partial class ProductController : BaseAdminController
     }
 
     [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
-    [CheckPermission(StandardPermission.Catalog.PRODUCT_ATTRIBUTES_VIEW)]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
     public virtual async Task<IActionResult> ProductAttributeCombinationGeneratePopup(int productId)
     {
         //try to get a product with the specified id
@@ -3541,7 +3539,7 @@ public partial class ProductController : BaseAdminController
 
     [HttpPost]
     [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
-    [CheckPermission(StandardPermission.Catalog.PRODUCT_ATTRIBUTES_VIEW)]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
     public virtual async Task<IActionResult> ProductAttributeCombinationGeneratePopup(IFormCollection form, ProductAttributeCombinationModel model)
     {
         //try to get a product with the specified id
@@ -3582,7 +3580,7 @@ public partial class ProductController : BaseAdminController
     }
 
     [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
-    [CheckPermission(StandardPermission.Catalog.PRODUCT_ATTRIBUTES_VIEW)]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
     public virtual async Task<IActionResult> ProductAttributeCombinationEditPopup(int id)
     {
         //try to get a combination with the specified id
@@ -3608,7 +3606,7 @@ public partial class ProductController : BaseAdminController
 
     [HttpPost]
     [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
-    [CheckPermission(StandardPermission.Catalog.PRODUCT_ATTRIBUTES_VIEW)]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
     public virtual async Task<IActionResult> ProductAttributeCombinationEditPopup(ProductAttributeCombinationModel model, IFormCollection form)
     {
         //try to get a combination with the specified id
@@ -3674,7 +3672,7 @@ public partial class ProductController : BaseAdminController
 
     [HttpPost]
     [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
-    [CheckPermission(StandardPermission.Catalog.PRODUCT_ATTRIBUTES_VIEW)]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
     public virtual async Task<IActionResult> GenerateAllAttributeCombinations(int productId)
     {
         //try to get a product with the specified id
