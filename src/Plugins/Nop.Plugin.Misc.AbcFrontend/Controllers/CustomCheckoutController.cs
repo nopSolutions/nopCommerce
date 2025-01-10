@@ -344,19 +344,6 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
             var shippingMethod = model.ShippingMethods.SingleOrDefault();
             if (shippingMethod == null || shippingMethod.Fee != "$0.00")
             {
-                // Debug to see what state of shipping method might continue the
-                // "shipping address not set" issue
-                var isDebugMode = (await _settingService.GetSettingAsync("coresettings.isdebugmode"))?.Value;
-                if (isDebugMode == "True")
-                {
-                    await _logger.InsertLogAsync(
-                        LogLevel.Information,
-                        "Debug information for Shipping Method page",
-                        $"Customer Shipping Address: {customerShippingAddress}\nShipping Method: {shippingMethod}\nShipping Method Fee: {shippingMethod?.Fee}",
-                        customer
-                    );
-                }
-
                 return await base.ShippingMethod();
             }
 
