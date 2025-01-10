@@ -1633,7 +1633,8 @@ public partial class InstallationService
             AllowVendorsToEditInfo = false,
             NotifyStoreOwnerAboutVendorInformationChange = true,
             MaximumProductNumber = 3000,
-            AllowVendorsToImportProducts = true
+            AllowVendorsToImportProducts = true,
+            MaximumProductPicturesNumber = 5
         });
 
         var eaGeneral = await Table<EmailAccount>().FirstOrDefaultAsync() ?? throw new Exception("Default email account cannot be loaded");

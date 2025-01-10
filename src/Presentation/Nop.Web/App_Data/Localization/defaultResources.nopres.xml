@@ -3552,6 +3552,9 @@
   <LocaleResource Name="Admin.Catalog.Products.Multimedia.Pictures.Alert.PictureAdd">
     <Value>Failed to add product picture.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Multimedia.Pictures.Alert.VendorNumberPicturesLimit">
+    <Value>The maximum number of product pictures has been reached.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Multimedia.Pictures.Fields.DisplayOrder">
     <Value>Display order</Value>
   </LocaleResource>

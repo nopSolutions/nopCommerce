@@ -66,4 +66,9 @@ public partial class VendorSettings : ISettings
     /// Gets or sets a value indicating whether vendors are allowed to import products
     /// </summary>
     public bool AllowVendorsToImportProducts { get; set; }
+
+    /// <summary>
+    /// Gets or sets the maximum number of product pictures to upload for vendor
+    /// </summary>
+    public int MaximumProductPicturesNumber { get; set; }
 }
