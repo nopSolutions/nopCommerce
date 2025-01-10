@@ -328,12 +328,6 @@ namespace Nop.Plugin.Misc.AbcFrontend.Controllers
             }
 
             var customerShippingAddress = await _customerService.GetCustomerShippingAddressAsync(customer);
-            // If no address, redirect back to the cart
-            if (customerShippingAddress == null)
-            {
-                return RedirectToRoute("ShoppingCart");
-            }
-
             var model = await _checkoutModelFactory.PrepareShippingMethodModelAsync(
                 cart,
                 customerShippingAddress

@@ -14,6 +14,7 @@ using Nop.Plugin.Misc.AbcCore.Nop;
 using Nop.Web.Factories;
 using Nop.Services.Media.RoxyFileman;
 using Nop.Services.Orders;
+using Nop.Services.Shipping;
 
 namespace Nop.Plugin.Misc.AbcCore.Infrastructure
 {
@@ -71,6 +72,7 @@ namespace Nop.Plugin.Misc.AbcCore.Infrastructure
             // Need both to cover base interface
             services.AddScoped<IShoppingCartService, AbcShoppingCartService>();
             services.AddScoped<IAbcShoppingCartService, AbcShoppingCartService>();
+            services.AddScoped<IShippingService, AbcShippingService>();
         }
     }
 }
