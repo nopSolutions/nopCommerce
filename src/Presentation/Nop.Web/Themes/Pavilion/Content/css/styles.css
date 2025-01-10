@@ -6378,7 +6378,7 @@ img.hawthorne-logo {
 /* Superbowl*/
 .abc-home-content .master-wrapper-page {
 	background-image: url("http://abcwarehouse.com/images/turf-background.jpg");
-	background-size: cover;
+	background-size: 100%;
 	background-position-y: -60px;
 }
 .page.home-page {
