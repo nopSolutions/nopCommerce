@@ -1143,6 +1143,16 @@ public class OmnisendService
     }
 
     #endregion
-    
+
+    #endregion
+
+    #region Properties
+
+    /// <summary>
+    /// Check whether the plugin is configured
+    /// </summary>
+    /// <returns>Result</returns>
+    public bool IsConfigured => !string.IsNullOrEmpty(_omnisendSettings.ApiKey);
+
     #endregion
 }
