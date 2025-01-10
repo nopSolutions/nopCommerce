@@ -31,6 +31,12 @@ public class LocalizationMigration : MigrationBase
 
         #region Add or update locales
 
+        localizationService.AddOrUpdateLocaleResource(new Dictionary<string, string>
+        {
+            //#2184
+            ["Admin.Catalog.Products.Multimedia.Pictures.Alert.VendorNumberPicturesLimit"] = "The maximum number of product pictures has been reached.",
+        });
+
         #endregion
     }
 
