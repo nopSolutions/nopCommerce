@@ -529,16 +529,16 @@ public partial class InstallationService
 
         var categoryElectronics = await _dataProvider.InsertEntityAsync(await createCategory("Electronics", "category_electronics.jpeg", 2, false, showOnHomepage: true));
 
-        var categoryCameraPhoto = await createCategory("Camera & photo", "category_camera_photo.jpg", 1, parentCategoryId: categoryElectronics.Id);
-        var categoryCellPhones = await createCategory("Cell phones", "category_cell_phones.jpg", 2, false, categoryElectronics.Id);
+        var categoryCameraPhoto = await createCategory("Camera & photo", "category_camera_photo.jpeg", 1, parentCategoryId: categoryElectronics.Id);
+        var categoryCellPhones = await createCategory("Cell phones", "category_cell_phones.jpeg", 2, false, categoryElectronics.Id);
         var categoryOthers = await createCategory("Others", "category_accessories.jpg", 3, parentCategoryId: categoryElectronics.Id);
 
         await _dataProvider.BulkInsertEntitiesAsync(new[] { categoryCameraPhoto, categoryCellPhones, categoryOthers });
 
         var categoryApparel = await _dataProvider.InsertEntityAsync(await createCategory("Apparel", "category_apparel.jpeg", 3, false, showOnHomepage: true));
 
-        var categoryShoes = await createCategory("Shoes", "category_shoes.jpg", 1, parentCategoryId: categoryApparel.Id);
-        var categoryClothing = await createCategory("Clothing", "category_clothing.jpg", 2, false, categoryApparel.Id);
+        var categoryShoes = await createCategory("Shoes", "category_shoes.jpeg", 1, parentCategoryId: categoryApparel.Id);
+        var categoryClothing = await createCategory("Clothing", "category_clothing.jpeg", 2, false, categoryApparel.Id);
         var categoryAccessories = await createCategory("Accessories", "category_apparel_accessories.jpg", 3, parentCategoryId: categoryApparel.Id);
 
         await _dataProvider.BulkInsertEntitiesAsync(new[] { categoryShoes, categoryClothing, categoryAccessories });
