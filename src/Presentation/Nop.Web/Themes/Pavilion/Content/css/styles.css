@@ -6375,68 +6375,25 @@ img.hawthorne-logo {
 	}
 }
 
-/* Black Friday */
-.popup-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+/* Superbowl*/
+.abc-home-content .master-wrapper-page {
+	background-image: url("http://abcwarehouse.com/images/turf-background.jpg");
+	background-size: cover;
+	background-position-y: -60px;
 }
-
-.popup-content {
-    background: white;
-    padding: 20px;
-    border-radius: 5px;
-    text-align: center;
+.page.home-page {
+    background: #fff;
+    padding: 0 15px;
 }
-
-.close-btn {
-    margin-top: 10px;
-    padding: 8px 16px;
-    background: #d9534f;
-    color: white;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-	position: absolute;
-    top: 0px;
-    right: 60px;
+.abc-home-content .header-lower {
+	background-color: #249948 !important;
 }
-
-.close-btn:hover {
-    background: #c9302c;
-}
-div#video-popup {
-    position: absolute;
-    top: 0;
-    z-index: 99999;
-}
-
-@media (max-width: 1024px) {
-    body .responsive-nav-wrapper-parent {
-		height: 80px !important;
-	}
-	.mobile-header-content-row {
-		background-color: #ff0314 !important;
-	}
-	
-}
-
-div#storeDropDown div {
-    clear: both;
-}
-.contact-us-header {
-    clear: both;
+.abc-home-content .mobile-header-content-row {
+    background-color: #249948 !important;
 }
 
 
-/* End Black Friday */
+/* End Superbowl */
 
 /* Bootstrap */
 .row {
