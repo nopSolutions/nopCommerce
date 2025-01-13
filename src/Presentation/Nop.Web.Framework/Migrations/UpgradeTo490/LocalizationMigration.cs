@@ -1,4 +1,4 @@
-﻿using FluentMigrator;
+using FluentMigrator;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -30,6 +30,13 @@ public class LocalizationMigration : MigrationBase
         #endregion
 
         #region Add or update locales
+
+        localizationService.AddOrUpdateLocaleResource(new Dictionary<string, string>
+        {
+            //#4834
+            ["Admin.Configuration.Settings.GeneralCommon.AdminArea.UseStickyHeaderLayout"] = "Use sticky header",
+            ["Admin.Configuration.Settings.GeneralCommon.AdminArea.UseStickyHeaderLayout.Hint"] = "The content header (containing the action buttons) will stick to the top when you reach its scroll position.",
+        }, languageId);
 
         #endregion
     }

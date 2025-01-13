@@ -633,7 +633,8 @@ public partial class SettingModelFactory : ISettingModelFactory
         //fill in model values from the entity
         var model = new AdminAreaSettingsModel
         {
-            UseRichEditorInMessageTemplates = adminAreaSettings.UseRichEditorInMessageTemplates
+            UseRichEditorInMessageTemplates = adminAreaSettings.UseRichEditorInMessageTemplates,
+            UseStickyHeaderLayout = adminAreaSettings.UseStickyHeaderLayout
         };
 
         //fill in overridden values

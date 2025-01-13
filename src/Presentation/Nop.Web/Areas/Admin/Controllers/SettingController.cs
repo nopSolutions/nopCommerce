@@ -1655,8 +1655,10 @@ public partial class SettingController : BaseAdminController
             //this behavior can increase performance because cached settings will not be cleared 
             //and loaded from database after each update
             adminAreaSettings.UseRichEditorInMessageTemplates = model.AdminAreaSettings.UseRichEditorInMessageTemplates;
+            adminAreaSettings.UseStickyHeaderLayout = model.AdminAreaSettings.UseStickyHeaderLayout;
 
             await _settingService.SaveSettingOverridablePerStoreAsync(adminAreaSettings, x => x.UseRichEditorInMessageTemplates, model.AdminAreaSettings.UseRichEditorInMessageTemplates_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingAsync(adminAreaSettings, x => x.UseStickyHeaderLayout, clearCache: false);
 
             //now clear settings cache
             await _settingService.ClearCacheAsync();

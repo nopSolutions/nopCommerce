@@ -7320,6 +7320,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.AdminArea.UseRichEditorInMessageTemplates.Hint">
     <Value>Indicates whether to use rich editor on message templates and campaigns details pages.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.AdminArea.UseStickyHeaderLayout">
+    <Value>Use sticky header</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.AdminArea.UseStickyHeaderLayout.Hint">
+    <Value>The content header (containing the action buttons) will stick to the top when you reach its scroll position.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.AdminAreaAllowedIpAddresses">
     <Value>Admin area allowed IP</Value>
   </LocaleResource>

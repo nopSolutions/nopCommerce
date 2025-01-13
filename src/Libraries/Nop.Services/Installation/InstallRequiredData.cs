@@ -1067,7 +1067,8 @@ public partial class InstallationService
             UseRichEditorInMessageTemplates = false,
             CheckLicense = true,
             UseIsoDateFormatInJsonResult = true,
-            ShowDocumentationReferenceLinks = true
+            ShowDocumentationReferenceLinks = true,
+            UseStickyHeaderLayout = false
         });
 
         await settingService.SaveSettingAsync(new ProductEditorSettings
