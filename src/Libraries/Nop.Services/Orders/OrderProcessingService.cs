@@ -1030,7 +1030,7 @@ public partial class OrderProcessingService : IOrderProcessingService
             os == OrderStatus.Complete
             && notifyCustomer)
         {
-            //notification
+            //notify customer
             var orderCompletedAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderCompletedEmail ?
                 await _pdfService.SaveOrderPdfToDiskAsync(order) : null;
             var orderCompletedAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderCompletedEmail ?
@@ -1040,6 +1040,9 @@ public partial class OrderProcessingService : IOrderProcessingService
                     orderCompletedAttachmentFileName);
             if (orderCompletedCustomerNotificationQueuedEmailIds.Any())
                 await AddOrderNoteAsync(order, $"\"Order completed\" email (to customer) has been queued. Queued email identifiers: {string.Join(", ", orderCompletedCustomerNotificationQueuedEmailIds)}.");
+
+            //notify store owner
+            await _workflowMessageService.SendOrderCompletedStoreOwnerNotificationAsync(order, _localizationSettings.DefaultAdminLanguageId);
         }
 
         if (prevOrderStatus != OrderStatus.Cancelled &&

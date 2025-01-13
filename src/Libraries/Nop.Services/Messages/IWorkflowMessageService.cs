@@ -245,6 +245,17 @@ public partial interface IWorkflowMessageService
         string attachmentFilePath = null, string attachmentFileName = null);
 
     /// <summary>
+    /// Sends an order completed notification to a store owner
+    /// </summary>
+    /// <param name="order">Order instance</param>
+    /// <param name="languageId">Message language identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the queued email identifier
+    /// </returns>
+    Task<IList<int>> SendOrderCompletedStoreOwnerNotificationAsync(Order order, int languageId);
+
+    /// <summary>
     /// Sends an order cancelled notification to a customer
     /// </summary>
     /// <param name="order">Order instance</param>

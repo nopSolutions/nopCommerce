@@ -264,6 +264,13 @@ public class WorkflowMessageServiceTests : ServiceTest
     }
 
     [Test]
+    public async Task CanSendOrderCompletedStoreOwnerNotification()
+    {
+        await CheckData(async () =>
+            await _workflowMessageService.SendOrderCompletedStoreOwnerNotificationAsync(_order, 1));
+    }
+
+    [Test]
     public async Task CanSendOrderCancelledCustomerNotification()
     {
         await CheckData(async () =>
