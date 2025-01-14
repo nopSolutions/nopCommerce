@@ -250,7 +250,7 @@ public class PayPalCommerceServiceManager
             };
 
             return amount is not null ? PrepareMoney(amount.Value, currencyCode).Value : null;
-        }, new($"{PayPalCommerceDefaults.SystemName}.Messages.Amount"));
+        }, new($"{PayPalCommerceDefaults.SystemName}.Messages.Amount-{productId ?? 0}"));
     }
 
     #endregion
