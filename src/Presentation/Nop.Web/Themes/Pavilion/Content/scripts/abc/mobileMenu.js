@@ -22,7 +22,10 @@ $(document).ready(function () {
     var el = sidebar.find(".mega-menu-responsive");
     $(el[0]).addClass("mobile-sidebar-category first");
     $(el[1]).addClass("mobile-sidebar-category second");
-    var str = '<div class="mobile-sidebar-title"><div class="back-button"> < Back </div><div id="select_category_item">' + categoryArray[0] + '</div></div>';
+    // var str = '<div class="mobile-sidebar-title"><div class="back-button"> < Back </div><div id="select_category_item">' + categoryArray[0] + '</div></div>';
+
+
+    var str = `<div class="mobile-sidebar-title"><div class="back-button"> < Back </div><a id="select_category_item" href="#">${categoryArray[0]}</a></div>`;
     sidebar.append(str);
 
     header = $(".header-menu .mobile-sidebar-category.first");
@@ -36,6 +39,49 @@ $(document).ready(function () {
 
     content.height(heightArray[index]);
 
+    //Update Link based on category name, gonna remove stage if it works
+    function updateCategoryLink(categoryName) {
+        const baseURL = "https://abcwarehouse.com/";
+
+         // Special case for "shop-all-categories"
+    if (categoryName.toLowerCase() === "shop all categories") {
+        selectCategory.attr("href", baseURL + "filterSearch");
+        return;
+    }
+      // Special case for "dishwashers"
+    else if (categoryName.toLowerCase() === "dishwashers") {
+        selectCategory.attr("href", baseURL + "dishwashers-3");
+        return;
+    }
+    
+    // Special case for "Shop By Brand"
+    else if (categoryName.toLowerCase() === "shop by brand") {
+        selectCategory.attr("href", baseURL + "mattress-by-brand");
+        return;
+    }
+
+    // Special case for "Blank Media /Usb Storage"
+    else if (categoryName.toLowerCase() === "blank media/ usb storage") {
+        selectCategory.attr("href", baseURL + "media-usb-storage");
+        return;
+    }
+    //General case
+    else
+      {
+         // const formattedName = categoryName.replace(/[\s/]+/g, '-').toLowerCase(); // Replace spaces with hyphens and make lowercase
+         const formattedName = categoryName
+         .replace(/[\s/&/-]+/g, '-') // Replace spaces, slashes, ampersands, and dashes with a single hyphen
+         .replace(/[^a-z0-9-]/gi, '') // Remove any other non-alphanumeric characters except hyphens
+         .toLowerCase(); // Convert to lowercase
+         selectCategory.attr("href", baseURL + formattedName);
+      }   
+    }
+
+  // Set the initial link
+  updateCategoryLink(categoryArray[0]);
+
+
+
     nextButton.click(function () {
         heightArray[index + 1] = getHeight($(this).next().find(".sublist:eq(0)>li"), "O");
         if (heightArray[index] > heightArray[index + 1]) {
@@ -47,7 +93,14 @@ $(document).ready(function () {
         }
 
         backButton.removeClass('hidden');
-        selectCategory.text($(this).parent().find('a span').first().text());
+        //selectCategory.text($(this).parent().find('a span').first().text());
+        const newCategory = $(this).parent().find('a span').first().text();
+        categoryArray[index + 1] = newCategory;
+        updateCategoryLink(newCategory); // Update the link
+        selectCategory.text(newCategory); // Update the displayed category name
+
+
+
 
         categoryArray[index + 1] = $(this).parent().find('a span').first().text();
         elementArray[index] = this;
@@ -68,7 +121,11 @@ $(document).ready(function () {
                 content.height(heightArray[index - 1]);
             }
 
-            selectCategory.text(categoryArray[index]);
+            // selectCategory.text(categoryArray[index]);
+            const previousCategory = categoryArray[index];
+            updateCategoryLink(previousCategory); // Update the link
+            selectCategory.text(previousCategory); // Update the displayed category name
+
 
             if (sidebar.find('.active').length == 1) {
                 content.height(heightArray[0]);
