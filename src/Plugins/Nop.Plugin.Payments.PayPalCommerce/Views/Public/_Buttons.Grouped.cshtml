@@ -1,0 +1,525 @@
+﻿@model PaymentInfoModel
+
+@{
+    //container names
+    var paypalButtonContainer = $"paypal-button-container-{Model.ProductId}";
+    var paypalGooglePayContainer = $"paypal-googlepay-container-{Model.ProductId}";
+    var paypalMessagesContainer = $"paypal-messages-container-{Model.ProductId}";
+}
+
+<link rel="stylesheet" href="~/Plugins/Payments.PayPalCommerce/Content/styles.css" />
+<script asp-location="Auto" src="@Model.Script.Url" data-page-type="product-details" data-client-token="@Model.Script.ClientToken" data-user-id-token="@Model.Script.UserToken" data-partner-attribution-id="@PayPalCommerceDefaults.PartnerHeader.Value"></script>
+@if (settings.UseGooglePay)
+{
+    <script asp-location="Auto" src="@PayPalCommerceDefaults.GooglePayScriptUrl"></script>
+}
+@if (settings.UseSandbox || settings.ConfiguratorSupported)
+{
+    <script asp-location="Auto" src="@PayPalCommerceDefaults.MerchantConfiguratorScriptUrl" defer></script>
+}
+
+<div id="@paypalButtonContainer" class="paypal-button-container"></div>
+@if (settings.UseGooglePay)
+{
+    <div id="@paypalGooglePayContainer" class="paypal-googlepay-container"></div>
+}
+@if (settings.UseSandbox || settings.ConfiguratorSupported)
+{
+    <div id="@paypalMessagesContainer" class="paypal-messages-container"></div>
+}
+
+<script asp-location="Footer">
+    // define global params
+    var waitingPayPal@(Model.ProductId) = false;
+    var googlePayClient@(Model.ProductId) = null;
+    var googlePayConfig = null;
+
+    $(function () {
+        //render PayPal buttons
+        paypal.Buttons({
+            onInit: initCallback@(Model.ProductId),
+            onClick: clickCallback@(Model.ProductId),
+            createOrder: createOrderCallback@(Model.ProductId),
+            onApprove: approveCallback@(Model.ProductId),
+            onCancel: cancelCallback,
+            onError: errorCallback,
+            onShippingAddressChange: shippingAddressChangeCallback@(Model.ProductId),
+            onShippingOptionsChange: shippingOptionsChangeCallback@(Model.ProductId),
+            style: {
+                layout: 'horizontal',
+                color: '@settings.StyleColor',
+                shape: '@settings.StyleShape',
+                label: '@settings.StyleLabel',
+                tagline: '@settings.StyleTagline'
+            }
+        }).render('#@paypalButtonContainer')
+
+        //generate Pay Later message element on product pages (on the cart and checkout pages we generate it in a separate view component)
+        if ($('#@paypalMessagesContainer').length > 0) {
+            var messages@(Model.ProductId) = window.merchantConfigurators?.generateMessagingCodeSnippet({
+                messageConfig: @Html.Raw(Model.MessagesModel.Config),
+                productPrice: '@Model.MessagesModel.Amount',
+            });
+            $('#@paypalMessagesContainer').html(messages@(Model.ProductId));
+            $('#@paypalButtonContainer').closest('.add-to-cart-panel').before($('#@paypalMessagesContainer'));
+        }
+
+        //render Google Pay button
+        var useGooglePay = @settings.UseGooglePay.ToString().ToLower();
+        if (useGooglePay && google && paypal.Googlepay) {
+            onGooglePayLoaded@(Model.ProductId)();
+        }
+    });
+
+    function initCallback@(Model.ProductId)(data, actions) {
+        //add appropriate classes for containers when initialize buttons
+        $('#@paypalButtonContainer').addClass('paypal-product');
+        if ($('#@paypalGooglePayContainer').length > 0) {
+            $('#@paypalGooglePayContainer').addClass('paypal-product');
+        }
+        if ($('#@paypalMessagesContainer').length > 0) {
+            $('#@paypalMessagesContainer').addClass('paypal-product');
+        }
+    }
+
+    function clickCallback@(Model.ProductId)(data, actions) {
+        var cancel = false;
+
+        //on product pages when customer clicks the button we should first add the product in the cart
+        if ($('#add-to-cart-button-@Model.ProductId').length > 0) {
+            if (waitingPayPal@(Model.ProductId) !== false)
+                return actions.reject();
+
+            displayAjaxLoading(true);
+            waitingPayPal@(Model.ProductId) = true;
+
+            $.ajax({
+                async: false,
+                type: 'POST',
+                url: '@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })',
+                data: $('#product-details-form').serialize(),
+                success: function (response, textStatus, jqXHR) {
+                    if (response.success || response.redirect) {
+                        //validate shopping cart
+                        $.ajax({
+                            cache: false,
+                            async: false,
+                            type: 'GET',
+                            url: '@(Url.Action("ValidateShoppingCart", "PayPalCommercePublic"))',
+                            success: function (data, textStatus, jqXHR) {
+                                if (data.error) {
+                                    displayBarNotification(data.error, 'error', 0);
+                                    cancel = true;
+                                } else {
+                                    cancel = false;
+                                }
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                if (errorThrown) {
+                                    displayBarNotification(errorThrown, 'error', 0);
+                                } else {
+                                    displayBarNotification(textStatus, 'error', 0);
+                                }
+                                cancel = true;
+                            }
+                        });
+                    } else {
+                        if (response.message) {
+                            displayBarNotification(response.message, 'error', 0);
+                        }
+                        cancel = true;
+                    }
+                },
+                complete: function (jqXHR, textStatus) {
+                    displayAjaxLoading(false);
+                    waitingPayPal@(Model.ProductId) = false;
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    if (errorThrown) {
+                        displayBarNotification(errorThrown, 'error', 0);
+                    } else {
+                        displayBarNotification(textStatus, 'error', 0);
+                    }
+                    cancel = true;
+                }
+            });
+        }
+
+        if (cancel === true) {
+            return actions.reject();
+        } else {
+            return actions.resolve();
+        }
+    }
+
+    function createOrderCallback@(Model.ProductId)(data, actions) {
+        var orderId = '';
+        var status = '';
+        if (waitingPayPal@(Model.ProductId) !== false)
+            throw new Error('Request in processing');
+
+        displayAjaxLoading(true);
+        waitingPayPal@(Model.ProductId) = true;
+
+        //create order
+        var postData = {
+            placement: '@((int)ButtonPlacement.Product)',
+            paymentSource: data.paymentSource
+        };
+        addAntiForgeryToken(postData);
+        $.ajax({
+            async: false,
+            type: 'POST',
+            url: '@(Url.Action("CreateOrder", "PayPalCommercePublic"))',
+            data: postData,
+            success: function (data, textStatus, jqXHR) {
+                if (data.error) {
+                    displayBarNotification(data.error, 'error', 0);
+                } else if (data.redirect) {
+                    setLocation(data.redirect);
+                } else {
+                    orderId = data.orderId;
+                    status = data.status;
+                }
+            },
+            complete: function (jqXHR, textStatus) {
+                displayAjaxLoading(false);
+                waitingPayPal@(Model.ProductId) = false;
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                if (errorThrown) {
+                    displayBarNotification(errorThrown, 'error', 0);
+                } else {
+                    displayBarNotification(textStatus, 'error', 0);
+                }
+            }
+        });
+
+        return orderId;
+    }
+
+    function approveCallback@(Model.ProductId)(data, actions) {
+        var redirectUrl = '';
+
+        //check liability shift
+        if (data.liabilityShift === 'NO') {
+            displayBarNotification('3D Secure contingency is not resolved', 'error', 0);
+            return;
+        }
+        displayAjaxLoading(true);
+        waitingPayPal@(Model.ProductId) = true;
+
+        //approve order and redirect customer to the confirmation page
+        var postData = {
+            orderId: data.orderID ?? data.orderId,
+            liabilityShift: data.liabilityShift
+        };
+        addAntiForgeryToken(postData);
+        $.ajax({
+            async: false,
+            type: 'POST',
+            url: '@(Url.Action("ApproveOrder", "PayPalCommercePublic"))',
+            data: postData,
+            success: function (data, textStatus, jqXHR) {
+                if (data.redirect) {
+                    redirectUrl = data.redirect;
+                } else {
+                    displayBarNotification(data.error, 'error', 0);
+                    redirectUrl = '@Url.RouteUrl(PayPalCommerceDefaults.Route.ShoppingCart)';
+                }
+            },
+            complete: function (jqXHR, textStatus) {
+                displayAjaxLoading(false);
+                waitingPayPal@(Model.ProductId) = false;
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                if (errorThrown) {
+                    displayBarNotification(errorThrown, 'error', 0);
+                } else {
+                    displayBarNotification(textStatus, 'error', 0);
+                }
+            }
+        });
+        setLocation(redirectUrl);
+    }
+
+    function cancelCallback(data) {
+        setLocation('@Url.RouteUrl(PayPalCommerceDefaults.Route.ShoppingCart)');
+    }
+
+    function errorCallback(err) {
+        displayBarNotification(err.message, 'error', 0);
+    }
+
+    function shippingAddressChangeCallback@(Model.ProductId)(data, actions) {
+        //shipping address was changed on the PayPal's side, we should update it here as well
+        var postData = {
+            orderId: data.orderID ?? data.orderId,
+            paymentId: data.paymentID,
+            paymentToken: data.paymentToken,
+            addressCity: data.shippingAddress.city,
+            addressState: data.shippingAddress.state,
+            addressCountryCode: data.shippingAddress.countryCode,
+            addressPostalCode: data.shippingAddress.postalCode
+        };
+        addAntiForgeryToken(postData);
+        $.ajax({
+            async: false,
+            type: 'POST',
+            url: '@(Url.Action("UpdateOrderShipping", "PayPalCommercePublic"))',
+            data: postData,
+            success: function (data, textStatus, jqXHR) {
+                if (data.error) {
+                    actions.reject(data.errors.ADDRESS_ERROR);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                actions.reject(data.errors.ADDRESS_ERROR);
+            }
+        });
+    }
+
+    function shippingOptionsChangeCallback@(Model.ProductId)(data, actions) {
+        //shipping option was selected on the PayPal's side, we should update it here as well
+        var postData = {
+            orderId: data.orderID ?? data.orderId,
+            paymentId: data.paymentID,
+            paymentToken: data.paymentToken,
+            optionId: data.selectedShippingOption.id,
+            optionType: data.selectedShippingOption.type,
+            optionLabel: data.selectedShippingOption.label,
+            optionSelected: data.selectedShippingOption.selected,
+            optionAmount: data.selectedShippingOption.amount.value
+        };
+        addAntiForgeryToken(postData);
+        $.ajax({
+            async: false,
+            type: 'POST',
+            url: '@(Url.Action("UpdateOrderShipping", "PayPalCommercePublic"))',
+            data: postData,
+            success: function (data, textStatus, jqXHR) {
+                if (data.error) {
+                    actions.reject(data.errors.METHOD_UNAVAILABLE);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                actions.reject(data.errors.METHOD_UNAVAILABLE);
+            }
+        });
+    }
+
+    function getGooglePayClient@(Model.ProductId)() {
+        if (googlePayClient@(Model.ProductId)) {
+            return googlePayClient@(Model.ProductId);
+        }
+
+        //check whether the shipping is required, we need it to properly create the client
+        var shippingIsRequired = false;
+        var postData = {
+            placement: '@((int)ButtonPlacement.Product)',
+            productId: @(Model.ProductId?.ToString() ?? "null"),
+        };
+        addAntiForgeryToken(postData);
+        $.ajax({
+            async: false,
+            type: 'POST',
+            url: '@(Url.Action("CheckGoogleShipping", "PayPalCommercePublic"))',
+            data: postData,
+            success: function (data, textStatus, jqXHR) {
+                if (data.error) {
+                    displayBarNotification(data.error, 'error', 0);
+                } else {
+                    shippingIsRequired = data.shippingIsRequired;
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                if (errorThrown) {
+                    displayBarNotification(errorThrown, 'error', 0);
+                } else {
+                    displayBarNotification(textStatus, 'error', 0);
+                }
+            }
+        });
+
+        //create a new client
+        var paymentOptions = {
+            environment: '@(settings.UseSandbox ? "TEST" : "PRODUCTION")',
+            paymentDataCallbacks: shippingIsRequired === true
+                ? { onPaymentAuthorized: googlePaymentAuthorized@(Model.ProductId), onPaymentDataChanged: googlePaymentDataChanged@(Model.ProductId) }
+                : { onPaymentAuthorized: googlePaymentAuthorized@(Model.ProductId) }
+        };
+        googlePayClient@(Model.ProductId) = new google.payments.api.PaymentsClient(paymentOptions);
+        return googlePayClient@(Model.ProductId);
+    }
+
+    async function getGooglePayConfig() {
+        if (!googlePayConfig) {
+            googlePayConfig = await paypal.Googlepay().config();
+        }
+        var allowedPaymentMethods = googlePayConfig.allowedPaymentMethods;
+        var merchantInfo = googlePayConfig.merchantInfo;
+        return { allowedPaymentMethods, merchantInfo };
+    }
+
+    async function onGooglePayLoaded@(Model.ProductId)() {
+        var { allowedPaymentMethods } = await getGooglePayConfig();
+        var isReadyToPayRequest = { apiVersion: 2, apiVersionMinor: 0, allowedPaymentMethods: allowedPaymentMethods };
+        var paymentsClient = getGooglePayClient@(Model.ProductId)();
+        paymentsClient.isReadyToPay(isReadyToPayRequest).then(response => {
+            if (response.result) {
+                addGooglePayButton@(Model.ProductId)();
+            }
+        });
+    }
+
+    function addGooglePayButton@(Model.ProductId)() {
+        //render the button
+        var buttonOptions = { onClick: googlePayButtonClicked@(Model.ProductId), buttonType: 'pay', buttonSizeMode: 'fill' };
+        var paymentsClient = getGooglePayClient@(Model.ProductId)();
+        var button = paymentsClient.createButton(buttonOptions);
+
+        $('#@paypalGooglePayContainer').html(button);
+        $('#@paypalButtonContainer').after($('#@paypalGooglePayContainer'));
+    }
+
+    async function googlePayButtonClicked@(Model.ProductId)() {
+        var { allowedPaymentMethods, merchantInfo } = await getGooglePayConfig();
+        clickCallback@(Model.ProductId)({ fundingSource: 'googlepay' }, {
+            resolve: function () {
+                //get transaction info required to handle payment request
+                var postData = {
+                    placement: '@((int)ButtonPlacement.Product)'
+                };
+                addAntiForgeryToken(postData);
+                $.ajax({
+                    async: false,
+                    type: 'POST',
+                    url: '@(Url.Action("GoogleTransactionInfo", "PayPalCommercePublic"))',
+                    data: postData,
+                    success: function (data, textStatus, jqXHR) {
+                        if (data.error) {
+                            displayBarNotification(data.error, 'error', 0);
+                        } else if (data.redirect) {
+                            setLocation(data.redirect);
+                        } else {
+                            var paymentDataRequest = {
+                                apiVersion: 2,
+                                apiVersionMinor: 0,
+                                allowedPaymentMethods: allowedPaymentMethods,
+                                merchantInfo: merchantInfo,
+                                callbackIntents: data.callbacks,
+                                transactionInfo: data.transactionInfo,
+                                shippingAddressRequired: data.shipping,
+                                shippingOptionRequired: data.shipping,
+                                shippingAddressParameters: { phoneNumberRequired: false }
+                            };
+                            var paymentsClient = getGooglePayClient@(Model.ProductId)();
+                            paymentsClient.loadPaymentData(paymentDataRequest);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        if (errorThrown) {
+                            displayBarNotification(errorThrown, 'error', 0);
+                        } else {
+                            displayBarNotification(textStatus, 'error', 0);
+                        }
+                    }
+                });
+            }, reject: function () {
+                return;
+            }
+        });
+    }
+
+    function googlePaymentDataChanged@(Model.ProductId)(intermediatePaymentData) {
+        return new Promise(function (resolve, reject) {
+            var paymentDataRequestUpdate = {};
+            var shippingAddressError = { reason: "SHIPPING_ADDRESS_UNSERVICEABLE", message: "Cannot ship to the selected address", intent: "SHIPPING_ADDRESS" };
+            var shippingOptionError = { reason: "SHIPPING_OPTION_INVALID", message: "Shipping option unavailable", intent: "SHIPPING_OPTION" };
+            if (intermediatePaymentData.callbackTrigger == 'INITIALIZE' || intermediatePaymentData.callbackTrigger == 'SHIPPING_ADDRESS') {
+                var postData = {
+                    placement: '@((int)ButtonPlacement.Product)',
+                    addressCity: intermediatePaymentData.shippingAddress.locality,
+                    addressState: intermediatePaymentData.shippingAddress.administrativeArea,
+                    addressCountryCode: intermediatePaymentData.shippingAddress.countryCode,
+                    addressPostalCode: intermediatePaymentData.shippingAddress.postalCode
+                };
+                addAntiForgeryToken(postData);
+                $.ajax({
+                    async: false,
+                    type: 'POST',
+                    url: '@(Url.Action("UpdateGoogleShipping", "PayPalCommercePublic"))',
+                    data: postData,
+                    success: function (data, textStatus, jqXHR) {
+                        if (data.error) {
+                            paymentDataRequestUpdate.error = shippingAddressError;
+                        } else {
+                            paymentDataRequestUpdate.newShippingOptionParameters = data.options;
+                            paymentDataRequestUpdate.newTransactionInfo = data.transactionInfo;
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        paymentDataRequestUpdate.error = shippingAddressError;
+                    }
+                });
+            } else if (intermediatePaymentData.callbackTrigger == 'SHIPPING_OPTION') {
+                var postData = {
+                    placement: '@((int)ButtonPlacement.Product)',
+                    optionId: intermediatePaymentData.shippingOptionData.id
+                };
+                addAntiForgeryToken(postData);
+                $.ajax({
+                    async: false,
+                    type: 'POST',
+                    url: '@(Url.Action("UpdateGoogleShipping", "PayPalCommercePublic"))',
+                    data: postData,
+                    success: function (data, textStatus, jqXHR) {
+                        if (data.error) {
+                            paymentDataRequestUpdate.error = shippingOptionError;
+                        } else {
+                            paymentDataRequestUpdate.newTransactionInfo = data.transactionInfo;
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        paymentDataRequestUpdate.error = shippingOptionError;
+                    }
+                });
+            }
+            resolve(paymentDataRequestUpdate);
+        });
+    }
+
+    function googlePaymentAuthorized@(Model.ProductId)(paymentData) {
+        return new Promise(function (resolve, reject) {
+            processPayment@(Model.ProductId)(paymentData).then(data => {
+                resolve({ transactionState: 'SUCCESS' });
+            }).catch(error => {
+                resolve({ transactionState: 'ERROR' });
+            });
+        });
+    }
+
+    async function processPayment@(Model.ProductId)(paymentData) {
+        try {
+            //payment has been authorized, so create a new order
+            var orderId = createOrderCallback@(Model.ProductId)({ paymentSource: 'googlepay' });
+            var { status } = await paypal.Googlepay().confirmOrder({
+                orderId: orderId,
+                paymentMethodData: paymentData.paymentMethodData,
+                shippingAddress: paymentData.shippingAddress
+            });
+
+            //then approve it immediately or request 3DS verification
+            if (status === 'APPROVED' || status === 'COMPLETED') {
+                approveCallback@(Model.ProductId)({ orderID: orderId, liabilityShift: 'YES' });
+            } else if (status === 'CREATED' || status === 'PAYER_ACTION_REQUIRED') {
+                paypal.Googlepay().initiatePayerAction({ orderId: orderId }).then(data => {
+                    approveCallback@(Model.ProductId)({ orderID: orderId, liabilityShift: data.liabilityShift });
+                });
+            }
+        } catch (err) {
+            return { transactionState: 'ERROR', error: { message: err.message, } };
+        }
+    }
+
+</script>

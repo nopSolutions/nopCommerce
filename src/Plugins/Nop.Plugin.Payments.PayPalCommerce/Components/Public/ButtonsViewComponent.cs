@@ -65,8 +65,9 @@ public class ButtonsViewComponent : NopViewComponent
             if (_settings.DisplayButtonsOnProductDetails)
             {
                 var productId = additionalData is ProductDetailsModel.AddToCartModel product ? (int?)product.ProductId : null;
-                if (productId is null || (await _productService.GetProductByIdAsync(productId ?? 0))?.ParentGroupedProductId == 0)
-                    model = await _modelFactory.PreparePaymentInfoModelAsync(ButtonPlacement.Product, productId);
+                model = await _modelFactory.PreparePaymentInfoModelAsync(ButtonPlacement.Product, productId);
+                if ((await _productService.GetProductByIdAsync(productId ?? 0))?.ParentGroupedProductId > 0)
+                    return View("~/Plugins/Payments.PayPalCommerce/Views/Public/_Buttons.Grouped.cshtml", model);
             }
         }
         else if (widgetZone.Equals(PublicWidgetZones.OrderSummaryContentBefore))
