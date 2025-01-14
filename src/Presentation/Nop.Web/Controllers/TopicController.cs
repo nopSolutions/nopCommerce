@@ -6,6 +6,7 @@ using Nop.Services.Topics;
 using Nop.Web.Factories;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Models.Topics;
 
 namespace Nop.Web.Controllers;
 
@@ -50,8 +51,8 @@ public partial class TopicController : BasePublicController
 
         if (topic == null)
             return InvokeHttp404();
-
         var notAvailable = !topic.Published ||
+                           (DateTime.UtcNow >= (topic.AvailableStartDateTimeUtc ?? DateTime.MinValue) && DateTime.UtcNow <= (topic.AvailableEndDateTimeUtc ?? DateTime.MaxValue)) ||
                            //ACL (access control list)
                            !await _aclService.AuthorizeAsync(topic) ||
                            //store mapping
@@ -91,34 +92,36 @@ public partial class TopicController : BasePublicController
     [HttpPost]
     public virtual async Task<IActionResult> Authenticate(int id, string password)
     {
-        var authResult = false;
-        var title = string.Empty;
-        var body = string.Empty;
-        var error = string.Empty;
-
+        var authResult = new AuthenticatedTopicModel();
         var topic = await _topicService.GetTopicByIdAsync(id);
-        if (topic != null &&
-            topic.Published &&
-            //password protected?
-            topic.IsPasswordProtected &&
-            //store mapping
-            await _storeMappingService.AuthorizeAsync(topic) &&
-            //ACL (access control list)
-            await _aclService.AuthorizeAsync(topic))
+
+        if (topic == null ||
+            !topic.Published ||
+            DateTime.UtcNow <= (topic.AvailableStartDateTimeUtc ?? DateTime.MinValue) ||
+            DateTime.UtcNow >= (topic.AvailableEndDateTimeUtc ?? DateTime.MaxValue) ||
+            !await _storeMappingService.AuthorizeAsync(topic) ||
+            !await _aclService.AuthorizeAsync(topic))
+        {
+            return Json(authResult with { Error = "Topic is not found" });
+        }
+
+        if (topic.IsPasswordProtected)
         {
             if (topic.Password != null && topic.Password.Equals(password))
             {
-                authResult = true;
-                title = await _localizationService.GetLocalizedAsync(topic, x => x.Title);
-                body = await _localizationService.GetLocalizedAsync(topic, x => x.Body);
+                return Json(authResult with { 
+                    Authenticated = true, 
+                    Title = await _localizationService.GetLocalizedAsync(topic, x => x.Title),
+                    Body = await _localizationService.GetLocalizedAsync(topic, x => x.Body)
+                });
             }
             else
             {
-                error = await _localizationService.GetResourceAsync("Topic.WrongPassword");
+                return Json(authResult with { Error = await _localizationService.GetResourceAsync("Topic.WrongPassword") });
             }
         }
 
-        return Json(new { Authenticated = authResult, Title = title, Body = body, Error = error });
+        return Json(authResult);
     }
 
     #endregion

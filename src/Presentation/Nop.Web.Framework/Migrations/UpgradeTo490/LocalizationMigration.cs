@@ -39,6 +39,13 @@ public class LocalizationMigration : MigrationBase
 
             //#3425
             ["Admin.ContentManagement.MessageTemplates.Description.OrderCompleted.StoreOwnerNotification"] = "This message template is used to notify a store owner that the certain order was completed. The order gets the order status Complete when it's paid and delivered, or it can be changed manually to Complete in Sales - Orders.",
+
+            //#5345
+            ["Admin.ContentManagement.Topics.Fields.AvailableEndDateTime"] = "Availability end date",
+            ["Admin.ContentManagement.Topics.Fields.AvailableEndDateTime.Hint"] = "The end of the topic's availability (UTC).",
+            ["Admin.ContentManagement.Topics.Fields.AvailableEndDateTime.GreaterThanOrEqualToStartDate"] = "The end date must be greater than or equal to the start date.",
+            ["Admin.ContentManagement.Topics.Fields.AvailableStartDateTime"] = "Availability start date",
+            ["Admin.ContentManagement.Topics.Fields.AvailableStartDateTime.Hint"] = "The start of the topic's availability (UTC).",
         }, languageId);
 
         #endregion

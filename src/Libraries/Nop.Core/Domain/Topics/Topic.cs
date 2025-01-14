@@ -1,4 +1,4 @@
-using Nop.Core.Domain.Localization;
+﻿using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Stores;
@@ -104,4 +104,14 @@ public partial class Topic : BaseEntity, ILocalizedEntity, ISlugSupported, IStor
     /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
     /// </summary>
     public bool LimitedToStores { get; set; }
+
+    /// <summary>
+    /// Gets or sets the available start date and time
+    /// </summary>
+    public DateTime? AvailableStartDateTimeUtc { get; set; }
+
+    /// <summary>
+    /// Gets or sets the available end date and time
+    /// </summary>
+    public DateTime? AvailableEndDateTimeUtc { get; set; }
 }

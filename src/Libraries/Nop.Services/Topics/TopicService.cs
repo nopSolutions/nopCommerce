@@ -1,4 +1,5 @@
-﻿using Nop.Core;
+﻿using System.Data.SqlTypes;
+using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Topics;
 using Nop.Data;
@@ -93,6 +94,10 @@ public partial class TopicService : ITopicService
             var query = _topicRepository.Table
                 .Where(t => t.Published);
 
+            query = query.Where(t =>
+                DateTime.UtcNow >= (t.AvailableStartDateTimeUtc ?? SqlDateTime.MinValue.Value) &&
+                DateTime.UtcNow <= (t.AvailableEndDateTimeUtc ?? SqlDateTime.MaxValue.Value));
+
             //apply store mapping constraints
             query = await _storeMappingService.ApplyStoreMapping(query, storeId);
 
@@ -134,6 +139,10 @@ public partial class TopicService : ITopicService
             if (!showHidden)
             {
                 query = query.Where(t => t.Published);
+
+                query = query.Where(t => 
+                    DateTime.UtcNow >= (t.AvailableStartDateTimeUtc ?? SqlDateTime.MinValue.Value) &&
+                    DateTime.UtcNow <= (t.AvailableEndDateTimeUtc ?? SqlDateTime.MaxValue.Value));
 
                 //apply ACL constraints
                 if (!ignoreAcl)
