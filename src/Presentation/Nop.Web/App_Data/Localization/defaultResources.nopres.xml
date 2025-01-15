@@ -2811,6 +2811,15 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.AdminComment.Hint">
     <Value>This comment is for internal use only, not visible for customers.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.AgeVerification">
+    <Value>Age verification</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.AgeVerification.Hint">
+    <Value>Check to require customer registration with date of birth before placing an order.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.AgeVerification.DateOfBirthDisabled">
+    <Value><![CDATA[It looks like you have <a href="{0}" target="_blank">Date of Birth</a> setting disabled.]]></Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.AllowAddingOnlyExistingAttributeCombinations">
     <Value>Allow only existing attribute combinations</Value>
   </LocaleResource>
@@ -3158,6 +3167,15 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.MetaTitle.Hint">
     <Value>Override the page title. The default is the name of the product.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.MinimumAgeToPurchase">
+    <Value>Minimum age to purchase</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.MinimumAgeToPurchase.Hint">
+    <Value>Enter the minimum age for purchasing this product.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.MinimumAgeToPurchase.ShouldBeGreaterThanZero">
+    <Value>The minimum age for purchasing should be greater 0</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.MinimumCustomerEnteredPrice">
     <Value>Minimum amount</Value>
@@ -8534,6 +8552,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.AdminComment">
     <Value>Admin comment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.AgeVerification">
+    <Value>Age verification</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.AllowAddingOnlyExistingAttributeCombinations">
     <Value>Allow only existing attribute combinations</Value>
@@ -19920,6 +19941,9 @@
   <LocaleResource Name="ShoppingCart.CustomerEnteredPrice.RangeError">
     <Value>The price must be from {0} to {1}</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.DateOfBirthRequired">
+    <Value>This product has age restrictions. Please specify your age in the account details</Value>
+  </LocaleResource>
   <LocaleResource Name="ShoppingCart.Discount.CannotBeUsed">
     <Value>You cannot use this discount coupon because the validation conditions are not met</Value>
   </LocaleResource>
@@ -20042,6 +20066,9 @@
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Mini.ViewCart">
     <Value>Go to cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.MinimumAgeToPurchase">
+    <Value>This product is available to customers who are {0} years of age or older</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.MinimumQuantity">
     <Value>The minimum quantity allowed for purchase is {0}.</Value>

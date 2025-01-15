@@ -1333,6 +1333,8 @@ public partial class ExportManager : IExportManager
             await xmlWriter.WriteStringAsync("Published", product.Published, await IgnoreExportProductPropertyAsync(p => p.Published));
             await xmlWriter.WriteStringAsync("CreatedOnUtc", product.CreatedOnUtc);
             await xmlWriter.WriteStringAsync("UpdatedOnUtc", product.UpdatedOnUtc);
+            await xmlWriter.WriteStringAsync("AgeVerification", product.AgeVerification, await IgnoreExportProductPropertyAsync(p => p.AgeVerification));
+            await xmlWriter.WriteStringAsync("MinimumAgeToPurchase", product.MinimumAgeToPurchase, await IgnoreExportProductPropertyAsync(p => p.AgeVerification));
 
             if (!await IgnoreExportProductPropertyAsync(p => p.Discounts))
             {
@@ -1731,6 +1733,8 @@ public partial class ExportManager : IExportManager
             new PropertyByName<Product, Language>("IsLimitedToStores", (p, l) => p.LimitedToStores, await IgnoreExportLimitedToStoreAsync()),
             new PropertyByName<Product, Language>("LimitedToStores",async (p, l) =>  await GetLimitedToStoresAsync(p), await IgnoreExportLimitedToStoreAsync()),
             new PropertyByName<Product, Language>("DisplayAttributeCombinationImagesOnly",(p, l) =>  p.DisplayAttributeCombinationImagesOnly, !productAdvancedMode),
+            new PropertyByName<Product, Language>("AgeVerification", (p, l) => p.AgeVerification, await IgnoreExportProductPropertyAsync(p => p.AgeVerification)),
+            new PropertyByName<Product, Language>("MinimumAgeToPurchase", (p, l) => p.MinimumAgeToPurchase, await IgnoreExportProductPropertyAsync(p => p.AgeVerification)),
             new PropertyByName<Product, Language>("Picture1", async (p, l) => await GetPictureAsync(p, 0)),
             new PropertyByName<Product, Language>("Picture2", async (p, l) => await GetPictureAsync(p, 1)),
             new PropertyByName<Product, Language>("Picture3", async (p, l) => await GetPictureAsync(p, 2))

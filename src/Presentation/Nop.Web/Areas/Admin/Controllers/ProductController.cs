@@ -44,6 +44,7 @@ public partial class ProductController : BaseAdminController
     #region Fields
 
     protected readonly AdminAreaSettings _adminAreaSettings;
+    protected readonly CustomerSettings _customerSettings;
     protected readonly IAclService _aclService;
     protected readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
     protected readonly ICategoryService _categoryService;
@@ -91,6 +92,7 @@ public partial class ProductController : BaseAdminController
     #region Ctor
 
     public ProductController(AdminAreaSettings adminAreaSettings,
+        CustomerSettings customerSettings,
         IAclService aclService,
         IBackInStockSubscriptionService backInStockSubscriptionService,
         ICategoryService categoryService,
@@ -133,6 +135,7 @@ public partial class ProductController : BaseAdminController
         VendorSettings vendorSettings)
     {
         _adminAreaSettings = adminAreaSettings;
+        _customerSettings = customerSettings;
         _aclService = aclService;
         _backInStockSubscriptionService = backInStockSubscriptionService;
         _categoryService = categoryService;
@@ -1369,6 +1372,18 @@ public partial class ProductController : BaseAdminController
             (await _productService.GetProductByIdAsync(combinationBySku.ProductId))?.Name);
 
         return Json(new { Result = message });
+    }
+
+    //action displaying notification (warning) to a store owner that 'Date of Birth' is disabled
+    public virtual async Task<IActionResult> CustomersDateOfBirthDisabledWarning()
+    {
+        if (_customerSettings.DateOfBirthEnabled)
+            return Json(new { Result = string.Empty });
+
+        var warning = string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Fields.AgeVerification.DateOfBirthDisabled"),
+            Url.Action("CustomerUser", "Setting"));
+
+        return Json(new { Result = warning });
     }
 
     #endregion

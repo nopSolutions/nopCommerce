@@ -468,6 +468,40 @@
             <span asp-validation-for="VisibleIndividually"></span>
         </div>
     </div>
+    <div class="form-group row @(Model.ProductEditorSettingsModel.AgeVerification ? null : "advanced-setting")">
+        <div class="col-md-3">
+            <nop-label asp-for="AgeVerification" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AgeVerification" />
+            <span asp-validation-for="AgeVerification"></span>
+        </div>
+        <script asp-location="Footer">
+            $(function() {
+                $('#@Html.IdFor(m => m.AgeVerification)').on('change', function() {
+                    if (this.checked) {
+                        warningValidation('@Url.Action("CustomersDateOfBirthDisabledWarning")', '@Html.NameFor(model => model.AgeVerification)', { ageVerification: this.checked });
+                    }
+                    else {
+                        $(this).siblings('.field-validation-custom').remove();
+                    }
+                });
+
+                $('#@Html.IdFor(m => m.AgeVerification)').trigger('change');
+            });
+        </script>
+    </div>
+    <nop-nested-setting asp-for="AgeVerification">
+        <div class="form-group row @(Model.ProductEditorSettingsModel.AgeVerification ? null : "advanced-setting")">
+            <div class="col-md-3">
+                <nop-label asp-for="MinimumAgeToPurchase" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="MinimumAgeToPurchase" asp-required="true" />
+                <span asp-validation-for="MinimumAgeToPurchase"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
 @await Component.InvokeAsync(typeof(AclCustomerRolesViewComponent), Model)
     <div class="form-group row @(Model.ProductEditorSettingsModel.Stores ? null : "advanced-setting")">
         <div class="col-md-3">

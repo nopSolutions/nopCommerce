@@ -1,5 +1,6 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -25,6 +26,14 @@ public class SettingMigration : MigrationBase
         {
             adminAreaSettings.UseStickyHeaderLayout = false;
             settingService.SaveSetting(adminAreaSettings, settings => settings.UseStickyHeaderLayout);
+        }
+
+        //#7387
+        var productEditorSettings = settingService.LoadSetting<ProductEditorSettings>();
+        if (!settingService.SettingExists(productEditorSettings, settings => settings.AgeVerification))
+        {
+            productEditorSettings.AgeVerification = false;
+            settingService.SaveSetting(productEditorSettings, settings => settings.AgeVerification);
         }
     }
 

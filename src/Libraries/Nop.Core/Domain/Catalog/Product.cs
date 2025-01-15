@@ -277,7 +277,7 @@ public partial class Product : BaseEntity, ILocalizedEntity, ISlugSupported, IAc
     /// <summary>
     /// Gets or sets the tax category identifier
     /// </summary>
-    public int TaxCategoryId { get; set; }        
+    public int TaxCategoryId { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating how to manage inventory
@@ -521,6 +521,16 @@ public partial class Product : BaseEntity, ILocalizedEntity, ISlugSupported, IAc
     /// Gets or sets the date and time of product update
     /// </summary>
     public DateTime UpdatedOnUtc { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether <see cref="MinimumAgeToPurchase"/> should be specified
+    /// </summary>
+    public bool AgeVerification { get; set; }
+
+    /// <summary>
+    /// Gets or sets the minimum age to purchase
+    /// </summary>
+    public int MinimumAgeToPurchase { get; set; }
 
     /// <summary>
     /// Gets or sets the product type
