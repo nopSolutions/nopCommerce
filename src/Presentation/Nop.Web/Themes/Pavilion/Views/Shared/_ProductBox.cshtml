@@ -351,8 +351,7 @@
             {
                 <div class="prices">
                     @{decimal? savedPrice = null; }
-                    @{var priceDifference = Model.ProductPrice.OldPrice - (decimal.Parse(Model.ProductPrice.OldPrice) - decimal.Parse(Model.ProductPrice.Price)); }
-                    @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice && priceDifference >= 50))
+                    @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
                     {
                         string oldPriceStr = "Compare at " + Model.ProductPrice.OldPrice.Replace(".00", "");
                         <span class="price old-price">@oldPriceStr</span>
