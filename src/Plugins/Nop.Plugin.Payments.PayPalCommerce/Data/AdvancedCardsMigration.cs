@@ -15,7 +15,6 @@ public class AdvancedCardsMigration : MigrationBase
 {
     #region Fields
 
-    private readonly ILanguageService _languageService;
     private readonly ILocalizationService _localizationService;
     private readonly ISettingService _settingService;
     private readonly OnboardingHttpClient _httpClient;
@@ -26,14 +25,12 @@ public class AdvancedCardsMigration : MigrationBase
 
     #region Ctor
 
-    public AdvancedCardsMigration(ILanguageService languageService,
-        ILocalizationService localizationService,
+    public AdvancedCardsMigration(ILocalizationService localizationService,
         ISettingService settingService,
         OnboardingHttpClient httpClient,
         PayPalCommerceServiceManager serviceManager,
         PayPalCommerceSettings settings)
     {
-        _languageService = languageService;
         _localizationService = localizationService;
         _settingService = settingService;
         _httpClient = httpClient;
@@ -74,6 +71,8 @@ public class AdvancedCardsMigration : MigrationBase
             ["Plugins.Payments.PayPalCommerce.Configuration"] = "Configuration",
             ["Plugins.Payments.PayPalCommerce.Fields.CustomerAuthenticationRequired"] = "Use 3D Secure",
             ["Plugins.Payments.PayPalCommerce.Fields.CustomerAuthenticationRequired.Hint"] = "3D Secure enables you to authenticate card holders through card issuers. It reduces the likelihood of fraud when you use supported cards and improves transaction performance. A successful 3D Secure authentication can shift liability for chargebacks due to fraud from you to the card issuer.",
+            ["Plugins.Payments.PayPalCommerce.Fields.DisplayButtonsOnProductDetails.Hint"] = "Determine whether to display PayPal buttons on product details pages (simple products only) allowing buyers to complete a purchase without going through the full checkout process.",
+            ["Plugins.Payments.PayPalCommerce.Fields.DisplayButtonsOnShoppingCart.Hint"] = "Determine whether to display PayPal buttons on the shopping cart page in addition to the default checkout button.",
             ["Plugins.Payments.PayPalCommerce.Fields.MerchantId"] = "Merchant ID",
             ["Plugins.Payments.PayPalCommerce.Fields.MerchantId.Hint"] = "PayPal account ID of the merchant.",
             ["Plugins.Payments.PayPalCommerce.Fields.MerchantId.Required"] = "Merchant ID is required",
@@ -117,7 +116,7 @@ public class AdvancedCardsMigration : MigrationBase
             ["Plugins.Payments.PayPalCommerce.PaymentTokens.Title"] = "Method",
             ["Plugins.Payments.PayPalCommerce.PayLater"] = "Pay Later",
             ["Plugins.Payments.PayPalCommerce.Shipment.Carrier"] = "Carrier",
-            ["Plugins.Payments.PayPalCommerce.Shipment.Carrier.Hint"] = "Cpecify the carrier for the shipment (e.g. UPS or FEDEX_UK, see allowed values on PayPal site).",
+            ["Plugins.Payments.PayPalCommerce.Shipment.Carrier.Hint"] = "Specify the carrier for the shipment (e.g. UPS or FEDEX_UK, see allowed values on PayPal site).",
         }, languageId);
 
         if (!_settingService.SettingExists(_settings, settings => settings.MerchantId))

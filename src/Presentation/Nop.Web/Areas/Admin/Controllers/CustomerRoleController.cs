@@ -60,7 +60,6 @@ public partial class CustomerRoleController : BaseAdminController
         return RedirectToAction("List");
     }
 
-    [CheckPermission(StandardPermission.Customers.CUSTOMERS_VIEW)]
     [CheckPermission(StandardPermission.Customers.CUSTOMER_ROLES_VIEW)]
     public virtual async Task<IActionResult> List()
     {
@@ -71,7 +70,6 @@ public partial class CustomerRoleController : BaseAdminController
     }
 
     [HttpPost]
-    [CheckPermission(StandardPermission.Customers.CUSTOMERS_VIEW)]
     [CheckPermission(StandardPermission.Customers.CUSTOMER_ROLES_VIEW)]
     public virtual async Task<IActionResult> List(CustomerRoleSearchModel searchModel)
     {

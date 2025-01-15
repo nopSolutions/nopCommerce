@@ -507,7 +507,6 @@ public partial class SpecificationAttributeController : BaseAdminController
 
     [HttpPost]
     [CheckPermission(StandardPermission.Catalog.SPECIFICATION_ATTRIBUTES_VIEW)]
-    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
     public virtual async Task<IActionResult> UsedByProducts(SpecificationAttributeProductSearchModel searchModel)
     {
         //try to get a specification attribute with the specified id

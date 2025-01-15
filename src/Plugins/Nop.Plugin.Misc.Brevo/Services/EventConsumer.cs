@@ -25,6 +25,7 @@ public class EventConsumer :
     #region Fields
 
     protected readonly BrevoManager _brevoEmailManager;
+    protected readonly BrevoSettings _brevoSettings;
     protected readonly MarketingAutomationManager _marketingAutomationManager;
 
     #endregion
@@ -32,9 +33,11 @@ public class EventConsumer :
     #region Ctor
 
     public EventConsumer(BrevoManager brevoEmailManager,
+        BrevoSettings brevoSettings,
         MarketingAutomationManager marketingAutomationManager)
     {
         _brevoEmailManager = brevoEmailManager;
+        _brevoSettings = brevoSettings;
         _marketingAutomationManager = marketingAutomationManager;
     }
 
@@ -49,6 +52,9 @@ public class EventConsumer :
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(EmailUnsubscribedEvent eventMessage)
     {
+        if (!BrevoManager.IsConfigured(_brevoSettings))
+            return;
+
         //unsubscribe contact
         await _brevoEmailManager.UnsubscribeAsync(eventMessage.Subscription);
     }
@@ -60,6 +66,9 @@ public class EventConsumer :
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(EmailSubscribedEvent eventMessage)
     {
+        if (!BrevoManager.IsConfigured(_brevoSettings))
+            return;
+
         //subscribe contact
         await _brevoEmailManager.SubscribeAsync(eventMessage.Subscription);
     }
@@ -71,6 +80,9 @@ public class EventConsumer :
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(EntityInsertedEvent<ShoppingCartItem> eventMessage)
     {
+        if (!BrevoManager.IsConfigured(_brevoSettings))
+            return;
+
         //handle event
         await _marketingAutomationManager.HandleShoppingCartChangedEventAsync(eventMessage.Entity);
     }
@@ -82,6 +94,9 @@ public class EventConsumer :
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(EntityUpdatedEvent<ShoppingCartItem> eventMessage)
     {
+        if (!BrevoManager.IsConfigured(_brevoSettings))
+            return;
+
         //handle event
         await _marketingAutomationManager.HandleShoppingCartChangedEventAsync(eventMessage.Entity);
     }
@@ -93,6 +108,9 @@ public class EventConsumer :
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(EntityDeletedEvent<ShoppingCartItem> eventMessage)
     {
+        if (!BrevoManager.IsConfigured(_brevoSettings))
+            return;
+
         //handle event
         await _marketingAutomationManager.HandleShoppingCartChangedEventAsync(eventMessage.Entity);
     }
@@ -104,6 +122,9 @@ public class EventConsumer :
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(OrderPaidEvent eventMessage)
     {
+        if (!BrevoManager.IsConfigured(_brevoSettings))
+            return;
+
         //handle event
         await _marketingAutomationManager.HandleOrderCompletedEventAsync(eventMessage.Order);
         await _brevoEmailManager.UpdateContactAfterCompletingOrderAsync(eventMessage.Order);
@@ -116,6 +137,9 @@ public class EventConsumer :
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(OrderPlacedEvent eventMessage)
     {
+        if (!BrevoManager.IsConfigured(_brevoSettings))
+            return;
+
         //handle event
         await _marketingAutomationManager.HandleOrderPlacedEventAsync(eventMessage.Order);
     }
@@ -127,6 +151,9 @@ public class EventConsumer :
     /// <returns>A task that represents the asynchronous operation</returns>
     public Task HandleEventAsync(EntityTokensAddedEvent<Store, Token> eventMessage)
     {
+        if (!BrevoManager.IsConfigured(_brevoSettings))
+            return Task.CompletedTask;
+
         //handle event
         eventMessage.Tokens.Add(new Token("Store.Id", eventMessage.Entity.Id));
 
@@ -140,6 +167,9 @@ public class EventConsumer :
     /// <returns>A task that represents the asynchronous operation</returns>
     public Task HandleEventAsync(EntityTokensAddedEvent<Customer, Token> eventMessage)
     {
+        if (!BrevoManager.IsConfigured(_brevoSettings))
+            return Task.CompletedTask;
+
         //handle event
         eventMessage.Tokens.Add(new Token("Customer.PhoneNumber", eventMessage.Entity.Phone));
 
