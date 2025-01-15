@@ -96,27 +96,20 @@ public partial class NopStartup : INopStartup
 
         if (distributedCacheConfig.Enabled)
         {
-            switch (distributedCacheConfig.DistributedCacheType)
+            if (distributedCacheConfig.DistributedCacheType == DistributedCacheType.RedisSynchronizedMemory)
             {
-                case DistributedCacheType.Memory:
-                    services.AddScoped<IStaticCacheManager, MemoryDistributedCacheManager>();
-                    services.AddScoped<ICacheKeyService, MemoryDistributedCacheManager>();
-                    break;
-                case DistributedCacheType.SqlServer:
-                    services.AddScoped<IStaticCacheManager, MsSqlServerCacheManager>();
-                    services.AddScoped<ICacheKeyService, MsSqlServerCacheManager>();
-                    break;
-                case DistributedCacheType.Redis:
+                services.AddSingleton<IRedisConnectionWrapper, RedisConnectionWrapper>();
+                services.AddSingleton<SynchronizedHybridCache, RedisSynchronizedMemoryCache>();
+                services.AddSingleton<IStaticCacheManager, SynchronizedMemoryCacheManager>();
+                services.AddScoped<ICacheKeyService, SynchronizedMemoryCacheManager>();
+            }
+            else
+            {
+                if (distributedCacheConfig.DistributedCacheType == DistributedCacheType.Redis)
                     services.AddSingleton<IRedisConnectionWrapper, RedisConnectionWrapper>();
-                    services.AddScoped<IStaticCacheManager, RedisCacheManager>();
-                    services.AddScoped<ICacheKeyService, RedisCacheManager>();
-                    break;
-                case DistributedCacheType.RedisSynchronizedMemory:
-                    services.AddSingleton<IRedisConnectionWrapper, RedisConnectionWrapper>();
-                    services.AddSingleton<ISynchronizedMemoryCache, RedisSynchronizedMemoryCache>();
-                    services.AddSingleton<IStaticCacheManager, SynchronizedMemoryCacheManager>();
-                    services.AddScoped<ICacheKeyService, SynchronizedMemoryCacheManager>();
-                    break;
+
+                services.AddSingleton<IStaticCacheManager, StaticCacheManager>();
+                services.AddScoped<ICacheKeyService, StaticCacheManager>();
             }
 
             services.AddSingleton<ILocker, DistributedCacheLocker>();
@@ -124,8 +117,8 @@ public partial class NopStartup : INopStartup
         else
         {
             services.AddSingleton<ILocker, MemoryCacheLocker>();
-            services.AddSingleton<IStaticCacheManager, MemoryCacheManager>();
-            services.AddScoped<ICacheKeyService, MemoryCacheManager>();
+            services.AddSingleton<IStaticCacheManager, StaticCacheManager>();
+            services.AddScoped<ICacheKeyService, StaticCacheManager>();
         }
 
         //work context

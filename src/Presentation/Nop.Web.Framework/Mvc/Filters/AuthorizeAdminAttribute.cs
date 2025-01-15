@@ -66,6 +66,7 @@ public sealed class AuthorizeAdminAttribute : TypeFilterAttribute
         /// <returns>A task that represents the asynchronous operation</returns>
         private async Task AuthorizeAdminAsync(AuthorizationFilterContext context)
         {
+            
             ArgumentNullException.ThrowIfNull(context);
 
             if (!DataSettingsManager.IsDatabaseInstalled())

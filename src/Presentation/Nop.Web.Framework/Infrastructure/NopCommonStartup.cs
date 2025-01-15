@@ -25,6 +25,11 @@ public partial class NopCommonStartup : INopStartup
         //add distributed cache
         services.AddDistributedCache();
 
+#pragma warning disable EXTEXP0018
+        //add hybrid cache
+        services.AddHybridCache();
+#pragma warning restore EXTEXP0018
+
         //add HTTP session state feature
         services.AddHttpSession();
 

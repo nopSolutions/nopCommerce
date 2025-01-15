@@ -13,7 +13,7 @@ public static partial class NopSettingsDefaults
     /// <summary>
     /// Gets a key for caching
     /// </summary>
-    public static CacheKey SettingsAllAsDictionaryCacheKey => new("Nop.setting.all.dictionary.", NopEntityCacheDefaults<Setting>.Prefix);
+    public static CacheKey SettingsAllAsDictionaryCacheKey => new("Nop.setting.all.dictionary", NopEntityCacheDefaults<Setting>.Prefix);
 
     #endregion
 }

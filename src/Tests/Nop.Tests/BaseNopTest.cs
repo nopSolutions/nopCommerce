@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.Resources;
 using FluentAssertions;
@@ -263,8 +264,11 @@ public partial class BaseNopTest
         services.AddScoped<IShortTermCacheManager, PerRequestCacheManager>();
 
         services.AddSingleton<ICacheKeyManager, CacheKeyManager>();
+#pragma warning disable EXTEXP0018
+        services.AddHybridCache();
+#pragma warning restore EXTEXP0018
         services.AddSingleton<IMemoryCache>(memoryCache);
-        services.AddSingleton<IStaticCacheManager, MemoryCacheManager>();
+        services.AddSingleton<IStaticCacheManager, StaticCacheManager>();
         services.AddSingleton<ILocker, MemoryCacheLocker>();
         services.AddSingleton<MemoryCacheLocker>();
 
@@ -272,7 +276,6 @@ public partial class BaseNopTest
 
         var memoryDistributedCache = new MemoryDistributedCache(new TestMemoryDistributedCacheOptions());
         services.AddSingleton<IDistributedCache>(memoryDistributedCache);
-        services.AddScoped<MemoryDistributedCacheManager>();
         services.AddSingleton(new DistributedCacheLocker(memoryDistributedCache));
 
         //services
@@ -561,6 +564,20 @@ public partial class BaseNopTest
     protected static T GetService<T>(IServiceScope scope)
     {
         return scope.ServiceProvider.GetService<T>();
+    }
+
+    protected static void Profile(Action action)
+    {
+        var sw = new Stopwatch();
+        var memory = GC.GetTotalMemory(true) / 1024.0 / 1024.0;
+        sw.Start();
+
+        action.Invoke();
+
+        sw.Stop();
+        var delta = GC.GetTotalMemory(true) / 1024.0 / 1024.0 - memory;
+        Console.WriteLine("Elapsed time: {0:F} s", sw.ElapsedMilliseconds / 1000.0);
+        Console.WriteLine("Memory usage: {0:F} MB", delta);
     }
 
     public static bool SetDataProviderType(DataProviderType type)

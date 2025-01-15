@@ -220,13 +220,6 @@ public static class ServiceCollectionExtensions
                 break;
 
             case DistributedCacheType.Redis:
-                services.AddStackExchangeRedisCache(options =>
-                {
-                    options.Configuration = distributedCacheConfig.ConnectionString;
-                    options.InstanceName = distributedCacheConfig.InstanceName ?? string.Empty;
-                });
-                break;
-
             case DistributedCacheType.RedisSynchronizedMemory:
                 services.AddStackExchangeRedisCache(options =>
                 {

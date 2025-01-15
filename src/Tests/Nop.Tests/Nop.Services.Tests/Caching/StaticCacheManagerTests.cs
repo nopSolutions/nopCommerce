@@ -1,18 +1,19 @@
-﻿using FluentAssertions;
+﻿using System.Security.Cryptography;
+using FluentAssertions;
 using Nop.Core.Caching;
 using NUnit.Framework;
 
-namespace Nop.Tests.Nop.Core.Tests.Caching;
+namespace Nop.Tests.Nop.Services.Tests.Caching;
 
 [TestFixture]
-public class MemoryCacheManagerTests : BaseNopTest
+public class StaticCacheManagerTests : BaseNopTest
 {
-    private MemoryCacheManager _staticCacheManager;
+    private IStaticCacheManager _staticCacheManager;
 
     [OneTimeSetUp]
     public void Setup()
     {
-        _staticCacheManager = GetService<IStaticCacheManager>() as MemoryCacheManager;
+        _staticCacheManager = GetService<IStaticCacheManager>();
     }
 
     [TearDown]
@@ -75,6 +76,7 @@ public class MemoryCacheManagerTests : BaseNopTest
         var key = new CacheKey("some_key_1");
         var res = await _staticCacheManager.GetAsync(key, 1);
         res.Should().Be(1);
+        await _staticCacheManager.RemoveAsync(key);
         res = await _staticCacheManager.GetAsync<int>(key);
         res.Should().Be(0);
     }
@@ -182,7 +184,7 @@ public class MemoryCacheManagerTests : BaseNopTest
         var key = new CacheKey("some_key_1");
 
         var obj = await _staticCacheManager.GetAsync<object>(
-            key, () => null);
+            key, async () => null);
 
         obj.Should().BeNull();
 
@@ -208,5 +210,32 @@ public class MemoryCacheManagerTests : BaseNopTest
 
         obj = await _staticCacheManager.GetAsync<int>(key);
         obj.Should().Be(0);
+    }
+
+    [Test]
+    [TestCase(10000)]
+    [TestCase(1000000)]
+    [Ignore("Not a test, used for profiling.")]
+    public async Task Profile(int objectCount)
+    {
+        await _staticCacheManager.ClearAsync();
+
+        string createRandomString(int size)
+        {
+            //generate a cryptographic random number
+            using var provider = RandomNumberGenerator.Create();
+            var buff = new byte[size];
+            provider.GetBytes(buff);
+
+            // Return a Base64 string representation of the random number
+            return Convert.ToBase64String(buff);
+        }
+
+        Profile(() =>
+        {
+            for (var i = 0; i < objectCount; i++)
+                _staticCacheManager.GetAsync(new CacheKey($"test_key_{i + 1}"), () => createRandomString(1000))
+                    .GetAwaiter().GetResult();
+        });
     }
 }

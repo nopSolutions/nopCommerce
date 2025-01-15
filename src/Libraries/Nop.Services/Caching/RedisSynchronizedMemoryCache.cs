@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using Nop.Core.Caching;
@@ -13,7 +14,7 @@ namespace Nop.Services.Caching;
 /// <remarks>
 /// This class should be registered on IoC as singleton instance
 /// </remarks>
-public partial class RedisSynchronizedMemoryCache : ISynchronizedMemoryCache
+public partial class RedisSynchronizedMemoryCache : SynchronizedHybridCache, IDisposable
 {
     #region Fields
 
@@ -24,7 +25,7 @@ public partial class RedisSynchronizedMemoryCache : ISynchronizedMemoryCache
     /// Holds the keys known by this nopCommerce instance
     /// </summary>
     protected readonly ICacheKeyManager _keyManager;
-    protected readonly IMemoryCache _memoryCache;
+    protected readonly HybridCache _hybridCache;
     protected readonly IRedisConnectionWrapper _connection;
     protected readonly ConcurrentQueue<string> _messageQueue = new();
     protected readonly Timer _timer;
@@ -33,14 +34,14 @@ public partial class RedisSynchronizedMemoryCache : ISynchronizedMemoryCache
 
     #region Ctor
 
-    public RedisSynchronizedMemoryCache(IMemoryCache memoryCache,
+    public RedisSynchronizedMemoryCache(HybridCache hybridCache,
         IRedisConnectionWrapper connectionWrapper,
         ICacheKeyManager cacheKeyManager,
         AppSettings appSettings)
     {
         _processId = $"{Guid.NewGuid()}:{Environment.ProcessId}";
 
-        _memoryCache = memoryCache;
+        _hybridCache = hybridCache;
         _keyManager = cacheKeyManager;
         _connection = connectionWrapper;
 
@@ -78,7 +79,7 @@ public partial class RedisSynchronizedMemoryCache : ISynchronizedMemoryCache
 
             foreach (var key in keys)
             {
-                _memoryCache.Remove(key);
+                _hybridCache.RemoveAsync(key).AsTask().Wait();
                 _keyManager.RemoveKey(key);
             }
         });
@@ -155,40 +156,7 @@ public partial class RedisSynchronizedMemoryCache : ISynchronizedMemoryCache
     }
 
     #endregion
-
-    /// <summary>
-    /// Create or overwrite an entry in the cache.
-    /// </summary>
-    /// <param name="key">An object identifying the entry.</param>
-    /// <returns>The newly created <see cref="T:Microsoft.Extensions.Caching.Memory.ICacheEntry" /> instance.</returns>
-    public ICacheEntry CreateEntry(object key)
-    {
-        return _memoryCache.CreateEntry(key).RegisterPostEvictionCallback(OnEviction);
-    }
-
-    /// <summary>
-    /// Removes the object associated with the given key.
-    /// </summary>
-    /// <param name="key">An object identifying the entry.</param>
-    public void Remove(object key)
-    {
-        _memoryCache.Remove(key);
-
-        //publish event manually instead of through eviction callback to avoid feedback loops
-        PublishChangeEvent(key);
-    }
-
-    /// <summary>
-    /// Gets the item associated with this key if present.
-    /// </summary>
-    /// <param name="key">An object identifying the requested entry.</param>
-    /// <param name="value">The located value or null.</param>
-    /// <returns>True if the key was found.</returns>
-    public bool TryGetValue(object key, out object value)
-    {
-        return _memoryCache.TryGetValue(key, out value);
-    }
-
+    
     /// <summary>
     /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
     /// </summary>
@@ -204,5 +172,32 @@ public partial class RedisSynchronizedMemoryCache : ISynchronizedMemoryCache
         }
 
         GC.SuppressFinalize(this);
+    }
+
+    public override ValueTask<T> GetOrCreateAsync<TState, T>(string key, TState state, Func<TState, CancellationToken, ValueTask<T>> factory, HybridCacheEntryOptions options = null,
+        IEnumerable<string> tags = null, CancellationToken cancellationToken = new())
+    {
+        return _hybridCache.GetOrCreateAsync(key, state, factory, options, tags, cancellationToken);
+    }
+
+    public override ValueTask SetAsync<T>(string key, T value, HybridCacheEntryOptions options = null, IEnumerable<string> tags = null,
+        CancellationToken cancellationToken = new())
+    {
+        return _hybridCache.SetAsync(key, value, options, tags, cancellationToken);
+    }
+
+    public override ValueTask RemoveAsync(string key, CancellationToken cancellationToken = new())
+    {
+        var rez = _hybridCache.RemoveAsync(key, cancellationToken);
+
+        //publish event manually instead of through eviction callback to avoid feedback loops
+        PublishChangeEvent(key);
+
+        return rez;
+    }
+
+    public override ValueTask RemoveByTagAsync(string tag, CancellationToken cancellationToken = new())
+    {
+        return _hybridCache.RemoveByTagAsync(tag, cancellationToken);
     }
 }
