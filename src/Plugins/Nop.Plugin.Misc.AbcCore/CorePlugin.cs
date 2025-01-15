@@ -254,6 +254,14 @@ namespace Nop.Plugin.Misc.AbcCore
                             Visible = true,
                             ControllerName = "NewProduct",
                             ActionName = "List"
+                        },
+                        new SiteMapNode()
+                        {
+                            SystemName = "ABCWarehouse.PageNotFound",
+                            Title = "Page Not Found List",
+                            Visible = true,
+                            ControllerName = "PageNotFound",
+                            ActionName = "List"
                         }
                     }
                 };

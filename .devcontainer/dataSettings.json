@@ -1,5 +1,0 @@
-{
-    "DataConnectionString": "Server=tcp:localhost,1433;Initial Catalog=NOPCommerce;User ID=sa;Password=P@ssw0rd;TrustServerCertificate=True;",
-    "DataProvider": "sqlserver",
-    "RawDataSettings": {}  
-}
