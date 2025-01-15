@@ -361,7 +361,7 @@
                     {
                         <span class="price old-price">&nbsp</span>
                     }
-                    @if (savedPrice.HasValue && savedPrice.Value > 0)
+                    @if (savedPrice.HasValue && savedPrice.Value > 50)
                     {
                         var saveStr = "$" + savedPrice.Value.ToString().Replace(".00", "") + " Off";
                         <span class="price you-save">@saveStr</span>
@@ -370,7 +370,7 @@
                     {
                         <span class="price you-save">&nbsp</span>
                     }
-                    @if (savedPrice.HasValue && savedPrice.Value > 0)
+                    @if (savedPrice.HasValue && savedPrice.Value > 50)
                     {
                         <span class="price-sale-tag">Sale</span>
                     }
