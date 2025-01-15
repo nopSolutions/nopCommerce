@@ -104,7 +104,7 @@ public partial class BrevoManager
         {
             //whether plugin is configured
             var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>();
-            if (string.IsNullOrEmpty(brevoSettings.ApiKey))
+            if (!IsConfigured(brevoSettings))
                 throw new NopException("Plugin not configured");
 
             return (await function(), default);
@@ -133,8 +133,8 @@ public partial class BrevoManager
     {
         //check whether plugin is configured to request services (validate API key)
         var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>();
-        if (string.IsNullOrEmpty(brevoSettings.ApiKey))
-            throw new NopException($"Plugin not configured");
+        if (!IsConfigured(brevoSettings))
+            throw new NopException("Plugin not configured");
 
         var apiConfiguration = new Configuration()
         {
@@ -834,6 +834,17 @@ public partial class BrevoManager
     #endregion
 
     #region Common
+
+    /// <summary>
+    /// Check whether the plugin is configured
+    /// </summary>
+    /// <param name="settings">Plugin settings</param>
+    /// <returns>Result</returns>
+    public static bool IsConfigured(BrevoSettings settings)
+    {
+        //API key is required to request remote services
+        return !string.IsNullOrEmpty(settings?.ApiKey);
+    }
 
     /// <summary>
     /// Get account information
