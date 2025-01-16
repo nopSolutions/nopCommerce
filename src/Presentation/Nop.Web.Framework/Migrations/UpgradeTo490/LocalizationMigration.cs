@@ -50,6 +50,9 @@ public class LocalizationMigration : MigrationBase
             ["ShoppingCart.DateOfBirthRequired"] = "This product has age restrictions. Please specify your age in the account details",
             ["ShoppingCart.MinimumAgeToPurchase"] = "This product is available to customers who are {0} years of age or older",
             ["Admin.Configuration.Settings.ProductEditor.AgeVerification"] = "Age verification",
+
+            //#2184
+            ["Admin.Catalog.Products.Multimedia.Pictures.Alert.VendorNumberPicturesLimit"] = "The maximum number of product pictures has been reached.",
         }, languageId);
 
         #endregion

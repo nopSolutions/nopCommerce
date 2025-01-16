@@ -1,6 +1,7 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Vendors;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -34,6 +35,14 @@ public class SettingMigration : MigrationBase
         {
             productEditorSettings.AgeVerification = false;
             settingService.SaveSetting(productEditorSettings, settings => settings.AgeVerification);
+        }
+
+        //#2184
+        var vendorSettings = settingService.LoadSetting<VendorSettings>();
+        if (!settingService.SettingExists(vendorSettings, settings => settings.MaximumProductPicturesNumber))
+        {
+            vendorSettings.MaximumProductPicturesNumber = 5;
+            settingService.SaveSetting(vendorSettings, settings => settings.MaximumProductPicturesNumber);
         }
     }
 

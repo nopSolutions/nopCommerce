@@ -332,7 +332,7 @@ public partial class ImportManager : IImportManager
     {
         foreach (var product in productPictureMetadata)
         {
-            foreach (var picturePath in new[] { product.Picture1Path, product.Picture2Path, product.Picture3Path })
+            foreach (var picturePath in product.PicturePaths)
             {
                 if (string.IsNullOrEmpty(picturePath))
                     continue;
@@ -401,7 +401,7 @@ public partial class ImportManager : IImportManager
 
         foreach (var product in productPictureMetadata)
         {
-            foreach (var picturePath in new[] { product.Picture1Path, product.Picture2Path, product.Picture3Path })
+            foreach (var picturePath in product.PicturePaths)
             {
                 if (string.IsNullOrEmpty(picturePath))
                     continue;
@@ -2641,18 +2641,21 @@ public partial class ImportManager : IImportManager
                 await _productService.UpdateProductStoreMappingsAsync(product, importedStores);
             }
 
-            var picture1 = await DownloadFileAsync(metadata.Manager.GetDefaultProperty("Picture1")?.StringValue, downloadedFiles);
-            var picture2 = await DownloadFileAsync(metadata.Manager.GetDefaultProperty("Picture2")?.StringValue, downloadedFiles);
-            var picture3 = await DownloadFileAsync(metadata.Manager.GetDefaultProperty("Picture3")?.StringValue, downloadedFiles);
-
-            productPictureMetadata.Add(new ProductPictureMetadata
+            var pictureMetaData = new ProductPictureMetadata
             {
                 ProductItem = product,
-                Picture1Path = picture1,
-                Picture2Path = picture2,
-                Picture3Path = picture3,
                 IsNew = isNew
-            });
+            };
+
+            var pictureProperties = new List<string> { "Picture1", "Picture2", "Picture3" };
+
+            if (currentVendor != null)
+                pictureProperties = pictureProperties.Take(_vendorSettings.MaximumProductPicturesNumber).ToList();
+
+            foreach (var propertyName in pictureProperties)
+                pictureMetaData.PicturePaths.Add(await DownloadFileAsync(metadata.Manager.GetDefaultProperty(propertyName)?.StringValue, downloadedFiles));
+
+            productPictureMetadata.Add(pictureMetaData);
 
             lastLoadedProduct = product;
         }
@@ -3408,11 +3411,7 @@ public partial class ImportManager : IImportManager
     {
         public Product ProductItem { get; set; }
 
-        public string Picture1Path { get; set; }
-
-        public string Picture2Path { get; set; }
-
-        public string Picture3Path { get; set; }
+        public HashSet<string> PicturePaths { get; set; } = new();
 
         public bool IsNew { get; set; }
     }
