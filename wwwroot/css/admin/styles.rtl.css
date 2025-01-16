@@ -1915,6 +1915,10 @@ span.grid-report-item.red {
   width: 100%;
 }
 
+.filepond--file-wrapper, .filepond--panel.filepond--item-panel {
+    animation: unset !important;
+}
+
 /*fix for inline-block buttons*/
 .content-header .float-right > .btn, .content-header .float-right > .btn-group {
   float: right;
