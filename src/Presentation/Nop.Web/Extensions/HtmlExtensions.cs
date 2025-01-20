@@ -367,20 +367,20 @@ public static class HtmlExtensions
         return theme?.SupportRtl ?? false;
     }
 
+    /// <summary>
+    /// Return a value indicating whether to display the admin tour
+    /// </summary>
+    /// <param name="html">HTML helper</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the value
+    /// </returns>
     public static async Task<bool> IsTourActiveAsync(this IHtmlHelper html)
     {
-        //var customer = await _workContext.GetCurrentCustomerAsync();
-        //var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
-        //var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
-
-        //if (!hideCard && !closeCard)
-        //    ViewBag.ShowTour = true;
-
         var actionContextAccessor = EngineContext.Current.Resolve<IActionContextAccessor>();
         if (actionContextAccessor.ActionContext.HttpContext.Request.Query.TryGetValue("ShowTour", out var showTourValue) && bool.TryParse(showTourValue, out var showTour))
         {
-            var workContext = EngineContext.Current.Resolve<IWorkContext>();
-            return showTour && await workContext.GetCurrentVendorAsync() is null;
+            return showTour && await EngineContext.Current.Resolve<IWorkContext>().GetCurrentVendorAsync() is null;
         }
 
         return false;

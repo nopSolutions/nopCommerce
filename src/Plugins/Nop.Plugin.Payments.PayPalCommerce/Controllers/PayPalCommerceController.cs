@@ -10,7 +10,6 @@ using Nop.Plugin.Payments.PayPalCommerce.Factories;
 using Nop.Plugin.Payments.PayPalCommerce.Models.Admin;
 using Nop.Plugin.Payments.PayPalCommerce.Services;
 using Nop.Services;
-using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
@@ -30,10 +29,8 @@ public class PayPalCommerceController : BasePluginController
     #region Fields
 
     private readonly AppSettings _appSettings;
-    private readonly IGenericAttributeService _genericAttributeService;
     private readonly ILocalizationService _localizationService;
     private readonly INotificationService _notificationService;
-    private readonly IPermissionService _permissionService;
     private readonly ISettingService _settingService;
     private readonly IStoreContext _storeContext;
     private readonly IWorkContext _workContext;
@@ -46,10 +43,8 @@ public class PayPalCommerceController : BasePluginController
     #region Ctor
 
     public PayPalCommerceController(AppSettings appSettings,
-        IGenericAttributeService genericAttributeService,
         ILocalizationService localizationService,
         INotificationService notificationService,
-        IPermissionService permissionService,
         ISettingService settingService,
         IStoreContext storeContext,
         IWorkContext workContext,
@@ -58,10 +53,8 @@ public class PayPalCommerceController : BasePluginController
         ShoppingCartSettings shoppingCartSettings)
     {
         _appSettings = appSettings;
-        _genericAttributeService = genericAttributeService;
         _localizationService = localizationService;
         _notificationService = notificationService;
-        _permissionService = permissionService;
         _settingService = settingService;
         _storeContext = storeContext;
         _workContext = workContext;

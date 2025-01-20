@@ -53,7 +53,6 @@ public partial class ProductController : BaseAdminController
     protected readonly IDiscountService _discountService;
     protected readonly IDownloadService _downloadService;
     protected readonly IExportManager _exportManager;
-    protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly IHttpClientFactory _httpClientFactory;
     protected readonly IImportManager _importManager;
     protected readonly ILanguageService _languageService;
@@ -100,7 +99,6 @@ public partial class ProductController : BaseAdminController
         IDiscountService discountService,
         IDownloadService downloadService,
         IExportManager exportManager,
-        IGenericAttributeService genericAttributeService,
         IHttpClientFactory httpClientFactory,
         IImportManager importManager,
         ILanguageService languageService,
@@ -142,7 +140,6 @@ public partial class ProductController : BaseAdminController
         _discountService = discountService;
         _downloadService = downloadService;
         _exportManager = exportManager;
-        _genericAttributeService = genericAttributeService;
         _httpClientFactory = httpClientFactory;
         _importManager = importManager;
         _languageService = languageService;

@@ -31,11 +31,17 @@
                 side: "bottom",
                 align: 'start',
                 onPopoverRender: (popover, { config, state }) => {
+                    config.onPopoverRender(popover, { config, state });
+
                     if (advancedModeCheckBox !== null && !advancedModeCheckBox.checked){
                         advancedModeCheckBox.click();
                     }
 
-                    credentialsCheckBox.click();
+                    if (!credentialsCheckBox.checked) {
+                        credentialsCheckBox.click();
+                    }
+
+                    $('#pnlCredentials').showElement();
                 }
             }},{
             element: '#pnlCredentials',

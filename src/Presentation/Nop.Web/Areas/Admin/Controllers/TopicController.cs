@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Nop.Core;
 using Nop.Core.Domain.Topics;
-using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -33,8 +31,6 @@ public partial class TopicController : BaseAdminController
     protected readonly ITopicModelFactory _topicModelFactory;
     protected readonly ITopicService _topicService;
     protected readonly IUrlRecordService _urlRecordService;
-    protected readonly IGenericAttributeService _genericAttributeService;
-    protected readonly IWorkContext _workContext;
 
 
     #endregion Fields
@@ -52,9 +48,7 @@ public partial class TopicController : BaseAdminController
         IStoreService storeService,
         ITopicModelFactory topicModelFactory,
         ITopicService topicService,
-        IUrlRecordService urlRecordService,
-        IGenericAttributeService genericAttributeService,
-        IWorkContext workContext)
+        IUrlRecordService urlRecordService)
     {
         _aclService = aclService;
         _customerActivityService = customerActivityService;
@@ -68,8 +62,6 @@ public partial class TopicController : BaseAdminController
         _topicModelFactory = topicModelFactory;
         _topicService = topicService;
         _urlRecordService = urlRecordService;
-        _genericAttributeService = genericAttributeService;
-        _workContext = workContext;
     }
 
     #endregion

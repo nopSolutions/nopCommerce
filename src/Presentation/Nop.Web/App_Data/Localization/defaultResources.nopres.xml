@@ -10054,7 +10054,7 @@
     <Value>Configure PayPal Commerce</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.PaymentPayPal.ApiCredentials.Text">
-    <Value><![CDATA[If you already have an app created in your PayPal account or would like to test it in the sandbox mode, follow these steps.]]></Value>
+    <Value><![CDATA[If you already have an app created in your PayPal account, follow these steps.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.PaymentPayPal.ApiCredentials.Title">
     <Value>Specify API credentials</Value>

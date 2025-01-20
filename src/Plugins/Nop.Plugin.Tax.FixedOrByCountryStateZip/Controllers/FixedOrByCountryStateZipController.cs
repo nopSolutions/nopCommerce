@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Core;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Domain;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Models;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Services;
-using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
@@ -35,8 +33,6 @@ public class FixedOrByCountryStateZipController : BasePluginController
     protected readonly IStateProvinceService _stateProvinceService;
     protected readonly IStoreService _storeService;
     protected readonly ITaxCategoryService _taxCategoryService;
-    protected readonly IGenericAttributeService _genericAttributeService;
-    protected readonly IWorkContext _workContext;
 
     #endregion
 
@@ -50,9 +46,7 @@ public class FixedOrByCountryStateZipController : BasePluginController
         ISettingService settingService,
         IStateProvinceService stateProvinceService,
         IStoreService storeService,
-        ITaxCategoryService taxCategoryService,
-        IGenericAttributeService genericAttributeService,
-        IWorkContext workContext)
+        ITaxCategoryService taxCategoryService)
 
     {
         _countryStateZipSettings = countryStateZipSettings;
@@ -64,8 +58,6 @@ public class FixedOrByCountryStateZipController : BasePluginController
         _stateProvinceService = stateProvinceService;
         _storeService = storeService;
         _taxCategoryService = taxCategoryService;
-        _genericAttributeService = genericAttributeService;
-        _workContext = workContext;
 
     }
 

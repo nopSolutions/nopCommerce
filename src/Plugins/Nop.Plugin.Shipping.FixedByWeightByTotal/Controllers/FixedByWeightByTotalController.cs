@@ -1,12 +1,10 @@
 ﻿using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Domain;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Models;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Services;
-using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
@@ -40,8 +38,6 @@ public class FixedByWeightByTotalController : BasePluginController
     protected readonly IShippingService _shippingService;
     protected readonly IStateProvinceService _stateProvinceService;
     protected readonly IStoreService _storeService;
-    protected readonly IGenericAttributeService _genericAttributeService;
-    protected readonly IWorkContext _workContext;
     protected readonly MeasureSettings _measureSettings;
 
     #endregion
@@ -60,8 +56,6 @@ public class FixedByWeightByTotalController : BasePluginController
         IShippingService shippingService,
         IStateProvinceService stateProvinceService,
         IStoreService storeService,
-        IGenericAttributeService genericAttributeService,
-        IWorkContext workContext,
         MeasureSettings measureSettings)
     {
         _currencySettings = currencySettings;
@@ -76,8 +70,6 @@ public class FixedByWeightByTotalController : BasePluginController
         _stateProvinceService = stateProvinceService;
         _shippingService = shippingService;
         _storeService = storeService;
-        _genericAttributeService = genericAttributeService;
-        _workContext = workContext;
         _measureSettings = measureSettings;
     }
 

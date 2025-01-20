@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Infrastructure;
-using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -32,7 +31,6 @@ public partial class EmailAccountController : BaseAdminController
     protected readonly IEmailAccountModelFactory _emailAccountModelFactory;
     protected readonly IEmailAccountService _emailAccountService;
     protected readonly IEmailSender _emailSender;
-    protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly ILocalizationService _localizationService;
     protected readonly INopFileProvider _fileProvider;
     protected readonly INotificationService _notificationService;
@@ -40,7 +38,6 @@ public partial class EmailAccountController : BaseAdminController
     protected readonly ISettingService _settingService;
     protected readonly IStoreContext _storeContext;
     protected readonly IWebHelper _webHelper;
-    protected readonly IWorkContext _workContext;
 
     #endregion
 
@@ -51,22 +48,19 @@ public partial class EmailAccountController : BaseAdminController
         IEmailAccountModelFactory emailAccountModelFactory,
         IEmailAccountService emailAccountService,
         IEmailSender emailSender,
-        IGenericAttributeService genericAttributeService,
         ILocalizationService localizationService,
         INopFileProvider fileProvider,
         INotificationService notificationService,
         IPermissionService permissionService,
         ISettingService settingService,
         IStoreContext storeContext,
-        IWebHelper webHelper,
-        IWorkContext workContext)
+        IWebHelper webHelper)
     {
         _emailAccountSettings = emailAccountSettings;
         _customerActivityService = customerActivityService;
         _emailAccountModelFactory = emailAccountModelFactory;
         _emailAccountService = emailAccountService;
         _emailSender = emailSender;
-        _genericAttributeService = genericAttributeService;
         _localizationService = localizationService;
         _fileProvider = fileProvider;
         _notificationService = notificationService;
@@ -74,7 +68,6 @@ public partial class EmailAccountController : BaseAdminController
         _settingService = settingService;
         _storeContext = storeContext;
         _webHelper = webHelper;
-        _workContext = workContext;
     }
 
     #endregion

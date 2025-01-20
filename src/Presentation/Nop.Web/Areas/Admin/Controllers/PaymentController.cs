@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
-using Nop.Core;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Events;
-using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
@@ -30,8 +28,6 @@ public partial class PaymentController : BaseAdminController
     protected readonly IPaymentPluginManager _paymentPluginManager;
     protected readonly IPermissionService _permissionService;
     protected readonly ISettingService _settingService;
-    protected readonly IGenericAttributeService _genericAttributeService;
-    protected readonly IWorkContext _workContext;
     protected readonly PaymentSettings _paymentSettings;
     private static readonly char[] _separator = [','];
 
@@ -47,8 +43,6 @@ public partial class PaymentController : BaseAdminController
         IPaymentPluginManager paymentPluginManager,
         IPermissionService permissionService,
         ISettingService settingService,
-        IGenericAttributeService genericAttributeService,
-        IWorkContext workContext,
         PaymentSettings paymentSettings)
     {
         _countryService = countryService;
@@ -59,8 +53,6 @@ public partial class PaymentController : BaseAdminController
         _paymentPluginManager = paymentPluginManager;
         _permissionService = permissionService;
         _settingService = settingService;
-        _genericAttributeService = genericAttributeService;
-        _workContext = workContext;
         _paymentSettings = paymentSettings;
     }
 

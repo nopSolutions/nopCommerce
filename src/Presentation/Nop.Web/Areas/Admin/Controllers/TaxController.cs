@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Nop.Core;
 using Nop.Core.Domain.Tax;
-using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Security;
 using Nop.Services.Tax;
@@ -21,8 +19,6 @@ public partial class TaxController : BaseAdminController
     protected readonly IPermissionService _permissionService;
     protected readonly ISettingService _settingService;
     protected readonly ITaxCategoryService _taxCategoryService;
-    protected readonly IGenericAttributeService _genericAttributeService;
-    protected readonly IWorkContext _workContext;
     protected readonly ITaxModelFactory _taxModelFactory;
     protected readonly ITaxPluginManager _taxPluginManager;
     protected readonly TaxSettings _taxSettings;
@@ -34,8 +30,6 @@ public partial class TaxController : BaseAdminController
     public TaxController(IPermissionService permissionService,
         ISettingService settingService,
         ITaxCategoryService taxCategoryService,
-        IGenericAttributeService genericAttributeService,
-        IWorkContext workContext,
         ITaxModelFactory taxModelFactory,
         ITaxPluginManager taxPluginManager,
         TaxSettings taxSettings)
@@ -43,8 +37,6 @@ public partial class TaxController : BaseAdminController
         _permissionService = permissionService;
         _settingService = settingService;
         _taxCategoryService = taxCategoryService;
-        _genericAttributeService = genericAttributeService;
-        _workContext = workContext;
         _taxModelFactory = taxModelFactory;
         _taxPluginManager = taxPluginManager;
         _taxSettings = taxSettings;
