@@ -1,6 +1,9 @@
 @model PageNotFoundSearchModel
 
-@using Nop.Plugin.Misc.AbcCore.Areas.Admin.Models
+@using Nop.Web.Framework.UI
+@using Nop.Web.Framework.Models.DataTables
+@using Nop.Core.Domain.Common
+@using Nop.Plugin.Misc.AbcCore.Areas.Admin.PageNotFound
 @using Nop.Web.Framework.Models.DataTables
 @using Nop.Services.Common
 @using Nop.Core
@@ -55,6 +58,16 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-5">
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="CustomerEmail" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="CustomerEmail" />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="text-center col-12">
@@ -79,7 +92,8 @@
                         LengthMenu = Model.AvailablePageSizes,
                         Filters = new List<FilterParameter>
                         {
-                            new FilterParameter(nameof(Model.Slug))
+                            new FilterParameter(nameof(Model.Slug)),
+                            new FilterParameter(nameof(Model.CustomerEmail))
                         },
                         ColumnCollection = new List<ColumnProperty>
                         {
@@ -93,10 +107,16 @@
                                 Title = "Referrer",
                                 Width = "300"
                             },
+                            new ColumnProperty(nameof(PageNotFoundModel.CustomerEmail))
+                            {
+                                Title = "Customer",
+                                Width = "100",
+                                Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(PageNotFoundModel.CustomerId)))
+                            },
                             new ColumnProperty(nameof(PageNotFoundModel.Date))
                             {
                                 Title = "Date",
-                                Width = "300",
+                                Width = "100",
                                 Render = new RenderDate()
                             }
                         }
