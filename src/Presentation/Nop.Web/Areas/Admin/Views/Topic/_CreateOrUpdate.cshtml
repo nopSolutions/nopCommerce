@@ -1,11 +1,9 @@
 ﻿@model TopicModel
 
 @{
-    var showTour = ViewBag.ShowTour ?? false;
-
     const string hideInfoBlockAttributeName = "TopicDetailsPage.HideInfoBlock";
     var customer = await workContext.GetCurrentCustomerAsync();
-    var hideInfoBlock = showTour ? false : await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
+    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName) && !await Html.IsTourActiveAsync();
 
     const string hideDisplayBlockAttributeName = "TopicDetailsPage.HideDisplayBlock";
     var hideDisplayBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideDisplayBlockAttributeName, defaultValue: true);

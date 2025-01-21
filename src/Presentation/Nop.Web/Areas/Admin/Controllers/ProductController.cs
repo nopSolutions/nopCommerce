@@ -55,7 +55,6 @@ public partial class ProductController : BaseAdminController
     protected readonly IDiscountService _discountService;
     protected readonly IDownloadService _downloadService;
     protected readonly IExportManager _exportManager;
-    protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly IHttpClientFactory _httpClientFactory;
     protected readonly IImportManager _importManager;
     protected readonly ILanguageService _languageService;
@@ -103,7 +102,6 @@ public partial class ProductController : BaseAdminController
         IDiscountService discountService,
         IDownloadService downloadService,
         IExportManager exportManager,
-        IGenericAttributeService genericAttributeService,
         IHttpClientFactory httpClientFactory,
         IImportManager importManager,
         ILanguageService languageService,
@@ -146,7 +144,6 @@ public partial class ProductController : BaseAdminController
         _discountService = discountService;
         _downloadService = downloadService;
         _exportManager = exportManager;
-        _genericAttributeService = genericAttributeService;
         _httpClientFactory = httpClientFactory;
         _importManager = importManager;
         _languageService = languageService;
@@ -972,7 +969,7 @@ public partial class ProductController : BaseAdminController
     }
 
     [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
-    public virtual async Task<IActionResult> Create(bool showtour = false)
+    public virtual async Task<IActionResult> Create()
     {
         //validate maximum number of products per vendor
         var currentVendor = await _workContext.GetCurrentVendorAsync();
@@ -987,17 +984,6 @@ public partial class ProductController : BaseAdminController
 
         //prepare model
         var model = await _productModelFactory.PrepareProductModelAsync(new ProductModel(), null);
-
-        //show configuration tour
-        if (showtour)
-        {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
-            var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
-
-            if (!hideCard && !closeCard)
-                ViewBag.ShowTour = true;
-        }
 
         return View(model);
     }

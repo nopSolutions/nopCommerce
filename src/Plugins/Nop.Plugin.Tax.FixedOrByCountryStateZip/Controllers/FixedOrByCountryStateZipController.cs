@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Core;
-using Nop.Core.Domain.Customers;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Domain;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Models;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Services;
-using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
@@ -36,8 +33,6 @@ public class FixedOrByCountryStateZipController : BasePluginController
     protected readonly IStateProvinceService _stateProvinceService;
     protected readonly IStoreService _storeService;
     protected readonly ITaxCategoryService _taxCategoryService;
-    protected readonly IGenericAttributeService _genericAttributeService;
-    protected readonly IWorkContext _workContext;
 
     #endregion
 
@@ -51,9 +46,7 @@ public class FixedOrByCountryStateZipController : BasePluginController
         ISettingService settingService,
         IStateProvinceService stateProvinceService,
         IStoreService storeService,
-        ITaxCategoryService taxCategoryService,
-        IGenericAttributeService genericAttributeService,
-        IWorkContext workContext)
+        ITaxCategoryService taxCategoryService)
 
     {
         _countryStateZipSettings = countryStateZipSettings;
@@ -65,8 +58,6 @@ public class FixedOrByCountryStateZipController : BasePluginController
         _stateProvinceService = stateProvinceService;
         _storeService = storeService;
         _taxCategoryService = taxCategoryService;
-        _genericAttributeService = genericAttributeService;
-        _workContext = workContext;
 
     }
 
@@ -75,7 +66,7 @@ public class FixedOrByCountryStateZipController : BasePluginController
     #region Methods
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
-    public async Task<IActionResult> Configure(bool showtour = false)
+    public async Task<IActionResult> Configure()
     {
         var taxCategories = await _taxCategoryService.GetAllTaxCategoriesAsync();
 
@@ -114,17 +105,6 @@ public class FixedOrByCountryStateZipController : BasePluginController
             var states = await _stateProvinceService.GetStateProvincesByCountryIdAsync(defaultCountry.Id);
             foreach (var s in states)
                 model.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
-        }
-
-        //show configuration tour
-        if (showtour)
-        {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
-            var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
-
-            if (!hideCard && !closeCard)
-                ViewBag.ShowTour = true;
         }
 
         return View("~/Plugins/Tax.FixedOrByCountryStateZip/Views/Configure.cshtml", model);
