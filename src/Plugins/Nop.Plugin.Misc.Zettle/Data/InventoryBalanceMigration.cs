@@ -40,7 +40,8 @@ public class InventoryBalanceMigration : MigrationBase
 
         //delete settings
         var setting = await _settingService.GetSettingAsync($"{nameof(ZettleSettings)}.InventoryTrackingIds");
-        await _settingService.DeleteSettingAsync(setting);
+        if(setting is not null)
+            await _settingService.DeleteSettingAsync(setting);
     }
 
     /// <summary>
