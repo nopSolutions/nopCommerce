@@ -52,7 +52,7 @@ namespace Nop.Plugin.Misc.AbcCore.Areas.Admin.PageNotFound
             var logs = _logger.GetPageNotFoundLogs();
             if (!string.IsNullOrWhiteSpace(searchModel.Slug))
             {
-                logs = logs.Where(logs => logs.PageUrl.Contains(searchModel.Slug)).ToList();
+                logs = logs.Where(log => log.PageUrl.Contains(searchModel.Slug)).ToList();
             }
             if (!string.IsNullOrWhiteSpace(searchModel.CustomerEmail))
             {
@@ -66,6 +66,20 @@ namespace Nop.Plugin.Misc.AbcCore.Areas.Admin.PageNotFound
                     logs = new List<Log>();
                 }
             }
+            var createdOnFromValue = searchModel.CreatedOnFrom.HasValue
+                ? (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnFrom.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()) : null;
+            var createdToFromValue = searchModel.CreatedOnTo.HasValue
+                ? (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnTo.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1) : null;
+
+            if (createdOnFromValue != null)
+            {
+                logs = logs.Where(log => log.CreatedOnUtc >= createdOnFromValue).ToList();
+            }
+            if (createdToFromValue != null)
+            {
+                logs = logs.Where(log => log.CreatedOnUtc <= createdToFromValue).ToList();
+            }
+
             var pagedList = logs.ToPagedList(searchModel);
             var model = await new PageNotFoundListModel().PrepareToGridAsync(searchModel, pagedList, () =>
             {

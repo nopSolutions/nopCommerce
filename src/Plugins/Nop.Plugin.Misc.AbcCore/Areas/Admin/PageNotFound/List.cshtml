@@ -70,6 +70,28 @@
                             </div>
                         </div>
                         <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="CreatedOnFrom" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="CreatedOnFrom" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="CreatedOnTo" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="CreatedOnTo" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="text-center col-12">
                                 <button type="button" id="search-log" class="btn btn-primary btn-search">
                                     <i class="fas fa-search"></i>
@@ -93,7 +115,9 @@
                         Filters = new List<FilterParameter>
                         {
                             new FilterParameter(nameof(Model.Slug)),
-                            new FilterParameter(nameof(Model.CustomerEmail))
+                            new FilterParameter(nameof(Model.CustomerEmail)),
+                            new FilterParameter(nameof(Model.CreatedOnFrom)),
+                            new FilterParameter(nameof(Model.CreatedOnTo)),
                         },
                         ColumnCollection = new List<ColumnProperty>
                         {
