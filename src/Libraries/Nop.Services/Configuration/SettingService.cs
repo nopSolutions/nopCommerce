@@ -373,7 +373,7 @@ public partial class SettingService : ISettingService
         if (setting == null && storeId > 0 && loadSharedValueIfNotFound)
             setting = settingsByKey.FirstOrDefault(x => x.StoreId == 0);
 
-        return setting != null ? GetSettingById(setting.Id) : null;
+        return setting;
     }
 
     /// <summary>
