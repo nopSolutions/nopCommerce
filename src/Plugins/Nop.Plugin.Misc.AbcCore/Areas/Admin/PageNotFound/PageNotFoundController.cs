@@ -17,6 +17,8 @@ using Nop.Plugin.Misc.AbcCore.Nop;
 using Nop.Services.Helpers;
 using System;
 using Nop.Services.Customers;
+using System.Collections.Generic;
+using Nop.Core.Domain.Logging;
 
 namespace Nop.Plugin.Misc.AbcCore.Areas.Admin.PageNotFound
 {
@@ -57,7 +59,11 @@ namespace Nop.Plugin.Misc.AbcCore.Areas.Admin.PageNotFound
                 var customerId = (await _customerService.GetCustomerByEmailAsync(searchModel.CustomerEmail))?.Id;
                 if (customerId.HasValue)
                 {
-                    logs = logs.Where(logs => logs.CustomerId == customerId.Value).ToList();
+                    logs = logs.Where(log => log.CustomerId == customerId.Value).ToList();
+                }
+                else
+                {
+                    logs = new List<Log>();
                 }
             }
             var pagedList = logs.ToPagedList(searchModel);
