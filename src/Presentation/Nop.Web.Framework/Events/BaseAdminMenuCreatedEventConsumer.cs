@@ -73,6 +73,11 @@ public abstract class BaseAdminMenuCreatedEventConsumer : IConsumer<AdminMenuCre
 
         var plugin = await _pluginManager.LoadPluginBySystemNameAsync(PluginSystemName);
 
+        //the LoadPluginBySystemNameAsync method returns only plugins that are already fully installed,
+        //while the IConsumer<AdminMenuCreatedEvent> event can be called before the installation is complete
+        if (plugin ==  null)
+            return;
+
         var newItem = await GetAdminMenuItemAsync(plugin);
 
         if (newItem == null)
