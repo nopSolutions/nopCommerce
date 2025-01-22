@@ -10,5 +10,6 @@ namespace Nop.Plugin.Misc.AbcCore.Areas.Admin.PageNotFound
         public int CustomerId { get; set; }
         public string CustomerEmail { get; set; }
         public DateTime Date { get; set; }
+        public string IpAddress { get; set; }
     }
 }

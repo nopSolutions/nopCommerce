@@ -92,6 +92,20 @@
                             </div>
                         </div>
                         <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="IpAddress" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="IpAddress" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="text-center col-12">
                                 <button type="button" id="search-log" class="btn btn-primary btn-search">
                                     <i class="fas fa-search"></i>
@@ -118,6 +132,7 @@
                             new FilterParameter(nameof(Model.CustomerEmail)),
                             new FilterParameter(nameof(Model.CreatedOnFrom)),
                             new FilterParameter(nameof(Model.CreatedOnTo)),
+                            new FilterParameter(nameof(Model.IpAddress)),
                         },
                         ColumnCollection = new List<ColumnProperty>
                         {
@@ -136,6 +151,11 @@
                                 Title = "Customer",
                                 Width = "100",
                                 Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(PageNotFoundModel.CustomerId)))
+                            },
+                            new ColumnProperty(nameof(PageNotFoundModel.IpAddress))
+                            {
+                                Title = "IPAddress",
+                                Width = "100"
                             },
                             new ColumnProperty(nameof(PageNotFoundModel.Date))
                             {

@@ -22,5 +22,8 @@ namespace Nop.Plugin.Misc.AbcCore.Areas.Admin.PageNotFound
         [NopResourceDisplayName("Admin.System.PageNotFound.List.CreatedOnTo")]
         [UIHint("DateNullable")]
         public DateTime? CreatedOnTo { get; set; }
+
+        [NopResourceDisplayName("Admin.System.PageNotFound.List.IpAddress")]
+        public string IpAddress { get; set; }
     }
 }

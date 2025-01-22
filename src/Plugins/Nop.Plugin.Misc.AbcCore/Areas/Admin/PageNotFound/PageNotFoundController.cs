@@ -80,6 +80,11 @@ namespace Nop.Plugin.Misc.AbcCore.Areas.Admin.PageNotFound
                 logs = logs.Where(log => log.CreatedOnUtc <= createdToFromValue).ToList();
             }
 
+            if (!string.IsNullOrWhiteSpace(searchModel.IpAddress))
+            {
+                logs = logs.Where(log => log.IpAddress == searchModel.IpAddress).ToList();
+            }
+
             var pagedList = logs.ToPagedList(searchModel);
             var model = await new PageNotFoundListModel().PrepareToGridAsync(searchModel, pagedList, () =>
             {
@@ -93,7 +98,8 @@ namespace Nop.Plugin.Misc.AbcCore.Areas.Admin.PageNotFound
                         ReferrerUrl = log.ReferrerUrl,
                         CustomerId = customerId,
                         CustomerEmail = (await _customerService.GetCustomerByIdAsync(customerId))?.Email ?? "Guest",
-                        Date = await _dateTimeHelper.ConvertToUserTimeAsync(log.CreatedOnUtc, DateTimeKind.Utc)
+                        Date = await _dateTimeHelper.ConvertToUserTimeAsync(log.CreatedOnUtc, DateTimeKind.Utc),
+                        IpAddress = log.IpAddress
                     };
 
                     return PageNotFoundModel;
