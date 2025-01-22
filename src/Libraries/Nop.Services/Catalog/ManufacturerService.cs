@@ -418,7 +418,7 @@ public partial class ManufacturerService : IManufacturerService
             query = query.Where(pm => manufacturersQuery.Any(m => m.Id == pm.ManufacturerId));
         }
 
-        return await _staticCacheManager.GetAsync(key, query.ToList);
+        return await _staticCacheManager.GetAsync(key, query.ToListAsync);
     }
 
     /// <summary>
