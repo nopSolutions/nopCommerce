@@ -81,9 +81,9 @@ public partial class InstallationService
     /// <returns>
     /// A task that represents the asynchronous operation
     /// </returns>
-    protected virtual async Task InstallMeasuresAsync(RegionInfo regionInfo)
+    protected virtual async Task InstallMeasuresAsync()
     {
-        var isMetric = regionInfo?.IsMetric ?? false;
+        var isMetric = _installationSettings.RegionInfo?.IsMetric ?? false;
 
         var measureDimensions = new List<MeasureDimension>
         {
@@ -169,11 +169,8 @@ public partial class InstallationService
     /// <summary>
     /// Installs a default languages
     /// </summary>
-    /// <param name="languagePackInfo">Language pack download link</param>
-    /// <param name="cultureInfo">Culture info</param>
-    /// <param name="regionInfo">Region info</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    protected virtual async Task InstallLanguagesAsync((string languagePackDownloadLink, int languagePackProgress) languagePackInfo, CultureInfo cultureInfo, RegionInfo regionInfo)
+    protected virtual async Task InstallLanguagesAsync()
     {
         var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
 
@@ -199,6 +196,9 @@ public partial class InstallationService
             await localizationService.ImportResourcesFromXmlAsync(defaultLanguage, streamReader);
         }
 
+        var cultureInfo = _installationSettings.CultureInfo;
+        var regionInfo = _installationSettings.RegionInfo;
+
         if (cultureInfo == null || regionInfo == null || cultureInfo.Name == NopCommonDefaults.DefaultLanguageCulture)
             return;
 
@@ -214,7 +214,7 @@ public partial class InstallationService
         };
         await _dataProvider.InsertEntityAsync(language);
 
-        if (string.IsNullOrEmpty(languagePackInfo.languagePackDownloadLink))
+        if (string.IsNullOrEmpty(_installationSettings.LanguagePackDownloadLink))
             return;
 
         //download and import language pack
@@ -222,7 +222,7 @@ public partial class InstallationService
         {
             var httpClientFactory = EngineContext.Current.Resolve<IHttpClientFactory>();
             var httpClient = httpClientFactory.CreateClient(NopHttpDefaults.DefaultHttpClient);
-            await using var stream = await httpClient.GetStreamAsync(languagePackInfo.languagePackDownloadLink);
+            await using var stream = await httpClient.GetStreamAsync(_installationSettings.LanguagePackDownloadLink);
             using var streamReader = new StreamReader(stream);
             await localizationService.ImportResourcesFromXmlAsync(language, streamReader);
 
@@ -236,7 +236,7 @@ public partial class InstallationService
                 EntityId = language.Id,
                 Key = NopCommonDefaults.LanguagePackProgressAttribute,
                 KeyGroup = nameof(Language),
-                Value = languagePackInfo.languagePackProgress.ToString(),
+                Value = _installationSettings.LanguagePackProgress.ToString(),
                 StoreId = 0,
                 CreatedOrUpdatedDateUTC = DateTime.UtcNow
             });
@@ -250,13 +250,11 @@ public partial class InstallationService
     /// <summary>
     /// Installs a default currencies
     /// </summary>
-    /// <param name="cultureInfo">Culture info</param>
-    /// <param name="regionInfo">Region info</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    protected virtual async Task InstallCurrenciesAsync(CultureInfo cultureInfo, RegionInfo regionInfo)
+    protected virtual async Task InstallCurrenciesAsync()
     {
         //set some currencies with a rate against the USD
-        var defaultCurrencies = new List<string>() { "USD", "AUD", "GBP", "CAD", "CNY", "EUR", "HKD", "JPY", "RUB", "SEK", "INR" };
+        var defaultCurrencies = new List<string> { "USD", "AUD", "GBP", "CAD", "CNY", "EUR", "HKD", "JPY", "RUB", "SEK", "INR" };
         var currencies = new List<Currency>
             {
                 new() {
@@ -394,6 +392,9 @@ public partial class InstallationService
             };
 
         //set additional currency
+        var cultureInfo = _installationSettings.CultureInfo;
+        var regionInfo = _installationSettings.RegionInfo;
+
         if (cultureInfo != null && regionInfo != null)
         {
             if (!defaultCurrencies.Contains(regionInfo.ISOCurrencySymbol))
@@ -978,12 +979,11 @@ public partial class InstallationService
     /// <summary>
     /// Installs a default settings
     /// </summary>
-    /// <param name="regionInfo">Region info</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    protected virtual async Task InstallSettingsAsync(RegionInfo regionInfo)
+    protected virtual async Task InstallSettingsAsync()
     {
-        var isMetric = regionInfo?.IsMetric ?? false;
-        var country = regionInfo?.TwoLetterISORegionName ?? string.Empty;
+        var isMetric = _installationSettings.RegionInfo?.IsMetric ?? false;
+        var country = _installationSettings.RegionInfo?.TwoLetterISORegionName ?? string.Empty;
         var isGermany = country == "DE";
         var isEurope = ISO3166.FromCountryCode(country)?.SubjectToVat ?? false;
 
@@ -1291,7 +1291,7 @@ public partial class InstallationService
             PhoneNumberValidationEnabled = false,
             PhoneNumberValidationUseRegex = false,
             PhoneNumberValidationRule = "^[0-9]{1,14}?$",
-            DefaultCountryId = await GetFirstEntityIdAsync<Country>(c => c.ThreeLetterIsoCode == regionInfo.ThreeLetterISORegionName)
+            DefaultCountryId = await GetFirstEntityIdAsync<Country>(c => c.ThreeLetterIsoCode == _installationSettings.RegionInfo.ThreeLetterISORegionName)
         });
 
         await settingService.SaveSettingAsync(new MultiFactorAuthenticationSettings
@@ -1316,7 +1316,7 @@ public partial class InstallationService
             PhoneEnabled = true,
             PhoneRequired = true,
             FaxEnabled = true,
-            DefaultCountryId = await GetFirstEntityIdAsync<Country>(c => c.ThreeLetterIsoCode == regionInfo.ThreeLetterISORegionName)
+            DefaultCountryId = await GetFirstEntityIdAsync<Country>(c => c.ThreeLetterIsoCode == _installationSettings.RegionInfo.ThreeLetterISORegionName)
         });
 
         await settingService.SaveSettingAsync(new MediaSettings
@@ -1648,15 +1648,17 @@ public partial class InstallationService
         var eaGeneral = await Table<EmailAccount>().FirstOrDefaultAsync() ?? throw new Exception("Default email account cannot be loaded");
         await settingService.SaveSettingAsync(new EmailAccountSettings { DefaultEmailAccountId = eaGeneral.Id });
 
+        var displayMenuItems = !_installationSettings.InstallSampleData;
+
         await settingService.SaveSettingAsync(new DisplayDefaultMenuItemSettings
         {
-            DisplayHomepageMenuItem = true,
-            DisplayNewProductsMenuItem = true,
-            DisplayProductSearchMenuItem = true,
-            DisplayCustomerInfoMenuItem = true,
-            DisplayBlogMenuItem = true,
-            DisplayForumsMenuItem = true,
-            DisplayContactUsMenuItem = true
+            DisplayHomepageMenuItem = displayMenuItems,
+            DisplayNewProductsMenuItem = displayMenuItems,
+            DisplayProductSearchMenuItem = displayMenuItems,
+            DisplayCustomerInfoMenuItem = displayMenuItems,
+            DisplayBlogMenuItem = displayMenuItems,
+            DisplayForumsMenuItem = displayMenuItems,
+            DisplayContactUsMenuItem = displayMenuItems
         });
 
         await settingService.SaveSettingAsync(new DisplayDefaultFooterItemSettings
@@ -1838,9 +1840,8 @@ public partial class InstallationService
     /// <summary>
     /// Installs a default customers
     /// </summary>
-    /// <param name="defaultUserPassword">Password for default administrator</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    protected virtual async Task InstallCustomersAndUsersAsync(string defaultUserPassword)
+    protected virtual async Task InstallCustomersAndUsersAsync()
     {
         var crAdministrators = new CustomerRole
         {
@@ -1897,8 +1898,8 @@ public partial class InstallationService
         var adminUser = new Customer
         {
             CustomerGuid = Guid.NewGuid(),
-            Email = _defaultCustomerEmail,
-            Username = _defaultCustomerEmail,
+            Email = _installationSettings.AdminEmail,
+            Username = _installationSettings.AdminEmail,
             Active = true,
             CreatedOnUtc = DateTime.UtcNow,
             LastActivityDateUtc = DateTime.UtcNow,
@@ -1911,7 +1912,7 @@ public partial class InstallationService
                 FirstName = "John",
                 LastName = "Smith",
                 PhoneNumber = "12345678",
-                Email = _defaultCustomerEmail,
+                Email = _installationSettings.AdminEmail,
                 FaxNumber = string.Empty,
                 Company = "Nop Solutions Ltd",
                 Address1 = "21 West 52nd Street",
@@ -1939,8 +1940,8 @@ public partial class InstallationService
 
         //set hashed admin password
         var customerRegistrationService = EngineContext.Current.Resolve<ICustomerRegistrationService>();
-        await customerRegistrationService.ChangePasswordAsync(new ChangePasswordRequest(_defaultCustomerEmail, false,
-             PasswordFormat.Hashed, defaultUserPassword, null, NopCustomerServicesDefaults.DefaultHashedPasswordFormat));
+        await customerRegistrationService.ChangePasswordAsync(new ChangePasswordRequest(_installationSettings.AdminEmail, false,
+             PasswordFormat.Hashed, _installationSettings.AdminPassword, null, NopCustomerServicesDefaults.DefaultHashedPasswordFormat));
 
         //search engine (crawler) built-in user
         var searchEngineUser = new Customer
