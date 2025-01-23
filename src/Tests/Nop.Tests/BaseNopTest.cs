@@ -111,17 +111,21 @@ public partial class BaseNopTest
 
         dataProvider.CreateDatabase(null);
         dataProvider.InitializeDatabase();
-
-        var languagePackInfo = (DownloadUrl: string.Empty, Progress: 0);
-
-        var cultureInfo = new CultureInfo(NopCommonDefaults.DefaultLanguageCulture);
-        var regionInfo = new RegionInfo(NopCommonDefaults.DefaultLanguageCulture);
-
+        
         var installationService = _serviceProvider.GetService<IInstallationService>();
 
-        installationService.InstallRequiredDataAsync(NopTestsDefaults.AdminEmail, NopTestsDefaults.AdminPassword, languagePackInfo, regionInfo, cultureInfo).Wait();
-        installationService.InstallSampleDataAsync(NopTestsDefaults.AdminEmail).Wait();
-
+        installationService.InstallAsync(
+            new InstallationSettings
+            {
+                AdminEmail = NopTestsDefaults.AdminEmail,
+                AdminPassword = NopTestsDefaults.AdminPassword,
+                LanguagePackDownloadLink = string.Empty,
+                LanguagePackProgress = 0,
+                RegionInfo = new RegionInfo(NopCommonDefaults.DefaultLanguageCulture),
+                CultureInfo = new CultureInfo(NopCommonDefaults.DefaultLanguageCulture),
+                InstallSampleData = true
+            }).Wait();
+        
         var permissionService = EngineContext.Current.Resolve<IPermissionService>();
         permissionService.InsertPermissionsAsync().Wait();
     }

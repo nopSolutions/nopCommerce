@@ -1,12 +1,9 @@
-﻿using System.Globalization;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Text;
 using Nop.Core;
-using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Infrastructure;
 using Nop.Data;
-using Nop.Services.Configuration;
 using Nop.Services.Seo;
 
 namespace Nop.Services.Installation;
@@ -22,7 +19,7 @@ public partial class InstallationService : IInstallationService
     protected readonly INopFileProvider _fileProvider;
     protected readonly IWebHelper _webHelper;
 
-    protected string _defaultCustomerEmail;
+    protected InstallationSettings _installationSettings;
 
     #endregion
 
@@ -148,28 +145,21 @@ public partial class InstallationService : IInstallationService
     #region Methods
 
     /// <summary>
-    /// Install required data
+    /// Install
     /// </summary>
-    /// <param name="defaultUserEmail">Default user email</param>
-    /// <param name="defaultUserPassword">Default user password</param>
-    /// <param name="languagePackInfo">Language pack info</param>
-    /// <param name="regionInfo">RegionInfo</param>
-    /// <param name="cultureInfo">CultureInfo</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task InstallRequiredDataAsync(string defaultUserEmail, string defaultUserPassword,
-        (string languagePackDownloadLink, int languagePackProgress) languagePackInfo, RegionInfo regionInfo, CultureInfo cultureInfo)
+    /// <param name="installationSettings">Installation settings</param>
+    public virtual async Task InstallAsync(InstallationSettings installationSettings)
     {
-        if (string.IsNullOrEmpty(_defaultCustomerEmail) || !_defaultCustomerEmail.Equals(defaultUserEmail))
-        {
-            _defaultCustomerEmail = defaultUserEmail;
-            _defaultCustomerId = null;
-        }
+        _installationSettings = installationSettings;
+        _defaultLanguageId = null;
+        _defaultStoreId = null;
+        _defaultCustomerId = null;
 
         await InstallStoresAsync();
-        await InstallMeasuresAsync(regionInfo);
+        await InstallMeasuresAsync();
         await InstallTaxCategoriesAsync();
-        await InstallLanguagesAsync(languagePackInfo, cultureInfo, regionInfo);
-        await InstallCurrenciesAsync(cultureInfo, regionInfo);
+        await InstallLanguagesAsync();
+        await InstallCurrenciesAsync();
         await InstallCountriesAndStatesAsync();
         await InstallShippingMethodsAsync();
         await InstallDeliveryDatesAsync();
@@ -177,8 +167,8 @@ public partial class InstallationService : IInstallationService
         await InstallEmailAccountsAsync();
         await InstallMessageTemplatesAsync();
         await InstallTopicTemplatesAsync();
-        await InstallSettingsAsync(regionInfo);
-        await InstallCustomersAndUsersAsync(defaultUserPassword);
+        await InstallSettingsAsync();
+        await InstallCustomersAndUsersAsync();
         await InstallTopicsAsync();
         await InstallActivityLogTypesAsync();
         await InstallProductTemplatesAsync();
@@ -187,20 +177,9 @@ public partial class InstallationService : IInstallationService
         await InstallScheduleTasksAsync();
         await InstallReturnRequestReasonsAsync();
         await InstallReturnRequestActionsAsync();
-    }
 
-    /// <summary>
-    /// Install sample data
-    /// </summary>
-    /// <param name="defaultUserEmail">Default user email</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task InstallSampleDataAsync(string defaultUserEmail)
-    {
-        if (string.IsNullOrEmpty(_defaultCustomerEmail) || !_defaultCustomerEmail.Equals(defaultUserEmail))
-        {
-            _defaultCustomerEmail = defaultUserEmail;
-            _defaultCustomerId = null;
-        }
+        if (!installationSettings.InstallSampleData)
+            return;
 
         await InstallSampleCustomersAsync();
         await InstallCheckoutAttributesAsync();
@@ -220,19 +199,6 @@ public partial class InstallationService : IInstallationService
         await InstallOrdersAsync();
         await InstallActivityLogsAsync();
         await InstallSearchTermsAsync();
-
-        var settingService = EngineContext.Current.Resolve<ISettingService>();
-
-        await settingService.SaveSettingAsync(new DisplayDefaultMenuItemSettings
-        {
-            DisplayHomepageMenuItem = false,
-            DisplayNewProductsMenuItem = false,
-            DisplayProductSearchMenuItem = false,
-            DisplayCustomerInfoMenuItem = false,
-            DisplayBlogMenuItem = false,
-            DisplayForumsMenuItem = false,
-            DisplayContactUsMenuItem = false
-        });
     }
 
     #endregion

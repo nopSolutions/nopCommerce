@@ -79,7 +79,7 @@ public partial class InstallationService
         if (_defaultCustomerId.HasValue)
             return _defaultCustomerId.Value;
 
-        var customer = await Table<Customer>().FirstOrDefaultAsync(x => x.Email == _defaultCustomerEmail) ?? throw new Exception("Cannot load default customer");
+        var customer = await Table<Customer>().FirstOrDefaultAsync(x => x.Email == _installationSettings.AdminEmail) ?? throw new Exception("Cannot load default customer");
 
         _defaultCustomerId = customer.Id;
 
