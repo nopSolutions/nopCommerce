@@ -72,7 +72,7 @@ public partial class AclService : IAclService
             where acl.EntityName == entityName
             select acl;
 
-        return await _staticCacheManager.GetAsync(key, query.Any);
+        return await _staticCacheManager.GetAsync(key, ()=>query.AnyAsync());
     }
 
     #endregion
