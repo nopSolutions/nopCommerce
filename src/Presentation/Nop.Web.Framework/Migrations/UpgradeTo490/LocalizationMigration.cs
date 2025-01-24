@@ -57,6 +57,10 @@ public class LocalizationMigration : MigrationBase
             //#7398
             ["Admin.ConfigurationSteps.Product.Details.Text"] = "Enter the relevant product details in these fields. The screenshot below shows how they will be displayed on the product page with the default nopCommerce theme: <div class=\"row row-cols-1\"><img class=\"img-thumbnail mt-3\" src=\"/js/admintour/images/product-page.jpg\"/></div>",
             ["Admin.ConfigurationSteps.PaymentPayPal.ApiCredentials.Text"] = "If you already have an app created in your PayPal account, follow these steps.",
+
+            //#6407
+            ["ActivityLog.PublicStore.PasswordChanged"] = "Public store. Customer has changed the password",
+
         }, languageId);
 
         #endregion

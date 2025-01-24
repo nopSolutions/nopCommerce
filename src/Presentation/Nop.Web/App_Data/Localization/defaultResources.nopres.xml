@@ -1152,6 +1152,9 @@
   <LocaleResource Name="ActivityLog.PublicStore.AddToWishlist">
     <Value>Added a product to wishlist ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.PublicStore.PasswordChanged">
+    <Value>Public store. Customer has changed the password</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.PublicStore.ContactUs">
     <Value>Used contact us form</Value>
   </LocaleResource>
