@@ -205,7 +205,7 @@ public partial class ImportManager : IImportManager
 
         tierPriceManager.ReadDefaultFromXlsx(defaultWorksheet, iRow, ExportImportDefaults.ProductAdditionalInfoCellOffset);
 
-        if (tierPriceManager.IsCaption) 
+        if (tierPriceManager.IsCaption)
             return ExportedAdditionalProductInfoType.TierPrices;
 
         return ExportedAdditionalProductInfoType.NotSpecified;
@@ -1038,7 +1038,7 @@ public partial class ImportManager : IImportManager
     protected virtual async Task ImportTierPriceAsync(ImportProductMetadata metadata, Product lastLoadedProduct, IList<Language> languages, int iRow)
     {
         var tierPriceManager = metadata.TierPriceManager;
-        
+
         if (!_catalogSettings.ExportImportTierPrices || lastLoadedProduct == null || tierPriceManager.IsCaption)
             return;
 
@@ -1316,14 +1316,14 @@ public partial class ImportManager : IImportManager
                     case ExportedAdditionalProductInfoType.ProductAttribute:
                         productAttributeManager.ReadDefaultFromXlsx(defaultWorksheet, endRow,
                             ExportImportDefaults.ProductAdditionalInfoCellOffset);
-                        if (int.TryParse(defaultWorksheet.Row(endRow).Cell(attributeIdCellNum).Value.ToString(), out var aid)) 
+                        if (int.TryParse(defaultWorksheet.Row(endRow).Cell(attributeIdCellNum).Value.ToString(), out var aid))
                             allAttributeIds.Add(aid);
 
                         break;
                     case ExportedAdditionalProductInfoType.SpecificationAttribute:
                         specificationAttributeManager.ReadDefaultFromXlsx(defaultWorksheet, endRow, ExportImportDefaults.ProductAdditionalInfoCellOffset);
 
-                        if (int.TryParse(defaultWorksheet.Row(endRow).Cell(specificationAttributeOptionIdCellNum).Value.ToString(), out var saoid)) 
+                        if (int.TryParse(defaultWorksheet.Row(endRow).Cell(specificationAttributeOptionIdCellNum).Value.ToString(), out var saoid))
                             allSpecificationAttributeOptionIds.Add(saoid);
 
                         break;
@@ -1405,7 +1405,7 @@ public partial class ImportManager : IImportManager
 
         //performance optimization, the check for the existence of the stores in one SQL request
         var notExistingStores = await _storeService.GetNotExistingStoresAsync(allStores.ToArray());
-        if (notExistingStores.Any()) 
+        if (notExistingStores.Any())
             throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Import.StoresDontExist"), string.Join(", ", notExistingStores)));
 
         return new ImportProductMetadata
@@ -1991,7 +1991,7 @@ public partial class ImportManager : IImportManager
             }
 
             if (!isNew && rolesToSave.Any())
-                foreach (var customerRole in customerRoles.Where(cr=>!rolesToSave.Contains(cr.Id)).ToList())
+                foreach (var customerRole in customerRoles.Where(cr => !rolesToSave.Contains(cr.Id)).ToList())
                     await _customerService.RemoveCustomerRoleMappingAsync(customer, customerRole);
 
             if (avatarPictureId.HasValue)
@@ -2006,7 +2006,7 @@ public partial class ImportManager : IImportManager
                 !string.IsNullOrEmpty(password) && !string.IsNullOrEmpty(passwordSalt))
             {
                 var lastPassword = isNew ? null : await _customerService.GetCurrentPasswordAsync(customer.Id);
-                
+
                 if (lastPassword == null || !(lastPassword.Password.Equals(password) && lastPassword.PasswordSalt.Equals(passwordSalt)))
                     await _customerService.InsertCustomerPasswordAsync(new CustomerPassword
                     {
@@ -2071,7 +2071,8 @@ public partial class ImportManager : IImportManager
 
             allCategories = await allCategoryList
                 .WhereAwait(async c => await _categoryService.CanVendorAddProductsAsync(c, allCategoryList))
-                .ToDictionaryAwaitAsync(async c => {
+                .ToDictionaryAwaitAsync(async c =>
+                {
                     var keyName = await _categoryService.GetFormattedBreadCrumbAsync(c, allCategoryList);
                     return new CategoryKey(keyName, c, c.LimitedToStores ? (await _storeMappingService.GetStoresIdsWithAccessAsync(c)).ToList() : new List<int>());
                 });
@@ -3110,7 +3111,7 @@ public partial class ImportManager : IImportManager
                 metadata.OrderItemManager.ReadDefaultFromXlsx(worksheet, iRow, 2);
 
                 //skip caption row
-                if (!metadata.OrderItemManager.IsCaption) 
+                if (!metadata.OrderItemManager.IsCaption)
                     await ImportOrderItemAsync(metadata.OrderItemManager, lastLoadedOrder);
 
                 continue;
@@ -3268,7 +3269,7 @@ public partial class ImportManager : IImportManager
                         break;
                     case "BillingStateProvinceAbbreviation":
                         billingStateProvinceAbbreviation = property.StringValue;
-                        
+
                         break;
                     case "BillingZipPostalCode":
                         orderBillingAddress.ZipPostalCode = property.StringValue;

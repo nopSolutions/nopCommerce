@@ -1421,7 +1421,8 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         if (pagingModel.PageNumber <= 0)
             pagingModel.PageNumber = 1;
 
-        var model = new VendorProductReviewsListModel { 
+        var model = new VendorProductReviewsListModel
+        {
             VendorId = vendor.Id,
             VendorName = await _localizationService.GetLocalizedAsync(vendor, x => x.Name),
             VendorUrl = await _nopUrlHelper.RouteGenericUrlAsync<Vendor>(new { SeName = await _urlRecordService.GetSeNameAsync(vendor) })
@@ -1990,7 +1991,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
                 var result = new List<SelectListItem>
                 {
                     //empty entry
-                    new() 
+                    new()
                     {
                         Value = "0",
                         Text = await _localizationService.GetResourceAsync("Search.SearchBox.AllCategories")

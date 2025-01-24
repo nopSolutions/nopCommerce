@@ -4,7 +4,7 @@ public static class DtoExtensions
 {
     public static string ToDtoString(this DateTime date)
     {
-        return date.ToString("s")+"Z";
+        return date.ToString("s") + "Z";
     }
 
     public static int ToCents(this decimal price)
