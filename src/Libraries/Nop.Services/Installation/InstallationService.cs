@@ -15,6 +15,7 @@ public partial class InstallationService : IInstallationService
 {
     #region Fields
 
+    protected readonly IHttpClientFactory _httpClientFactory;
     protected readonly INopDataProvider _dataProvider;
     protected readonly INopFileProvider _fileProvider;
     protected readonly IWebHelper _webHelper;
@@ -25,10 +26,12 @@ public partial class InstallationService : IInstallationService
 
     #region Ctor
 
-    public InstallationService(INopDataProvider dataProvider,
+    public InstallationService(IHttpClientFactory httpClientFactory,
+        INopDataProvider dataProvider,
         INopFileProvider fileProvider,
         IWebHelper webHelper)
     {
+        _httpClientFactory = httpClientFactory;
         _dataProvider = dataProvider;
         _fileProvider = fileProvider;
         _webHelper = webHelper;
@@ -181,7 +184,21 @@ public partial class InstallationService : IInstallationService
         if (!installationSettings.InstallSampleData)
             return;
 
-        await InstallSampleCustomersAsync();
+        var directoryPath = _fileProvider.MapPath(NopInstallationDefaults.SampleDataPath);
+
+        foreach (var filePath in _fileProvider.EnumerateFiles(directoryPath, "Sample*.json"))
+        {
+            var sampleData = await _fileProvider.ReadAllTextAsync(filePath, Encoding.UTF8);
+
+            switch (_fileProvider.GetFileNameWithoutExtension(filePath))
+            {
+                case "SampleCustomers":
+                    await InstallSampleCustomersAsync(sampleData);
+                    break;
+            }
+        }
+
+        
         await InstallCheckoutAttributesAsync();
         await InstallSpecificationAttributesAsync();
         await InstallProductAttributesAsync();
