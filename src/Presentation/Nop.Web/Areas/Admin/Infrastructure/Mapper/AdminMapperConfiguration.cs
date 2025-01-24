@@ -665,7 +665,8 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(model => model.AttributeType, options => options.Ignore());
 
         CreateMap<ProductTag, ProductTagModel>()
-            .ForMember(model => model.ProductCount, options => options.Ignore());
+            .ForMember(model => model.ProductCount, options => options.Ignore())
+            .ForMember(model => model.ProductTagProductSearchModel, options => options.Ignore());
 
         CreateMap<ProductTemplate, ProductTemplateModel>();
         CreateMap<ProductTemplateModel, ProductTemplate>();

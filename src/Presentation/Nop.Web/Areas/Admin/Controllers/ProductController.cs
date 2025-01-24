@@ -2412,6 +2412,16 @@ public partial class ProductController : BaseAdminController
         return View(model);
     }
 
+    [HttpPost]
+    [CheckPermission(StandardPermission.Catalog.PRODUCT_TAGS_VIEW)]
+    public virtual async Task<IActionResult> TaggetProducts(ProductTagProductSearchModel searchModel)
+    {
+        //prepare model
+        var model = await _productModelFactory.PrepareTaggedProductListModelAsync(searchModel);
+
+        return Json(model);
+    }
+
     #endregion
 
     #region Purchased with order

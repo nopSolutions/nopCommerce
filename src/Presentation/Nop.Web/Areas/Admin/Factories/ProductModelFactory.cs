@@ -630,6 +630,25 @@ public partial class ProductModelFactory : IProductModelFactory
         return searchModel;
     }
 
+    /// <summary>
+    /// Prepare tagget products search model
+    /// </summary>
+    /// <param name="searchModel">Tagget products search model</param>
+    /// <param name="productTag">Product tag</param>
+    /// <returns>Related product search model</returns>
+    protected virtual ProductTagProductSearchModel PrepareTaggedProductsSearchModel(ProductTagProductSearchModel searchModel, ProductTag productTag)
+    {
+        ArgumentNullException.ThrowIfNull(searchModel);
+        ArgumentNullException.ThrowIfNull(productTag);
+
+        searchModel.ProductTagId = productTag.Id;
+
+        //prepare page parameters
+        searchModel.SetGridPageSize();
+
+        return searchModel;
+    }
+
     #endregion
 
     #region Methods
@@ -1726,11 +1745,34 @@ public partial class ProductModelFactory : IProductModelFactory
             };
         }
 
+        PrepareTaggedProductsSearchModel(model.ProductTagProductSearchModel, productTag);
+
         //prepare localized models
         if (!excludeProperties)
             model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
         return model;
+    }
+
+    /// <summary>
+    /// Prepare tagget product list model
+    /// </summary>
+    /// <param name="searchModel">Product search model</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains list model for the tagget products
+    /// </returns>
+    public virtual async Task<ProductListModel> PrepareTaggedProductListModelAsync(ProductTagProductSearchModel searchModel)
+    {
+        ArgumentNullException.ThrowIfNull(searchModel);
+
+        //get products by tag
+        var products = await _productService.SearchProductsAsync(
+                productTagId: searchModel.ProductTagId,
+                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+
+        //prepare list model
+        return new ProductListModel().PrepareToGrid(searchModel, products, () => products.Select(product => product.ToModel<ProductModel>()));
     }
 
     /// <summary>
