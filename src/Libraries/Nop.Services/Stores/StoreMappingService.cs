@@ -64,7 +64,7 @@ public partial class StoreMappingService : IStoreMappingService
             where sm.EntityName == entityName
             select sm.StoreId;
 
-        return await _staticCacheManager.GetAsync(key, query.Any);
+        return await _staticCacheManager.GetAsync(key, ()=>query.AnyAsync());
     }
 
     #endregion
