@@ -6375,36 +6375,6 @@ img.hawthorne-logo {
 	}
 }
 
-/* Superbowl*/
-.abc-home-content .master-wrapper-page {
-	background-image: url("http://abcwarehouse.com/images/ABCFootball_3.jpg");
-	background-size: 100%;
-	background-position-y: 210px;
-}
-.page.home-page {
-    background: #fff;
-    padding: 0 15px;
-}
-.abc-home-content .header-lower {
-	background-color: #249948 !important;
-}
-.abc-home-content .mobile-header-content-row {
-    background-color: #249948 !important;
-}
-
-body .master-wrapper-content {
-    margin-top: 15px;
-}
-
-@media screen and (max-width: 999px) {
-	.two-columns-area.slider-right-column {
-		margin-top: -12px;
-	}
-}
-
-
-/* End Superbowl */
-
 /*Angelo*/
  /* Mobile Menu Padding Fix*/
   .mega-menu-responsive.mobile-sidebar-category .sublist-wrap.active { 
