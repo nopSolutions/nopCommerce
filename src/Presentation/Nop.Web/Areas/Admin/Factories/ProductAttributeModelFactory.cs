@@ -117,7 +117,7 @@ public partial class ProductAttributeModelFactory : IProductAttributeModelFactor
 
         //get product attributes
         var productAttributes = await _productAttributeService
-            .GetAllProductAttributesAsync(pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+            .GetAllProductAttributesAsync(pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize, name: searchModel.SearchProductAttributeName);
 
         //prepare list model
         var model = new ProductAttributeListModel().PrepareToGrid(searchModel, productAttributes, () =>

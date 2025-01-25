@@ -29,11 +29,12 @@ public partial interface IProductAttributeService
     /// </summary>
     /// <param name="pageIndex">Page index</param>
     /// <param name="pageSize">Page size</param>
+    /// <param name="name">Filter by name</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the product attributes
     /// </returns>
-    Task<IPagedList<ProductAttribute>> GetAllProductAttributesAsync(int pageIndex = 0, int pageSize = int.MaxValue);
+    Task<IPagedList<ProductAttribute>> GetAllProductAttributesAsync(int pageIndex = 0, int pageSize = int.MaxValue, string name = "");
 
     /// <summary>
     /// Gets a product attribute 

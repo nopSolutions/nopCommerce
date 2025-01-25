@@ -88,21 +88,20 @@ public partial class ProductAttributeService : IProductAttributeService
     /// </summary>
     /// <param name="pageIndex">Page index</param>
     /// <param name="pageSize">Page size</param>
+    /// <param name="name">Filter by name</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the product attributes
     /// </returns>
     public virtual async Task<IPagedList<ProductAttribute>> GetAllProductAttributesAsync(int pageIndex = 0,
-        int pageSize = int.MaxValue)
+        int pageSize = int.MaxValue, string name = "")
     {
-        var productAttributes = await _productAttributeRepository.GetAllPagedAsync(query =>
-        {
-            return from pa in query
-                orderby pa.Name
-                select pa;
-        }, pageIndex, pageSize);
+        var query = _productAttributeRepository.Table;
 
-        return productAttributes;
+        if (!string.IsNullOrWhiteSpace(name))
+            query = query.Where(pa => pa.Name.Contains(name));
+
+        return await query.OrderBy(x => x.Name).ToPagedListAsync(pageIndex, pageSize);
     }
 
     /// <summary>
@@ -124,7 +123,7 @@ public partial class ProductAttributeService : IProductAttributeService
     /// <param name="productAttributeIds">Product attribute identifiers</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the product attributes 
+    /// The task result contains the product attributes
     /// </returns>
     public virtual async Task<IList<ProductAttribute>> GetProductAttributeByIdsAsync(int[] productAttributeIds)
     {
@@ -199,9 +198,9 @@ public partial class ProductAttributeService : IProductAttributeService
         var allCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductAttributeMappingsByProductCacheKey, productId);
 
         var query = from pam in _productAttributeMappingRepository.Table
-            orderby pam.DisplayOrder, pam.Id
-            where pam.ProductId == productId
-            select pam;
+                   orderby pam.DisplayOrder, pam.Id
+                   where pam.ProductId == productId
+                   select pam;
 
         var attributes = await _staticCacheManager.GetAsync(allCacheKey, async () => await query.ToListAsync()) ?? new List<ProductAttributeMapping>();
 
@@ -268,9 +267,9 @@ public partial class ProductAttributeService : IProductAttributeService
         var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductAttributeValuesByAttributeCacheKey, productAttributeMappingId);
 
         var query = from pav in _productAttributeValueRepository.Table
-            orderby pav.DisplayOrder, pav.Id
-            where pav.ProductAttributeMappingId == productAttributeMappingId
-            select pav;
+                   orderby pav.DisplayOrder, pav.Id
+                   where pav.ProductAttributeMappingId == productAttributeMappingId
+                   select pav;
         var productAttributeValues = await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
 
         return productAttributeValues;
@@ -411,9 +410,9 @@ public partial class ProductAttributeService : IProductAttributeService
         var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.PredefinedProductAttributeValuesByAttributeCacheKey, productAttributeId);
 
         var query = from ppav in _predefinedProductAttributeValueRepository.Table
-            orderby ppav.DisplayOrder, ppav.Id
-            where ppav.ProductAttributeId == productAttributeId
-            select ppav;
+                   orderby ppav.DisplayOrder, ppav.Id
+                   where ppav.ProductAttributeId == productAttributeId
+                   select ppav;
 
         var values = await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
 
