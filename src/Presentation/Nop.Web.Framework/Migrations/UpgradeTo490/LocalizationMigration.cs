@@ -135,6 +135,9 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Configuration.Settings.CustomerUser.NotifyFailedLoginAttempt.Hint"] = "Check to enable customer notifications on failed login attempts.",
             ["ActivityLog.PublicStore.Login.Success"] = "Public store. Customer has logged in",
 
+            //#7515
+            ["Admin.Catalog.Attributes.ProductAttributes.List.SearchProductAttributeName"] = "Product attribute name",
+            ["Admin.Catalog.Attributes.ProductAttributes.List.SearchProductAttributeName.Hint"] = "A Product attribute name.",
         }, languageId);
 
         #endregion

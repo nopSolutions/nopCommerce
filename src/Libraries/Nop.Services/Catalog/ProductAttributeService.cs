@@ -87,21 +87,20 @@ public partial class ProductAttributeService : IProductAttributeService
     /// </summary>
     /// <param name="pageIndex">Page index</param>
     /// <param name="pageSize">Page size</param>
+    /// <param name="name">Filter by name</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the product attributes
     /// </returns>
     public virtual async Task<IPagedList<ProductAttribute>> GetAllProductAttributesAsync(int pageIndex = 0,
-        int pageSize = int.MaxValue)
+        int pageSize = int.MaxValue, string name = "")
     {
-        var productAttributes = await _productAttributeRepository.GetAllPagedAsync(query =>
-        {
-            return from pa in query
-                orderby pa.Name
-                select pa;
-        }, pageIndex, pageSize);
+        var query = _productAttributeRepository.Table;
 
-        return productAttributes;
+        if (!string.IsNullOrWhiteSpace(name))
+            query = query.Where(pa => pa.Name.Contains(name));
+
+        return await query.OrderBy(x => x.Name).ToPagedListAsync(pageIndex, pageSize);
     }
 
     /// <summary>
