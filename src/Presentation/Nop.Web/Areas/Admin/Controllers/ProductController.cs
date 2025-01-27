@@ -259,7 +259,7 @@ public partial class ProductController : BaseAdminController
         foreach (var pp in await _productService.GetProductPicturesByProductIdAsync(product.Id))
             await _pictureService.SetSeoFilenameAsync(pp.PictureId, await _pictureService.GetPictureSeNameAsync(product.Name));
     }
-    
+
     protected virtual async Task SaveCategoryMappingsAsync(Product product, ProductModel model)
     {
         var existingProductCategories = await _categoryService.GetProductCategoriesByProductIdAsync(product.Id, true);
@@ -836,7 +836,7 @@ public partial class ProductController : BaseAdminController
 
         var products = await _productService.GetProductsByIdsAsync(productIds);
 
-        foreach (var product in products) 
+        foreach (var product in products)
             rez[product.Id].Product = product;
 
         return rez.Values.ToList();
@@ -900,7 +900,7 @@ public partial class ProductController : BaseAdminController
         var data = await ParseBulkEditDataAsync();
 
         var productsToUpdate = data.Where(d => d.NeedToUpdate(selected)).ToList();
-        await _productService.UpdateProductsAsync(productsToUpdate.Select(d=>d.UpdateProduct(selected)).ToList());
+        await _productService.UpdateProductsAsync(productsToUpdate.Select(d => d.UpdateProduct(selected)).ToList());
 
         var productsToInsert = data.Where(d => d.NeedToCreate(selected)).ToList();
         await _productService.InsertProductsAsync(productsToInsert.Select(d => d.CreateProduct(selected)).ToList());
@@ -1031,7 +1031,7 @@ public partial class ProductController : BaseAdminController
 
             //manufacturers
             await SaveManufacturerMappingsAsync(product, model);
-            
+
             //stores
             await _productService.UpdateProductStoreMappingsAsync(product, model.SelectedStoreIds);
 
@@ -1167,7 +1167,7 @@ public partial class ProductController : BaseAdminController
 
             //manufacturers
             await SaveManufacturerMappingsAsync(product, model);
-            
+
             //stores
             await _productService.UpdateProductStoreMappingsAsync(product, model.SelectedStoreIds);
 
@@ -1295,14 +1295,14 @@ public partial class ProductController : BaseAdminController
             .Where(p => currentVendor == null || p.VendorId == currentVendor.Id).ToList();
 
         await _productService.DeleteProductsAsync(products);
-        
+
         //activity log
         var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.DeleteProduct");
-        
+
         foreach (var product in products)
             await _customerActivityService.InsertActivityAsync("DeleteProduct",
                 string.Format(activityLogFormat, product.Name), product);
-        
+
         return Json(new { Result = true });
     }
 
@@ -1381,7 +1381,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> LoadProductFriendlyNames(string productIds)
     {
         var result = string.Empty;
-        
+
         if (string.IsNullOrWhiteSpace(productIds))
             return Json(new { Text = result });
 

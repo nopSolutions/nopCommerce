@@ -126,7 +126,7 @@ public partial class BaseNopTest
         permissionService.InsertPermissionsAsync().Wait();
     }
 
-    protected static void PropertiesShouldEqual<T1, T2>(T1 obj1, T2 obj2, params string[] filter) 
+    protected static void PropertiesShouldEqual<T1, T2>(T1 obj1, T2 obj2, params string[] filter)
     {
         var object1Properties = typeof(T1).GetProperties();
         var object2Properties = typeof(T2).GetProperties();
@@ -145,7 +145,7 @@ public partial class BaseNopTest
 
             var object1PropertyValue = object1Property.GetValue(obj1);
             var object2PropertyValue = object2Property.GetValue(obj2);
-            
+
             object1PropertyValue.Should().Be(object2PropertyValue, $"The property \"{typeof(T1).Name}.{object1Property.Name}\" of these objects is not equal");
         }
     }
@@ -605,7 +605,7 @@ public partial class BaseNopTest
     }
 
     #region Nested classes
-    
+
     protected class NopTestUrlHelper : UrlHelperBase
     {
         public NopTestUrlHelper(ActionContext actionContext) : base(actionContext)
@@ -800,7 +800,7 @@ public partial class BaseNopTest
         public MemoryDistributedCacheOptions Value => new();
     }
 
-    private class TestSeesion:ISession
+    private class TestSeesion : ISession
     {
         private static ConcurrentDictionary<string, byte[]> _sessison = new();
 
@@ -821,7 +821,7 @@ public partial class BaseNopTest
 
         public void Set(string key, byte[] value)
         {
-            if(!_sessison.ContainsKey(key))
+            if (!_sessison.ContainsKey(key))
                 _sessison.TryAdd(key, value);
             else
                 _sessison[key] = value;

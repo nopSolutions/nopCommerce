@@ -75,7 +75,7 @@ public abstract class BaseAdminMenuCreatedEventConsumer : IConsumer<AdminMenuCre
 
         //the LoadPluginBySystemNameAsync method returns only plugins that are already fully installed,
         //while the IConsumer<AdminMenuCreatedEvent> event can be called before the installation is complete
-        if (plugin ==  null)
+        if (plugin == null)
             return;
 
         var newItem = await GetAdminMenuItemAsync(plugin);
@@ -105,7 +105,7 @@ public abstract class BaseAdminMenuCreatedEventConsumer : IConsumer<AdminMenuCre
     }
 
     #endregion
-    
+
     #region Properties
 
     /// <summary>

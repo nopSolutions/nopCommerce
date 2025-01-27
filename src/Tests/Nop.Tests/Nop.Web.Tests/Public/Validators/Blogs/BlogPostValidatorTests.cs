@@ -14,7 +14,7 @@ public class BlogPostValidatorTests : BaseNopTest
     [OneTimeSetUp]
     public void Setup()
     {
-        _validator =  new BlogPostValidator(GetService<ILocalizationService>());
+        _validator = new BlogPostValidator(GetService<ILocalizationService>());
     }
 
     [Test]

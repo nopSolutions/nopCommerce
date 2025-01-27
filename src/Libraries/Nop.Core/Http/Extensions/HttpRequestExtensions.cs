@@ -47,7 +47,7 @@ public static class HttpRequestExtensions
 
         return form[formKey];
     }
-        
+
     /// <summary>
     /// Checks if the provided key is exists on the form
     /// </summary>
@@ -78,7 +78,7 @@ public static class HttpRequestExtensions
 
         var form = await request.ReadFormAsync();
 
-        return  predicate == null ? form.Any() : form.Keys.Any(predicate);
+        return predicate == null ? form.Any() : form.Keys.Any(predicate);
     }
 
     /// <summary>
