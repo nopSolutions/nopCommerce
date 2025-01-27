@@ -14,7 +14,7 @@ public class EditForumPostValidatorTests : BaseNopTest
     [OneTimeSetUp]
     public void Setup()
     {
-        _validator = new EditForumPostValidator(GetService<ILocalizationService>()) ;
+        _validator = new EditForumPostValidator(GetService<ILocalizationService>());
     }
 
     [Test]
