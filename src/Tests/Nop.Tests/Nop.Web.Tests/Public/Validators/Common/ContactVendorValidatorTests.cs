@@ -15,7 +15,7 @@ public class ContactVendorValidatorTests : BaseNopTest
     [OneTimeSetUp]
     public void Setup()
     {
-        _validator =  new ContactVendorValidator(GetService<ILocalizationService>(), GetService<CommonSettings>());
+        _validator = new ContactVendorValidator(GetService<ILocalizationService>(), GetService<CommonSettings>());
     }
 
     [Test]

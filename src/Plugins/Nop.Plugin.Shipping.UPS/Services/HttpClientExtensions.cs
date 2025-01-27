@@ -1,5 +1,5 @@
-﻿using Microsoft.Net.Http.Headers;
-using System.Text;
+﻿using System.Text;
+using Microsoft.Net.Http.Headers;
 using Nop.Core.Infrastructure;
 using Nop.Services.Logging;
 using static System.TimeSpan;
@@ -19,7 +19,7 @@ public static class HttpClientExtensions
         httpClient.DefaultRequestHeaders.Add(HeaderNames.UserAgent, UPSDefaults.UserAgent);
 
         if (!string.IsNullOrEmpty(accessToken))
-            request.Headers.Add(HeaderNames.Authorization,$"Bearer {accessToken}");
+            request.Headers.Add(HeaderNames.Authorization, $"Bearer {accessToken}");
         else
         {
             var base64 = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{upsSettings.ClientId}:{upsSettings.ClientSecret}"));
@@ -27,7 +27,7 @@ public static class HttpClientExtensions
         }
 
         //save debug info
-        if (!upsSettings.Tracing) 
+        if (!upsSettings.Tracing)
             return;
 
         var logger = EngineContext.Current.Resolve<ILogger>();
