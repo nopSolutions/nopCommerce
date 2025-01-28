@@ -1814,7 +1814,15 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         IPagedList<Product> products = new PagedList<Product>(new List<Product>(), 0, 1);
         //only search if query string search keyword is set (used to avoid searching or displaying search term min length error message on /search page load)
         //we don't use "!string.IsNullOrEmpty(searchTerms)" in cases of "ProductSearchTermMinimumLength" set to 0 but searching by other parameters (e.g. category or price filter)
-        var isSearchTermSpecified = _httpContextAccessor.HttpContext.Request.Query.ContainsKey("q");
+        var request = _httpContextAccessor.HttpContext.Request;
+
+        var isSearchTermSpecified = request?.Method switch
+        {
+            "GET" => request.Query.ContainsKey("q"),
+            "POST" when request.HasFormContentType => request.Form.ContainsKey("q"),
+            _ => false
+        };
+
         if (isSearchTermSpecified)
         {
             var currentStore = await _storeContext.GetCurrentStoreAsync();
