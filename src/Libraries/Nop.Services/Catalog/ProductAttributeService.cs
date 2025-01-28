@@ -86,24 +86,27 @@ public partial class ProductAttributeService : IProductAttributeService
     /// <summary>
     /// Gets all product attributes
     /// </summary>
+    /// <param name="searchModelName">search model name </param>
     /// <param name="pageIndex">Page index</param>
     /// <param name="pageSize">Page size</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the product attributes
     /// </returns>
-    public virtual async Task<IPagedList<ProductAttribute>> GetAllProductAttributesAsync(int pageIndex = 0,
+    public virtual async Task<IPagedList<ProductAttribute>> GetAllProductAttributesAsync(string searchModelName = null,int pageIndex = 0,
         int pageSize = int.MaxValue)
     {
-        var productAttributes = await _productAttributeRepository.GetAllPagedAsync(query =>
+        Func<IQueryable<ProductAttribute>, IQueryable<ProductAttribute>> func = query => searchModelName switch
         {
-            return from pa in query
-                orderby pa.Name
-                select pa;
-        }, pageIndex, pageSize);
+            null => query.OrderBy(pa => pa.Name),
+            _ => query.Where(pa => pa.Name.Contains(searchModelName)).OrderBy(pa => pa.Name)
+        };
+        var productAttributes = await _productAttributeRepository.GetAllPagedAsync(func, pageIndex, pageSize);
 
         return productAttributes;
     }
+
+
 
     /// <summary>
     /// Gets a product attribute 
