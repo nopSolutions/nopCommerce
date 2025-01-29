@@ -1959,7 +1959,7 @@
   <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.List.SearchProductAttributeName">
     <Value>Product attribute name</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.List.SearchProductAttributeName">
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.List.SearchProductAttributeName.Hint">
     <Value>A Product attribute name.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes">
