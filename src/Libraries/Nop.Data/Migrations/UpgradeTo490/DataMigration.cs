@@ -1,4 +1,5 @@
 ﻿using FluentMigrator;
+using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Messages;
 
 namespace Nop.Data.Migrations.UpgradeTo490;
@@ -30,6 +31,21 @@ public class DataMigration : Migration
                 IsActive = false, //this template is disabled by default
                 EmailAccountId = eaGeneral.Id
             });
+        }
+
+        var activityLogTypeTable = _dataProvider.GetTable<ActivityLogType>();
+
+        //#6407
+        if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "PublicStore.PasswordChanged", StringComparison.InvariantCultureIgnoreCase) == 0))
+        {
+            _dataProvider.InsertEntity(
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.PasswordChanged",
+                    Enabled = true,
+                    Name = "Public store. Change password"
+                }
+            );
         }
     }
 

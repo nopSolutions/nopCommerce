@@ -63,7 +63,7 @@ public class OmnisendHttpClient
 
         if (string.IsNullOrEmpty(_omnisendSettings.BrandId) && !skipBrandIdCheck)
         {
-            if(_omnisendSettings.LogRequestErrors)
+            if (_omnisendSettings.LogRequestErrors)
                 await _logger.InsertLogAsync(LogLevel.Error, $"{OmnisendDefaults.SystemName} configuration error", await _localizationService.GetResourceAsync("Plugins.Misc.Omnisend.CantGetBrandId"));
 
             return null;
@@ -117,18 +117,18 @@ public class OmnisendHttpClient
             case HttpStatusCode.OK:
             case HttpStatusCode.Accepted:
             case HttpStatusCode.NoContent:
-            {
-                return response;
-            }
+                {
+                    return response;
+                }
             case HttpStatusCode.NotFound:
                 return string.Empty;
             default:
-            {
-                if (!string.IsNullOrEmpty(response)) 
-                    throw new NopException(response);
+                {
+                    if (!string.IsNullOrEmpty(response))
+                        throw new NopException(response);
 
-                throw new NopException("Omnisend unknown error.");
-            }
+                    throw new NopException("Omnisend unknown error.");
+                }
         }
     }
 
@@ -192,7 +192,7 @@ public class OmnisendHttpClient
     /// </returns>
     public async Task<T> PerformRequestAsync<T>(string apiUri, string data = null, HttpMethod httpMethod = null)
     {
-        return await PerformRequestAsync(async () => await RequestAsync<T>(apiUri,  data, httpMethod));
+        return await PerformRequestAsync(async () => await RequestAsync<T>(apiUri, data, httpMethod));
     }
 
     #endregion

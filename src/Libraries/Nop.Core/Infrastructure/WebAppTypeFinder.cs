@@ -20,7 +20,7 @@ public partial class WebAppTypeFinder : ITypeFinder
     #region Fields
 
     protected static readonly Dictionary<string, Assembly> _assemblies = new(StringComparer.InvariantCultureIgnoreCase);
-        
+
     protected static bool _loaded;
     protected static readonly object _locker = new();
 
@@ -145,7 +145,7 @@ public partial class WebAppTypeFinder : ITypeFinder
         {
             var msg = string.Empty;
 
-            if (ex.LoaderExceptions.Any()) 
+            if (ex.LoaderExceptions.Any())
                 msg = ex.LoaderExceptions.Where(e => e != null)
                     .Aggregate(msg, (current, e) => $"{current}{e.Message + Environment.NewLine}");
 
@@ -233,7 +233,7 @@ public partial class WebAppTypeFinder : ITypeFinder
     {
         if (!_loaded)
             InitData();
-            
+
         return _assemblies.Values.ToList();
     }
 
@@ -290,7 +290,7 @@ public partial class WebAppTypeFinder : ITypeFinder
     /// <remarks>
     /// For example, the web application's bin folder should be specifically checked for being loaded on the application load. This is needed in situations where plugins need to be loaded in the AppDomain after the application has been reloaded
     /// </remarks>
-    public virtual List<string> DirectoriesToLoadAssemblies { get; set; } = new ()
+    public virtual List<string> DirectoriesToLoadAssemblies { get; set; } = new()
     {
         AppContext.BaseDirectory
     };
