@@ -19527,6 +19527,9 @@
   <LocaleResource Name="Search.SearchInDescriptions">
     <Value>Search In product descriptions</Value>
   </LocaleResource>
+  <LocaleResource Name="Search.SearchInTags">
+    <Value>Search in product tags</Value>
+  </LocaleResource>
   <LocaleResource Name="Search.SearchTerm">
     <Value>Search keyword</Value>
   </LocaleResource>

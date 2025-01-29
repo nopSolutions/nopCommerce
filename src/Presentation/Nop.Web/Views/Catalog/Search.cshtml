@@ -77,6 +77,10 @@
                                 <input asp-for="sid" />
                                 <label asp-for="sid">@T("Search.SearchInDescriptions")</label>
                             </div>
+                            <div class="inputs reversed">
+                                <input asp-for="sit" />
+                                <label asp-for="sit">@T("Search.SearchInTags")</label>
+                            </div>
                             @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductSearchPageAdvanced, additionalData = Model })
                         </div>
                     </div>
@@ -109,7 +113,8 @@
                                 .addParameter('isc', $('#@Html.IdFor(model => model.isc)').is(':checked'))
                                 .addParameter('mid', $('#@Html.IdFor(model => model.mid)').val())
                                 .addParameter('vid', $('#@Html.IdFor(model => model.vid)').val())
-                                .addParameter('sid', $('#@Html.IdFor(model => model.sid)').is(':checked'));
+                                .addParameter('sid', $('#@Html.IdFor(model => model.sid)').is(':checked'))
+                                .addParameter('sit', $('#@Html.IdFor(model => model.sit)').is(':checked'));;
                         }
                     });
                 });

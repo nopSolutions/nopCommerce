@@ -68,6 +68,9 @@ public class LocalizationMigration : MigrationBase
             //#6407
             ["ActivityLog.PublicStore.PasswordChanged"] = "Public store. Customer has changed the password",
 
+            //#5279
+            ["Search.SearchInTags"] = "Search in product tags",
+
         }, languageId);
 
         #endregion

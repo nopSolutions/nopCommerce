@@ -48,6 +48,12 @@ public partial record SearchModel : BaseNopModel
     public bool sid { get; set; }
 
     /// <summary>
+    /// A value indicating whether to search in product tags
+    /// </summary>
+    [NopResourceDisplayName("Search.SearchInTags")]
+    public bool sit { get; set; }
+
+    /// <summary>
     /// A value indicating whether "advanced search" is enabled
     /// </summary>
     [NopResourceDisplayName("Search.AdvancedSearch")]
