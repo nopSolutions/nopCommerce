@@ -104,6 +104,12 @@
         .captcha-box {
             text-align: left;
         }
+
+        .required-field::before {
+            content: "*";
+            color: red;
+        }
+
     </style>
         <div class="panel-group">
             <div class="panel panel-default">
@@ -118,27 +124,27 @@
                                 </div>
                             }
 
-                            <div style="display:inline-block; width:33%; min-width: 480px;">
+                             <div class="NameC" @* style="display:inline-block; width:33%; min-width: 480px;"*@> 
                                 <div class="contact-us-header">
-                                    Name
+                                    Name<span class="required-field"></span>
                                 </div>
                                 <div class="col-md-9">
                                     <nop-editor asp-for="Name" />
                                 </div>
                             </div>
 
-                            <div style="display:inline-block; width:32%; min-width: 480px;">
+                            <div class="EmailC" @* style="display:inline-block; width:33%; min-width: 480px;"*@>
                                 <div class="contact-us-header">
-                                    Email
+                                    Email<span class="required-field"></span>
                                 </div>
                                 <div class="col-md-9">
                                     @Html.TextBoxFor(model => model.Email)
                                 </div>
                             </div>
 
-                            <div style="display:inline-block; width:33%; min-width: 480px;">
+                            <div class="PhoneC" @* style="display:inline-block; width:33%; min-width: 480px;"*@>
                                 <div class="contact-us-header">
-                                    Phone
+                                    Phone<span class="required-field"></span>
                                 </div>
                                 <div class="col-md-9">
                                     <nop-editor asp-for="PhoneNumber" />
@@ -151,7 +157,7 @@
 
                         <div>
                             <div class="contact-us-header">
-                                Reason For Contact
+                                Reason For Contact<span class="required-field"></span>
                             </div>
                             <div class="col-md-9">
                                 <nop-select asp-for="Reason" asp-items="Model.ReasonsForContact" />
@@ -160,7 +166,7 @@
                         </div>
                         <div id="storeDropDown">
                             <div class="contact-us-header">
-                                Store
+                                Store<span class="required-field"></span>
                             </div>
                             <div class="col-md-9">
                                 <nop-select asp-for="SelectedStore" asp-items="Model.Stores" />
@@ -169,7 +175,7 @@
                         </div>
                         <div>
                             <div class="contact-us-header">
-                                Comments
+                                Comments<span class="required-field"></span>
                             </div>
                             <div class="col-md-9">
                                 <nop-textarea asp-for="Comments" />
