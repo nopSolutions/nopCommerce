@@ -4,7 +4,7 @@ using Nop.Core.Domain.Topics;
 
 namespace Nop.Data.Migrations.UpgradeTo490;
 
-[NopSchemaMigration("2024-12-01 00:00:00", "SchemaMigration for 4.90.0")]
+[NopSchemaMigration("2025-01-01 00:00:00", "SchemaMigration for 4.90.0")]
 public class SchemaMigration : ForwardOnlyMigration
 {
     /// <summary>
