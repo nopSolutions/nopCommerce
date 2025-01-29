@@ -312,6 +312,12 @@ public class Indexes : ForwardOnlyMigration
             .OnTable(nameof(Topic))
             .OnColumn(nameof(Topic.SystemName)).Ascending()
             .WithOptions().NonClustered();
+
+        Create.Index("IX_Topic_Availability")
+            .OnTable(nameof(Topic))
+            .OnColumn(nameof(Topic.AvailableEndDateTimeUtc)).Descending()
+            .OnColumn(nameof(Topic.AvailableStartDateTimeUtc)).Descending()
+            .WithOptions().NonClustered();
     }
 
     #endregion
