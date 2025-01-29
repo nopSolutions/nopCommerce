@@ -33,5 +33,26 @@ public class SchemaMigration : ForwardOnlyMigration
                 .NotNullable()
                 .WithDefaultValue(0);
         }
+
+        //#7294
+        var topicTableName = nameof(Topic);
+        var topicAvailableEndDateColumnName = nameof(Topic.AvailableEndDateTimeUtc);
+        var topicAvailableStartDateColumnName = nameof(Topic.AvailableStartDateTimeUtc);
+
+        if (!Schema.Table(topicTableName).Column(topicAvailableEndDateColumnName).Exists())
+        {
+            Alter.Table(topicTableName)
+                .AddColumn(topicAvailableEndDateColumnName)
+                .AsDateTime()
+                .Nullable();
+        }
+
+        if (!Schema.Table(topicTableName).Column(topicAvailableStartDateColumnName).Exists())
+        {
+            Alter.Table(topicTableName)
+                .AddColumn(topicAvailableStartDateColumnName)
+                .AsDateTime()
+                .Nullable();
+        }
     }
 }
