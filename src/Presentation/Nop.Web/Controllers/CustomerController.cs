@@ -740,6 +740,9 @@ public partial class CustomerController : BasePublicController
 
         await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute, "");
 
+        await _customerActivityService.InsertActivityAsync(customer, "PublicStore.PasswordChanged", await
+            _localizationService.GetResourceAsync("ActivityLog.PublicStore.PasswordChanged"));
+
         //authenticate customer after changing password
         await _customerRegistrationService.SignInCustomerAsync(customer, null, true);
 
@@ -1648,6 +1651,9 @@ public partial class CustomerController : BasePublicController
             if (changePasswordResult.Success)
             {
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Account.ChangePassword.Success"));
+
+                await _customerActivityService.InsertActivityAsync(customer, "PublicStore.PasswordChanged", await 
+                    _localizationService.GetResourceAsync("ActivityLog.PublicStore.PasswordChanged"));
 
                 //authenticate customer after changing password
                 await _customerRegistrationService.SignInCustomerAsync(customer, null, true);
