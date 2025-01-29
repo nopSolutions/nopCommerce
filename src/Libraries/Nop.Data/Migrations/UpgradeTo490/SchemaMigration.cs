@@ -1,5 +1,6 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Topics;
 
 namespace Nop.Data.Migrations.UpgradeTo490;
 
