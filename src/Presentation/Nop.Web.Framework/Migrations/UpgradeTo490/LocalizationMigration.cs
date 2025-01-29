@@ -64,6 +64,10 @@ public class LocalizationMigration : MigrationBase
             ["Admin.ContentManagement.Topics.Fields.AvailableEndDateTime.GreaterThanOrEqualToStartDate"] = "The end date must be greater than or equal to the start date.",
             ["Admin.ContentManagement.Topics.Fields.AvailableStartDateTime"] = "Availability start date",
             ["Admin.ContentManagement.Topics.Fields.AvailableStartDateTime.Hint"] = "The start of the topic's availability (UTC).",
+
+            //#6407
+            ["ActivityLog.PublicStore.PasswordChanged"] = "Public store. Customer has changed the password",
+
         }, languageId);
 
         #endregion
