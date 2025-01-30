@@ -4230,6 +4230,24 @@
   <LocaleResource Name="Admin.Catalog.ProductTags.EditTagDetails">
     <Value>Edit product tag details</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.Fields.MetaKeywords">
+    <Value>Meta keywords</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.Fields.MetaKeywords.Hint">
+    <Value>Meta keywords to be added to product tag page header.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.Fields.MetaDescription">
+    <Value>Meta description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.Fields.MetaDescription.Hint">
+    <Value>Meta description to be added to product tag page header.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.Fields.MetaTitle">
+    <Value>Meta title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.Fields.MetaTitle.Hint">
+    <Value>Override the page title. The default is the name of the product tag.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductTags.Fields.Name">
     <Value>Tag name</Value>
   </LocaleResource>
@@ -4247,6 +4265,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductTags.Fields.SearchTagName.Hint">
     <Value>Search by a tag name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.Seo">
+    <Value>SEO</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductTags.Updated">
     <Value>The product tag has been updated successfully.</Value>

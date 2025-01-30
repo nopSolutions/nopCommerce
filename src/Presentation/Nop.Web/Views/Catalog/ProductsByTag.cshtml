@@ -11,7 +11,11 @@
     Layout = "_ColumnsTwo";
 
     //title
-    NopHtml.AddTitleParts(string.Format(T("PageTitle.ProductsByTag").Text, Model.TagName));
+    NopHtml.AddTitleParts(!string.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : T("PageTitle.ProductsByTag", Model.TagName).Text);
+    //meta
+    NopHtml.AddMetaDescriptionParts(Model.MetaDescription);
+    NopHtml.AddMetaKeywordParts(Model.MetaKeywords);
+
     //page class
     NopHtml.AppendPageCssClassParts("html-product-tag-page");
 

@@ -1547,6 +1547,9 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         var model = new ProductsByTagModel
         {
             Id = productTag.Id,
+            MetaKeywords = await _localizationService.GetLocalizedAsync(productTag, x => x.MetaKeywords),
+            MetaDescription = await _localizationService.GetLocalizedAsync(productTag, x => x.MetaDescription),
+            MetaTitle = await _localizationService.GetLocalizedAsync(productTag, x => x.MetaTitle),
             TagName = await _localizationService.GetLocalizedAsync(productTag, y => y.Name),
             TagSeName = await _urlRecordService.GetSeNameAsync(productTag),
             CatalogProductsModel = await PrepareTagProductsModelAsync(productTag, command)
