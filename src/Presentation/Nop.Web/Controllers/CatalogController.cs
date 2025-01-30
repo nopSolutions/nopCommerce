@@ -423,7 +423,7 @@ public partial class CatalogController : BasePublicController
 
         var categoryIds = new List<int>();
         if (categoryId > 0)
-            categoryIds.AddRange([categoryId, ..await _categoryService.GetChildCategoryIdsAsync(categoryId, store.Id)]);
+            categoryIds.AddRange([categoryId, .. await _categoryService.GetChildCategoryIdsAsync(categoryId, store.Id)]);
 
         var products = await _productService.SearchProductsAsync(0,
             categoryIds: categoryIds,
@@ -437,13 +437,13 @@ public partial class CatalogController : BasePublicController
 
         var models = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, false, _catalogSettings.ShowProductImagesInSearchAutoComplete, _mediaSettings.AutoCompleteSearchThumbPictureSize)).ToList();
         var result = (from p in models
-                select new
-                {
-                    label = p.Name,
-                    producturl = Url.RouteUrl<Product>(new { SeName = p.SeName }),
-                    productpictureurl = p.PictureModels.FirstOrDefault()?.ImageUrl,
-                    showlinktoresultsearch = showLinkToResultSearch
-                })
+                      select new
+                      {
+                          label = p.Name,
+                          producturl = Url.RouteUrl<Product>(new { SeName = p.SeName }),
+                          productpictureurl = p.PictureModels.FirstOrDefault()?.ImageUrl,
+                          showlinktoresultsearch = showLinkToResultSearch
+                      })
             .ToList();
         return Json(result);
     }

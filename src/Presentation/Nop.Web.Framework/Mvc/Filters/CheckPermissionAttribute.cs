@@ -3,11 +3,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
-using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Localization;
 using Nop.Services.Security;
-using Nop.Web.Framework.UI;
 
 namespace Nop.Web.Framework.Mvc.Filters;
 
@@ -146,7 +144,7 @@ public sealed class CheckPermissionAttribute : TypeFilterAttribute
                     : string.Empty;
 
                 var pageSystemNameKey = $"{controller}.{action}";
-               
+
                 return new RedirectToActionResult("AccessDenied", "Security",
                     new { pageUrl = _webHelper.GetRawUrl(request), pageSystemNameKey });
             }

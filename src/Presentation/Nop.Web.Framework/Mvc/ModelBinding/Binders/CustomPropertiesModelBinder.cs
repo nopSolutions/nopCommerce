@@ -17,7 +17,7 @@ public partial class CustomPropertiesModelBinder : IModelBinder
         var result = new Dictionary<string, string>();
         var request = bindingContext.HttpContext.Request;
 
-        if (request.IsPostRequest() && request.HasFormContentType )
+        if (request.IsPostRequest() && request.HasFormContentType)
         {
             var form = await request.ReadFormAsync();
 

@@ -1421,7 +1421,8 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         if (pagingModel.PageNumber <= 0)
             pagingModel.PageNumber = 1;
 
-        var model = new VendorProductReviewsListModel { 
+        var model = new VendorProductReviewsListModel
+        {
             VendorId = vendor.Id,
             VendorName = await _localizationService.GetLocalizedAsync(vendor, x => x.Name),
             VendorUrl = await _nopUrlHelper.RouteGenericUrlAsync<Vendor>(new { SeName = await _urlRecordService.GetSeNameAsync(vendor) })
@@ -1813,7 +1814,15 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         IPagedList<Product> products = new PagedList<Product>(new List<Product>(), 0, 1);
         //only search if query string search keyword is set (used to avoid searching or displaying search term min length error message on /search page load)
         //we don't use "!string.IsNullOrEmpty(searchTerms)" in cases of "ProductSearchTermMinimumLength" set to 0 but searching by other parameters (e.g. category or price filter)
-        var isSearchTermSpecified = _httpContextAccessor.HttpContext.Request.Query.ContainsKey("q");
+        var request = _httpContextAccessor.HttpContext.Request;
+
+        var isSearchTermSpecified = request?.Method switch
+        {
+            "GET" => request.Query.ContainsKey("q"),
+            "POST" when request.HasFormContentType => request.Form.ContainsKey("q"),
+            _ => false
+        };
+
         if (isSearchTermSpecified)
         {
             var currentStore = await _storeContext.GetCurrentStoreAsync();
@@ -1990,7 +1999,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
                 var result = new List<SelectListItem>
                 {
                     //empty entry
-                    new() 
+                    new()
                     {
                         Value = "0",
                         Text = await _localizationService.GetResourceAsync("Search.SearchBox.AllCategories")

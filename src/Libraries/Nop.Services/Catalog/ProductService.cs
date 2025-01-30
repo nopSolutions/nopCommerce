@@ -412,9 +412,9 @@ public partial class ProductService : IProductService
 
         var qty = -quantity;
 
-        var productInventory = _productWarehouseInventoryRepository.Table.Where(pwi => pwi.ProductId == product.Id)
+        var productInventory = await _productWarehouseInventoryRepository.Table.Where(pwi => pwi.ProductId == product.Id)
             .OrderByDescending(pwi => pwi.StockQuantity - pwi.ReservedQuantity)
-            .ToList();
+            .ToListAsync();
 
         if (productInventory.Count <= 0)
             return;
