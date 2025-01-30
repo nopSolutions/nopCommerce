@@ -69,8 +69,8 @@ public partial class AclService : IAclService
         var key = _staticCacheManager.PrepareKeyForDefaultCache(NopSecurityDefaults.EntityAclRecordExistsCacheKey, entityName);
 
         var query = from acl in _aclRecordRepository.Table
-                    where acl.EntityName == entityName
-                    select acl;
+            where acl.EntityName == entityName
+            select acl;
 
         return await _staticCacheManager.GetAsync(key, async () => await query.AnyAsync());
     }
@@ -121,9 +121,9 @@ public partial class AclService : IAclService
             return query;
 
         return from entity in query
-               where !entity.SubjectToAcl || _aclRecordRepository.Table.Any(acl =>
-                   acl.EntityName == typeof(TEntity).Name && acl.EntityId == entity.Id && customerRoleIds.Contains(acl.CustomerRoleId))
-               select entity;
+            where !entity.SubjectToAcl || _aclRecordRepository.Table.Any(acl =>
+                acl.EntityName == typeof(TEntity).Name && acl.EntityId == entity.Id && customerRoleIds.Contains(acl.CustomerRoleId))
+            select entity;
     }
 
     /// <summary>
@@ -153,9 +153,9 @@ public partial class AclService : IAclService
         var entityName = entity.GetType().Name;
 
         var query = from ur in _aclRecordRepository.Table
-                    where ur.EntityId == entityId &&
-                          ur.EntityName == entityName
-                    select ur;
+            where ur.EntityId == entityId &&
+                  ur.EntityName == entityName
+            select ur;
         var aclRecords = await query.ToListAsync();
 
         return aclRecords;
@@ -205,9 +205,9 @@ public partial class AclService : IAclService
         var key = _staticCacheManager.PrepareKeyForDefaultCache(NopSecurityDefaults.AclRecordCacheKey, entityId, entityName);
 
         var query = from ur in _aclRecordRepository.Table
-                    where ur.EntityId == entityId &&
-                          ur.EntityName == entityName
-                    select ur.CustomerRoleId;
+            where ur.EntityId == entityId &&
+                  ur.EntityName == entityName
+            select ur.CustomerRoleId;
 
         return await _staticCacheManager.GetAsync(key, () => query.ToArrayAsync());
     }
