@@ -61,10 +61,10 @@ public partial class StoreMappingService : IStoreMappingService
         var key = _staticCacheManager.PrepareKeyForDefaultCache(NopStoreDefaults.StoreMappingExistsCacheKey, entityName);
 
         var query = from sm in _storeMappingRepository.Table
-            where sm.EntityName == entityName
-            select sm.StoreId;
+                    where sm.EntityName == entityName
+                    select sm.StoreId;
 
-        return await _staticCacheManager.GetAsync(key, ()=>query.AnyAsync());
+        return await _staticCacheManager.GetAsync(key, async () => await query.AnyAsync());
     }
 
     #endregion
@@ -90,9 +90,9 @@ public partial class StoreMappingService : IStoreMappingService
             return query;
 
         return from entity in query
-            where !entity.LimitedToStores || _storeMappingRepository.Table.Any(sm =>
-                sm.EntityName == typeof(TEntity).Name && sm.EntityId == entity.Id && sm.StoreId == storeId)
-            select entity;
+               where !entity.LimitedToStores || _storeMappingRepository.Table.Any(sm =>
+                   sm.EntityName == typeof(TEntity).Name && sm.EntityId == entity.Id && sm.StoreId == storeId)
+               select entity;
     }
 
     /// <summary>
@@ -124,9 +124,9 @@ public partial class StoreMappingService : IStoreMappingService
         var key = _staticCacheManager.PrepareKeyForDefaultCache(NopStoreDefaults.StoreMappingsCacheKey, entityId, entityName);
 
         var query = from sm in _storeMappingRepository.Table
-            where sm.EntityId == entityId &&
-                  sm.EntityName == entityName
-            select sm;
+                    where sm.EntityId == entityId &&
+                          sm.EntityName == entityName
+                    select sm;
 
         var storeMappings = await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
 
@@ -179,9 +179,9 @@ public partial class StoreMappingService : IStoreMappingService
         var key = _staticCacheManager.PrepareKeyForDefaultCache(NopStoreDefaults.StoreMappingIdsCacheKey, entityId, entityName);
 
         var query = from sm in _storeMappingRepository.Table
-            where sm.EntityId == entityId &&
-                  sm.EntityName == entityName
-            select sm.StoreId;
+                    where sm.EntityId == entityId &&
+                          sm.EntityName == entityName
+                    select sm.StoreId;
 
         return await _staticCacheManager.GetAsync(key, () => query.ToArrayAsync());
     }
@@ -204,9 +204,9 @@ public partial class StoreMappingService : IStoreMappingService
         var key = _staticCacheManager.PrepareKeyForDefaultCache(NopStoreDefaults.StoreMappingIdsCacheKey, entityId, entityName);
 
         var query = from sm in _storeMappingRepository.Table
-            where sm.EntityId == entityId &&
-                  sm.EntityName == entityName
-            select sm.StoreId;
+                    where sm.EntityId == entityId &&
+                          sm.EntityName == entityName
+                    select sm.StoreId;
 
         return _staticCacheManager.Get(key, () => query.ToArray());
     }
