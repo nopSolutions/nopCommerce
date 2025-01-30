@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Nop.Core.Configuration;
 using Nop.Core.Infrastructure.Mapper;
 
 namespace Nop.Core.Infrastructure;
@@ -71,7 +70,7 @@ public partial class NopEngine : IEngine
         //create AutoMapper configuration
         var config = new MapperConfiguration(cfg =>
         {
-            foreach (var instance in instances) 
+            foreach (var instance in instances)
                 cfg.AddProfile(instance.GetType());
         });
 
@@ -141,7 +140,7 @@ public partial class NopEngine : IEngine
     public virtual void ConfigureRequestPipeline(IApplicationBuilder application)
     {
         ServiceProvider = application.ApplicationServices;
-        
+
         //find startup configurations provided by other assemblies
         var typeFinder = Singleton<ITypeFinder>.Instance;
         var startupConfigurations = typeFinder.FindClassesOfType<INopStartup>();

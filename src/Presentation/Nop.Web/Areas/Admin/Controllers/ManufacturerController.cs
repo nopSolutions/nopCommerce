@@ -134,7 +134,7 @@ public partial class ManufacturerController : BaseAdminController
         if (picture != null)
             await _pictureService.SetSeoFilenameAsync(picture.Id, await _pictureService.GetPictureSeNameAsync(manufacturer.Name));
     }
-    
+
     protected virtual async Task SaveStoreMappingsAsync(Manufacturer manufacturer, ManufacturerModel model)
     {
         manufacturer.LimitedToStores = model.SelectedStoreIds.Any();
@@ -233,7 +233,7 @@ public partial class ManufacturerController : BaseAdminController
 
             //update picture seo file name
             await UpdatePictureSeoNamesAsync(manufacturer);
-            
+
             //stores
             await SaveStoreMappingsAsync(manufacturer, model);
 
@@ -323,7 +323,7 @@ public partial class ManufacturerController : BaseAdminController
 
             //update picture seo file name
             await UpdatePictureSeoNamesAsync(manufacturer);
-            
+
             //stores
             await SaveStoreMappingsAsync(manufacturer, model);
 
@@ -487,7 +487,8 @@ public partial class ManufacturerController : BaseAdminController
 
     [HttpPost]
     [CheckPermission(StandardPermission.Catalog.MANUFACTURER_CREATE_EDIT_DELETE)]
-    public virtual async Task<IActionResult> ProductDelete(int id) {
+    public virtual async Task<IActionResult> ProductDelete(int id)
+    {
 
         //try to get a product manufacturer with the specified id
         var productManufacturer = await _manufacturerService.GetProductManufacturerByIdAsync(id)

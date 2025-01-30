@@ -2,12 +2,10 @@
 using System.Data.Common;
 using System.Linq.Expressions;
 using System.Text;
-using DocumentFormat.OpenXml.Vml.Office;
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider;
 using LinqToDB.DataProvider.SQLite;
-using LinqToDB.Tools;
 using Microsoft.Data.Sqlite;
 using Nop.Core;
 using Nop.Core.ComponentModel;
