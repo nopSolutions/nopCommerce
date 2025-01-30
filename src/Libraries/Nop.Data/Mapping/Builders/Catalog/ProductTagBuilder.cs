@@ -16,7 +16,10 @@ public partial class ProductTagBuilder : NopEntityBuilder<ProductTag>
     /// <param name="table">Create table expression builder</param>
     public override void MapEntity(CreateTableExpressionBuilder table)
     {
-        table.WithColumn(nameof(ProductTag.Name)).AsString(400).NotNullable();
+        table
+            .WithColumn(nameof(ProductTag.Name)).AsString(400).NotNullable()
+            .WithColumn(nameof(ProductTag.MetaKeywords)).AsString(400).Nullable()
+            .WithColumn(nameof(ProductTag.MetaTitle)).AsString(400).Nullable();
     }
 
     #endregion

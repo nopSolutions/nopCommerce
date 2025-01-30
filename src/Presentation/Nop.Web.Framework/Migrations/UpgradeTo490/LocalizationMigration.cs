@@ -68,6 +68,15 @@ public class LocalizationMigration : MigrationBase
             //#6407
             ["ActivityLog.PublicStore.PasswordChanged"] = "Public store. Customer has changed the password",
 
+            //#6407
+            ["Admin.Catalog.ProductTags.Seo"] = "SEO",
+            ["Admin.Catalog.ProductTags.Fields.MetaKeywords"] = "Meta keywords",
+            ["Admin.Catalog.ProductTags.Fields.MetaKeywords.Hint"] = "Meta keywords to be added to product tag page header.",
+            ["Admin.Catalog.ProductTags.Fields.MetaDescription"] = "Meta description",
+            ["Admin.Catalog.ProductTags.Fields.MetaDescription.Hint"] = "Meta description to be added to product tag page header.",
+            ["Admin.Catalog.ProductTags.Fields.MetaTitle"] = "Meta title",
+            ["Admin.Catalog.ProductTags.Fields.MetaTitle.Hint"] = "Override the page title. The default is the name of the product tag.",
+
         }, languageId);
 
         #endregion
