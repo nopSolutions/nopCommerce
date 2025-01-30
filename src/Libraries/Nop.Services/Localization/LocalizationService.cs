@@ -503,8 +503,16 @@ public partial class LocalizationService : ILocalizationService
         if (xmlStreamReader.EndOfStream)
             return;
 
-        var lsNamesList = await _lsrRepository.Table.Where(lsr => lsr.LanguageId == language.Id)
-                     .ToDictionaryAsync(lsr => lsr.ResourceName.ToLowerInvariant(), lsr => lsr);
+        var lsNamesList = new Dictionary<string, LocaleStringResource>();
+        var locales = await _lsrRepository.Table
+            .Where(lsr => lsr.LanguageId == language.Id)
+            .OrderBy(lsr => lsr.Id)
+            .ToListAsync();
+
+        foreach (var localeStringResource in locales)
+        {
+            lsNamesList[localeStringResource.ResourceName.ToLowerInvariant()] = localeStringResource;
+        }
 
         var lrsToUpdateList = new List<LocaleStringResource>();
         var lrsToInsertList = new Dictionary<string, LocaleStringResource>();
