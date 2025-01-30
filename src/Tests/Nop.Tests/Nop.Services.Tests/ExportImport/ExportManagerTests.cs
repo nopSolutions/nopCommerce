@@ -4,7 +4,6 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
@@ -105,7 +104,7 @@ public class ExportManagerTests : ServiceTest
 
     #region Utilities
 
-    protected static T PropertiesShouldEqual<T, L, Tp>(T actual, PropertyManager<Tp, L> manager, IDictionary<string, string> replacePairs, params string[] filter) where L : Language
+    protected static T PropertiesShouldEqual<T, Tp>(T actual, PropertyManager<Tp> manager, IDictionary<string, string> replacePairs, params string[] filter)
     {
         var objectProperties = typeof(T).GetProperties();
         foreach (var property in manager.GetDefaultProperties)
@@ -167,7 +166,7 @@ public class ExportManagerTests : ServiceTest
         return actual;
     }
 
-    protected async Task<PropertyManager<T, Language>> GetPropertyManagerAsync<T>(XLWorkbook workbook)
+    protected async Task<PropertyManager<T>> GetPropertyManagerAsync<T>(XLWorkbook workbook)
     {
         var languages = await _languageService.GetAllLanguagesAsync();
 
@@ -176,7 +175,7 @@ public class ExportManagerTests : ServiceTest
         var defaultProperties = metadata.DefaultProperties;
         var localizedProperties = metadata.LocalizedProperties;
 
-        return new PropertyManager<T, Language>(defaultProperties, _catalogSettings, localizedProperties);
+        return new PropertyManager<T>(defaultProperties, _catalogSettings, localizedProperties);
     }
 
     protected XLWorkbook GetWorkbook(byte[] excelData)
@@ -185,7 +184,7 @@ public class ExportManagerTests : ServiceTest
         return new XLWorkbook(stream);
     }
 
-    protected T AreAllObjectPropertiesPresent<T, L>(T obj, PropertyManager<T, L> manager, params string[] filters) where L : Language
+    protected T AreAllObjectPropertiesPresent<T>(T obj, PropertyManager<T> manager, params string[] filters)
     {
         foreach (var propertyInfo in typeof(T).GetProperties())
         {
