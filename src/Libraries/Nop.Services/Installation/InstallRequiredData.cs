@@ -1075,7 +1075,8 @@ public partial class InstallationService
             CheckLicense = true,
             UseIsoDateFormatInJsonResult = true,
             ShowDocumentationReferenceLinks = true,
-            UseStickyHeaderLayout = false
+            UseStickyHeaderLayout = false,
+            MinimumDropdownItemsForSearch = 50
         });
 
         await settingService.SaveSettingAsync(new ProductEditorSettings

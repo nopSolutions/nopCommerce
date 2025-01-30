@@ -81,4 +81,9 @@ public partial class AdminAreaSettings : ISettings
     /// Gets or sets a value indicating whether to the content header should be sticky when scrolling
     /// </summary>
     public bool UseStickyHeaderLayout { get; set; }
+
+    /// <summary>
+    /// Gets or sets the minimum number of drop-down list items to display search input.
+    /// </summary>
+    public int MinimumDropdownItemsForSearch { get; set; }
 }

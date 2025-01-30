@@ -44,6 +44,13 @@ public class SettingMigration : MigrationBase
             vendorSettings.MaximumProductPicturesNumber = 5;
             settingService.SaveSetting(vendorSettings, settings => settings.MaximumProductPicturesNumber);
         }
+
+        //#1892
+        if (!settingService.SettingExists(adminAreaSettings, settings => settings.MinimumDropdownItemsForSearch))
+        {
+            adminAreaSettings.MinimumDropdownItemsForSearch = 50;
+            settingService.SaveSetting(adminAreaSettings, settings => settings.MinimumDropdownItemsForSearch);
+        }
     }
 
     public override void Down()
