@@ -1454,14 +1454,15 @@ public partial class ImportManager : IImportManager
         var endCell = metadata.Properties.Max(p => p.PropertyOrderPosition);
 
         var filePaths = new List<string>();
+        var exportImportProductsCountInOneFile = Math.Max(_catalogSettings.ExportImportProductsCountInOneFile, 1);
 
         while (true)
         {
-            var curIndex = fileIndex * _catalogSettings.ExportImportProductsCountInOneFile;
+            var curIndex = fileIndex * exportImportProductsCountInOneFile;
 
-            var startRow = metadata.ProductsInFile[(fileIndex - 1) * _catalogSettings.ExportImportProductsCountInOneFile];
+            var startRow = metadata.ProductsInFile[(fileIndex - 1) * exportImportProductsCountInOneFile];
 
-            var endRow = metadata.CountProductsInFile > curIndex + 1
+            var endRow = metadata.CountProductsInFile > curIndex
                 ? metadata.ProductsInFile[curIndex - 1]
                 : metadata.EndRow;
 
