@@ -151,7 +151,10 @@ public class AffiliateServiceTests : ServiceTest<Affiliate>
 
             var updatedEntity = new Affiliate
             {
-                Active = true, AddressId = 1, AdminComment = "Test comment", FriendlyUrlName = "TestActiveAffiliate"
+                Active = true,
+                AddressId = 1,
+                AdminComment = "Test comment",
+                FriendlyUrlName = "TestActiveAffiliate"
             };
 
             return new CrudData<Affiliate>

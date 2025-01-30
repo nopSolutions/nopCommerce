@@ -744,11 +744,7 @@ public partial class CategoryService : ICategoryService
     /// <returns>A ProductCategory that has the specified values; otherwise null</returns>
     public virtual ProductCategory FindProductCategory(IList<ProductCategory> source, int productId, int categoryId)
     {
-        foreach (var productCategory in source)
-            if (productCategory.ProductId == productId && productCategory.CategoryId == categoryId)
-                return productCategory;
-
-        return null;
+        return source.FirstOrDefault(pc => pc.ProductId == productId && pc.CategoryId == categoryId);
     }
 
     /// <summary>

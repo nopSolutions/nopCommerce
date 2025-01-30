@@ -460,6 +460,7 @@ public class PayPalCommerceServiceManager
         }
 
         var (shippingTotal, _, _) = await _orderTotalCalculationService.GetShoppingCartShippingTotalAsync(details.Cart, includingTax: false);
+        var (shippingTotalWithTax, _, _) = await _orderTotalCalculationService.GetShoppingCartShippingTotalAsync(details.Cart, includingTax: true);
 
         var itemTotal = items
             .Sum(item => decimal.Parse(item.UnitAmount?.Value ?? "0", NumberStyles.Any, CultureInfo.InvariantCulture) * int.Parse(item.Quantity));
@@ -468,12 +469,13 @@ public class PayPalCommerceServiceManager
         var (taxTotal, _) = await _orderTotalCalculationService.GetTaxTotalAsync(details.Cart, usePaymentMethodAdditionalFee: false);
         var itemTaxTotal = items
             .Sum(item => decimal.Parse(item.Tax?.Value ?? "0", NumberStyles.Any, CultureInfo.InvariantCulture) * int.Parse(item.Quantity));
-        var taxAdjustment = taxTotal - itemTaxTotal;
+        var shippingTax = (shippingTotalWithTax ?? 0) - (shippingTotal ?? 0);
+        var taxAdjustment = taxTotal - itemTaxTotal - shippingTax;
         if (taxAdjustment > decimal.Zero)
             itemTotal += taxAdjustment;
-        if (taxAdjustment < decimal.Zero)
+        if (taxAdjustment < decimal.Zero || shippingTax > decimal.Zero)
         {
-            taxAdjustment = decimal.Zero;
+            taxAdjustment = Math.Max(taxAdjustment, decimal.Zero);
             foreach (var item in items)
             {
                 item.Tax = null;
@@ -610,7 +612,9 @@ public class PayPalCommerceServiceManager
         {
             var (adjustedShippingRate, _) = await _orderTotalCalculationService
                 .AdjustShippingRateAsync(option.Rate, details.Cart, option.IsPickupInStore);
-            var (rate, _) = await _taxService.GetShippingPriceAsync(adjustedShippingRate, details.Customer);
+            //var (rate, _) = await _taxService.GetShippingPriceAsync(adjustedShippingRate, details.Customer);
+            //PayPal currently handles taxable shipping incorrectly, so we display shipping rates without tax, but it'll be included to tax total
+            var rate = adjustedShippingRate;
 
             return new ShippingOption
             {

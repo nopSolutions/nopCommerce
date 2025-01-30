@@ -15,7 +15,7 @@ public class ChangePasswordValidatorTests : BaseNopTest
     [OneTimeSetUp]
     public void Setup()
     {
-        _validator = new ChangePasswordValidator(GetService<ILocalizationService>(), GetService<CustomerSettings>()) ;
+        _validator = new ChangePasswordValidator(GetService<ILocalizationService>(), GetService<CustomerSettings>());
     }
 
     [Test]

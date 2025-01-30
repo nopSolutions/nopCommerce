@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
-using Nop.Core.Caching;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Media;
@@ -411,11 +411,11 @@ public class ProductModelFactoryTests : WebTest
                     foreach (var associatedProduct in associatedProducts)
                     {
                         var (_, tmpMinPossiblePrice, _, _) = await _priceCalculationService.GetFinalPriceAsync(associatedProduct, customer, store);
-                        
+
                         //calculate price for the maximum quantity if we have tier prices, and choose minimal
                         tmpMinPossiblePrice = Math.Min(tmpMinPossiblePrice,
                             (await _priceCalculationService.GetFinalPriceAsync(associatedProduct, customer, store, quantity: int.MaxValue)).finalPrice);
-                        
+
                         if (minPossiblePrice.HasValue && tmpMinPossiblePrice >= minPossiblePrice.Value)
                             continue;
                         minPriceProduct = associatedProduct;
@@ -564,7 +564,7 @@ public class ProductModelFactoryTests : WebTest
                         //PAngV baseprice (used in Germany)
                         model.BasePricePAngV = await _priceFormatter.FormatBasePriceAsync(product, finalPriceWithDiscountBase);
                         model.BasePricePAngVValue = finalPriceWithDiscountBase;
-                        
+
                         //rental
                         if (product.IsRental)
                         {

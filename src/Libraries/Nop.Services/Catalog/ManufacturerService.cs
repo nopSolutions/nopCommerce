@@ -512,11 +512,7 @@ public partial class ManufacturerService : IManufacturerService
     /// <returns>A ProductManufacturer that has the specified values; otherwise null</returns>
     public virtual ProductManufacturer FindProductManufacturer(IList<ProductManufacturer> source, int productId, int manufacturerId)
     {
-        foreach (var productManufacturer in source)
-            if (productManufacturer.ProductId == productId && productManufacturer.ManufacturerId == manufacturerId)
-                return productManufacturer;
-
-        return null;
+        return source.FirstOrDefault(pm => pm.ProductId == productId && pm.ManufacturerId == manufacturerId);
     }
 
     /// <summary>

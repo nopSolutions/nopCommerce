@@ -793,7 +793,7 @@ public partial class ExportManager : IExportManager
     protected virtual async Task<int> ExportTierPricesAsync(Product item, PropertyManager<ExportTierPrice, Language> tierPriceManager,
         IXLWorksheet worksheet, IList<(Language Language, IXLWorksheet Worksheet)> localizedWorksheets, int row, IXLWorksheet faWorksheet)
     {
-        var tierPrices = (await _productService.GetTierPricesByProductAsync(item.Id)).Select(p=>new ExportTierPrice
+        var tierPrices = (await _productService.GetTierPricesByProductAsync(item.Id)).Select(p => new ExportTierPrice
         {
             Id = p.Id,
             CustomerRoleId = p.CustomerRoleId,
@@ -1741,7 +1741,7 @@ public partial class ExportManager : IExportManager
         };
 
         var productList = products.ToList();
-        
+
         if (!_catalogSettings.ExportImportProductAttributes && !_catalogSettings.ExportImportProductSpecificationAttributes)
             return await new PropertyManager<Product, Language>(properties, _catalogSettings).ExportToXlsxAsync(productList);
 

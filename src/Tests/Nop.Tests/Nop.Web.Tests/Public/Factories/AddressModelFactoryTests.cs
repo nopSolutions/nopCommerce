@@ -41,15 +41,18 @@ public class AddressModelFactoryTests : BaseNopTest
 
         await _addressAttributeService.InsertAttributeValueAsync(new AddressAttributeValue
         {
-            AttributeId = _testAddressAttribute.Id, Name = "Value 1"
+            AttributeId = _testAddressAttribute.Id,
+            Name = "Value 1"
         });
         await _addressAttributeService.InsertAttributeValueAsync(new AddressAttributeValue
         {
-            AttributeId = _testAddressAttribute.Id, Name = "Value 2"
+            AttributeId = _testAddressAttribute.Id,
+            Name = "Value 2"
         });
         await _addressAttributeService.InsertAttributeValueAsync(new AddressAttributeValue
         {
-            AttributeId = _testAddressAttribute.Id, Name = "Value 3"
+            AttributeId = _testAddressAttribute.Id,
+            Name = "Value 3"
         });
     }
 

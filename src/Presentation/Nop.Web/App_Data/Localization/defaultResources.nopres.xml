@@ -1152,6 +1152,9 @@
   <LocaleResource Name="ActivityLog.PublicStore.AddToWishlist">
     <Value>Added a product to wishlist ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.PublicStore.PasswordChanged">
+    <Value>Public store. Customer has changed the password</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.PublicStore.ContactUs">
     <Value>Used contact us form</Value>
   </LocaleResource>
@@ -11357,6 +11360,21 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.AccessibleWhenStoreClosed.Hint">
     <Value>Check to allow customer to view this topic details page when the store is closed.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.AvailableEndDateTime">
+    <Value>Availability end date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.AvailableEndDateTime.Hint">
+    <Value>The end of the topic's availability (UTC).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.AvailableEndDateTime.GreaterThanOrEqualToStartDate">
+    <Value>The end date must be greater than or equal to the start date.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.AvailableStartDateTime">
+    <Value>Availability start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.AvailableStartDateTime.Hint">
+    <Value>The start of the topic's availability (UTC).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Body">
     <Value>Body</Value>

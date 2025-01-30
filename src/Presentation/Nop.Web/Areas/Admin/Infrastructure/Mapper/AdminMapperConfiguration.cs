@@ -1736,7 +1736,8 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(model => model.VendorAttributeSearchModel, options => options.Ignore())
             .ForMember(model => model.VendorsBlockItemsToDisplay_OverrideForStore, options => options.Ignore());
         CreateMap<VendorSettingsModel, VendorSettings>()
-            .ForMember(settings => settings.DefaultVendorPageSizeOptions, options => options.Ignore());
+            .ForMember(settings => settings.DefaultVendorPageSizeOptions, options => options.Ignore())
+            .ForMember(settings => settings.MaximumProductPicturesNumber, options => options.Ignore());
     }
 
     /// <summary>
