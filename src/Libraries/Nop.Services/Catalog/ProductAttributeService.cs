@@ -377,11 +377,7 @@ public partial class ProductAttributeService : IProductAttributeService
     /// <returns>A ProductAttributeValuePicture that has the specified values; otherwise null</returns>
     public virtual ProductAttributeValuePicture FindProductAttributeValuePicture(IList<ProductAttributeValuePicture> source, int valueId, int pictureId)
     {
-        foreach (var valuePicture in source)
-            if (valuePicture.ProductAttributeValueId == valueId && valuePicture.PictureId == pictureId)
-                return valuePicture;
-
-        return null;
+        return source.FirstOrDefault(vp => vp.ProductAttributeValueId == valueId && vp.PictureId == pictureId);
     }
 
     #endregion

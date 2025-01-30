@@ -1238,17 +1238,20 @@ public partial class ProductService : IProductService
         query = query.Where(x => !x.Deleted);
         query = query.OrderBy(x => x.DisplayOrder).ThenBy(x => x.Id);
 
-        var products = await query.ToListAsync();
+        if (!showHidden || storeId > 0)
+        {
+            //apply store mapping constraints
+            query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+        }
 
-        //ACL mapping
         if (!showHidden)
-            products = await products.WhereAwait(async x => await _aclService.AuthorizeAsync(x)).ToListAsync();
+        {
+            //apply ACL constraints
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            query = await _aclService.ApplyAcl(query, customer);
+        }
 
-        //Store mapping
-        if (!showHidden && storeId > 0)
-            products = await products.WhereAwait(async x => await _storeMappingService.AuthorizeAsync(x, storeId)).ToListAsync();
-
-        return products;
+        return await query.ToListAsync();
     }
 
     /// <summary>
