@@ -2042,7 +2042,7 @@ public partial class ImportManager : IImportManager
         var metadata = await PrepareImportProductDataAsync(workbook, languages);
         var defaultWorksheet = metadata.DefaultWorksheet;
 
-        if (_catalogSettings.ExportImportSplitProductsFile && metadata.CountProductsInFile > _catalogSettings.ExportImportProductsCountInOneFile)
+        if (_catalogSettings.ExportImportSplitProductsFile && metadata.CountProductsInFile > Math.Max(_catalogSettings.ExportImportProductsCountInOneFile, 1))
         {
             await ImportProductsFromSplitedXlsxAsync(defaultWorksheet, metadata);
             return;
