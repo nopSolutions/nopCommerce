@@ -68,6 +68,13 @@ public class LocalizationMigration : MigrationBase
             //#6407
             ["ActivityLog.PublicStore.PasswordChanged"] = "Public store. Customer has changed the password",
 
+            //#4170
+            ["Admin.Promotions.Campaigns.Copy.Name"] = "New campaign name",
+            ["Admin.Promotions.Campaigns.Copy.Name.Hint"] = "The name of the new campaign.",
+            ["Admin.Promotions.Campaigns.Copy.Name.New"] = "{0} - copy",
+            ["Admin.Promotions.Campaigns.Copy"] = "Copy campaign",
+            ["Admin.Promotions.Campaigns.Copied"] = "The campaign has been copied successfully",
+
         }, languageId);
 
         #endregion
