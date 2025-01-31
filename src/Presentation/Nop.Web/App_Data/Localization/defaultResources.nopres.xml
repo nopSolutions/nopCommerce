@@ -14100,6 +14100,21 @@
   <LocaleResource Name="Admin.Promotions.Campaigns.BackToList">
     <Value>back to campaign list</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Copy">
+    <Value>New campaign name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Copied">
+    <Value>The campaign has been copied successfully</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Copy.Name">
+    <Value>New campaign name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Copy.Name.Hint">
+    <Value>The name of the new campaign.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Copy.Name.New">
+    <Value>{0} - copy</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.Deleted">
     <Value>The campaign has been deleted successfully.</Value>
   </LocaleResource>

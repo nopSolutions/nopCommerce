@@ -309,5 +309,33 @@ public partial class CampaignController : BaseAdminController
         return RedirectToAction("List");
     }
 
+    [HttpPost]
+    [CheckPermission(StandardPermission.Promotions.CAMPAIGNS_CREATE_EDIT)]
+    public virtual async Task<IActionResult> CopyCampaign(CampaignModel model)
+    {
+        var copyModel = model.CopyCampaignModel;
+        if (copyModel is null)
+            return RedirectToAction("List");
+
+        try
+        {
+            var originalCampaign = await _campaignService.GetCampaignByIdAsync(copyModel.OriginalCampaignId);
+
+            if (originalCampaign is null)
+                return RedirectToAction("List");
+
+            var newCampaign = await _campaignService.CopyCampaignAsync(originalCampaign, copyModel.Name);
+
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Promotions.Campaigns.Copied"));
+
+            return RedirectToAction("Edit", new { id = newCampaign.Id });
+        }
+        catch (Exception exc)
+        {
+            _notificationService.ErrorNotification(exc.Message);
+            return RedirectToAction("Edit", new { id = copyModel.OriginalCampaignId });
+        }
+    }
+
     #endregion
 }
