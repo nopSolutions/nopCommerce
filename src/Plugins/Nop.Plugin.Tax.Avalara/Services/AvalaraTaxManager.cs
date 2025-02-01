@@ -269,13 +269,13 @@ public class AvalaraTaxManager : IDisposable
                           ?? throw new NopException("No response from the service");
 
         //whether there are any errors
-        if (transaction.messages?.Any() ?? false)
-        {
-            var message = transaction.messages.Aggregate(string.Empty, (error, message) => $"{error}{message.summary}{Environment.NewLine}");
-            throw new NopException(message);
-        }
+        var errors = transaction.messages?.Where(m => !m.severity?.ToLower().Equals("success") ?? true).ToList() ?? [];
 
-        return transaction;
+        if (!errors.Any()) 
+            return transaction;
+
+        var message = errors.Aggregate(string.Empty, (error, message) => $"{error}{message.summary}{Environment.NewLine}");
+        throw new NopException(message);
     }
 
     /// <summary>
