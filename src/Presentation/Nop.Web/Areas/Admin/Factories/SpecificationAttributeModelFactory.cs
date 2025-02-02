@@ -115,19 +115,15 @@ public partial class SpecificationAttributeModelFactory : ISpecificationAttribut
     {
         ArgumentNullException.ThrowIfNull(searchModel);
 
+        var one = new List<SpecificationAttributeGroupModel>();
         //get specification attribute groups
         var specificationAttributeGroups = await _specificationAttributeService
-            .GetSpecificationAttributeGroupsAsync(searchModel.Page - 1, searchModel.PageSize);
-
-        if (searchModel.Page == 1)
+            .GetSpecificationAttributeGroupsAsync(searchModel.Page - 1, searchModel.PageSize, searchModel.SpecificationAttributeSearchGroupName, searchModel.SpecificationAttributeName);
+        // check wether to set the default group
+        if (specificationAttributeGroups.Any(s => s.Id == 0))
         {
-            //dislpay default group with non-grouped specification attributes on first page
-            specificationAttributeGroups.Insert(0, new SpecificationAttributeGroup
-            {
-                Name = await _localizationService.GetResourceAsync("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.DefaultGroupName")
-            });
+            specificationAttributeGroups.FirstOrDefault(sag => sag.Id == 0).Name = await _localizationService.GetResourceAsync("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.DefaultGroupName");
         }
-
         //prepare list model
         var model = new SpecificationAttributeGroupListModel().PrepareToGrid(searchModel, specificationAttributeGroups, () =>
         {
@@ -186,7 +182,7 @@ public partial class SpecificationAttributeModelFactory : ISpecificationAttribut
         ArgumentNullException.ThrowIfNull(searchModel);
 
         //get specification attributes
-        var specificationAttributes = (await _specificationAttributeService.GetSpecificationAttributesByGroupIdAsync(group?.Id)).ToPagedList(searchModel);
+        var specificationAttributes = (await _specificationAttributeService.GetSpecificationAttributesByGroupIdAsync(group?.Id, searchModel.SpecificationAttributeSearchName)).ToPagedList(searchModel);
 
         //prepare list model
         var model = new SpecificationAttributeListModel().PrepareToGrid(searchModel, specificationAttributes, () =>
