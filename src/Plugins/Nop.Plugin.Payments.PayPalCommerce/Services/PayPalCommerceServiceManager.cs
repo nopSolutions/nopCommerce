@@ -493,14 +493,20 @@ public class PayPalCommerceServiceManager
         //set adjustment item if needed
         if (itemAdjustment > decimal.Zero || taxAdjustment > decimal.Zero)
         {
-            items.Add(new()
+            var amount = PrepareMoney(itemAdjustment + taxAdjustment, details.CurrencyCode);
+            if (decimal.TryParse(amount.Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var value) && value > decimal.Zero)
             {
-                Name = adjustmentName,
-                Description = adjustmentDescription,
-                Quantity = 1.ToString(),
-                UnitAmount = PrepareMoney(itemAdjustment + taxAdjustment, details.CurrencyCode),
-                Tax = taxAdjustment > decimal.Zero ? PrepareMoney(taxAdjustment, details.CurrencyCode) : null
-            });
+                items.Add(new()
+                {
+                    Name = adjustmentName,
+                    Description = adjustmentDescription,
+                    Quantity = 1.ToString(),
+                    UnitAmount = amount,
+                    Tax = taxAdjustment > decimal.Zero && items.Any(item => item?.Tax is not null)
+                        ? PrepareMoney(taxAdjustment, details.CurrencyCode)
+                        : null
+                });
+            }
         }
 
         return new()
