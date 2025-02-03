@@ -1,7 +1,6 @@
 ﻿using System.Globalization;
 using System.Text;
 using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Infrastructure;

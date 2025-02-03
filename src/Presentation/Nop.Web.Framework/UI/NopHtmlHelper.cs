@@ -88,7 +88,7 @@ public partial class NopHtmlHelper : INopHtmlHelper
     protected static string GetAssetKey(string[] keys, string suffix)
     {
         ArgumentNullException.ThrowIfNull(keys?.Length > 0 ? keys : null, nameof(keys));
-            
+
         var hashInput = string.Join(',', keys);
         var input = MD5.HashData(Encoding.Unicode.GetBytes(hashInput));
 
@@ -150,15 +150,15 @@ public partial class NopHtmlHelper : INopHtmlHelper
                 switch (_seoSettings.PageTitleSeoAdjustment)
                 {
                     case PageTitleSeoAdjustment.PagenameAfterStorename:
-                    {
-                        result = string.Join(_seoSettings.PageTitleSeparator, defaultTitle, specificTitle);
-                    }
+                        {
+                            result = string.Join(_seoSettings.PageTitleSeparator, defaultTitle, specificTitle);
+                        }
                         break;
                     case PageTitleSeoAdjustment.StorenameAfterPagename:
                     default:
-                    {
-                        result = string.Join(_seoSettings.PageTitleSeparator, specificTitle, defaultTitle);
-                    }
+                        {
+                            result = string.Join(_seoSettings.PageTitleSeparator, specificTitle, defaultTitle);
+                        }
                         break;
                 }
             else
@@ -767,8 +767,8 @@ public partial class NopHtmlHelper : INopHtmlHelper
     /// <param name="jsonLd">The JSON-LD serialized model></param>
     public virtual void AddJsonLdParts(string jsonLd)
     {
-        if(_seoSettings.MicrodataEnabled) 
-            AddHeadCustomParts("<script type=\"application/ld+json\">" +  _htmlHelper.Raw(jsonLd) + "</script>");
+        if (_seoSettings.MicrodataEnabled)
+            AddHeadCustomParts("<script type=\"application/ld+json\">" + _htmlHelper.Raw(jsonLd) + "</script>");
     }
 
     #endregion

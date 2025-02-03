@@ -79,7 +79,7 @@ public partial class InstallationService
         if (_defaultCustomerId.HasValue)
             return _defaultCustomerId.Value;
 
-        var customer = await Table<Customer>().FirstOrDefaultAsync(x => x.Email == _defaultCustomerEmail) ?? throw new Exception("Cannot load default customer");
+        var customer = await Table<Customer>().FirstOrDefaultAsync(x => x.Email == _installationSettings.AdminEmail) ?? throw new Exception("Cannot load default customer");
 
         _defaultCustomerId = customer.Id;
 
@@ -93,7 +93,7 @@ public partial class InstallationService
     /// <param name="getName">Function to getting the name fore creating the slug</param>
     /// <param name="languageId">The language identifier</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    protected async Task InsertSearchEngineNamesAsync<TEntity>(IEnumerable<TEntity> entities, Func<TEntity, string> getName, int languageId=0) where TEntity : BaseEntity
+    protected async Task InsertSearchEngineNamesAsync<TEntity>(IEnumerable<TEntity> entities, Func<TEntity, string> getName, int languageId = 0) where TEntity : BaseEntity
     {
         await _dataProvider.BulkInsertEntitiesAsync(await entities.SelectAwait(async entity => new UrlRecord
         {
@@ -480,7 +480,7 @@ public partial class InstallationService
             new ProductAttribute { Name = "Software" }
         });
     }
-    
+
     /// <summary>
     /// Installs a sample categories
     /// </summary>
@@ -723,7 +723,7 @@ public partial class InstallationService
 
         await _dataProvider.BulkInsertEntitiesAsync(blogPosts);
         await InsertSearchEngineNamesAsync(blogPosts, blogPost => blogPost.Title, await GetDefaultLanguageIdAsync());
-        
+
         await _dataProvider.BulkInsertEntitiesAsync(await blogPosts.SelectAwait(async blogPost => new BlogComment
         {
             BlogPostId = blogPost.Id,
@@ -805,7 +805,7 @@ public partial class InstallationService
             ShowOnHomepage = true,
             DisplayOrder = 1
         });
-        
+
         await _dataProvider.BulkInsertEntitiesAsync(new[]
         {
             new PollAnswer { Name = "Excellent", DisplayOrder = 1, PollId = poll.Id },
@@ -842,7 +842,7 @@ public partial class InstallationService
         };
 
         await _dataProvider.BulkInsertEntitiesAsync(new[] { address1, address2 });
-        
+
         await _dataProvider.BulkInsertEntitiesAsync(new[]
         {
             new Warehouse { Name = "Warehouse 1 (New York)", AddressId = address1.Id },
@@ -914,7 +914,7 @@ public partial class InstallationService
             CountryId = await GetFirstEntityIdAsync<Country>(c => c.ThreeLetterIsoCode == "USA"),
             CreatedOnUtc = DateTime.UtcNow
         });
-        
+
         await _dataProvider.InsertEntityAsync(new Affiliate
         {
             Active = true,
@@ -989,7 +989,7 @@ public partial class InstallationService
         #endregion
 
         #region Orders
-        
+
         var firstOrder = new Order
         {
             StoreId = defaultStoreId,
@@ -1044,7 +1044,7 @@ public partial class InstallationService
             CreatedOnUtc = DateTime.UtcNow,
             CustomOrderNumber = string.Empty
         };
-        
+
         var secondOrder = new Order
         {
             StoreId = defaultStoreId,
@@ -1269,7 +1269,7 @@ public partial class InstallationService
 
         await _dataProvider.BulkInsertEntitiesAsync(allOrders);
 
-        foreach (var order in allOrders) 
+        foreach (var order in allOrders)
             order.CustomOrderNumber = order.Id.ToString();
 
         await _dataProvider.UpdateEntitiesAsync(allOrders);
@@ -1573,7 +1573,7 @@ public partial class InstallationService
         });
 
         #endregion
-        
+
         #region Shipments
 
         var fourthOrderShipment1 = new Shipment

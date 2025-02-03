@@ -42,7 +42,7 @@ public class TaskSchedulerTests : ServiceTest
     }
 
     [Test]
-    public async  Task CanStartStopScheduler()
+    public async Task CanStartStopScheduler()
     {
         await _taskScheduler.InitializeAsync();
         _taskScheduler.IsRun.Should().BeFalse();
