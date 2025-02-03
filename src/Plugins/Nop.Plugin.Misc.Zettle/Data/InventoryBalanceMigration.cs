@@ -29,7 +29,7 @@ public class InventoryBalanceMigration : MigrationBase
     /// <summary>
     /// Collect the UP migration expressions
     /// </summary>
-    public override async void Up()
+    public override void Up()
     {
         if (!DataSettingsManager.IsDatabaseInstalled())
             return;
@@ -39,8 +39,11 @@ public class InventoryBalanceMigration : MigrationBase
             Alter.Table(nameof(ZettleRecord)).AddColumn(nameof(ZettleRecord.ExternalUuid)).AsString().Nullable();
 
         //delete settings
-        var setting = await _settingService.GetSettingAsync($"{nameof(ZettleSettings)}.InventoryTrackingIds");
-        await _settingService.DeleteSettingAsync(setting);
+        var setting = _settingService.GetSetting($"{nameof(ZettleSettings)}.InventoryTrackingIds");
+        if (setting is null)
+            return;
+
+        _settingService.DeleteSetting(setting);
     }
 
     /// <summary>
