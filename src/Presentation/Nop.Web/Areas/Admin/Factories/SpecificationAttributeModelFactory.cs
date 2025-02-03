@@ -118,7 +118,7 @@ public partial class SpecificationAttributeModelFactory : ISpecificationAttribut
         var one = new List<SpecificationAttributeGroupModel>();
         //get specification attribute groups
         var specificationAttributeGroups = await _specificationAttributeService
-            .GetSpecificationAttributeGroupsAsync(searchModel.Page - 1, searchModel.PageSize, searchModel.SpecificationAttributeSearchGroupName, searchModel.SpecificationAttributeName);
+            .GetSpecificationAttributeGroupsAsync(searchModel.Page - 1, searchModel.PageSize, searchModel.SpecificationAttributeName);
         // check wether to set the default group
         if (specificationAttributeGroups.Any(s => s.Id == 0))
         {
