@@ -274,6 +274,16 @@ public class PayPalCommerceServiceManager
     }
 
     /// <summary>
+    /// Convert money object to decimal value
+    /// </summary>
+    /// <param name="value">Amount value</param>
+    /// <returns>Decimal value</returns>
+    private static decimal ConvertMoney(Money amount)
+    {
+        return decimal.TryParse(amount?.Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var value) ? value : decimal.Zero;
+    }
+
+    /// <summary>
     /// Prepare order context
     /// </summary>
     /// <param name="settings">Plugin settings</param>
@@ -384,8 +394,6 @@ public class PayPalCommerceServiceManager
             var (itemSubTotal, itemDiscount, _, _) = await _shoppingCartService.GetSubTotalAsync(item, true);
             var unitPrice = itemSubTotal / item.Quantity;
             var (unitPriceExclTax, _) = await _taxService.GetProductPriceAsync(product, unitPrice, false, details.Customer);
-            var (unitPriceInclTax, _) = await _taxService.GetProductPriceAsync(product, unitPrice, true, details.Customer);
-            var itemTax = unitPriceInclTax - unitPriceExclTax;
 
             return new Item
             {
@@ -398,8 +406,7 @@ public class PayPalCommerceServiceManager
                     : CategoryType.PHYSICAL_GOODS.ToString().ToUpper(),
                 Url = url,
                 ImageUrl = imageUrl,
-                UnitAmount = PrepareMoney(unitPriceExclTax, details.CurrencyCode),
-                Tax = PrepareMoney(itemTax, details.CurrencyCode)
+                UnitAmount = PrepareMoney(unitPriceExclTax, details.CurrencyCode)
             };
         }).ToListAsync();
 
@@ -412,16 +419,13 @@ public class PayPalCommerceServiceManager
             await foreach (var attributeValue in values)
             {
                 var (attributePriceExclTax, _) = await _taxService.GetCheckoutAttributePriceAsync(attribute, attributeValue, false, details.Customer);
-                var (attributePriceInclTax, _) = await _taxService.GetCheckoutAttributePriceAsync(attribute, attributeValue, true, details.Customer);
-                var attributeTax = attributePriceInclTax - attributePriceExclTax;
 
                 items.Add(new()
                 {
                     Name = CommonHelper.EnsureMaximumLength(attribute.Name, 127),
                     Description = CommonHelper.EnsureMaximumLength($"{attribute.Name} - {attributeValue.Name}", 127),
                     Quantity = 1.ToString(),
-                    UnitAmount = PrepareMoney(attributePriceExclTax, details.CurrencyCode),
-                    Tax = PrepareMoney(attributeTax, details.CurrencyCode)
+                    UnitAmount = PrepareMoney(attributePriceExclTax, details.CurrencyCode)
                 });
             }
         }
@@ -442,6 +446,7 @@ public class PayPalCommerceServiceManager
     {
         //in some rare cases we need an additional item to adjust the order total
         //this can happen due to complex discounts or a large order and related to rounding in calculations
+        //PayPal uses two decimal places, while nopCommerce can use more complex types of rounding (configured for each currency separately) 
         var adjustmentName = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Order.Adjustment.Name");
         var adjustmentDescription = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Order.Adjustment.Description");
         if (items.FirstOrDefault(item => adjustmentName.Equals(item.Name) && adjustmentDescription.Equals(item.Description)) is Item adjustmentItem)
@@ -458,53 +463,38 @@ public class PayPalCommerceServiceManager
             var (_, _, subTotal, _, _) = await _orderTotalCalculationService.GetShoppingCartSubTotalAsync(details.Cart, includingTax: false);
             total = subTotal;
         }
+        var orderTotal = PrepareMoney(total.Value, details.CurrencyCode);
 
         var (shippingTotal, _, _) = await _orderTotalCalculationService.GetShoppingCartShippingTotalAsync(details.Cart, includingTax: false);
-        var (shippingTotalWithTax, _, _) = await _orderTotalCalculationService.GetShoppingCartShippingTotalAsync(details.Cart, includingTax: true);
-
-        var itemTotal = items
-            .Sum(item => decimal.Parse(item.UnitAmount?.Value ?? "0", NumberStyles.Any, CultureInfo.InvariantCulture) * int.Parse(item.Quantity));
-        var itemAdjustment = decimal.Zero;
+        var orderShippingTotal = PrepareMoney(shippingTotal ?? decimal.Zero, details.CurrencyCode);
 
         var (taxTotal, _) = await _orderTotalCalculationService.GetTaxTotalAsync(details.Cart, usePaymentMethodAdditionalFee: false);
-        var itemTaxTotal = items
-            .Sum(item => decimal.Parse(item.Tax?.Value ?? "0", NumberStyles.Any, CultureInfo.InvariantCulture) * int.Parse(item.Quantity));
-        var shippingTax = (shippingTotalWithTax ?? 0) - (shippingTotal ?? 0);
-        var taxAdjustment = taxTotal - itemTaxTotal - shippingTax;
-        if (taxAdjustment > decimal.Zero)
-            itemTotal += taxAdjustment;
-        if (taxAdjustment < decimal.Zero || shippingTax > decimal.Zero)
-        {
-            taxAdjustment = Math.Max(taxAdjustment, decimal.Zero);
-            foreach (var item in items)
-            {
-                item.Tax = null;
-            }
-        }
+        var orderTaxTotal = PrepareMoney(taxTotal, details.CurrencyCode);
 
-        var discountTotal = itemTotal + taxTotal + (shippingTotal ?? decimal.Zero) - total.Value;
+        var itemAdjustment = decimal.Zero;
+        var itemTotal = items.Sum(item => ConvertMoney(item.UnitAmount) * int.Parse(item.Quantity));
+        var discountTotal = itemTotal + ConvertMoney(orderTaxTotal) + ConvertMoney(orderShippingTotal) - ConvertMoney(orderTotal);
         if (discountTotal < decimal.Zero)
         {
             itemAdjustment = -discountTotal;
             itemTotal += itemAdjustment;
             discountTotal = decimal.Zero;
         }
+        var orderItemTotal = PrepareMoney(itemTotal, details.CurrencyCode);
+        var orderDiscount = PrepareMoney(discountTotal, details.CurrencyCode);
 
         //set adjustment item if needed
-        if (itemAdjustment > decimal.Zero || taxAdjustment > decimal.Zero)
+        if (itemAdjustment > decimal.Zero)
         {
-            var amount = PrepareMoney(itemAdjustment + taxAdjustment, details.CurrencyCode);
-            if (decimal.TryParse(amount.Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var value) && value > decimal.Zero)
+            var unitAmount = PrepareMoney(itemAdjustment, details.CurrencyCode);
+            if (ConvertMoney(unitAmount) > decimal.Zero)
             {
                 items.Add(new()
                 {
                     Name = adjustmentName,
                     Description = adjustmentDescription,
                     Quantity = 1.ToString(),
-                    UnitAmount = amount,
-                    Tax = taxAdjustment > decimal.Zero && items.Any(item => item?.Tax is not null)
-                        ? PrepareMoney(taxAdjustment, details.CurrencyCode)
-                        : null
+                    UnitAmount = unitAmount
                 });
             }
         }
@@ -512,13 +502,13 @@ public class PayPalCommerceServiceManager
         return new()
         {
             CurrencyCode = details.CurrencyCode,
-            Value = PrepareMoney(total.Value, details.CurrencyCode).Value,
+            Value = orderTotal.Value,
             Breakdown = new()
             {
-                ItemTotal = PrepareMoney(itemTotal, details.CurrencyCode),
-                TaxTotal = PrepareMoney(taxTotal, details.CurrencyCode),
-                Shipping = PrepareMoney(shippingTotal ?? decimal.Zero, details.CurrencyCode),
-                Discount = PrepareMoney(discountTotal, details.CurrencyCode)
+                ItemTotal = orderItemTotal,
+                TaxTotal = orderTaxTotal,
+                Shipping = orderShippingTotal,
+                Discount = orderDiscount
             }
         };
     }
@@ -1767,9 +1757,7 @@ public class PayPalCommerceServiceManager
                 return false;
 
             //recalculate the total and update the items, since the shipping price may have changed
-            var items = unit.Items;
-            if (items.Any(item => item?.Tax is null))
-                items = await PrepareOrderItemsAsync(details);
+            var items = await PrepareOrderItemsAsync(details);
             var orderAmount = await PrepareOrderMoneyAsync(details, items);
             var cardData = new CardData
             {
@@ -1896,9 +1884,7 @@ public class PayPalCommerceServiceManager
             };
 
             //recalculate the total and update the items, since the amounts may have changed
-            var items = unit.Items;
-            if (items.Any(item => item?.Tax is null))
-                items = await PrepareOrderItemsAsync(details);
+            var items = await PrepareOrderItemsAsync(details);
             var orderAmount = await PrepareOrderMoneyAsync(details, items);
             var cardData = new CardData
             {
@@ -2042,8 +2028,7 @@ public class PayPalCommerceServiceManager
             //totals must match
             var (cartTotal, _, _, _, _, _) = await _orderTotalCalculationService
                 .GetShoppingCartTotalAsync(cart, usePaymentMethodAdditionalFee: false);
-            decimal.TryParse(unit.Amount?.Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var orderAmount);
-            var difference = Math.Abs(orderAmount - Math.Round(cartTotal ?? decimal.Zero, 2));
+            var difference = Math.Abs(ConvertMoney(unit.Amount) - Math.Round(cartTotal ?? decimal.Zero, 2));
             if (difference > decimal.Zero)
                 throw new NopException($"Shopping cart total and approved order amount differ by {difference}");
 
@@ -2902,8 +2887,7 @@ public class PayPalCommerceServiceManager
                         if (!_orderProcessingService.CanMarkOrderAsAuthorized(nopOrder))
                             break;
 
-                        decimal.TryParse(authorization.Amount?.Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var authorizationAmount);
-                        if (authorizationAmount >= Math.Round(nopOrder.OrderTotal, 2))
+                        if (ConvertMoney(authorization.Amount) >= Math.Round(nopOrder.OrderTotal, 2))
                             await _orderProcessingService.MarkAsAuthorizedAsync(nopOrder);
 
                         break;
@@ -2947,8 +2931,7 @@ public class PayPalCommerceServiceManager
                         if (!_orderProcessingService.CanMarkOrderAsPaid(nopOrder))
                             break;
 
-                        decimal.TryParse(capture.Amount?.Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var captureAmount);
-                        if (captureAmount >= Math.Round(nopOrder.OrderTotal, 2))
+                        if (ConvertMoney(capture.Amount) >= Math.Round(nopOrder.OrderTotal, 2))
                             await _orderProcessingService.MarkOrderAsPaidAsync(nopOrder);
 
                         break;
@@ -3039,8 +3022,7 @@ public class PayPalCommerceServiceManager
                         nopOrder.CaptureTransactionId = orderCapture.Id;
                         nopOrder.CaptureTransactionResult = orderCapture.Status;
 
-                        decimal.TryParse(orderCapture.Amount?.Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var captureAmount);
-                        if (captureAmount >= Math.Round(nopOrder.OrderTotal, 2))
+                        if (ConvertMoney(orderCapture.Amount) >= Math.Round(nopOrder.OrderTotal, 2))
                             await _orderProcessingService.MarkOrderAsPaidAsync(nopOrder);
 
                         break;
