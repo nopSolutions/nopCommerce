@@ -58,7 +58,7 @@ public partial class MediaSettings : ISettings
     public int OrderThumbPictureSize { get; set; }
 
     /// <summary>
-    /// Picture size of product pictures for minishipping cart box
+    /// Picture size of product pictures for mini shopping cart box
     /// </summary>
     public int MiniCartThumbPictureSize { get; set; }
 

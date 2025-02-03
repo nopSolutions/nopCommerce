@@ -23,7 +23,7 @@ public partial class PdfSettings : ISettings
     public bool RenderOrderNotes { get; set; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether to disallow customers to print PDF invoices for pedning orders
+    /// Gets or sets a value indicating whether to disallow customers to print PDF invoices for pending orders
     /// </summary>
     public bool DisablePdfInvoicesForPendingOrders { get; set; }
 
