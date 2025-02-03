@@ -70,9 +70,7 @@ public class LocalizationMigration : MigrationBase
 
             //#7545
             ["Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.SearchName"] = "Name",
-            ["Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.SearchName.Hint"] = "a specification name",
-            ["Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.SearchGroupName"] = "Group Name",
-            ["Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.SearchGroupName.Hint"] = "a group name"
+            ["Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.SearchName.Hint"] = "a specification name"
 
 
         }, languageId);
