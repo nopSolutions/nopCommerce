@@ -1235,14 +1235,9 @@ public partial class ProductService : IProductService
             query = query.Where(p => p.VendorId == vendorId);
         }
 
-        query = query.Where(x => !x.Deleted);
-        query = query.OrderBy(x => x.DisplayOrder).ThenBy(x => x.Id);
-
+        //apply store mapping constraints
         if (!showHidden && storeId > 0)
-        {
-            //apply store mapping constraints
             query = await _storeMappingService.ApplyStoreMapping(query, storeId);
-        }
 
         if (!showHidden)
         {
@@ -1250,6 +1245,9 @@ public partial class ProductService : IProductService
             var customer = await _workContext.GetCurrentCustomerAsync();
             query = await _aclService.ApplyAcl(query, customer);
         }
+
+        query = query.Where(x => !x.Deleted);
+        query = query.OrderBy(x => x.DisplayOrder).ThenBy(x => x.Id);
 
         return await query.ToListAsync();
     }
