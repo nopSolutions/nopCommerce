@@ -122,25 +122,20 @@ public partial class SpecificationAttributeService : ISpecificationAttributeServ
     /// </summary>
     /// <param name="pageIndex">Page index</param>
     /// <param name="pageSize">Page size</param>
-    /// <param name="gName">group name</param>
-    /// <param name="sName">specification attribute name name</param>
+    /// <param name="specificationName">specification attribute name name</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the specification attribute groups
     /// </returns>
-    public virtual async Task<IPagedList<SpecificationAttributeGroup>> GetSpecificationAttributeGroupsAsync(int pageIndex = 0, int pageSize = int.MaxValue, string gName = "", string sName = "")
+    public virtual async Task<IPagedList<SpecificationAttributeGroup>> GetSpecificationAttributeGroupsAsync(int pageIndex = 0, int pageSize = int.MaxValue, string specificationName = "")
     {
         var query = _specificationAttributeGroupRepository.Table;
 
-        // Filter by group name
-        if (!string.IsNullOrEmpty(gName))
-            query = query.Where(sag => sag.Name.Contains(gName));
-
         // Filter by specification attribute name
-        if (!string.IsNullOrEmpty(sName))
+        if (!string.IsNullOrEmpty(specificationName))
             query = from sag in query
                     from sa in _specificationAttributeRepository.Table
-                    where sa.Name.Contains(sName) && sa.SpecificationAttributeGroupId == sag.Id
+                    where sa.Name.Contains(specificationName) && sa.SpecificationAttributeGroupId == sag.Id
                     select sag;
 
         // Order the results
@@ -152,10 +147,10 @@ public partial class SpecificationAttributeService : ISpecificationAttributeServ
         var result = await query.ToPagedListAsync(pageIndex, pageSize);
 
         // Add default group if necessary
-        if (pageIndex == 0 && string.IsNullOrEmpty(gName))
+        if (pageIndex == 0)
         {
             var hasNoGroup = _specificationAttributeRepository.Table
-                    .Any(sa => sa.SpecificationAttributeGroupId == null && (string.IsNullOrEmpty(sName) || sa.Name.Contains(sName)));
+                    .Any(sa => sa.SpecificationAttributeGroupId == null && (string.IsNullOrEmpty(specificationName) || sa.Name.Contains(specificationName)));
             if (hasNoGroup)
                 result.Insert(0, new SpecificationAttributeGroup());
         }

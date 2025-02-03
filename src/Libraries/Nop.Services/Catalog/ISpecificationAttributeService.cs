@@ -25,13 +25,12 @@ public partial interface ISpecificationAttributeService
     /// </summary>
     /// <param name="pageIndex">Page index</param>
     /// <param name="pageSize">Page size</param>
-    /// <param name="gName">group name</param>
-    /// <param name="sName">specification attribute name name</param>
+    /// <param name="specificationName">specification attribute name name</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the specification attribute groups
     /// </returns>
-    Task<IPagedList<SpecificationAttributeGroup>> GetSpecificationAttributeGroupsAsync(int pageIndex = 0, int pageSize = int.MaxValue, string gName = "", string sName = "");
+    Task<IPagedList<SpecificationAttributeGroup>> GetSpecificationAttributeGroupsAsync(int pageIndex = 0, int pageSize = int.MaxValue, string specificationName = "");
 
     /// <summary>
     /// Gets product specification attribute groups
