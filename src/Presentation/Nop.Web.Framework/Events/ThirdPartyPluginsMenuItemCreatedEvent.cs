@@ -5,7 +5,7 @@ namespace Nop.Web.Framework.Events;
 /// <summary>
 /// Represents an event that occurs after third party plugins menu item created
 /// </summary>
-public partial class ThirdPartyPluginsMenuItemCreatedEvent: BaseMenuItemCreatedEvent
+public partial class ThirdPartyPluginsMenuItemCreatedEvent : BaseMenuItemCreatedEvent
 {
     #region Ctor
 

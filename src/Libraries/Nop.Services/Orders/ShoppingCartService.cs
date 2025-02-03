@@ -202,9 +202,9 @@ public partial class ShoppingCartService : IShoppingCartService
     /// </summary>
     /// <param name="customer">Customer</param>
     /// <returns>Result</returns>
-    protected virtual bool IsCustomerShoppingCartEmpty(Customer customer)
+    protected virtual async Task<bool> IsCustomerShoppingCartEmptyAsync(Customer customer)
     {
-        return !_sciRepository.Table.Any(sci => sci.CustomerId == customer.Id);
+        return !await _sciRepository.Table.AnyAsync(sci => sci.CustomerId == customer.Id);
     }
 
     /// <summary>
@@ -614,7 +614,7 @@ public partial class ShoppingCartService : IShoppingCartService
         await _sciRepository.DeleteAsync(shoppingCartItem);
 
         //reset "HasShoppingCartItems" property used for performance optimization
-        var hasShoppingCartItems = !IsCustomerShoppingCartEmpty(customer);
+        var hasShoppingCartItems = !await IsCustomerShoppingCartEmptyAsync(customer);
         if (hasShoppingCartItems != customer.HasShoppingCartItems)
         {
             customer.HasShoppingCartItems = hasShoppingCartItems;
@@ -679,7 +679,7 @@ public partial class ShoppingCartService : IShoppingCartService
         await _eventPublisher.PublishAsync(new ClearShoppingCartEvent(cart));
 
         //reset "HasShoppingCartItems" property used for performance optimization
-        var hasShoppingCartItems = !IsCustomerShoppingCartEmpty(customer);
+        var hasShoppingCartItems = !await IsCustomerShoppingCartEmptyAsync(customer);
         if (hasShoppingCartItems != customer.HasShoppingCartItems)
         {
             customer.HasShoppingCartItems = hasShoppingCartItems;
@@ -1692,7 +1692,7 @@ public partial class ShoppingCartService : IShoppingCartService
             await _sciRepository.InsertAsync(shoppingCartItem);
 
             //updated "HasShoppingCartItems" property used for performance optimization
-            var hasShoppingCartItems = !IsCustomerShoppingCartEmpty(customer);
+            var hasShoppingCartItems = !await IsCustomerShoppingCartEmptyAsync(customer);
             if (hasShoppingCartItems != customer.HasShoppingCartItems)
             {
                 customer.HasShoppingCartItems = hasShoppingCartItems;
