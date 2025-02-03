@@ -1238,7 +1238,7 @@ public partial class ProductService : IProductService
         query = query.Where(x => !x.Deleted);
         query = query.OrderBy(x => x.DisplayOrder).ThenBy(x => x.Id);
 
-        if (!showHidden || storeId > 0)
+        if (!showHidden && storeId > 0)
         {
             //apply store mapping constraints
             query = await _storeMappingService.ApplyStoreMapping(query, storeId);
