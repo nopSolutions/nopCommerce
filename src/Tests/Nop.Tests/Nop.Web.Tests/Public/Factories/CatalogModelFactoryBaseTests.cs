@@ -54,6 +54,7 @@ public class CatalogModelFactoryBaseTests : WebTest
         model.AvailableVendors.Any().Should().BeFalse();
 
         var queryString = _httpContextAccessor.HttpContext.Request.QueryString;
+        _httpContextAccessor.HttpContext.Request.Method = HttpMethods.Get;
         _httpContextAccessor.HttpContext.Request.QueryString = new QueryString("?q=t");
 
         model = await _catalogModelFactory.PrepareSearchModelAsync(new SearchModel(), new CatalogProductsCommand());
