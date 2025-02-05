@@ -62,7 +62,7 @@ public partial class ProductTagService : IProductTagService
     /// <param name="productId">Product identifier</param>
     /// <param name="productTagId">Product tag identifier</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    protected virtual async Task DeleteProductProductTagMappingAsync(int productId, IList<int> productTagIds)
+    protected virtual async Task DeleteProductProductTagMappingAsync(int productId, HashSet<int> productTagIds)
     {
         var mappingRecords = await _productProductTagMappingRepository.Table
             .Where(pptm => pptm.ProductId == productId && productTagIds.Contains(pptm.ProductTagId))
@@ -319,7 +319,7 @@ public partial class ProductTagService : IProductTagService
 
         //product tags
         var existingProductTags = await GetAllProductTagsByProductIdAsync(product.Id);
-        var productTagIdsToRemove = new List<int>();
+        var productTagIdsToRemove = new HashSet<int>();
         foreach (var existingProductTag in existingProductTags)
         {
             var found = false;
