@@ -613,11 +613,7 @@ public partial class ProductAttributeService : IProductAttributeService
     /// <returns>A ProductAttributeCombinationPicture that has the specified values; otherwise null</returns>
     public virtual ProductAttributeCombinationPicture FindProductAttributeCombinationPicture(IList<ProductAttributeCombinationPicture> source, int combinationId, int pictureId)
     {
-        foreach (var combinationPicture in source)
-            if (combinationPicture.ProductAttributeCombinationId == combinationId && combinationPicture.PictureId == pictureId)
-                return combinationPicture;
-
-        return null;
+        return source.FirstOrDefault(pacp => pacp.ProductAttributeCombinationId == combinationId && pacp.PictureId == pictureId);
     }
 
     #endregion
