@@ -128,9 +128,6 @@ public partial class NopScriptTagHelper : UrlResolutionTagHelper
 
         output.TagMode = TagMode.StartTagAndEndTag;
 
-        if (!output.Attributes.ContainsName("type")) // we don't touch other types e.g. text/template
-            output.Attributes.SetAttribute("type", MimeTypes.TextJavascript);
-
         var woConfig = _appSettings.Get<WebOptimizerConfig>();
 
         if (Location == ResourceLocation.Auto)
