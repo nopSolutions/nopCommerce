@@ -552,9 +552,9 @@ public partial class CheckoutController : BasePublicController
                     redirect = Url.RouteUrl("CheckoutShippingAddress")
                 });
 
-            var shippingAddressModel = new CheckoutShippingAddressModel();
+            var shippingAddressModel  = new CheckoutShippingAddressModel();
             await _checkoutModelFactory.PrepareShippingAddressModelAsync(shippingAddressModel, cart, address.CountryId);
-
+	    
             return Json(new
             {
                 selected_id = model.ShippingNewAddress.Id,
@@ -766,7 +766,7 @@ public partial class CheckoutController : BasePublicController
         //model
         var model = new CheckoutShippingAddressModel();
         await _checkoutModelFactory.PrepareShippingAddressModelAsync(model, cart, prePopulateNewAddressWithCustomerFields: true);
-
+	
         return View(model);
     }
 
@@ -881,7 +881,7 @@ public partial class CheckoutController : BasePublicController
         await _checkoutModelFactory.PrepareShippingAddressModelAsync(model, cart,
             selectedCountryId: newAddress.CountryId,
             overrideAttributesXml: customAttributes);
-
+	
         return View(model);
     }
 
@@ -1565,7 +1565,7 @@ public partial class CheckoutController : BasePublicController
                         selectedCountryId: newAddress.CountryId,
                         overrideAttributesXml: customAttributes);
                     billingAddressModel.NewAddressPreselected = true;
-
+		    
                     return Json(new
                     {
                         update_section = new UpdateSectionJsonModel
@@ -1733,7 +1733,7 @@ public partial class CheckoutController : BasePublicController
                         selectedCountryId: newAddress.CountryId,
                         overrideAttributesXml: customAttributes);
                     shippingAddressModel.NewAddressPreselected = true;
-
+                    
                     return Json(new
                     {
                         update_section = new UpdateSectionJsonModel
