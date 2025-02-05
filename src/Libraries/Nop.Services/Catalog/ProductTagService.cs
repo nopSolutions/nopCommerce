@@ -62,13 +62,13 @@ public partial class ProductTagService : IProductTagService
     /// <param name="productId">Product identifier</param>
     /// <param name="productTagId">Product tag identifier</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    protected virtual async Task DeleteProductProductTagMappingAsync(int productId, int productTagId)
+    protected virtual async Task DeleteProductProductTagMappingAsync(int productId, IList<int> productTagIds)
     {
-        var mappingRecord = await _productProductTagMappingRepository.Table
-                                .FirstOrDefaultAsync(pptm => pptm.ProductId == productId && pptm.ProductTagId == productTagId)
-                            ?? throw new Exception("Mapping record not found");
+        var mappingRecords = await _productProductTagMappingRepository.Table
+            .Where(pptm => pptm.ProductId == productId && productTagIds.Contains(pptm.ProductTagId))
+                                .ToListAsync();
 
-        await _productProductTagMappingRepository.DeleteAsync(mappingRecord);
+        await _productProductTagMappingRepository.DeleteAsync(mappingRecords);
     }
 
     /// <summary>
@@ -319,7 +319,7 @@ public partial class ProductTagService : IProductTagService
 
         //product tags
         var existingProductTags = await GetAllProductTagsByProductIdAsync(product.Id);
-        var productTagsToRemove = new List<ProductTag>();
+        var productTagIdsToRemove = new List<int>();
         foreach (var existingProductTag in existingProductTags)
         {
             var found = false;
@@ -333,11 +333,10 @@ public partial class ProductTagService : IProductTagService
             }
 
             if (!found)
-                productTagsToRemove.Add(existingProductTag);
+                productTagIdsToRemove.Add(existingProductTag.Id);
         }
-
-        foreach (var productTag in productTagsToRemove)
-            await DeleteProductProductTagMappingAsync(product.Id, productTag.Id);
+        
+        await DeleteProductProductTagMappingAsync(product.Id, productTagIdsToRemove);
 
         foreach (var productTagName in productTags)
         {
