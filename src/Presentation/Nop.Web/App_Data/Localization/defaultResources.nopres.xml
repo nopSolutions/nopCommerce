@@ -1959,6 +1959,18 @@
   <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Published">
     <Value>Published</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttribute.Fields.SearchGroupName">
+    <Value>Group Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttribute.Fields.SearchGroupName.Hint">
+     <Value>a group name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Fields.SearchName">
+     <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Fields.SearchName.Hint">
+    <Value>a specification name</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes">
     <Value>Specification attributes</Value>
   </LocaleResource>

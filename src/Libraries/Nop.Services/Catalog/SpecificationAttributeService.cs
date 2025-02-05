@@ -101,7 +101,7 @@ public partial class SpecificationAttributeService : ISpecificationAttributeServ
     #endregion
 
     #region Methods
-
+    
     #region Specification attribute group
 
     /// <summary>
@@ -122,17 +122,40 @@ public partial class SpecificationAttributeService : ISpecificationAttributeServ
     /// </summary>
     /// <param name="pageIndex">Page index</param>
     /// <param name="pageSize">Page size</param>
+    /// <param name="specificationName">specification attribute name name</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the specification attribute groups
     /// </returns>
-    public virtual async Task<IPagedList<SpecificationAttributeGroup>> GetSpecificationAttributeGroupsAsync(int pageIndex = 0, int pageSize = int.MaxValue)
+    public virtual async Task<IPagedList<SpecificationAttributeGroup>> GetSpecificationAttributeGroupsAsync(int pageIndex = 0, int pageSize = int.MaxValue, string specificationName = "")
     {
-        var query = from sag in _specificationAttributeGroupRepository.Table
-            orderby sag.DisplayOrder, sag.Id
-            select sag;
+        var query = _specificationAttributeGroupRepository.Table;
 
-        return await query.ToPagedListAsync(pageIndex, pageSize);
+        // Filter by specification attribute name
+        if (!string.IsNullOrEmpty(specificationName))
+            query = from sag in query
+                    from sa in _specificationAttributeRepository.Table
+                    where sa.Name.Contains(specificationName) && sa.SpecificationAttributeGroupId == sag.Id
+                    select sag;
+
+        // Order the results
+        query = from sag in query
+                orderby sag.DisplayOrder, sag.Id
+                select sag;
+
+        // Get paged results
+        var result = await query.ToPagedListAsync(pageIndex, pageSize);
+
+        // Add default group if necessary
+        if (pageIndex == 0)
+        {
+            var hasNoGroup = _specificationAttributeRepository.Table
+                    .Any(sa => sa.SpecificationAttributeGroupId == null && (string.IsNullOrEmpty(specificationName) || sa.Name.Contains(specificationName)));
+            if (hasNoGroup)
+                result.Insert(0, new SpecificationAttributeGroup());
+        }
+
+        return result;
     }
 
     /// <summary>
@@ -260,19 +283,21 @@ public partial class SpecificationAttributeService : ISpecificationAttributeServ
     }
 
     /// <summary>
-    /// Gets specification attributes by group identifier
+    /// Gets specification attributes by group identifier and also by name 
     /// </summary>
     /// <param name="specificationAttributeGroupId">The specification attribute group identifier</param>
+    /// <param name="name">The specification attribute name and it's optional</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the specification attributes
     /// </returns>
-    public virtual async Task<IList<SpecificationAttribute>> GetSpecificationAttributesByGroupIdAsync(int? specificationAttributeGroupId = null)
+    public virtual async Task<IList<SpecificationAttribute>> GetSpecificationAttributesByGroupIdAsync(int? specificationAttributeGroupId = null, string name = "")
     {
         var query = _specificationAttributeRepository.Table;
         if (!specificationAttributeGroupId.HasValue || specificationAttributeGroupId > 0)
             query = query.Where(sa => sa.SpecificationAttributeGroupId == specificationAttributeGroupId);
-
+        if (!string.IsNullOrEmpty(name)) 
+            query = query.Where(sa => sa.Name.Contains(name));
         query = query.OrderBy(sa => sa.DisplayOrder).ThenBy(sa => sa.Id);
 
         return await query.ToListAsync();
@@ -647,6 +672,7 @@ public partial class SpecificationAttributeService : ISpecificationAttributeServ
 
         return await query.ToPagedListAsync(pageIndex, pageSize);
     }
+
 
     #endregion
 

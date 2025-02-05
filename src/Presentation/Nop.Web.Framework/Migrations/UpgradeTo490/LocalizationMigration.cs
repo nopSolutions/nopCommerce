@@ -68,6 +68,11 @@ public class LocalizationMigration : MigrationBase
             //#6407
             ["ActivityLog.PublicStore.PasswordChanged"] = "Public store. Customer has changed the password",
 
+            //#7545
+            ["Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.SearchName"] = "Name",
+            ["Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.SearchName.Hint"] = "a specification name"
+
+
         }, languageId);
 
         #endregion
