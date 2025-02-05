@@ -81,20 +81,18 @@ public partial class LanguageService : ILanguageService
 
         var languages = await _staticCacheManager.GetAsync(key, async () =>
         {
-            var allLanguages = await _languageRepository.GetAllAsync(query =>
+            var allLanguages = await _languageRepository.GetAllAsync(async query =>
             {
                 if (!showHidden)
                     query = query.Where(l => l.Published);
+
+                if (storeId > 0)
+                    query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+
                 query = query.OrderBy(l => l.DisplayOrder).ThenBy(l => l.Id);
 
                 return query;
             });
-
-            //store mapping
-            if (storeId > 0)
-                allLanguages = await allLanguages
-                    .WhereAwait(async l => await _storeMappingService.AuthorizeAsync(l, storeId))
-                    .ToListAsync();
 
             return allLanguages;
         });
