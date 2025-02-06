@@ -107,6 +107,9 @@
     <Reference Include="SevenSpikes.Nop.EntitySettings">
       <HintPath>..\..\Presentation\Nop.Web\Plugins\SevenSpikes.Core\SevenSpikes.Nop.EntitySettings.dll</HintPath>
     </Reference>
+    <Reference Include="SevenSpikes.Nop.Services">
+      <HintPath>..\..\Presentation\Nop.Web\Plugins\SevenSpikes.Core\SevenSpikes.Nop.Services.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
