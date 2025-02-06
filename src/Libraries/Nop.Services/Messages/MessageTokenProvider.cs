@@ -1304,6 +1304,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         tokens.Add(new Token("Customer.FirstName", customer.FirstName));
         tokens.Add(new Token("Customer.LastName", customer.LastName));
         tokens.Add(new Token("Customer.VatNumber", customer.VatNumber));
+        tokens.Add(new Token("Customer.Company", customer.Company));
         tokens.Add(new Token("Customer.VatNumberStatus", ((VatNumberStatus)customer.VatNumberStatusId).ToString()));
 
         var customAttributesXml = customer.CustomCustomerAttributesXML;
