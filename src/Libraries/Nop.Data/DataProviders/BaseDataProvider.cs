@@ -405,13 +405,13 @@ public abstract partial class BaseDataProvider
     /// A task that represents the asynchronous operation
     /// The task result contains the returns collection of query result records
     /// </returns>
-    public virtual Task<IList<T>> QueryProcAsync<T>(string procedureName, params DataParameter[] parameters)
+    public virtual async Task<IList<T>> QueryProcAsync<T>(string procedureName, params DataParameter[] parameters)
     {
         using var dataConnection = CreateDataConnection(LinqToDbDataProvider);
         var command = new CommandInfo(dataConnection, procedureName, parameters);
 
-        var rez = command.QueryProc<T>()?.ToList();
-        return Task.FromResult<IList<T>>(rez ?? new List<T>());
+        var result = (await command.QueryProcAsync<T>())?.ToList() ?? [];
+        return result;
     }
 
     /// <summary>
