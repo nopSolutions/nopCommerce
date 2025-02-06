@@ -338,4 +338,10 @@ public partial interface IOrderProcessingService
     /// <param name="recurringPayment">Recurring payment</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     Task<int> GetCyclesRemainingAsync(RecurringPayment recurringPayment);
+
+    /// <summary>
+    /// Generate an order GUID
+    /// </summary>
+    /// <param name="processPaymentRequest">Process payment request</param>
+    Task GenerateOrderGuidAsync(ProcessPaymentRequest processPaymentRequest);
 }
