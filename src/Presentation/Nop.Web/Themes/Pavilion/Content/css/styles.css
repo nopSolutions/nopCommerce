@@ -6375,6 +6375,21 @@ img.hawthorne-logo {
 	}
 }
 
+/*promo banner*/
+  
+.promo-bann {
+	width: 80%;
+}
+
+
+@media only screen and (max-width: 600px) {
+	.promo-bann {
+		width: 100%;
+	}
+}
+
+
+
 /*Angelo*/
  /* Mobile Menu Padding Fix*/
   .mega-menu-responsive.mobile-sidebar-category .sublist-wrap.active { 
