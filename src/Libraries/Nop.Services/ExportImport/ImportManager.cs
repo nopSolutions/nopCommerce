@@ -1454,13 +1454,12 @@ public partial class ImportManager : IImportManager
         var endCell = metadata.Properties.Max(p => p.PropertyOrderPosition);
 
         var filePaths = new List<string>();
-        var exportImportProductsCountInOneFile = Math.Max(_catalogSettings.ExportImportProductsCountInOneFile, 1);
 
         while (true)
         {
-            var curIndex = fileIndex * exportImportProductsCountInOneFile;
+            var curIndex = fileIndex * _catalogSettings.ExportImportProductsCountInOneFile;
 
-            var startRow = metadata.ProductsInFile[(fileIndex - 1) * exportImportProductsCountInOneFile];
+            var startRow = metadata.ProductsInFile[(fileIndex - 1) * _catalogSettings.ExportImportProductsCountInOneFile];
 
             var endRow = metadata.CountProductsInFile > curIndex
                 ? metadata.ProductsInFile[curIndex - 1]
@@ -2042,7 +2041,7 @@ public partial class ImportManager : IImportManager
         var metadata = await PrepareImportProductDataAsync(workbook, languages);
         var defaultWorksheet = metadata.DefaultWorksheet;
 
-        if (_catalogSettings.ExportImportSplitProductsFile && metadata.CountProductsInFile > Math.Max(_catalogSettings.ExportImportProductsCountInOneFile, 1))
+        if (_catalogSettings.ExportImportSplitProductsFile && metadata.CountProductsInFile > _catalogSettings.ExportImportProductsCountInOneFile)
         {
             await ImportProductsFromSplitedXlsxAsync(defaultWorksheet, metadata);
             return;
