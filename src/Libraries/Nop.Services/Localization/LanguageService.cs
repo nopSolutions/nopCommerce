@@ -76,7 +76,6 @@ public partial class LanguageService : ILanguageService
     /// </returns>
     public virtual async Task<IList<Language>> GetAllLanguagesAsync(bool showHidden = false, int storeId = 0)
     {
-        //cacheable copy
         var key = _staticCacheManager.PrepareKeyForDefaultCache(NopLocalizationDefaults.LanguagesAllCacheKey, storeId, showHidden);
 
         var languages = await _staticCacheManager.GetAsync(key, async () =>
@@ -110,7 +109,6 @@ public partial class LanguageService : ILanguageService
     /// </returns>
     public virtual IList<Language> GetAllLanguages(bool showHidden = false, int storeId = 0)
     {
-        //cacheable copy
         var key = _staticCacheManager.PrepareKeyForDefaultCache(NopLocalizationDefaults.LanguagesAllCacheKey, storeId, showHidden);
 
         var languages = _staticCacheManager.Get(key, () =>
