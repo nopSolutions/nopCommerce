@@ -4540,7 +4540,7 @@
     <Value>Permit limit</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.PermitLimit.Hint">
-    <Value>Maximum number of permit counters that can be allowed in a window (1 minute). Must be set to a value > 0 by the time these options are passed to the constructor of FixedWindowRateLimiter. If set to 0 than limitation is off.</Value>
+    <Value>Maximum number of permit counters that can be allowed in a window (1 minute). Must be set to a value > 0 by the time these options are passed to the constructor of FixedWindowRateLimiter. If set to 0 then the limitation is off.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.PluginStaticFileExtensionsBlacklist">
     <Value>Plugin static file extensions blacklist</Value>
@@ -4552,7 +4552,7 @@
     <Value>Queue count</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.QueueCount.Hint">
-    <Value>Maximum cumulative permit count of queued acquisition requests. Must be set to a value >= 0 by the time these options are passed to the constructor of FixedWindowRateLimiter. If set to 0 than Queue is off.</Value>
+    <Value>Maximum cumulative permit count of queued acquisition requests. Must be set to a value >= 0 by the time these options are passed to the constructor of FixedWindowRateLimiter. If set to 0 then the Queue is off.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.RejectionStatusCode">
     <Value>Rejection status code</Value>
