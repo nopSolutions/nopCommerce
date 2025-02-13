@@ -82,6 +82,16 @@ public class LocalizationMigration : MigrationBase
             //#5279
             ["Search.SearchInTags"] = "Search in product tags",
 
+            //#6407
+            ["Admin.Catalog.ProductTags.Info"] = "Product tag info",
+            ["Admin.Catalog.ProductTags.Seo"] = "SEO",
+            ["Admin.Catalog.ProductTags.Fields.MetaKeywords"] = "Meta keywords",
+            ["Admin.Catalog.ProductTags.Fields.MetaKeywords.Hint"] = "Meta keywords to be added to product tag page header.",
+            ["Admin.Catalog.ProductTags.Fields.MetaDescription"] = "Meta description",
+            ["Admin.Catalog.ProductTags.Fields.MetaDescription.Hint"] = "Meta description to be added to product tag page header.",
+            ["Admin.Catalog.ProductTags.Fields.MetaTitle"] = "Meta title",
+            ["Admin.Catalog.ProductTags.Fields.MetaTitle.Hint"] = "Override the page title. The default is the name of the product tag.",
+
         }, languageId);
 
         #endregion

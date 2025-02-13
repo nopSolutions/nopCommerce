@@ -25,6 +25,15 @@ public partial record ProductTagModel : BaseNopEntityModel, ILocalizedModel<Prod
     [NopResourceDisplayName("Admin.Catalog.ProductTags.Fields.ProductCount")]
     public int ProductCount { get; set; }
 
+    [NopResourceDisplayName("Admin.Catalog.ProductTags.Fields.MetaKeywords")]
+    public string MetaKeywords { get; set; }
+
+    [NopResourceDisplayName("Admin.Catalog.ProductTags.Fields.MetaDescription")]
+    public string MetaDescription { get; set; }
+
+    [NopResourceDisplayName("Admin.Catalog.ProductTags.Fields.MetaTitle")]
+    public string MetaTitle { get; set; }
+
     public IList<ProductTagLocalizedModel> Locales { get; set; }
 
     #endregion
@@ -36,4 +45,13 @@ public partial record ProductTagLocalizedModel : ILocalizedLocaleModel
 
     [NopResourceDisplayName("Admin.Catalog.ProductTags.Fields.Name")]
     public string Name { get; set; }
+
+    [NopResourceDisplayName("Admin.Catalog.ProductTags.Fields.MetaKeywords")]
+    public string MetaKeywords { get; set; }
+
+    [NopResourceDisplayName("Admin.Catalog.ProductTags.Fields.MetaDescription")]
+    public string MetaDescription { get; set; }
+
+    [NopResourceDisplayName("Admin.Catalog.ProductTags.Fields.MetaTitle")]
+    public string MetaTitle { get; set; }
 }
