@@ -68,6 +68,10 @@ public class LocalizationMigration : MigrationBase
             //#6407
             ["ActivityLog.PublicStore.PasswordChanged"] = "Public store. Customer has changed the password",
 
+            //#7498
+            ["Admin.Configuration.AppSettings.Common.PermitLimit.Hint"] = "Maximum number of permit counters that can be allowed in a window (1 minute). Must be set to a value > 0 by the time these options are passed to the constructor of FixedWindowRateLimiter. If set to 0 then the limitation is off.",
+            ["Admin.Configuration.AppSettings.Common.QueueCount.Hint"] = "Maximum cumulative permit count of queued acquisition requests. Must be set to a value >= 0 by the time these options are passed to the constructor of FixedWindowRateLimiter. If set to 0 then the Queue is off.",
+
         }, languageId);
 
         #endregion
