@@ -10,7 +10,7 @@ pipeline {
         stage('SCM') {
             steps {
                 git url: 'https://github.com/spandana-26/nopCommerce.git'
-                branch: 'develop'
+                branch:  'develop'
             }
         }
         stage('Build') {
