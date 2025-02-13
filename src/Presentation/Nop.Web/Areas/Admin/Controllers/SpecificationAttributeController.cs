@@ -334,12 +334,10 @@ public partial class SpecificationAttributeController : BaseAdminController
 
         var specificationAttributes = await _specificationAttributeService.GetSpecificationAttributeByIdsAsync(selectedIds.ToArray());
         await _specificationAttributeService.DeleteSpecificationAttributesAsync(specificationAttributes);
-
-        foreach (var specificationAttribute in specificationAttributes)
-        {
-            await _customerActivityService.InsertActivityAsync("DeleteSpecAttribute",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteSpecAttribute"), specificationAttribute.Name), specificationAttribute);
-        }
+        
+        //activity log
+        var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.DeleteSpecAttribute");
+        await _customerActivityService.InsertActivitiesAsync("DeleteSpecAttribute", specificationAttributes, specificationAttribute => string.Format(activityLogFormat, specificationAttribute.Name));
 
         return Json(new { Result = true });
     }
