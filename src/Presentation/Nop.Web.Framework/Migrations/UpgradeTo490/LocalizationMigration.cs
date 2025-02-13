@@ -79,6 +79,9 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Promotions.Campaigns.Copy"] = "Copy campaign",
             ["Admin.Promotions.Campaigns.Copied"] = "The campaign has been copied successfully",
 
+            //#5279
+            ["Search.SearchInTags"] = "Search in product tags",
+
         }, languageId);
 
         #endregion
