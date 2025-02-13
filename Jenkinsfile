@@ -9,8 +9,8 @@ pipeline {
     stages {
         stage('SCM') {
             steps {
-                git url: 'https://github.com/spandana-26/nopCommerce.git'
-                    branch:  'develop'
+                // Correct syntax for checking out the Git repository with a specific branch
+                git branch: 'develop', url: 'https://github.com/spandana-26/nopCommerce.git'
             }
         }
         stage('Build') {
