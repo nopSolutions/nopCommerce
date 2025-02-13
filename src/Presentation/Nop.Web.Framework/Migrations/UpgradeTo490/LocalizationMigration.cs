@@ -72,6 +72,13 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Configuration.AppSettings.Common.PermitLimit.Hint"] = "Maximum number of permit counters that can be allowed in a window (1 minute). Must be set to a value > 0 by the time these options are passed to the constructor of FixedWindowRateLimiter. If set to 0 then the limitation is off.",
             ["Admin.Configuration.AppSettings.Common.QueueCount.Hint"] = "Maximum cumulative permit count of queued acquisition requests. Must be set to a value >= 0 by the time these options are passed to the constructor of FixedWindowRateLimiter. If set to 0 then the Queue is off.",
 
+            //#4170
+            ["Admin.Promotions.Campaigns.Copy.Name"] = "New campaign name",
+            ["Admin.Promotions.Campaigns.Copy.Name.Hint"] = "The name of the new campaign.",
+            ["Admin.Promotions.Campaigns.Copy.Name.New"] = "{0} - copy",
+            ["Admin.Promotions.Campaigns.Copy"] = "Copy campaign",
+            ["Admin.Promotions.Campaigns.Copied"] = "The campaign has been copied successfully",
+
         }, languageId);
 
         #endregion
