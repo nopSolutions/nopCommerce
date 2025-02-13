@@ -390,17 +390,6 @@ public class SettingMigration : MigrationBase
         settingRepository.Delete(setting => setting.Name == metaDescriptionKey);
         settingRepository.Delete(setting => setting.Name == homepageTitleKey);
         settingRepository.Delete(setting => setting.Name == homepageDescriptionKey);
-
-        //#6464
-        var pdfSettings = settingService.LoadSetting<PdfSettings>();
-        if (!settingService.SettingExists(pdfSettings, settings => settings.FontFamily))
-        {
-            pdfSettings.FontFamily = "FreeSerif";
-            settingService.SaveSetting(pdfSettings, settings => settings.FontFamily);
-
-            //delete old setting
-            settingRepository.Delete(setting => setting.Name == $"{nameof(PdfSettings)}.FontFileName".ToLower());
-        }
     }
 
     public override void Down()

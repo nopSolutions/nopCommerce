@@ -18775,7 +18775,7 @@
     <Value>Gift card ({0})</Value>
   </LocaleResource>
   <LocaleResource Name="Pdf.Order">
-    <Value>Order</Value>
+    <Value>Order #{0}</Value>
   </LocaleResource>
   <LocaleResource Name="Pdf.OrderDate">
     <Value>Date</Value>
@@ -18818,6 +18818,9 @@
   </LocaleResource>
   <LocaleResource Name="Pdf.RewardPoints">
     <Value>{0} reward points</Value>
+  </LocaleResource>
+  <LocaleResource Name="Pdf.Shipment">
+    <Value>Shipment #{0}</Value>
   </LocaleResource>
   <LocaleResource Name="Pdf.Shipping">
     <Value>Shipping</Value>

@@ -68,6 +68,10 @@ public class LocalizationMigration : MigrationBase
             //#6407
             ["ActivityLog.PublicStore.PasswordChanged"] = "Public store. Customer has changed the password",
 
+            //#7477
+            ["Pdf.Order"] = "Order #{0}",
+            ["Pdf.Shipment"] = "Shipment #{0}",
+
         }, languageId);
 
         #endregion
