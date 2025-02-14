@@ -23,6 +23,13 @@ public class LocalizationMigration : MigrationBase
 
         #region Delete locales
 
+        localizationService.DeleteLocaleResources(new List<string>
+        {
+            //#7569
+            "Admin.Configuration.AppSettings.Common.PluginStaticFileExtensionsBlacklist",
+            "Admin.Configuration.AppSettings.Common.PluginStaticFileExtensionsBlacklist.Hint",
+        });
+
         #endregion
 
         #region Rename locales
