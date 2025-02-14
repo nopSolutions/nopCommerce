@@ -446,7 +446,7 @@ public partial class CustomerRegistrationService : ICustomerRegistrationService
         await _authenticationService.SignInAsync(customer, isPersist);
 
         //raise event       
-        await _eventPublisher.PublishAsync(new CustomerLoggedinEvent(customer));
+        await _eventPublisher.PublishAsync(new CustomerLoggedinEvent(customer, currentCustomer?.Id != customer.Id ? currentCustomer : default));
 
         //activity log
         await _customerActivityService.InsertActivityAsync(customer, "PublicStore.Login",
