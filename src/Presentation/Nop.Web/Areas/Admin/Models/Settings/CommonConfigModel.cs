@@ -33,9 +33,6 @@ public partial record CommonConfigModel : BaseNopModel, IConfigModel
     [NopResourceDisplayName("Admin.Configuration.AppSettings.Common.StaticFilesCacheControl")]
     public string StaticFilesCacheControl { get; set; }
 
-    [NopResourceDisplayName("Admin.Configuration.AppSettings.Common.PluginStaticFileExtensionsBlacklist")]
-    public string PluginStaticFileExtensionsBlacklist { get; set; }
-
     [NopResourceDisplayName("Admin.Configuration.AppSettings.Common.ServeUnknownFileTypes")]
     public bool ServeUnknownFileTypes { get; set; }
 

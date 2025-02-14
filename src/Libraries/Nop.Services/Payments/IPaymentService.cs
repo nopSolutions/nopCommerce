@@ -165,10 +165,4 @@ public partial interface IPaymentService
     /// <param name="order">Order</param>
     /// <returns>Serialized CustomValues CustomValues</returns>
     Dictionary<string, object> DeserializeCustomValues(Order order);
-
-    /// <summary>
-    /// Generate an order GUID
-    /// </summary>
-    /// <param name="processPaymentRequest">Process payment request</param>
-    Task GenerateOrderGuidAsync(ProcessPaymentRequest processPaymentRequest);
 }

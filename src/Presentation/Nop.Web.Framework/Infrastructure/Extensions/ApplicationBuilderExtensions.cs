@@ -69,16 +69,16 @@ public static class ApplicationBuilderExtensions
             await pluginService.InstallPluginsAsync();
             await pluginService.UpdatePluginsAsync();
 
+            //insert new ACL permission if exists
+            var permissionService = engine.Resolve<IPermissionService>();
+            await permissionService.InsertPermissionsAsync();
+
             //update nopCommerce core and db
             var migrationManager = engine.Resolve<IMigrationManager>();
             var assembly = Assembly.GetAssembly(typeof(ApplicationBuilderExtensions));
             migrationManager.ApplyUpMigrations(assembly, MigrationProcessType.Update);
             assembly = Assembly.GetAssembly(typeof(IMigrationManager));
             migrationManager.ApplyUpMigrations(assembly, MigrationProcessType.Update);
-
-            //insert new ACL permission if exists
-            var permissionService = engine.Resolve<IPermissionService>();
-            await permissionService.InsertPermissionsAsync();
 
             var taskScheduler = engine.Resolve<ITaskScheduler>();
             await taskScheduler.InitializeAsync();
@@ -286,37 +286,18 @@ public static class ApplicationBuilderExtensions
         //themes static files
         application.UseStaticFiles(new StaticFileOptions
         {
-            FileProvider = new PhysicalFileProvider(fileProvider.MapPath(@"Themes")),
+            FileProvider = new PhysicalFileProvider(fileProvider.MapPath("Themes")),
             RequestPath = new PathString("/Themes"),
             OnPrepareResponse = staticFileResponse
         });
 
         //plugins static files
-        var staticFileOptions = new StaticFileOptions
+        application.UseStaticFiles(new StaticFileOptions
         {
-            FileProvider = new PhysicalFileProvider(fileProvider.MapPath(@"Plugins")),
+            FileProvider = new PhysicalFileProvider(fileProvider.MapPath("Plugins")),
             RequestPath = new PathString("/Plugins"),
             OnPrepareResponse = staticFileResponse
-        };
-
-        //exclude files in blacklist
-        if (!string.IsNullOrEmpty(appSettings.Get<CommonConfig>().PluginStaticFileExtensionsBlacklist))
-        {
-            var fileExtensionContentTypeProvider = new FileExtensionContentTypeProvider();
-
-            foreach (var ext in appSettings.Get<CommonConfig>().PluginStaticFileExtensionsBlacklist
-                         .Split(';', ',')
-                         .Select(e => e.Trim().ToLowerInvariant())
-                         .Select(e => $"{(e.StartsWith(".") ? string.Empty : ".")}{e}")
-                         .Where(fileExtensionContentTypeProvider.Mappings.ContainsKey))
-            {
-                fileExtensionContentTypeProvider.Mappings.Remove(ext);
-            }
-
-            staticFileOptions.ContentTypeProvider = fileExtensionContentTypeProvider;
-        }
-
-        application.UseStaticFiles(staticFileOptions);
+        });
 
         //add support for backups
         var provider = new FileExtensionContentTypeProvider

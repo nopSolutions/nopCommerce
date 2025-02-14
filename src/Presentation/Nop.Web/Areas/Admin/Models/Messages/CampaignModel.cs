@@ -17,6 +17,7 @@ public partial record CampaignModel : BaseNopEntityModel
         AvailableStores = new List<SelectListItem>();
         AvailableCustomerRoles = new List<SelectListItem>();
         AvailableEmailAccounts = new List<SelectListItem>();
+        CopyCampaignModel = new CopyCampaignModel();
     }
 
     #endregion
@@ -57,6 +58,8 @@ public partial record CampaignModel : BaseNopEntityModel
     [DataType(DataType.EmailAddress)]
     [NopResourceDisplayName("Admin.Promotions.Campaigns.Fields.TestEmail")]
     public string TestEmail { get; set; }
+
+    public CopyCampaignModel CopyCampaignModel { get; set; }
 
     #endregion
 }
