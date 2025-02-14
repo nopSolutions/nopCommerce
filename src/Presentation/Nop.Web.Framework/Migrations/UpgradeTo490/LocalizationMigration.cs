@@ -99,6 +99,9 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Catalog.ProductTags.Fields.MetaTitle"] = "Meta title",
             ["Admin.Catalog.ProductTags.Fields.MetaTitle.Hint"] = "Override the page title. The default is the name of the product tag.",
 
+            //#7571
+            ["Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnCheckGiftCardBalance"] = "Show on check gift card balance page",
+            ["Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnCheckGiftCardBalance.Hint"] = "Check to show CAPTCHA on check gift card balance page.",
         }, languageId);
 
         #endregion

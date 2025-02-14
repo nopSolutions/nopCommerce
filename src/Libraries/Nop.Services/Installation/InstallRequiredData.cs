@@ -1931,6 +1931,7 @@ public partial class InstallationService
             ShowOnProductReviewPage = false,
             ShowOnRegistrationPage = false,
             ShowOnCheckoutPageForGuests = false,
+            ShowOnCheckGiftCardBalance = true
         });
 
         await SaveSettingAsync(dictionary, new MessagesSettings { UsePopupNotifications = false });

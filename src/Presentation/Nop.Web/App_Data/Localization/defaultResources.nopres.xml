@@ -7458,6 +7458,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnBlogCommentPage.Hint">
     <Value>Check to show CAPTCHA on blog page when writing a comment.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnCheckGiftCardBalance">
+    <Value>Show on check gift card balance page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnCheckGiftCardBalance.Hint">
+    <Value>Check to show CAPTCHA on check gift card balance page.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnCheckoutPageForGuests">
     <Value>Show on checkout page for guests</Value>
   </LocaleResource>
