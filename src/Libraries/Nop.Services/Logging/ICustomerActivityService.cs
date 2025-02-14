@@ -61,6 +61,31 @@ public partial interface ICustomerActivityService
     Task<ActivityLog> InsertActivityAsync(Customer customer, string systemKeyword, string comment, BaseEntity entity = null);
 
     /// <summary>
+    /// Inserts the activities log items
+    /// </summary>
+    /// <param name="systemKeyword">System keyword</param>
+    /// <param name="entities">Entities</param>
+    /// <param name="comment">Comment</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the activity log items
+    /// </returns>
+    Task<IList<ActivityLog>> InsertActivitiesAsync<TEntity>(string systemKeyword, IList<TEntity> entities, Func<TEntity, string> comment);
+
+    /// <summary>
+    /// Inserts the activities log items
+    /// </summary>
+    /// <param name="customer">Customer</param>
+    /// <param name="systemKeyword">System keyword</param>
+    /// <param name="entities">Entities</param>
+    /// <param name="comment">Comment</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the activity log items
+    /// </returns>
+    Task<IList<ActivityLog>> InsertActivitiesAsync<TEntity>(Customer customer, string systemKeyword, IList<TEntity> entities, Func<TEntity, string> comment);
+
+    /// <summary>
     /// Deletes an activity log item
     /// </summary>
     /// <param name="activityLog">Activity log</param>
