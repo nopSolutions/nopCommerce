@@ -15,7 +15,6 @@
   1. HTML Widgets
   2. Product Ribbons
   3. CRON Tasks
-  4. PowerReviews
 
 ## Windows
 

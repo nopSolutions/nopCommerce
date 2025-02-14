@@ -100,13 +100,7 @@
     }
     <!-- custom: reviews quicktab -->
     <div id="quickTab-Reviews">
-        @await Component.InvokeAsync(
-            "Widget",
-            new {
-                widgetZone = CustomPublicWidgetZones.ProductDetailsReviewsTabContent,
-                additionalData = Model
-            }
-        )
+        <div data-bv-show="reviews" data-bv-product-id="@Model.ProductModel.Id"></div>
     </div>
     @if (!string.IsNullOrEmpty(addnlDocumentContent))
     {

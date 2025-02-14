@@ -11,8 +11,7 @@ NOPCommerce codebase that runs both abcwarehouse.com and hawthorneonline.com
     1. HTML Widgets
     2. Product Ribbons
     3. CRON Tasks
-    4. PowerReviews
-    5. AJAX Filters
+    4. AJAX Filters
 
 ## Running E2E tests
 
