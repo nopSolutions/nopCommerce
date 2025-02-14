@@ -376,11 +376,7 @@ public partial class ProductAttributeService : IProductAttributeService
     /// <returns>A ProductAttributeValuePicture that has the specified values; otherwise null</returns>
     public virtual ProductAttributeValuePicture FindProductAttributeValuePicture(IList<ProductAttributeValuePicture> source, int valueId, int pictureId)
     {
-        foreach (var valuePicture in source)
-            if (valuePicture.ProductAttributeValueId == valueId && valuePicture.PictureId == pictureId)
-                return valuePicture;
-
-        return null;
+        return source.FirstOrDefault(vp => vp.ProductAttributeValueId == valueId && vp.PictureId == pictureId);
     }
 
     #endregion
@@ -616,11 +612,7 @@ public partial class ProductAttributeService : IProductAttributeService
     /// <returns>A ProductAttributeCombinationPicture that has the specified values; otherwise null</returns>
     public virtual ProductAttributeCombinationPicture FindProductAttributeCombinationPicture(IList<ProductAttributeCombinationPicture> source, int combinationId, int pictureId)
     {
-        foreach (var combinationPicture in source)
-            if (combinationPicture.ProductAttributeCombinationId == combinationId && combinationPicture.PictureId == pictureId)
-                return combinationPicture;
-
-        return null;
+        return source.FirstOrDefault(pacp => pacp.ProductAttributeCombinationId == combinationId && pacp.PictureId == pictureId);
     }
 
     #endregion
