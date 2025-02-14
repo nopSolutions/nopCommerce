@@ -4266,8 +4266,20 @@
   <LocaleResource Name="Admin.Catalog.ProductTags.Fields.SearchTagName.Hint">
     <Value>Search by a tag name.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.Info">
+    <Value>Product tag info</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductTags.Seo">
     <Value>SEO</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.TaggedProducts">
+    <Value>Used by products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.TaggedProducts.Product">
+    <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.TaggedProducts.Published">
+    <Value>Published</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductTags.Updated">
     <Value>The product tag has been updated successfully.</Value>
