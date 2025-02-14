@@ -79,8 +79,7 @@ public partial class ProductAttributeService : IProductAttributeService
     {
         ArgumentNullException.ThrowIfNull(productAttributes);
 
-        foreach (var productAttribute in productAttributes)
-            await DeleteProductAttributeAsync(productAttribute);
+        await _productAttributeRepository.DeleteAsync(productAttributes);
     }
 
     /// <summary>
