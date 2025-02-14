@@ -98,8 +98,8 @@ public partial class ProductAttributeService : IProductAttributeService
         var productAttributes = await _productAttributeRepository.GetAllPagedAsync(query =>
         {
             return from pa in query
-                   orderby pa.Name
-                   select pa;
+                orderby pa.Name
+                select pa;
         }, pageIndex, pageSize);
 
         return productAttributes;
@@ -199,9 +199,9 @@ public partial class ProductAttributeService : IProductAttributeService
         var allCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductAttributeMappingsByProductCacheKey, productId);
 
         var query = from pam in _productAttributeMappingRepository.Table
-                    orderby pam.DisplayOrder, pam.Id
-                    where pam.ProductId == productId
-                    select pam;
+            orderby pam.DisplayOrder, pam.Id
+            where pam.ProductId == productId
+            select pam;
 
         var attributes = await _staticCacheManager.GetAsync(allCacheKey, async () => await query.ToListAsync()) ?? new List<ProductAttributeMapping>();
 
@@ -268,9 +268,9 @@ public partial class ProductAttributeService : IProductAttributeService
         var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductAttributeValuesByAttributeCacheKey, productAttributeMappingId);
 
         var query = from pav in _productAttributeValueRepository.Table
-                    orderby pav.DisplayOrder, pav.Id
-                    where pav.ProductAttributeMappingId == productAttributeMappingId
-                    select pav;
+            orderby pav.DisplayOrder, pav.Id
+            where pav.ProductAttributeMappingId == productAttributeMappingId
+            select pav;
         var productAttributeValues = await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
 
         return productAttributeValues;
@@ -356,11 +356,11 @@ public partial class ProductAttributeService : IProductAttributeService
         var allCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductAttributeValuePicturesByValueCacheKey, valueId);
 
         var query = from pacp in _productAttributeValuePictureRepository.Table
-                    join p in _pictureRepository.Table on pacp.PictureId equals p.Id
-                    join pp in _productPictureRepository.Table on p.Id equals pp.PictureId
-                    where pacp.ProductAttributeValueId == valueId
-                    orderby pp.DisplayOrder, pacp.PictureId
-                    select pacp;
+            join p in _pictureRepository.Table on pacp.PictureId equals p.Id
+            join pp in _productPictureRepository.Table on p.Id equals pp.PictureId
+            where pacp.ProductAttributeValueId == valueId
+            orderby pp.DisplayOrder, pacp.PictureId
+            select pacp;
 
         var valuePictures = await _staticCacheManager.GetAsync(allCacheKey, async () => await query.ToListAsync())
                             ?? new List<ProductAttributeValuePicture>();
@@ -411,9 +411,9 @@ public partial class ProductAttributeService : IProductAttributeService
         var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.PredefinedProductAttributeValuesByAttributeCacheKey, productAttributeId);
 
         var query = from ppav in _predefinedProductAttributeValueRepository.Table
-                    orderby ppav.DisplayOrder, ppav.Id
-                    where ppav.ProductAttributeId == productAttributeId
-                    select ppav;
+            orderby ppav.DisplayOrder, ppav.Id
+            where ppav.ProductAttributeId == productAttributeId
+            select ppav;
 
         var values = await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
 
@@ -483,9 +483,9 @@ public partial class ProductAttributeService : IProductAttributeService
         var combinations = await _productAttributeCombinationRepository.GetAllAsync(query =>
         {
             return from c in query
-                   orderby c.Id
-                   where c.ProductId == productId
-                   select c;
+                orderby c.Id
+                where c.ProductId == productId
+                select c;
         }, cache => cache.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductAttributeCombinationsByProductCacheKey, productId));
 
         return combinations;
@@ -520,10 +520,10 @@ public partial class ProductAttributeService : IProductAttributeService
         sku = sku.Trim();
 
         var query = from pac in _productAttributeCombinationRepository.Table
-                    join p in _productRepository.Table on pac.ProductId equals p.Id
-                    orderby pac.Id
-                    where !p.Deleted && pac.Sku == sku
-                    select pac;
+            join p in _productRepository.Table on pac.ProductId equals p.Id
+            orderby pac.Id
+            where !p.Deleted && pac.Sku == sku
+            select pac;
         var combination = await query.FirstOrDefaultAsync();
 
         return combination;
@@ -596,13 +596,13 @@ public partial class ProductAttributeService : IProductAttributeService
         var allCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductAttributeCombinationPicturesByCombinationCacheKey, combinationId);
 
         var query = from pacp in _productAttributeCombinationPictureRepository.Table
-                    join p in _pictureRepository.Table on pacp.PictureId equals p.Id
-                    join pp in _productPictureRepository.Table on p.Id equals pp.PictureId
-                    where pacp.ProductAttributeCombinationId == combinationId
-                    orderby pp.DisplayOrder, pacp.PictureId
-                    select pacp;
+            join p in _pictureRepository.Table on pacp.PictureId equals p.Id
+            join pp in _productPictureRepository.Table on p.Id equals pp.PictureId
+            where pacp.ProductAttributeCombinationId == combinationId
+            orderby pp.DisplayOrder, pacp.PictureId
+            select pacp;
 
-        var combinationPictures = await _staticCacheManager.GetAsync(allCacheKey, async () => await query.ToListAsync())
+        var combinationPictures = await _staticCacheManager.GetAsync(allCacheKey, async () => await query.ToListAsync()) 
                                   ?? new List<ProductAttributeCombinationPicture>();
 
         return combinationPictures;
