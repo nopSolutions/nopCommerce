@@ -542,23 +542,23 @@
                         {
                             <script>
                                 $(function () {
-                                    toggleEditShippingMethod(false);
+                                toggleEditShippingMethod(false);
                                 });
 
                                 function toggleEditShippingMethod(editmode) {
-                                    if (editmode) {
-                                        $('#lblShippingMethod').hideElement();
-                                        $('#divShippingMethod').showElement();
-                                        $('#btnEditShippingMethod').hideElement();
-                                        $('#btnSaveShippingMethod').showElement();
-                                        $('#btnCancelShippingMethod').showElement();
-                                    } else {
-                                        $('#lblShippingMethod').showElement();
-                                        $('#divShippingMethod').hideElement();
-                                        $('#btnEditShippingMethod').showElement();
-                                        $('#btnSaveShippingMethod').hideElement();
-                                        $('#btnCancelShippingMethod').hideElement();
-                                    }
+                                if (editmode) {
+                                $('#lblShippingMethod').hideElement();
+                                $('#divShippingMethod').showElement();
+                                $('#btnEditShippingMethod').hideElement();
+                                $('#btnSaveShippingMethod').showElement();
+                                $('#btnCancelShippingMethod').showElement();
+                                } else {
+                                $('#lblShippingMethod').showElement();
+                                $('#divShippingMethod').hideElement();
+                                $('#btnEditShippingMethod').showElement();
+                                $('#btnSaveShippingMethod').hideElement();
+                                $('#btnCancelShippingMethod').hideElement();
+                                }
                                 }
                             </script>
                             <div class="input-group input-group-short">
@@ -606,8 +606,9 @@
                 }
             </div>
         </div>
-
-        <div class="card card-default">
+        if (await permissionService.AuthorizeAsync(StandardPermission.Orders.SHIPMENTS_VIEW))
+        {
+            <div class="card card-default">
             <div class="card-header">
                 @T("Admin.Orders.Shipments")
             </div>
@@ -722,5 +723,6 @@
                 </div>
             }
         </div>
+        }
     }
 </div>
