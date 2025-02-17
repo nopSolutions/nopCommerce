@@ -99,6 +99,10 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Catalog.ProductTags.Fields.MetaTitle"] = "Meta title",
             ["Admin.Catalog.ProductTags.Fields.MetaTitle.Hint"] = "Override the page title. The default is the name of the product tag.",
 
+            //#5771
+            ["Admin.Catalog.ProductTags.TaggedProducts"] = "Used by products",
+            ["Admin.Catalog.ProductTags.TaggedProducts.Product"] = "Product",
+            ["Admin.Catalog.ProductTags.TaggedProducts.Published"] = "Published",
         }, languageId);
 
         #endregion
