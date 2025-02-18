@@ -11,4 +11,6 @@ public partial record CheckGiftCardBalanceModel : BaseNopModel
 
     [NopResourceDisplayName("ShoppingCart.GiftCardCouponCode.Tooltip")]
     public string GiftCardCode { get; set; }
+
+    public bool DisplayCaptcha { get; set; }
 }
