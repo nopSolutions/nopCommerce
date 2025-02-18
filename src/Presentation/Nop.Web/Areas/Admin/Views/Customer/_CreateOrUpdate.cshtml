@@ -47,7 +47,10 @@
                     {
                         <nop-card asp-name="customer-activitylog" asp-icon="fas fa-list-alt" asp-title="@T("Admin.Customers.Customers.ActivityLog")" asp-hide-block-attribute-name="@hideActivityLogBlockAttributeName" asp-hide="@hideActivityLogBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.ActivityLog", Model)</nop-card>
                     }
-                    <nop-card asp-name="customer-impersonate" asp-icon="fas fa-shopping-basket" asp-title="@T("Admin.Customers.Customers.Impersonate")" asp-hide-block-attribute-name="@hidePlaceOrderBlockAttributeName" asp-hide="@hidePlaceOrderBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Impersonate", Model)</nop-card>
+                    @if (await permissionService.AuthorizeAsync(StandardPermission.Customers.CUSTOMERS_IMPERSONATION))
+                    {
+                        <nop-card asp-name="customer-impersonate" asp-icon="fas fa-shopping-basket" asp-title="@T("Admin.Customers.Customers.Impersonate")" asp-hide-block-attribute-name="@hidePlaceOrderBlockAttributeName" asp-hide="@hidePlaceOrderBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Impersonate", Model)</nop-card>
+                    }
                     <nop-card asp-name="customer-backinstock" asp-icon="fas fa-square-plus" asp-title="@T("Admin.Customers.Customers.BackInStockSubscriptions")" asp-hide-block-attribute-name="@hideBackInStockSubscriptionsBlockAttributeName" asp-hide="@hideBackInStockSubscriptionsBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.BackInStockSubscriptions", Model)</nop-card>
                 }
 
