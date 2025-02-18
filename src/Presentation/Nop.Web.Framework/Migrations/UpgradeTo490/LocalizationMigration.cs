@@ -102,6 +102,11 @@ public class LocalizationMigration : MigrationBase
             //#7571
             ["Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnCheckGiftCardBalance"] = "Show on check gift card balance page",
             ["Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnCheckGiftCardBalance.Hint"] = "Check to show CAPTCHA on check gift card balance page.",
+
+            //#5771
+            ["Admin.Catalog.ProductTags.TaggedProducts"] = "Used by products",
+            ["Admin.Catalog.ProductTags.TaggedProducts.Product"] = "Product",
+            ["Admin.Catalog.ProductTags.TaggedProducts.Published"] = "Published",
         }, languageId);
 
         #endregion
