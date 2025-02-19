@@ -360,10 +360,14 @@ public partial class PictureService : IPictureService
     /// <param name="image">Source image</param>
     /// <param name="format">Destination format</param>
     /// <param name="targetSize">Target size</param>
+    /// <param name="encodedOrigin">Encoded origin</param>
     /// <returns>Image as array of byte[]</returns>
-    protected virtual byte[] ImageResize(SKBitmap image, SKEncodedImageFormat format, int targetSize)
+    protected virtual byte[] ImageResize(SKBitmap image, SKEncodedImageFormat format, int targetSize, SKEncodedOrigin? encodedOrigin = null)
     {
         ArgumentNullException.ThrowIfNull(image);
+
+        if (encodedOrigin.HasValue)
+            image = AutoOrient(image, encodedOrigin.Value);
 
         float width, height;
         if (image.Height > image.Width)
@@ -410,6 +414,47 @@ public partial class PictureService : IPictureService
     protected virtual async Task<IList<Picture>> GetPicturesByIdsAsync(int[] pictureIds)
     {
         return await _pictureRepository.GetByIdsAsync(pictureIds, cache => default);
+    }
+
+    /// <summary>
+    /// Automatically oriented image if needed
+    /// </summary>
+    /// <param name="bitmap">Image to reoriented</param>
+    /// <param name="origin">Base image origin</param>
+    /// <returns>Reoriented image</returns>
+    protected virtual SKBitmap AutoOrient(SKBitmap bitmap, SKEncodedOrigin origin)
+    {
+        SKBitmap rotated;
+        switch (origin)
+        {
+            case SKEncodedOrigin.BottomRight:
+                using (var surface = new SKCanvas(bitmap))
+                {
+                    surface.RotateDegrees(180, bitmap.Width / 2f, bitmap.Height / 2f);
+                    surface.DrawBitmap(bitmap.Copy(), 0, 0);
+                }
+                return bitmap;
+            case SKEncodedOrigin.RightTop:
+                rotated = new SKBitmap(bitmap.Height, bitmap.Width);
+                using (var surface = new SKCanvas(rotated))
+                {
+                    surface.Translate(rotated.Width, 0);
+                    surface.RotateDegrees(90);
+                    surface.DrawBitmap(bitmap, 0, 0);
+                }
+                return rotated;
+            case SKEncodedOrigin.LeftBottom:
+                rotated = new SKBitmap(bitmap.Height, bitmap.Width);
+                using (var surface = new SKCanvas(rotated))
+                {
+                    surface.Translate(0, rotated.Height);
+                    surface.RotateDegrees(270);
+                    surface.DrawBitmap(bitmap, 0, 0);
+                }
+                return rotated;
+            default:
+                return bitmap;
+        }
     }
 
     #endregion
@@ -641,26 +686,39 @@ public partial class PictureService : IPictureService
 
             pictureBinary ??= await LoadPictureBinaryAsync(picture);
 
+            if (pictureBinary == null)
+                return (await GetThumbUrlAsync(thumbFileName, storeLocation), picture);
+
             //the named mutex helps to avoid creating the same files in different threads,
             //and does not decrease performance significantly, because the code is blocked only for the specific file.
             //you should be very careful, mutexes cannot be used in with the await operation
             //we can't use semaphore here, because it produces PlatformNotSupportedException exception on UNIX based systems
             using var mutex = new Mutex(false, thumbFileName);
             mutex.WaitOne();
+           
             try
             {
-                if (pictureBinary != null)
-                    try
-                    {
-                        using var image = SKBitmap.Decode(pictureBinary);
-                        var format = GetImageFormatByMimeType(picture.MimeType);
-                        pictureBinary = ImageResize(image, format, targetSize);
-                        SaveThumbAsync(thumbFilePath, thumbFileName, picture.MimeType, pictureBinary).Wait();
-                    }
-                    catch
-                    {
-                        // ignored
-                    }
+                var format = GetImageFormatByMimeType(picture.MimeType);
+
+                if (_mediaSettings.AutoOrientImage)
+                {
+                    using var stream = new MemoryStream(pictureBinary);
+                    using var inputStream = new SKManagedStream(stream);
+                    using var codec = SKCodec.Create(inputStream);
+                    using var image = SKBitmap.Decode(codec);
+                    pictureBinary = ImageResize(image, format, targetSize, codec.EncodedOrigin);
+                }
+                else
+                {
+                    using var image = SKBitmap.Decode(pictureBinary);
+                    pictureBinary = ImageResize(image, format, targetSize);
+                }
+
+                SaveThumbAsync(thumbFilePath, thumbFileName, picture.MimeType, pictureBinary).Wait();
+            }
+            catch
+            {
+                // ignored
             }
             finally
             {
@@ -804,10 +862,10 @@ public partial class PictureService : IPictureService
             return new List<Picture>();
 
         var query = from p in _pictureRepository.Table
-            join pp in _productPictureRepository.Table on p.Id equals pp.PictureId
-            orderby pp.DisplayOrder, pp.Id
-            where pp.ProductId == productId
-            select p;
+                    join pp in _productPictureRepository.Table on p.Id equals pp.PictureId
+                    orderby pp.DisplayOrder, pp.Id
+                    where pp.ProductId == productId
+                    select p;
 
         if (recordsToReturn > 0)
             query = query.Take(recordsToReturn);
@@ -1065,14 +1123,24 @@ public partial class PictureService : IPictureService
     {
         try
         {
-            using var image = SKBitmap.Decode(pictureBinary);
+            SKBitmap image;
+
+            if (_mediaSettings.AutoOrientImage)
+            {
+                using var input = new MemoryStream(pictureBinary);
+                using var codec = SKCodec.Create(input);
+                image = AutoOrient(SKBitmap.Decode(codec), codec.EncodedOrigin);
+            }
+            else
+                image = SKBitmap.Decode(pictureBinary);
 
             //resize the image in accordance with the maximum size
-            if (Math.Max(image.Height, image.Width) > _mediaSettings.MaximumImageSize)
-            {
-                var format = GetImageFormatByMimeType(mimeType);
-                pictureBinary = ImageResize(image, format, _mediaSettings.MaximumImageSize);
-            }
+            if (Math.Max(image.Height, image.Width) <= _mediaSettings.MaximumImageSize) 
+                return pictureBinary;
+
+            var format = GetImageFormatByMimeType(mimeType);
+            pictureBinary = ImageResize(image, format, _mediaSettings.MaximumImageSize);
+
             return pictureBinary;
         }
         catch (Exception exc)
