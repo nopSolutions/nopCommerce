@@ -16821,9 +16821,6 @@
   <LocaleResource Name="Checkout.Progress.Shipping">
     <Value>Shipping</Value>
   </LocaleResource>
-  <LocaleResource Name="Checkout.RedirectMessage">
-    <Value>Redirected</Value>
-  </LocaleResource>
   <LocaleResource Name="Checkout.SelectBillingAddress">
     <Value>Select billing address</Value>
   </LocaleResource>

@@ -2,7 +2,7 @@
   "Group": "Payment methods",
   "FriendlyName": "Amazon Pay",
   "SystemName": "Payments.AmazonPay",
-  "Version": "4.80.7",
+  "Version": "4.80.8",
   "SupportedVersions": [ "4.80" ],
   "Author": "nopCommerce team",
   "DisplayOrder": 1,

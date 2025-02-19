@@ -106,7 +106,9 @@ public class LocalizationMigration : MigrationBase
             "Permission.SalesSummaryReport",
             "Admin.ConfigurationSteps.PaymentPayPal.SignUp.Title",
             "Admin.ConfigurationSteps.PaymentPayPal.SignUp.Text",
-            "Admin.ConfigurationSteps.PaymentPayPal.Register.Text2"
+            "Admin.ConfigurationSteps.PaymentPayPal.Register.Text2",
+            //#7590
+            "Checkout.RedirectMessage"
         });
 
         #endregion
