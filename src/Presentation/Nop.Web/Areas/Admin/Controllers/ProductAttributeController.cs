@@ -224,11 +224,9 @@ public partial class ProductAttributeController : BaseAdminController
         var productAttributes = await _productAttributeService.GetProductAttributeByIdsAsync(selectedIds.ToArray());
         await _productAttributeService.DeleteProductAttributesAsync(productAttributes);
 
-        foreach (var productAttribute in productAttributes)
-        {
-            await _customerActivityService.InsertActivityAsync("DeleteProductAttribute",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteProductAttribute"), productAttribute.Name), productAttribute);
-        }
+        //activity log
+        var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.DeleteProductAttribute");
+        await _customerActivityService.InsertActivitiesAsync("DeleteProductAttribute", productAttributes, productAttribute => string.Format(activityLogFormat, productAttribute.Name));
 
         return Json(new { Result = true });
     }

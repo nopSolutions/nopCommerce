@@ -390,11 +390,8 @@ public partial class CategoryController : BaseAdminController
 
         //activity log
         var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.DeleteCategory");
-
-        foreach (var category in categories)
-            await _customerActivityService.InsertActivityAsync("DeleteCategory",
-                string.Format(activityLogFormat, category.Name), category);
-
+        await _customerActivityService.InsertActivitiesAsync("DeleteCategory", categories, category => string.Format(activityLogFormat, category.Name));
+        
         return Json(new { Result = true });
     }
 

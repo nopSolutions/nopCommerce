@@ -346,13 +346,10 @@ public partial class CheckoutAttributeController : BaseAdminController
         var checkoutAttributes = await _checkoutAttributeService.GetAttributeByIdsAsync(selectedIds.ToArray());
         await _checkoutAttributeService.DeleteAttributesAsync(checkoutAttributes);
 
-        foreach (var checkoutAttribute in checkoutAttributes)
-        {
-            //activity log
-            await _customerActivityService.InsertActivityAsync("DeleteCheckoutAttribute",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteCheckoutAttribute"), checkoutAttribute.Name), checkoutAttribute);
-        }
-
+        //activity log
+        var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.DeleteCheckoutAttribute");
+        await _customerActivityService.InsertActivitiesAsync("DeleteCheckoutAttribute", checkoutAttributes, checkoutAttribute => string.Format(activityLogFormat, checkoutAttribute.Name));
+        
         return Json(new { Result = true });
     }
 

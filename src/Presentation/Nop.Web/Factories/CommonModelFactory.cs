@@ -462,7 +462,7 @@ public partial class CommonModelFactory : ICommonModelFactory
             HidePoweredByNopCommerce = _storeInformationSettings.HidePoweredByNopCommerce,
             IsHomePage = await IsHomePageAsync(),
             AllowCustomersToApplyForVendorAccount = _vendorSettings.AllowCustomersToApplyForVendorAccount,
-            AllowCustomersToCheckGiftCardBalance = _customerSettings.AllowCustomersToCheckGiftCardBalance && _captchaSettings.Enabled,
+            AllowCustomersToCheckGiftCardBalance = _customerSettings.AllowCustomersToCheckGiftCardBalance,
             Topics = topicModels,
             DisplaySitemapFooterItem = _displayDefaultFooterItemSettings.DisplaySitemapFooterItem,
             DisplayContactUsFooterItem = _displayDefaultFooterItemSettings.DisplayContactUsFooterItem,

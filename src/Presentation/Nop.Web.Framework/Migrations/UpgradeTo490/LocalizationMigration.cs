@@ -23,6 +23,15 @@ public class LocalizationMigration : MigrationBase
 
         #region Delete locales
 
+        localizationService.DeleteLocaleResources(new List<string>
+        {
+            //#7569
+            "Admin.Configuration.AppSettings.Common.PluginStaticFileExtensionsBlacklist",
+            "Admin.Configuration.AppSettings.Common.PluginStaticFileExtensionsBlacklist.Hint",
+            //#7590
+            "Checkout.RedirectMessage"
+        });
+
         #endregion
 
         #region Rename locales
@@ -68,6 +77,38 @@ public class LocalizationMigration : MigrationBase
             //#6407
             ["ActivityLog.PublicStore.PasswordChanged"] = "Public store. Customer has changed the password",
 
+            //#7498
+            ["Admin.Configuration.AppSettings.Common.PermitLimit.Hint"] = "Maximum number of permit counters that can be allowed in a window (1 minute). Must be set to a value > 0 by the time these options are passed to the constructor of FixedWindowRateLimiter. If set to 0 then the limitation is off.",
+            ["Admin.Configuration.AppSettings.Common.QueueCount.Hint"] = "Maximum cumulative permit count of queued acquisition requests. Must be set to a value >= 0 by the time these options are passed to the constructor of FixedWindowRateLimiter. If set to 0 then the Queue is off.",
+
+            //#4170
+            ["Admin.Promotions.Campaigns.Copy.Name"] = "New campaign name",
+            ["Admin.Promotions.Campaigns.Copy.Name.Hint"] = "The name of the new campaign.",
+            ["Admin.Promotions.Campaigns.Copy.Name.New"] = "{0} - copy",
+            ["Admin.Promotions.Campaigns.Copy"] = "Copy campaign",
+            ["Admin.Promotions.Campaigns.Copied"] = "The campaign has been copied successfully",
+
+            //#5279
+            ["Search.SearchInTags"] = "Search in product tags",
+
+            //#6407
+            ["Admin.Catalog.ProductTags.Info"] = "Product tag info",
+            ["Admin.Catalog.ProductTags.Seo"] = "SEO",
+            ["Admin.Catalog.ProductTags.Fields.MetaKeywords"] = "Meta keywords",
+            ["Admin.Catalog.ProductTags.Fields.MetaKeywords.Hint"] = "Meta keywords to be added to product tag page header.",
+            ["Admin.Catalog.ProductTags.Fields.MetaDescription"] = "Meta description",
+            ["Admin.Catalog.ProductTags.Fields.MetaDescription.Hint"] = "Meta description to be added to product tag page header.",
+            ["Admin.Catalog.ProductTags.Fields.MetaTitle"] = "Meta title",
+            ["Admin.Catalog.ProductTags.Fields.MetaTitle.Hint"] = "Override the page title. The default is the name of the product tag.",
+
+            //#7571
+            ["Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnCheckGiftCardBalance"] = "Show on check gift card balance page",
+            ["Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnCheckGiftCardBalance.Hint"] = "Check to show CAPTCHA on check gift card balance page.",
+
+            //#5771
+            ["Admin.Catalog.ProductTags.TaggedProducts"] = "Used by products",
+            ["Admin.Catalog.ProductTags.TaggedProducts.Product"] = "Product",
+            ["Admin.Catalog.ProductTags.TaggedProducts.Published"] = "Published",
         }, languageId);
 
         #endregion

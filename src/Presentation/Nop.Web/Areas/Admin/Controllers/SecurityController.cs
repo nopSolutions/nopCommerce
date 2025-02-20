@@ -70,15 +70,18 @@ public partial class SecurityController : BaseAdminController
 
         var menuSystemName = "Home";
 
-        if (_menuSystemNames.TryGetValue(pageSystemNameKey, out var value))
-            menuSystemName = value;
-        else
+        if (!string.IsNullOrEmpty(pageSystemNameKey))
         {
-            var systemName =
-                _menuSystemNames.FirstOrDefault(item => item.Key.StartsWith(pageSystemNameKey.Split('.')[0]));
-                
-            if (!string.IsNullOrEmpty(systemName.Value))
+            if (_menuSystemNames.TryGetValue(pageSystemNameKey, out var value))
+                menuSystemName = value;
+            else
+            {
+                var systemName =
+                    _menuSystemNames.FirstOrDefault(item => item.Key.StartsWith(pageSystemNameKey.Split('.')[0]));
+
+                if (!string.IsNullOrEmpty(systemName.Value))
                     menuSystemName = systemName.Value;
+            }
         }
 
         if (currentCustomer == null || await _customerService.IsGuestAsync(currentCustomer))

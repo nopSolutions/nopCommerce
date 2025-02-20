@@ -83,6 +83,11 @@ public partial class CaptchaSettings : ISettings
     public bool ShowOnCheckoutPageForGuests { get; set; }
 
     /// <summary>
+    /// A value indicating whether CAPTCHA should be displayed on the check gift card balance page
+    /// </summary>
+    public bool ShowOnCheckGiftCardBalance { get; set; }
+
+    /// <summary>
     /// The base reCAPTCHA API URL
     /// </summary>
     public string ReCaptchaApiUrl { get; set; }
