@@ -665,7 +665,8 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(model => model.AttributeType, options => options.Ignore());
 
         CreateMap<ProductTag, ProductTagModel>()
-            .ForMember(model => model.ProductCount, options => options.Ignore());
+            .ForMember(model => model.ProductCount, options => options.Ignore())
+            .ForMember(model => model.ProductTagProductSearchModel, options => options.Ignore());
 
         CreateMap<ProductTemplate, ProductTemplateModel>();
         CreateMap<ProductTemplateModel, ProductTemplate>();
@@ -1161,6 +1162,7 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(settings => settings.AutoCompleteSearchThumbPictureSize, options => options.Ignore())
             .ForMember(settings => settings.AzureCacheControlHeader, options => options.Ignore())
             .ForMember(settings => settings.UseAbsoluteImagePath, options => options.Ignore())
+            .ForMember(settings => settings.AutoOrientImage, options => options.Ignore())
             .ForMember(settings => settings.ImageSquarePictureSize, options => options.Ignore())
             .ForMember(settings => settings.VideoIframeAllow, options => options.Ignore())
             .ForMember(settings => settings.VideoIframeHeight, options => options.Ignore())
@@ -1180,7 +1182,8 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(model => model.CreatedOn, options => options.Ignore())
             .ForMember(model => model.DontSendBeforeDate, options => options.Ignore())
             .ForMember(model => model.EmailAccountId, options => options.Ignore())
-            .ForMember(model => model.TestEmail, options => options.Ignore());
+            .ForMember(model => model.TestEmail, options => options.Ignore())
+            .ForMember(model => model.CopyCampaignModel, options => options.Ignore());
         CreateMap<CampaignModel, Campaign>()
             .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
             .ForMember(entity => entity.DontSendBeforeDateUtc, options => options.Ignore());

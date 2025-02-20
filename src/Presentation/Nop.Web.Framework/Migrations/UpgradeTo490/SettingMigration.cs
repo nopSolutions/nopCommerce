@@ -1,6 +1,8 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Infrastructure;
 using Nop.Data;
@@ -43,6 +45,22 @@ public class SettingMigration : MigrationBase
         {
             vendorSettings.MaximumProductPicturesNumber = 5;
             settingService.SaveSetting(vendorSettings, settings => settings.MaximumProductPicturesNumber);
+        }
+
+        //#7571
+        var captchaSettings = settingService.LoadSetting<CaptchaSettings>();
+        if (!settingService.SettingExists(captchaSettings, settings => settings.ShowOnCheckGiftCardBalance))
+        {
+            captchaSettings.ShowOnCheckGiftCardBalance = true;
+            settingService.SaveSetting(captchaSettings, settings => settings.ShowOnCheckGiftCardBalance);
+        }
+
+        //#5818
+        var mediaSettings = settingService.LoadSetting<MediaSettings>();
+        if (!settingService.SettingExists(mediaSettings, settings => settings.AutoOrientImage))
+        {
+            mediaSettings.AutoOrientImage = false;
+            settingService.SaveSetting(mediaSettings, settings => settings.AutoOrientImage);
         }
     }
 

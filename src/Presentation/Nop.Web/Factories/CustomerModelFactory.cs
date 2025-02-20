@@ -720,7 +720,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
             });
         }
 
-        if (_captchaSettings.Enabled && _customerSettings.AllowCustomersToCheckGiftCardBalance)
+        if (_customerSettings.AllowCustomersToCheckGiftCardBalance)
         {
             model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
             {
@@ -904,7 +904,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
     /// </returns>
     public virtual Task<CheckGiftCardBalanceModel> PrepareCheckGiftCardBalanceModelAsync()
     {
-        var model = new CheckGiftCardBalanceModel();
+        var model = new CheckGiftCardBalanceModel { DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnCheckGiftCardBalance };
 
         return Task.FromResult(model);
     }

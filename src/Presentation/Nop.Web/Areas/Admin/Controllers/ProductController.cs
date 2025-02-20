@@ -222,6 +222,18 @@ public partial class ProductController : BaseAdminController
                 x => x.Name,
                 localized.Name,
                 localized.LanguageId);
+            await _localizedEntityService.SaveLocalizedValueAsync(productTag,
+                x => x.MetaKeywords,
+                localized.MetaKeywords,
+                localized.LanguageId);
+            await _localizedEntityService.SaveLocalizedValueAsync(productTag,
+                x => x.MetaDescription,
+                localized.MetaDescription,
+                localized.LanguageId);
+            await _localizedEntityService.SaveLocalizedValueAsync(productTag,
+                x => x.MetaTitle,
+                localized.MetaTitle,
+                localized.LanguageId);
 
             var seName = await _urlRecordService.ValidateSeNameAsync(productTag, string.Empty, localized.Name, false);
             await _urlRecordService.SaveSlugAsync(productTag, seName, localized.LanguageId);
@@ -2395,6 +2407,9 @@ public partial class ProductController : BaseAdminController
         if (ModelState.IsValid)
         {
             productTag.Name = model.Name;
+            productTag.MetaDescription = model.MetaDescription;
+            productTag.MetaKeywords = model.MetaKeywords;
+            productTag.MetaTitle = model.MetaTitle;
             await _productTagService.UpdateProductTagAsync(productTag);
 
             //locales
@@ -2410,6 +2425,16 @@ public partial class ProductController : BaseAdminController
 
         //if we got this far, something failed, redisplay form
         return View(model);
+    }
+
+    [HttpPost]
+    [CheckPermission(StandardPermission.Catalog.PRODUCT_TAGS_VIEW)]
+    public virtual async Task<IActionResult> TaggedProducts(ProductTagProductSearchModel searchModel)
+    {
+        //prepare model
+        var model = await _productModelFactory.PrepareTaggedProductListModelAsync(searchModel);
+
+        return Json(model);
     }
 
     #endregion

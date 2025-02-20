@@ -1547,6 +1547,9 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         var model = new ProductsByTagModel
         {
             Id = productTag.Id,
+            MetaKeywords = await _localizationService.GetLocalizedAsync(productTag, x => x.MetaKeywords),
+            MetaDescription = await _localizationService.GetLocalizedAsync(productTag, x => x.MetaDescription),
+            MetaTitle = await _localizationService.GetLocalizedAsync(productTag, x => x.MetaTitle),
             TagName = await _localizationService.GetLocalizedAsync(productTag, y => y.Name),
             TagSeName = await _urlRecordService.GetSeNameAsync(productTag),
             CatalogProductsModel = await PrepareTagProductsModelAsync(productTag, command)
@@ -1838,7 +1841,9 @@ public partial class CatalogModelFactory : ICatalogModelFactory
                 var categoryIds = new List<int>();
                 var manufacturerId = 0;
                 var searchInDescriptions = false;
+                var searchInProductTags = false;
                 var vendorId = 0;
+
                 if (searchModel.advs)
                 {
                     //advanced search
@@ -1860,10 +1865,9 @@ public partial class CatalogModelFactory : ICatalogModelFactory
                         vendorId = searchModel.vid;
 
                     searchInDescriptions = searchModel.sid;
+                    searchInProductTags = searchModel.sit;
                 }
 
-                //var searchInProductTags = false;
-                var searchInProductTags = searchInDescriptions;
                 var workingLanguage = await _workContext.GetWorkingLanguageAsync();
 
                 //price range

@@ -15,6 +15,7 @@ public partial class InstallationService : IInstallationService
 {
     #region Fields
 
+    protected readonly IHttpClientFactory _httpClientFactory;
     protected readonly INopDataProvider _dataProvider;
     protected readonly INopFileProvider _fileProvider;
     protected readonly IWebHelper _webHelper;
@@ -25,10 +26,12 @@ public partial class InstallationService : IInstallationService
 
     #region Ctor
 
-    public InstallationService(INopDataProvider dataProvider,
+    public InstallationService(IHttpClientFactory httpClientFactory,
+        INopDataProvider dataProvider,
         INopFileProvider fileProvider,
         IWebHelper webHelper)
     {
+        _httpClientFactory = httpClientFactory;
         _dataProvider = dataProvider;
         _fileProvider = fileProvider;
         _webHelper = webHelper;
