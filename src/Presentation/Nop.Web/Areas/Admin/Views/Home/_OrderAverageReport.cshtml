@@ -1,6 +1,4 @@
-﻿@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
-@inject IWorkContext workContext
-@{
+﻿@{
     const string cardId = "order-average-report-card";
     const string hideCardAttributeName = "Reports.HideOrderAverageReportCard";
     var hideCard = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCardAttributeName);

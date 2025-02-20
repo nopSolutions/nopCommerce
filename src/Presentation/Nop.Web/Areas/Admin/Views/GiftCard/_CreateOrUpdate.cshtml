@@ -1,7 +1,5 @@
 ﻿@model GiftCardModel
 
-@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
-@inject IWorkContext workContext
 @{
     const string hideInfoBlockAttributeName = "GiftCardPage.HideInfoBlock";
     var customer = await workContext.GetCurrentCustomerAsync();
