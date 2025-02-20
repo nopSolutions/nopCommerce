@@ -606,121 +606,123 @@
                 }
             </div>
         </div>
-
-        <div class="card card-default">
-            <div class="card-header">
-                @T("Admin.Orders.Shipments")
-            </div>
-            <div class="card-body">
-                @await Html.PartialAsync("Table", new DataTablesModel
-                {
-                    Name = "shipments-grid",
-                    UrlRead = new DataUrl("ShipmentsByOrder", "Order", new RouteValueDictionary { [nameof(OrderShipmentSearchModel.OrderId)] = Model.Id }),
-                    PrimaryKeyColumn = nameof(ShipmentModel.Id),
-                    Length = Model.OrderShipmentSearchModel.PageSize,
-                    LengthMenu = Model.OrderShipmentSearchModel.AvailablePageSizes,
-                    ColumnCollection = new List<ColumnProperty>
+        if (await permissionService.AuthorizeAsync(StandardPermission.Orders.SHIPMENTS_VIEW))
+        {
+            <div class="card card-default">
+                <div class="card-header">
+                    @T("Admin.Orders.Shipments")
+                </div>
+                <div class="card-body">
+                    @await Html.PartialAsync("Table", new DataTablesModel
                     {
-                        new ColumnProperty(null)
-                        {
-                            Render = new RenderChildCaret(),
-                            Width = "5",
-                            Searchable = false,
-                            ClassName =  NopColumnClassDefaults.ChildControl
-                        },
-                        new ColumnProperty(nameof(ShipmentModel.Id))
-                        {
-                            Title = T("Admin.Orders.Shipments.ID").Text,
-                            Width = "50"
-                        },
-                        new ColumnProperty(nameof(ShipmentModel.CustomOrderNumber))
-                        {
-                            Title = T("Admin.Orders.Shipments.CustomOrderNumber").Text,
-                            Width = "100"
-                        },
-                        new ColumnProperty(nameof(ShipmentModel.TrackingNumber))
-                        {
-                            Title = T("Admin.Orders.Shipments.TrackingNumber").Text,
-                            Width = "100"
-                        },
-                        new ColumnProperty(nameof(ShipmentModel.TotalWeight))
-                        {
-                            Title = T("Admin.Orders.Shipments.TotalWeight").Text,
-                            Width = "100"
-                        },
-                        (Model.PickupInStore ? 
-                            new ColumnProperty(nameof(ShipmentModel.ReadyForPickupDate))
-                            {
-                                Title = T("Admin.Orders.Shipments.ReadyForPickupDate").Text,
-                                Width = "100"
-                            } : 
-                            new ColumnProperty(nameof(ShipmentModel.ShippedDate))
-                            {
-                                Title = T("Admin.Orders.Shipments.ShippedDate").Text,
-                                Width = "100"
-                            }),
-                        new ColumnProperty(nameof(ShipmentModel.DeliveryDate))
-                        {
-                            Title = T("Admin.Orders.Shipments.DeliveryDate").Text,
-                            Width = "100"
-                        },
-                        new ColumnProperty(nameof(ShipmentModel.Id))
-                        {
-                            Title = T("Admin.Common.View").Text,
-                            Width = "50",
-                            Render = new RenderButtonView(new DataUrl("~/Admin/Order/ShipmentDetails/"))
-                        }
-                    },
-                    ChildTable = new DataTablesModel
-                    {
-                        Name = "shipment-items-grid",
-                        UrlRead = new DataUrl("ShipmentsItemsByShipmentId", "Order", null),
-                        IsChildTable = true,
+                        Name = "shipments-grid",
+                        UrlRead = new DataUrl("ShipmentsByOrder", "Order", new RouteValueDictionary { [nameof(OrderShipmentSearchModel.OrderId)] = Model.Id }),
+                        PrimaryKeyColumn = nameof(ShipmentModel.Id),
                         Length = Model.OrderShipmentSearchModel.PageSize,
                         LengthMenu = Model.OrderShipmentSearchModel.AvailablePageSizes,
-                        Filters = new List<FilterParameter>
-                        {
-                            new FilterParameter(nameof(ShipmentItemSearchModel.ShipmentId), nameof(ShipmentModel.Id), true)
-                        },
                         ColumnCollection = new List<ColumnProperty>
                         {
-                            new ColumnProperty(nameof(ShipmentItemModel.ProductName))
+                            new ColumnProperty(null)
                             {
-                                Title = T("Admin.Orders.Shipments.Products.ProductName").Text,
-                                Width = "400"
+                                Render = new RenderChildCaret(),
+                                Width = "5",
+                                Searchable = false,
+                                ClassName =  NopColumnClassDefaults.ChildControl
                             },
-                            new ColumnProperty(nameof(ShipmentItemModel.ShippedFromWarehouse))
+                            new ColumnProperty(nameof(ShipmentModel.Id))
                             {
-                                Title = T("Admin.Orders.Shipments.Products.Warehouse").Text,
-                                Width = "150"
+                                Title = T("Admin.Orders.Shipments.ID").Text,
+                                Width = "50"
                             },
-                            new ColumnProperty(nameof(ShipmentItemModel.QuantityInThisShipment))
+                            new ColumnProperty(nameof(ShipmentModel.CustomOrderNumber))
                             {
-                                Title = T("Admin.Orders.Shipments.Products.QtyShipped").Text,
-                                Width = "150"
+                                Title = T("Admin.Orders.Shipments.CustomOrderNumber").Text,
+                                Width = "100"
                             },
-                            new ColumnProperty(nameof(ShipmentItemModel.ItemWeight))
+                            new ColumnProperty(nameof(ShipmentModel.TrackingNumber))
                             {
-                                Title = T("Admin.Orders.Shipments.Products.ItemWeight").Text,
-                                Width = "150"
+                                Title = T("Admin.Orders.Shipments.TrackingNumber").Text,
+                                Width = "100"
                             },
-                            new ColumnProperty(nameof(ShipmentItemModel.ItemDimensions))
+                            new ColumnProperty(nameof(ShipmentModel.TotalWeight))
                             {
-                                Title = T("Admin.Orders.Shipments.Products.ItemDimensions").Text,
-                                Width = "150"
+                                Title = T("Admin.Orders.Shipments.TotalWeight").Text,
+                                Width = "100"
+                            },
+                            (Model.PickupInStore ? 
+                                new ColumnProperty(nameof(ShipmentModel.ReadyForPickupDate))
+                                {
+                                    Title = T("Admin.Orders.Shipments.ReadyForPickupDate").Text,
+                                    Width = "100"
+                                } : 
+                                new ColumnProperty(nameof(ShipmentModel.ShippedDate))
+                                {
+                                    Title = T("Admin.Orders.Shipments.ShippedDate").Text,
+                                    Width = "100"
+                                }),
+                            new ColumnProperty(nameof(ShipmentModel.DeliveryDate))
+                            {
+                                Title = T("Admin.Orders.Shipments.DeliveryDate").Text,
+                                Width = "100"
+                            },
+                            new ColumnProperty(nameof(ShipmentModel.Id))
+                            {
+                                Title = T("Admin.Common.View").Text,
+                                Width = "50",
+                                Render = new RenderButtonView(new DataUrl("~/Admin/Order/ShipmentDetails/"))
+                            }
+                        },
+                        ChildTable = new DataTablesModel
+                        {
+                            Name = "shipment-items-grid",
+                            UrlRead = new DataUrl("ShipmentsItemsByShipmentId", "Order", null),
+                            IsChildTable = true,
+                            Length = Model.OrderShipmentSearchModel.PageSize,
+                            LengthMenu = Model.OrderShipmentSearchModel.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
+                            {
+                                new FilterParameter(nameof(ShipmentItemSearchModel.ShipmentId), nameof(ShipmentModel.Id), true)
+                            },
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(ShipmentItemModel.ProductName))
+                                {
+                                    Title = T("Admin.Orders.Shipments.Products.ProductName").Text,
+                                    Width = "400"
+                                },
+                                new ColumnProperty(nameof(ShipmentItemModel.ShippedFromWarehouse))
+                                {
+                                    Title = T("Admin.Orders.Shipments.Products.Warehouse").Text,
+                                    Width = "150"
+                                },
+                                new ColumnProperty(nameof(ShipmentItemModel.QuantityInThisShipment))
+                                {
+                                    Title = T("Admin.Orders.Shipments.Products.QtyShipped").Text,
+                                    Width = "150"
+                                },
+                                new ColumnProperty(nameof(ShipmentItemModel.ItemWeight))
+                                {
+                                    Title = T("Admin.Orders.Shipments.Products.ItemWeight").Text,
+                                    Width = "150"
+                                },
+                                new ColumnProperty(nameof(ShipmentItemModel.ItemDimensions))
+                                {
+                                    Title = T("Admin.Orders.Shipments.Products.ItemDimensions").Text,
+                                    Width = "150"
+                                }
                             }
                         }
-                    }
-                })
-            </div>
-            @if (Model.CanAddNewShipments)
-            {
-                <div class="card-footer">
-                    <button type="submit" id="btnAddNewShipment" name="btnAddNewShipment" onclick="javascript:setLocation('@(Url.Action("AddShipment", "Order", new { id = Model.Id }))'); return false;" class="btn btn-primary">
-                        @T("Admin.Orders.Shipments.AddNew")
-                    </button>
+                    })
                 </div>
-            }
-        </div>
+                @if (Model.CanAddNewShipments)
+                {
+                    <div class="card-footer">
+                        <button type="submit" id="btnAddNewShipment" name="btnAddNewShipment" onclick="javascript:setLocation('@(Url.Action("AddShipment", "Order", new { id = Model.Id }))'); return false;" class="btn btn-primary">
+                            @T("Admin.Orders.Shipments.AddNew")
+                        </button>
+                    </div>
+                }
+            </div>
+        }
     }
 </div>

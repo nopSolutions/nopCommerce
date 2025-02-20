@@ -36,6 +36,8 @@ public partial record ProductTagModel : BaseNopEntityModel, ILocalizedModel<Prod
 
     public IList<ProductTagLocalizedModel> Locales { get; set; }
 
+    public ProductTagProductSearchModel ProductTagProductSearchModel { get; set; } = new();
+
     #endregion
 }
 
