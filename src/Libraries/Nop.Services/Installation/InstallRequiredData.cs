@@ -1568,6 +1568,7 @@ public partial class InstallationService
             ImportProductImagesUsingHash = true,
             AzureCacheControlHeader = string.Empty,
             UseAbsoluteImagePath = true,
+            AutoOrientImage = false,
             VideoIframeAllow = "fullscreen",
             VideoIframeWidth = 300,
             VideoIframeHeight = 150
@@ -1931,6 +1932,7 @@ public partial class InstallationService
             ShowOnProductReviewPage = false,
             ShowOnRegistrationPage = false,
             ShowOnCheckoutPageForGuests = false,
+            ShowOnCheckGiftCardBalance = true
         });
 
         await SaveSettingAsync(dictionary, new MessagesSettings { UsePopupNotifications = false });

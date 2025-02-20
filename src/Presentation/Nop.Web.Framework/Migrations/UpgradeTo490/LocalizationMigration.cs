@@ -28,6 +28,8 @@ public class LocalizationMigration : MigrationBase
             //#7569
             "Admin.Configuration.AppSettings.Common.PluginStaticFileExtensionsBlacklist",
             "Admin.Configuration.AppSettings.Common.PluginStaticFileExtensionsBlacklist.Hint",
+            //#7590
+            "Checkout.RedirectMessage"
         });
 
         #endregion
@@ -99,6 +101,14 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Catalog.ProductTags.Fields.MetaTitle"] = "Meta title",
             ["Admin.Catalog.ProductTags.Fields.MetaTitle.Hint"] = "Override the page title. The default is the name of the product tag.",
 
+            //#7571
+            ["Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnCheckGiftCardBalance"] = "Show on check gift card balance page",
+            ["Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnCheckGiftCardBalance.Hint"] = "Check to show CAPTCHA on check gift card balance page.",
+
+            //#5771
+            ["Admin.Catalog.ProductTags.TaggedProducts"] = "Used by products",
+            ["Admin.Catalog.ProductTags.TaggedProducts.Product"] = "Product",
+            ["Admin.Catalog.ProductTags.TaggedProducts.Published"] = "Published",
         }, languageId);
 
         #endregion

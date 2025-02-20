@@ -375,13 +375,10 @@ public partial class ManufacturerController : BaseAdminController
 
         var manufacturers = await _manufacturerService.GetManufacturersByIdsAsync(selectedIds.ToArray());
         await _manufacturerService.DeleteManufacturersAsync(manufacturers);
-
-        var locale = await _localizationService.GetResourceAsync("ActivityLog.DeleteManufacturer");
-        foreach (var manufacturer in manufacturers)
-        {
-            //activity log
-            await _customerActivityService.InsertActivityAsync("DeleteManufacturer", string.Format(locale, manufacturer.Name), manufacturer);
-        }
+        
+        //activity log
+        var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.DeleteManufacturer");
+        await _customerActivityService.InsertActivitiesAsync("DeleteManufacturer", manufacturers, manufacturer => string.Format(activityLogFormat, manufacturer.Name));
 
         return Json(new { Result = true });
     }
