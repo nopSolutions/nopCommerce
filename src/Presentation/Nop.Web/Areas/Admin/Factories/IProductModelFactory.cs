@@ -231,6 +231,16 @@ public partial interface IProductModelFactory
     Task<ProductTagModel> PrepareProductTagModelAsync(ProductTagModel model, ProductTag productTag, bool excludeProperties = false);
 
     /// <summary>
+    /// Prepare tagged product list model
+    /// </summary>
+    /// <param name="searchModel">Product search model</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains list model for the tagged products
+    /// </returns>
+    Task<ProductTagProductListModel> PrepareTaggedProductListModelAsync(ProductTagProductSearchModel searchModel);
+
+    /// <summary>
     /// Prepare paged product order list model
     /// </summary>
     /// <param name="searchModel">Product order search model</param>

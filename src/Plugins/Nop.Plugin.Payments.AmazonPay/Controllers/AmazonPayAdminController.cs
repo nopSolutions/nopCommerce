@@ -216,7 +216,7 @@ public class AmazonPayController : BasePaymentController
         await _settingService.SaveSettingOverridablePerStoreAsync(amazonPaySettings, settings => settings.PublicKey, model.Region_OverrideForStore, storeId, false);
         await _settingService.ClearCacheAsync();
 
-        return Content("Redirected");
+        return Empty;
     }
 
     #endregion

@@ -13,6 +13,9 @@
 
     const string hideSeoBlockAttributeName = "ProductTagPage.HideSeoBlock";
     var hideSeoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideSeoBlockAttributeName, defaultValue: true);
+    
+    const string hideTaggedProductsBlockAttributeName = "ProductTagPage.HideTaggedProductsBlock";
+    var hideTaggedProductsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideTaggedProductsBlockAttributeName, defaultValue: true);
 }
 
 <form asp-controller="Product" asp-action="EditProductTag" method="post">
@@ -50,6 +53,9 @@
                     </nop-card>
                     <nop-card asp-name="producttag-seo" asp-icon="fas fa-magnifying-glass-plus" asp-title="@T("Admin.Catalog.ProductTags.Seo")" asp-hide-block-attribute-name="@hideSeoBlockAttributeName" asp-hide="@hideSeoBlock">
                         @await Html.PartialAsync("_CreateOrUpdateProductTag.Seo", Model)
+                    </nop-card>
+                    <nop-card asp-name="tagged-products" asp-icon="fas fa-square-check" asp-title="@T("Admin.Catalog.ProductTags.TaggedProducts")" asp-hide-block-attribute-name="@hideTaggedProductsBlockAttributeName" asp-hide="@hideTaggedProductsBlock">
+                        @await Html.PartialAsync("_CreateOrUpdateProductTag.TaggedProducts", Model)
                     </nop-card>
                 </nop-cards>
             </div>

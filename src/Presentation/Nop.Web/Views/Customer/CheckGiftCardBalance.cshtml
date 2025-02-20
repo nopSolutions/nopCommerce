@@ -58,7 +58,10 @@
                         <nop-required />
                         <span asp-validation-for="GiftCardCode"></span>
                     </div>
-                    <nop-captcha />
+                    @if (Model.DisplayCaptcha)
+                    {
+                        <nop-captcha />
+                    }
                 </div>
             </div>
             <div class="buttons">
