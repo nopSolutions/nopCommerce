@@ -1568,6 +1568,7 @@ public partial class InstallationService
             ImportProductImagesUsingHash = true,
             AzureCacheControlHeader = string.Empty,
             UseAbsoluteImagePath = true,
+            AutoOrientImage = false,
             VideoIframeAllow = "fullscreen",
             VideoIframeWidth = 300,
             VideoIframeHeight = 150

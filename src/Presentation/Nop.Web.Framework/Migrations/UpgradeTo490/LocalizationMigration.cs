@@ -28,6 +28,8 @@ public class LocalizationMigration : MigrationBase
             //#7569
             "Admin.Configuration.AppSettings.Common.PluginStaticFileExtensionsBlacklist",
             "Admin.Configuration.AppSettings.Common.PluginStaticFileExtensionsBlacklist.Hint",
+            //#7590
+            "Checkout.RedirectMessage"
         });
 
         #endregion
