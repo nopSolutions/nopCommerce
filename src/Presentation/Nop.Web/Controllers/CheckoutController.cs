@@ -298,12 +298,8 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("OrderDetails", new { orderId = order.Id });
             }
 
-            // Fetch the order items
-            var orderItems = await _orderService.GetOrderItemsAsync(order.Id);
-
             //model
             var model = await _checkoutModelFactory.PrepareCheckoutCompletedModelAsync(order);
-            ViewBag.OrderItems = orderItems;
             return View(model);
         }
 

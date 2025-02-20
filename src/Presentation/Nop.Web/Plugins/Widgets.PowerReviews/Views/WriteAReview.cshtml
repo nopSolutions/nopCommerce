@@ -1,0 +1,31 @@
+@using Nop.Core
+@using Nop.Plugin.Widgets.PowerReviews
+
+@inject PowerReviewsSettings powerReviewsSettings
+@inject IWebHelper webHelper
+
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+}
+
+<div id="pr-write"></div>
+<script src="https://ui.powerreviews.com/stable/4.1/ui.js" async></script>
+      
+<script>
+    window.pwr = window.pwr || function () {
+       (pwr.q = pwr.q || []).push(arguments); 
+    };
+    pwr("render", {
+      api_key: '@powerReviewsSettings.APIKey',
+      locale: 'en_US',
+      merchant_group_id: '@powerReviewsSettings.MerchantGroupId',
+      merchant_id: '@powerReviewsSettings.MerchantId',
+      style_sheet: '@webHelper.GetStoreLocation()Plugins/Widgets.PowerReviews/styles/pr-war-styles.css',
+      on_submit: function(config, data){
+        window.scrollTo(0,0); 
+      },
+      components: {
+        Write: 'pr-write'
+      }
+    });
+</script>

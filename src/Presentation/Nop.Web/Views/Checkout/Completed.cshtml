@@ -7,9 +7,6 @@
     //page class
     Html.AppendPageCssClassParts("html-checkout-page");
     Html.AppendPageCssClassParts("html-order-completed-page");
-
-    var order = ViewBag.Order as Nop.Core.Domain.Orders.Order;
-    var orderItems = ViewBag.OrderItems as IList<Nop.Core.Domain.Orders.OrderItem>;
 }
 <div class="page checkout-page order-completed-page">
     @if (!Model.OnePageCheckoutEnabled)
@@ -40,27 +37,3 @@
         @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutCompletedBottom, additionalData = Model })
     </div>
 </div>
-
-@if (order != null)
-{
-<!--load Transaction event and parameters-->
-<script>
-window.bvCallback = function (BV) {
-    BV.pixel.trackTransaction({
-        "currency": "@order.CustomerCurrencyCode",
-        "orderId": "@order.Id",
-        "total": "@order.OrderTotal",
-        "items": [
-            @foreach (var item in orderItems)
-            {
-                <text>{
-                    "price": "@item.UnitPriceInclTax",
-                    "quantity": "@item.Quantity",
-                    "productId": "@item.ProductId"
-                },</text>
-            }
-        ]
-    });
-};
-</script>
-}

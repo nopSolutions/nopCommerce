@@ -342,8 +342,6 @@
                 <p class="item-number item-number-style">&nbsp;</p>
             }
 
-            <div class="product-box-review" data-bv-show="inline_rating" data-bv-product-id="@Model.Id"></div>
-
             <!-- ABC: custom - adds widget zone for reviews -->
             @await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.ProductBoxAddinfoReviews, additionalData = Model })
 

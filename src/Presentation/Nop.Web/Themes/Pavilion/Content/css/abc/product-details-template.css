@@ -29,7 +29,7 @@
 }
 
 .overview .short-description.short-description {
-    margin: 5px 0px;
+    margin: -5px 0px;
 }
 
 /*below overview stuff: prices, add to cart, etc*/
