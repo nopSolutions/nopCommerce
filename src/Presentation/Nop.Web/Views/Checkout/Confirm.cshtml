@@ -20,27 +20,29 @@
                 <script asp-location="Footer">
                     $(document).ready(function () {
                         $('.confirm-order-next-step-button').on('click', function () {
-                            //terms of service
                             var termOfServiceOk = true;
+                            var measurementConfirmed = true;
+
+                            // Validate Terms of Service
                             if ($('#termsofservice').length > 0) {
-                                //terms of service element exists
                                 if (!$('#termsofservice').is(':checked')) {
                                     $("#terms-of-service-warning-box").dialog();
                                     termOfServiceOk = false;
-                                } else {
-                                    termOfServiceOk = true;
                                 }
                             }
-                            if (termOfServiceOk) {
-                                //$('#confirm-order-form').submit();
-                                //$('.confirm-order-next-step-button').prop('disabled', true);
-                                return true;
-                            } else {
-                                return false;
+
+                            // Validate Measurement Confirmation
+                            if (!$('#measurement-confirmation').is(':checked')) {
+                                alert("You must confirm that you have measured your items and they will fit upon delivery.");
+                                measurementConfirmed = false;
                             }
+
+                            // Prevent form submission if validation fails
+                            return termOfServiceOk && measurementConfirmed;
                         });
                     });
                 </script>
+
                 @if (!string.IsNullOrEmpty(Model.MinOrderTotalWarning))
                 {
                     <span class="min-order-warning">@Model.MinOrderTotalWarning</span>
@@ -74,9 +76,17 @@
                             }
                         </div>
                     }
+
+                    <!-- New Measurement Confirmation Checkbox -->
+                    <div class="measurement-confirmation">
+                        <input id="measurement-confirmation" type="checkbox" name="measurement-confirmation" />
+                        <label for="measurement-confirmation">I have measured my items and they will fit upon delivery</label>
+                    </div>
+
                     <div class="buttons">
                         <button type="submit" name="nextstep" class="button-1 confirm-order-next-step-button">@T("Checkout.ConfirmButton")</button>
                     </div>
+
                     <script asp-location="Footer">
                         $('#confirm-order-form').on('submit',
                             function () {
