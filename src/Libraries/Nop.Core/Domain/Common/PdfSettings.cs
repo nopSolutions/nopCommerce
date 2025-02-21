@@ -3,7 +3,7 @@
 namespace Nop.Core.Domain.Common;
 
 /// <summary>
-/// PPDF settings
+/// PDF settings
 /// </summary>
 public partial class PdfSettings : ISettings
 {
@@ -46,4 +46,14 @@ public partial class PdfSettings : ISettings
     /// Gets or sets the text that will appear at the bottom of invoices (column 1)
     /// </summary>
     public string InvoiceFooterTextColumn2 { get; set; }
+
+    /// <summary>
+    /// Gets or sets the default font size
+    /// </summary>
+    public float BaseFontSize { get; set; }
+
+    /// <summary>
+    /// Gets or sets the size required to scale images before rendering
+    /// </summary>
+    public int ImageTargetSize { get; set; }
 }

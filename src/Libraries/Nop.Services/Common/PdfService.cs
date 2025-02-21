@@ -700,7 +700,8 @@ public partial class PdfService : IPdfService
         {
             StoreUrl = orderStore.Url?.Trim('/'),
             Language = language,
-            FontFamily = language.ResolveFontName(pdfSettingsByStore),
+            Font = language.ResolvePdfFont(pdfSettingsByStore),
+            ImageTargetSize = pdfSettingsByStore.ImageTargetSize,
             OrderDateUser = date.ToString("D", new CultureInfo(language.LanguageCulture)),
             LogoData = logo,
             OrderNumberText = order.CustomOrderNumber,
@@ -823,7 +824,8 @@ public partial class PdfService : IPdfService
         {
             PageSize = pdfSettingsByStore.LetterPageSizeEnabled ? PdfPageSize.Letter : PdfPageSize.A4,
             Language = language,
-            FontFamily = language.ResolveFontName(pdfSettingsByStore),
+            Font = language.ResolvePdfFont(pdfSettingsByStore),
+            ImageTargetSize = pdfSettingsByStore.ImageTargetSize,
             ShipmentNumberText = shipment.Id.ToString(),
             OrderNumberText = order.CustomOrderNumber,
             Address = await GetShippingAddressAsync(language, order),
@@ -887,7 +889,7 @@ public partial class PdfService : IPdfService
 
                 foreach (var pic in pictures)
                 {
-                    var picPath = await _pictureService.GetThumbLocalPathAsync(pic, 200, false);
+                    var picPath = await _pictureService.GetThumbLocalPathAsync(pic, pdfSettingsByStore.ImageTargetSize, false);
                     if (!string.IsNullOrEmpty(picPath))
                     {
                         picturePaths.Add(picPath);
@@ -903,8 +905,9 @@ public partial class PdfService : IPdfService
         var catalogDocument = new CatalogDocument
         {
             Language = lang,
+            ImageTargetSize = pdfSettingsByStore.ImageTargetSize,
             PageSize = pdfSettingsByStore.LetterPageSizeEnabled ? PdfPageSize.Letter : PdfPageSize.A4,
-            FontFamily = lang.ResolveFontName(pdfSettingsByStore),
+            Font = lang.ResolvePdfFont(pdfSettingsByStore),
             Products = productItems
         };
 

@@ -1,9 +1,11 @@
 ﻿using System.Linq.Expressions;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
-using Nop.Core.Domain.Localization;
+using iTextSharp.text.pdf.draw;
 using PdfRpt.Core.Contracts;
+using PdfRpt.Core.Helper;
 using PdfRpt.FluentInterface;
+using Language = Nop.Core.Domain.Localization.Language;
 
 namespace Nop.Services.Common.Pdf;
 
@@ -12,54 +14,164 @@ namespace Nop.Services.Common.Pdf;
 /// </summary>
 public abstract class PdfDocument<TItem>
 {
-    #region Fields
-
-    private string _fontName;
-
-    #endregion
-
     #region Utilities
 
-    protected virtual PdfGrid BuildAddressTable<TLabel>(Expression<Func<TLabel, AddressItem>> labelSelector, Font font, AddressItem address)
+    /// <summary>
+    /// Build a cell with a hyperlink 
+    /// </summary>
+    /// <param name="labelSelector">Property selector to get resource key annotation</param>
+    /// <param name="font">Font</param>
+    /// <param name="language">Language</param>
+    /// <param name="url">URL</param>
+    /// <returns>A cell for PDF table</returns>
+    protected virtual PdfPCell BuildHyperLinkCell<TLabel>(Expression<Func<TLabel, string>> labelSelector, string url)
+    {
+        ArgumentNullException.ThrowIfNull(labelSelector);
+        ArgumentNullException.ThrowIfNullOrEmpty(url);
+
+        var content = new Phrase();
+        var label = PdfDocumentHelper.LabelField(labelSelector, Font, Language);
+
+        if (label.IsEmpty())
+            label.Append(url);
+
+        content.Add(new Anchor(label) { Reference = url });
+
+        var cell = new PdfPCell(content)
+        {
+            HorizontalAlignment = Element.ALIGN_LEFT,
+            RunDirection = Language.GetPdfRunDirection(),
+            Border = 0,
+            Padding = 3
+        };
+
+        cell.SetLeading(0f, PdfDocumentHelper.RELATIVE_LEADING);
+
+        return cell;
+    }
+
+    /// <summary>
+    /// Build a cell with the given property
+    /// </summary>
+    /// <param name="labelSelector">Property selector to get resource key annotation</param>
+    /// <param name="value">Value to format</param>
+    /// <param name="font">Font</param>
+    /// <param name="language">Language</param>
+    /// <param name="horizontalAlign">Horizontal alignment</param>
+    /// <returns>A cell for PDF table</returns>
+    protected virtual PdfPCell BuildPdfPCell<TLabel>(Expression<Func<TLabel, string>> labelSelector, string value, int horizontalAlign = Element.ALIGN_LEFT)
+    {
+        var label = PdfDocumentHelper.LabelField(labelSelector, Font, Language, value);
+
+        var cell = new PdfPCell(new Phrase() { label })
+        {
+            RunDirection = Language.GetPdfRunDirection(),
+            HorizontalAlignment = horizontalAlign,
+            VerticalAlignment = Element.ALIGN_CENTER,
+            Border = 0,
+            Padding = 3
+        };
+
+        cell.SetLeading(0f, PdfDocumentHelper.RELATIVE_LEADING);
+
+        return cell;
+    }
+
+    /// <summary>
+    /// Build a cell with the given text
+    /// </summary>
+    /// <param name="text">Text</param>
+    /// <param name="language">Language</param>
+    /// <param name="font">Font</param>
+    /// <param name="collSpan">The number of columns occupied by a cell</param>
+    /// <param name="horizontalAlign">Horizontal alignment</param>
+    /// <param name="verticalAlignment">Vertical alignment</param>
+    /// <returns>A cell for PDF table</returns>
+    protected virtual PdfPCell BuildPdfPCell(string text, int collSpan = 1, int horizontalAlign = Element.ALIGN_LEFT, int verticalAlignment = Element.ALIGN_CENTER)
+    {
+        var cell = new PdfPCell(new Phrase(text, Font))
+        {
+            HorizontalAlignment = horizontalAlign,
+            VerticalAlignment = verticalAlignment,
+            Colspan = collSpan,
+            RunDirection = Language.GetPdfRunDirection(),
+            Border = 0,
+            Padding = 3
+        };
+
+        cell.SetLeading(0f, PdfDocumentHelper.RELATIVE_LEADING);
+
+        return cell;
+    }
+
+
+    /// <summary>
+    /// Build a cell for the given selector and text
+    /// </summary>
+    /// <param name="table">PDF table</param>
+    /// <param name="labelSelector">Property selector to get resource key annotation</param>
+    /// <param name="text">Text</param>
+    /// <param name="font">Font</param>
+    /// <param name="language">Language</param>
+    /// <returns>A cell for PDF table</returns>
+    protected virtual PdfPCell BuildTextCell<TLabel>(Expression<Func<TLabel, string>> labelSelector, string text)
+    {
+        ArgumentNullException.ThrowIfNull(labelSelector);
+        ArgumentNullException.ThrowIfNullOrEmpty(text);
+
+        var label = PdfDocumentHelper.LabelField(labelSelector, Font, Language);
+
+        var content = new Phrase() { label, new Chunk(":", Font), new Chunk(" ", Font), new Chunk(text, Font) };
+        var cell = new PdfPCell(content)
+        {
+            HorizontalAlignment = Element.ALIGN_LEFT,
+            RunDirection = Language.GetPdfRunDirection(),
+            Border = 0,
+            Padding = 3
+        };
+
+        cell.SetLeading(0f, PdfDocumentHelper.RELATIVE_LEADING);
+
+        return cell;
+    }
+
+    protected virtual PdfGrid BuildAddressTable<TLabel>(Expression<Func<TLabel, AddressItem>> labelSelector, AddressItem address)
     {
         ArgumentNullException.ThrowIfNull(address);
 
         var addressTable = PdfDocumentHelper.BuildPdfGrid(numColumns: 1, Language);
 
-        var fontBold = PdfDocumentHelper.GetFont(font, font.Size, DocumentFontStyle.Bold);
+        var fontBold = PdfDocumentHelper.GetFont(Font, Font.Size, DocumentFontStyle.Bold);
         var label = PdfDocumentHelper.LabelField(labelSelector, fontBold, Language);
 
         addressTable.AddCell(
-            new PdfPCell(new Phrase(label))
+            new PdfPCell(new Phrase(label) { new LineSeparator(2f, 100f, BaseColor.LightGray, Element.ALIGN_LEFT, -4) })
             {
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 RunDirection = Language.GetPdfRunDirection(),
-                Border = 0,
-                BorderWidthBottom = 2,
-                BorderColorBottom = BaseColor.LightGray,
-                PaddingBottom = 5
+                Border = 0
             });
 
         if (!string.IsNullOrEmpty(address?.Company))
-            addressTable.AddTextCell<AddressItem>(address => address.Company, address.Company, font, Language);
+            addressTable.AddCell(BuildTextCell<AddressItem>(address => address.Company, address.Company));
 
         if (!string.IsNullOrEmpty(address?.Name))
-            addressTable.AddTextCell<AddressItem>(address => address.Name, address?.Name, font, Language);
+            addressTable.AddCell(BuildTextCell<AddressItem>(address => address.Name, address?.Name));
 
         if (!string.IsNullOrEmpty(address?.Phone))
-            addressTable.AddTextCell<AddressItem>(address => address.Phone, address?.Phone, font, Language);
+            addressTable.AddCell(BuildTextCell<AddressItem>(address => address.Phone, address?.Phone));
 
         if (!string.IsNullOrEmpty(address?.AddressLine))
-            addressTable.AddTextCell<AddressItem>(address => address.AddressLine, address?.AddressLine, font, Language);
+            addressTable.AddCell(BuildTextCell<AddressItem>(address => address.AddressLine, address?.AddressLine));
 
         if (!string.IsNullOrEmpty(address?.VATNumber))
-            addressTable.AddTextCell<AddressItem>(address => address.VATNumber, address?.VATNumber, font, Language);
+            addressTable.AddCell(BuildTextCell<AddressItem>(address => address.VATNumber, address?.VATNumber));
 
         if (!string.IsNullOrEmpty(address?.PaymentMethod))
-            addressTable.AddTextCell<AddressItem>(address => address.PaymentMethod, address?.PaymentMethod, font, Language);
+            addressTable.AddCell(BuildTextCell<AddressItem>(address => address.PaymentMethod, address?.PaymentMethod));
 
         if (!string.IsNullOrEmpty(address?.ShippingMethod))
-            addressTable.AddTextCell<AddressItem>(address => address.ShippingMethod, address?.ShippingMethod, font, Language);
+            addressTable.AddCell(BuildTextCell<AddressItem>(address => address.ShippingMethod, address?.ShippingMethod));
 
         if (address?.CustomValues.Any() == true)
         {
@@ -76,6 +188,72 @@ public abstract class PdfDocument<TItem>
         return addressTable;
     }
 
+    /// <summary>
+    /// Specify default behavior for maintable column
+    /// </summary>
+    /// <param name="column">Column builder</param>
+    /// <param name="propertyExpression">Property selector for cells in the column</param>
+    /// <param name="language">Language</param>
+    /// <param name="font">Font</param>
+    /// <param name="width">The column's width according to the PdfRptPageSetup.MainTableColumnsWidthsType value</param>
+    /// <param name="printProductAttributes">Indicates that product attribute descriptions should be printed if they exist</param>
+    protected virtual void ConfigureProductColumn(ColumnAttributesBuilder column, Expression<Func<TItem, object>> propertyExpression, int width = 1, bool printProductAttributes = false)
+    {
+        column.PropertyName(propertyExpression);
+        column.CellsHorizontalAlignment(HorizontalAlignment.Left);
+        column.IsVisible(true);
+        column.Width(width);
+        column.HeaderCell(PdfDocumentHelper.LabelField(propertyExpression, Font, Language).Content, horizontalAlignment: HorizontalAlignment.Left);
+
+        column.ColumnItemsTemplate(itemsTemplate =>
+        {
+            itemsTemplate.InlineField(inlineField =>
+            {
+                inlineField.RenderCell(cellData =>
+                {
+                    var table = new PdfGrid(numColumns: 1)
+                    {
+                        WidthPercentage = 100,
+                        RunDirection = Language.GetPdfRunDirection(),
+                        HorizontalAlignment = Element.ALIGN_LEFT,
+                        SpacingAfter = 5,
+                        SpacingBefore = 5
+                    };
+
+                    var data = cellData.Attributes.RowData.TableRowData;
+                    var text = data.GetSafeStringValueOf(propertyExpression);
+
+                    table.AddCell(BuildPdfPCell(text, verticalAlignment: Element.ALIGN_TOP));
+
+                    if (printProductAttributes)
+                    {
+                        var productAttributes = (List<string>)data.GetValueOf((ProductItem x) => x.ProductAttributes);
+                        var font8Italic = PdfDocumentHelper.GetFont(Font, Font.Size * 0.8f, DocumentFontStyle.Italic);
+
+                        foreach (var pa in productAttributes)
+                        {
+                            table.AddCell(new PdfPCell(new Phrase(pa, font8Italic))
+                            {
+                                RunDirection = Language.GetPdfRunDirection(),
+                                HorizontalAlignment = Element.ALIGN_LEFT,
+                                Border = 0
+                            });
+                        }
+                    }
+
+                    return new PdfPCell(table)
+                    {
+                        RunDirection = Language.GetPdfRunDirection(),
+                        BorderWidthBottom = 2,
+                        BorderColorBottom = BaseColor.LightGray,
+                        MinimumHeight = 25,
+                        VerticalAlignment = Element.ALIGN_CENTER
+                    };
+                });
+            });
+        });
+    }
+
     protected virtual PdfReport DefaultDocument()
     {
         return new PdfReport()
@@ -84,10 +262,6 @@ public abstract class PdfDocument<TItem>
                 doc.RunDirection(Language.Rtl ? PdfRunDirection.RightToLeft : PdfRunDirection.LeftToRight);
                 doc.Orientation(PageOrientation.Portrait);
                 doc.PageSize(PageSize);
-            })
-            .DefaultFonts(fonts =>
-            {
-                fonts.Size(PdfDocumentHelper.BASE_FONT_SIZE);
             })
             .MainTableEvents(events =>
             {
@@ -122,11 +296,6 @@ public abstract class PdfDocument<TItem>
     protected PdfReport Document => DefaultDocument();
 
     /// <summary>
-    /// Gets the language Id
-    /// </summary>
-    public int LanguageId => Language?.Id ?? 0;
-    
-    /// <summary>
     /// Gets or sets a collection of shipping items
     /// </summary>
     public List<TItem> Products { get; init; }
@@ -142,9 +311,14 @@ public abstract class PdfDocument<TItem>
     public required PdfPageSize PageSize { get; init; }
 
     /// <summary>
-    /// Gets or sets the font name. Loaded from the ~/App_Data/Pdf directory during application start. The default font is Tahoma.
+    /// Gets or sets the font name. Loaded from the ~/App_Data/Pdf directory during application start.
     /// </summary>
-    public required string FontFamily { get; init; }
+    public required Font Font { get; init; }
+
+    /// <summary>
+    /// Gets or sets the size required to scale images before rendering
+    /// </summary>
+    public required int ImageTargetSize { get; init; }
 
     #endregion
 }

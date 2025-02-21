@@ -21,7 +21,6 @@
     <PackageReference Include="MaxMind.GeoIP2" Version="5.2.0" />
     <PackageReference Include="Microsoft.Identity.Client" Version="4.66.2" />
     <PackageReference Include="PdfRpt.Core" Version="1.5.15" />
-    <PackageReference Include="QuestPDF" Version="2022.12.15" />
     <PackageReference Include="System.ServiceModel.Http" Version="8.1.0" />
     <PackageReference Include="SkiaSharp" Version="3.116.1" />
     <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.116.1" />

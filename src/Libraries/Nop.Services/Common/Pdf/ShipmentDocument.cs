@@ -14,9 +14,8 @@ public partial class ShipmentDocument : PdfDocument<ProductItem>
     {
         var headerTable = PdfDocumentHelper.BuildPdfGrid(numColumns: 1, Language);
 
-        var font = PdfDocumentHelper.GetFont(FontFamily);
-        headerTable.AddCell(PdfDocumentHelper.BuildPdfPCell<ShipmentDocument>(source => OrderNumberText, OrderNumberText, font, Language));
-        headerTable.AddCell(PdfDocumentHelper.BuildPdfPCell<ShipmentDocument>(source => ShipmentNumberText, ShipmentNumberText, font, Language));
+        headerTable.AddCell(BuildPdfPCell<ShipmentDocument>(source => OrderNumberText, OrderNumberText));
+        headerTable.AddCell(BuildPdfPCell<ShipmentDocument>(source => ShipmentNumberText, ShipmentNumberText));
 
         return headerTable;
     }
@@ -34,7 +33,6 @@ public partial class ShipmentDocument : PdfDocument<ProductItem>
     /// </param>
     public override void Generate(Stream pdfStreamOutput)
     {
-        var font = PdfDocumentHelper.GetFont(FontFamily);
         var languageId = Language?.Id ?? 0;
 
         Document
@@ -55,14 +53,14 @@ public partial class ShipmentDocument : PdfDocument<ProductItem>
             })
             .MainTableColumns(columns =>
             {
-                columns.AddColumn(column => column.ConfigureProductColumn<ProductItem>(p => p.Name, Language, font, width: 10));
-                columns.AddColumn(column => column.ConfigureProductColumn<ProductItem>(p => p.Sku, Language, font, width: 3));
-                columns.AddColumn(column => column.ConfigureProductColumn<ProductItem>(p => p.Quantity, Language, font, width: 3));
+                columns.AddColumn(column => ConfigureProductColumn(column, p => p.Name, width: 10));
+                columns.AddColumn(column => ConfigureProductColumn(column, p => p.Sku, width: 3));
+                columns.AddColumn(column => ConfigureProductColumn(column, p => p.Quantity, width: 3));
 
             })
             .MainTableEvents(events => events.MainTableCreated(events =>
             {
-                events.PdfDoc.Add(BuildAddressTable<ShipmentDocument>(p => p.Address, font, Address));
+                events.PdfDoc.Add(BuildAddressTable<ShipmentDocument>(p => p.Address, Address));
             }))
             .Generate(builder => builder.AsPdfStream(pdfStreamOutput, closeStream: false));
     }

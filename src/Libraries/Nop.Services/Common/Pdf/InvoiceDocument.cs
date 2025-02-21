@@ -13,36 +13,33 @@ public partial class InvoiceDocument : PdfDocument<ProductItem>
 {
     #region Utilities
 
-    private PdfGrid CreateAdressesInfo()
+    protected virtual PdfGrid CreateAdressesInfo()
     {
-        var font = PdfDocumentHelper.GetFont(FontFamily);
-        var billingInfo = PdfDocumentHelper.BuildPdfPCell(
-            BuildAddressTable<InvoiceDocument>(source => BillingAddress, font, BillingAddress), Language);
-        var shippingInfo = PdfDocumentHelper.BuildPdfPCell(
-            BuildAddressTable<InvoiceDocument>(source => ShippingAddress, font, ShippingAddress), Language);
+        var hasShipping = !string.IsNullOrEmpty(ShippingAddress.ShippingMethod);
+        var addressesTable = PdfDocumentHelper.BuildPdfGrid(numColumns: hasShipping ? 2 : 1, Language);
 
-        var addressesTable = PdfDocumentHelper.BuildPdfGrid(numColumns: 2, Language);
-
-        billingInfo.Padding = 5;
-        shippingInfo.Padding = 5;
-
+        var billingInfo = PdfDocumentHelper.BuildPdfPCell(BuildAddressTable<InvoiceDocument>(source => BillingAddress, BillingAddress), Language);
         addressesTable.AddCell(billingInfo);
-        addressesTable.AddCell(shippingInfo);
+
+        if (hasShipping)
+        {
+            var shippingInfo = PdfDocumentHelper.BuildPdfPCell(BuildAddressTable<InvoiceDocument>(source => ShippingAddress, ShippingAddress), Language);
+            addressesTable.AddCell(shippingInfo);
+        }
 
         return addressesTable;
     }
 
-    private PdfGrid CreateInvoiceHeader()
+    protected virtual PdfGrid CreateInvoiceHeader()
     {
         var headerTable = PdfDocumentHelper.BuildPdfGrid(numColumns: 2, Language);
-        var font = PdfDocumentHelper.GetFont(FontFamily);
 
         var info = PdfDocumentHelper.BuildPdfGrid(numColumns: 1, Language);
         info.SpacingAfter = 15;
 
-        info.AddCell(PdfDocumentHelper.BuildPdfPCell<InvoiceDocument>(source => OrderNumberText, OrderNumberText, font, Language));
-        info.AddCell(PdfDocumentHelper.BuildHyperLinkCell<InvoiceDocument>(source => StoreUrl, font, Language, StoreUrl));
-        info.AddTextCell<InvoiceDocument>(source => OrderDateUser, OrderDateUser, font, Language);
+        info.AddCell(BuildPdfPCell<InvoiceDocument>(source => OrderNumberText, OrderNumberText));
+        info.AddCell(BuildHyperLinkCell<InvoiceDocument>(source => StoreUrl, StoreUrl));
+        info.AddCell(BuildTextCell<InvoiceDocument>(source => OrderDateUser, OrderDateUser));
 
         headerTable.AddCell(PdfDocumentHelper.BuildPdfPCell(info, Language, horizontalAlign: Element.ALIGN_LEFT));
 
@@ -60,7 +57,11 @@ public partial class InvoiceDocument : PdfDocument<ProductItem>
         }
         else
         {
-            headerTable.AddEmptyCell();
+            headerTable.AddCell(new PdfPCell(new Phrase())
+            {
+                Border = 0,
+                Padding = 0
+            });
         }
 
         headerTable.AddCell(PdfDocumentHelper.BuildPdfPCell(CreateAdressesInfo(), Language, collSpan: 2));
@@ -68,9 +69,8 @@ public partial class InvoiceDocument : PdfDocument<ProductItem>
         return headerTable;
     }
 
-    private PdfGrid CreateFooter(FooterData footerData)
+    protected virtual PdfGrid CreateFooter(FooterData footerData)
     {
-        var font = PdfDocumentHelper.GetFont(FontFamily);
         var footerTable = PdfDocumentHelper.BuildPdfGrid(numColumns: 2, Language);
 
         if (!FooterTextColumn1.Any() && !FooterTextColumn2.Any())
@@ -78,67 +78,68 @@ public partial class InvoiceDocument : PdfDocument<ProductItem>
 
         var footer1Table = PdfDocumentHelper.BuildPdfGrid(numColumns: 1, Language);
         foreach (var line in FooterTextColumn1)
-            footer1Table.AddCell(PdfDocumentHelper.BuildPdfPCell(line, Language, font));
+            footer1Table.AddCell(BuildPdfPCell(line));
 
         var footer2Table = PdfDocumentHelper.BuildPdfGrid(numColumns: 1, Language);
         foreach (var line in FooterTextColumn2)
-            footer2Table.AddCell(PdfDocumentHelper.BuildPdfPCell(line, Language, font));
+            footer2Table.AddCell(BuildPdfPCell(line));
 
         footerTable.AddCell(PdfDocumentHelper.BuildPdfPCell(footer1Table, Language));
         footerTable.AddCell(PdfDocumentHelper.BuildPdfPCell(footer2Table, Language));
 
-        footerTable.AddCell(PdfDocumentHelper.BuildPdfPCell($"- {footerData.CurrentPageNumber} -", Language, font, collSpan: 2, horizontalAlign: Element.ALIGN_CENTER));
+        footerTable.AddCell(BuildPdfPCell($"- {footerData.CurrentPageNumber} -", collSpan: 2, horizontalAlign: Element.ALIGN_CENTER));
 
         return footerTable;
     }
 
-    private PdfGrid CreateSummary()
+    protected virtual PdfGrid CreateSummary()
     {
         var summaryData = PdfDocumentHelper.BuildPdfGrid(numColumns: 1, Language);
-        var font = PdfDocumentHelper.GetFont(FontFamily);
 
         if (!string.IsNullOrEmpty(Totals.SubTotal))
-            summaryData.AddTextCell<InvoiceTotals>(totals => totals.SubTotal, Totals.SubTotal, font, Language);
+            summaryData.AddCell(BuildTextCell<InvoiceTotals>(totals => totals.SubTotal, Totals.SubTotal));
         if (!string.IsNullOrEmpty(Totals.Discount))
-            summaryData.AddTextCell<InvoiceTotals>(totals => totals.Discount, Totals.Discount, font, Language);
+            summaryData.AddCell(BuildTextCell<InvoiceTotals>(totals => totals.Discount, Totals.Discount));
         if (!string.IsNullOrEmpty(Totals.Shipping))
-            summaryData.AddTextCell<InvoiceTotals>(totals => totals.Shipping, Totals.Shipping, font, Language);
+            summaryData.AddCell(BuildTextCell<InvoiceTotals>(totals => totals.Shipping, Totals.Shipping));
         if (!string.IsNullOrEmpty(Totals.PaymentMethodAdditionalFee))
-            summaryData.AddTextCell<InvoiceTotals>(totals => totals.PaymentMethodAdditionalFee, Totals.PaymentMethodAdditionalFee, font, Language);
+            summaryData.AddCell(BuildTextCell<InvoiceTotals>(totals => totals.PaymentMethodAdditionalFee, Totals.PaymentMethodAdditionalFee));
         if (!string.IsNullOrEmpty(Totals.Tax))
-            summaryData.AddTextCell<InvoiceTotals>(totals => totals.Tax, Totals.Tax, font, Language);
+            summaryData.AddCell(BuildTextCell<InvoiceTotals>(totals => totals.Tax, Totals.Tax));
 
         foreach (var rate in Totals.TaxRates)
-            summaryData.AddCell(PdfDocumentHelper.BuildPdfPCell(rate, Language, font));
+            summaryData.AddCell(BuildPdfPCell(rate));
 
         foreach (var card in Totals.GiftCards)
-            summaryData.AddCell(PdfDocumentHelper.BuildPdfPCell(card, Language, font));
+            summaryData.AddCell(BuildPdfPCell(card));
 
         if (!string.IsNullOrEmpty(Totals.RewardPoints))
-            summaryData.AddTextCell<InvoiceTotals>(totals => totals.Tax, Totals.RewardPoints, font, Language);
+            summaryData.AddCell(BuildTextCell<InvoiceTotals>(totals => totals.RewardPoints, Totals.RewardPoints));
         if (!string.IsNullOrEmpty(Totals.OrderTotal))
-            summaryData.AddTextCell<InvoiceTotals>(totals => totals.OrderTotal, Totals.OrderTotal, font, Language);
+            summaryData.AddCell(BuildTextCell<InvoiceTotals>(totals => totals.OrderTotal, Totals.OrderTotal));
 
         return summaryData;
     }
 
-    private PdfGrid CreateCheckoutAttributes()
+    protected virtual PdfGrid CreateCheckoutAttributes()
     {
         var attributesData = PdfDocumentHelper.BuildPdfGrid(numColumns: 1, Language);
-        var font = PdfDocumentHelper.GetFont(FontFamily);
 
-        attributesData.AddCell(PdfDocumentHelper.BuildPdfPCell(CheckoutAttributes, Language, font));
+        attributesData.AddCell(BuildPdfPCell(CheckoutAttributes));
 
         return attributesData;
     }
 
-    private PdfGrid CreateOrderNotes()
+    protected virtual PdfGrid CreateOrderNotes()
     {
         var notesTable = PdfDocumentHelper.BuildPdfGrid(numColumns: 2, Language);
+
+        if (OrderNotes?.Any() != true)
+            return notesTable;
+
         notesTable.SetWidths([2, 5]);
 
-        var font = PdfDocumentHelper.GetFont(FontFamily);
-        var fontBold = PdfDocumentHelper.GetFont(font, font.Size, DocumentFontStyle.Bold);
+        var fontBold = PdfDocumentHelper.GetFont(Font, Font.Size, DocumentFontStyle.Bold);
         var label = PdfDocumentHelper.LabelField<InvoiceDocument, List<(string, string)>>(invoice => invoice.OrderNotes, fontBold, Language);
 
         notesTable.AddCell(
@@ -153,8 +154,8 @@ public partial class InvoiceDocument : PdfDocument<ProductItem>
 
         foreach (var (date, note) in OrderNotes)
         {
-            notesTable.AddCell(PdfDocumentHelper.BuildPdfPCell(Language.Rtl ? date.FixWeakCharacters() : date, Language, font));
-            notesTable.AddCell(PdfDocumentHelper.BuildPdfPCell(note, Language, font));
+            notesTable.AddCell(BuildPdfPCell(Language.Rtl ? date.FixWeakCharacters() : date));
+            notesTable.AddCell(BuildPdfPCell(note));
         }
 
         return notesTable;
@@ -194,15 +195,14 @@ public partial class InvoiceDocument : PdfDocument<ProductItem>
             })
             .MainTableColumns(columns =>
             {
-                var font = PdfDocumentHelper.GetFont(FontFamily);
-                columns.AddColumn(column => column.ConfigureProductColumn<ProductItem>(p => p.Name, Language, font, width: 10, printProductAttributes: true));
+                columns.AddColumn(column => ConfigureProductColumn(column, p => p.Name, width: 10, printProductAttributes: true));
                 if (ShowSkuInProductList)
-                    columns.AddColumn(column => column.ConfigureProductColumn<ProductItem>(p => p.Sku, Language, font, width: 3));
+                    columns.AddColumn(column => ConfigureProductColumn(column, p => p.Sku, width: 3));
                 if (ShowVendorInProductList)
-                    columns.AddColumn(column => column.ConfigureProductColumn<ProductItem>(p => p.VendorName, Language, font, width: 3));
-                columns.AddColumn(column => column.ConfigureProductColumn<ProductItem>(p => p.Price, Language, font, width: 3));
-                columns.AddColumn(column => column.ConfigureProductColumn<ProductItem>(p => p.Quantity, Language, font, width: 2));
-                columns.AddColumn(column => column.ConfigureProductColumn<ProductItem>(p => p.Total, Language, font, width: 3));
+                    columns.AddColumn(column => ConfigureProductColumn(column, p => p.VendorName, width: 3));
+                columns.AddColumn(column => ConfigureProductColumn(column, p => p.Price, width: 3));
+                columns.AddColumn(column => ConfigureProductColumn(column, p => p.Quantity, width: 2));
+                columns.AddColumn(column => ConfigureProductColumn(column, p => p.Total, width: 3));
             })
             .MainTableEvents(events =>
             {
@@ -218,7 +218,7 @@ public partial class InvoiceDocument : PdfDocument<ProductItem>
 
                     summaryTable.AddCell(new PdfPCell() { Colspan = 2, Border = 0 });
                     summaryTable.AddCell(PdfDocumentHelper.BuildPdfPCell(CreateSummary(), Language));
-                    
+
                     events.PdfDoc.Add(summaryTable);
                     events.PdfDoc.Add(CreateOrderNotes());
                 });
@@ -250,7 +250,7 @@ public partial class InvoiceDocument : PdfDocument<ProductItem>
     /// <summary>
     /// Gets or sets store location
     /// </summary>
-    public string StoreUrl { get; set; }
+    public string StoreUrl { get; init; }
 
     /// <summary>
     /// Gets or sets the billing address
