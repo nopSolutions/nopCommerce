@@ -33,7 +33,7 @@
                             new ColumnProperty(nameof(AbcPromoModel.Name))
                             {
                                 Title = "Name",
-                                Width = "100"
+                                Width = "50"
                             },
                             new ColumnProperty(nameof(AbcPromoModel.Description))
                             {
@@ -43,7 +43,7 @@
                             new ColumnProperty(nameof(AbcPromoModel.StartDate))
                             {
                                 Title = "Start Date",
-                                Width = "100",
+                                Width = "50",
                                 Render = new RenderDate() {
                                     Format = "MM/DD/YYYY"
                                 }
@@ -51,7 +51,7 @@
                             new ColumnProperty(nameof(AbcPromoModel.EndDate))
                             {
                                 Title = "End Date",
-                                Width = "100",
+                                Width = "50",
                                 Render = new RenderDate() {
                                     Format = "MM/DD/YYYY"
                                 }
@@ -59,6 +59,20 @@
                             new ColumnProperty(nameof(AbcPromoModel.IsActive))
                             {
                                 Title = "Active",
+                                Width = "50",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(AbcPromoModel.IsABC))
+                            {
+                                Title = "ABC",
+                                Width = "50",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(AbcPromoModel.IsHawthorne))
+                            {
+                                Title = "Hawthorne",
                                 Width = "50",
                                 ClassName = NopColumnClassDefaults.CenterAll,
                                 Render = new RenderBoolean()

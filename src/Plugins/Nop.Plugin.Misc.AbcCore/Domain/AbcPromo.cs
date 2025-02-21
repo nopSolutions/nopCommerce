@@ -6,16 +6,18 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Nop.Core.Domain.Stores;
 
 namespace Nop.Plugin.Misc.AbcCore.Domain
 {
-    public partial class AbcPromo : BaseEntity, ISlugSupported
+    public partial class AbcPromo : BaseEntity, ISlugSupported, IStoreMappingSupported
     {
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public int? ManufacturerId { get; set; }
+        public bool LimitedToStores { get; set; }
 
         public bool IsActive()
         {

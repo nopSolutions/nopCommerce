@@ -1,0 +1,277 @@
+{
+    "InstalledPluginNames": [
+      "Obsolete field, using only for compatibility"
+    ],
+    "InstalledPlugins": [
+      {
+        "SystemName": "Payments.Manual",
+        "Version": "1.55"
+      },
+      {
+        "SystemName": "Shipping.FedEx",
+        "Version": "1.36"
+      },
+      {
+        "SystemName": "Tax.CountryStateZip",
+        "Version": null
+      },
+      {
+        "SystemName": "SevenSpikes.Core",
+        "Version": "4.4"
+      },
+      {
+        "SystemName": "SevenSpikes.Nop.Plugins.AnywhereSliders",
+        "Version": "4.40"
+      },
+      {
+        "SystemName": "SevenSpikes.Nop.Plugins.JCarousel",
+        "Version": "4.40"
+      },
+      {
+        "SystemName": "SevenSpikes.Nop.Plugins.MegaMenu",
+        "Version": "4.4"
+      },
+      {
+        "SystemName": "SevenSpikes.Nop.Plugins.ProductRibbons",
+        "Version": "4.4"
+      },
+      {
+        "SystemName": "SevenSpikes.Nop.Plugins.NopQuickTabs",
+        "Version": "4.4"
+      },
+      {
+        "SystemName": "SevenSpikes.Nop.Plugins.RichBlog",
+        "Version": "4.4"
+      },
+      {
+        "SystemName": "SevenSpikes.Theme.Pavilion",
+        "Version": "4.4"
+      },
+      {
+        "SystemName": "SevenSpikes.Nop.Plugins.HtmlWidgets",
+        "Version": "4.40"
+      },
+      {
+        "SystemName": "SevenSpikes.Nop.Plugins.StoreLocator",
+        "Version": "4.4"
+      },
+      {
+        "SystemName": "AbcWarehouse.ProdutFeatureWidget",
+        "Version": null
+      },
+      {
+        "SystemName": "AbcWarehouse.PickupInStore",
+        "Version": null
+      },
+      {
+        "SystemName": "AbcWarehouse.FrontEnd",
+        "Version": null
+      },
+      {
+        "SystemName": "Misc.GiftCardProcessing",
+        "Version": null
+      },
+      {
+        "SystemName": "AbcWarehouse.StatusApi",
+        "Version": null
+      },
+      {
+        "SystemName": "AbcWarehouse.MarkdownDateWidget",
+        "Version": null
+      },
+      {
+        "SystemName": "AbcWarehouse.HomeDeliveryStatusWidget",
+        "Version": null
+      },
+      {
+        "SystemName": "AbcWarehouse.ContactUsWidget",
+        "Version": null
+      },
+      {
+        "SystemName": "Shipping.HomeDelivery",
+        "Version": "4.40.0"
+      },
+      {
+        "SystemName": "AbcWarehouse.Import",
+        "Version": null
+      },
+      {
+        "SystemName": "AbcWarehouse.SliExport",
+        "Version": null
+      },
+      {
+        "SystemName": "Uco.CustomRedirect",
+        "Version": null
+      },
+      {
+        "SystemName": "AbcWarehouse.Synchrony",
+        "Version": null
+      },
+      {
+        "SystemName": "Misc.UpdownIOIntegration",
+        "Version": null
+      },
+      {
+        "SystemName": "AbcWarehouse.MultipleCollections",
+        "Version": null
+      },
+      {
+        "SystemName": "Misc.SearchPageRedirect",
+        "Version": "4.40.0"
+      },
+      {
+        "SystemName": "BrainStation.ProductVideo",
+        "Version": null
+      },
+      {
+        "SystemName": "Misc.FreshAddressNewsletterIntegration",
+        "Version": "4.40.0"
+      },
+      {
+        "SystemName": "Misc.AzureWebTestsIntegration",
+        "Version": "1.00"
+      },
+      {
+        "SystemName": "Widgets.SynchronyPayments",
+        "Version": null
+      },
+      {
+        "SystemName": "Widgets.AbcBonusBundle",
+        "Version": "4.40.0"
+      },
+      {
+        "SystemName": "Misc.AbcFrontend",
+        "Version": "4.40.0"
+      },
+      {
+        "SystemName": "Misc.AbcSync",
+        "Version": "4.40.2"
+      },
+      {
+        "SystemName": "Misc.EnhancedLogging",
+        "Version": "4.40.0"
+      },
+      {
+        "SystemName": "Misc.AbcSliExport",
+        "Version": "4.40.0"
+      },
+      {
+        "SystemName": "Misc.AbcStatusApi",
+        "Version": "4.40.0"
+      },
+      {
+        "SystemName": "Widgets.AbcHomeDeliveryStatus",
+        "Version": "4.40.0"
+      },
+      {
+        "SystemName": "Widgets.AbcPickupInStore",
+        "Version": "4.40.0"
+      },
+      {
+        "SystemName": "Widgets.AbcMarkdownDate",
+        "Version": "4.40.0"
+      },
+      {
+        "SystemName": "Widgets.AbcContactUs",
+        "Version": "4.40.0"
+      },
+      {
+        "SystemName": "Misc.AbcCore",
+        "Version": "4.40.4"
+      },
+      {
+        "SystemName": "EllaSoftware.CronTasks",
+        "Version": "4.40.0"
+      },
+      {
+        "SystemName": "Misc.AbcSiteOnTimeSync",
+        "Version": "4.40.0"
+      },
+      {
+        "SystemName": "Misc.AbcExportOrder",
+        "Version": "4.40.0"
+      },
+      {
+        "SystemName": "Widgets.AbcPromos",
+        "Version": "4.40.0"
+      },
+      {
+        "SystemName": "Widgets.GAEnhanced",
+        "Version": "1.1"
+      },
+      {
+        "SystemName": "Widgets.AbcEnergyGuide",
+        "Version": "4.40.0"
+      },
+      {
+        "SystemName": "Misc.AbcMattresses",
+        "Version": "4.40.1"
+      },
+      {
+        "SystemName": "Widgets.PowerReviews",
+        "Version": "4.40.1"
+      },
+      {
+        "SystemName": "Tax.AbcTax",
+        "Version": "4.40.1"
+      },
+      {
+        "SystemName": "Widgets.Flixmedia",
+        "Version": "4.40.0"
+      },
+      {
+        "SystemName": "Misc.SLI",
+        "Version": "4.40.0"
+      },
+      {
+        "SystemName": "Widgets.Listrak",
+        "Version": "4.40.0"
+      },
+      {
+        "SystemName": "Widgets.GA4",
+        "Version": "4.40.0"
+      },
+      {
+        "SystemName": "SevenSpikes.Nop.Plugins.AjaxFilters",
+        "Version": "4.4"
+      },
+      {
+        "SystemName": "Widgets.CartSlideout",
+        "Version": "4.40.0"
+      },
+      {
+        "SystemName": "Payments.UniFi",
+        "Version": "4.40.0"
+      },
+      {
+        "SystemName": "Widgets.UniFi",
+        "Version": "4.40.0"
+      },
+      {
+        "SystemName": "Widgets.PriceSpider",
+        "Version": "4.40.0"
+      },
+      {
+        "SystemName": "Widgets.AddressAutocomplete",
+        "Version": "4.40.0"
+      },
+      {
+        "SystemName": "Misc.Redirect",
+        "Version": "4.40.0"
+      },
+      {
+        "SystemName": "NopAdvance.DiscountRules.CartSubTotal",
+        "Version": "1.2"
+      },
+      {
+        "SystemName": "Widgets.PercentOffAppliancesMessage",
+        "Version": "4.40.0"
+      }
+    ],
+    "PluginNamesToUninstall": [],
+    "PluginNamesToDelete": [
+      "Widgets.Bronto",
+      "DiscountRequirement.BuyOne50OffGrouped"
+    ],
+    "PluginNamesToInstall": []
+  }

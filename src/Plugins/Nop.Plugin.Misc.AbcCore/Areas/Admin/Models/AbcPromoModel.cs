@@ -10,6 +10,8 @@ namespace Nop.Plugin.Misc.AbcCore.Areas.Admin.Models
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public bool IsActive { get; set; }
+        public bool IsABC { get; set; }
+        public bool IsHawthorne { get; set; }
         public string Manufacturer { get; set; }
         public string Slug { get; set; }
         public int ProductCount { get; set; }

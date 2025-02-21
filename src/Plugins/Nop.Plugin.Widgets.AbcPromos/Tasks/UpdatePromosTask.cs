@@ -12,6 +12,7 @@ using Nop.Services.Seo;
 using Nop.Services.Tasks;
 using Task = System.Threading.Tasks.Task;
 using Nop.Plugin.Misc.AbcCore.Data;
+using Nop.Services.Stores;
 
 namespace Nop.Plugin.Widgets.AbcPromos.Tasks
 {
@@ -25,6 +26,7 @@ namespace Nop.Plugin.Widgets.AbcPromos.Tasks
 
         private readonly IAbcPromoService _abcPromoService;
         private readonly IManufacturerService _manufacturerService;
+        private readonly IStoreMappingService _storeMappingService;
         private readonly IUrlRecordService _urlRecordService;
 
         private readonly GenerateRebatePromoPageTask _generateRebatePromoPageTask;
@@ -36,6 +38,7 @@ namespace Nop.Plugin.Widgets.AbcPromos.Tasks
             ICustomNopDataProvider nopDataProvider,
             IAbcPromoService abcPromoService,
             IManufacturerService manufacturerService,
+            IStoreMappingService storeMappingService,
             IUrlRecordService urlRecordService,
             GenerateRebatePromoPageTask generateRebatePromoPageTask
         )
@@ -45,6 +48,7 @@ namespace Nop.Plugin.Widgets.AbcPromos.Tasks
             _nopDataProvider = nopDataProvider;
             _abcPromoService = abcPromoService;
             _manufacturerService = manufacturerService;
+            _storeMappingService = storeMappingService;
             _urlRecordService = urlRecordService;
             _generateRebatePromoPageTask = generateRebatePromoPageTask;
         }
@@ -61,10 +65,45 @@ namespace Nop.Plugin.Widgets.AbcPromos.Tasks
             }
 
             var promos = await _abcPromoService.GetAllPromosAsync();
+            // consider combining these steps so we loop through promos only once
             await SetPromoManufacturersAsync(promos);
             await SetPromoSlugsAsync(promos);
+            await UpdateStoreMappings(promos);
 
             await _generateRebatePromoPageTask.ExecuteAsync();
+        }
+
+        private async Task UpdateStoreMappings(IList<AbcPromo> promos)
+        {
+            foreach (var promo in promos)
+            {
+                var newStoreMappingIds = new HashSet<int>();
+                var products = await _abcPromoService.GetProductsByPromoIdAsync(promo.Id);
+                foreach (var product in products)
+                {
+                    var storeMappings =
+                        await _storeMappingService.GetStoreMappingsAsync(product);
+
+                    foreach (var storeMapping in storeMappings)
+                    {
+                        newStoreMappingIds.Add(storeMapping.StoreId);
+                    }
+                }
+
+                var existingPromoStoreMappings = await _storeMappingService.GetStoreMappingsAsync(promo);
+
+                var toBeDeleted = existingPromoStoreMappings
+                    .Where(e => !newStoreMappingIds.Any(n => n == e.StoreId));
+                var toBeInserted = newStoreMappingIds
+                    .Where(n => !existingPromoStoreMappings.Any(e => n == e.StoreId));
+
+                toBeInserted.ToList().ForEach(async n => {
+                    await _storeMappingService.InsertStoreMappingAsync(promo, n);
+                });
+                toBeDeleted.ToList().ForEach(async e => {
+                    await _storeMappingService.DeleteStoreMappingAsync(e);
+                });
+            }
         }
 
         private async Task SetPromoManufacturersAsync(IList<AbcPromo> promos)
