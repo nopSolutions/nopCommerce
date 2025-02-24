@@ -23,11 +23,13 @@ public partial class EventPublisher : IEventPublisher
         var consumers = EngineContext.Current.ResolveAll<IConsumer<TEvent>>().ToList();
 
         foreach (var consumer in consumers)
-        {
             try
             {
                 //try to handle published event
                 await consumer.HandleEventAsync(@event);
+
+                if (@event is IStopProcessingEvent { StopProcessing: true })
+                    break;
             }
             catch (Exception exception)
             {
@@ -45,7 +47,6 @@ public partial class EventPublisher : IEventPublisher
                     // ignored
                 }
             }
-        }
     }
 
     /// <summary>
@@ -63,6 +64,9 @@ public partial class EventPublisher : IEventPublisher
             {
                 //try to handle published event
                 consumer.HandleEventAsync(@event).Wait();
+
+                if (@event is IStopProcessingEvent { StopProcessing: true })
+                    break;
             }
             catch (Exception exception)
             {

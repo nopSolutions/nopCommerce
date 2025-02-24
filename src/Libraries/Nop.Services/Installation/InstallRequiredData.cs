@@ -1,23 +1,27 @@
 ﻿using System.ComponentModel;
 using System.Globalization;
 using System.Security.Cryptography;
+using System.Text;
 using System.Xml;
-using Nop.Core.Domain.Blogs;
-using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain;
 using Nop.Core;
 using Nop.Core.Configuration;
+using Nop.Core.Domain;
+using Nop.Core.Domain.Blogs;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
+using Nop.Core.Domain.ScheduleTasks;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
@@ -32,10 +36,6 @@ using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Seo;
-using Nop.Core.Domain.Logging;
-using Nop.Core.Domain.ScheduleTasks;
-using Nop.Core.Domain.Configuration;
-using System.Text;
 
 namespace Nop.Services.Installation;
 
@@ -356,7 +356,6 @@ public partial class InstallationService
         //download and import language pack
         try
         {
-
             var httpClient = _httpClientFactory.CreateClient(NopHttpDefaults.DefaultHttpClient);
             await using var stream = await httpClient.GetStreamAsync(_installationSettings.LanguagePackDownloadLink);
             using var streamReader = new StreamReader(stream);

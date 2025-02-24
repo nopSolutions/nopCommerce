@@ -71,7 +71,7 @@ public class EventConsumer :
 
     #endregion
 
-    #region Utitites
+    #region Utilities
 
     /// <summary>
     /// Checks is the current customer has rights to access this menu item
