@@ -1339,7 +1339,7 @@ public partial class ProductController : BaseAdminController
             var newProduct = await _copyProductService.CopyProductAsync(originalProduct, copyModel.Name, copyModel.Published, copyModel.CopyMultimedia);
 
             //publishing post copy product event
-            await _eventPublisher.PublishAsync(new PostCopyProductEvent(originalProduct, newProduct);
+            await _eventPublisher.PublishAsync(new PostCopyProductEvent(originalProduct, newProduct));
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Copied"));
 
