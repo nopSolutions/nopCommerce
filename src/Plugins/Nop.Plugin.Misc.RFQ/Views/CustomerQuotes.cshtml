@@ -1,0 +1,56 @@
+@model List<Nop.Plugin.Misc.RFQ.Models.Customer.QuoteModel>
+
+@{
+
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.Account").Text);
+    NopHtml.AddTitleParts(T("Plugins.Misc.RFQ.Quotes").Text);
+
+    NopHtml.AddCssFileParts(@"~/Plugins/Misc.RFQ/Content/styles.css", null);
+
+    //page class
+    NopHtml.AppendPageCssClassParts("html-account-page");
+    NopHtml.AppendPageCssClassParts("html-rfq-requests-page");
+}
+
+@section left
+{
+    @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = RfqDefaults.QuotesTabId })
+}
+
+<div class="page account-page request-list-page">
+
+    <div class="page-title">
+        <h1>@T("Account.MyAccount") - @T("Plugins.Misc.RFQ.Quotes")</h1>
+    </div>
+    <div class="page-body">
+        @if (!Model.Any())
+        {
+            <div class="no-data">@T("Plugins.Misc.RFQ.CustomerRequests.NoQuotes")</div>
+        }
+        else
+        {
+            @foreach (var quote in Model)
+            {
+                <div class="section">
+                    <div class="title">
+                        <strong>@string.Format(T("Plugins.Misc.RFQ.QuoteNumber").Text, quote.Id)</strong>
+                    </div>
+                    <ul class="info">
+                        <li>@T("Plugins.Misc.RFQ.Fields.Quote.CreatedOn"): <span>@quote.CreatedOn</span></li>
+                        @if (quote.ExpirationDate.HasValue)
+                        {
+                            <li>@T("Plugins.Misc.RFQ.Fields.Quote.ExpirationDate"): <span>@quote.ExpirationDate</span></li>
+                        }
+                        <li>@T("Plugins.Misc.RFQ.Fields.Quote.Status"): <span>@quote.Status</span></li>
+                    </ul>
+                    <div class="buttons">
+                        <button type="button" class="button-2" onclick="setLocation('@Url.RouteUrl(RfqDefaults.CustomerQuoteRouteName, new { quoteId = quote.Id })')">@T("Plugins.Misc.RFQ.CustomerQuote.Info")</button>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

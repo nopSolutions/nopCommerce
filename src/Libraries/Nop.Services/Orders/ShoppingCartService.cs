@@ -1393,6 +1393,12 @@ public partial class ShoppingCartService : IShoppingCartService
     {
         ArgumentNullException.ThrowIfNull(shoppingCartItem);
 
+        //allow third-party handlers to select the unit price
+        var unitPriceEvent = new GetShoppingCartItemUnitPriceEvent(shoppingCartItem, includeDiscounts);
+        await _eventPublisher.PublishAsync(unitPriceEvent);
+        if (unitPriceEvent.StopProcessing)
+            return (unitPriceEvent.UnitPrice, unitPriceEvent.DiscountAmount, unitPriceEvent.AppliedDiscounts);
+
         var customer = await _customerService.GetCustomerByIdAsync(shoppingCartItem.CustomerId);
         var product = await _productService.GetProductByIdAsync(shoppingCartItem.ProductId);
         var store = await _storeService.GetStoreByIdAsync(shoppingCartItem.StoreId);

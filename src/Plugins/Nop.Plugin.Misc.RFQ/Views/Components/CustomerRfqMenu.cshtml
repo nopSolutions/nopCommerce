@@ -1,0 +1,8 @@
+@model Nop.Web.Models.Customer.CustomerNavigationModel
+
+<li class="customer-rfqs @(Model.SelectedTab == RfqDefaults.RequestsTabId ? "active" : "inactive")">
+    <a href="@Url.RouteUrl(RfqDefaults.CustomerRequestsRouteName)">@T("Plugins.Misc.RFQ.RequestsQuote")</a>
+</li>
+<li class="customer-quotes @(Model.SelectedTab == RfqDefaults.QuotesTabId ? "active" : "inactive")">
+    <a href="@Url.RouteUrl(RfqDefaults.CustomerQuotesRouteName)">@T("Plugins.Misc.RFQ.Quotes")</a>
+</li>
