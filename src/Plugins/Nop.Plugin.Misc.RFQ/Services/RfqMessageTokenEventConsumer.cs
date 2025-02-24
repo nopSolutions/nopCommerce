@@ -1,0 +1,18 @@
+﻿using Nop.Core.Domain.Messages;
+using Nop.Services.Events;
+
+namespace Nop.Plugin.Misc.RFQ.Services;
+
+public class RfqMessageTokenEventConsumer : IConsumer<AdditionalTokensAddedEvent>
+{
+    #region Methods
+
+    public Task HandleEventAsync(AdditionalTokensAddedEvent eventMessage)
+    {
+        eventMessage.AddTokens("%RequestQuote.Id%", "%RequestQuote.CreatedOn%", "%RequestQuote.URL%", "%Quote.Id%", "%Quote.CreatedOn%", "%Quote.ExpirationOn%", "%Quote.URL%");
+
+        return Task.CompletedTask;
+    }
+
+    #endregion
+}
