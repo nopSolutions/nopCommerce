@@ -1,0 +1,30 @@
+﻿@model Nop.Plugin.Misc.RFQ.Models.Admin.ConfigurationModel
+
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+<form asp-controller="RfqAdmin" asp-action="Configure" method="post">
+    <section class="content">
+        <div class="container-fluid">			
+            <div class="card card-default">
+                <div class="card-body">
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="Enabled" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="Enabled" />
+                            <span asp-validation-for="Enabled"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-9 offset-md-3">
+                            <input type="submit" name="save" class="btn btn-primary" value="@T("Admin.Common.Save")" />
+                        </div>
+                    </div>
+                </div>
+            </div>			
+        </div>
+    </section>
+</form>

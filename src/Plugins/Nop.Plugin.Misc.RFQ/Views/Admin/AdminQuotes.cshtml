@@ -1,0 +1,199 @@
+@using Nop.Plugin.Misc.RFQ.Models.Admin
+@model QuoteSearchModel
+
+@{
+    Layout = "_AdminLayout";
+    //page title
+    ViewBag.PageTitle = T("Plugins.Misc.RFQ.Quotes").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName(RfqDefaults.QuotesAdminMenuSystemName);
+}
+
+@{
+    const string hideSearchBlockAttributeName = "AdminQuotes.HideSearchBlock";
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
+}
+
+<form asp-controller="RfqAdmin" asp-action="AdminQuotes" method="post">
+    <input asp-for="CustomerId" type="hidden" />
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Plugins.Misc.RFQ.Quotes")
+        </h1>
+        <div class="float-right">
+            <button type="submit" id="btnCreate" name="btnCreate" style="display: none"></button>
+            <button type="submit" id="btnCreateNewQuote" onclick="javascript:OpenWindow('@Url.Action("SelectCustomerPopup", "RfqAdmin", new { btnId = "btnCreate", productIdInput = Html.IdFor(model => model.CustomerId) })', 800, 850, true); return false;" class="btn btn-info">
+                <i class="fas fa-plus-square"></i>
+                @T("Plugins.Misc.RFQ.CreateNew")
+            </button>
+            <button type="button" id="delete-selected" name="delete-selected" class="btn btn-danger">
+                <i class="far fa-trash-alt"></i>
+                @T("Plugins.Misc.RFQ.DeleteSelected")
+            </button>
+            <nop-action-confirmation asp-button-id="delete-selected"/>
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div class="cards-group">
+                    <div class="card card-default card-search">
+                        <div class="card-body">
+                            <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                                <div class="search-text">@T("Admin.Common.Search")</div>
+                                <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                                <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                            </div>
+
+                            <div class="search-body @(hideSearchBlock ? "closed" : "")">
+
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <div class="form-group row">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="CreatedOnFrom"/>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-editor asp-for="CreatedOnFrom"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="CreatedOnTo"/>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-editor asp-for="CreatedOnTo"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <div class="form-group row">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="CustomerEmail"/>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-editor asp-for="CustomerEmail"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="QuoteStatus"/>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-select asp-for="QuoteStatus" asp-items="Model.AvailableQuoteStatuses"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="text-center col-12">
+                                        <button type="button" id="search-log" class="btn btn-primary btn-search">
+                                            <i class="fas fa-search"></i>
+                                            @T("Admin.Common.Search")
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card card-default">
+                        <div class="card-body">
+                            @await Html.PartialAsync("Table", new DataTablesModel
+                            {
+                                Name = "quotes-grid",
+                                UrlRead = new DataUrl("QuoteList", "RfqAdmin", null),
+                                SearchButtonId = "search-log",
+                                Length = Model.PageSize,
+                                LengthMenu = Model.AvailablePageSizes,
+                                Filters = new List<FilterParameter>
+                                {
+                                    new(nameof(Model.CreatedOnFrom)),
+                                    new(nameof(Model.CreatedOnTo)),
+                                    new(nameof(Model.CustomerEmail)),
+                                    new(nameof(Model.QuoteStatus))
+                                },
+                                ColumnCollection = new List<ColumnProperty>
+                                {
+                                    new(nameof(QuoteModel.Id))
+                                    {
+                                        IsMasterCheckBox = true,
+                                        Render = new RenderCheckBox("checkbox_log"),
+                                        ClassName = NopColumnClassDefaults.CenterAll,
+                                        Width = "50"
+                                    },
+                                    new(nameof(QuoteModel.CreatedOn))
+                                    {
+                                        Title = T("Plugins.Misc.RFQ.Fields.Quote.CreatedOn").Text,
+                                        Width = "200",
+                                        Render = new RenderDate()
+                                    },
+                                    new(nameof(QuoteModel.ExpirationDateUtc))
+                                    {
+                                        Title = T("Plugins.Misc.RFQ.Fields.Quote.ExpirationDate").Text,
+                                        Width = "200",
+                                        Render = new RenderDate()
+                                    },
+                                    new(nameof(QuoteModel.Status))
+                                    {
+                                        Title = T("Plugins.Misc.RFQ.Fields.Quote.Status").Text,
+                                        Encode = false,
+                                        Width = "200",
+                                    },
+                                    new(nameof(QuoteModel.CustomerEmail))
+                                    {
+                                        Title = T("Plugins.Misc.RFQ.Fields.CustomerEmail").Text,
+                                        Encode = true,
+                                        Width = "200",
+                                    },
+                                    new(nameof(QuoteModel.Id))
+                                    {
+                                        Title = T("Admin.Common.View").Text,
+                                        Width = "100",
+                                        ClassName = NopColumnClassDefaults.Button,
+                                        Render = new RenderButtonView(new DataUrl("~/Admin/RfqAdmin/AdminQuote"))
+                                    }
+                                }
+                            })
+
+                            <script>
+                                $(function() {
+                                    //"delete selected" button
+                                    $("#delete-selected-action-confirmation-submit-button").bind("click", function () {
+                                        var postData = {
+                                            selectedIds: selectedIds
+                                        };
+                                        addAntiForgeryToken(postData);
+                                        $.ajax({
+                                            cache: false,
+                                            type: "POST",
+                                            url: "@(Url.Action("DeleteSelectedQuotes", "RfqAdmin"))",
+                                            data: postData,
+                                            traditional: true,
+                                            error: function (jqXHR, textStatus, errorThrown) {
+                                                showAlert('deleteSelectedFailed', errorThrown);
+                                            },
+                                            complete: function (jqXHR, textStatus) {
+                                                if (jqXHR.status === 204)
+                                                {
+                                                    showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                                                    return;
+                                                }
+                                                updateTable('#quotes-grid');
+                                            }
+                                        });
+                                        $('#delete-selected-action-confirmation').modal('toggle');
+                                        return false;
+                                    });
+                                });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+<nop-alert asp-alert-id="deleteSelectedFailed" />
+<nop-alert asp-alert-id="nothingSelectedAlert" />

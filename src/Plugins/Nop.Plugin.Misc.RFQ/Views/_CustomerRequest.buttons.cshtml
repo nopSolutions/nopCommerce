@@ -1,0 +1,34 @@
+@model Nop.Plugin.Misc.RFQ.Models.Customer.RequestQuoteModel
+
+<div class="request-options">
+    <div class="common-buttons">
+        
+        @if (Model.DisplayDeleteRequestButton)
+        {
+            <button id="delete-request" type="submit" name="delete" class="button-1">@T("Admin.Common.Delete")</button>
+        }
+
+        @if (Model.DisplayCancelRequestButton)
+        {
+            <button id="cancel-request" type="submit" name="cancel" class="button-1">@T("Admin.Common.Cancel")</button>
+        }
+
+        @if (Model.DisplaySendRequestButton)
+        {
+            <button type="submit" name="send" class="button-1">@T("Plugins.Misc.RFQ.SendRequest")</button>
+            <button type="submit" name="back-to-cart" class="button-1">@T("Plugins.Misc.RFQ.BackToShoppingCart")</button>
+        }
+    </div>
+</div>
+
+<script asp-location="Footer">
+    $(function() {
+        $('#delete-request').on('click', function() {
+            return confirm('@T("Common.AreYouSure")');
+        });
+
+        $('#cancel-request').on('click', function() {
+            return confirm('@T("Common.AreYouSure")');
+        });
+    });
+</script>
