@@ -1,0 +1,21 @@
+﻿using Nop.Core.Domain.Customers;
+using Nop.Services.Security;
+
+namespace Nop.Plugin.Misc.RFQ.Services;
+
+/// <summary>
+/// RFQ permission provider
+/// </summary>
+public class RfqPermissionConfigManager : IPermissionConfigManager
+{
+    public const string ACCESS_RFQ = "AccessRFQ";
+
+    /// <summary>
+    /// Gets all permission configurations
+    /// </summary>
+    public IList<PermissionConfig> AllConfigs =>
+        new List<PermissionConfig>
+        {
+            new("Access to the customer’s Request and Price Offer functionality", ACCESS_RFQ , nameof(StandardPermission.Orders), NopCustomerDefaults.AdministratorsRoleName)
+        };
+}

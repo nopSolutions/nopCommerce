@@ -1,0 +1,5 @@
+<script asp-location="Footer">
+    $(function () {
+        $('#checkout').after('<div style="margin-top:10px;"><a class="button-1 checkout-button" href="@Url.RouteUrl(RfqDefaults.CustomerRequestRouteName)">@T("Plugins.Misc.RFQ.CreateRequest")</a></div>');
+    });
+</script>

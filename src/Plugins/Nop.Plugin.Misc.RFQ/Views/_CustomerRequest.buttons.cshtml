@@ -1,0 +1,22 @@
+@model Nop.Plugin.Misc.RFQ.Models.Customer.RequestQuoteModel
+
+<div class="request-options">
+    <div class="common-buttons">
+        
+        @if (Model.DisplayDeleteRequestButton)
+        {
+            <button type="submit" name="delete" class="button-1">@T("Admin.Common.Delete")</button>
+        }
+
+        @if (Model.DisplayCancelRequestButton)
+        {
+            <button type="submit" name="cancel" class="button-1">@T("Admin.Common.Cancel")</button>
+        }
+
+        @if (Model.DisplaySendRequestButton)
+        {
+            <button type="submit" name="send" class="button-1">@T("Plugins.Misc.RFQ.SendRequest")</button>
+            <button type="submit" name="back-to-cart" class="button-1">@T("Plugins.Misc.RFQ.BackToShoppingCart")</button>
+        }
+    </div>
+</div>
