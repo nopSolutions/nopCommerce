@@ -11,6 +11,34 @@
     <h1 class="float-left">
         @T("Admin.Reports.Customers.RegisteredCustomers")
     </h1>
+    <form asp-controller="Report" method="post">
+            <div class="float-right">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-success">
+                        <i class="fas fa-download"></i>
+                        @T("Admin.Common.Export")
+                    </button>
+                    <button type="button" class="btn btn-success dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false">
+                        <span class="sr-only">&nbsp;</span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li class="dropdown-item">
+                            <button asp-action="ExportRegisteredCustomersXmlAll" type="submit" name="exportxml-all">
+                                <i class="far fa-file-code"></i>
+                                @T("Admin.Common.ExportToXml")
+                            </button>
+                        </li>
+                        <li class="dropdown-divider"></li>
+                        <li class="dropdown-item">
+                            <button asp-action="ExportRegisteredCustomersExcelAll" type="submit" name="exportexcel-all">
+                                <i class="far fa-file-excel"></i>
+                                @T("Admin.Common.ExportToExcel")
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            </form>
 </div>
 <section class="content">
     <div class="container-fluid">    
