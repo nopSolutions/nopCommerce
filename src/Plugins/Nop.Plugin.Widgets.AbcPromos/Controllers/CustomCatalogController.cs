@@ -17,6 +17,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Services.Localization;
 using System;
 using Microsoft.AspNetCore.Http;
+using Nop.Services.Stores;
+using Nop.Plugin.Misc.AbcCore.Domain;
 
 namespace Nop.Plugin.Misc.AbcPromos.Controllers
 {
@@ -32,6 +34,8 @@ namespace Nop.Plugin.Misc.AbcPromos.Controllers
         private readonly ICatalogModelFactory _catalogModelFactory;
 
         private readonly ILogger _logger;
+        private readonly IStoreContext _storeContext;
+        private readonly IStoreMappingService _storeMappingService;
 
         private readonly AbcPromosSettings _settings;
         private readonly CatalogSettings _catalogSettings;
@@ -45,6 +49,8 @@ namespace Nop.Plugin.Misc.AbcPromos.Controllers
             IProductModelFactory productModelFactory,
             ICatalogModelFactory categoryModelFactory,
             ILogger logger,
+            IStoreContext storeContext,
+            IStoreMappingService storeMappingService,
             AbcPromosSettings settings,
             CatalogSettings catalogSettings,
             IHttpContextAccessor httpContextAccessor
@@ -58,8 +64,38 @@ namespace Nop.Plugin.Misc.AbcPromos.Controllers
             _productModelFactory = productModelFactory;
             _catalogModelFactory = categoryModelFactory;
             _logger = logger;
+            _storeContext = storeContext;
+            _storeMappingService = storeMappingService;
             _settings = settings;
             _catalogSettings = catalogSettings;
+        }
+
+        public async Task<IActionResult> PromoListingPage()
+        {
+            var promos = _settings.IncludeExpiredPromosOnRebatesPromosPage ?
+                            (await _abcPromoService.GetActivePromosAsync()).Union(await _abcPromoService.GetExpiredPromosAsync()) :
+                            await _abcPromoService.GetActivePromosAsync();
+
+            // filter by active store
+            var activeStoreId = (await _storeContext.GetCurrentStoreAsync()).Id;
+            var storePromos = new List<AbcPromo>();
+            foreach (var promo in promos)
+            {
+                var storeMappings = await _storeMappingService.GetStoreMappingsAsync(promo);
+                foreach (var sm in storeMappings)
+                {
+                    if (sm.StoreId == activeStoreId)
+                    {
+                        storePromos.Add(promo);
+                        break;
+                    }
+                }
+            }
+
+            // Filter to promos with published products only
+            storePromos = await storePromos.WhereAwait(async p => (await _abcPromoService.GetPublishedProductsByPromoIdAsync(p.Id)).Any()).ToListAsync();
+
+            return View("~/Plugins/Widgets.AbcPromos/Views/PromoListingPage.cshtml", storePromos);
         }
 
         public async Task<IActionResult> Promo(string promoSlug, CatalogProductsCommand command)
@@ -82,6 +118,9 @@ namespace Nop.Plugin.Misc.AbcPromos.Controllers
             if (!shouldDisplay) return InvokeHttp404();
 
             var promoProducts = await _abcPromoService.GetPublishedProductsByPromoIdAsync(promo.Id);
+
+            // need to filter by store here
+            promoProducts = await FilterByStoreAsync(promoProducts);
 
             // if a category is provided, filter by it
             var filterCategory = await GetFilterCategoryAsync();
@@ -130,6 +169,23 @@ namespace Nop.Plugin.Misc.AbcPromos.Controllers
             await PrepareSortingOptionsAsync(model, command);
 
             return View("~/Plugins/Widgets.AbcPromos/Views/PromoListing.cshtml", model);
+        }
+
+        private async Task<List<Product>> FilterByStoreAsync(IList<Product> products)
+        {
+            var activeStoreId = (await _storeContext.GetCurrentStoreAsync()).Id;
+            var result = new List<Product>();
+
+            foreach (var product in products)
+            {
+                var storeMappings = await _storeMappingService.GetStoreMappingsAsync(product);
+                if (storeMappings.Select(sm => sm.StoreId).Contains(activeStoreId))
+                {
+                    result.Add(product);
+                }
+            }
+
+            return result;
         }
 
         private async Task<Category> GetFilterCategoryAsync()

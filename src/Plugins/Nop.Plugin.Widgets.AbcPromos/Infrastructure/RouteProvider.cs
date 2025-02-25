@@ -15,6 +15,10 @@ namespace Nop.Plugin.Misc.AbcPromos.Infrastructure
         }
         public void RegisterRoutes(IEndpointRouteBuilder endpointRouteBuilder)
         {
+            endpointRouteBuilder.MapControllerRoute("PromoListingPage",
+                            "rebates-and-promos",
+                            new { controller = "CustomCatalog", action = "PromoListingPage" });
+
             endpointRouteBuilder.MapControllerRoute("PromoListings",
                             "promos/{promoSlug}",
                             new { controller = "CustomCatalog", action = "Promo" });

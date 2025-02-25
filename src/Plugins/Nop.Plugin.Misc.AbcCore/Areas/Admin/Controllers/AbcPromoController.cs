@@ -117,6 +117,11 @@ namespace Nop.Plugin.Misc.AbcCore.Areas.Admin.Controllers
             var products = await _abcPromoService.GetProductsByPromoIdAsync(searchModel.AbcPromoId);
             var productsPaged = products.ToPagedList(searchModel);
 
+            // get stores to list mapping:
+            var stores = await _storeService.GetAllStoresAsync();
+            var abcStore = stores.First(s => s.Name.Contains("ABC"));
+            var hawStore = stores.First(s => s.Name.Contains("Haw"));
+
             var model = await new AbcPromoProductListModel().PrepareToGridAsync(searchModel, productsPaged, () =>
             {
                 return products.SelectAwait(async product =>
@@ -124,12 +129,15 @@ namespace Nop.Plugin.Misc.AbcCore.Areas.Admin.Controllers
                     var productAbcDescription =
                         await _productAbcDescriptionService.GetProductAbcDescriptionByProductIdAsync(product.Id);
                     var abcItemNumber = productAbcDescription?.AbcItemNumber;
+                    var storeMappings = await _storeMappingService.GetStoreMappingsAsync(product);
 
                     var abcPromoProductModel = new AbcPromoProductModel()
                     {
                         AbcItemNumber = abcItemNumber,
                         Name = product.Name,
-                        Published = product.Published
+                        Published = product.Published,
+                        IsABC = storeMappings.FirstOrDefault(storeMappings => storeMappings.StoreId == abcStore.Id) != null,
+                        IsHawthorne = storeMappings.FirstOrDefault(storeMappings => storeMappings.StoreId == hawStore.Id) != null,
                     };
 
                     return abcPromoProductModel;

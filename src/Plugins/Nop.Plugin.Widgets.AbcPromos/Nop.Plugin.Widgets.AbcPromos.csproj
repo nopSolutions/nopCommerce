@@ -16,6 +16,7 @@
 		<None Remove="Views/Configure.cshtml" />
 		<None Remove="Views/DisplayBanner.cshtml" />
 		<None Remove="Views/PromoListing.cshtml" />
+		<None Remove="Views/PromoListingPage.cshtml" />
 		<None Remove="Views/ProductBoxPromos.cshtml" />
 		<None Remove="Views/ProductDetailPromos.cshtml" />
 		<None Remove="styles/product-box.css" />
@@ -39,6 +40,9 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 		<Content Include="Views/PromoListing.cshtml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Views/PromoListingPage.cshtml">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 		<Content Include="Views/ProductBoxPromos.cshtml">

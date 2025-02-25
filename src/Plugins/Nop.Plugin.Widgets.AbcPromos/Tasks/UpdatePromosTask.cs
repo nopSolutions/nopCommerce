@@ -78,7 +78,7 @@ namespace Nop.Plugin.Widgets.AbcPromos.Tasks
             foreach (var promo in promos)
             {
                 var newStoreMappingIds = new HashSet<int>();
-                var products = await _abcPromoService.GetProductsByPromoIdAsync(promo.Id);
+                var products = await _abcPromoService.GetPublishedProductsByPromoIdAsync(promo.Id);
                 foreach (var product in products)
                 {
                     var storeMappings =

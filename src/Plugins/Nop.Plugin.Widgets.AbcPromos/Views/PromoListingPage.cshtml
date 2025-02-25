@@ -1,0 +1,40 @@
+@model IList<AbcPromo>
+
+@using Nop.Plugin.Misc.AbcCore.Domain
+@using Nop.Services.Catalog
+@using Nop.Services.Seo
+
+@inject IManufacturerService manufacturerService
+@inject IUrlRecordService urlRecordService
+
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    Html.AddTitleParts("Rebates/Promos");
+
+    //page class
+    Html.AppendPageCssClassParts("html-promo-listing-page");
+}
+
+<div class="page category-page">
+    <div class="page-title">
+        @* <h1>@Model.Name</h1> *@
+        <h1>Rebates and Promos</h1>
+    </div>
+    <div class="page-body">
+        <div class="abc-container abc-promo-container">
+            @foreach (var promo in Model)
+            {
+                var promoDescription = promo.ManufacturerId != null ?
+                    $"{(await manufacturerService.GetManufacturerByIdAsync(promo.ManufacturerId.Value)).Name} - {promo.Description}" :
+                    promo.Description;
+                var slug = await urlRecordService.GetActiveSlugAsync(promo.Id, "AbcPromo", 0);
+                <div class="abc-item abc-promo-item">
+                    <a href="/promos/@slug">@promoDescription</a><br />
+                    <span>Expires @promo.EndDate.ToString("MM-dd-yy")</span>
+                </div>
+            }
+        </div>
+    </div>
+</div>
