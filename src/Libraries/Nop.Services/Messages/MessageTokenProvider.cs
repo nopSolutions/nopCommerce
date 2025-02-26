@@ -1100,7 +1100,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         tokens.Add(new Token("Order.PaymentMethod", paymentMethodName));
         tokens.Add(new Token("Order.VatNumber", order.VatNumber));
         var sbCustomValues = new StringBuilder();
-        var customValues = _paymentService.DeserializeCustomValues(order);
+        var customValues = CommonHelper.DeserializeCustomValuesFromXml(order.CustomValuesXml);
         if (customValues != null)
         {
             foreach (var item in customValues)

@@ -112,7 +112,7 @@ public partial record AddressItem
     /// <summary>
     /// Gets or sets the deserialized CustomValues (values from ProcessPaymentRequest)
     /// </summary>
-    public Dictionary<string, object> CustomValues { get; set; }
+    public Dictionary<string, string> CustomValues { get; set; }
 
     #endregion
 }
