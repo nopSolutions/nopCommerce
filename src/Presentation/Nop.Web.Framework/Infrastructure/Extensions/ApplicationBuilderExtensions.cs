@@ -69,16 +69,16 @@ public static class ApplicationBuilderExtensions
             await pluginService.InstallPluginsAsync();
             await pluginService.UpdatePluginsAsync();
 
+            //insert new ACL permission if exists
+            var permissionService = engine.Resolve<IPermissionService>();
+            await permissionService.InsertPermissionsAsync();
+
             //update nopCommerce core and db
             var migrationManager = engine.Resolve<IMigrationManager>();
             var assembly = Assembly.GetAssembly(typeof(ApplicationBuilderExtensions));
             migrationManager.ApplyUpMigrations(assembly, MigrationProcessType.Update);
             assembly = Assembly.GetAssembly(typeof(IMigrationManager));
             migrationManager.ApplyUpMigrations(assembly, MigrationProcessType.Update);
-
-            //insert new ACL permission if exists
-            var permissionService = engine.Resolve<IPermissionService>();
-            await permissionService.InsertPermissionsAsync();
 
             var taskScheduler = engine.Resolve<ITaskScheduler>();
             await taskScheduler.InitializeAsync();

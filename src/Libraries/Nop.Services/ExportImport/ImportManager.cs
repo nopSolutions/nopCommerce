@@ -1461,7 +1461,7 @@ public partial class ImportManager : IImportManager
 
             var startRow = metadata.ProductsInFile[(fileIndex - 1) * _catalogSettings.ExportImportProductsCountInOneFile];
 
-            var endRow = metadata.CountProductsInFile > curIndex + 1
+            var endRow = metadata.CountProductsInFile > curIndex
                 ? metadata.ProductsInFile[curIndex - 1]
                 : metadata.EndRow;
 
