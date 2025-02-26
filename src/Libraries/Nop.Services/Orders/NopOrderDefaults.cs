@@ -10,6 +10,15 @@ public static partial class NopOrderDefaults
 {
     #region Caching defaults
 
+    /// <summary>
+    /// Gets a key of cache ProcessPaymentRequest
+    /// </summary>
+    /// /// <remarks>
+    /// {0} : current store ID
+    /// {1} : customer GUID
+    /// </remarks>
+    public static CacheKey ProcessPaymentRequestKeyCache => new("Nop.Order.ProcessPaymentRequest-{0}-{1}");
+
     #region Checkout attributes
 
     /// <summary>

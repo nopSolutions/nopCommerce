@@ -12,6 +12,8 @@ public partial class ProcessPaymentRequest
     public ProcessPaymentRequest()
     {
         CustomValues = new Dictionary<string, object>();
+        OrderGuid = Guid.NewGuid();
+        OrderGuidGeneratedOnUtc = DateTime.UtcNow;
     }
 
     /// <summary>

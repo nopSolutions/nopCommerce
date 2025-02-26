@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -15,7 +14,6 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
-using Nop.Core.Http.Extensions;
 using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -55,7 +53,6 @@ public partial class OrderProcessingService : IOrderProcessingService
     protected readonly IEventPublisher _eventPublisher;
     protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly IGiftCardService _giftCardService;
-    protected readonly IHttpContextAccessor _httpContextAccessor;
     protected readonly ILanguageService _languageService;
     protected readonly ILocalizationService _localizationService;
     protected readonly ILogger _logger;
@@ -76,6 +73,7 @@ public partial class OrderProcessingService : IOrderProcessingService
     protected readonly IShoppingCartService _shoppingCartService;
     protected readonly IStateProvinceService _stateProvinceService;
     protected readonly IStaticCacheManager _staticCacheManager;
+    protected readonly IStoreContext _storeContext;
     protected readonly IStoreMappingService _storeMappingService;
     protected readonly IStoreService _storeService;
     protected readonly ITaxService _taxService;
@@ -108,7 +106,6 @@ public partial class OrderProcessingService : IOrderProcessingService
         IEventPublisher eventPublisher,
         IGenericAttributeService genericAttributeService,
         IGiftCardService giftCardService,
-        IHttpContextAccessor httpContextAccessor,
         ILanguageService languageService,
         ILocalizationService localizationService,
         ILogger logger,
@@ -129,6 +126,7 @@ public partial class OrderProcessingService : IOrderProcessingService
         IShoppingCartService shoppingCartService,
         IStateProvinceService stateProvinceService,
         IStaticCacheManager staticCacheManager,
+        IStoreContext storeContext,
         IStoreMappingService storeMappingService,
         IStoreService storeService,
         ITaxService taxService,
@@ -157,7 +155,6 @@ public partial class OrderProcessingService : IOrderProcessingService
         _eventPublisher = eventPublisher;
         _genericAttributeService = genericAttributeService;
         _giftCardService = giftCardService;
-        _httpContextAccessor = httpContextAccessor;
         _languageService = languageService;
         _localizationService = localizationService;
         _logger = logger;
@@ -178,6 +175,7 @@ public partial class OrderProcessingService : IOrderProcessingService
         _shoppingCartService = shoppingCartService;
         _stateProvinceService = stateProvinceService;
         _staticCacheManager = staticCacheManager;
+        _storeContext = storeContext;
         _storeMappingService = storeMappingService;
         _storeService = storeService;
         _taxService = taxService;
@@ -1512,6 +1510,21 @@ public partial class OrderProcessingService : IOrderProcessingService
 
         if (!isOrderSaved)
             await _orderService.UpdateOrderAsync(order);
+    }
+
+    /// <summary>
+    /// Prepare payment info cash key
+    /// </summary>
+    /// <returns>Cache key</returns>
+    protected virtual async Task<CacheKey> PrepareProcessPaymentRequestCacheKeyAsync()
+    {
+        var customer = await _workContext.GetCurrentCustomerAsync();
+
+        var key = _staticCacheManager.PrepareKeyForDefaultCache(NopOrderDefaults.ProcessPaymentRequestKeyCache,
+            await _storeContext.GetCurrentStoreAsync(),
+            customer.CustomerGuid);
+
+        return key;
     }
 
     #endregion
@@ -3240,21 +3253,46 @@ public partial class OrderProcessingService : IOrderProcessingService
     }
 
     /// <summary>
-    /// Generate an order GUID
+    /// Gets process payment request
     /// </summary>
-    /// <param name="processPaymentRequest">Process payment request</param>
-    public virtual async Task GenerateOrderGuidAsync(ProcessPaymentRequest processPaymentRequest)
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task contains the process payment request
+    /// </returns>
+    public async Task<ProcessPaymentRequest> GetProcessPaymentRequestAsync()
     {
+        var key = await PrepareProcessPaymentRequestCacheKeyAsync();
+        
+        return await _staticCacheManager.GetAsync(key, () => Task.FromResult<ProcessPaymentRequest>(null));
+    }
+
+
+    /// <summary>
+    /// Sets process payment request
+    /// </summary>
+    /// <param name="processPaymentRequest">Process payment request. Pass null for delete</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public async Task SetProcessPaymentRequestAsync(ProcessPaymentRequest processPaymentRequest)
+    {
+        var key = await PrepareProcessPaymentRequestCacheKeyAsync();
+
         if (processPaymentRequest == null)
+        {
+            await _staticCacheManager.RemoveAsync(key);
+
+            return;
+        }
+
+        if (_paymentSettings.RegenerateOrderGuidInterval <= 0)
             return;
 
         //we should use the same GUID for multiple payment attempts
         //this way a payment gateway can prevent security issues such as credit card brute-force attacks
         //in order to avoid any possible limitations by payment gateway we reset GUID periodically
-        var previousPaymentRequest = await _httpContextAccessor.HttpContext.Session.GetAsync<ProcessPaymentRequest>("OrderPaymentInfo");
-        if (_paymentSettings.RegenerateOrderGuidInterval > 0 &&
-            previousPaymentRequest != null &&
-            previousPaymentRequest.OrderGuidGeneratedOnUtc.HasValue)
+        var previousPaymentRequest = await GetProcessPaymentRequestAsync();
+
+        //set previous order GUID (if exists)
+        if (previousPaymentRequest is { OrderGuidGeneratedOnUtc: not null })
         {
             var interval = DateTime.UtcNow - previousPaymentRequest.OrderGuidGeneratedOnUtc.Value;
             if (interval.TotalSeconds < _paymentSettings.RegenerateOrderGuidInterval)
@@ -3264,11 +3302,7 @@ public partial class OrderProcessingService : IOrderProcessingService
             }
         }
 
-        if (processPaymentRequest.OrderGuid == Guid.Empty)
-        {
-            processPaymentRequest.OrderGuid = Guid.NewGuid();
-            processPaymentRequest.OrderGuidGeneratedOnUtc = DateTime.UtcNow;
-        }
+        await _staticCacheManager.SetAsync(key, processPaymentRequest);
     }
 
     #endregion
