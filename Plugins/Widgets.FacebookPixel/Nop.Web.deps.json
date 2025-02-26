@@ -3147,7 +3147,7 @@
         },
         "runtime": {
           "Nop.Core.dll": {
-            "assemblyVersion": "4.80.0",
+            "assemblyVersion": "4.80.0.0",
             "fileVersion": "4.80.0.0"
           }
         },
@@ -3169,7 +3169,7 @@
         },
         "runtime": {
           "Nop.Data.dll": {
-            "assemblyVersion": "4.80.0",
+            "assemblyVersion": "4.80.0.0",
             "fileVersion": "4.80.0.0"
           }
         },
@@ -3197,7 +3197,7 @@
         },
         "runtime": {
           "Nop.Services.dll": {
-            "assemblyVersion": "4.80.0",
+            "assemblyVersion": "4.80.0.0",
             "fileVersion": "4.80.0.0"
           }
         },
@@ -3217,7 +3217,7 @@
         },
         "runtime": {
           "Nop.Web.Framework.dll": {
-            "assemblyVersion": "4.80.0",
+            "assemblyVersion": "4.80.0.0",
             "fileVersion": "4.80.0.0"
           }
         },
