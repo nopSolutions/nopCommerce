@@ -1,6 +1,4 @@
-﻿using System.Net;
-using System.Reflection;
-using System.Threading.RateLimiting;
+﻿using System.Threading.RateLimiting;
 using Azure.Identity;
 using Azure.Storage.Blobs;
 using FluentValidation;
@@ -293,6 +291,7 @@ public static class ServiceCollectionExtensions
             options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
             options.LoginPath = NopAuthenticationDefaults.LoginPath;
             options.AccessDeniedPath = NopAuthenticationDefaults.AccessDeniedPath;
+            options.ReturnUrlParameter = NopAuthenticationDefaults.ReturnUrlParameter;
         });
 
         //add external authentication
@@ -303,6 +302,7 @@ public static class ServiceCollectionExtensions
             options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
             options.LoginPath = NopAuthenticationDefaults.LoginPath;
             options.AccessDeniedPath = NopAuthenticationDefaults.AccessDeniedPath;
+            options.ReturnUrlParameter = NopAuthenticationDefaults.ReturnUrlParameter;
         });
 
         //register and configure external authentication plugins now

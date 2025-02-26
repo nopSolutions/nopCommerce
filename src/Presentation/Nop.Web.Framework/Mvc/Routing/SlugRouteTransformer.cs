@@ -304,7 +304,7 @@ public partial class SlugRouteTransformer : DynamicRouteValueTransformer
         //allow third-party handlers to select an action by the found URL record
         var routingEvent = new GenericRoutingEvent(httpContext, values, urlRecord);
         await _eventPublisher.PublishAsync(routingEvent);
-        if (routingEvent.Handled)
+        if (routingEvent.StopProcessing)
             return values;
 
         //then try to select an action by the found URL record and the catalog path

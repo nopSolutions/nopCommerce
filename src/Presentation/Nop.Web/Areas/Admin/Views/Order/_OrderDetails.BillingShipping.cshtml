@@ -1,5 +1,9 @@
 @model OrderModel
 
+@{
+    var canShipmentsView = await permissionService.AuthorizeAsync(StandardPermission.Orders.SHIPMENTS_VIEW);
+}
+
 <div class="card-body">
     <div class="row">
         <div class="col-md-6 card-group">
@@ -606,7 +610,7 @@
                 }
             </div>
         </div>
-        if (await permissionService.AuthorizeAsync(StandardPermission.Orders.SHIPMENTS_VIEW))
+        if (canShipmentsView)
         {
             <div class="card card-default">
                 <div class="card-header">

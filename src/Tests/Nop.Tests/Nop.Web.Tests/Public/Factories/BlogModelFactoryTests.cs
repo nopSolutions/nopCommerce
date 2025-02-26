@@ -186,14 +186,14 @@ public class BlogModelFactoryTests : BaseNopTest
     public async Task CanPrepareBlogPostTagListModel()
     {
         var model = await _blogModelFactory.PrepareBlogPostTagListModelAsync();
-        model.Tags.Count.Should().Be(6);
+        model.Tags.Count.Should().Be(5);
     }
 
     [Test]
     public async Task PrepareBlogPostTagListModelCountShouldDependOnSettings()
     {
         var model = await _blogModelFactory.PrepareBlogPostTagListModelAsync();
-        model.Tags.Count.Should().Be(6);
+        model.Tags.Count.Should().Be(5);
 
         _blogSettings.NumberOfTags = 1;
         await _settingsService.SaveSettingAsync(_blogSettings);
