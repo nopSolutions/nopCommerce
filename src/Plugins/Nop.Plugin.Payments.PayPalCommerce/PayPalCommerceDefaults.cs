@@ -16,12 +16,7 @@ public class PayPalCommerceDefaults
     /// Gets the user agent used to request third-party services
     /// </summary>
     public static string UserAgent => $"nopCommerce-{NopVersion.FULL_VERSION}";
-
-    /// <summary>
-    /// Gets the session key to get process payment request
-    /// </summary>
-    public static string PaymentRequestSessionKey => "OrderPaymentInfo";
-
+    
     /// <summary>
     /// Gets the name of a generic attribute to store the refund identifier
     /// </summary>

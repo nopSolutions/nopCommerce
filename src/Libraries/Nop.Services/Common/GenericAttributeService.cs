@@ -54,6 +54,16 @@ public partial class GenericAttributeService : IGenericAttributeService
     }
 
     /// <summary>
+    /// Deletes an attributes
+    /// </summary>
+    /// <param name="key">Key</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task DeleteAttributesAsync(string key)
+    {
+        await _genericAttributeRepository.DeleteAsync(a => a.Key == key);
+    }
+
+    /// <summary>
     /// Inserts an attribute
     /// </summary>
     /// <param name="attribute">attribute</param>

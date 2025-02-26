@@ -126,6 +126,11 @@ public static partial class NopCustomerDefaults
     public static string SelectedPickupPointAttribute => "SelectedPickupPoint";
 
     /// <summary>
+    /// Gets a name of generic attribute to store the value of 'ProcessPaymentRequest'
+    /// </summary>
+    public static string ProcessPaymentRequestAttribute => "ProcessPaymentRequest";
+
+    /// <summary>
     /// Gets a name of generic attribute to store the value of 'CheckoutAttributes'
     /// </summary>
     public static string CheckoutAttributes => "CheckoutAttributes";
