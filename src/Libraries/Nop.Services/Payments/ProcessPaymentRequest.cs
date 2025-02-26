@@ -6,12 +6,13 @@ namespace Nop.Services.Payments;
 /// <summary>
 /// Represents a payment info holder
 /// </summary>
-[Serializable]
 public partial class ProcessPaymentRequest
 {
     public ProcessPaymentRequest()
     {
-        CustomValues = new Dictionary<string, object>();
+        CustomValues = new Dictionary<string, string>();
+        OrderGuid = Guid.NewGuid();
+        OrderGuidGeneratedOnUtc = DateTime.UtcNow;
     }
 
     /// <summary>
@@ -107,5 +108,5 @@ public partial class ProcessPaymentRequest
     /// <summary>
     /// You can store any custom value in this property
     /// </summary>
-    public Dictionary<string, object> CustomValues { get; set; }
+    public Dictionary<string, string> CustomValues { get; set; }
 }

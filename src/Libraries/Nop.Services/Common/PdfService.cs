@@ -219,7 +219,7 @@ public partial class PdfService : IPdfService
             }
 
             //custom values
-            var customValues = _paymentService.DeserializeCustomValues(order);
+            var customValues = CommonHelper.DeserializeCustomValuesFromXml(order.CustomValuesXml);
             if (customValues != null)
                 addressResult.CustomValues = customValues;
         }

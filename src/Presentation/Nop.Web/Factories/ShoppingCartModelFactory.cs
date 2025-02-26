@@ -12,7 +12,6 @@ using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
-using Nop.Core.Http.Extensions;
 using Nop.Services.Attributes;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -745,7 +744,7 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
             : string.Empty;
 
         //custom values
-        var processPaymentRequestTask = _httpContextAccessor.HttpContext?.Session?.GetAsync<ProcessPaymentRequest>("OrderPaymentInfo");
+        var processPaymentRequestTask = _orderProcessingService.GetProcessPaymentRequestAsync();
         if (processPaymentRequestTask != null)
             model.CustomValues = (await processPaymentRequestTask)?.CustomValues;
 
