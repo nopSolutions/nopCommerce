@@ -1,7 +1,6 @@
 ﻿@model Nop.Web.Framework.Menu.AdminMenuItem
 
 @using Nop.Core.Domain.Localization
-@inject IWorkContext workContext
 @inject LocalizationSettings localizationSettings
 @{
     var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl && !localizationSettings.IgnoreRtlPropertyForAdminArea;
