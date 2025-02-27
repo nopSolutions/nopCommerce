@@ -6,6 +6,11 @@
 public partial interface INopConnectionStringInfo
 {
     /// <summary>
+    /// Oracle Service name
+    /// </summary>
+    string ServiceName { get; set; }
+
+    /// <summary>
     /// DatabaseName
     /// </summary>
     string DatabaseName { get; set; }

@@ -36,7 +36,7 @@ public partial record InstallModel : INopConnectionStringInfo
 
     public string DatabaseName { get; set; }
     public string ServerName { get; set; }
-
+    public string ServiceName { get; set; } = "XE";
     public bool IntegratedSecurity { get; set; }
 
     public string Username { get; set; }

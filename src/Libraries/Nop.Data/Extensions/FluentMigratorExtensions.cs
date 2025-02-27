@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
+using System.Linq.Expressions;
 using System.Reflection;
 using FluentMigrator.Builders.Alter.Table;
 using FluentMigrator.Builders.Create;
@@ -65,7 +66,7 @@ public static class FluentMigratorExtensions
     public static IMigrationRunnerBuilder AddNopDbEngines(this IMigrationRunnerBuilder builder)
     {        
         if (!DataSettingsManager.IsDatabaseInstalled())
-            return builder.AddSqlServer().AddMySql5().AddPostgres();
+            return builder.AddSqlServer().AddMySql5().AddPostgres().AddOracle12CManaged();
 
         var dataSettings = DataSettingsManager.LoadSettings();
 
@@ -74,6 +75,7 @@ public static class FluentMigratorExtensions
             DataProviderType.MySql => builder.AddMySql5(),
             DataProviderType.SqlServer => builder.AddSqlServer(),
             DataProviderType.PostgreSQL => builder.AddPostgres(),
+            DataProviderType.Oracle => builder.AddOracle12CManaged(),
             _ => throw new NotImplementedException(),
         };
     }
@@ -111,6 +113,22 @@ public static class FluentMigratorExtensions
             primaryColumnName = nameof(BaseEntity.Id);
 
         return column.Indexed().ForeignKey(primaryTableName, primaryColumnName).OnDelete(onDelete);
+    }
+
+    public static CreateTableExpressionBuilder WithColumn<TEntity, TProperty>(this CreateTableExpressionBuilder table, Expression<Func<TEntity, TProperty>> expression) where TEntity : BaseEntity
+    {
+        if (expression.Body is not MemberExpression member)
+            throw new ArgumentException($"Expression '{expression}' refers to a method, not a property.");
+
+        if (member.Member is not PropertyInfo propInfo)
+            throw new ArgumentException($"Expression '{expression}' refers to a field, not a property.");
+
+        var columnName = NameCompatibilityManager.GetColumnName(typeof(TEntity), propInfo.Name);
+
+        var column = new ColumnDefinition { Name = columnName, TableName = table.Expression.TableName, ModificationType = ColumnModificationType.Create };
+        table.Expression.Columns.Add(column);
+        table.CurrentColumn = column;
+        return table;
     }
 
     /// <summary>

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Data;
 using System.Reflection;
+using AutoMapper.Internal;
 using LinqToDB;
 using LinqToDB.Mapping;
 using LinqToDB.Metadata;
@@ -119,13 +120,24 @@ public partial class FluentMigratorMetadataReader : IMetadataReader
 
         var result = new List<MappingAttribute>();
 
+
         if (attribute is ColumnAttribute column)
         {
             result.Add(column);
 
-            //define sequence name for supported db engines to retrieve identity values (PostgreSQL)
             if (column.IsIdentity)
-                result.Add(new SequenceNameAttribute($"{entityDescriptor.EntityName}_{column.Name}_seq"));
+            {
+                var dataSettings = DataSettingsManager.LoadSettings();
+
+                if (dataSettings.DataProvider == DataProviderType.PostgreSQL)
+
+                    _ = dataSettings.DataProvider switch
+                    {
+                        DataProviderType.PostgreSQL => result.TryAdd(new SequenceNameAttribute($"{entityDescriptor.EntityName}_{column.Name}_seq")),
+                        DataProviderType.Oracle => result.TryAdd(new SkipValuesOnInsertAttribute()),
+                        _ => false
+                    };
+            }
         }
 
         return result.ToArray();

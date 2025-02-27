@@ -818,6 +818,21 @@ public partial class SettingService : ISettingService
         Expression<Func<T, TPropType>> keySelector, int storeId = 0) where T : ISettings, new()
     {
         var key = GetSettingKey(settings, keySelector);
+        await DeleteSettingAsync(key, storeId);
+    }
+
+    /// <summary>
+    /// Delete settings object
+    /// </summary>
+    /// <typeparam name="T">Entity type</typeparam>
+    /// <typeparam name="TPropType">Property type</typeparam>
+    /// <param name="keySelector">Key selector</param>
+    /// <param name="storeId">Store ID</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task DeleteSettingAsync(string key, int storeId = 0)
+    {
+        ArgumentNullException.ThrowIfNullOrWhiteSpace(key);
+
         key = key.Trim().ToLowerInvariant();
 
         var allSettings = await GetAllSettingsDictionaryAsync();

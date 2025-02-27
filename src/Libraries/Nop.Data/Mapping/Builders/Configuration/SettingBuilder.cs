@@ -18,7 +18,8 @@ public partial class SettingBuilder : NopEntityBuilder<Setting>
     {
         table
             .WithColumn(nameof(Setting.Name)).AsString(200).NotNullable()
-            .WithColumn(nameof(Setting.Value)).AsString(6000).NotNullable();
+#warning Temporary marked as Nullable
+            .WithColumn(nameof(Setting.Value)).AsString(6000).Nullable();
     }
 
     #endregion

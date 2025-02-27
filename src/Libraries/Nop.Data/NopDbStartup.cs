@@ -1,6 +1,7 @@
 ﻿using FluentMigrator;
 using FluentMigrator.Runner;
 using FluentMigrator.Runner.Conventions;
+using FluentMigrator.Runner.Generators.Oracle;
 using FluentMigrator.Runner.Initialization;
 using FluentMigrator.Runner.Processors;
 using Microsoft.AspNetCore.Builder;
@@ -54,8 +55,11 @@ public partial class NopDbStartup : INopStartup
         services.AddTransient(serviceProvider =>
             serviceProvider.GetRequiredService<IDataProviderManager>().DataProvider);
 
-        //repositories	
+        //repositories
         services.AddScoped(typeof(IRepository<>), typeof(EntityRepository<>));
+
+        services
+            .AddScoped<OracleQuoterBase, OracleQuoterQuotedIdentifier>();
 
         if (!DataSettingsManager.IsDatabaseInstalled())
             return;

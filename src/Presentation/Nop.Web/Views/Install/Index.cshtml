@@ -83,6 +83,7 @@
 
                         toggleSqlConnectionInfo();
                         toggleCollation();
+                        toggleDatabaseInfo();
                     });
 
                     $(function() {
@@ -96,8 +97,24 @@
                             } else {
                                 $('#@Html.IdFor(x => x.IntegratedSecurity)').prop('disabled', false)
                             }
+
+                            toggleDatabaseInfo();
                         });
                     });
+
+                    function toggleDatabaseInfo()
+                    {
+                        if ($('#@Html.IdFor(m => m.DataProvider)').val() == '@((int)DataProviderType.Oracle)')
+                        {
+                            $('#sqlDatabaseNameInfo').hide();
+                            $('#sqlServiceNameInfo').show();
+                        }
+                        else
+                        {
+                            $('#sqlServiceNameInfo').hide();
+                            $('#sqlDatabaseNameInfo').show();
+                        }
+                    }
 
                     function toggleSqlConnectionInfo() {
                         var connectionStringRaw = $("#@Html.IdFor(x => x.ConnectionStringRaw)").is(':checked');

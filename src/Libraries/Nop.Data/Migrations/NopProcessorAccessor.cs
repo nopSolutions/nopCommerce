@@ -39,6 +39,7 @@ public class NopProcessorAccessor : IProcessorAccessor
                 DataProviderType.SqlServer => FindGenerator(processors, "SqlServer"),
                 DataProviderType.MySql => FindGenerator(processors, "MySQL"),
                 DataProviderType.PostgreSQL => FindGenerator(processors, "Postgres"),
+                DataProviderType.Oracle => FindGenerator(processors, "Oracle"),
                 _ => throw new ProcessorFactoryNotFoundException(
                     $@"A migration generator for Data provider type {dataSettings.DataProvider} couldn't be found.")
             };

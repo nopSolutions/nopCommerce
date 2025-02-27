@@ -26,7 +26,15 @@ public partial class InstallValidator : BaseNopValidator<InstallModel>
         When(x => !x.ConnectionStringRaw, () =>
         {
             RuleFor(x => x.ServerName).NotEmpty().WithMessage(locService.GetResource("ServerNameRequired"));
-            RuleFor(x => x.DatabaseName).NotEmpty().WithMessage(locService.GetResource("ConnectionStringRequired"));
+
+            When(x => x.DataProvider == DataProviderType.Oracle, () =>
+            {
+                RuleFor(x => x.ServiceName).NotEmpty().WithMessage(locService.GetResource("ConnectionStringRequired"));
+            })
+            .Otherwise(() =>
+            {
+                RuleFor(x => x.DatabaseName).NotEmpty().WithMessage(locService.GetResource("ConnectionStringRequired"));
+            });
 
             When(x => !x.IntegratedSecurity, () =>
             {
