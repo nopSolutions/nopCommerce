@@ -58,7 +58,7 @@ public partial class MsSqlNopDataProvider : BaseDataProvider, INopDataProvider
         //gets database name
         var databaseName = builder.InitialCatalog;
 
-        //now create connection string to 'master' dabatase. It always exists.
+        //now create connection string to 'master' database. It always exists.
         builder.InitialCatalog = "master";
 
         using (var connection = GetInternalDbConnection(builder.ConnectionString))

@@ -23,7 +23,7 @@ public partial interface IShortTermCacheManager : ICacheKeyService
     /// Get a cached item. If it's not in the cache yet, then load and cache it
     /// </summary>
     /// <typeparam name="T">Type of cached item</typeparam>
-    /// /// <param name="acquire">Function to load item if it's not in the cache yet</param>
+    /// <param name="acquire">Function to load item if it's not in the cache yet</param>
     /// <param name="cacheKey">Initial cache key</param>
     /// <param name="cacheKeyParameters">Parameters to create cache key</param>
     /// <returns>
