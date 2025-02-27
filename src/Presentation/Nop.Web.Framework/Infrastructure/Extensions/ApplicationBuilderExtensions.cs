@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
@@ -147,45 +146,76 @@ public static class ApplicationBuilderExtensions
         application.UseStatusCodePages(async context =>
         {
             //handle 404 Not Found
-            if (context.HttpContext.Response.StatusCode == StatusCodes.Status404NotFound)
+            if (context.HttpContext.Response.StatusCode != StatusCodes.Status404NotFound)
+                return;
+
+            //return a browser-dependent error message indicating the static file can't be found
+            var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+            if (webHelper.IsStaticResource())
+                return;
+
+            //get original path and query
+            var originalPath = context.HttpContext.Request.Path;
+            var originalQueryString = context.HttpContext.Request.QueryString;
+
+            if (DataSettingsManager.IsDatabaseInstalled())
             {
-                var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-                if (!webHelper.IsStaticResource())
+                var commonSettings = EngineContext.Current.Resolve<CommonSettings>();
+
+                if (commonSettings.Log404Errors)
                 {
-                    //get original path and query
-                    var originalPath = context.HttpContext.Request.Path;
-                    var originalQueryString = context.HttpContext.Request.QueryString;
+                    var logger = EngineContext.Current.Resolve<ILogger>();
+                    var workContext = EngineContext.Current.Resolve<IWorkContext>();
 
-                    if (DataSettingsManager.IsDatabaseInstalled())
-                    {
-                        var commonSettings = EngineContext.Current.Resolve<CommonSettings>();
-
-                        if (commonSettings.Log404Errors)
-                        {
-                            var logger = EngineContext.Current.Resolve<ILogger>();
-                            var workContext = EngineContext.Current.Resolve<IWorkContext>();
-
-                            await logger.ErrorAsync($"Error 404. The requested page ({originalPath}) was not found",
-                                customer: await workContext.GetCurrentCustomerAsync());
-                        }
-                    }
-
-                    try
-                    {
-                        //get new path
-                        var lang = GetLanguagePart(context);
-						var pageNotFoundPath = $"{lang}/page-not-found";
-
-                        //re-execute request with new path
-                        await CreateHandler(pageNotFoundPath, null)(context);
-                    }
-                    finally
-                    {
-                        //return original path to request
-                        context.HttpContext.Request.QueryString = originalQueryString;
-                        context.HttpContext.Request.Path = originalPath;
-                    }
+                    await logger.ErrorAsync($"Error 404. The requested page ({originalPath}) was not found",
+                        customer: await workContext.GetCurrentCustomerAsync());
                 }
+            }
+
+            var routeValuesFeature = context.HttpContext.Features.Get<IRouteValuesFeature>();
+
+            //store the original paths so we can check it later
+            context.HttpContext.Features.Set<IStatusCodeReExecuteFeature>(new StatusCodeReExecuteFeature
+            {
+                OriginalPathBase = context.HttpContext.Request.PathBase.Value!,
+                OriginalPath = originalPath.Value!,
+                OriginalQueryString = originalQueryString.HasValue ? originalQueryString.Value : null,
+                Endpoint = context.HttpContext.GetEndpoint(),
+                RouteValues = routeValuesFeature?.RouteValues
+            });
+
+            string getLanguageRouteValue()
+            {
+                if (!DataSettingsManager.IsDatabaseInstalled())
+                    return string.Empty;
+
+                var localizationSettings = EngineContext.Current.Resolve<LocalizationSettings>();
+                if (!localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+                    return string.Empty;
+
+                return routeValuesFeature?.RouteValues.GetValueOrDefault(NopRoutingDefaults.RouteValue.Language) is string lang ? $"/{lang}" : "/en";
+            }
+
+            //set new path
+            context.HttpContext.Request.Path = $"{getLanguageRouteValue()}/page-not-found";
+            context.HttpContext.Request.QueryString = QueryString.Empty;
+
+            //since we're going to re-invoke the middleware pipeline we need to reset the endpoint and route values
+            context.HttpContext.SetEndpoint(null);
+            if (routeValuesFeature is not null)
+                routeValuesFeature.RouteValues = null!;
+
+            try
+            {
+                //re-execute request with new path
+                await context.Next(context.HttpContext);
+            }
+            finally
+            {
+                //return original path to request
+                context.HttpContext.Request.QueryString = originalQueryString;
+                context.HttpContext.Request.Path = originalPath;
+                context.HttpContext.Features.Set<IStatusCodeReExecuteFeature>(null);
             }
         });
     }
@@ -531,74 +561,5 @@ public static class ApplicationBuilderExtensions
             return;
 
         application.UseWebMarkupMin();
-    }
-
-    /// <summary>
-    /// Retrieves a language url part based on the given StatusCodeContext.
-    /// </summary>
-    /// <param name="context">The StatusCodeContext used to determine the language part.</param>
-    /// <returns>The language url part as a string.</returns>
-    private static string GetLanguagePart(StatusCodeContext context)
-    {
-        if (!DataSettingsManager.IsDatabaseInstalled()) return string.Empty;
-        var localizationSettings = EngineContext.Current.Resolve<LocalizationSettings>();
-        if (!localizationSettings.SeoFriendlyUrlsForLanguagesEnabled) return string.Empty;
-        return context.HttpContext.GetRouteValue(NopRoutingDefaults.RouteValue.Language) is string lang ? $"/{lang}" : "/en";
-    }
-
-    /// <summary>
-    /// Creates a request handling method based on specified paths and a next request delegate.
-    /// It was inspired by UseStatusCodePagesWithReExecute method from Microsoft.AspNetCore.Builder.StatusCodePagesExtensions class.
-    /// </summary>
-    /// <param name="pathFormat">A string representing the path format.</param>
-    /// <param name="queryFormat">A string representing the query format.</param>
-    /// <param name="next">The next request delegate in the pipeline.</param>
-    /// <returns>A function that handles the status code context.</returns>
-    private static Func<StatusCodeContext, Task> CreateHandler(string pathFormat, string queryFormat, RequestDelegate next = null)
-    {
-        return (async context =>
-        {
-            var statusCode = context.HttpContext.Response.StatusCode;
-            var pathString = new PathString(string.Format(CultureInfo.InvariantCulture, pathFormat, statusCode));
-            var str = queryFormat == null ? null : string.Format(CultureInfo.InvariantCulture, queryFormat, statusCode);
-            var queryString = queryFormat == null ? QueryString.Empty : new QueryString(str);
-            var originalPath = context.HttpContext.Request.Path;
-            var originalQueryString = context.HttpContext.Request.QueryString;
-            var routeValuesFeature = context.HttpContext.Features.Get<IRouteValuesFeature>();
-            context.HttpContext.Features.Set<IStatusCodeReExecuteFeature>(new StatusCodeReExecuteFeature
-            {
-                OriginalPathBase = context.HttpContext.Request.PathBase.Value!,
-                OriginalPath = originalPath.Value!,
-                OriginalQueryString = (originalQueryString.HasValue ? originalQueryString.Value : null),
-                Endpoint = context.HttpContext.GetEndpoint(),
-                RouteValues = routeValuesFeature?.RouteValues
-            });
-            context.HttpContext.SetEndpoint(null);
-            if (routeValuesFeature != null)
-                routeValuesFeature.RouteValues = null!;
-            context.HttpContext.Request.Path = pathString;
-            context.HttpContext.Request.QueryString = queryString;
-            try
-            {
-                if (next != null)
-                {
-                    await next(context.HttpContext);
-                    originalPath = new PathString();
-                    originalQueryString = new QueryString();
-                }
-                else
-                {
-                    await context.Next(context.HttpContext);
-                    originalPath = new PathString();
-                    originalQueryString = new QueryString();
-                }
-            }
-            finally
-            {
-                context.HttpContext.Request.QueryString = originalQueryString;
-                context.HttpContext.Request.Path = originalPath;
-                context.HttpContext.Features.Set<IStatusCodeReExecuteFeature>(null);
-            }
-        });
     }
 }
