@@ -291,10 +291,8 @@ public partial class SlugRouteTransformer : DynamicRouteValueTransformer
     {
         //get values to transform for action selection
         var values = new RouteValueDictionary(routeValues);
-        if (values is null)
-            return values;
 
-        if (!values.TryGetValue(NopRoutingDefaults.RouteValue.SeName, out var slug))
+        if (!values.TryGetValue(NopRoutingDefaults.RouteValue.SeName, out var slug) || slug is null)
             return values;
 
         //find record by the URL slug

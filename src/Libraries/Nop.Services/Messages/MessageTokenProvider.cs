@@ -1317,6 +1317,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         tokens.Add(new Token("Customer.PasswordRecoveryURL", passwordRecoveryUrl, true));
         tokens.Add(new Token("Customer.AccountActivationURL", accountActivationUrl, true));
         tokens.Add(new Token("Customer.EmailRevalidationURL", emailRevalidationUrl, true));
+        tokens.Add(new Token("Customer.Company", customer.Company));
         tokens.Add(new Token("Wishlist.URLForCustomer", wishlistUrl, true));
 
         //event notification

@@ -24,7 +24,7 @@ public class AddIndexesMigration : ForwardOnlyMigration
         var topicEndDateColumnName = nameof(Topic.AvailableEndDateTimeUtc);
         var topicStartDateColumnName = nameof(Topic.AvailableStartDateTimeUtc);
         var topicAvailableDatesIndexName = "IX_Topic_Availability";
-        if (!Schema.Table(topicAvailableDatesIndexName).Exists())
+        if (!Schema.Table(topicTableName).Index(topicAvailableDatesIndexName).Exists())
             Create.Index(topicAvailableDatesIndexName)
                 .OnTable(topicTableName)
                 .OnColumn(topicEndDateColumnName).Descending()
