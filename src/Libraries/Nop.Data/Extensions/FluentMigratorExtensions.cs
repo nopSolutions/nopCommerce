@@ -6,6 +6,7 @@ using FluentMigrator.Builders.Create;
 using FluentMigrator.Builders.Create.Table;
 using FluentMigrator.Infrastructure.Extensions;
 using FluentMigrator.Model;
+using FluentMigrator.Runner;
 using LinqToDB.Mapping;
 using Nop.Core;
 using Nop.Core.Infrastructure;
@@ -55,6 +56,27 @@ public static class FluentMigratorExtensions
     }
 
     #endregion
+
+    /// <summary>
+    /// Adds database support for migrations
+    /// </summary>
+    /// <param name="builder">The builder to add the database engine(s) to</param>
+    /// <returns>The migration runner builder</returns>
+    public static IMigrationRunnerBuilder AddNopDbEngines(this IMigrationRunnerBuilder builder)
+    {        
+        if (!DataSettingsManager.IsDatabaseInstalled())
+            return builder.AddSqlServer().AddMySql5().AddPostgres();
+
+        var dataSettings = DataSettingsManager.LoadSettings();
+
+        return dataSettings.DataProvider switch
+        {
+            DataProviderType.MySql => builder.AddMySql5(),
+            DataProviderType.SqlServer => builder.AddSqlServer(),
+            DataProviderType.PostgreSQL => builder.AddPostgres(),
+            _ => throw new NotImplementedException(),
+        };
+    }
 
     /// <summary>
     /// Defines the column type as date that is combined with a time of day and a specified precision
