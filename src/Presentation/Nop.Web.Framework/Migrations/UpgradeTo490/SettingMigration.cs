@@ -62,6 +62,13 @@ public class SettingMigration : MigrationBase
             mediaSettings.AutoOrientImage = false;
             settingService.SaveSetting(mediaSettings, settings => settings.AutoOrientImage);
         }
+
+        //#1892
+        if (!settingService.SettingExists(adminAreaSettings, settings => settings.MinimumDropdownItemsForSearch))
+        {
+            adminAreaSettings.MinimumDropdownItemsForSearch = 50;
+            settingService.SaveSetting(adminAreaSettings, settings => settings.MinimumDropdownItemsForSearch);
+        }
     }
 
     public override void Down()

@@ -1300,7 +1300,8 @@ public partial class InstallationService
             CheckLicense = true,
             UseIsoDateFormatInJsonResult = true,
             ShowDocumentationReferenceLinks = true,
-            UseStickyHeaderLayout = false
+            UseStickyHeaderLayout = false,
+            MinimumDropdownItemsForSearch = 50
         });
 
         await SaveSettingAsync(dictionary, new ProductEditorSettings
