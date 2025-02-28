@@ -109,6 +109,10 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Catalog.ProductTags.TaggedProducts"] = "Used by products",
             ["Admin.Catalog.ProductTags.TaggedProducts.Product"] = "Product",
             ["Admin.Catalog.ProductTags.TaggedProducts.Published"] = "Published",
+            
+            //#7405
+            ["Admin.Configuration.Settings.Catalog.ExportImportCategoryUseLimitedToStores"] = "Export / Import categories with \"limited to stores\"",
+            ["Admin.Configuration.Settings.Catalog.ExportImportCategoryUseLimitedToStores.Hint"] = "Check if categories should be exported / imported with \"limited to stores\" property.",
         }, languageId);
 
         #endregion
