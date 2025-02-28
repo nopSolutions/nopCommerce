@@ -111,7 +111,6 @@ public partial class CatalogDocument : PdfDocument<CatalogItem>
             Border = 0
         });
 
-
         var description = rowData.GetSafeStringValueOf<CatalogItem>(p => p.Description);
 
         var cell = new PdfPCell(new Paragraph(description, Font))

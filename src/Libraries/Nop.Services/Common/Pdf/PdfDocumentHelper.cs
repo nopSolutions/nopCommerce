@@ -11,7 +11,7 @@ using PdfRpt.Core.Contracts;
 namespace Nop.Services.Common.Pdf;
 
 /// <summary>
-/// Extensions
+/// Represents PDF document helper
 /// </summary>
 public static partial class PdfDocumentHelper
 {
@@ -92,7 +92,7 @@ public static partial class PdfDocumentHelper
     /// </summary>
     /// <param name="propertyExpression">Property selector to get resource key annotation</param>
     /// <param name="font">Font</param>
-    /// <param name="languageId">Language</param>
+    /// <param name="language">Language</param>
     /// <param name="args">Array of objects to format the resource string</param>
     /// <returns>A chunk with localized annotation if present, otherwise an empty chunk</returns>
     public static Chunk LabelField<TLabel, TOut>(Expression<Func<TLabel, TOut>> propertyExpression, Font font, Language language, params string[] args)

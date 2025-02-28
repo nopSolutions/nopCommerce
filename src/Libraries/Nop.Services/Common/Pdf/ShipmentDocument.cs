@@ -27,14 +27,9 @@ public partial class ShipmentDocument : PdfDocument<ProductItem>
     /// <summary>
     /// Generate shipment
     /// </summary>
-    /// <param name="pdfStreamOutput">the PDF file's stream</param>
-    /// Close the document by closing the underlying stream. Its default value is true.
-    /// If you want to access the PDF stream after it has been created, set it to false.
-    /// </param>
+    /// <param name="pdfStreamOutput">Stream for PDF output</param>
     public override void Generate(Stream pdfStreamOutput)
     {
-        var languageId = Language?.Id ?? 0;
-
         Document
             .MainTablePreferences(table =>
             {

@@ -20,8 +20,6 @@ public abstract class PdfDocument<TItem>
     /// Build a cell with a hyperlink 
     /// </summary>
     /// <param name="labelSelector">Property selector to get resource key annotation</param>
-    /// <param name="font">Font</param>
-    /// <param name="language">Language</param>
     /// <param name="url">URL</param>
     /// <returns>A cell for PDF table</returns>
     protected virtual PdfPCell BuildHyperLinkCell<TLabel>(Expression<Func<TLabel, string>> labelSelector, string url)
@@ -55,8 +53,6 @@ public abstract class PdfDocument<TItem>
     /// </summary>
     /// <param name="labelSelector">Property selector to get resource key annotation</param>
     /// <param name="value">Value to format</param>
-    /// <param name="font">Font</param>
-    /// <param name="language">Language</param>
     /// <param name="horizontalAlign">Horizontal alignment</param>
     /// <returns>A cell for PDF table</returns>
     protected virtual PdfPCell BuildPdfPCell<TLabel>(Expression<Func<TLabel, string>> labelSelector, string value, int horizontalAlign = Element.ALIGN_LEFT)
@@ -81,8 +77,6 @@ public abstract class PdfDocument<TItem>
     /// Build a cell with the given text
     /// </summary>
     /// <param name="text">Text</param>
-    /// <param name="language">Language</param>
-    /// <param name="font">Font</param>
     /// <param name="collSpan">The number of columns occupied by a cell</param>
     /// <param name="horizontalAlign">Horizontal alignment</param>
     /// <param name="verticalAlignment">Vertical alignment</param>
@@ -104,15 +98,11 @@ public abstract class PdfDocument<TItem>
         return cell;
     }
 
-
     /// <summary>
     /// Build a cell for the given selector and text
     /// </summary>
-    /// <param name="table">PDF table</param>
     /// <param name="labelSelector">Property selector to get resource key annotation</param>
     /// <param name="text">Text</param>
-    /// <param name="font">Font</param>
-    /// <param name="language">Language</param>
     /// <returns>A cell for PDF table</returns>
     protected virtual PdfPCell BuildTextCell<TLabel>(Expression<Func<TLabel, string>> labelSelector, string text)
     {
@@ -135,6 +125,12 @@ public abstract class PdfDocument<TItem>
         return cell;
     }
 
+    /// <summary>
+    /// Build a table for address item
+    /// </summary>
+    /// <param name="labelSelector">Property selector to get resource key annotation</param>
+    /// <param name="address">Address item</param>
+    /// <returns>PDF table</returns>
     protected virtual PdfGrid BuildAddressTable<TLabel>(Expression<Func<TLabel, AddressItem>> labelSelector, AddressItem address)
     {
         ArgumentNullException.ThrowIfNull(address);
@@ -177,11 +173,7 @@ public abstract class PdfDocument<TItem>
         {
             foreach (var (key, value) in address.CustomValues)
             {
-                addressTable.AddCell(new PdfPCell(
-                    new Phrase {
-                        new Chunk(key), new Chunk(":"), new Chunk(value.ToString())
-                    }
-                 ));
+                addressTable.AddCell(new PdfPCell(new Phrase { new Chunk(key), new Chunk(":"), new Chunk(value.ToString()) }));
             }
         }
 
@@ -193,8 +185,6 @@ public abstract class PdfDocument<TItem>
     /// </summary>
     /// <param name="column">Column builder</param>
     /// <param name="propertyExpression">Property selector for cells in the column</param>
-    /// <param name="language">Language</param>
-    /// <param name="font">Font</param>
     /// <param name="width">The column's width according to the PdfRptPageSetup.MainTableColumnsWidthsType value</param>
     /// <param name="printProductAttributes">Indicates that product attribute descriptions should be printed if they exist</param>
     protected virtual void ConfigureProductColumn(ColumnAttributesBuilder column, Expression<Func<TItem, object>> propertyExpression, int width = 1, bool printProductAttributes = false)
@@ -254,6 +244,10 @@ public abstract class PdfDocument<TItem>
         });
     }
 
+    /// <summary>
+    /// Get default document builder
+    /// </summary>
+    /// <returns>PDF document builder</returns>
     protected virtual PdfReport DefaultDocument()
     {
         return new PdfReport()
@@ -296,7 +290,7 @@ public abstract class PdfDocument<TItem>
     protected PdfReport Document => DefaultDocument();
 
     /// <summary>
-    /// Gets or sets a collection of shipping items
+    /// Gets or sets a collection of items
     /// </summary>
     public List<TItem> Products { get; init; }
 
