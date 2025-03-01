@@ -12,7 +12,7 @@ public partial class ShipmentDocument : PdfDocument<ProductItem>
 
     private PdfGrid CreateDefaultHeader()
     {
-        var headerTable = PdfDocumentHelper.BuildPdfGrid(numColumns: 1, Language);
+        var headerTable = PdfDocumentHelper.BuildPdfGrid(numColumns: 1, DocumentRunDirection);
 
         headerTable.AddCell(BuildPdfPCell<ShipmentDocument>(source => OrderNumberText, OrderNumberText));
         headerTable.AddCell(BuildPdfPCell<ShipmentDocument>(source => ShipmentNumberText, ShipmentNumberText));

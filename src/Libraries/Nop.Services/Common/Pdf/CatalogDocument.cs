@@ -1,7 +1,5 @@
 ﻿using iTextSharp.text;
 using iTextSharp.text.pdf;
-using Nop.Core.Infrastructure;
-using Nop.Services.Media;
 using PdfRpt.Core.Contracts;
 using PdfRpt.Core.Helper;
 
@@ -14,40 +12,20 @@ public partial class CatalogDocument : PdfDocument<CatalogItem>
 {
     #region Utilities
 
-    private Image GetImage(string path)
-    {
-        ArgumentNullException.ThrowIfNullOrEmpty(path);
-
-        if (path.EndsWith(".svg"))
-        {
-            using var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            var pngBinaryData = EngineContext.Current.Resolve<IPictureService>()
-                .ConvertSvgToPngAsync(fileStream).Result;
-
-            return PdfImageHelper.GetITextSharpImageFromByteArray(pngBinaryData, true);
-        }
-
-        return PdfImageHelper.GetITextSharpImageFromImageFile(path, true);
-    }
-
     protected virtual PdfPCell BuildProductImages(IList<CellData> rowData)
     {
-        var table = PdfDocumentHelper.BuildPdfGrid(2, Language);
+        var table = PdfDocumentHelper.BuildPdfGrid(2, DocumentRunDirection);
 
         table.HorizontalAlignment = Element.ALIGN_CENTER;
 
         var picPaths = (HashSet<string>)rowData.GetValueOf<CatalogItem>(x => x.PicturePaths) ?? new();
 
-        picPaths = picPaths
-            .Where(x => !x.EndsWith(".webp"))
-            .ToHashSet();
-
         if (!picPaths.Any())
-            return PdfDocumentHelper.BuildPdfPCell(table, Language, horizontalAlign: Element.ALIGN_CENTER);
+            return PdfDocumentHelper.BuildPdfPCell(table, DocumentRunDirection, horizontalAlign: Element.ALIGN_CENTER);
 
         foreach (var path in picPaths)
         {
-            var image = GetImage(path);
+            var image = PdfImageHelper.GetITextSharpImageFromByteArray(GetImageImpl(path));
             image.ScaleToFit(ImageTargetSize, ImageTargetSize);
 
             var imageCell = new PdfPCell(image, fit: false)
@@ -64,12 +42,12 @@ public partial class CatalogDocument : PdfDocument<CatalogItem>
             table.AddCell(imageCell);
         }
 
-        return PdfDocumentHelper.BuildPdfPCell(table, Language, horizontalAlign: Element.ALIGN_CENTER);
+        return PdfDocumentHelper.BuildPdfPCell(table, DocumentRunDirection, horizontalAlign: Element.ALIGN_CENTER);
     }
 
     protected virtual PdfPCell BuildProductProperties(IList<CellData> rowData)
     {
-        var table = PdfDocumentHelper.BuildPdfGrid(1, Language);
+        var table = PdfDocumentHelper.BuildPdfGrid(1, DocumentRunDirection);
 
         var price = rowData.GetSafeStringValueOf<CatalogItem>(p => p.Price);
         if (!string.IsNullOrEmpty(price))
@@ -87,7 +65,7 @@ public partial class CatalogDocument : PdfDocument<CatalogItem>
         if (!string.IsNullOrEmpty(stock))
             table.AddCell(BuildTextCell<CatalogItem>(p => p.Stock, stock));
 
-        return PdfDocumentHelper.BuildPdfPCell(table, Language);
+        return PdfDocumentHelper.BuildPdfPCell(table, DocumentRunDirection);
     }
 
     protected virtual PdfPCell ConfigureCatalogItemTemplate(InlineFieldData data)
@@ -97,14 +75,14 @@ public partial class CatalogDocument : PdfDocument<CatalogItem>
         var table = new PdfGrid(numColumns: 1)
         {
             WidthPercentage = 100,
-            RunDirection = Language.GetPdfRunDirection(),
+            RunDirection = DocumentRunDirection,
             HorizontalAlignment = Element.ALIGN_LEFT
         };
         var rowData = data.Attributes.RowData.TableRowData;
         var name = rowData.GetSafeStringValueOf<CatalogItem>(p => p.Name);
         table.AddCell(new PdfPCell(new Phrase(name, font16Bold))
         {
-            RunDirection = Language.GetPdfRunDirection(),
+            RunDirection = DocumentRunDirection,
             HorizontalAlignment = Element.ALIGN_LEFT,
             VerticalAlignment = Element.ALIGN_TOP,
             PaddingBottom = 14,
@@ -115,7 +93,7 @@ public partial class CatalogDocument : PdfDocument<CatalogItem>
 
         var cell = new PdfPCell(new Paragraph(description, Font))
         {
-            RunDirection = Language.GetPdfRunDirection(),
+            RunDirection = DocumentRunDirection,
             HorizontalAlignment = Element.ALIGN_LEFT,
             VerticalAlignment = Element.ALIGN_TOP,
             Border = 0,
@@ -130,7 +108,7 @@ public partial class CatalogDocument : PdfDocument<CatalogItem>
         var tableContainer = new PdfGrid(numColumns: 1)
         {
             WidthPercentage = 100,
-            RunDirection = Language.GetPdfRunDirection(),
+            RunDirection = DocumentRunDirection,
             HorizontalAlignment = Element.ALIGN_LEFT
         };
 
@@ -143,7 +121,7 @@ public partial class CatalogDocument : PdfDocument<CatalogItem>
 
         return new PdfPCell(tableContainer)
         {
-            RunDirection = Language.GetPdfRunDirection(),
+            RunDirection = DocumentRunDirection,
             Border = 0,
             MinimumHeight = 25,
             VerticalAlignment = Element.ALIGN_TOP
@@ -185,6 +163,12 @@ public partial class CatalogDocument : PdfDocument<CatalogItem>
             })
             .Generate(builder => builder.AsPdfStream(pdfStreamOutput, closeStream: false));
     }
+
+    #endregion
+
+    #region Properties
+
+    public required Func<string, byte[]> GetImageImpl { get; init; }
 
     #endregion
 }

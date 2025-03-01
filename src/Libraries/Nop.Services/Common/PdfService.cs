@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.IO.Compression;
+using iTextSharp.text;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -630,6 +631,25 @@ public partial class PdfService : IPdfService
         return result;
     }
 
+    /// <summary>
+    /// Resolve font for PDF document
+    /// </summary>
+    /// <param name="language">Language</param>
+    /// <param name="settings">PDF settings</param>
+    /// <returns>A font object</returns>
+    protected virtual Font ResolvePdfFont(Language language, PdfSettings settings)
+    {
+        ArgumentNullException.ThrowIfNull(settings);
+
+        var fontName = language?.Rtl == true
+            ? !string.IsNullOrEmpty(settings.RtlFontName) ? settings.RtlFontName : NopCommonDefaults.PdfRtlFontName
+            : !string.IsNullOrEmpty(settings.LtrFontName) ? settings.LtrFontName : NopCommonDefaults.PdfLtrFontName;
+
+        var fontSize = settings.BaseFontSize >= 0 ? settings.BaseFontSize : 10;
+
+        return PdfDocumentHelper.GetFont(fontName, fontSize);
+    }
+
     #endregion
 
     #region Methods
@@ -700,7 +720,7 @@ public partial class PdfService : IPdfService
         {
             StoreUrl = orderStore.Url?.Trim('/'),
             Language = language,
-            Font = language.ResolvePdfFont(pdfSettingsByStore),
+            Font = ResolvePdfFont(language, pdfSettingsByStore),
             ImageTargetSize = pdfSettingsByStore.ImageTargetSize,
             OrderDateUser = date.ToString("D", new CultureInfo(language.LanguageCulture)),
             LogoData = logo,
@@ -715,7 +735,8 @@ public partial class PdfService : IPdfService
             Totals = vendor is null ? await GetTotalsAsync(language, order) : new(), //vendors cannot see totals
             OrderNotes = await GetOrderNotesAsync(pdfSettingsByStore, order, language),
             FooterTextColumn1 = column1Lines,
-            FooterTextColumn2 = column2Lines
+            FooterTextColumn2 = column2Lines,
+            GetResourceImpl = (string resourceKey, int languageId) => _localizationService.GetResourceAsync(resourceKey, languageId).Result
         };
 
         await using var pdfStream = new MemoryStream();
@@ -824,12 +845,13 @@ public partial class PdfService : IPdfService
         {
             PageSize = pdfSettingsByStore.LetterPageSizeEnabled ? PdfPageSize.Letter : PdfPageSize.A4,
             Language = language,
-            Font = language.ResolvePdfFont(pdfSettingsByStore),
+            Font = ResolvePdfFont(language, pdfSettingsByStore),
             ImageTargetSize = pdfSettingsByStore.ImageTargetSize,
             ShipmentNumberText = shipment.Id.ToString(),
             OrderNumberText = order.CustomOrderNumber,
             Address = await GetShippingAddressAsync(language, order),
-            Products = await GetOrderProductItemsAsync(order, orderItems, language, shipmentItems)
+            Products = await GetOrderProductItemsAsync(order, orderItems, language, shipmentItems),
+            GetResourceImpl = (string resourceKey, int languageId) => _localizationService.GetResourceAsync(resourceKey, languageId).Result
         };
 
         document.Generate(pdfStream);
@@ -890,7 +912,7 @@ public partial class PdfService : IPdfService
                 foreach (var pic in pictures)
                 {
                     var picPath = await _pictureService.GetThumbLocalPathAsync(pic, pdfSettingsByStore.ImageTargetSize, false);
-                    if (!string.IsNullOrEmpty(picPath))
+                    if (!string.IsNullOrEmpty(picPath) && !picPath.EndsWith("webp"))
                     {
                         picturePaths.Add(picPath);
                     }
@@ -907,9 +929,23 @@ public partial class PdfService : IPdfService
             Language = lang,
             ImageTargetSize = pdfSettingsByStore.ImageTargetSize,
             PageSize = pdfSettingsByStore.LetterPageSizeEnabled ? PdfPageSize.Letter : PdfPageSize.A4,
-            Font = lang.ResolvePdfFont(pdfSettingsByStore),
-            Products = productItems
+            Font = ResolvePdfFont(lang, pdfSettingsByStore),
+            Products = productItems,
+            GetImageImpl = (string path) =>
+            {
+                ArgumentNullException.ThrowIfNullOrEmpty(path);
+
+                if (path.EndsWith(".svg"))
+                {
+                    using var svgFileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                    return _pictureService.ConvertSvgToPngAsync(svgFileStream).Result;
+                }
+
+                return _fileProvider.ReadAllBytesAsync(path).Result;
+            },
+            GetResourceImpl = (string resourceKey, int languageId) => _localizationService.GetResourceAsync(resourceKey, languageId).Result
         };
+
 
         await using var pdfStream = new MemoryStream();
         catalogDocument.Generate(pdfStream);

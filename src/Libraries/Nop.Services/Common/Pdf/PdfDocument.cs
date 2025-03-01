@@ -1,4 +1,6 @@
-﻿using System.Linq.Expressions;
+﻿using System.ComponentModel;
+using System.Linq.Expressions;
+using System.Reflection;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.draw;
@@ -28,7 +30,7 @@ public abstract class PdfDocument<TItem>
         ArgumentNullException.ThrowIfNullOrEmpty(url);
 
         var content = new Phrase();
-        var label = PdfDocumentHelper.LabelField(labelSelector, Font, Language);
+        var label = LabelField(labelSelector, Font, Language);
 
         if (label.IsEmpty())
             label.Append(url);
@@ -38,7 +40,7 @@ public abstract class PdfDocument<TItem>
         var cell = new PdfPCell(content)
         {
             HorizontalAlignment = Element.ALIGN_LEFT,
-            RunDirection = Language.GetPdfRunDirection(),
+            RunDirection = DocumentRunDirection,
             Border = 0,
             Padding = 3
         };
@@ -57,11 +59,11 @@ public abstract class PdfDocument<TItem>
     /// <returns>A cell for PDF table</returns>
     protected virtual PdfPCell BuildPdfPCell<TLabel>(Expression<Func<TLabel, string>> labelSelector, string value, int horizontalAlign = Element.ALIGN_LEFT)
     {
-        var label = PdfDocumentHelper.LabelField(labelSelector, Font, Language, value);
+        var label = LabelField(labelSelector, Font, Language, value);
 
         var cell = new PdfPCell(new Phrase() { label })
         {
-            RunDirection = Language.GetPdfRunDirection(),
+            RunDirection = DocumentRunDirection,
             HorizontalAlignment = horizontalAlign,
             VerticalAlignment = Element.ALIGN_CENTER,
             Border = 0,
@@ -88,7 +90,7 @@ public abstract class PdfDocument<TItem>
             HorizontalAlignment = horizontalAlign,
             VerticalAlignment = verticalAlignment,
             Colspan = collSpan,
-            RunDirection = Language.GetPdfRunDirection(),
+            RunDirection = DocumentRunDirection,
             Border = 0,
             Padding = 3
         };
@@ -109,13 +111,13 @@ public abstract class PdfDocument<TItem>
         ArgumentNullException.ThrowIfNull(labelSelector);
         ArgumentNullException.ThrowIfNullOrEmpty(text);
 
-        var label = PdfDocumentHelper.LabelField(labelSelector, Font, Language);
+        var label = LabelField(labelSelector, Font, Language);
 
         var content = new Phrase() { label, new Chunk(":", Font), new Chunk(" ", Font), new Chunk(text, Font) };
         var cell = new PdfPCell(content)
         {
             HorizontalAlignment = Element.ALIGN_LEFT,
-            RunDirection = Language.GetPdfRunDirection(),
+            RunDirection = DocumentRunDirection,
             Border = 0,
             Padding = 3
         };
@@ -135,16 +137,16 @@ public abstract class PdfDocument<TItem>
     {
         ArgumentNullException.ThrowIfNull(address);
 
-        var addressTable = PdfDocumentHelper.BuildPdfGrid(numColumns: 1, Language);
+        var addressTable = PdfDocumentHelper.BuildPdfGrid(numColumns: 1, DocumentRunDirection);
 
         var fontBold = PdfDocumentHelper.GetFont(Font, Font.Size, DocumentFontStyle.Bold);
-        var label = PdfDocumentHelper.LabelField(labelSelector, fontBold, Language);
+        var label = LabelField(labelSelector, fontBold, Language);
 
         addressTable.AddCell(
             new PdfPCell(new Phrase(label) { new LineSeparator(2f, 100f, BaseColor.LightGray, Element.ALIGN_LEFT, -4) })
             {
                 HorizontalAlignment = Element.ALIGN_LEFT,
-                RunDirection = Language.GetPdfRunDirection(),
+                RunDirection = DocumentRunDirection,
                 Border = 0
             });
 
@@ -193,7 +195,7 @@ public abstract class PdfDocument<TItem>
         column.CellsHorizontalAlignment(HorizontalAlignment.Left);
         column.IsVisible(true);
         column.Width(width);
-        column.HeaderCell(PdfDocumentHelper.LabelField(propertyExpression, Font, Language).Content, horizontalAlignment: HorizontalAlignment.Left);
+        column.HeaderCell(LabelField(propertyExpression, Font, Language).Content, horizontalAlignment: HorizontalAlignment.Left);
 
         column.ColumnItemsTemplate(itemsTemplate =>
         {
@@ -204,7 +206,7 @@ public abstract class PdfDocument<TItem>
                     var table = new PdfGrid(numColumns: 1)
                     {
                         WidthPercentage = 100,
-                        RunDirection = Language.GetPdfRunDirection(),
+                        RunDirection = DocumentRunDirection,
                         HorizontalAlignment = Element.ALIGN_LEFT,
                         SpacingAfter = 5,
                         SpacingBefore = 5
@@ -224,7 +226,7 @@ public abstract class PdfDocument<TItem>
                         {
                             table.AddCell(new PdfPCell(new Phrase(pa, font8Italic))
                             {
-                                RunDirection = Language.GetPdfRunDirection(),
+                                RunDirection = DocumentRunDirection,
                                 HorizontalAlignment = Element.ALIGN_LEFT,
                                 Border = 0
                             });
@@ -233,7 +235,7 @@ public abstract class PdfDocument<TItem>
 
                     return new PdfPCell(table)
                     {
-                        RunDirection = Language.GetPdfRunDirection(),
+                        RunDirection = DocumentRunDirection,
                         BorderWidthBottom = 2,
                         BorderColorBottom = BaseColor.LightGray,
                         MinimumHeight = 25,
@@ -268,6 +270,30 @@ public abstract class PdfDocument<TItem>
                     }
                 });
             });
+    }
+
+    /// <summary>
+    /// Get a label for the given property
+    /// </summary>
+    /// <param name="propertyExpression">Property selector to get resource key annotation</param>
+    /// <param name="font">Font</param>
+    /// <param name="language">Language</param>
+    /// <param name="args">Array of objects to format the resource string</param>
+    /// <returns>A chunk with localized annotation if present, otherwise an empty chunk</returns>
+    protected virtual Chunk LabelField<TLabel, TOut>(Expression<Func<TLabel, TOut>> propertyExpression, Font font, Language language, params string[] args)
+    {
+        var expression = (MemberExpression)propertyExpression.Body;
+        var propertyInfo = (PropertyInfo)expression.Member;
+
+        var label = propertyInfo
+            .GetCustomAttributes<DisplayNameAttribute>(true)
+            .FirstOrDefault() is DisplayNameAttribute attr ?
+            GetResourceImpl(attr.DisplayName, language?.Id ?? 0) : string.Empty;
+
+        if (!string.IsNullOrEmpty(label) && args.Any())
+            label = string.Format(label, args);
+
+        return new Chunk(label, font);
     }
 
     #endregion
@@ -313,6 +339,13 @@ public abstract class PdfDocument<TItem>
     /// Gets or sets the size required to scale images before rendering
     /// </summary>
     public required int ImageTargetSize { get; init; }
+
+    /// <summary>
+    /// Gets document run direction
+    /// </summary>
+    public int DocumentRunDirection => Language?.Rtl == true ? PdfWriter.RUN_DIRECTION_RTL : PdfWriter.RUN_DIRECTION_LTR;
+
+    public required Func<string, int, string> GetResourceImpl { get; init; }
 
     #endregion
 }

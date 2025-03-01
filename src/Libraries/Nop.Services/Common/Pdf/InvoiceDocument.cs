@@ -16,14 +16,14 @@ public partial class InvoiceDocument : PdfDocument<ProductItem>
     protected virtual PdfGrid CreateAdressesInfo()
     {
         var hasShipping = !string.IsNullOrEmpty(ShippingAddress.ShippingMethod);
-        var addressesTable = PdfDocumentHelper.BuildPdfGrid(numColumns: hasShipping ? 2 : 1, Language);
+        var addressesTable = PdfDocumentHelper.BuildPdfGrid(numColumns: hasShipping ? 2 : 1, DocumentRunDirection);
 
-        var billingInfo = PdfDocumentHelper.BuildPdfPCell(BuildAddressTable<InvoiceDocument>(source => BillingAddress, BillingAddress), Language);
+        var billingInfo = PdfDocumentHelper.BuildPdfPCell(BuildAddressTable<InvoiceDocument>(source => BillingAddress, BillingAddress), DocumentRunDirection);
         addressesTable.AddCell(billingInfo);
 
         if (hasShipping)
         {
-            var shippingInfo = PdfDocumentHelper.BuildPdfPCell(BuildAddressTable<InvoiceDocument>(source => ShippingAddress, ShippingAddress), Language);
+            var shippingInfo = PdfDocumentHelper.BuildPdfPCell(BuildAddressTable<InvoiceDocument>(source => ShippingAddress, ShippingAddress), DocumentRunDirection);
             addressesTable.AddCell(shippingInfo);
         }
 
@@ -32,16 +32,16 @@ public partial class InvoiceDocument : PdfDocument<ProductItem>
 
     protected virtual PdfGrid CreateInvoiceHeader()
     {
-        var headerTable = PdfDocumentHelper.BuildPdfGrid(numColumns: 2, Language);
+        var headerTable = PdfDocumentHelper.BuildPdfGrid(numColumns: 2, DocumentRunDirection);
 
-        var info = PdfDocumentHelper.BuildPdfGrid(numColumns: 1, Language);
+        var info = PdfDocumentHelper.BuildPdfGrid(numColumns: 1, DocumentRunDirection);
         info.SpacingAfter = 15;
 
         info.AddCell(BuildPdfPCell<InvoiceDocument>(source => OrderNumberText, OrderNumberText));
         info.AddCell(BuildHyperLinkCell<InvoiceDocument>(source => StoreUrl, StoreUrl));
         info.AddCell(BuildTextCell<InvoiceDocument>(source => OrderDateUser, OrderDateUser));
 
-        headerTable.AddCell(PdfDocumentHelper.BuildPdfPCell(info, Language, horizontalAlign: Element.ALIGN_LEFT));
+        headerTable.AddCell(PdfDocumentHelper.BuildPdfPCell(info, DocumentRunDirection, horizontalAlign: Element.ALIGN_LEFT));
 
         if (LogoData is not null)
         {
@@ -50,7 +50,7 @@ public partial class InvoiceDocument : PdfDocument<ProductItem>
             {
                 Border = 0,
                 FixedHeight = 65,
-                RunDirection = Language.GetPdfRunDirection(),
+                RunDirection = DocumentRunDirection,
                 VerticalAlignment = Element.ALIGN_CENTER,
                 HorizontalAlignment = Element.ALIGN_CENTER
             });
@@ -64,28 +64,28 @@ public partial class InvoiceDocument : PdfDocument<ProductItem>
             });
         }
 
-        headerTable.AddCell(PdfDocumentHelper.BuildPdfPCell(CreateAdressesInfo(), Language, collSpan: 2));
+        headerTable.AddCell(PdfDocumentHelper.BuildPdfPCell(CreateAdressesInfo(), DocumentRunDirection, collSpan: 2));
 
         return headerTable;
     }
 
     protected virtual PdfGrid CreateFooter(FooterData footerData)
     {
-        var footerTable = PdfDocumentHelper.BuildPdfGrid(numColumns: 2, Language);
+        var footerTable = PdfDocumentHelper.BuildPdfGrid(numColumns: 2, DocumentRunDirection);
 
         if (!FooterTextColumn1.Any() && !FooterTextColumn2.Any())
             return footerTable;
 
-        var footer1Table = PdfDocumentHelper.BuildPdfGrid(numColumns: 1, Language);
+        var footer1Table = PdfDocumentHelper.BuildPdfGrid(numColumns: 1, DocumentRunDirection);
         foreach (var line in FooterTextColumn1)
             footer1Table.AddCell(BuildPdfPCell(line));
 
-        var footer2Table = PdfDocumentHelper.BuildPdfGrid(numColumns: 1, Language);
+        var footer2Table = PdfDocumentHelper.BuildPdfGrid(numColumns: 1, DocumentRunDirection);
         foreach (var line in FooterTextColumn2)
             footer2Table.AddCell(BuildPdfPCell(line));
 
-        footerTable.AddCell(PdfDocumentHelper.BuildPdfPCell(footer1Table, Language));
-        footerTable.AddCell(PdfDocumentHelper.BuildPdfPCell(footer2Table, Language));
+        footerTable.AddCell(PdfDocumentHelper.BuildPdfPCell(footer1Table, DocumentRunDirection));
+        footerTable.AddCell(PdfDocumentHelper.BuildPdfPCell(footer2Table, DocumentRunDirection));
 
         footerTable.AddCell(BuildPdfPCell($"- {footerData.CurrentPageNumber} -", collSpan: 2, horizontalAlign: Element.ALIGN_CENTER));
 
@@ -94,7 +94,7 @@ public partial class InvoiceDocument : PdfDocument<ProductItem>
 
     protected virtual PdfGrid CreateSummary()
     {
-        var summaryData = PdfDocumentHelper.BuildPdfGrid(numColumns: 1, Language);
+        var summaryData = PdfDocumentHelper.BuildPdfGrid(numColumns: 1, DocumentRunDirection);
 
         if (!string.IsNullOrEmpty(Totals.SubTotal))
             summaryData.AddCell(BuildTextCell<InvoiceTotals>(totals => totals.SubTotal, Totals.SubTotal));
@@ -123,7 +123,7 @@ public partial class InvoiceDocument : PdfDocument<ProductItem>
 
     protected virtual PdfGrid CreateCheckoutAttributes()
     {
-        var attributesData = PdfDocumentHelper.BuildPdfGrid(numColumns: 1, Language);
+        var attributesData = PdfDocumentHelper.BuildPdfGrid(numColumns: 1, DocumentRunDirection);
 
         attributesData.AddCell(BuildPdfPCell(CheckoutAttributes));
 
@@ -132,7 +132,7 @@ public partial class InvoiceDocument : PdfDocument<ProductItem>
 
     protected virtual PdfGrid CreateOrderNotes()
     {
-        var notesTable = PdfDocumentHelper.BuildPdfGrid(numColumns: 2, Language);
+        var notesTable = PdfDocumentHelper.BuildPdfGrid(numColumns: 2, DocumentRunDirection);
 
         if (OrderNotes?.Any() != true)
             return notesTable;
@@ -140,7 +140,7 @@ public partial class InvoiceDocument : PdfDocument<ProductItem>
         notesTable.SetWidths([2, 5]);
 
         var fontBold = PdfDocumentHelper.GetFont(Font, Font.Size, DocumentFontStyle.Bold);
-        var label = PdfDocumentHelper.LabelField<InvoiceDocument, List<(string, string)>>(invoice => invoice.OrderNotes, fontBold, Language);
+        var label = LabelField<InvoiceDocument, List<(string, string)>>(invoice => invoice.OrderNotes, fontBold, Language);
 
         notesTable.AddCell(
             new PdfPCell(new Phrase(label))
@@ -149,7 +149,7 @@ public partial class InvoiceDocument : PdfDocument<ProductItem>
                 Colspan = 2,
                 HorizontalAlignment = Element.ALIGN_LEFT,
                 PaddingBottom = 5,
-                RunDirection = Language.GetPdfRunDirection(),
+                RunDirection = DocumentRunDirection,
             });
 
         foreach (var (date, note) in OrderNotes)
@@ -188,7 +188,7 @@ public partial class InvoiceDocument : PdfDocument<ProductItem>
                     {
                         PdfFont = footer.PdfFont,
                         HorizontalAlignment = HorizontalAlignment.Center,
-                        RunDirection = PdfRunDirection.LeftToRight
+                        RunDirection = Language.Rtl ? PdfRunDirection.RightToLeft : PdfRunDirection.LeftToRight
                     });
                     inlineFooter.AddPageFooter(data => CreateFooter(data));
                 });
@@ -213,11 +213,11 @@ public partial class InvoiceDocument : PdfDocument<ProductItem>
                 });
                 events.MainTableAdded(events =>
                 {
-                    var summaryTable = PdfDocumentHelper.BuildPdfGrid(numColumns: 3, Language);
-                    summaryTable.AddCell(PdfDocumentHelper.BuildPdfPCell(CreateCheckoutAttributes(), Language, 3, horizontalAlign: Element.ALIGN_LEFT));
+                    var summaryTable = PdfDocumentHelper.BuildPdfGrid(numColumns: 3, DocumentRunDirection);
+                    summaryTable.AddCell(PdfDocumentHelper.BuildPdfPCell(CreateCheckoutAttributes(), DocumentRunDirection, 3, horizontalAlign: Element.ALIGN_LEFT));
 
                     summaryTable.AddCell(new PdfPCell() { Colspan = 2, Border = 0 });
-                    summaryTable.AddCell(PdfDocumentHelper.BuildPdfPCell(CreateSummary(), Language));
+                    summaryTable.AddCell(PdfDocumentHelper.BuildPdfPCell(CreateSummary(), DocumentRunDirection));
 
                     events.PdfDoc.Add(summaryTable);
                     events.PdfDoc.Add(CreateOrderNotes());

@@ -1,11 +1,5 @@
-﻿using System.ComponentModel;
-using System.Linq.Expressions;
-using System.Reflection;
-using iTextSharp.text;
+﻿using iTextSharp.text;
 using iTextSharp.text.pdf;
-using Nop.Core.Domain.Localization;
-using Nop.Core.Infrastructure;
-using Nop.Services.Localization;
 using PdfRpt.Core.Contracts;
 
 namespace Nop.Services.Common.Pdf;
@@ -27,15 +21,15 @@ public static partial class PdfDocumentHelper
     /// Build a cell with the given table
     /// </summary>
     /// <param name="table">PDF table</param>
-    /// <param name="language">Language</param>
+    /// <param name="runDirection">Preferential run direction</param>
     /// <param name="collSpan">The number of columns occupied by a cell</param>
     /// <param name="horizontalAlign">Horizontal alignment</param>
     /// <returns>A cell for PDF table</returns>
-    public static PdfPCell BuildPdfPCell(PdfGrid table, Language language, int collSpan = 1, int horizontalAlign = Element.ALIGN_CENTER)
+    public static PdfPCell BuildPdfPCell(PdfGrid table, int runDirection, int collSpan = 1, int horizontalAlign = Element.ALIGN_CENTER)
     {
         var cell = new PdfPCell(table)
         {
-            RunDirection = language.GetPdfRunDirection(),
+            RunDirection = runDirection,
             Colspan = collSpan,
             HorizontalAlignment = horizontalAlign,
             Border = 0
@@ -50,14 +44,14 @@ public static partial class PdfDocumentHelper
     /// Build default PDF table
     /// </summary>
     /// <param name="numColumns">The number of columns</param>
-    /// <param name="language">Language</param>
+    /// <param name="runDirection">Preferential run direction</param>
     /// <returns>A PDF table</returns>
-    public static PdfGrid BuildPdfGrid(int numColumns, Language language)
+    public static PdfGrid BuildPdfGrid(int numColumns, int runDirection)
     {
         return new PdfGrid(numColumns: numColumns)
         {
             WidthPercentage = 100,
-            RunDirection = language.GetPdfRunDirection(),
+            RunDirection = runDirection,
             HorizontalAlignment = Element.ALIGN_LEFT,
             SpacingAfter = 10
         };
@@ -85,31 +79,6 @@ public static partial class PdfDocumentHelper
     public static Font GetFont(Font font, float size, DocumentFontStyle style = DocumentFontStyle.Normal)
     {
         return new Font(font.GetCalculatedBaseFont(false), size, (int)style, font.Color);
-    }
-
-    /// <summary>
-    /// Get a label for the given property
-    /// </summary>
-    /// <param name="propertyExpression">Property selector to get resource key annotation</param>
-    /// <param name="font">Font</param>
-    /// <param name="language">Language</param>
-    /// <param name="args">Array of objects to format the resource string</param>
-    /// <returns>A chunk with localized annotation if present, otherwise an empty chunk</returns>
-    public static Chunk LabelField<TLabel, TOut>(Expression<Func<TLabel, TOut>> propertyExpression, Font font, Language language, params string[] args)
-    {
-        var expression = (MemberExpression)propertyExpression.Body;
-        var propertyInfo = (PropertyInfo)expression.Member;
-        var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-
-        var label = propertyInfo
-            .GetCustomAttributes<DisplayNameAttribute>(true)
-            .FirstOrDefault() is DisplayNameAttribute attr ?
-            localizationService.GetResourceAsync(attr.DisplayName, language?.Id ?? 0).Result : string.Empty;
-
-        if (!string.IsNullOrEmpty(label) && args.Any())
-            label = string.Format(label, args);
-
-        return new Chunk(label, font);
     }
 
     #endregion
