@@ -73,7 +73,7 @@ public partial class AdminAreaSettings : ISettings
     public bool UseIsoDateFormatInJsonResult { get; set; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether to documantation reference links on pages
+    /// Gets or sets a value indicating whether to documentation reference links on pages
     /// </summary>
     public bool ShowDocumentationReferenceLinks { get; set; }
 

@@ -13,7 +13,7 @@ public partial class GdprConsent : BaseEntity, ILocalizedEntity
     public string Message { get; set; }
 
     /// <summary>
-    /// Gets or setsa value indicating whether the consent is required
+    /// Gets or sets the value indicating whether the consent is required
     /// </summary>
     public bool IsRequired { get; set; }
 
