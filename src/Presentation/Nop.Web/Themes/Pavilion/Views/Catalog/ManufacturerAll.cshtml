@@ -15,13 +15,32 @@
     //page class
     Html.AppendPageCssClassParts("html-manufacturer-list-page");
 
-    //custom
-    var orderedList = Model.OrderBy(it => it.SeName);
+     // Featured filter list
+    var allowedManufacturers = new HashSet<string>
+    {
+        "AIRELOOM", "ASHLEY", "BOSCH", "CAFE", "COZZIA", "ELECTROLUX", "FRIGIDAIRE",
+        "FRIGIDAIRE GALLERY", "GE APPLIANCES", "GE PROFILE",
+        "HOTPOINT", "JBL", "KITCHENAID", "LG", "LG SIGNATURE", "LG STUDIO", "MAYTAG",
+        "NATUZZI", "PROFILE", "SAMSUNG", "SEALY", "SERTA RESTOKRAFT MATT INC", 
+        "SIMMONS BEAUTYREST", "SCOTT LIVING", "SPEED QUEEN", "SUBZERO", "SUNBRITE TV", 
+        "TCL", "TEMPUR-PEDIC", "VIZIO", "WHIRLPOOL"
+    };
+
+    var orderedList = Model.Where(it => allowedManufacturers.Contains(it.Name.ToUpper())).OrderBy(it => it.SeName);
+    var trueOrderedList = Model.OrderBy(it => it.SeName);
+    
+
+    // old code
+    @* var orderedList = Model.OrderBy(it => it.SeName); *@
 }
+
+
+    
+
 @* custom style *@
 <style>
 .manufacturer-item > .picture, .manufacturer-details {
-  display: none;
+  @* display: none; *@
 }
 .manufacturer-item.manufacturer-item.manufacturer-item {
   width: 100%;
@@ -29,8 +48,7 @@
   display: block;
 }
 
-.title.title.title {
-  width: 100%;
+.manufacturer-list-page .title.title.title {
   width: 100%;
   margin: auto;
   display: block;
@@ -43,19 +61,64 @@
 .title.title.title > a {
   padding: 8px;
 }
+.explore {
+    text-decoration: underline;
+    text-align: center;
+    margin: 0 0 30px;
+    border-bottom: 1px solid #ddd;
+    padding: 0 0 10px;
+    text-transform: uppercase;
+    }
+
+    .alpha-nav {
+    text-align: center;
+    margin-bottom: 1rem;
+    background-color: #f4f4f4;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.alpha-nav a {
+    margin: 0 6px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #007bff;
+}
+
+.alpha-nav a:hover {
+    text-decoration: underline;
+    color: #ff4500;
+}
+
+.title-hidden {
+    width: 100%;
+    margin: auto;
+    display: none;
+    text-align: center;
+}
+
+h2.explore {
+    margin-top: 25px;
+    color: #000;
+    text-decoration: none;
+}
+
 </style>
+
+
 <div class="page manufacturer-list-page">
     <div class="page-title">
         <h1>@T("Manufacturers.List")</h1>
     </div>
     <div class="page-body">
-        <div class="manufacturer-grid">
+        <div class="manufacturer-grid top-level-manufacturer">
             <div class="item-grid">
                 @foreach (var item in orderedList)
                 {
                     <div class="item-box">
                         <div class="manufacturer-item">
-                            <h2 class="title">
+                            @* Each manufacturer’s name now has an ID corresponding to its first letter,  *@
+                            <h2 class="title-hidden">
                                 <a href="@Url.RouteUrl("Manufacturer", new { SeName = item.SeName })" title="@item.PictureModel.Title">
                                     @item.Name
                                 </a>
@@ -68,7 +131,7 @@
                                         {
                                             ("src", item.PictureModel.ImageUrl),
                                             ("alt", item.PictureModel.AlternateText),
-                                            ("title", item.PictureModel.Title)
+                                            ("title-hidden", item.PictureModel.Title)
                                         })
                                     }
                                     else
@@ -87,6 +150,38 @@
                                     @T("SevenSpikes.Themes.Pavilion.Manufacturers.ShowAllProducts")
                                 </a>
                             </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+            <h2 class="explore">Explore More Brands</h2>
+
+        @* This is the code for implementing the navbar  *@
+        <div class="alpha-nav">
+             @foreach (var letter in trueOrderedList.Select(m => m.Name.Substring(0,1).ToUpper()).Distinct())
+                {
+                    <a href="#@letter">@letter</a>
+                }
+        </div>
+        <div class="manufacturer-grid">
+            <div class="item-grid">
+                @foreach (var item in trueOrderedList)
+                {
+                    <div class="item-box">
+                        <div class="manufacturer-item">
+                             @* Each manufacturer’s name now has an ID corresponding to its first letter,   *@
+                            <h2 class="title"  id="@item.Name.Substring(0,1).ToUpper()">
+                                <a href="@Url.RouteUrl("Manufacturer", new { SeName = item.SeName })" title="@item.PictureModel.Title">
+                                    @item.Name
+                                </a>
+                            </h2>
+                            @* This is the code for the pics of the remaining logos *@
+                            @* <div class="picture">
+                                <a href="@Url.RouteUrl("Manufacturer", new {SeName = item.SeName})" title="@item.PictureModel.Title">
+                                    <img alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title"/>
+                                </a>
+                            </div> *@
                         </div>
                     </div>
                 }

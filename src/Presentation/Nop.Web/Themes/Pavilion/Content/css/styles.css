@@ -1,6 +1,7 @@
-﻿
-
-/*********** CSS RESET **********/
+﻿/*********** CSS RESET **********/
+html {
+    scroll-behavior: smooth;
+}
 
 * {
 	margin: 0;
@@ -6386,6 +6387,29 @@ img.hawthorne-logo {
 	.promo-bann {
 		width: 100%;
 	}
+}
+@media (min-width: 1281px) {
+    .top-level-manufacturer .item-box.item-box:nth-child(6n+1) {
+        clear: both;
+        margin-left: 0;
+    }
+	.top-level-manufacturer .item-box.item-box:nth-child(4n+1) {
+		clear: none;
+		margin-left: 2%;
+	}
+	.top-level-manufacturer .item-box.item-box.item-box {
+		margin-bottom: 10px !important;
+		margin-left: 10px !important;
+	}
+	.top-level-manufacturer .manufacturer-details {
+		padding: 30% 0;
+	}
+}
+
+@media (min-width: 1281px) {
+    body .top-level-manufacturer .item-box {
+        width: 15%;
+    }
 }
 
 /* Bootstrap */
