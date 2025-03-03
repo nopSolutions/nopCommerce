@@ -111,7 +111,7 @@ public class PayPalCommercePublicController : BasePublicController
         if (!string.IsNullOrEmpty(model.Error))
             return ErrorJson(model.Error);
 
-        //order is approved but the customer must confirm it before
+        //order is approved but the customer must confirm it before (if not yet completed)
         if (!model.PayNow)
         {
             return Json(new
@@ -346,6 +346,66 @@ public class PayPalCommercePublicController : BasePublicController
     }
 
     #endregion
+
+    [HttpPost]
+    public async Task<IActionResult> CreateSetupToken()
+    {
+        var model = await _modelFactory.PrepareSetupTokenModelAsync();
+        if (model.LoginIsRequired)
+            return Json(new { redirect = Url.RouteUrl("Login", new { returnUrl = Url.RouteUrl(PayPalCommerceDefaults.Route.ShoppingCart) }) });
+
+        if (!model.CheckoutIsEnabled)
+            return Json(new { redirect = Url.RouteUrl(PayPalCommerceDefaults.Route.ShoppingCart) });
+
+        if (!string.IsNullOrEmpty(model.Error))
+            return ErrorJson(model.Error);
+
+        return Json(new { status = model.Status, redirect = model.PayerActionUrl });
+    }
+
+    public async Task<IActionResult> ApproveToken(string approvalTokenId)
+    {
+        if (string.IsNullOrEmpty(approvalTokenId))
+            approvalTokenId = _webHelper.QueryString<string>("approval_token_id");
+
+        //create new recurring order
+        var orderModel = await _modelFactory.PrepareRecurringOrderModelAsync(approvalTokenId);
+        if (orderModel.LoginIsRequired)
+            return RedirectToRoute("Login", new { returnUrl = Url.RouteUrl(PayPalCommerceDefaults.Route.ShoppingCart) });
+
+        if (!orderModel.CheckoutIsEnabled)
+            return RedirectToRoute(PayPalCommerceDefaults.Route.ShoppingCart);
+
+        if (!string.IsNullOrEmpty(orderModel.Error))
+        {
+            _notificationService.ErrorNotification(orderModel.Error);
+            return RedirectToRoute(PayPalCommerceDefaults.Route.ShoppingCart);
+        }
+
+        //order is created, let's approve it
+        var liabilityShift = string.Empty;
+        var approvedModel = await _modelFactory.PrepareOrderApprovedModelAsync(orderModel.OrderId, liabilityShift);
+
+        if (!string.IsNullOrEmpty(approvedModel.Error))
+        {
+            _notificationService.ErrorNotification(approvedModel.Error);
+            return RedirectToRoute(PayPalCommerceDefaults.Route.ShoppingCart);
+        }
+
+        //order is approved but the customer must confirm it before (if not yet completed)
+        if (!approvedModel.PayNow)
+            return RedirectToRoute(PayPalCommerceDefaults.Route.ConfirmOrder, new { orderId = approvedModel.OrderId, liabilityShift = liabilityShift });
+
+        //or pay it right now
+        var completedModel = await _modelFactory.PrepareOrderCompletedModelAsync(orderModel.OrderId, liabilityShift);
+        if (!string.IsNullOrEmpty(completedModel.Error))
+        {
+            _notificationService.ErrorNotification(completedModel.Error);
+            return RedirectToRoute(PayPalCommerceDefaults.Route.ShoppingCart);
+        }
+
+        return RedirectToRoute(PayPalCommerceDefaults.Route.CheckoutCompleted, new { orderId = completedModel.OrderId });
+    }
 
     #region Payment tokens
 

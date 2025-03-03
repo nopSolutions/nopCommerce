@@ -28,7 +28,7 @@ public class PayPal : Payer
     public string BillingAgreementId { get; set; }
 
     /// <summary>
-    /// Gets or sets the PayPal-generated ID for the saved card payment source. Typically stored on the merchant's server.
+    /// Gets or sets the PayPal-generated ID for the saved payment source. Typically stored on the merchant's server.
     /// </summary>
     [JsonProperty(PropertyName = "vault_id")]
     public string VaultId { get; set; }
@@ -38,6 +38,12 @@ public class PayPal : Payer
     /// </summary>
     [JsonProperty(PropertyName = "attributes")]
     public Attributes Attributes { get; set; }
+
+    /// <summary>
+    /// Gets or sets the additional details to process a payment using the PayPal wallet billing agreement or a vaulted payment method that has been stored or is intended to be stored.
+    /// </summary>
+    [JsonProperty(PropertyName = "stored_credential")]
+    public StoredCredential StoredCredential { get; set; }
 
     #endregion
 }

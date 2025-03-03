@@ -33,6 +33,11 @@ public class PayPalCommerceDefaults
     public static string ShipmentCarrierAttribute => "PayPalCommerceShipmentCarrier";
 
     /// <summary>
+    /// Gets the name of a generic attribute to store the payment token identifier
+    /// </summary>
+    public static string TokenIdAttributeName => "PayPalCommerceTokenId";
+
+    /// <summary>
     /// Gets the service URL
     /// </summary>
     public static (string Sandbox, string Live) ServiceUrl => ("https://api-m.sandbox.paypal.com/", "https://api-m.paypal.com/");
@@ -137,6 +142,11 @@ public class PayPalCommerceDefaults
         /// Gets the confirm order route name
         /// </summary>
         public static string ConfirmOrder => "Plugin.Payments.PayPalCommerce.ConfirmOrder";
+
+        /// <summary>
+        /// Gets the approve token route name
+        /// </summary>
+        public static string ApproveToken => "Plugin.Payments.PayPalCommerce.ApproveToken";
 
         /// <summary>
         /// Gets the one page checkout route name

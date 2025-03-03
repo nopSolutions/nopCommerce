@@ -28,6 +28,12 @@ public class StoredCredential
     public string Usage { get; set; }
 
     /// <summary>
+    /// Gets or sets the value if this is a first or subsequent payment using a stored payment source (also referred to as stored credential or card on file).
+    /// </summary>
+    [JsonProperty(PropertyName = "usage_pattern")]
+    public string UsagePattern { get; set; }
+
+    /// <summary>
     /// Gets or sets the reference values used by the card network to identify a transaction.
     /// </summary>
     [JsonProperty(PropertyName = "previous_network_transaction_reference")]

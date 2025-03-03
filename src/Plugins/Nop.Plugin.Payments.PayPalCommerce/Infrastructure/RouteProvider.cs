@@ -39,6 +39,10 @@ public class RouteProvider : BaseRouteProvider, IRouteProvider
             pattern: $"{lang}/paypal/confirm-order",
             defaults: new { controller = "PayPalCommercePublic", action = "ConfirmOrder" });
 
+        endpointRouteBuilder.MapControllerRoute(name: PayPalCommerceDefaults.Route.ApproveToken,
+            pattern: $"{lang}/paypal/approve-payment",
+            defaults: new { controller = "PayPalCommercePublic", action = "ApproveToken" });
+
         endpointRouteBuilder.MapControllerRoute(name: PayPalCommerceDefaults.Route.PaymentTokens,
             pattern: $"{lang}/customer/paypal-payment-methods",
             defaults: new { controller = "PayPalCommercePublic", action = "PaymentTokens" });

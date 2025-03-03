@@ -162,9 +162,18 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
     /// A task that represents the asynchronous operation
     /// The task result contains the process payment result
     /// </returns>
-    public Task<ProcessPaymentResult> ProcessRecurringPaymentAsync(ProcessPaymentRequest processPaymentRequest)
+    public async Task<ProcessPaymentResult> ProcessRecurringPaymentAsync(ProcessPaymentRequest processPaymentRequest)
     {
-        return Task.FromResult(new ProcessPaymentResult { Errors = new[] { "Recurring payment not supported" } });
+        //we process an initial order separately
+        if (processPaymentRequest.InitialOrder is null)
+            return new();
+
+        var (_, error) = await _serviceManager.ProcessNextRecurringPaymentAsync(_settings, processPaymentRequest);
+        if (!string.IsNullOrEmpty(error))
+            return new() { Errors = new[] { error }, RecurringPaymentFailed = true };
+
+        //request succeeded
+        return new();
     }
 
     /// <summary>
@@ -175,9 +184,13 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
     /// A task that represents the asynchronous operation
     /// The task result contains the result
     /// </returns>
-    public Task<CancelRecurringPaymentResult> CancelRecurringPaymentAsync(CancelRecurringPaymentRequest cancelPaymentRequest)
+    public async Task<CancelRecurringPaymentResult> CancelRecurringPaymentAsync(CancelRecurringPaymentRequest cancelPaymentRequest)
     {
-        return Task.FromResult(new CancelRecurringPaymentResult { Errors = new[] { "Recurring payment not supported" } });
+        var (_, error) = await _serviceManager.CancelRecurringPaymentAsync(_settings, cancelPaymentRequest.Order);
+        if (!string.IsNullOrEmpty(error))
+            return new() { Errors = new[] { error } };
+
+        return new();
     }
 
     /// <summary>
@@ -557,7 +570,7 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
     /// <summary>
     /// Gets a recurring payment type of payment method
     /// </summary>
-    public RecurringPaymentType RecurringPaymentType => RecurringPaymentType.NotSupported;
+    public RecurringPaymentType RecurringPaymentType => RecurringPaymentType.Manual;
 
     /// <summary>
     /// Gets a payment method type

@@ -32,6 +32,7 @@
     <None Remove="Views\Public\PaymentTokens.cshtml" />
     <None Remove="Views\Public\PluginPaymentInfo.cshtml" />
     <None Remove="Views\Public\_Buttons.cshtml" />
+    <None Remove="Views\Public\_Buttons.Recurring.cshtml" />
     <None Remove="Views\Public\_Messages.cshtml" />
     <None Remove="Views\_ViewImports.cshtml" />
   </ItemGroup>
@@ -71,6 +72,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Public\PluginPaymentInfo.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Public\_Buttons.Recurring.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Public\_Buttons.cshtml">

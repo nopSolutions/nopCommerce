@@ -5,9 +5,9 @@ using Nop.Plugin.Payments.PayPalCommerce.Services.Api.Models;
 namespace Nop.Plugin.Payments.PayPalCommerce.Services.Api.PaymentTokens;
 
 /// <summary>
-/// Represents the request to create a Setup Token from the given payment source and adds it to the Vault of the associated customer
+/// Represents the request to create a Payment Token from the given payment source and adds it to the Vault of the associated customer
 /// </summary>
-public class CreateSetupTokenRequest : IAuthorizedRequest
+public class CreatePaymentTokenRequest : IAuthorizedRequest
 {
     #region Properties
 
@@ -27,7 +27,7 @@ public class CreateSetupTokenRequest : IAuthorizedRequest
     /// Gets the request path
     /// </summary>
     [JsonIgnore]
-    public string Path => $"v3/vault/setup-tokens?";
+    public string Path => $"v3/vault/payment-tokens?";
 
     /// <summary>
     /// Gets the request method
