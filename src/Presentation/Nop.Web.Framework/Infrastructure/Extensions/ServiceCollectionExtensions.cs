@@ -384,6 +384,7 @@ public static class ServiceCollectionExtensions
     {
         //we use custom redirect executor as a workaround to allow using non-ASCII characters in redirect URLs
         services.AddScoped<IActionResultExecutor<RedirectResult>, NopRedirectResultExecutor>();
+        services.AddScoped<IActionResultExecutor<LocalRedirectResult>, NopLocalRedirectResultExecutor>();
     }
 
     /// <summary>
