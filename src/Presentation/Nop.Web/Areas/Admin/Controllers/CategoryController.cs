@@ -44,7 +44,6 @@ public partial class CategoryController : BaseAdminController
     protected readonly IProductService _productService;
     protected readonly IStaticCacheManager _staticCacheManager;
     protected readonly IStoreMappingService _storeMappingService;
-    protected readonly IStoreService _storeService;
     protected readonly IUrlRecordService _urlRecordService;
     protected readonly IWorkContext _workContext;
 
@@ -68,7 +67,6 @@ public partial class CategoryController : BaseAdminController
         IProductService productService,
         IStaticCacheManager staticCacheManager,
         IStoreMappingService storeMappingService,
-        IStoreService storeService,
         IUrlRecordService urlRecordService,
         IWorkContext workContext)
     {
@@ -88,7 +86,6 @@ public partial class CategoryController : BaseAdminController
         _productService = productService;
         _staticCacheManager = staticCacheManager;
         _storeMappingService = storeMappingService;
-        _storeService = storeService;
         _urlRecordService = urlRecordService;
         _workContext = workContext;
     }
@@ -137,31 +134,6 @@ public partial class CategoryController : BaseAdminController
         var picture = await _pictureService.GetPictureByIdAsync(category.PictureId);
         if (picture != null)
             await _pictureService.SetSeoFilenameAsync(picture.Id, await _pictureService.GetPictureSeNameAsync(category.Name));
-    }
-    
-    protected virtual async Task SaveStoreMappingsAsync(Category category, CategoryModel model)
-    {
-        category.LimitedToStores = model.SelectedStoreIds.Any();
-        await _categoryService.UpdateCategoryAsync(category);
-
-        var existingStoreMappings = await _storeMappingService.GetStoreMappingsAsync(category);
-        var allStores = await _storeService.GetAllStoresAsync();
-        foreach (var store in allStores)
-        {
-            if (model.SelectedStoreIds.Contains(store.Id))
-            {
-                //new store
-                if (!existingStoreMappings.Any(sm => sm.StoreId == store.Id))
-                    await _storeMappingService.InsertStoreMappingAsync(category, store.Id);
-            }
-            else
-            {
-                //remove store
-                var storeMappingToDelete = existingStoreMappings.FirstOrDefault(sm => sm.StoreId == store.Id);
-                if (storeMappingToDelete != null)
-                    await _storeMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
-            }
-        }
     }
 
     #endregion
@@ -235,9 +207,9 @@ public partial class CategoryController : BaseAdminController
 
             //update picture seo file name
             await UpdatePictureSeoNamesAsync(category);
-            
+
             //stores
-            await SaveStoreMappingsAsync(category, model);
+            await _categoryService.UpdateCategoryStoreMappingsAsync(category, model.SelectedStoreIds);
 
             //activity log
             await _customerActivityService.InsertActivityAsync("AddNewCategory",
@@ -334,9 +306,9 @@ public partial class CategoryController : BaseAdminController
 
             //update picture seo file name
             await UpdatePictureSeoNamesAsync(category);
-            
+
             //stores
-            await SaveStoreMappingsAsync(category, model);
+            await _categoryService.UpdateCategoryStoreMappingsAsync(category, model.SelectedStoreIds);
 
             //activity log
             await _customerActivityService.InsertActivityAsync("EditCategory",
@@ -391,7 +363,7 @@ public partial class CategoryController : BaseAdminController
         //activity log
         var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.DeleteCategory");
         await _customerActivityService.InsertActivitiesAsync("DeleteCategory", categories, category => string.Format(activityLogFormat, category.Name));
-        
+
         return Json(new { Result = true });
     }
 

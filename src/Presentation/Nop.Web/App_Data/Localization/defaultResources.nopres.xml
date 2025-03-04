@@ -6069,6 +6069,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportCategoriesUsingCategoryName.Hint">
     <Value>Check if categories should be exported/imported using name of category.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportCategoryUseLimitedToStores">
+    <Value>Export/Import categories with "limited to stores"</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportCategoryUseLimitedToStores.Hint">
+    <Value>Check if categories should be exported/imported with "limited to stores" property.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportProductAttributes">
     <Value>Export/Import products with attributes</Value>
   </LocaleResource>

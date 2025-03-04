@@ -69,6 +69,14 @@ public class SettingMigration : MigrationBase
             adminAreaSettings.MinimumDropdownItemsForSearch = 50;
             settingService.SaveSetting(adminAreaSettings, settings => settings.MinimumDropdownItemsForSearch);
         }
+
+        //#7405
+        var catalogSettings = settingService.LoadSetting<CatalogSettings>();
+        if (!settingService.SettingExists(catalogSettings, settings => settings.ExportImportCategoryUseLimitedToStores))
+        {
+            catalogSettings.ExportImportCategoryUseLimitedToStores = false;
+            settingService.SaveSetting(catalogSettings, settings => settings.ExportImportCategoryUseLimitedToStores);
+        }
     }
 
     public override void Down()

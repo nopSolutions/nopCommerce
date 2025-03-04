@@ -462,7 +462,7 @@ public partial class ImportManager : IImportManager
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    protected virtual async Task<(string seName, bool isParentCategoryExists)> UpdateCategoryByXlsxAsync(Category category, PropertyManager<Category> manager, Dictionary<string, ValueTask<Category>> allCategories, bool isNew)
+    protected virtual async Task<(string seName, bool isParentCategoryExists)> UpdateCategoryByXlsxAsync(Category category, PropertyManager<Category> manager, Dictionary<string, ValueTask<Category>> allCategories, IList<Store> allStores, bool isNew)
     {
         var seName = string.Empty;
         var isParentCategoryExists = true;
@@ -559,6 +559,9 @@ public partial class ImportManager : IImportManager
                 case "IncludeInTopMenu":
                     category.IncludeInTopMenu = property.BooleanValue;
                     break;
+                case "IsLimitedToStores":
+                    category.LimitedToStores = property.BooleanValue;
+                    break;
                 case "Published":
                     category.Published = property.BooleanValue;
                     break;
@@ -569,6 +572,17 @@ public partial class ImportManager : IImportManager
                     seName = property.StringValue;
                     break;
             }
+        }
+
+        var tempProperty = manager.GetDefaultProperty("LimitedToStores");
+        if (tempProperty != null)
+        {
+            var limitedToStoresList = tempProperty.StringValue;
+
+            var importedStores = category.LimitedToStores ? limitedToStoresList.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(x => allStores.FirstOrDefault(store => store.Name == x.Trim())?.Id ?? int.Parse(x.Trim())).ToList() : new List<int>();
+
+            await _categoryService.UpdateCategoryStoreMappingsAsync(category, importedStores);
         }
 
         category.UpdatedOnUtc = DateTime.UtcNow;
@@ -3000,6 +3014,9 @@ public partial class ImportManager : IImportManager
 
         var saveNextTime = new List<int>();
 
+        //performance optimization, load all stores in one SQL request
+        var allStores = await _storeService.GetAllStoresAsync();
+
         while (true)
         {
             var allColumnsAreEmpty = manager.GetDefaultProperties
@@ -3013,7 +3030,7 @@ public partial class ImportManager : IImportManager
             var (category, isNew, currentCategoryBreadCrumb) = await GetCategoryFromXlsxAsync(manager, defaultWorksheet, iRow, allCategories);
 
             //update category by data in xlsx file
-            var (seName, isParentCategoryExists) = await UpdateCategoryByXlsxAsync(category, manager, allCategories, isNew);
+            var (seName, isParentCategoryExists) = await UpdateCategoryByXlsxAsync(category, manager, allCategories, allStores, isNew);
 
             if (isParentCategoryExists)
             {
@@ -3044,7 +3061,7 @@ public partial class ImportManager : IImportManager
                 //get category by data in xlsx file if it possible, or create new category
                 var (category, isNew, currentCategoryBreadCrumb) = await GetCategoryFromXlsxAsync(manager, defaultWorksheet, rowId, allCategories);
                 //update category by data in xlsx file
-                var (seName, isParentCategoryExists) = await UpdateCategoryByXlsxAsync(category, manager, allCategories, isNew);
+                var (seName, isParentCategoryExists) = await UpdateCategoryByXlsxAsync(category, manager, allCategories, allStores, isNew);
 
                 if (!isParentCategoryExists)
                     continue;
