@@ -6146,6 +6146,21 @@ h1.search-page-title {
 .center ul.mega-menu a {
     padding: 5px;
 }
+.measurement-confirmation {
+    padding-bottom: 20px;
+}
+
+.sublist-wrap.categories.with-pictures .sublist {
+    padding-left: 30px !important;
+}
+@media screen and (max-width: 999px) {
+ul.sublist {
+    padding-top: 40px !important;
+}
+.header-menu>ul li>.with-subcategories {
+width: 250px !important;
+}
+}
 
 @media (min-width: 1001px) {
     .master-wrapper-page .header-middle {

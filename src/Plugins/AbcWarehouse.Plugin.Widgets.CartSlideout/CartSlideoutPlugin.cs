@@ -63,9 +63,11 @@ namespace AbcWarehouse.Plugin.Widgets.CartSlideout
 
             await _localizationService.AddOrUpdateLocaleResourceAsync(
                 "AbcWarehouse.Plugin.Widgets.CartSlideout.DeliveryNotAvailable",
-                "Home delivery for the zip code entered is not available at this time. ABC Warehouse currently " +
-                "provides home delivery on major appliances and TVs within our Home Delivery Areas throughout " +
-                "Michigan, and surrounding areas of our store locations in Ohio and Indiana."
+                "Home delivery for the zip code entered is not available through ABC Warehouse " +
+                "because it is outside of our local service area in Michigan, Ohio and Indiana.  " +
+                "Please see our sister company, us-appliance.com for nation-wide delivery options for " +
+                "your new appliance(s). " +
+                "<a href='https://www.us-appliance.com/' target='_blank' rel='noopener noreferrer'>Shop Us Appliance</a> for more details."
             );
             await _localizationService.AddOrUpdateLocaleResourceAsync(
                 "AbcWarehouse.Plugin.Widgets.CartSlideout.MattressMessaging",
