@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Nop.Core.Domain.Common;
 using Nop.Web.Framework.Extensions;
+using static LinqToDB.Reflection.Methods.LinqToDB.Insert;
 
 namespace Nop.Web.Framework.TagHelpers.Admin;
 
@@ -91,10 +93,17 @@ public partial class NopSelectTagHelper : TagHelper
             if (bool.TryParse(IsMultiple, out var multiple) && multiple)
                 templateName = $"Multi{templateName}";
 
-            if (For?.ModelExplorer.ModelType == typeof(List<string>) || For?.ModelExplorer.ModelType == typeof(string))
-                templateName = $"{templateName}String";
+            IHtmlContent selectList;
+            var modelType = For?.ModelExplorer.ModelType;
+            var additionalData = new { htmlAttributes, SelectList = Items, MinimumItemsForSearch = _adminAreaSettings.MinimumDropdownItemsForSearch };
 
-            var selectList = _htmlHelper.Editor(tagName, templateName, new { htmlAttributes, SelectList = Items, MinimumItemsForSearch = _adminAreaSettings.MinimumDropdownItemsForSearch });
+            if (modelType is null || new[] { typeof(List<string>), typeof(string) }.Contains(modelType))
+                selectList = _htmlHelper.Editor(tagName, $"{templateName}String", additionalData);
+            else if (new[] { typeof(List<int>), typeof(int) }.Contains(modelType))
+                selectList = _htmlHelper.Editor(tagName, templateName, additionalData);
+            else
+                selectList = _htmlHelper.DropDownList(tagName, Items, htmlAttributes);
+
             output.Content.SetHtmlContent(await selectList.RenderHtmlContentAsync());
         }
     }
