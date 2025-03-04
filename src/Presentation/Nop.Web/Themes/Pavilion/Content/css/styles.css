@@ -6146,6 +6146,9 @@ h1.search-page-title {
 .center ul.mega-menu a {
     padding: 5px;
 }
+.measurement-confirmation {
+    padding-bottom: 20px;
+}
 
 @media (min-width: 1001px) {
     .master-wrapper-page .header-middle {
