@@ -142,13 +142,17 @@ public abstract class PdfDocument<TItem>
         var fontBold = PdfDocumentHelper.GetFont(Font, Font.Size, DocumentFontStyle.Bold);
         var label = LabelField(labelSelector, fontBold, Language);
 
-        addressTable.AddCell(
-            new PdfPCell(new Phrase(label) { new LineSeparator(2f, 100f, BaseColor.LightGray, Element.ALIGN_LEFT, -4) })
-            {
-                HorizontalAlignment = Element.ALIGN_LEFT,
-                RunDirection = DocumentRunDirection,
-                Border = 0
-            });
+        var captionCell = new PdfPCell()
+        {
+            HorizontalAlignment = Element.ALIGN_LEFT,
+            RunDirection = DocumentRunDirection,
+            Border = 0
+        };
+
+        captionCell.AddElement(new Paragraph(label) { Alignment = Element.ALIGN_LEFT });
+        captionCell.AddElement(new LineSeparator(2f, 100f, BaseColor.LightGray, Element.ALIGN_LEFT, -4));
+
+        addressTable.AddCell(captionCell);
 
         if (!string.IsNullOrEmpty(address?.Company))
             addressTable.AddCell(BuildTextCell<AddressItem>(address => address.Company, address.Company));
