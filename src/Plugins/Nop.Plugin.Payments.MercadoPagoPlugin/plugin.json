@@ -1,0 +1,13 @@
+﻿{
+  "Group": "Payment methods",
+  "FriendlyName": "Mercado Pago NopCommerce Plugin",
+  "SystemName": "Mercado Pago NopCommerce Plugin",
+  "Version": "1.00",
+  "SupportedVersions": [
+    "4.80"
+  ],
+  "Author": "lautaro.0298@gmail.com",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Payments.MercadoPagoPlugin.dll",
+  "Description": ""
+}

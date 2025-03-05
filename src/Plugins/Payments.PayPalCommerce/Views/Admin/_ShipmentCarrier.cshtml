@@ -1,0 +1,23 @@
+﻿@model ShipmentCarrierModel
+
+<div id="paypal-carrier" class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="PayPalCommerceShipmentCarrier" />
+    </div>
+    <div class="col-md-9">
+        <nop-editor asp-for="PayPalCommerceShipmentCarrier" asp-required="true" />
+        <span asp-validation-for="PayPalCommerceShipmentCarrier"></span>
+    </div>
+</div>
+<div id="paypal-carrier-info" class="form-group row">
+    <div class="col-md-9 offset-md-3">
+        <span>NOTE: The carrier for the shipment is required. Some carriers have a global version as well as local subsidiaries. The subsidiaries are repeated over many countries and might also have an entry in the global list. Choose the carrier for your country. If the carrier is not available for your country, choose the global version of the carrier. If your carrier name is not in the list, set carrier to OTHER. For allowed values, see <a href="https://developer.paypal.com/docs/tracking/reference/carriers/" target="_blank">Carriers</a>.</span>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('#@Html.IdFor(model => model.TrackingNumber)').closest('.form-group').after($('#paypal-carrier'));
+        $('#paypal-carrier').after($('#paypal-carrier-info'));
+    });
+</script>
