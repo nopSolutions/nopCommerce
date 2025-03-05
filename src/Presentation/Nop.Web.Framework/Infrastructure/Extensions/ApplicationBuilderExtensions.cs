@@ -2,6 +2,7 @@
 using System.Net;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
+using iTextSharp.text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
@@ -34,7 +35,6 @@ using Nop.Services.Seo;
 using Nop.Web.Framework.Globalization;
 using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.WebOptimizer;
-using QuestPDF.Drawing;
 using WebMarkupMin.AspNetCoreLatest;
 using WebOptimizer;
 using IPNetwork = Microsoft.AspNetCore.HttpOverrides.IPNetwork;
@@ -427,14 +427,11 @@ public static class ApplicationBuilderExtensions
             return;
 
         var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
+
         var fontPaths = fileProvider.EnumerateFiles(fileProvider.MapPath("~/App_Data/Pdf/"), "*.ttf") ?? Enumerable.Empty<string>();
-
-        //write placeholder characters instead of unavailable glyphs for both debug/release configurations
-        QuestPDF.Settings.CheckIfAllTextGlyphsAreAvailable = false;
-
         foreach (var fp in fontPaths)
         {
-            FontManager.RegisterFont(File.OpenRead(fp));
+            FontFactory.Register(fp, fileProvider.GetFileNameWithoutExtension(fp));
         }
     }
 

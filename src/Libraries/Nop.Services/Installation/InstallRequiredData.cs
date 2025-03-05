@@ -1218,9 +1218,12 @@ public partial class InstallationService
             LogoPictureId = 0,
             LetterPageSizeEnabled = false,
             RenderOrderNotes = true,
-            FontFamily = "FreeSerif",
+            LtrFontName = NopCommonDefaults.PdfLtrFontName,
+            RtlFontName = NopCommonDefaults.PdfRtlFontName,
             InvoiceFooterTextColumn1 = null,
-            InvoiceFooterTextColumn2 = null
+            InvoiceFooterTextColumn2 = null,
+            BaseFontSize = 10,
+            ImageTargetSize = 200
         });
 
         await SaveSettingAsync(dictionary, new SitemapSettings
