@@ -16,5 +16,8 @@ public partial record AdminAreaSettingsModel : BaseNopModel, ISettingsModel
     public bool UseRichEditorInMessageTemplates { get; set; }
     public bool UseRichEditorInMessageTemplates_OverrideForStore { get; set; }
 
+    [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.AdminArea.UseStickyHeaderLayout")]
+    public bool UseStickyHeaderLayout { get; set; }
+
     #endregion
 }

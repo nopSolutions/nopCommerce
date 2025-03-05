@@ -740,6 +740,9 @@ public partial class CustomerController : BasePublicController
 
         await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute, "");
 
+        await _customerActivityService.InsertActivityAsync(customer, "PublicStore.PasswordChanged", await
+            _localizationService.GetResourceAsync("ActivityLog.PublicStore.PasswordChanged"));
+
         //authenticate customer after changing password
         await _customerRegistrationService.SignInCustomerAsync(customer, null, true);
 
@@ -1649,6 +1652,9 @@ public partial class CustomerController : BasePublicController
             {
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Account.ChangePassword.Success"));
 
+                await _customerActivityService.InsertActivityAsync(customer, "PublicStore.PasswordChanged", await 
+                    _localizationService.GetResourceAsync("ActivityLog.PublicStore.PasswordChanged"));
+
                 //authenticate customer after changing password
                 await _customerRegistrationService.SignInCustomerAsync(customer, null, true);
 
@@ -1838,10 +1844,8 @@ public partial class CustomerController : BasePublicController
     [CheckAccessClosedStore(ignore: true)]
     public virtual async Task<IActionResult> CheckGiftCardBalance()
     {
-        if (!(_captchaSettings.Enabled && _customerSettings.AllowCustomersToCheckGiftCardBalance))
-        {
+        if (!_customerSettings.AllowCustomersToCheckGiftCardBalance) 
             return RedirectToRoute("CustomerInfo");
-        }
 
         var model = await _customerModelFactory.PrepareCheckGiftCardBalanceModelAsync();
 
@@ -1853,11 +1857,12 @@ public partial class CustomerController : BasePublicController
     [ValidateCaptcha]
     public virtual async Task<IActionResult> CheckBalance(CheckGiftCardBalanceModel model, bool captchaValid)
     {
+        if (!_customerSettings.AllowCustomersToCheckGiftCardBalance)
+            return RedirectToRoute("CustomerInfo");
+
         //validate CAPTCHA
-        if (_captchaSettings.Enabled && !captchaValid)
-        {
+        if (_captchaSettings.Enabled && _captchaSettings.ShowOnCheckGiftCardBalance && !captchaValid) 
             ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
-        }
 
         if (ModelState.IsValid)
         {

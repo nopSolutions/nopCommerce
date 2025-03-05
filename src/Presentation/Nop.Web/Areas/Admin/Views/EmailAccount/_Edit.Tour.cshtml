@@ -1,0 +1,59 @@
+﻿@await Html.PartialAsync("_AdminTour");
+
+<script asp-location="Footer">
+    const steps = [{
+        element: '#email-area',
+        popover: {
+            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.EmailAddress.Title").Text)',
+            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.EmailAddress.Text").Text)',
+            side: "bottom",
+            align: 'start'
+        }}, {
+        element: '#display-name-area',
+        popover: {
+            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.DisplayName.Title").Text)',
+            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.DisplayName.Text").Text)',
+            side: "bottom",
+            align: 'start'
+        }},{
+        element: '#host-area',
+        popover: {
+            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.Host.Title").Text)',
+            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.Host.Text").Text)',
+            side: "bottom",
+            align: 'start'
+        }},{
+        element: '#port-area',
+        popover: {
+            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.Port.Title").Text)',
+            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.Port.Text").Text)',
+            side: "bottom",
+            align: 'start'
+        }},{
+        element: '#ssl-area',
+        popover: {
+            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.UseSsl.Title").Text)',
+            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.UseSsl.Text").Text)',
+            side: "bottom",
+            align: 'start'
+        }},{
+        element: '#authentication-method-area',
+        popover: {
+            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.AuthenticationMethod.Title").Text)',
+            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.AuthenticationMethod.Text").Text)',
+            side: "bottom",
+            align: 'start'
+        }},{
+        element: '#test-email-area',
+        popover: {
+            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.TestEmail.Title").Text)',
+            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccount.TestEmail.Text").Text)',
+            side: "bottom",
+            align: 'start'
+        }},
+    ];
+
+    AdminTourBuilder
+        .init(localized_data, '', '@Url.Action("List", "Topic", new { showtour = true })', steps)
+        .drive();
+</script>

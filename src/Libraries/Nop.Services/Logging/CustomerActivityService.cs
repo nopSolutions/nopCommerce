@@ -134,6 +134,58 @@ public partial class CustomerActivityService : ICustomerActivityService
     }
 
     /// <summary>
+    /// Inserts the activities log items
+    /// </summary>
+    /// <param name="systemKeyword">System keyword</param>
+    /// <param name="entities">Entities</param>
+    /// <param name="comment">Comment</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the activity log items
+    /// </returns>
+    public virtual async Task<IList<ActivityLog>> InsertActivitiesAsync<TEntity>(string systemKeyword, IList<TEntity> entities, Func<TEntity, string> comment)
+    {
+        return await InsertActivitiesAsync(await _workContext.GetCurrentCustomerAsync(), systemKeyword, entities, comment);
+    }
+
+    /// <summary>
+    /// Inserts the activities log items
+    /// </summary>
+    /// <param name="customer">Customer</param>
+    /// <param name="systemKeyword">System keyword</param>
+    /// <param name="entities">Entities</param>
+    /// <param name="comment">Comment</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the activity log items
+    /// </returns>
+    public virtual async Task<IList<ActivityLog>> InsertActivitiesAsync<TEntity>(Customer customer, string systemKeyword, IList<TEntity> entities, Func<TEntity, string> comment)
+    {
+        if (customer == null || customer.IsSearchEngineAccount())
+            return null;
+
+        //try to get activity log type by passed system keyword
+        var activityLogType = (await GetAllActivityTypesAsync()).FirstOrDefault(type => type.SystemKeyword.Equals(systemKeyword));
+        if (!activityLogType?.Enabled ?? true)
+            return null;
+
+        var logItems = entities.Select(entity => new ActivityLog
+        {
+            ActivityLogTypeId = activityLogType.Id,
+            EntityId = (entity as BaseEntity)?.Id,
+            EntityName = entity.GetType().Name,
+            CustomerId = customer.Id,
+            Comment = CommonHelper.EnsureMaximumLength(comment(entity) ?? string.Empty, 4000),
+            CreatedOnUtc = DateTime.UtcNow,
+            IpAddress = _customerSettings.StoreIpAddresses ? _webHelper.GetCurrentIpAddress() : string.Empty
+        }).ToList();
+
+        await _activityLogRepository.InsertAsync(logItems);
+
+        return logItems;
+    }
+
+    /// <summary>
     /// Deletes an activity log item
     /// </summary>
     /// <param name="activityLog">Activity log type</param>

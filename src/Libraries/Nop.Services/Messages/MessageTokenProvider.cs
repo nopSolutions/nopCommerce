@@ -1317,6 +1317,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         tokens.Add(new Token("Customer.PasswordRecoveryURL", passwordRecoveryUrl, true));
         tokens.Add(new Token("Customer.AccountActivationURL", accountActivationUrl, true));
         tokens.Add(new Token("Customer.EmailRevalidationURL", emailRevalidationUrl, true));
+        tokens.Add(new Token("Customer.Company", customer.Company));
         tokens.Add(new Token("Wishlist.URLForCustomer", wishlistUrl, true));
 
         //event notification
@@ -1646,6 +1647,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
                 MessageTemplateSystemNames.ORDER_PLACED_CUSTOMER_NOTIFICATION or
                 MessageTemplateSystemNames.ORDER_PROCESSING_CUSTOMER_NOTIFICATION or
                 MessageTemplateSystemNames.ORDER_COMPLETED_CUSTOMER_NOTIFICATION or
+                MessageTemplateSystemNames.ORDER_COMPLETED_STORE_OWNER_NOTIFICATION or
                 MessageTemplateSystemNames.ORDER_CANCELLED_VENDOR_NOTIFICATION or
                 MessageTemplateSystemNames.ORDER_CANCELLED_CUSTOMER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens],
 

@@ -141,4 +141,9 @@ public partial class MediaSettings : ISettings
     /// Gets or sets the product default image id. If 0, then wwwroot/images/default-image.png will be used
     /// </summary>
     public int ProductDefaultImageId { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether we need to reorient images automatically
+    /// </summary>
+    public bool AutoOrientImage { get; set; }
 }

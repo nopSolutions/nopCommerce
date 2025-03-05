@@ -633,7 +633,8 @@ public partial class SettingModelFactory : ISettingModelFactory
         //fill in model values from the entity
         var model = new AdminAreaSettingsModel
         {
-            UseRichEditorInMessageTemplates = adminAreaSettings.UseRichEditorInMessageTemplates
+            UseRichEditorInMessageTemplates = adminAreaSettings.UseRichEditorInMessageTemplates,
+            UseStickyHeaderLayout = adminAreaSettings.UseStickyHeaderLayout
         };
 
         //fill in overridden values
@@ -1287,6 +1288,7 @@ public partial class SettingModelFactory : ISettingModelFactory
             model.RemoveRequiredProducts_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.RemoveRequiredProducts, storeId);
             model.ExportImportRelatedEntitiesByName_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ExportImportRelatedEntitiesByName, storeId);
             model.ExportImportProductUseLimitedToStores_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ExportImportProductUseLimitedToStores, storeId);
+            model.ExportImportCategoryUseLimitedToStores_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ExportImportCategoryUseLimitedToStores, storeId);
             model.DisplayDatePreOrderAvailability_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.DisplayDatePreOrderAvailability, storeId);
             model.UseAjaxCatalogProductsLoading_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.UseAjaxCatalogProductsLoading, storeId);
             model.EnableManufacturerFiltering_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.EnableManufacturerFiltering, storeId);

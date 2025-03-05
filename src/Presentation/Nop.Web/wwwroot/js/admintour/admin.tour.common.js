@@ -1,99 +1,73 @@
-﻿var AdminTourCommonTourOptions = {
-  useModalOverlay: true,
-    defaultStepOptions: {
-    canClickTarget: false,
-      popperOptions: {
-      modifiers: [{
-        name: 'offset',
-        options: {
-          offset: [0, 15],
-        },
-      }],
-      },
-    classes: 'admin-area-tour',
-      cancelIcon: {
-      enabled: true
-    },
-    modalOverlayOpeningPadding: '3',
-      scrollTo: { behavior: 'smooth', block: 'center' },
-    when: {
-      show() {
-        const tour = Shepherd.activeTour;
-        const currentStep = tour.currentStep;
-        const currentStepElement = currentStep.el;
-        const header = currentStepElement.querySelector('.shepherd-header');
-        const progress = document.createElement('span');
-        progress.className = "shepherd-progress";
-        progress.innerText = `${tour.steps.indexOf(tour.currentStep) + 1}/${tour.steps.length}`;
-        header.insertBefore(progress, currentStepElement.querySelector('.shepherd-title'));
+﻿
+function createPopoverButton(popover, text, buttonClass, iconClass, clickListener, isForward) {
+  let button = document.createElement("button");
+  button.classList.add(buttonClass);
 
-        //disable arrow navigation on the last step
-        if (tour.steps.indexOf(tour.currentStep) + 1 == tour.steps.length) {
-          const nextPageButton = $.grep(currentStep.options.buttons, function (button, i) {
-            if (button.classes.indexOf('button-next') >= 0) {
-              return button;
-            }
-          });
+  let icon = document.createElement("i");
+  icon.classList.add("fas", iconClass);
+  icon.style.fontFamily = "FontAwesome";
 
-          if (nextPageButton.length) {
-            tour.options.keyboardNavigation = false;
+  let buttonText = document.createElement("div");
+  buttonText.classList.add("button-text");
+  buttonText.textContent = text;
 
-            $(document).on('keydown.admintour', function (e) {
-              if (e.keyCode == 37) {
-                tour.back();
-                tour.options.keyboardNavigation = true;
-                $(document).off('keydown.admintour');
-              }
-            });
-          }
-        } else {
-          tour.options.keyboardNavigation = true;
+  var childrenElements = [icon, buttonText].sort((a, b) => isForward ? -1 : 1)
+  button.append(...childrenElements);
+
+  popover.footerButtons.appendChild(button);
+  button.addEventListener("click", clickListener);
+}
+
+const AdminTourBuilder = {
+  init: function (localizedData, nextPageEntityId, nextPageUrl, steps) {
+    this.steps = steps;
+
+    const tour = window.driver.js.driver({
+      overlayOpacity: 0.5,
+      disableActiveInteraction: true,
+      popoverClass: 'admin-area-tour',
+      popoverOffset: 15,
+      stagePadding: 3,
+
+      smoothScroll: true,
+
+      showProgress: true,
+      progressText: "{{current}}/{{total}}",
+
+      steps: steps,
+
+      onPopoverRender: (popover, { config, state }) => {
+
+        var buttonsContainer = popover.footerButtons;
+        while (buttonsContainer.firstChild) {
+          buttonsContainer.removeChild(buttonsContainer.firstChild);
+        }
+
+        var isRightToLeft = getComputedStyle(document.getElementById('driver-popover-description')).direction == "rtl";
+
+        if (tour.hasPreviousStep() && localizedData.Back) {
+          createPopoverButton(popover, localizedData.Back, "button-back", "fa-chevron-" + (isRightToLeft ? "right" : "left"), () => tour.movePrevious(), false);
+        }
+
+        if (tour.hasNextStep() && localizedData.NextStep) {
+          createPopoverButton(popover, localizedData.NextStep, "button-next", "fa-chevron-" + (isRightToLeft ? "left" : "right"), () => tour.moveNext(), true);
+        }
+
+        if (tour.isLastStep() && nextPageUrl && localizedData.NextPage) {
+          createPopoverButton(popover, localizedData.NextPage, "button-next-page", "fa-angle-double-" + (isRightToLeft ? "left" : "right"), () => {
+            if (nextPageUrl)
+              window.location = nextPageUrl + nextPageEntityId;
+
+            tour.destroy();
+          }, true);
+        }
+
+        if (tour.isLastStep() && localizedData.Done) {
+          createPopoverButton(popover, localizedData.Done, "button-done", "fa-check", () => tour.destroy());
         }
       }
-    }
+    })
+
+    return tour;
   }
 }
-
-var AdminTourDataProvider = {
-  localized_data: false,
-  next_button_entity_id: null,
-
-  init: function (localized_data, next_button_entity_id) {
-    this.localized_data = localized_data;
-    this.next_button_entity_id = next_button_entity_id;
-  }
-}
-
-var AdminTourBackButton = {}
-var AdminTourNextButton = {}
-var AdminTourNextPageButton = {}
-var AdminTourDoneButton = {}
-
-$(function() {
-  AdminTourBackButton = {
-    classes: 'button-back',
-    text: '<i class="fas fa-chevron-left"></i>' + '<div class="button-text">' + AdminTourDataProvider.localized_data.Back + '</div>',
-    secondary: true,
-    action() { return Shepherd.activeTour.back(); }
-  }
-
-  AdminTourNextButton = {
-    classes: 'button-next',
-    text: '<div class="button-text">' + AdminTourDataProvider.localized_data.NextStep + '</div>' + '<i class="fas fa-chevron-right"></i>',
-    action() { return Shepherd.activeTour.next(); }
-  };
-
-  AdminTourNextPageButton = {
-    classes: 'button-next-page',
-    text: '<div class="button-text">' + AdminTourDataProvider.localized_data.NextPage + '</div>' + ' <i class="fas fa-angle-double-right"></i>',
-    action() {
-      //need to specify an action for each page separately
-    },
-  };
-
-  AdminTourDoneButton = {
-    classes: 'button-done',
-    text: AdminTourDataProvider.localized_data.Done,
-    action() { return Shepherd.activeTour.cancel(); }
-  };
-});

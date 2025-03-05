@@ -79,9 +79,9 @@ public partial class RewardPointService : IRewardPointService
     {
         //get expired points
         var nowUtc = DateTime.UtcNow;
-        var expiredPoints = query
+        var expiredPoints = await query
             .Where(historyEntry => historyEntry.EndDateUtc < nowUtc && historyEntry.ValidPoints > 0)
-            .OrderBy(historyEntry => historyEntry.CreatedOnUtc).ThenBy(historyEntry => historyEntry.Id).ToList();
+            .OrderBy(historyEntry => historyEntry.CreatedOnUtc).ThenBy(historyEntry => historyEntry.Id).ToListAsync();
 
         //reduce the balance for these points
         foreach (var historyEntry in expiredPoints)
@@ -101,9 +101,10 @@ public partial class RewardPointService : IRewardPointService
         }
 
         //get has not yet activated points, but it's time to do it
-        var notActivatedPoints = query
+        var notActivatedPoints = await query
             .Where(historyEntry => !historyEntry.PointsBalance.HasValue && historyEntry.CreatedOnUtc < nowUtc)
-            .OrderBy(historyEntry => historyEntry.CreatedOnUtc).ThenBy(historyEntry => historyEntry.Id).ToList();
+            .OrderBy(historyEntry => historyEntry.CreatedOnUtc).ThenBy(historyEntry => historyEntry.Id).ToListAsync();
+
         if (!notActivatedPoints.Any())
             return;
 
@@ -229,9 +230,10 @@ public partial class RewardPointService : IRewardPointService
         if (points >= 0)
             return newHistoryEntry.Id;
 
-        var withValidPoints = (await GetRewardPointsQueryAsync(customer.Id, storeId))
+        var withValidPoints = await (await GetRewardPointsQueryAsync(customer.Id, storeId))
             .Where(historyEntry => historyEntry.ValidPoints > 0)
-            .OrderBy(historyEntry => historyEntry.CreatedOnUtc).ThenBy(historyEntry => historyEntry.Id).ToList();
+            .OrderBy(historyEntry => historyEntry.CreatedOnUtc).ThenBy(historyEntry => historyEntry.Id).ToListAsync();
+
         foreach (var historyEntry in withValidPoints)
         {
             points += historyEntry.ValidPoints.Value;

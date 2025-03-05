@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -14,6 +15,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
+using Nop.Core.Http.Extensions;
 using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -53,6 +55,7 @@ public partial class OrderProcessingService : IOrderProcessingService
     protected readonly IEventPublisher _eventPublisher;
     protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly IGiftCardService _giftCardService;
+    protected readonly IHttpContextAccessor _httpContextAccessor;
     protected readonly ILanguageService _languageService;
     protected readonly ILocalizationService _localizationService;
     protected readonly ILogger _logger;
@@ -105,6 +108,7 @@ public partial class OrderProcessingService : IOrderProcessingService
         IEventPublisher eventPublisher,
         IGenericAttributeService genericAttributeService,
         IGiftCardService giftCardService,
+        IHttpContextAccessor httpContextAccessor,
         ILanguageService languageService,
         ILocalizationService localizationService,
         ILogger logger,
@@ -153,6 +157,7 @@ public partial class OrderProcessingService : IOrderProcessingService
         _eventPublisher = eventPublisher;
         _genericAttributeService = genericAttributeService;
         _giftCardService = giftCardService;
+        _httpContextAccessor = httpContextAccessor;
         _languageService = languageService;
         _localizationService = localizationService;
         _logger = logger;
@@ -1030,7 +1035,7 @@ public partial class OrderProcessingService : IOrderProcessingService
             os == OrderStatus.Complete
             && notifyCustomer)
         {
-            //notification
+            //notify customer
             var orderCompletedAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderCompletedEmail ?
                 await _pdfService.SaveOrderPdfToDiskAsync(order) : null;
             var orderCompletedAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderCompletedEmail ?
@@ -1040,6 +1045,9 @@ public partial class OrderProcessingService : IOrderProcessingService
                     orderCompletedAttachmentFileName);
             if (orderCompletedCustomerNotificationQueuedEmailIds.Any())
                 await AddOrderNoteAsync(order, $"\"Order completed\" email (to customer) has been queued. Queued email identifiers: {string.Join(", ", orderCompletedCustomerNotificationQueuedEmailIds)}.");
+
+            //notify store owner
+            await _workflowMessageService.SendOrderCompletedStoreOwnerNotificationAsync(order, _localizationSettings.DefaultAdminLanguageId);
         }
 
         if (prevOrderStatus != OrderStatus.Cancelled &&
@@ -3229,6 +3237,38 @@ public partial class OrderProcessingService : IOrderProcessingService
             result = 0;
 
         return result;
+    }
+
+    /// <summary>
+    /// Generate an order GUID
+    /// </summary>
+    /// <param name="processPaymentRequest">Process payment request</param>
+    public virtual async Task GenerateOrderGuidAsync(ProcessPaymentRequest processPaymentRequest)
+    {
+        if (processPaymentRequest == null)
+            return;
+
+        //we should use the same GUID for multiple payment attempts
+        //this way a payment gateway can prevent security issues such as credit card brute-force attacks
+        //in order to avoid any possible limitations by payment gateway we reset GUID periodically
+        var previousPaymentRequest = await _httpContextAccessor.HttpContext.Session.GetAsync<ProcessPaymentRequest>("OrderPaymentInfo");
+        if (_paymentSettings.RegenerateOrderGuidInterval > 0 &&
+            previousPaymentRequest != null &&
+            previousPaymentRequest.OrderGuidGeneratedOnUtc.HasValue)
+        {
+            var interval = DateTime.UtcNow - previousPaymentRequest.OrderGuidGeneratedOnUtc.Value;
+            if (interval.TotalSeconds < _paymentSettings.RegenerateOrderGuidInterval)
+            {
+                processPaymentRequest.OrderGuid = previousPaymentRequest.OrderGuid;
+                processPaymentRequest.OrderGuidGeneratedOnUtc = previousPaymentRequest.OrderGuidGeneratedOnUtc;
+            }
+        }
+
+        if (processPaymentRequest.OrderGuid == Guid.Empty)
+        {
+            processPaymentRequest.OrderGuid = Guid.NewGuid();
+            processPaymentRequest.OrderGuidGeneratedOnUtc = DateTime.UtcNow;
+        }
     }
 
     #endregion

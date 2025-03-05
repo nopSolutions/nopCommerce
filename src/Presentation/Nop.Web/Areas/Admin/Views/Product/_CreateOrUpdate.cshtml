@@ -5,7 +5,7 @@
 
     const string hideInfoBlockAttributeName = "ProductPage.HideInfoBlock";
     var customer = await workContext.GetCurrentCustomerAsync();
-    var hideInfoBlock = showTour ? false : await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
+    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName) && !await Html.IsTourActiveAsync();
 
     const string hidePricesBlockAttributeName = "ProductPage.HidePricesBlock";
     var hidePricesBlock = showTour ? false : await genericAttributeService.GetAttributeAsync<bool>(customer, hidePricesBlockAttributeName);
@@ -51,6 +51,8 @@
 
     const string hideStockQuantityHistoryBlockAttributeName = "ProductPage.HideStockQuantityHistoryBlock";
     var hideStockQuantityHistoryBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideStockQuantityHistoryBlockAttributeName, defaultValue: true);
+
+    var hasViewOrderPermission = await permissionService.AuthorizeAsync(StandardPermission.Orders.ORDERS_VIEW);
 }
 
 <div asp-validation-summary="All"></div>
@@ -92,7 +94,10 @@
 
                 @if (Model.Id > 0)
                 {
-                    <nop-card asp-name="product-purchased-with-orders" asp-icon="fas fa-cart-arrow-down" asp-title="@T("Admin.Catalog.Products.PurchasedWithOrders")" asp-hide-block-attribute-name="@hidePurchasedWithOrdersBlockAttributeName" asp-hide="@hidePurchasedWithOrdersBlock" asp-advanced="@(!Model.ProductEditorSettingsModel.PurchasedWithOrders)">@await Html.PartialAsync("_CreateOrUpdate.PurchasedWithOrders", Model)</nop-card>
+                    if (hasViewOrderPermission)
+                    {
+                        <nop-card asp-name="product-purchased-with-orders" asp-icon="fas fa-cart-arrow-down" asp-title="@T("Admin.Catalog.Products.PurchasedWithOrders")" asp-hide-block-attribute-name="@hidePurchasedWithOrdersBlockAttributeName" asp-hide="@hidePurchasedWithOrdersBlock" asp-advanced="@(!Model.ProductEditorSettingsModel.PurchasedWithOrders)">@await Html.PartialAsync("_CreateOrUpdate.PurchasedWithOrders", Model)</nop-card>
+                    }
                     <nop-card asp-name="product-stock-quantity-history" asp-icon="fas fa-clock-rotate-left" asp-title="@T("Admin.Catalog.Products.StockQuantityHistory")" asp-hide-block-attribute-name="@hideStockQuantityHistoryBlockAttributeName" asp-hide="@hideStockQuantityHistoryBlock" asp-advanced="@(!Model.ProductEditorSettingsModel.StockQuantityHistory)">@await Html.PartialAsync("_CreateOrUpdate.StockQuantityHistory", Model)</nop-card>
                 }
 

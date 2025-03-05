@@ -1,17 +1,16 @@
 ﻿@inject IWebHelper webHelper
 @inject IDateTimeHelper dateTimeHelper
-@inject IPermissionService permissionService
 @inject ICustomerService customerService
 @inject IEventPublisher eventPublisher
 @inject LocalizationSettings localizationSettings
 @inject StoreInformationSettings storeInformationSettings
+@inject AdminAreaSettings adminAreaSettings
 @inject Nop.Services.Localization.ILanguageService languageService
 
 @using Nop.Core.Domain
 @using Nop.Core.Domain.Localization
 @using Nop.Services.Customers
 @using Nop.Services.Helpers
-@using Nop.Services.Security
 
 
 @{
@@ -181,7 +180,7 @@
                 </div>
             </aside>
         }
-        <div class="content-wrapper">
+        <div class="content-wrapper @(adminAreaSettings.UseStickyHeaderLayout ? "sticky-header-layout" : "" )">
             @await Html.PartialAsync("Notifications")
             <nop-antiforgery-token />
             @RenderBody()
@@ -214,6 +213,23 @@
         </div>
     </div>
 
+    @if (adminAreaSettings.UseStickyHeaderLayout)
+    {
+    <script asp-location="Footer">
+        $(function() {
+            const stickyHeader = document.querySelector(".sticky-header-layout .content-header");
+
+            if (stickyHeader !== null) {
+                const observer = new IntersectionObserver(
+                    ([e]) => e.target.classList.toggle("is-pinned", e.intersectionRatio < 1),
+                    { threshold: [1] }
+                );
+
+                observer.observe(stickyHeader);
+            }
+        });
+    </script>
+    }
     <script>
         var AdminLTEOptions = {
             boxWidgetOptions: {

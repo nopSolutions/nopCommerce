@@ -73,7 +73,7 @@ public partial class AdminMenuItem
     /// <returns>Result</returns>
     public bool ContainsSystemName(string systemName)
     {
-        return GetItemBySystem(systemName) != null;
+        return GetItemBySystemName(systemName) is not null;
     }
 
     /// <summary>
@@ -81,12 +81,12 @@ public partial class AdminMenuItem
     /// </summary>
     /// <param name="systemName">Menu item system name</param>
     /// <returns>Menu item if found, otherwise null</returns>
-    public AdminMenuItem GetItemBySystem(string systemName)
+    public AdminMenuItem GetItemBySystemName(string systemName)
     {
         if (string.IsNullOrEmpty(systemName))
             return null;
 
-        return SystemName.Equals(systemName) ? this : ChildNodes.Select(n => n.GetItemBySystem(systemName)).FirstOrDefault(n => n != null);
+        return SystemName.Equals(systemName) ? this : ChildNodes.Select(node => node.GetItemBySystemName(systemName)).FirstOrDefault(node => node is not null);
     }
 
     /// <summary>
@@ -122,7 +122,7 @@ public partial class AdminMenuItem
     {
         get
         {
-            if (_permissionNames != null)
+            if (_permissionNames is not null)
                 return _permissionNames;
 
             if (ChildNodes.Any())

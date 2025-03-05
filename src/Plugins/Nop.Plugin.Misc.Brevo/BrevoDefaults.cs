@@ -31,7 +31,7 @@ public static class BrevoDefaults
     /// <summary>
     /// Gets the plugin version (only major versions)
     /// </summary>
-    public static string PluginVersion => "4.80";
+    public static string PluginVersion => "4.90";
 
     /// <summary>
     /// Gets a URL to edit message template on Brevo account

@@ -504,10 +504,15 @@ public partial class LocalizationService : ILocalizationService
             return;
 
         var lsNamesList = new Dictionary<string, LocaleStringResource>();
+        var locales = await _lsrRepository.Table
+            .Where(lsr => lsr.LanguageId == language.Id)
+            .OrderBy(lsr => lsr.Id)
+            .ToListAsync();
 
-        foreach (var localeStringResource in _lsrRepository.Table.Where(lsr => lsr.LanguageId == language.Id)
-                     .OrderBy(lsr => lsr.Id))
+        foreach (var localeStringResource in locales)
+        {
             lsNamesList[localeStringResource.ResourceName.ToLowerInvariant()] = localeStringResource;
+        }
 
         var lrsToUpdateList = new List<LocaleStringResource>();
         var lrsToInsertList = new Dictionary<string, LocaleStringResource>();

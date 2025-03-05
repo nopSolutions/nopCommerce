@@ -96,7 +96,22 @@ public class WorkflowMessageServiceTests : ServiceTest
             Text = string.Empty
         };
         _productReview = (await productService.GetAllProductReviewsAsync()).FirstOrDefault();
-        _giftCard = await giftCardService.GetGiftCardByIdAsync(1);
+        _giftCard = await GetService<INopDataProvider>().InsertEntityAsync(new GiftCard
+        {
+            GiftCardType = GiftCardType.Virtual,
+            PurchasedWithOrderItemId = 3,
+            Amount = 25M,
+            IsGiftCardActivated = false,
+            GiftCardCouponCode = string.Empty,
+            RecipientName = "Brenda Lindgren",
+            RecipientEmail = "brenda_lindgren@nopCommerce.com",
+            SenderName = "Steve Gates",
+            SenderEmail = "steve_gates@nopCommerce.com",
+            Message = string.Empty,
+            IsRecipientNotified = false,
+            CreatedOnUtc = DateTime.UtcNow
+        });
+
         _blogComment = await blogService.GetBlogCommentByIdAsync(1);
         _newsComment = await newsService.GetNewsCommentByIdAsync(1);
         _backInStockSubscription = new BackInStockSubscription { ProductId = _product.Id, CustomerId = _customer.Id };
@@ -261,6 +276,13 @@ public class WorkflowMessageServiceTests : ServiceTest
     {
         await CheckData(async () =>
             await _workflowMessageService.SendOrderCompletedCustomerNotificationAsync(_order, 1));
+    }
+
+    [Test]
+    public async Task CanSendOrderCompletedStoreOwnerNotification()
+    {
+        await CheckData(async () =>
+            await _workflowMessageService.SendOrderCompletedStoreOwnerNotificationAsync(_order, 1));
     }
 
     [Test]

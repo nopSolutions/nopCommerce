@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace Nop.Tests.Nop.Services.Tests.Tax;
 
 [TestFixture]
-public class TaxCategoryServiceTests :ServiceTest<TaxCategory>
+public class TaxCategoryServiceTests : ServiceTest<TaxCategory>
 {
     private ITaxCategoryService _taxCategoryService;
 

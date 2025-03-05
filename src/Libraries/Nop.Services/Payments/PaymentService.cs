@@ -1,10 +1,8 @@
 ﻿using System.Xml;
 using System.Xml.Serialization;
-using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
-using Nop.Core.Http.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 
@@ -18,7 +16,6 @@ public partial class PaymentService : IPaymentService
     #region Fields
 
     protected readonly ICustomerService _customerService;
-    protected readonly IHttpContextAccessor _httpContextAccessor;
     protected readonly IPaymentPluginManager _paymentPluginManager;
     protected readonly IPriceCalculationService _priceCalculationService;
     protected readonly PaymentSettings _paymentSettings;
@@ -29,14 +26,12 @@ public partial class PaymentService : IPaymentService
     #region Ctor
 
     public PaymentService(ICustomerService customerService,
-        IHttpContextAccessor httpContextAccessor,
         IPaymentPluginManager paymentPluginManager,
         IPriceCalculationService priceCalculationService,
         PaymentSettings paymentSettings,
         ShoppingCartSettings shoppingCartSettings)
     {
         _customerService = customerService;
-        _httpContextAccessor = httpContextAccessor;
         _paymentPluginManager = paymentPluginManager;
         _priceCalculationService = priceCalculationService;
         _paymentSettings = paymentSettings;
@@ -413,38 +408,6 @@ public partial class PaymentService : IPaymentService
         if (serializer.Deserialize(xmlReader) is DictionarySerializer ds)
             return ds.Dictionary;
         return [];
-    }
-
-    /// <summary>
-    /// Generate an order GUID
-    /// </summary>
-    /// <param name="processPaymentRequest">Process payment request</param>
-    public virtual async Task GenerateOrderGuidAsync(ProcessPaymentRequest processPaymentRequest)
-    {
-        if (processPaymentRequest == null)
-            return;
-
-        //we should use the same GUID for multiple payment attempts
-        //this way a payment gateway can prevent security issues such as credit card brute-force attacks
-        //in order to avoid any possible limitations by payment gateway we reset GUID periodically
-        var previousPaymentRequest = await _httpContextAccessor.HttpContext.Session.GetAsync<ProcessPaymentRequest>("OrderPaymentInfo");
-        if (_paymentSettings.RegenerateOrderGuidInterval > 0 &&
-            previousPaymentRequest != null &&
-            previousPaymentRequest.OrderGuidGeneratedOnUtc.HasValue)
-        {
-            var interval = DateTime.UtcNow - previousPaymentRequest.OrderGuidGeneratedOnUtc.Value;
-            if (interval.TotalSeconds < _paymentSettings.RegenerateOrderGuidInterval)
-            {
-                processPaymentRequest.OrderGuid = previousPaymentRequest.OrderGuid;
-                processPaymentRequest.OrderGuidGeneratedOnUtc = previousPaymentRequest.OrderGuidGeneratedOnUtc;
-            }
-        }
-
-        if (processPaymentRequest.OrderGuid == Guid.Empty)
-        {
-            processPaymentRequest.OrderGuid = Guid.NewGuid();
-            processPaymentRequest.OrderGuidGeneratedOnUtc = DateTime.UtcNow;
-        }
     }
 
     #endregion

@@ -301,4 +301,9 @@ public partial class ProductEditorSettings : ISettings
     /// Gets or sets a value indicating whether 'Stock quantity history' tab is shown
     /// </summary>
     public bool StockQuantityHistory { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether 'Age verification' field is shown
+    /// </summary>
+    public bool AgeVerification { get; set; }
 }

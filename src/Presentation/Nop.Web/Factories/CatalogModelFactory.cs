@@ -1421,7 +1421,8 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         if (pagingModel.PageNumber <= 0)
             pagingModel.PageNumber = 1;
 
-        var model = new VendorProductReviewsListModel { 
+        var model = new VendorProductReviewsListModel
+        {
             VendorId = vendor.Id,
             VendorName = await _localizationService.GetLocalizedAsync(vendor, x => x.Name),
             VendorUrl = await _nopUrlHelper.RouteGenericUrlAsync<Vendor>(new { SeName = await _urlRecordService.GetSeNameAsync(vendor) })
@@ -1546,6 +1547,9 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         var model = new ProductsByTagModel
         {
             Id = productTag.Id,
+            MetaKeywords = await _localizationService.GetLocalizedAsync(productTag, x => x.MetaKeywords),
+            MetaDescription = await _localizationService.GetLocalizedAsync(productTag, x => x.MetaDescription),
+            MetaTitle = await _localizationService.GetLocalizedAsync(productTag, x => x.MetaTitle),
             TagName = await _localizationService.GetLocalizedAsync(productTag, y => y.Name),
             TagSeName = await _urlRecordService.GetSeNameAsync(productTag),
             CatalogProductsModel = await PrepareTagProductsModelAsync(productTag, command)
@@ -1837,7 +1841,9 @@ public partial class CatalogModelFactory : ICatalogModelFactory
                 var categoryIds = new List<int>();
                 var manufacturerId = 0;
                 var searchInDescriptions = false;
+                var searchInProductTags = false;
                 var vendorId = 0;
+
                 if (searchModel.advs)
                 {
                     //advanced search
@@ -1859,10 +1865,9 @@ public partial class CatalogModelFactory : ICatalogModelFactory
                         vendorId = searchModel.vid;
 
                     searchInDescriptions = searchModel.sid;
+                    searchInProductTags = searchModel.sit;
                 }
 
-                //var searchInProductTags = false;
-                var searchInProductTags = searchInDescriptions;
                 var workingLanguage = await _workContext.GetWorkingLanguageAsync();
 
                 //price range
@@ -1998,7 +2003,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
                 var result = new List<SelectListItem>
                 {
                     //empty entry
-                    new() 
+                    new()
                     {
                         Value = "0",
                         Text = await _localizationService.GetResourceAsync("Search.SearchBox.AllCategories")

@@ -177,26 +177,26 @@ public partial class PluginController : BaseAdminController
             var descriptors = await _uploadService.UploadPluginsAndThemesAsync(archivefile);
             var pluginDescriptors = descriptors.OfType<PluginDescriptor>().ToList();
             var themeDescriptors = descriptors.OfType<ThemeDescriptor>().ToList();
-
-            //activity log
-            foreach (var descriptor in pluginDescriptors)
-            {
-                await _customerActivityService.InsertActivityAsync("UploadNewPlugin",
-                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.UploadNewPlugin"), descriptor.FriendlyName));
-            }
-
-            foreach (var descriptor in themeDescriptors)
-            {
-                await _customerActivityService.InsertActivityAsync("UploadNewTheme",
-                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.UploadNewTheme"), descriptor.FriendlyName));
-            }
-
-            //events
+            
             if (pluginDescriptors.Any())
+            {
+                //events
                 await _eventPublisher.PublishAsync(new PluginsUploadedEvent(pluginDescriptors));
 
+                //activity log
+                var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.UploadNewPlugin");
+                await _customerActivityService.InsertActivitiesAsync("UploadNewPlugin", pluginDescriptors, descriptor => string.Format(activityLogFormat, descriptor.FriendlyName));
+            }
+
             if (themeDescriptors.Any())
+            {
+                //events
                 await _eventPublisher.PublishAsync(new ThemesUploadedEvent(themeDescriptors));
+
+                //activity log
+                var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.UploadNewTheme");
+                await _customerActivityService.InsertActivitiesAsync("UploadNewTheme", themeDescriptors, descriptor => string.Format(activityLogFormat, descriptor.FriendlyName));
+            }
 
             var message = string.Format(await _localizationService.GetResourceAsync("Admin.Configuration.Plugins.Uploaded"), pluginDescriptors.Count, themeDescriptors.Count);
             _notificationService.SuccessNotification(message);

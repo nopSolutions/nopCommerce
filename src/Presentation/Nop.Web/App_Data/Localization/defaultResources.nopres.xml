@@ -1152,6 +1152,9 @@
   <LocaleResource Name="ActivityLog.PublicStore.AddToWishlist">
     <Value>Added a product to wishlist ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.PublicStore.PasswordChanged">
+    <Value>Public store. Customer has changed the password</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.PublicStore.ContactUs">
     <Value>Used contact us form</Value>
   </LocaleResource>
@@ -2811,6 +2814,15 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.AdminComment.Hint">
     <Value>This comment is for internal use only, not visible for customers.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.AgeVerification">
+    <Value>Age verification</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.AgeVerification.Hint">
+    <Value>Check to require customer registration with date of birth before placing an order.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.AgeVerification.DateOfBirthDisabled">
+    <Value><![CDATA[It looks like you have <a href="{0}" target="_blank">Date of Birth</a> setting disabled.]]></Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.AllowAddingOnlyExistingAttributeCombinations">
     <Value>Allow only existing attribute combinations</Value>
   </LocaleResource>
@@ -3158,6 +3170,15 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.MetaTitle.Hint">
     <Value>Override the page title. The default is the name of the product.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.MinimumAgeToPurchase">
+    <Value>Minimum age to purchase</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.MinimumAgeToPurchase.Hint">
+    <Value>Enter the minimum age for purchasing this product.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.MinimumAgeToPurchase.ShouldBeGreaterThanZero">
+    <Value>The minimum age for purchasing should be greater 0</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.MinimumCustomerEnteredPrice">
     <Value>Minimum amount</Value>
@@ -3551,6 +3572,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Multimedia.Pictures.Alert.PictureAdd">
     <Value>Failed to add product picture.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Multimedia.Pictures.Alert.VendorNumberPicturesLimit">
+    <Value>The maximum number of product pictures has been reached.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Multimedia.Pictures.Fields.DisplayOrder">
     <Value>Display order</Value>
@@ -4206,6 +4230,24 @@
   <LocaleResource Name="Admin.Catalog.ProductTags.EditTagDetails">
     <Value>Edit product tag details</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.Fields.MetaKeywords">
+    <Value>Meta keywords</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.Fields.MetaKeywords.Hint">
+    <Value>Meta keywords to be added to product tag page header.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.Fields.MetaDescription">
+    <Value>Meta description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.Fields.MetaDescription.Hint">
+    <Value>Meta description to be added to product tag page header.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.Fields.MetaTitle">
+    <Value>Meta title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.Fields.MetaTitle.Hint">
+    <Value>Override the page title. The default is the name of the product tag.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductTags.Fields.Name">
     <Value>Tag name</Value>
   </LocaleResource>
@@ -4223,6 +4265,21 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductTags.Fields.SearchTagName.Hint">
     <Value>Search by a tag name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.Info">
+    <Value>Product tag info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.Seo">
+    <Value>SEO</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.TaggedProducts">
+    <Value>Used by products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.TaggedProducts.Product">
+    <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.TaggedProducts.Published">
+    <Value>Published</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductTags.Updated">
     <Value>The product tag has been updated successfully.</Value>
@@ -4517,18 +4574,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.PermitLimit.Hint">
     <Value>Maximum number of permit counters that can be allowed in a window (1 minute). Must be set to a value > 0 by the time these options are passed to the constructor of FixedWindowRateLimiter. If set to 0 than limitation is off.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Common.PluginStaticFileExtensionsBlacklist">
-    <Value>Plugin static file extensions blacklist</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Common.PluginStaticFileExtensionsBlacklist.Hint">
-    <Value>Specify the blacklist of static file extension for plugin directories.</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.QueueCount">
     <Value>Queue count</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.QueueCount.Hint">
-    <Value>Maximum cumulative permit count of queued acquisition requests. Must be set to a value >= 0 by the time these options are passed to the constructor of FixedWindowRateLimiter. If set to 0 than Queue is off.</Value>
+    <Value>Maximum cumulative permit count of queued acquisition requests. Must be set to a value >= 0 by the time these options are passed to the constructor of FixedWindowRateLimiter. If set to 0 then the Queue is off.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.RejectionStatusCode">
     <Value>Rejection status code</Value>
@@ -6018,6 +6069,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportCategoriesUsingCategoryName.Hint">
     <Value>Check if categories should be exported/imported using name of category.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportCategoryUseLimitedToStores">
+    <Value>Export/Import categories with "limited to stores"</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportCategoryUseLimitedToStores.Hint">
+    <Value>Check if categories should be exported/imported with "limited to stores" property.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportProductAttributes">
     <Value>Export/Import products with attributes</Value>
   </LocaleResource>
@@ -7320,6 +7377,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.AdminArea.UseRichEditorInMessageTemplates.Hint">
     <Value>Indicates whether to use rich editor on message templates and campaigns details pages.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.AdminArea.UseStickyHeaderLayout">
+    <Value>Use sticky header</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.AdminArea.UseStickyHeaderLayout.Hint">
+    <Value>The content header (containing the action buttons) will stick to the top when you reach its scroll position.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.AdminAreaAllowedIpAddresses">
     <Value>Admin area allowed IP</Value>
   </LocaleResource>
@@ -7412,6 +7475,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnBlogCommentPage.Hint">
     <Value>Check to show CAPTCHA on blog page when writing a comment.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnCheckGiftCardBalance">
+    <Value>Show on check gift card balance page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnCheckGiftCardBalance.Hint">
+    <Value>Check to show CAPTCHA on check gift card balance page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnCheckoutPageForGuests">
     <Value>Show on checkout page for guests</Value>
@@ -8528,6 +8597,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.AdminComment">
     <Value>Admin comment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.AgeVerification">
+    <Value>Age verification</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.AllowAddingOnlyExistingAttributeCombinations">
     <Value>Allow only existing attribute combinations</Value>
@@ -10054,7 +10126,7 @@
     <Value>Configure PayPal Commerce</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.PaymentPayPal.ApiCredentials.Text">
-    <Value><![CDATA[If you already have an app created in your PayPal account or would like to test it in the sandbox mode, follow these steps.]]></Value>
+    <Value><![CDATA[If you already have an app created in your PayPal account, follow these steps.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.PaymentPayPal.ApiCredentials.Title">
     <Value>Specify API credentials</Value>
@@ -10144,7 +10216,7 @@
     <Value>“Powered by” link</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.Product.Details.Text">
-    <Value><![CDATA[Enter the relevant product details in these fields. The screenshot below shows how they will be displayed on the product page with the default nopCommerce theme: <div><img src="js/admintour/images/product-page.jpg"/></div>]]></Value>
+    <Value><![CDATA[Enter the relevant product details in these fields. The screenshot below shows how they will be displayed on the product page with the default nopCommerce theme: <div class="row row-cols-1"><img class="img-thumbnail mt-3" src="/js/admintour/images/product-page.jpg"/></div>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.Product.Details.Title">
     <Value>Product details</Value>
@@ -10737,6 +10809,9 @@
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderCompleted.CustomerNotification">
     <Value>This message template is used to notify a customer that the certain order was completed. The order gets the order status Complete when it's paid and delivered, or it can be changed manually to Complete in Sales - Orders.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderCompleted.StoreOwnerNotification">
+    <Value>This message template is used to notify a store owner that the certain order was completed. The order gets the order status Complete when it's paid and delivered, or it can be changed manually to Complete in Sales - Orders.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderPaid.AffiliateNotification">
     <Value>This message template is used to notify an affiliate that the certain order was paid. The order gets the status Paid when the amount was charged.</Value>
   </LocaleResource>
@@ -11324,6 +11399,21 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.AccessibleWhenStoreClosed.Hint">
     <Value>Check to allow customer to view this topic details page when the store is closed.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.AvailableEndDateTime">
+    <Value>Availability end date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.AvailableEndDateTime.Hint">
+    <Value>The end of the topic's availability (UTC).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.AvailableEndDateTime.GreaterThanOrEqualToStartDate">
+    <Value>The end date must be greater than or equal to the start date.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.AvailableStartDateTime">
+    <Value>Availability start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.AvailableStartDateTime.Hint">
+    <Value>The start of the topic's availability (UTC).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Body">
     <Value>Body</Value>
@@ -14048,6 +14138,21 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.BackToList">
     <Value>back to campaign list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Copy">
+    <Value>New campaign name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Copied">
+    <Value>The campaign has been copied successfully</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Copy.Name">
+    <Value>New campaign name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Copy.Name.Hint">
+    <Value>The name of the new campaign.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Copy.Name.New">
+    <Value>{0} - copy</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.Deleted">
     <Value>The campaign has been deleted successfully.</Value>
@@ -18721,7 +18826,7 @@
     <Value>Gift card ({0})</Value>
   </LocaleResource>
   <LocaleResource Name="Pdf.Order">
-    <Value>Order</Value>
+    <Value>Order #{0}</Value>
   </LocaleResource>
   <LocaleResource Name="Pdf.OrderDate">
     <Value>Date</Value>
@@ -18764,6 +18869,9 @@
   </LocaleResource>
   <LocaleResource Name="Pdf.RewardPoints">
     <Value>{0} reward points</Value>
+  </LocaleResource>
+  <LocaleResource Name="Pdf.Shipment">
+    <Value>Shipment #{0}</Value>
   </LocaleResource>
   <LocaleResource Name="Pdf.Shipping">
     <Value>Shipping</Value>
@@ -19473,6 +19581,9 @@
   <LocaleResource Name="Search.SearchInDescriptions">
     <Value>Search In product descriptions</Value>
   </LocaleResource>
+  <LocaleResource Name="Search.SearchInTags">
+    <Value>Search in product tags</Value>
+  </LocaleResource>
   <LocaleResource Name="Search.SearchTerm">
     <Value>Search keyword</Value>
   </LocaleResource>
@@ -19908,6 +20019,9 @@
   <LocaleResource Name="ShoppingCart.CustomerEnteredPrice.RangeError">
     <Value>The price must be from {0} to {1}</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.DateOfBirthRequired">
+    <Value>This product has age restrictions. Please specify your age in the account details</Value>
+  </LocaleResource>
   <LocaleResource Name="ShoppingCart.Discount.CannotBeUsed">
     <Value>You cannot use this discount coupon because the validation conditions are not met</Value>
   </LocaleResource>
@@ -20030,6 +20144,9 @@
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Mini.ViewCart">
     <Value>Go to cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.MinimumAgeToPurchase">
+    <Value>This product is available to customers who are {0} years of age or older</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.MinimumQuantity">
     <Value>The minimum quantity allowed for purchase is {0}.</Value>

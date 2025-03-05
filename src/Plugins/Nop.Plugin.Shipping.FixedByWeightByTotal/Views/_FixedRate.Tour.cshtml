@@ -1,0 +1,71 @@
+@await Html.PartialAsync("_AdminTour");
+
+<script asp-location="Footer">
+    const steps = [{
+        element: '.onoffswitch',
+        popover: {
+            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ConfigureManual.Switch.Title").Text)',
+            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ConfigureManual.Switch.Text").Text)',
+            side: "right",
+            align: "start"
+        }},{
+        element: '.onoffswitch',
+        popover: {
+            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ConfigureManual.FixedRate.Title").Text)',
+            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ConfigureManual.FixedRate.Text").Text)',
+            side: "right",
+            align: "start"
+        }},{
+        element: '.onoffswitch',
+        popover: {
+            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ConfigureManual.ByWeight.Title").Text)',
+            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ConfigureManual.ByWeight.Text").Text)',
+            side: "right",
+            align: "start"
+        }},{
+        element: '#shipping-rate-grid',
+        popover: {
+            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ConfigureManual.Methods.Title").Text)',
+            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ConfigureManual.Methods.Text").Text)',
+            side: "bottom",
+            align: "start"
+        }}
+    ];
+
+    $(function(){
+        if ($.fn.dataTable.isDataTable("#shipping-rate-grid")) {
+            let dataTable = $("#shipping-rate-grid").DataTable();
+
+            dataTable.on('init.dt', function() {
+                if (dataTable.rows().count() > 0) {
+                    const tourShippingRateNode = dataTable.row(0).node();
+
+                    steps.push({
+                        element: tourShippingRateNode.querySelector(".button-column .btn-default"),
+                        popover: {
+                            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ConfigureManual.Edit.Title").Text)',
+                            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ConfigureManual.Edit.Text").Text)',
+                            side: "left",
+                            align: "start"
+                        }},{
+                        element: '#manage-shipping-methods-button',
+                        popover: {
+                            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ConfigureManual.Manage.Title").Text)',
+                            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ConfigureManual.Manage.Text").Text)',
+                            side: "left",
+                            align: "start"
+                        }});
+                }
+
+                AdminTourBuilder
+                    .init(localized_data, "", "@Url.Action("Methods", "Payment", new { showtour = true })", steps)
+                    .drive();
+            });
+        }
+        else {
+            AdminTourBuilder
+                .init(localized_data, "", "@Url.Action("Methods", "Payment", new { showtour = true })", steps)
+                .drive();
+        }
+    });
+</script>

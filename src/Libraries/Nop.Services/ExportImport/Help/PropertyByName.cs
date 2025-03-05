@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Core.Domain.Localization;
 
 namespace Nop.Services.ExportImport.Help;
 
@@ -6,8 +7,7 @@ namespace Nop.Services.ExportImport.Help;
 /// A helper class to access the property by name
 /// </summary>
 /// <typeparam name="T">Object type</typeparam>
-/// <typeparam name="L">Language</typeparam>
-public partial class PropertyByName<T, L>
+public partial class PropertyByName<T>
 {
     protected object _propertyValue;
 
@@ -18,7 +18,7 @@ public partial class PropertyByName<T, L>
     /// <param name="func">Feature property access</param>
     /// <param name="ignore">Specifies whether the property should be exported</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public PropertyByName(string propertyName, Func<T, L, Task<object>> func, bool ignore = false)
+    public PropertyByName(string propertyName, Func<T, Language, Task<object>> func, bool ignore = false)
     {
         PropertyName = propertyName;
         GetProperty = func;
@@ -32,7 +32,7 @@ public partial class PropertyByName<T, L>
     /// <param name="propertyName">Property name</param>
     /// <param name="func">Feature property access</param>
     /// <param name="ignore">Specifies whether the property should be exported</param>
-    public PropertyByName(string propertyName, Func<T, L, object> func = null, bool ignore = false)
+    public PropertyByName(string propertyName, Func<T, Language, object> func = null, bool ignore = false)
     {
         PropertyName = propertyName;
 
@@ -52,7 +52,7 @@ public partial class PropertyByName<T, L>
     /// Feature property access
     /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public Func<T, L, Task<object>> GetProperty { get; }
+    public Func<T, Language, Task<object>> GetProperty { get; }
 
     /// <summary>
     /// Property name

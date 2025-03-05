@@ -144,10 +144,10 @@ public class AddIndexesMigration : ForwardOnlyMigration
                 .OnColumn(nameof(ProductReview.CustomerId)).Ascending()
                 .WithOptions().NonClustered();
 
-        if(!Schema.Table(nameof(Product)).Index("IX_Product_Name").Exists())
+        if (!Schema.Table(nameof(Product)).Index("IX_Product_Name").Exists())
             Create.Index("IX_Product_Name")
                 .OnTable(nameof(Product))
-                .OnColumn(nameof(Product.Name)).Ascending() 
+                .OnColumn(nameof(Product.Name)).Ascending()
                 .WithOptions().NonClustered();
 
         if (!Schema.Table(NameCompatibilityManager.GetTableName(typeof(ForumTopic))).Index("IX_Forums_Topic_Subject").Exists())

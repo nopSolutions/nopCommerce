@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 namespace Nop.Services.Common.Pdf;
 
@@ -7,15 +7,6 @@ namespace Nop.Services.Common.Pdf;
 /// </summary>
 public partial class ProductItem
 {
-    #region Ctor
-
-    public ProductItem()
-    {
-        ProductAttributes = new();
-    }
-
-    #endregion
-
     #region Properties
 
     /// <summary>
@@ -57,7 +48,7 @@ public partial class ProductItem
     /// <summary>
     /// Gets or sets the product attribute description
     /// </summary>
-    public List<string> ProductAttributes { get; set; }
+    public List<string> ProductAttributes { get; set; } = new();
 
     #endregion
 }
