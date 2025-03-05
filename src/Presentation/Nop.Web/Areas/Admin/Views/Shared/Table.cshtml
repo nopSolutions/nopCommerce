@@ -191,7 +191,7 @@
 
             function rowEditMode_@(tableName)(rowid) {
                 var prevRow;
-                var rowIndexVlaue = parseInt(rowid[0].rowIndex);
+                var rowIndexValue = parseInt(rowid[0].rowIndex);
                 if (editIndexTable_@(tableName) == -1) {
                     saveRowIntoArray_@(tableName)(rowid);
                     rowid.attr("editState", "editState");
@@ -202,7 +202,7 @@
                     prevRow = $("[editState=editState]");
                     prevRow.attr("editState", "");
                     rowid.attr("editState", "editState");
-                    editIndexTable_@(tableName) = rowIndexVlaue;
+                    editIndexTable_@(tableName) = rowIndexValue;
                     saveArrayIntoRow_@(tableName)(prevRow);
                     saveRowIntoArray_@(tableName)(rowid);
                     setEditStateValue_@(tableName)(rowid);
