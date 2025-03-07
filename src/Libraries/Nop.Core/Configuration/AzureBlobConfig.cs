@@ -33,7 +33,7 @@ public partial class AzureBlobConfig : IConfig
     public bool StoreDataProtectionKeys { get; protected set; } = false;
 
     /// <summary>
-    /// Gets or sets the Azure container name for storing Data Prtection Keys (this container should be separate from the container used for media and should be Private)
+    /// Gets or sets the Azure container name for storing Data Protection Keys (this container should be separate from the container used for media and should be Private)
     /// </summary>
     public string DataProtectionKeysContainerName { get; protected set; } = string.Empty;
 
