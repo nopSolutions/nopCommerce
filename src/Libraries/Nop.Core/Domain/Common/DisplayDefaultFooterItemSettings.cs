@@ -23,11 +23,6 @@ public partial class DisplayDefaultFooterItemSettings : ISettings
     public bool DisplayProductSearchFooterItem { get; set; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether to display "news" footer item
-    /// </summary>
-    public bool DisplayNewsFooterItem { get; set; }
-
-    /// <summary>
     /// Gets or sets a value indicating whether to display "blog" footer item
     /// </summary>
     public bool DisplayBlogFooterItem { get; set; }

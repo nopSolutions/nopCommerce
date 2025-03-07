@@ -41,10 +41,6 @@ public partial record CaptchaSettingsModel : BaseNopModel, ISettingsModel
     public bool ShowOnBlogCommentPage { get; set; }
     public bool ShowOnBlogCommentPage_OverrideForStore { get; set; }
 
-    [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnNewsCommentPage")]
-    public bool ShowOnNewsCommentPage { get; set; }
-    public bool ShowOnNewsCommentPage_OverrideForStore { get; set; }
-
     [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnNewsletterPage")]
     public bool ShowOnNewsletterPage { get; set; }
     public bool ShowOnNewsletterPage_OverrideForStore { get; set; }

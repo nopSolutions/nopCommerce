@@ -24,10 +24,6 @@ public partial record DisplayDefaultFooterItemSettingsModel : BaseNopModel, ISet
     public bool DisplayProductSearchFooterItem { get; set; }
     public bool DisplayProductSearchFooterItem_OverrideForStore { get; set; }
 
-    [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayNewsFooterItem")]
-    public bool DisplayNewsFooterItem { get; set; }
-    public bool DisplayNewsFooterItem_OverrideForStore { get; set; }
-
     [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayBlogFooterItem")]
     public bool DisplayBlogFooterItem { get; set; }
     public bool DisplayBlogFooterItem_OverrideForStore { get; set; }

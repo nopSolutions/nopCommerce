@@ -9,7 +9,6 @@ using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Polls;
 using Nop.Core.Domain.ScheduleTasks;
@@ -171,20 +170,6 @@ public class MySqlDateTimeWithPrecisionMigration : ForwardOnlyMigration
             .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(MigrationVersionInfo), nameof(MigrationVersionInfo.AppliedOn)))
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(NewsItem)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(NewsItem), nameof(NewsItem.CreatedOnUtc)))
-            .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(NewsItem)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(NewsItem), nameof(NewsItem.EndDateUtc)))
-            .AsCustom("datetime(6)")
-            .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(NewsItem)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(NewsItem), nameof(NewsItem.StartDateUtc)))
-            .AsCustom("datetime(6)")
-            .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(NewsComment)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(NewsComment), nameof(NewsComment.CreatedOnUtc)))
-            .AsCustom("datetime(6)");
         Alter.Table(NameCompatibilityManager.GetTableName(typeof(NewsLetterSubscription)))
             .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(NewsLetterSubscription), nameof(NewsLetterSubscription.CreatedOnUtc)))
             .AsCustom("datetime(6)");

@@ -10,7 +10,6 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Vendors;
@@ -69,7 +68,6 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected readonly IWorkContext _workContext;
     protected readonly LocalizationSettings _localizationSettings;
     protected readonly MediaSettings _mediaSettings;
-    protected readonly NewsSettings _newsSettings;
     protected readonly RobotsTxtSettings _robotsTxtSettings;
     protected readonly SitemapSettings _sitemapSettings;
     protected readonly SitemapXmlSettings _sitemapXmlSettings;
@@ -109,7 +107,6 @@ public partial class CommonModelFactory : ICommonModelFactory
         IWorkContext workContext,
         LocalizationSettings localizationSettings,
         MediaSettings mediaSettings,
-        NewsSettings newsSettings,
         RobotsTxtSettings robotsTxtSettings,
         SitemapSettings sitemapSettings,
         SitemapXmlSettings sitemapXmlSettings,
@@ -145,7 +142,6 @@ public partial class CommonModelFactory : ICommonModelFactory
         _workContext = workContext;
         _mediaSettings = mediaSettings;
         _localizationSettings = localizationSettings;
-        _newsSettings = newsSettings;
         _robotsTxtSettings = robotsTxtSettings;
         _sitemapSettings = sitemapSettings;
         _sitemapXmlSettings = sitemapXmlSettings;
@@ -414,7 +410,6 @@ public partial class CommonModelFactory : ICommonModelFactory
             YoutubeLink = _storeInformationSettings.YoutubeLink,
             InstagramLink = _storeInformationSettings.InstagramLink,
             WorkingLanguageId = (await _workContext.GetWorkingLanguageAsync()).Id,
-            NewsEnabled = _newsSettings.Enabled,
         };
 
         return model;
@@ -455,7 +450,6 @@ public partial class CommonModelFactory : ICommonModelFactory
             BlogEnabled = _blogSettings.Enabled,
             CompareProductsEnabled = _catalogSettings.CompareProductsEnabled,
             ForumEnabled = _forumSettings.ForumsEnabled,
-            NewsEnabled = _newsSettings.Enabled,
             RecentlyViewedProductsEnabled = _catalogSettings.RecentlyViewedProductsEnabled,
             NewProductsEnabled = _catalogSettings.NewProductsEnabled,
             DisplayTaxShippingInfoFooter = _catalogSettings.DisplayTaxShippingInfoFooter,
@@ -467,7 +461,6 @@ public partial class CommonModelFactory : ICommonModelFactory
             DisplaySitemapFooterItem = _displayDefaultFooterItemSettings.DisplaySitemapFooterItem,
             DisplayContactUsFooterItem = _displayDefaultFooterItemSettings.DisplayContactUsFooterItem,
             DisplayProductSearchFooterItem = _displayDefaultFooterItemSettings.DisplayProductSearchFooterItem,
-            DisplayNewsFooterItem = _displayDefaultFooterItemSettings.DisplayNewsFooterItem,
             DisplayBlogFooterItem = _displayDefaultFooterItemSettings.DisplayBlogFooterItem,
             DisplayForumsFooterItem = _displayDefaultFooterItemSettings.DisplayForumsFooterItem,
             DisplayRecentlyViewedProductsFooterItem = _displayDefaultFooterItemSettings.DisplayRecentlyViewedProductsFooterItem,

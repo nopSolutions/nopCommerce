@@ -6,7 +6,6 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Configuration;
 using Nop.Services.Vendors;
@@ -25,7 +24,6 @@ public class CommonModelFactoryTests : BaseNopTest
     private CustomerSettings _customerSettings;
     private ForumSettings _forumSettings;
     private StoreInformationSettings _storeInformationSettings;
-    private NewsSettings _newsSettings;
     private CatalogSettings _catalogSettings;
     private DisplayDefaultFooterItemSettings _displayDefaultFooterItemSettings;
     private CommonSettings _commonSettings;
@@ -50,7 +48,6 @@ public class CommonModelFactoryTests : BaseNopTest
         _customerSettings = GetService<CustomerSettings>();
         
         _storeInformationSettings = GetService<StoreInformationSettings>();
-        _newsSettings = GetService<NewsSettings>();
         _catalogSettings = GetService<CatalogSettings>();
         _commonSettings = GetService<CommonSettings>();
         _displayDefaultFooterItemSettings = GetService<DisplayDefaultFooterItemSettings>();
@@ -146,7 +143,6 @@ public class CommonModelFactoryTests : BaseNopTest
         model.YoutubeLink.Should().Be(_storeInformationSettings.YoutubeLink);
         model.InstagramLink.Should().Be(_storeInformationSettings.InstagramLink);
         model.WorkingLanguageId.Should().Be(1);
-        model.NewsEnabled.Should().Be(_newsSettings.Enabled);
     }
 
     [Test]
@@ -163,7 +159,6 @@ public class CommonModelFactoryTests : BaseNopTest
         model.BlogEnabled.Should().BeTrue();
         model.CompareProductsEnabled.Should().Be(_catalogSettings.CompareProductsEnabled);
         model.ForumEnabled.Should().Be(_forumSettings.ForumsEnabled);
-        model.NewsEnabled.Should().Be(_newsSettings.Enabled);
         model.RecentlyViewedProductsEnabled.Should().Be(_catalogSettings.RecentlyViewedProductsEnabled);
         model.NewProductsEnabled.Should().Be(_catalogSettings.NewProductsEnabled);
         model.DisplayTaxShippingInfoFooter.Should().Be(_catalogSettings.DisplayTaxShippingInfoFooter);
@@ -174,7 +169,6 @@ public class CommonModelFactoryTests : BaseNopTest
         model.DisplayContactUsFooterItem.Should().Be(_displayDefaultFooterItemSettings.DisplayContactUsFooterItem);
         model.DisplayProductSearchFooterItem.Should()
             .Be(_displayDefaultFooterItemSettings.DisplayProductSearchFooterItem);
-        model.DisplayNewsFooterItem.Should().Be(_displayDefaultFooterItemSettings.DisplayNewsFooterItem);
         model.DisplayBlogFooterItem.Should().Be(_displayDefaultFooterItemSettings.DisplayBlogFooterItem);
         model.DisplayForumsFooterItem.Should().Be(_displayDefaultFooterItemSettings.DisplayForumsFooterItem);
         model.DisplayRecentlyViewedProductsFooterItem.Should()

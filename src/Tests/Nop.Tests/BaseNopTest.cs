@@ -61,7 +61,6 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Messages;
-using Nop.Services.News;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
@@ -371,7 +370,6 @@ public partial class BaseNopTest
         services.AddTransient<IPollService, PollService>();
         services.AddTransient<IBlogService, BlogService>();
         services.AddTransient<ITopicService, TopicService>();
-        services.AddTransient<INewsService, NewsService>();
         services.AddTransient<IDateTimeHelper, DateTimeHelper>();
         services.AddTransient<IScheduleTaskService, ScheduleTaskService>();
         services.AddTransient<IExportManager, ExportManager>();
@@ -495,7 +493,6 @@ public partial class BaseNopTest
         services.AddTransient<IMeasureModelFactory, MeasureModelFactory>();
         services.AddTransient<IMessageTemplateModelFactory, MessageTemplateModelFactory>();
         services.AddTransient<INewsletterSubscriptionModelFactory, NewsletterSubscriptionModelFactory>();
-        services.AddTransient<INewsModelFactory, NewsModelFactory>();
         services.AddTransient<IOrderModelFactory, OrderModelFactory>();
         services.AddTransient<IPaymentModelFactory, PaymentModelFactory>();
         services.AddTransient<IPluginModelFactory, PluginModelFactory>();
@@ -536,7 +533,6 @@ public partial class BaseNopTest
             .AddTransient<Web.Factories.IExternalAuthenticationModelFactory,
                 Web.Factories.ExternalAuthenticationModelFactory>();
         services.AddTransient<Web.Factories.IJsonLdModelFactory, Web.Factories.JsonLdModelFactory>();
-        services.AddTransient<Web.Factories.INewsModelFactory, Web.Factories.NewsModelFactory>();
         services.AddTransient<Web.Factories.INewsletterModelFactory, Web.Factories.NewsletterModelFactory>();
         services.AddTransient<Web.Factories.IOrderModelFactory, Web.Factories.OrderModelFactory>();
         services.AddTransient<Web.Factories.IPollModelFactory, Web.Factories.PollModelFactory>();

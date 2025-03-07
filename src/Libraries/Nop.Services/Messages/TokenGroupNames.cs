@@ -101,11 +101,6 @@ public static partial class TokenGroupNames
     public static string BlogCommentTokens => "Blog comment tokens";
 
     /// <summary>
-    /// Represents tokens with information about the news comment 
-    /// </summary>
-    public static string NewsCommentTokens => "News comment tokens";
-
-    /// <summary>
     /// Represents tokens with information that product is in stock
     /// </summary>
     public static string ProductBackInStockTokens => "Back in stock tokens";

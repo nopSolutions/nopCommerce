@@ -56,7 +56,6 @@ public partial class NopStartup : INopStartup
         services.AddScoped<IMessageTemplateModelFactory, MessageTemplateModelFactory>();
         services.AddScoped<IMultiFactorAuthenticationMethodModelFactory, MultiFactorAuthenticationMethodModelFactory>();
         services.AddScoped<INewsletterSubscriptionModelFactory, NewsletterSubscriptionModelFactory>();
-        services.AddScoped<INewsModelFactory, NewsModelFactory>();
         services.AddScoped<IOrderModelFactory, OrderModelFactory>();
         services.AddScoped<IPaymentModelFactory, PaymentModelFactory>();
         services.AddScoped<IPluginModelFactory, PluginModelFactory>();
@@ -94,7 +93,6 @@ public partial class NopStartup : INopStartup
         services.AddScoped<Factories.IForumModelFactory, Factories.ForumModelFactory>();
         services.AddScoped<Factories.IExternalAuthenticationModelFactory, Factories.ExternalAuthenticationModelFactory>();
         services.AddScoped<Factories.IJsonLdModelFactory, Factories.JsonLdModelFactory>();
-        services.AddScoped<Factories.INewsModelFactory, Factories.NewsModelFactory>();
         services.AddScoped<Factories.INewsletterModelFactory, Factories.NewsletterModelFactory>();
         services.AddScoped<Factories.IOrderModelFactory, Factories.OrderModelFactory>();
         services.AddScoped<Factories.IPollModelFactory, Factories.PollModelFactory>();

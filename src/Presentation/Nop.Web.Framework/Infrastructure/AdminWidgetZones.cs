@@ -137,13 +137,7 @@ public static partial class AdminWidgetZones
     public static string MessageTemplateListButtons => "admin_message_template_list_buttons";
     public static string MessageTemplateTestButtons => "admin_message_template_test_buttons";
     public static string MultiFactorAuthenticationListButtons => "admin_multifactor_authentication_list_buttons";
-    public static string NewsCommentListButtons => "admin_news_comment_list_buttons";
-    public static string NewsDetailsBlock => "admin_news_details_block";
-    public static string NewsDetailsButtons => "admin_news_details_buttons";
-    public static string NewsItemsDetailsBlock => "admin_news_items_details_block";
     public static string NewsLetterSubscriptionListButtons => "admin_newsletter_subscription_list_buttons";
-    public static string NewsListButtons => "admin_news_list_buttons";
-    public static string NewsSettingsButtons => "admin_news_settings_buttons";
     public static string OnlineCustomerListButtons => "admin_online_customer_list_buttons";
     public static string OrderAddressDetailsBottom => "admin_order_address_details_bottom";
     public static string OrderAddressDetailsButtons => "admin_order_address_details_buttons";

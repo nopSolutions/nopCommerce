@@ -15,7 +15,6 @@ public partial record FooterModel : BaseNopModel
     public bool ShoppingCartEnabled { get; set; }
     public bool SitemapEnabled { get; set; }
     public bool SearchEnabled { get; set; }
-    public bool NewsEnabled { get; set; }
     public bool BlogEnabled { get; set; }
     public bool CompareProductsEnabled { get; set; }
     public bool ForumEnabled { get; set; }
@@ -33,7 +32,6 @@ public partial record FooterModel : BaseNopModel
     public bool DisplaySitemapFooterItem { get; set; }
     public bool DisplayContactUsFooterItem { get; set; }
     public bool DisplayProductSearchFooterItem { get; set; }
-    public bool DisplayNewsFooterItem { get; set; }
     public bool DisplayBlogFooterItem { get; set; }
     public bool DisplayForumsFooterItem { get; set; }
     public bool DisplayRecentlyViewedProductsFooterItem { get; set; }

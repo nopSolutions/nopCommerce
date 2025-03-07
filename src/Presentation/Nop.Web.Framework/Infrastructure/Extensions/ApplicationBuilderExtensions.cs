@@ -65,14 +65,14 @@ public static class ApplicationBuilderExtensions
             //log application start
             await engine.Resolve<ILogger>().InformationAsync("Application started");
 
+            //insert new ACL permission if exists
+            var permissionService = engine.Resolve<IPermissionService>();
+            await permissionService.InsertPermissionsAsync();
+
             //install and update plugins
             var pluginService = engine.Resolve<IPluginService>();
             await pluginService.InstallPluginsAsync();
             await pluginService.UpdatePluginsAsync();
-
-            //insert new ACL permission if exists
-            var permissionService = engine.Resolve<IPermissionService>();
-            await permissionService.InsertPermissionsAsync();
 
             //update nopCommerce core and db
             var migrationManager = engine.Resolve<IMigrationManager>();

@@ -34,7 +34,6 @@ using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Media.RoxyFileman;
 using Nop.Services.Messages;
-using Nop.Services.News;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
@@ -214,7 +213,6 @@ public partial class NopStartup : INopStartup
         services.AddScoped<IPollService, PollService>();
         services.AddScoped<IBlogService, BlogService>();
         services.AddScoped<ITopicService, TopicService>();
-        services.AddScoped<INewsService, NewsService>();
         services.AddScoped<IDateTimeHelper, DateTimeHelper>();
         services.AddScoped<INopHtmlHelper, NopHtmlHelper>();
         services.AddScoped<IScheduleTaskService, ScheduleTaskService>();

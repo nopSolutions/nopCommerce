@@ -13,7 +13,6 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Polls;
 using Nop.Core.Domain.ScheduleTasks;
@@ -148,8 +147,6 @@ public class SchemaMigration : ForwardOnlyMigration
         Create.TableFor<MessageTemplate>();
         Create.TableFor<NewsLetterSubscription>();
         Create.TableFor<QueuedEmail>();
-        Create.TableFor<NewsItem>();
-        Create.TableFor<NewsComment>();
         Create.TableFor<Poll>();
         Create.TableFor<PollAnswer>();
         Create.TableFor<PollVotingRecord>();
