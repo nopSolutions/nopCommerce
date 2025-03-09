@@ -1,4 +1,4 @@
-namespace Nop.Core.Domain.Customers;
+﻿namespace Nop.Core.Domain.Customers;
 
 /// <summary>
 /// Customer logged-in event
@@ -9,15 +9,25 @@ public partial class CustomerLoggedinEvent
     /// Ctor
     /// </summary>
     /// <param name="customer">Customer</param>
-    public CustomerLoggedinEvent(Customer customer)
+    /// <param name="guestCustomer">Guest customer</param>
+    public CustomerLoggedinEvent(Customer customer, Customer guestCustomer = null)
     {
         Customer = customer;
+        GuestCustomer = guestCustomer;
     }
 
     /// <summary>
     /// Customer
     /// </summary>
     public Customer Customer
+    {
+        get;
+    }
+
+    /// <summary>
+    /// Guest customer
+    /// </summary>
+    public Customer GuestCustomer
     {
         get;
     }
