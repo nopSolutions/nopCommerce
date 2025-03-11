@@ -78,9 +78,11 @@ public partial class MemoryCacheManager : CacheKeyService, IStaticCacheManager
             case EvictionReason.Replaced:
             case EvictionReason.TokenExpired:
                 break;
-            // if the entry was evicted by the cache itself, we remove the key
+            //if the entry was evicted by the cache itself, we remove the key
             default:
-                _keyManager.RemoveKey(key as string);
+                //checks if the eviction callback happens after the item is re-added to the cache to prevent the erroneously removing entry from the key manager
+                if (!_memoryCache.TryGetValue(key, out _))
+                    _keyManager.RemoveKey(key as string);
                 break;
         }
     }
