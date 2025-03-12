@@ -182,6 +182,15 @@
                     </div>
                 </div>
 
+                @if (!string.IsNullOrEmpty(Model.BillingAddress.FormattedCustomAddressAttributes))
+                {
+                    <div class="form-group row">
+                        <div class="offset-md-3 col-md-8 custom-attributes-view">
+                            @Html.Raw(Model.BillingAddress.FormattedCustomAddressAttributes)
+                        </div>
+                    </div>
+                }
+
                 @if (!Model.IsLoggedInAsVendor)
                 {
                     <div class="card-footer">
