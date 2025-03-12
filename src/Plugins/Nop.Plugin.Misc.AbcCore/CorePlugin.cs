@@ -103,7 +103,14 @@ namespace Nop.Plugin.Misc.AbcCore
 
         public System.Threading.Tasks.Task<IList<string>> GetWidgetZonesAsync()
         {
-            return System.Threading.Tasks.Task.FromResult<IList<string>>(new List<string> { AdminWidgetZones.ProductDetailsBlock, AdminWidgetZones.HeaderBefore });
+            return System.Threading.Tasks.Task.FromResult<IList<string>>(
+                new List<string>
+                {
+                    AdminWidgetZones.ProductDetailsBlock,
+                    AdminWidgetZones.HeaderBefore,
+                    PublicWidgetZones.Footer
+                }
+            );
         }
 
         public string GetWidgetViewComponentName(string widgetZone)

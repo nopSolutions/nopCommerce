@@ -65,6 +65,12 @@ namespace Nop.Plugin.Misc.AbcCore.Components
                         Url.Action("Configure", "AbcCore")),
                         false);
             }
+            else if (widgetZone == PublicWidgetZones.Footer)
+            {
+                string sha = File.ReadAllText("Plugins/Misc.AbcCore/sha.txt").Trim();
+                string branch = File.ReadAllText("Plugins/Misc.AbcCore/branch.txt").Trim();
+                return View("~/Plugins/Misc.AbcCore/Views/BuildInfo.cshtml", (sha, branch));
+            }
 
             return Content("");
         }
