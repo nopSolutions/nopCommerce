@@ -12983,6 +12983,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Address.County">
     <Value>County / region</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Orders.Address.CustomAttributes">
+    <Value>Custom Attributes</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Address.EditAddress">
     <Value>Edit address</Value>
