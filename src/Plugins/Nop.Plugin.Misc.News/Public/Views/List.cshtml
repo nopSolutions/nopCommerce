@@ -1,0 +1,43 @@
+﻿@model NewsItemListModel
+
+@{
+    //title
+    NopHtml.AddTitleParts(T("Plugins.Misc.News.PageTitle.NewsArchive").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-news-list-page");
+}
+
+<div class="page news-list-page">
+    <div class="page-title">
+        <a href="@Url.RouteUrl(NewsDefaults.Routes.Public.NewsRSS, new { languageId = Model.WorkingLanguageId })" class="link-rss" title="@T("Plugins.Misc.News.RSS.Hint")">@T("Plugins.Misc.News.RSS")</a>
+        <h1>@T("Plugins.Misc.News.Title")</h1>
+    </div>
+    <div class="page-body">
+        <div class="news-items">
+            @foreach (var item in Model.NewsItems)
+            {
+                <div class="news-item">
+                    <div class="news-head">
+                        <a class="news-title" href="@(Url.RouteUrl(NewsDefaults.Routes.Public.NewsItemRouteName, new { SeName = item.SeName }))">@item.Title</a>
+                        <span class="news-date">-@item.CreatedOn.ToString("D")</span>
+                    </div>
+                    <div class="news-body">
+                        @Html.Raw(item.Short)
+                    </div>
+                    <div class="buttons">
+                        <a href="@(Url.RouteUrl(NewsDefaults.Routes.Public.NewsItemRouteName, new { SeName = item.SeName }))" class="read-more">@T("Plugins.Misc.News.MoreInfo")</a>
+                    </div>
+                </div>
+            }
+        </div>
+        @{
+            var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
+        }
+        @if (!(await pager.IsEmpty()))
+        {
+            <div class="pager">
+                @pager
+            </div>
+        }
+    </div>
+</div>

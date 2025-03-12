@@ -1,0 +1,114 @@
+﻿using Nop.Core.Caching;
+
+namespace Nop.Plugin.Misc.News;
+
+/// <summary>
+/// Represents plugin constants
+/// </summary>
+public class NewsDefaults
+{
+    /// <summary>
+    /// Gets a plugin system name
+    /// </summary>
+    public static string SystemName => "Misc.News";
+
+    /// <summary>
+    /// Gets a system name of the activity log type
+    /// </summary>
+    public static string ActivityLogTypeSystemName => "PublicStore.AddNewsComment";
+
+    /// <summary>
+    /// Represents system name of notification store owner about new news comment
+    /// </summary>
+    public static string NewsCommentStoreOwnerNotification => "News.NewsComment";
+
+    /// <summary>
+    /// Represents system name of the "News items" menu item in the admin area
+    /// </summary>
+    public static string NewsItemsMenuSystemName => "News items";
+
+    /// <summary>
+    /// Represents system name of the "News comments" menu item in the admin area
+    /// </summary>
+    public static string NewsCommentsMenuSystemName => "News comments";
+
+    /// <summary>
+    /// Gets a URL of the news docs page
+    /// </summary>
+    public static string NewsDocsUrl => "https://docs.nopcommerce.com/running-your-store/content-management/news.html";
+
+    #region Caching defaults
+
+    /// <summary>
+    /// Key for home page news
+    /// </summary>
+    /// <remarks>
+    /// {0} : language ID
+    /// {1} : current store ID
+    /// </remarks>
+    public static CacheKey HomepageNewsModelKey => new("Nop.pres.news.homepage-{0}-{1}", NewsPrefixCacheKey);
+    public static string NewsPrefixCacheKey => "Nop.pres.news";
+
+    /// <summary>
+    /// Key for number of news comments
+    /// </summary>
+    /// <remarks>
+    /// {0} : news item ID
+    /// {1} : store ID
+    /// {2} : are only approved comments?
+    /// </remarks>
+    public static CacheKey NewsCommentsNumberCacheKey => new("Nop.newsitem.comments.number.{0}-{1}-{2}", NewsCommentsNumberPrefix);
+
+    /// <summary>
+    /// Gets a key pattern to clear cache
+    /// </summary>
+    /// <remarks>
+    /// {0} : news item ID
+    /// </remarks>
+    public static string NewsCommentsNumberPrefix => "Nop.newsitem.comments.number.{0}";
+
+    #endregion
+
+    #region Routes
+
+    public static class Routes
+    {
+        private const string RoutePrefix = "Plugin.Misc.News.Route.";
+
+        public static class Admin
+        {
+            public static string ConfigurationRouteName => RoutePrefix + "Configure";
+            public static string NewsItemsRouteName => RoutePrefix + "NewsItems";
+            public static string NewsItemEditRouteName => RoutePrefix + "NewsItemEdit";
+            public static string NewsItemCreateRouteName => RoutePrefix + "NewsItemCreate";
+            public static string NewsItemDeleteRouteName => RoutePrefix + "NewsItemDelete";
+            public static string NewsCommentsRouteName => RoutePrefix + "NewsComments";
+        }
+
+        public static class Public
+        {
+            public static string NewsItemRouteName => RoutePrefix + "NewsItem";
+            public static string NewsArchive => RoutePrefix + "NewsArchive";
+            public static string NewsRSS => RoutePrefix + "NewsRSS";
+        }
+
+        /// <summary>
+        /// Gets default key for newsitem id route value
+        /// </summary>
+        public static string NewsItemIdRouteValue => "newsItemId";
+    }
+
+    #endregion
+
+    #region Permissions
+
+    public static class Permissions
+    {
+        public const string NEWS_VIEW = $"News.View";
+        public const string NEWS_MANAGE = $"News.Manage";
+        public const string NEWS_COMMENTS_VIEW = $"News.CommentsView";
+        public const string NEWS_COMMENTS_MANAGE = $"News.CommentsManage";
+    }
+
+    #endregion
+}
