@@ -195,4 +195,14 @@ public static partial class NopCommonDefaults
     #endregion
 
     #endregion
+
+    /// <summary>
+    /// ~/App_Data/Pdf/OpenSans.ttf
+    /// </summary>
+    public static string PdfLtrFontName => "OpenSans";
+
+    /// <summary>
+    /// ~/App_Data/Pdf/Vazirmatn.ttf
+    /// </summary>
+    public static string PdfRtlFontName => "Vazirmatn";
 }

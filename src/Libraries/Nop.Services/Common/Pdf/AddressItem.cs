@@ -7,16 +7,6 @@ namespace Nop.Services.Common.Pdf;
 /// </summary>
 public partial record AddressItem
 {
-    #region Ctor
-
-    public AddressItem()
-    {
-        AddressAttributes = new();
-        CustomValues = new();
-    }
-
-    #endregion
-
     #region Properties
 
     /// <summary>
@@ -107,12 +97,12 @@ public partial record AddressItem
     /// <summary>
     /// Gets or sets the custom attributes (see "AddressAttribute" entity for more info)
     /// </summary>
-    public List<string> AddressAttributes { get; set; }
+    public List<string> AddressAttributes { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the deserialized CustomValues (values from ProcessPaymentRequest)
     /// </summary>
-    public Dictionary<string, object> CustomValues { get; set; }
+    public Dictionary<string, object> CustomValues { get; set; } = new();
 
     #endregion
 }

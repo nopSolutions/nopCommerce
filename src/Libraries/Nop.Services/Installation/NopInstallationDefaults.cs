@@ -24,4 +24,9 @@ public static partial class NopInstallationDefaults
     /// Gets a path to the installation sample images
     /// </summary>
     public static string SampleImagesPath => "images\\samples\\";
+
+    /// <summary>
+    /// Gets a path to the installation sample images
+    /// </summary>
+    public static string SampleDataPath => "~/App_Data/Installation/SampleData.json";
 }

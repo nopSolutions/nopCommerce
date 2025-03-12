@@ -431,7 +431,7 @@ public class CatalogModelFactoryBaseTests : WebTest
     [Test]
     public async Task CanPrepareCategoryProductsModelAsync()
     {
-        var model = await _catalogModelFactory.PrepareCategoryProductsModelAsync(await _categoryService.GetCategoryByIdAsync(3), new CatalogProductsCommand());
+        var model = await _catalogModelFactory.PrepareCategoryProductsModelAsync((await _categoryService.GetAllCategoriesAsync("Notebooks")).First(), new CatalogProductsCommand());
         model.UseAjaxLoading.Should().Be(_catalogSettings.UseAjaxCatalogProductsLoading);
         model.AvailableSortOptions.Should().NotBeEmpty();
         model.AvailableViewModes.Should().NotBeEmpty();

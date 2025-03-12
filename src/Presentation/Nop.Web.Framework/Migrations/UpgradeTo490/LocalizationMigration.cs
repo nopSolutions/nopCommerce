@@ -88,6 +88,10 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Promotions.Campaigns.Copy"] = "Copy campaign",
             ["Admin.Promotions.Campaigns.Copied"] = "The campaign has been copied successfully",
 
+            //#7477
+            ["Pdf.Order"] = "Order #{0}",
+            ["Pdf.Shipment"] = "Shipment #{0}",
+
             //#5279
             ["Search.SearchInTags"] = "Search in product tags",
 
@@ -109,6 +113,10 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Catalog.ProductTags.TaggedProducts"] = "Used by products",
             ["Admin.Catalog.ProductTags.TaggedProducts.Product"] = "Product",
             ["Admin.Catalog.ProductTags.TaggedProducts.Published"] = "Published",
+            
+            //#7405
+            ["Admin.Configuration.Settings.Catalog.ExportImportCategoryUseLimitedToStores"] = "Export / Import categories with \"limited to stores\"",
+            ["Admin.Configuration.Settings.Catalog.ExportImportCategoryUseLimitedToStores.Hint"] = "Check if categories should be exported / imported with \"limited to stores\" property.",
         }, languageId);
 
         #endregion

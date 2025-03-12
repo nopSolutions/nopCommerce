@@ -2,10 +2,12 @@
 using System.Net;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
+using iTextSharp.text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.StaticFiles;
@@ -33,7 +35,6 @@ using Nop.Services.Seo;
 using Nop.Web.Framework.Globalization;
 using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.WebOptimizer;
-using QuestPDF.Drawing;
 using WebMarkupMin.AspNetCoreLatest;
 using WebOptimizer;
 using IPNetwork = Microsoft.AspNetCore.HttpOverrides.IPNetwork;
@@ -145,43 +146,76 @@ public static class ApplicationBuilderExtensions
         application.UseStatusCodePages(async context =>
         {
             //handle 404 Not Found
-            if (context.HttpContext.Response.StatusCode == StatusCodes.Status404NotFound)
+            if (context.HttpContext.Response.StatusCode != StatusCodes.Status404NotFound)
+                return;
+
+            //return a browser-dependent error message indicating the static file can't be found
+            var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+            if (webHelper.IsStaticResource())
+                return;
+
+            //get original path and query
+            var originalPath = context.HttpContext.Request.Path;
+            var originalQueryString = context.HttpContext.Request.QueryString;
+
+            if (DataSettingsManager.IsDatabaseInstalled())
             {
-                var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-                if (!webHelper.IsStaticResource())
+                var commonSettings = EngineContext.Current.Resolve<CommonSettings>();
+
+                if (commonSettings.Log404Errors)
                 {
-                    //get original path and query
-                    var originalPath = context.HttpContext.Request.Path;
-                    var originalQueryString = context.HttpContext.Request.QueryString;
+                    var logger = EngineContext.Current.Resolve<ILogger>();
+                    var workContext = EngineContext.Current.Resolve<IWorkContext>();
 
-                    if (DataSettingsManager.IsDatabaseInstalled())
-                    {
-                        var commonSettings = EngineContext.Current.Resolve<CommonSettings>();
-
-                        if (commonSettings.Log404Errors)
-                        {
-                            var logger = EngineContext.Current.Resolve<ILogger>();
-                            var workContext = EngineContext.Current.Resolve<IWorkContext>();
-
-                            await logger.ErrorAsync($"Error 404. The requested page ({originalPath}) was not found",
-                                customer: await workContext.GetCurrentCustomerAsync());
-                        }
-                    }
-
-                    try
-                    {
-                        //get new path
-                        var pageNotFoundPath = "/page-not-found";
-                        //re-execute request with new path
-                        context.HttpContext.Response.Redirect(context.HttpContext.Request.PathBase + pageNotFoundPath);
-                    }
-                    finally
-                    {
-                        //return original path to request
-                        context.HttpContext.Request.QueryString = originalQueryString;
-                        context.HttpContext.Request.Path = originalPath;
-                    }
+                    await logger.ErrorAsync($"Error 404. The requested page ({originalPath}) was not found",
+                        customer: await workContext.GetCurrentCustomerAsync());
                 }
+            }
+
+            var routeValuesFeature = context.HttpContext.Features.Get<IRouteValuesFeature>();
+
+            //store the original paths so we can check it later
+            context.HttpContext.Features.Set<IStatusCodeReExecuteFeature>(new StatusCodeReExecuteFeature
+            {
+                OriginalPathBase = context.HttpContext.Request.PathBase.Value!,
+                OriginalPath = originalPath.Value!,
+                OriginalQueryString = originalQueryString.HasValue ? originalQueryString.Value : null,
+                Endpoint = context.HttpContext.GetEndpoint(),
+                RouteValues = routeValuesFeature?.RouteValues
+            });
+
+            string getLanguageRouteValue()
+            {
+                if (!DataSettingsManager.IsDatabaseInstalled())
+                    return string.Empty;
+
+                var localizationSettings = EngineContext.Current.Resolve<LocalizationSettings>();
+                if (!localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+                    return string.Empty;
+
+                return routeValuesFeature?.RouteValues.GetValueOrDefault(NopRoutingDefaults.RouteValue.Language) is string lang ? $"/{lang}" : "/en";
+            }
+
+            //set new path
+            context.HttpContext.Request.Path = $"{getLanguageRouteValue()}/page-not-found";
+            context.HttpContext.Request.QueryString = QueryString.Empty;
+
+            //since we're going to re-invoke the middleware pipeline we need to reset the endpoint and route values
+            context.HttpContext.SetEndpoint(null);
+            if (routeValuesFeature is not null)
+                routeValuesFeature.RouteValues = null!;
+
+            try
+            {
+                //re-execute request with new path
+                await context.Next(context.HttpContext);
+            }
+            finally
+            {
+                //return original path to request
+                context.HttpContext.Request.QueryString = originalQueryString;
+                context.HttpContext.Request.Path = originalPath;
+                context.HttpContext.Features.Set<IStatusCodeReExecuteFeature>(null);
             }
         });
     }
@@ -393,14 +427,11 @@ public static class ApplicationBuilderExtensions
             return;
 
         var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
+
         var fontPaths = fileProvider.EnumerateFiles(fileProvider.MapPath("~/App_Data/Pdf/"), "*.ttf") ?? Enumerable.Empty<string>();
-
-        //write placeholder characters instead of unavailable glyphs for both debug/release configurations
-        QuestPDF.Settings.CheckIfAllTextGlyphsAreAvailable = false;
-
         foreach (var fp in fontPaths)
         {
-            FontManager.RegisterFont(File.OpenRead(fp));
+            FontFactory.Register(fp, fileProvider.GetFileNameWithoutExtension(fp));
         }
     }
 

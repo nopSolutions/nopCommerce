@@ -31,6 +31,11 @@ public static partial class NopAuthenticationDefaults
     /// The default value for the access denied path
     /// </summary>
     public static PathString AccessDeniedPath => new("/page-not-found");
+
+    /// <summary>
+    /// The name of the query string parameter which is appended by the handler during a Challenge
+    /// </summary>
+    public static string ReturnUrlParameter => "returnUrl";
     
     /// <summary>
     /// Gets a key to store external authentication errors to session

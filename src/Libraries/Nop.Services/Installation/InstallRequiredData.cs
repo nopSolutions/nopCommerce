@@ -1,23 +1,27 @@
 ﻿using System.ComponentModel;
 using System.Globalization;
 using System.Security.Cryptography;
+using System.Text;
 using System.Xml;
-using Nop.Core.Domain.Blogs;
-using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain;
 using Nop.Core;
 using Nop.Core.Configuration;
+using Nop.Core.Domain;
+using Nop.Core.Domain.Blogs;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
+using Nop.Core.Domain.ScheduleTasks;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
@@ -32,10 +36,6 @@ using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Seo;
-using Nop.Core.Domain.Logging;
-using Nop.Core.Domain.ScheduleTasks;
-using Nop.Core.Domain.Configuration;
-using System.Text;
 
 namespace Nop.Services.Installation;
 
@@ -356,7 +356,6 @@ public partial class InstallationService
         //download and import language pack
         try
         {
-
             var httpClient = _httpClientFactory.CreateClient(NopHttpDefaults.DefaultHttpClient);
             await using var stream = await httpClient.GetStreamAsync(_installationSettings.LanguagePackDownloadLink);
             using var streamReader = new StreamReader(stream);
@@ -1219,9 +1218,12 @@ public partial class InstallationService
             LogoPictureId = 0,
             LetterPageSizeEnabled = false,
             RenderOrderNotes = true,
-            FontFamily = "FreeSerif",
+            LtrFontName = NopCommonDefaults.PdfLtrFontName,
+            RtlFontName = NopCommonDefaults.PdfRtlFontName,
             InvoiceFooterTextColumn1 = null,
-            InvoiceFooterTextColumn2 = null
+            InvoiceFooterTextColumn2 = null,
+            BaseFontSize = 10,
+            ImageTargetSize = 200
         });
 
         await SaveSettingAsync(dictionary, new SitemapSettings
@@ -1301,7 +1303,8 @@ public partial class InstallationService
             CheckLicense = true,
             UseIsoDateFormatInJsonResult = true,
             ShowDocumentationReferenceLinks = true,
-            UseStickyHeaderLayout = false
+            UseStickyHeaderLayout = false,
+            MinimumDropdownItemsForSearch = 50
         });
 
         await SaveSettingAsync(dictionary, new ProductEditorSettings
@@ -1419,6 +1422,7 @@ public partial class InstallationService
             ExportImportProductsCountInOneFile = 500,
             ExportImportSplitProductsFile = false,
             ExportImportRelatedEntitiesByName = true,
+            ExportImportCategoryUseLimitedToStores = false,
             CountDisplayedYearsDatePicker = 1,
             UseAjaxLoadMenu = false,
             UseAjaxCatalogProductsLoading = true,
@@ -1960,107 +1964,107 @@ public partial class InstallationService
             DisallowPaths =
             [
                 "/admin",
-                    "/bin/",
-                    "/files/",
-                    "/files/exportimport/",
-                    "/install",
-                    "/*?*returnUrl=",
-                    //AJAX urls
-                    "/cart/estimateshipping",
-                    "/cart/selectshippingoption",
-                    "/customer/addressdelete",
-                    "/customer/removeexternalassociation",
-                    "/customer/checkusernameavailability",
-                    "/catalog/searchtermautocomplete",
-                    "/catalog/getcatalogroot",
-                    "/addproducttocart/catalog/*",
-                    "/addproducttocart/details/*",
-                    "/compareproducts/add/*",
-                    "/backinstocksubscribe/*",
-                    "/subscribenewsletter",
-                    "/t-popup/*",
-                    "/setproductreviewhelpfulness",
-                    "/poll/vote",
-                    "/country/getstatesbycountryid/",
-                    "/eucookielawaccept",
-                    "/topic/authenticate",
-                    "/category/products/",
-                    "/product/combinations",
-                    "/uploadfileproductattribute/*",
-                    "/shoppingcart/productdetails_attributechange/*",
-                    "/uploadfilereturnrequest",
-                    "/boards/topicwatch/*",
-                    "/boards/forumwatch/*",
-                    "/install/restartapplication",
-                    "/boards/postvote",
-                    "/product/estimateshipping/*",
-                    "/shoppingcart/checkoutattributechange/*"
+                "/bin/",
+                "/files/",
+                "/files/exportimport/",
+                "/install",
+                "/*?*returnUrl=",
+                //AJAX urls
+                "/cart/estimateshipping",
+                "/cart/selectshippingoption",
+                "/customer/addressdelete",
+                "/customer/removeexternalassociation",
+                "/customer/checkusernameavailability",
+                "/catalog/searchtermautocomplete",
+                "/catalog/getcatalogroot",
+                "/addproducttocart/catalog/*",
+                "/addproducttocart/details/*",
+                "/compareproducts/add/*",
+                "/backinstocksubscribe/*",
+                "/subscribenewsletter",
+                "/t-popup/*",
+                "/setproductreviewhelpfulness",
+                "/poll/vote",
+                "/country/getstatesbycountryid/",
+                "/eucookielawaccept",
+                "/topic/authenticate",
+                "/category/products/",
+                "/product/combinations",
+                "/uploadfileproductattribute/*",
+                "/shoppingcart/productdetails_attributechange/*",
+                "/uploadfilereturnrequest",
+                "/boards/topicwatch/*",
+                "/boards/forumwatch/*",
+                "/install/restartapplication",
+                "/boards/postvote",
+                "/product/estimateshipping/*",
+                "/shoppingcart/checkoutattributechange/*"
             ],
             LocalizableDisallowPaths =
             [
                 "/addproducttocart/catalog/",
-                    "/addproducttocart/details/",
-                    "/backinstocksubscriptions/manage",
-                    "/boards/forumsubscriptions",
-                    "/boards/forumwatch",
-                    "/boards/postedit",
-                    "/boards/postdelete",
-                    "/boards/postcreate",
-                    "/boards/topicedit",
-                    "/boards/topicdelete",
-                    "/boards/topiccreate",
-                    "/boards/topicmove",
-                    "/boards/topicwatch",
-                    "/cart$",
-                    "/changecurrency",
-                    "/changelanguage",
-                    "/changetaxtype",
-                    "/checkout",
-                    "/checkout/billingaddress",
-                    "/checkout/completed",
-                    "/checkout/confirm",
-                    "/checkout/shippingaddress",
-                    "/checkout/shippingmethod",
-                    "/checkout/paymentinfo",
-                    "/checkout/paymentmethod",
-                    "/clearcomparelist",
-                    "/compareproducts",
-                    "/compareproducts/add/*",
-                    "/customer/avatar",
-                    "/customer/activation",
-                    "/customer/addresses",
-                    "/customer/changepassword",
-                    "/customer/checkusernameavailability",
-                    "/customer/downloadableproducts",
-                    "/customer/info",
-                    "/customer/productreviews",
-                    "/deletepm",
-                    "/emailwishlist",
-                    "/eucookielawaccept",
-                    "/inboxupdate",
-                    "/newsletter/subscriptionactivation",
-                    "/onepagecheckout",
-                    "/order/history",
-                    "/orderdetails",
-                    "/passwordrecovery/confirm",
-                    "/poll/vote",
-                    "/privatemessages",
-                    "/recentlyviewedproducts",
-                    "/returnrequest",
-                    "/returnrequest/history",
-                    "/rewardpoints/history",
-                    "/search?",
-                    "/sendpm",
-                    "/sentupdate",
-                    "/shoppingcart/*",
-                    "/storeclosed",
-                    "/subscribenewsletter",
-                    "/topic/authenticate",
-                    "/viewpm",
-                    "/uploadfilecheckoutattribute",
-                    "/uploadfileproductattribute",
-                    "/uploadfilereturnrequest",
-                    "/wishlist"
+                "/addproducttocart/details/",
+                "/backinstocksubscriptions/manage",
+                "/boards/forumsubscriptions",
+                "/boards/forumwatch",
+                "/boards/postedit",
+                "/boards/postdelete",
+                "/boards/postcreate",
+                "/boards/topicedit",
+                "/boards/topicdelete",
+                "/boards/topiccreate",
+                "/boards/topicmove",
+                "/boards/topicwatch",
+                "/cart$",
+                "/changecurrency",
+                "/changelanguage",
+                "/changetaxtype",
+                "/checkout",
+                "/checkout/billingaddress",
+                "/checkout/completed",
+                "/checkout/confirm",
+                "/checkout/shippingaddress",
+                "/checkout/shippingmethod",
+                "/checkout/paymentinfo",
+                "/checkout/paymentmethod",
+                "/clearcomparelist",
+                "/compareproducts",
+                "/compareproducts/add/*",
+                "/customer/avatar",
+                "/customer/activation",
+                "/customer/addresses",
+                "/customer/changepassword",
+                "/customer/checkusernameavailability",
+                "/customer/downloadableproducts",
+                "/customer/info",
+                "/customer/productreviews",
+                "/deletepm",
+                "/emailwishlist",
+                "/eucookielawaccept",
+                "/inboxupdate",
+                "/newsletter/subscriptionactivation",
+                "/onepagecheckout",
+                "/order/history",
+                "/orderdetails",
+                "/passwordrecovery/confirm",
+                "/poll/vote",
+                "/privatemessages",
+                "/recentlyviewedproducts",
+                "/returnrequest",
+                "/returnrequest/history",
+                "/rewardpoints/history",
+                "/search?",
+                "/sendpm",
+                "/sentupdate",
+                "/shoppingcart/*",
+                "/storeclosed",
+                "/subscribenewsletter",
+                "/topic/authenticate",
+                "/viewpm",
+                "/uploadfilecheckoutattribute",
+                "/uploadfileproductattribute",
+                "/uploadfilereturnrequest",
+                "/wishlist"
             ]
         });
     }

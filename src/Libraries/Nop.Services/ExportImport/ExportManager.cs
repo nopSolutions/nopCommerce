@@ -338,18 +338,18 @@ public partial class ExportManager : IExportManager
     }
 
     /// <summary>
-    /// Returns the list of limited to stores for a product separated by a ";"
+    /// Returns the list of limited to stores for an entity separated by a ";"
     /// </summary>
-    /// <param name="product">Product</param>
+    /// <param name="entity">IStoreMappingSupported entity</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the list of store
     /// </returns>
-    protected virtual async Task<object> GetLimitedToStoresAsync(Product product)
+    protected virtual async Task<object> GetLimitedToStoresAsync<TEntity>(TEntity entity) where TEntity: BaseEntity, IStoreMappingSupported
     {
         string limitedToStores = null;
 
-        foreach (var storeMapping in await _storeMappingService.GetStoreMappingsAsync(product))
+        foreach (var storeMapping in await _storeMappingService.GetStoreMappingsAsync(entity))
         {
             var store = await _storeService.GetStoreByIdAsync(storeMapping.StoreId);
 
@@ -453,11 +453,19 @@ public partial class ExportManager : IExportManager
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    protected virtual async Task<bool> IgnoreExportLimitedToStoreAsync()
+    protected virtual async Task<bool> ProductIgnoreExportLimitedToStoreAsync()
     {
         return _catalogSettings.IgnoreStoreLimitations ||
                !_catalogSettings.ExportImportProductUseLimitedToStores ||
                (await _storeService.GetAllStoresAsync()).Count == 1;
+    }
+
+    /// <returns>A task that represents the asynchronous operation</returns>
+    protected virtual async Task<bool> CategoryIgnoreExportLimitedToStoreAsync()
+    {
+        return _catalogSettings.IgnoreStoreLimitations ||
+            !_catalogSettings.ExportImportCategoryUseLimitedToStores ||
+            (await _storeService.GetAllStoresAsync()).Count == 1;
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
@@ -1196,6 +1204,8 @@ public partial class ExportManager : IExportManager
             new PropertyByName<Category>("PageSizeOptions", (p, _) => p.PageSizeOptions, await IgnoreExportCategoryPropertyAsync()),
             new PropertyByName<Category>("ShowOnHomepage", (p, _) => p.ShowOnHomepage, await IgnoreExportCategoryPropertyAsync()),
             new PropertyByName<Category>("IncludeInTopMenu", (p, _) => p.IncludeInTopMenu, await IgnoreExportCategoryPropertyAsync()),
+            new PropertyByName<Category>("IsLimitedToStores", (p, _) => p.LimitedToStores, await CategoryIgnoreExportLimitedToStoreAsync()),
+            new PropertyByName<Category>("LimitedToStores",async (p, _) =>  await GetLimitedToStoresAsync(p), await CategoryIgnoreExportLimitedToStoreAsync()),
             new PropertyByName<Category>("Published", (p, _) => p.Published, await IgnoreExportCategoryPropertyAsync()),
             new PropertyByName<Category>("DisplayOrder", (p, _) => p.DisplayOrder)
         }, _catalogSettings, localizedProperties, languages);
@@ -1730,8 +1740,8 @@ public partial class ExportManager : IExportManager
             new PropertyByName<Product>("Categories", async (p, _) =>  await GetCategoriesAsync(p)),
             new PropertyByName<Product>("Manufacturers", async (p, _) =>  await GetManufacturersAsync(p), await IgnoreExportProductPropertyAsync(p => p.Manufacturers)),
             new PropertyByName<Product>("ProductTags", async (p, _) =>  await GetProductTagsAsync(p), await IgnoreExportProductPropertyAsync(p => p.ProductTags)),
-            new PropertyByName<Product>("IsLimitedToStores", (p, _) => p.LimitedToStores, await IgnoreExportLimitedToStoreAsync()),
-            new PropertyByName<Product>("LimitedToStores",async (p, _) =>  await GetLimitedToStoresAsync(p), await IgnoreExportLimitedToStoreAsync()),
+            new PropertyByName<Product>("IsLimitedToStores", (p, _) => p.LimitedToStores, await ProductIgnoreExportLimitedToStoreAsync()),
+            new PropertyByName<Product>("LimitedToStores",async (p, _) =>  await GetLimitedToStoresAsync(p), await ProductIgnoreExportLimitedToStoreAsync()),
             new PropertyByName<Product>("DisplayAttributeCombinationImagesOnly",(p, _) =>  p.DisplayAttributeCombinationImagesOnly, !productAdvancedMode),
             new PropertyByName<Product>("AgeVerification", (p, _) => p.AgeVerification, await IgnoreExportProductPropertyAsync(p => p.AgeVerification)),
             new PropertyByName<Product>("MinimumAgeToPurchase", (p, _) => p.MinimumAgeToPurchase, await IgnoreExportProductPropertyAsync(p => p.AgeVerification)),

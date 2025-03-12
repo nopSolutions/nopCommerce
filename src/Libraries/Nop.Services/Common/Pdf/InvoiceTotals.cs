@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 namespace Nop.Services.Common.Pdf;
 
@@ -7,16 +7,6 @@ namespace Nop.Services.Common.Pdf;
 /// </summary>
 public partial class InvoiceTotals
 {
-    #region Ctor
-
-    public InvoiceTotals()
-    {
-        GiftCards = new();
-        TaxRates = new();
-    }
-
-    #endregion
-
     #region Properties
 
     /// <summary>
@@ -34,7 +24,7 @@ public partial class InvoiceTotals
     /// <summary>
     /// Gets or sets the gift card text
     /// </summary>
-    public List<string> GiftCards { get; set; }
+    public List<string> GiftCards { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the shipping price
@@ -57,16 +47,18 @@ public partial class InvoiceTotals
     /// <summary>
     /// Gets or sets a collection of the tax rates
     /// </summary>
-    public List<string> TaxRates { get; set; }
+    public List<string> TaxRates { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the reward points text
     /// </summary>
+    [DisplayName("Pdf.RewardPoints")]
     public string RewardPoints { get; set; }
 
     /// <summary>
     /// Gets or sets the order total
     /// </summary>
+    [DisplayName("Pdf.OrderTotal")]
     public string OrderTotal { get; set; }
 
     #endregion
