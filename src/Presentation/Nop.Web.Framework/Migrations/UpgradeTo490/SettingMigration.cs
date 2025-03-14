@@ -3,6 +3,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Security;
+using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Infrastructure;
 using Nop.Data;
@@ -107,6 +108,27 @@ public class SettingMigration : MigrationBase
         {
             pdfSettings.ImageTargetSize = 200;
             settingService.SaveSetting(pdfSettings, settings => pdfSettings.ImageTargetSize);
+        }
+
+        //#7630
+        var taxSettings = settingService.LoadSetting<TaxSettings>();
+
+        if (!settingService.SettingExists(taxSettings, settings => settings.HmrcApiUrl))
+        {
+            taxSettings.HmrcApiUrl = "https://api.service.hmrc.gov.uk";
+            settingService.SaveSetting(taxSettings, settings => taxSettings.HmrcApiUrl);
+        }
+
+        if (!settingService.SettingExists(taxSettings, settings => settings.HmrcClientId))
+        {
+            taxSettings.HmrcClientId = string.Empty;
+            settingService.SaveSetting(taxSettings, settings => taxSettings.HmrcClientId);
+        }
+
+        if (!settingService.SettingExists(taxSettings, settings => settings.HmrcClientSecret))
+        {
+            taxSettings.HmrcClientSecret = string.Empty;
+            settingService.SaveSetting(taxSettings, settings => taxSettings.HmrcClientSecret);
         }
     }
 

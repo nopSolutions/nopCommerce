@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Net.Http.Headers;
+using Newtonsoft.Json;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Http;
 
@@ -12,14 +13,57 @@ public partial class CheckVatService : ICheckVatService
     #region Fields
 
     protected readonly IHttpClientFactory _httpClientFactory;
+    protected readonly TaxSettings _taxSettings;
 
     #endregion
 
     #region Ctor
 
-    public CheckVatService(IHttpClientFactory httpClientFactory)
+    public CheckVatService(IHttpClientFactory httpClientFactory, TaxSettings taxSettings)
     {
         _httpClientFactory = httpClientFactory;
+        _taxSettings = taxSettings;
+    }
+
+    #endregion
+
+    #region Utilities
+
+    /// <summary>
+    /// Gets hmrc.gov.uk API access token
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the access token for hmrc service
+    /// </returns>
+    protected virtual async Task<string> GetHmrcAccessTokenAsync()
+    {
+        if (string.IsNullOrEmpty(_taxSettings.HmrcClientId) || string.IsNullOrEmpty(_taxSettings.HmrcClientSecret))
+            return null;
+
+        var client = _httpClientFactory.CreateClient(NopHttpDefaults.DefaultHttpClient);
+        client.BaseAddress = new Uri(_taxSettings.HmrcApiUrl);
+
+        var data = new FormUrlEncodedContent(new[]
+        {
+            new KeyValuePair<string, string>("client_id", _taxSettings.HmrcClientId),
+            new KeyValuePair<string, string>("client_secret", _taxSettings.HmrcClientSecret),
+            new KeyValuePair<string, string>("grant_type", "client_credentials"),
+            new KeyValuePair<string, string>("scope", "read:vat")
+        });
+
+        var response = await client.PostAsync(NopTaxDefaults.HmrcOauthTokenUrl, data);
+
+        if (!response.IsSuccessStatusCode)
+            return null;
+
+        return JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(),
+            new
+            {
+                access_token = string.Empty,
+                token_type = string.Empty,
+                expires_in = 0
+            })?.access_token;
     }
 
     #endregion
@@ -44,21 +88,30 @@ public partial class CheckVatService : ICheckVatService
         //so we use hmrc.gov.uk API to validate UK VAT numbers.
         if (twoLetterIsoCode == "GB")
         {
-            var client = _httpClientFactory.CreateClient(NopHttpDefaults.DefaultHttpClient);
-            var result = await client.GetAsync(string.Format(NopTaxDefaults.UKVatValidateUrl, vatNumber));
+            var accessToken = await GetHmrcAccessTokenAsync();
 
-            if (!result.IsSuccessStatusCode)
+            if (string.IsNullOrEmpty(accessToken))
                 return (VatNumberStatus.Invalid, name, address);
 
-            var response = JsonConvert.DeserializeAnonymousType(await result.Content.ReadAsStringAsync(),
+            var client = _httpClientFactory.CreateClient(NopHttpDefaults.DefaultHttpClient);
+            client.BaseAddress = new Uri(_taxSettings.HmrcApiUrl);
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.hmrc.2.0+json"));
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            var response = await client.GetAsync(string.Format(NopTaxDefaults.HmrcVatValidateUrl, vatNumber));
+
+            if (!response.IsSuccessStatusCode)
+                return (VatNumberStatus.Invalid, name, address);
+
+            var result = JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(),
                 new { target = new { name = string.Empty, address = new { line1 = string.Empty } } });
 
-            if (response == null) 
+            if (result == null)
                 return (VatNumberStatus.Invalid, name, address);
-
-            var target = response.target;
-            name = target.name;
-            address = target.address.line1;
+           
+            name = result.target.name;
+            address = result.target.address.line1;
         }
         else
         {
