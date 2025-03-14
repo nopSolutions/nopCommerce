@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Nop.Core.Domain.Common;
 using Nop.Web.Framework.Extensions;
-using static LinqToDB.Reflection.Methods.LinqToDB.Insert;
 
 namespace Nop.Web.Framework.TagHelpers.Admin;
 
@@ -98,11 +97,20 @@ public partial class NopSelectTagHelper : TagHelper
             var additionalData = new { htmlAttributes, SelectList = Items, MinimumItemsForSearch = _adminAreaSettings.MinimumDropdownItemsForSearch };
 
             if (modelType is null || new[] { typeof(List<string>), typeof(string) }.Contains(modelType))
+            {
                 selectList = _htmlHelper.Editor(tagName, $"{templateName}String", additionalData);
+            }
             else if (new[] { typeof(List<int>), typeof(int) }.Contains(modelType))
+            {
                 selectList = _htmlHelper.Editor(tagName, templateName, additionalData);
+            }
             else
+            {
+                if (!htmlAttributes.TryAdd("class", "form-control"))
+                    htmlAttributes["class"] += " form-control";
+
                 selectList = _htmlHelper.DropDownList(tagName, Items, htmlAttributes);
+            }
 
             output.Content.SetHtmlContent(await selectList.RenderHtmlContentAsync());
         }
