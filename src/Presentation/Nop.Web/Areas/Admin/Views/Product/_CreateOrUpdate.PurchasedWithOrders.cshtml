@@ -9,8 +9,8 @@
         {
             Name = "purchased-with-orders-grid",
             UrlRead = new DataUrl("PurchasedWithOrders", "Product", new RouteValueDictionary { [nameof(Model.ProductOrderSearchModel.ProductId)] = Model.ProductOrderSearchModel.ProductId }),
-            Length = Model.ProductPictureSearchModel.PageSize,
-            LengthMenu = Model.ProductPictureSearchModel.AvailablePageSizes
+            Length = Model.ProductOrderSearchModel.PageSize,
+            LengthMenu = Model.ProductOrderSearchModel.AvailablePageSizes
         };
 
         var columns = new List<ColumnProperty>();
