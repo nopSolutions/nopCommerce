@@ -64,16 +64,6 @@
         </div>
         <div class="form-group row">
             <div class="col-md-3">
-                <nop-override-store-checkbox asp-for="EuVatUseWebService_OverrideForStore" asp-input="EuVatUseWebService" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                <nop-label asp-for="EuVatUseWebService" />
-            </div>
-            <div class="col-md-9">
-                <nop-editor asp-for="EuVatUseWebService" />
-                <span asp-validation-for="EuVatUseWebService"></span>
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="EuVatEmailAdminWhenNewVatSubmitted_OverrideForStore" asp-input="EuVatEmailAdminWhenNewVatSubmitted" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="EuVatEmailAdminWhenNewVatSubmitted" />
             </div>
@@ -82,5 +72,47 @@
                 <span asp-validation-for="EuVatEmailAdminWhenNewVatSubmitted"></span>
             </div>
         </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="EuVatUseWebService_OverrideForStore" asp-input="EuVatUseWebService" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="EuVatUseWebService" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="EuVatUseWebService" />
+                <span asp-validation-for="EuVatUseWebService"></span>
+            </div>
+        </div>
+        <nop-nested-setting asp-for="EuVatUseWebService">
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="HmrcApiUrl_OverrideForStore" asp-input="HmrcApiUrl" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="HmrcApiUrl" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="HmrcApiUrl" />
+                    <span asp-validation-for="HmrcApiUrl"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="HmrcClientId_OverrideForStore" asp-input="HmrcClientId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="HmrcClientId" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="HmrcClientId" />
+                    <span asp-validation-for="HmrcClientId"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="HmrcClientSecret_OverrideForStore" asp-input="HmrcClientSecret" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="HmrcClientSecret" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="HmrcClientSecret" html-attributes="@(new { value = Model.HmrcClientSecret })" />
+                    <span asp-validation-for="HmrcClientSecret"></span>
+                </div>
+            </div>
+        </nop-nested-setting>
     </nop-nested-setting>
 </div>

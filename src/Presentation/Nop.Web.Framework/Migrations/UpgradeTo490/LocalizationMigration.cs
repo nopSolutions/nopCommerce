@@ -117,6 +117,14 @@ public class LocalizationMigration : MigrationBase
             //#7405
             ["Admin.Configuration.Settings.Catalog.ExportImportCategoryUseLimitedToStores"] = "Export / Import categories with \"limited to stores\"",
             ["Admin.Configuration.Settings.Catalog.ExportImportCategoryUseLimitedToStores.Hint"] = "Check if categories should be exported / imported with \"limited to stores\" property.",
+
+            //#7630
+            ["Admin.Configuration.Settings.Tax.HmrcApiUrl"] = "HMRC API URL",
+            ["Admin.Configuration.Settings.Tax.HmrcApiUrl.Hint"] = "The base HMRC access API URL.",
+            ["Admin.Configuration.Settings.Tax.HmrcClientId"] = "HMRC API client ID",
+            ["Admin.Configuration.Settings.Tax.HmrcClientId.Hint"] = "Your HMRC API client ID is a unique identifier which created when you added your application.",
+            ["Admin.Configuration.Settings.Tax.HmrcClientSecret"] = "HMRC API client secret",
+            ["Admin.Configuration.Settings.Tax.HmrcClientSecret.Hint"] = "Your client secret is a unique passphrase that you generate to authorise your application.",
         }, languageId);
 
         #endregion
