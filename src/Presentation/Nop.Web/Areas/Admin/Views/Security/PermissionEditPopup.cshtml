@@ -59,6 +59,12 @@
                                     </text>
                                 }
                             });
+
+                            $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').on('select2:open', function (e) {
+                                const container = $(this).siblings('.select2-container');
+                                const availableHeight = $(window).height() - container.offset().top - container.outerHeight() - 1;
+                                $('ul.select2-results__options').css('max-height', Math.max(availableHeight, 50) + 'px');
+                            });
                         });
                     </script>
                 </div>
