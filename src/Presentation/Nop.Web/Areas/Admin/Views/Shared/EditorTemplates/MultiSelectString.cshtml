@@ -10,7 +10,7 @@
 }
 
 <div class="select2-blue">
-    @Html.DropDownList("", ViewData["SelectList"] as IEnumerable<SelectListItem>, htmlAttributes)
+    @Html.ListBox("", ViewData["SelectList"] as IEnumerable<SelectListItem>, htmlAttributes)
 </div>
 
 <script>
