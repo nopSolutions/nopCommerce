@@ -77,7 +77,7 @@ public class ModelCacheEventConsumer :
     /// {0} : picture id
     /// {1} : secured
     /// </remarks>
-    public static CacheKey PictureUrlModelKey => new("Nop.plugins.widgets.swiper.pictureurl-{0}-{1}", PictureUrlPrefix);
+    public static CacheKey PictureUrlModelKey => new("Nop.plugins.widgets.swiper.pictureurl-{0}-{1}");
 
     #endregion
 }

@@ -13,6 +13,10 @@ public static partial class WidgetModelDefaults
     /// {2} : widget zone
     /// {3} : current theme name
     /// </remarks>
-    public static CacheKey WidgetModelKey => new("Nop.pres.widget-{0}-{1}-{2}-{3}", WidgetPrefixCacheKey);
+    public static CacheKey WidgetModelKey => new("Nop.pres.widget-{0}-{1}-{2}-{3}");
+    
+    /// <summary>
+    /// Gets the prefix key to clear cache
+    /// </summary>
     public static string WidgetPrefixCacheKey => "Nop.pres.widget";
 }

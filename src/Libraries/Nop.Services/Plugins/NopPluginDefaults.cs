@@ -83,7 +83,7 @@ public static partial class NopPluginDefaults
     /// <remarks>
     /// {0} : customer identifier
     /// </remarks>
-    public static CacheKey AdminNavigationPluginsCacheKey => new("Nop.plugins.adminnavigation.{0}", AdminNavigationPluginsPrefix);
+    public static CacheKey AdminNavigationPluginsCacheKey => new("Nop.plugins.adminnavigation.{0}");
 
     /// <summary>
     /// Gets a key pattern to clear cache

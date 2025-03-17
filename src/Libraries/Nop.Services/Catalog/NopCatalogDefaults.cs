@@ -1,5 +1,4 @@
 ﻿using Nop.Core.Caching;
-using Nop.Core.Domain.Catalog;
 
 namespace Nop.Services.Catalog;
 
@@ -52,7 +51,7 @@ public static partial class NopCatalogDefaults
     /// {2} : roles of the current user
     /// {3} : store ID
     /// </remarks>
-    public static CacheKey CategoriesByParentCategoryCacheKey => new("Nop.category.byparent.{0}-{1}-{2}-{3}", CategoriesByParentCategoryPrefix);
+    public static CacheKey CategoriesByParentCategoryCacheKey => new("Nop.category.byparent.{0}-{1}-{2}-{3}");
 
     /// <summary>
     /// Gets a key pattern to clear cache
@@ -71,7 +70,7 @@ public static partial class NopCatalogDefaults
     /// {2} : current store ID
     /// {3} : show hidden records?
     /// </remarks>
-    public static CacheKey CategoriesChildIdsCacheKey => new("Nop.category.childids.{0}-{1}-{2}-{3}", CategoriesChildIdsPrefix);
+    public static CacheKey CategoriesChildIdsCacheKey => new("Nop.category.childids.{0}-{1}-{2}-{3}");
 
     /// <summary>
     /// Gets a key pattern to clear cache
@@ -88,7 +87,7 @@ public static partial class NopCatalogDefaults
     /// {0} : current store ID
     /// {1} : show hidden records?
     /// </remarks>
-    public static CacheKey ChildCategoryIdLookupCacheKey => new("Nop.childcategoryidlookup.bystore.{0}-{1}", ChildCategoryIdLookupPrefix, ChildCategoryIdLookupByStorePrefix);
+    public static CacheKey ChildCategoryIdLookupCacheKey => new("Nop.childcategoryidlookup.bystore.{0}-{1}");
 
     /// <summary>
     /// Gets a key pattern to clear cache
@@ -103,7 +102,7 @@ public static partial class NopCatalogDefaults
     /// <summary>
     /// Gets a key for caching
     /// </summary>
-    public static CacheKey CategoriesHomepageCacheKey => new("Nop.category.homepage.", CategoriesHomepagePrefix);
+    public static CacheKey CategoriesHomepageCacheKey => new("Nop.category.homepage.");
 
     /// <summary>
     /// Gets a key for caching
@@ -112,7 +111,7 @@ public static partial class NopCatalogDefaults
     /// {0} : current store ID
     /// {1} : roles of the current user
     /// </remarks>
-    public static CacheKey CategoriesHomepageWithoutHiddenCacheKey => new("Nop.category.homepage.withouthidden-{0}-{1}", CategoriesHomepagePrefix);
+    public static CacheKey CategoriesHomepageWithoutHiddenCacheKey => new("Nop.category.homepage.withouthidden-{0}-{1}");
 
     /// <summary>
     /// Gets a key pattern to clear cache
@@ -129,7 +128,7 @@ public static partial class NopCatalogDefaults
     /// {3} : language ID
     /// {4} : show hidden records?
     /// </remarks>
-    public static CacheKey CategoryBreadcrumbCacheKey => new("Nop.category.breadcrumb.{0}-{1}-{2}-{3}-{4}", CategoryBreadcrumbPrefix);
+    public static CacheKey CategoryBreadcrumbCacheKey => new("Nop.category.breadcrumb.{0}-{1}-{2}-{3}-{4}");
 
     /// <summary>
     /// Gets a key pattern to clear cache
@@ -144,7 +143,7 @@ public static partial class NopCatalogDefaults
     /// {1} : roles of the current user
     /// {2} : show hidden records?
     /// </remarks>
-    public static CacheKey CategoriesAllCacheKey => new("Nop.category.all.{0}-{1}-{2}", NopEntityCacheDefaults<Category>.AllPrefix);
+    public static CacheKey CategoriesAllCacheKey => new("Nop.category.all.{0}-{1}-{2}");
 
     /// <summary>
     /// Gets a key for caching
@@ -155,7 +154,7 @@ public static partial class NopCatalogDefaults
     /// {2} : roles of the current user
     /// {3} : store ID
     /// </remarks>
-    public static CacheKey ProductCategoriesByProductCacheKey => new("Nop.productcategory.byproduct.{0}-{1}-{2}-{3}", ProductCategoriesByProductPrefix, ProductCategoriesByProductWithoutIdPrefix);
+    public static CacheKey ProductCategoriesByProductCacheKey => new("Nop.productcategory.byproduct.{0}-{1}-{2}-{3}");
 
     /// <summary>
     /// Gets a key pattern to clear cache
@@ -175,7 +174,7 @@ public static partial class NopCatalogDefaults
     /// {1} : current store ID
     /// {2} : categories ID hash
     /// </remarks>
-    public static CacheKey CategoryProductsNumberCacheKey => new("Nop.productcategory.products.number.{0}-{1}-{2}", CategoryProductsNumberPrefix);
+    public static CacheKey CategoryProductsNumberCacheKey => new("Nop.productcategory.products.number.{0}-{1}-{2}");
 
     /// <summary>
     /// Gets a key pattern to clear cache
@@ -195,7 +194,7 @@ public static partial class NopCatalogDefaults
     /// {2} : roles of the current user
     /// {3} : store ID
     /// </remarks>
-    public static CacheKey ProductManufacturersByProductCacheKey => new("Nop.productmanufacturer.byproduct.{0}-{1}-{2}-{3}", ProductManufacturersPrefix, ProductManufacturersByProductPrefix);
+    public static CacheKey ProductManufacturersByProductCacheKey => new("Nop.productmanufacturer.byproduct.{0}-{1}-{2}-{3}");
 
     /// <summary>
     /// Gets a key pattern to clear cache
@@ -218,7 +217,7 @@ public static partial class NopCatalogDefaults
     /// {1} : store ID
     /// {2} : customer role Ids
     /// </remarks>
-    public static CacheKey ManufacturersByCategoryCacheKey => new("Nop.manufacturer.bycategory.{0}.{1}.{2}", ManufacturersByCategoryWithIdPrefix, ManufacturersByCategoryPrefix);
+    public static CacheKey ManufacturersByCategoryCacheKey => new("Nop.manufacturer.bycategory.{0}.{1}.{2}");
 
     /// <summary>
     /// Gets a key pattern to clear cache
@@ -241,7 +240,7 @@ public static partial class NopCatalogDefaults
     /// {0} : current product id
     /// {1} : show hidden records?
     /// </remarks>
-    public static CacheKey RelatedProductsCacheKey => new("Nop.relatedproduct.byproduct.{0}-{1}", RelatedProductsPrefix);
+    public static CacheKey RelatedProductsCacheKey => new("Nop.relatedproduct.byproduct.{0}-{1}");
 
     /// <summary>
     /// Gets a key pattern to clear cache
@@ -272,7 +271,7 @@ public static partial class NopCatalogDefaults
     /// {1} : customer role Ids
     /// {2} : current store ID
     /// </remarks>
-    public static CacheKey CategoryFeaturedProductsIdsKey => new("Nop.product.featured.bycategory.{0}-{1}-{2}", CategoryFeaturedProductsIdsPrefix, FeaturedProductIdsPrefix);
+    public static CacheKey CategoryFeaturedProductsIdsKey => new("Nop.product.featured.bycategory.{0}-{1}-{2}");
     public static string CategoryFeaturedProductsIdsPrefix => "Nop.product.featured.bycategory.{0}";
 
     /// <summary>
@@ -283,7 +282,7 @@ public static partial class NopCatalogDefaults
     /// {1} : customer role Ids
     /// {2} : current store ID
     /// </remarks>
-    public static CacheKey ManufacturerFeaturedProductIdsKey => new("Nop.product.featured.bymanufacturer.{0}-{1}-{2}", ManufacturerFeaturedProductIdsPrefix, FeaturedProductIdsPrefix);
+    public static CacheKey ManufacturerFeaturedProductIdsKey => new("Nop.product.featured.bymanufacturer.{0}-{1}-{2}");
     public static string ManufacturerFeaturedProductIdsPrefix => "Nop.product.featured.bymanufacturer.{0}";
 
     public static string FeaturedProductIdsPrefix => "Nop.product.featured.";
@@ -300,7 +299,7 @@ public static partial class NopCatalogDefaults
     /// {5} : roles of the current user
     /// {6} : current store ID
     /// </remarks>
-    public static CacheKey ProductPriceCacheKey => new("Nop.totals.productprice.{0}-{1}-{2}-{3}-{4}-{5}-{6}", ProductPricePrefix);
+    public static CacheKey ProductPriceCacheKey => new("Nop.totals.productprice.{0}-{1}-{2}-{3}-{4}-{5}-{6}");
 
     /// <summary>
     /// Gets a key pattern to clear cache
@@ -318,7 +317,7 @@ public static partial class NopCatalogDefaults
     /// {1} : customer role ids
     /// {2} : store id
     /// </remarks>
-    public static CacheKey ProductMultiplePriceCacheKey => new("Nop.totals.productprice.multiple.{0}-{1}-{2}", ProductMultiplePricePrefix);
+    public static CacheKey ProductMultiplePriceCacheKey => new("Nop.totals.productprice.multiple.{0}-{1}-{2}");
 
     /// <summary>
     /// Gets a key pattern to clear cache
@@ -338,7 +337,7 @@ public static partial class NopCatalogDefaults
     /// <remarks>
     /// {0} : product ID
     /// </remarks>
-    public static CacheKey ProductAttributeMappingsByProductCacheKey => new("Nop.productattributemapping.byproduct.{0}", ProductAttributeMappingsByProductPrefix);
+    public static CacheKey ProductAttributeMappingsByProductCacheKey => new("Nop.productattributemapping.byproduct.{0}");
 
     /// <summary>
     /// Gets a key pattern to clear cache
@@ -399,7 +398,7 @@ public static partial class NopCatalogDefaults
     /// {1} : hash of list of customer roles IDs
     /// {2} : show hidden records?
     /// </remarks>
-    public static CacheKey ProductTagCountCacheKey => new("Nop.producttag.count.{0}-{1}-{2}", NopEntityCacheDefaults<ProductTag>.Prefix);
+    public static CacheKey ProductTagCountCacheKey => new("Nop.producttag.count.{0}-{1}-{2}");
 
     /// <summary>
     /// Gets a key for caching
@@ -407,7 +406,7 @@ public static partial class NopCatalogDefaults
     /// <remarks>
     /// {0} : product ID
     /// </remarks>
-    public static CacheKey ProductTagsByProductCacheKey => new("Nop.producttag.byproduct.{0}", NopEntityCacheDefaults<ProductTag>.Prefix);
+    public static CacheKey ProductTagsByProductCacheKey => new("Nop.producttag.byproduct.{0}");
 
     #endregion
 
@@ -435,7 +434,7 @@ public static partial class NopCatalogDefaults
     /// {3} : show on product page
     /// {4} : specification attribute group ID
     /// </remarks>
-    public static CacheKey ProductSpecificationAttributeByProductCacheKey => new("Nop.productspecificationattribute.byproduct.{0}-{1}-{2}-{3}-{4}", ProductSpecificationAttributeByProductPrefix, ProductSpecificationAttributeAllByProductPrefix);
+    public static CacheKey ProductSpecificationAttributeByProductCacheKey => new("Nop.productspecificationattribute.byproduct.{0}-{1}-{2}-{3}-{4}");
 
     /// <summary>
     /// Gets a key pattern to clear cache
@@ -472,7 +471,7 @@ public static partial class NopCatalogDefaults
     /// <remarks>
     /// {0} : category ID
     /// </remarks>
-    public static CacheKey SpecificationAttributeOptionsByCategoryCacheKey => new("Nop.specificationattributeoption.bycategory.{0}", FilterableSpecificationAttributeOptionsPrefix);
+    public static CacheKey SpecificationAttributeOptionsByCategoryCacheKey => new("Nop.specificationattributeoption.bycategory.{0}");
 
     /// <summary>
     /// Key for specification attribute options by manufacturer ID caching
@@ -480,7 +479,7 @@ public static partial class NopCatalogDefaults
     /// <remarks>
     /// {0} : manufacturer ID
     /// </remarks>
-    public static CacheKey SpecificationAttributeOptionsByManufacturerCacheKey => new("Nop.specificationattributeoption.bymanufacturer.{0}", FilterableSpecificationAttributeOptionsPrefix);
+    public static CacheKey SpecificationAttributeOptionsByManufacturerCacheKey => new("Nop.specificationattributeoption.bymanufacturer.{0}");
 
     /// <summary>
     /// Gets a key pattern to clear cache
@@ -493,7 +492,7 @@ public static partial class NopCatalogDefaults
     /// <remarks>
     /// {0} : product ID
     /// </remarks>
-    public static CacheKey SpecificationAttributeGroupByProductCacheKey => new("Nop.specificationattributegroup.byproduct.{0}", SpecificationAttributeGroupByProductPrefix);
+    public static CacheKey SpecificationAttributeGroupByProductCacheKey => new("Nop.specificationattributegroup.byproduct.{0}");
 
     /// <summary>
     /// Gets a key pattern to clear cache
