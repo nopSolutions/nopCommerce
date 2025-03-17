@@ -320,6 +320,10 @@ public class LocalizationMigration : MigrationBase
             ["Admin.ConfigurationSteps.PaymentMethods.PayPalCommerce.Configure.Title"] = "Configure PayPal Commerce",
             ["Admin.ConfigurationSteps.PaymentPayPal.Register.Text"] = "Click this button to register an account. You need to go through a few steps to fill in all the required data. The last step will be to verify your email address to activate your account.",
             ["Admin.ConfigurationSteps.PaymentPayPal.Credentials.Text"] = "After you create and set up your application in your <b>PayPal</b> account, you need to copy the <b>Client ID</b>, <b>Secret</b> and <b>Merchant ID</b>, and paste them into these fields.",
+
+            //#7618
+            ["Admin.Orders.Address.CustomAttributes"] = "Custom Attributes",
+
         }, languageId);
 
         #endregion
