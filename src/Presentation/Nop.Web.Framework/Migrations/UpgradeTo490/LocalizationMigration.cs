@@ -117,6 +117,11 @@ public class LocalizationMigration : MigrationBase
             //#7405
             ["Admin.Configuration.Settings.Catalog.ExportImportCategoryUseLimitedToStores"] = "Export / Import categories with \"limited to stores\"",
             ["Admin.Configuration.Settings.Catalog.ExportImportCategoryUseLimitedToStores.Hint"] = "Check if categories should be exported / imported with \"limited to stores\" property.",
+            
+            //#5652
+            ["Admin.System.SystemInfo.DatabaseCollation"] = "Database collation",
+            ["Admin.System.SystemInfo.DatabaseCollation.Hint"] = "The collation defines the rules for sorting and comparing data.",
+
         }, languageId);
 
         #endregion

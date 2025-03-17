@@ -378,6 +378,18 @@ public partial class SqLiteNopDataProvider : BaseDataProvider, INopDataProvider
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Gets the name of the database collation
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains an empty string
+    /// </returns>
+    public Task<string> GetDataBaseCollationAsync()
+    {
+        return Task.FromResult(string.Empty);
+    }
+
     #endregion
 
     #region Properties

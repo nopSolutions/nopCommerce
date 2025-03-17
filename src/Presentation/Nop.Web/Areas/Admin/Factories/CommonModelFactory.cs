@@ -771,6 +771,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         //ensure no exception is thrown
         try
         {
+            model.DatabaseCollation = await _dataProvider.GetDataBaseCollationAsync();
             model.OperatingSystem = Environment.OSVersion.VersionString;
             model.AspNetInfo = RuntimeInformation.FrameworkDescription;
             model.IsFullTrust = AppDomain.CurrentDomain.IsFullyTrusted;

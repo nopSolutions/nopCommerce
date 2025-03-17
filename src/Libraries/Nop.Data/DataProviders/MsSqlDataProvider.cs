@@ -338,6 +338,19 @@ public partial class MsSqlNopDataProvider : BaseDataProvider, INopDataProvider
             .UpdateWhenMatched()
             .Merge();
     }
+    
+    /// <summary>
+    /// Gets the name of the database collation
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the collation name
+    /// </returns>
+    public virtual Task<string> GetDataBaseCollationAsync()
+    {
+        var builder = GetConnectionStringBuilder();
+        return GetSqlStringValueAsync($"SELECT CONVERT (varchar(256), DATABASEPROPERTYEX('{builder.InitialCatalog}','collation'));");
+    }
 
     #endregion
 

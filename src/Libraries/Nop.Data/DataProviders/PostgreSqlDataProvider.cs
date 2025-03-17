@@ -377,6 +377,18 @@ public partial class PostgreSqlDataProvider : BaseDataProvider, INopDataProvider
     {
         return $"IX_{targetTable}_{targetColumn}";
     }
+    
+    /// <summary>
+    /// Gets the name of the database collation
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the collation name
+    /// </returns>
+    public virtual Task<string> GetDataBaseCollationAsync()
+    {
+        return GetSqlStringValueAsync("SELECT datcollate AS collation FROM pg_database WHERE datname = current_database();");
+    }
 
     #endregion
 

@@ -305,6 +305,18 @@ public partial class MySqlNopDataProvider : BaseDataProvider, INopDataProvider
         return "IX_" + HashHelper.CreateHash(Encoding.UTF8.GetBytes($"{targetTable}_{targetColumn}"), HASH_ALGORITHM);
     }
 
+    /// <summary>
+    /// Gets the name of the database collation
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the collation name
+    /// </returns>
+    public virtual Task<string> GetDataBaseCollationAsync()
+    {
+        return GetSqlStringValueAsync($"SELECT @@collation_database;");
+    }
+
     #endregion
 
     #region Properties
