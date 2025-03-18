@@ -1,23 +1,86 @@
 .abc-container {
-    display: flex;
-    flex-wrap: wrap;
-    text-align: center;
-    margin: 1rem 0;
+    /* display: flex; */
+    /* flex-wrap: wrap;
+    text-align: center; */
+    /* margin: 1rem 0; */
 }
-
 .abc-item {
-    margin: 5px auto;
-    background: #fff;
+    margin: 2% 3% 2% 0%;
+    /* background: #fff; */
     line-height: 25px;
-    padding: 1rem;
+    /* padding: 1rem; */
     flex: 0 0 16rem;
 }
-
 .abc-item a {
-    text-decoration: none;
+    /* text-decoration: none; */
     font-weight: bold;
+    color: rgb(43, 95, 194);
 }
-
 .abc-item a:hover {
     text-decoration: underline;
 }
+.abc-manufacturer-container {
+    display: flex;
+    flex-wrap: wrap;
+    text-align: left;
+    width: 100%;
+}
+.ManButton {
+    background-color: #fff;
+    border: 1px solid #dcdcdc;
+    border-radius: 16px;
+    -webkit-box-shadow: inset 0 1px 0 0 #fff;
+    box-shadow: inset 0 1px 0 0 #fff;
+    color: #e91d24;
+    cursor: pointer;
+    display: inline-block;
+    font-family: Arial;
+    font-size: 14px;
+    padding: 6px 24px;
+    
+    text-decoration: none !important;
+    text-shadow: 0 1px 0 #fff;
+    margin-left: 11px;
+    margin-bottom: 35px;
+}
+
+h1.manName {
+    font-size: 22px;
+    color: #333;
+    padding: 20px 0 5px 20px;
+}
+
+.responsive-banner {
+    width: 100%; 
+    height: auto; 
+    display: block;
+}
+
+.abc-item.abc-promo-item {
+    padding: 0 0px 0 35px;
+}
+
+
+.promo-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    text-align: center;
+}
+
+@media screen and (max-width: 500px) {
+    .promo-grid {
+        
+        grid-template-columns: repeat(1, 1fr);
+        
+    }
+}
+
+.promo-group {
+    break-inside: avoid;
+}
+
+.abc-container.abc-promo-container {
+    background-color: white;
+}
+
