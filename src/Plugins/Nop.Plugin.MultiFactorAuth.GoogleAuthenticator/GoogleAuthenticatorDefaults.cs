@@ -30,7 +30,7 @@ public class GoogleAuthenticatorDefaults
     /// <remarks>
     /// {0} : configuration identifier
     /// </remarks>
-    public static CacheKey ConfigurationCacheKey => new("Nop.PluginMultiFactorAuth.GoogleAuthenticator.Configuration-{0}", PrefixCacheKey);
+    public static CacheKey ConfigurationCacheKey => new("Nop.PluginMultiFactorAuth.GoogleAuthenticator.Configuration-{0}");
 
     /// <summary>
     /// Gets the prefix key to clear cache

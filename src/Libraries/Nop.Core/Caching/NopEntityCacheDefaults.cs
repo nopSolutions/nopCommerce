@@ -16,7 +16,7 @@ public static partial class NopEntityCacheDefaults<TEntity> where TEntity : Base
     /// <remarks>
     /// {0} : entity id
     /// </remarks>
-    public static CacheKey ByIdCacheKey => new($"Nop.{EntityTypeName}.byid.{{0}}", ByIdPrefix, Prefix);
+    public static CacheKey ByIdCacheKey => new($"Nop.{EntityTypeName}.byid.{{0}}");
 
     /// <summary>
     /// Gets a key for caching entities by identifiers
@@ -24,12 +24,12 @@ public static partial class NopEntityCacheDefaults<TEntity> where TEntity : Base
     /// <remarks>
     /// {0} : entity ids
     /// </remarks>
-    public static CacheKey ByIdsCacheKey => new($"Nop.{EntityTypeName}.byids.{{0}}", ByIdsPrefix, Prefix);
+    public static CacheKey ByIdsCacheKey => new($"Nop.{EntityTypeName}.byids.{{0}}");
 
     /// <summary>
     /// Gets a key for caching all entities
     /// </summary>
-    public static CacheKey AllCacheKey => new($"Nop.{EntityTypeName}.all.", AllPrefix, Prefix);
+    public static CacheKey AllCacheKey => new($"Nop.{EntityTypeName}.all.");
 
     /// <summary>
     /// Gets a key pattern to clear cache

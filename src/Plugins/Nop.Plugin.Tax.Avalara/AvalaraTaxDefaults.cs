@@ -115,7 +115,7 @@ public class AvalaraTaxDefaults
     /// {5} - Country identifier
     /// {6} - Zip postal code
     /// </remarks>
-    public static CacheKey TaxRateCacheKey => new("Nop.avalara.taxrate.{0}-{1}-{2}-{3}-{4}-{5}-{6}", TaxRateCacheKeyByCustomerPrefix);
+    public static CacheKey TaxRateCacheKey => new("Nop.avalara.taxrate.{0}-{1}-{2}-{3}-{4}-{5}-{6}");
 
     /// <summary>
     /// Gets a key pattern to clear cache
