@@ -7,7 +7,7 @@ using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Models.Media;
 
 namespace Nop.Web.Areas.Admin.Controllers;
-//Controller for Roxy fileman (http://www.roxyfileman.com/) for TinyMCE editor
+//Controller for Roxy fileman (http://www.roxyfileman.com/) for Summernote editor
 //the original file was \RoxyFileman-1.4.5-net\fileman\asp_net\main.ashx
 
 //do not validate request token (XSRF)

@@ -42,9 +42,8 @@
     "magnific-popup": "^1.1.0",
     "moment": "^2.30.1",
     "overlayscrollbars": "2.10.0",
+    "summernote": "^0.9.1",
     "swiper": "11.1.14",
-    "tinymce": "6.8.5",
-    "tinymce-langs": "1.0.0",
     "typeahead.js": "^0.11.1"
   }
 }

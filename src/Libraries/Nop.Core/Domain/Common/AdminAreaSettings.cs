@@ -33,16 +33,6 @@ public partial class AdminAreaSettings : ISettings
     public string RichEditorAdditionalSettings { get; set; }
 
     /// <summary>
-    /// A value indicating whether to javascript is supported in rich editor
-    /// </summary>
-    public bool RichEditorAllowJavaScript { get; set; }
-
-    /// <summary>
-    /// A value indicating whether to style tag is supported in rich editor
-    /// </summary>
-    public bool RichEditorAllowStyleTag { get; set; }
-
-    /// <summary>
     /// A value indicating whether to use rich text editor on email messages for customers
     /// </summary>
     public bool UseRichEditorForCustomerEmails { get; set; }
