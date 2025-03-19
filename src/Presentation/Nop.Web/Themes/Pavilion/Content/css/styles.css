@@ -68,9 +68,6 @@ script {
 
 
 /*********** GLOBAL STYLES **********/
-
-
-
 body {
     max-width: 100%;
 	overflow-x: hidden; /* responsive navigation & filters scroll bug fix*/
@@ -260,6 +257,11 @@ label, label + * {
 	white-space: nowrap; /*fix for 'required' elements*/
     font-size: 0;
 }
+
+.storeId8 .inputs {
+	font-size: 13px;
+}
+
 .inputs:after {
 	content: "";
 	display: block;
@@ -872,7 +874,7 @@ label, label + * {
 	position: relative;
 }
 .store-search-box form {
-	display: inline-block;
+	
 	position: relative;
 	font-size: 0;
 }
@@ -920,6 +922,16 @@ label, label + * {
 .ui-autocomplete,
 .ui-autocomplete img {
 	display: none;
+}
+
+@media (min-width: 1025px) {
+    .storeId8 .store-search-box .search-box-button {
+        margin: -10px 0px 0 5px !important;
+    }
+}
+
+input#sli_search_1 {
+    
 }
 
 
@@ -6113,7 +6125,8 @@ h1.search-page-title {
 }
 
 .header-middle .hours-desktop {
-    padding-top: 18px;
+	margin-top: 32px;
+   
 }
 .header-logo.header-logo img {
 	width: 270px;
@@ -6126,9 +6139,11 @@ h1.search-page-title {
     float: right;
     height: 0px;
     margin-top: -40px;
+	margin-right: -30px;
 }
 .hawthorne-lower.header-lower {
     padding: 40px 0;
+	margin-top: -16px;
 }
 .hawthorne.top-menu li a label:hover {
     cursor: pointer;
@@ -6190,11 +6205,63 @@ width: 250px !important;
 	}
 }
 
+/* Added to make room for the merch category in the side mega menu */
+.storeId3 .header-menu.categories-in-side-panel {
+    margin-left: -90px;
+	margin-top: 6px;
+}
+
+@media (max-width: 1280px) {
+	.storeId3 .header-menu.categories-in-side-panel {
+		margin-left: -8px;
+	}
+}
+
+
+/* Customer Name */
+#customerName {
+    font-size: 1em;
+    display: inline-block;
+    max-width: 150px; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+@media screen and (max-width: 1024px) {
+#customerName {
+    
+    display: none !important;
+    
+}
+}
+
+@media (max-width: 600px) { 
+    #customerName {
+        font-size: 0.8em;
+    }
+}
+
+
+
 .header-links {
 	left: -20px;
+	margin-top: 52px;
   }
 .header-links-wrapper label:hover {
     cursor: pointer;
+}
+
+.storeId3 .header-links-wrapper label {
+	color:black;
+
+}
+
+@media screen and (max-width: 1024px) {
+	.storeId3 .header-links-wrapper label {
+		display: none;
+	}
 }
 
 .hawthorne.top-menu {
@@ -6206,8 +6273,9 @@ width: 250px !important;
 }
 .hawthorne.top-menu li img {
     padding: 10px 10px;
-    height: 43px;
-	width: auto;
+    height: auto;
+    width: auto;
+    margin-top: 0px;
 }
 .hawthorne.top-menu li {
     padding: 0px 15px;
@@ -6233,43 +6301,49 @@ width: 250px !important;
 	display: inline-block;
 }
 img.hawthorne-logo {
-    padding-left: 30px;
-	max-width: 100%;
+    /* padding-left: 30px; */
+	/* max-width: 100%; */
 }
+
 .hawthorne-lower .search-cart-wrapper {
     width: 70%;
 }
+
 .header-logo.desktop {
     width: 19%;
 }
 .hawthorne-lower .close-button.close-search {
     display: none;
 }
-.hawthorne.top-menu ul {
-    margin-bottom: 0;
+
+/* Header Hawthorne Button */
+img.hawthorne-logo {
+    padding-left: 30px;
+    max-width: 59%;
+    margin-top: 8px;
+    margin-left: -30px;
 }
-.header-lower.hawthorne-lower .search-box.store-search-box.nav-panel {
-	width: 80% !important;
-    display: inline-block;
-    float: none;
-}
+
+
+/* Angelo Change */
 .header-lower.hawthorne-lower div#flyout-cart {
     width: 15%;
     display: inline-block;
     float: none;
+	margin-bottom: -8px;
 }
 .hawthorne-lower .header-menu {
     overflow-y: visible;
 }
-.hawthorne-lower #flyout-cart {
+.storeId8 .hawthorne-lower #flyout-cart {
     margin-right: 0;
-    padding-left: 50px;
+    padding-left: 41px;
 }
 .hawthorne-lower .cart-trigger {
 	background: #fff;
 }
 .hawthorne-lower .header-menu .mega-menu-categories .sublist-wrap {
-    top: 30px;
+    top: 95px;
 }
 .header-lower.hawthorne-lower .with-subcategories {
 	color: #fff;
@@ -6296,19 +6370,122 @@ img.hawthorne-logo {
 }
 .hawthorne-lower input#sli_search_1 {
     font-size: 14px;
+	margin-top:-11px;
 }
 .header-menu ul.mega-menu {
     padding-top: 35px;
 }
+
+@media screen and (max-width: 1024px) {
+body.storeId3 .header-lower {
+	background-color: white !important;
+}
+}
+.storeId8 .home-page-body .header-lower {
+    background: #02463b !important;
+}
+/* //Angelo Change */
+.storeId8 li.has-sublist.mega-menu-categories.root-category-items {
+	padding-right: 30px;
+}
+.storeId8 .hawthorne-lower .search-cart-wrapper {
+    width: 45% !important;
+}
+
+.storeId8 .item-box.water {
+    display: none;
+}
+
+@media (max-width: 1645px) {
+	
+	
+	.storeId8 .hawthorne-lower .search-cart-wrapper {
+		width: 34% !important;
+	}
+}
+
+@media (max-width: 1400px) {
+	
+	
+	.storeId8 .hawthorne-lower .search-cart-wrapper {
+		width: 25% !important;
+	}
+}
+
+
+@media (max-width: 1240px) {
+	
+	.storeId8 li.has-sublist.mega-menu-categories.root-category-items {
+		padding-right: 0px !important;
+	}
+	
+}
+
+.gNddtC {
+	max-width: none !important;
+}
+
+
+ul.mega-menu.hawthorne {
+    margin-bottom: 0rem !important;
+}
+
+
+
+.storeId8 .header-lower.hawthorne-lower .search-box.store-search-box.nav-panel {
+	width: 80% !important;
+    display: inline-block;
+    float: none;
+}
+.storeId8 .hawthorne-lower .header-menu {
+    width: auto !important;
+	
+}
+
+
+/* DeAngelo added this for hawthorne */
+.storeId8 .root-category-items > a.with-subcategories > span {
+    color: #fff;
+   
+}
+
+
+.eJVeap {    
+	position: relative;    
+	width: 100%;   
+	max-width: 350px;    
+	margin-left: auto;    
+	margin-right: auto;}
+
+.storeId8 .has-sublist.mega-menu-categories.root-category-items {
+		padding-bottom: 40px !important;
+	}
+
+	
+
+	
+@media (min-width: 1281px) {
+		.storeId8 .header-menu > ul > li > a, .header-menu > ul > li > span {
+			padding: 5px 0px !important;
+
+			/* DeAngelo made this simple change for hawthrone header*/
+		}
+	}
+	
+
 
 /* Fireworks Logo Changes */
 @media (min-width: 1020px) {
 	.header-upper .header-links-wrapper {
 		padding-top: 20px;
 	}
-	div#flyout-cart {
+	.storeId8 #flyout-cart {
+		padding-top: 3px;
+	}
+	.storeId3 #flyout-cart {
 		padding-top: 20px;
 	}
+
 	.header-middle .header-menu-parent .header-menu-parent {
         padding-top: 5px;
     }
@@ -6331,6 +6508,43 @@ img.hawthorne-logo {
 	.responsive-nav-wrapper>div>a.logo img {
 		width: 140px;
 		margin-top: -10px;
+	}
+}
+.header-lower.hawthorne-lower .mega-menu-categories {
+    
+}
+.storeId8 .mobile-header-content-row {
+    background-color: #02463b;
+}
+.storeId8 .header-middle {
+    display: none;
+}
+.storeId8 .header-middle {
+    display: none;
+}
+.storeId8 .header-lower.secondary-bar {
+    display: none;
+}
+@media screen and (min-width: 1024px) {
+	.storeId8 .header-middle {
+		display: none;
+	}
+	.storeId8 .header-lower.secondary-bar {
+		display: none;
+	}
+	.storeId8 .header-menu-parent {
+		display: none;
+	}
+}
+@media screen and (max-width: 1024px) {
+	.storeId8 ul.top-menu {
+		margin-top: 75px;
+	}
+	.storeId8 .header-menu .mobile-sidebar-title {
+		top: 50px;
+	}
+	.storeId8 .header-middle {
+		display: block;
 	}
 }
 
@@ -6373,6 +6587,11 @@ img.hawthorne-logo {
 	.hawthorne.top-menu {
 		display: none;
 	}
+
+	body.storeId3 .master-wrapper-page .mobile-header-content-row {
+		background-color: #d3d3d3 !important;
+	}
+
 	.eJVeap {
 		max-width: none !important;
 		margin-left: auto;
@@ -6389,6 +6608,13 @@ img.hawthorne-logo {
 	.responsive-nav-wrapper>div>a.logo img {
 		margin-top: 0px;
 	}
+}
+
+div#storeDropDown div {
+    clear: both;
+}
+.contact-us-header {
+    clear: both;
 }
 
 /*promo banner*/
@@ -6421,6 +6647,18 @@ img.hawthorne-logo {
 	}
 }
 
+/*Angelo*/
+ /* Mobile Menu Padding Fix*/
+  .mega-menu-responsive.mobile-sidebar-category .sublist-wrap.active { 
+	padding-top: 50px;
+}
+
+/* AbcWarehouse Header */
+.header-lower.secondary-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 @media (min-width: 1281px) {
     body .top-level-manufacturer .item-box {
         width: 15%;

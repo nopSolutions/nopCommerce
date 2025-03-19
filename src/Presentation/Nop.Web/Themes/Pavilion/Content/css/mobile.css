@@ -20,16 +20,30 @@
 	background-color: #fff;
 	line-height: 110px;
 }
-.responsive-nav-wrapper-parent {
+.storeId8 .responsive-nav-wrapper-parent {
 	position: fixed;
 	top: 0;
 	z-index: 1020;
 	width: 100%;
 	height: 53px !important; /*override inline height*/
 	border-top: 3px solid #00a1b1;
-	box-shadow: 0 3px 5px rgba(0,0,0,0.1);
-	background-color: #fff;
+	background-color: #02463b;
 }
+
+
+.storeId3 .responsive-nav-wrapper-parent {
+        position: relative;
+		/* position: fixed; */
+        /* top: 42px !important; */
+        z-index: 1020;
+        width: 100%;
+        height: 53px !important;
+        border-top: 3px solid white;
+        box-shadow: 0 3px 5px rgba(0, 0, 0, .1);
+        background-color: #fff;
+    }
+
+
 .admin-header-links ~ .header .header-logo {
 	top: 95px;
 }
@@ -68,6 +82,9 @@
 	margin-top: 0 !important; /*important because of demo-strip*/
 }
 
+
+
+
 /* RESPONSIVE NAV WRAPPER */
 
 .responsive-nav-wrapper {
@@ -80,25 +97,41 @@
 	display: block;
 	clear: both;
 }
-.responsive-nav-wrapper > div {
-	display: inline-block;
-	border-right: 1px solid #eee;
-	background-color: #f74258;
-	background-image: url('../img/mobile-sprite.png');
+.storeId8 .responsive-nav-wrapper > div {
+	
+	
+	background-color: #02463b !important;
+	background-image: url('https://www.abcwarehouse.com/images/gold_cart.png');  
 	background-repeat: no-repeat;
-	vertical-align: middle;
+	background-size: 43%;
+	background-position: center;
 }
+
+.storeId3 .responsive-nav-wrapper > div {
+	
+	
+	background-color: white !important;
+	background-image: url('https://www.abcwarehouse.com/Plugins/Misc.AbcFrontend/Images/mobile-sprite.png');  
+	background-position: 215px;
+	
+	
+	
+}
+
+
 .responsive-nav-wrapper > div:first-child {
 	border-left: 1px solid #eee;
 }
 .responsive-nav-wrapper div.menu-title {
 	background-position: 0 center;
 }
-.responsive-nav-wrapper div.shopping-cart-link {
+.storeId3 .responsive-nav-wrapper div.shopping-cart-link {
+	
 	background-position: -55px center;
+	
 }
 .responsive-nav-wrapper div.personal-button {
-	background-position: -108px center;
+	
 }
 .responsive-nav-wrapper div.preferences-button {
 	background-position: -162px center;
@@ -116,6 +149,11 @@
 	width: 52px;
 	height: 50px;
 	font-size: 0;
+}
+
+.storeId8 div#header-links-opener {
+    background-image: url('https://www.abcwarehouse.com/images/gold_account.png');
+    background-position: -108px center;
 }
 
 /* RESPONSIVE MENU */
@@ -405,4 +443,11 @@
 	width: 50%;
 }
 	
+}
+
+
+@media (max-width: 1025px) {
+.storeId3 .ABC-Merch {
+    display: none !important;
+}
 }

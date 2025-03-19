@@ -45,6 +45,9 @@
         shortTitle = fullTitle;
     }
 
+    var currentStore = await storeContext.GetCurrentStoreAsync();
+    string storeId = "storeId" + currentStore.Id.ToString();
+
     if (System.IO.File.Exists(iosFixContentFilePath))
     {
         Html.AppendScriptParts(ResourceLocation.Footer, iosFixFilePath);
@@ -179,8 +182,8 @@
     }
 }
 
-<body class="@GetBodyClass() @isAndroid23Class @currentPageClass @if (supportRtl){<text>rtl</text>}">
-    <!-- Google Tag Manager (noscript) -->
+<body class="@GetBodyClass() @storeId @isAndroid23Class @currentPageClass @if (supportRtl){<text>rtl</text>}">
+
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TBLL3Z89"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->

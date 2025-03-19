@@ -55,22 +55,30 @@
 .header-upper .center {
     position: relative;
 }
-.header-links-wrapper {
-    position: absolute;
-    top: 17px;
-    right: 0;
-    z-index: 10;
+.storeId3 .header-links-wrapper {
+    display: flex;
+    padding-bottom: 188px;
 }
 .hours-desktop .cFzLkk {
     margin-top: 0;
 }
-#flyout-cart {
+.storeId8 #flyout-cart {
     width: auto;
     float: right;
     margin-right: 115px;
     margin-top: 0px;
     margin-bottom: -15px;
+    padding-bottom: 15px;
+}
+
+.storeId3 #flyout-cart {
+    width: auto;
+    float: none;
+    /* margin-right: 184px; */
+    margin-top: -22px;
+    margin-bottom: -15px;
     padding-bottom: 5px;
+    display: flex;
 }
 
 /* Have logo match category width - other header logo fixes */

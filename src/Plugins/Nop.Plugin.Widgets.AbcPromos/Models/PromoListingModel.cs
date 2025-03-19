@@ -3,6 +3,7 @@ using Nop.Web.Framework.Models;
 using Nop.Web.Models.Catalog;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.UI.Paging;
+//using Nop.Plugin.Misc.AbcCore.Domain;
 
 namespace Nop.Plugin.Misc.AbcPromos.Models
 {
@@ -21,5 +22,15 @@ namespace Nop.Plugin.Misc.AbcPromos.Models
         {
             AvailableSortOptions = new List<SelectListItem>();
         }
+        // public class AbcPromoModel {
+        //     public int AbcPromoId { get; set; }
+        //     public int ProductId { get; set; }
+        //     public int StoreId { get; set; }
+        // }
+        // public class HawthornePromoModel {
+        //     public int HawthornePromoId { get; set; }
+        //     public int ProductId { get; set; }
+        //     public int StoreId { get; set; }
+        // }
     }
 }

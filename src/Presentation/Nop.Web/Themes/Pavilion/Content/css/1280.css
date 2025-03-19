@@ -47,10 +47,15 @@
 }
 .header .center {
 	width: 1200px;
+	
+}
+
+.header .header-lower .center {
+    display: flex;
 }
 .header-links-wrapper,
 .header-selectors-wrapper {
-	margin: 0 0 0 30px;
+	margin: 4px 0 0 30px;
 }
 .header-links,
 .header-selectors {

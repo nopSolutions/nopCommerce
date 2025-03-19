@@ -7,5 +7,6 @@ namespace Nop.Plugin.Misc.AbcCore.Areas.Admin.Models
     {
         public int AbcPromoId { get; set; }
         public string AbcPromoName { get; set; }
+        public string StoreId { get; set; }
     }
 }

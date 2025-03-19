@@ -29,7 +29,7 @@
 }
 .responsive-nav-wrapper > div {
     border-right: 0;
-    background-image: url(/Plugins/Misc.AbcFrontend/Images/mobile-sprite.png);
+    /* background-image: url(/Plugins/Misc.AbcFrontend/Images/mobile-sprite.png); Image for the menu in mobile */
 }
 
 /* phone number gets special rules */
@@ -107,11 +107,28 @@ input.search-box-text {
 }
 
 /* SLI search bar */
+.storeId3 div.search-box.store-search-box {
+    width: calc(100% - 290px);
+    margin-top: 1.5px;
+    margin-left: 25.6%;
+    display: flex;
+    flex-grow: 1;
+    max-width: calc(100% - 300px);
+    padding-right: 20px;
+}
+
+
+@media (max-width: 1280px) {
+.storeId3 div.search-box.store-search-box {
+    margin-left: 27.2%;
+}
+}
+
 div.search-box.store-search-box {
     width: calc(100% - 290px);
     margin-top: 1.5px;
 }
-div.search-box.store-search-box form#small-search-box-form {
+.storeId8 .div.search-box.store-search-box form#small-search-box-form {
     width: 100%;
     padding-left: 10px;
 }
@@ -131,6 +148,11 @@ input.search-box-text::placeholder {
     color: #787878;
 }
 
+
+.storeId3 form#small-search-box-form {
+    width: 100%;
+    
+}
 .search-box-button {
     background: url(/Plugins/Misc.AbcFrontend/Images/search-button.png) center no-repeat !important;
     background-color: transparent !important;
@@ -183,13 +205,27 @@ input#sli_search_1::-webkit-input-placeholder {
         width: 100% !important;
     }
 
+    .storeId3 .store-search-box {
+        width: calc(61% - 247px) !important;
+    }
+
     .store-search-box {
         width: calc(100% - 247px) !important;
     }
+}
+
+@media (max-width: 1280px) {
+.storeId3 .store-search-box {
+    width: calc(74% - 247px) !important;
+  }
 }
 
 @media (min-width: 1281px) {
     .store-search-box {
         width: calc(100% - 290px) !important;
     }
+}
+
+.storeId3 .mobile-header-content-row {
+    margin-top: 0px;
 }
