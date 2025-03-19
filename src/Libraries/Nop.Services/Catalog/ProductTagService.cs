@@ -274,14 +274,12 @@ public partial class ProductTagService : IProductTagService
         return await _staticCacheManager.GetAsync(key, async () =>
         {
             var query = _productProductTagMappingRepository.Table;
-            var productsQuery = _productRepository.Table;
+            var productsQuery = _productRepository.Table.Where(p => !p.Deleted);
 
             if (!showHidden || storeId > 0)
             {
                 //apply store mapping constraints
                 productsQuery = await _storeMappingService.ApplyStoreMapping(productsQuery, storeId);
-
-                query = query.Where(pc => productsQuery.Any(p => !p.Deleted && pc.ProductId == p.Id));
             }
 
             if (!showHidden)
@@ -290,9 +288,9 @@ public partial class ProductTagService : IProductTagService
 
                 //apply ACL constraints
                 productsQuery = await _aclService.ApplyAcl(productsQuery, customerRoleIds);
-
-                query = query.Where(pc => productsQuery.Any(p => !p.Deleted && pc.ProductId == p.Id));
             }
+
+            query = query.Where(pc => productsQuery.Any(p => pc.ProductId == p.Id));
 
             var pTagCount = from pt in _productTagRepository.Table
                 join ptm in query on pt.Id equals ptm.ProductTagId
