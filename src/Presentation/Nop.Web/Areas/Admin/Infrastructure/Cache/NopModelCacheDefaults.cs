@@ -23,4 +23,12 @@ public static partial class NopModelCacheDefaults
     /// Key for vendors caching
     /// </summary>
     public static CacheKey VendorsListKey => new("Nop.pres.admin.vendors.list");
+
+    /// <summary>
+    /// Key for Summernote language caching
+    /// </summary>
+    /// <remarks>
+    /// {0} : language culture
+    /// </remarks>
+    public static CacheKey SummernoteLanguageKey => new("Nop.pres.admin.summernote.language-{0}");
 }
