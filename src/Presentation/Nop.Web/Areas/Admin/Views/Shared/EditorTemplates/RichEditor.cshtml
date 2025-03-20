@@ -1,9 +1,7 @@
 ﻿@model string
-@inject IPermissionService permissionService
 @inject AdminAreaSettings adminAreaSettings
 @inject ITinyMceHelper tinyMceHelper
 @using Nop.Web.Areas.Admin.Helpers
-@using Nop.Services.Security
 @{
     // tinyMCE language
     var language = await tinyMceHelper.GetTinyMceLanguageAsync();

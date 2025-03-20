@@ -350,6 +350,10 @@ public partial record CatalogSettingsModel : BaseNopModel, ISettingsModel
     public bool ExportImportProductUseLimitedToStores { get; set; }
     public bool ExportImportProductUseLimitedToStores_OverrideForStore { get; set; }
 
+    [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ExportImportCategoryUseLimitedToStores")]
+    public bool ExportImportCategoryUseLimitedToStores { get; set; }
+    public bool ExportImportCategoryUseLimitedToStores_OverrideForStore { get; set; }
+
     [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.IgnoreDiscounts")]
     public bool IgnoreDiscounts { get; set; }
 

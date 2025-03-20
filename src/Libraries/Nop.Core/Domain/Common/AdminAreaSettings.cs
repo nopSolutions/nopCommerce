@@ -73,7 +73,7 @@ public partial class AdminAreaSettings : ISettings
     public bool UseIsoDateFormatInJsonResult { get; set; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether to documantation reference links on pages
+    /// Gets or sets a value indicating whether to documentation reference links on pages
     /// </summary>
     public bool ShowDocumentationReferenceLinks { get; set; }
 
@@ -81,4 +81,9 @@ public partial class AdminAreaSettings : ISettings
     /// Gets or sets a value indicating whether to the content header should be sticky when scrolling
     /// </summary>
     public bool UseStickyHeaderLayout { get; set; }
+
+    /// <summary>
+    /// Gets or sets the minimum number of drop-down list items to display search input.
+    /// </summary>
+    public int MinimumDropdownItemsForSearch { get; set; }
 }

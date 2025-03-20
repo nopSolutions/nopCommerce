@@ -11,6 +11,7 @@ using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Events;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
@@ -54,6 +55,7 @@ public partial class ProductController : BaseAdminController
     protected readonly ICustomerService _customerService;
     protected readonly IDiscountService _discountService;
     protected readonly IDownloadService _downloadService;
+    protected readonly IEventPublisher _eventPublisher;
     protected readonly IExportManager _exportManager;
     protected readonly IHttpClientFactory _httpClientFactory;
     protected readonly IImportManager _importManager;
@@ -101,6 +103,7 @@ public partial class ProductController : BaseAdminController
         ICustomerService customerService,
         IDiscountService discountService,
         IDownloadService downloadService,
+        IEventPublisher eventPublisher,
         IExportManager exportManager,
         IHttpClientFactory httpClientFactory,
         IImportManager importManager,
@@ -143,6 +146,7 @@ public partial class ProductController : BaseAdminController
         _customerService = customerService;
         _discountService = discountService;
         _downloadService = downloadService;
+        _eventPublisher = eventPublisher;
         _exportManager = exportManager;
         _httpClientFactory = httpClientFactory;
         _importManager = importManager;
@@ -222,6 +226,18 @@ public partial class ProductController : BaseAdminController
                 x => x.Name,
                 localized.Name,
                 localized.LanguageId);
+            await _localizedEntityService.SaveLocalizedValueAsync(productTag,
+                x => x.MetaKeywords,
+                localized.MetaKeywords,
+                localized.LanguageId);
+            await _localizedEntityService.SaveLocalizedValueAsync(productTag,
+                x => x.MetaDescription,
+                localized.MetaDescription,
+                localized.LanguageId);
+            await _localizedEntityService.SaveLocalizedValueAsync(productTag,
+                x => x.MetaTitle,
+                localized.MetaTitle,
+                localized.LanguageId);
 
             var seName = await _urlRecordService.ValidateSeNameAsync(productTag, string.Empty, localized.Name, false);
             await _urlRecordService.SaveSlugAsync(productTag, seName, localized.LanguageId);
@@ -259,7 +275,7 @@ public partial class ProductController : BaseAdminController
         foreach (var pp in await _productService.GetProductPicturesByProductIdAsync(product.Id))
             await _pictureService.SetSeoFilenameAsync(pp.PictureId, await _pictureService.GetPictureSeNameAsync(product.Name));
     }
-    
+
     protected virtual async Task SaveCategoryMappingsAsync(Product product, ProductModel model)
     {
         var existingProductCategories = await _categoryService.GetProductCategoriesByProductIdAsync(product.Id, true);
@@ -836,7 +852,7 @@ public partial class ProductController : BaseAdminController
 
         var products = await _productService.GetProductsByIdsAsync(productIds);
 
-        foreach (var product in products) 
+        foreach (var product in products)
             rez[product.Id].Product = product;
 
         return rez.Values.ToList();
@@ -900,7 +916,7 @@ public partial class ProductController : BaseAdminController
         var data = await ParseBulkEditDataAsync();
 
         var productsToUpdate = data.Where(d => d.NeedToUpdate(selected)).ToList();
-        await _productService.UpdateProductsAsync(productsToUpdate.Select(d=>d.UpdateProduct(selected)).ToList());
+        await _productService.UpdateProductsAsync(productsToUpdate.Select(d => d.UpdateProduct(selected)).ToList());
 
         var productsToInsert = data.Where(d => d.NeedToCreate(selected)).ToList();
         await _productService.InsertProductsAsync(productsToInsert.Select(d => d.CreateProduct(selected)).ToList());
@@ -1031,7 +1047,7 @@ public partial class ProductController : BaseAdminController
 
             //manufacturers
             await SaveManufacturerMappingsAsync(product, model);
-            
+
             //stores
             await _productService.UpdateProductStoreMappingsAsync(product, model.SelectedStoreIds);
 
@@ -1167,7 +1183,7 @@ public partial class ProductController : BaseAdminController
 
             //manufacturers
             await SaveManufacturerMappingsAsync(product, model);
-            
+
             //stores
             await _productService.UpdateProductStoreMappingsAsync(product, model.SelectedStoreIds);
 
@@ -1295,14 +1311,14 @@ public partial class ProductController : BaseAdminController
             .Where(p => currentVendor == null || p.VendorId == currentVendor.Id).ToList();
 
         await _productService.DeleteProductsAsync(products);
-        
+
         //activity log
         var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.DeleteProduct");
-        
+
         foreach (var product in products)
             await _customerActivityService.InsertActivityAsync("DeleteProduct",
                 string.Format(activityLogFormat, product.Name), product);
-        
+
         return Json(new { Result = true });
     }
 
@@ -1321,6 +1337,9 @@ public partial class ProductController : BaseAdminController
                 return RedirectToAction("List");
 
             var newProduct = await _copyProductService.CopyProductAsync(originalProduct, copyModel.Name, copyModel.Published, copyModel.CopyMultimedia);
+
+            //publishing post copy product event
+            await _eventPublisher.PublishAsync(new PostCopyProductEvent(originalProduct, newProduct));
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Copied"));
 
@@ -1381,7 +1400,7 @@ public partial class ProductController : BaseAdminController
     public virtual async Task<IActionResult> LoadProductFriendlyNames(string productIds)
     {
         var result = string.Empty;
-        
+
         if (string.IsNullOrWhiteSpace(productIds))
             return Json(new { Text = result });
 
@@ -2395,6 +2414,9 @@ public partial class ProductController : BaseAdminController
         if (ModelState.IsValid)
         {
             productTag.Name = model.Name;
+            productTag.MetaDescription = model.MetaDescription;
+            productTag.MetaKeywords = model.MetaKeywords;
+            productTag.MetaTitle = model.MetaTitle;
             await _productTagService.UpdateProductTagAsync(productTag);
 
             //locales
@@ -2410,6 +2432,16 @@ public partial class ProductController : BaseAdminController
 
         //if we got this far, something failed, redisplay form
         return View(model);
+    }
+
+    [HttpPost]
+    [CheckPermission(StandardPermission.Catalog.PRODUCT_TAGS_VIEW)]
+    public virtual async Task<IActionResult> TaggedProducts(ProductTagProductSearchModel searchModel)
+    {
+        //prepare model
+        var model = await _productModelFactory.PrepareTaggedProductListModelAsync(searchModel);
+
+        return Json(model);
     }
 
     #endregion

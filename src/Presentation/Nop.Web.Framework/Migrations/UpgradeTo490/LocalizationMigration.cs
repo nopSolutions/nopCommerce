@@ -23,6 +23,15 @@ public class LocalizationMigration : MigrationBase
 
         #region Delete locales
 
+        localizationService.DeleteLocaleResources(new List<string>
+        {
+            //#7569
+            "Admin.Configuration.AppSettings.Common.PluginStaticFileExtensionsBlacklist",
+            "Admin.Configuration.AppSettings.Common.PluginStaticFileExtensionsBlacklist.Hint",
+            //#7590
+            "Checkout.RedirectMessage"
+        });
+
         #endregion
 
         #region Rename locales
@@ -58,9 +67,62 @@ public class LocalizationMigration : MigrationBase
             ["Admin.ConfigurationSteps.Product.Details.Text"] = "Enter the relevant product details in these fields. The screenshot below shows how they will be displayed on the product page with the default nopCommerce theme: <div class=\"row row-cols-1\"><img class=\"img-thumbnail mt-3\" src=\"/js/admintour/images/product-page.jpg\"/></div>",
             ["Admin.ConfigurationSteps.PaymentPayPal.ApiCredentials.Text"] = "If you already have an app created in your PayPal account, follow these steps.",
 
+
             //#7515
             ["Admin.Catalog.Attributes.ProductAttributes.List.SearchProductAttributeName"] = "Product attribute name",
             ["Admin.Catalog.Attributes.ProductAttributes.List.SearchProductAttributeName.Hint"] = "A Product attribute name.",
+
+            //#5345
+            ["Admin.ContentManagement.Topics.Fields.AvailableEndDateTime"] = "Availability end date",
+            ["Admin.ContentManagement.Topics.Fields.AvailableEndDateTime.Hint"] = "The end of the topic's availability (UTC).",
+            ["Admin.ContentManagement.Topics.Fields.AvailableEndDateTime.GreaterThanOrEqualToStartDate"] = "The end date must be greater than or equal to the start date.",
+            ["Admin.ContentManagement.Topics.Fields.AvailableStartDateTime"] = "Availability start date",
+            ["Admin.ContentManagement.Topics.Fields.AvailableStartDateTime.Hint"] = "The start of the topic's availability (UTC).",
+
+            //#6407
+            ["ActivityLog.PublicStore.PasswordChanged"] = "Public store. Customer has changed the password",
+
+            //#7498
+            ["Admin.Configuration.AppSettings.Common.PermitLimit.Hint"] = "Maximum number of permit counters that can be allowed in a window (1 minute). Must be set to a value > 0 by the time these options are passed to the constructor of FixedWindowRateLimiter. If set to 0 then the limitation is off.",
+            ["Admin.Configuration.AppSettings.Common.QueueCount.Hint"] = "Maximum cumulative permit count of queued acquisition requests. Must be set to a value >= 0 by the time these options are passed to the constructor of FixedWindowRateLimiter. If set to 0 then the Queue is off.",
+
+            //#4170
+            ["Admin.Promotions.Campaigns.Copy.Name"] = "New campaign name",
+            ["Admin.Promotions.Campaigns.Copy.Name.Hint"] = "The name of the new campaign.",
+            ["Admin.Promotions.Campaigns.Copy.Name.New"] = "{0} - copy",
+            ["Admin.Promotions.Campaigns.Copy"] = "Copy campaign",
+            ["Admin.Promotions.Campaigns.Copied"] = "The campaign has been copied successfully",
+
+            //#7477
+            ["Pdf.Order"] = "Order #{0}",
+            ["Pdf.Shipment"] = "Shipment #{0}",
+
+            //#5279
+            ["Search.SearchInTags"] = "Search in product tags",
+
+            //#6407
+            ["Admin.Catalog.ProductTags.Info"] = "Product tag info",
+            ["Admin.Catalog.ProductTags.Seo"] = "SEO",
+            ["Admin.Catalog.ProductTags.Fields.MetaKeywords"] = "Meta keywords",
+            ["Admin.Catalog.ProductTags.Fields.MetaKeywords.Hint"] = "Meta keywords to be added to product tag page header.",
+            ["Admin.Catalog.ProductTags.Fields.MetaDescription"] = "Meta description",
+            ["Admin.Catalog.ProductTags.Fields.MetaDescription.Hint"] = "Meta description to be added to product tag page header.",
+            ["Admin.Catalog.ProductTags.Fields.MetaTitle"] = "Meta title",
+            ["Admin.Catalog.ProductTags.Fields.MetaTitle.Hint"] = "Override the page title. The default is the name of the product tag.",
+
+            //#7571
+            ["Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnCheckGiftCardBalance"] = "Show on check gift card balance page",
+            ["Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnCheckGiftCardBalance.Hint"] = "Check to show CAPTCHA on check gift card balance page.",
+
+            //#5771
+            ["Admin.Catalog.ProductTags.TaggedProducts"] = "Used by products",
+            ["Admin.Catalog.ProductTags.TaggedProducts.Product"] = "Product",
+            ["Admin.Catalog.ProductTags.TaggedProducts.Published"] = "Published",
+            
+            //#7405
+            ["Admin.Configuration.Settings.Catalog.ExportImportCategoryUseLimitedToStores"] = "Export / Import categories with \"limited to stores\"",
+            ["Admin.Configuration.Settings.Catalog.ExportImportCategoryUseLimitedToStores.Hint"] = "Check if categories should be exported / imported with \"limited to stores\" property.",
+
         }, languageId);
 
         #endregion

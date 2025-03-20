@@ -100,12 +100,8 @@ public partial class CommonController : BasePublicController
 
     #region Methods
 
-    //page not found
     public virtual IActionResult PageNotFound()
     {
-        Response.StatusCode = 404;
-        Response.ContentType = "text/html";
-
         return View();
     }
 

@@ -1,5 +1,4 @@
 ﻿using Nop.Core.Caching;
-using Nop.Core.Domain.Messages;
 
 namespace Nop.Services.Messages;
 
@@ -42,7 +41,7 @@ public static partial class NopMessageDefaults
     /// {0} : store ID
     /// {1} : is active?
     /// </remarks>
-    public static CacheKey MessageTemplatesAllCacheKey => new("Nop.messagetemplate.all.{0}-{1}", NopEntityCacheDefaults<MessageTemplate>.AllPrefix);
+    public static CacheKey MessageTemplatesAllCacheKey => new("Nop.messagetemplate.all.{0}-{1}");
 
     /// <summary>
     /// Gets a key for caching
@@ -51,7 +50,7 @@ public static partial class NopMessageDefaults
     /// {0} : template name
     /// {1} : store ID
     /// </remarks>
-    public static CacheKey MessageTemplatesByNameCacheKey => new("Nop.messagetemplate.byname.{0}-{1}", MessageTemplatesByNamePrefix);
+    public static CacheKey MessageTemplatesByNameCacheKey => new("Nop.messagetemplate.byname.{0}-{1}");
 
     /// <summary>
     /// Gets a key pattern to clear cache

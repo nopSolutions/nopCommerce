@@ -5,10 +5,6 @@
 /// </summary>
 public partial class RobotsTxtDefaults
 {
-    /// <summary>
-    /// Gets a name of custom robots file
-    /// </summary>
-    public static string RobotsFileName => "robots.txt";
 
     /// <summary>
     /// Gets a name of custom robots file

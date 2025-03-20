@@ -1,11 +1,9 @@
 ﻿using ClosedXML.Excel;
 using FluentAssertions;
-using Microsoft.IdentityModel.Tokens;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
@@ -106,7 +104,7 @@ public class ExportManagerTests : ServiceTest
 
     #region Utilities
 
-    protected static T PropertiesShouldEqual<T, L, Tp>(T actual, PropertyManager<Tp, L> manager, IDictionary<string, string> replacePairs, params string[] filter) where L : Language
+    protected static T PropertiesShouldEqual<T, Tp>(T actual, PropertyManager<Tp> manager, IDictionary<string, string> replacePairs, params string[] filter)
     {
         var objectProperties = typeof(T).GetProperties();
         foreach (var property in manager.GetDefaultProperties)
@@ -123,10 +121,10 @@ public class ExportManagerTests : ServiceTest
             var objectPropertyValue = objectProperty.GetValue(actual);
             var propertyValue = property.PropertyValue;
 
-            if (propertyValue is XLCellValue { IsBlank: true }) 
+            if (propertyValue is XLCellValue { IsBlank: true })
                 propertyValue = null;
 
-            if (string.IsNullOrEmpty(propertyValue?.ToString() ?? string.Empty) && objectPropertyValue is null) 
+            if (string.IsNullOrEmpty(propertyValue?.ToString() ?? string.Empty) && objectPropertyValue is null)
                 continue;
 
             switch (objectPropertyValue)
@@ -140,7 +138,8 @@ public class ExportManagerTests : ServiceTest
                 case string:
                     propertyValue = property.StringValue;
                     break;
-                case DateTime time: ;
+                case DateTime time:
+                    ;
                     objectPropertyValue = new DateTime(time.Year, time.Month, time.Day, time.Hour, time.Minute, time.Second);
                     if (DateTime.TryParse(property.StringValue, out var date))
                         propertyValue = date;
@@ -153,7 +152,7 @@ public class ExportManagerTests : ServiceTest
                 case decimal:
                     propertyValue = property.DecimalValue;
                     break;
-            }   
+            }
 
             if (objectProperty.PropertyType.IsEnum && objectPropertyValue != null)
             {
@@ -167,7 +166,7 @@ public class ExportManagerTests : ServiceTest
         return actual;
     }
 
-    protected async Task<PropertyManager<T, Language>> GetPropertyManagerAsync<T>(XLWorkbook workbook)
+    protected async Task<PropertyManager<T>> GetPropertyManagerAsync<T>(XLWorkbook workbook)
     {
         var languages = await _languageService.GetAllLanguagesAsync();
 
@@ -176,7 +175,7 @@ public class ExportManagerTests : ServiceTest
         var defaultProperties = metadata.DefaultProperties;
         var localizedProperties = metadata.LocalizedProperties;
 
-        return new PropertyManager<T, Language>(defaultProperties, _catalogSettings, localizedProperties);
+        return new PropertyManager<T>(defaultProperties, _catalogSettings, localizedProperties);
     }
 
     protected XLWorkbook GetWorkbook(byte[] excelData)
@@ -185,7 +184,7 @@ public class ExportManagerTests : ServiceTest
         return new XLWorkbook(stream);
     }
 
-    protected T AreAllObjectPropertiesPresent<T, L>(T obj, PropertyManager<T, L> manager, params string[] filters) where L : Language
+    protected T AreAllObjectPropertiesPresent<T>(T obj, PropertyManager<T> manager, params string[] filters)
     {
         foreach (var propertyInfo in typeof(T).GetProperties())
         {
@@ -338,7 +337,7 @@ public class ExportManagerTests : ServiceTest
         manager.SetSelectList("VatNumberStatus", await VatNumberStatus.Unknown.ToSelectListAsync(useLocalization: false));
 
         var customer = customers.First();
-            
+
         var ignore = new List<string> { "Id", "ExternalAuthenticationRecords", "ShoppingCartItems",
             "ReturnRequests", "BillingAddress", "ShippingAddress", "Addresses", "AdminComment",
             "EmailToRevalidate", "HasShoppingCartItems", "RequireReLogin", "FailedLoginAttempts",
@@ -349,9 +348,9 @@ public class ExportManagerTests : ServiceTest
             "StateProvinceId", "VatNumberStatusId", "TimeZoneId",
             "CurrencyId", "LanguageId", "TaxDisplayTypeId", "TaxDisplayType", "TaxDisplayType", "VatNumberStatusId", "MustChangePassword" };
 
-        if (!_customerSettings.FirstNameEnabled) 
+        if (!_customerSettings.FirstNameEnabled)
             ignore.Add("FirstName");
-            
+
         if (!_customerSettings.LastNameEnabled)
             ignore.Add("LastName");
 
@@ -379,15 +378,15 @@ public class ExportManagerTests : ServiceTest
         if (!_customerSettings.CountryEnabled)
             ignore.Add("Country");
 
-        if(!_customerSettings.StateProvinceEnabled)
+        if (!_customerSettings.StateProvinceEnabled)
             ignore.Add("StateProvince");
 
-        if(!_customerSettings.PhoneEnabled)
+        if (!_customerSettings.PhoneEnabled)
             ignore.Add("Phone");
 
-        if(!_customerSettings.FaxEnabled)
+        if (!_customerSettings.FaxEnabled)
             ignore.Add("Fax");
-            
+
         AreAllObjectPropertiesPresent(customer, manager, ignore.ToArray());
         PropertiesShouldEqual(customer, manager, new Dictionary<string, string>());
     }
@@ -450,7 +449,7 @@ public class ExportManagerTests : ServiceTest
             "DownloadExpirationDays", "AvailableStartDateTimeUtc",
             "AvailableEndDateTimeUtc", "DisplayOrder", "CreatedOnUtc", "UpdatedOnUtc", "ProductProductTagMappings",
             "DiscountProductMappings", "EntityCacheKey" };
-        
+
         ignore.AddRange(replacePairs.Values);
 
         var product = _productRepository.Table.ToList().First();

@@ -20,6 +20,10 @@ public partial class TopicValidator : BaseNopValidator<TopicModel>
             .When(x => x.IsPasswordProtected)
             .WithMessageAwait(localizationService.GetResourceAsync("Validation.Password.IsNotEmpty"));
 
+        RuleFor(x => x.AvailableEndDateTimeUtc)
+            .GreaterThanOrEqualTo(x => x.AvailableStartDateTimeUtc)
+            .WithMessageAwait(localizationService.GetResourceAsync("Admin.ContentManagement.Topics.Fields.AvailableEndDateTime.GreaterThanOrEqualToStartDate"));
+        
         SetDatabaseValidationRules<Topic>();
     }
 }

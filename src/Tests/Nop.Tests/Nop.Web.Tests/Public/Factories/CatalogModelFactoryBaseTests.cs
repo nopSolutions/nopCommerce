@@ -54,6 +54,7 @@ public class CatalogModelFactoryBaseTests : WebTest
         model.AvailableVendors.Any().Should().BeFalse();
 
         var queryString = _httpContextAccessor.HttpContext.Request.QueryString;
+        _httpContextAccessor.HttpContext.Request.Method = HttpMethods.Get;
         _httpContextAccessor.HttpContext.Request.QueryString = new QueryString("?q=t");
 
         model = await _catalogModelFactory.PrepareSearchModelAsync(new SearchModel(), new CatalogProductsCommand());
@@ -430,7 +431,7 @@ public class CatalogModelFactoryBaseTests : WebTest
     [Test]
     public async Task CanPrepareCategoryProductsModelAsync()
     {
-        var model = await _catalogModelFactory.PrepareCategoryProductsModelAsync(await _categoryService.GetCategoryByIdAsync(3), new CatalogProductsCommand());
+        var model = await _catalogModelFactory.PrepareCategoryProductsModelAsync((await _categoryService.GetAllCategoriesAsync("Notebooks")).First(), new CatalogProductsCommand());
         model.UseAjaxLoading.Should().Be(_catalogSettings.UseAjaxCatalogProductsLoading);
         model.AvailableSortOptions.Should().NotBeEmpty();
         model.AvailableViewModes.Should().NotBeEmpty();

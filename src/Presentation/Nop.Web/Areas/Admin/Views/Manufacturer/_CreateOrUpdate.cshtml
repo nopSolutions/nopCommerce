@@ -1,8 +1,5 @@
 ﻿@model ManufacturerModel
 
-@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
-@inject IWorkContext workContext
-
 @{
 	const string hideInfoBlockAttributeName = "ManufacturerPage.HideInfoBlock";
     var customer = await workContext.GetCurrentCustomerAsync();
