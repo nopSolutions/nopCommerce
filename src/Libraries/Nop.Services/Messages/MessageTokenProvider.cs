@@ -1570,7 +1570,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         var product = await _productService.GetProductByIdAsync(subscription.ProductId);
 
         tokens.Add(new Token("BackInStockSubscription.ProductName", product.Name));
-        var productUrl = await RouteUrlAsync(subscription.StoreId, "Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) });
+        var productUrl = await RouteUrlAsync(subscription.StoreId, "ProductDetails", new { SeName = await _urlRecordService.GetSeNameAsync(product) });
         tokens.Add(new Token("BackInStockSubscription.ProductUrl", productUrl, true));
 
         //event notification
