@@ -385,13 +385,16 @@ public class PayPalCommerceServiceManager
         var items = await details.Cart.SelectAwait(async item =>
         {
             var product = await _productService.GetProductByIdAsync(item.ProductId);
+            if (product is null)
+                return null;
+
             var sku = await _productService.FormatSkuAsync(product, item.AttributesXml);
             var seName = await _urlRecordService.GetSeNameAsync(product);
             var url = await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = seName }, _webHelper.GetCurrentRequestProtocol());
 
             var picture = await _pictureService.GetProductPictureAsync(product, item.AttributesXml);
             //PayPal doesn't currently support WebP images
-            var ext = await _pictureService.GetFileExtensionFromMimeTypeAsync(picture.MimeType);
+            var ext = await _pictureService.GetFileExtensionFromMimeTypeAsync(picture?.MimeType);
             var (imageUrl, _) = ext != "webp" ? await _pictureService.GetPictureUrlAsync(picture) : default;
 
             var (itemSubTotal, itemDiscount, _, _) = await _shoppingCartService.GetSubTotalAsync(item, true);
@@ -411,7 +414,7 @@ public class PayPalCommerceServiceManager
                 ImageUrl = imageUrl,
                 UnitAmount = PrepareMoney(unitPriceExclTax, details.CurrencyCode)
             };
-        }).ToListAsync();
+        }).Where(item => item is not null).ToListAsync();
 
         //and checkout attributes
         var checkoutAttributes = await _genericAttributeService
