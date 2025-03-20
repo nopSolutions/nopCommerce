@@ -155,48 +155,13 @@ public class CommonModelFactoryTests : BaseNopTest
         var model = await _commonModelFactory.PrepareFooterModelAsync();
 
         model.StoreName.Should().Be("Your store name");
-        model.WishlistEnabled.Should().BeTrue();
-        model.ShoppingCartEnabled.Should().BeTrue();
-        model.SitemapEnabled.Should().BeTrue();
-        model.SearchEnabled.Should().BeTrue();
-        model.WorkingLanguageId.Should().Be(1);
-        model.BlogEnabled.Should().BeTrue();
-        model.CompareProductsEnabled.Should().Be(_catalogSettings.CompareProductsEnabled);
-        model.ForumEnabled.Should().Be(_forumSettings.ForumsEnabled);
-        model.NewsEnabled.Should().Be(_newsSettings.Enabled);
-        model.RecentlyViewedProductsEnabled.Should().Be(_catalogSettings.RecentlyViewedProductsEnabled);
-        model.NewProductsEnabled.Should().Be(_catalogSettings.NewProductsEnabled);
         model.DisplayTaxShippingInfoFooter.Should().Be(_catalogSettings.DisplayTaxShippingInfoFooter);
         model.HidePoweredByNopCommerce.Should().Be(_storeInformationSettings.HidePoweredByNopCommerce);
-        model.AllowCustomersToApplyForVendorAccount.Should().BeTrue();
-        model.AllowCustomersToCheckGiftCardBalance.Should().BeFalse();
-        model.DisplaySitemapFooterItem.Should().Be(_displayDefaultFooterItemSettings.DisplaySitemapFooterItem);
-        model.DisplayContactUsFooterItem.Should().Be(_displayDefaultFooterItemSettings.DisplayContactUsFooterItem);
-        model.DisplayProductSearchFooterItem.Should()
-            .Be(_displayDefaultFooterItemSettings.DisplayProductSearchFooterItem);
-        model.DisplayNewsFooterItem.Should().Be(_displayDefaultFooterItemSettings.DisplayNewsFooterItem);
-        model.DisplayBlogFooterItem.Should().Be(_displayDefaultFooterItemSettings.DisplayBlogFooterItem);
-        model.DisplayForumsFooterItem.Should().Be(_displayDefaultFooterItemSettings.DisplayForumsFooterItem);
-        model.DisplayRecentlyViewedProductsFooterItem.Should()
-            .Be(_displayDefaultFooterItemSettings.DisplayRecentlyViewedProductsFooterItem);
-        model.DisplayCompareProductsFooterItem.Should()
-            .Be(_displayDefaultFooterItemSettings.DisplayCompareProductsFooterItem);
-        model.DisplayNewProductsFooterItem.Should()
-            .Be(_displayDefaultFooterItemSettings.DisplayNewProductsFooterItem);
-        model.DisplayCustomerInfoFooterItem.Should()
-            .Be(_displayDefaultFooterItemSettings.DisplayCustomerInfoFooterItem);
-        model.DisplayCustomerOrdersFooterItem.Should()
-            .Be(_displayDefaultFooterItemSettings.DisplayCustomerOrdersFooterItem);
-        model.DisplayCustomerAddressesFooterItem.Should()
-            .Be(_displayDefaultFooterItemSettings.DisplayCustomerAddressesFooterItem);
-        model.DisplayShoppingCartFooterItem.Should()
-            .Be(_displayDefaultFooterItemSettings.DisplayShoppingCartFooterItem);
-        model.DisplayWishlistFooterItem.Should().Be(_displayDefaultFooterItemSettings.DisplayWishlistFooterItem);
-        model.DisplayApplyVendorAccountFooterItem.Should()
-            .Be(_displayDefaultFooterItemSettings.DisplayApplyVendorAccountFooterItem);
+       
 
-        model.Topics.Should().NotBeNullOrEmpty();
-        model.Topics.Count.Should().Be(4);
+        model.LinksColumn1.Count.Should().Be(6);
+        model.LinksColumn2.Count.Should().Be(6);
+        model.LinksColumn3.Count.Should().Be(6);
     }
 
     [Test]

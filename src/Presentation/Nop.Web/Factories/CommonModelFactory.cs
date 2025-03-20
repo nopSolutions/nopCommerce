@@ -1,5 +1,8 @@
 ﻿using System.Globalization;
 using System.Text;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain;
@@ -26,6 +29,7 @@ using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Themes;
 using Nop.Services.Topics;
+using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.UI;
 using Nop.Web.Infrastructure.Cache;
@@ -47,6 +51,7 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected readonly CustomerSettings _customerSettings;
     protected readonly DisplayDefaultFooterItemSettings _displayDefaultFooterItemSettings;
     protected readonly ForumSettings _forumSettings;
+    protected readonly IActionContextAccessor _actionContextAccessor;
     protected readonly ICurrencyService _currencyService;
     protected readonly ICustomerService _customerService;
     protected readonly IForumService _forumService;
@@ -64,6 +69,7 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected readonly IThemeContext _themeContext;
     protected readonly IThemeProvider _themeProvider;
     protected readonly ITopicService _topicService;
+    protected readonly IUrlHelperFactory _urlHelperFactory;
     protected readonly IUrlRecordService _urlRecordService;
     protected readonly IWebHelper _webHelper;
     protected readonly IWorkContext _workContext;
@@ -87,6 +93,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         CustomerSettings customerSettings,
         DisplayDefaultFooterItemSettings displayDefaultFooterItemSettings,
         ForumSettings forumSettings,
+        IActionContextAccessor actionContextAccessor,
         ICurrencyService currencyService,
         ICustomerService customerService,
         IForumService forumService,
@@ -104,6 +111,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         IThemeContext themeContext,
         IThemeProvider themeProvider,
         ITopicService topicService,
+        IUrlHelperFactory urlHelperFactory,
         IUrlRecordService urlRecordService,
         IWebHelper webHelper,
         IWorkContext workContext,
@@ -123,6 +131,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         _customerSettings = customerSettings;
         _displayDefaultFooterItemSettings = displayDefaultFooterItemSettings;
         _forumSettings = forumSettings;
+        _actionContextAccessor = actionContextAccessor;
         _currencyService = currencyService;
         _customerService = customerService;
         _forumService = forumService;
@@ -140,6 +149,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         _themeContext = themeContext;
         _themeProvider = themeProvider;
         _topicService = topicService;
+        _urlHelperFactory = urlHelperFactory;
         _urlRecordService = urlRecordService;
         _webHelper = webHelper;
         _workContext = workContext;
@@ -431,55 +441,255 @@ public partial class CommonModelFactory : ICommonModelFactory
     {
         //footer topics
         var store = await _storeContext.GetCurrentStoreAsync();
-        var topicModels = await (await _topicService.GetAllTopicsAsync(store.Id))
-            .Where(t => t.IncludeInFooterColumn1 || t.IncludeInFooterColumn2 || t.IncludeInFooterColumn3)
-            .SelectAwait(async t => new FooterModel.FooterTopicModel
-            {
-                Id = t.Id,
-                Name = await _localizationService.GetLocalizedAsync(t, x => x.Title),
-                SeName = await _urlRecordService.GetSeNameAsync(t),
-                IncludeInFooterColumn1 = t.IncludeInFooterColumn1,
-                IncludeInFooterColumn2 = t.IncludeInFooterColumn2,
-                IncludeInFooterColumn3 = t.IncludeInFooterColumn3
-            }).ToListAsync();
 
         //model
         var model = new FooterModel
         {
             StoreName = await _localizationService.GetLocalizedAsync(store, x => x.Name),
-            WishlistEnabled = await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_WISHLIST),
-            ShoppingCartEnabled = await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_SHOPPING_CART),
-            SitemapEnabled = _sitemapSettings.SitemapEnabled,
-            SearchEnabled = _catalogSettings.ProductSearchEnabled,
-            WorkingLanguageId = (await _workContext.GetWorkingLanguageAsync()).Id,
-            BlogEnabled = _blogSettings.Enabled,
-            CompareProductsEnabled = _catalogSettings.CompareProductsEnabled,
-            ForumEnabled = _forumSettings.ForumsEnabled,
-            NewsEnabled = _newsSettings.Enabled,
-            RecentlyViewedProductsEnabled = _catalogSettings.RecentlyViewedProductsEnabled,
-            NewProductsEnabled = _catalogSettings.NewProductsEnabled,
+            IsHomePage = await IsHomePageAsync(),
             DisplayTaxShippingInfoFooter = _catalogSettings.DisplayTaxShippingInfoFooter,
             HidePoweredByNopCommerce = _storeInformationSettings.HidePoweredByNopCommerce,
-            IsHomePage = await IsHomePageAsync(),
-            AllowCustomersToApplyForVendorAccount = _vendorSettings.AllowCustomersToApplyForVendorAccount,
-            AllowCustomersToCheckGiftCardBalance = _customerSettings.AllowCustomersToCheckGiftCardBalance,
-            Topics = topicModels,
-            DisplaySitemapFooterItem = _displayDefaultFooterItemSettings.DisplaySitemapFooterItem,
-            DisplayContactUsFooterItem = _displayDefaultFooterItemSettings.DisplayContactUsFooterItem,
-            DisplayProductSearchFooterItem = _displayDefaultFooterItemSettings.DisplayProductSearchFooterItem,
-            DisplayNewsFooterItem = _displayDefaultFooterItemSettings.DisplayNewsFooterItem,
-            DisplayBlogFooterItem = _displayDefaultFooterItemSettings.DisplayBlogFooterItem,
-            DisplayForumsFooterItem = _displayDefaultFooterItemSettings.DisplayForumsFooterItem,
-            DisplayRecentlyViewedProductsFooterItem = _displayDefaultFooterItemSettings.DisplayRecentlyViewedProductsFooterItem,
-            DisplayCompareProductsFooterItem = _displayDefaultFooterItemSettings.DisplayCompareProductsFooterItem,
-            DisplayNewProductsFooterItem = _displayDefaultFooterItemSettings.DisplayNewProductsFooterItem,
-            DisplayCustomerInfoFooterItem = _displayDefaultFooterItemSettings.DisplayCustomerInfoFooterItem,
-            DisplayCustomerOrdersFooterItem = _displayDefaultFooterItemSettings.DisplayCustomerOrdersFooterItem,
-            DisplayCustomerAddressesFooterItem = _displayDefaultFooterItemSettings.DisplayCustomerAddressesFooterItem,
-            DisplayShoppingCartFooterItem = _displayDefaultFooterItemSettings.DisplayShoppingCartFooterItem,
-            DisplayWishlistFooterItem = _displayDefaultFooterItemSettings.DisplayWishlistFooterItem,
-            DisplayApplyVendorAccountFooterItem = _displayDefaultFooterItemSettings.DisplayApplyVendorAccountFooterItem
         };
+
+        var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+        var topics = await _topicService.GetAllTopicsAsync(store.Id);
+
+        #region Column 1
+
+        var displayOrderCol1 = 0;
+
+        if (_sitemapSettings.SitemapEnabled && _displayDefaultFooterItemSettings.DisplaySitemapFooterItem)
+        {
+            model.LinksColumn1.Add(new FooterModel.FooterLinkModel
+            {
+                Text = await _localizationService.GetResourceAsync("Sitemap"),
+                Url = urlHelper.RouteUrl("Sitemap"),
+                DisplayOrder = displayOrderCol1
+            });
+
+            displayOrderCol1++;
+        }
+
+        if (_displayDefaultFooterItemSettings.DisplayContactUsFooterItem)
+        {
+            model.LinksColumn1.Add(new FooterModel.FooterLinkModel
+            {
+                Text = await _localizationService.GetResourceAsync("ContactUs"),
+                Url = urlHelper.RouteUrl("ContactUs"),
+                DisplayOrder = displayOrderCol1
+            });
+
+            displayOrderCol1++;
+        }
+
+        model.LinksColumn1.AddRange(await topics
+            .Where(t => t.IncludeInFooterColumn1)
+            .SelectAwait(async t => new FooterModel.FooterLinkModel
+            {
+                Id = t.Id,
+                Text = await _localizationService.GetLocalizedAsync(t, x => x.Title),
+                Url = urlHelper.RouteUrl(NopRoutingDefaults.RouteName.Generic.Topic, new { SeName = await _urlRecordService.GetSeNameAsync(t) }),
+                DisplayOrder = displayOrderCol1 + t.DisplayOrder
+            }).ToListAsync());
+
+        #endregion
+
+        #region Column 2
+
+        var displayOrderCol2 = 0;
+        if (_catalogSettings.ProductSearchEnabled && _displayDefaultFooterItemSettings.DisplayProductSearchFooterItem)
+        {
+            model.LinksColumn2.Add(new FooterModel.FooterLinkModel
+            {
+                Text = await _localizationService.GetResourceAsync("Search"),
+                Url = urlHelper.RouteUrl("ProductSearch"),
+                DisplayOrder = displayOrderCol2
+            });
+
+            displayOrderCol2++;
+        }
+
+        if (_newsSettings.Enabled && _displayDefaultFooterItemSettings.DisplayNewsFooterItem)
+        {
+            model.LinksColumn2.Add(new FooterModel.FooterLinkModel
+            {
+                Text = await _localizationService.GetResourceAsync("News"),
+                Url = urlHelper.RouteUrl("NewsArchive"),
+                DisplayOrder = displayOrderCol2
+            });
+
+            displayOrderCol2++;
+        }
+
+        if (_blogSettings.Enabled && _displayDefaultFooterItemSettings.DisplayBlogFooterItem)
+        {
+            model.LinksColumn2.Add(new FooterModel.FooterLinkModel
+            {
+                Text = await _localizationService.GetResourceAsync("Blog"),
+                Url = urlHelper.RouteUrl("Blog"),
+                DisplayOrder = displayOrderCol2
+            });
+
+            displayOrderCol2++;
+        }
+
+        if (_forumSettings.ForumsEnabled && _displayDefaultFooterItemSettings.DisplayForumsFooterItem)
+        {
+            model.LinksColumn2.Add(new FooterModel.FooterLinkModel
+            {
+                Text = await _localizationService.GetResourceAsync("Forum.Forums"),
+                Url = urlHelper.RouteUrl("Boards"),
+                DisplayOrder = displayOrderCol2
+            });
+
+            displayOrderCol2++;
+        }
+
+        if (_catalogSettings.RecentlyViewedProductsEnabled && _displayDefaultFooterItemSettings.DisplayRecentlyViewedProductsFooterItem)
+        {
+            model.LinksColumn2.Add(new FooterModel.FooterLinkModel
+            {
+                Text = await _localizationService.GetResourceAsync("Products.RecentlyViewedProducts"),
+                Url = urlHelper.RouteUrl("RecentlyViewedProducts"),
+                DisplayOrder = displayOrderCol2
+            });
+
+            displayOrderCol2++;
+        }
+
+        if (_catalogSettings.CompareProductsEnabled && _displayDefaultFooterItemSettings.DisplayCompareProductsFooterItem)
+        {
+            model.LinksColumn2.Add(new FooterModel.FooterLinkModel
+            {
+                Text = await _localizationService.GetResourceAsync("Products.Compare.List"),
+                Url = urlHelper.RouteUrl("CompareProducts"),
+                DisplayOrder = displayOrderCol2
+            });
+
+            displayOrderCol2++;
+        }
+
+        if (_catalogSettings.NewProductsEnabled && _displayDefaultFooterItemSettings.DisplayNewProductsFooterItem)
+        {
+            model.LinksColumn2.Add(new FooterModel.FooterLinkModel
+            {
+                Text = await _localizationService.GetResourceAsync("Products.NewProducts"),
+                Url = urlHelper.RouteUrl("NewProducts"),
+                DisplayOrder = displayOrderCol2
+            });
+
+            displayOrderCol2++;
+        }
+
+        if (_customerSettings.AllowCustomersToCheckGiftCardBalance)
+        {
+            model.LinksColumn2.Add(new FooterModel.FooterLinkModel
+            {
+                Text = await _localizationService.GetResourceAsync("CheckGiftCardBalance"),
+                Url = urlHelper.RouteUrl("CheckGiftCardBalance"),
+                DisplayOrder = displayOrderCol2
+            });
+
+            displayOrderCol2++;
+        }
+
+        model.LinksColumn1.AddRange(await topics
+            .Where(t => t.IncludeInFooterColumn2)
+            .SelectAwait(async t => new FooterModel.FooterLinkModel
+            {
+                Id = t.Id,
+                Text = await _localizationService.GetLocalizedAsync(t, x => x.Title),
+                Url = urlHelper.RouteUrl(NopRoutingDefaults.RouteName.Generic.Topic, new { SeName = await _urlRecordService.GetSeNameAsync(t) }),
+                DisplayOrder = displayOrderCol2 + t.DisplayOrder
+            }).ToListAsync());
+
+        #endregion
+
+        #region Column 3
+
+        var displayOrderCol3 = 0;
+        if (_displayDefaultFooterItemSettings.DisplayCustomerInfoFooterItem)
+        {
+            model.LinksColumn3.Add(new FooterModel.FooterLinkModel
+            {
+                Text = await _localizationService.GetResourceAsync("Account.MyAccount"),
+                Url = urlHelper.RouteUrl("CustomerInfo"),
+                DisplayOrder = displayOrderCol3
+            });
+
+            displayOrderCol3++;
+        }
+
+        if (_displayDefaultFooterItemSettings.DisplayCustomerOrdersFooterItem)
+        {
+            model.LinksColumn3.Add(new FooterModel.FooterLinkModel
+            {
+                Text = await _localizationService.GetResourceAsync("Account.CustomerOrders"),
+                Url = urlHelper.RouteUrl("CustomerOrders"),
+                DisplayOrder = displayOrderCol3
+            });
+
+            displayOrderCol3++;
+        }
+
+        if (_displayDefaultFooterItemSettings.DisplayCustomerAddressesFooterItem)
+        {
+            model.LinksColumn3.Add(new FooterModel.FooterLinkModel
+            {
+                Text = await _localizationService.GetResourceAsync("Account.CustomerAddresses"),
+                Url = urlHelper.RouteUrl("CustomerAddresses"),
+                DisplayOrder = displayOrderCol3
+            });
+
+            displayOrderCol3++;
+        }
+
+        if (_displayDefaultFooterItemSettings.DisplayShoppingCartFooterItem && await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_SHOPPING_CART))
+        {
+            model.LinksColumn3.Add(new FooterModel.FooterLinkModel
+            {
+                Text = await _localizationService.GetResourceAsync("ShoppingCart"),
+                Url = urlHelper.RouteUrl("ShoppingCart"),
+                DisplayOrder = displayOrderCol3
+            });
+
+            displayOrderCol3++;
+        }
+
+        if (_displayDefaultFooterItemSettings.DisplayWishlistFooterItem && await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_WISHLIST))
+        {
+            model.LinksColumn3.Add(new FooterModel.FooterLinkModel
+            {
+                Text = await _localizationService.GetResourceAsync("Wishlist"),
+                Url = urlHelper.RouteUrl("Wishlist"),
+                DisplayOrder = displayOrderCol3
+            });
+
+            displayOrderCol3++;
+        }
+
+        if (_vendorSettings.AllowCustomersToApplyForVendorAccount && _displayDefaultFooterItemSettings.DisplayApplyVendorAccountFooterItem)
+        {
+            model.LinksColumn3.Add(new FooterModel.FooterLinkModel
+            {
+                Text = await _localizationService.GetResourceAsync("Vendors.ApplyAccount"),
+                Url = urlHelper.RouteUrl("ApplyVendorAccount"),
+                DisplayOrder = displayOrderCol3
+            });
+
+            displayOrderCol3++;
+        }
+        model.LinksColumn1.AddRange(await topics
+            .Where(t => t.IncludeInFooterColumn3)
+            .SelectAwait(async t => new FooterModel.FooterLinkModel
+            {
+                Id = t.Id,
+                Text = await _localizationService.GetLocalizedAsync(t, x => x.Title),
+                Url = urlHelper.RouteUrl(NopRoutingDefaults.RouteName.Generic.Topic, new { SeName = await _urlRecordService.GetSeNameAsync(t) }),
+                DisplayOrder = displayOrderCol3 + t.DisplayOrder
+            }).ToListAsync());
+
+        #endregion
 
         return model;
     }
