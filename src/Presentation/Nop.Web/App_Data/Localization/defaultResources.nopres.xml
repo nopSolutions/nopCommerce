@@ -15951,6 +15951,9 @@
   <LocaleResource Name="Admin.System.QueuedEmails.Requeued">
     <Value>The queued email has been requeued successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.RequeueSelected">
+    <Value>Requeue selected</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.QueuedEmails.Updated">
     <Value>The queued email has been updated successfully.</Value>
   </LocaleResource>
