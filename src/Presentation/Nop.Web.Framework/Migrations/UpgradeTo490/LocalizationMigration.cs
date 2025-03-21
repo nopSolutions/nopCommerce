@@ -117,6 +117,10 @@ public class LocalizationMigration : MigrationBase
             //#7405
             ["Admin.Configuration.Settings.Catalog.ExportImportCategoryUseLimitedToStores"] = "Export / Import categories with \"limited to stores\"",
             ["Admin.Configuration.Settings.Catalog.ExportImportCategoryUseLimitedToStores.Hint"] = "Check if categories should be exported / imported with \"limited to stores\" property.",
+
+            //#2192
+            ["Admin.System.QueuedEmails.RequeueSelected"] = "Requeue selected",
+
         }, languageId);
 
         #endregion
