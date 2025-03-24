@@ -12,7 +12,7 @@
     var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
-<form asp-controller="QueuedEmail" asp-action="List" method="post">
+<form asp-controller="QueuedEmail" asp-action="List" method="post" id="queued-email-list-form">
     <div class="content-header clearfix">
         <h1 class="float-left">
             @T("Admin.System.QueuedEmails")
@@ -22,7 +22,27 @@
                 <i class="fas fa-repeat"></i>
                 @T("Admin.System.QueuedEmails.RequeueSelected")
             </button>
-            <nop-action-confirmation asp-button-id="requeue-selected" />
+            <button type="submit" id="btnRequeueRefresh" style="display: none"></button>
+            <script>
+                $(function() {
+                    $('#requeue-selected').click(function () {
+                        if (selectedIds.length == 0) {
+                            showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                            return false;
+                        }
+                        OpenWindow('@Url.Action("RequeueEmailsPopup", "QueuedEmail")?ids=' + selectedIds + '&btnId=btnRequeueRefresh&formId=queued-email-list-form', 800, 550, true);
+                        return false;
+                    });
+
+                    $('#btnRequeueRefresh').click(function () {
+                        //refresh grid
+                        updateTable('#queuedEmails-grid');
+
+                        //return false to don't reload a page
+                        return false;
+                    });
+                });
+            </script>
             <button type="button" id="delete-selected" class="btn btn-danger">
                 <i class="far fa-trash-can"></i>
                 @T("Admin.System.QueuedEmails.DeleteSelected")

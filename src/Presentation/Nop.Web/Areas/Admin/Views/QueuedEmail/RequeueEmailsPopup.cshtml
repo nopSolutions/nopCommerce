@@ -1,0 +1,90 @@
+﻿@model RequeueEmailsModel
+
+@{
+    Layout = "_AdminPopupLayout";
+
+    //page title
+    var title = T("Admin.System.QueuedEmails.RequeueSelected").Text;
+    ViewBag.PageTitle = title;
+}
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script>
+        try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
+        catch (e){}
+        window.close();
+    </script>
+}
+
+
+<form asp-controller="QueuedEmail" asp-action="RequeueEmailsPopup" method="post"
+      asp-route-ids="@Context.Request.Query["ids"]"
+      asp-route-formId="@Context.Request.Query["formId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @title
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-floppy-disk"></i>
+                @T("Admin.System.QueuedEmails.Requeue")
+            </button>
+        </div>
+    </div>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div class="form-horizontal">
+                    <div class="cards-group">
+                        <div class="card card-default card-popup card-popup">
+                            <div class="card-body">
+                                <input asp-for="SelectedQueuedEmailIds" type="hidden" />
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SendImmediately" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SendImmediately" />
+                                    </div>
+                                </div>
+                                <div class="form-group row dontsendbefore-fields">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="DontSendBeforeDate" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="DontSendBeforeDate" />
+                                    </div>
+                                </div>
+                                <div class="offset-md-4 col-md-8 callout dontsendbefore-fields">
+                                    <p>@T("Admin.System.QueuedEmails.RequeueSelected.Note")</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+
+<script asp-location="Footer">
+    $(function(){
+        const sendImmediately = $('#@Html.IdFor(m => m.SendImmediately)');
+        const dontSendBefore = $('#@Html.IdFor(m => m.DontSendBeforeDate)');
+        const dontSendBeforeFields = $('.dontsendbefore-fields');
+
+        const toggleDontSendBeforeDate = () => {
+            let isSendImmediately = sendImmediately.is(':checked');
+            dontSendBeforeFields.toggle(!isSendImmediately);
+            dontSendBefore.prop('disabled', isSendImmediately);
+        }
+
+        toggleDontSendBeforeDate();
+
+        sendImmediately.on('change', toggleDontSendBeforeDate);
+
+    
+    });
+</script>

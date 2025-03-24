@@ -120,6 +120,7 @@ public class LocalizationMigration : MigrationBase
 
             //#2192
             ["Admin.System.QueuedEmails.RequeueSelected"] = "Requeue selected",
+            ["Admin.System.QueuedEmails.RequeueSelected.Note"] = "To keep the old values, leave the date empty",
 
         }, languageId);
 

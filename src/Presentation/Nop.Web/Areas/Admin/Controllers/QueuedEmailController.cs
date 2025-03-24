@@ -203,21 +203,40 @@ public partial class QueuedEmailController : BaseAdminController
         return RedirectToAction("List");
     }
 
+    [CheckPermission(StandardPermission.System.MANAGE_MESSAGE_QUEUE)]
+    public virtual async Task<IActionResult> RequeueEmailsPopup(string ids)
+    {
+        if (string.IsNullOrEmpty(ids))
+            return Challenge();
+
+        return View(new RequeueEmailsModel { SelectedQueuedEmailIds = ids });
+    }
+
     [HttpPost]
     [CheckPermission(StandardPermission.System.MANAGE_MESSAGE_QUEUE)]
-    public virtual async Task<IActionResult> RequeueSelected(int[] selectedIds)
+    public virtual async Task<IActionResult> RequeueEmailsPopup(RequeueEmailsModel model)
     {
-        if (selectedIds == null || selectedIds.Length == 0)
-            return NoContent();
+        if (string.IsNullOrEmpty(model.SelectedQueuedEmailIds))
+            return RedirectToAction("List");
 
-        var emailsToRequeue = await _queuedEmailService.GetQueuedEmailsByIdsAsync(selectedIds);
+        var ids = new List<int>();
+        foreach (var idStr in model.SelectedQueuedEmailIds.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()))
+        {
+            if (int.TryParse(idStr, out var id))
+                ids.Add(id);
+        }
 
-        if (!emailsToRequeue.Any())
-            return NotFound();
+        var emailsToRequeue = await _queuedEmailService.GetQueuedEmailsByIdsAsync(ids.ToArray());
+        if (emailsToRequeue.Any())
+        {
+            var utcDate = model.SendImmediately || !model.DontSendBeforeDate.HasValue ?
+                null : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DontSendBeforeDate.Value);
 
-        await _queuedEmailService.RequeueQueuedEmailsAsync(emailsToRequeue);
+            await _queuedEmailService.RequeueQueuedEmailsAsync(emailsToRequeue, model.SendImmediately, utcDate);
+        }
 
-        return Json(new { Result = true });
+        ViewBag.RefreshPage = true;
+        return View(model);
     }
 
     #endregion

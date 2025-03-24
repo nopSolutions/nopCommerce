@@ -1,4 +1,5 @@
-﻿using Nop.Core;
+﻿using DocumentFormat.OpenXml.EMMA;
+using Nop.Core;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
 
@@ -96,8 +97,10 @@ public partial class QueuedEmailService : IQueuedEmailService
     /// Requeue a queued emails
     /// </summary>
     /// <param name="queuedEmails">Queued emails</param>
+    /// <param name="sendImmediately">A value indicating whether to send requeued messages immediately</param>
+    /// <param name="dontSendBeforeDateUtc">The date and time in UTC before which this email should not be sent</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task RequeueQueuedEmailsAsync(IList<QueuedEmail> queuedEmails)
+    public virtual async Task RequeueQueuedEmailsAsync(IList<QueuedEmail> queuedEmails, bool sendImmediately, DateTime? dontSendBeforeDateUtc = null)
     {
         ArgumentNullException.ThrowIfNull(queuedEmails);
 
@@ -119,7 +122,7 @@ public partial class QueuedEmailService : IQueuedEmailService
             AttachedDownloadId = queuedEmail.AttachedDownloadId,
             CreatedOnUtc = DateTime.UtcNow,
             EmailAccountId = queuedEmail.EmailAccountId,
-            DontSendBeforeDateUtc = queuedEmail.DontSendBeforeDateUtc
+            DontSendBeforeDateUtc = sendImmediately ? null : dontSendBeforeDateUtc ?? queuedEmail.DontSendBeforeDateUtc
         }).ToList();
 
         await _queuedEmailRepository.InsertAsync(newEmails);

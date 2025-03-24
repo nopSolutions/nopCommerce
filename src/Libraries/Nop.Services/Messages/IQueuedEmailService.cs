@@ -60,8 +60,10 @@ public partial interface IQueuedEmailService
     /// Requeue a queued emails
     /// </summary>
     /// <param name="queuedEmails">Queued emails</param>
+    /// <param name="sendImmediately">A value indicating whether to send requeued messages immediately</param>
+    /// <param name="dontSendBeforeDateUtc">The date and time in UTC before which this email should not be sent</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    Task RequeueQueuedEmailsAsync(IList<QueuedEmail> queuedEmails);
+    Task RequeueQueuedEmailsAsync(IList<QueuedEmail> queuedEmails, bool sendImmediately, DateTime? dontSendBeforeDateUtc = null);
 
     /// <summary>
     /// Search queued emails
