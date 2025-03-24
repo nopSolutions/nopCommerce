@@ -76,6 +76,11 @@ div.mobile-cart-qty {
     clear: both;
     height: 50px;
 }
+
+.storeId8 .mobile-header-content-row {
+    clear: both;
+    height: 20px;
+}
 .mobile-header-content-row div.mobile-menu {
     float: left;
     background-image: url(/Plugins/Misc.AbcFrontend/Images/mobile-menu.png);

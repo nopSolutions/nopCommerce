@@ -135,7 +135,7 @@
 	position: relative;
 	float: right;
 	height: 42px;
-	margin: 4px 0 0 30px;
+	margin: 4px 0 0 10px;
 	transition: all 0.2s ease;
 }
 .header-links-wrapper label,

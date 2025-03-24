@@ -24,6 +24,7 @@
         "NATUZZI", "PROFILE", "SAMSUNG", "SEALY", "SERTA RESTOKRAFT MATT INC", 
         "SIMMONS BEAUTYREST", "SCOTT LIVING", "SPEED QUEEN", "SUBZERO", "SUNBRITE TV", 
         "TCL", "TEMPUR-PEDIC", "VIZIO", "WHIRLPOOL"
+
     };
 
     var orderedList = Model.Where(it => allowedManufacturers.Contains(it.Name.ToUpper())).OrderBy(it => it.SeName);
