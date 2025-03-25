@@ -206,14 +206,10 @@ public class MarketingAutomationManager
 
                 //if there is a single item in the cart, so the cart is just created
                 if (cart.Count == 1)
-                {
                     shoppingCartGuid = Guid.NewGuid();
-                }
                 else
-                {
                     //otherwise cart is updated
                     shoppingCartGuid ??= Guid.NewGuid();
-                }
                 trackEvent.EventName = BrevoDefaults.CartUpdatedEventName;
                 trackEvent.EventData = new { id = $"cart:{shoppingCartGuid}", data = cartData };
             }

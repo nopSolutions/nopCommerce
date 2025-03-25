@@ -43,10 +43,8 @@ public partial class PhoneNumberPropertyValidator<T, TProperty> : PropertyValida
         if (!customerSettings.PhoneNumberValidationEnabled || string.IsNullOrEmpty(customerSettings.PhoneNumberValidationRule))
             return true;
 
-        if (string.IsNullOrEmpty(phoneNumber))
-        {
+        if (string.IsNullOrEmpty(phoneNumber)) 
             return !customerSettings.PhoneRequired;
-        }
 
         return customerSettings.PhoneNumberValidationUseRegex
             ? Regex.IsMatch(phoneNumber, customerSettings.PhoneNumberValidationRule, RegexOptions.CultureInvariant | RegexOptions.IgnoreCase)

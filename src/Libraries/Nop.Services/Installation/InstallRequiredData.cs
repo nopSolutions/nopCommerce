@@ -533,7 +533,6 @@ public partial class InstallationService
         if (cultureInfo != null && regionInfo != null)
         {
             if (!defaultCurrencies.Contains(regionInfo.ISOCurrencySymbol))
-            {
                 currencies.Add(new Currency
                 {
                     Name = regionInfo.CurrencyEnglishName,
@@ -547,7 +546,6 @@ public partial class InstallationService
                     UpdatedOnUtc = DateTime.UtcNow,
                     RoundingType = RoundingType.Rounding001
                 });
-            }
 
             foreach (var currency in currencies.Where(currency => currency.CurrencyCode == regionInfo.ISOCurrencySymbol))
             {
@@ -2373,7 +2371,6 @@ public partial class InstallationService
 
         //search engine names
         foreach (var topic in topics)
-        {
             await _dataProvider.InsertEntityAsync(new UrlRecord
             {
                 EntityId = topic.Id,
@@ -2382,7 +2379,6 @@ public partial class InstallationService
                 IsActive = true,
                 Slug = await ValidateSeNameAsync(topic, !string.IsNullOrEmpty(topic.Title) ? topic.Title : topic.SystemName)
             });
-        }
     }
 
     /// <summary>

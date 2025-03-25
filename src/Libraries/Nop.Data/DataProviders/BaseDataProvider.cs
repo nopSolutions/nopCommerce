@@ -134,15 +134,11 @@ public abstract partial class BaseDataProvider
     {
         if (keySelector.Body is not MemberExpression keyMember ||
             keyMember.Member is not PropertyInfo keyPropInfo)
-        {
             throw new ArgumentException($"Expression '{keySelector}' refers to method or field, not a property.");
-        }
 
         if (fieldSelector.Body is not MemberExpression member ||
             member.Member is not PropertyInfo propInfo)
-        {
             throw new ArgumentException($"Expression '{fieldSelector}' refers to a method or field, not a property.");
-        }
 
         var hashes = GetTable<TEntity>()
             .Where(predicate)
@@ -292,16 +288,12 @@ public abstract partial class BaseDataProvider
     {
         using var dataContext = CreateDataConnection();
         if (entities.All(entity => entity.Id == 0))
-        {
             foreach (var entity in entities)
                 await dataContext.DeleteAsync(entity);
-        }
         else
-        {
             await dataContext.GetTable<TEntity>()
                 .Where(e => e.Id.In(entities.Select(x => x.Id)))
                 .DeleteAsync();
-        }
     }
 
     /// <summary>

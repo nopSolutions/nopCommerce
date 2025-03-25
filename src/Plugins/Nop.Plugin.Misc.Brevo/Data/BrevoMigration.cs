@@ -131,10 +131,8 @@ public class BrevoMigration : MigrationBase
         var sendinblueSettings = _dataProvider.GetTable<Setting>().Where(x => x.Name.StartsWith("sendinbluesettings.")).ToList();
         if (sendinblueSettings.Any())
         { 
-            foreach (var setting in sendinblueSettings)
-            {
+            foreach (var setting in sendinblueSettings) 
                 setting.Name = setting.Name.Replace("sendinbluesettings", "brevosettings");
-            }
             _dataProvider.UpdateEntities(sendinblueSettings);
         }
 

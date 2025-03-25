@@ -261,14 +261,12 @@ public partial class CustomerModelFactory : ICustomerModelFactory
 
             model.AvailableCountries.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectCountry"), Value = "0" });
             foreach (var c in await _countryService.GetAllCountriesAsync(currentLanguage.Id))
-            {
                 model.AvailableCountries.Add(new SelectListItem
                 {
                     Text = await _localizationService.GetLocalizedAsync(c, x => x.Name),
                     Value = c.Id.ToString(),
                     Selected = c.Id == model.CountryId
                 });
-            }
 
             if (_customerSettings.StateProvinceEnabled)
             {
@@ -278,10 +276,8 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                 {
                     model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectState"), Value = "0" });
 
-                    foreach (var s in states)
-                    {
+                    foreach (var s in states) 
                         model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetLocalizedAsync(s, x => x.Name), Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
-                    }
                 }
                 else
                 {
@@ -442,10 +438,8 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnRegistrationPage;
         model.EnteringEmailTwice = _customerSettings.EnteringEmailTwice;
         if (setDefaultValues)
-        {
             //enable newsletter by default
             model.Newsletter = _customerSettings.NewsletterTickedByDefault;
-        }
 
         //countries and states
         if (_customerSettings.CountryEnabled)
@@ -454,14 +448,12 @@ public partial class CustomerModelFactory : ICustomerModelFactory
             model.CountryId = _customerSettings.DefaultCountryId ?? 0;
             var currentLanguage = await _workContext.GetWorkingLanguageAsync();
             foreach (var c in await _countryService.GetAllCountriesAsync(currentLanguage.Id))
-            {
                 model.AvailableCountries.Add(new SelectListItem
                 {
                     Text = await _localizationService.GetLocalizedAsync(c, x => x.Name),
                     Value = c.Id.ToString(),
                     Selected = c.Id == model.CountryId
                 });
-            }
 
             if (_customerSettings.StateProvinceEnabled)
             {
@@ -471,10 +463,8 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                 {
                     model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectState"), Value = "0" });
 
-                    foreach (var s in states)
-                    {
+                    foreach (var s in states) 
                         model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetLocalizedAsync(s, x => x.Name), Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
-                    }
                 }
                 else
                 {
@@ -499,10 +489,8 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         if (_gdprSettings.GdprEnabled)
         {
             var consents = (await _gdprService.GetAllConsentsAsync()).Where(consent => consent.DisplayDuringRegistration).ToList();
-            foreach (var consent in consents)
-            {
+            foreach (var consent in consents) 
                 model.GdprConsents.Add(await PrepareGdprConsentModelAsync(consent, false));
-            }
         }
 
         return model;
@@ -617,7 +605,6 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         if (_orderSettings.ReturnRequestsEnabled &&
             (await _returnRequestService.SearchReturnRequestsAsync(store.Id,
                 customer.Id, pageIndex: 0, pageSize: 1)).Any())
-        {
             model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
             {
                 RouteName = "CustomerReturnRequests",
@@ -625,10 +612,8 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                 Tab = (int)CustomerNavigationEnum.ReturnRequests,
                 ItemClass = "return-requests"
             });
-        }
 
         if (!_customerSettings.HideDownloadableProductsTab)
-        {
             model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
             {
                 RouteName = "CustomerDownloadableProducts",
@@ -636,10 +621,8 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                 Tab = (int)CustomerNavigationEnum.DownloadableProducts,
                 ItemClass = "downloadable-products"
             });
-        }
 
         if (!_customerSettings.HideBackInStockSubscriptionsTab)
-        {
             model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
             {
                 RouteName = "CustomerBackInStockSubscriptions",
@@ -647,10 +630,8 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                 Tab = (int)CustomerNavigationEnum.BackInStockSubscriptions,
                 ItemClass = "back-in-stock-subscriptions"
             });
-        }
 
         if (_rewardPointsSettings.Enabled)
-        {
             model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
             {
                 RouteName = "CustomerRewardPoints",
@@ -658,7 +639,6 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                 Tab = (int)CustomerNavigationEnum.RewardPoints,
                 ItemClass = "reward-points"
             });
-        }
 
         model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
         {
@@ -669,7 +649,6 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         });
 
         if (_customerSettings.AllowCustomersToUploadAvatars)
-        {
             model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
             {
                 RouteName = "CustomerAvatar",
@@ -677,10 +656,8 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                 Tab = (int)CustomerNavigationEnum.Avatar,
                 ItemClass = "customer-avatar"
             });
-        }
 
         if (_forumSettings.ForumsEnabled && _forumSettings.AllowCustomersToManageSubscriptions)
-        {
             model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
             {
                 RouteName = "CustomerForumSubscriptions",
@@ -688,9 +665,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                 Tab = (int)CustomerNavigationEnum.ForumSubscriptions,
                 ItemClass = "forum-subscriptions"
             });
-        }
         if (_catalogSettings.ShowProductReviewsTabOnAccountPage)
-        {
             model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
             {
                 RouteName = "CustomerProductReviews",
@@ -698,9 +673,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                 Tab = (int)CustomerNavigationEnum.ProductReviews,
                 ItemClass = "customer-reviews"
             });
-        }
         if (_vendorSettings.AllowVendorsToEditInfo && await _workContext.GetCurrentVendorAsync() != null)
-        {
             model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
             {
                 RouteName = "CustomerVendorInfo",
@@ -708,9 +681,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                 Tab = (int)CustomerNavigationEnum.VendorInfo,
                 ItemClass = "customer-vendor-info"
             });
-        }
         if (_gdprSettings.GdprEnabled)
-        {
             model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
             {
                 RouteName = "GdprTools",
@@ -718,10 +689,8 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                 Tab = (int)CustomerNavigationEnum.GdprTools,
                 ItemClass = "customer-gdpr"
             });
-        }
 
         if (_customerSettings.AllowCustomersToCheckGiftCardBalance)
-        {
             model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
             {
                 RouteName = "CheckGiftCardBalance",
@@ -729,11 +698,9 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                 Tab = (int)CustomerNavigationEnum.CheckGiftCardBalance,
                 ItemClass = "customer-check-gift-card-balance"
             });
-        }
 
         if (await _permissionService.AuthorizeAsync(StandardPermission.Security.ENABLE_MULTI_FACTOR_AUTHENTICATION) &&
             await _multiFactorAuthenticationPluginManager.HasActivePluginsAsync())
-        {
             model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
             {
                 RouteName = "MultiFactorAuthenticationSettings",
@@ -741,7 +708,6 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                 Tab = (int)CustomerNavigationEnum.MultiFactorAuthentication,
                 ItemClass = "customer-multiFactor-authentication"
             });
-        }
 
         model.SelectedTab = selectedTabId;
 

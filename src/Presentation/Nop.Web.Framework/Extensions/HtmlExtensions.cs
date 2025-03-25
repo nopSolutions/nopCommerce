@@ -83,13 +83,9 @@ public static class HtmlExtensions
         var standardTabSelected = string.IsNullOrEmpty(tabNameToSelect) || standardTabName == tabNameToSelect;
         tabStrip.AppendLine(string.Format("<li class=\"nav-item\">"));
         if (standardTabSelected)
-        {
             tabStrip.AppendLine($"<a class=\"nav-link active\" data-tab-name=\"{standardTabName}\" href=\"#{standardTabName}\" data-toggle=\"pill\" role=\"tab\" aria-selected=\"false\">{await localizationService.GetResourceAsync("Admin.Common.Standard")}</a>");
-        }
         else
-        {
             tabStrip.AppendLine($"<a class=\"nav-link\" data-tab-name=\"{standardTabName}\" href=\"#{standardTabName}\" data-toggle=\"pill\" role=\"tab\" aria-selected=\"false\">{await localizationService.GetResourceAsync("Admin.Common.Standard")}</a>");
-        }
         tabStrip.AppendLine("</li>");
 
         foreach (var locale in helper.ViewData.Model.Locales)

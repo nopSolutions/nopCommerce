@@ -133,7 +133,6 @@ public partial class LogModelFactory : ILogModelFactory
     public virtual async Task<LogModel> PrepareLogModelAsync(LogModel model, Log log, bool excludeProperties = false)
     {
         if (log != null)
-        {
             //fill in model values from the entity
             if (model == null)
             {
@@ -145,7 +144,7 @@ public partial class LogModelFactory : ILogModelFactory
                 model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(log.CreatedOnUtc, DateTimeKind.Utc);
                 model.CustomerEmail = log.CustomerId.HasValue ? (await _customerService.GetCustomerByIdAsync(log.CustomerId.Value))?.Email : string.Empty;
             }
-        }
+
         return model;
     }
 

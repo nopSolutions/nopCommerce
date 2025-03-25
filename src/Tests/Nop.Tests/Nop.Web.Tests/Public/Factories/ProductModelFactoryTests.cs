@@ -268,10 +268,8 @@ public class ProductModelFactoryTests : WebTest
                                         var additionalCharge = decimal.Zero;
                                         var attributeValues = await _productAttributeParser.ParseProductAttributeValuesAsync(attributesXml);
                                         foreach (var attributeValue in attributeValues)
-                                        {
                                             additionalCharge += await _priceCalculationService.
                                                 GetProductAttributeValuePriceAdjustmentAsync(product, attributeValue, customer, store);
-                                        }
                                         if (additionalCharge != decimal.Zero)
                                         {
                                             (var priceWithoutDiscount, var priceWithDiscount, _, _) = await _priceCalculationService
@@ -521,9 +519,7 @@ public class ProductModelFactoryTests : WebTest
                     if (product.CallForPrice &&
                         //also check whether the current user is impersonated
                         (!_orderSettings.AllowAdminsToBuyCallForPriceProducts || _workContext.OriginalCustomerIfImpersonated == null))
-                    {
                         model.CallForPrice = true;
-                    }
                     else
                     {
                         var customer = await _workContext.GetCurrentCustomerAsync();

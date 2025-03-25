@@ -159,10 +159,8 @@ public partial class SettingController : BaseAdminController
     {
         var store = await _storeService.GetStoreByIdAsync(storeid);
         if (store != null || storeid == 0)
-        {
             await _genericAttributeService
                 .SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.AdminAreaStoreScopeConfigurationAttribute, storeid);
-        }
 
         //home page
         if (string.IsNullOrEmpty(returnUrl))
@@ -916,7 +914,6 @@ public partial class SettingController : BaseAdminController
 
             //order ident
             if (model.OrderIdent.HasValue)
-            {
                 try
                 {
                     await _dataProvider.SetTableIdentAsync<Order>(model.OrderIdent.Value);
@@ -925,7 +922,6 @@ public partial class SettingController : BaseAdminController
                 {
                     _notificationService.ErrorNotification(exc.Message);
                 }
-            }
 
             //activity log
             await _customerActivityService.InsertActivityAsync("EditSettings", await _localizationService.GetResourceAsync("ActivityLog.EditSettings"));
@@ -1114,7 +1110,6 @@ public partial class SettingController : BaseAdminController
             customerSettings = model.CustomerSettings.ToSettings(customerSettings);
 
             if (customerSettings.UsernameValidationEnabled && customerSettings.UsernameValidationUseRegex)
-            {
                 try
                 {
                     //validate regex rule
@@ -1129,10 +1124,8 @@ public partial class SettingController : BaseAdminController
 
                     _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Settings.CustomerSettings.RegexValidationRule.Error"));
                 }
-            }
 
             if (customerSettings.PhoneNumberValidationEnabled && customerSettings.PhoneNumberValidationUseRegex)
-            {
                 try
                 {
                     //validate regex rule
@@ -1147,7 +1140,6 @@ public partial class SettingController : BaseAdminController
 
                     _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Settings.CustomerSettings.PhoneNumberRegexValidationRule.Error"));
                 }
-            }
 
             await _settingService.SaveSettingAsync(customerSettings);
 
@@ -1535,10 +1527,8 @@ public partial class SettingController : BaseAdminController
 
             if (captchaSettings.Enabled &&
                 (string.IsNullOrWhiteSpace(captchaSettings.ReCaptchaPublicKey) || string.IsNullOrWhiteSpace(captchaSettings.ReCaptchaPrivateKey)))
-            {
                 //captcha is enabled but the keys are not entered
                 _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Settings.GeneralCommon.CaptchaAppropriateKeysNotEnteredError"));
-            }
 
             //PDF settings
             var pdfSettings = await _settingService.LoadSettingAsync<PdfSettings>(storeScope);
@@ -1563,10 +1553,8 @@ public partial class SettingController : BaseAdminController
             //localization settings
             var localizationSettings = await _settingService.LoadSettingAsync<LocalizationSettings>(storeScope);
             localizationSettings.UseImagesForLanguageSelection = model.LocalizationSettings.UseImagesForLanguageSelection;
-            if (localizationSettings.SeoFriendlyUrlsForLanguagesEnabled != model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
-            {
+            if (localizationSettings.SeoFriendlyUrlsForLanguagesEnabled != model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled) 
                 localizationSettings.SeoFriendlyUrlsForLanguagesEnabled = model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled;
-            }
 
             localizationSettings.AutomaticallyDetectLanguage = model.LocalizationSettings.AutomaticallyDetectLanguage;
             localizationSettings.LoadAllLocaleRecordsOnStartup = model.LocalizationSettings.LoadAllLocaleRecordsOnStartup;
@@ -1808,10 +1796,8 @@ public partial class SettingController : BaseAdminController
 
             //delete old favicon icon if exist
             var oldFaviconIconPath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.OldFaviconIconName, storeScope));
-            if (_fileProvider.FileExists(oldFaviconIconPath))
-            {
+            if (_fileProvider.FileExists(oldFaviconIconPath)) 
                 _fileProvider.DeleteFile(oldFaviconIconPath);
-            }
 
             //activity log
             await _customerActivityService.InsertActivityAsync("UploadIcons", string.Format(await _localizationService.GetResourceAsync("ActivityLog.UploadNewIcons"), storeScope));
@@ -1856,10 +1842,8 @@ public partial class SettingController : BaseAdminController
             ?? throw new ArgumentException("No setting found with the specified id");
 
         if (!setting.Name.Equals(model.Name, StringComparison.InvariantCultureIgnoreCase))
-        {
             //setting name has been changed
             await _settingService.DeleteSettingAsync(setting);
-        }
 
         await _settingService.SetSettingAsync(model.Name, model.Value, setting.StoreId);
 
@@ -1910,13 +1894,11 @@ public partial class SettingController : BaseAdminController
     {
         //LoadAllLocaleRecordsOnStartup is set and distributed cache is used, so display warning
         if (_appSettings.Get<DistributedCacheConfig>().Enabled && _appSettings.Get<DistributedCacheConfig>().DistributedCacheType != DistributedCacheType.Memory && loadAllLocaleRecordsOnStartup)
-        {
             return Json(new
             {
                 Result = await _localizationService
                     .GetResourceAsync("Admin.Configuration.Settings.GeneralCommon.LoadAllLocaleRecordsOnStartup.Warning")
             });
-        }
 
         return Json(new { Result = string.Empty });
     }
@@ -1926,13 +1908,11 @@ public partial class SettingController : BaseAdminController
     {
         //ForceMultifactorAuthentication is set and the store haven't active Authentication provider , so display warning
         if (forceMultifactorAuthentication && !await _multiFactorAuthenticationPluginManager.HasActivePluginsAsync())
-        {
             return Json(new
             {
                 Result = await _localizationService
                     .GetResourceAsync("Admin.Configuration.Settings.CustomerUser.ForceMultifactorAuthentication.Warning")
             });
-        }
 
         return Json(new { Result = string.Empty });
     }
@@ -1945,13 +1925,11 @@ public partial class SettingController : BaseAdminController
         var localizationSettings = await _settingService.LoadSettingAsync<LocalizationSettings>(storeScope);
 
         if (seoFriendlyUrlsForLanguagesEnabled != localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
-        {
             return Json(new
             {
                 Result = await _localizationService
                     .GetResourceAsync("Admin.Configuration.Settings.GeneralCommon.SeoFriendlyUrlsForLanguagesEnabled.Warning")
             });
-        }
 
         return Json(new { Result = string.Empty });
     }

@@ -187,10 +187,8 @@ public partial class CommonModelFactory : ICommonModelFactory
             var privateMessages = await _forumService.GetAllPrivateMessagesAsync(store.Id,
                 0, customer.Id, false, null, false, string.Empty, 0, 1);
 
-            if (privateMessages.TotalCount > 0)
-            {
+            if (privateMessages.TotalCount > 0) 
                 result = privateMessages.TotalCount;
-            }
         }
 
         return result;

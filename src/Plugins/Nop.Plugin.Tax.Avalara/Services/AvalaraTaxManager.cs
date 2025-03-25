@@ -374,25 +374,19 @@ public class AvalaraTaxManager : IDisposable
         //tax is based on billing address
         if (_taxSettings.TaxBasedOn == TaxBasedOn.BillingAddress &&
             await _addressService.GetAddressByIdAsync(order.BillingAddressId) is Address billingAddress)
-        {
             address = billingAddress;
-        }
 
         //tax is based on shipping address
         if (_taxSettings.TaxBasedOn == TaxBasedOn.ShippingAddress &&
             order.ShippingAddressId.HasValue &&
             await _addressService.GetAddressByIdAsync(order.ShippingAddressId.Value) is Address shippingAddress)
-        {
             address = shippingAddress;
-        }
 
         //tax is based on pickup point address
         if (_taxSettings.TaxBasedOnPickupPointAddress &&
             order.PickupAddressId.HasValue &&
             await _addressService.GetAddressByIdAsync(order.PickupAddressId.Value) is Address pickupAddress)
-        {
             address = pickupAddress;
-        }
 
         //or use default address for tax calculation
         address ??= await _addressService.GetAddressByIdAsync(_taxSettings.DefaultTaxAddressId);
@@ -542,10 +536,8 @@ public class AvalaraTaxManager : IDisposable
             paymentItem.taxCode = CommonHelper.EnsureMaximumLength(paymentTaxCategory?.Name, 25);
         }
         else
-        {
             //if payment is non-taxable, set it as exempt
             paymentItem.exemptionCode = "Payment-fee-non-taxable";
-        }
 
         return paymentItem;
     }
@@ -581,10 +573,8 @@ public class AvalaraTaxManager : IDisposable
             shippingItem.taxCode = CommonHelper.EnsureMaximumLength(shippingTaxCategory?.Name, 25);
         }
         else
-        {
             //if shipping is non-taxable, set it as exempt
             shippingItem.exemptionCode = "Shipping-rate-non-taxable";
-        }
 
         return shippingItem;
     }
@@ -1097,7 +1087,6 @@ public class AvalaraTaxManager : IDisposable
 
                 //add the product as exported item
                 if (!string.IsNullOrEmpty(product.Sku))
-                {
                     exportedItems.Add(new ItemModel
                     {
                         createdDate = DateTime.UtcNow,
@@ -1105,7 +1094,6 @@ public class AvalaraTaxManager : IDisposable
                         itemCode = CommonHelper.EnsureMaximumLength(product.Sku, 50),
                         taxCode = taxCode
                     });
-                }
 
                 //add product combinations
                 exportedItems.AddRange(combinations.Select(combination => new ItemModel
@@ -1760,10 +1748,8 @@ public class AvalaraTaxManager : IDisposable
             //log request
             var stringBuilder = new StringBuilder();
             stringBuilder.Append(nameof(request.Headers));
-            foreach (var header in request.Headers)
-            {
+            foreach (var header in request.Headers) 
                 stringBuilder.AppendLine($"{header.Key}: {header.Value}");
-            }
             stringBuilder.AppendLine($"{nameof(request.Path)}: {request.Path}");
             stringBuilder.AppendLine($"{nameof(request.QueryString)}: {request.QueryString}");
             stringBuilder.AppendLine($"{nameof(request.Body)}: {requestContent}");
@@ -1805,10 +1791,8 @@ public class AvalaraTaxManager : IDisposable
             return;
 
         if (disposing)
-        {
             if (_serviceClient != null)
                 _serviceClient.CallCompleted -= OnCallCompleted;
-        }
 
         _disposed = true;
     }

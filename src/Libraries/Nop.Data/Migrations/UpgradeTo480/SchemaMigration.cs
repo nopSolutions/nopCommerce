@@ -33,48 +33,40 @@ public class SchemaMigration : ForwardOnlyMigration
         var restrictFromVendorsColumnName = nameof(Category.RestrictFromVendors);
 
         if (!Schema.Table(categoryTableName).Column(restrictFromVendorsColumnName).Exists())
-        {
             Alter.Table(categoryTableName)
                 .AddColumn(restrictFromVendorsColumnName)
                 .AsBoolean()
                 .NotNullable()
                 .WithDefaultValue(false);
-        }
 
         //#7281
         var customerTableName = nameof(Customer);
         var mustChangePasswordColumnName = nameof(Customer.MustChangePassword);
 
         if (!Schema.Table(customerTableName).Column(mustChangePasswordColumnName).Exists())
-        {
             Alter.Table(customerTableName)
                 .AddColumn(mustChangePasswordColumnName)
                 .AsBoolean()
                 .NotNullable()
                 .WithDefaultValue(false);
-        }
 
         //#7294
         var topicTableName = nameof(Topic);
         var topicSystemNameColumnName = nameof(Topic.SystemName);
 
         if (!Schema.Table(topicTableName).Index("IX_Topic_SystemName").Exists())
-        {
             Alter.Table(topicTableName)
                 .AlterColumn(topicSystemNameColumnName)
                 .AsString(400)
                 .Nullable();
-        }
 
         //#7241
         var discountTableName = nameof(Discount);
         var vendorIdDiscountColumnName = nameof(Discount.VendorId);
 
         if (!Schema.Table(discountTableName).Column(vendorIdDiscountColumnName).Exists())
-        {
             Alter.Table(discountTableName)
                 .AddColumn(vendorIdDiscountColumnName).AsInt32().ForeignKey<Vendor>(onDelete: Rule.SetNull).Nullable();
-        }
 
         //#7243
         var vendorTableName = nameof(Vendor);

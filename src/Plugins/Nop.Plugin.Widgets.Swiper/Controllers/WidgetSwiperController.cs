@@ -212,9 +212,7 @@ public class WidgetSwiperController : BasePluginController
         var sliderSettings = await _settingService.LoadSettingAsync<SwiperSettings>(storeScope);
 
         if (!slides?.Any() == true)
-        {
             await _settingService.DeleteSettingAsync(sliderSettings, setting => setting.Slides, storeScope);
-        }
         else
         {
             sliderSettings.Slides = JsonConvert.SerializeObject(slides);

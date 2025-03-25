@@ -264,7 +264,6 @@ public partial class NopStartup : INopStartup
 
         var settings = typeFinder.FindClassesOfType(typeof(ISettings), false).ToList();
         foreach (var setting in settings)
-        {
             services.AddScoped(setting, serviceProvider =>
             {
                 var storeId = DataSettingsManager.IsDatabaseInstalled()
@@ -273,7 +272,6 @@ public partial class NopStartup : INopStartup
 
                 return serviceProvider.GetRequiredService<ISettingService>().LoadSettingAsync(setting, storeId).Result;
             });
-        }
 
         //picture service
         if (appSettings.Get<AzureBlobConfig>().Enabled)

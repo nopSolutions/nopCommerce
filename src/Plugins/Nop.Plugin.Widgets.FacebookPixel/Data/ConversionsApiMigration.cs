@@ -43,26 +43,20 @@ public class ConversionsApiMigration : MigrationBase
 
         //add ConversionsApiEnabled column if not exists
         if (!Schema.Table(facebookPixelConfigurationTableName).Column(nameof(FacebookPixelConfiguration.ConversionsApiEnabled)).Exists())
-        {
             Alter.Table(facebookPixelConfigurationTableName)
                 .AddColumn(nameof(FacebookPixelConfiguration.ConversionsApiEnabled))
                 .AsBoolean().NotNullable().SetExistingRowsTo(false);
-        }
 
         //add AccessToken column if not exists
         if (!Schema.Table(facebookPixelConfigurationTableName).Column(nameof(FacebookPixelConfiguration.AccessToken)).Exists())
-        {
             Alter.Table(facebookPixelConfigurationTableName)
                 .AddColumn(nameof(FacebookPixelConfiguration.AccessToken)).AsString().Nullable();
-        }
 
         //rename Enabled column to PixelScriptEnabled
         if (Schema.Table(facebookPixelConfigurationTableName).Column("Enabled").Exists())
-        {
             Rename.Column("Enabled")
                 .OnTable(facebookPixelConfigurationTableName)
                 .To(nameof(FacebookPixelConfiguration.PixelScriptEnabled));
-        }
 
         //locales
         var (languageId, _) = this.GetLanguageData();

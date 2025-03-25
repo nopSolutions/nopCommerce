@@ -1077,12 +1077,9 @@ public class OmnisendService
         //    await _omnisendHttpClient.PerformRequestAsync($"{OmnisendDefaults.CartsApiUrl}/{await _omnisendCustomerService.GetCartIdAsync(customer)}/{OmnisendDefaults.ProductsEndpoint}/{shoppingCartItem.Id}", httpMethod: HttpMethod.Delete);
 
         if (!cart.Any())
-        {
             //if (sendRequest)
             //    await _omnisendHttpClient.PerformRequestAsync($"{OmnisendDefaults.CartsApiUrl}/{await _omnisendCustomerService.GetCartIdAsync(customer)}", httpMethod: HttpMethod.Delete);
-
             await _omnisendCustomerService.DeleteCurrentCustomerShoppingCartIdAsync(customer);
-        }
     }
 
     #endregion

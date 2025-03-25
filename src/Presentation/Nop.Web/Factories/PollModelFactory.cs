@@ -64,7 +64,6 @@ public partial class PollModelFactory : IPollModelFactory
         foreach (var answer in answers)
             model.TotalVotes += answer.NumberOfVotes;
         foreach (var pa in answers)
-        {
             model.Answers.Add(new PollAnswerModel
             {
                 Id = pa.Id,
@@ -72,7 +71,6 @@ public partial class PollModelFactory : IPollModelFactory
                 NumberOfVotes = pa.NumberOfVotes,
                 PercentOfTotalVotes = model.TotalVotes > 0 ? ((Convert.ToDouble(pa.NumberOfVotes) / Convert.ToDouble(model.TotalVotes)) * Convert.ToDouble(100)) : 0,
             });
-        }
 
         return model;
     }

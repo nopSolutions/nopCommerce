@@ -151,12 +151,8 @@ public partial class PaymentController : BaseAdminController
 
             var newCountryIds = new List<int>();
             foreach (var c in countries)
-            {
                 if (countryIdsToRestrict.Contains(c.Id))
-                {
                     newCountryIds.Add(c.Id);
-                }
-            }
 
             await _paymentPluginManager.SaveRestrictedCountriesAsync(pm, newCountryIds);
         }

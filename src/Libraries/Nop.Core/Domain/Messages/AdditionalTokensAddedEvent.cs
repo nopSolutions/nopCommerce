@@ -16,10 +16,8 @@ public partial class AdditionalTokensAddedEvent
     /// <param name="additionalTokens">Additional tokens</param>
     public void AddTokens(params string[] additionalTokens)
     {
-        foreach (var additionalToken in additionalTokens)
-        {
+        foreach (var additionalToken in additionalTokens) 
             AdditionalTokens.Add(additionalToken);
-        }
     }
 
     /// <summary>

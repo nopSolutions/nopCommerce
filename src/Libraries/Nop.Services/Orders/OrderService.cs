@@ -82,7 +82,6 @@ public partial class OrderService : IOrderService
         {
             var orderItems = await GetOrderItemsAsync(order.Id, isShipEnabled: true);
             if (orderItems?.Any() == true)
-            {
                 foreach (var shipment in shipments)
                 {
                     if (predicate?.Invoke(shipment) == false)
@@ -97,7 +96,6 @@ public partial class OrderService : IOrderService
                     if (shipmentItems?.Any(hasPositiveQuantity) == true)
                         return true;
                 }
-            }
         }
 
         return false;
@@ -625,10 +623,8 @@ public partial class OrderService : IOrderService
             var shipment = shipments[i];
             var si = (await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
                 .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
-            if (si != null)
-            {
+            if (si != null) 
                 totalInShipments += si.Quantity;
-            }
         }
 
         return totalInShipments;
@@ -691,15 +687,11 @@ public partial class OrderService : IOrderService
                     //expiration date
                     if (product.DownloadExpirationDays.HasValue)
                     {
-                        if (order.PaidDateUtc.Value.AddDays(product.DownloadExpirationDays.Value) > DateTime.UtcNow)
-                        {
+                        if (order.PaidDateUtc.Value.AddDays(product.DownloadExpirationDays.Value) > DateTime.UtcNow) 
                             return true;
-                        }
                     }
                     else
-                    {
                         return true;
-                    }
                 }
 
                 break;
@@ -709,15 +701,11 @@ public partial class OrderService : IOrderService
                     //expiration date
                     if (product.DownloadExpirationDays.HasValue)
                     {
-                        if (order.CreatedOnUtc.AddDays(product.DownloadExpirationDays.Value) > DateTime.UtcNow)
-                        {
+                        if (order.CreatedOnUtc.AddDays(product.DownloadExpirationDays.Value) > DateTime.UtcNow) 
                             return true;
-                        }
                     }
                     else
-                    {
                         return true;
-                    }
                 }
 
                 break;
@@ -799,10 +787,8 @@ public partial class OrderService : IOrderService
 
         var query = _orderNoteRepository.Table.Where(on => on.OrderId == orderId);
 
-        if (displayToCustomer.HasValue)
-        {
+        if (displayToCustomer.HasValue) 
             query = query.Where(on => on.DisplayToCustomer == displayToCustomer);
-        }
 
         return await query.ToListAsync();
     }

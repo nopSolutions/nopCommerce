@@ -400,18 +400,14 @@ public partial class Pager : IHtmlContent
         if (_showPagerItems && (_model.TotalPages > 1))
         {
             if (_showFirst)
-            {
                 //first page
                 if ((_model.PageIndex >= 3) && (_model.TotalPages > _individualPagesDisplayedCount))
                     links.Append(await CreatePageLinkAsync(1, await localizationService.GetResourceAsync("Pager.First"), _firstPageCssClass));
-            }
 
             if (_showPrevious)
-            {
                 //previous page
                 if (_model.PageIndex > 0)
                     links.Append(await CreatePageLinkAsync(_model.PageIndex, await localizationService.GetResourceAsync("Pager.Previous"), _previousPageCssClass));
-            }
 
             if (_showIndividualPages)
             {
@@ -419,27 +415,21 @@ public partial class Pager : IHtmlContent
                 var firstIndividualPageIndex = GetFirstIndividualPageIndex();
                 var lastIndividualPageIndex = GetLastIndividualPageIndex();
                 for (var i = firstIndividualPageIndex; i <= lastIndividualPageIndex; i++)
-                {
                     if (_model.PageIndex == i)
                         links.AppendFormat("<li class=\"" + _currentPageCssClass + "\"><span>{0}</span></li>", (i + 1));
                     else
                         links.Append(await CreatePageLinkAsync(i + 1, (i + 1).ToString(), _individualPageCssClass));
-                }
             }
 
             if (_showNext)
-            {
                 //next page
                 if ((_model.PageIndex + 1) < _model.TotalPages)
                     links.Append(await CreatePageLinkAsync(_model.PageIndex + 2, await localizationService.GetResourceAsync("Pager.Next"), _nextPageCssClass));
-            }
 
             if (_showLast)
-            {
                 //last page
                 if (((_model.PageIndex + 3) < _model.TotalPages) && (_model.TotalPages > _individualPagesDisplayedCount))
                     links.Append(await CreatePageLinkAsync(_model.TotalPages, await localizationService.GetResourceAsync("Pager.Last"), _lastPageCssClass));
-            }
         }
 
         var result = links.ToString();
@@ -522,20 +512,16 @@ public partial class Pager : IHtmlContent
         {
             var value = ViewContext.HttpContext.Request.Query[key].ToString();
             if (_renderEmptyParameters && string.IsNullOrEmpty(value))
-            {
                 //we store query string parameters with empty values separately
                 //we need to do it because they are not properly processed in the UrlHelper.GenerateUrl method (dropped for some reasons)
                 parametersWithEmptyValues.Add(key);
-            }
             else
             {
                 if (_booleanParameterNames.Contains(key, StringComparer.InvariantCultureIgnoreCase))
-                {
                     //little hack here due to ugly MVC implementation
                     //find more info here: http://www.mindstorminteractive.com/topics/jquery-fix-asp-net-mvc-checkbox-truefalse-value/
                     if (!string.IsNullOrEmpty(value) && value.Equals("true,false", StringComparison.InvariantCultureIgnoreCase))
                         value = "true";
-                }
 
                 routeValues[key] = value;
             }

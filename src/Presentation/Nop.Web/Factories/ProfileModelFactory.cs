@@ -118,13 +118,11 @@ public partial class ProfileModelFactory : IProfileModelFactory
         //avatar
         var avatarUrl = "";
         if (_customerSettings.AllowCustomersToUploadAvatars)
-        {
             avatarUrl = await _pictureService.GetPictureUrlAsync(
                 await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute),
                 _mediaSettings.AvatarPictureSize,
                 _customerSettings.DefaultAvatarEnabled,
                 defaultPictureType: PictureType.Avatar);
-        }
 
         //location
         var locationEnabled = false;
@@ -136,13 +134,9 @@ public partial class ProfileModelFactory : IProfileModelFactory
             var countryId = customer.CountryId;
             var country = await _countryService.GetCountryByIdAsync(countryId);
             if (country != null)
-            {
                 location = await _localizationService.GetLocalizedAsync(country, x => x.Name);
-            }
             else
-            {
                 locationEnabled = false;
-            }
         }
 
         //private message
@@ -171,13 +165,11 @@ public partial class ProfileModelFactory : IProfileModelFactory
         var dateOfBirthEnabled = false;
         var dateOfBirth = string.Empty;
         if (_customerSettings.DateOfBirthEnabled)
-        {
             if (customer.DateOfBirth.HasValue)
             {
                 dateOfBirthEnabled = true;
                 dateOfBirth = customer.DateOfBirth.Value.ToString("D");
             }
-        }
 
         var model = new ProfileInfoModel
         {
@@ -210,10 +202,8 @@ public partial class ProfileModelFactory : IProfileModelFactory
     {
         ArgumentNullException.ThrowIfNull(customer);
 
-        if (page > 0)
-        {
+        if (page > 0) 
             page -= 1;
-        }
 
         var pageSize = _forumSettings.LatestCustomerPostsPageSize;
 
@@ -231,9 +221,7 @@ public partial class ProfileModelFactory : IProfileModelFactory
                 posted = string.Format(await _localizationService.GetResourceAsync("Common.RelativeDateTime.Past"), postedAgo);
             }
             else
-            {
                 posted = (await _dateTimeHelper.ConvertToUserTimeAsync(forumPost.CreatedOnUtc, DateTimeKind.Utc)).ToString("f");
-            }
 
             var topic = await _forumService.GetTopicByIdAsync(forumPost.TopicId);
 

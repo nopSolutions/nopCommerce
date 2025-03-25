@@ -138,10 +138,8 @@ public partial class SqLiteNopDataProvider : BaseDataProvider, INopDataProvider
     public override Task BulkDeleteEntitiesAsync<TEntity>(IList<TEntity> entities)
     {
         using (new ReaderWriteLockDisposable(_locker))
-        {
             foreach (var entity in entities)
                 DataContext.Delete(entity);
-        }
 
         return Task.CompletedTask;
     }

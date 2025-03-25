@@ -19,11 +19,9 @@ public class SpecificationAttributeGroupingMigration : ForwardOnlyMigration
             Create.TableFor<SpecificationAttributeGroup>();
 
         if (!Schema.Table(NameCompatibilityManager.GetTableName(typeof(SpecificationAttribute))).Column(nameof(SpecificationAttribute.SpecificationAttributeGroupId)).Exists())
-        {
             //add new column
             Alter.Table(NameCompatibilityManager.GetTableName(typeof(SpecificationAttribute)))
                 .AddColumn(nameof(SpecificationAttribute.SpecificationAttributeGroupId)).AsInt32().Nullable().ForeignKey<SpecificationAttributeGroup>();
-        }
     }
 
     #endregion

@@ -116,10 +116,8 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
         {
             //exclude Form and CustomProperties from mapping BaseNopModel
             if (typeof(BaseNopModel).IsAssignableFrom(mapConfiguration.DestinationType))
-            {
                 //map.ForMember(nameof(BaseNopModel.Form), options => options.Ignore());
                 map.ForMember(nameof(BaseNopModel.CustomProperties), options => options.Ignore());
-            }
 
             //exclude ActiveStoreScopeConfiguration from mapping ISettingsModel
             if (typeof(ISettingsModel).IsAssignableFrom(mapConfiguration.DestinationType))

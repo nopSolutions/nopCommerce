@@ -162,10 +162,8 @@ public partial class AzurePictureService : PictureService
         var prefix = $"{picture.Id:0000000}";
 
         var tasks = new List<Task>();
-        await foreach (var blob in _blobContainerClient.GetBlobsAsync(BlobTraits.All, BlobStates.All, prefix))
-        {
+        await foreach (var blob in _blobContainerClient.GetBlobsAsync(BlobTraits.All, BlobStates.All, prefix)) 
             tasks.Add(_blobContainerClient.DeleteBlobIfExistsAsync(blob.Name, DeleteSnapshotsOption.IncludeSnapshots));
-        }
         await Task.WhenAll(tasks);
 
         await _staticCacheManager.RemoveByPrefixAsync(NopMediaDefaults.ThumbsExistsPrefix);
@@ -213,12 +211,10 @@ public partial class AzurePictureService : PictureService
         //set mime type
         BlobHttpHeaders headers = null;
         if (!string.IsNullOrWhiteSpace(mimeType))
-        {
             headers = new BlobHttpHeaders
             {
                 ContentType = mimeType
             };
-        }
 
         //set cache control
         if (!string.IsNullOrWhiteSpace(_mediaSettings.AzureCacheControlHeader))

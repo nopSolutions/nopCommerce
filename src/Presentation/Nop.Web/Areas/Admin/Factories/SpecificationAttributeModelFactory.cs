@@ -120,13 +120,11 @@ public partial class SpecificationAttributeModelFactory : ISpecificationAttribut
             .GetSpecificationAttributeGroupsAsync(searchModel.Page - 1, searchModel.PageSize);
 
         if (searchModel.Page == 1)
-        {
             //dislpay default group with non-grouped specification attributes on first page
             specificationAttributeGroups.Insert(0, new SpecificationAttributeGroup
             {
                 Name = await _localizationService.GetResourceAsync("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.DefaultGroupName")
             });
-        }
 
         //prepare list model
         var model = new SpecificationAttributeGroupListModel().PrepareToGrid(searchModel, specificationAttributeGroups, () =>

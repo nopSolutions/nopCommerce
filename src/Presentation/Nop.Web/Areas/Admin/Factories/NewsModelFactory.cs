@@ -264,11 +264,9 @@ public partial class NewsModelFactory : INewsModelFactory
                 commentModel.NewsItemTitle = (await _newsService.GetNewsByIdAsync(newsComment.NewsItemId))?.Title;
 
                 if ((await _customerService.GetCustomerByIdAsync(newsComment.CustomerId)) is Customer customer)
-                {
                     commentModel.CustomerInfo = (await _customerService.IsRegisteredAsync(customer))
                         ? customer.Email
                         : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
-                }
 
                 commentModel.CommentText = _htmlFormatter.FormatText(newsComment.CommentText, false, true, false, false, false, false);
                 commentModel.StoreName = storeNames.TryGetValue(newsComment.StoreId, out var value) ? value : "Deleted";

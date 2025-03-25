@@ -102,24 +102,18 @@ public partial class TopicController : BasePublicController
             !_topicService.TopicIsAvailable(topic) ||
             !await _storeMappingService.AuthorizeAsync(topic) ||
             !await _aclService.AuthorizeAsync(topic))
-        {
             return Json(authResult with { Error = "Topic is not found" });
-        }
 
         if (topic.IsPasswordProtected)
         {
             if (topic.Password != null && topic.Password.Equals(password))
-            {
                 return Json(authResult with { 
                     Authenticated = true, 
                     Title = await _localizationService.GetLocalizedAsync(topic, x => x.Title),
                     Body = await _localizationService.GetLocalizedAsync(topic, x => x.Body)
                 });
-            }
             else
-            {
                 return Json(authResult with { Error = await _localizationService.GetResourceAsync("Topic.WrongPassword") });
-            }
         }
 
         return Json(authResult);

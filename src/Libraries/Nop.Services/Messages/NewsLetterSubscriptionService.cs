@@ -54,13 +54,9 @@ public partial class NewsLetterSubscriptionService : INewsLetterSubscriptionServ
             return;
 
         if (isSubscribe)
-        {
             await _eventPublisher.PublishNewsletterSubscribeAsync(subscription);
-        }
         else
-        {
             await _eventPublisher.PublishNewsletterUnsubscribeAsync(subscription);
-        }
     }
 
     #endregion
@@ -110,17 +106,13 @@ public partial class NewsLetterSubscriptionService : INewsLetterSubscriptionServ
         //Publish the subscription event 
         if ((originalSubscription.Active == false && newsLetterSubscription.Active) ||
             (newsLetterSubscription.Active && originalSubscription.Email != newsLetterSubscription.Email))
-        {
             //If the previous entry was false, but this one is true, publish a subscribe.
             await PublishSubscriptionEventAsync(newsLetterSubscription, true, publishSubscriptionEvents);
-        }
 
         if (originalSubscription.Active && newsLetterSubscription.Active &&
             originalSubscription.Email != newsLetterSubscription.Email)
-        {
             //If the two emails are different publish an unsubscribe.
             await PublishSubscriptionEventAsync(originalSubscription, false, publishSubscriptionEvents);
-        }
 
         if (originalSubscription.Active && !newsLetterSubscription.Active)
             //If the previous entry was true, but this one is false

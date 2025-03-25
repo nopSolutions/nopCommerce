@@ -45,10 +45,8 @@ public partial class AppSettingsHelper
         var configuration = JsonConvert.DeserializeObject<AppSettings>(fileProvider.ReadAllText(filePath, Encoding.UTF8))
                                 ?.Configuration
                             ?? new();
-        foreach (var config in configurations)
-        {
+        foreach (var config in configurations) 
             configuration[config.Name] = JToken.FromObject(config);
-        }
 
         //sort configurations for display by order (e.g. data configuration with 0 will be the first)
         appSettings.Configuration = configuration

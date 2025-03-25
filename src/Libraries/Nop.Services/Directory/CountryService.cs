@@ -84,14 +84,12 @@ public partial class CountryService : ICountryService
             });
 
             if (languageId > 0)
-            {
                 //we should sort countries by localized names when they have the same display order
                 countries = await countries
                     .ToAsyncEnumerable()
                     .OrderBy(c => c.DisplayOrder)
                     .ThenByAwait(async c => await _localizationService.GetLocalizedAsync(c, x => x.Name, languageId))
                     .ToListAsync();
-            }
 
             return countries;
         });

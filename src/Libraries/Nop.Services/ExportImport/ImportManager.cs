@@ -217,9 +217,7 @@ public partial class ImportManager : IImportManager
         var attributeType = (cellValue ?? string.Empty).ToString();
 
         if (attributeType.Equals("AttributeType", StringComparison.InvariantCultureIgnoreCase))
-        {
             worksheet.Row(endRow).OutlineLevel = 1;
-        }
         else
         {
             if ((await SpecificationAttributeType.Option.ToSelectListAsync(useLocalization: false))
@@ -302,9 +300,7 @@ public partial class ImportManager : IImportManager
                 var validatedPictureBinary = await _pictureService.ValidatePictureAsync(newPictureBinary, mimeType, name);
                 if (existingBinary.SequenceEqual(validatedPictureBinary) ||
                     existingBinary.SequenceEqual(newPictureBinary))
-                {
                     pictureAlreadyExists = true;
-                }
             }
         }
 
@@ -331,57 +327,55 @@ public partial class ImportManager : IImportManager
     protected virtual async Task ImportProductImagesUsingServicesAsync(IList<ProductPictureMetadata> productPictureMetadata)
     {
         foreach (var product in productPictureMetadata)
+        foreach (var picturePath in product.PicturePaths)
         {
-            foreach (var picturePath in product.PicturePaths)
+            if (string.IsNullOrEmpty(picturePath))
+                continue;
+
+            var mimeType = GetMimeTypeFromFilePath(picturePath);
+            if (string.IsNullOrEmpty(mimeType))
+                continue;
+
+            var newPictureBinary = await _fileProvider.ReadAllBytesAsync(picturePath);
+            var pictureAlreadyExists = false;
+            if (!product.IsNew)
             {
-                if (string.IsNullOrEmpty(picturePath))
-                    continue;
-
-                var mimeType = GetMimeTypeFromFilePath(picturePath);
-                if (string.IsNullOrEmpty(mimeType))
-                    continue;
-
-                var newPictureBinary = await _fileProvider.ReadAllBytesAsync(picturePath);
-                var pictureAlreadyExists = false;
-                if (!product.IsNew)
+                //compare with existing product pictures
+                var existingPictures = await _pictureService.GetPicturesByProductIdAsync(product.ProductItem.Id);
+                foreach (var existingPicture in existingPictures)
                 {
-                    //compare with existing product pictures
-                    var existingPictures = await _pictureService.GetPicturesByProductIdAsync(product.ProductItem.Id);
-                    foreach (var existingPicture in existingPictures)
-                    {
-                        var existingBinary = await _pictureService.LoadPictureBinaryAsync(existingPicture);
-                        //picture binary after validation (like in database)
-                        var validatedPictureBinary = await _pictureService.ValidatePictureAsync(newPictureBinary, mimeType, picturePath);
-                        if (!existingBinary.SequenceEqual(validatedPictureBinary) &&
-                            !existingBinary.SequenceEqual(newPictureBinary))
-                            continue;
-                        //the same picture content
-                        pictureAlreadyExists = true;
-                        break;
-                    }
+                    var existingBinary = await _pictureService.LoadPictureBinaryAsync(existingPicture);
+                    //picture binary after validation (like in database)
+                    var validatedPictureBinary = await _pictureService.ValidatePictureAsync(newPictureBinary, mimeType, picturePath);
+                    if (!existingBinary.SequenceEqual(validatedPictureBinary) &&
+                        !existingBinary.SequenceEqual(newPictureBinary))
+                        continue;
+                    //the same picture content
+                    pictureAlreadyExists = true;
+                    break;
                 }
+            }
 
-                if (pictureAlreadyExists)
-                    continue;
+            if (pictureAlreadyExists)
+                continue;
 
-                try
+            try
+            {
+                var newPicture = await _pictureService.InsertPictureAsync(newPictureBinary, mimeType, await _pictureService.GetPictureSeNameAsync(product.ProductItem.Name));
+                await _productService.InsertProductPictureAsync(new ProductPicture
                 {
-                    var newPicture = await _pictureService.InsertPictureAsync(newPictureBinary, mimeType, await _pictureService.GetPictureSeNameAsync(product.ProductItem.Name));
-                    await _productService.InsertProductPictureAsync(new ProductPicture
-                    {
-                        //EF has some weird issue if we set "Picture = newPicture" instead of "PictureId = newPicture.Id"
-                        //pictures are duplicated
-                        //maybe because entity size is too large
-                        PictureId = newPicture.Id,
-                        DisplayOrder = 1,
-                        ProductId = product.ProductItem.Id
-                    });
-                    await _productService.UpdateProductAsync(product.ProductItem);
-                }
-                catch (Exception ex)
-                {
-                    await LogPictureInsertErrorAsync(picturePath, ex);
-                }
+                    //EF has some weird issue if we set "Picture = newPicture" instead of "PictureId = newPicture.Id"
+                    //pictures are duplicated
+                    //maybe because entity size is too large
+                    PictureId = newPicture.Id,
+                    DisplayOrder = 1,
+                    ProductId = product.ProductItem.Id
+                });
+                await _productService.UpdateProductAsync(product.ProductItem);
+            }
+            catch (Exception ex)
+            {
+                await LogPictureInsertErrorAsync(picturePath, ex);
             }
         }
     }
@@ -400,63 +394,61 @@ public partial class ImportManager : IImportManager
             p => p.PictureId, p => p.BinaryData) : new Dictionary<int, string>();
 
         foreach (var product in productPictureMetadata)
+        foreach (var picturePath in product.PicturePaths)
         {
-            foreach (var picturePath in product.PicturePaths)
+            if (string.IsNullOrEmpty(picturePath))
+                continue;
+            try
             {
-                if (string.IsNullOrEmpty(picturePath))
+                var mimeType = GetMimeTypeFromFilePath(picturePath);
+                if (string.IsNullOrEmpty(mimeType))
                     continue;
-                try
+
+                var newPictureBinary = await _fileProvider.ReadAllBytesAsync(picturePath);
+                var pictureAlreadyExists = false;
+                var seoFileName = await _pictureService.GetPictureSeNameAsync(product.ProductItem.Name);
+
+                if (!product.IsNew)
                 {
-                    var mimeType = GetMimeTypeFromFilePath(picturePath);
-                    if (string.IsNullOrEmpty(mimeType))
-                        continue;
+                    var newImageHash = HashHelper.CreateHash(
+                        newPictureBinary,
+                        ExportImportDefaults.ImageHashAlgorithm,
+                        trimByteCount);
 
-                    var newPictureBinary = await _fileProvider.ReadAllBytesAsync(picturePath);
-                    var pictureAlreadyExists = false;
-                    var seoFileName = await _pictureService.GetPictureSeNameAsync(product.ProductItem.Name);
+                    var newValidatedImageHash = HashHelper.CreateHash(
+                        await _pictureService.ValidatePictureAsync(newPictureBinary, mimeType, seoFileName),
+                        ExportImportDefaults.ImageHashAlgorithm,
+                        trimByteCount);
 
-                    if (!product.IsNew)
-                    {
-                        var newImageHash = HashHelper.CreateHash(
-                            newPictureBinary,
-                            ExportImportDefaults.ImageHashAlgorithm,
-                            trimByteCount);
+                    var imagesIds = productsImagesIds.TryGetValue(product.ProductItem.Id, out var value) ? value : Array.Empty<int>();
 
-                        var newValidatedImageHash = HashHelper.CreateHash(
-                            await _pictureService.ValidatePictureAsync(newPictureBinary, mimeType, seoFileName),
-                            ExportImportDefaults.ImageHashAlgorithm,
-                            trimByteCount);
-
-                        var imagesIds = productsImagesIds.TryGetValue(product.ProductItem.Id, out var value) ? value : Array.Empty<int>();
-
-                        pictureAlreadyExists = allPicturesHashes.Where(p => imagesIds.Contains(p.Key))
-                            .Select(p => p.Value)
-                            .Any(p =>
-                                p.Equals(newImageHash, StringComparison.OrdinalIgnoreCase) ||
-                                p.Equals(newValidatedImageHash, StringComparison.OrdinalIgnoreCase));
-                    }
-
-                    if (pictureAlreadyExists)
-                        continue;
-
-                    var newPicture = await _pictureService.InsertPictureAsync(newPictureBinary, mimeType, seoFileName);
-
-                    await _productService.InsertProductPictureAsync(new ProductPicture
-                    {
-                        //EF has some weird issue if we set "Picture = newPicture" instead of "PictureId = newPicture.Id"
-                        //pictures are duplicated
-                        //maybe because entity size is too large
-                        PictureId = newPicture.Id,
-                        DisplayOrder = 1,
-                        ProductId = product.ProductItem.Id
-                    });
-
-                    await _productService.UpdateProductAsync(product.ProductItem);
+                    pictureAlreadyExists = allPicturesHashes.Where(p => imagesIds.Contains(p.Key))
+                        .Select(p => p.Value)
+                        .Any(p =>
+                            p.Equals(newImageHash, StringComparison.OrdinalIgnoreCase) ||
+                            p.Equals(newValidatedImageHash, StringComparison.OrdinalIgnoreCase));
                 }
-                catch (Exception ex)
+
+                if (pictureAlreadyExists)
+                    continue;
+
+                var newPicture = await _pictureService.InsertPictureAsync(newPictureBinary, mimeType, seoFileName);
+
+                await _productService.InsertProductPictureAsync(new ProductPicture
                 {
-                    await LogPictureInsertErrorAsync(picturePath, ex);
-                }
+                    //EF has some weird issue if we set "Picture = newPicture" instead of "PictureId = newPicture.Id"
+                    //pictures are duplicated
+                    //maybe because entity size is too large
+                    PictureId = newPicture.Id,
+                    DisplayOrder = 1,
+                    ProductId = product.ProductItem.Id
+                });
+
+                await _productService.UpdateProductAsync(product.ProductItem);
+            }
+            catch (Exception ex)
+            {
+                await LogPictureInsertErrorAsync(picturePath, ex);
             }
         }
     }
@@ -469,7 +461,6 @@ public partial class ImportManager : IImportManager
         var isParentCategorySet = false;
 
         foreach (var property in manager.GetDefaultProperties)
-        {
             switch (property.PropertyName)
             {
                 case "Name":
@@ -520,9 +511,7 @@ public partial class ImportManager : IImportManager
                                 isParentCategorySet = true;
                             }
                             else
-                            {
                                 isParentCategoryExists = false;
-                            }
                         }
                     }
 
@@ -572,7 +561,6 @@ public partial class ImportManager : IImportManager
                     seName = property.StringValue;
                     break;
             }
-        }
 
         var tempProperty = manager.GetDefaultProperty("LimitedToStores");
         if (tempProperty != null)
@@ -601,13 +589,11 @@ public partial class ImportManager : IImportManager
         {
             var categoryName = manager.GetDefaultProperty("Name").StringValue;
             if (!string.IsNullOrEmpty(categoryName))
-            {
                 category = allCategories.TryGetValue(categoryName, out var value)
                     //try find category by full name with all parent category names
                     ? await value
                     //try find category by name
                     : await await allCategories.Values.FirstOrDefaultAwaitAsync(async c => (await c).Name.Equals(categoryName, StringComparison.InvariantCulture));
-            }
         }
 
         var isNew = category == null;
@@ -859,14 +845,12 @@ public partial class ImportManager : IImportManager
 
                 if (_productAttributeService.FindProductAttributeValuePicture(existingValuePictures, value.Id,
                         pictureId) == null)
-                {
                     await _productAttributeService.InsertProductAttributeValuePictureAsync(
                         new ProductAttributeValuePicture
                         {
                             ProductAttributeValueId = value.Id,
                             PictureId = pictureId
                         });
-                }
             }
 
             if (!metadata.LocalizedWorksheets.Any())
@@ -1391,31 +1375,23 @@ public partial class ImportManager : IImportManager
 
         //performance optimization, the check for the existence of the categories in one SQL request
         var notExistingCategories = await _categoryService.GetNotExistingCategoriesAsync(allCategories.ToArray());
-        if (notExistingCategories.Any())
-        {
+        if (notExistingCategories.Any()) 
             throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Import.CategoriesDontExist"), string.Join(", ", notExistingCategories)));
-        }
 
         //performance optimization, the check for the existence of the manufacturers in one SQL request
         var notExistingManufacturers = await _manufacturerService.GetNotExistingManufacturersAsync(allManufacturers.ToArray());
-        if (notExistingManufacturers.Any())
-        {
+        if (notExistingManufacturers.Any()) 
             throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Import.ManufacturersDontExist"), string.Join(", ", notExistingManufacturers)));
-        }
 
         //performance optimization, the check for the existence of the product attributes in one SQL request
         var notExistingProductAttributes = await _productAttributeService.GetNotExistingAttributesAsync(allAttributeIds.ToArray());
-        if (notExistingProductAttributes.Any())
-        {
+        if (notExistingProductAttributes.Any()) 
             throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Import.ProductAttributesDontExist"), string.Join(", ", notExistingProductAttributes)));
-        }
 
         //performance optimization, the check for the existence of the specification attribute options in one SQL request
         var notExistingSpecificationAttributeOptions = await _specificationAttributeService.GetNotExistingSpecificationAttributeOptionsAsync(allSpecificationAttributeOptionIds.Where(saoId => saoId != 0).ToArray());
-        if (notExistingSpecificationAttributeOptions.Any())
-        {
+        if (notExistingSpecificationAttributeOptions.Any()) 
             throw new ArgumentException($"The following specification attribute option ID(s) don't exist - {string.Join(", ", notExistingSpecificationAttributeOptions)}");
-        }
 
         //performance optimization, the check for the existence of the stores in one SQL request
         var notExistingStores = await _storeService.GetNotExistingStoresAsync(allStores.ToArray());
@@ -1555,10 +1531,8 @@ public partial class ImportManager : IImportManager
                 orderItemManager.ReadDefaultFromXlsx(worksheet, endRow, 2);
 
                 //skip caption row
-                if (!orderItemManager.IsCaption)
-                {
+                if (!orderItemManager.IsCaption) 
                     allOrderItemSkus.Add(orderItemManager.GetDefaultProperty("Sku").StringValue);
-                }
 
                 endRow++;
                 continue;
@@ -1586,17 +1560,11 @@ public partial class ImportManager : IImportManager
 
         //performance optimization, the check for the existence of the customers in one SQL request
         var notExistingCustomerGuids = await _customerService.GetNotExistingCustomersAsync(allCustomerGuids.ToArray());
-        if (notExistingCustomerGuids.Any())
-        {
-            throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.Orders.Import.CustomersDontExist"), string.Join(", ", notExistingCustomerGuids)));
-        }
+        if (notExistingCustomerGuids.Any()) throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.Orders.Import.CustomersDontExist"), string.Join(", ", notExistingCustomerGuids)));
 
         //performance optimization, the check for the existence of the order items in one SQL request
         var notExistingProductSkus = await _productService.GetNotExistingProductsAsync(allOrderItemSkus.ToArray());
-        if (notExistingProductSkus.Any())
-        {
-            throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.Orders.Import.ProductsDontExist"), string.Join(", ", notExistingProductSkus)));
-        }
+        if (notExistingProductSkus.Any()) throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.Orders.Import.ProductsDontExist"), string.Join(", ", notExistingProductSkus)));
 
         return (new ImportOrderMetadata
         {
@@ -1737,7 +1705,6 @@ public partial class ImportManager : IImportManager
 
         var poz = 1;
         while (true)
-        {
             try
             {
                 var cell = worksheet.Row(1).Cell(poz);
@@ -1752,7 +1719,6 @@ public partial class ImportManager : IImportManager
             {
                 break;
             }
-        }
 
         foreach (var ws in workbook.Worksheets.Skip(1))
             if (languages.Any(l => l.UniqueSeoCode.Equals(ws.Name, StringComparison.InvariantCultureIgnoreCase)))
@@ -1765,7 +1731,6 @@ public partial class ImportManager : IImportManager
 
             poz = 1;
             while (true)
-            {
                 try
                 {
                     var cell = localizedWorksheet.Row(1).Cell(poz);
@@ -1780,7 +1745,6 @@ public partial class ImportManager : IImportManager
                 {
                     break;
                 }
-            }
         }
 
         return new WorkbookMetadata<T>
@@ -1811,10 +1775,8 @@ public partial class ImportManager : IImportManager
         var manager = new PropertyManager<Customer>(defaultProperties, _catalogSettings);
 
         if (_catalogSettings.ExportImportUseDropdownlistsForAssociatedEntities)
-        {
             manager.SetSelectList("VatNumberStatus",
                 await VatNumberStatus.Unknown.ToSelectListAsync(useLocalization: false));
-        }
 
         var iRow = 2;
         var allRoles = await _customerService.GetAllCustomerRolesAsync();
@@ -1853,7 +1815,6 @@ public partial class ImportManager : IImportManager
             var rolesToSave = new List<int>();
 
             foreach (var property in manager.GetDefaultProperties)
-            {
                 switch (property.PropertyName)
                 {
                     case "Email":
@@ -1984,7 +1945,6 @@ public partial class ImportManager : IImportManager
                         passwordSalt = property.StringValue;
                         break;
                 }
-            }
 
             if (isNew)
                 await _customerService.InsertCustomerAsync(customer);
@@ -2165,7 +2125,6 @@ public partial class ImportManager : IImportManager
                 product.CreatedOnUtc = DateTime.UtcNow;
 
             foreach (var property in metadata.Manager.GetDefaultProperties)
-            {
                 switch (property.PropertyName)
                 {
                     case "ProductType":
@@ -2448,7 +2407,6 @@ public partial class ImportManager : IImportManager
                         product.MinimumAgeToPurchase = property.IntValue;
                         break;
                 }
-            }
 
             //set some default values if not specified
             if (isNew && metadata.Properties.All(p => p.PropertyName != "ProductType"))
@@ -2471,10 +2429,8 @@ public partial class ImportManager : IImportManager
 
             //quantity change history
             if (isNew || previousWarehouseId == product.WarehouseId)
-            {
                 await _productService.AddStockQuantityHistoryEntryAsync(product, product.StockQuantity - previousStockQuantity, product.StockQuantity,
                     product.WarehouseId, await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.ImportProduct.Edit"));
-            }
             //warehouse is changed 
             else
             {
@@ -2510,9 +2466,7 @@ public partial class ImportManager : IImportManager
                 prevTotalStockQuantity <= 0 &&
                 product.Published &&
                 !product.Deleted)
-            {
                 await _backInStockSubscriptionService.SendNotificationsToSubscribersAsync(product);
-            }
 
             var tempProperty = metadata.Manager.GetDefaultProperty("SeName");
 
@@ -2785,7 +2739,6 @@ public partial class ImportManager : IImportManager
     {
         var count = 0;
         using (var reader = new StreamReader(stream))
-        {
             while (!reader.EndOfStream)
             {
                 var line = await reader.ReadLineAsync();
@@ -2805,10 +2758,8 @@ public partial class ImportManager : IImportManager
 
                 var country = await _countryService.GetCountryByTwoLetterIsoCodeAsync(countryTwoLetterIsoCode);
                 if (country == null)
-                {
                     //country cannot be loaded. skip
                     continue;
-                }
 
                 //import
                 var states = await _stateProvinceService.GetStateProvincesByCountryIdAsync(country.Id, showHidden: true);
@@ -2836,14 +2787,11 @@ public partial class ImportManager : IImportManager
 
                 count++;
             }
-        }
 
         //activity log
         if (writeLog)
-        {
             await _customerActivityService.InsertActivityAsync("ImportStates",
                 string.Format(await _localizationService.GetResourceAsync("ActivityLog.ImportStates"), count));
-        }
 
         return count;
     }
@@ -2901,7 +2849,6 @@ public partial class ImportManager : IImportManager
             var seName = string.Empty;
 
             foreach (var property in manager.GetDefaultProperties)
-            {
                 switch (property.PropertyName)
                 {
                     case "Name":
@@ -2960,7 +2907,6 @@ public partial class ImportManager : IImportManager
                         seName = property.StringValue;
                         break;
                 }
-            }
 
             manufacturer.UpdatedOnUtc = DateTime.UtcNow;
 
@@ -3041,10 +2987,8 @@ public partial class ImportManager : IImportManager
                 await ImportCategoryLocalizedAsync(category, metadata, manager, iRow, languages);
             }
             else
-            {
                 //if parent category doesn't exists in database then try save category into database next time
                 saveNextTime.Add(iRow);
-            }
 
             iRow++;
         }

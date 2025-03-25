@@ -163,10 +163,8 @@ using SkiaSharp;
          var uniqueFileName = fileName;
 
          var i = 0;
-         while (GetFileInfo(Path.Combine(directoryPath, uniqueFileName)) is IFileInfo fileInfo && fileInfo.Exists)
-         {
+         while (GetFileInfo(Path.Combine(directoryPath, uniqueFileName)) is IFileInfo fileInfo && fileInfo.Exists) 
              uniqueFileName = $"{Path.GetFileNameWithoutExtension(fileName)}-Copy-{++i}{Path.GetExtension(fileName)}";
-         }
 
          return uniqueFileName;
      }
@@ -277,10 +275,8 @@ using SkiaSharp;
      public virtual async Task<RoxyFilemanConfig> GetOrCreateConfigurationAsync(string pathBase, string lang)
      {
          //check whether the path base has changed, otherwise there is no need to overwrite the configuration file
-         if (Singleton<RoxyFilemanConfig>.Instance?.RETURN_URL_PREFIX?.Equals(pathBase) ?? false)
-         {
+         if (Singleton<RoxyFilemanConfig>.Instance?.RETURN_URL_PREFIX?.Equals(pathBase) ?? false) 
              return Singleton<RoxyFilemanConfig>.Instance;
-         }
 
          var filePath = _nopFileProvider.GetAbsolutePath(NopRoxyFilemanDefaults.ConfigurationFile);
 
@@ -639,9 +635,7 @@ using SkiaSharp;
              await stream.WriteAsync(imageData);
          }
          else
-         {
              await fileStream.CopyToAsync(stream);
-         }
 
          await stream.FlushAsync();
      }
@@ -686,7 +680,6 @@ using SkiaSharp;
 
          using var memoryStream = new MemoryStream();
          using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
-         {
              foreach (var file in sourceDirInfo.EnumerateFiles("*", SearchOption.AllDirectories))
              {
                  var fileRelativePath = file.FullName.Replace(sourceDirInfo.FullName, string.Empty)
@@ -696,7 +689,6 @@ using SkiaSharp;
                  using var fileStreamInZip = archive.CreateEntry(fileRelativePath).Open();
                  fileStream.CopyTo(fileStreamInZip);
              }
-         }
 
          //ToArray() should be outside of the archive using
          return memoryStream.ToArray();

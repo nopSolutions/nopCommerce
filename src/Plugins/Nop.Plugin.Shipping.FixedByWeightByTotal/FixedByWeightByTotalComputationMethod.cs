@@ -100,10 +100,8 @@ public class FixedByWeightByTotalComputationMethod : BasePlugin, IShippingRateCo
         }
 
         //percentage rate of subtotal
-        if (shippingByWeightByTotalRecord.PercentageRateOfSubtotal > decimal.Zero)
-        {
+        if (shippingByWeightByTotalRecord.PercentageRateOfSubtotal > decimal.Zero) 
             shippingTotal += Math.Round((decimal)((((float)subTotal) * ((float)shippingByWeightByTotalRecord.PercentageRateOfSubtotal)) / 100f), 2);
-        }
 
         return Math.Max(shippingTotal, decimal.Zero);
     }

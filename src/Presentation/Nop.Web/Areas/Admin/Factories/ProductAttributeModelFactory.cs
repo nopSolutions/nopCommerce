@@ -229,10 +229,8 @@ public partial class ProductAttributeModelFactory : IProductAttributeModelFactor
         if (productAttributeValue != null)
         {
             //fill in model values from the entity
-            if (model == null)
-            {
+            if (model == null) 
                 model = productAttributeValue.ToModel<PredefinedProductAttributeValueModel>();
-            }
 
             //define localized model configuration action
             localizedModelConfiguration = async (locale, languageId) =>

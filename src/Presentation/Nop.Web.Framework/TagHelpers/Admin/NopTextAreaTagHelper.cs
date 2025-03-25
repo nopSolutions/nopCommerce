@@ -53,12 +53,8 @@ public partial class NopTextAreaTagHelper : TextAreaTagHelper
         //set custom html attributes
         var htmlAttributesDictionary = HtmlHelper.AnonymousObjectToHtmlAttributes(CustomHtmlAttributes);
         if (htmlAttributesDictionary?.Count > 0)
-        {
             foreach (var (key, value) in htmlAttributesDictionary)
-            {
                 output.Attributes.Add(key, value);
-            }
-        }
 
         //additional parameters
         var rowsNumber = output.Attributes.ContainsName("rows") ? output.Attributes["rows"].Value : 4;

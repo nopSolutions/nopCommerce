@@ -75,7 +75,6 @@ public partial class LanguageController : BaseAdminController
         var existingStoreMappings = await _storeMappingService.GetStoreMappingsAsync(language);
         var allStores = await _storeService.GetAllStoresAsync();
         foreach (var store in allStores)
-        {
             if (model.SelectedStoreIds.Contains(store.Id))
             {
                 //new store
@@ -89,7 +88,6 @@ public partial class LanguageController : BaseAdminController
                 if (storeMappingToDelete != null)
                     await _storeMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
             }
-        }
     }
 
     #endregion
@@ -275,13 +273,11 @@ public partial class LanguageController : BaseAdminController
     public virtual async Task<IActionResult> LanguageCultureWarning(string currentCulture, string changedCulture)
     {
         if (currentCulture != changedCulture)
-        {
             return Json(new
             {
                 Result = string.Format(await _localizationService.GetResourceAsync("Admin.Configuration.Languages.CLDR.Warning"),
                     Url.Action("GeneralCommon", "Setting"))
             });
-        }
 
         return Json(new { Result = string.Empty });
     }
@@ -310,20 +306,16 @@ public partial class LanguageController : BaseAdminController
     [CheckPermission(StandardPermission.Configuration.MANAGE_LANGUAGES)]
     public virtual async Task<IActionResult> ResourceUpdate([Validate] LocaleResourceModel model)
     {
-        if (!ModelState.IsValid)
-        {
+        if (!ModelState.IsValid) 
             return ErrorJson(ModelState.SerializeErrors());
-        }
 
         var resource = await _localizationService.GetLocaleStringResourceByIdAsync(model.Id);
         // if the resourceName changed, ensure it isn't being used by another resource
         if (!resource.ResourceName.Equals(model.ResourceName, StringComparison.InvariantCultureIgnoreCase))
         {
             var res = await _localizationService.GetLocaleStringResourceByNameAsync(model.ResourceName, model.LanguageId, false);
-            if (res != null && res.Id != resource.Id)
-            {
+            if (res != null && res.Id != resource.Id) 
                 return ErrorJson(string.Format(await _localizationService.GetResourceAsync("Admin.Configuration.Languages.Resources.NameAlreadyExists"), res.ResourceName));
-            }
         }
 
         //fill entity from model
@@ -339,10 +331,8 @@ public partial class LanguageController : BaseAdminController
     [CheckPermission(StandardPermission.Configuration.MANAGE_LANGUAGES)]
     public virtual async Task<IActionResult> ResourceAdd(int languageId, [Validate] LocaleResourceModel model)
     {
-        if (!ModelState.IsValid)
-        {
+        if (!ModelState.IsValid) 
             return ErrorJson(ModelState.SerializeErrors());
-        }
 
         var res = await _localizationService.GetLocaleStringResourceByNameAsync(model.ResourceName, model.LanguageId, false);
         if (res == null)
@@ -355,9 +345,7 @@ public partial class LanguageController : BaseAdminController
             await _localizationService.InsertLocaleStringResourceAsync(resource);
         }
         else
-        {
             return ErrorJson(string.Format(await _localizationService.GetResourceAsync("Admin.Configuration.Languages.Resources.NameAlreadyExists"), model.ResourceName));
-        }
 
         return Json(new { Result = true });
     }

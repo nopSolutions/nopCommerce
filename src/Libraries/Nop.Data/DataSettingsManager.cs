@@ -120,9 +120,7 @@ public partial class DataSettingsManager
             Singleton<DataConfig>.Instance = dataSettings;
         }
         else
-        {
             Singleton<DataConfig>.Instance = Singleton<AppSettings>.Instance.Get<DataConfig>();
-        }
 
         return Singleton<DataConfig>.Instance;
     }

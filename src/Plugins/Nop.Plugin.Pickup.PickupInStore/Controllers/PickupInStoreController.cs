@@ -172,7 +172,6 @@ public class PickupInStoreController : BasePluginController
 
         var address = await _addressService.GetAddressByIdAsync(pickupPoint.AddressId);
         if (address != null)
-        {
             model.Address = new AddressModel
             {
                 Address1 = address.Address1,
@@ -182,7 +181,6 @@ public class PickupInStoreController : BasePluginController
                 StateProvinceId = address.StateProvinceId,
                 ZipPostalCode = address.ZipPostalCode,
             };
-        }
 
         model.Address.AvailableCountries.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Admin.Address.SelectCountry"), Value = "0" });
         foreach (var country in await _countryService.GetAllCountriesAsync(showHidden: true))

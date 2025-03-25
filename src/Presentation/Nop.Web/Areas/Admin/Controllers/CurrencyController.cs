@@ -67,10 +67,8 @@ public partial class CurrencyController : BaseAdminController
 
     protected virtual async Task UpdateLocalesAsync(Currency currency, CurrencyModel model)
     {
-        foreach (var localized in model.Locales)
-        {
+        foreach (var localized in model.Locales) 
             await _localizedEntityService.SaveLocalizedValueAsync(currency, x => x.Name, localized.Name, localized.LanguageId);
-        }
     }
 
     protected virtual async Task SaveStoreMappingsAsync(Currency currency, CurrencyModel model)
@@ -81,7 +79,6 @@ public partial class CurrencyController : BaseAdminController
         var existingStoreMappings = await _storeMappingService.GetStoreMappingsAsync(currency);
         var allStores = await _storeService.GetAllStoresAsync();
         foreach (var store in allStores)
-        {
             if (model.SelectedStoreIds.Contains(store.Id))
             {
                 //new store
@@ -95,7 +92,6 @@ public partial class CurrencyController : BaseAdminController
                 if (storeMappingToDelete != null)
                     await _storeMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
             }
-        }
     }
 
     #endregion

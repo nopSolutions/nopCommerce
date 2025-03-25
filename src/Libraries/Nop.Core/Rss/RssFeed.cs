@@ -103,10 +103,8 @@ public partial class RssFeed
 
             var feed = new RssFeed(title, description, link, lastBuildDate);
 
-            foreach (var item in channel.Elements(NopRssDefaults.Item))
-            {
+            foreach (var item in channel.Elements(NopRssDefaults.Item)) 
                 feed.Items.Add(new RssItem(item));
-            }
 
             return feed;
         }
@@ -129,15 +127,11 @@ public partial class RssFeed
 
         channel.Add(Title, Description, Link, LastBuildDate);
 
-        foreach (var element in ElementExtensions)
-        {
+        foreach (var element in ElementExtensions) 
             channel.Add(element);
-        }
 
-        foreach (var item in Items)
-        {
+        foreach (var item in Items) 
             channel.Add(item.ToXElement());
-        }
 
         root.Add(channel);
         document.Add(root);

@@ -48,9 +48,7 @@ public partial class RedisConnectionWrapper : IRedisConnectionWrapper
                 connection = await ConnectionMultiplexer.ConnectAsync(_options.Configuration);
         }
         else
-        {
             connection = await _options.ConnectionMultiplexerFactory();
-        }
 
         if (_options.ProfilingSession != null)
             connection.RegisterProfiler(_options.ProfilingSession);
@@ -203,10 +201,8 @@ public partial class RedisConnectionWrapper : IRedisConnectionWrapper
         await Task.WhenAll(endPoints.Select(async endPoint =>
         {
             var server = await GetServerAsync(endPoint);
-            if (!server.IsReplica)
-            {
+            if (!server.IsReplica) 
                 await server.FlushDatabaseAsync();
-            }
         }));
     }
 

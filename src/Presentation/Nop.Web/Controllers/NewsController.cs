@@ -168,16 +168,12 @@ public partial class NewsController : BasePublicController
             return RedirectToRoute("Homepage");
 
         //validate CAPTCHA
-        if (_captchaSettings.Enabled && _captchaSettings.ShowOnNewsCommentPage && !captchaValid)
-        {
+        if (_captchaSettings.Enabled && _captchaSettings.ShowOnNewsCommentPage && !captchaValid) 
             ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
-        }
 
         var customer = await _workContext.GetCurrentCustomerAsync();
-        if (await _customerService.IsGuestAsync(customer) && !_newsSettings.AllowNotRegisteredUsersToLeaveComments)
-        {
+        if (await _customerService.IsGuestAsync(customer) && !_newsSettings.AllowNotRegisteredUsersToLeaveComments) 
             ModelState.AddModelError("", await _localizationService.GetResourceAsync("News.Comments.OnlyRegisteredUsersLeaveComments"));
-        }
 
         if (ModelState.IsValid)
         {

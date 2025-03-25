@@ -92,7 +92,6 @@ public partial class ScheduleTaskService : IScheduleTaskService
         var licenseCheckTask = tasks
             .FirstOrDefault(task => string.Equals(task.Name, nameof(ResetLicenseCheckTask), StringComparison.InvariantCultureIgnoreCase));
         if (licenseCheckTask is null)
-        {
             await InsertTaskAsync(new()
             {
                 Name = nameof(ResetLicenseCheckTask),
@@ -102,7 +101,6 @@ public partial class ScheduleTaskService : IScheduleTaskService
                 LastEnabledUtc = DateTime.UtcNow,
                 StopOnError = false
             });
-        }
         else if (!licenseCheckTask.Enabled)
         {
             licenseCheckTask.Enabled = true;

@@ -83,10 +83,8 @@ public class OrderTotalCalculationServiceTests : ServiceTest
         };
 
         var cart = new List<ShoppingCartItem> { sci1, sci2 };
-        foreach (var sci in cart)
-        {
+        foreach (var sci in cart) 
             sci.CustomerId = _customer.Id;
-        }
 
         return cart;
     }

@@ -60,7 +60,6 @@ public sealed class FormValueRequiredAttribute : ActionMethodSelectorAttribute
         var form = routeContext.HttpContext.Request.ReadFormAsync().Result;
 
         foreach (var buttonName in _submitButtonNames)
-        {
             try
             {
                 switch (_requirement)
@@ -92,7 +91,6 @@ public sealed class FormValueRequiredAttribute : ActionMethodSelectorAttribute
                                 return true;
                         }
                         else
-                        {
                             //validate "value"
                             foreach (var formValue in form.Keys)
                                 if (formValue.StartsWith(buttonName, StringComparison.InvariantCultureIgnoreCase))
@@ -101,7 +99,6 @@ public sealed class FormValueRequiredAttribute : ActionMethodSelectorAttribute
                                     if (!string.IsNullOrEmpty(value))
                                         return true;
                                 }
-                        }
                     }
                         break;
                 }
@@ -110,7 +107,7 @@ public sealed class FormValueRequiredAttribute : ActionMethodSelectorAttribute
             {
                 //try-catch to ensure that no exception is throw
             }
-        }
+
         return false;
     }
 }

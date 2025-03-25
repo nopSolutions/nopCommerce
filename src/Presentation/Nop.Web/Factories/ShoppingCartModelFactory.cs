@@ -231,11 +231,9 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
                 DefaultValue = await _localizationService.GetLocalizedAsync(attribute, x => x.DefaultValue)
             };
             if (!string.IsNullOrEmpty(attribute.ValidationFileAllowedExtensions))
-            {
                 attributeModel.AllowedFileExtensions = attribute.ValidationFileAllowedExtensions
                     .Split(_separator, StringSplitOptions.RemoveEmptyEntries)
                     .ToList();
-            }
 
             if (attribute.ShouldHaveValues)
             {
@@ -324,7 +322,6 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
                     var selectedDateStr =
                         _checkoutAttributeParser.ParseValues(selectedCheckoutAttributes, attribute.Id);
                     if (selectedDateStr.Any())
-                    {
                         if (DateTime.TryParseExact(selectedDateStr[0], "D", CultureInfo.CurrentCulture,
                                 DateTimeStyles.None, out var selectedDate))
                         {
@@ -333,7 +330,6 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
                             attributeModel.SelectedMonth = selectedDate.Month;
                             attributeModel.SelectedYear = selectedDate.Year;
                         }
-                    }
                 }
 
                     break;
@@ -408,14 +404,12 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
         //allowed quantities
         var allowedQuantities = _productService.ParseAllowedQuantities(product);
         foreach (var qty in allowedQuantities)
-        {
             cartItemModel.AllowedQuantities.Add(new SelectListItem
             {
                 Text = qty.ToString(),
                 Value = qty.ToString(),
                 Selected = sci.Quantity == qty
             });
-        }
 
         //recurring info
         if (product.IsRecurring)
@@ -485,10 +479,8 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
 
         //picture
         if (_shoppingCartSettings.ShowProductImagesOnShoppingCart)
-        {
             cartItemModel.Picture = await PrepareCartItemPictureModelAsync(sci,
                 _mediaSettings.CartThumbPictureSize, true, cartItemModel.ProductName);
-        }
 
         //item warnings
         var itemWarnings = await _shoppingCartService.GetShoppingCartItemWarningsAsync(
@@ -548,14 +540,12 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
         //allowed quantities
         var allowedQuantities = _productService.ParseAllowedQuantities(product);
         foreach (var qty in allowedQuantities)
-        {
             cartItemModel.AllowedQuantities.Add(new SelectListItem
             {
                 Text = qty.ToString(),
                 Value = qty.ToString(),
                 Selected = sci.Quantity == qty
             });
-        }
 
         //recurring info
         if (product.IsRecurring)
@@ -625,10 +615,8 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
 
         //picture
         if (_shoppingCartSettings.ShowProductImagesOnWishList)
-        {
             cartItemModel.Picture = await PrepareCartItemPictureModelAsync(sci,
                 _mediaSettings.CartThumbPictureSize, true, cartItemModel.ProductName);
-        }
 
         //item warnings
         var itemWarnings = await _shoppingCartService.GetShoppingCartItemWarningsAsync(
@@ -671,12 +659,10 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
         var store = await _storeContext.GetCurrentStoreAsync();
         var billingAddress = await _customerService.GetCustomerBillingAddressAsync(customer);
         if (billingAddress != null)
-        {
             await _addressModelFactory.PrepareAddressModelAsync(model.BillingAddress,
                 address: billingAddress,
                 excludeProperties: false,
                 addressSettings: _addressSettings);
-        }
 
         //shipping info
         if (await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart))
@@ -689,12 +675,10 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
             if (!model.SelectedPickupInStore)
             {
                 if (await _customerService.GetCustomerShippingAddressAsync(customer) is Address address)
-                {
                     await _addressModelFactory.PrepareAddressModelAsync(model.ShippingAddress,
                         address: address,
                         excludeProperties: false,
                         addressSettings: _addressSettings);
-                }
             }
             else
             {
@@ -809,25 +793,19 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
                 ? (await _stateProvinceService.GetStateProvincesByCountryIdAsync(defaultEstimateCountryId.Value, currentLanguage.Id)).ToList()
                 : new List<StateProvince>();
             if (states.Any())
-            {
                 foreach (var s in states)
-                {
                     model.AvailableStates.Add(new SelectListItem
                     {
                         Text = await _localizationService.GetLocalizedAsync(s, x => x.Name),
                         Value = s.Id.ToString(),
                         Selected = s.Id == defaultEstimateStateId
                     });
-                }
-            }
             else
-            {
                 model.AvailableStates.Add(new SelectListItem
                 {
                     Text = await _localizationService.GetResourceAsync("Address.Other"),
                     Value = "0"
                 });
-            }
 
             if (setEstimateShippingDefaultAddress && shippingAddress != null)
             {
@@ -898,13 +876,11 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
                 .FirstOrDefaultAwaitAsync(async d => d.RequiresCouponCode && (await _discountService.ValidateDiscountAsync(d, customer, discountCouponCodes)).IsValid);
 
             if (discount != null)
-            {
                 model.DiscountBox.AppliedDiscountsWithCodes.Add(new ShoppingCartModel.DiscountBoxModel.DiscountInfoModel
                 {
                     Id = discount.Id,
                     CouponCode = discount.CouponCode
                 });
-            }
         }
 
         model.GiftCardBox.Display = _shoppingCartSettings.ShowGiftCardBox;
@@ -949,10 +925,8 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
         model.HideCheckoutButton = !nonButtonPaymentMethods.Any() && model.ButtonPaymentMethodViewComponents.Any();
 
         //order review data
-        if (prepareAndDisplayOrderReviewData)
-        {
+        if (prepareAndDisplayOrderReviewData) 
             model.OrderReviewData = await PrepareOrderReviewDataModelAsync(cart);
-        }
 
         return model;
     }
@@ -1100,10 +1074,8 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
 
                     //picture
                     if (_shoppingCartSettings.ShowProductImagesInMiniShoppingCart)
-                    {
                         cartItemModel.Picture = await PrepareCartItemPictureModelAsync(sci,
                             _mediaSettings.MiniCartThumbPictureSize, true, cartItemModel.ProductName);
-                    }
 
                     model.Items.Add(cartItemModel);
                 }
@@ -1183,9 +1155,7 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
                 }
             }
             else
-            {
                 model.HideShippingTotal = _shippingSettings.HideShippingTotal;
-            }
 
             //payment method fee
             var paymentMethodSystemName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedPaymentMethodAttribute, store.Id);
@@ -1222,13 +1192,11 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
 
                     model.Tax = await _priceFormatter.FormatPriceAsync(shoppingCartTax, true, false);
                     foreach (var tr in taxRates)
-                    {
                         model.TaxRates.Add(new OrderTotalsModel.TaxRate
                         {
                             Rate = _priceFormatter.FormatTaxRate(tr.Key),
                             Value = await _priceFormatter.FormatPriceAsync(await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(tr.Value, currentCurrency), true, false),
                         });
-                    }
                 }
             }
 
@@ -1252,7 +1220,6 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
 
             //gift cards
             if (appliedGiftCards != null && appliedGiftCards.Any())
-            {
                 foreach (var appliedGiftCard in appliedGiftCards)
                 {
                     var gcModel = new OrderTotalsModel.GiftCard
@@ -1269,7 +1236,6 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
 
                     model.GiftCards.Add(gcModel);
                 }
-            }
 
             //reward points to be spent (redeemed)
             if (redeemedRewardPointsAmount > decimal.Zero)
@@ -1329,9 +1295,7 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
             if (getShippingOptionResponse.Success)
             {
                 if (getShippingOptionResponse.ShippingOptions.Any())
-                {
                     foreach (var shippingOption in getShippingOptionResponse.ShippingOptions)
-                    {
                         rawShippingOptions.Add(new ShippingOption
                         {
                             Name = shippingOption.Name,
@@ -1340,14 +1304,10 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
                             TransitDays = shippingOption.TransitDays,
                             ShippingRateComputationMethodSystemName = shippingOption.ShippingRateComputationMethodSystemName
                         });
-                    }
-                }
             }
             else
-            {
                 foreach (var error in getShippingOptionResponse.Errors)
                     model.Errors.Add(error);
-            }
 
             var pickupPointsNumber = 0;
             if (_shippingSettings.AllowPickupInStore)
@@ -1373,10 +1333,8 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
                     }
                 }
                 else
-                {
                     foreach (var error in pickupPointsResponse.Errors)
                         model.Errors.Add(error);
-                }
             }
 
             ShippingOption selectedShippingOption = null;
@@ -1436,13 +1394,11 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
 
                 //sort shipping methods
                 if (model.ShippingOptions.Count > 1)
-                {
                     model.ShippingOptions = (_shippingSettings.ShippingSorting switch
                     {
                         ShippingSortingEnum.ShippingCost => model.ShippingOptions.OrderBy(option => option.Rate),
                         _ => model.ShippingOptions.OrderBy(option => option.DisplayOrder)
                     }).ToList();
-                }
 
                 //if no option has been selected, let's do it for the first one
                 if (!model.ShippingOptions.Any(so => so.Selected))

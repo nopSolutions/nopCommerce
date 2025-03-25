@@ -96,10 +96,8 @@ public partial class CurrencyModelFactory : ICurrencyModelFactory
                 .Any(currency => currency.CurrencyCode.Equals(rate.CurrencyCode, StringComparison.InvariantCultureIgnoreCase))).ToList();
 
         //prepare models
-        foreach (var rate in exchangeRates)
-        {
+        foreach (var rate in exchangeRates) 
             models.Add(new CurrencyExchangeRateModel { CurrencyCode = rate.CurrencyCode, Rate = rate.Rate });
-        }
     }
 
     #endregion

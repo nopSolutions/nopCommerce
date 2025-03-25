@@ -287,10 +287,8 @@ public partial class ProductReviewController : BaseAdminController
         await _customerActivityService.InsertActivitiesAsync("DeleteProductReview", productReviews, productReview => string.Format(activityLogFormat, productReview.Id));
 
         //update product totals
-        foreach (var product in products)
-        {
+        foreach (var product in products) 
             await _productService.UpdateProductReviewTotalsAsync(product);
-        }
 
         return Json(new { Result = true });
     }

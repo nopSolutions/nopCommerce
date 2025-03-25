@@ -76,23 +76,19 @@ public partial class CountryController : BaseAdminController
     protected virtual async Task UpdateLocalesAsync(Country country, CountryModel model)
     {
         foreach (var localized in model.Locales)
-        {
             await _localizedEntityService.SaveLocalizedValueAsync(country,
                 x => x.Name,
                 localized.Name,
                 localized.LanguageId);
-        }
     }
 
     protected virtual async Task UpdateLocalesAsync(StateProvince stateProvince, StateProvinceModel model)
     {
         foreach (var localized in model.Locales)
-        {
             await _localizedEntityService.SaveLocalizedValueAsync(stateProvince,
                 x => x.Name,
                 localized.Name,
                 localized.LanguageId);
-        }
     }
 
     protected virtual async Task SaveStoreMappingsAsync(Country country, CountryModel model)
@@ -103,7 +99,6 @@ public partial class CountryController : BaseAdminController
         var existingStoreMappings = await _storeMappingService.GetStoreMappingsAsync(country);
         var allStores = await _storeService.GetAllStoresAsync();
         foreach (var store in allStores)
-        {
             if (model.SelectedStoreIds.Contains(store.Id))
             {
                 //new store
@@ -117,7 +112,6 @@ public partial class CountryController : BaseAdminController
                 if (storeMappingToDelete != null)
                     await _storeMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
             }
-        }
     }
 
     #endregion
@@ -438,10 +432,8 @@ public partial class CountryController : BaseAdminController
         var state = await _stateProvinceService.GetStateProvinceByIdAsync(id)
             ?? throw new ArgumentException("No state found with the specified id");
 
-        if (await _addressService.GetAddressTotalByStateProvinceIdAsync(state.Id) > 0)
-        {
+        if (await _addressService.GetAddressTotalByStateProvinceIdAsync(state.Id) > 0) 
             return ErrorJson(await _localizationService.GetResourceAsync("Admin.Configuration.Countries.States.CantDeleteWithAddresses"));
-        }
 
         //int countryId = state.CountryId;
         await _stateProvinceService.DeleteStateProvinceAsync(state);
@@ -465,39 +457,29 @@ public partial class CountryController : BaseAdminController
         var result = (from s in states
             select new { id = s.Id, name = s.Name }).ToList();
         if (addAsterisk.HasValue && addAsterisk.Value)
-        {
             //asterisk
             result.Insert(0, new { id = 0, name = "*" });
-        }
         else
         {
             if (country == null)
             {
                 //country is not selected ("choose country" item)
                 if (addSelectStateItem.HasValue && addSelectStateItem.Value)
-                {
                     result.Insert(0, new { id = 0, name = await _localizationService.GetResourceAsync("Admin.Address.SelectState") });
-                }
                 else
-                {
                     result.Insert(0, new { id = 0, name = await _localizationService.GetResourceAsync("Admin.Address.Other") });
-                }
             }
             else
             {
                 //some country is selected
                 if (!result.Any())
-                {
                     //country does not have states
                     result.Insert(0, new { id = 0, name = await _localizationService.GetResourceAsync("Admin.Address.Other") });
-                }
                 else
                 {
                     //country has some states
-                    if (addSelectStateItem.HasValue && addSelectStateItem.Value)
-                    {
+                    if (addSelectStateItem.HasValue && addSelectStateItem.Value) 
                         result.Insert(0, new { id = 0, name = await _localizationService.GetResourceAsync("Admin.Address.SelectState") });
-                    }
                 }
             }
         }

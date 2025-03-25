@@ -83,7 +83,6 @@ public class ZettlePlugin : BasePlugin, IMiscPlugin
         });
 
         if (await _scheduleTaskService.GetTaskByTypeAsync(ZettleDefaults.SynchronizationTask.Type) is null)
-        {
             await _scheduleTaskService.InsertTaskAsync(new()
             {
                 Enabled = false,
@@ -93,7 +92,6 @@ public class ZettlePlugin : BasePlugin, IMiscPlugin
                 Type = ZettleDefaults.SynchronizationTask.Type,
                 Seconds = ZettleDefaults.SynchronizationTask.Period
             });
-        }
 
         await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
         {

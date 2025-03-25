@@ -298,9 +298,7 @@ public partial class ExportManager : IExportManager
                     : category.Name;
             }
             else
-            {
                 categoryNames += pc.CategoryId.ToString();
-            }
 
             categoryNames += ";";
         }
@@ -327,9 +325,7 @@ public partial class ExportManager : IExportManager
                 manufacturerNames += manufacturer.Name;
             }
             else
-            {
                 manufacturerNames += pm.ManufacturerId.ToString();
-            }
 
             manufacturerNames += ";";
         }
@@ -614,14 +610,12 @@ public partial class ExportManager : IExportManager
 
             var localizedWorksheets = new List<(Language Language, IXLWorksheet Worksheet)>();
             if (languages.Count >= 2)
-            {
                 foreach (var language in languages)
                 {
                     var lws = workbook.Worksheets.Add(language.UniqueSeoCode);
                     localizedWorksheets.Add(new(language, lws));
                     manager.WriteLocalizedCaption(lws);
                 }
-            }
 
             var row = 2;
             foreach (var item in itemsToExport)
@@ -1038,7 +1032,6 @@ public partial class ExportManager : IExportManager
             await xmlWriter.WriteStartElementAsync("Products");
             var productManufacturers = await _manufacturerService.GetProductManufacturersByManufacturerIdAsync(manufacturer.Id, showHidden: true);
             if (productManufacturers != null)
-            {
                 foreach (var productManufacturer in productManufacturers)
                 {
                     var product = await _productService.GetProductByIdAsync(productManufacturer.ProductId);
@@ -1053,7 +1046,6 @@ public partial class ExportManager : IExportManager
                     await xmlWriter.WriteStringAsync("DisplayOrder", productManufacturer.DisplayOrder);
                     await xmlWriter.WriteEndElementAsync();
                 }
-            }
 
             await xmlWriter.WriteEndElementAsync();
             await xmlWriter.WriteEndElementAsync();
@@ -1402,28 +1394,20 @@ public partial class ExportManager : IExportManager
                     if (productAttributeMapping.ValidationRulesAllowed())
                     {
                         if (productAttributeMapping.ValidationMinLength.HasValue)
-                        {
                             await xmlWriter.WriteStringAsync("ValidationMinLength",
                                 productAttributeMapping.ValidationMinLength.Value);
-                        }
 
                         if (productAttributeMapping.ValidationMaxLength.HasValue)
-                        {
                             await xmlWriter.WriteStringAsync("ValidationMaxLength",
                                 productAttributeMapping.ValidationMaxLength.Value);
-                        }
 
                         if (string.IsNullOrEmpty(productAttributeMapping.ValidationFileAllowedExtensions))
-                        {
                             await xmlWriter.WriteStringAsync("ValidationFileAllowedExtensions",
                                 productAttributeMapping.ValidationFileAllowedExtensions);
-                        }
 
                         if (productAttributeMapping.ValidationFileMaximumSize.HasValue)
-                        {
                             await xmlWriter.WriteStringAsync("ValidationFileMaximumSize",
                                 productAttributeMapping.ValidationFileMaximumSize.Value);
-                        }
 
                         await WriteLocalizedPropertyXmlAsync(productAttributeMapping, pam => pam.DefaultValue, xmlWriter, languages, overriddenNodeName: "DefaultValue");
                     }
@@ -1477,7 +1461,6 @@ public partial class ExportManager : IExportManager
             await xmlWriter.WriteStartElementAsync("ProductCategories");
             var productCategories = await _categoryService.GetProductCategoriesByProductIdAsync(product.Id, true);
             if (productCategories != null)
-            {
                 foreach (var productCategory in productCategories)
                 {
                     await xmlWriter.WriteStartElementAsync("ProductCategory");
@@ -1487,7 +1470,6 @@ public partial class ExportManager : IExportManager
                     await xmlWriter.WriteStringAsync("DisplayOrder", productCategory.DisplayOrder);
                     await xmlWriter.WriteEndElementAsync();
                 }
-            }
 
             await xmlWriter.WriteEndElementAsync();
 
@@ -1496,7 +1478,6 @@ public partial class ExportManager : IExportManager
                 await xmlWriter.WriteStartElementAsync("ProductManufacturers");
                 var productManufacturers = await _manufacturerService.GetProductManufacturersByProductIdAsync(product.Id);
                 if (productManufacturers != null)
-                {
                     foreach (var productManufacturer in productManufacturers)
                     {
                         await xmlWriter.WriteStartElementAsync("ProductManufacturer");
@@ -1506,7 +1487,6 @@ public partial class ExportManager : IExportManager
                         await xmlWriter.WriteStringAsync("DisplayOrder", productManufacturer.DisplayOrder);
                         await xmlWriter.WriteEndElementAsync();
                     }
-                }
 
                 await xmlWriter.WriteEndElementAsync();
             }

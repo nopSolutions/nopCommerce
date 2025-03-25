@@ -183,11 +183,8 @@ public partial class MessageTemplateModelFactory : IMessageTemplateModelFactory
                     defaultItemText: await _localizationService.GetResourceAsync("Admin.ContentManagement.MessageTemplates.Fields.EmailAccount.Standard"));
 
                 //PrepareEmailAccounts only gets available accounts, we need to set the item as selected manually
-                if (locale.AvailableEmailAccounts?.FirstOrDefault(x => x.Value == locale.EmailAccountId.ToString()) is SelectListItem emailAccountListItem)
-                {
+                if (locale.AvailableEmailAccounts?.FirstOrDefault(x => x.Value == locale.EmailAccountId.ToString()) is SelectListItem emailAccountListItem) 
                     emailAccountListItem.Selected = true;
-                }
-
             };
         }
 

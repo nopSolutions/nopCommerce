@@ -404,27 +404,20 @@ public partial class BoardsController : BasePublicController
             return RedirectToRoute("Boards");
 
         //validate CAPTCHA
-        if (_captchaSettings.Enabled && _captchaSettings.ShowOnForum && !captchaValid)
-        {
+        if (_captchaSettings.Enabled && _captchaSettings.ShowOnForum && !captchaValid) 
             ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
-        }
 
         if (ModelState.IsValid)
-        {
             try
             {
                 var customer = await _workContext.GetCurrentCustomerAsync();
-                if (!await _forumService.IsCustomerAllowedToCreateTopicAsync(customer, forum))
-                {
+                if (!await _forumService.IsCustomerAllowedToCreateTopicAsync(customer, forum)) 
                     return Challenge();
-                }
 
                 var subject = model.Subject;
                 var maxSubjectLength = _forumSettings.TopicSubjectMaxLength;
-                if (maxSubjectLength > 0 && subject.Length > maxSubjectLength)
-                {
+                if (maxSubjectLength > 0 && subject.Length > maxSubjectLength) 
                     subject = subject[0..maxSubjectLength];
-                }
 
                 var text = model.Text;
                 var maxPostLength = _forumSettings.PostMaxLength;
@@ -471,7 +464,6 @@ public partial class BoardsController : BasePublicController
 
                 //subscription                
                 if (await _forumService.IsCustomerAllowedToSubscribeAsync(customer))
-                {
                     if (model.Subscribed)
                     {
                         var forumSubscription = new ForumSubscription
@@ -484,7 +476,6 @@ public partial class BoardsController : BasePublicController
 
                         await _forumService.InsertSubscriptionAsync(forumSubscription);
                     }
-                }
 
                 return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = await _forumService.GetTopicSeNameAsync(forumTopic) });
             }
@@ -492,7 +483,6 @@ public partial class BoardsController : BasePublicController
             {
                 ModelState.AddModelError("", ex.Message);
             }
-        }
 
         //redisplay form
         await _forumModelFactory.PrepareTopicCreateModelAsync(forum, model);
@@ -535,13 +525,10 @@ public partial class BoardsController : BasePublicController
             return RedirectToRoute("Boards");
 
         //validate CAPTCHA
-        if (_captchaSettings.Enabled && _captchaSettings.ShowOnForum && !captchaValid)
-        {
+        if (_captchaSettings.Enabled && _captchaSettings.ShowOnForum && !captchaValid) 
             ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
-        }
 
         if (ModelState.IsValid)
-        {
             try
             {
                 var customer = await _workContext.GetCurrentCustomerAsync();
@@ -550,10 +537,8 @@ public partial class BoardsController : BasePublicController
 
                 var subject = model.Subject;
                 var maxSubjectLength = _forumSettings.TopicSubjectMaxLength;
-                if (maxSubjectLength > 0 && subject.Length > maxSubjectLength)
-                {
+                if (maxSubjectLength > 0 && subject.Length > maxSubjectLength) 
                     subject = subject[0..maxSubjectLength];
-                }
 
                 var text = model.Text;
                 var maxPostLength = _forumSettings.PostMaxLength;
@@ -617,10 +602,8 @@ public partial class BoardsController : BasePublicController
                     }
                     else
                     {
-                        if (forumSubscription != null)
-                        {
+                        if (forumSubscription != null) 
                             await _forumService.DeleteSubscriptionAsync(forumSubscription);
-                        }
                     }
                 }
 
@@ -631,7 +614,6 @@ public partial class BoardsController : BasePublicController
             {
                 ModelState.AddModelError("", ex.Message);
             }
-        }
 
         //redisplay form
         await _forumModelFactory.PrepareTopicEditModelAsync(forumTopic, model, true);
@@ -707,13 +689,10 @@ public partial class BoardsController : BasePublicController
             return RedirectToRoute("Boards");
 
         //validate CAPTCHA
-        if (_captchaSettings.Enabled && _captchaSettings.ShowOnForum && !captchaValid)
-        {
+        if (_captchaSettings.Enabled && _captchaSettings.ShowOnForum && !captchaValid) 
             ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
-        }
 
         if (ModelState.IsValid)
-        {
             try
             {
                 var customer = await _workContext.GetCurrentCustomerAsync();
@@ -760,10 +739,8 @@ public partial class BoardsController : BasePublicController
                     }
                     else
                     {
-                        if (forumSubscription != null)
-                        {
+                        if (forumSubscription != null) 
                             await _forumService.DeleteSubscriptionAsync(forumSubscription);
-                        }
                     }
                 }
 
@@ -781,7 +758,6 @@ public partial class BoardsController : BasePublicController
             {
                 ModelState.AddModelError("", ex.Message);
             }
-        }
 
         //redisplay form
         model = await _forumModelFactory.PreparePostCreateModelAsync(forumTopic, 0, true);
@@ -830,23 +806,18 @@ public partial class BoardsController : BasePublicController
             return RedirectToRoute("Boards");
 
         //validate CAPTCHA
-        if (_captchaSettings.Enabled && _captchaSettings.ShowOnForum && !captchaValid)
-        {
+        if (_captchaSettings.Enabled && _captchaSettings.ShowOnForum && !captchaValid) 
             ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
-        }
 
         if (ModelState.IsValid)
-        {
             try
             {
                 var nowUtc = DateTime.UtcNow;
 
                 var text = model.Text;
                 var maxPostLength = _forumSettings.PostMaxLength;
-                if (maxPostLength > 0 && text.Length > maxPostLength)
-                {
+                if (maxPostLength > 0 && text.Length > maxPostLength) 
                     text = text[0..maxPostLength];
-                }
 
                 forumPost.UpdatedOnUtc = nowUtc;
                 forumPost.Text = text;
@@ -873,10 +844,8 @@ public partial class BoardsController : BasePublicController
                     }
                     else
                     {
-                        if (forumSubscription != null)
-                        {
+                        if (forumSubscription != null) 
                             await _forumService.DeleteSubscriptionAsync(forumSubscription);
-                        }
                     }
                 }
 
@@ -884,20 +853,15 @@ public partial class BoardsController : BasePublicController
                 var pageIndex = (await _forumService.CalculateTopicPageIndexAsync(forumPost.TopicId, pageSize, forumPost.Id) + 1);
                 string url;
                 if (pageIndex > 1)
-                {
                     url = Url.RouteUrl("TopicSlugPaged", new { id = forumPost.TopicId, slug = await _forumService.GetTopicSeNameAsync(forumTopic), pageNumber = pageIndex });
-                }
                 else
-                {
                     url = Url.RouteUrl("TopicSlug", new { id = forumPost.TopicId, slug = await _forumService.GetTopicSeNameAsync(forumTopic) });
-                }
                 return LocalRedirect($"{url}#{forumPost.Id}");
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError("", ex.Message);
             }
-        }
 
         //redisplay form
         model = await _forumModelFactory.PreparePostEditModelAsync(forumPost, true);
@@ -941,10 +905,8 @@ public partial class BoardsController : BasePublicController
                     var forumSubscription = await _forumService.GetSubscriptionByIdAsync(forumSubscriptionId);
                     var customer = await _workContext.GetCurrentCustomerAsync();
 
-                    if (forumSubscription != null && forumSubscription.CustomerId == customer.Id)
-                    {
+                    if (forumSubscription != null && forumSubscription.CustomerId == customer.Id) 
                         await _forumService.DeleteSubscriptionAsync(forumSubscription);
-                    }
                 }
             }
         }

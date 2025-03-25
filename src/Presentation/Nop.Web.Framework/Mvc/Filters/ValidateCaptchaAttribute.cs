@@ -94,7 +94,6 @@ public sealed class ValidateCaptchaAttribute : TypeFilterAttribute
                 var gCaptchaResponseValue = await context.HttpContext.Request.GetFormValueAsync(G_RESPONSE_FIELD_KEY);
 
                 if (!StringValues.IsNullOrEmpty(captchaResponseValue) || !StringValues.IsNullOrEmpty(gCaptchaResponseValue))
-                {
                     //validate request
                     try
                     {
@@ -109,8 +108,8 @@ public sealed class ValidateCaptchaAttribute : TypeFilterAttribute
 
                             case CaptchaType.ReCaptchaV3:
                                 isValid = response.IsValid &&
-                                          response.Action == context.RouteData.Values["action"].ToString() &&
-                                          response.Score > _captchaSettings.ReCaptchaV3ScoreThreshold;
+                                    response.Action == context.RouteData.Values["action"].ToString() &&
+                                    response.Score > _captchaSettings.ReCaptchaV3ScoreThreshold;
                                 break;
 
                             default:
@@ -121,7 +120,6 @@ public sealed class ValidateCaptchaAttribute : TypeFilterAttribute
                     {
                         await _logger.ErrorAsync("Error occurred on CAPTCHA validation", exception, await _workContext.GetCurrentCustomerAsync());
                     }
-                }
 
                 context.ActionArguments[_actionParameterName] = isValid;
             }

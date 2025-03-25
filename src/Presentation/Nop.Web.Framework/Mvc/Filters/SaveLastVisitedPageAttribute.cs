@@ -96,7 +96,6 @@ public sealed class SaveLastVisitedPageAttribute : TypeFilterAttribute
 
             //save new one if don't match
             if (previousPageAttribute == null)
-            {
                 //insert without event notification
                 await _genericAttributeRepository.InsertAsync(new GenericAttribute
                 {
@@ -106,7 +105,6 @@ public sealed class SaveLastVisitedPageAttribute : TypeFilterAttribute
                     Value = pageUrl,
                     CreatedOrUpdatedDateUTC = DateTime.UtcNow
                 }, false);
-            }
             else if (!pageUrl.Equals(previousPageAttribute.Value, StringComparison.InvariantCultureIgnoreCase))
             {
                 //update without event notification

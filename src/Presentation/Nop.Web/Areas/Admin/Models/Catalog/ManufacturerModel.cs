@@ -15,10 +15,8 @@ public partial record ManufacturerModel : BaseNopEntityModel, IAclSupportedModel
 
     public ManufacturerModel()
     {
-        if (PageSize < 1)
-        {
+        if (PageSize < 1) 
             PageSize = 5;
-        }
         Locales = new List<ManufacturerLocalizedModel>();
         AvailableManufacturerTemplates = new List<SelectListItem>();
 

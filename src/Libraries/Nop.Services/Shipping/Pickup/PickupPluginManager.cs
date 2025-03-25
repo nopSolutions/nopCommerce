@@ -45,11 +45,9 @@ public partial class PickupPluginManager : PluginManager<IPickupPointProvider>, 
 
         //filter by passed system name
         if (!string.IsNullOrEmpty(systemName))
-        {
             pickupPointProviders = pickupPointProviders
                 .Where(provider => provider.PluginDescriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase))
                 .ToList();
-        }
 
         return pickupPointProviders;
     }

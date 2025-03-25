@@ -165,26 +165,21 @@ public class AclMigration : Migration
         {
             var viewDiscountsPermission = _permissionRepository.Table.FirstOrDefault(x => x.SystemName == StandardPermission.Promotions.DISCOUNTS_VIEW);
             if (viewDiscountsPermission is not null && !_permissionRecordCustomerRoleMappingRepository.Table.Any(x => x.CustomerRoleId == vendorRole.Id && x.PermissionRecordId == viewDiscountsPermission.Id))
-            {
                 _permissionRecordCustomerRoleMappingRepository.Insert(
-                        new PermissionRecordCustomerRoleMapping
-                        {
-                            CustomerRoleId = vendorRole.Id,
-                            PermissionRecordId = viewDiscountsPermission.Id
-                        });
-            }
+                    new PermissionRecordCustomerRoleMapping
+                    {
+                        CustomerRoleId = vendorRole.Id,
+                        PermissionRecordId = viewDiscountsPermission.Id
+                    });
 
             var crudDiscountsPermission = _permissionRepository.Table.FirstOrDefault(x => x.SystemName == StandardPermission.Promotions.DISCOUNTS_CREATE_EDIT_DELETE);
             if (crudDiscountsPermission is not null && !_permissionRecordCustomerRoleMappingRepository.Table.Any(x => x.CustomerRoleId == vendorRole.Id && x.PermissionRecordId == crudDiscountsPermission.Id))
-            {
                 _permissionRecordCustomerRoleMappingRepository.Insert(
-                        new PermissionRecordCustomerRoleMapping
-                        {
-                            CustomerRoleId = vendorRole.Id,
-                            PermissionRecordId = crudDiscountsPermission.Id
-                        });
-            }
-
+                    new PermissionRecordCustomerRoleMapping
+                    {
+                        CustomerRoleId = vendorRole.Id,
+                        PermissionRecordId = crudDiscountsPermission.Id
+                    });
         }
     }
 

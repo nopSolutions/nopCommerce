@@ -133,10 +133,8 @@ public partial class DateTimeHelper : IDateTimeHelper
     public virtual DateTime ConvertToUtcTime(DateTime dt, TimeZoneInfo sourceTimeZone)
     {
         if (sourceTimeZone.IsInvalidTime(dt))
-        {
             //could not convert
             return dt;
-        }
 
         return TimeZoneInfo.ConvertTimeToUtc(dt, sourceTimeZone);
     }

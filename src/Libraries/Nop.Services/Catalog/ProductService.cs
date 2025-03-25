@@ -251,7 +251,6 @@ public partial class ProductService : IProductService
             if (stockQuantity > 0)
             {
                 if (product.MinStockQuantity >= stockQuantity && product.LowStockActivity == LowStockActivity.Nothing)
-                {
                     stockMessage = product.DisplayStockQuantity
                         ?
                         //display "low stock" with stock quantity
@@ -259,9 +258,7 @@ public partial class ProductService : IProductService
                         :
                         //display "low stock" without stock quantity
                         await _localizationService.GetResourceAsync("Products.Availability.LowStock");
-                }
                 else
-                {
                     stockMessage = product.DisplayStockQuantity
                         ?
                         //display "in stock" with stock quantity
@@ -269,14 +266,11 @@ public partial class ProductService : IProductService
                         :
                         //display "in stock" without stock quantity
                         await _localizationService.GetResourceAsync("Products.Availability.InStock");
-                }
             }
             else
             {
                 if (combination.AllowOutOfStockOrders)
-                {
                     stockMessage = await _localizationService.GetResourceAsync("Products.Availability.InStock");
-                }
                 else
                 {
                     var productAvailabilityRange = await
@@ -323,9 +317,7 @@ public partial class ProductService : IProductService
                         await _localizationService.GetLocalizedAsync(productAvailabilityRange, range => range.Name));
             }
             else
-            {
                 stockMessage = await _localizationService.GetResourceAsync("Products.Availability.InStock");
-            }
         }
 
         return stockMessage;
@@ -350,7 +342,6 @@ public partial class ProductService : IProductService
         if (stockQuantity > 0)
         {
             if (product.MinStockQuantity >= stockQuantity && product.LowStockActivity == LowStockActivity.Nothing)
-            {
                 stockMessage = product.DisplayStockQuantity
                     ?
                     //display "low stock" with stock quantity
@@ -358,9 +349,7 @@ public partial class ProductService : IProductService
                     :
                     //display "low stock" without stock quantity
                     await _localizationService.GetResourceAsync("Products.Availability.LowStock");
-            }
             else
-            {
                 stockMessage = product.DisplayStockQuantity
                     ?
                     //display "in stock" with stock quantity
@@ -368,7 +357,6 @@ public partial class ProductService : IProductService
                     :
                     //display "in stock" without stock quantity
                     await _localizationService.GetResourceAsync("Products.Availability.InStock");
-            }
         }
         else
         {
@@ -799,12 +787,10 @@ public partial class ProductService : IProductService
 
         //category filtering
         if (categoryIds != null && categoryIds.Any())
-        {
             query = from p in query
                 join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId
                 where categoryIds.Contains(pc.CategoryId)
                 select p;
-        }
 
         var cacheKey = _staticCacheManager
             .PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryProductsNumberCacheKey, customerRoleIds, storeId, categoryIds);
@@ -886,16 +872,12 @@ public partial class ProductService : IProductService
         var customer = await _workContext.GetCurrentCustomerAsync();
 
         if (!showHidden || storeId > 0)
-        {
             //apply store mapping constraints
             productsQuery = await _storeMappingService.ApplyStoreMapping(productsQuery, storeId);
-        }
 
         if (!showHidden)
-        {
             //apply ACL constraints
             productsQuery = await _aclService.ApplyAcl(productsQuery, customer);
-        }
 
         productsQuery =
             from p in productsQuery
@@ -955,29 +937,25 @@ public partial class ProductService : IProductService
                     select p.Id;
 
                 if (searchLocalizedValue)
-                {
                     productsByKeywords = productsByKeywords.Union(
                         from lp in _localizedPropertyRepository.Table
                         let checkName = lp.LocaleKey == nameof(Product.Name) &&
-                                        lp.LocaleValue.Contains(keywords)
+                            lp.LocaleValue.Contains(keywords)
                         let checkShortDesc = searchDescriptions &&
-                                             lp.LocaleKey == nameof(Product.ShortDescription) &&
-                                             lp.LocaleValue.Contains(keywords)
+                            lp.LocaleKey == nameof(Product.ShortDescription) &&
+                            lp.LocaleValue.Contains(keywords)
                         where
                             lp.LocaleKeyGroup == nameof(Product) && lp.LanguageId == languageId && (checkName || checkShortDesc)
 
                         select lp.EntityId);
-                }
             }
 
             //search by SKU for ProductAttributeCombination
             if (searchSku)
-            {
                 productsByKeywords = productsByKeywords.Union(
                     from pac in _productAttributeCombinationRepository.Table
                     where pac.Sku == keywords
                     select pac.ProductId);
-            }
 
             //search by category name if admin allows
             if (_catalogSettings.AllowCustomersToSearchWithCategoryName)
@@ -1003,16 +981,14 @@ public partial class ProductService : IProductService
                 );
 
                 if (searchLocalizedValue)
-                {
                     productsByKeywords = productsByKeywords.Union(
                         from pc in _productCategoryRepository.Table
                         join lp in _localizedPropertyRepository.Table on pc.CategoryId equals lp.EntityId
                         where lp.LocaleKeyGroup == nameof(Category) &&
-                              lp.LocaleKey == nameof(Category.Name) &&
-                              lp.LocaleValue.Contains(keywords) &&
-                              lp.LanguageId == languageId
+                            lp.LocaleKey == nameof(Category.Name) &&
+                            lp.LocaleValue.Contains(keywords) &&
+                            lp.LanguageId == languageId
                         select pc.ProductId);
-                }
             }
 
             //search by manufacturer name if admin allows
@@ -1039,16 +1015,14 @@ public partial class ProductService : IProductService
                 );
 
                 if (searchLocalizedValue)
-                {
                     productsByKeywords = productsByKeywords.Union(
                         from pm in _productManufacturerRepository.Table
                         join lp in _localizedPropertyRepository.Table on pm.ManufacturerId equals lp.EntityId
                         where lp.LocaleKeyGroup == nameof(Manufacturer) &&
-                              lp.LocaleKey == nameof(Manufacturer.Name) &&
-                              lp.LocaleValue.Contains(keywords) &&
-                              lp.LanguageId == languageId
+                            lp.LocaleKey == nameof(Manufacturer.Name) &&
+                            lp.LocaleValue.Contains(keywords) &&
+                            lp.LanguageId == languageId
                         select pm.ProductId);
-                }
             }
 
             if (searchProductTags)
@@ -1061,16 +1035,14 @@ public partial class ProductService : IProductService
                 );
 
                 if (searchLocalizedValue)
-                {
                     productsByKeywords = productsByKeywords.Union(
                         from pptm in _productTagMappingRepository.Table
                         join lp in _localizedPropertyRepository.Table on pptm.ProductTagId equals lp.EntityId
                         where lp.LocaleKeyGroup == nameof(ProductTag) &&
-                              lp.LocaleKey == nameof(ProductTag.Name) &&
-                              lp.LocaleValue.Contains(keywords) &&
-                              lp.LanguageId == languageId
+                            lp.LocaleKey == nameof(ProductTag.Name) &&
+                            lp.LocaleValue.Contains(keywords) &&
+                            lp.LanguageId == languageId
                         select pptm.ProductId);
-                }
             }
 
             productsQuery =
@@ -1132,13 +1104,11 @@ public partial class ProductService : IProductService
         }
 
         if (productTagId > 0)
-        {
             productsQuery =
                 from p in productsQuery
                 join ptm in _productTagMappingRepository.Table on p.Id equals ptm.ProductId
                 where ptm.ProductTagId == productTagId
                 select p;
-        }
 
         if (filteredSpecOptions?.Count > 0)
         {
@@ -1230,10 +1200,8 @@ public partial class ProductService : IProductService
                 (!p.AvailableEndDateTimeUtc.HasValue || p.AvailableEndDateTimeUtc.Value > DateTime.UtcNow));
         }
         //vendor filtering
-        if (vendorId > 0)
-        {
+        if (vendorId > 0) 
             query = query.Where(p => p.VendorId == vendorId);
-        }
 
         //apply store mapping constraints
         if (!showHidden && storeId > 0)
@@ -1491,10 +1459,8 @@ public partial class ProductService : IProductService
                 .Split(_separator, StringSplitOptions.RemoveEmptyEntries)
                 .ToList();
             foreach (var qtyStr in quantities)
-            {
                 if (int.TryParse(qtyStr.Trim(), out var qty))
                     result.Add(qty);
-            }
         }
 
         return result.ToArray();
@@ -1716,7 +1682,6 @@ public partial class ProductService : IProductService
             .ToDictionary(sm => sm.StoreId);
         var allStores = await _storeService.GetAllStoresAsync();
         foreach (var store in allStores)
-        {
             if (limitedToStoresIdsSet.Contains(store.Id))
             {
                 //new store
@@ -1729,7 +1694,6 @@ public partial class ProductService : IProductService
                 if (existingStoreMappingsByStoreId.TryGetValue(store.Id, out var storeMappingToDelete))
                     await _storeMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
             }
-        }
     }
 
     /// <summary>
@@ -1901,10 +1865,8 @@ public partial class ProductService : IProductService
 
             //associated product (bundle)
             var associatedProduct = await GetProductByIdAsync(attributeValue.AssociatedProductId);
-            if (associatedProduct != null)
-            {
+            if (associatedProduct != null) 
                 await AdjustInventoryAsync(associatedProduct, quantityToChange * attributeValue.Quantity, message);
-            }
         }
     }
 

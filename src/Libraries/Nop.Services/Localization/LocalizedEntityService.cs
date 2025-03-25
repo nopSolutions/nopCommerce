@@ -242,11 +242,9 @@ public partial class LocalizedEntityService : ILocalizedEntityService
             throw new ArgumentOutOfRangeException(nameof(languageId), "Language ID should not be 0");
 
         if (keySelector.Body is not MemberExpression member)
-        {
             throw new ArgumentException(string.Format(
                 "Expression '{0}' refers to a method, not a property.",
                 keySelector));
-        }
 
         var propInfo = member.Member as PropertyInfo ?? throw new ArgumentException(string.Format(
             "Expression '{0}' refers to a field, not a property.",
@@ -265,10 +263,8 @@ public partial class LocalizedEntityService : ILocalizedEntityService
         if (prop != null)
         {
             if (string.IsNullOrWhiteSpace(localeValueStr))
-            {
                 //delete
                 await DeleteLocalizedPropertyAsync(prop);
-            }
             else
             {
                 //update

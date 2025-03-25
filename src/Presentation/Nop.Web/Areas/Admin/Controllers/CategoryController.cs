@@ -198,10 +198,8 @@ public partial class CategoryController : BaseAdminController
             //discounts
             var allDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToCategories, showHidden: true, isActive: null);
             foreach (var discount in allDiscounts)
-            {
                 if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                     await _categoryService.InsertDiscountCategoryMappingAsync(new DiscountCategoryMapping { DiscountId = discount.Id, EntityId = category.Id });
-            }
 
             await _categoryService.UpdateCategoryAsync(category);
 
@@ -279,7 +277,6 @@ public partial class CategoryController : BaseAdminController
             //discounts
             var allDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToCategories, showHidden: true, isActive: null);
             foreach (var discount in allDiscounts)
-            {
                 if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                 {
                     //new discount
@@ -292,7 +289,6 @@ public partial class CategoryController : BaseAdminController
                     if (await _categoryService.GetDiscountAppliedToCategoryAsync(category.Id, discount.Id) is DiscountCategoryMapping mapping)
                         await _categoryService.DeleteDiscountCategoryMappingAsync(mapping);
                 }
-            }
 
             await _categoryService.UpdateCategoryAsync(category);
 
@@ -415,9 +411,7 @@ public partial class CategoryController : BaseAdminController
         try
         {
             if (importexcelfile != null && importexcelfile.Length > 0)
-            {
                 await _importManager.ImportCategoriesFromXlsxAsync(importexcelfile.OpenReadStream());
-            }
             else
             {
                 _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Common.UploadFile"));

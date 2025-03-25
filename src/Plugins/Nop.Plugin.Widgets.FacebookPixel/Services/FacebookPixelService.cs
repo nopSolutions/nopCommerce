@@ -351,10 +351,8 @@ public class FacebookPixelService
                 _ => new List<FacebookPixelConfiguration>()
             };
             if (trackedEvent.IsCustomEvent)
-            {
                 activeConfigurations = await configurations.WhereAwait(async configuration =>
                     (await GetCustomEventsAsync(configuration.Id)).Any(customEvent => customEvent.EventName == trackedEvent.EventName)).ToListAsync();
-            }
 
             //prepare event scripts
             return preparedScripts + await trackedEvent.EventObjects.AggregateAwaitAsync(string.Empty, async (preparedEventScripts, eventObject) =>
@@ -579,7 +577,6 @@ public class FacebookPixelService
 
         var logErrors = true; //set it to false to ignore Conversions API errors 
         foreach (var configuration in conversionsApiConfigurations)
-        {
             await HandleFunctionAsync(async () =>
             {
                 var response = await _facebookConversionsHttpClient.SendEventAsync(configuration, model);
@@ -589,7 +586,6 @@ public class FacebookPixelService
 
                 return true;
             }, logErrors);
-        }
 
         return true;
     }

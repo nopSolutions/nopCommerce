@@ -133,7 +133,6 @@ public partial class OrderReportService : IOrderReportService
             select orderItem;
 
         if (categoryId > 0)
-        {
             orderItems = from orderItem in orderItems
                 join p in _productRepository.Table on orderItem.ProductId equals p.Id
                 join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId
@@ -141,10 +140,8 @@ public partial class OrderReportService : IOrderReportService
                 from pc in p_pc.DefaultIfEmpty()
                 where pc.CategoryId == categoryId
                 select orderItem;
-        }
 
         if (manufacturerId > 0)
-        {
             orderItems = from orderItem in orderItems
                 join p in _productRepository.Table on orderItem.ProductId equals p.Id
                 join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId
@@ -152,7 +149,6 @@ public partial class OrderReportService : IOrderReportService
                 from pm in p_pm.DefaultIfEmpty()
                 where pm.ManufacturerId == manufacturerId
                 select orderItem;
-        }
 
         return orderItems;
     }
@@ -869,24 +865,20 @@ public partial class OrderReportService : IOrderReportService
             select p;
 
         if (categoryId > 0)
-        {
             query = from p in query
                 join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId
                     into p_pc
                 from pc in p_pc.DefaultIfEmpty()
                 where pc.CategoryId == categoryId
                 select p;
-        }
 
         if (manufacturerId > 0)
-        {
             query = from p in query
                 join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId
                     into p_pm
                 from pm in p_pm.DefaultIfEmpty()
                 where pm.ManufacturerId == manufacturerId
                 select p;
-        }
 
         //apply store mapping constraints
         query = await _storeMappingService.ApplyStoreMapping(query, storeId);

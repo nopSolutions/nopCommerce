@@ -63,23 +63,19 @@ public partial class ReturnRequestController : BaseAdminController
     protected virtual async Task UpdateLocalesAsync(ReturnRequestReason rrr, ReturnRequestReasonModel model)
     {
         foreach (var localized in model.Locales)
-        {
             await _localizedEntityService.SaveLocalizedValueAsync(rrr,
                 x => x.Name,
                 localized.Name,
                 localized.LanguageId);
-        }
     }
 
     protected virtual async Task UpdateLocalesAsync(ReturnRequestAction rra, ReturnRequestActionModel model)
     {
         foreach (var localized in model.Locales)
-        {
             await _localizedEntityService.SaveLocalizedValueAsync(rra,
                 x => x.Name,
                 localized.Name,
                 localized.LanguageId);
-        }
     }
 
     #endregion

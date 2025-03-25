@@ -255,39 +255,29 @@ public partial class ProductModelFactory : IProductModelFactory
 
         var validationRules = new StringBuilder(string.Empty);
         if (attributeMapping.ValidationMinLength.HasValue)
-        {
             validationRules.AppendFormat("{0}: {1}<br />",
                 await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.MinLength"),
                 attributeMapping.ValidationMinLength);
-        }
 
         if (attributeMapping.ValidationMaxLength.HasValue)
-        {
             validationRules.AppendFormat("{0}: {1}<br />",
                 await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.MaxLength"),
                 attributeMapping.ValidationMaxLength);
-        }
 
         if (!string.IsNullOrEmpty(attributeMapping.ValidationFileAllowedExtensions))
-        {
             validationRules.AppendFormat("{0}: {1}<br />",
                 await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.FileAllowedExtensions"),
                 WebUtility.HtmlEncode(attributeMapping.ValidationFileAllowedExtensions));
-        }
 
         if (attributeMapping.ValidationFileMaximumSize.HasValue)
-        {
             validationRules.AppendFormat("{0}: {1}<br />",
                 await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.FileMaximumSize"),
                 attributeMapping.ValidationFileMaximumSize);
-        }
 
         if (!string.IsNullOrEmpty(attributeMapping.DefaultValue))
-        {
             validationRules.AppendFormat("{0}: {1}<br />",
                 await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.DefaultValue"),
                 WebUtility.HtmlEncode(attributeMapping.DefaultValue));
-        }
 
         return validationRules.ToString();
     }
@@ -921,13 +911,11 @@ public partial class ProductModelFactory : IProductModelFactory
             {
                 var list = (IList<int>)TypeDescriptor.GetConverter(typeof(List<int>)).ConvertFrom(template.IgnoredProductTypes) ?? new List<int>();
                 if (string.IsNullOrEmpty(template.IgnoredProductTypes) || !list.Contains((int)productType))
-                {
                     model.ProductsTypesSupportedByProductTemplates[(int)productType].Add(new SelectListItem
                     {
                         Text = template.Name,
                         Value = template.Id.ToString()
                     });
-                }
             }
         }
 
@@ -960,18 +948,14 @@ public partial class ProductModelFactory : IProductModelFactory
         //prepare model categories
         await _baseAdminModelFactory.PrepareCategoriesAsync(model.AvailableCategories, false);
         foreach (var categoryItem in model.AvailableCategories)
-        {
             categoryItem.Selected = int.TryParse(categoryItem.Value, out var categoryId)
-                                    && model.SelectedCategoryIds.Contains(categoryId);
-        }
+                && model.SelectedCategoryIds.Contains(categoryId);
 
         //prepare model manufacturers
         await _baseAdminModelFactory.PrepareManufacturersAsync(model.AvailableManufacturers, false);
         foreach (var manufacturerItem in model.AvailableManufacturers)
-        {
             manufacturerItem.Selected = int.TryParse(manufacturerItem.Value, out var manufacturerId)
-                                        && model.SelectedManufacturerIds.Contains(manufacturerId);
-        }
+                && model.SelectedManufacturerIds.Contains(manufacturerId);
 
         //prepare model discounts
         var availableDiscounts = await _discountService.GetAllDiscountsAsync(
@@ -1573,7 +1557,6 @@ public partial class ProductModelFactory : IProductModelFactory
     public virtual async Task<AddSpecificationAttributeModel> PrepareAddSpecificationAttributeModelAsync(int productId, int? specificationId)
     {
         if (!specificationId.HasValue)
-        {
             return new AddSpecificationAttributeModel
             {
                 AvailableAttributes = await (await _specificationAttributeService.GetSpecificationAttributesWithOptionsAsync())
@@ -1586,7 +1569,6 @@ public partial class ProductModelFactory : IProductModelFactory
                 ProductId = productId,
                 Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync<AddSpecificationAttributeLocalizedModel>()
             };
-        }
 
         var attribute = await _specificationAttributeService.GetProductSpecificationAttributeByIdAsync(specificationId.Value) 
                         ?? throw new ArgumentException("No specification attribute found with the specified id");
@@ -1731,10 +1713,8 @@ public partial class ProductModelFactory : IProductModelFactory
         if (productTag != null)
         {
             //fill in model values from the entity
-            if (model == null)
-            {
+            if (model == null) 
                 model = productTag.ToModel<ProductTagModel>();
-            }
 
             model.ProductCount = await _productTagService.GetProductCountByProductTagIdAsync(productTag.Id, storeId: 0, showHidden: true);
 
@@ -1890,11 +1870,9 @@ public partial class ProductModelFactory : IProductModelFactory
         ArgumentNullException.ThrowIfNull(product);
 
         if (tierPrice != null)
-        {
             //fill in model values from the entity
             if (model == null)
                 model = tierPrice.ToModel<TierPriceModel>();
-        }
 
         model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
 
@@ -1944,10 +1922,8 @@ public partial class ProductModelFactory : IProductModelFactory
                 //fill in additional values (not existing in the entity)
                 var combination = await _productAttributeService.GetProductAttributeCombinationByIdAsync(historyEntry.CombinationId ?? 0);
                 if (combination != null)
-                {
                     stockQuantityHistoryModel.AttributeCombination = await _productAttributeFormatter
                         .FormatAttributesAsync(product, combination.AttributesXml, currentCustomer, currentStore, renderGiftCardAttributes: false);
-                }
 
                 stockQuantityHistoryModel.WarehouseName = historyEntry.WarehouseId.HasValue
                     ? (await _shippingService.GetWarehouseByIdAsync(historyEntry.WarehouseId.Value))?.Name ?? "Deleted"
@@ -2003,10 +1979,8 @@ public partial class ProductModelFactory : IProductModelFactory
                         .ParseProductAttributeValuesAsync(attributeMapping.ConditionAttributeXml))
                     .FirstOrDefault();
                 if (conditionValue != null)
-                {
                     productAttributeMappingModel.ConditionString =
                         $"{WebUtility.HtmlEncode((await _productAttributeService.GetProductAttributeByIdAsync(conditionAttribute.ProductAttributeId)).Name)}: {WebUtility.HtmlEncode(conditionValue.Name)}";
-                }
 
                 return productAttributeMappingModel;
             });
@@ -2129,10 +2103,8 @@ public partial class ProductModelFactory : IProductModelFactory
                     productAttributeValueModel.WeightAdjustmentStr = value.WeightAdjustment.ToString("G29");
                 }
 
-                if (value.AttributeValueType == AttributeValueType.AssociatedToProduct)
-                {
+                if (value.AttributeValueType == AttributeValueType.AssociatedToProduct) 
                     productAttributeValueModel.AssociatedProductName = (await _productService.GetProductByIdAsync(value.AssociatedProductId))?.Name ?? string.Empty;
-                }
 
                 var valuePicture = (await _productAttributeService.GetProductAttributeValuePicturesAsync(value.Id)).FirstOrDefault();
                 var pictureThumbnailUrl = await _pictureService.GetPictureUrlAsync(valuePicture?.PictureId ?? 0, 75, false);
@@ -2383,7 +2355,6 @@ public partial class ProductModelFactory : IProductModelFactory
         ArgumentNullException.ThrowIfNull(product);
 
         if (productAttributeCombination != null)
-        {
             //fill in model values from the entity
             model ??= new ProductAttributeCombinationModel
             {
@@ -2401,7 +2372,6 @@ public partial class ProductModelFactory : IProductModelFactory
                 StockQuantity = productAttributeCombination.StockQuantity,
                 MinStockQuantity = productAttributeCombination.MinStockQuantity
             };
-        }
 
         model.ProductId = product.Id;
 

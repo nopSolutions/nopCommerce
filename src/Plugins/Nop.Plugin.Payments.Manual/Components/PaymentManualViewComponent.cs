@@ -29,10 +29,8 @@ public class PaymentManualViewComponent : NopViewComponent
         }
 
         //months
-        for (var i = 1; i <= 12; i++)
-        {
+        for (var i = 1; i <= 12; i++) 
             model.ExpireMonths.Add(new SelectListItem { Text = i.ToString("D2"), Value = i.ToString(), });
-        }
 
         //set postback values (we cannot access "Form" with "GET" requests)
         if (!Request.IsGetRequest())

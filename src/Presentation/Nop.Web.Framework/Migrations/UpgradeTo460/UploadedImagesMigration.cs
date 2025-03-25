@@ -62,10 +62,8 @@ public class UploadedImagesMigration : Migration
                     _roxyFilemanFileProvider.CreateDirectory("/", thumbDirectoryName);
 
                     if (picture.IsNew)
-                    {
                         // delete old file if exist
                         _roxyFilemanFileProvider.DeleteFile(thumbFilePath);
-                    }
 
                     if (_roxyFilemanFileProvider.GetFileInfo(thumbFilePath).Exists)
                     {

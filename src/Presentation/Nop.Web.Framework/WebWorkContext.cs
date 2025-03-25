@@ -217,23 +217,17 @@ public partial class WebWorkContext : IWorkContext
             if (_httpContextAccessor.HttpContext?.Request
                     ?.Path.Equals(new PathString($"/{NopTaskDefaults.ScheduleTaskPath}"), StringComparison.InvariantCultureIgnoreCase)
                 ?? true)
-            {
                 //in this case return built-in customer record for background task
                 customer = await _customerService.GetOrCreateBackgroundTaskUserAsync();
-            }
 
             if (customer == null || customer.Deleted || !customer.Active || customer.RequireReLogin)
-            {
                 //check whether request is made by a search engine, in this case return built-in customer record for search engines
                 if (_userAgentHelper.IsSearchEngine())
                     customer = await _customerService.GetOrCreateSearchEngineUserAsync();
-            }
 
             if (customer == null || customer.Deleted || !customer.Active || customer.RequireReLogin)
-            {
                 //try to get registered user
                 customer = await _authenticationService.GetAuthenticatedCustomerAsync();
-            }
 
             if (customer != null && !customer.Deleted && customer.Active && !customer.RequireReLogin)
             {
@@ -268,10 +262,8 @@ public partial class WebWorkContext : IWorkContext
             }
 
             if (customer == null || customer.Deleted || !customer.Active || customer.RequireReLogin)
-            {
                 //create guest if not exists
                 customer = await _customerService.InsertGuestCustomerAsync();
-            }
         }
 
         if (!customer.Deleted && customer.Active && !customer.RequireReLogin)

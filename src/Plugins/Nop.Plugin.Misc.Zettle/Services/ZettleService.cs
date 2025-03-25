@@ -152,7 +152,6 @@ public class ZettleService
                 ExternalReference = discount.Id.ToString()
             };
             if (!discount.UsePercentage)
-            {
                 request.Amount = new Domain.Api.Product.Discount.DiscountAmount
                 {
                     CurrencyId = storeCurrency.CurrencyCode.ToUpper(),
@@ -162,7 +161,6 @@ public class ZettleService
                         _ => Convert.ToInt32(Math.Round(discount.DiscountAmount * 100, 0))
                     }
                 };
-            }
             else
                 request.Percentage = discount.DiscountPercentage;
 
@@ -262,13 +260,11 @@ public class ZettleService
                 ];
             }
             else
-            {
                 request.Variants = product.CombinationRecords.Select(record => new Product.ProductVariant
                 {
                     Uuid = record.VariantUuid,
                     Presentation = new Product.ProductPresentation { ImageUrl = record.ImageUrl }
                 }).ToList();
-            }
 
             log.AppendLine($"\tAdd image to product #{product.ProductRecord.ProductId}");
 
@@ -579,10 +575,8 @@ public class ZettleService
                     .Where(record => string.Equals(record.Url, image.Source, StringComparison.InvariantCultureIgnoreCase))
                     .Select(record => record.Record)
                     .ToList();
-                foreach (var record in recordsWithUploadedImage)
-                {
+                foreach (var record in recordsWithUploadedImage) 
                     record.ImageUrl = image.ImageUrls?.FirstOrDefault();
-                }
                 return recordsWithUploadedImage;
             })
             .Distinct()
@@ -639,7 +633,6 @@ public class ZettleService
                 ? product.StockQuantity - productRecord.StockQuantity
                 : productRecord.QuantityAdjustment ?? 0;
             if (quantity != 0)
-            {
                 productChange.VariantChanges =
                 [
                     new()
@@ -650,7 +643,6 @@ public class ZettleService
                         Change = Math.Abs(quantity)
                     }
                 ];
-            }
         }
         else
         {
@@ -700,10 +692,8 @@ public class ZettleService
         };
 
         //save external UUID to avoid a double change, we will check it when receive a webhook event
-        foreach (var record in records)
-        {
+        foreach (var record in records) 
             record.ExternalUuid = inventoryRequest.ExternalUuid;
-        }
         await _zettleRecordService.UpdateRecordsAsync(records);
 
         //update balances
@@ -984,10 +974,8 @@ public class ZettleService
 
                     var combinationRecords = records.Where(record => record.CombinationId != 0).ToList();
                     var combinationRecordsToStart = new List<(ZettleRecord Record, int StockQuantity, int? QuantityAdjustment)>();
-                    foreach (var combinationRecord in combinationRecords)
-                    {
+                    foreach (var combinationRecord in combinationRecords) 
                         combinationRecordsToStart.Add((combinationRecord, 0, null));
-                    }
                     (ZettleRecord Record, int StockQuantity, int? QuantityAdjustment) productRecordToStart = (productRecord, 0, null);
                     var productChange = await PrepareInventoryBalanceChangeAsync(InventoryBalanceChangeType.StartTracking,
                         productRecordToStart, combinationRecordsToStart);
@@ -1126,10 +1114,8 @@ public class ZettleService
         //we cannot know the exact reason of the change, so we will use Purchase for negative adjustments and Re-stock for positive ones
         var changeType = quantityAdjustment < 0 ? InventoryBalanceChangeType.Purchase : InventoryBalanceChangeType.Restock;
         var combinationRecordsToUpdate = new List<(ZettleRecord Record, int StockQuantity, int? QuantityAdjustment)>();
-        foreach (var combinationRecord in combinationRecords)
-        {
+        foreach (var combinationRecord in combinationRecords) 
             combinationRecordsToUpdate.Add((combinationRecord, 0, Math.Abs(quantityAdjustment)));
-        }
         (ZettleRecord Record, int StockQuantity, int? QuantityAdjustment) productRecordToUpdate = (productRecord, 0, Math.Abs(quantityAdjustment));
         var productChange = await PrepareInventoryBalanceChangeAsync(changeType, productRecordToUpdate, combinationRecordsToUpdate);
         if (productChange is null)

@@ -53,23 +53,19 @@ public partial class AddressAttributeController : BaseAdminController
     protected virtual async Task UpdateAttributeLocalesAsync(AddressAttribute addressAttribute, AddressAttributeModel model)
     {
         foreach (var localized in model.Locales)
-        {
             await _localizedEntityService.SaveLocalizedValueAsync(addressAttribute,
                 x => x.Name,
                 localized.Name,
                 localized.LanguageId);
-        }
     }
 
     protected virtual async Task UpdateValueLocalesAsync(AddressAttributeValue addressAttributeValue, AddressAttributeValueModel model)
     {
         foreach (var localized in model.Locales)
-        {
             await _localizedEntityService.SaveLocalizedValueAsync(addressAttributeValue,
                 x => x.Name,
                 localized.Name,
                 localized.LanguageId);
-        }
     }
 
     #endregion

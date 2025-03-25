@@ -36,14 +36,10 @@ public partial class RegisterValidator : BaseNopValidator<RegisterModel>
             RuleFor(x => x.Username).IsUsername(customerSettings).WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.Username.NotValid"));
         }
 
-        if (customerSettings.FirstNameEnabled && customerSettings.FirstNameRequired)
-        {
+        if (customerSettings.FirstNameEnabled && customerSettings.FirstNameRequired) 
             RuleFor(x => x.FirstName).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.FirstName.Required"));
-        }
-        if (customerSettings.LastNameEnabled && customerSettings.LastNameRequired)
-        {
+        if (customerSettings.LastNameEnabled && customerSettings.LastNameRequired) 
             RuleFor(x => x.LastName).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.LastName.Required"));
-        }
 
         //Password rule
         RuleFor(x => x.Password).IsPassword(localizationService, customerSettings);
@@ -53,29 +49,23 @@ public partial class RegisterValidator : BaseNopValidator<RegisterModel>
 
         //form fields
         if (customerSettings.CountryEnabled && customerSettings.CountryRequired)
-        {
             RuleFor(x => x.CountryId)
                 .NotEqual(0)
                 .WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.Country.Required"));
-        }
         if (customerSettings.CountryEnabled &&
             customerSettings.StateProvinceEnabled &&
             customerSettings.StateProvinceRequired)
-        {
             RuleFor(x => x.StateProvinceId).MustAwait(async (x, context) =>
             {
                 //does selected country have states?
                 var hasStates = (await stateProvinceService.GetStateProvincesByCountryIdAsync(x.CountryId)).Any();
                 if (hasStates)
-                {
                     //if yes, then ensure that a state is selected
                     if (x.StateProvinceId == 0)
                         return false;
-                }
 
                 return true;
             }).WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.StateProvince.Required"));
-        }
         if (customerSettings.DateOfBirthEnabled && customerSettings.DateOfBirthRequired)
         {
             //entered?
@@ -100,48 +90,27 @@ public partial class RegisterValidator : BaseNopValidator<RegisterModel>
                 return true;
             }).WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.DateOfBirth.MinimumAge"), customerSettings.DateOfBirthMinimumAge);
         }
-        if (customerSettings.CompanyRequired && customerSettings.CompanyEnabled)
-        {
+        if (customerSettings.CompanyRequired && customerSettings.CompanyEnabled) 
             RuleFor(x => x.Company).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.Company.Required"));
-        }
-        if (customerSettings.StreetAddressRequired && customerSettings.StreetAddressEnabled)
-        {
+        if (customerSettings.StreetAddressRequired && customerSettings.StreetAddressEnabled) 
             RuleFor(x => x.StreetAddress).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.StreetAddress.Required"));
-        }
-        if (customerSettings.StreetAddress2Required && customerSettings.StreetAddress2Enabled)
-        {
+        if (customerSettings.StreetAddress2Required && customerSettings.StreetAddress2Enabled) 
             RuleFor(x => x.StreetAddress2).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.StreetAddress2.Required"));
-        }
-        if (customerSettings.ZipPostalCodeRequired && customerSettings.ZipPostalCodeEnabled)
-        {
+        if (customerSettings.ZipPostalCodeRequired && customerSettings.ZipPostalCodeEnabled) 
             RuleFor(x => x.ZipPostalCode).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.ZipPostalCode.Required"));
-        }
-        if (customerSettings.CountyRequired && customerSettings.CountyEnabled)
-        {
+        if (customerSettings.CountyRequired && customerSettings.CountyEnabled) 
             RuleFor(x => x.County).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.County.Required"));
-        }
-        if (customerSettings.CityRequired && customerSettings.CityEnabled)
-        {
+        if (customerSettings.CityRequired && customerSettings.CityEnabled) 
             RuleFor(x => x.City).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.City.Required"));
-        }
-        if (customerSettings.PhoneRequired && customerSettings.PhoneEnabled)
-        {
+        if (customerSettings.PhoneRequired && customerSettings.PhoneEnabled) 
             RuleFor(x => x.Phone).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.Phone.Required"));
-        }
-        if (customerSettings.PhoneEnabled)
-        {
+        if (customerSettings.PhoneEnabled) 
             RuleFor(x => x.Phone).IsPhoneNumber(customerSettings).WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.Phone.NotValid"));
-        }
-        if (customerSettings.FaxRequired && customerSettings.FaxEnabled)
-        {
+        if (customerSettings.FaxRequired && customerSettings.FaxEnabled) 
             RuleFor(x => x.Fax).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.Fax.Required"));
-        }
 
         //Tax settings
-        if (taxSettings.EuVatEnabled && taxSettings.EuVatRequired)
-        {
+        if (taxSettings.EuVatEnabled && taxSettings.EuVatRequired) 
             RuleFor(x => x.VatNumber).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.VatNumber.Required"));
-        }
-
     }
 }

@@ -17,23 +17,19 @@ public class SchemaMigration : ForwardOnlyMigration
 
         var ageVerificationColumnName = nameof(Product.AgeVerification);
         if (!Schema.Table(productTableName).Column(ageVerificationColumnName).Exists())
-        {
             Alter.Table(productTableName)
                 .AddColumn(ageVerificationColumnName)
                 .AsBoolean()
                 .NotNullable()
                 .WithDefaultValue(false);
-        }
 
         var minimumAgeToPurchaseColumnName = nameof(Product.MinimumAgeToPurchase);
         if (!Schema.Table(productTableName).Column(minimumAgeToPurchaseColumnName).Exists())
-        {
             Alter.Table(productTableName)
                 .AddColumn(minimumAgeToPurchaseColumnName)
                 .AsInt32()
                 .NotNullable()
                 .WithDefaultValue(0);
-        }
 
         //#7294
         var topicTableName = nameof(Topic);
@@ -41,20 +37,16 @@ public class SchemaMigration : ForwardOnlyMigration
         var topicAvailableStartDateColumnName = nameof(Topic.AvailableStartDateTimeUtc);
 
         if (!Schema.Table(topicTableName).Column(topicAvailableEndDateColumnName).Exists())
-        {
             Alter.Table(topicTableName)
                 .AddColumn(topicAvailableEndDateColumnName)
                 .AsDateTime()
                 .Nullable();
-        }
 
         if (!Schema.Table(topicTableName).Column(topicAvailableStartDateColumnName).Exists())
-        {
             Alter.Table(topicTableName)
                 .AddColumn(topicAvailableStartDateColumnName)
                 .AsDateTime()
                 .Nullable();
-        }
 
         //#873
         var productTagTableName = nameof(ProductTag);

@@ -46,11 +46,9 @@ public partial class ShippingPluginManager : PluginManager<IShippingRateComputat
 
         //filter by passed system name
         if (!string.IsNullOrEmpty(systemName))
-        {
             shippingProviders = shippingProviders
                 .Where(provider => provider.PluginDescriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase))
                 .ToList();
-        }
 
         return shippingProviders;
     }

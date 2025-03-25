@@ -118,10 +118,8 @@ public class CustomerRoleDiscountRequirementRule : BasePlugin, IDiscountRequirem
         //discount requirements
         var discountRequirements = (await _discountService.GetAllDiscountRequirementsAsync())
             .Where(discountRequirement => discountRequirement.DiscountRequirementRuleSystemName == DiscountRequirementDefaults.SystemName);
-        foreach (var discountRequirement in discountRequirements)
-        {
+        foreach (var discountRequirement in discountRequirements) 
             await _discountService.DeleteDiscountRequirementAsync(discountRequirement, false);
-        }
 
         //locales
         await _localizationService.DeleteLocaleResourcesAsync("Plugins.DiscountRules.CustomerRoles");

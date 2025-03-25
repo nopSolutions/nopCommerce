@@ -58,10 +58,8 @@ public class SettingMigration : MigrationBase
         //#5384
         var seoSettings = settingService.LoadSetting<SeoSettings>();
         foreach (var slug in NopSeoDefaults.ReservedUrlRecordSlugs)
-        {
             if (!seoSettings.ReservedUrlRecordSlugs.Contains(slug))
                 seoSettings.ReservedUrlRecordSlugs.Add(slug);
-        }
         settingService.SaveSetting(seoSettings, settings => seoSettings.ReservedUrlRecordSlugs);
 
         //#3015

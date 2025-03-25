@@ -69,12 +69,10 @@ public partial class ProductAttributeController : BaseAdminController
     protected virtual async Task UpdateLocalesAsync(PredefinedProductAttributeValue ppav, PredefinedProductAttributeValueModel model)
     {
         foreach (var localized in model.Locales)
-        {
             await _localizedEntityService.SaveLocalizedValueAsync(ppav,
                 x => x.Name,
                 localized.Name,
                 localized.LanguageId);
-        }
     }
 
     #endregion

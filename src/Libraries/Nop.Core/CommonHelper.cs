@@ -38,10 +38,8 @@ public partial class CommonHelper
         output = output.Trim();
         output = EnsureMaximumLength(output, 255);
 
-        if (!IsValidEmail(output))
-        {
+        if (!IsValidEmail(output)) 
             throw new NopException("Email is not valid.");
-        }
 
         return output;
     }
@@ -115,10 +113,8 @@ public partial class CommonHelper
         var pLen = postfix?.Length ?? 0;
 
         var result = str[0..(maxLength - pLen)];
-        if (!string.IsNullOrEmpty(postfix))
-        {
+        if (!string.IsNullOrEmpty(postfix)) 
             result += postfix;
-        }
 
         return result;
     }

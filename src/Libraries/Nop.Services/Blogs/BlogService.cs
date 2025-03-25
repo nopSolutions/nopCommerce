@@ -98,10 +98,8 @@ public partial class BlogService : IBlogService
                 query = query.Where(b => b.Title.Contains(title));
 
             if (!showHidden || storeId > 0)
-            {
                 //apply store mapping constraints
                 query = await _storeMappingService.ApplyStoreMapping(query, storeId);
-            }
 
             if (!showHidden)
             {

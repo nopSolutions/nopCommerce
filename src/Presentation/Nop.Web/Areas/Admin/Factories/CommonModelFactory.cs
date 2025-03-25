@@ -270,13 +270,11 @@ public partial class CommonModelFactory : ICommonModelFactory
 
         //check whether primary exchange rate currency rate configured
         if (primaryExchangeRateCurrency.Rate != 1)
-        {
             models.Add(new SystemWarningModel
             {
                 Level = SystemWarningLevel.Fail,
                 Text = await _localizationService.GetResourceAsync("Admin.System.Warnings.ExchangeCurrency.Rate1")
             });
-        }
     }
 
     /// <summary>
@@ -336,13 +334,11 @@ public partial class CommonModelFactory : ICommonModelFactory
 
         //check whether base measure weight ratio configured
         if (baseWeight.Ratio != 1)
-        {
             models.Add(new SystemWarningModel
             {
                 Level = SystemWarningLevel.Fail,
                 Text = await _localizationService.GetResourceAsync("Admin.System.Warnings.DefaultWeight.Ratio1")
             });
-        }
     }
 
     /// <summary>
@@ -374,13 +370,11 @@ public partial class CommonModelFactory : ICommonModelFactory
 
         //check whether base measure dimension ratio configured
         if (baseDimension.Ratio != 1)
-        {
             models.Add(new SystemWarningModel
             {
                 Level = SystemWarningLevel.Fail,
                 Text = await _localizationService.GetResourceAsync("Admin.System.Warnings.DefaultDimension.Ratio1")
             });
-        }
     }
 
     /// <summary>
@@ -421,23 +415,19 @@ public partial class CommonModelFactory : ICommonModelFactory
 
         //check whether "IgnoreStoreLimitations" setting disabled
         if (!_catalogSettings.IgnoreStoreLimitations && (await _storeService.GetAllStoresAsync()).Count == 1)
-        {
             models.Add(new SystemWarningModel
             {
                 Level = SystemWarningLevel.Recommendation,
                 Text = await _localizationService.GetResourceAsync("Admin.System.Warnings.Performance.IgnoreStoreLimitations")
             });
-        }
 
         //check whether "IgnoreAcl" setting disabled
         if (!_catalogSettings.IgnoreAcl)
-        {
             models.Add(new SystemWarningModel
             {
                 Level = SystemWarningLevel.Recommendation,
                 Text = await _localizationService.GetResourceAsync("Admin.System.Warnings.Performance.IgnoreAcl")
             });
-        }
     }
 
     /// <summary>
@@ -466,13 +456,11 @@ public partial class CommonModelFactory : ICommonModelFactory
         }
 
         if (dirPermissionsOk)
-        {
             models.Add(new SystemWarningModel
             {
                 Level = SystemWarningLevel.Pass,
                 Text = await _localizationService.GetResourceAsync("Admin.System.Warnings.DirectoryPermission.OK")
             });
-        }
 
         var filePermissionsOk = true;
         var filesToCheck = _fileProvider.GetFilesWrite();
@@ -491,13 +479,11 @@ public partial class CommonModelFactory : ICommonModelFactory
         }
 
         if (filePermissionsOk)
-        {
             models.Add(new SystemWarningModel
             {
                 Level = SystemWarningLevel.Pass,
                 Text = await _localizationService.GetResourceAsync("Admin.System.Warnings.FilePermission.OK")
             });
-        }
     }
 
     /// <summary>
@@ -781,14 +767,12 @@ public partial class CommonModelFactory : ICommonModelFactory
         }
 
         foreach (var header in _httpContextAccessor.HttpContext.Request.Headers)
-        {
             if (header.Key != HeaderNames.Cookie)
                 model.Headers.Add(new SystemInfoModel.HeaderModel
                 {
                     Name = header.Key,
                     Value = header.Value
                 });
-        }
 
         foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
         {

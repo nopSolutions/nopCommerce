@@ -89,10 +89,8 @@ public partial class NewsService : INewsService
                 query = query.Where(n => n.Title.Contains(title));
 
             if (!showHidden || storeId > 0)
-            {
                 //apply store mapping constraints
                 query = await _storeMappingService.ApplyStoreMapping(query, storeId);
-            }
 
             if (!showHidden)
             {

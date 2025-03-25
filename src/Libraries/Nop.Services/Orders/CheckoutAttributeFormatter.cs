@@ -126,10 +126,8 @@ public partial class CheckoutAttributeFormatter : ICheckoutAttributeFormatter
                                 attributeText = $"<a href=\"{downloadLink}\" class=\"fileuploadattribute\">{fileName}</a>";
                             }
                             else
-                            {
                                 //hyperlinks aren't allowed
                                 attributeText = fileName;
-                            }
 
                             var attributeName = await _localizationService.GetLocalizedAsync(attribute, a => a.Name, currentLanguage.Id);
                             //encode (if required)
@@ -161,11 +159,9 @@ public partial class CheckoutAttributeFormatter : ICheckoutAttributeFormatter
                                 var priceAdjustmentBase = (await _taxService.GetCheckoutAttributePriceAsync(attribute, attributeValue, customer)).price;
                                 var priceAdjustment = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(priceAdjustmentBase, await _workContext.GetWorkingCurrencyAsync());
                                 if (priceAdjustmentBase > 0)
-                                {
                                     formattedAttribute += string.Format(
                                         await _localizationService.GetResourceAsync("FormattedAttributes.PriceAdjustment"),
                                         "+", await _priceFormatter.FormatPriceAsync(priceAdjustment), string.Empty);
-                                }
                             }
                         }
 

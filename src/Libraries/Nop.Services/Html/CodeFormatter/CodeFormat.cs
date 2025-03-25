@@ -91,10 +91,8 @@ public abstract partial class CodeFormat : SourceFormat
         regKeyword = r.Replace(regKeyword, @"|");
         regPreproc = r.Replace(regPreproc, @"|");
 
-        if (regPreproc.Length == 0)
-        {
+        if (regPreproc.Length == 0) 
             regPreproc = "(?!.*)_{37}(?<!.*)"; //use something quite impossible...
-        }
 
         //build a master regex with capturing groups
         var regAll = new StringBuilder();
@@ -131,10 +129,8 @@ public abstract partial class CodeFormat : SourceFormat
             var sb = new StringBuilder();
             while ((line = reader.ReadLine()) != null)
             {
-                if (sb.Length > 0)
-                {
+                if (sb.Length > 0) 
                     sb.Append('\n');
-                }
 
                 sb.Append("<span class=\"rem\">");
                 sb.Append(line);
@@ -145,19 +141,13 @@ public abstract partial class CodeFormat : SourceFormat
         }
 
         if (match.Groups[2].Success) //string literal
-        {
             return "<span class=\"str\">" + match + "</span>";
-        }
 
         if (match.Groups[3].Success) //preprocessor keyword
-        {
             return "<span class=\"preproc\">" + match + "</span>";
-        }
 
         if (match.Groups[4].Success) //keyword
-        {
             return "<span class=\"kwrd\">" + match + "</span>";
-        }
 
         return string.Empty; //none of the above
     }

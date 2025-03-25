@@ -165,10 +165,7 @@ public partial class ProductAttributeParser : IProductAttributeParser
                 senderEmail = form[formKey];
                 continue;
             }
-            if (formKey.Equals($"giftcard_{product.Id}.Message", StringComparison.InvariantCultureIgnoreCase))
-            {
-                giftCardMessage = form[formKey];
-            }
+            if (formKey.Equals($"giftcard_{product.Id}.Message", StringComparison.InvariantCultureIgnoreCase)) giftCardMessage = form[formKey];
         }
 
         attributesXml = AddGiftCardAttribute(attributesXml, recipientName, recipientEmail, senderName, senderEmail, giftCardMessage);
@@ -221,7 +218,6 @@ public partial class ProductAttributeParser : IProductAttributeParser
                 {
                     var ctrlAttributes = form[controlId];
                     if (!StringValues.IsNullOrEmpty(ctrlAttributes))
-                    {
                         foreach (var item in ctrlAttributes.ToString()
                                      .Split(_separator, StringSplitOptions.RemoveEmptyEntries))
                         {
@@ -239,7 +235,6 @@ public partial class ProductAttributeParser : IProductAttributeParser
                                     attribute, selectedAttributeId.ToString(), quantity > 1 ? (int?)quantity : null);
                             }
                         }
-                    }
                 }
                     break;
                 case AttributeControlType.ReadonlyCheckboxes:
@@ -310,10 +305,7 @@ public partial class ProductAttributeParser : IProductAttributeParser
         foreach (var attribute in productAttributes)
         {
             var conditionMet = await IsConditionMetAsync(attribute, attributesXml);
-            if (conditionMet.HasValue && !conditionMet.Value)
-            {
-                attributesXml = RemoveProductAttribute(attributesXml, attribute);
-            }
+            if (conditionMet.HasValue && !conditionMet.Value) attributesXml = RemoveProductAttribute(attributesXml, attribute);
         }
         return attributesXml;
     }
@@ -567,9 +559,7 @@ public partial class ProductAttributeParser : IProductAttributeParser
                 xmlDoc.AppendChild(element1);
             }
             else
-            {
                 xmlDoc.LoadXml(attributesXml);
-            }
 
             var rootElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes");
 
@@ -673,7 +663,6 @@ public partial class ProductAttributeParser : IProductAttributeParser
                 var values1Str = ParseValuesWithQuantity(attributesXml1, a1.Id);
                 var values2Str = ParseValuesWithQuantity(attributesXml2, a2.Id);
                 if (values1Str.Count == values2Str.Count)
-                {
                     foreach (var str1 in values1Str)
                     {
                         var hasValue = false;
@@ -694,7 +683,6 @@ public partial class ProductAttributeParser : IProductAttributeParser
                         attributesEqual = false;
                         break;
                     }
-                }
                 else
                 {
                     attributesEqual = false;
@@ -834,33 +822,23 @@ public partial class ProductAttributeParser : IProductAttributeParser
                 var currentAttributesXml = new List<string>();
 
                 if (isCheckbox)
-                {
                     //add several values attribute types (checkboxes)
-
                     //checkboxes could have several values ticked
                     foreach (var oldXml in attributesXml.Any() ? attributesXml : [string.Empty])
+                    foreach (var checkboxCombination in CreateCombination(attributeValues))
                     {
-                        foreach (var checkboxCombination in CreateCombination(attributeValues))
-                        {
-                            var newXml = oldXml;
-                            foreach (var checkboxValue in checkboxCombination)
-                                newXml = AddProductAttribute(newXml, productAttributeMapping, checkboxValue.Id.ToString());
+                        var newXml = oldXml;
+                        foreach (var checkboxValue in checkboxCombination)
+                            newXml = AddProductAttribute(newXml, productAttributeMapping, checkboxValue.Id.ToString());
 
-                            if (!string.IsNullOrEmpty(newXml))
-                                currentAttributesXml.Add(newXml);
-                        }
+                        if (!string.IsNullOrEmpty(newXml))
+                            currentAttributesXml.Add(newXml);
                     }
-                }
                 else
-                {
                     //add one value attribute types (dropdownlist, radiobutton, color squares)
-
                     foreach (var oldXml in attributesXml.Any() ? attributesXml : [string.Empty])
-                    {
                         currentAttributesXml.AddRange(attributeValues.Select(attributeValue =>
                             AddProductAttribute(oldXml, productAttributeMapping, attributeValue.Id.ToString())));
-                    }
-                }
 
                 attributesXml.Clear();
                 attributesXml.AddRange(currentAttributesXml);
@@ -904,14 +882,12 @@ public partial class ProductAttributeParser : IProductAttributeParser
         var customerEnteredPriceConverted = decimal.Zero;
         if (product.CustomerEntersPrice)
             foreach (var formKey in form.Keys)
-            {
                 if (formKey.Equals($"addtocart_{product.Id}.CustomerEnteredPrice", StringComparison.InvariantCultureIgnoreCase))
                 {
                     if (decimal.TryParse(form[formKey], out var customerEnteredPrice))
                         customerEnteredPriceConverted = await _currencyService.ConvertToPrimaryStoreCurrencyAsync(customerEnteredPrice, await _workContext.GetWorkingCurrencyAsync());
                     break;
                 }
-            }
 
         return customerEnteredPriceConverted;
     }

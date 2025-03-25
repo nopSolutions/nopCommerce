@@ -186,10 +186,8 @@ public partial class VendorModelFactory : IVendorModelFactory
         model.TermsOfServiceEnabled = _vendorSettings.TermsOfServiceEnabled;
         model.TermsOfServicePopup = _commonSettings.PopupForTermsOfServiceLinks;
 
-        if (!excludeProperties)
-        {
+        if (!excludeProperties) 
             model.Email = customer.Email;
-        }
 
         //vendor attributes
         model.VendorAttributes = await PrepareVendorAttributesAsync(vendorAttributesXml);

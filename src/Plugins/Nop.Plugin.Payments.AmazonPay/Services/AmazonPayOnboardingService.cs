@@ -172,13 +172,9 @@ public class AmazonPayOnboardingService
                 .Replace($"{Uri.UriSchemeHttp}{Uri.SchemeDelimiter}", $"{Uri.UriSchemeHttps}{Uri.SchemeDelimiter}"));
 
             foreach (var store in await _storeService.GetAllStoresAsync())
-            {
                 if (!string.IsNullOrEmpty(store.Url) && !store.Url.Contains("localhost"))
-                {
                     post.Add("merchantLoginDomains[]", store.Url.TrimEnd('/'));
-                    //post.Add("merchantLoginRedirectURLs[]", ""); //not used
-                }
-            }
+            //post.Add("merchantLoginRedirectURLs[]", ""); //not used
             post.Add("merchantStoreDescription", CommonHelper.EnsureMaximumLength((await _storeContext.GetCurrentStoreAsync()).Name, 2048));
             //post.Add("merchantCountry", ""); //not yet processed
 

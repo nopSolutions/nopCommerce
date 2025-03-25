@@ -227,11 +227,9 @@ public partial class NewsModelFactory : INewsModelFactory
         };
 
         if (_customerSettings.AllowCustomersToUploadAvatars)
-        {
             model.CustomerAvatarUrl = await _pictureService.GetPictureUrlAsync(
                 await _genericAttributeService.GetAttributeAsync<Customer, int>(newsComment.CustomerId, NopCustomerDefaults.AvatarPictureIdAttribute),
                 _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
-        }
 
         return model;
     }

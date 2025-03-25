@@ -283,7 +283,6 @@ public partial class CatalogModelFactory : ICatalogModelFactory
             var workingLanguage = await _workContext.GetWorkingLanguageAsync();
 
             foreach (var manufacturer in availableManufacturers)
-            {
                 model.Manufacturers.Add(new SelectListItem
                 {
                     Value = manufacturer.Id.ToString(),
@@ -292,7 +291,6 @@ public partial class CatalogModelFactory : ICatalogModelFactory
                     Selected = selectedManufacturers?
                         .Any(manufacturerId => manufacturerId == manufacturer.Id) == true
                 });
-            }
         }
 
         return model;
@@ -336,18 +334,14 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         model.AvailablePriceRange.To = Math.Ceiling(await toWorkingCurrencyAsync(availablePriceRange.To));
 
         if (!selectedPriceRange.From.HasValue || availablePriceRange.From == selectedPriceRange.From)
-        {
             //already converted
             model.SelectedPriceRange.From = model.AvailablePriceRange.From;
-        }
         else if (selectedPriceRange.From > decimal.Zero)
             model.SelectedPriceRange.From = Math.Floor(await toWorkingCurrencyAsync(selectedPriceRange.From));
 
         if (!selectedPriceRange.To.HasValue || availablePriceRange.To == selectedPriceRange.To)
-        {
             //already converted
             model.SelectedPriceRange.To = model.AvailablePriceRange.To;
-        }
         else if (selectedPriceRange.To > decimal.Zero)
             model.SelectedPriceRange.To = Math.Ceiling(await toWorkingCurrencyAsync(selectedPriceRange.To));
 
@@ -594,10 +588,8 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         //get active category
         var activeCategoryId = 0;
         if (currentCategoryId > 0)
-        {
             //category details page
             activeCategoryId = currentCategoryId;
-        }
         else if (currentProductId > 0)
         {
             //product details page
@@ -805,13 +797,11 @@ public partial class CatalogModelFactory : ICatalogModelFactory
                 };
             }
             else
-            {
                 availablePriceRange = new PriceRangeModel
                 {
                     From = category.PriceFrom,
                     To = category.PriceTo
                 };
-            }
 
             model.PriceRangeFilter = await PreparePriceRangeFilterAsync(selectedPriceRange, availablePriceRange);
         }
@@ -820,10 +810,8 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         var filterableOptions = await _specificationAttributeService
             .GetFiltrableSpecificationAttributeOptionsByCategoryIdAsync(category.Id);
 
-        if (_catalogSettings.EnableSpecificationAttributeFiltering)
-        {
+        if (_catalogSettings.EnableSpecificationAttributeFiltering) 
             model.SpecificationFilter = await PrepareSpecificationFilterModel(command.Specs, filterableOptions);
-        }
 
         //filterable manufacturers
         if (_catalogSettings.EnableManufacturerFiltering)
@@ -1075,13 +1063,11 @@ public partial class CatalogModelFactory : ICatalogModelFactory
                 };
             }
             else
-            {
                 availablePriceRange = new PriceRangeModel
                 {
                     From = manufacturer.PriceFrom,
                     To = manufacturer.PriceTo
                 };
-            }
 
             model.PriceRangeFilter = await PreparePriceRangeFilterAsync(selectedPriceRange, availablePriceRange);
         }
@@ -1090,10 +1076,8 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         var filterableOptions = await _specificationAttributeService
             .GetFiltrableSpecificationAttributeOptionsByManufacturerIdAsync(manufacturer.Id);
 
-        if (_catalogSettings.EnableSpecificationAttributeFiltering)
-        {
+        if (_catalogSettings.EnableSpecificationAttributeFiltering) 
             model.SpecificationFilter = await PrepareSpecificationFilterModel(command.Specs, filterableOptions);
-        }
 
         var filteredSpecs = command.Specs is null ? null : filterableOptions.Where(fo => command.Specs.Contains(fo.Id)).ToList();
 
@@ -1307,13 +1291,11 @@ public partial class CatalogModelFactory : ICatalogModelFactory
                 };
             }
             else
-            {
                 availablePriceRange = new PriceRangeModel
                 {
                     From = vendor.PriceFrom,
                     To = vendor.PriceTo
                 };
-            }
 
             model.PriceRangeFilter = await PreparePriceRangeFilterAsync(selectedPriceRange, availablePriceRange);
         }
@@ -1386,14 +1368,12 @@ public partial class CatalogModelFactory : ICatalogModelFactory
             };
 
             foreach (var vendor in vendors)
-            {
                 model.Vendors.Add(new VendorBriefInfoModel
                 {
                     Id = vendor.Id,
                     Name = await _localizationService.GetLocalizedAsync(vendor, x => x.Name),
                     SeName = await _urlRecordService.GetSeNameAsync(vendor),
                 });
-            }
 
             return model;
         });
@@ -1463,11 +1443,9 @@ public partial class CatalogModelFactory : ICatalogModelFactory
                 };
 
                 if (_customerSettings.AllowCustomersToUploadAvatars)
-                {
                     model.CustomerAvatarUrl = await _pictureService.GetPictureUrlAsync(
                         await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute),
                         _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
-                }
 
                 return model;
             })
@@ -1614,13 +1592,11 @@ public partial class CatalogModelFactory : ICatalogModelFactory
                 };
             }
             else
-            {
                 availablePriceRange = new PriceRangeModel
                 {
                     From = _catalogSettings.ProductsByTagPriceFrom,
                     To = _catalogSettings.ProductsByTagPriceTo
                 };
-            }
 
             model.PriceRangeFilter = await PreparePriceRangeFilterAsync(selectedPriceRange, availablePriceRange);
         }
@@ -1731,14 +1707,12 @@ public partial class CatalogModelFactory : ICatalogModelFactory
             });
             //all other categories
             foreach (var c in categoriesModels)
-            {
                 model.AvailableCategories.Add(new SelectListItem
                 {
                     Value = c.Id.ToString(),
                     Text = c.Breadcrumb,
                     Selected = model.cid == c.Id
                 });
-            }
         }
 
         var manufacturers = await _manufacturerService.GetAllManufacturersAsync(storeId: currentStore.Id);
@@ -1831,11 +1805,9 @@ public partial class CatalogModelFactory : ICatalogModelFactory
             var currentStore = await _storeContext.GetCurrentStoreAsync();
 
             if (searchTerms.Length < _catalogSettings.ProductSearchTermMinimumLength)
-            {
                 model.WarningMessage =
                     string.Format(await _localizationService.GetResourceAsync("Search.SearchTermMinimumLengthIsNCharacters"),
                         _catalogSettings.ProductSearchTermMinimumLength);
-            }
             else
             {
                 var categoryIds = new List<int>();
@@ -1852,11 +1824,9 @@ public partial class CatalogModelFactory : ICatalogModelFactory
                     {
                         categoryIds.Add(categoryId);
                         if (searchModel.isc)
-                        {
                             //include subcategories
                             categoryIds.AddRange(
                                 await _categoryService.GetChildCategoryIdsAsync(categoryId, currentStore.Id));
-                        }
                     }
 
                     manufacturerId = searchModel.mid;
@@ -2012,14 +1982,12 @@ public partial class CatalogModelFactory : ICatalogModelFactory
 
                 //add top categories
                 foreach (var c in allCategories.Where(c => c.ParentCategoryId == 0).OrderBy(c => c.DisplayOrder).ToList())
-                {
                     result.Add(new()
                     {
                         Value = c.Id.ToString(),
                         Text = await _localizationService.GetLocalizedAsync(c, x => x.Name, language.Id),
                         Selected = model.SearchCategoryId == c.Id
                     });
-                }
 
                 return result;
             });
@@ -2062,14 +2030,12 @@ public partial class CatalogModelFactory : ICatalogModelFactory
 
         //prepare available model sorting options
         foreach (var option in orderedActiveSortingOptions)
-        {
             model.AvailableSortOptions.Add(new SelectListItem
             {
                 Text = await _localizationService.GetLocalizedEnumAsync((ProductSortingEnum)option.Id),
                 Value = option.Id.ToString(),
                 Selected = option.Id == command.OrderBy
             });
-        }
     }
 
     /// <summary>
@@ -2129,13 +2095,9 @@ public partial class CatalogModelFactory : ICatalogModelFactory
             {
                 // get the first page size entry to use as the default (category page load) or if customer enters invalid value via query string
                 if (command.PageSize <= 0 || !pageSizes.Contains(command.PageSize.ToString()))
-                {
                     if (int.TryParse(pageSizes.FirstOrDefault(), out var temp))
-                    {
                         if (temp > 0)
                             command.PageSize = temp;
-                    }
-                }
 
                 foreach (var pageSize in pageSizes)
                 {
@@ -2164,16 +2126,11 @@ public partial class CatalogModelFactory : ICatalogModelFactory
             }
         }
         else
-        {
             //customer is not allowed to select a page size
             command.PageSize = fixedPageSize;
-        }
 
         //ensure pge size is specified
-        if (command.PageSize <= 0)
-        {
-            command.PageSize = fixedPageSize;
-        }
+        if (command.PageSize <= 0) command.PageSize = fixedPageSize;
 
         return Task.CompletedTask;
     }

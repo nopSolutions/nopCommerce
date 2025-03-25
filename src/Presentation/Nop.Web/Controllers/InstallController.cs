@@ -94,14 +94,12 @@ public partial class InstallController : Controller
     protected virtual InstallModel PrepareLanguageList(InstallModel model)
     {
         foreach (var lang in _locService.Value.GetAvailableLanguages())
-        {
             model.AvailableLanguages.Add(new SelectListItem
             {
                 Value = Url.RouteUrl("InstallationChangeLanguage", new { language = lang.Code }),
                 Text = lang.Name,
                 Selected = _locService.Value.GetCurrentLanguage().Code == lang.Code
             });
-        }
 
         return model;
     }
@@ -203,7 +201,6 @@ public partial class InstallController : Controller
             }, _fileProvider);
 
             if (model.CreateDatabaseIfNotExists && !await dataProvider.DatabaseExistsAsync())
-            {
                 try
                 {
                     dataProvider.CreateDatabase(model.Collation);
@@ -212,7 +209,6 @@ public partial class InstallController : Controller
                 {
                     throw new Exception(string.Format(_locService.Value.GetResource("DatabaseCreationError"), ex.Message));
                 }
-            }
             else
             {
                 //check whether database exists
@@ -223,7 +219,6 @@ public partial class InstallController : Controller
             dataProvider.InitializeDatabase();
 
             if (model.SubscribeNewsletters)
-            {
                 try
                 {
                     var resultRequest = await _nopHttpClient.Value.SubscribeNewslettersAsync(model.AdminEmail);
@@ -232,7 +227,6 @@ public partial class InstallController : Controller
                 {
                     // ignored
                 }
-            }
 
             var cultureInfo = new CultureInfo(NopCommonDefaults.DefaultLanguageCulture);
             var regionInfo = new RegionInfo(NopCommonDefaults.DefaultLanguageCulture);
@@ -254,7 +248,6 @@ public partial class InstallController : Controller
 
                 //get URL to download language pack
                 if (cultureInfo.Name != NopCommonDefaults.DefaultLanguageCulture)
-                {
                     try
                     {
                         var languageCode = _locService.Value.GetCurrentLanguage().Code[0..2];
@@ -272,7 +265,6 @@ public partial class InstallController : Controller
                     {
                         // ignored
                     }
-                }
 
                 //upload CLDR
                 await _uploadService.Value.UploadLocalePatternAsync(cultureInfo);
@@ -295,21 +287,17 @@ public partial class InstallController : Controller
 
             var pluginsIgnoredDuringInstallation = new List<string>();
             if (!string.IsNullOrEmpty(_appSettings.Get<InstallationConfig>().DisabledPlugins))
-            {
                 pluginsIgnoredDuringInstallation = _appSettings.Get<InstallationConfig>().DisabledPlugins
                     .Split(',', StringSplitOptions.RemoveEmptyEntries).Select(pluginName => pluginName.Trim()).ToList();
-            }
 
             var plugins = (await _pluginService.Value.GetPluginDescriptorsAsync<IPlugin>(LoadPluginsMode.All))
                 .Where(pluginDescriptor => !pluginsIgnoredDuringInstallation.Contains(pluginDescriptor.SystemName))
                 .OrderBy(pluginDescriptor => pluginDescriptor.Group).ThenBy(pluginDescriptor => pluginDescriptor.DisplayOrder)
                 .ToList();
 
-            foreach (var plugin in plugins)
-            {
+            foreach (var plugin in plugins) 
                 await _pluginService.Value.PreparePluginToInstallAsync(plugin.SystemName, checkDependencies: false);
-            }
-            
+
             return View(new InstallModel { RestartUrl = Url.RouteUrl("Homepage") });
 
         }

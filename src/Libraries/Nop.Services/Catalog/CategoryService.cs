@@ -279,10 +279,8 @@ public partial class CategoryService : ICategoryService
                 query = query.Where(c => c.Published == overridePublished.Value);
 
             if (!showHidden || storeId > 0)
-            {
                 //apply store mapping constraints
                 query = await _storeMappingService.ApplyStoreMapping(query, storeId);
-            }
 
             if (!showHidden)
             {
@@ -841,7 +839,6 @@ public partial class CategoryService : ICategoryService
         var existingStoreMappings = await _storeMappingService.GetStoreMappingsAsync(category);
         var allStores = await _storeService.GetAllStoresAsync();
         foreach (var store in allStores)
-        {
             if (limitedToStoresIds.Contains(store.Id))
             {
                 //new store
@@ -855,7 +852,6 @@ public partial class CategoryService : ICategoryService
                 if (storeMappingToDelete != null)
                     await _storeMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
             }
-        }
     }
 
     #endregion

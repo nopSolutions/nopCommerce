@@ -99,12 +99,10 @@ public partial class CheckoutAttributeController : BaseAdminController
     protected virtual async Task UpdateValueLocalesAsync(CheckoutAttributeValue checkoutAttributeValue, CheckoutAttributeValueModel model)
     {
         foreach (var localized in model.Locales)
-        {
             await _localizedEntityService.SaveLocalizedValueAsync(checkoutAttributeValue,
                 x => x.Name,
                 localized.Name,
                 localized.LanguageId);
-        }
     }
 
     protected virtual async Task SaveStoreMappingsAsync(CheckoutAttribute checkoutAttribute, CheckoutAttributeModel model)
@@ -115,7 +113,6 @@ public partial class CheckoutAttributeController : BaseAdminController
         var existingStoreMappings = await _storeMappingService.GetStoreMappingsAsync(checkoutAttribute);
         var allStores = await _storeService.GetAllStoresAsync();
         foreach (var store in allStores)
-        {
             if (model.SelectedStoreIds.Contains(store.Id))
             {
                 //new store
@@ -129,7 +126,6 @@ public partial class CheckoutAttributeController : BaseAdminController
                 if (storeMappingToDelete != null)
                     await _storeMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
             }
-        }
     }
 
     protected virtual async Task SaveConditionAttributesAsync(CheckoutAttribute checkoutAttribute, CheckoutAttributeModel model)
@@ -140,7 +136,6 @@ public partial class CheckoutAttributeController : BaseAdminController
         {
             var attribute = await _checkoutAttributeService.GetAttributeByIdAsync(model.ConditionModel.SelectedAttributeId);
             if (attribute != null)
-            {
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
@@ -157,7 +152,7 @@ public partial class CheckoutAttributeController : BaseAdminController
                         //hence we won't be able to find a selected attribute
                         attributesXml = _checkoutAttributeParser.AddAttribute(null, attribute, string.IsNullOrEmpty(selectedValue) ? string.Empty : selectedValue);
                     }
-                    break;
+                        break;
 
                     case AttributeControlType.Checkboxes:
                     {
@@ -174,7 +169,7 @@ public partial class CheckoutAttributeController : BaseAdminController
                         else
                             attributesXml = _checkoutAttributeParser.AddAttribute(null, attribute, string.Empty);
                     }
-                    break;
+                        break;
 
                     case AttributeControlType.ReadonlyCheckboxes:
                     case AttributeControlType.TextBox:
@@ -185,7 +180,6 @@ public partial class CheckoutAttributeController : BaseAdminController
                         //these attribute types are not supported as conditions
                         break;
                 }
-            }
         }
 
         checkoutAttribute.ConditionAttributeXml = attributesXml;

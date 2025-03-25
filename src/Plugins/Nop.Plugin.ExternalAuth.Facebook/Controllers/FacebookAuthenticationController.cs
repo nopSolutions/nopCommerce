@@ -109,9 +109,7 @@ public class FacebookAuthenticationController : BasePluginController
 
         if (string.IsNullOrEmpty(_facebookExternalAuthSettings.ClientKeyIdentifier) ||
             string.IsNullOrEmpty(_facebookExternalAuthSettings.ClientSecret))
-        {
             throw new NopException("Facebook authentication module not configured");
-        }
 
         //configure login callback action
         var authenticationProperties = new AuthenticationProperties

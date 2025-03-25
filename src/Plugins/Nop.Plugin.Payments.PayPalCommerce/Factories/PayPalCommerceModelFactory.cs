@@ -641,41 +641,31 @@ public class PayPalCommerceModelFactory
 
         //check special details of "Advanced Cards" feature and prepare warning notifications
         if (merchant.AdvancedCardsDetails.BelowLimit)
-        {
             model.Messages.Warning.Add("PayPal requires more information about your business on paypal.com to fully enable " +
                 "Advanced Credit and Debit Card Payments beyond a $500 receiving limitation. " +
                 "Please visit <a href=\"https://www.paypal.com/policy/hub/kyc\" target=\"_blank\">https://www.paypal.com/policy/hub/kyc</a>. " +
                 "After reaching the $500 limit you will still be offering all other PayPal payment methods except " +
                 "Advanced Credit and Debit Card Payments to your customers.");
-        }
         if (merchant.AdvancedCardsDetails.OverLimit)
-        {
             model.Messages.Warning.Add("PayPal requires more information about your business on paypal.com to fully enable " +
                 "Advanced Credit and Debit Card Payments beyond a $500 receiving limitation. " +
                 "Please visit <a href=\"https://www.paypal.com/policy/hub/kyc\" target=\"_blank\">https://www.paypal.com/policy/hub/kyc</a>. " +
                 "You already surpassed the $500 limitation hence aren't able to process more " +
                 "Advanced Credit and Debit Card Payments transactions but are still offering all other PayPal payment methods to your customers. " +
                 "Once sorted, simply revisit this page to refresh the onboarding status.");
-        }
         if (merchant.AdvancedCardsDetails.NeedMoreData)
-        {
             model.Messages.Warning.Add("PayPal requires more information about your business on paypal.com to fully enable " +
                 "Advanced Credit and Debit Card Payments. " +
                 "Please visit <a href=\"https://www.paypal.com/policy/hub/kyc\" target=\"_blank\">https://www.paypal.com/policy/hub/kyc</a>. " +
                 "Until then you are still offering all other PayPal payment methods to your customers. " +
                 "Once sorted, simply revisit this page to refresh the onboarding status.");
-        }
         if (merchant.AdvancedCardsDetails.OnReview)
-        {
             model.Messages.Warning.Add("PayPal is currently reviewing your information after which you’ll be notified of your eligibility for " +
                 "Advanced Credit and Debit Card Payments. Until then you are still offering all other PayPal payment methods to your customers.");
-        }
         if (merchant.AdvancedCardsDetails.Denied)
-        {
             model.Messages.Warning.Add(string.Format("PayPal denied your application to use Advanced Credit and Debit Card Payments. " +
                 "You can retry in 90 days, on {0} on paypal.com. Until then you are still offering all other " +
                 "PayPal payment methods to your customers.", DateTime.UtcNow.AddDays(90).ToShortDateString()));
-        }
 
         //no need to check further details, if the plugin is already connected 
         if (PayPalCommerceServiceManager.IsConnected(settings))
@@ -690,19 +680,15 @@ public class PayPalCommerceModelFactory
         {
             model.Messages.Warning.Add(await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Onboarding.InProcess"));
             if (!model.PaymentsReceivable)
-            {
                 model.Messages.Warning.Add("Attention: You currently cannot receive payments due to possible restriction on your PayPal account. " +
                     "Please reach out to PayPal Customer Support or connect to " +
                     "<a href=\"https://www.paypal.com/\" target=\"_blank\">https://www.paypal.com/</a> for more information. " +
                     "Once sorted, simply revisit this page to refresh the onboarding status.");
-            }
             if (!model.EmailConfirmed)
-            {
                 model.Messages.Warning.Add("Attention: Please confirm your email address on " +
                     "<a href=\"https://www.paypal.com/businessprofile/settings\" target=\"_blank\">https://www.paypal.com/businessprofile/settings</a>" +
                     " in order to receive payments! You currently cannot receive payments. " +
                     "Once done, simply revisit this page to refresh the onboarding status.");
-            }
 
             return model;
         }

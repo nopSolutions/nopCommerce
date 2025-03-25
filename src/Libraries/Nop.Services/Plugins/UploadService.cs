@@ -94,11 +94,9 @@ public partial class UploadService : IUploadService
             var rootDirectories = archive.Entries.Select(p => p.FullName.Split('/')[0]).Distinct().ToList();
 
             if (rootDirectories.Count != 1)
-            {
                 throw new Exception("The archive should contain only one root plugin or theme directory. " +
-                                    "For example, Payments.PayPalDirect or DefaultClean. " +
-                                    $"To upload multiple items, the archive should have the '{NopPluginDefaults.UploadedItemsFileName}' file in the root");
-            }
+                    "For example, Payments.PayPalDirect or DefaultClean. " +
+                    $"To upload multiple items, the archive should have the '{NopPluginDefaults.UploadedItemsFileName}' file in the root");
 
             //get directory name (remove the ending /)
             uploadedItemDirectoryName = rootDirectories.First();
@@ -186,7 +184,6 @@ public partial class UploadService : IUploadService
         //get descriptors of items contained in the archive
         var descriptors = new List<IDescriptor>();
         using (var archive = ZipFile.OpenRead(archivePath))
-        {
             foreach (var item in uploadedItems)
             {
                 if (!item.Type.HasValue)
@@ -275,7 +272,6 @@ public partial class UploadService : IUploadService
                 //item is uploaded
                 descriptors.Add(descriptor);
             }
-        }
 
         return descriptors;
     }
@@ -289,9 +285,7 @@ public partial class UploadService : IUploadService
         //if the folder does not exist, create it
         //if the folder is already there - we delete it (since the pictures in the folder are in the unpacked version, there will be many files and it is easier for us to delete the folder than to delete all the files one by one) and create a new
         if (!_fileProvider.DirectoryExists(path))
-        {
             _fileProvider.CreateDirectory(path);
-        }
         else
         {
             _fileProvider.DeleteDirectory(path);
@@ -336,10 +330,8 @@ public partial class UploadService : IUploadService
             //you can find a sample of such descriptive file in Libraries\Nop.Core\Plugins\Samples\
             var uploadedItems = await GetUploadedItemsAsync(zipFilePath);
             if (!uploadedItems?.Any() ?? true)
-            {
                 //JSON file doesn't exist, so there is a single plugin or theme in the archive, just unzip it
                 descriptors.Add(await UploadSingleItemAsync(zipFilePath));
-            }
             else
                 descriptors.AddRange(await UploadMultipleItemsAsync(zipFilePath, uploadedItems));
         }
@@ -449,10 +441,8 @@ public partial class UploadService : IUploadService
 
                 //4. Search in the temp unpacked archive a folder with locales by culture
                 var sourcelocalePath = _fileProvider.Combine(getPath(NopCommonDefaults.LocalePatternPath, tempFolder), currentCulture.Name);
-                if (_fileProvider.DirectoryExists(sourcelocalePath))
-                {
+                if (_fileProvider.DirectoryExists(sourcelocalePath)) 
                     cultureToUse = currentCulture.Name;
-                }
 
                 var sourcelocaleISOPath = _fileProvider.Combine(getPath(NopCommonDefaults.LocalePatternPath, tempFolder), currentCulture.TwoLetterISOLanguageName);
                 if (_fileProvider.DirectoryExists(sourcelocaleISOPath))
@@ -465,10 +455,8 @@ public partial class UploadService : IUploadService
                 if (!string.IsNullOrEmpty(cultureToUse))
                 {
                     var destlocalePath = getPath(NopCommonDefaults.LocalePatternPath, cultureToUse);
-                    if (_fileProvider.DirectoryExists(destlocalePath))
-                    {
+                    if (_fileProvider.DirectoryExists(destlocalePath)) 
                         _fileProvider.DeleteDirectory(destlocalePath);
-                    }
 
                     _fileProvider.DirectoryMove(sourcelocalePath, destlocalePath);
                 }

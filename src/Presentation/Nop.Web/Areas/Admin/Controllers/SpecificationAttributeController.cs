@@ -53,34 +53,28 @@ public partial class SpecificationAttributeController : BaseAdminController
     protected virtual async Task UpdateAttributeLocalesAsync(SpecificationAttribute specificationAttribute, SpecificationAttributeModel model)
     {
         foreach (var localized in model.Locales)
-        {
             await _localizedEntityService.SaveLocalizedValueAsync(specificationAttribute,
                 x => x.Name,
                 localized.Name,
                 localized.LanguageId);
-        }
     }
 
     protected virtual async Task UpdateAttributeGroupLocalesAsync(SpecificationAttributeGroup specificationAttributeGroup, SpecificationAttributeGroupModel model)
     {
         foreach (var localized in model.Locales)
-        {
             await _localizedEntityService.SaveLocalizedValueAsync(specificationAttributeGroup,
                 x => x.Name,
                 localized.Name,
                 localized.LanguageId);
-        }
     }
 
     protected virtual async Task UpdateOptionLocalesAsync(SpecificationAttributeOption specificationAttributeOption, SpecificationAttributeOptionModel model)
     {
         foreach (var localized in model.Locales)
-        {
             await _localizedEntityService.SaveLocalizedValueAsync(specificationAttributeOption,
                 x => x.Name,
                 localized.Name,
                 localized.LanguageId);
-        }
     }
 
     #endregion
@@ -116,10 +110,8 @@ public partial class SpecificationAttributeController : BaseAdminController
         SpecificationAttributeGroup group = null;
 
         if (searchModel.SpecificationAttributeGroupId > 0)
-        {
             group = await _specificationAttributeService.GetSpecificationAttributeGroupByIdAsync(searchModel.SpecificationAttributeGroupId)
                 ?? throw new ArgumentException("No specification attribute group found with the specified id");
-        }
 
         var model = await _specificationAttributeModelFactory.PrepareSpecificationAttributeListModelAsync(searchModel, group);
 

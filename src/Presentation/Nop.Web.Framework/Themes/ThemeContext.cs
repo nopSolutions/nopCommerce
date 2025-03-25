@@ -77,11 +77,9 @@ public partial class ThemeContext : IThemeContext
 
         //ensure that this theme exists
         if (!await _themeProvider.ThemeExistsAsync(themeName))
-        {
             //if it does not exist, try to get the first one
             themeName = (await _themeProvider.GetThemesAsync()).FirstOrDefault()?.SystemName
-                        ?? throw new Exception("No theme could be loaded");
-        }
+                ?? throw new Exception("No theme could be loaded");
 
         //cache theme system name
         _cachedThemeName = themeName;

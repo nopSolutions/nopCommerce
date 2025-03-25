@@ -94,9 +94,7 @@ public class EntityUseCodeViewComponent : NopViewComponent
             !widgetZone.Equals(AdminWidgetZones.CustomerRoleDetailsTop) &&
             !widgetZone.Equals(AdminWidgetZones.ProductDetailsBlock) &&
             !widgetZone.Equals(AdminWidgetZones.CheckoutAttributeDetailsBlock))
-        {
             return Content(string.Empty);
-        }
 
         //get Avalara pre-defined entity use codes
         var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(AvalaraTaxDefaults.EntityUseCodesCacheKey);

@@ -97,15 +97,11 @@ public static class ApplicationBuilderExtensions
         var webHostEnvironment = EngineContext.Current.Resolve<IWebHostEnvironment>();
         var useDetailedExceptionPage = appSettings.Get<CommonConfig>().DisplayFullErrorStack || webHostEnvironment.IsDevelopment();
         if (useDetailedExceptionPage)
-        {
             //get detailed exceptions for developing and testing purposes
             application.UseDeveloperExceptionPage();
-        }
         else
-        {
             //or use special exception handler
             application.UseExceptionHandler("/Error/Error");
-        }
 
         //log errors
         application.UseExceptionHandler(handler =>
@@ -367,24 +363,20 @@ public static class ApplicationBuilderExtensions
         });
 
         if (DataSettingsManager.IsDatabaseInstalled())
-        {
             application.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = EngineContext.Current.Resolve<IRoxyFilemanFileProvider>(),
                 RequestPath = new PathString(NopRoxyFilemanDefaults.DefaultRootDirectory),
                 OnPrepareResponse = staticFileResponse
             });
-        }
 
         if (appSettings.Get<CommonConfig>().ServeUnknownFileTypes)
-        {
             application.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(fileProvider.GetAbsolutePath(".well-known")),
                 RequestPath = new PathString("/.well-known"),
                 ServeUnknownFileTypes = true,
             });
-        }
     }
 
     /// <summary>
@@ -429,10 +421,8 @@ public static class ApplicationBuilderExtensions
         var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
 
         var fontPaths = fileProvider.EnumerateFiles(fileProvider.MapPath("~/App_Data/Pdf/"), "*.ttf") ?? Enumerable.Empty<string>();
-        foreach (var fp in fontPaths)
-        {
+        foreach (var fp in fontPaths) 
             FontFactory.Register(fp, fileProvider.GetFileNameWithoutExtension(fp));
-        }
     }
 
     /// <summary>
@@ -518,26 +508,18 @@ public static class ApplicationBuilderExtensions
             options.KnownProxies.Clear();
 
             if (!string.IsNullOrEmpty(hostingConfig.KnownProxies))
-            {
                 foreach (var strIp in hostingConfig.KnownProxies.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList())
-                {
                     if (IPAddress.TryParse(strIp, out var ip))
                         options.KnownProxies.Add(ip);
-                }
-            }
 
             if (!string.IsNullOrEmpty(hostingConfig.KnownNetworks))
-            {
                 foreach (var strIpNet in hostingConfig.KnownNetworks.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList())
                 {
                     var ipNetParts = strIpNet.Split("/");
                     if (ipNetParts.Length == 2)
-                    {
                         if (IPAddress.TryParse(ipNetParts[0], out var ip) && int.TryParse(ipNetParts[1], out var length))
                             options.KnownNetworks.Add(new IPNetwork(ip, length));
-                    }
                 }
-            }
 
             if (options.KnownProxies.Count > 1 || options.KnownNetworks.Count > 1)
                 options.ForwardLimit = null; //disable the limit, because KnownProxies is configured

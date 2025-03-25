@@ -176,12 +176,8 @@ public abstract class PdfDocument<TItem>
             addressTable.AddCell(BuildTextCell<AddressItem>(address => address.ShippingMethod, address?.ShippingMethod));
 
         if (address?.CustomValues.Any() == true)
-        {
             foreach (var (key, value) in address.CustomValues)
-            {
                 addressTable.AddCell(new PdfPCell(new Phrase { new Chunk(key), new Chunk(":"), new Chunk(value.ToString()) }));
-            }
-        }
 
         return addressTable;
     }
@@ -227,14 +223,12 @@ public abstract class PdfDocument<TItem>
                         var font8Italic = PdfDocumentHelper.GetFont(Font, Font.Size * 0.8f, DocumentFontStyle.Italic);
 
                         foreach (var pa in productAttributes)
-                        {
                             table.AddCell(new PdfPCell(new Phrase(pa, font8Italic))
                             {
                                 RunDirection = DocumentRunDirection,
                                 HorizontalAlignment = Element.ALIGN_LEFT,
                                 Border = 0
                             });
-                        }
                     }
 
                     return new PdfPCell(table)

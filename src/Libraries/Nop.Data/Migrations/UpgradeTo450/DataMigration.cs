@@ -29,10 +29,8 @@ public class DataMigration : Migration
         var collectedDateUtcColumnName = "ReadyForPickupDateUtc";
 
         if (!Schema.Table(shipmentTableName).Column(collectedDateUtcColumnName).Exists())
-        {
             Alter.Table(shipmentTableName)
                 .AddColumn(collectedDateUtcColumnName).AsDateTime2().Nullable();
-        }
 
         // add message template
         if (!_dataProvider.GetTable<MessageTemplate>().Any(pr => string.Compare(pr.Name, MessageTemplateSystemNames.SHIPMENT_READY_FOR_PICKUP_CUSTOMER_NOTIFICATION, true) == 0))
@@ -53,14 +51,10 @@ public class DataMigration : Migration
 
         //add column
         if (!Schema.Table(scheduleTaskTableName).Column(nameof(ScheduleTask.LastEnabledUtc)).Exists())
-        {
             Alter.Table(scheduleTaskTableName)
                 .AddColumn(nameof(ScheduleTask.LastEnabledUtc)).AsDateTime2().Nullable();
-        }
         else
-        {
             Alter.Table(scheduleTaskTableName).AlterColumn(nameof(ScheduleTask.LastEnabledUtc)).AsDateTime2().Nullable();
-        }
 
         //#5939
         if (!_dataProvider.GetTable<PermissionRecord>().Any(pr => string.Compare(pr.SystemName, "SalesSummaryReport", StringComparison.InvariantCultureIgnoreCase) == 0))
@@ -93,10 +87,8 @@ public class DataMigration : Migration
         var returnedQuantityColumnName = "ReturnedQuantity";
 
         if (!Schema.Table(returnRequestTableName).Column(returnedQuantityColumnName).Exists())
-        {
             Alter.Table(returnRequestTableName)
                 .AddColumn(returnedQuantityColumnName).AsInt32().NotNullable().SetExistingRowsTo(0);
-        }
 
         //#6053
         if (!_dataProvider.GetTable<PermissionRecord>().Any(pr => string.Compare(pr.SystemName, "ManageAppSettings", StringComparison.InvariantCultureIgnoreCase) == 0))

@@ -400,10 +400,8 @@ public partial class PluginController : BaseAdminController
 
             //locales
             var pluginInstance = pluginDescriptor.Instance<IPlugin>();
-            foreach (var localized in model.Locales)
-            {
+            foreach (var localized in model.Locales) 
                 await _localizationService.SaveLocalizedFriendlyNameAsync(pluginInstance, localized.LanguageId, localized.FriendlyName);
-            }
 
             //enabled/disabled
             if (!pluginDescriptor.Installed)

@@ -199,10 +199,8 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
 
         Product product = null;
 
-        if (isSearchProduct)
-        {
+        if (isSearchProduct) 
             product = await _productService.GetProductByIdAsync(searchModel.ProductId) ?? throw new Exception("Product is not found");
-        }
 
         var store = await _storeService.GetStoreByIdAsync(searchModel.StoreId);
         //prepare list model

@@ -596,13 +596,11 @@ public partial class ProductModelFactory : IProductModelFactory
             });
         }
         else
-        {
             productReview = new ProductReviewOverviewModel
             {
                 RatingSum = product.ApprovedRatingSum,
                 TotalReviews = product.ApprovedTotalReviews
             };
-        }
 
         if (productReview != null)
         {
@@ -704,7 +702,6 @@ public partial class ProductModelFactory : IProductModelFactory
             return breadcrumbModel;
 
         foreach (var catBr in await _categoryService.GetCategoryBreadCrumbAsync(category))
-        {
             breadcrumbModel.CategoryBreadcrumb.Add(new CategorySimpleModel
             {
                 Id = catBr.Id,
@@ -712,7 +709,6 @@ public partial class ProductModelFactory : IProductModelFactory
                 SeName = await _urlRecordService.GetSeNameAsync(catBr),
                 IncludeInTopMenu = catBr.IncludeInTopMenu
             });
-        }
 
         if (_seoSettings.MicrodataEnabled)
         {
@@ -782,19 +778,15 @@ public partial class ProductModelFactory : IProductModelFactory
         //allowed quantities
         var allowedQuantities = _productService.ParseAllowedQuantities(product);
         foreach (var qty in allowedQuantities)
-        {
             model.AllowedQuantities.Add(new SelectListItem
             {
                 Text = qty.ToString(),
                 Value = qty.ToString(),
                 Selected = updatecartitem != null && updatecartitem.Quantity == qty
             });
-        }
         //minimum quantity notification
-        if (product.OrderMinimumQuantity > 1)
-        {
+        if (product.OrderMinimumQuantity > 1) 
             model.MinimumQuantityNotification = string.Format(await _localizationService.GetResourceAsync("Products.MinimumQuantityNotification"), product.OrderMinimumQuantity);
-        }
 
         //'add to cart', 'add to wishlist' buttons
         model.DisableBuyButton = product.DisableBuyButton || !await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_SHOPPING_CART);
@@ -814,10 +806,8 @@ public partial class ProductModelFactory : IProductModelFactory
             if (model.AvailableForPreOrder &&
                 model.PreOrderAvailabilityStartDateTimeUtc.HasValue &&
                 _catalogSettings.DisplayDatePreOrderAvailability)
-            {
                 model.PreOrderAvailabilityStartDateTimeUserTime =
                     (await _dateTimeHelper.ConvertToUserTimeAsync(model.PreOrderAvailabilityStartDateTimeUtc.Value)).ToString("D");
-            }
         }
         //rental
         model.IsRental = product.IsRental;
@@ -874,11 +864,9 @@ public partial class ProductModelFactory : IProductModelFactory
                 HasCondition = !string.IsNullOrEmpty(attribute.ConditionAttributeXml)
             };
             if (!string.IsNullOrEmpty(attribute.ValidationFileAllowedExtensions))
-            {
                 attributeModel.AllowedFileExtensions = attribute.ValidationFileAllowedExtensions
                     .Split(_separator, StringSplitOptions.RemoveEmptyEntries)
                     .ToList();
-            }
 
             if (attribute.ShouldHaveValues())
             {
@@ -940,14 +928,11 @@ public partial class ProductModelFactory : IProductModelFactory
                             (var imageUrl, imageSquaresPicture) = await _pictureService.GetPictureUrlAsync(imageSquaresPicture, _mediaSettings.ImageSquarePictureSize);
 
                             if (imageSquaresPicture != null)
-                            {
-
                                 return new PictureModel
                                 {
                                     FullSizeImageUrl = fullSizeImageUrl,
                                     ImageUrl = imageUrl
                                 };
-                            }
 
                             return new PictureModel();
                         });
@@ -960,7 +945,6 @@ public partial class ProductModelFactory : IProductModelFactory
 
             //set already selected attributes (if we're going to update the existing shopping cart item)
             if (updatecartitem != null)
-            {
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
@@ -978,15 +962,15 @@ public partial class ProductModelFactory : IProductModelFactory
                             //select new values
                             var selectedValues = await _productAttributeParser.ParseProductAttributeValuesAsync(updatecartitem.AttributesXml);
                             foreach (var attributeValue in selectedValues)
-                                foreach (var item in attributeModel.Values)
-                                    if (attributeValue.Id == item.Id)
-                                    {
-                                        item.IsPreSelected = true;
+                            foreach (var item in attributeModel.Values)
+                                if (attributeValue.Id == item.Id)
+                                {
+                                    item.IsPreSelected = true;
 
-                                        //set customer entered quantity
-                                        if (attributeValue.CustomerEntersQty)
-                                            item.Quantity = attributeValue.Quantity;
-                                    }
+                                    //set customer entered quantity
+                                    if (attributeValue.CustomerEntersQty)
+                                        item.Quantity = attributeValue.Quantity;
+                                }
                         }
                     }
 
@@ -994,10 +978,8 @@ public partial class ProductModelFactory : IProductModelFactory
                     case AttributeControlType.ReadonlyCheckboxes:
                     {
                         //values are already pre-set
-
                         //set customer entered quantity
                         if (!string.IsNullOrEmpty(updatecartitem.AttributesXml))
-                        {
                             foreach (var attributeValue in (await _productAttributeParser.ParseProductAttributeValuesAsync(updatecartitem.AttributesXml))
                                      .Where(value => value.CustomerEntersQty))
                             {
@@ -1005,7 +987,6 @@ public partial class ProductModelFactory : IProductModelFactory
                                 if (item != null)
                                     item.Quantity = attributeValue.Quantity;
                             }
-                        }
                     }
 
                         break;
@@ -1026,7 +1007,6 @@ public partial class ProductModelFactory : IProductModelFactory
                         //keep in mind my that the code below works only in the current culture
                         var selectedDateStr = _productAttributeParser.ParseValues(updatecartitem.AttributesXml, attribute.Id);
                         if (selectedDateStr.Any())
-                        {
                             if (DateTime.TryParseExact(selectedDateStr[0], "D", CultureInfo.CurrentCulture, DateTimeStyles.None, out var selectedDate))
                             {
                                 //successfully parsed
@@ -1034,7 +1014,6 @@ public partial class ProductModelFactory : IProductModelFactory
                                 attributeModel.SelectedMonth = selectedDate.Month;
                                 attributeModel.SelectedYear = selectedDate.Year;
                             }
-                        }
                     }
 
                         break;
@@ -1054,7 +1033,6 @@ public partial class ProductModelFactory : IProductModelFactory
                     default:
                         break;
                 }
-            }
 
             model.Add(attributeModel);
         }
@@ -1285,22 +1263,16 @@ public partial class ProductModelFactory : IProductModelFactory
             };
 
             //price
-            if (preparePriceModel)
-            {
+            if (preparePriceModel) 
                 model.ProductPrice = await PrepareProductPriceModelAsync(product, true, forceRedirectionAfterAddingToCart);
-            }
 
             //picture
-            if (preparePictureModel)
-            {
+            if (preparePictureModel) 
                 model.PictureModels = await PrepareProductOverviewPicturesModelAsync(product, productThumbPictureSize);
-            }
 
             //specs
-            if (prepareSpecificationAttributes)
-            {
+            if (prepareSpecificationAttributes) 
                 model.ProductSpecificationModel = await PrepareProductSpecificationModelAsync(product);
-            }
 
             //reviews
             model.ReviewOverviewModel = await PrepareProductReviewOverviewModelAsync(product);
@@ -1328,7 +1300,6 @@ public partial class ProductModelFactory : IProductModelFactory
         var combinations = await _productAttributeService
             .GetAllProductAttributeCombinationsAsync(product.Id);
         if (combinations?.Any() == true)
-        {
             foreach (var combination in combinations)
             {
                 var combinationModel = new ProductCombinationModel
@@ -1361,7 +1332,6 @@ public partial class ProductModelFactory : IProductModelFactory
 
                 result.Add(combinationModel);
             }
-        }
 
         return result;
     }
@@ -1412,10 +1382,8 @@ public partial class ProductModelFactory : IProductModelFactory
 
         //automatically generate product description?
         if (_seoSettings.GenerateProductMetaDescription && string.IsNullOrEmpty(model.MetaDescription))
-        {
             //based on short description
             model.MetaDescription = model.ShortDescription;
-        }
 
         //shipping info
         model.IsShipEnabled = product.IsShipEnabled;
@@ -1424,10 +1392,8 @@ public partial class ProductModelFactory : IProductModelFactory
             model.IsFreeShipping = product.IsFreeShipping;
             //delivery date
             var deliveryDate = await _dateRangeService.GetDeliveryDateByIdAsync(product.DeliveryDateId);
-            if (deliveryDate != null)
-            {
+            if (deliveryDate != null) 
                 model.DeliveryDate = await _localizationService.GetLocalizedAsync(deliveryDate, dd => dd.Name);
-            }
         }
 
         var store = await _storeContext.GetCurrentStoreAsync();
@@ -1460,10 +1426,8 @@ public partial class ProductModelFactory : IProductModelFactory
         {
             var shareCode = _catalogSettings.PageShareCode;
             if (_webHelper.IsCurrentConnectionSecured())
-            {
                 //need to change the add this link to be https linked when the page is, so that the page doesn't ask about mixed mode when viewed in https...
                 shareCode = shareCode.Replace("http://", "https://");
-            }
 
             model.PageShareCode = shareCode;
         }
@@ -1490,17 +1454,13 @@ public partial class ProductModelFactory : IProductModelFactory
 
         //breadcrumb
         //do not prepare this model for the associated products. anyway it's not used
-        if (_catalogSettings.CategoryBreadcrumbEnabled && !isAssociatedProduct)
-        {
+        if (_catalogSettings.CategoryBreadcrumbEnabled && !isAssociatedProduct) 
             model.Breadcrumb = await PrepareProductBreadcrumbModelAsync(product);
-        }
 
         //product tags
         //do not prepare this model for the associated products. anyway it's not used
-        if (!isAssociatedProduct)
-        {
+        if (!isAssociatedProduct) 
             model.ProductTags = await PrepareProductTagModelsAsync(product);
-        }
 
         //pictures and videos
         model.DefaultPictureZoomEnabled = _mediaSettings.DefaultPictureZoomEnabled;
@@ -1546,10 +1506,7 @@ public partial class ProductModelFactory : IProductModelFactory
 
         //product specifications
         //do not prepare this model for the associated products. anyway it's not used
-        if (!isAssociatedProduct)
-        {
-            model.ProductSpecificationModel = await PrepareProductSpecificationModelAsync(product);
-        }
+        if (!isAssociatedProduct) model.ProductSpecificationModel = await PrepareProductSpecificationModelAsync(product);
 
         //product review overview
         model.ProductReviewOverview = await PrepareProductReviewOverviewModelAsync(product);
@@ -1647,7 +1604,6 @@ public partial class ProductModelFactory : IProductModelFactory
 
         //get all review types
         foreach (var reviewType in await _reviewTypeService.GetAllReviewTypesAsync())
-        {
             model.ReviewTypeList.Add(new ReviewTypeModel
             {
                 Id = reviewType.Id,
@@ -1657,7 +1613,6 @@ public partial class ProductModelFactory : IProductModelFactory
                 DisplayOrder = reviewType.DisplayOrder,
                 IsRequired = reviewType.IsRequired,
             });
-        }
 
         var currentCustomer = await _workContext.GetCurrentCustomerAsync();
 
@@ -1686,11 +1641,9 @@ public partial class ProductModelFactory : IProductModelFactory
             };
 
             if (_customerSettings.AllowCustomersToUploadAvatars)
-            {
                 productReviewModel.CustomerAvatarUrl = await _pictureService.GetPictureUrlAsync(
                     await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute),
                     _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
-            }
 
             foreach (var q in await _reviewTypeService.GetProductReviewReviewTypeMappingsByProductReviewIdAsync(pr.Id))
             {
@@ -1732,12 +1685,10 @@ public partial class ProductModelFactory : IProductModelFactory
             var totalRating = 0;
             var totalCount = 0;
             foreach (var item in model.Items)
+            foreach (var q in item.AdditionalProductReviewList.Where(w => w.ReviewTypeId == rtm.Id))
             {
-                foreach (var q in item.AdditionalProductReviewList.Where(w => w.ReviewTypeId == rtm.Id))
-                {
-                    totalRating += q.Rating;
-                    totalCount = ++totalCount;
-                }
+                totalRating += q.Rating;
+                totalCount = ++totalCount;
             }
 
             rtm.AverageRating = (double)totalRating / (totalCount > 0 ? totalCount : 1);
@@ -1763,10 +1714,7 @@ public partial class ProductModelFactory : IProductModelFactory
         var pageSize = _catalogSettings.ProductReviewsPageSizeOnAccountPage;
         var pageIndex = 0;
 
-        if (page > 0)
-        {
-            pageIndex = page.Value - 1;
-        }
+        if (page > 0) pageIndex = page.Value - 1;
 
         var store = await _storeContext.GetCurrentStoreAsync();
         var customer = await _workContext.GetCurrentCustomerAsync();
@@ -1797,11 +1745,9 @@ public partial class ProductModelFactory : IProductModelFactory
             };
 
             if (_catalogSettings.ProductReviewsMustBeApproved)
-            {
                 productReviewModel.ApprovalStatus = review.IsApproved
                     ? await _localizationService.GetResourceAsync("Account.CustomerProductReviews.ApprovalStatus.Approved")
                     : await _localizationService.GetResourceAsync("Account.CustomerProductReviews.ApprovalStatus.Pending");
-            }
 
             foreach (var q in await _reviewTypeService.GetProductReviewReviewTypeMappingsByProductReviewIdAsync(review.Id))
             {
@@ -1891,14 +1837,12 @@ public partial class ProductModelFactory : IProductModelFactory
         // Add grouped attributes
         var groups = await _specificationAttributeService.GetProductSpecificationAttributeGroupsAsync(product.Id);
         foreach (var group in groups)
-        {
             model.Groups.Add(new ProductSpecificationAttributeGroupModel
             {
                 Id = group.Id,
                 Name = await _localizationService.GetLocalizedAsync(group, x => x.Name),
                 Attributes = await PrepareProductSpecificationAttributeModelAsync(product, group)
             });
-        }
 
         return model;
     }

@@ -290,13 +290,11 @@ public partial class DiscountModelFactory : IDiscountModelFactory
             //prepare available discount requirement rules
             var discountRules = await _discountPluginManager.LoadAllPluginsAsync();
             foreach (var discountRule in discountRules)
-            {
                 model.AvailableDiscountRequirementRules.Add(new SelectListItem
                 {
                     Text = discountRule.PluginDescriptor.FriendlyName,
                     Value = discountRule.PluginDescriptor.SystemName
                 });
-            }
 
             model.AvailableDiscountRequirementRules.Insert(0, new SelectListItem
             {
@@ -325,9 +323,7 @@ public partial class DiscountModelFactory : IDiscountModelFactory
         model.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
 
         if (model.IsLoggedInAsVendor)
-        {
             model.DiscountTypeId = (int)DiscountType.AssignedToSkus;
-        }
         else
         {
             //prepare available vendors
@@ -340,10 +336,8 @@ public partial class DiscountModelFactory : IDiscountModelFactory
 
         //get URL of discount with coupon code
         if (model.RequiresCouponCode && !string.IsNullOrEmpty(model.CouponCode))
-        {
             model.DiscountUrl = QueryHelpers.AddQueryString((_webHelper.GetStoreLocation()).TrimEnd('/'),
                 NopDiscountDefaults.DiscountCouponQueryParameter, model.CouponCode);
-        }
 
         //set default values for the new model
         if (discount == null)

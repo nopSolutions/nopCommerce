@@ -193,10 +193,8 @@ public partial class PluginService : IPluginService
         _migrationManager.Value.ApplyUpMigrations(assembly, migrationProcessType);
 
         //mark update migrations as applied
-        if (migrationProcessType == MigrationProcessType.Installation)
-        {
+        if (migrationProcessType == MigrationProcessType.Installation) 
             _migrationManager.Value.ApplyUpMigrations(assembly, MigrationProcessType.Update, true);
-        }
     }
 
     #endregion
@@ -493,7 +491,6 @@ public partial class PluginService : IPluginService
 
         //install plugins
         foreach (var descriptor in pluginDescriptors.OrderBy(pluginDescriptor => pluginDescriptor.pluginDescriptor.DisplayOrder))
-        {
             try
             {
                 InsertPluginData(descriptor.pluginDescriptor.PluginType, MigrationProcessType.Installation);
@@ -522,7 +519,6 @@ public partial class PluginService : IPluginService
                 var message = string.Format(await localizationService.GetResourceAsync("Admin.Plugins.Errors.NotInstalled"), descriptor.pluginDescriptor.SystemName);
                 await _logger.ErrorAsync(message, exception);
             }
-        }
 
         //save changes
         await _pluginsInfo.SaveAsync();
@@ -549,7 +545,6 @@ public partial class PluginService : IPluginService
 
         //uninstall plugins
         foreach (var descriptor in pluginDescriptors.OrderByDescending(pluginDescriptor => pluginDescriptor.pluginDescriptor.DisplayOrder))
-        {
             try
             {
                 var plugin = descriptor.pluginDescriptor.Instance<IPlugin>();
@@ -578,7 +573,6 @@ public partial class PluginService : IPluginService
                 var message = string.Format(await localizationService.GetResourceAsync("Admin.Plugins.Errors.NotUninstalled"), descriptor.pluginDescriptor.SystemName);
                 await _logger.ErrorAsync(message, exception);
             }
-        }
 
         //save changes
         await _pluginsInfo.SaveAsync();
@@ -605,7 +599,6 @@ public partial class PluginService : IPluginService
 
         //delete plugins
         foreach (var descriptor in pluginDescriptors)
-        {
             try
             {
                 //try to delete a plugin directory from disk storage
@@ -626,7 +619,6 @@ public partial class PluginService : IPluginService
                 var message = string.Format(await localizationService.GetResourceAsync("Admin.Plugins.Errors.NotDeleted"), descriptor.pluginDescriptor.SystemName);
                 await _logger.ErrorAsync(message, exception);
             }
-        }
 
         //save changes
         await _pluginsInfo.SaveAsync();

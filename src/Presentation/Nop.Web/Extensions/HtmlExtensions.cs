@@ -48,21 +48,13 @@ public static class HtmlExtensions
 
         // Convert month
         if (currentFormat.Contains("MMMM"))
-        {
             currentFormat = currentFormat.Replace("MMMM", "MM");
-        }
         else if (currentFormat.Contains("MMM"))
-        {
             currentFormat = currentFormat.Replace("MMM", "M");
-        }
         else if (currentFormat.Contains("MM"))
-        {
             currentFormat = currentFormat.Replace("MM", "mm");
-        }
         else
-        {
             currentFormat = currentFormat.Replace("M", "m");
-        }
 
         // Convert year
         currentFormat = currentFormat.Contains("yyyy") ?
@@ -100,7 +92,6 @@ public static class HtmlExtensions
         if (model.ShowPagerItems && (model.TotalPages > 1))
         {
             if (model.ShowFirst)
-            {
                 //first page
                 if ((model.PageIndex >= 3) && (model.TotalPages > model.IndividualPagesDisplayedCount))
                 {
@@ -125,10 +116,8 @@ public static class HtmlExtensions
                     }
                     links.Append("</li>");
                 }
-            }
 
             if (model.ShowPrevious)
-            {
                 //previous page
                 if (model.PageIndex > 0)
                 {
@@ -153,7 +142,6 @@ public static class HtmlExtensions
                     }
                     links.Append("</li>");
                 }
-            }
 
             if (model.ShowIndividualPages)
             {
@@ -161,7 +149,6 @@ public static class HtmlExtensions
                 var firstIndividualPageIndex = model.GetFirstIndividualPageIndex();
                 var lastIndividualPageIndex = model.GetLastIndividualPageIndex();
                 for (var i = firstIndividualPageIndex; i <= lastIndividualPageIndex; i++)
-                {
                     if (model.PageIndex == i)
                         links.AppendFormat("<li class=\"current-page\"><span>{0}</span></li>", i + 1);
                     else
@@ -187,11 +174,9 @@ public static class HtmlExtensions
                         }
                         links.Append("</li>");
                     }
-                }
             }
 
             if (model.ShowNext)
-            {
                 //next page
                 if ((model.PageIndex + 1) < model.TotalPages)
                 {
@@ -216,10 +201,8 @@ public static class HtmlExtensions
                     }
                     links.Append("</li>");
                 }
-            }
 
             if (model.ShowLast)
-            {
                 //last page
                 if (((model.PageIndex + 3) < model.TotalPages) && (model.TotalPages > model.IndividualPagesDisplayedCount))
                 {
@@ -244,7 +227,6 @@ public static class HtmlExtensions
                     }
                     links.Append("</li>");
                 }
-            }
         }
 
         var result = links.ToString();
@@ -289,7 +271,6 @@ public static class HtmlExtensions
             var links = new StringBuilder();
 
             if (totalPages <= 4)
-            {
                 for (var x = 1; x <= totalPages; x++)
                 {
                     var link = html.RouteLink(x.ToString(),
@@ -300,7 +281,6 @@ public static class HtmlExtensions
                     if (x < totalPages)
                         links.Append(", ");
                 }
-            }
             else
             {
                 var link1 = html.RouteLink("1",

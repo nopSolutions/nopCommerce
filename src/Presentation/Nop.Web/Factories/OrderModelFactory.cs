@@ -444,13 +444,11 @@ public partial class OrderModelFactory : IOrderModelFactory
                 model.Tax = await _priceFormatter.FormatPriceAsync(orderTaxInCustomerCurrency, true, order.CustomerCurrencyCode, false, languageId);
 
                 foreach (var tr in taxRates)
-                {
                     model.TaxRates.Add(new OrderDetailsModel.TaxRate
                     {
                         Rate = _priceFormatter.FormatTaxRate(tr.Key),
                         Value = await _priceFormatter.FormatPriceAsync(_currencyService.ConvertCurrency(tr.Value, order.CurrencyRate), true, order.CustomerCurrencyCode, false, languageId),
                     });
-                }
             }
         }
         model.DisplayTaxRates = displayTaxRates;
@@ -468,13 +466,11 @@ public partial class OrderModelFactory : IOrderModelFactory
 
         //gift cards
         foreach (var gcuh in await _giftCardService.GetGiftCardUsageHistoryAsync(order))
-        {
             model.GiftCards.Add(new OrderDetailsModel.GiftCard
             {
                 CouponCode = (await _giftCardService.GetGiftCardByIdAsync(gcuh.GiftCardId)).GiftCardCouponCode,
                 Amount = await _priceFormatter.FormatPriceAsync(-(_currencyService.ConvertCurrency(gcuh.UsedValue, order.CurrencyRate)), true, order.CustomerCurrencyCode, false, languageId),
             });
-        }
 
         //reward points           
         if (order.RedeemedRewardPointsEntryId.HasValue && await _rewardPointService.GetRewardPointsHistoryEntryByIdAsync(order.RedeemedRewardPointsEntryId.Value) is RewardPointsHistory redeemedRewardPointsEntry)
@@ -495,7 +491,6 @@ public partial class OrderModelFactory : IOrderModelFactory
         foreach (var orderNote in (await _orderService.GetOrderNotesByOrderIdAsync(order.Id, true))
                  .OrderByDescending(on => on.CreatedOnUtc)
                  .ToList())
-        {
             model.OrderNotes.Add(new OrderDetailsModel.OrderNote
             {
                 Id = orderNote.Id,
@@ -503,7 +498,6 @@ public partial class OrderModelFactory : IOrderModelFactory
                 Note = _orderService.FormatOrderNoteText(orderNote),
                 CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(orderNote.CreatedOnUtc, DateTimeKind.Utc)
             });
-        }
 
         //purchased products
         model.ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage;
@@ -570,10 +564,8 @@ public partial class OrderModelFactory : IOrderModelFactory
             if (await _orderService.IsLicenseDownloadAllowedAsync(orderItem))
                 orderItemModel.LicenseId = orderItem.LicenseDownloadId ?? 0;
 
-            if (_orderSettings.ShowProductThumbnailInOrderDetailsPage)
-            {
+            if (_orderSettings.ShowProductThumbnailInOrderDetailsPage) 
                 orderItemModel.Picture = await PrepareOrderItemPictureModelAsync(orderItem, _mediaSettings.OrderThumbPictureSize, true, orderItemModel.ProductName);
-            }
         }
 
         return model;
@@ -615,7 +607,6 @@ public partial class OrderModelFactory : IOrderModelFactory
                 {
                     var shipmentEvents = await shipmentTracker.GetShipmentEventsAsync(shipment.TrackingNumber, shipment);
                     if (shipmentEvents != null)
-                    {
                         foreach (var shipmentEvent in shipmentEvents)
                         {
                             var shipmentStatusEventModel = new ShipmentDetailsModel.ShipmentStatusEventModel();
@@ -628,7 +619,6 @@ public partial class OrderModelFactory : IOrderModelFactory
                             shipmentStatusEventModel.Location = shipmentEvent.Location;
                             model.ShipmentStatusEvents.Add(shipmentStatusEventModel);
                         }
-                    }
                 }
             }
         }

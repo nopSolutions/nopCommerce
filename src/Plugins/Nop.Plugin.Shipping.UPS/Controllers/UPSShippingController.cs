@@ -140,7 +140,6 @@ public class UPSShippingController : BasePluginController
 
         //use default services if no one is selected 
         if (!model.CarrierServices.Any())
-        {
             model.CarrierServices = new List<string>
             {
                 _upsService.GetUpsCode(DeliveryService.Ground),
@@ -148,7 +147,6 @@ public class UPSShippingController : BasePluginController
                 _upsService.GetUpsCode(DeliveryService.Standard),
                 _upsService.GetUpsCode(DeliveryService._3DaySelect)
             };
-        }
         _upsSettings.CarrierServicesOffered = string.Join(':', model.CarrierServices.Select(service => $"[{service}]"));
 
         await _settingService.SaveSettingAsync(_upsSettings);

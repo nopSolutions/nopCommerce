@@ -170,7 +170,6 @@ public partial class ReturnRequestModelFactory : IReturnRequestModelFactory
 
         var returnRequestAvailability = await _returnRequestService.GetReturnRequestAvailabilityAsync(order.Id);
         if (returnRequestAvailability?.IsAllowed == true)
-        {
             foreach (var returnableOrderItem in returnRequestAvailability.ReturnableOrderItems)
             {
                 if (returnableOrderItem.AvailableQuantityForReturn == 0)
@@ -207,7 +206,6 @@ public partial class ReturnRequestModelFactory : IReturnRequestModelFactory
 
                 models.Add(model);
             }
-        }
 
         return models;
     }

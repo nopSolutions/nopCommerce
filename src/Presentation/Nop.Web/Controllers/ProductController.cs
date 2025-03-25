@@ -218,10 +218,8 @@ public partial class ProductController : BasePublicController
         {
             //a vendor should have access only to his products
             var currentVendor = await _workContext.GetCurrentVendorAsync();
-            if (currentVendor == null || currentVendor.Id == product.VendorId)
-            {
+            if (currentVendor == null || currentVendor.Id == product.VendorId) 
                 DisplayEditLink(Url.Action("Edit", "Product", new { id = product.Id, area = AreaNames.ADMIN }));
-            }
         }
 
         //activity log
@@ -348,10 +346,8 @@ public partial class ProductController : BasePublicController
             return RedirectToRoute("Homepage");
 
         //validate CAPTCHA
-        if (_captchaSettings.Enabled && _captchaSettings.ShowOnProductReviewPage && !captchaValid)
-        {
+        if (_captchaSettings.Enabled && _captchaSettings.ShowOnProductReviewPage && !captchaValid) 
             ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
-        }
 
         await ValidateProductReviewAvailabilityAsync(product);
 
@@ -440,25 +436,21 @@ public partial class ProductController : BasePublicController
 
         var customer = await _workContext.GetCurrentCustomerAsync();
         if (await _customerService.IsGuestAsync(customer) && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
-        {
             return Json(new
             {
                 Result = await _localizationService.GetResourceAsync("Reviews.Helpfulness.OnlyRegistered"),
                 TotalYes = productReview.HelpfulYesTotal,
                 TotalNo = productReview.HelpfulNoTotal
             });
-        }
 
         //customers aren't allowed to vote for their own reviews
         if (productReview.CustomerId == customer.Id)
-        {
             return Json(new
             {
                 Result = await _localizationService.GetResourceAsync("Reviews.Helpfulness.YourOwnReview"),
                 TotalYes = productReview.HelpfulYesTotal,
                 TotalNo = productReview.HelpfulNoTotal
             });
-        }
 
         await _productService.SetProductReviewHelpfulnessAsync(productReview, washelpful);
 
@@ -478,10 +470,8 @@ public partial class ProductController : BasePublicController
         if (await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()))
             return Challenge();
 
-        if (!_catalogSettings.ShowProductReviewsTabOnAccountPage)
-        {
+        if (!_catalogSettings.ShowProductReviewsTabOnAccountPage) 
             return RedirectToRoute("CustomerInfo");
-        }
 
         var model = await _productModelFactory.PrepareCustomerProductReviewsModelAsync(pageNumber);
 
@@ -513,17 +503,13 @@ public partial class ProductController : BasePublicController
             return RedirectToRoute("Homepage");
 
         //validate CAPTCHA
-        if (_captchaSettings.Enabled && _captchaSettings.ShowOnEmailProductToFriendPage && !captchaValid)
-        {
+        if (_captchaSettings.Enabled && _captchaSettings.ShowOnEmailProductToFriendPage && !captchaValid) 
             ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
-        }
 
         //check whether the current customer is guest and ia allowed to email a friend
         var customer = await _workContext.GetCurrentCustomerAsync();
-        if (await _customerService.IsGuestAsync(customer) && !_catalogSettings.AllowAnonymousUsersToEmailAFriend)
-        {
+        if (await _customerService.IsGuestAsync(customer) && !_catalogSettings.AllowAnonymousUsersToEmailAFriend) 
             ModelState.AddModelError("", await _localizationService.GetResourceAsync("Products.EmailAFriend.OnlyRegisteredUsers"));
-        }
 
         if (ModelState.IsValid)
         {
@@ -616,10 +602,8 @@ public partial class ProductController : BasePublicController
         //prepare model
         var poModels = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, prepareSpecificationAttributes: true))
             .ToList();
-        foreach (var poModel in poModels)
-        {
+        foreach (var poModel in poModels) 
             model.Products.Add(poModel);
-        }
 
         return View(model);
     }

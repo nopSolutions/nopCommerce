@@ -84,10 +84,8 @@ public partial class CopyProductService : ICopyProductService
     /// <returns>A task that represents the asynchronous operation</returns>
     protected virtual async Task CopyDiscountsMappingAsync(Product product, Product productCopy)
     {
-        foreach (var discountMapping in await _productService.GetAllDiscountsAppliedToProductAsync(product.Id))
-        {
+        foreach (var discountMapping in await _productService.GetAllDiscountsAppliedToProductAsync(product.Id)) 
             await _productService.InsertDiscountProductMappingAsync(new DiscountProductMapping { EntityId = productCopy.Id, DiscountId = discountMapping.DiscountId });
-        }
     }
 
     /// <summary>
@@ -184,10 +182,8 @@ public partial class CopyProductService : ICopyProductService
 
             productAttributeMappingCopies.Add(productAttributeMappingCopy.Id, productAttributeMappingCopy);
 
-            if (!string.IsNullOrEmpty(productAttributeMapping.ConditionAttributeXml))
-            {
+            if (!string.IsNullOrEmpty(productAttributeMapping.ConditionAttributeXml)) 
                 oldCopyWithConditionAttributes.Add(productAttributeMapping);
-            }
 
             //save associated value (used for combinations copying)
             associatedAttributes.Add(productAttributeMapping.Id, productAttributeMappingCopy.Id);
@@ -282,10 +278,8 @@ public partial class CopyProductService : ICopyProductService
             var newConditionAttributeXml = string.Empty;
 
             foreach (var oldConditionValue in oldConditionValues)
-            {
                 newConditionAttributeXml = _productAttributeParser.AddProductAttribute(newConditionAttributeXml,
                     newConditionAttributeMapping, associatedAttributeValues[oldConditionValue.Id].ToString());
-            }
 
             var attributeMappingId = associatedAttributes[productAttributeMapping.Id];
             var conditionAttribute = productAttributeMappingCopies[attributeMappingId];
@@ -313,7 +307,6 @@ public partial class CopyProductService : ICopyProductService
                 var oldAttributeValuesStr = _productAttributeParser.ParseValues(combination.AttributesXml, oldAttribute.Id);
 
                 foreach (var oldAttributeValueStr in oldAttributeValuesStr)
-                {
                     if (newAttribute.ShouldHaveValues())
                     {
                         //attribute values
@@ -324,18 +317,13 @@ public partial class CopyProductService : ICopyProductService
                         var newAttributeValue = await _productAttributeService.GetProductAttributeValueByIdAsync(associatedAttributeValues[oldAttributeValue]);
 
                         if (newAttributeValue != null)
-                        {
                             newAttributesXml = _productAttributeParser.AddProductAttribute(newAttributesXml,
                                 newAttribute, newAttributeValue.Id.ToString());
-                        }
                     }
                     else
-                    {
                         //just a text
                         newAttributesXml = _productAttributeParser.AddProductAttribute(newAttributesXml,
                             newAttribute, oldAttributeValueStr);
-                    }
-                }
             }
 
             var combinationCopy = new ProductAttributeCombination
@@ -561,7 +549,6 @@ public partial class CopyProductService : ICopyProductService
     protected virtual async Task CopyProductVideosAsync(Product product, bool copyVideos, Product productCopy)
     {
         if (copyVideos)
-        {
             foreach (var productVideo in await _productService.GetProductVideosByProductIdAsync(product.Id))
             {
                 var video = await _videoService.GetVideoByIdAsync(productVideo.VideoId);
@@ -573,7 +560,6 @@ public partial class CopyProductService : ICopyProductService
                     DisplayOrder = productVideo.DisplayOrder
                 });
             }
-        }
     }
 
     /// <summary>

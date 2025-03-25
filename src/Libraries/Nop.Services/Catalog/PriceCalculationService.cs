@@ -108,12 +108,10 @@ public partial class PriceCalculationService : IPriceCalculationService
             //compare with categories of this product
             var productCategoryIds = new List<int>();
             if (discountCategoryIds.Any())
-            {
                 productCategoryIds = (await _categoryService
                         .GetProductCategoriesByProductIdAsync(product.Id))
                     .Select(x => x.CategoryId)
                     .ToList();
-            }
 
             var couponCodesToValidate = await _customerService.ParseAppliedDiscountCouponCodesAsync(customer);
 
@@ -154,13 +152,11 @@ public partial class PriceCalculationService : IPriceCalculationService
             //compare with manufacturers of this product
             var productManufacturerIds = new List<int>();
             if (discountManufacturerIds.Any())
-            {
                 productManufacturerIds =
                     (await _manufacturerService
                         .GetProductManufacturersByProductIdAsync(product.Id))
                     .Select(x => x.ManufacturerId)
                     .ToList();
-            }
 
             var couponCodesToValidate = await _customerService.ParseAppliedDiscountCouponCodesAsync(customer);
 
@@ -418,7 +414,6 @@ public partial class PriceCalculationService : IPriceCalculationService
         var cost = product.ProductCost;
         var attributeValues = await _productAttributeParser.ParseProductAttributeValuesAsync(attributesXml);
         foreach (var attributeValue in attributeValues)
-        {
             switch (attributeValue.AttributeValueType)
             {
                 case AttributeValueType.Simple:
@@ -434,7 +429,6 @@ public partial class PriceCalculationService : IPriceCalculationService
                 default:
                     break;
             }
-        }
 
         return cost;
     }
@@ -474,9 +468,7 @@ public partial class PriceCalculationService : IPriceCalculationService
                     adjustment = (decimal)((float)productPrice * (float)value.PriceAdjustment / 100f);
                 }
                 else
-                {
                     adjustment = value.PriceAdjustment;
-                }
 
                 break;
             case AttributeValueType.AssociatedToProduct:

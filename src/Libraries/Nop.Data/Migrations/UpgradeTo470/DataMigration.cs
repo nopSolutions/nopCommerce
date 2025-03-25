@@ -140,10 +140,8 @@ public class DataMigration : Migration
         }
 
         // new permission
-        if (_dataProvider.GetTable<PermissionRecord>().Any(pr => string.Compare(pr.SystemName, "AccessProfiling", StringComparison.InvariantCultureIgnoreCase) == 0))
-        {
+        if (_dataProvider.GetTable<PermissionRecord>().Any(pr => string.Compare(pr.SystemName, "AccessProfiling", StringComparison.InvariantCultureIgnoreCase) == 0)) 
             _dataProvider.BulkDeleteEntitiesAsync<PermissionRecord>(pr => pr.SystemName == "AccessProfiling");
-        }
 
         //#6890
         var productTableName = NameCompatibilityManager.GetTableName(typeof(Product));
@@ -175,10 +173,8 @@ public class DataMigration : Migration
         {
             var emailAccounts = _dataProvider.GetTable<EmailAccount>().ToList();
             foreach (var item in emailAccounts)
-            {
                 if (!string.IsNullOrEmpty(item.Username))
                     item.EmailAuthenticationMethod = EmailAuthenticationMethod.Login;
-            }
 
             _dataProvider.UpdateEntities(emailAccounts);
 

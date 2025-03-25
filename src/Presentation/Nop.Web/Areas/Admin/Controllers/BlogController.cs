@@ -70,7 +70,6 @@ public partial class BlogController : BaseAdminController
         var existingStoreMappings = await _storeMappingService.GetStoreMappingsAsync(blogPost);
         var allStores = await _storeService.GetAllStoresAsync();
         foreach (var store in allStores)
-        {
             if (model.SelectedStoreIds.Contains(store.Id))
             {
                 //new store
@@ -84,7 +83,6 @@ public partial class BlogController : BaseAdminController
                 if (storeMappingToDelete != null)
                     await _storeMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
             }
-        }
     }
 
     #endregion

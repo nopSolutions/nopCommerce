@@ -109,7 +109,6 @@ public class AddressValidationViewComponent : NopViewComponent
                                .Select(message => message.details)
                            ?? new List<string>();
         if (errorDetails.Any())
-        {
             //display error message to customer
             return View("~/Plugins/Tax.Avalara/Views/Checkout/AddressValidation.cshtml", new AddressValidationModel
             {
@@ -117,7 +116,6 @@ public class AddressValidationViewComponent : NopViewComponent
                     WebUtility.HtmlEncode(string.Join("; ", errorDetails))),
                 IsError = true
             });
-        }
 
         //if there are no errors and no validated addresses, nothing to display
         if (!validationResult?.validatedAddresses?.Any() ?? true)

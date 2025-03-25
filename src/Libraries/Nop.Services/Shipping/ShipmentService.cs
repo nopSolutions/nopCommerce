@@ -367,20 +367,16 @@ public partial class ShipmentService : IShipmentService
         if (warehouseId > 0)
             query = query.Where(si => si.WarehouseId == warehouseId);
         if (ignoreShipped)
-        {
             query = from si in query
                 join s in _shipmentRepository.Table on si.ShipmentId equals s.Id
                 where !s.ShippedDateUtc.HasValue
                 select si;
-        }
 
         if (ignoreDelivered)
-        {
             query = from si in query
                 join s in _shipmentRepository.Table on si.ShipmentId equals s.Id
                 where !s.DeliveryDateUtc.HasValue
                 select si;
-        }
 
         var queryProductOrderItems = from orderItem in _orderItemRepository.Table
             where orderItem.ProductId == product.Id

@@ -329,10 +329,8 @@ public partial class CustomerModelFactory : ICustomerModelFactory
 
         var customAttributesFormatted = await _addressAttributeFormatter.FormatAttributesAsync(address?.CustomAttributes);
         if (!string.IsNullOrEmpty(customAttributesFormatted))
-        {
             //already encoded
             addressHtmlSb.AppendFormat($"{separator}{customAttributesFormatted}");
-        }
 
         addressHtmlSb.Append("</div>");
 
@@ -711,11 +709,9 @@ public partial class CustomerModelFactory : ICustomerModelFactory
 
                 //prepare model newsletter subscriptions
                 if (!string.IsNullOrEmpty(customer.Email))
-                {
                     model.SelectedNewsletterSubscriptionStoreIds = await (await _storeService.GetAllStoresAsync())
                         .WhereAwait(async store => await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id) != null)
                         .Select(store => store.Id).ToListAsync();
-                }
             }
             //prepare reward points model
             model.DisplayRewardPointsHistory = _rewardPointsSettings.Enabled;
@@ -1228,9 +1224,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
             if (customer != null)
                 customerId = customer.Id;
             else
-            {
                 customerInfo = searchModel.SearchEmail;
-            }
         }
         //get requests
         var gdprLog = await _gdprService.GetAllLogAsync(

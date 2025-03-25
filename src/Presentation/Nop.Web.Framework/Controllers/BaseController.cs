@@ -252,13 +252,9 @@ public abstract partial class BaseController : Controller
 
         const string dataKey = "nop.selected-card-name";
         if (persistForTheNextRequest)
-        {
             TempData[dataKey] = cardName;
-        }
         else
-        {
             ViewData[dataKey] = cardName;
-        }
     }
 
     /// <summary>

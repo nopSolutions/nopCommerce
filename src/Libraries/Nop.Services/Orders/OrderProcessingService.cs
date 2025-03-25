@@ -224,15 +224,13 @@ public partial class OrderProcessingService : IOrderProcessingService
     protected virtual async Task ReverseBookedInventoryAsync(Order order, string message)
     {
         foreach (var shipment in await _shipmentService.GetShipmentsByOrderIdAsync(order.Id))
+        foreach (var shipmentItem in await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
         {
-            foreach (var shipmentItem in await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
-            {
-                var product = await _orderService.GetProductByOrderItemIdAsync(shipmentItem.OrderItemId);
-                if (product is null)
-                    continue;
+            var product = await _orderService.GetProductByOrderItemIdAsync(shipmentItem.OrderItemId);
+            if (product is null)
+                continue;
 
-                await _productService.ReverseBookedInventoryAsync(product, shipmentItem, message);
-            }
+            await _productService.ReverseBookedInventoryAsync(product, shipmentItem, message);
         }
     }
 
@@ -906,10 +904,8 @@ public partial class OrderProcessingService : IOrderProcessingService
         if (rewardPointsHistoryEntry != null)
         {
             if (rewardPointsHistoryEntry.CreatedOnUtc > DateTime.UtcNow)
-            {
                 //just delete the upcoming entry (points were not granted yet)
                 await _rewardPointService.DeleteRewardPointsHistoryEntryAsync(rewardPointsHistoryEntry);
-            }
             else
             {
                 var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
@@ -935,14 +931,10 @@ public partial class OrderProcessingService : IOrderProcessingService
         //were some reward points spend on the order
         var allRewardPoints = await _rewardPointService.GetRewardPointsHistoryAsync(order.CustomerId, order.StoreId, orderGuid: order.OrderGuid);
         if (allRewardPoints?.Any() == true)
-        {
             foreach (var rewardPoints in allRewardPoints)
-            {
                 //return back
                 await _rewardPointService.AddRewardPointsHistoryEntryAsync(customer, -rewardPoints.Points, order.StoreId,
                     string.Format(await _localizationService.GetResourceAsync("RewardPoints.Message.ReturnedForOrder"), order.CustomOrderNumber));
-            }
-        }
     }
 
     /// <summary>
@@ -955,25 +947,22 @@ public partial class OrderProcessingService : IOrderProcessingService
     {
         var giftCards = await _giftCardService.GetAllGiftCardsAsync(order.Id, isGiftCardActivated: !activate);
         foreach (var gc in giftCards)
-        {
             if (activate)
             {
                 //activate
                 var isRecipientNotified = gc.IsRecipientNotified;
                 if (gc.GiftCardType == GiftCardType.Virtual)
-                {
                     //send email for virtual gift card
                     if (!string.IsNullOrEmpty(gc.RecipientEmail) &&
                         !string.IsNullOrEmpty(gc.SenderEmail))
                     {
                         var customerLang = (await _languageService.GetLanguageByIdAsync(order.CustomerLanguageId) ??
-                                            (await _languageService.GetAllLanguagesAsync()).FirstOrDefault())
-                                           ?? throw new Exception("No languages could be loaded");
+                                (await _languageService.GetAllLanguagesAsync()).FirstOrDefault())
+                            ?? throw new Exception("No languages could be loaded");
                         var queuedEmailIds = await _workflowMessageService.SendGiftCardNotificationAsync(gc, customerLang.Id);
                         if (queuedEmailIds.Any())
                             isRecipientNotified = true;
                     }
-                }
 
                 gc.IsGiftCardActivated = true;
                 gc.IsRecipientNotified = isRecipientNotified;
@@ -985,7 +974,6 @@ public partial class OrderProcessingService : IOrderProcessingService
                 gc.IsGiftCardActivated = false;
                 await _giftCardService.UpdateGiftCardAsync(gc);
             }
-        }
     }
 
     /// <summary>
@@ -1333,7 +1321,6 @@ public partial class OrderProcessingService : IOrderProcessingService
         _productAttributeParser.GetGiftCardAttribute(attributesXml, out var giftCardRecipientName, out var giftCardRecipientEmail, out var giftCardSenderName, out var giftCardSenderEmail, out var giftCardMessage);
 
         for (var i = 0; i < quantity; i++)
-        {
             await _giftCardService.InsertGiftCardAsync(new GiftCard
             {
                 GiftCardType = product.GiftCardType,
@@ -1349,7 +1336,6 @@ public partial class OrderProcessingService : IOrderProcessingService
                 IsRecipientNotified = false,
                 CreatedOnUtc = DateTime.UtcNow
             });
-        }
     }
 
     /// <summary>
@@ -1378,7 +1364,6 @@ public partial class OrderProcessingService : IOrderProcessingService
                 throw new NopException("Payment method is not active");
 
             if (details.IsRecurringShoppingCart)
-            {
                 //recurring cart
                 processPaymentResult = (await _paymentService.GetRecurringPaymentTypeAsync(processPaymentRequest.PaymentMethodSystemName)) switch
                 {
@@ -1387,7 +1372,6 @@ public partial class OrderProcessingService : IOrderProcessingService
                         RecurringPaymentType.Automatic => await _paymentService.ProcessRecurringPaymentAsync(processPaymentRequest),
                     _ => throw new NopException("Not supported recurring payment type"),
                 };
-            }
             else
                 //standard cart
                 processPaymentResult = await _paymentService.ProcessPaymentAsync(processPaymentRequest);
@@ -1995,10 +1979,8 @@ public partial class OrderProcessingService : IOrderProcessingService
             {
                 //cancel recurring payment
                 var errors = (await CancelRecurringPaymentAsync(recurringPayment)).ToList();
-                foreach (var error in errors)
-                {
+                foreach (var error in errors) 
                     await _logger.ErrorAsync(error);
-                }
 
                 //notify a customer about cancelled payment
                 await _workflowMessageService.SendRecurringPaymentCancelledCustomerNotificationAsync(recurringPayment, initialOrder.CustomerLanguageId);
@@ -2279,11 +2261,9 @@ public partial class OrderProcessingService : IOrderProcessingService
         await AddOrderNoteAsync(order, $"Shipment# {shipment.Id} has been delivered");
 
         if (order.PickupInStore)
-        {
             // Shipment has been collected by customer.
             // We must process products with "Multiple warehouse" support enabled.
             await BookReservedInventoryAsync(shipment, string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.ReadyForPickupByCustomer"), shipment.OrderId));
-        }
 
         if (notifyCustomer)
         {
@@ -3202,7 +3182,6 @@ public partial class OrderProcessingService : IOrderProcessingService
 
         //calculate next payment date
         if (historyCollection.Any())
-        {
             result = recurringPayment.CyclePeriod switch
             {
                 RecurringProductCyclePeriod.Days => recurringPayment.StartDateUtc.AddDays((double)recurringPayment.CycleLength * historyCollection.Count),
@@ -3211,7 +3190,6 @@ public partial class OrderProcessingService : IOrderProcessingService
                 RecurringProductCyclePeriod.Years => recurringPayment.StartDateUtc.AddYears(recurringPayment.CycleLength * historyCollection.Count),
                 _ => throw new NopException("Not supported cycle period"),
             };
-        }
         else
         {
             if (recurringPayment.TotalCycles > 0)

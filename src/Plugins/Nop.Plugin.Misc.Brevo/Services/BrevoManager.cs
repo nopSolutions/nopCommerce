@@ -384,16 +384,14 @@ public partial class BrevoManager
                     .Select(contact => contact.email).ToList() ?? new List<string>();
 
                 foreach (var email in blackListedEmails)
-                {
                     //email in black list, so unsubscribe contact from all stores
-                    foreach (var id in (await _storeService.GetAllStoresAsync()).Select(store => store.Id))
+                foreach (var id in (await _storeService.GetAllStoresAsync()).Select(store => store.Id))
+                {
+                    var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(email, id);
+                    if (subscription != null)
                     {
-                        var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(email, id);
-                        if (subscription != null)
-                        {
-                            subscription.Active = false;
-                            await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(subscription, false);
-                        }
+                        subscription.Active = false;
+                        await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(subscription, false);
                     }
                 }
             }
@@ -802,9 +800,7 @@ public partial class BrevoManager
             catch (ApiException apiException)
             {
                 if (apiException.ErrorCode == 404)
-                {
                     return;
-                }
                 else
                 {
                     await _logger.ErrorAsync($"Brevo error: {apiException.Message}.", apiException, await _workContext.GetCurrentCustomerAsync());
@@ -907,10 +903,8 @@ public partial class BrevoManager
             if (!storeCredentials.Any())
                 return false;
 
-            foreach (var storeCredential in storeCredentials)
-            {
+            foreach (var storeCredential in storeCredentials) 
                 await HttpBrevoClientAsync(storeCredential.Key, storeCredential.Value);
-            }
         }
         catch (Exception exception)
         {
@@ -981,13 +975,9 @@ public partial class BrevoManager
             var template = new { lists = new[] { new { id = string.Empty, name = string.Empty } } };
             var listObjects = JsonConvert.DeserializeAnonymousType(lists.ToJson(), template);
             if (listObjects?.lists != null)
-            {
                 foreach (var list in listObjects.lists)
-                {
                     if (list != null)
                         availableLists.Add((list.id, list.name));
-                }
-            }
         }
         catch (Exception exception)
         {
@@ -1019,10 +1009,8 @@ public partial class BrevoManager
             var senders = await client.GetSendersAsync();
 
             //prepare id-name pairs
-            foreach (var sender in senders.Senders)
-            {
+            foreach (var sender in senders.Senders) 
                 availableSenders.Add((sender.Id.ToString(), $"{sender.Name} ({sender.Email})"));
-            }
         }
         catch (Exception exception)
         {
@@ -1108,10 +1096,8 @@ public partial class BrevoManager
             //create attributes that are not already on account
             var newAttributes = new List<(CategoryEnum category, string Name, string Value, CreateAttribute.TypeEnum? Type)>();
             foreach (var attribute in initialAttributes)
-            {
                 if (!allAttribytes.Contains(attribute.Name))
                     newAttributes.Add(attribute);
-            }
 
             await CreateAttributesAsync(newAttributes);
 
@@ -1174,10 +1160,8 @@ public partial class BrevoManager
             //create attributes that are not already on account
             var newAttributes = new List<(CategoryEnum category, string Name, string Value, CreateAttribute.TypeEnum? Type)>();
             foreach (var attribute in initialAttributes)
-            {
                 if (!attributeNames.Contains(attribute.Name))
                     newAttributes.Add(attribute);
-            }
 
             return await CreateAttributesAsync(newAttributes);
         }
@@ -1219,10 +1203,8 @@ public partial class BrevoManager
 
             //prepare attributes to create
             var newAttributes = new List<(CategoryEnum category, string Name, string Value, CreateAttribute.TypeEnum? Type)>();
-            foreach (var token in tokens)
-            {
+            foreach (var token in tokens) 
                 newAttributes.Add((CategoryEnum.Transactional, token, null, CreateAttribute.TypeEnum.Text));
-            }
 
             return await CreateAttributesAsync(newAttributes);
         }

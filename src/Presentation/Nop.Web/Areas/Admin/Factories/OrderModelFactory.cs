@@ -314,10 +314,8 @@ public partial class OrderModelFactory : IOrderModelFactory
 
             //license file
             if (orderItem.LicenseDownloadId.HasValue)
-            {
                 orderItemModel.LicenseDownloadGuid = (await _downloadService
                     .GetDownloadByIdAsync(orderItem.LicenseDownloadId.Value))?.DownloadGuid ?? Guid.Empty;
-            }
 
             var languageId = (await _workContext.GetWorkingLanguageAsync()).Id;
 
@@ -347,10 +345,8 @@ public partial class OrderModelFactory : IOrderModelFactory
 
             //recurring info
             if (product.IsRecurring)
-            {
                 orderItemModel.RecurringInfo = string.Format(await _localizationService.GetResourceAsync("Admin.Orders.Products.RecurringPeriod"),
                     product.RecurringCycleLength, await _localizationService.GetLocalizedEnumAsync(product.RecurringCyclePeriod));
-            }
 
             //rental info
             if (product.IsRental)
@@ -388,13 +384,11 @@ public partial class OrderModelFactory : IOrderModelFactory
 
         var returnRequests = await _returnRequestService.SearchReturnRequestsAsync(orderItemId: orderItem.Id);
         foreach (var returnRequest in returnRequests)
-        {
             models.Add(new OrderItemModel.ReturnRequestBriefModel
             {
                 CustomNumber = returnRequest.CustomNumber,
                 Id = returnRequest.Id
             });
-        }
     }
 
     /// <summary>
@@ -472,7 +466,6 @@ public partial class OrderModelFactory : IOrderModelFactory
         var displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Any();
         var displayTax = !displayTaxRates;
         foreach (var tr in taxRates)
-        {
             model.TaxRates.Add(new OrderModel.TaxRate
             {
                 Rate = _priceFormatter.FormatTaxRate(tr.Key),
@@ -480,7 +473,6 @@ public partial class OrderModelFactory : IOrderModelFactory
                     .FormatOrderPriceAsync(tr.Value, order.CurrencyRate, order.CustomerCurrencyCode,
                         _orderSettings.DisplayCustomerCurrencyOnOrders, primaryStoreCurrency, languageId, null, false)
             });
-        }
 
         model.DisplayTaxRates = displayTaxRates;
         model.DisplayTax = displayTax;
@@ -489,22 +481,18 @@ public partial class OrderModelFactory : IOrderModelFactory
 
         //discount
         if (order.OrderDiscount > 0)
-        {
             model.OrderTotalDiscount = await _priceFormatter
                 .FormatOrderPriceAsync(-order.OrderDiscount, order.CurrencyRate, order.CustomerCurrencyCode,
                     _orderSettings.DisplayCustomerCurrencyOnOrders, primaryStoreCurrency, languageId, null, false);
-        }
         model.OrderTotalDiscountValue = order.OrderDiscount;
 
         //gift cards
         foreach (var gcuh in await _giftCardService.GetGiftCardUsageHistoryAsync(order))
-        {
             model.GiftCards.Add(new OrderModel.GiftCard
             {
                 CouponCode = (await _giftCardService.GetGiftCardByIdAsync(gcuh.GiftCardId)).GiftCardCouponCode,
                 Amount = await _priceFormatter.FormatPriceAsync(-gcuh.UsedValue, true, false)
             });
-        }
 
         //reward points
         if (order.RedeemedRewardPointsEntryId.HasValue && await _rewardPointService.GetRewardPointsHistoryEntryByIdAsync(order.RedeemedRewardPointsEntryId.Value) is RewardPointsHistory redeemedRewardPointsEntry)
@@ -702,11 +690,9 @@ public partial class OrderModelFactory : IOrderModelFactory
                 HasCondition = !string.IsNullOrEmpty(attribute.ConditionAttributeXml)
             };
             if (!string.IsNullOrEmpty(attribute.ValidationFileAllowedExtensions))
-            {
                 attributeModel.AllowedFileExtensions = attribute.ValidationFileAllowedExtensions
                     .Split(_separator, StringSplitOptions.RemoveEmptyEntries)
                     .ToList();
-            }
 
             if (attribute.ShouldHaveValues())
             {
@@ -730,9 +716,7 @@ public partial class OrderModelFactory : IOrderModelFactory
                             priceAdjustmentStr = priceAdjustment > 0 ? $"+{priceAdjustmentStr}%" : $"{priceAdjustmentStr}%";
                         }
                         else
-                        {
                             priceAdjustmentStr = priceAdjustment > 0 ? $"+{await _priceFormatter.FormatPriceAsync(priceAdjustment, false, false)}" : $"-{await _priceFormatter.FormatPriceAsync(-priceAdjustment, false, false)}";
-                        }
                     }
 
                     attributeModel.Values.Add(new AddProductToOrderModel.ProductAttributeValueModel
@@ -928,10 +912,8 @@ public partial class OrderModelFactory : IOrderModelFactory
             {
                 var ids = searchModel.OrderStatusIds.Select(id => id.ToString());
                 var statusItems = searchModel.AvailableOrderStatuses.Where(statusItem => ids.Contains(statusItem.Value)).ToList();
-                foreach (var statusItem in statusItems)
-                {
+                foreach (var statusItem in statusItems) 
                     statusItem.Selected = true;
-                }
             }
             else
                 searchModel.AvailableOrderStatuses.FirstOrDefault().Selected = true;
@@ -944,10 +926,8 @@ public partial class OrderModelFactory : IOrderModelFactory
             {
                 var ids = searchModel.PaymentStatusIds.Select(id => id.ToString());
                 var statusItems = searchModel.AvailablePaymentStatuses.Where(statusItem => ids.Contains(statusItem.Value)).ToList();
-                foreach (var statusItem in statusItems)
-                {
+                foreach (var statusItem in statusItems) 
                     statusItem.Selected = true;
-                }
             }
             else
                 searchModel.AvailablePaymentStatuses.FirstOrDefault().Selected = true;
@@ -960,10 +940,8 @@ public partial class OrderModelFactory : IOrderModelFactory
             {
                 var ids = searchModel.ShippingStatusIds.Select(id => id.ToString());
                 var statusItems = searchModel.AvailableShippingStatuses.Where(statusItem => ids.Contains(statusItem.Value)).ToList();
-                foreach (var statusItem in statusItems)
-                {
+                foreach (var statusItem in statusItems) 
                     statusItem.Selected = true;
-                }
             }
             else
                 searchModel.AvailableShippingStatuses.FirstOrDefault().Selected = true;
@@ -1560,9 +1538,7 @@ public partial class OrderModelFactory : IOrderModelFactory
                 //multiple warehouses supported
                 shipmentItemModel.AllowToChooseWarehouse = true;
                 foreach (var pwi in (await _productService.GetAllProductWarehouseInventoryRecordsAsync(orderItem.ProductId)).OrderBy(w => w.WarehouseId).ToList())
-                {
                     if (await _shippingService.GetWarehouseByIdAsync(pwi.WarehouseId) is Warehouse warehouse)
-                    {
                         shipmentItemModel.AvailableWarehouses.Add(new ShipmentItemModel.WarehouseInfo
                         {
                             WarehouseId = warehouse.Id,
@@ -1572,22 +1548,18 @@ public partial class OrderModelFactory : IOrderModelFactory
                             PlannedQuantity =
                                 await _shipmentService.GetQuantityInShipmentsAsync(product, warehouse.Id, true, true)
                         });
-                    }
-                }
             }
             else
             {
                 //multiple warehouses are not supported
                 var warehouse = await _shippingService.GetWarehouseByIdAsync(product.WarehouseId);
                 if (warehouse != null)
-                {
                     shipmentItemModel.AvailableWarehouses.Add(new ShipmentItemModel.WarehouseInfo
                     {
                         WarehouseId = warehouse.Id,
                         WarehouseName = warehouse.Name,
                         StockQuantity = product.StockQuantity
                     });
-                }
             }
 
             model.Items.Add(shipmentItemModel);

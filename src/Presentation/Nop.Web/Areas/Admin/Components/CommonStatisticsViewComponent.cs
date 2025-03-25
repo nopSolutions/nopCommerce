@@ -47,9 +47,7 @@ public partial class CommonStatisticsViewComponent : NopViewComponent
             !await _permissionService.AuthorizeAsync(StandardPermission.Orders.ORDERS_VIEW) ||
             !await _permissionService.AuthorizeAsync(StandardPermission.Orders.RETURN_REQUESTS_VIEW) ||
             !await _permissionService.AuthorizeAsync(StandardPermission.Catalog.PRODUCTS_VIEW))
-        {
             return Content(string.Empty);
-        }
 
         //a vendor doesn't have access to this report
         if (await _workContext.GetCurrentVendorAsync() != null)

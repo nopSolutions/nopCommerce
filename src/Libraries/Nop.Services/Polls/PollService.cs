@@ -71,10 +71,8 @@ public partial class PollService : IPollService
         var query = _pollRepository.Table;
 
         if (!showHidden || storeId > 0)
-        {
             //apply store mapping constraints
             query = await _storeMappingService.ApplyStoreMapping(query, storeId);
-        }
 
         //whether to load not published, not started and expired polls
         if (!showHidden)

@@ -15,10 +15,8 @@ public partial record CategoryModel : BaseNopEntityModel, IAclSupportedModel, ID
 
     public CategoryModel()
     {
-        if (PageSize < 1)
-        {
+        if (PageSize < 1) 
             PageSize = 5;
-        }
 
         Locales = new List<CategoryLocalizedModel>();
         AvailableCategoryTemplates = new List<SelectListItem>();

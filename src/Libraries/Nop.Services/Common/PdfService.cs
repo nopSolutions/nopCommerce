@@ -213,10 +213,8 @@ public partial class PdfService : IPdfService
             var paymentMethodStr = paymentMethod != null
                 ? await _localizationService.GetLocalizedFriendlyNameAsync(paymentMethod, lang.Id)
                 : order.PaymentMethodSystemName;
-            if (!string.IsNullOrEmpty(paymentMethodStr))
-            {
+            if (!string.IsNullOrEmpty(paymentMethodStr)) 
                 addressResult.PaymentMethod = paymentMethodStr;
-            }
 
             //custom values
             var customValues = _paymentService.DeserializeCustomValues(order);
@@ -273,10 +271,8 @@ public partial class PdfService : IPdfService
                 var stateProvince = await _stateProvinceService.GetStateProvinceByAddressAsync(shippingAddress);
                 addressResult.StateProvinceName = stateProvince != null ? await _localizationService.GetLocalizedAsync(stateProvince, x => x.Name, lang.Id) : string.Empty;
 
-                if (_addressSettings.CountryEnabled && await _countryService.GetCountryByAddressAsync(shippingAddress) is Country country)
-                {
+                if (_addressSettings.CountryEnabled && await _countryService.GetCountryByAddressAsync(shippingAddress) is Country country) 
                     addressResult.Country = await _localizationService.GetLocalizedAsync(country, x => x.Name, lang.Id);
-                }
 
                 var (addressLine, _) = await _addressService.FormatAddressAsync(shippingAddress, lang.Id);
                 addressResult.AddressLine = addressLine;
@@ -549,9 +545,7 @@ public partial class PdfService : IPdfService
         bool displayTax;
         var displayTaxRates = true;
         if (_taxSettings.HideTaxInOrderSummary && order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
-        {
             displayTax = false;
-        }
         else
         {
             if (order.OrderTax == 0 && _taxSettings.HideZeroTax)
@@ -572,13 +566,10 @@ public partial class PdfService : IPdfService
             }
         }
 
-        if (displayTax)
-        {
+        if (displayTax) 
             result.Tax = taxStr;
-        }
 
         if (displayTaxRates)
-        {
             foreach (var item in taxRates)
             {
                 var taxRate = string.Format(await _localizationService.GetResourceAsync("Pdf.TaxRate", languageId),
@@ -589,7 +580,6 @@ public partial class PdfService : IPdfService
 
                 result.TaxRates.Add($"{taxRate} {taxValue}");
             }
-        }
 
         //discount (applied to order total)
         if (order.OrderDiscount > decimal.Zero)

@@ -88,12 +88,10 @@ public partial class GiftCardService : IGiftCardService
         var giftCards = await _giftCardRepository.GetAllPagedAsync(query =>
         {
             if (purchasedWithOrderId.HasValue)
-            {
                 query = from gc in query
                     join oi in _orderItemRepository.Table on gc.PurchasedWithOrderItemId equals oi.Id
                     where oi.OrderId == purchasedWithOrderId.Value
                     select gc;
-            }
 
             if (usedWithOrderId.HasValue)
                 query = from gc in query

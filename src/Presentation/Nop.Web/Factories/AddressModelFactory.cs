@@ -224,26 +224,20 @@ public partial class AddressModelFactory : IAddressModelFactory
             var countries = await loadCountries();
 
             if (_addressSettings.PreselectCountryIfOnlyOne && countries.Count == 1)
-            {
                 model.CountryId = countries[0].Id;
-            }
             else
-            {
                 model.AvailableCountries.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectCountry"), Value = "0" });
-            }
 
             if (addressSettings.DefaultCountryId != null)
                 model.CountryId = model.CountryId ?? addressSettings.DefaultCountryId;
 
             foreach (var c in countries)
-            {
                 model.AvailableCountries.Add(new SelectListItem
                 {
                     Text = await _localizationService.GetLocalizedAsync(c, x => x.Name),
                     Value = c.Id.ToString(),
                     Selected = c.Id == model.CountryId
                 });
-            }
 
             if (addressSettings.StateProvinceEnabled)
             {
@@ -255,14 +249,12 @@ public partial class AddressModelFactory : IAddressModelFactory
                     model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectState"), Value = "0" });
 
                     foreach (var s in states)
-                    {
                         model.AvailableStates.Add(new SelectListItem
                         {
                             Text = await _localizationService.GetLocalizedAsync(s, x => x.Name),
                             Value = s.Id.ToString(),
                             Selected = (s.Id == model.StateProvinceId)
                         });
-                    }
                 }
                 else
                 {
@@ -298,14 +290,10 @@ public partial class AddressModelFactory : IAddressModelFactory
         model.DefaultCountryId = addressSettings.DefaultCountryId;
 
         //customer attribute services
-        if (_addressAttributeService != null && _addressAttributeParser != null)
-        {
+        if (_addressAttributeService != null && _addressAttributeParser != null) 
             await PrepareCustomAddressAttributesAsync(model, address, overrideAttributesXml);
-        }
-        if (_addressAttributeFormatter != null && address != null)
-        {
+        if (_addressAttributeFormatter != null && address != null) 
             model.FormattedCustomAddressAttributes = await _addressAttributeFormatter.FormatAttributesAsync(address.CustomAttributes);
-        }
 
         (model.AddressLine, model.AddressFields) = await _addressService.FormatAddressAsync(address, languageId);
     }

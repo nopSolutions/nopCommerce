@@ -262,12 +262,10 @@ public partial class ProductController : BaseAdminController
     protected virtual async Task UpdateLocalesAsync(ProductAttributeValue pav, ProductAttributeValueModel model)
     {
         foreach (var localized in model.Locales)
-        {
             await _localizedEntityService.SaveLocalizedValueAsync(pav,
                 x => x.Name,
                 localized.Name,
                 localized.LanguageId);
-        }
     }
 
     protected virtual async Task UpdatePictureSeoNamesAsync(Product product)
@@ -323,7 +321,6 @@ public partial class ProductController : BaseAdminController
 
         //add manufacturers
         foreach (var manufacturerId in model.SelectedManufacturerIds)
-        {
             if (_manufacturerService.FindProductManufacturer(existingProductManufacturers, product.Id, manufacturerId) == null)
             {
                 //find next display order
@@ -338,7 +335,6 @@ public partial class ProductController : BaseAdminController
                     DisplayOrder = displayOrder
                 });
             }
-        }
     }
 
     protected virtual async Task SaveDiscountMappingsAsync(Product product, ProductModel model)
@@ -346,7 +342,6 @@ public partial class ProductController : BaseAdminController
         var allDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToSkus, showHidden: true, isActive: null);
 
         foreach (var discount in allDiscounts)
-        {
             if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
             {
                 //new discount
@@ -359,7 +354,6 @@ public partial class ProductController : BaseAdminController
                 if (await _productService.GetDiscountAppliedToProductAsync(product.Id, discount.Id) is DiscountProductMapping discountProductMapping)
                     await _productService.DeleteDiscountProductMappingAsync(discountProductMapping);
             }
-        }
 
         await _productService.UpdateProductAsync(product);
     }
@@ -396,7 +390,6 @@ public partial class ProductController : BaseAdminController
                 case AttributeControlType.Checkboxes:
                     var cblAttributes = form[controlId].ToString();
                     if (!string.IsNullOrEmpty(cblAttributes))
-                    {
                         foreach (var item in cblAttributes.Split(_separator,
                                      StringSplitOptions.RemoveEmptyEntries))
                         {
@@ -405,7 +398,6 @@ public partial class ProductController : BaseAdminController
                                 attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                     attribute, selectedAttributeId.ToString());
                         }
-                    }
 
                     break;
                 case AttributeControlType.ReadonlyCheckboxes:
@@ -415,10 +407,8 @@ public partial class ProductController : BaseAdminController
                                  .Where(v => v.IsPreSelected)
                                  .Select(v => v.Id)
                                  .ToList())
-                    {
                         attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                             attribute, selectedAttributeId.ToString());
-                    }
 
                     break;
                 case AttributeControlType.TextBox:
@@ -447,10 +437,8 @@ public partial class ProductController : BaseAdminController
                     }
 
                     if (selectedDate.HasValue)
-                    {
                         attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                             attribute, selectedDate.Value.ToString("D"));
-                    }
 
                     break;
                 case AttributeControlType.FileUpload:
@@ -504,10 +492,8 @@ public partial class ProductController : BaseAdminController
         foreach (var attribute in attributes)
         {
             var conditionMet = await _productAttributeParser.IsConditionMetAsync(attribute, attributesXml);
-            if (conditionMet.HasValue && !conditionMet.Value)
-            {
+            if (conditionMet.HasValue && !conditionMet.Value) 
                 attributesXml = _productAttributeParser.RemoveProductAttribute(attributesXml, attribute);
-            }
         }
 
         return attributesXml;
@@ -638,13 +624,11 @@ public partial class ProductController : BaseAdminController
                                 selectedAttributeId > 0 ? selectedAttributeId.ToString() : string.Empty);
                         }
                         else
-                        {
                             //for conditions we should empty values save even when nothing is selected
                             //otherwise "attributesXml" will be empty
                             //hence we won't be able to find a selected attribute
                             attributesXml = _productAttributeParser.AddProductAttribute(null,
                                 attribute, string.Empty);
-                        }
 
                         break;
                     case AttributeControlType.Checkboxes:
@@ -665,22 +649,18 @@ public partial class ProductController : BaseAdminController
                             }
 
                             if (!anyValueSelected)
-                            {
                                 //for conditions we should save empty values even when nothing is selected
                                 //otherwise "attributesXml" will be empty
                                 //hence we won't be able to find a selected attribute
                                 attributesXml = _productAttributeParser.AddProductAttribute(null,
                                     attribute, string.Empty);
-                            }
                         }
                         else
-                        {
                             //for conditions we should save empty values even when nothing is selected
                             //otherwise "attributesXml" will be empty
                             //hence we won't be able to find a selected attribute
                             attributesXml = _productAttributeParser.AddProductAttribute(null,
                                 attribute, string.Empty);
-                        }
 
                         break;
                     case AttributeControlType.ReadonlyCheckboxes:
@@ -761,13 +741,11 @@ public partial class ProductController : BaseAdminController
                 continue;
 
             if (_productAttributeService.FindProductAttributeCombinationPicture(existingCombinationPictures, combination.Id, pictureId) == null)
-            {
                 await _productAttributeService.InsertProductAttributeCombinationPictureAsync(new ProductAttributeCombinationPicture
                 {
                     ProductAttributeCombinationId = combination.Id,
                     PictureId = pictureId
                 });
-            }
         }
     }
 
@@ -788,13 +766,11 @@ public partial class ProductController : BaseAdminController
                 continue;
 
             if (_productAttributeService.FindProductAttributeValuePicture(existingValuePictures, value.Id, pictureId) == null)
-            {
                 await _productAttributeService.InsertProductAttributeValuePictureAsync(new ProductAttributeValuePicture
                 {
                     ProductAttributeValueId = value.Id,
                     PictureId = pictureId
                 });
-            }
         }
     }
 
@@ -1201,9 +1177,7 @@ public partial class ProductController : BaseAdminController
                 prevTotalStockQuantity <= 0 &&
                 product.Published &&
                 !product.Deleted)
-            {
                 await _backInStockSubscriptionService.SendNotificationsToSubscribersAsync(product);
-            }
 
             //delete an old "download" file (if deleted or updated)
             if (prevDownloadId > 0 && prevDownloadId != product.DownloadId)
@@ -1249,10 +1223,8 @@ public partial class ProductController : BaseAdminController
                 await _productService.AddStockQuantityHistoryEntryAsync(product, product.StockQuantity, product.StockQuantity, product.WarehouseId, message);
             }
             else
-            {
                 await _productService.AddStockQuantityHistoryEntryAsync(product, product.StockQuantity - previousStockQuantity, product.StockQuantity,
                     product.WarehouseId, await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.Edit"));
-            }
 
             //activity log
             await _customerActivityService.InsertActivityAsync("EditProduct",
@@ -1411,10 +1383,8 @@ public partial class ProductController : BaseAdminController
             .ToList();
 
         foreach (var str1 in rangeArray)
-        {
             if (int.TryParse(str1, out var tmp1))
                 ids.Add(tmp1);
-        }
 
         var products = await _productService.GetProductsByIdsAsync(ids.ToArray());
         for (var i = 0; i <= products.Count - 1; i++)
@@ -1756,7 +1726,6 @@ public partial class ProductController : BaseAdminController
             .Contains(model.ProductId);
 
         if (selectedProducts.Any())
-        {
             foreach (var product in selectedProducts)
             {
                 if (product.Id == model.ProductId)
@@ -1770,7 +1739,6 @@ public partial class ProductController : BaseAdminController
                 product.ParentGroupedProductId = model.ProductId;
                 await _productService.UpdateProductAsync(product);
             }
-        }
 
         if (tryToAddSelfGroupedProduct)
         {
@@ -1821,13 +1789,11 @@ public partial class ProductController : BaseAdminController
 
             var existingPictures = await _pictureService.GetPicturesByProductIdAsync(product.Id);
             if (existingPictures.Count >= _vendorSettings.MaximumProductPicturesNumber)
-            {
                 return Json(new
                 {
                     success = false,
                     message = await _localizationService.GetResourceAsync("Admin.Catalog.Products.Multimedia.Pictures.Alert.VendorNumberPicturesLimit"),
                 });
-            }
         }
 
         try
@@ -2122,10 +2088,8 @@ public partial class ProductController : BaseAdminController
 
         //a vendor should have access only to his products
         var currentVendor = await _workContext.GetCurrentVendorAsync();
-        if (currentVendor != null && product.VendorId != currentVendor.Id)
-        {
+        if (currentVendor != null && product.VendorId != currentVendor.Id) 
             return RedirectToAction("List");
-        }
 
         //we allow filtering only for "Option" attribute type
         if (model.AttributeTypeId != (int)SpecificationAttributeType.Option)
@@ -2147,22 +2111,18 @@ public partial class ProductController : BaseAdminController
         {
             case SpecificationAttributeType.CustomText:
                 foreach (var localized in model.Locales)
-                {
                     await _localizedEntityService.SaveLocalizedValueAsync(psa,
                         x => x.CustomValue,
                         localized.Value,
                         localized.LanguageId);
-                }
 
                 break;
             case SpecificationAttributeType.CustomHtmlText:
                 foreach (var localized in model.Locales)
-                {
                     await _localizedEntityService.SaveLocalizedValueAsync(psa,
                         x => x.CustomValue,
                         localized.ValueRaw,
                         localized.LanguageId);
-                }
 
                 break;
             case SpecificationAttributeType.Option:
@@ -2238,23 +2198,19 @@ public partial class ProductController : BaseAdminController
             case (int)SpecificationAttributeType.CustomHtmlText:
                 psa.CustomValue = model.ValueRaw;
                 foreach (var localized in model.Locales)
-                {
                     await _localizedEntityService.SaveLocalizedValueAsync(psa,
                         x => x.CustomValue,
                         localized.ValueRaw,
                         localized.LanguageId);
-                }
 
                 break;
             case (int)SpecificationAttributeType.CustomText:
                 psa.CustomValue = model.Value;
                 foreach (var localized in model.Locales)
-                {
                     await _localizedEntityService.SaveLocalizedValueAsync(psa,
                         x => x.CustomValue,
                         localized.Value,
                         localized.LanguageId);
-                }
 
                 break;
             default:
@@ -2268,10 +2224,8 @@ public partial class ProductController : BaseAdminController
         await _specificationAttributeService.UpdateProductSpecificationAttributeAsync(psa);
 
         if (continueEditing)
-        {
             return RedirectToAction("ProductSpecAttributeAddOrEdit",
                 new { productId = psa.ProductId, specificationId = model.SpecificationId });
-        }
 
         //select an appropriate card
         SaveSelectedCardName("product-specification-attributes");
@@ -2478,10 +2432,7 @@ public partial class ProductController : BaseAdminController
     {
         //a vendor should have access only to his products
         var currentVendor = await _workContext.GetCurrentVendorAsync();
-        if (currentVendor != null)
-        {
-            model.SearchVendorId = currentVendor.Id;
-        }
+        if (currentVendor != null) model.SearchVendorId = currentVendor.Id;
 
         var categoryIds = new List<int> { model.SearchCategoryId };
         //include subcategories
@@ -2533,10 +2484,7 @@ public partial class ProductController : BaseAdminController
     {
         //a vendor should have access only to his products
         var currentVendor = await _workContext.GetCurrentVendorAsync();
-        if (currentVendor != null)
-        {
-            model.SearchVendorId = currentVendor.Id;
-        }
+        if (currentVendor != null) model.SearchVendorId = currentVendor.Id;
 
         var categoryIds = new List<int> { model.SearchCategoryId };
         //include subcategories
@@ -2591,10 +2539,7 @@ public partial class ProductController : BaseAdminController
         }
         //a vendor should have access only to his products
         var currentVendor = await _workContext.GetCurrentVendorAsync();
-        if (currentVendor != null)
-        {
-            products = products.Where(p => p.VendorId == currentVendor.Id).ToList();
-        }
+        if (currentVendor != null) products = products.Where(p => p.VendorId == currentVendor.Id).ToList();
 
         try
         {
@@ -2615,10 +2560,7 @@ public partial class ProductController : BaseAdminController
     {
         //a vendor should have access only to his products
         var currentVendor = await _workContext.GetCurrentVendorAsync();
-        if (currentVendor != null)
-        {
-            model.SearchVendorId = currentVendor.Id;
-        }
+        if (currentVendor != null) model.SearchVendorId = currentVendor.Id;
 
         var categoryIds = new List<int> { model.SearchCategoryId };
         //include subcategories
@@ -2674,10 +2616,7 @@ public partial class ProductController : BaseAdminController
         }
         //a vendor should have access only to his products
         var currentVendor = await _workContext.GetCurrentVendorAsync();
-        if (currentVendor != null)
-        {
-            products = products.Where(p => p.VendorId == currentVendor.Id).ToList();
-        }
+        if (currentVendor != null) products = products.Where(p => p.VendorId == currentVendor.Id).ToList();
 
         try
         {
@@ -2703,9 +2642,7 @@ public partial class ProductController : BaseAdminController
         try
         {
             if (importexcelfile != null && importexcelfile.Length > 0)
-            {
                 await _importManager.ImportProductsFromXlsxAsync(importexcelfile.OpenReadStream());
-            }
             else
             {
                 _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Common.UploadFile"));
@@ -3095,7 +3032,6 @@ public partial class ProductController : BaseAdminController
         //check if existed combinations contains the specified attribute
         var existedCombinations = await _productAttributeService.GetAllProductAttributeCombinationsAsync(product.Id);
         if (existedCombinations?.Any() == true)
-        {
             foreach (var combination in existedCombinations)
             {
                 var mappings = await _productAttributeParser
@@ -3110,7 +3046,6 @@ public partial class ProductController : BaseAdminController
                     return RedirectToAction("ProductAttributeMappingEdit", new { id = productAttributeMapping.Id });
                 }
             }
-        }
 
         await _productAttributeService.DeleteProductAttributeMappingAsync(productAttributeMapping);
 
@@ -3201,10 +3136,7 @@ public partial class ProductController : BaseAdminController
         }
 
         //ensure a picture is uploaded
-        if (productAttributeMapping.AttributeControlType == AttributeControlType.ImageSquares && model.ImageSquaresPictureId == 0)
-        {
-            ModelState.AddModelError(string.Empty, "Image is required");
-        }
+        if (productAttributeMapping.AttributeControlType == AttributeControlType.ImageSquares && model.ImageSquaresPictureId == 0) ModelState.AddModelError(string.Empty, "Image is required");
 
         if (ModelState.IsValid)
         {
@@ -3297,10 +3229,7 @@ public partial class ProductController : BaseAdminController
         }
 
         //ensure a picture is uploaded
-        if (productAttributeMapping.AttributeControlType == AttributeControlType.ImageSquares && model.ImageSquaresPictureId == 0)
-        {
-            ModelState.AddModelError(string.Empty, "Image is required");
-        }
+        if (productAttributeMapping.AttributeControlType == AttributeControlType.ImageSquares && model.ImageSquaresPictureId == 0) ModelState.AddModelError(string.Empty, "Image is required");
 
         if (ModelState.IsValid)
         {
@@ -3348,18 +3277,14 @@ public partial class ProductController : BaseAdminController
         //check if existed combinations contains the specified attribute value
         var existedCombinations = await _productAttributeService.GetAllProductAttributeCombinationsAsync(product.Id);
         if (existedCombinations?.Any() == true)
-        {
             foreach (var combination in existedCombinations)
             {
                 var attributeValues = await _productAttributeParser.ParseProductAttributeValuesAsync(combination.AttributesXml);
 
                 if (attributeValues.Where(attribute => attribute.Id == id).Any())
-                {
                     return Conflict(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.AlreadyExistsInCombination"),
                         await _productAttributeFormatter.FormatAttributesAsync(product, combination.AttributesXml, await _workContext.GetCurrentCustomerAsync(), await _storeContext.GetCurrentStoreAsync(), ", ")));
-                }
             }
-        }
 
         await _productAttributeService.DeleteProductAttributeValueAsync(productAttributeValue);
 
@@ -3427,16 +3352,10 @@ public partial class ProductController : BaseAdminController
         }
 
         //gift card
-        if (associatedProduct.IsGiftCard)
-        {
-            return Json(new { Result = await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.GiftCard") });
-        }
+        if (associatedProduct.IsGiftCard) return Json(new { Result = await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.GiftCard") });
 
         //downloadable product
-        if (associatedProduct.IsDownload)
-        {
-            return Json(new { Result = await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.Downloadable") });
-        }
+        if (associatedProduct.IsDownload) return Json(new { Result = await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.Downloadable") });
 
         return Json(new { Result = string.Empty });
     }
@@ -3609,10 +3528,7 @@ public partial class ProductController : BaseAdminController
             var pavModels = model.ProductAttributes.SelectMany(pa => pa.Values)
                 .Where(v => allowedAttributeIds.Any(id => id == v.Id))
                 .ToList();
-            foreach (var pavModel in pavModels)
-            {
-                pavModel.Checked = "checked";
-            }
+            foreach (var pavModel in pavModels) pavModel.Checked = "checked";
 
             model.Warnings.Add(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.SelectRequiredAttributes"), string.Join(", ", requiredAttributeNames)));
 

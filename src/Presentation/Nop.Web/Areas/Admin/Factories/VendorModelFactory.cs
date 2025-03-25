@@ -94,13 +94,11 @@ public partial class VendorModelFactory : IVendorModelFactory
 
         var associatedCustomers = await _customerService.GetAllCustomersAsync(vendorId: vendor.Id);
         foreach (var customer in associatedCustomers)
-        {
             models.Add(new VendorAssociatedCustomerModel
             {
                 Id = customer.Id,
                 Email = customer.Email
             });
-        }
     }
 
     /// <summary>

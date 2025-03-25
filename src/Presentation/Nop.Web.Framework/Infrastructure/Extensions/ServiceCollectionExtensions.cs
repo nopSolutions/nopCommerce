@@ -329,19 +329,15 @@ public static class ServiceCollectionExtensions
 
         var appSettings = Singleton<AppSettings>.Instance;
         if (appSettings.Get<CommonConfig>().UseSessionStateTempDataProvider)
-        {
             //use session-based temp data provider
             mvcBuilder.AddSessionStateTempDataProvider();
-        }
         else
-        {
             //use cookie-based temp data provider
             mvcBuilder.AddCookieTempDataProvider(options =>
             {
                 options.Cookie.Name = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.TempDataCookie}";
                 options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
             });
-        }
 
         services.AddRazorPages();
 

@@ -48,10 +48,8 @@ public static class TagHelperExtensions
         if (!output.Attributes.Any())
             return result;
 
-        foreach (var attrName in output.Attributes.Select(x => x.Name).Distinct())
-        {
+        foreach (var attrName in output.Attributes.Select(x => x.Name).Distinct()) 
             result.Add(attrName, await output.GetAttributeValueAsync(attrName));
-        }
 
         return result;
     }

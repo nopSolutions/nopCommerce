@@ -157,12 +157,8 @@ public partial class RecurringPaymentController : BaseAdminController
         {
             var errors = (await _orderProcessingService.ProcessNextRecurringPaymentAsync(payment)).ToList();
             if (errors.Any())
-            {
                 foreach (var error in errors)
-                {
                     _notificationService.ErrorNotification(error);
-                }
-            }
             else
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.RecurringPayments.NextPaymentProcessed"));
 
@@ -202,10 +198,8 @@ public partial class RecurringPaymentController : BaseAdminController
         {
             var errors = await _orderProcessingService.CancelRecurringPaymentAsync(payment);
             if (errors.Any())
-            {
                 foreach (var error in errors)
                     _notificationService.ErrorNotification(error);
-            }
             else
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.RecurringPayments.Cancelled"));
 

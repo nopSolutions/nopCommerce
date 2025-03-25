@@ -193,20 +193,14 @@ public class PayPalCommerceController : BasePluginController
         await _settingService.ClearCacheAsync();
 
         //display notifications
-        foreach (var warning in model.Messages.Warning)
-        {
+        foreach (var warning in model.Messages.Warning) 
             _notificationService.WarningNotification(warning, false);
-        }
 
-        foreach (var error in model.Messages.Error)
-        {
+        foreach (var error in model.Messages.Error) 
             _notificationService.ErrorNotification(error, false);
-        }
 
-        foreach (var message in model.Messages.Success)
-        {
+        foreach (var message in model.Messages.Success) 
             _notificationService.SuccessNotification(message);
-        }
 
         return model;
     }
@@ -375,15 +369,11 @@ public class PayPalCommerceController : BasePluginController
         {
             var (_, credentialsError) = await _serviceManager.GetAccessTokenAsync(settings);
             if (!string.IsNullOrEmpty(credentialsError))
-            {
                 _notificationService.ErrorNotification(await _localizationService
                     .GetResourceAsync("Plugins.Payments.PayPalCommerce.Credentials.Invalid"));
-            }
             else
-            {
                 _notificationService.SuccessNotification(await _localizationService
                     .GetResourceAsync("Plugins.Payments.PayPalCommerce.Credentials.Valid"));
-            }
         }
 
         return View("~/Plugins/Payments.PayPalCommerce/Views/Admin/Configure.cshtml", model);
@@ -586,14 +576,12 @@ public class PayPalCommerceController : BasePluginController
     {
         var message = string.Empty;
         if (enabled)
-        {
             if (!_appSettings.Get<CommonConfig>().ServeUnknownFileTypes)
             {
                 //this setting should be enabled for domain verification
                 var locale = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Fields.UseApplePay.Warning");
                 message = string.Format(locale, Url.Action("AppSettings", "Setting"));
             }
-        }
 
         return Json(new { Result = message });
     }

@@ -125,10 +125,8 @@ public class EventConsumer :
         {
             await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Delete, eventMessage.Entity.Id);
             var combinations = await _productAttributeService.GetAllProductAttributeCombinationsAsync(eventMessage.Entity.Id);
-            foreach (var combination in combinations)
-            {
+            foreach (var combination in combinations) 
                 await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Delete, combination.ProductId, combination.Id);
-            }
         }
     }
 
@@ -147,10 +145,8 @@ public class EventConsumer :
 
         await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Delete, eventMessage.Entity.Id);
         var combinations = await _productAttributeService.GetAllProductAttributeCombinationsAsync(eventMessage.Entity.Id);
-        foreach (var combination in combinations)
-        {
+        foreach (var combination in combinations) 
             await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Delete, combination.ProductId, combination.Id);
-        }
     }
 
     /// <summary>
@@ -208,10 +204,8 @@ public class EventConsumer :
             return;
 
         var mappings = await _categoryService.GetProductCategoriesByCategoryIdAsync(eventMessage.Entity.Id, showHidden: true);
-        foreach (var mapping in mappings)
-        {
+        foreach (var mapping in mappings) 
             await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, mapping.ProductId);
-        }
     }
 
     /// <summary>
@@ -231,10 +225,8 @@ public class EventConsumer :
             return;
 
         var mappings = await _categoryService.GetProductCategoriesByCategoryIdAsync(eventMessage.Entity.Id, showHidden: true);
-        foreach (var mapping in mappings)
-        {
+        foreach (var mapping in mappings) 
             await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, mapping.ProductId);
-        }
     }
 
     /// <summary>
@@ -307,10 +299,8 @@ public class EventConsumer :
         {
             await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, product.Id);
             var combinations = await _productAttributeService.GetAllProductAttributeCombinationsAsync(product.Id);
-            foreach (var combination in combinations)
-            {
+            foreach (var combination in combinations) 
                 await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, combination.ProductId, combination.Id);
-            }
         }
     }
 
@@ -362,10 +352,8 @@ public class EventConsumer :
 
         await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, mapping.ProductId);
         var combinations = await _productAttributeService.GetAllProductAttributeCombinationsAsync(mapping.ProductId);
-        foreach (var combination in combinations)
-        {
+        foreach (var combination in combinations) 
             await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, combination.ProductId, combination.Id);
-        }
     }
 
     /// <summary>
@@ -387,10 +375,8 @@ public class EventConsumer :
 
         await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, mapping.ProductId);
         var combinations = await _productAttributeService.GetAllProductAttributeCombinationsAsync(mapping.ProductId);
-        foreach (var combination in combinations)
-        {
+        foreach (var combination in combinations) 
             await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, combination.ProductId, combination.Id);
-        }
     }
 
     /// <summary>
@@ -409,10 +395,8 @@ public class EventConsumer :
         await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, eventMessage.Entity.ProductId);
         await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Create, eventMessage.Entity.ProductId, eventMessage.Entity.Id);
         var combinations = await _productAttributeService.GetAllProductAttributeCombinationsAsync(eventMessage.Entity.ProductId);
-        foreach (var combination in combinations)
-        {
+        foreach (var combination in combinations) 
             await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, combination.ProductId, combination.Id);
-        }
     }
 
     /// <summary>
@@ -430,10 +414,8 @@ public class EventConsumer :
 
         await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, eventMessage.Entity.ProductId);
         var combinations = await _productAttributeService.GetAllProductAttributeCombinationsAsync(eventMessage.Entity.ProductId);
-        foreach (var combination in combinations)
-        {
+        foreach (var combination in combinations) 
             await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, combination.ProductId, combination.Id);
-        }
     }
 
     /// <summary>
@@ -452,10 +434,8 @@ public class EventConsumer :
         await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, eventMessage.Entity.ProductId);
         await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Delete, eventMessage.Entity.ProductId, eventMessage.Entity.Id);
         var combinations = await _productAttributeService.GetAllProductAttributeCombinationsAsync(eventMessage.Entity.ProductId);
-        foreach (var combination in combinations)
-        {
+        foreach (var combination in combinations) 
             await _zettleRecordService.CreateOrUpdateRecordAsync(OperationType.Update, combination.ProductId, combination.Id);
-        }
     }
 
     /// <summary>

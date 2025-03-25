@@ -113,12 +113,10 @@ public class PayPalCommercePublicController : BasePublicController
 
         //order is approved but the customer must confirm it before
         if (!model.PayNow)
-        {
             return Json(new
             {
                 redirect = Url.RouteUrl(PayPalCommerceDefaults.Route.ConfirmOrder, new { orderId = model.OrderId, liabilityShift = liabilityShift })
             });
-        }
 
         //or pay it right now
         var completedModel = await _modelFactory.PrepareOrderCompletedModelAsync(orderId, liabilityShift);

@@ -56,13 +56,11 @@ public partial class InvoiceDocument : PdfDocument<ProductItem>
             });
         }
         else
-        {
             headerTable.AddCell(new PdfPCell(new Phrase())
             {
                 Border = 0,
                 Padding = 0
             });
-        }
 
         headerTable.AddCell(PdfDocumentHelper.BuildPdfPCell(CreateAdressesInfo(), DocumentRunDirection, collSpan: 2));
 

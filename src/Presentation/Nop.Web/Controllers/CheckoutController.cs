@@ -393,10 +393,8 @@ public partial class CheckoutController : BasePublicController
 
         Order order = null;
         if (orderId.HasValue)
-        {
             //load order by identifier (if provided)
             order = await _orderService.GetOrderByIdAsync(orderId.Value);
-        }
         if (order == null)
         {
             var store = await _storeContext.GetCurrentStoreAsync();
@@ -404,16 +402,12 @@ public partial class CheckoutController : BasePublicController
                     customerId: customer.Id, pageSize: 1))
                 .FirstOrDefault();
         }
-        if (order == null || order.Deleted || customer.Id != order.CustomerId)
-        {
+        if (order == null || order.Deleted || customer.Id != order.CustomerId) 
             return RedirectToRoute("Homepage");
-        }
 
         //disable "order completed" page?
-        if (_orderSettings.DisableOrderCompletedPage)
-        {
+        if (_orderSettings.DisableOrderCompletedPage) 
             return RedirectToRoute("OrderDetails", new { orderId = order.Id });
-        }
 
         //model
         var model = await _checkoutModelFactory.PrepareCheckoutCompletedModelAsync(order);
@@ -598,10 +592,8 @@ public partial class CheckoutController : BasePublicController
         if (_orderSettings.DisableBillingAddressCheckoutStep && model.ExistingAddresses.Any())
         {
             if (model.ExistingAddresses.Any())
-            {
                 //choose the first one
                 return await SelectBillingAddress(model.ExistingAddresses.First().Id);
-            }
 
             TryValidateModel(model);
             TryValidateModel(model.BillingNewAddress);
@@ -677,10 +669,8 @@ public partial class CheckoutController : BasePublicController
         //custom address attributes
         var customAttributes = await _addressAttributeParser.ParseCustomAttributesAsync(form, NopCommonDefaults.AddressAttributeControlName);
         var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
-        foreach (var error in customAttributeWarnings)
-        {
+        foreach (var error in customAttributeWarnings) 
             ModelState.AddModelError("", error);
-        }
 
         var newAddress = model.BillingNewAddress;
 
@@ -838,10 +828,8 @@ public partial class CheckoutController : BasePublicController
         //custom address attributes
         var customAttributes = await _addressAttributeParser.ParseCustomAttributesAsync(form, NopCommonDefaults.AddressAttributeControlName);
         var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
-        foreach (var error in customAttributeWarnings)
-        {
+        foreach (var error in customAttributeWarnings) 
             ModelState.AddModelError("", error);
-        }
 
         var newAddress = model.ShippingNewAddress;
 
@@ -995,17 +983,13 @@ public partial class CheckoutController : BasePublicController
         var shippingOptions = await _genericAttributeService.GetAttributeAsync<List<ShippingOption>>(customer,
             NopCustomerDefaults.OfferedShippingOptionsAttribute, store.Id);
         if (shippingOptions == null || !shippingOptions.Any())
-        {
             //not found? let's load them using shipping service
             shippingOptions = (await _shippingService.GetShippingOptionsAsync(cart, await _customerService.GetCustomerShippingAddressAsync(customer),
                 customer, shippingRateComputationMethodSystemName, store.Id)).ShippingOptions.ToList();
-        }
         else
-        {
             //loaded cached results. let's filter result by a chosen shipping rate computation method
             shippingOptions = shippingOptions.Where(so => so.ShippingRateComputationMethodSystemName.Equals(shippingRateComputationMethodSystemName, StringComparison.InvariantCultureIgnoreCase))
                 .ToList();
-        }
 
         var shippingOption = shippingOptions
             .Find(so => !string.IsNullOrEmpty(so.Name) && so.Name.Equals(selectedName, StringComparison.InvariantCultureIgnoreCase));
@@ -1049,10 +1033,8 @@ public partial class CheckoutController : BasePublicController
 
         //filter by country
         var filterByCountryId = 0;
-        if (_addressSettings.CountryEnabled)
-        {
+        if (_addressSettings.CountryEnabled) 
             filterByCountryId = (await _customerService.GetCustomerBillingAddressAsync(customer))?.CountryId ?? 0;
-        }
 
         //model
         var paymentMethodModel = await _checkoutModelFactory.PreparePaymentMethodModelAsync(cart, filterByCountryId);
@@ -1096,11 +1078,9 @@ public partial class CheckoutController : BasePublicController
 
         //reward points
         if (_rewardPointsSettings.Enabled)
-        {
             await _genericAttributeService.SaveAttributeAsync(customer,
                 NopCustomerDefaults.UseRewardPointsDuringCheckoutAttribute, model.UseRewardPoints,
                 store.Id);
-        }
 
         //Check whether payment workflow is required
         var isPaymentWorkflowRequired = await _orderProcessingService.IsPaymentWorkflowRequiredAsync(cart);
@@ -1145,10 +1125,8 @@ public partial class CheckoutController : BasePublicController
 
         //Check whether payment workflow is required
         var isPaymentWorkflowRequired = await _orderProcessingService.IsPaymentWorkflowRequiredAsync(cart);
-        if (!isPaymentWorkflowRequired)
-        {
+        if (!isPaymentWorkflowRequired) 
             return RedirectToRoute("CheckoutConfirm");
-        }
 
         //load payment method
         var paymentMethodSystemName = await _genericAttributeService.GetAttributeAsync<string>(customer,
@@ -1199,10 +1177,8 @@ public partial class CheckoutController : BasePublicController
 
         //Check whether payment workflow is required
         var isPaymentWorkflowRequired = await _orderProcessingService.IsPaymentWorkflowRequiredAsync(cart);
-        if (!isPaymentWorkflowRequired)
-        {
+        if (!isPaymentWorkflowRequired) 
             return RedirectToRoute("CheckoutConfirm");
-        }
 
         //load payment method
         var paymentMethodSystemName = await _genericAttributeService.GetAttributeAsync<string>(customer,
@@ -1324,10 +1300,8 @@ public partial class CheckoutController : BasePublicController
                 await _paymentService.PostProcessPaymentAsync(postProcessPaymentRequest);
 
                 if (_webHelper.IsRequestBeingRedirected || _webHelper.IsPostBeingDone)
-                {
                     //redirection or POST has been done in PostProcessPayment
                     return Empty;
-                }
 
                 return RedirectToRoute("CheckoutCompleted", new { orderId = placeOrderResult.PlacedOrder.Id });
             }
@@ -1389,10 +1363,8 @@ public partial class CheckoutController : BasePublicController
         {
             //filter by country
             var filterByCountryId = 0;
-            if (_addressSettings.CountryEnabled)
-            {
+            if (_addressSettings.CountryEnabled) 
                 filterByCountryId = (await _customerService.GetCustomerBillingAddressAsync(customer))?.CountryId ?? 0;
-            }
 
             //payment is required
             var paymentMethodModel = await _checkoutModelFactory.PreparePaymentMethodModelAsync(cart, filterByCountryId);
@@ -1551,10 +1523,8 @@ public partial class CheckoutController : BasePublicController
                 //custom address attributes
                 var customAttributes = await _addressAttributeParser.ParseCustomAttributesAsync(form, NopCommonDefaults.AddressAttributeControlName);
                 var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
-                foreach (var error in customAttributeWarnings)
-                {
+                foreach (var error in customAttributeWarnings) 
                     ModelState.AddModelError("", error);
-                }
 
                 //validate model
                 if (!ModelState.IsValid)
@@ -1719,10 +1689,8 @@ public partial class CheckoutController : BasePublicController
                 //custom address attributes
                 var customAttributes = await _addressAttributeParser.ParseCustomAttributesAsync(form, NopCommonDefaults.AddressAttributeControlName);
                 var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
-                foreach (var error in customAttributeWarnings)
-                {
+                foreach (var error in customAttributeWarnings) 
                     ModelState.AddModelError("", error);
-                }
 
                 //validate model
                 if (!ModelState.IsValid)
@@ -1835,17 +1803,13 @@ public partial class CheckoutController : BasePublicController
             var shippingOptions = await _genericAttributeService.GetAttributeAsync<List<ShippingOption>>(customer,
                 NopCustomerDefaults.OfferedShippingOptionsAttribute, store.Id);
             if (shippingOptions == null || !shippingOptions.Any())
-            {
                 //not found? let's load them using shipping service
                 shippingOptions = (await _shippingService.GetShippingOptionsAsync(cart, await _customerService.GetCustomerShippingAddressAsync(customer),
                     customer, shippingRateComputationMethodSystemName, store.Id)).ShippingOptions.ToList();
-            }
             else
-            {
                 //loaded cached results. let's filter result by a chosen shipping rate computation method
                 shippingOptions = shippingOptions.Where(so => so.ShippingRateComputationMethodSystemName.Equals(shippingRateComputationMethodSystemName, StringComparison.InvariantCultureIgnoreCase))
                     .ToList();
-            }
 
             var shippingOption = shippingOptions.Find(so => !string.IsNullOrEmpty(so.Name) && so.Name.Equals(selectedName, StringComparison.InvariantCultureIgnoreCase))
                                  ?? throw new Exception("Selected shipping method can't be loaded");
@@ -1891,11 +1855,9 @@ public partial class CheckoutController : BasePublicController
 
             //reward points
             if (_rewardPointsSettings.Enabled)
-            {
                 await _genericAttributeService.SaveAttributeAsync(customer,
                     NopCustomerDefaults.UseRewardPointsDuringCheckoutAttribute, model.UseRewardPoints,
                     store.Id);
-            }
 
             //Check whether payment workflow is required
             var isPaymentWorkflowRequired = await _orderProcessingService.IsPaymentWorkflowRequiredAsync(cart);
@@ -2051,10 +2013,8 @@ public partial class CheckoutController : BasePublicController
                 if (processPaymentRequest == null)
                 {
                     //Check whether payment workflow is required
-                    if (await _orderProcessingService.IsPaymentWorkflowRequiredAsync(cart))
-                    {
+                    if (await _orderProcessingService.IsPaymentWorkflowRequiredAsync(cart)) 
                         throw new Exception("Payment information is not entered");
-                    }
 
                     processPaymentRequest = new ProcessPaymentRequest();
                 }
@@ -2081,16 +2041,13 @@ public partial class CheckoutController : BasePublicController
                         return Json(new { success = 1 });
 
                     if (paymentMethod.PaymentMethodType == PaymentMethodType.Redirection)
-                    {
                         //Redirection will not work because it's AJAX request.
                         //That's why we don't process it here (we redirect a user to another page where he'll be redirected)
-
                         //redirect
                         return Json(new
                         {
                             redirect = $"{_webHelper.GetStoreLocation()}checkout/OpcCompleteRedirectionPayment"
                         });
-                    }
 
                     await _paymentService.PostProcessPaymentAsync(postProcessPaymentRequest);
                     //success
@@ -2102,9 +2059,7 @@ public partial class CheckoutController : BasePublicController
                     confirmOrderModel.Warnings.Add(error);
             }
             else
-            {
                 confirmOrderModel.Warnings.Add(await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
-            }
 
             return Json(new
             {
@@ -2163,10 +2118,8 @@ public partial class CheckoutController : BasePublicController
             await _paymentService.PostProcessPaymentAsync(postProcessPaymentRequest);
 
             if (_webHelper.IsRequestBeingRedirected || _webHelper.IsPostBeingDone)
-            {
                 //redirection or POST has been done in PostProcessPayment
                 return Empty;
-            }
 
             //if no redirection has been done (to a third-party payment page)
             //theoretically it's not possible

@@ -37,7 +37,6 @@ public class DataMigration : Migration
 
         //#6407
         if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "PublicStore.PasswordChanged", StringComparison.InvariantCultureIgnoreCase) == 0))
-        {
             _dataProvider.InsertEntity(
                 new ActivityLogType
                 {
@@ -46,7 +45,6 @@ public class DataMigration : Migration
                     Name = "Public store. Change password"
                 }
             );
-        }
     }
 
     public override void Down()

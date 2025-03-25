@@ -150,7 +150,6 @@ public partial class SettingModelFactory : ISettingModelFactory
         //get available themes
         var availableThemes = await _themeProvider.GetThemesAsync();
         foreach (var theme in availableThemes)
-        {
             models.Add(new StoreInformationSettingsModel.ThemeModel
             {
                 FriendlyName = theme.FriendlyName,
@@ -160,7 +159,6 @@ public partial class SettingModelFactory : ISettingModelFactory
                 SupportRtl = theme.SupportRtl,
                 Selected = theme.SystemName.Equals(storeInformationSettings.DefaultStoreTheme, StringComparison.InvariantCultureIgnoreCase)
             });
-        }
     }
 
     /// <summary>
@@ -638,10 +636,8 @@ public partial class SettingModelFactory : ISettingModelFactory
         };
 
         //fill in overridden values
-        if (storeId > 0)
-        {
+        if (storeId > 0) 
             model.UseRichEditorInMessageTemplates_OverrideForStore = await _settingService.SettingExistsAsync(adminAreaSettings, x => x.UseRichEditorInMessageTemplates, storeId);
-        }
 
         return model;
     }

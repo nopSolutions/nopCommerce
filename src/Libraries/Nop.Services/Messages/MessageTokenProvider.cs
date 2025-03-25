@@ -817,16 +817,12 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         sb.AppendLine($"<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4em;\"><strong>{await _localizationService.GetResourceAsync("Messages.Order.SubTotal", languageId)}</strong></td> <td style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4em;\"><strong>{cusSubTotal}</strong></td></tr>");
 
         //discount (applied to order subtotal)
-        if (displaySubTotalDiscount)
-        {
+        if (displaySubTotalDiscount) 
             sb.AppendLine($"<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4em;\"><strong>{await _localizationService.GetResourceAsync("Messages.Order.SubTotalDiscount", languageId)}</strong></td> <td style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4em;\"><strong>{cusSubTotalDiscount}</strong></td></tr>");
-        }
 
         //shipping
-        if (displayShipping)
-        {
+        if (displayShipping) 
             sb.AppendLine($"<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4em;\"><strong>{await _localizationService.GetResourceAsync("Messages.Order.Shipping", languageId)}</strong></td> <td style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4em;\"><strong>{cusShipTotal}</strong></td></tr>");
-        }
 
         //payment method fee
         if (displayPaymentMethodFee)
@@ -836,13 +832,10 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         }
 
         //tax
-        if (displayTax)
-        {
+        if (displayTax) 
             sb.AppendLine($"<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4em;\"><strong>{await _localizationService.GetResourceAsync("Messages.Order.Tax", languageId)}</strong></td> <td style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4em;\"><strong>{cusTaxTotal}</strong></td></tr>");
-        }
 
         if (displayTaxRates)
-        {
             foreach (var item in taxRates)
             {
                 var taxRate = string.Format(await _localizationService.GetResourceAsync("Messages.Order.TaxRateLine"),
@@ -850,13 +843,10 @@ public partial class MessageTokenProvider : IMessageTokenProvider
                 var taxValue = await _priceFormatter.FormatPriceAsync(item.Value, true, order.CustomerCurrencyCode, false, languageId);
                 sb.AppendLine($"<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4em;\"><strong>{taxRate}</strong></td> <td style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4em;\"><strong>{taxValue}</strong></td></tr>");
             }
-        }
 
         //discount
-        if (displayDiscount)
-        {
+        if (displayDiscount) 
             sb.AppendLine($"<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4em;\"><strong>{await _localizationService.GetResourceAsync("Messages.Order.TotalDiscount", languageId)}</strong></td> <td style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4em;\"><strong>{cusDiscount}</strong></td></tr>");
-        }
 
         //gift cards
         foreach (var gcuh in await _giftCardService.GetGiftCardUsageHistoryAsync(order))
@@ -1102,13 +1092,11 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         var sbCustomValues = new StringBuilder();
         var customValues = _paymentService.DeserializeCustomValues(order);
         if (customValues != null)
-        {
             foreach (var item in customValues)
             {
                 sbCustomValues.AppendFormat("{0}: {1}", WebUtility.HtmlEncode(item.Key), WebUtility.HtmlEncode(item.Value != null ? item.Value.ToString() : string.Empty));
                 sbCustomValues.Append("<br />");
             }
-        }
 
         tokens.Add(new Token("Order.CustomValues", sbCustomValues.ToString(), true));
 
@@ -1122,9 +1110,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
             tokens.Add(new Token("Order.CreatedOn", createdOn.ToString("D", new CultureInfo(language.LanguageCulture))));
         }
         else
-        {
             tokens.Add(new Token("Order.CreatedOn", order.CreatedOnUtc.ToString("D")));
-        }
 
         var orderUrl = await RouteUrlAsync(order.StoreId, "OrderDetails", new { orderId = order.Id });
         tokens.Add(new Token("Order.OrderURLForCustomer", orderUrl, true));

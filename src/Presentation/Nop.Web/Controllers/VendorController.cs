@@ -124,7 +124,6 @@ public partial class VendorController : BasePublicController
                 {
                     var cblAttributes = form[controlId];
                     if (!StringValues.IsNullOrEmpty(cblAttributes))
-                    {
                         foreach (var item in cblAttributes.ToString().Split(_separator, StringSplitOptions.RemoveEmptyEntries)
                                 )
                         {
@@ -133,7 +132,6 @@ public partial class VendorController : BasePublicController
                                 attributesXml = _vendorAttributeParser.AddAttribute(attributesXml,
                                     attribute, selectedAttributeId.ToString());
                         }
-                    }
                 }
                     break;
                 case AttributeControlType.ReadonlyCheckboxes:
@@ -144,10 +142,8 @@ public partial class VendorController : BasePublicController
                                  .Where(v => v.IsPreSelected)
                                  .Select(v => v.Id)
                                  .ToList())
-                    {
                         attributesXml = _vendorAttributeParser.AddAttribute(attributesXml,
                             attribute, selectedAttributeId.ToString());
-                    }
                 }
                     break;
                 case AttributeControlType.TextBox:
@@ -207,15 +203,12 @@ public partial class VendorController : BasePublicController
             ModelState.AddModelError("", await _localizationService.GetResourceAsync("Vendors.ApplyAccount.IsAdmin"));
 
         //validate CAPTCHA
-        if (_captchaSettings.Enabled && _captchaSettings.ShowOnApplyVendorPage && !captchaValid)
-        {
+        if (_captchaSettings.Enabled && _captchaSettings.ShowOnApplyVendorPage && !captchaValid) 
             ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
-        }
 
         var pictureId = 0;
 
         if (uploadedFile != null && !string.IsNullOrEmpty(uploadedFile.FileName))
-        {
             try
             {
                 var contentType = uploadedFile.ContentType.ToLowerInvariant();
@@ -235,15 +228,12 @@ public partial class VendorController : BasePublicController
             {
                 ModelState.AddModelError("", await _localizationService.GetResourceAsync("Vendors.ApplyAccount.Picture.ErrorMessage"));
             }
-        }
 
         //vendor attributes
         var vendorAttributesXml = await ParseVendorAttributesAsync(form);
         var warnings = (await _vendorAttributeParser.GetAttributeWarningsAsync(vendorAttributesXml)).ToList();
-        foreach (var warning in warnings)
-        {
+        foreach (var warning in warnings) 
             ModelState.AddModelError(string.Empty, warning);
-        }
 
         if (ModelState.IsValid)
         {
@@ -318,7 +308,6 @@ public partial class VendorController : BasePublicController
         Picture picture = null;
 
         if (uploadedFile != null && !string.IsNullOrEmpty(uploadedFile.FileName))
-        {
             try
             {
                 var contentType = uploadedFile.ContentType.ToLowerInvariant();
@@ -335,17 +324,14 @@ public partial class VendorController : BasePublicController
             {
                 ModelState.AddModelError("", await _localizationService.GetResourceAsync("Account.VendorInfo.Picture.ErrorMessage"));
             }
-        }
 
         var prevPicture = await _pictureService.GetPictureByIdAsync(vendor.PictureId);
 
         //vendor attributes
         var vendorAttributesXml = await ParseVendorAttributesAsync(form);
         var warnings = (await _vendorAttributeParser.GetAttributeWarningsAsync(vendorAttributesXml)).ToList();
-        foreach (var warning in warnings)
-        {
+        foreach (var warning in warnings) 
             ModelState.AddModelError(string.Empty, warning);
-        }
 
         if (ModelState.IsValid)
         {

@@ -59,13 +59,9 @@ public class AuthenticationController : BasePluginController
         {
             //try to find config with current customer and update
             if (_googleAuthenticatorService.IsRegisteredCustomer(currentCustomer.Email))
-            {
                 await _googleAuthenticatorService.UpdateGoogleAuthenticatorAccountAsync(currentCustomer.Email, model.SecretKey);
-            }
             else
-            {
                 await _googleAuthenticatorService.AddGoogleAuthenticatorAccountAsync(currentCustomer.Email, model.SecretKey);
-            }
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.MultiFactorAuth.GoogleAuthenticator.Token.Successful"));
         }
         else
@@ -100,14 +96,10 @@ public class AuthenticationController : BasePluginController
                 return await _customerRegistrationService.SignInCustomerAsync(customer, returnUrl, isPersist);
             }
             else
-            {
                 _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Plugins.MultiFactorAuth.GoogleAuthenticator.Token.Unsuccessful"));
-            }
         }
         else
-        {
             _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Plugins.MultiFactorAuth.GoogleAuthenticator.Record.Notfound"));
-        }
 
         return RedirectToRoute("MultiFactorVerification");
     }

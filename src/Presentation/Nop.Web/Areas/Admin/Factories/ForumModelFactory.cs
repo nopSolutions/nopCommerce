@@ -184,10 +184,8 @@ public partial class ForumModelFactory : IForumModelFactory
             model.DisplayOrder = 1;
 
         //prepare available forum groups
-        foreach (var forumGroup in await _forumService.GetAllForumGroupsAsync())
-        {
+        foreach (var forumGroup in await _forumService.GetAllForumGroupsAsync()) 
             model.ForumGroups.Add(forumGroup.ToModel<ForumGroupModel>());
-        }
 
         return model;
     }

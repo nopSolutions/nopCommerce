@@ -66,13 +66,11 @@ public partial class DownloadController : BaseAdminController
     {
         //don't allow to save empty download object
         if (string.IsNullOrEmpty(downloadUrl))
-        {
             return Json(new
             {
                 success = false,
                 message = "Please enter URL"
             });
-        }
 
         //insert
         var download = new Download
@@ -94,13 +92,11 @@ public partial class DownloadController : BaseAdminController
     {
         var httpPostedFile = await Request.GetFirstOrDefaultFileAsync();
         if (httpPostedFile == null)
-        {
             return Json(new
             {
                 success = false,
                 message = "No file uploaded"
             });
-        }
 
         var fileBinary = await _downloadService.GetDownloadBitsAsync(httpPostedFile);
 

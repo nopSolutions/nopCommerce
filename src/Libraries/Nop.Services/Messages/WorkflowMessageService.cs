@@ -154,16 +154,12 @@ public partial class WorkflowMessageService : IWorkflowMessageService
         var language = await _languageService.GetLanguageByIdAsync(languageId);
 
         if (language == null || !language.Published)
-        {
             //load any language from the specified store
             language = (await _languageService.GetAllLanguagesAsync(storeId: storeId)).FirstOrDefault();
-        }
 
         if (language == null || !language.Published)
-        {
             //load any language
             language = (await _languageService.GetAllLanguagesAsync()).FirstOrDefault();
-        }
 
         if (language == null)
             throw new Exception("No active language could be loaded");

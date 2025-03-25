@@ -206,10 +206,8 @@ public partial class CustomerController : BasePublicController
         {
             var controlId = $"consent{consent.Id}";
             var cbConsent = form[controlId];
-            if (StringValues.IsNullOrEmpty(cbConsent) || !cbConsent.ToString().Equals("on"))
-            {
+            if (StringValues.IsNullOrEmpty(cbConsent) || !cbConsent.ToString().Equals("on")) 
                 ModelState.AddModelError("", consent.RequiredMessage);
-            }
         }
     }
 
@@ -228,10 +226,8 @@ public partial class CustomerController : BasePublicController
             if (!StringValues.IsNullOrEmpty(curProvider))
             {
                 var selectedProvider = curProvider.ToString();
-                if (!string.IsNullOrEmpty(selectedProvider))
-                {
+                if (!string.IsNullOrEmpty(selectedProvider)) 
                     return selectedProvider;
-                }
             }
         }
         return string.Empty;
@@ -265,7 +261,6 @@ public partial class CustomerController : BasePublicController
                 {
                     var cblAttributes = form[controlId];
                     if (!StringValues.IsNullOrEmpty(cblAttributes))
-                    {
                         foreach (var item in cblAttributes.ToString().Split(_separator, StringSplitOptions.RemoveEmptyEntries))
                         {
                             var selectedAttributeId = int.Parse(item);
@@ -273,7 +268,6 @@ public partial class CustomerController : BasePublicController
                                 attributesXml = _customerAttributeParser.AddAttribute(attributesXml,
                                     attribute, selectedAttributeId.ToString());
                         }
-                    }
                 }
                     break;
                 case AttributeControlType.ReadonlyCheckboxes:
@@ -284,10 +278,8 @@ public partial class CustomerController : BasePublicController
                                  .Where(v => v.IsPreSelected)
                                  .Select(v => v.Id)
                                  .ToList())
-                    {
                         attributesXml = _customerAttributeParser.AddAttribute(attributesXml,
                             attribute, selectedAttributeId.ToString());
-                    }
                 }
                     break;
                 case AttributeControlType.TextBox:
@@ -330,18 +322,14 @@ public partial class CustomerController : BasePublicController
                 if (!StringValues.IsNullOrEmpty(cbConsent) && cbConsent.ToString().Equals("on"))
                 {
                     //agree
-                    if (!previousConsentValue.HasValue || !previousConsentValue.Value)
-                    {
+                    if (!previousConsentValue.HasValue || !previousConsentValue.Value) 
                         await _gdprService.InsertLogAsync(customer, consent.Id, GdprRequestType.ConsentAgree, consent.Message);
-                    }
                 }
                 else
                 {
                     //disagree
-                    if (!previousConsentValue.HasValue || previousConsentValue.Value)
-                    {
+                    if (!previousConsentValue.HasValue || previousConsentValue.Value) 
                         await _gdprService.InsertLogAsync(customer, consent.Id, GdprRequestType.ConsentDisagree, consent.Message);
-                    }
                 }
             }
 
@@ -443,10 +431,8 @@ public partial class CustomerController : BasePublicController
     public virtual async Task<IActionResult> Login(LoginModel model, string returnUrl, bool captchaValid)
     {
         //validate CAPTCHA
-        if (_captchaSettings.Enabled && _captchaSettings.ShowOnLoginPage && !captchaValid)
-        {
+        if (_captchaSettings.Enabled && _captchaSettings.ShowOnLoginPage && !captchaValid) 
             ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
-        }
 
         if (ModelState.IsValid)
         {
@@ -580,7 +566,6 @@ public partial class CustomerController : BasePublicController
 
         //EU Cookie
         if (_storeInformationSettings.DisplayEuCookieLawWarning)
-        {
             //the cookie law message should not pop up immediately after logout.
             //otherwise, the user will have to click it again...
             //and thus next visitor will not click it... so violation for that cookie law..
@@ -588,7 +573,6 @@ public partial class CustomerController : BasePublicController
             //indicating that the EU cookie popup window should not be displayed on the next page open (after logout redirection to homepage)
             //but it'll be displayed for further page loads
             TempData[$"{NopCookieDefaults.Prefix}{NopCookieDefaults.IgnoreEuCookieLawWarning}"] = true;
-        }
 
         return RedirectToRoute("Homepage");
     }
@@ -619,10 +603,8 @@ public partial class CustomerController : BasePublicController
     public virtual async Task<IActionResult> PasswordRecoverySend(PasswordRecoveryModel model, bool captchaValid)
     {
         // validate CAPTCHA
-        if (_captchaSettings.Enabled && _captchaSettings.ShowOnForgotPasswordPage && !captchaValid)
-        {
+        if (_captchaSettings.Enabled && _captchaSettings.ShowOnForgotPasswordPage && !captchaValid) 
             ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
-        }
 
         if (ModelState.IsValid)
         {
@@ -644,9 +626,7 @@ public partial class CustomerController : BasePublicController
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Account.PasswordRecovery.EmailHasBeenSent"));
             }
             else
-            {
                 _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Account.PasswordRecovery.EmailNotFound"));
-            }
         }
 
         model = await _customerModelFactory.PreparePasswordRecoveryModelAsync(model);
@@ -801,16 +781,12 @@ public partial class CustomerController : BasePublicController
         //custom customer attributes
         var customerAttributesXml = await ParseCustomCustomerAttributesAsync(form);
         var customerAttributeWarnings = await _customerAttributeParser.GetAttributeWarningsAsync(customerAttributesXml);
-        foreach (var error in customerAttributeWarnings)
-        {
+        foreach (var error in customerAttributeWarnings) 
             ModelState.AddModelError("", error);
-        }
 
         //validate CAPTCHA
-        if (_captchaSettings.Enabled && _captchaSettings.ShowOnRegistrationPage && !captchaValid)
-        {
+        if (_captchaSettings.Enabled && _captchaSettings.ShowOnRegistrationPage && !captchaValid) 
             ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
-        }
 
         //GDPR
         if (_gdprSettings.GdprEnabled)
@@ -902,10 +878,8 @@ public partial class CustomerController : BasePublicController
                             await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(newsletter);
 
                             //GDPR
-                            if (_gdprSettings.GdprEnabled && _gdprSettings.LogNewsletterConsent)
-                            {
+                            if (_gdprSettings.GdprEnabled && _gdprSettings.LogNewsletterConsent) 
                                 await _gdprService.InsertLogAsync(customer, 0, GdprRequestType.ConsentAgree, await _localizationService.GetResourceAsync("Gdpr.Consent.Newsletter"));
-                            }
                         }
                         //else
                         //{
@@ -928,23 +902,17 @@ public partial class CustomerController : BasePublicController
                             });
 
                             //GDPR
-                            if (_gdprSettings.GdprEnabled && _gdprSettings.LogNewsletterConsent)
-                            {
+                            if (_gdprSettings.GdprEnabled && _gdprSettings.LogNewsletterConsent) 
                                 await _gdprService.InsertLogAsync(customer, 0, GdprRequestType.ConsentAgree, await _localizationService.GetResourceAsync("Gdpr.Consent.Newsletter"));
-                            }
                         }
                     }
                 }
 
                 if (_customerSettings.AcceptPrivacyPolicyEnabled)
-                {
                     //privacy policy is required
                     //GDPR
                     if (_gdprSettings.GdprEnabled && _gdprSettings.LogPrivacyPolicyConsent)
-                    {
                         await _gdprService.InsertLogAsync(customer, 0, GdprRequestType.ConsentAgree, await _localizationService.GetResourceAsync("Gdpr.Consent.PrivacyPolicy"));
-                    }
-                }
 
                 //GDPR
                 if (_gdprSettings.GdprEnabled)
@@ -955,15 +923,11 @@ public partial class CustomerController : BasePublicController
                         var controlId = $"consent{consent.Id}";
                         var cbConsent = form[controlId];
                         if (!StringValues.IsNullOrEmpty(cbConsent) && cbConsent.ToString().Equals("on"))
-                        {
                             //agree
                             await _gdprService.InsertLogAsync(customer, consent.Id, GdprRequestType.ConsentAgree, consent.Message);
-                        }
                         else
-                        {
                             //disagree
                             await _gdprService.InsertLogAsync(customer, consent.Id, GdprRequestType.ConsentDisagree, consent.Message);
-                        }
                     }
                 }
 
@@ -1077,18 +1041,14 @@ public partial class CustomerController : BasePublicController
         var statusText = await _localizationService.GetResourceAsync("Account.CheckUsernameAvailability.NotAvailable");
 
         if (!UsernamePropertyValidator<string, string>.IsValid(username, _customerSettings))
-        {
             statusText = await _localizationService.GetResourceAsync("Account.Fields.Username.NotValid");
-        }
         else if (_customerSettings.UsernamesEnabled && !string.IsNullOrWhiteSpace(username))
         {
             var currentCustomer = await _workContext.GetCurrentCustomerAsync();
             if (currentCustomer != null &&
                 currentCustomer.Username != null &&
                 currentCustomer.Username.Equals(username, StringComparison.InvariantCultureIgnoreCase))
-            {
                 statusText = await _localizationService.GetResourceAsync("Account.CheckUsernameAvailability.CurrentUsername");
-            }
             else
             {
                 var customer = await _customerService.GetCustomerByUsernameAsync(username);
@@ -1184,10 +1144,8 @@ public partial class CustomerController : BasePublicController
         //custom customer attributes
         var customerAttributesXml = await ParseCustomCustomerAttributesAsync(form);
         var customerAttributeWarnings = await _customerAttributeParser.GetAttributeWarningsAsync(customerAttributesXml);
-        foreach (var error in customerAttributeWarnings)
-        {
+        foreach (var error in customerAttributeWarnings) 
             ModelState.AddModelError("", error);
-        }
 
         //GDPR
         if (_gdprSettings.GdprEnabled)
@@ -1227,11 +1185,9 @@ public partial class CustomerController : BasePublicController
 
                     //do not authenticate users in impersonation mode
                     if (_workContext.OriginalCustomerIfImpersonated == null)
-                    {
                         //re-authenticate (if usernames are disabled)
                         if (!_customerSettings.UsernamesEnabled && !requireValidation)
                             await _authenticationService.SignInAsync(customer, true);
-                    }
                 }
 
                 //properties
@@ -1302,14 +1258,11 @@ public partial class CustomerController : BasePublicController
                             await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(newsletter);
                         }
                         else
-                        {
                             await _newsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(newsletter);
-                        }
                     }
                     else
                     {
                         if (model.Newsletter)
-                        {
                             await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new NewsLetterSubscription
                             {
                                 NewsLetterSubscriptionGuid = Guid.NewGuid(),
@@ -1319,7 +1272,6 @@ public partial class CustomerController : BasePublicController
                                 LanguageId = customer.LanguageId ?? store.DefaultLanguageId,
                                 CreatedOnUtc = DateTime.UtcNow
                             });
-                        }
                     }
                 }
 
@@ -1356,12 +1308,10 @@ public partial class CustomerController : BasePublicController
         var ear = await _externalAuthenticationService.GetExternalAuthenticationRecordByIdAsync(id);
 
         if (ear == null)
-        {
             return Json(new
             {
                 redirect = Url.RouteUrl("CustomerInfo"),
             });
-        }
 
         await _externalAuthenticationService.DeleteExternalAuthenticationRecordAsync(ear);
 
@@ -1484,10 +1434,7 @@ public partial class CustomerController : BasePublicController
         //custom address attributes
         var customAttributes = await _addressAttributeParser.ParseCustomAttributesAsync(form, NopCommonDefaults.AddressAttributeControlName);
         var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
-        foreach (var error in customAttributeWarnings)
-        {
-            ModelState.AddModelError("", error);
-        }
+        foreach (var error in customAttributeWarnings) ModelState.AddModelError("", error);
 
         if (ModelState.IsValid)
         {
@@ -1559,10 +1506,7 @@ public partial class CustomerController : BasePublicController
         //custom address attributes
         var customAttributes = await _addressAttributeParser.ParseCustomAttributesAsync(form, NopCommonDefaults.AddressAttributeControlName);
         var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
-        foreach (var error in customAttributeWarnings)
-        {
-            ModelState.AddModelError("", error);
-        }
+        foreach (var error in customAttributeWarnings) ModelState.AddModelError("", error);
 
         if (ModelState.IsValid)
         {
@@ -1714,7 +1658,6 @@ public partial class CustomerController : BasePublicController
             ModelState.AddModelError("", await _localizationService.GetResourceAsync("Account.Avatar.UploadRules"));
 
         if (ModelState.IsValid)
-        {
             try
             {
                 var customerAvatar = await _pictureService.GetPictureByIdAsync(await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute));
@@ -1748,7 +1691,6 @@ public partial class CustomerController : BasePublicController
             {
                 ModelState.AddModelError("", exc.Message);
             }
-        }
 
         //If we got this far, something failed, redisplay form
         model = await _customerModelFactory.PrepareCustomerAvatarModelAsync(model);
@@ -1873,9 +1815,7 @@ public partial class CustomerController : BasePublicController
                 model.Result = await _priceFormatter.FormatPriceAsync(remainingAmount, true, false);
             }
             else
-            {
                 model.Message = await _localizationService.GetResourceAsync("CheckGiftCardBalance.GiftCardCouponCode.Invalid");
-            }
         }
 
         return View(model);
@@ -1889,10 +1829,7 @@ public partial class CustomerController : BasePublicController
     [CheckAccessClosedStore(ignore: true)]
     public virtual async Task<IActionResult> MultiFactorAuthentication()
     {
-        if (!await _multiFactorAuthenticationPluginManager.HasActivePluginsAsync())
-        {
-            return RedirectToRoute("CustomerInfo");
-        }
+        if (!await _multiFactorAuthenticationPluginManager.HasActivePluginsAsync()) return RedirectToRoute("CustomerInfo");
 
         if (!await _permissionService.AuthorizeAsync(StandardPermission.Security.ENABLE_MULTI_FACTOR_AUTHENTICATION))
             return RedirectToRoute("CustomerInfo");
@@ -1939,10 +1876,7 @@ public partial class CustomerController : BasePublicController
                     //save selected multi-factor authentication provider
                     var selectedProvider = await ParseSelectedProviderAsync(form);
                     var lastSavedProvider = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute);
-                    if (string.IsNullOrEmpty(selectedProvider) && !string.IsNullOrEmpty(lastSavedProvider))
-                    {
-                        selectedProvider = lastSavedProvider;
-                    }
+                    if (string.IsNullOrEmpty(selectedProvider) && !string.IsNullOrEmpty(lastSavedProvider)) selectedProvider = lastSavedProvider;
 
                     if (selectedProvider != lastSavedProvider)
                     {

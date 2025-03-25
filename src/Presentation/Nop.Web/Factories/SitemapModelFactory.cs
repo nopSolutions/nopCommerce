@@ -465,9 +465,7 @@ public partial class SitemapModelFactory : ISitemapModelFactory
             //write all alternate url if exists
             foreach (var alternate in sitemapUrl.AlternateLocations
                          .Where(p => !p.Equals(sitemapUrl.Location, StringComparison.InvariantCultureIgnoreCase)))
-            {
                 await WriteSitemapUrlAsync(writer, new SitemapUrlModel(alternate, sitemapUrl));
-            }
         }
 
         await writer.WriteEndElementAsync();
@@ -555,15 +553,11 @@ public partial class SitemapModelFactory : ISitemapModelFactory
         {
             //URLs more than the maximum allowable, so generate a sitemap index file
             if (numberOfParts > 1)
-            {
                 //write a sitemap index file into the stream
                 await WriteSitemapIndexAsync(stream, sitemaps.Count);
-            }
             else
-            {
                 //otherwise generate a standard sitemap
                 await WriteSitemapAsync(stream, sitemaps.First());
-            }
         }
 
         if (_nopFileProvider.FileExists(fullPath))
@@ -654,36 +648,30 @@ public partial class SitemapModelFactory : ISitemapModelFactory
 
             //news
             if (_newsSettings.Enabled)
-            {
                 model.Items.Add(new SitemapModel.SitemapItemModel
                 {
                     GroupTitle = commonGroupTitle,
                     Name = await _localizationService.GetResourceAsync("News"),
                     Url = urlHelper.RouteUrl("NewsArchive")
                 });
-            }
 
             //blog
             if (_blogSettings.Enabled)
-            {
                 model.Items.Add(new SitemapModel.SitemapItemModel
                 {
                     GroupTitle = commonGroupTitle,
                     Name = await _localizationService.GetResourceAsync("Blog"),
                     Url = urlHelper.RouteUrl("Blog")
                 });
-            }
 
             //forums
             if (_forumSettings.ForumsEnabled)
-            {
                 model.Items.Add(new SitemapModel.SitemapItemModel
                 {
                     GroupTitle = commonGroupTitle,
                     Name = await _localizationService.GetResourceAsync("Forum.Forums"),
                     Url = urlHelper.RouteUrl("Boards")
                 });
-            }
 
             //contact us
             model.Items.Add(new SitemapModel.SitemapItemModel
@@ -829,19 +817,15 @@ public partial class SitemapModelFactory : ISitemapModelFactory
         var fileName = string.Format(NopSeoDefaults.SitemapXmlFilePattern, store.Id, language.Id, id);
         var fullPath = _nopFileProvider.GetAbsolutePath(NopSeoDefaults.SitemapXmlDirectory, fileName);
 
-        if (_nopFileProvider.FileExists(fullPath) && _nopFileProvider.GetLastWriteTimeUtc(fullPath) > DateTime.UtcNow.AddHours(-_sitemapXmlSettings.RebuildSitemapXmlAfterHours))
-        {
+        if (_nopFileProvider.FileExists(fullPath) && _nopFileProvider.GetLastWriteTimeUtc(fullPath) > DateTime.UtcNow.AddHours(-_sitemapXmlSettings.RebuildSitemapXmlAfterHours)) 
             return new SitemapXmlModel { SitemapXmlPath = fullPath };
-        }
 
         //execute task with lock
         if (!await _locker.PerformActionWithLockAsync(
                 fullPath,
                 TimeSpan.FromSeconds(_sitemapXmlSettings.SitemapBuildOperationDelay),
                 async () => await GenerateAsync(fullPath, id)))
-        {
             throw new InvalidOperationException();
-        }
 
         return new SitemapXmlModel { SitemapXmlPath = fullPath };
     }

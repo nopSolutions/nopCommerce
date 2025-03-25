@@ -410,21 +410,15 @@ public partial class BaseNopTest
         //register all settings
         var settings = typeFinder.FindClassesOfType(typeof(ISettings), false).ToList();
         foreach (var setting in settings)
-        {
             services.AddTransient(setting,
                 context => context.GetRequiredService<ISettingService>().LoadSettingAsync(setting).Result);
-
-
-        }
 
         //event consumers
         foreach (var consumer in typeFinder.FindClassesOfType(typeof(IConsumer<>)).ToList())
         {
             var interfaces = consumer.FindInterfaces((type, criteria) => type.IsGenericType && ((Type)criteria).IsAssignableFrom(type.GetGenericTypeDefinition()), typeof(IConsumer<>));
-            foreach (var findInterface in interfaces)
-            {
+            foreach (var findInterface in interfaces) 
                 services.AddTransient(findInterface, consumer);
-            }
         }
 
         services.AddSingleton<IInstallationService, InstallationService>();
@@ -686,11 +680,9 @@ public partial class BaseNopTest
             PictureType defaultPictureType = PictureType.Entity)
         {
             if (picture == null)
-            {
                 return showDefaultPicture
                     ? (await GetDefaultPictureUrlAsync(targetSize, defaultPictureType, storeLocation), null)
                     : (string.Empty, (Picture)null);
-            }
 
             byte[] pictureBinary = null;
             if (picture.IsNew)
@@ -699,11 +691,9 @@ public partial class BaseNopTest
                 pictureBinary = await LoadPictureBinaryAsync(picture);
 
                 if ((pictureBinary?.Length ?? 0) == 0)
-                {
                     return showDefaultPicture
                         ? (await GetDefaultPictureUrlAsync(targetSize, defaultPictureType, storeLocation), picture)
                         : (string.Empty, picture);
-                }
 
                 //we do not validate picture binary here to ensure that no exception ("Parameter is not valid") will be thrown
                 picture = await UpdatePictureAsync(picture.Id,
@@ -768,7 +758,6 @@ public partial class BaseNopTest
                 try
                 {
                     if (pictureBinary != null)
-                    {
                         try
                         {
                             using var image = SKBitmap.Decode(pictureBinary);
@@ -778,7 +767,6 @@ public partial class BaseNopTest
                         catch
                         {
                         }
-                    }
 
                     SaveThumbAsync(thumbFilePath, thumbFileName, string.Empty, pictureBinary).Wait();
                 }

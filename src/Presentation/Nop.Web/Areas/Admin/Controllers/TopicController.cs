@@ -111,7 +111,6 @@ public partial class TopicController : BaseAdminController
         var existingStoreMappings = await _storeMappingService.GetStoreMappingsAsync(topic);
         var allStores = await _storeService.GetAllStoresAsync();
         foreach (var store in allStores)
-        {
             if (model.SelectedStoreIds.Contains(store.Id))
             {
                 //new store
@@ -125,7 +124,6 @@ public partial class TopicController : BaseAdminController
                 if (storeMappingToDelete != null)
                     await _storeMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
             }
-        }
     }
 
     #endregion

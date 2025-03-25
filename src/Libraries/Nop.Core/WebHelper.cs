@@ -187,10 +187,8 @@ public partial class WebHelper : IWebHelper
         //get store host
         var storeHost = GetStoreHost(useSsl ?? IsCurrentConnectionSecured());
         if (!string.IsNullOrEmpty(storeHost))
-        {
             //add application path base if exists
             storeLocation = IsRequestAvailable() ? $"{storeHost.TrimEnd('/')}{_httpContextAccessor.HttpContext.Request.PathBase}" : storeHost;
-        }
 
         //if host is empty (it is possible only when HttpContext is not available), use URL of a store entity configured in admin area
         if (string.IsNullOrEmpty(storeHost))
@@ -295,16 +293,12 @@ public partial class WebHelper : IWebHelper
             .ToList();
 
         if (!string.IsNullOrEmpty(value))
-        {
             //remove a specific query parameter value if it's passed
             queryParameters.RemoveAll(parameter => parameter.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase)
-                                                   && parameter.Value.Equals(value, StringComparison.InvariantCultureIgnoreCase));
-        }
+                && parameter.Value.Equals(value, StringComparison.InvariantCultureIgnoreCase));
         else
-        {
             //or remove query parameter by the key
             queryParameters.RemoveAll(parameter => parameter.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase));
-        }
 
         var queryBuilder = new QueryBuilder(queryParameters);
 
@@ -388,14 +382,12 @@ public partial class WebHelper : IWebHelper
         //source: https://stackoverflow.com/a/41242493/7860424
         var connection = req.HttpContext.Connection;
         if (IsIpAddressSet(connection.RemoteIpAddress))
-        {
             //We have a remote address set up
             return IsIpAddressSet(connection.LocalIpAddress)
                 //Is local is same as remote, then we are local
                 ? connection.RemoteIpAddress.Equals(connection.LocalIpAddress)
                 //else we are remote if the remote IP address is not a loopback address
                 : IPAddress.IsLoopback(connection.RemoteIpAddress);
-        }
 
         return true;
     }

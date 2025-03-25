@@ -72,16 +72,12 @@ public partial class NopSelectTagHelper : TagHelper
         var htmlAttributes = new Dictionary<string, object>();
         var attributes = context.AllAttributes;
         foreach (var attribute in attributes)
-        {
             if (!attribute.Name.Equals(FOR_ATTRIBUTE_NAME) &&
                 !attribute.Name.Equals(NAME_ATTRIBUTE_NAME) &&
                 !attribute.Name.Equals(ITEMS_ATTRIBUTE_NAME) &&
                 !attribute.Name.Equals(MULTIPLE_ATTRIBUTE_NAME) &&
                 !attribute.Name.Equals(REQUIRED_ATTRIBUTE_NAME))
-            {
                 htmlAttributes.Add(attribute.Name, attribute.Value);
-            }
-        }
 
         //generate editor
         var tagName = For != null ? For.Name : Name;
@@ -97,13 +93,9 @@ public partial class NopSelectTagHelper : TagHelper
             var additionalData = new { htmlAttributes, SelectList = Items, MinimumItemsForSearch = _adminAreaSettings.MinimumDropdownItemsForSearch };
 
             if (modelType is null || new[] { typeof(List<string>), typeof(string) }.Contains(modelType))
-            {
                 selectList = _htmlHelper.Editor(tagName, $"{templateName}String", additionalData);
-            }
             else if (new[] { typeof(List<int>), typeof(int) }.Contains(modelType))
-            {
                 selectList = _htmlHelper.Editor(tagName, templateName, additionalData);
-            }
             else
             {
                 if (!htmlAttributes.TryAdd("class", "form-control"))

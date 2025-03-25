@@ -131,10 +131,8 @@ public partial class NopScriptTagHelper : UrlResolutionTagHelper
         var woConfig = _appSettings.Get<WebOptimizerConfig>();
 
         if (Location == ResourceLocation.Auto)
-        {
             // move script to the footer bundle when bundling is enabled
             Location = woConfig.EnableJavaScriptBundling ? ResourceLocation.Footer : ResourceLocation.None;
-        }
 
         if (Location == ResourceLocation.None)
         {

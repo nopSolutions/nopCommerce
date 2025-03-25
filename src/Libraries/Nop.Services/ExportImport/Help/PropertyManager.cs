@@ -124,14 +124,12 @@ public partial class PropertyManager<T>
             var lwss = new Dictionary<Language, IXLWorksheet>();
 
             if (_languages.Count >= 2)
-            {
                 foreach (var language in _languages)
                 {
                     var lws = workbook.Worksheets.Add(language.UniqueSeoCode);
                     lwss.Add(language, lws);
                     WriteLocalizedCaption(lws);
                 }
-            }
 
             var row = 2;
             foreach (var items in itemsToExport)
@@ -322,10 +320,8 @@ public partial class PropertyManager<T>
         if (worksheet?.Cells() == null)
             return;
 
-        foreach (var prop in _defaultProperties.Values)
-        {
+        foreach (var prop in _defaultProperties.Values) 
             prop.PropertyValue = worksheet.Row(row).Cell(prop.PropertyOrderPosition + cellOffset).Value;
-        }
     }
 
     /// <summary>
@@ -339,10 +335,8 @@ public partial class PropertyManager<T>
         if (worksheet?.Cells() == null)
             return;
 
-        foreach (var prop in _localizedProperties.Values)
-        {
+        foreach (var prop in _localizedProperties.Values) 
             prop.PropertyValue = worksheet.Row(row).Cell(prop.PropertyOrderPosition + cellOffset).Value;
-        }
     }
 
     /// <summary>

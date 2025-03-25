@@ -555,7 +555,6 @@ public partial class SpecificationAttributeService : ISpecificationAttributeServ
         if (allowFiltering.HasValue)
             query = query.Where(psa => psa.AllowFiltering == allowFiltering.Value);
         if (!specificationAttributeGroupId.HasValue || specificationAttributeGroupId > 0)
-        {
             query = from psa in query
                 join sao in _specificationAttributeOptionRepository.Table
                     on psa.SpecificationAttributeOptionId equals sao.Id
@@ -563,7 +562,6 @@ public partial class SpecificationAttributeService : ISpecificationAttributeServ
                     on sao.SpecificationAttributeId equals sa.Id
                 where sa.SpecificationAttributeGroupId == specificationAttributeGroupId
                 select psa;
-        }
         if (showOnProductPage.HasValue)
             query = query.Where(psa => psa.ShowOnProductPage == showOnProductPage.Value);
         query = query.OrderBy(psa => psa.DisplayOrder).ThenBy(psa => psa.Id);

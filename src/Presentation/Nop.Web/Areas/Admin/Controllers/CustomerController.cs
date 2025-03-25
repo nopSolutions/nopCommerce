@@ -160,10 +160,8 @@ public partial class CustomerController : BaseAdminController
         var rolesToAdd = customerRoles.Except(existingCustomerRoles, new CustomerRoleComparerByName());
         var rolesToDelete = existingCustomerRoles.Except(customerRoles, new CustomerRoleComparerByName());
         if (rolesToAdd.Any(role => role.SystemName != NopCustomerDefaults.RegisteredRoleName) || rolesToDelete.Any())
-        {
             if (!await _permissionService.AuthorizeAsync(StandardPermission.Configuration.MANAGE_ACL))
                 return await _localizationService.GetResourceAsync("Admin.Customers.Customers.CustomerRolesManagingError");
-        }
 
         //ensure a customer is not added to both 'Guests' and 'Registered' customer roles
         //ensure that a customer is in at least one required role ('Guests' and 'Registered')
@@ -206,7 +204,6 @@ public partial class CustomerController : BaseAdminController
                 case AttributeControlType.Checkboxes:
                     var cblAttributes = form[controlId];
                     if (!StringValues.IsNullOrEmpty(cblAttributes))
-                    {
                         foreach (var item in cblAttributes.ToString()
                                      .Split(_separator, StringSplitOptions.RemoveEmptyEntries))
                         {
@@ -215,7 +212,6 @@ public partial class CustomerController : BaseAdminController
                                 attributesXml = _customerAttributeParser.AddAttribute(attributesXml,
                                     attribute, selectedAttributeId.ToString());
                         }
-                    }
 
                     break;
                 case AttributeControlType.ReadonlyCheckboxes:
@@ -225,10 +221,8 @@ public partial class CustomerController : BaseAdminController
                                  .Where(v => v.IsPreSelected)
                                  .Select(v => v.Id)
                                  .ToList())
-                    {
                         attributesXml = _customerAttributeParser.AddAttribute(attributesXml,
                             attribute, selectedAttributeId.ToString());
-                    }
 
                     break;
                 case AttributeControlType.TextBox:
@@ -309,9 +303,7 @@ public partial class CustomerController : BaseAdminController
 
         if (!string.IsNullOrWhiteSpace(model.Username) && _customerSettings.UsernamesEnabled &&
             await _customerService.GetCustomerByUsernameAsync(model.Username) != null)
-        {
             ModelState.AddModelError(string.Empty, "Username is already registered");
-        }
 
         //validate customer roles
         var allCustomerRoles = await _customerService.GetAllCustomerRolesAsync(true);
@@ -340,10 +332,8 @@ public partial class CustomerController : BaseAdminController
         if (newCustomerRoles.Any() && newCustomerRoles.FirstOrDefault(c => c.SystemName == NopCustomerDefaults.RegisteredRoleName) != null)
         {
             var customerAttributeWarnings = await _customerAttributeParser.GetAttributeWarningsAsync(customerAttributesXml);
-            foreach (var error in customerAttributeWarnings)
-            {
+            foreach (var error in customerAttributeWarnings) 
                 ModelState.AddModelError(string.Empty, error);
-            }
         }
 
         if (ModelState.IsValid)
@@ -405,7 +395,6 @@ public partial class CustomerController : BaseAdminController
                     {
                         //subscribed
                         if (newsletterSubscription == null)
-                        {
                             await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new NewsLetterSubscription
                             {
                                 NewsLetterSubscriptionGuid = Guid.NewGuid(),
@@ -415,15 +404,12 @@ public partial class CustomerController : BaseAdminController
                                 LanguageId = customer.LanguageId ?? store.DefaultLanguageId,
                                 CreatedOnUtc = DateTime.UtcNow
                             });
-                        }
                     }
                     else
                     {
                         //not subscribed
-                        if (newsletterSubscription != null)
-                        {
+                        if (newsletterSubscription != null) 
                             await _newsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(newsletterSubscription);
-                        }
                     }
                 }
             }
@@ -434,10 +420,8 @@ public partial class CustomerController : BaseAdminController
                 var changePassRequest = new ChangePasswordRequest(model.Email, false, _customerSettings.DefaultPasswordFormat, model.Password);
                 var changePassResult = await _customerRegistrationService.ChangePasswordAsync(changePassRequest);
                 if (!changePassResult.Success)
-                {
                     foreach (var changePassError in changePassResult.Errors)
                         _notificationService.ErrorNotification(changePassError);
-                }
             }
 
             //customer roles
@@ -542,14 +526,11 @@ public partial class CustomerController : BaseAdminController
         if (newCustomerRoles.Any() && newCustomerRoles.FirstOrDefault(c => c.SystemName == NopCustomerDefaults.RegisteredRoleName) != null)
         {
             var customerAttributeWarnings = await _customerAttributeParser.GetAttributeWarningsAsync(customerAttributesXml);
-            foreach (var error in customerAttributeWarnings)
-            {
+            foreach (var error in customerAttributeWarnings) 
                 ModelState.AddModelError(string.Empty, error);
-            }
         }
 
         if (ModelState.IsValid)
-        {
             try
             {
                 customer.AdminComment = model.AdminComment;
@@ -586,10 +567,8 @@ public partial class CustomerController : BaseAdminController
                     //set VAT number status
                     if (!string.IsNullOrEmpty(model.VatNumber))
                     {
-                        if (!model.VatNumber.Equals(prevVatNumber, StringComparison.InvariantCultureIgnoreCase))
-                        {
+                        if (!model.VatNumber.Equals(prevVatNumber, StringComparison.InvariantCultureIgnoreCase)) 
                             customer.VatNumberStatusId = (int)(await _taxService.GetVatNumberStatusAsync(model.VatNumber)).vatNumberStatus;
-                        }
                     }
                     else
                         customer.VatNumberStatusId = (int)VatNumberStatus.Empty;
@@ -646,7 +625,6 @@ public partial class CustomerController : BaseAdminController
                         {
                             //subscribed
                             if (newsletterSubscription == null)
-                            {
                                 await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new NewsLetterSubscription
                                 {
                                     NewsLetterSubscriptionGuid = Guid.NewGuid(),
@@ -656,15 +634,12 @@ public partial class CustomerController : BaseAdminController
                                     LanguageId = customer.LanguageId ?? store.DefaultLanguageId,
                                     CreatedOnUtc = DateTime.UtcNow
                                 });
-                            }
                         }
                         else
                         {
                             //not subscribed
-                            if (newsletterSubscription != null)
-                            {
+                            if (newsletterSubscription != null) 
                                 await _newsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(newsletterSubscription);
-                            }
                         }
                     }
                 }
@@ -737,7 +712,6 @@ public partial class CustomerController : BaseAdminController
             {
                 _notificationService.ErrorNotification(exc.Message);
             }
-        }
 
         //prepare model
         model = await _customerModelFactory.PrepareCustomerModelAsync(model, customer, true);
@@ -1189,10 +1163,8 @@ public partial class CustomerController : BaseAdminController
         //custom address attributes
         var customAttributes = await _addressAttributeParser.ParseCustomAttributesAsync(form, NopCommonDefaults.AddressAttributeControlName);
         var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
-        foreach (var error in customAttributeWarnings)
-        {
+        foreach (var error in customAttributeWarnings) 
             ModelState.AddModelError(string.Empty, error);
-        }
 
         if (ModelState.IsValid)
         {
@@ -1258,10 +1230,8 @@ public partial class CustomerController : BaseAdminController
         //custom address attributes
         var customAttributes = await _addressAttributeParser.ParseCustomAttributesAsync(form, NopCommonDefaults.AddressAttributeControlName);
         var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
-        foreach (var error in customAttributeWarnings)
-        {
+        foreach (var error in customAttributeWarnings) 
             ModelState.AddModelError(string.Empty, error);
-        }
 
         if (ModelState.IsValid)
         {

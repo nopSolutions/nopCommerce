@@ -283,10 +283,8 @@ public class BrevoController : BasePluginController
 
         //synchronize contacts of selected store
         var messages = await _brevoEmailManager.SynchronizeAsync(false, await _storeContext.GetActiveStoreScopeConfigurationAsync());
-        foreach (var message in messages)
-        {
+        foreach (var message in messages) 
             _notificationService.Notification(message.Type, message.Message, false);
-        }
         if (!messages.Any(message => message.Type == NotifyType.Error))
         {
             ViewData["synchronizationStart"] = true;
@@ -503,7 +501,6 @@ public class BrevoController : BasePluginController
                 };
 
                 if (storeId == 0)
-                {
                     if (storeId == 0 && messageTemplate.LimitedToStores)
                     {
                         var storeIds = await _storeMappingService.GetStoresIdsWithAccessAsync(messageTemplate);
@@ -511,7 +508,6 @@ public class BrevoController : BasePluginController
 
                         smsModel.Name = $"{smsModel.Name} ({string.Join(',', storeNames)})";
                     }
-                }
 
                 //choose phone number to send SMS
                 //currently supported: "my phone" (filled on the configuration page), customer phone, phone of the billing address

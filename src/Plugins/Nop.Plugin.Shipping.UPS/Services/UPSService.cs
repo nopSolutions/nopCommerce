@@ -989,10 +989,8 @@ public class UPSService
         if (_upsSettings.SaturdayDeliveryEnabled)
         {
             var (saturdayShippingOptions, saturdayError) = await GetShippingOptionsAsync(shippingOptionRequest, true);
-            foreach (var shippingOption in saturdayShippingOptions)
-            {
+            foreach (var shippingOption in saturdayShippingOptions) 
                 response.ShippingOptions.Add(shippingOption);
-            }
             if (!string.IsNullOrEmpty(saturdayError))
                 response.Errors.Add(saturdayError);
         }

@@ -125,13 +125,9 @@ public partial class OrderTotalCalculationService : IOrderTotalCalculationServic
         {
             var couponCodesToValidate = await _customerService.ParseAppliedDiscountCouponCodesAsync(customer);
             foreach (var discount in allDiscounts)
-            {
                 if (!_discountService.ContainsDiscount(allowedDiscounts, discount) &&
                     (await _discountService.ValidateDiscountAsync(discount, customer, couponCodesToValidate)).IsValid)
-                {
                     allowedDiscounts.Add(discount);
-                }
-            }
         }
 
         var appliedDiscounts = _discountService.GetPreferredDiscount(allowedDiscounts, orderSubTotal, out discountAmount);
@@ -202,13 +198,9 @@ public partial class OrderTotalCalculationService : IOrderTotalCalculationServic
         {
             var couponCodesToValidate = await _customerService.ParseAppliedDiscountCouponCodesAsync(customer);
             foreach (var discount in allDiscounts)
-            {
                 if (!_discountService.ContainsDiscount(allowedDiscounts, discount) &&
                     (await _discountService.ValidateDiscountAsync(discount, customer, couponCodesToValidate)).IsValid)
-                {
                     allowedDiscounts.Add(discount);
-                }
-            }
         }
 
         var appliedDiscounts = _discountService.GetPreferredDiscount(allowedDiscounts, orderTotal, out discountAmount);
@@ -871,29 +863,25 @@ public partial class OrderTotalCalculationService : IOrderTotalCalculationServic
             var checkoutAttributesXml = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CheckoutAttributes, store.Id);
             var attributeValues = _checkoutAttributeParser.ParseAttributeValues(checkoutAttributesXml);
             if (attributeValues != null)
-            {
                 await foreach (var (attribute, values) in attributeValues)
+                await foreach (var attributeValue in values)
                 {
-                    await foreach (var attributeValue in values)
-                    {
-                        var (caExclTax, taxRate) = await _taxService.GetCheckoutAttributePriceAsync(attribute, attributeValue, false, customer);
-                        var (caInclTax, _) = await _taxService.GetCheckoutAttributePriceAsync(attribute, attributeValue, true, customer);
+                    var (caExclTax, taxRate) = await _taxService.GetCheckoutAttributePriceAsync(attribute, attributeValue, false, customer);
+                    var (caInclTax, _) = await _taxService.GetCheckoutAttributePriceAsync(attribute, attributeValue, true, customer);
 
-                        subTotalWithoutDiscountExclTax += caExclTax;
-                        subTotalWithoutDiscountInclTax += caInclTax;
+                    subTotalWithoutDiscountExclTax += caExclTax;
+                    subTotalWithoutDiscountInclTax += caInclTax;
 
-                        //tax rates
-                        var caTax = caInclTax - caExclTax;
-                        if (taxRate <= decimal.Zero || caTax <= decimal.Zero)
-                            continue;
+                    //tax rates
+                    var caTax = caInclTax - caExclTax;
+                    if (taxRate <= decimal.Zero || caTax <= decimal.Zero)
+                        continue;
 
-                        if (!taxRates.ContainsKey(taxRate))
-                            taxRates.Add(taxRate, caTax);
-                        else
-                            taxRates[taxRate] += caTax;
-                    }
+                    if (!taxRates.ContainsKey(taxRate))
+                        taxRates.Add(taxRate, caTax);
+                    else
+                        taxRates[taxRate] += caTax;
                 }
-            }
         }
 
         if (subTotalWithoutDiscountExclTax < decimal.Zero)
@@ -1050,10 +1038,8 @@ public partial class OrderTotalCalculationService : IOrderTotalCalculationServic
 
         var adjustedRate = shippingRate;
 
-        if (!(applyToPickupInStore && _shippingSettings.AllowPickupInStore && pickupPoint != null && _shippingSettings.IgnoreAdditionalShippingChargeForPickupInStore))
-        {
+        if (!(applyToPickupInStore && _shippingSettings.AllowPickupInStore && pickupPoint != null && _shippingSettings.IgnoreAdditionalShippingChargeForPickupInStore)) 
             adjustedRate += await GetShoppingCartAdditionalShippingChargeAsync(cart);
-        }
 
         //discount
         var (discountAmount, appliedDiscounts) = await GetShippingDiscountAsync(customer, adjustedRate);
@@ -1108,10 +1094,8 @@ public partial class OrderTotalCalculationService : IOrderTotalCalculationServic
             shippingOption = await _genericAttributeService.GetAttributeAsync<ShippingOption>(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, store.Id);
 
         if (shippingOption != null)
-        {
             //use last shipping option (get from cache)
             (shippingTotal, appliedDiscounts) = await AdjustShippingRateAsync(shippingOption.Rate, cart, shippingOption.IsPickupInStore);
-        }
         else
         {
             //use fixed rate (if possible)
@@ -1146,10 +1130,8 @@ public partial class OrderTotalCalculationService : IOrderTotalCalculationServic
                 }
 
                 if (fixedRate.HasValue)
-                {
                     //adjust shipping rate
                     (shippingTotal, appliedDiscounts) = await AdjustShippingRateAsync(fixedRate.Value, cart);
-                }
             }
         }
 
@@ -1202,10 +1184,8 @@ public partial class OrderTotalCalculationService : IOrderTotalCalculationServic
             shippingOption = await _genericAttributeService.GetAttributeAsync<ShippingOption>(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, store.Id);
 
         if (shippingOption != null)
-        {
             //use last shipping option (get from cache)
             (shippingTotal, appliedDiscounts) = await AdjustShippingRateAsync(shippingOption.Rate, cart, shippingOption.IsPickupInStore);
-        }
         else
         {
             //use fixed rate (if possible)
@@ -1240,10 +1220,8 @@ public partial class OrderTotalCalculationService : IOrderTotalCalculationServic
                 }
 
                 if (fixedRate.HasValue)
-                {
                     //adjust shipping rate
                     (shippingTotal, appliedDiscounts) = await AdjustShippingRateAsync(fixedRate.Value, cart);
-                }
             }
         }
 
@@ -1321,10 +1299,8 @@ public partial class OrderTotalCalculationService : IOrderTotalCalculationServic
         var paymentMethodSystemName = string.Empty;
 
         if (customer != null)
-        {
             paymentMethodSystemName = await _genericAttributeService.GetAttributeAsync<string>(customer,
                 NopCustomerDefaults.SelectedPaymentMethodAttribute, store.Id);
-        }
 
         //subtotal without tax
         var (_, _, _, subTotalWithDiscountBase, _) = await GetShoppingCartSubTotalAsync(cart, false);
@@ -1351,10 +1327,8 @@ public partial class OrderTotalCalculationService : IOrderTotalCalculationServic
         //order total
         var resultTemp = decimal.Zero;
         resultTemp += subtotalBase;
-        if (shoppingCartShipping.HasValue)
-        {
+        if (shoppingCartShipping.HasValue) 
             resultTemp += shoppingCartShipping.Value;
-        }
 
         resultTemp += paymentMethodAdditionalFeeWithoutTax;
         resultTemp += shoppingCartTax;
@@ -1386,10 +1360,8 @@ public partial class OrderTotalCalculationService : IOrderTotalCalculationServic
             resultTemp = await _priceCalculationService.RoundPriceAsync(resultTemp);
 
         if (!shoppingCartShipping.HasValue)
-        {
             //we have errors
             return (null, discountAmount, appliedDiscounts, appliedGiftCards, redeemedRewardPoints, redeemedRewardPointsAmount);
-        }
 
         var orderTotal = resultTemp;
 

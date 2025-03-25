@@ -34,13 +34,11 @@ public partial class ThemeableViewLocationExpander : IViewLocationExpander
     public IEnumerable<string> ExpandViewLocations(ViewLocationExpanderContext context, IEnumerable<string> viewLocations)
     {
         if (context.Values.TryGetValue(THEME_KEY, out string theme))
-        {
             viewLocations = new[] {
                     $"/Themes/{theme}/Views/{{1}}/{{0}}.cshtml",
                     $"/Themes/{theme}/Views/Shared/{{0}}.cshtml",
                 }
                 .Concat(viewLocations);
-        }
 
 
         return viewLocations;

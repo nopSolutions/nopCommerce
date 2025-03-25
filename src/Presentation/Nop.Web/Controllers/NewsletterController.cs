@@ -62,9 +62,7 @@ public partial class NewsletterController : BasePublicController
         }
 
         if (!CommonHelper.IsValidEmail(email))
-        {
             result = await _localizationService.GetResourceAsync("Newsletter.Email.Wrong");
-        }
         else
         {
             email = email.Trim();
@@ -76,18 +74,14 @@ public partial class NewsletterController : BasePublicController
                 subscription.LanguageId = subscription.LanguageId == 0 ? currentLanguage.Id : subscription.LanguageId;
                 if (subscribe)
                 {
-                    if (!subscription.Active)
-                    {
+                    if (!subscription.Active) 
                         await _workflowMessageService.SendNewsLetterSubscriptionActivationMessageAsync(subscription);
-                    }
                     result = await _localizationService.GetResourceAsync("Newsletter.SubscribeEmailSent");
                 }
                 else
                 {
-                    if (subscription.Active)
-                    {
+                    if (subscription.Active) 
                         await _workflowMessageService.SendNewsLetterSubscriptionDeactivationMessageAsync(subscription);
-                    }
                     result = await _localizationService.GetResourceAsync("Newsletter.UnsubscribeEmailSent");
                 }
             }
@@ -108,9 +102,8 @@ public partial class NewsletterController : BasePublicController
                 result = await _localizationService.GetResourceAsync("Newsletter.SubscribeEmailSent");
             }
             else
-            {
                 result = await _localizationService.GetResourceAsync("Newsletter.UnsubscribeEmailSent");
-            }
+
             success = true;
         }
 
@@ -136,9 +129,7 @@ public partial class NewsletterController : BasePublicController
 
             if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()) &&
                 await _languageService.GetLanguageByIdAsync(subscription.LanguageId) is Language language)
-            {
                 await _workContext.SetWorkingLanguageAsync(language);
-            }
         }
         else
             await _newsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(subscription);

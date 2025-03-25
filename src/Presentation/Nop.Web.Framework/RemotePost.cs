@@ -80,37 +80,26 @@ public partial class RemotePost
         sb.Append("<html><head>");
         sb.Append($"</head><body onload=\"document.{FormName}.submit()\">");
         if (!string.IsNullOrEmpty(AcceptCharset))
-        {
             //AcceptCharset specified
             sb.Append(
                 $"<form name=\"{FormName}\" method=\"{Method}\" action=\"{Url}\" accept-charset=\"{AcceptCharset}\">");
-        }
         else
-        {
             //no AcceptCharset specified
             sb.Append($"<form name=\"{FormName}\" method=\"{Method}\" action=\"{Url}\" >");
-        }
         if (NewInputForEachValue)
-        {
             foreach (string key in Params.Keys)
             {
                 var values = Params.GetValues(key);
                 if (values != null)
-                {
                     foreach (var value in values)
-                    {
                         sb.Append(
                             $"<input name=\"{WebUtility.HtmlEncode(key)}\" type=\"hidden\" value=\"{WebUtility.HtmlEncode(value)}\">");
-                    }
-                }
             }
-        }
         else
-        {
             for (var i = 0; i < Params.Keys.Count; i++)
                 sb.Append(
                     $"<input name=\"{WebUtility.HtmlEncode(Params.Keys[i])}\" type=\"hidden\" value=\"{WebUtility.HtmlEncode(Params[Params.Keys[i]])}\">");
-        }
+
         sb.Append("</form>");
         sb.Append("</body></html>");
 

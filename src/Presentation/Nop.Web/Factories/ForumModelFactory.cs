@@ -126,10 +126,8 @@ public partial class ForumModelFactory : IForumModelFactory
             forumsList.Add(new SelectListItem { Text = fg.Name, Value = "0" });
 
             var forums = await _forumService.GetAllForumsByGroupIdAsync(fg.Id);
-            foreach (var f in forums)
-            {
+            foreach (var f in forums) 
                 forumsList.Add(new SelectListItem { Text = $"{separator}{f.Name}", Value = f.Id.ToString() });
-            }
         }
 
         return forumsList;
@@ -280,10 +278,8 @@ public partial class ForumModelFactory : IForumModelFactory
             model.WatchForumText = await _localizationService.GetResourceAsync("Forum.WatchForum");
 
             var forumSubscription = (await _forumService.GetAllSubscriptionsAsync(customer.Id, forum.Id, 0, 0, 1)).FirstOrDefault();
-            if (forumSubscription != null)
-            {
+            if (forumSubscription != null) 
                 model.WatchForumText = await _localizationService.GetResourceAsync("Forum.UnwatchForum");
-            }
         }
 
         var topics = await _forumService.GetAllTopicsAsync(forum.Id, 0, string.Empty, ForumSearchType.All, 0, (page - 1), pageSize);
@@ -337,10 +333,8 @@ public partial class ForumModelFactory : IForumModelFactory
             model.WatchTopicText = await _localizationService.GetResourceAsync("Forum.WatchTopic");
 
             var forumTopicSubscription = (await _forumService.GetAllSubscriptionsAsync(currentCustomer.Id, 0, forumTopic.Id, 0, 1)).FirstOrDefault();
-            if (forumTopicSubscription != null)
-            {
+            if (forumTopicSubscription != null) 
                 model.WatchTopicText = await _localizationService.GetResourceAsync("Forum.UnwatchTopic");
-            }
         }
         model.PostsPageIndex = posts.PageIndex;
         model.PostsPageSize = posts.PageSize;
@@ -384,13 +378,11 @@ public partial class ForumModelFactory : IForumModelFactory
                     (await _dateTimeHelper.ConvertToUserTimeAsync(post.CreatedOnUtc, DateTimeKind.Utc)).ToString("f");
             //avatar
             if (_customerSettings.AllowCustomersToUploadAvatars)
-            {
                 forumPostModel.CustomerAvatarUrl = await _pictureService.GetPictureUrlAsync(
                     await _genericAttributeService.GetAttributeAsync<Customer, int>(post.CustomerId, NopCustomerDefaults.AvatarPictureIdAttribute),
                     _mediaSettings.AvatarPictureSize,
                     _customerSettings.DefaultAvatarEnabled,
                     defaultPictureType: PictureType.Avatar);
-            }
             //location
             forumPostModel.ShowCustomersLocation = _customerSettings.ShowCustomersLocation && !customerIsGuest;
             if (_customerSettings.ShowCustomersLocation)
@@ -696,14 +688,12 @@ public partial class ForumModelFactory : IForumModelFactory
 
             var forums = await _forumService.GetAllForumsByGroupIdAsync(fg.Id);
             foreach (var f in forums)
-            {
                 forumsSelectList.Add(
                     new SelectListItem
                     {
                         Text = $"{separator}{f.Name}",
                         Value = f.Id.ToString()
                     });
-            }
         }
         model.ForumList = forumsSelectList;
 
@@ -751,10 +741,8 @@ public partial class ForumModelFactory : IForumModelFactory
                 model.SearchTerms = searchterms;
 
                 if (searchterms.Length < searchTermMinimumLength)
-                {
                     throw new NopException(string.Format(await _localizationService.GetResourceAsync("Forum.SearchTermMinimumLengthIsNCharacters"),
                         searchTermMinimumLength));
-                }
 
                 ForumSearchType searchWithin = 0;
                 var limitResultsToPrevious = 0;
@@ -764,10 +752,8 @@ public partial class ForumModelFactory : IForumModelFactory
                     limitResultsToPrevious = limitDaysSelected;
                 }
 
-                if (_forumSettings.SearchResultsPageSize > 0)
-                {
+                if (_forumSettings.SearchResultsPageSize > 0) 
                     pageSize = _forumSettings.SearchResultsPageSize;
-                }
 
                 var topics = await _forumService.GetAllTopicsAsync(forumIdSelected, 0, searchterms, searchWithin,
                     limitResultsToPrevious, page - 1, pageSize);
@@ -903,10 +889,8 @@ public partial class ForumModelFactory : IForumModelFactory
     public virtual async Task<CustomerForumSubscriptionsModel> PrepareCustomerForumSubscriptionsModelAsync(int? page)
     {
         var pageIndex = 0;
-        if (page > 0)
-        {
+        if (page > 0) 
             pageIndex = page.Value - 1;
-        }
 
         var customer = await _workContext.GetCurrentCustomerAsync();
 

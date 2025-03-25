@@ -134,28 +134,18 @@ public partial class EmailSender : IEmailSender
         message.From.Add(new MailboxAddress(fromName, fromAddress));
         message.To.Add(new MailboxAddress(toName, toAddress));
 
-        if (!string.IsNullOrEmpty(replyTo))
-        {
+        if (!string.IsNullOrEmpty(replyTo)) 
             message.ReplyTo.Add(new MailboxAddress(replyToName, replyTo));
-        }
 
         //BCC
         if (bcc != null)
-        {
             foreach (var address in bcc.Where(bccValue => !string.IsNullOrWhiteSpace(bccValue)))
-            {
                 message.Bcc.Add(new MailboxAddress("", address.Trim()));
-            }
-        }
 
         //CC
         if (cc != null)
-        {
             foreach (var address in cc.Where(ccValue => !string.IsNullOrWhiteSpace(ccValue)))
-            {
                 message.Cc.Add(new MailboxAddress("", address.Trim()));
-            }
-        }
 
         //content
         message.Subject = subject;
@@ -163,9 +153,7 @@ public partial class EmailSender : IEmailSender
         //headers
         if (headers != null)
             foreach (var header in headers)
-            {
                 message.Headers.Add(header.Key, header.Value);
-            }
 
         var multipart = new Multipart("mixed")
         {
@@ -173,20 +161,16 @@ public partial class EmailSender : IEmailSender
         };
 
         //create the file attachment for this e-mail message
-        if (!string.IsNullOrEmpty(attachmentFilePath) && _fileProvider.FileExists(attachmentFilePath))
-        {
+        if (!string.IsNullOrEmpty(attachmentFilePath) && _fileProvider.FileExists(attachmentFilePath)) 
             multipart.Add(await CreateMimeAttachmentAsync(attachmentFilePath, attachmentFileName));
-        }
 
         //another attachment?
         if (attachedDownloadId > 0)
         {
             var download = await _downloadService.GetDownloadByIdAsync(attachedDownloadId);
             //we do not support URLs as attachments
-            if (!download?.UseDownloadUrl ?? false)
-            {
+            if (!download?.UseDownloadUrl ?? false) 
                 multipart.Add(CreateMimeAttachment(download));
-            }
         }
 
         message.Body = multipart;

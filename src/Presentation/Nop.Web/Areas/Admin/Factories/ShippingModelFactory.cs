@@ -475,13 +475,9 @@ public partial class ShippingModelFactory : IShippingModelFactory
     public virtual async Task<WarehouseModel> PrepareWarehouseModelAsync(WarehouseModel model, Warehouse warehouse, bool excludeProperties = false)
     {
         if (warehouse != null)
-        {
             //fill in model values from the entity
             if (model == null)
-            {
                 model = warehouse.ToModel<WarehouseModel>();
-            }
-        }
 
         //prepare address model
         var address = await _addressService.GetAddressByIdAsync(warehouse?.AddressId ?? 0);

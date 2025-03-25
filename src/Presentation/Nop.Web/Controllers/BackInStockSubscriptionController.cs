@@ -131,12 +131,10 @@ public partial class BackInStockSubscriptionController : BasePublicController
             if ((await _backInStockSubscriptionService
                     .GetAllSubscriptionsByCustomerIdAsync(customer.Id, store.Id, 0, 1))
                 .TotalCount >= _catalogSettings.MaximumBackInStockSubscriptions)
-            {
                 return Json(new
                 {
                     result = string.Format(await _localizationService.GetResourceAsync("BackInStockSubscriptions.MaxSubscriptions"), _catalogSettings.MaximumBackInStockSubscriptions)
                 });
-            }
             subscription = new BackInStockSubscription
             {
                 CustomerId = customer.Id,
@@ -157,16 +155,12 @@ public partial class BackInStockSubscriptionController : BasePublicController
     // My account / Back in stock subscriptions
     public virtual async Task<IActionResult> CustomerSubscriptions(int? pageNumber)
     {
-        if (_customerSettings.HideBackInStockSubscriptionsTab)
-        {
+        if (_customerSettings.HideBackInStockSubscriptionsTab) 
             return RedirectToRoute("CustomerInfo");
-        }
 
         var pageIndex = 0;
-        if (pageNumber > 0)
-        {
+        if (pageNumber > 0) 
             pageIndex = pageNumber.Value - 1;
-        }
         var pageSize = 10;
 
         var customer = await _workContext.GetCurrentCustomerAsync();
@@ -221,10 +215,8 @@ public partial class BackInStockSubscriptionController : BasePublicController
                 {
                     var subscription = await _backInStockSubscriptionService.GetSubscriptionByIdAsync(subscriptionId);
                     var customer = await _workContext.GetCurrentCustomerAsync();
-                    if (subscription != null && subscription.CustomerId == customer.Id)
-                    {
+                    if (subscription != null && subscription.CustomerId == customer.Id) 
                         await _backInStockSubscriptionService.DeleteSubscriptionAsync(subscription);
-                    }
                 }
             }
         }

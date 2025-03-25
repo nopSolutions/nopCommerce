@@ -60,12 +60,8 @@ public partial class NopEditorTagHelper : TagHelper
         //set custom html attributes
         var htmlAttributesDictionary = HtmlHelper.AnonymousObjectToHtmlAttributes(CustomHtmlAttributes);
         if (htmlAttributesDictionary?.Count > 0)
-        {
             foreach (var (key, value) in htmlAttributesDictionary)
-            {
                 htmlAttributes.Add(key, value);
-            }
-        }
 
         //required asterisk
         if (bool.TryParse(IsRequired, out var required) && required)

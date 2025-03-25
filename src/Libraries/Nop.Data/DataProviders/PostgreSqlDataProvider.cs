@@ -152,9 +152,7 @@ public partial class PostgreSqlDataProvider : BaseDataProvider, INopDataProvider
                 throw new Exception("Unable to connect to the new database. Please try one more time");
 
             if (!DatabaseExists())
-            {
                 Thread.Sleep(1000);
-            }
             else
             {
                 builder.Database = databaseName;

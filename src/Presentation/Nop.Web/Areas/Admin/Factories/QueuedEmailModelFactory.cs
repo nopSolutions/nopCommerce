@@ -127,10 +127,8 @@ public partial class QueuedEmailModelFactory : IQueuedEmailModelFactory
                 queuedEmailModel.PriorityName = await _localizationService.GetLocalizedEnumAsync(queuedEmail.Priority);
 
                 if (queuedEmail.DontSendBeforeDateUtc.HasValue)
-                {
                     queuedEmailModel.DontSendBeforeDate = await _dateTimeHelper
                         .ConvertToUserTimeAsync(queuedEmail.DontSendBeforeDateUtc.Value, DateTimeKind.Utc);
-                }
 
                 if (queuedEmail.SentOnUtc.HasValue)
                     queuedEmailModel.SentOn = await _dateTimeHelper.ConvertToUserTimeAsync(queuedEmail.SentOnUtc.Value, DateTimeKind.Utc);

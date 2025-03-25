@@ -290,11 +290,9 @@ public partial class BlogModelFactory : IBlogModelFactory
         };
 
         if (_customerSettings.AllowCustomersToUploadAvatars)
-        {
             model.CustomerAvatarUrl = await _pictureService.GetPictureUrlAsync(
                 await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute),
                 _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
-        }
 
         return model;
     }

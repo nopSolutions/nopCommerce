@@ -157,7 +157,6 @@ public partial class VendorController : BaseAdminController
                 case AttributeControlType.Checkboxes:
                     var cblAttributes = form[controlId];
                     if (!StringValues.IsNullOrEmpty(cblAttributes))
-                    {
                         foreach (var item in cblAttributes.ToString().Split(_separator, StringSplitOptions.RemoveEmptyEntries))
                         {
                             var selectedAttributeId = int.Parse(item);
@@ -165,7 +164,6 @@ public partial class VendorController : BaseAdminController
                                 attributesXml = _vendorAttributeParser.AddAttribute(attributesXml,
                                     attribute, selectedAttributeId.ToString());
                         }
-                    }
 
                     break;
                 case AttributeControlType.ReadonlyCheckboxes:
@@ -175,10 +173,8 @@ public partial class VendorController : BaseAdminController
                                  .Where(v => v.IsPreSelected)
                                  .Select(v => v.Id)
                                  .ToList())
-                    {
                         attributesXml = _vendorAttributeParser.AddAttribute(attributesXml,
                             attribute, selectedAttributeId.ToString());
-                    }
 
                     break;
                 case AttributeControlType.TextBox:
@@ -286,10 +282,8 @@ public partial class VendorController : BaseAdminController
         //parse vendor attributes
         var vendorAttributesXml = await ParseVendorAttributesAsync(form);
         var warnings = (await _vendorAttributeParser.GetAttributeWarningsAsync(vendorAttributesXml)).ToList();
-        foreach (var warning in warnings)
-        {
+        foreach (var warning in warnings) 
             ModelState.AddModelError(string.Empty, warning);
-        }
 
         if (ModelState.IsValid)
         {
@@ -370,18 +364,14 @@ public partial class VendorController : BaseAdminController
         //parse vendor attributes
         var vendorAttributesXml = await ParseVendorAttributesAsync(form);
         var warnings = (await _vendorAttributeParser.GetAttributeWarningsAsync(vendorAttributesXml)).ToList();
-        foreach (var warning in warnings)
-        {
+        foreach (var warning in warnings) 
             ModelState.AddModelError(string.Empty, warning);
-        }
 
         //custom address attributes
         var customAttributes = await _addressAttributeParser.ParseCustomAttributesAsync(form, NopCommonDefaults.AddressAttributeControlName);
         var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
-        foreach (var error in customAttributeWarnings)
-        {
+        foreach (var error in customAttributeWarnings) 
             ModelState.AddModelError(string.Empty, error);
-        }
 
         if (ModelState.IsValid)
         {

@@ -95,18 +95,14 @@ public partial class ShippingController : BaseAdminController
 
     protected virtual async Task UpdateLocalesAsync(DeliveryDate deliveryDate, DeliveryDateModel model)
     {
-        foreach (var localized in model.Locales)
-        {
+        foreach (var localized in model.Locales) 
             await _localizedEntityService.SaveLocalizedValueAsync(deliveryDate, x => x.Name, localized.Name, localized.LanguageId);
-        }
     }
 
     protected virtual async Task UpdateLocalesAsync(ProductAvailabilityRange productAvailabilityRange, ProductAvailabilityRangeModel model)
     {
-        foreach (var localized in model.Locales)
-        {
+        foreach (var localized in model.Locales) 
             await _localizedEntityService.SaveLocalizedValueAsync(productAvailabilityRange, x => x.Name, localized.Name, localized.LanguageId);
-        }
     }
 
     #endregion

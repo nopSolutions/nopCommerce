@@ -735,14 +735,12 @@ public class AmazonPayCheckoutService
             };
 
             if (!(placement == ButtonPlacement.PaymentMethod && await ShoppingCartRequiresShippingAsync()))
-            {
                 scopes.AddRange(new[]
                 {
                     CheckoutSessionScope.ShippingAddress,
                     CheckoutSessionScope.PrimeStatus,
                     CheckoutSessionScope.PostalCode
                 });
-            }
 
             // prepare the request
             var request = new CreateCheckoutSessionRequest
@@ -781,10 +779,8 @@ public class AmazonPayCheckoutService
             if (placement != ButtonPlacement.PaymentMethod)
                 await SetShippingMethodToNullAsync();
             else
-            {
                 await _genericAttributeService
                     .SaveAttributeAsync<bool?>(customer, AmazonPayDefaults.SkipFillDataBySessionAttributeName, true, store.Id);
-            }
 
             if (placement == ButtonPlacement.PaymentMethod)
             {

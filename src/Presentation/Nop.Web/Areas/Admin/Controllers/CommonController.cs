@@ -158,7 +158,6 @@ public partial class CommonController : BaseAdminController
         model.DeleteExportedFiles.NumberOfDeletedFiles = 0;
 
         foreach (var fullPath in _fileProvider.GetFiles(_fileProvider.GetAbsolutePath(EXPORT_IMPORT_PATH)))
-        {
             try
             {
                 var fileName = _fileProvider.GetFileName(fullPath);
@@ -178,7 +177,6 @@ public partial class CommonController : BaseAdminController
             {
                 await _notificationService.ErrorNotificationAsync(exc);
             }
-        }
 
         return View(model);
     }
@@ -191,7 +189,6 @@ public partial class CommonController : BaseAdminController
         model.DeleteMinificationFiles.NumberOfDeletedFiles = 0;
 
         foreach (var fullPath in _fileProvider.GetFiles(_fileProvider.GetAbsolutePath("bundles")))
-        {
             try
             {
                 var info = _fileProvider.GetFileInfo(fullPath);
@@ -207,7 +204,6 @@ public partial class CommonController : BaseAdminController
             {
                 await _notificationService.ErrorNotificationAsync(exc);
             }
-        }
 
         return View(model);
     }

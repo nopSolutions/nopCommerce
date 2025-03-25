@@ -117,11 +117,9 @@ public sealed class PublishModelEventsAttribute : TypeFilterAttribute
 
             //model received event
             foreach (var model in context.ActionArguments.Values.OfType<BaseNopModel>())
-            {
                 //we publish the ModelReceived event for all models as the BaseNopModel, 
                 //so you need to implement IConsumer<ModelReceived<BaseNopModel>> interface to handle this event
                 await _eventPublisher.ModelReceivedAsync(model, context.ModelState);
-            }
         }
 
         /// <summary>

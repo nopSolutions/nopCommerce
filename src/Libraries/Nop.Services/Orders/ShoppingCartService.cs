@@ -301,9 +301,7 @@ public partial class ShoppingCartService : IShoppingCartService
                     warnings.Add(requiredProductWarning);
             }
             else
-            {
                 warnings.Add(requiredProductWarning);
-            }
         }
 
         return warnings;
@@ -341,52 +339,37 @@ public partial class ShoppingCartService : IShoppingCartService
         }
 
         //published
-        if (!product.Published)
-        {
+        if (!product.Published) 
             warnings.Add(await _localizationService.GetResourceAsync("ShoppingCart.ProductUnpublished"));
-        }
 
         //we can add only simple products
-        if (product.ProductType != ProductType.SimpleProduct)
-        {
+        if (product.ProductType != ProductType.SimpleProduct) 
             warnings.Add("This is not simple product");
-        }
 
         //ACL
-        if (!await _aclService.AuthorizeAsync(product, customer))
-        {
+        if (!await _aclService.AuthorizeAsync(product, customer)) 
             warnings.Add(await _localizationService.GetResourceAsync("ShoppingCart.ProductUnpublished"));
-        }
 
         //Store mapping
-        if (!await _storeMappingService.AuthorizeAsync(product, storeId))
-        {
+        if (!await _storeMappingService.AuthorizeAsync(product, storeId)) 
             warnings.Add(await _localizationService.GetResourceAsync("ShoppingCart.ProductUnpublished"));
-        }
 
         //disabled "add to cart" button
-        if (shoppingCartType == ShoppingCartType.ShoppingCart && product.DisableBuyButton)
-        {
+        if (shoppingCartType == ShoppingCartType.ShoppingCart && product.DisableBuyButton) 
             warnings.Add(await _localizationService.GetResourceAsync("ShoppingCart.BuyingDisabled"));
-        }
 
         //disabled "add to wishlist" button
-        if (shoppingCartType == ShoppingCartType.Wishlist && product.DisableWishlistButton)
-        {
+        if (shoppingCartType == ShoppingCartType.Wishlist && product.DisableWishlistButton) 
             warnings.Add(await _localizationService.GetResourceAsync("ShoppingCart.WishlistDisabled"));
-        }
 
         //call for price
         if (shoppingCartType == ShoppingCartType.ShoppingCart && product.CallForPrice &&
             //also check whether the current user is impersonated
             (!_orderSettings.AllowAdminsToBuyCallForPriceProducts || _workContext.OriginalCustomerIfImpersonated == null))
-        {
             warnings.Add(await _localizationService.GetResourceAsync("Products.CallForPrice"));
-        }
 
         //customer entered price
         if (product.CustomerEntersPrice)
-        {
             if (customerEnteredPrice < product.MinimumCustomerEnteredPrice ||
                 customerEnteredPrice > product.MaximumCustomerEnteredPrice)
             {
@@ -397,7 +380,6 @@ public partial class ShoppingCartService : IShoppingCartService
                     await _priceFormatter.FormatPriceAsync(minimumCustomerEnteredPrice, false, false),
                     await _priceFormatter.FormatPriceAsync(maximumCustomerEnteredPrice, false, false)));
             }
-        }
 
         //quantity validation
         var hasQtyWarnings = false;
@@ -414,14 +396,11 @@ public partial class ShoppingCartService : IShoppingCartService
         }
 
         var allowedQuantities = _productService.ParseAllowedQuantities(product);
-        if (allowedQuantities.Length > 0 && !allowedQuantities.Contains(quantity))
-        {
+        if (allowedQuantities.Length > 0 && !allowedQuantities.Contains(quantity)) 
             warnings.Add(string.Format(await _localizationService.GetResourceAsync("ShoppingCart.AllowedQuantities"), string.Join(", ", allowedQuantities)));
-        }
 
         var validateOutOfStock = shoppingCartType == ShoppingCartType.ShoppingCart || !_shoppingCartSettings.AllowOutOfStockItemsToBeAddedToWishlist;
         if (validateOutOfStock && !hasQtyWarnings)
-        {
             switch (product.ManageInventoryMethod)
             {
                 case ManageInventoryMethod.DontManageStock:
@@ -456,10 +435,8 @@ public partial class ShoppingCartService : IShoppingCartService
                                 {
                                     var attributeValues = await _productAttributeParser.ParseProductAttributeValuesAsync(bundle.AttributesXml);
                                     foreach (var attributeValue in attributeValues)
-                                    {
                                         if (attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct && attributeValue.AssociatedProductId == product.Id)
                                             totalAddedQuantity += bundle.Quantity * attributeValue.Quantity;
-                                    }
                                 }
 
                                 warnings.AddRange(await GetQuantityProductWarningsAsync(product, totalAddedQuantity, maximumQuantityCanBeAdded));
@@ -482,10 +459,8 @@ public partial class ShoppingCartService : IShoppingCartService
                             {
                                 var attributeValues = await _productAttributeParser.ParseProductAttributeValuesAsync(bundle.AttributesXml);
                                 foreach (var attributeValue in attributeValues)
-                                {
                                     if (attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct && attributeValue.AssociatedProductId == product.Id)
                                         totalQuantityInCart += bundle.Quantity * attributeValue.Quantity;
-                                }
                             }
 
                             warnings.AddRange(await GetQuantityProductWarningsAsync(product, totalQuantityInCart, maximumQuantityCanBeAdded));
@@ -520,7 +495,6 @@ public partial class ShoppingCartService : IShoppingCartService
                 default:
                     break;
             }
-        }
 
         //availability dates
         var availableStartDateError = false;
@@ -546,10 +520,8 @@ public partial class ShoppingCartService : IShoppingCartService
             return warnings;
 
         var availableEndDateTime = DateTime.SpecifyKind(product.AvailableEndDateTimeUtc.Value, DateTimeKind.Utc);
-        if (availableEndDateTime.CompareTo(DateTime.UtcNow) < 0)
-        {
+        if (availableEndDateTime.CompareTo(DateTime.UtcNow) < 0) 
             warnings.Add(await _localizationService.GetResourceAsync("ShoppingCart.NotAvailable"));
-        }
 
         return warnings;
     }
@@ -824,10 +796,8 @@ public partial class ShoppingCartService : IShoppingCartService
 
         //ensure it's our attributes
         var attributes1 = await _productAttributeParser.ParseProductAttributeMappingsAsync(attributesXml);
-        if (ignoreNonCombinableAttributes)
-        {
+        if (ignoreNonCombinableAttributes) 
             attributes1 = attributes1.Where(x => !x.IsNonCombinable()).ToList();
-        }
 
         foreach (var attribute in attributes1)
         {
@@ -837,28 +807,22 @@ public partial class ShoppingCartService : IShoppingCartService
                 return warnings;
             }
 
-            if (attribute.ProductId != product.Id)
-            {
+            if (attribute.ProductId != product.Id) 
                 warnings.Add("Attribute error");
-            }
         }
 
         //validate required product attributes (whether they're chosen/selected/entered)
         var attributes2 = await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id);
-        if (ignoreNonCombinableAttributes)
-        {
+        if (ignoreNonCombinableAttributes) 
             attributes2 = attributes2.Where(x => !x.IsNonCombinable()).ToList();
-        }
 
         //validate conditional attributes only (if specified)
         if (!ignoreConditionMet)
-        {
             attributes2 = await attributes2.WhereAwait(async x =>
             {
                 var conditionMet = await _productAttributeParser.IsConditionMetAsync(x, attributesXml);
                 return !conditionMet.HasValue || conditionMet.Value;
             }).ToListAsync();
-        }
 
         foreach (var a2 in attributes2)
         {
@@ -916,10 +880,8 @@ public partial class ShoppingCartService : IShoppingCartService
                 .Select(x => x.Id)
                 .ToArray();
 
-            if (!CommonHelper.ArraysEqual(allowedReadOnlyValueIds, selectedReadOnlyValueIds))
-            {
+            if (!CommonHelper.ArraysEqual(allowedReadOnlyValueIds, selectedReadOnlyValueIds)) 
                 warnings.Add("You cannot change read-only values");
-            }
         }
 
         //validation rules
@@ -935,19 +897,15 @@ public partial class ShoppingCartService : IShoppingCartService
 
             //minimum length
             if (pam.ValidationMinLength.HasValue)
-            {
                 if (pam.AttributeControlType == AttributeControlType.TextBox ||
                     pam.AttributeControlType == AttributeControlType.MultilineTextbox)
                 {
                     enteredText = _productAttributeParser.ParseValues(attributesXml, pam.Id).FirstOrDefault();
                     enteredTextLength = string.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
 
-                    if (pam.ValidationMinLength.Value > enteredTextLength)
-                    {
+                    if (pam.ValidationMinLength.Value > enteredTextLength) 
                         warnings.Add(string.Format(await _localizationService.GetResourceAsync("ShoppingCart.TextboxMinimumLength"), await _localizationService.GetLocalizedAsync(productAttribute, a => a.Name), pam.ValidationMinLength.Value));
-                    }
                 }
-            }
 
             //maximum length
             if (!pam.ValidationMaxLength.HasValue)
@@ -959,10 +917,8 @@ public partial class ShoppingCartService : IShoppingCartService
             enteredText = _productAttributeParser.ParseValues(attributesXml, pam.Id).FirstOrDefault();
             enteredTextLength = string.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
 
-            if (pam.ValidationMaxLength.Value < enteredTextLength)
-            {
+            if (pam.ValidationMaxLength.Value < enteredTextLength) 
                 warnings.Add(string.Format(await _localizationService.GetResourceAsync("ShoppingCart.TextboxMaximumLength"), await _localizationService.GetLocalizedAsync(productAttribute, a => a.Name), pam.ValidationMaxLength.Value));
-            }
         }
 
         if (warnings.Any() || ignoreBundledProducts)
@@ -1044,11 +1000,9 @@ public partial class ShoppingCartService : IShoppingCartService
             warnings.Add(await _localizationService.GetResourceAsync("ShoppingCart.RecipientNameError"));
 
         if (product.GiftCardType == GiftCardType.Virtual)
-        {
             //validate for virtual gift cards only
             if (string.IsNullOrEmpty(giftCardRecipientEmail) || !CommonHelper.IsValidEmail(giftCardRecipientEmail))
                 warnings.Add(await _localizationService.GetResourceAsync("ShoppingCart.RecipientEmailError"));
-        }
 
         if (string.IsNullOrEmpty(giftCardSenderName))
             warnings.Add(await _localizationService.GetResourceAsync("ShoppingCart.SenderNameError"));
@@ -1289,19 +1243,15 @@ public partial class ShoppingCartService : IShoppingCartService
             int enteredTextLength;
 
             if (ca.ValidationMinLength.HasValue)
-            {
                 if (ca.AttributeControlType == AttributeControlType.TextBox ||
                     ca.AttributeControlType == AttributeControlType.MultilineTextbox)
                 {
                     enteredText = _checkoutAttributeParser.ParseValues(checkoutAttributesXml, ca.Id).FirstOrDefault();
                     enteredTextLength = string.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
 
-                    if (ca.ValidationMinLength.Value > enteredTextLength)
-                    {
+                    if (ca.ValidationMinLength.Value > enteredTextLength) 
                         warnings.Add(string.Format(await _localizationService.GetResourceAsync("ShoppingCart.TextboxMinimumLength"), await _localizationService.GetLocalizedAsync(ca, a => a.Name), ca.ValidationMinLength.Value));
-                    }
                 }
-            }
 
             //maximum length
             if (!ca.ValidationMaxLength.HasValue)
@@ -1313,10 +1263,8 @@ public partial class ShoppingCartService : IShoppingCartService
             enteredText = _checkoutAttributeParser.ParseValues(checkoutAttributesXml, ca.Id).FirstOrDefault();
             enteredTextLength = string.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
 
-            if (ca.ValidationMaxLength.Value < enteredTextLength)
-            {
+            if (ca.ValidationMaxLength.Value < enteredTextLength) 
                 warnings.Add(string.Format(await _localizationService.GetResourceAsync("ShoppingCart.TextboxMaximumLength"), await _localizationService.GetLocalizedAsync(ca, a => a.Name), ca.ValidationMaxLength.Value));
-            }
         }
 
         return warnings;
@@ -1372,9 +1320,7 @@ public partial class ShoppingCartService : IShoppingCartService
             }
         }
         else
-        {
             subTotal = unitPrice * shoppingCartItem.Quantity;
-        }
 
         return (subTotal, discountAmount, appliedDiscounts, maximumDiscountQty);
     }
@@ -1447,7 +1393,6 @@ public partial class ShoppingCartService : IShoppingCartService
 
         var combination = await _productAttributeParser.FindProductAttributeCombinationAsync(product, attributesXml);
         if (combination?.OverriddenPrice.HasValue ?? false)
-        {
             (_, finalPrice, discountAmount, appliedDiscounts) = await _priceCalculationService.GetFinalPriceAsync(product,
                 customer,
                 store,
@@ -1457,30 +1402,23 @@ public partial class ShoppingCartService : IShoppingCartService
                 quantity,
                 product.IsRental ? rentalStartDate : null,
                 product.IsRental ? rentalEndDate : null);
-        }
         else
         {
             //summarize price of all attributes
             var attributesTotalPrice = decimal.Zero;
             var attributeValues = await _productAttributeParser.ParseProductAttributeValuesAsync(attributesXml);
             if (attributeValues != null)
-            {
                 foreach (var attributeValue in attributeValues)
-                {
                     attributesTotalPrice += await _priceCalculationService.GetProductAttributeValuePriceAdjustmentAsync(product,
                         attributeValue,
                         customer,
                         store,
                         product.CustomerEntersPrice ? (decimal?)customerEnteredPrice : null,
                         quantity);
-                }
-            }
 
             //get price of a product (with previously calculated price of all attributes)
             if (product.CustomerEntersPrice)
-            {
                 finalPrice = customerEnteredPrice;
-            }
             else
             {
                 int qty;
@@ -1491,15 +1429,10 @@ public partial class ShoppingCartService : IShoppingCartService
                     qty = (await GetShoppingCartAsync(customer, shoppingCartType: shoppingCartType, productId: product.Id))
                         .Sum(x => x.Quantity);
 
-                    if (qty == 0)
-                    {
-                        qty = quantity;
-                    }
+                    if (qty == 0) qty = quantity;
                 }
                 else
-                {
                     qty = quantity;
-                }
 
                 (_, finalPrice, discountAmount, appliedDiscounts) = await _priceCalculationService.GetFinalPriceAsync(product,
                     customer,
@@ -1777,10 +1710,8 @@ public partial class ShoppingCartService : IShoppingCartService
             return warnings;
 
         if (resetCheckoutData)
-        {
             //reset checkout data
             await _customerService.ResetCheckoutDataAsync(customer, shoppingCartItem.StoreId);
-        }
 
         var product = await _productService.GetProductByIdAsync(shoppingCartItem.ProductId);
 

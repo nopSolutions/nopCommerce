@@ -55,15 +55,11 @@ public partial class PrivateMessagesController : BasePublicController
 
     public virtual async Task<IActionResult> Index(int? pageNumber, string tab)
     {
-        if (!_forumSettings.AllowPrivateMessages)
-        {
+        if (!_forumSettings.AllowPrivateMessages) 
             return RedirectToRoute("Homepage");
-        }
 
-        if (await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()))
-        {
+        if (await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync())) 
             return Challenge();
-        }
 
         var model = await _privateMessagesModelFactory.PreparePrivateMessageIndexModelAsync(pageNumber, tab);
         return View(model);
@@ -171,10 +167,8 @@ public partial class PrivateMessagesController : BasePublicController
 
         PrivateMessage replyToPM = null;
         if (replyToMessageId.HasValue)
-        {
             //reply to a previous PM
             replyToPM = await _forumService.GetPrivateMessageByIdAsync(replyToMessageId.Value);
-        }
 
         var model = await _privateMessagesModelFactory.PrepareSendPrivateMessageModelAsync(customerTo, replyToPM);
         return View(model);
@@ -183,16 +177,12 @@ public partial class PrivateMessagesController : BasePublicController
     [HttpPost]
     public virtual async Task<IActionResult> SendPM(SendPrivateMessageModel model)
     {
-        if (!_forumSettings.AllowPrivateMessages)
-        {
+        if (!_forumSettings.AllowPrivateMessages) 
             return RedirectToRoute("Homepage");
-        }
 
         var customer = await _workContext.GetCurrentCustomerAsync();
-        if (await _customerService.IsGuestAsync(customer))
-        {
+        if (await _customerService.IsGuestAsync(customer)) 
             return Challenge();
-        }
 
         Customer toCustomer;
         var replyToPM = await _forumService.GetPrivateMessageByIdAsync(model.ReplyToMessageId);
@@ -200,43 +190,30 @@ public partial class PrivateMessagesController : BasePublicController
         {
             //reply to a previous PM
             if (replyToPM.ToCustomerId == customer.Id || replyToPM.FromCustomerId == customer.Id)
-            {
                 //Reply to already sent PM (by current customer) should not be sent to yourself
                 toCustomer = await _customerService.GetCustomerByIdAsync(replyToPM.FromCustomerId == customer.Id
                     ? replyToPM.ToCustomerId
                     : replyToPM.FromCustomerId);
-            }
             else
-            {
                 return RedirectToRoute("PrivateMessages");
-            }
         }
         else
-        {
             //first PM
             toCustomer = await _customerService.GetCustomerByIdAsync(model.ToCustomerId);
-        }
 
-        if (toCustomer == null || await _customerService.IsGuestAsync(toCustomer))
-        {
+        if (toCustomer == null || await _customerService.IsGuestAsync(toCustomer)) 
             return RedirectToRoute("PrivateMessages");
-        }
 
         if (ModelState.IsValid)
-        {
             try
             {
                 var subject = model.Subject;
-                if (_forumSettings.PMSubjectMaxLength > 0 && subject.Length > _forumSettings.PMSubjectMaxLength)
-                {
+                if (_forumSettings.PMSubjectMaxLength > 0 && subject.Length > _forumSettings.PMSubjectMaxLength) 
                     subject = subject[0.._forumSettings.PMSubjectMaxLength];
-                }
 
                 var text = model.Message;
-                if (_forumSettings.PMTextMaxLength > 0 && text.Length > _forumSettings.PMTextMaxLength)
-                {
+                if (_forumSettings.PMTextMaxLength > 0 && text.Length > _forumSettings.PMTextMaxLength) 
                     text = text[0.._forumSettings.PMTextMaxLength];
-                }
 
                 var nowUtc = DateTime.UtcNow;
                 var store = await _storeContext.GetCurrentStoreAsync();
@@ -266,7 +243,6 @@ public partial class PrivateMessagesController : BasePublicController
             {
                 ModelState.AddModelError("", ex.Message);
             }
-        }
 
         model = await _privateMessagesModelFactory.PrepareSendPrivateMessageModelAsync(toCustomer, replyToPM);
         return View(model);
@@ -274,24 +250,18 @@ public partial class PrivateMessagesController : BasePublicController
 
     public virtual async Task<IActionResult> ViewPM(int privateMessageId)
     {
-        if (!_forumSettings.AllowPrivateMessages)
-        {
+        if (!_forumSettings.AllowPrivateMessages) 
             return RedirectToRoute("Homepage");
-        }
 
         var customer = await _workContext.GetCurrentCustomerAsync();
-        if (await _customerService.IsGuestAsync(customer))
-        {
+        if (await _customerService.IsGuestAsync(customer)) 
             return Challenge();
-        }
 
         var pm = await _forumService.GetPrivateMessageByIdAsync(privateMessageId);
         if (pm != null)
         {
-            if (pm.ToCustomerId != customer.Id && pm.FromCustomerId != customer.Id)
-            {
+            if (pm.ToCustomerId != customer.Id && pm.FromCustomerId != customer.Id) 
                 return RedirectToRoute("PrivateMessages");
-            }
 
             if (!pm.IsRead && pm.ToCustomerId == customer.Id)
             {
@@ -300,9 +270,7 @@ public partial class PrivateMessagesController : BasePublicController
             }
         }
         else
-        {
             return RedirectToRoute("PrivateMessages");
-        }
 
         var model = await _privateMessagesModelFactory.PreparePrivateMessageModelAsync(pm);
         return View(model);
@@ -310,16 +278,12 @@ public partial class PrivateMessagesController : BasePublicController
 
     public virtual async Task<IActionResult> DeletePM(int privateMessageId)
     {
-        if (!_forumSettings.AllowPrivateMessages)
-        {
+        if (!_forumSettings.AllowPrivateMessages) 
             return RedirectToRoute("Homepage");
-        }
 
         var customer = await _workContext.GetCurrentCustomerAsync();
-        if (await _customerService.IsGuestAsync(customer))
-        {
+        if (await _customerService.IsGuestAsync(customer)) 
             return Challenge();
-        }
 
         var pm = await _forumService.GetPrivateMessageByIdAsync(privateMessageId);
         if (pm != null)

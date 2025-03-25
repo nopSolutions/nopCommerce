@@ -463,37 +463,27 @@ public partial class TaxService : ITaxService
             {
                 //we should calculate price WITH tax
                 if (!isTaxable)
-                {
                     //but our request is not taxable
                     //hence we should calculate price WITHOUT tax
                     price = CalculatePrice(price, taxRate, false);
-                }
             }
             else
-            {
                 //we should calculate price WITHOUT tax
                 price = CalculatePrice(price, taxRate, false);
-            }
         }
         else
         {
             //"price" doesn't include tax
             if (includingTax)
-            {
                 //we should calculate price WITH tax
                 //do it only when price is taxable
                 if (isTaxable)
-                {
                     price = CalculatePrice(price, taxRate, true);
-                }
-            }
         }
 
         if (!isTaxable)
-        {
             //we return 0% tax rate in case a request is not taxable
             taxRate = decimal.Zero;
-        }
 
         //allowed to support negative price adjustments
         //if (price < decimal.Zero)
@@ -565,10 +555,8 @@ public partial class TaxService : ITaxService
     {
         var taxRate = decimal.Zero;
 
-        if (!_taxSettings.ShippingIsTaxable)
-        {
+        if (!_taxSettings.ShippingIsTaxable) 
             return (price, taxRate);
-        }
 
         var taxClassId = _taxSettings.ShippingTaxClassId;
         var priceIncludesTax = _taxSettings.ShippingPriceIncludesTax;
@@ -610,10 +598,8 @@ public partial class TaxService : ITaxService
     {
         var taxRate = decimal.Zero;
 
-        if (!_taxSettings.PaymentMethodAdditionalFeeIsTaxable)
-        {
+        if (!_taxSettings.PaymentMethodAdditionalFeeIsTaxable) 
             return (price, taxRate);
-        }
 
         var taxClassId = _taxSettings.PaymentMethodAdditionalFeeTaxClassId;
         var priceIncludesTax = _taxSettings.PaymentMethodAdditionalFeeIncludesTax;
@@ -754,12 +740,8 @@ public partial class TaxService : ITaxService
 
         //error logging
         if (taxTotalResult != null && !taxTotalResult.Success && _taxSettings.LogErrors)
-        {
             foreach (var error in taxTotalResult.Errors)
-            {
                 await _logger.ErrorAsync($"{activeTaxProvider.PluginDescriptor.FriendlyName} - {error}", null, customer);
-            }
-        }
 
         return taxTotalResult;
     }

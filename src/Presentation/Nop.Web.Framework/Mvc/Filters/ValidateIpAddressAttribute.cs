@@ -75,9 +75,7 @@ public sealed class ValidateIpAddressAttribute : TypeFilterAttribute
             //don't validate on the 'Access denied' page
             if (controllerName.Equals("Security", StringComparison.InvariantCultureIgnoreCase) &&
                 actionName.Equals("AccessDenied", StringComparison.InvariantCultureIgnoreCase))
-            {
                 return;
-            }
 
             //get allowed IP addresses
             var ipAddresses = _securitySettings.AdminAreaAllowedIpAddresses;

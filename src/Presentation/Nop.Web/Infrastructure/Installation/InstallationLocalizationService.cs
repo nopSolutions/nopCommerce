@@ -96,10 +96,8 @@ public partial class InstallationLocalizationService : IInstallationLocalization
         {
             var userLanguage = userLanguages.FirstOrDefault()?.Split(',').FirstOrDefault() ?? string.Empty;
             if (!string.IsNullOrEmpty(userLanguage))
-            {
                 //right. we do "StartsWith" (not "Equals") because we have shorten codes (not full culture names)
                 language = availableLanguages.FirstOrDefault(l => userLanguage.StartsWith(l.Code, StringComparison.InvariantCultureIgnoreCase));
-            }
         }
 
         if (language != null)

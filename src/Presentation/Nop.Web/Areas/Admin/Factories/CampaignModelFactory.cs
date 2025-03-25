@@ -99,10 +99,8 @@ public partial class CampaignModelFactory : ICampaignModelFactory
                 //convert dates to the user time
                 campaignModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(campaign.CreatedOnUtc, DateTimeKind.Utc);
                 if (campaign.DontSendBeforeDateUtc.HasValue)
-                {
                     campaignModel.DontSendBeforeDate = await _dateTimeHelper
                         .ConvertToUserTimeAsync(campaign.DontSendBeforeDateUtc.Value, DateTimeKind.Utc);
-                }
 
                 return campaignModel;
             });

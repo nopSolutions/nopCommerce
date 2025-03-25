@@ -347,10 +347,8 @@ public partial class PictureService : IPictureService
     protected virtual string GetMimeTypeFromFileName(string fileName)
     {
         var provider = new FileExtensionContentTypeProvider();
-        if (!provider.TryGetContentType(fileName, out var contentType))
-        {
+        if (!provider.TryGetContentType(fileName, out var contentType)) 
             contentType = "application/octet-stream";
-        }
         return contentType;
     }
 
@@ -542,10 +540,8 @@ public partial class PictureService : IPictureService
             _ => await _settingService.GetSettingByKeyAsync("Media.DefaultImageName", NopMediaDefaults.DefaultImageFileName),
         };
         var filePath = await GetPictureLocalPathAsync(defaultImageFileName);
-        if (!_fileProvider.FileExists(filePath))
-        {
+        if (!_fileProvider.FileExists(filePath)) 
             return string.Empty;
-        }
 
         if (targetSize == 0)
             return await GetImagesPathUrlAsync(storeLocation) + defaultImageFileName;
@@ -1094,7 +1090,6 @@ public partial class PictureService : IPictureService
 
         //update if it has been changed
         if (seoFilename != picture.SeoFilename)
-        {
             //update picture
             picture = await UpdatePictureAsync(picture.Id,
                 await LoadPictureBinaryAsync(picture),
@@ -1104,7 +1099,6 @@ public partial class PictureService : IPictureService
                 picture.TitleAttribute,
                 true,
                 false);
-        }
 
         return picture;
     }

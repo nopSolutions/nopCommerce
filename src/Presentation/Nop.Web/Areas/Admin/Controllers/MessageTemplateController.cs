@@ -93,7 +93,6 @@ public partial class MessageTemplateController : BaseAdminController
         var existingStoreMappings = await _storeMappingService.GetStoreMappingsAsync(messageTemplate);
         var allStores = await _storeService.GetAllStoresAsync();
         foreach (var store in allStores)
-        {
             if (model.SelectedStoreIds.Contains(store.Id))
             {
                 //new store
@@ -107,7 +106,6 @@ public partial class MessageTemplateController : BaseAdminController
                 if (storeMappingToDelete != null)
                     await _storeMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
             }
-        }
     }
 
     #endregion
@@ -291,10 +289,8 @@ public partial class MessageTemplateController : BaseAdminController
 
         await _workflowMessageService.SendTestEmailAsync(messageTemplate.Id, model.SendTo, tokens, model.LanguageId);
 
-        if (ModelState.IsValid)
-        {
+        if (ModelState.IsValid) 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ContentManagement.MessageTemplates.Test.Success"));
-        }
 
         return RedirectToAction("Edit", new { id = messageTemplate.Id });
     }

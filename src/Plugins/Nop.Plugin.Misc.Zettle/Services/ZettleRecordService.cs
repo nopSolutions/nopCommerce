@@ -255,7 +255,6 @@ public class ZettleRecordService
                 await InsertRecordsAsync(records);
             }
             else
-            {
                 await InsertRecordAsync(new()
                 {
                     Active = _zettleSettings.SyncEnabled,
@@ -268,7 +267,6 @@ public class ZettleRecordService
                     InventoryTrackingEnabled = _zettleSettings.InventoryTrackingEnabled,
                     OperationType = operationType
                 });
-            }
 
             return;
         }

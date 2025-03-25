@@ -131,10 +131,8 @@ public partial class TopicService : ITopicService
         {
 
             if (!showHidden || storeId > 0)
-            {
                 //apply store mapping constraints
                 query = await _storeMappingService.ApplyStoreMapping(query, storeId);
-            }
 
             if (!showHidden)
             {
@@ -182,12 +180,10 @@ public partial class TopicService : ITopicService
             onlyIncludedInTopMenu: onlyIncludedInTopMenu);
 
         if (!string.IsNullOrWhiteSpace(keywords))
-        {
             return topics
                 .Where(topic => (topic.Title?.Contains(keywords, StringComparison.InvariantCultureIgnoreCase) ?? false) ||
-                                (topic.Body?.Contains(keywords, StringComparison.InvariantCultureIgnoreCase) ?? false))
+                    (topic.Body?.Contains(keywords, StringComparison.InvariantCultureIgnoreCase) ?? false))
                 .ToList();
-        }
 
         return topics;
     }

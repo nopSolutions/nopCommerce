@@ -112,10 +112,8 @@ public class PaymentCheckMoneyOrderController : BasePaymentController
 
         //localization. no multi-store support for localization yet.
         foreach (var localized in model.Locales)
-        {
             await _localizationService.SaveLocalizedSettingAsync(checkMoneyOrderPaymentSettings,
                 x => x.DescriptionText, localized.LanguageId, localized.DescriptionText);
-        }
 
         _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
 

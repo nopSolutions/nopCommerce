@@ -351,10 +351,8 @@ public partial class PaymentService : IPaymentService
 
         var last4 = creditCardNumber[(creditCardNumber.Length - 4)..creditCardNumber.Length];
         var maskedChars = string.Empty;
-        for (var i = 0; i < creditCardNumber.Length - 4; i++)
-        {
+        for (var i = 0; i < creditCardNumber.Length - 4; i++) 
             maskedChars += "*";
-        }
 
         return maskedChars + last4;
     }
@@ -380,10 +378,8 @@ public partial class PaymentService : IPaymentService
         var xs = new XmlSerializer(typeof(DictionarySerializer));
 
         using var textWriter = new StringWriter();
-        using (var xmlWriter = XmlWriter.Create(textWriter))
-        {
+        using (var xmlWriter = XmlWriter.Create(textWriter)) 
             xs.Serialize(xmlWriter, ds);
-        }
 
         var result = textWriter.ToString();
         return result;

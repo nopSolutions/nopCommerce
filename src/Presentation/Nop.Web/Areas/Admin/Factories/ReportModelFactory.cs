@@ -164,10 +164,8 @@ public partial class ReportModelFactory : IReportModelFactory
             {
                 var ids = searchModel.OrderStatusIds.Select(id => id.ToString());
                 var statusItems = searchModel.AvailableOrderStatuses.Where(statusItem => ids.Contains(statusItem.Value)).ToList();
-                foreach (var statusItem in statusItems)
-                {
+                foreach (var statusItem in statusItems) 
                     statusItem.Selected = true;
-                }
             }
             else
                 searchModel.AvailableOrderStatuses.FirstOrDefault().Selected = true;
@@ -181,10 +179,8 @@ public partial class ReportModelFactory : IReportModelFactory
             {
                 var ids = searchModel.PaymentStatusIds.Select(id => id.ToString());
                 var statusItems = searchModel.AvailablePaymentStatuses.Where(statusItem => ids.Contains(statusItem.Value)).ToList();
-                foreach (var statusItem in statusItems)
-                {
+                foreach (var statusItem in statusItems) 
                     statusItem.Selected = true;
-                }
             }
             else
                 searchModel.AvailablePaymentStatuses.FirstOrDefault().Selected = true;
@@ -771,11 +767,9 @@ public partial class ReportModelFactory : IReportModelFactory
                 //fill in additional values (not existing in the entity)
                 var customer = await _customerService.GetCustomerByIdAsync(item.CustomerId);
                 if (customer != null)
-                {
                     bestCustomersReportModel.CustomerName = (await _customerService.IsRegisteredAsync(customer))
                         ? customer.Email
                         : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
-                }
 
                 return bestCustomersReportModel;
             });

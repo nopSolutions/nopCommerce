@@ -221,10 +221,8 @@ public partial class CampaignController : BaseAdminController
             var subscription = await _newsLetterSubscriptionService
                 .GetNewsLetterSubscriptionByEmailAndStoreIdAsync(model.TestEmail, store.Id);
             if (subscription != null)
-            {
                 //there's a subscription. let's use it
                 await _campaignService.SendCampaignAsync(campaign, emailAccount, new List<NewsLetterSubscription> { subscription });
-            }
             else
             {
                 var workingLanguage = await _workContext.GetWorkingLanguageAsync();

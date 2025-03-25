@@ -22,10 +22,8 @@ public partial class GenericUrlRouteProvider : BaseRouteProvider, IRouteProvider
         //these routes are not generic, they are just default to map requests that don't match other patterns, 
         //but we define them here since this route provider is with the lowest priority, to allow to add additional routes before them
         if (!string.IsNullOrEmpty(lang))
-        {
             endpointRouteBuilder.MapControllerRoute(name: "DefaultWithLanguageCode",
                 pattern: $"{lang}/{{controller=Home}}/{{action=Index}}/{{id?}}");
-        }
 
         endpointRouteBuilder.MapControllerRoute(name: "Default",
             pattern: "{controller=Home}/{action=Index}/{id?}");

@@ -251,7 +251,6 @@ public class DataMigration : Migration
                 customerRoles = customerRoles.Where(cr => cr.SystemName == NopCustomerDefaults.AdministratorsRoleName || cr.SystemName == NopCustomerDefaults.RegisteredRoleName);
 
             foreach (var role in customerRoles.ToList())
-            {
                 _dataProvider.InsertEntity(
                     new PermissionRecordCustomerRoleMapping
                     {
@@ -259,12 +258,10 @@ public class DataMigration : Migration
                         PermissionRecordId = multifactorAuthenticationPermissionRecord.Id
                     }
                 );
-            }
         }
 
         var lastEnabledUtc = DateTime.UtcNow;
         if (!_dataProvider.GetTable<ScheduleTask>().Any(st => string.Compare(st.Type, "Nop.Services.Common.ResetLicenseCheckTask, Nop.Services", StringComparison.InvariantCultureIgnoreCase) == 0))
-        {
             _dataProvider.InsertEntity(new ScheduleTask
             {
                 Name = "ResetLicenseCheckTask",
@@ -274,7 +271,6 @@ public class DataMigration : Migration
                 LastEnabledUtc = lastEnabledUtc,
                 StopOnError = false
             });
-        }
 
         //#3651
         if (!_dataProvider.GetTable<MessageTemplate>().Any(mt => string.Compare(mt.Name, MessageTemplateSystemNames.ORDER_PROCESSING_CUSTOMER_NOTIFICATION, StringComparison.InvariantCultureIgnoreCase) == 0))

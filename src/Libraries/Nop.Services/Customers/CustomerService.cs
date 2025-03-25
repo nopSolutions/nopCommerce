@@ -188,13 +188,11 @@ public partial class CustomerService : ICustomerService
             query = query.Where(c => !c.Deleted);
 
             if (customerRoleIds != null && customerRoleIds.Length > 0)
-            {
                 query = query.Join(_customerCustomerRoleMappingRepository.Table, x => x.Id, y => y.CustomerId,
                         (x, y) => new { Customer = x, Mapping = y })
                     .Where(z => customerRoleIds.Contains(z.Mapping.CustomerRoleId))
                     .Select(z => z.Customer)
                     .Distinct();
-            }
 
             if (!string.IsNullOrWhiteSpace(email))
                 query = query.Where(c => c.Email.Contains(email));
@@ -220,10 +218,8 @@ public partial class CustomerService : ICustomerService
                 query = query.Where(c => c.DateOfBirth.HasValue && c.DateOfBirth.Value.Month == monthOfBirth);
 
             //search by IpAddress
-            if (!string.IsNullOrWhiteSpace(ipAddress) && CommonHelper.IsValidIpAddress(ipAddress))
-            {
+            if (!string.IsNullOrWhiteSpace(ipAddress) && CommonHelper.IsValidIpAddress(ipAddress)) 
                 query = query.Where(w => w.LastIpAddress == ipAddress);
-            }
 
             query = query.OrderByDescending(c => c.CreatedOnUtc);
 

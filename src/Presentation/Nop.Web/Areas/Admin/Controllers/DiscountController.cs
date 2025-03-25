@@ -182,7 +182,6 @@ public partial class DiscountController : BaseAdminController
 
             //clean up old references (if changed) 
             if (prevDiscountType != discount.DiscountType)
-            {
                 switch (prevDiscountType)
                 {
                     case DiscountType.AssignedToSkus:
@@ -197,7 +196,6 @@ public partial class DiscountController : BaseAdminController
                     default:
                         break;
                 }
-            }
 
             //activity log
             await _customerActivityService.InsertActivityAsync("EditDiscount",
@@ -288,10 +286,8 @@ public partial class DiscountController : BaseAdminController
 
                 //delete default group if there are no any requirements
                 if (!discountRequirements.Any(requirement => requirement.ParentId.HasValue))
-                {
                     foreach (var dr in discountRequirements)
                         await _discountService.DeleteDiscountRequirementAsync(dr, true);
-                }
             }
             //or update the requirement
             else
@@ -339,10 +335,8 @@ public partial class DiscountController : BaseAdminController
         var interactionType = topLevelRequirements.FirstOrDefault()?.InteractionType;
 
         if (interactionType.HasValue)
-        {
             requirements = (await _discountModelFactory
                 .PrepareDiscountRequirementRuleModelsAsync(topLevelRequirements, discount, interactionType.Value)).ToList();
-        }
 
         //get available groups
         var requirementGroups = (await _discountService.GetAllDiscountRequirementsAsync(discount.Id)).Where(requirement => requirement.IsGroup);
@@ -360,7 +354,6 @@ public partial class DiscountController : BaseAdminController
 
         var defaultGroup = (await _discountService.GetAllDiscountRequirementsAsync(discount.Id, true)).FirstOrDefault(requirement => requirement.IsGroup);
         if (defaultGroup == null)
-        {
             //add default requirement group
             await _discountService.InsertDiscountRequirementAsync(new DiscountRequirement
             {
@@ -370,7 +363,6 @@ public partial class DiscountController : BaseAdminController
                 DiscountRequirementRuleSystemName = await _localizationService
                     .GetResourceAsync("Admin.Promotions.Discounts.Requirements.DefaultRequirementGroup")
             });
-        }
 
         //save new requirement group
         var discountRequirementGroup = new DiscountRequirement
@@ -479,7 +471,6 @@ public partial class DiscountController : BaseAdminController
 
         var selectedProducts = await _productService.GetProductsByIdsAsync(model.SelectedProductIds.ToArray());
         if (selectedProducts.Any())
-        {
             foreach (var product in selectedProducts)
             {
                 if (await _productService.GetDiscountAppliedToProductAsync(product.Id, discount.Id) is null)
@@ -487,7 +478,6 @@ public partial class DiscountController : BaseAdminController
 
                 await _productService.UpdateProductAsync(product);
             }
-        }
 
         ViewBag.RefreshPage = true;
 

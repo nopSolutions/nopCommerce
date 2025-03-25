@@ -127,7 +127,6 @@ public partial class Tokenizer : ITokenizer
         {
             var conditionIsMet = false;
             if (!string.IsNullOrEmpty(statement.Condition))
-            {
                 try
                 {
                     //replace tokens (string values are wrap in quotes)
@@ -138,7 +137,6 @@ public partial class Tokenizer : ITokenizer
                 {
                     // ignored
                 }
-            }
 
             template = template.Replace(conditionIsMet ? statement.Condition : statement.FullStatement, string.Empty);
         }

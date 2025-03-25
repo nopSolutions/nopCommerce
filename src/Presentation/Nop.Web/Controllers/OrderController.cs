@@ -93,10 +93,8 @@ public partial class OrderController : BasePublicController
                 recurringPaymentId = Convert.ToInt32(formValue["cancelRecurringPayment".Length..]);
 
         var recurringPayment = await _orderService.GetRecurringPaymentByIdAsync(recurringPaymentId);
-        if (recurringPayment == null)
-        {
+        if (recurringPayment == null) 
             return RedirectToRoute("CustomerOrders");
-        }
 
         if (await _orderProcessingService.CanCancelRecurringPaymentAsync(customer, recurringPayment))
         {
@@ -124,9 +122,7 @@ public partial class OrderController : BasePublicController
         var recurringPaymentId = 0;
         if (!form.Keys.Any(formValue => formValue.StartsWith("retryLastPayment", StringComparison.InvariantCultureIgnoreCase) &&
                                         int.TryParse(formValue[(formValue.IndexOf('_') + 1)..], out recurringPaymentId)))
-        {
             return RedirectToRoute("CustomerOrders");
-        }
 
         var recurringPayment = await _orderService.GetRecurringPaymentByIdAsync(recurringPaymentId);
         if (recurringPayment == null)
@@ -237,10 +233,8 @@ public partial class OrderController : BasePublicController
         await _paymentService.PostProcessPaymentAsync(postProcessPaymentRequest);
 
         if (_webHelper.IsRequestBeingRedirected || _webHelper.IsPostBeingDone)
-        {
             //redirection or POST has been done in PostProcessPayment
             return new EmptyResult();
-        }
 
         //if no redirection has been done (to a third-party payment page)
         //theoretically it's not possible

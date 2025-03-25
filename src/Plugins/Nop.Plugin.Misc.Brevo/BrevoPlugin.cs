@@ -118,7 +118,6 @@ public class BrevoPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
 
         //install synchronization task
         if (await _scheduleTaskService.GetTaskByTypeAsync(BrevoDefaults.SynchronizationTask) == null)
-        {
             await _scheduleTaskService.InsertTaskAsync(new ScheduleTask
             {
                 Enabled = true,
@@ -127,7 +126,6 @@ public class BrevoPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
                 Name = BrevoDefaults.SynchronizationTaskName,
                 Type = BrevoDefaults.SynchronizationTask,
             });
-        }
 
         //locales
         await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
@@ -219,10 +217,8 @@ public class BrevoPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
         foreach (var store in await _storeService.GetAllStoresAsync())
         {
             var messageTemplates = await _messageTemplateService.GetAllMessageTemplatesAsync(store.Id);
-            foreach (var messageTemplate in messageTemplates)
-            {
+            foreach (var messageTemplate in messageTemplates) 
                 await _genericAttributeService.SaveAttributeAsync<int?>(messageTemplate, BrevoDefaults.TemplateIdAttribute, null);
-            }
         }
 
         //schedule task

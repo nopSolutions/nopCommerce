@@ -135,10 +135,8 @@ public partial class ManufacturerService : IManufacturerService
                 query = query.Where(m => m.Published == overridePublished.Value);
 
             if (!showHidden || storeId > 0)
-            {
                 //apply store mapping constraints
                 query = await _storeMappingService.ApplyStoreMapping(query, storeId);
-            }
 
             if (!showHidden)
             {

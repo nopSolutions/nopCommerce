@@ -88,16 +88,12 @@ public sealed class ForceMultiFactorAuthenticationAttribute : TypeFilterAttribut
 
             if (controllerName.Equals("Customer", StringComparison.InvariantCultureIgnoreCase) &&
                 actionName.Equals("MultiFactorAuthentication", StringComparison.InvariantCultureIgnoreCase))
-            {
                 return;
-            }
 
             //whether multi-factor authentication is enforced
             if (!_multiFactorAuthenticationSettings.ForceMultifactorAuthentication ||
                 !await _multiFactorAuthenticationPluginManager.HasActivePluginsAsync())
-            {
                 return;
-            }
 
             //check selected provider of MFA
             var customer = await _workContext.GetCurrentCustomerAsync();

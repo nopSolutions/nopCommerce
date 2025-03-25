@@ -143,13 +143,11 @@ public class AvalaraController : BasePluginController
         //get active account companies
         var activeCompanies = model.IsConfigured ? await _avalaraTaxManager.GetAccountCompaniesAsync() : null;
         if (activeCompanies?.Any() ?? false)
-        {
             model.Companies = activeCompanies.OrderBy(company => company.isDefault ?? false ? 0 : 1).Select(company => new SelectListItem
             {
                 Text = company.isTest ?? false ? $"{company.name} (Test)" : company.name,
                 Value = company.companyCode
             }).ToList();
-        }
 
         var defaultCompanyCode = _avalaraTaxSettings.CompanyCode;
         if (!model.Companies.Any())
@@ -317,10 +315,8 @@ public class AvalaraController : BasePluginController
             //display tax rates by jurisdictions
             testTaxResult = $"Total tax rate: {transaction.totalTax:0.000}% {Environment.NewLine}";
             if (transaction.summary?.Any() ?? false)
-            {
                 testTaxResult = transaction.summary.Aggregate(testTaxResult, (resultString, rate) =>
                     $"{resultString}Jurisdiction: {rate?.jurisName}, Tax rate: {(rate?.rate ?? 0) * 100:0.000}% {Environment.NewLine}");
-            }
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Tax.Avalara.TestTax.Success"));
         }
         else

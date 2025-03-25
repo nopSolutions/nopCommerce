@@ -215,7 +215,6 @@ public partial class ShippingService : IShippingService
     public virtual async Task<IList<ShippingMethod>> GetAllShippingMethodsAsync(int? filterByCountryId = null)
     {
         if (filterByCountryId.HasValue && filterByCountryId.Value > 0)
-        {
             return await _shippingMethodRepository.GetAllAsync(query =>
             {
                 var query1 = from sm in query
@@ -232,7 +231,6 @@ public partial class ShippingService : IShippingService
 
                 return query2;
             }, cache => cache.PrepareKeyForDefaultCache(NopShippingDefaults.ShippingMethodsAllCacheKey, filterByCountryId));
-        }
 
         return await _shippingMethodRepository.GetAllAsync(query =>
         {
@@ -492,7 +490,6 @@ public partial class ShippingService : IShippingService
 
         var attributeValues = await _productAttributeParser.ParseProductAttributeValuesAsync(attributesXml);
         foreach (var attributeValue in attributeValues)
-        {
             switch (attributeValue.AttributeValueType)
             {
                 case AttributeValueType.Simple:
@@ -506,7 +503,6 @@ public partial class ShippingService : IShippingService
                         attributesTotalWeight += associatedProduct.Weight * attributeValue.Quantity;
                     break;
             }
-        }
 
         return productWeight + attributesTotalWeight;
     }
@@ -583,7 +579,6 @@ public partial class ShippingService : IShippingService
 
                 //associated products volume
                 if (_shippingSettings.ConsiderAssociatedProductsDimensions && !string.IsNullOrEmpty(packageItem.ShoppingCartItem.AttributesXml))
-                {
                     productVolume += await (await _productAttributeParser.ParseProductAttributeValuesAsync(packageItem.ShoppingCartItem.AttributesXml))
                         .Where(attributeValue => attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct).SumAwaitAsync(async attributeValue =>
                         {
@@ -598,7 +593,6 @@ public partial class ShippingService : IShippingService
 
                             return attributeValue.Quantity * associatedProduct.Width * associatedProduct.Length * associatedProduct.Height;
                         });
-                }
 
                 //total volume of item
                 return productVolume * packageItem.GetQuantity();
@@ -704,19 +698,15 @@ public partial class ShippingService : IShippingService
                     warehouse = await GetNearestWarehouseAsync(shippingAddress, allWarehouses);
                 }
                 else
-                {
                     //multiple warehouses are not supported
                     warehouse = await GetWarehouseByIdAsync(product.WarehouseId);
-                }
             }
 
             var warehouseId = warehouse?.Id ?? 0;
 
             //add item to existing request
             if (requests.TryGetValue(warehouseId, out var value) && !product.ShipSeparately)
-            {
                 value.Items.Add(new GetShippingOptionRequest.PackageItem(sci, product));
-            }
             else
             {
                 //create a new request
@@ -762,10 +752,8 @@ public partial class ShippingService : IShippingService
                         request.Items.Add(new GetShippingOptionRequest.PackageItem(sci, product, 1));
 
                         //create separate requests for all product quantity
-                        for (var i = 0; i < sci.Quantity; i++)
-                        {
+                        for (var i = 0; i < sci.Quantity; i++) 
                             separateRequests.Add(request);
-                        }
                     }
                     else
                     {
@@ -836,10 +824,8 @@ public partial class ShippingService : IShippingService
                 {
                     //success
                     if (srcmShippingOptions == null)
-                    {
                         //first shipping option request
                         srcmShippingOptions = getShippingOptionResponse.ShippingOptions;
-                    }
                     else
                     {
                         //get shipping options which already exist for prior requested packages for this scrm (i.e. common options)
@@ -849,12 +835,10 @@ public partial class ShippingService : IShippingService
 
                         //and sum the rates
                         foreach (var existingso in srcmShippingOptions)
-                        {
                             existingso.Rate += getShippingOptionResponse
                                 .ShippingOptions
                                 .First(newso => newso.Name == existingso.Name)
                                 .Rate;
-                        }
                     }
                 }
                 else
@@ -887,11 +871,9 @@ public partial class ShippingService : IShippingService
         }
 
         if (_shippingSettings.ReturnValidOptionsIfThereAreAny)
-        {
             //return valid options if there are any (no matter of the errors returned by other shipping rate computation methods).
             if (result.ShippingOptions.Any() && result.Errors.Any())
                 result.Errors.Clear();
-        }
 
         //no shipping options loaded
         if (!result.ShippingOptions.Any() && !result.Errors.Any())
@@ -928,13 +910,11 @@ public partial class ShippingService : IShippingService
             if (pickPointsResponse.Success)
                 allPickupPoints.AddRange(pickPointsResponse.PickupPoints);
             else
-            {
                 foreach (var error in pickPointsResponse.Errors)
                 {
                     result.AddError(error);
                     await _logger.WarningAsync($"PickupPoints ({provider.PluginDescriptor.FriendlyName}). {error}");
                 }
-            }
         }
 
         //any pickup points is enough

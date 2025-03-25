@@ -88,10 +88,8 @@ public partial class NopDatePickerTagHelper : TagHelper
         };
         var customerAttributes = new Dictionary<string, object>();
         foreach (var attribute in context.AllAttributes)
-        {
             if (!tagHelperAttributes.Contains(attribute.Name))
                 customerAttributes.Add(attribute.Name, attribute.Value);
-        }
         var htmlAttributesDictionary = HtmlHelper.AnonymousObjectToHtmlAttributes(customerAttributes);
         daysList.MergeAttributes(htmlAttributesDictionary, true);
         monthsList.MergeAttributes(htmlAttributesDictionary, true);
@@ -112,12 +110,10 @@ public partial class NopDatePickerTagHelper : TagHelper
         months.AppendFormat("<option value='{0}'>{1}</option>", "0", await _localizationService.GetResourceAsync("Common.Month"));
 
         for (var i = 1; i <= 12; i++)
-        {
             months.AppendFormat("<option value='{0}'{1}>{2}</option>",
                 i,
                 (SelectedDate.HasValue && currentCalendar.GetMonth(SelectedDate.Value) == i) ? " selected=\"selected\"" : null,
                 CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i));
-        }
 
         years.AppendFormat("<option value='{0}'>{1}</option>", "0", await _localizationService.GetResourceAsync("Common.Year"));
 
@@ -125,17 +121,13 @@ public partial class NopDatePickerTagHelper : TagHelper
         EndYear ??= DateTime.UtcNow;
 
         if (EndYear > BeginYear)
-        {
             for (var i = currentCalendar.GetYear(BeginYear.Value); i <= currentCalendar.GetYear(EndYear.Value); i++)
                 years.AppendFormat("<option value='{0}'{1}>{0}</option>", i,
                     (SelectedDate.HasValue && currentCalendar.GetYear(SelectedDate.Value) == i) ? " selected=\"selected\"" : null);
-        }
         else
-        {
             for (var i = currentCalendar.GetYear(BeginYear.Value); i >= currentCalendar.GetYear(EndYear.Value); i--)
                 years.AppendFormat("<option value='{0}'{1}>{0}</option>", i,
                     (SelectedDate.HasValue && currentCalendar.GetYear(SelectedDate.Value) == i) ? " selected=\"selected\"" : null);
-        }
 
         daysList.InnerHtml.AppendHtml(days.ToString());
         monthsList.InnerHtml.AppendHtml(months.ToString());

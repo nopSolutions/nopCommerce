@@ -120,7 +120,6 @@ public static partial class ApplicationPartManagerExtensions
         catch (FileLoadException)
         {
             if (useUnsafeLoadAssembly)
-            {
                 //if an application has been copied from the web, it is flagged by Windows as being a web application,
                 //even if it resides on the local computer.You can change that designation by changing the file properties,
                 //or you can use the<loadFromRemoteSources> element to grant the assembly full trust.As an alternative,
@@ -128,7 +127,6 @@ public static partial class ApplicationPartManagerExtensions
                 //having been loaded from the web.
                 //see http://go.microsoft.com/fwlink/?LinkId=155569 for more information.
                 assembly = Assembly.UnsafeLoadFrom(assemblyFile);
-            }
             else
                 throw;
         }

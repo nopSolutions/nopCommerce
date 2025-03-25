@@ -198,11 +198,9 @@ public class EventConsumer :
             if (shipment is not null)
                 await _genericAttributeService.SaveAttributeAsync(shipment, PayPalCommerceDefaults.ShipmentCarrierAttribute, carrier);
             else if (!string.IsNullOrEmpty(carrier))
-            {
                 //when we add a new shipping, it's not in the db yet and we cannot save a generic attribute to it,
                 //so we temporarily store the data in the context, we'll move it to the attribute later during the same request
                 _httpContextAccessor.HttpContext.Items.TryAdd(PayPalCommerceDefaults.ShipmentCarrierAttribute, carrier);
-            }
         }
     }
 
@@ -221,10 +219,8 @@ public class EventConsumer :
 
         //move the saved data from context to the generic attribute
         if (_httpContextAccessor.HttpContext.Items.TryGetValue(PayPalCommerceDefaults.ShipmentCarrierAttribute, out var carrier))
-        {
             await _genericAttributeService
                 .SaveAttributeAsync(eventMessage.Shipment, PayPalCommerceDefaults.ShipmentCarrierAttribute, carrier.ToString());
-        }
     }
 
     /// <summary>

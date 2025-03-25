@@ -183,24 +183,20 @@ public partial class ReturnRequestController : BasePublicController
     public virtual async Task<IActionResult> UploadFileReturnRequest()
     {
         if (!_orderSettings.ReturnRequestsEnabled || !_orderSettings.ReturnRequestsAllowFiles)
-        {
             return Json(new
             {
                 success = false,
                 downloadGuid = Guid.Empty,
             });
-        }
 
         var httpPostedFile = await Request.GetFirstOrDefaultFileAsync();
         if (httpPostedFile == null)
-        {
             return Json(new
             {
                 success = false,
                 message = "No file uploaded",
                 downloadGuid = Guid.Empty,
             });
-        }
 
         var fileBinary = await _downloadService.GetDownloadBitsAsync(httpPostedFile);
 
@@ -221,14 +217,12 @@ public partial class ReturnRequestController : BasePublicController
             //compare in bytes
             var maxFileSizeBytes = validationFileMaximumSize * 1024;
             if (fileBinary.Length > maxFileSizeBytes)
-            {
                 return Json(new
                 {
                     success = false,
                     message = string.Format(await _localizationService.GetResourceAsync("ShoppingCart.MaximumUploadedFileSize"), validationFileMaximumSize),
                     downloadGuid = Guid.Empty,
                 });
-            }
         }
 
         var download = new Download

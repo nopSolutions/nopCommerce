@@ -100,10 +100,8 @@ public class ModelCacheEventConsumer :
 
         //delete an appropriate record when tax category is deleted
         var recordsToDelete = (await _taxRateService.GetAllTaxRatesAsync()).Where(taxRate => taxRate.TaxCategoryId == taxCategory.Id).ToList();
-        foreach (var taxRate in recordsToDelete)
-        {
+        foreach (var taxRate in recordsToDelete) 
             await _taxRateService.DeleteTaxRateAsync(taxRate);
-        }
 
         //delete saved fixed rate if exists
         var setting = await _settingService.GetSettingAsync(string.Format(FixedOrByCountryStateZipDefaults.FIXED_RATE_SETTINGS_KEY, taxCategory.Id));

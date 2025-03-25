@@ -79,22 +79,16 @@ public partial class ScheduleTaskModelFactory : IScheduleTaskModelFactory
 
                 //convert dates to the user time
                 if (scheduleTask.LastStartUtc.HasValue)
-                {
                     scheduleTaskModel.LastStartUtc = (await _dateTimeHelper
                         .ConvertToUserTimeAsync(scheduleTask.LastStartUtc.Value, DateTimeKind.Utc)).ToString("G");
-                }
 
                 if (scheduleTask.LastEndUtc.HasValue)
-                {
                     scheduleTaskModel.LastEndUtc = (await _dateTimeHelper
                         .ConvertToUserTimeAsync(scheduleTask.LastEndUtc.Value, DateTimeKind.Utc)).ToString("G");
-                }
 
                 if (scheduleTask.LastSuccessUtc.HasValue)
-                {
                     scheduleTaskModel.LastSuccessUtc = (await _dateTimeHelper
                         .ConvertToUserTimeAsync(scheduleTask.LastSuccessUtc.Value, DateTimeKind.Utc)).ToString("G");
-                }
 
                 return scheduleTaskModel;
             });

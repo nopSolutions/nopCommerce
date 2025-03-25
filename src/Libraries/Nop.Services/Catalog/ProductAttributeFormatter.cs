@@ -114,7 +114,6 @@ public partial class ProductAttributeFormatter : IProductAttributeFormatter
         var currentLanguage = await _workContext.GetWorkingLanguageAsync();
         //attributes
         if (renderProductAttributes)
-        {
             foreach (var attribute in await _productAttributeParser.ParseProductAttributeMappingsAsync(attributesXml))
             {
                 var productAttribute = await _productAttributeService.GetProductAttributeByIdAsync(attribute.ProductAttributeId);
@@ -122,7 +121,6 @@ public partial class ProductAttributeFormatter : IProductAttributeFormatter
 
                 //attributes without values
                 if (!attribute.ShouldHaveValues())
-                {
                     foreach (var value in _productAttributeParser.ParseValues(attributesXml, attribute.Id))
                     {
                         var formattedAttribute = string.Empty;
@@ -175,10 +173,8 @@ public partial class ProductAttributeFormatter : IProductAttributeFormatter
                             result.Append(separator);
                         result.Append(formattedAttribute);
                     }
-                }
                 //product attribute values
                 else
-                {
                     foreach (var attributeValue in await _productAttributeParser.ParseProductAttributeValuesAsync(attributesXml, attribute.Id))
                     {
                         var formattedAttribute = $"{attributeName}: {await _localizationService.GetLocalizedAsync(attributeValue, a => a.Name, currentLanguage.Id)}";
@@ -188,17 +184,13 @@ public partial class ProductAttributeFormatter : IProductAttributeFormatter
                             if (attributeValue.PriceAdjustmentUsePercentage)
                             {
                                 if (attributeValue.PriceAdjustment > decimal.Zero)
-                                {
                                     formattedAttribute += string.Format(
                                         await _localizationService.GetResourceAsync("FormattedAttributes.PriceAdjustment"),
                                         "+", attributeValue.PriceAdjustment.ToString("G29"), "%");
-                                }
                                 else if (attributeValue.PriceAdjustment < decimal.Zero)
-                                {
                                     formattedAttribute += string.Format(
                                         await _localizationService.GetResourceAsync("FormattedAttributes.PriceAdjustment"),
                                         string.Empty, attributeValue.PriceAdjustment.ToString("G29"), "%");
-                                }
                             }
                             else
                             {
@@ -207,27 +199,21 @@ public partial class ProductAttributeFormatter : IProductAttributeFormatter
                                 var priceAdjustment = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(priceAdjustmentBase, await _workContext.GetWorkingCurrencyAsync());
 
                                 if (priceAdjustmentBase > decimal.Zero)
-                                {
                                     formattedAttribute += string.Format(
                                         await _localizationService.GetResourceAsync("FormattedAttributes.PriceAdjustment"),
                                         "+", await _priceFormatter.FormatPriceAsync(priceAdjustment, false, false), string.Empty);
-                                }
                                 else if (priceAdjustmentBase < decimal.Zero)
-                                {
                                     formattedAttribute += string.Format(
                                         await _localizationService.GetResourceAsync("FormattedAttributes.PriceAdjustment"),
                                         "-", await _priceFormatter.FormatPriceAsync(-priceAdjustment, false, false), string.Empty);
-                                }
                             }
                         }
 
                         //display quantity
                         if (_shoppingCartSettings.RenderAssociatedAttributeValueQuantity && attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
-                        {
                             //render only when more than 1
                             if (attributeValue.Quantity > 1)
                                 formattedAttribute += string.Format(await _localizationService.GetResourceAsync("ProductAttributes.Quantity"), attributeValue.Quantity);
-                        }
 
                         //encode (if required)
                         if (htmlEncode)
@@ -240,9 +226,7 @@ public partial class ProductAttributeFormatter : IProductAttributeFormatter
                             result.Append(separator);
                         result.Append(formattedAttribute);
                     }
-                }
             }
-        }
 
         //gift cards
         if (!renderGiftCardAttributes)
@@ -269,10 +253,8 @@ public partial class ProductAttributeFormatter : IProductAttributeFormatter
             giftCardFor = WebUtility.HtmlEncode(giftCardFor);
         }
 
-        if (!string.IsNullOrEmpty(result.ToString()))
-        {
+        if (!string.IsNullOrEmpty(result.ToString())) 
             result.Append(separator);
-        }
 
         result.Append(giftCardFrom);
         result.Append(separator);

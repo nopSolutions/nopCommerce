@@ -36,10 +36,8 @@ public partial class NopCssMinifier : Processor
             var minified = result.Code;
 
             if (result.HasErrors)
-            {
                 await EngineContext.Current.Resolve<ILogger>()
                     .WarningAsync($"Stylesheet minification: {key}", new(string.Join(Environment.NewLine, result.Errors)));
-            }
 
             content[key] = minified.AsByteArray();
         }

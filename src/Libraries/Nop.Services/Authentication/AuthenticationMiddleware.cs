@@ -49,7 +49,6 @@ public partial class AuthenticationMiddleware
         // Give any IAuthenticationRequestHandler schemes a chance to handle the request
         var handlers = EngineContext.Current.Resolve<IAuthenticationHandlerProvider>();
         foreach (var scheme in await Schemes.GetRequestHandlerSchemesAsync())
-        {
             try
             {
                 if (await handlers.GetHandlerAsync(context, scheme.Name) is IAuthenticationRequestHandler handler && await handler.HandleRequestAsync())
@@ -71,16 +70,13 @@ public partial class AuthenticationMiddleware
 
                 await logger.ErrorAsync(ex.Message, ex);
             }
-        }
 
         var defaultAuthenticate = await Schemes.GetDefaultAuthenticateSchemeAsync();
         if (defaultAuthenticate != null)
         {
             var result = await context.AuthenticateAsync(defaultAuthenticate.Name);
-            if (result?.Principal != null)
-            {
+            if (result?.Principal != null) 
                 context.User = result.Principal;
-            }
         }
 
         await _next(context);

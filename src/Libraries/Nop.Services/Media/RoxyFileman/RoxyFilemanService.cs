@@ -132,14 +132,12 @@ public partial class RoxyFilemanService : IRoxyFilemanService
         } };
 
         foreach (var (path, countFiles, countDirectories) in contents)
-        {
             result.Add(new
             {
                 p = path.Replace("\\", "/"),
                 f = countFiles,
                 d = countDirectories
             });
-        }
 
         return result;
     }
@@ -193,10 +191,8 @@ public partial class RoxyFilemanService : IRoxyFilemanService
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task UploadFilesAsync(string directoryPath, IEnumerable<IFormFile> files)
     {
-        foreach (var formFile in files)
-        {
+        foreach (var formFile in files) 
             await _fileProvider.SaveFileAsync(directoryPath, formFile.FileName, formFile.ContentType, formFile.OpenReadStream());
-        }
     }
 
     #endregion

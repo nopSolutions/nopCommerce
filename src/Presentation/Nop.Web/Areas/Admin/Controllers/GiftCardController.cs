@@ -228,9 +228,7 @@ public partial class GiftCardController : BaseAdminController
                     languageId = customerLang.Id;
             }
             else
-            {
                 languageId = _localizationSettings.DefaultAdminLanguageId;
-            }
 
             var queuedEmailIds = await _workflowMessageService.SendGiftCardNotificationAsync(giftCard, languageId);
             if (queuedEmailIds.Any())

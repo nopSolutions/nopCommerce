@@ -143,7 +143,6 @@ public partial class ManufacturerController : BaseAdminController
         var existingStoreMappings = await _storeMappingService.GetStoreMappingsAsync(manufacturer);
         var allStores = await _storeService.GetAllStoresAsync();
         foreach (var store in allStores)
-        {
             if (model.SelectedStoreIds.Contains(store.Id))
             {
                 //new store
@@ -157,7 +156,6 @@ public partial class ManufacturerController : BaseAdminController
                 if (storeMappingToDelete != null)
                     await _storeMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
             }
-        }
     }
 
     #endregion
@@ -222,12 +220,9 @@ public partial class ManufacturerController : BaseAdminController
             //discounts
             var allDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToManufacturers, showHidden: true, isActive: null);
             foreach (var discount in allDiscounts)
-            {
                 if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                     //manufacturer.AppliedDiscounts.Add(discount);
                     await _manufacturerService.InsertDiscountManufacturerMappingAsync(new DiscountManufacturerMapping { EntityId = manufacturer.Id, DiscountId = discount.Id });
-
-            }
 
             await _manufacturerService.UpdateManufacturerAsync(manufacturer);
 
@@ -296,7 +291,6 @@ public partial class ManufacturerController : BaseAdminController
             //discounts
             var allDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToManufacturers, showHidden: true, isActive: null);
             foreach (var discount in allDiscounts)
-            {
                 if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                 {
                     //new discount
@@ -309,7 +303,6 @@ public partial class ManufacturerController : BaseAdminController
                     if (await _manufacturerService.GetDiscountAppliedToManufacturerAsync(manufacturer.Id, discount.Id) is DiscountManufacturerMapping discountManufacturerMapping)
                         await _manufacturerService.DeleteDiscountManufacturerMappingAsync(discountManufacturerMapping);
                 }
-            }
 
             await _manufacturerService.UpdateManufacturerAsync(manufacturer);
 
@@ -430,9 +423,7 @@ public partial class ManufacturerController : BaseAdminController
         try
         {
             if (importexcelfile != null && importexcelfile.Length > 0)
-            {
                 await _importManager.ImportManufacturersFromXlsxAsync(importexcelfile.OpenReadStream());
-            }
             else
             {
                 _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Common.UploadFile"));
