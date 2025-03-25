@@ -129,6 +129,13 @@ public partial class CampaignModelFactory : ICampaignModelFactory
             model ??= campaign.ToModel<CampaignModel>();
             if (campaign.DontSendBeforeDateUtc.HasValue)
                 model.DontSendBeforeDate = await _dateTimeHelper.ConvertToUserTimeAsync(campaign.DontSendBeforeDateUtc.Value, DateTimeKind.Utc);
+
+            //prepare copy campaign model
+            model.CopyCampaignModel = new CopyCampaignModel
+            {
+                OriginalCampaignId = campaign.Id,
+                Name = string.Format(await _localizationService.GetResourceAsync("Admin.Promotions.Campaigns.Copy.Name.New"), campaign.Name)
+            };
         }
 
         model.AllowedTokens = string.Join(", ", await _messageTokenProvider.GetListOfCampaignAllowedTokensAsync());
@@ -136,13 +143,6 @@ public partial class CampaignModelFactory : ICampaignModelFactory
         //whether to fill in some of properties
         if (!excludeProperties)
             model.EmailAccountId = _emailAccountSettings.DefaultEmailAccountId;
-
-        //prepare copy campaign model
-        model.CopyCampaignModel = new CopyCampaignModel
-        {
-            OriginalCampaignId = campaign.Id,
-            Name = string.Format(await _localizationService.GetResourceAsync("Admin.Promotions.Campaigns.Copy.Name.New"), campaign.Name)
-        };
 
         //prepare available stores
         await _baseAdminModelFactory.PrepareStoresAsync(model.AvailableStores);
