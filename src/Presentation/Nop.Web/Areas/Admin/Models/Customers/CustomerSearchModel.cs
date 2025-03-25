@@ -88,7 +88,7 @@ public partial record CustomerSearchModel : BaseSearchModel, IAclSupportedModel
     [NopResourceDisplayName("Admin.Customers.Customers.List.SearchIpAddress")]
     public string SearchIpAddress { get; set; }
 
-    public bool AvatarEnabled { get; internal set; }
+    public bool AvatarEnabled { get; set; }
 
     [NopResourceDisplayName("Admin.Customers.Customers.List.SearchIsActive")]
     public bool? SearchIsActive { get; set; } = true;
