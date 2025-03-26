@@ -117,6 +117,10 @@ public class LocalizationMigration : MigrationBase
             //#7405
             ["Admin.Configuration.Settings.Catalog.ExportImportCategoryUseLimitedToStores"] = "Export / Import categories with \"limited to stores\"",
             ["Admin.Configuration.Settings.Catalog.ExportImportCategoryUseLimitedToStores.Hint"] = "Check if categories should be exported / imported with \"limited to stores\" property.",
+
+            //#820
+            ["Currency.Selector.Text.Pattern"] = "{0}, {1}",
+
         }, languageId);
 
         #endregion
