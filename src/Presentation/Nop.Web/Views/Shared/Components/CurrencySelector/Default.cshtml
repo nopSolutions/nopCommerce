@@ -9,7 +9,7 @@
             var returnUrl = webHelper.GetRawUrl(Context.Request);
             var currencies = await Model.AvailableCurrencies.SelectAwait(async x => new SelectListItem
             {
-                Text = T("Currency.Selector.Text.Pattern", x.Name, x.CurrencySymbol).Text,
+                Text = !Model.DisplayCurrencySymbol ? x.Name : T("Currency.Selector.Text.Pattern", x.Name, x.CurrencySymbol).Text,
                 Value = Url.RouteUrl("ChangeCurrency", new { customercurrency = x.Id, returnUrl }, webHelper.GetCurrentRequestProtocol()),
                 Selected = x.Id.Equals(Model.CurrentCurrencyId)
             }).ToListAsync();

@@ -1624,7 +1624,8 @@ public partial class InstallationService
             PrimaryStoreCurrencyId = (await Table<Currency>().SingleAsync(c => c.CurrencyCode == primaryCurrency)).Id,
             PrimaryExchangeRateCurrencyId = (await Table<Currency>().SingleAsync(c => c.CurrencyCode == primaryCurrency)).Id,
             ActiveExchangeRateProviderSystemName = "CurrencyExchange.ECB",
-            AutoUpdateEnabled = false
+            AutoUpdateEnabled = false,
+            DisplayCurrencySymbolInCurrencySelector = false
         });
 
         var baseDimension = isMetric ? "meters" : "inches";

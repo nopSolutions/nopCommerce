@@ -1,6 +1,7 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Vendors;
@@ -107,6 +108,14 @@ public class SettingMigration : MigrationBase
         {
             pdfSettings.ImageTargetSize = 200;
             settingService.SaveSetting(pdfSettings, settings => pdfSettings.ImageTargetSize);
+        }
+
+        //#820
+        var currencySettings = settingService.LoadSetting<CurrencySettings>();
+        if (!settingService.SettingExists(currencySettings, settings => settings.DisplayCurrencySymbolInCurrencySelector))
+        {
+            currencySettings.DisplayCurrencySymbolInCurrencySelector = false;
+            settingService.SaveSetting(currencySettings, settings => settings.DisplayCurrencySymbolInCurrencySelector);
         }
     }
 

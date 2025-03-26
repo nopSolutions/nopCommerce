@@ -7,6 +7,7 @@ using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
@@ -44,6 +45,7 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected readonly CaptchaSettings _captchaSettings;
     protected readonly CatalogSettings _catalogSettings;
     protected readonly CommonSettings _commonSettings;
+    protected readonly CurrencySettings _currencySettings;
     protected readonly CustomerSettings _customerSettings;
     protected readonly DisplayDefaultFooterItemSettings _displayDefaultFooterItemSettings;
     protected readonly ForumSettings _forumSettings;
@@ -84,6 +86,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         CaptchaSettings captchaSettings,
         CatalogSettings catalogSettings,
         CommonSettings commonSettings,
+        CurrencySettings currencySettings,
         CustomerSettings customerSettings,
         DisplayDefaultFooterItemSettings displayDefaultFooterItemSettings,
         ForumSettings forumSettings,
@@ -120,6 +123,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         _captchaSettings = captchaSettings;
         _catalogSettings = catalogSettings;
         _commonSettings = commonSettings;
+        _currencySettings = currencySettings;
         _customerSettings = customerSettings;
         _displayDefaultFooterItemSettings = displayDefaultFooterItemSettings;
         _forumSettings = forumSettings;
@@ -301,7 +305,8 @@ public partial class CommonModelFactory : ICommonModelFactory
         var model = new CurrencySelectorModel
         {
             CurrentCurrencyId = (await _workContext.GetWorkingCurrencyAsync()).Id,
-            AvailableCurrencies = availableCurrencies
+            AvailableCurrencies = availableCurrencies,
+            DisplayCurrencySymbol = _currencySettings.DisplayCurrencySymbolInCurrencySelector,
         };
 
         return model;
