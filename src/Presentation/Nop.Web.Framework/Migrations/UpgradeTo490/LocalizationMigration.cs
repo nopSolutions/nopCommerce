@@ -117,6 +117,13 @@ public class LocalizationMigration : MigrationBase
             //#7405
             ["Admin.Configuration.Settings.Catalog.ExportImportCategoryUseLimitedToStores"] = "Export / Import categories with \"limited to stores\"",
             ["Admin.Configuration.Settings.Catalog.ExportImportCategoryUseLimitedToStores.Hint"] = "Check if categories should be exported / imported with \"limited to stores\" property.",
+
+            //2921
+            ["Admin.System.Maintenance.ShrinkDatabase"] = "Shrink database",
+            ["Admin.System.Maintenance.ShrinkDatabase.Complete"] = "Database shrinking completed",
+            ["Admin.System.Maintenance.ShrinkDatabase.Progress"] = "Processing...",
+            ["Admin.System.Maintenance.ShrinkDatabase.Text"] = "Reclaim disk space by reorganizing physical data storage",
+
         }, languageId);
 
         #endregion

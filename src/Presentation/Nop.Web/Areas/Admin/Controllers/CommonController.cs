@@ -262,6 +262,24 @@ public partial class CommonController : BaseAdminController
     }
 
     [HttpPost, ActionName("Maintenance")]
+    [FormValueRequired("shrink-database")]
+    [CheckPermission(StandardPermission.System.MANAGE_MAINTENANCE)]
+    public virtual async Task<IActionResult> ShrinkDatabase(MaintenanceModel model)
+    {
+        try
+        {
+            await _dataProvider.ShrinkDatabaseAsync();
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.System.Maintenance.ShrinkDatabase.Complete"));
+        }
+        catch (Exception exc)
+        {
+            await _notificationService.ErrorNotificationAsync(exc);
+        }
+
+        return View(model);
+    }
+
+    [HttpPost, ActionName("Maintenance")]
     [FormValueRequired("backupFileName", "action")]
     [CheckPermission(StandardPermission.System.MANAGE_MAINTENANCE)]
     public virtual async Task<IActionResult> BackupAction(MaintenanceModel model)
