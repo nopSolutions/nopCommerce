@@ -47,6 +47,50 @@ public class DataMigration : Migration
                 }
             );
         }
+
+        //#1779
+        if (activityLogTypeTable.FirstOrDefault(alt => string.Compare(alt.SystemKeyword, "PublicStore.Login", StringComparison.InvariantCultureIgnoreCase) == 0)
+            is ActivityLogType loginActivity)
+        {
+            loginActivity.SystemKeyword = "PublicStore.SuccessfulLogin";
+            _dataProvider.UpdateEntity(loginActivity);
+        }
+        else
+        {
+            _dataProvider.InsertEntity(
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.SuccessfulLogin",
+                    Enabled = false,
+                    Name = "Public store. Successful login"
+                }
+            );
+        }
+
+        if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "PublicStore.FailedLogin", StringComparison.InvariantCultureIgnoreCase) == 0))
+        {
+            _dataProvider.InsertEntity(
+                new ActivityLogType
+                {
+                    SystemKeyword = "PublicStore.FailedLogin",
+                    Enabled = false,
+                    Name = "Public store. Failed login"
+                }
+            );
+        }
+
+        if (!_dataProvider.GetTable<MessageTemplate>().Any(st => string.Compare(st.Name, MessageTemplateSystemNames.CUSTOMER_FAILED_LOGIN_ATTEMPT_NOTIFICATION, StringComparison.InvariantCultureIgnoreCase) == 0))
+        {
+            var eaGeneral = _dataProvider.GetTable<EmailAccount>().FirstOrDefault() ?? throw new Exception("Default email account cannot be loaded");
+            _dataProvider.InsertEntity(new MessageTemplate()
+            {
+                Name = MessageTemplateSystemNames.CUSTOMER_FAILED_LOGIN_ATTEMPT_NOTIFICATION,
+                Subject = "%Store.Name%. Failed Login Attempt",
+                Body = $"<p>{Environment.NewLine}You have received this notification because we registered a login attempt with invalid authentication on <a href=\"%Store.URL%\">%Store.Name%</a>.{Environment.NewLine}</p>{Environment.NewLine}",
+                IsActive = true,
+                EmailAccountId = eaGeneral.Id
+            });
+        }
     }
 
     public override void Down()

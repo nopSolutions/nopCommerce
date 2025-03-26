@@ -113,6 +113,9 @@ public partial record CustomerSettingsModel : BaseNopModel, ISettingsModel
     [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.FailedPasswordLockoutMinutes")]
     public int FailedPasswordLockoutMinutes { get; set; }
 
+    [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.NotifyFailedLoginAttempt")]
+    public bool NotifyFailedLoginAttempt { get; set; }
+
     [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.NewsletterEnabled")]
     public bool NewsletterEnabled { get; set; }
 

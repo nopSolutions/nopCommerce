@@ -229,6 +229,48 @@ public partial class WorkflowMessageService : IWorkflowMessageService
     #region Customer workflow
 
     /// <summary>
+    /// Sends 'Failed login attempt' notification message to a customer
+    /// </summary>
+    /// <param name="customer">Customer instance</param>
+    /// <param name="languageId">Message language identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the queued email identifier
+    /// </returns>
+    public virtual async Task<IList<int>> SendCustomerFailedLoginAttemptNotificationAsync(Customer customer, int languageId)
+    {
+        ArgumentNullException.ThrowIfNull(customer);
+
+        var store = await _storeContext.GetCurrentStoreAsync();
+        languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
+
+        var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.CUSTOMER_FAILED_LOGIN_ATTEMPT_NOTIFICATION, store.Id);
+        if (!messageTemplates.Any())
+            return new List<int>();
+
+        //tokens
+        var commonTokens = new List<Token>();
+        await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
+
+        return await messageTemplates.SelectAwait(async messageTemplate =>
+        {
+            //email account
+            var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
+
+            var tokens = new List<Token>(commonTokens);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
+
+            //event notification
+            await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+
+            var toEmail = customer.Email;
+            var toName = await _customerService.GetCustomerFullNameAsync(customer);
+
+            return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+        }).ToListAsync();
+    }
+
+    /// <summary>
     /// Sends 'New customer' notification message to a store owner
     /// </summary>
     /// <param name="customer">Customer instance</param>

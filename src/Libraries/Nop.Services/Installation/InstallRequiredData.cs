@@ -1083,7 +1083,14 @@ public partial class InstallationService
                     Body = $"<p>{Environment.NewLine}%ContactUs.Body%{Environment.NewLine}</p>{Environment.NewLine}",
                     IsActive = true,
                     EmailAccountId = eaGeneral.Id
-                }
+                },
+                new() {
+                    Name = MessageTemplateSystemNames.CUSTOMER_FAILED_LOGIN_ATTEMPT_NOTIFICATION,
+                    Subject = "%Store.Name%. Failed Login Attempt",
+                    Body = $"<p>{Environment.NewLine}You have received this notification because we registered a login attempt with invalid authentication on <a href=\"%Store.URL%\">%Store.Name%</a>.{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id
+                },
             };
 
         await _dataProvider.BulkInsertEntitiesAsync(messageTemplates);
@@ -1477,6 +1484,7 @@ public partial class InstallationService
             ShowCustomersLocation = false,
             ShowCustomersJoinDate = false,
             AllowViewingProfiles = false,
+            NotifyFailedLoginAttempt = false,
             NotifyNewCustomerRegistration = false,
             HideDownloadableProductsTab = false,
             HideBackInStockSubscriptionsTab = false,
@@ -3142,9 +3150,14 @@ public partial class InstallationService
                     Name = "Public store. Add to wishlist"
                 },
                 new() {
-                    SystemKeyword = "PublicStore.Login",
+                    SystemKeyword = "PublicStore.SuccessfulLogin",
                     Enabled = false,
-                    Name = "Public store. Login"
+                    Name = "Public store. Successful login"
+                },
+                new() {
+                    SystemKeyword = "PublicStore.FailedLogin",
+                    Enabled = false,
+                    Name = "Public store. Failed login"
                 },
                 new() {
                     SystemKeyword = "PublicStore.Logout",

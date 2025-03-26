@@ -404,5 +404,10 @@ public partial class CustomerSettings : ISettings
     /// </summary>
     public bool AcceptPrivacyPolicyEnabled { get; set; }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether notification message should be sent to customer on failed login attempt
+    /// </summary>
+    public bool NotifyFailedLoginAttempt { get; set; }
+
     #endregion
 }

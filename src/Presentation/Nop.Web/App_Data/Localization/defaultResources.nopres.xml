@@ -1158,8 +1158,11 @@
   <LocaleResource Name="ActivityLog.PublicStore.ContactUs">
     <Value>Used contact us form</Value>
   </LocaleResource>
-  <LocaleResource Name="ActivityLog.PublicStore.Login">
-    <Value>Login</Value>
+  <LocaleResource Name="ActivityLog.PublicStore.Login.Success">
+    <Value>Public store. Custommer has logged in</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.PublicStore.Login.Fail">
+    <Value>Public store. Custommer has failed to log in: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.PublicStore.Logout">
     <Value>Logout</Value>
@@ -6911,6 +6914,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NewsletterTickedByDefault.Hint">
     <Value>A value indicating whether 'Newsletter' checkbox is ticked by default on the registration page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NotifyFailedLoginAttempt">
+    <Value>Notify customers about failed login attempts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NotifyFailedLoginAttempt.Hint">
+    <Value>Check to enable customer notifications on failed login attempts.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NotifyNewCustomerRegistration">
     <Value>Notify about new customer registration</Value>
