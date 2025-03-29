@@ -64,18 +64,14 @@
     {
         <script asp-location="Footer">
             $(function() {
-                $('.header').on('mouseenter', '#topcartlink', function () {
-                    $('#flyout-cart').addClass('active');
-                });
-                $('.header').on('mouseleave', '#topcartlink', function () {
-                    $('#flyout-cart').removeClass('active');
-                });
-                $('.header').on('mouseenter', '#flyout-cart', function () {
-                    $('#flyout-cart').addClass('active');
-                });
-                $('.header').on('mouseleave', '#flyout-cart', function () {
-                    $('#flyout-cart').removeClass('active');
-                });
+                $('.header').on({
+                    mouseenter: function() {
+                        $('#flyout-cart').addClass('active');
+                    },
+                    mouseleave: function() {
+                        $('#flyout-cart').removeClass('active');
+                    }
+                }, '#topcartlink, #flyout-cart');
             });
         </script>
     }
