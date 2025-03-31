@@ -1,0 +1,182 @@
+﻿using Microsoft.AspNetCore.Http;
+using Nop.Core;
+using Nop.Core.Domain.Media;
+using Nop.Core.Infrastructure;
+using Nop.Services.Catalog;
+using Nop.Services.Configuration;
+using Nop.Services.Logging;
+using Nop.Services.Seo;
+
+namespace Nop.Services.Media;
+
+/// <summary>
+/// Picture thumb service
+/// </summary>
+public partial class ThumbService : IThumbService
+{
+    #region Fields
+
+    protected readonly IHttpContextAccessor _httpContextAccessor;
+    protected readonly ILogger _logger;
+    protected readonly INopFileProvider _fileProvider;
+    protected readonly IProductAttributeParser _productAttributeParser;
+    protected readonly IProductAttributeService _productAttributeService;
+    protected readonly ISettingService _settingService;
+    protected readonly IUrlRecordService _urlRecordService;
+    protected readonly IWebHelper _webHelper;
+    protected readonly MediaSettings _mediaSettings;
+
+    #endregion
+
+    #region Ctor
+
+    public ThumbService(IHttpContextAccessor httpContextAccessor,
+        ILogger logger,
+        INopFileProvider fileProvider,
+        IProductAttributeParser productAttributeParser,
+        IProductAttributeService productAttributeService,
+        ISettingService settingService,
+        IUrlRecordService urlRecordService,
+        IWebHelper webHelper,
+        MediaSettings mediaSettings)
+    {
+        _httpContextAccessor = httpContextAccessor;
+        _logger = logger;
+        _fileProvider = fileProvider;
+        _productAttributeParser = productAttributeParser;
+        _productAttributeService = productAttributeService;
+        _settingService = settingService;
+        _urlRecordService = urlRecordService;
+        _webHelper = webHelper;
+        _mediaSettings = mediaSettings;
+    }
+
+    #endregion
+
+    #region Methods
+
+    /// <summary>
+    /// Delete picture thumbs
+    /// </summary>
+    /// <param name="picture">Picture</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task DeletePictureThumbsAsync(Picture picture)
+    {
+        var filter = $"{picture.Id:0000000}*.*";
+        var currentFiles = _fileProvider.GetFiles(_fileProvider.GetAbsolutePath(NopMediaDefaults.ImageThumbsPath), filter, false);
+        foreach (var currentFileName in currentFiles)
+        {
+            var thumbFilePath = await GetThumbLocalPathByFileNameAsync(currentFileName);
+            _fileProvider.DeleteFile(thumbFilePath);
+        }
+    }
+
+    /// <summary>
+    /// Get picture (thumb) local path
+    /// </summary>
+    /// <param name="thumbFileName">Filename</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the local picture thumb path
+    /// </returns>
+    public virtual Task<string> GetThumbLocalPathByFileNameAsync(string thumbFileName)
+    {
+        var thumbsDirectoryPath = _fileProvider.GetAbsolutePath(NopMediaDefaults.ImageThumbsPath);
+
+        if (_mediaSettings.MultipleThumbDirectories)
+        {
+            //get the first two letters of the file name
+            var fileNameWithoutExtension = _fileProvider.GetFileNameWithoutExtension(thumbFileName);
+            if (fileNameWithoutExtension != null && fileNameWithoutExtension.Length > NopMediaDefaults.MultipleThumbDirectoriesLength)
+            {
+                var subDirectoryName = fileNameWithoutExtension[..NopMediaDefaults.MultipleThumbDirectoriesLength];
+                thumbsDirectoryPath = _fileProvider.GetAbsolutePath(NopMediaDefaults.ImageThumbsPath, subDirectoryName);
+                _fileProvider.CreateDirectory(thumbsDirectoryPath);
+            }
+        }
+
+        var thumbFilePath = _fileProvider.Combine(thumbsDirectoryPath, thumbFileName);
+        return Task.FromResult(thumbFilePath);
+    }
+
+    /// <summary>
+    /// Get a value indicating whether some file (thumb) already exists
+    /// </summary>
+    /// <param name="thumbFilePath">Thumb file path</param>
+    /// <param name="thumbFileName">Thumb file name</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the result
+    /// </returns>
+    public virtual Task<bool> GeneratedThumbExistsAsync(string thumbFilePath, string thumbFileName)
+    {
+        return Task.FromResult(_fileProvider.FileExists(thumbFilePath));
+    }
+
+    /// <summary>
+    /// Get a picture thumb local path
+    /// </summary>
+    /// <param name="pictureUrl">Picture URL</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the 
+    /// </returns>
+    public virtual async Task<string> GetThumbLocalPathAsync(string pictureUrl)
+    {
+        if (string.IsNullOrEmpty(pictureUrl))
+            return string.Empty;
+
+        return await GetThumbLocalPathByFileNameAsync(_fileProvider.GetFileName(pictureUrl));
+    }
+
+    /// <summary>
+    /// Save a value indicating whether some file (thumb) already exists
+    /// </summary>
+    /// <param name="thumbFilePath">Thumb file path</param>
+    /// <param name="thumbFileName">Thumb file name</param>
+    /// <param name="mimeType">MIME type</param>
+    /// <param name="binary">Picture binary</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task SaveThumbAsync(string thumbFilePath, string thumbFileName, string mimeType, byte[] binary)
+    {
+        //ensure \thumb directory exists
+        var thumbsDirectoryPath = _fileProvider.GetAbsolutePath(NopMediaDefaults.ImageThumbsPath);
+        _fileProvider.CreateDirectory(thumbsDirectoryPath);
+
+        //save
+        await _fileProvider.WriteAllBytesAsync(thumbFilePath, binary);
+    }
+
+    /// <summary>
+    /// Get picture (thumb) URL 
+    /// </summary>
+    /// <param name="thumbFileName">Filename</param>
+    /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the local picture thumb path
+    /// </returns>
+    public virtual Task<string> GetThumbUrlAsync(string thumbFileName, string storeLocation = null)
+    {
+        var pathBase = _httpContextAccessor.HttpContext?.Request.PathBase.Value ?? string.Empty;
+        var imagesPathUrl = _mediaSettings.UseAbsoluteImagePath ? storeLocation : $"{pathBase}/";
+        imagesPathUrl = string.IsNullOrEmpty(imagesPathUrl) ? _webHelper.GetStoreLocation() : imagesPathUrl;
+        imagesPathUrl += "images/thumbs/";
+
+        if (_mediaSettings.MultipleThumbDirectories)
+        {
+            //get the first two letters of the file name
+            var fileNameWithoutExtension = _fileProvider.GetFileNameWithoutExtension(thumbFileName);
+            if (fileNameWithoutExtension != null && fileNameWithoutExtension.Length > NopMediaDefaults.MultipleThumbDirectoriesLength)
+            {
+                var subDirectoryName = fileNameWithoutExtension[..NopMediaDefaults.MultipleThumbDirectoriesLength];
+                imagesPathUrl = imagesPathUrl + subDirectoryName + "/";
+            }
+        }
+
+        imagesPathUrl += thumbFileName;
+        return Task.FromResult(imagesPathUrl);
+    }
+
+    #endregion
+}

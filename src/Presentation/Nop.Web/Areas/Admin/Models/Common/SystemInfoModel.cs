@@ -47,9 +47,6 @@ public partial record SystemInfoModel : BaseNopModel
     [NopResourceDisplayName("Admin.System.SystemInfo.LoadedAssemblies")]
     public IList<LoadedAssembly> LoadedAssemblies { get; set; }
 
-    [NopResourceDisplayName("Admin.System.SystemInfo.AzureBlobStorageEnabled")]
-    public bool AzureBlobStorageEnabled { get; set; }
-
     public partial record HeaderModel : BaseNopModel
     {
         public string Name { get; set; }

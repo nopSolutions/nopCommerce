@@ -1,0 +1,62 @@
+@using Nop.Plugin.Misc.CloudflareImages.Models
+@model ConfigurationModel
+@inject IGenericAttributeService genericAttributeService
+@inject IWorkContext workContext
+@{
+    var customer = await workContext.GetCurrentCustomerAsync();
+
+    const string hideCloudflareImagesBlockAttributeName = "Misc.CloudflareImages.AppSettingsPage.HideCloudflareImagesBlock";
+    var hideCloudflareImagesBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCloudflareImagesBlockAttributeName);
+}
+
+<nop-card asp-name="misc.azure-blob-config" asp-icon="fas fa-gears" asp-title="@T("Nop.Plugin.Misc.CloudflareImages.AppSettings")" asp-hide-block-attribute-name="@hideCloudflareImagesBlockAttributeName" asp-hide="@hideCloudflareImagesBlock" asp-advanced="false">
+    <div class="card-body">
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="CloudflareImagesConfiguration.Enabled" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CloudflareImagesConfiguration.Enabled" />
+                <span asp-validation-for="CloudflareImagesConfiguration.Enabled"></span>
+            </div>
+        </div>
+        <nop-nested-setting asp-for="CloudflareImagesConfiguration.Enabled">
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="CloudflareImagesConfiguration.DeliveryUrl"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="CloudflareImagesConfiguration.DeliveryUrl" />
+                    <span asp-validation-for="CloudflareImagesConfiguration.DeliveryUrl"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="CloudflareImagesConfiguration.AccountId"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="CloudflareImagesConfiguration.AccountId"/>
+                    <span asp-validation-for="CloudflareImagesConfiguration.AccountId"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="CloudflareImagesConfiguration.AccessToken"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="CloudflareImagesConfiguration.AccessToken"/>
+                    <span asp-validation-for="CloudflareImagesConfiguration.AccessToken"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="CloudflareImagesConfiguration.RequestTimeout"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="CloudflareImagesConfiguration.RequestTimeout"/>
+                    <span asp-validation-for="CloudflareImagesConfiguration.RequestTimeout"></span>
+                </div>
+            </div>
+        </nop-nested-setting>
+    </div>
+</nop-card>

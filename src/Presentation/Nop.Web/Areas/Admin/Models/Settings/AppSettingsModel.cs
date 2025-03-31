@@ -15,7 +15,6 @@ public partial record AppSettingsModel : BaseNopModel
         CacheConfigModel = new CacheConfigModel();
         DistributedCacheConfigModel = new DistributedCacheConfigModel();
         HostingConfigModel = new HostingConfigModel();
-        AzureBlobConfigModel = new AzureBlobConfigModel();
         InstallationConfigModel = new InstallationConfigModel();
         PluginConfigModel = new PluginConfigModel();
         CommonConfigModel = new CommonConfigModel();
@@ -34,9 +33,7 @@ public partial record AppSettingsModel : BaseNopModel
     public HostingConfigModel HostingConfigModel { get; set; }
 
     public DistributedCacheConfigModel DistributedCacheConfigModel { get; set; }
-
-    public AzureBlobConfigModel AzureBlobConfigModel { get; set; }
-
+    
     public InstallationConfigModel InstallationConfigModel { get; set; }
 
     public PluginConfigModel PluginConfigModel { get; set; }

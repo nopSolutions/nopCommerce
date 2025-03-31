@@ -195,11 +195,6 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(model => model.DistributedCacheTypeValues, options => options.Ignore());
         CreateMap<DistributedCacheConfigModel, DistributedCacheConfig>();
 
-        CreateMap<AzureBlobConfig, AzureBlobConfigModel>();
-        CreateMap<AzureBlobConfigModel, AzureBlobConfig>()
-            .ForMember(entity => entity.Enabled, options => options.Ignore())
-            .ForMember(entity => entity.DataProtectionKeysEncryptWithVault, options => options.Ignore());
-
         CreateMap<InstallationConfig, InstallationConfigModel>();
         CreateMap<InstallationConfigModel, InstallationConfig>();
 
@@ -1161,7 +1156,6 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(model => model.AllowSVGUploads_OverrideForStore, options => options.Ignore());
         CreateMap<MediaSettingsModel, MediaSettings>()
             .ForMember(settings => settings.AutoCompleteSearchThumbPictureSize, options => options.Ignore())
-            .ForMember(settings => settings.AzureCacheControlHeader, options => options.Ignore())
             .ForMember(settings => settings.UseAbsoluteImagePath, options => options.Ignore())
             .ForMember(settings => settings.AutoOrientImage, options => options.Ignore())
             .ForMember(settings => settings.ImageSquarePictureSize, options => options.Ignore())

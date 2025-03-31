@@ -1,15 +1,29 @@
-﻿namespace Nop.Core.Configuration;
+﻿using Microsoft.AspNetCore.Http;
+
+namespace Nop.Core.Configuration;
 
 /// <summary>
 /// Represents the event that is raised when App Settings are saving
 /// </summary>
 public partial class AppSettingsSavingEvent
 {
+    #region Fields
+
+    protected readonly IList<IConfig> _configurations;
+
+    #endregion
+
     #region Ctor
 
-    public AppSettingsSavingEvent(IList<IConfig> configurations)
+    /// <summary>
+    /// Ctor
+    /// </summary>
+    /// <param name="configurations">List of configuration to save</param>
+    /// <param name="form">Request form data</param>
+    public AppSettingsSavingEvent(IList<IConfig> configurations, IFormCollection form)
     {
-        Configurations = configurations;
+        _configurations = configurations;
+        FormData = form;
     }
 
     #endregion
@@ -22,10 +36,10 @@ public partial class AppSettingsSavingEvent
     /// <param name="config">Configuration to save</param>
     public void AddConfig<TConfig>(TConfig config) where TConfig : class, IConfig
     {
-        if (Configurations.OfType<TConfig>().FirstOrDefault() is TConfig currentConfig)
-            Configurations[Configurations.IndexOf(currentConfig)] = config;
+        if (_configurations.OfType<TConfig>().FirstOrDefault() is { } currentConfig)
+            _configurations[_configurations.IndexOf(currentConfig)] = config;
         else
-            Configurations.Add(config);
+            _configurations.Add(config);
     }
 
     #endregion
@@ -33,9 +47,9 @@ public partial class AppSettingsSavingEvent
     #region Properties
 
     /// <summary>
-    /// Gets configurations to save
+    /// Gets request form data if exists
     /// </summary>
-    public IList<IConfig> Configurations { get; protected set; }
+    public IFormCollection FormData { get; protected set; }
 
     #endregion
 }

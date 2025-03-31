@@ -1570,7 +1570,6 @@ public partial class InstallationService
             DefaultImageQuality = 80,
             MultipleThumbDirectories = false,
             ImportProductImagesUsingHash = true,
-            AzureCacheControlHeader = string.Empty,
             UseAbsoluteImagePath = true,
             AutoOrientImage = false,
             VideoIframeAllow = "fullscreen",

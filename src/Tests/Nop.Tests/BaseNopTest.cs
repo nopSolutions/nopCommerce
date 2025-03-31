@@ -670,10 +670,10 @@ public partial class BaseNopTest
             IHttpContextAccessor httpContextAccessor, ILogger logger, INopFileProvider fileProvider,
             IProductAttributeParser productAttributeParser, IProductAttributeService productAttributeService,
             IRepository<Picture> pictureRepository, IRepository<PictureBinary> pictureBinaryRepository,
-            IRepository<ProductPicture> productPictureRepository, ISettingService settingService,
+            IRepository<ProductPicture> productPictureRepository, ISettingService settingService, IThumbService thumbService,
             IUrlRecordService urlRecordService, IWebHelper webHelper, MediaSettings mediaSettings) : base(
             downloadService, httpContextAccessor, logger, fileProvider, productAttributeParser, productAttributeService,
-            pictureRepository, pictureBinaryRepository, productPictureRepository, settingService, urlRecordService,
+            pictureRepository, pictureBinaryRepository, productPictureRepository, settingService, thumbService, urlRecordService,
             webHelper, mediaSettings)
         {
         }
@@ -695,7 +695,7 @@ public partial class BaseNopTest
             byte[] pictureBinary = null;
             if (picture.IsNew)
             {
-                await DeletePictureThumbsAsync(picture);
+                await _thumbService.DeletePictureThumbsAsync(picture);
                 pictureBinary = await LoadPictureBinaryAsync(picture);
 
                 if ((pictureBinary?.Length ?? 0) == 0)
@@ -726,9 +726,9 @@ public partial class BaseNopTest
                     ? $"{picture.Id:0000000}_{seoFileName}.{lastPart}"
                     : $"{picture.Id:0000000}.{lastPart}";
 
-                var thumbFilePath = await GetThumbLocalPathAsync(thumbFileName);
-                if (await GeneratedThumbExistsAsync(thumbFilePath, thumbFileName))
-                    return (await GetThumbUrlAsync(thumbFileName, storeLocation), picture);
+                var thumbFilePath = await _thumbService.GetThumbLocalPathAsync(thumbFileName);
+                if (await _thumbService.GeneratedThumbExistsAsync(thumbFilePath, thumbFileName))
+                    return (await _thumbService.GetThumbUrlAsync(thumbFileName, storeLocation), picture);
 
                 pictureBinary ??= await LoadPictureBinaryAsync(picture);
 
@@ -740,7 +740,7 @@ public partial class BaseNopTest
                 mutex.WaitOne();
                 try
                 {
-                    SaveThumbAsync(thumbFilePath, thumbFileName, string.Empty, pictureBinary).Wait();
+                    _thumbService.SaveThumbAsync(thumbFilePath, thumbFileName, string.Empty, pictureBinary).Wait();
                 }
                 finally
                 {
@@ -753,9 +753,9 @@ public partial class BaseNopTest
                     ? $"{picture.Id:0000000}_{seoFileName}_{targetSize}.{lastPart}"
                     : $"{picture.Id:0000000}_{targetSize}.{lastPart}";
 
-                var thumbFilePath = await GetThumbLocalPathAsync(thumbFileName);
-                if (await GeneratedThumbExistsAsync(thumbFilePath, thumbFileName))
-                    return (await GetThumbUrlAsync(thumbFileName, storeLocation), picture);
+                var thumbFilePath = await _thumbService.GetThumbLocalPathAsync(thumbFileName);
+                if (await _thumbService.GeneratedThumbExistsAsync(thumbFilePath, thumbFileName))
+                    return (await _thumbService.GetThumbUrlAsync(thumbFileName, storeLocation), picture);
 
                 pictureBinary ??= await LoadPictureBinaryAsync(picture);
 
@@ -780,7 +780,7 @@ public partial class BaseNopTest
                         }
                     }
 
-                    SaveThumbAsync(thumbFilePath, thumbFileName, string.Empty, pictureBinary).Wait();
+                    _thumbService.SaveThumbAsync(thumbFilePath, thumbFileName, string.Empty, pictureBinary).Wait();
                 }
                 finally
                 {
@@ -788,7 +788,7 @@ public partial class BaseNopTest
                 }
             }
 
-            return (await GetThumbUrlAsync(thumbFileName, storeLocation), picture);
+            return (await _thumbService.GetThumbUrlAsync(thumbFileName, storeLocation), picture);
         }
     }
 

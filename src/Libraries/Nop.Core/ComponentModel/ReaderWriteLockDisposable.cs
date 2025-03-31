@@ -56,7 +56,6 @@ public partial class ReaderWriteLockDisposable : IDisposable
             return;
 
         if (disposing)
-        {
             switch (_readerWriteLockType)
             {
                 case ReaderWriteLockType.Read:
@@ -69,7 +68,6 @@ public partial class ReaderWriteLockDisposable : IDisposable
                     _rwLock.ExitUpgradeableReadLock();
                     break;
             }
-        }
 
         _disposed = true;
     }
