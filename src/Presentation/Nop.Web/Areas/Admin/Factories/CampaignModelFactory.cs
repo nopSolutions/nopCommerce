@@ -150,6 +150,9 @@ public partial class CampaignModelFactory : ICampaignModelFactory
         //prepare available customer roles
         await _baseAdminModelFactory.PrepareCustomerRolesAsync(model.AvailableCustomerRoles);
 
+        //prepare available subscription types
+        await _baseAdminModelFactory.PrepareSubscriptionTypesAsync(model.AvailableNewsLetterSubscriptionTypes);
+
         //prepare available email accounts
         await _baseAdminModelFactory.PrepareEmailAccountsAsync(model.AvailableEmailAccounts, false);
 

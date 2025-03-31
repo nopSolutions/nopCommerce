@@ -226,7 +226,7 @@ public partial class InstallController : Controller
             {
                 try
                 {
-                    var resultRequest = await _nopHttpClient.Value.SubscribeNewslettersAsync(model.AdminEmail);
+                    var resultRequest = await _nopHttpClient.Value.SubscribeNewsLettersAsync(model.AdminEmail);
                 }
                 catch
                 {

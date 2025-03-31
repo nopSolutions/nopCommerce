@@ -23,7 +23,6 @@ using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Security;
-using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
@@ -66,7 +65,6 @@ public partial class CustomerController : BaseAdminController
     protected readonly IQueuedEmailService _queuedEmailService;
     protected readonly IRewardPointService _rewardPointService;
     protected readonly IStoreContext _storeContext;
-    protected readonly IStoreService _storeService;
     protected readonly ITaxService _taxService;
     protected readonly IWorkContext _workContext;
     protected readonly IWorkflowMessageService _workflowMessageService;
@@ -105,7 +103,6 @@ public partial class CustomerController : BaseAdminController
         IQueuedEmailService queuedEmailService,
         IRewardPointService rewardPointService,
         IStoreContext storeContext,
-        IStoreService storeService,
         ITaxService taxService,
         IWorkContext workContext,
         IWorkflowMessageService workflowMessageService,
@@ -139,7 +136,6 @@ public partial class CustomerController : BaseAdminController
         _queuedEmailService = queuedEmailService;
         _rewardPointService = rewardPointService;
         _storeContext = storeContext;
-        _storeService = storeService;
         _taxService = taxService;
         _workContext = workContext;
         _workflowMessageService = workflowMessageService;
@@ -392,42 +388,6 @@ public partial class CustomerController : BaseAdminController
 
             await _customerService.InsertCustomerAsync(customer);
 
-            //newsletter subscriptions
-            if (!string.IsNullOrEmpty(customer.Email))
-            {
-                var allStores = await _storeService.GetAllStoresAsync();
-                foreach (var store in allStores)
-                {
-                    var newsletterSubscription = await _newsLetterSubscriptionService
-                        .GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id);
-                    if (model.SelectedNewsletterSubscriptionStoreIds != null &&
-                        model.SelectedNewsletterSubscriptionStoreIds.Contains(store.Id))
-                    {
-                        //subscribed
-                        if (newsletterSubscription == null)
-                        {
-                            await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new NewsLetterSubscription
-                            {
-                                NewsLetterSubscriptionGuid = Guid.NewGuid(),
-                                Email = customer.Email,
-                                Active = true,
-                                StoreId = store.Id,
-                                LanguageId = customer.LanguageId ?? store.DefaultLanguageId,
-                                CreatedOnUtc = DateTime.UtcNow
-                            });
-                        }
-                    }
-                    else
-                    {
-                        //not subscribed
-                        if (newsletterSubscription != null)
-                        {
-                            await _newsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(newsletterSubscription);
-                        }
-                    }
-                }
-            }
-
             //password
             if (!string.IsNullOrWhiteSpace(model.Password))
             {
@@ -633,42 +593,6 @@ public partial class CustomerController : BaseAdminController
                 //custom customer attributes
                 customer.CustomCustomerAttributesXML = customerAttributesXml;
 
-                //newsletter subscriptions
-                if (!string.IsNullOrEmpty(customer.Email))
-                {
-                    var allStores = await _storeService.GetAllStoresAsync();
-                    foreach (var store in allStores)
-                    {
-                        var newsletterSubscription = await _newsLetterSubscriptionService
-                            .GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id);
-                        if (model.SelectedNewsletterSubscriptionStoreIds != null &&
-                            model.SelectedNewsletterSubscriptionStoreIds.Contains(store.Id))
-                        {
-                            //subscribed
-                            if (newsletterSubscription == null)
-                            {
-                                await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new NewsLetterSubscription
-                                {
-                                    NewsLetterSubscriptionGuid = Guid.NewGuid(),
-                                    Email = customer.Email,
-                                    Active = true,
-                                    StoreId = store.Id,
-                                    LanguageId = customer.LanguageId ?? store.DefaultLanguageId,
-                                    CreatedOnUtc = DateTime.UtcNow
-                                });
-                            }
-                        }
-                        else
-                        {
-                            //not subscribed
-                            if (newsletterSubscription != null)
-                            {
-                                await _newsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(newsletterSubscription);
-                            }
-                        }
-                    }
-                }
-
                 var currentCustomerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer, true);
 
                 //customer roles
@@ -873,14 +797,10 @@ public partial class CustomerController : BaseAdminController
             //delete
             await _customerService.DeleteCustomerAsync(customer);
 
-            //remove newsletter subscription (if exists)
-            foreach (var store in await _storeService.GetAllStoresAsync())
-            {
-                var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customerEmail, store.Id);
-                
-                if (subscription != null)
-                    await _newsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(subscription);
-            }
+            //remove newsletter subscriptions (if exist)
+            var subscriptions = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionsByEmailAsync(customerEmail);
+            foreach (var subscription in subscriptions)
+                await _newsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(subscription);
 
             //activity log
             await _customerActivityService.InsertActivityAsync("DeleteCustomer",

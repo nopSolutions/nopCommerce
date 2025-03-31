@@ -366,17 +366,6 @@
             <span asp-validation-for="CustomerSettings.NewsletterEnabled"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="CustomerSettings.NewsletterEnabled">
-        <div class="form-group row">
-            <div class="col-md-3">
-                <nop-label asp-for="CustomerSettings.NewsletterTickedByDefault" />
-            </div>
-            <div class="col-md-9">
-                <nop-editor asp-for="CustomerSettings.NewsletterTickedByDefault" />
-                <span asp-validation-for="CustomerSettings.NewsletterTickedByDefault"></span>
-            </div>
-        </div>
-    </nop-nested-setting>
     @*render custom customer attributes*@
     @await Html.PartialAsync("../CustomerAttribute/ListBlock.cshtml", Model.CustomerAttributeSearchModel)
 </div>

@@ -61,6 +61,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
     protected readonly ILocalizationService _localizationService;
     protected readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
     protected readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+    protected readonly INewsLetterSubscriptionTypeService _newsLetterSubscriptionTypeService;
     protected readonly IOrderService _orderService;
     protected readonly IPermissionService _permissionService;
     protected readonly IPictureService _pictureService;
@@ -104,6 +105,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         ILocalizationService localizationService,
         IMultiFactorAuthenticationPluginManager multiFactorAuthenticationPluginManager,
         INewsLetterSubscriptionService newsLetterSubscriptionService,
+        INewsLetterSubscriptionTypeService newsLetterSubscriptionTypeService,
         IOrderService orderService,
         IPermissionService permissionService,
         IPictureService pictureService,
@@ -143,6 +145,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         _localizationService = localizationService;
         _multiFactorAuthenticationPluginManager = multiFactorAuthenticationPluginManager;
         _newsLetterSubscriptionService = newsLetterSubscriptionService;
+        _newsLetterSubscriptionTypeService = newsLetterSubscriptionTypeService;
         _orderService = orderService;
         _permissionService = permissionService;
         _pictureService = pictureService;
@@ -234,12 +237,21 @@ public partial class CustomerModelFactory : ICustomerModelFactory
             model.Phone = customer.Phone;
             model.Fax = customer.Fax;
 
-            //newsletter
-            var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id);
-            model.Newsletter = newsletter != null && newsletter.Active;
+            //newsletter subscriptions
+            var currentSubscriptions = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionsByEmailAsync(customer.Email, storeId: store.Id);
+            var newsLetterSubscriptionTypes = await _newsLetterSubscriptionTypeService.GetAllNewsLetterSubscriptionTypesAsync(store.Id);
+            foreach (var newsLetterSubscriptionType in newsLetterSubscriptionTypes)
+            {
+                var nsModel = new NewsLetterSubscriptionModel
+                {
+                    TypeId = newsLetterSubscriptionType.Id,
+                    Name = await _localizationService.GetLocalizedAsync(newsLetterSubscriptionType, x => x.Name),
+                    IsActive = currentSubscriptions.Any(subscription => subscription.TypeId == newsLetterSubscriptionType.Id && subscription.Active)
+                };
+                model.NewsLetterSubscriptions.Add(nsModel);
+            }
 
             model.Signature = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SignatureAttribute);
-
             model.Email = customer.Email;
             model.Username = customer.Username;
         }
@@ -443,8 +455,19 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         model.EnteringEmailTwice = _customerSettings.EnteringEmailTwice;
         if (setDefaultValues)
         {
-            //enable newsletter by default
-            model.Newsletter = _customerSettings.NewsletterTickedByDefault;
+            //newsletter subscriptions
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var newsLetterSubscriptionTypes = await _newsLetterSubscriptionTypeService.GetAllNewsLetterSubscriptionTypesAsync(store.Id);
+            foreach (var newsLetterSubscriptionType in newsLetterSubscriptionTypes)
+            {
+                var nsModel = new NewsLetterSubscriptionModel
+                {
+                    TypeId = newsLetterSubscriptionType.Id,
+                    Name = await _localizationService.GetLocalizedAsync(newsLetterSubscriptionType, x => x.Name),
+                    IsActive = newsLetterSubscriptionType.TickedByDefault
+                };
+                model.NewsLetterSubscriptions.Add(nsModel);
+            }
         }
 
         //countries and states

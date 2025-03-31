@@ -319,11 +319,6 @@ public static class BrevoDefaults
     public static string PhoneTypeAttribute => "PhoneTypeId";
 
     /// <summary>
-    /// Gets a name of custom email header 
-    /// </summary>
-    public static string EmailCustomHeader => "X-Mailin-Tag";
-
-    /// <summary>
     /// Gets a name of the cart updated event
     /// </summary>
     public static string CartUpdatedEventName => "cart_updated";

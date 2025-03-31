@@ -11,6 +11,7 @@ using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Nop.Core;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Messages;
 using Nop.Plugin.Misc.Brevo.Domain;
@@ -151,14 +152,14 @@ public partial class BrevoManager
     }
 
     /// <summary>
-    /// Import contacts from passed stores to account
+    /// Import contacts from the store to account
     /// </summary>
-    /// <param name="storeIds">List of store identifiers</param>
+    /// <param name="brevoSettings">Plugin settings</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the list of messages
     /// </returns>
-    protected async Task<IList<(NotifyType Type, string Message)>> ImportContactsAsync(IList<int> storeIds)
+    protected async Task<IList<(NotifyType Type, string Message)>> ImportContactsAsync(BrevoSettings brevoSettings)
     {
         var messages = new List<(NotifyType, string)>();
 
@@ -168,24 +169,67 @@ public partial class BrevoManager
             //create API client
             var client = await CreateApiClientAsync(config => new ContactsApi(config));
 
-            foreach (var storeId in storeIds)
-            {
-                //get list identifier from the settings
-                var key = $"{nameof(BrevoSettings)}.{nameof(BrevoSettings.ListId)}";
-                var listId = await _settingService.GetSettingByKeyAsync<int>(key, storeId: storeId);
-                if (listId == 0)
-                {
-                    await _logger.WarningAsync($"Brevo synchronization warning: List ID is empty for store #{storeId}");
-                    messages.Add((NotifyType.Warning, $"List ID is empty for store #{storeId}"));
-                    continue;
-                }
+            var languages = await _languageService.GetAllLanguagesAsync();
 
-                //try to get store subscriptions
-                var subscriptions = await _newsLetterSubscriptionService.GetAllNewsLetterSubscriptionsAsync(storeId: storeId, isActive: true);
+            List<Customer> customers = null;
+            async Task<List<Customer>> getCustomersAsync()
+            {
+                customers ??= (await _customerService.GetAllCustomersAsync()).ToList();
+                return customers;
+            }
+
+            async Task<string> getNamesAsync()
+            {
+                switch (await GetAccountLanguageAsync())
+                {
+                    case BrevoAccountLanguage.French:
+                        return
+                            $"{BrevoDefaults.FirstNameFrenchServiceAttribute};" +
+                            $"{BrevoDefaults.LastNameFrenchServiceAttribute};";
+
+                    case BrevoAccountLanguage.German:
+                        return
+                            $"{BrevoDefaults.FirstNameGermanServiceAttribute};" +
+                            $"{BrevoDefaults.LastNameGermanServiceAttribute};";
+
+                    case BrevoAccountLanguage.Italian:
+                        return
+                            $"{BrevoDefaults.FirstNameItalianServiceAttribute};" +
+                            $"{BrevoDefaults.LastNameItalianServiceAttribute};";
+
+                    case BrevoAccountLanguage.Portuguese:
+                        return
+                            $"{BrevoDefaults.FirstNamePortugueseServiceAttribute};" +
+                            $"{BrevoDefaults.LastNamePortugueseServiceAttribute};";
+
+                    case BrevoAccountLanguage.Spanish:
+                        return
+                            $"{BrevoDefaults.FirstNameSpanishServiceAttribute};" +
+                            $"{BrevoDefaults.LastNameSpanishServiceAttribute};";
+
+                    default:
+                        return
+                            $"{BrevoDefaults.FirstNameServiceAttribute};" +
+                            $"{BrevoDefaults.LastNameServiceAttribute};";
+                }
+            }
+
+            //get mappings from the settings
+            foreach (var mapping in brevoSettings.SubscriptionTypeMappings)
+            {
+                var typeId = mapping.Key;
+                var listId = mapping.Value;
+                if (typeId == 0 || listId == 0)
+                    continue;
+
+                //try to get subscriptions by the type
+                var subscriptions = (await _newsLetterSubscriptionService
+                    .GetAllNewsLetterSubscriptionsAsync(subscriptionTypeId: typeId, isActive: true))
+                    .ToList();
                 if (!subscriptions.Any())
                 {
-                    await _logger.WarningAsync($"Brevo synchronization warning: There are no subscriptions for store #{storeId}");
-                    messages.Add((NotifyType.Warning, $"There are no subscriptions for store #{storeId}"));
+                    await _logger.WarningAsync($"Brevo synchronization warning: There are no subscriptions of type #{typeId}");
+                    messages.Add((NotifyType.Warning, $"There are no subscriptions of type #{typeId}"));
                     continue;
                 }
 
@@ -193,49 +237,10 @@ public partial class BrevoManager
                 var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
                 var notificationUrl = urlHelper.RouteUrl(BrevoDefaults.ImportContactsRoute, null, _webHelper.GetCurrentRequestProtocol());
 
-                var name = string.Empty;
-
-                switch (await GetAccountLanguageAsync())
-                {
-                    case BrevoAccountLanguage.French:
-                        name =
-                            $"{BrevoDefaults.FirstNameFrenchServiceAttribute};" +
-                            $"{BrevoDefaults.LastNameFrenchServiceAttribute};";
-                        break;
-                    case BrevoAccountLanguage.German:
-                        name =
-                            $"{BrevoDefaults.FirstNameGermanServiceAttribute};" +
-                            $"{BrevoDefaults.LastNameGermanServiceAttribute};";
-                        break;
-                    case BrevoAccountLanguage.Italian:
-                        name =
-                            $"{BrevoDefaults.FirstNameItalianServiceAttribute};" +
-                            $"{BrevoDefaults.LastNameItalianServiceAttribute};";
-                        break;
-                    case BrevoAccountLanguage.Portuguese:
-                        name =
-                            $"{BrevoDefaults.FirstNamePortugueseServiceAttribute};" +
-                            $"{BrevoDefaults.LastNamePortugueseServiceAttribute};";
-                        break;
-                    case BrevoAccountLanguage.Spanish:
-                        name =
-                            $"{BrevoDefaults.FirstNameSpanishServiceAttribute};" +
-                            $"{BrevoDefaults.LastNameSpanishServiceAttribute};";
-                        break;
-
-                    case BrevoAccountLanguage.English:
-                        name =
-                            $"{BrevoDefaults.FirstNameServiceAttribute};" +
-                            $"{BrevoDefaults.LastNameServiceAttribute};";
-                        break;
-                }
-
-                var languages = await _languageService.GetAllLanguagesAsync(storeId: storeId);
-
                 //prepare CSV 
                 var title =
                     $"{BrevoDefaults.EmailServiceAttribute};" +
-                    name +
+                    await getNamesAsync() +
                     $"{BrevoDefaults.UsernameServiceAttribute};" +
                     $"{BrevoDefaults.SMSServiceAttribute};" +
                     $"{BrevoDefaults.PhoneServiceAttribute};" +
@@ -271,7 +276,7 @@ public partial class BrevoManager
                     var fax = string.Empty;
                     Language language = null;
 
-                    var customer = await _customerService.GetCustomerByEmailAsync(subscription.Email);
+                    var customer = (await getCustomersAsync()).FirstOrDefault(customer => customer.Email == subscription.Email);
                     if (customer != null)
                     {
                         firstName = customer.FirstName;
@@ -300,29 +305,31 @@ public partial class BrevoManager
                         fax = customer.Fax;
                     }
 
-                    language = languages.FirstOrDefault(lang => lang.Id == (customer?.LanguageId ?? subscription.LanguageId))
+                    language = languages
+                        .FirstOrDefault(lang => lang.Id == (customer?.LanguageId ?? subscription.LanguageId))
                         ?? languages.FirstOrDefault();
 
-                    return $"{all}\n" +
-                           $"{subscription.Email};" +
-                           $"{firstName};" +
-                           $"{lastName};" +
-                           $"{customer?.Username};" +
-                           $"{sms};" +
-                           $"{phone};" +
-                           $"{countryName};" +
-                           $"{subscription.StoreId};" +
-                           $"{gender};" +
-                           $"{dateOfBirth};" +
-                           $"{company};" +
-                           $"{address1};" +
-                           $"{address2};" +
-                           $"{zipCode};" +
-                           $"{city};" +
-                           $"{county};" +
-                           $"{state};" +
-                           $"{fax};" +
-                           $"{language?.LanguageCulture};";
+                    return
+                        $"{all}\n" +
+                        $"{subscription.Email};" +
+                        $"{firstName};" +
+                        $"{lastName};" +
+                        $"{customer?.Username};" +
+                        $"{sms};" +
+                        $"{phone};" +
+                        $"{countryName};" +
+                        $"{subscription.StoreId};" +
+                        $"{gender};" +
+                        $"{dateOfBirth};" +
+                        $"{company};" +
+                        $"{address1};" +
+                        $"{address2};" +
+                        $"{zipCode};" +
+                        $"{city};" +
+                        $"{county};" +
+                        $"{state};" +
+                        $"{fax};" +
+                        $"{language?.LanguageCulture};";
                 });
 
                 //prepare data to import
@@ -348,14 +355,14 @@ public partial class BrevoManager
     }
 
     /// <summary>
-    /// Export contacts from account to passed stores
+    /// Export contacts from account to the store
     /// </summary>
-    /// <param name="storeIds">List of store identifiers</param>
+    /// <param name="brevoSettings">Plugin settings</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the list of messages
     /// </returns>
-    protected async Task<IList<(NotifyType Type, string Message)>> ExportContactsAsync(IList<int> storeIds)
+    protected async Task<IList<(NotifyType Type, string Message)>> ExportContactsAsync(BrevoSettings brevoSettings)
     {
         var messages = new List<(NotifyType, string)>();
 
@@ -364,36 +371,34 @@ public partial class BrevoManager
             //create API client
             var client = await CreateApiClientAsync(config => new ContactsApi(config));
 
-            foreach (var storeId in storeIds)
+            //get mappings from the settings
+            foreach (var mapping in brevoSettings.SubscriptionTypeMappings)
             {
-                //get list identifier from the settings
-                var key = $"{nameof(BrevoSettings)}.{nameof(BrevoSettings.ListId)}";
-                var listId = await _settingService.GetSettingByKeyAsync<int>(key, storeId: storeId, loadSharedValueIfNotFound: true);
-                if (listId == 0)
-                {
-                    await _logger.WarningAsync($"Brevo synchronization warning: List ID is empty for store #{storeId}");
-                    messages.Add((NotifyType.Warning, $"List ID is empty for store #{storeId}"));
+                var typeId = mapping.Key;
+                var listId = mapping.Value;
+                if (typeId == 0 || listId == 0)
                     continue;
-                }
 
                 //check whether there are contacts in the list
                 var contacts = await client.GetContactsFromListAsync(listId);
-                var template = new { contacts = new[] { new { email = string.Empty, emailBlacklisted = false } } };
-                var contactObjects = JsonConvert.DeserializeAnonymousType(contacts.ToJson(), template);
-                var blackListedEmails = contactObjects?.contacts?.Where(contact => contact.emailBlacklisted)
-                    .Select(contact => contact.email).ToList() ?? new List<string>();
+                var contactObjects = JsonConvert
+                    .DeserializeAnonymousType(contacts.ToJson(), new { contacts = new[] { new { email = string.Empty, emailBlacklisted = false } } });
+                var blackListedEmails = contactObjects?.contacts
+                    ?.Where(contact => contact.emailBlacklisted && !string.IsNullOrEmpty(contact.email))
+                    .Select(contact => contact.email)
+                    .Distinct()
+                    .ToList()
+                    ?? new List<string>();
 
                 foreach (var email in blackListedEmails)
                 {
-                    //email in black list, so unsubscribe contact from all stores
-                    foreach (var id in (await _storeService.GetAllStoresAsync()).Select(store => store.Id))
+                    //email in black list, so unsubscribe contact
+                    var subscriptions = await _newsLetterSubscriptionService
+                        .GetNewsLetterSubscriptionsByEmailAsync(email, subscriptionTypeId: typeId);
+                    foreach (var subscription in subscriptions)
                     {
-                        var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(email, id);
-                        if (subscription != null)
-                        {
-                            subscription.Active = false;
-                            await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(subscription, false);
-                        }
+                        subscription.Active = false;
+                        await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(subscription, false);
                     }
                 }
             }
@@ -460,13 +465,11 @@ public partial class BrevoManager
     /// <summary>
     /// Synchronize contacts 
     /// </summary>
-    /// <param name="synchronizationTask">Whether it's a scheduled synchronization</param>
-    /// <param name="storeId">Store identifier; pass 0 to synchronize contacts for all stores</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the list of messages
     /// </returns>
-    public async Task<IList<(NotifyType Type, string Message)>> SynchronizeAsync(bool synchronizationTask = true, int storeId = 0)
+    public async Task<IList<(NotifyType Type, string Message)>> SynchronizeAsync()
     {
         var messages = new List<(NotifyType, string)>();
         try
@@ -475,16 +478,10 @@ public partial class BrevoManager
             var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>();
             if (!string.IsNullOrEmpty(brevoSettings.ApiKey))
             {
-                //use only passed store identifier for the manual synchronization
-                //use all store ids for the synchronization task
-                var storeIds = !synchronizationTask
-                        ? [storeId]
-                    : new List<int> { 0 }.Union((await _storeService.GetAllStoresAsync()).Select(store => store.Id)).ToList();
-
-                var importMessages = await ImportContactsAsync(storeIds);
+                var importMessages = await ImportContactsAsync(brevoSettings);
                 messages.AddRange(importMessages);
 
-                var exportMessages = await ExportContactsAsync(storeIds);
+                var exportMessages = await ExportContactsAsync(brevoSettings);
                 messages.AddRange(exportMessages);
             }
 
@@ -508,19 +505,13 @@ public partial class BrevoManager
     {
         try
         {
+            //try to get list id
+            var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>();
+            if (!brevoSettings.SubscriptionTypeMappings.TryGetValue(subscription.TypeId, out var listId) || listId == 0)
+                return;
+
             //create API client
             var client = await CreateApiClientAsync(config => new ContactsApi(config));
-
-            //try to get list identifier
-            var key = $"{nameof(BrevoSettings)}.{nameof(BrevoSettings.ListId)}";
-            var listId = await _settingService.GetSettingByKeyAsync<int>(key, storeId: subscription.StoreId);
-            if (listId == 0)
-                listId = await _settingService.GetSettingByKeyAsync<int>(key);
-            if (listId == 0)
-            {
-                await _logger.WarningAsync($"Brevo synchronization warning: List ID is empty for store #{subscription.StoreId}");
-                return;
-            }
 
             GetExtendedContactDetails contactObject = null;
             try
@@ -674,19 +665,13 @@ public partial class BrevoManager
     {
         try
         {
+            //try to get list id
+            var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>();
+            if (!brevoSettings.SubscriptionTypeMappings.TryGetValue(subscription.TypeId, out var listId) || listId == 0)
+                return;
+
             //create API client
             var client = await CreateApiClientAsync(config => new ContactsApi(config));
-
-            //try to get list identifier
-            var key = $"{nameof(BrevoSettings)}.{nameof(BrevoSettings.ListId)}";
-            var listId = await _settingService.GetSettingByKeyAsync<int>(key, storeId: subscription.StoreId);
-            if (listId == 0)
-                listId = await _settingService.GetSettingByKeyAsync<int>(key);
-            if (listId == 0)
-            {
-                await _logger.WarningAsync($"Brevo synchronization warning: List ID is empty for store #{subscription.StoreId}");
-                return;
-            }
 
             //update contact
             var updateContact = new UpdateContact
@@ -715,24 +700,33 @@ public partial class BrevoManager
             var requestContent = await streamReader.ReadToEndAsync();
 
             //parse string to JSON object
-            var unsubscriber = JsonConvert.DeserializeAnonymousType(requestContent,
-                new { tag = (int?)0, email = string.Empty, date_event = string.Empty });
+            var unsubscriber = JsonConvert
+                .DeserializeAnonymousType(requestContent, new { list_id = new List<int>(), email = string.Empty });
 
-            //we pass the store identifier in the X-Mailin-Tag at sending emails, now get it here
-            var storeId = unsubscriber?.tag;
-            if (!storeId.HasValue)
+            if (unsubscriber.list_id?.Any() != true || string.IsNullOrEmpty(unsubscriber.email))
                 return true;
 
-            //get subscription by email and store identifier
-            var email = unsubscriber?.email;
-            var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(email, storeId.Value);
-            if (subscription == null)
+            //get subscriptions by email
+            var subscriptions = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionsByEmailAsync(unsubscriber.email, isActive: true);
+            if (!subscriptions.Any())
                 return true;
 
-            //update subscription
-            subscription.Active = false;
-            await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(subscription);
-            await _logger.InformationAsync($"{BrevoDefaults.SystemName} unsubscription: email {email}, store #{storeId}, date {unsubscriber?.date_event}");
+            var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>();
+            foreach (var mapping in brevoSettings.SubscriptionTypeMappings)
+            {
+                var typeId = mapping.Key;
+                var listId = mapping.Value;
+                if (typeId == 0 || listId == 0 || !unsubscriber.list_id.Contains(listId))
+                    continue;
+
+                if (subscriptions.FirstOrDefault(subscription => subscription.TypeId == typeId) is not NewsLetterSubscription subscription)
+                    continue;
+
+                //update subscription
+                subscription.Active = false;
+                await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(subscription);
+                await _logger.InformationAsync($"{BrevoDefaults.SystemName} unsubscription: email '{subscription.Email}', subscription type #{subscription.TypeId}");
+            }
 
             return true;
         });

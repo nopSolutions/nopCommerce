@@ -12,7 +12,6 @@ using Nop.Services.Forums;
 using Nop.Services.Messages;
 using Nop.Services.News;
 using Nop.Services.Orders;
-using Nop.Services.Stores;
 
 namespace Nop.Services.Gdpr;
 
@@ -37,7 +36,6 @@ public partial class GdprService : IGdprService
     protected readonly IRepository<GdprConsent> _gdprConsentRepository;
     protected readonly IRepository<GdprLog> _gdprLogRepository;
     protected readonly IShoppingCartService _shoppingCartService;
-    protected readonly IStoreService _storeService;
 
     #endregion
 
@@ -56,8 +54,7 @@ public partial class GdprService : IGdprService
         IProductService productService,
         IRepository<GdprConsent> gdprConsentRepository,
         IRepository<GdprLog> gdprLogRepository,
-        IShoppingCartService shoppingCartService,
-        IStoreService storeService)
+        IShoppingCartService shoppingCartService)
     {
         _addressService = addressService;
         _backInStockSubscriptionService = backInStockSubscriptionService;
@@ -73,7 +70,6 @@ public partial class GdprService : IGdprService
         _gdprConsentRepository = gdprConsentRepository;
         _gdprLogRepository = gdprLogRepository;
         _shoppingCartService = shoppingCartService;
-        _storeService = storeService;
     }
 
     #endregion
@@ -307,13 +303,9 @@ public partial class GdprService : IGdprService
             await _forumService.DeletePrivateMessageAsync(pm);
 
         //newsletter
-        var allStores = await _storeService.GetAllStoresAsync();
-        foreach (var store in allStores)
-        {
-            var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id);
-            if (newsletter != null)
-                await _newsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(newsletter);
-        }
+        var newsletters = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionsByEmailAsync(customer.Email);
+        foreach (var newsletter in newsletters)
+            await _newsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(newsletter);
 
         //addresses
         foreach (var address in await _customerService.GetAddressesByCustomerIdAsync(customer.Id))

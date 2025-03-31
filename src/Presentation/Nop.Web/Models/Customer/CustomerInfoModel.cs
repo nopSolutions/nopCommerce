@@ -16,6 +16,7 @@ public partial record CustomerInfoModel : BaseNopModel
         AssociatedExternalAuthRecords = new List<AssociatedExternalAuthModel>();
         CustomerAttributes = new List<CustomerAttributeModel>();
         GdprConsents = new List<GdprConsentModel>();
+        NewsLetterSubscriptions = new List<NewsLetterSubscriptionModel>();
     }
 
     [DataType(DataType.EmailAddress)]
@@ -114,8 +115,8 @@ public partial record CustomerInfoModel : BaseNopModel
     public string Fax { get; set; }
 
     public bool NewsletterEnabled { get; set; }
-    [NopResourceDisplayName("Account.Fields.Newsletter")]
-    public bool Newsletter { get; set; }
+
+    public IList<NewsLetterSubscriptionModel> NewsLetterSubscriptions { get; set; }
 
     //preferences
     public bool SignatureEnabled { get; set; }

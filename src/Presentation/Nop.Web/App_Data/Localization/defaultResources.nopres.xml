@@ -378,9 +378,6 @@
   <LocaleResource Name="Account.Fields.LastName.Required">
     <Value>Last name is required.</Value>
   </LocaleResource>
-  <LocaleResource Name="Account.Fields.Newsletter">
-    <Value>Newsletter</Value>
-  </LocaleResource>
   <LocaleResource Name="Account.Fields.Password">
     <Value>Password</Value>
   </LocaleResource>
@@ -675,6 +672,9 @@
   <LocaleResource Name="Account.RewardPoints">
     <Value>Reward points</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.SubscribeToNewsletter">
+    <Value>Subscribe to newsletter</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.UserAgreement">
     <Value>User agreement</Value>
   </LocaleResource>
@@ -819,6 +819,9 @@
   <LocaleResource Name="ActivityLog.AddNewWarehouse">
     <Value>Added a new warehouse (ID = {0})</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddSubscriptionType">
+    <Value>Added a new subscription type (ID = {0})</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteActivityLog">
     <Value>Deleted activity log</Value>
   </LocaleResource>
@@ -929,6 +932,9 @@
   </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteStore">
     <Value>Deleted a store (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteSubscriptionType">
+    <Value>Deleted a subscription type (ID = {0})</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteSystemLog">
     <Value>Deleted system log</Value>
@@ -1058,6 +1064,9 @@
   </LocaleResource>
   <LocaleResource Name="ActivityLog.EditStore">
     <Value>Edited a store (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditSubscriptionType">
+    <Value>Edited a subscription type (ID = {0})</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.EditTask">
     <Value>Edited a task (ID = {0})</Value>
@@ -6906,12 +6915,6 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NewsletterEnabled.Hint">
     <Value>Set if 'Newsletter' is enabled.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NewsletterTickedByDefault">
-    <Value>Newsletter ticked by default</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NewsletterTickedByDefault.Hint">
-    <Value>A value indicating whether 'Newsletter' checkbox is ticked by default on the registration page.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NotifyNewCustomerRegistration">
     <Value>Notify about new customer registration</Value>
   </LocaleResource>
@@ -12114,12 +12117,6 @@
   <LocaleResource Name="Admin.Customers.Customers.Fields.MustChangePassword.Hint">
     <Value>Check to require the customer to change their password.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Customers.Fields.Newsletter">
-    <Value>Newsletter</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Customers.Fields.Newsletter.Hint">
-    <Value>Choose stores to subscribe to newsletter.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.Password">
     <Value>Password</Value>
   </LocaleResource>
@@ -14208,6 +14205,12 @@
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.Name.Required">
     <Value>Campaign name is required</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.NewsLetterSubscriptionType">
+    <Value>Limited to subscription types</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.NewsLetterSubscriptionType.Hint">
+    <Value>Choose a subscription type to which this email will be sent.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.Store">
     <Value>Limited to store</Value>
   </LocaleResource>
@@ -14580,32 +14583,74 @@
   <LocaleResource Name="Admin.Promotions.Discounts.Updated">
     <Value>The discount has been updated successfully.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions">
-    <Value>Newsletter subscribers</Value>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Added">
+    <Value>The subscription has been added successfully.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.Fields.Active">
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.AddNew">
+    <Value>Add a new subscription</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.BackToList">
+    <Value>back to subscriptions list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Deleted">
+    <Value>The subscription has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.EditSubscriptionDetails">
+    <Value>Edit subscription</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Updated">
+    <Value>The subscription has been updated successfully.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Fields.Active">
     <Value>Active</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.Fields.CreatedOn">
-    <Value>Subscribed on</Value>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Fields.Active.Hint">
+    <Value>A value indicating whether the subscription is active.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.Fields.Email">
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Fields.CreatedOn">
+    <Value>Created on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Fields.CreatedOn.Hint">
+    <Value>Date/Time the newsletter subscriptions entry was created.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Fields.Email">
     <Value>Email</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.Fields.Email.Required">
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Fields.Email.Hint">
+    <Value>Enter the email of subscription.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Fields.Email.Required">
     <Value>Email is required.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.Fields.Store">
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Fields.Language">
+    <Value>Language</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Fields.Language.Hint">
+    <Value>Choose language to subscribe to newsletter.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Fields.Store">
     <Value>Store</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.Fields.Language">
-    <Value>Language</Value>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Fields.Store.Hint">
+    <Value>Choose store to subscribe to newsletter.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Fields.SubscriptionType">
+    <Value>Subscription type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Fields.SubscriptionType.Hint">
+    <Value>Enter the type of subscription.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Warning">
+    <Value>An entity with this subscription type cannot be added or already exists.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions">
+    <Value>Newsletter subscribers</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.ImportEmailsSuccess">
     <Value>{0} emails have been successfully imported</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.CustomerRoles">
-    <Value>Customer roles</Value>
+    <Value>Customer role</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.CustomerRoles.Hint">
     <Value>Search by a specific customer role.</Value>
@@ -14648,6 +14693,63 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.StartDate.Hint">
     <Value>The start date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.SubscriptionTypes">
+    <Value>Subscription type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.SubscriptionTypes.Hint">
+    <Value>Limited to subscription types</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType">
+    <Value>Subscription types</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.Added">
+    <Value>The subscription type has been added successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.AddNew">
+    <Value>Add a new subscription type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.BackToList">
+    <Value>back to subscription types list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.Deleted">
+    <Value>The subscription type has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.EditSubscriptionTypeDetails">
+    <Value>Edit subscription type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.Fields.DisplayOrder.Hint">
+    <Value>Display order.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.Fields.LimitedToStores">
+    <Value>Limited to stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.Fields.LimitedToStores.Hint">
+    <Value>Option to limit this attribute to a certain store. If you have multiple stores, choose one or several from the list. If you don't use this option just leave this field empty.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.Fields.Name.Hint">
+    <Value>Enter the name of subscription type.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.Fields.Name.Required">
+    <Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.Fields.TickedByDefault">
+    <Value>Ticked by default</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.Fields.TickedByDefault.Hint">
+    <Value>Check to tick this newsletter subscription type by default.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.NotDeleted">
+    <Value><![CDATA[You cannot delete the only subscription type that is configured. To completely disable the newsletter, deactivate the "'Newsletter enabled" setting on the <a href="{0}">Customer settings</a> page]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.Updated">
+    <Value>The subscription type has been updated successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.RecurringPayments">
     <Value>Recurring payments</Value>

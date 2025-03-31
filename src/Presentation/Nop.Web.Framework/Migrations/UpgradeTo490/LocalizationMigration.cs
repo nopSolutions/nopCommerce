@@ -19,7 +19,7 @@ public class LocalizationMigration : MigrationBase
         //do not use DI, because it produces exception on the installation process
         var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
 
-        var (languageId, _) = this.GetLanguageData();
+        var (languageId, languages) = this.GetLanguageData();
 
         #region Delete locales
 
@@ -29,12 +29,30 @@ public class LocalizationMigration : MigrationBase
             "Admin.Configuration.AppSettings.Common.PluginStaticFileExtensionsBlacklist",
             "Admin.Configuration.AppSettings.Common.PluginStaticFileExtensionsBlacklist.Hint",
             //#7590
-            "Checkout.RedirectMessage"
+            "Checkout.RedirectMessage",
+
+            //#6874
+            "Account.Fields.Newsletter",
+            "Admin.Configuration.Settings.CustomerUser.NewsletterTickedByDefault",
+            "Admin.Configuration.Settings.CustomerUser.NewsletterTickedByDefault.Hint",
+            "Admin.Customers.Customers.Fields.Newsletter",
+            "Admin.Customers.Customers.Fields.Newsletter.Hint",
         });
 
         #endregion
 
         #region Rename locales
+
+        this.RenameLocales(new Dictionary<string, string>
+        {
+            //#6874
+            ["Admin.Promotions.NewsLetterSubscriptions.Fields.Active"] = "Admin.Promotions.NewsLetterSubscription.Fields.Active",
+            ["Admin.Promotions.NewsLetterSubscriptions.Fields.CreatedOn"] = "Admin.Promotions.NewsLetterSubscription.Fields.CreatedOn",
+            ["Admin.Promotions.NewsLetterSubscriptions.Fields.Email"] = "Admin.Promotions.NewsLetterSubscription.Fields.Email",
+            ["Admin.Promotions.NewsLetterSubscriptions.Fields.Email.Required"] = "Admin.Promotions.NewsLetterSubscription.Fields.Email.Required",
+            ["Admin.Promotions.NewsLetterSubscriptions.Fields.Language"] = "Admin.Promotions.NewsLetterSubscription.Fields.Language",
+            ["Admin.Promotions.NewsLetterSubscriptions.Fields.Store"] = "Admin.Promotions.NewsLetterSubscription.Fields.Store",
+        }, languages, localizationService);
 
         #endregion
 
@@ -117,6 +135,49 @@ public class LocalizationMigration : MigrationBase
             //#7405
             ["Admin.Configuration.Settings.Catalog.ExportImportCategoryUseLimitedToStores"] = "Export / Import categories with \"limited to stores\"",
             ["Admin.Configuration.Settings.Catalog.ExportImportCategoryUseLimitedToStores.Hint"] = "Check if categories should be exported / imported with \"limited to stores\" property.",
+
+            //#6874
+            ["Admin.Promotions.NewsLetterSubscriptionType"] = "Subscription types",
+            ["Admin.Promotions.NewsLetterSubscriptionType.Fields.LimitedToStores"] = "Limited to stores",
+            ["Admin.Promotions.NewsLetterSubscriptionType.Fields.LimitedToStores.Hint"] = "Option to limit this attribute to a certain store. If you have multiple stores, choose one or several from the list. If you don't use this option just leave this field empty.",
+            ["Admin.Promotions.NewsLetterSubscriptionType.Fields.Name"] = "Name",
+            ["Admin.Promotions.NewsLetterSubscriptionType.Fields.Name.Hint"] = "Enter the name of subscription type.",
+            ["Admin.Promotions.NewsLetterSubscriptionType.Fields.Name.Required"] = "Please provide a name.",
+            ["Admin.Promotions.NewsLetterSubscriptionType.Fields.TickedByDefault"] = "Ticked by default",
+            ["Admin.Promotions.NewsLetterSubscriptionType.Fields.TickedByDefault.Hint"] = "Check to tick this newsletter subscription type by default.",
+            ["Admin.Promotions.NewsLetterSubscriptionType.Fields.DisplayOrder"] = "Display order",
+            ["Admin.Promotions.NewsLetterSubscriptionType.Fields.DisplayOrder.Hint"] = "Display order.",
+            ["Admin.Promotions.NewsLetterSubscriptionType.Deleted"] = "The subscription type has been deleted successfully.",
+            ["Admin.Promotions.NewsLetterSubscriptionType.NotDeleted"] = "You cannot delete the only subscription type that is configured. To completely disable the newsletter, deactivate the \"'Newsletter enabled\" setting on the <a href=\"{0}\">Customer settings</a> page",
+            ["Admin.Promotions.NewsLetterSubscriptionType.Added"] = "The subscription type has been added successfully.",
+            ["Admin.Promotions.NewsLetterSubscriptionType.Updated"] = "The subscription type has been updated successfully.",
+            ["Admin.Promotions.NewsLetterSubscriptionType.EditSubscriptionTypeDetails"] = "Edit subscription type",
+            ["Admin.Promotions.NewsLetterSubscriptionType.BackToList"] = "back to subscription types list",
+            ["Admin.Promotions.NewsLetterSubscriptionType.AddNew"] = "Add a new subscription type",
+            ["Admin.Promotions.NewsLetterSubscriptions.List.CustomerRoles"] = "Customer role",
+            ["Admin.Promotions.NewsLetterSubscriptions.List.SubscriptionTypes"] = "Subscription type",
+            ["Admin.Promotions.NewsLetterSubscriptions.List.SubscriptionTypes.Hint"] = "Search by a specific subscription type.",            
+            ["Admin.Promotions.Campaigns.Fields.NewsLetterSubscriptionType"] = "Limited to subscription types",
+            ["Admin.Promotions.Campaigns.Fields.NewsLetterSubscriptionType.Hint"] = "Choose a subscription type to which this email will be sent.",
+            ["Account.SubscribeToNewsletter"] = "Subscribe to newsletter",
+            ["ActivityLog.AddSubscriptionType"] = "Added a new subscription type (ID = {0})",
+            ["ActivityLog.EditSubscriptionType"] = "Edited a subscription type (ID = {0})",
+            ["ActivityLog.DeleteSubscriptionType"] = "Deleted a subscription type (ID = {0})",
+            ["Admin.Promotions.NewsLetterSubscription.EditSubscriptionDetails"] = "Edit subscription",
+            ["Admin.Promotions.NewsLetterSubscription.BackToList"] = "back to subscriptions list",
+            ["Admin.Promotions.NewsLetterSubscription.AddNew"] = "Add a new subscription",
+            ["Admin.Promotions.NewsLetterSubscription.Deleted"] = "The subscription has been deleted successfully.",            
+            ["Admin.Promotions.NewsLetterSubscription.Added"] = "The subscription has been added successfully.",
+            ["Admin.Promotions.NewsLetterSubscription.Updated"] = "The subscription has been updated successfully.",
+            ["Admin.Promotions.NewsLetterSubscription.Warning"] = "An entity with this subscription type cannot be added or already exists.",
+
+            ["Admin.Promotions.NewsLetterSubscription.Fields.SubscriptionType"] = "Subscription type",
+            ["Admin.Promotions.NewsLetterSubscription.Fields.SubscriptionType.Hint"] = "Enter the type of subscription.",
+            ["Admin.Promotions.NewsLetterSubscription.Fields.Active.Hint"] = "A value indicating whether the subscription is active.",
+            ["Admin.Promotions.NewsLetterSubscription.Fields.Email.Hint"] = "Enter the email of subscription.",
+            ["Admin.Promotions.NewsLetterSubscription.Fields.Store.Hint"] = "Choose store to subscribe to newsletter.",
+            ["Admin.Promotions.NewsLetterSubscription.Fields.Language.Hint"] = "Choose language to subscribe to newsletter.",
+            ["Admin.Promotions.NewsLetterSubscription.Fields.CreatedOn.Hint"] = "Date/Time the newsletter subscriptions entry was created.",
         }, languageId);
 
         #endregion
