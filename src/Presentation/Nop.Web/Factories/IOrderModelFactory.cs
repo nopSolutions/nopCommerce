@@ -12,11 +12,22 @@ public partial interface IOrderModelFactory
     /// <summary>
     /// Prepare the customer order list model
     /// </summary>
+    /// <param name="page">Page number</param>
+    /// <param name="limit">Order filtering period</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the customer order list model
     /// </returns>
-    Task<CustomerOrderListModel> PrepareCustomerOrderListModelAsync();
+    Task<CustomerOrderListModel> PrepareCustomerOrderListModelAsync(int? page, OrderHistoryPeriods limit);
+
+    /// <summary>
+    /// Prepare the customer recurring payment list model
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the customer recurring payment list model
+    /// </returns>
+    Task<CustomerRecurringPaymentListModel> PrepareCustomerRecurringPaymentListModelAsync();
 
     /// <summary>
     /// Prepare the order details model
