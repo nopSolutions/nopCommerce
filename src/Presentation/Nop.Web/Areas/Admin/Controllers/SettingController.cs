@@ -195,14 +195,13 @@ public partial class SettingController : BaseAdminController
                 model.CacheConfigModel.ToConfig(_appSettings.Get<CacheConfig>()),
                 model.HostingConfigModel.ToConfig(_appSettings.Get<HostingConfig>()),
                 model.DistributedCacheConfigModel.ToConfig(_appSettings.Get<DistributedCacheConfig>()),
-                model.AzureBlobConfigModel.ToConfig(_appSettings.Get<AzureBlobConfig>()),
                 model.InstallationConfigModel.ToConfig(_appSettings.Get<InstallationConfig>()),
                 model.PluginConfigModel.ToConfig(_appSettings.Get<PluginConfig>()),
                 model.CommonConfigModel.ToConfig(_appSettings.Get<CommonConfig>()),
                 model.DataConfigModel.ToConfig(_appSettings.Get<DataConfig>()),
                 model.WebOptimizerConfigModel.ToConfig(_appSettings.Get<WebOptimizerConfig>())
             };
-
+            
             await _eventPublisher.PublishAsync(new AppSettingsSavingEvent(configurations));
 
             AppSettingsHelper.SaveAppSettings(configurations, _fileProvider);

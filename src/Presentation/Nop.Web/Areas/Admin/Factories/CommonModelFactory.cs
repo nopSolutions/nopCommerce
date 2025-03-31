@@ -818,7 +818,6 @@ public partial class CommonModelFactory : ICommonModelFactory
             model.LoadedAssemblies.Add(loadedAssemblyModel);
         }
 
-
         var currentStaticCacheManagerName = _staticCacheManager.GetType().Name;
 
         if (_appSettings.Get<DistributedCacheConfig>().Enabled)
@@ -826,8 +825,6 @@ public partial class CommonModelFactory : ICommonModelFactory
                 $"({await _localizationService.GetLocalizedEnumAsync(_appSettings.Get<DistributedCacheConfig>().DistributedCacheType)})";
 
         model.CurrentStaticCacheManager = currentStaticCacheManagerName;
-
-        model.AzureBlobStorageEnabled = _appSettings.Get<AzureBlobConfig>().Enabled;
 
         return model;
     }
