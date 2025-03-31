@@ -4,9 +4,9 @@ using Nop.Data.Extensions;
 using Nop.Data.Mapping.Builders;
 using Nop.Plugin.Misc.RFQ.Domains;
 
-namespace Nop.Plugin.Misc.RFQ.Mapping.Builders;
+namespace Nop.Plugin.Misc.RFQ.Data.Mapping.Builders;
 
-public class QuoteBuilder : NopEntityBuilder<Quote>
+public class RFQRequestQuoteBuilder : NopEntityBuilder<RFQRequestQuote>
 {
     #region Methods
 
@@ -16,8 +16,7 @@ public class QuoteBuilder : NopEntityBuilder<Quote>
     /// <param name="table">Create table expression builder</param>
     public override void MapEntity(CreateTableExpressionBuilder table)
     {
-        table.WithColumn(nameof(Quote.CustomerId)).AsInt32().ForeignKey<Customer>();
-        table.WithColumn(nameof(Quote.RequestQuoteId)).AsInt32().Nullable().ForeignKey<RequestQuote>();
+        table.WithColumn(nameof(RFQRequestQuote.CustomerId)).AsInt32().ForeignKey<Customer>();
     }
 
     #endregion

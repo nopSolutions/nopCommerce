@@ -1,26 +1,34 @@
-﻿namespace Nop.Plugin.Misc.RFQ;
+﻿using Nop.Core.Caching;
+
+namespace Nop.Plugin.Misc.RFQ;
 
 /// <summary>
 /// Represents plugin constants
 /// </summary>
 public class RfqDefaults
 {
+    #region Caching defaults
+
+    /// <summary>
+    /// Gets a key for caching
+    /// </summary>
+    /// <remarks>
+    /// {0} : shopping cart item ID
+    /// </remarks>
+    public static CacheKey QuoteItemByShoppingCartItemCacheKey => new("Misc.RFQ.QuoteItemByShoppingCartItem.{0}");
+    
+    #endregion
 
     public const string CUSTOMER_SENT_NEW_REQUEST_QUOTE = "RequestQuote.CustomerSentNewRequest.StoreOwnerNotification";
     public const string ADMIN_SENT_NEW_QUOTE = "Quote.AdminSentNewQuote.CustomerNotification";
-
+    
     /// <summary>
-    /// Gets an algorithm used to create the hash value
-    /// </summary>
-    public const string HASH_ALGORITHM = "SHA1";
-
-    /// <summary>
-    /// Gets an quantity form key prefix
+    /// Gets a quantity form key prefix
     /// </summary>
     public const string QUANTITY_FORM_KEY = "quantity_";
 
     /// <summary>
-    /// Gets an unit price form key prefix
+    /// Gets a unit price form key prefix
     /// </summary>
     public const string UNIT_PRICE_FORM_KEY = "unit_price_";
     

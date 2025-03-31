@@ -9,7 +9,7 @@ public record QuoteItemModel : BaseNopEntityModel
 {
     public int? RequestedQty { get; set; }
 
-    public string? RequestedUnitPrice { get; set; }
+    public string RequestedUnitPrice { get; set; }
 
     public int OfferedQty { get; set; }
 

@@ -6,7 +6,7 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 namespace Nop.Plugin.Misc.RFQ.Models.Admin;
 
 /// <summary>
-/// Represents a product model to add to the request quote
+/// Represents a product model to add to the quote
 /// </summary>
 public record AddProductModel : BaseNopModel
 {
@@ -24,7 +24,7 @@ public record AddProductModel : BaseNopModel
     #region Properties
 
     public int ProductId { get; set; }
-    
+
     public int? QuoteId { get; set; }
 
     public ProductType ProductType { get; set; }
@@ -33,10 +33,10 @@ public record AddProductModel : BaseNopModel
 
     [NopResourceDisplayName("Admin.Orders.Products.AddNew.UnitPriceInclTax")]
     public decimal UnitPriceInclTax { get; set; }
-    
+
     [NopResourceDisplayName("Admin.Orders.Products.AddNew.Quantity")]
     public int Quantity { get; set; }
-    
+
     //product attributes
     public IList<ProductAttributeModel> ProductAttributes { get; set; }
     //gift card info
@@ -89,7 +89,7 @@ public record AddProductModel : BaseNopModel
         public bool IsPreSelected { get; set; }
 
         public string PriceAdjustment { get; set; }
-        
+
         public bool CustomerEntersQty { get; set; }
 
         public int Quantity { get; set; }

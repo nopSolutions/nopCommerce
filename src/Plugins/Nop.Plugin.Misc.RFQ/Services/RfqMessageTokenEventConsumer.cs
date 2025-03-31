@@ -9,7 +9,7 @@ public class RfqMessageTokenEventConsumer : IConsumer<AdditionalTokensAddedEvent
 
     public Task HandleEventAsync(AdditionalTokensAddedEvent eventMessage)
     {
-        eventMessage.AddTokens("%RequestQuote.Id%", "%RequestQuote.CreatedOn%", "%RequestQuote.URL%", "%Quote.Id%", "%Quote.CreatedOn%", "%Quote.ExpirationOn%", "%Quote.URL%");
+        eventMessage.AddTokens("%RequestQuote.Id%", "%RequestQuote.CreatedOn%", "%RequestQuote.URL%", "%Quote.Id%", "%Quote.CreatedOn%", "%Quote.ExpirationOn%", "%Quote.ExpirationOnIsSet%", "%Quote.URL%");
 
         return Task.CompletedTask;
     }

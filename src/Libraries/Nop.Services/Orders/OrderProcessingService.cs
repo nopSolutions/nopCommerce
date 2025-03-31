@@ -1311,7 +1311,7 @@ public partial class OrderProcessingService : IOrderProcessingService
             await _productService.AdjustInventoryAsync(product, -sc.Quantity, sc.AttributesXml,
                 string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.PlaceOrder"), order.Id));
 
-            await _eventPublisher.PublishAsync(new OrderItemCreatedEvent(sc, orderItem));
+            await _eventPublisher.PublishAsync(new ShoppingCartItemMovedToOrderItemEvent(sc, orderItem));
         }
 
         await _shoppingCartService.ClearShoppingCartAsync(details.Customer, order.StoreId);

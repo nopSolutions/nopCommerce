@@ -23,9 +23,7 @@
     <None Remove="Views\AdminRequests.cshtml" />
     <None Remove="Views\Admin\_AdminQuote.Products.cshtml" />
     <None Remove="Views\Admin\_AdminRequest.Products.cshtml" />
-    <None Remove="Views\Components\AddRfq\Default.cshtml" />
     <None Remove="Views\Components\CustomerRequest.cshtml" />
-    <None Remove="Views\Components\CustomerRfqMenu\Default.cshtml" />
     <None Remove="Views\CustomerQuote.cshtml" />
     <None Remove="Views\CustomerQuotes.cshtml" />
     <None Remove="Views\CustomerRequests.cshtml" />
@@ -72,7 +70,7 @@
     <Content Include="Views\Admin\_AdminRequest.Products.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\Components\AddRfq\Default.cshtml">
+    <Content Include="Views\Components\AddRfq.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\CustomerQuotes.cshtml">
@@ -105,7 +103,7 @@
     <Content Include="Views\CustomerRequest.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\Components\CustomerRfqMenu\Default.cshtml">
+    <Content Include="Views\Components\CustomerRfqMenu.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Admin\_ProductAddAttributes.cshtml">

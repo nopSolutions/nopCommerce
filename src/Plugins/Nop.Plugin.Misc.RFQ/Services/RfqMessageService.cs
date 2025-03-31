@@ -85,25 +85,32 @@ public class RfqMessageService : WorkflowMessageService
 
     #region Utilities
 
-    private async Task AddAdminRequestQuoteTokens(IList<Token> tokens, RequestQuote requestQuote, Language language)
+    private async Task AddAdminRequestQuoteTokensAsync(IList<Token> tokens, RFQRequestQuote requestQuote, Language language)
     {
         tokens.Add(new Token("RequestQuote.Id", requestQuote.Id));
         tokens.Add(new Token("RequestQuote.CreatedOn", requestQuote.CreatedOnUtc.ToString("D", new CultureInfo(language.LanguageCulture))));
         tokens.Add(new Token("RequestQuote.URL", $"{_webHelper.GetStoreLocation()}Admin/RfqAdmin/AdminRequest/{requestQuote.Id}"));
-        
+
         //event notification
         await _eventPublisher.EntityTokensAddedAsync(requestQuote, tokens);
     }
 
-    private async Task AddCustomerQuoteTokens(IList<Token> tokens, Quote quote, Language language)
+    private async Task AddCustomerQuoteTokensAsync(IList<Token> tokens, RFQQuote quote, Language language)
     {
         tokens.Add(new Token("Quote.Id", quote.Id));
         tokens.Add(new Token("Quote.CreatedOn", quote.CreatedOnUtc.ToString("D", new CultureInfo(language.LanguageCulture))));
-        tokens.Add(new Token("Quote.ExpirationOn", quote.ExpirationDateUtc?.ToString("D", new CultureInfo(language.LanguageCulture))));
+        var expirationDate = quote.ExpirationDateUtc?.ToString("D", new CultureInfo(language.LanguageCulture));
+        tokens.Add(new Token("Quote.ExpirationOn", expirationDate));
+        tokens.Add(new Token("Quote.ExpirationOnIsSet", !string.IsNullOrWhiteSpace(expirationDate)));
 
         var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext!);
 
-        var url = $"{_webHelper.GetStoreLocation()}{urlHelper.RouteUrl(new UrlRouteContext { RouteName = RfqDefaults.CustomerQuoteRouteName, Values = new { quoteId = quote.Id } })}";
+        var url = urlHelper.RouteUrl(new UrlRouteContext
+        {
+            RouteName = RfqDefaults.CustomerQuoteRouteName,
+            Values = new { quoteId = quote.Id },
+            Protocol = _webHelper.GetCurrentRequestProtocol()
+        });
         tokens.Add(new Token("Quote.URL", url));
 
         //event notification
@@ -122,12 +129,12 @@ public class RfqMessageService : WorkflowMessageService
     /// A task that represents the asynchronous operation
     /// The task result contains the queued email identifier
     /// </returns>
-    public async Task<IList<int>> CustomerSentNewRequestQuoteAsync(RequestQuote requestQuote)
+    public async Task<IList<int>> CustomerSentNewRequestQuoteAsync(RFQRequestQuote requestQuote)
     {
         ArgumentNullException.ThrowIfNull(requestQuote);
 
         var store = await _storeContext.GetCurrentStoreAsync();
-        
+
         var messageTemplates = await GetActiveMessageTemplatesAsync(RfqDefaults.CUSTOMER_SENT_NEW_REQUEST_QUOTE, store.Id);
         if (!messageTemplates.Any())
             return new List<int>();
@@ -145,13 +152,13 @@ public class RfqMessageService : WorkflowMessageService
             var tokens = new List<Token>();
             await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
             await _messageTokenProvider.AddCustomerTokensAsync(tokens, requestQuote.CustomerId);
-            await AddAdminRequestQuoteTokens(tokens, requestQuote, language);
+            await AddAdminRequestQuoteTokensAsync(tokens, requestQuote, language);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
             var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
-            
+
             var replyToEmail = messageTemplate.AllowDirectReply ? customer.Email : "";
             var replyToName = messageTemplate.AllowDirectReply ? $"{customer.FirstName} {customer.LastName}" : "";
 
@@ -160,14 +167,14 @@ public class RfqMessageService : WorkflowMessageService
     }
 
     /// <summary>
-    /// Sends "Administrator sent new request quote" message 
+    /// Sends "Administrator sent new quote" message 
     /// </summary>
-    /// <param name="quote">Request quote</param>
+    /// <param name="quote">The quote</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the queued email identifier
     /// </returns>
-    public async Task<IList<int>> AdminSentNewQuoteAsync(Quote quote)
+    public async Task<IList<int>> AdminSentNewQuoteAsync(RFQQuote quote)
     {
         ArgumentNullException.ThrowIfNull(quote);
 
@@ -177,9 +184,10 @@ public class RfqMessageService : WorkflowMessageService
         if (!messageTemplates.Any())
             return new List<int>();
 
-        var languageId = await EnsureLanguageIsActiveAsync(_localizationSettings.DefaultAdminLanguageId, store.Id);
-        var language = await _languageService.GetLanguageByIdAsync(languageId);
         var customer = await _customerService.GetCustomerByIdAsync(quote.CustomerId);
+        var languageId = await EnsureLanguageIsActiveAsync(customer.LanguageId ?? 0, store.Id);
+        var language = await _languageService.GetLanguageByIdAsync(languageId);
+
 
         return await messageTemplates.SelectAwait(async messageTemplate =>
         {
@@ -190,11 +198,11 @@ public class RfqMessageService : WorkflowMessageService
             var tokens = new List<Token>();
             await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
             await _messageTokenProvider.AddCustomerTokensAsync(tokens, quote.CustomerId);
-            await AddCustomerQuoteTokens(tokens, quote, language);
+            await AddCustomerQuoteTokensAsync(tokens, quote, language);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
-            
+
             return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, customer.Email, $"{customer.FirstName} {customer.LastName}");
         }).ToListAsync();
     }

@@ -1,7 +1,6 @@
 @using Nop.Web.Components
 @using Nop.Core.Domain.Catalog
 @using Nop.Core.Domain.Media
-@using Nop.Web.Framework.Mvc.Routing
 
 @model Nop.Plugin.Misc.RFQ.Models.Customer.QuoteModel
 @inject MediaSettings mediaSettings
@@ -58,7 +57,7 @@
                     {
                         <div class="inputs">
                             <label asp-for="ExpirationDate" asp-postfix=":"></label>
-                            <label>@Model.ExpirationDate"</label>
+                            <label>@Model.ExpirationDate</label>
                         </div>
                     }
                     <div class="inputs">
@@ -67,7 +66,7 @@
                             @Model.Status
                             @if (Model.Order.HasValue)
                             {
-                                <a href="@Url.RouteUrl("OrderDetails", new { orderId = Model.Order })">(@T("Account.CustomerOrders.OrderDetails"))</a>
+                                <text> (</text><a class="rfq-link" href="@Url.RouteUrl("OrderDetails", new { orderId = Model.Order })">@T("Account.CustomerOrders.OrderDetails")</a><text>)</text>
                             }
                         </label>
                     </div>

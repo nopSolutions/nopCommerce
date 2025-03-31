@@ -1,5 +1,3 @@
-@using Nop.Web.Components
-
 @model List<Nop.Plugin.Misc.RFQ.Models.Customer.QuoteModel>
 
 @{
@@ -41,12 +39,12 @@
                         <strong>@string.Format(T("Plugins.Misc.RFQ.QuoteNumber").Text, quote.Id)</strong>
                     </div>
                     <ul class="info">
-                        <li>@T("Plugins.Misc.RFQ.Fields.CreatedOn"): <span>@quote.CreatedOn</span></li>
+                        <li>@T("Plugins.Misc.RFQ.Fields.Quote.CreatedOn"): <span>@quote.CreatedOn</span></li>
                         @if (quote.ExpirationDate.HasValue)
                         {
-                            <li>@T("Plugins.Misc.RFQ.Common.Fields.ExpirationDate"): <span>@quote.ExpirationDate</span></li>
+                            <li>@T("Plugins.Misc.RFQ.Fields.Quote.ExpirationDate"): <span>@quote.ExpirationDate</span></li>
                         }
-                        <li>@T("Plugins.Misc.RFQ.Fields.Status"): <span>@quote.Status</span></li>
+                        <li>@T("Plugins.Misc.RFQ.Fields.Quote.Status"): <span>@quote.Status</span></li>
                     </ul>
                     <div class="buttons">
                         <button type="button" class="button-2" onclick="setLocation('@Url.RouteUrl(RfqDefaults.CustomerQuoteRouteName, new { quoteId = quote.Id })')">@T("Plugins.Misc.RFQ.CustomerQuote.Info")</button>
