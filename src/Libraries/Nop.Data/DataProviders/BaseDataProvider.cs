@@ -60,6 +60,31 @@ public abstract partial class BaseDataProvider
     }
 
     /// <summary>
+    /// Gets scalar value from the database
+    /// </summary>
+    /// <param name="sql">The text command to run</param>
+    /// <param name="parameters">Database parameters</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The first column of the first row in the first result set.
+    /// </returns>
+    protected virtual async Task<string> GetSqlStringValueAsync(string sql, params DataParameter[] parameters)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(sql);
+        
+        await using var dbConnection = CreateDbConnection();
+        await using var command = dbConnection.CreateCommand();
+        command.Connection = dbConnection;
+        command.CommandText = sql;
+        command.Parameters.AddRange(parameters);
+        await dbConnection.OpenAsync();
+
+        var value = await command.ExecuteScalarAsync();
+        
+        return value?.ToString() ?? string.Empty;
+    }
+
+    /// <summary>
     /// Gets a data hash from database side
     /// </summary>
     /// <param name="binaryData">Array for a hashing function</param>

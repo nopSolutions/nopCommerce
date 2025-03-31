@@ -120,6 +120,10 @@ public class LocalizationMigration : MigrationBase
 
             //#820
             ["Currency.Selector.Text.Pattern"] = "{0}, {1}",
+            
+            //#5652
+            ["Admin.System.SystemInfo.DatabaseCollation"] = "Database collation",
+            ["Admin.System.SystemInfo.DatabaseCollation.Hint"] = "The collation defines the rules for sorting and comparing data.",
 
         }, languageId);
 

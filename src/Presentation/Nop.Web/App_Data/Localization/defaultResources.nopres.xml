@@ -16086,6 +16086,12 @@
   <LocaleResource Name="Admin.System.SystemInfo.CurrentUserTime.Hint">
     <Value>Current user time (based on specified datetime and timezone settings).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.DatabaseCollation">
+    <Value>Database collation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.DatabaseCollation.Hint">
+    <Value>The collation defines the rules for sorting and comparing data.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.Headers">
     <Value>Headers</Value>
   </LocaleResource>
