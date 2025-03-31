@@ -15,6 +15,9 @@ public partial record NewsletterSubscriptionModel : BaseNopEntityModel
     [NopResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.Fields.Email")]
     public string Email { get; set; }
 
+    [NopResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.Fields.SubscriptionTypes")]
+    public string SubscriptionTypes { get; set; }
+
     [NopResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.Fields.Active")]
     public bool Active { get; set; }
 

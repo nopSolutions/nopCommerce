@@ -17,6 +17,7 @@ public partial record NewsletterSubscriptionSearchModel : BaseSearchModel
         AvailableStores = new List<SelectListItem>();
         ActiveList = new List<SelectListItem>();
         AvailableCustomerRoles = new List<SelectListItem>();
+        AvailableSubscriptionTypes = new List<SelectListItem>();
     }
 
     #endregion
@@ -42,6 +43,10 @@ public partial record NewsletterSubscriptionSearchModel : BaseSearchModel
     public int CustomerRoleId { get; set; }
 
     public IList<SelectListItem> AvailableCustomerRoles { get; set; }
+
+    [NopResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.List.SubscriptionTypes")]
+    public int SubscriptionTypeId { get; set; }
+    public IList<SelectListItem> AvailableSubscriptionTypes { get; set; }
 
     [NopResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.List.StartDate")]
     [UIHint("DateNullable")]

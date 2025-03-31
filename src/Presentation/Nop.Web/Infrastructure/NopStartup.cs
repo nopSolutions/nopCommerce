@@ -56,6 +56,7 @@ public partial class NopStartup : INopStartup
         services.AddScoped<IMessageTemplateModelFactory, MessageTemplateModelFactory>();
         services.AddScoped<IMultiFactorAuthenticationMethodModelFactory, MultiFactorAuthenticationMethodModelFactory>();
         services.AddScoped<INewsletterSubscriptionModelFactory, NewsletterSubscriptionModelFactory>();
+        services.AddScoped<INewsletterSubscriptionTypeModelFactory, NewsLetterSubscriptionTypeModelFactory>();
         services.AddScoped<INewsModelFactory, NewsModelFactory>();
         services.AddScoped<IOrderModelFactory, OrderModelFactory>();
         services.AddScoped<IPaymentModelFactory, PaymentModelFactory>();

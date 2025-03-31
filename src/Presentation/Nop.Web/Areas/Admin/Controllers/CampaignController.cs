@@ -270,6 +270,7 @@ public partial class CampaignController : BaseAdminController
             var storeId = (await _storeService.GetStoreByIdAsync(campaign.StoreId))?.Id ?? 0;
             var subscriptions = await _newsLetterSubscriptionService.GetAllNewsLetterSubscriptionsAsync(storeId: storeId,
                 customerRoleId: model.CustomerRoleId,
+                subscriptionTypeId: model.NewsLetterSubscriptionTypeId,
                 isActive: true);
             var totalEmailsSent = await _campaignService.SendCampaignAsync(campaign, emailAccount, subscriptions);
 

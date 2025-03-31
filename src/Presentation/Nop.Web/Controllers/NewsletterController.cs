@@ -20,6 +20,7 @@ public partial class NewsletterController : BasePublicController
     protected readonly ILocalizationService _localizationService;
     protected readonly INewsletterModelFactory _newsletterModelFactory;
     protected readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+    protected readonly INewsLetterSubscriptionTypeService _newsLetterSubscriptionTypeService;
     protected readonly IStoreContext _storeContext;
     protected readonly IWorkContext _workContext;
     protected readonly IWorkflowMessageService _workflowMessageService;
@@ -30,6 +31,7 @@ public partial class NewsletterController : BasePublicController
         ILocalizationService localizationService,
         INewsletterModelFactory newsletterModelFactory,
         INewsLetterSubscriptionService newsLetterSubscriptionService,
+        INewsLetterSubscriptionTypeService newsLetterSubscriptionTypeService,
         IStoreContext storeContext,
         IWorkContext workContext,
         IWorkflowMessageService workflowMessageService)
@@ -40,6 +42,7 @@ public partial class NewsletterController : BasePublicController
         _localizationService = localizationService;
         _newsletterModelFactory = newsletterModelFactory;
         _newsLetterSubscriptionService = newsLetterSubscriptionService;
+        _newsLetterSubscriptionTypeService = newsLetterSubscriptionTypeService;
         _storeContext = storeContext;
         _workContext = workContext;
         _workflowMessageService = workflowMessageService;
@@ -71,6 +74,14 @@ public partial class NewsletterController : BasePublicController
             var store = await _storeContext.GetCurrentStoreAsync();
             var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(email, store.Id);
             var currentLanguage = await _workContext.GetWorkingLanguageAsync();
+
+            var newsLetterSubscriptionTypes = await _newsLetterSubscriptionTypeService.GetAllNewsLetterSubscriptionTypesAsync();
+            var newsLetterSubscriptionTypesByDefault = newsLetterSubscriptionTypes.Where(s => s.TickedByDefault);
+            if (newsLetterSubscriptionTypesByDefault.Any())
+            {
+                newsLetterSubscriptionTypes = newsLetterSubscriptionTypesByDefault.ToList();
+            }
+
             if (subscription != null)
             {
                 subscription.LanguageId = subscription.LanguageId == 0 ? currentLanguage.Id : subscription.LanguageId;
@@ -79,6 +90,15 @@ public partial class NewsletterController : BasePublicController
                     if (!subscription.Active)
                     {
                         await _workflowMessageService.SendNewsLetterSubscriptionActivationMessageAsync(subscription);
+                        await _newsLetterSubscriptionTypeService.ClearNewsLetterSubscriptionTypeMappingsAsync(subscription);
+                        foreach (var newsLetterSubscriptionType in newsLetterSubscriptionTypes)
+                        {
+                            await _newsLetterSubscriptionTypeService.InsertNewsLetterSubscriptionTypeMappingsAsync(new NewsLetterSubscriptionTypeMapping
+                            {
+                                NewsLetterSubscriptionId = subscription.Id,
+                                NewsLetterSubscriptionTypeId = newsLetterSubscriptionType.Id
+                            });
+                        }
                     }
                     result = await _localizationService.GetResourceAsync("Newsletter.SubscribeEmailSent");
                 }
@@ -87,6 +107,7 @@ public partial class NewsletterController : BasePublicController
                     if (subscription.Active)
                     {
                         await _workflowMessageService.SendNewsLetterSubscriptionDeactivationMessageAsync(subscription);
+                        await _newsLetterSubscriptionTypeService.ClearNewsLetterSubscriptionTypeMappingsAsync(subscription);
                     }
                     result = await _localizationService.GetResourceAsync("Newsletter.UnsubscribeEmailSent");
                 }
@@ -104,6 +125,16 @@ public partial class NewsletterController : BasePublicController
                 };
                 await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(subscription);
                 await _workflowMessageService.SendNewsLetterSubscriptionActivationMessageAsync(subscription);
+
+                var addedNewsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(subscription.Email, store.Id);
+                foreach (var newsLetterSubscriptionType in newsLetterSubscriptionTypes)
+                {
+                    await _newsLetterSubscriptionTypeService.InsertNewsLetterSubscriptionTypeMappingsAsync(new NewsLetterSubscriptionTypeMapping
+                    {
+                        NewsLetterSubscriptionId = addedNewsletter.Id,
+                        NewsLetterSubscriptionTypeId = newsLetterSubscriptionType.Id
+                    });
+                }
 
                 result = await _localizationService.GetResourceAsync("Newsletter.SubscribeEmailSent");
             }

@@ -179,6 +179,7 @@ public partial class NopStartup : INopStartup
         services.AddScoped<IMessageTemplateService, MessageTemplateService>();
         services.AddScoped<IQueuedEmailService, QueuedEmailService>();
         services.AddScoped<INewsLetterSubscriptionService, NewsLetterSubscriptionService>();
+        services.AddScoped<INewsLetterSubscriptionTypeService, NewsLetterSubscriptionTypeService>();
         services.AddScoped<INotificationService, NotificationService>();
         services.AddScoped<ICampaignService, CampaignService>();
         services.AddScoped<IEmailAccountService, EmailAccountService>();

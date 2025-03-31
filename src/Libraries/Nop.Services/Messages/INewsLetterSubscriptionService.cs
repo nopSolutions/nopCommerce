@@ -9,6 +9,15 @@ namespace Nop.Services.Messages;
 public partial interface INewsLetterSubscriptionService
 {
     /// <summary>
+    /// Gets a newsletter subscription by newsletter subscription identifier
+    /// </summary>
+    /// <param name="newsLetterSubscriptionId">The newsletter subscription identifier</param>
+    /// <returns>
+    /// The result contains true if the newsletter is active, false otherwise
+    /// </returns>
+    bool IsActiveNewsletter(NewsLetterSubscription newsLetterSubscription);
+
+    /// <summary>
     /// Inserts a newsletter subscription
     /// </summary>
     /// <param name="newsLetterSubscription">NewsLetter subscription</param>
@@ -72,6 +81,7 @@ public partial interface INewsLetterSubscriptionService
     /// <param name="storeId">Store identifier. 0 to load all records.</param>
     /// <param name="isActive">Value indicating whether subscriber record should be active or not; null to load all records</param>
     /// <param name="customerRoleId">Customer role identifier. Used to filter subscribers by customer role. 0 to load all records.</param>
+    ///  /// <param name="subscriptionTypeId">Subscription type identifier. Used to filter subscribers by subscription type. 0 to load all records.</param>
     /// <param name="pageIndex">Page index</param>
     /// <param name="pageSize">Page size</param>
     /// <returns>
@@ -80,6 +90,6 @@ public partial interface INewsLetterSubscriptionService
     /// </returns>
     Task<IPagedList<NewsLetterSubscription>> GetAllNewsLetterSubscriptionsAsync(string email = null,
         DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
-        int storeId = 0, bool? isActive = null, int customerRoleId = 0,
+        int storeId = 0, bool? isActive = null, int customerRoleId = 0, int subscriptionTypeId = 0,
         int pageIndex = 0, int pageSize = int.MaxValue);
 }

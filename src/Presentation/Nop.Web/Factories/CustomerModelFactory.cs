@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using LinqToDB.Tools;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -61,6 +62,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
     protected readonly ILocalizationService _localizationService;
     protected readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
     protected readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+    protected readonly INewsLetterSubscriptionTypeService _newsLetterSubscriptionTypeService;
     protected readonly IOrderService _orderService;
     protected readonly IPermissionService _permissionService;
     protected readonly IPictureService _pictureService;
@@ -104,6 +106,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         ILocalizationService localizationService,
         IMultiFactorAuthenticationPluginManager multiFactorAuthenticationPluginManager,
         INewsLetterSubscriptionService newsLetterSubscriptionService,
+        INewsLetterSubscriptionTypeService newsLetterSubscriptionTypeService,
         IOrderService orderService,
         IPermissionService permissionService,
         IPictureService pictureService,
@@ -143,6 +146,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         _localizationService = localizationService;
         _multiFactorAuthenticationPluginManager = multiFactorAuthenticationPluginManager;
         _newsLetterSubscriptionService = newsLetterSubscriptionService;
+        _newsLetterSubscriptionTypeService = newsLetterSubscriptionTypeService;
         _orderService = orderService;
         _permissionService = permissionService;
         _pictureService = pictureService;
@@ -236,7 +240,24 @@ public partial class CustomerModelFactory : ICustomerModelFactory
 
             //newsletter
             var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id);
-            model.Newsletter = newsletter != null && newsletter.Active;
+            if (newsletter != null)
+            {
+                var newsLetterSubscriptionTypes = await _newsLetterSubscriptionTypeService.GetAllNewsLetterSubscriptionTypesAsync();
+                var activeSubscriptions = _newsLetterSubscriptionTypeService.GetSubscriptionTypesByNewsLetter(newsletter);
+
+                model.Newsletter = _newsLetterSubscriptionService.IsActiveNewsletter(newsletter);
+
+                foreach (var newsLetterSubscriptionType in newsLetterSubscriptionTypes)
+                {
+                    var nsModel = new CustomerInfoModel.NewsLetterSubscriptionModel
+                    {
+                        TypeId = newsLetterSubscriptionType.Id,
+                        Name = await _localizationService.GetLocalizedAsync(newsLetterSubscriptionType, x => x.Name),
+                        IsActive = activeSubscriptions.Where(x => x.Id == newsLetterSubscriptionType.Id).Any()
+                    };
+                    model.NewsLetterSubscriptions.Add(nsModel);
+                }
+            }
 
             model.Signature = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SignatureAttribute);
 
@@ -328,7 +349,6 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         model.PhoneRequired = _customerSettings.PhoneRequired;
         model.FaxEnabled = _customerSettings.FaxEnabled;
         model.FaxRequired = _customerSettings.FaxRequired;
-        model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
         model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
         model.AllowUsersToChangeUsernames = _customerSettings.AllowUsersToChangeUsernames;
         model.CheckUsernameAvailabilityEnabled = _customerSettings.CheckUsernameAvailabilityEnabled;
@@ -433,7 +453,6 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         model.PhoneRequired = _customerSettings.PhoneRequired;
         model.FaxEnabled = _customerSettings.FaxEnabled;
         model.FaxRequired = _customerSettings.FaxRequired;
-        model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
         model.AcceptPrivacyPolicyEnabled = _customerSettings.AcceptPrivacyPolicyEnabled;
         model.AcceptPrivacyPolicyPopup = _commonSettings.PopupForTermsOfServiceLinks;
         model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
@@ -444,7 +463,17 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         if (setDefaultValues)
         {
             //enable newsletter by default
-            model.Newsletter = _customerSettings.NewsletterTickedByDefault;
+            var newsLetterSubscriptionTypes = await _newsLetterSubscriptionTypeService.GetAllNewsLetterSubscriptionTypesAsync();
+            foreach (var newsLetterSubscriptionType in newsLetterSubscriptionTypes)
+            {
+                var nsModel = new RegisterModel.NewsLetterSubscriptionModel
+                {
+                    TypeId = newsLetterSubscriptionType.Id,
+                    Name = await _localizationService.GetLocalizedAsync(newsLetterSubscriptionType, x => x.Name),
+                    IsActive = newsLetterSubscriptionType.TickedByDefault
+                };
+                model.NewsLetterSubscriptions.Add(nsModel);
+            }
         }
 
         //countries and states

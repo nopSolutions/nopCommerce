@@ -147,6 +147,8 @@ public class SchemaMigration : ForwardOnlyMigration
         Create.TableFor<EmailAccount>();
         Create.TableFor<MessageTemplate>();
         Create.TableFor<NewsLetterSubscription>();
+        Create.TableFor<NewsLetterSubscriptionType>();
+        Create.TableFor<NewsLetterSubscriptionTypeMapping>();
         Create.TableFor<QueuedEmail>();
         Create.TableFor<NewsItem>();
         Create.TableFor<NewsComment>();

@@ -24,6 +24,7 @@ public partial class NewsletterSubscriptionModelFactory : INewsletterSubscriptio
     protected readonly ILanguageService _languageService;
     protected readonly ILocalizationService _localizationService;
     protected readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+    protected readonly INewsLetterSubscriptionTypeService _newsLetterSubscriptionTypeService;
     protected readonly IStoreService _storeService;
 
     #endregion
@@ -36,6 +37,7 @@ public partial class NewsletterSubscriptionModelFactory : INewsletterSubscriptio
         ILanguageService languageService,
         ILocalizationService localizationService,
         INewsLetterSubscriptionService newsLetterSubscriptionService,
+        INewsLetterSubscriptionTypeService newsLetterSubscriptionTypeService,
         IStoreService storeService)
     {
         _catalogSettings = catalogSettings;
@@ -44,6 +46,7 @@ public partial class NewsletterSubscriptionModelFactory : INewsletterSubscriptio
         _languageService = languageService;
         _localizationService = localizationService;
         _newsLetterSubscriptionService = newsLetterSubscriptionService;
+        _newsLetterSubscriptionTypeService = newsLetterSubscriptionTypeService;
         _storeService = storeService;
     }
 
@@ -68,6 +71,9 @@ public partial class NewsletterSubscriptionModelFactory : INewsletterSubscriptio
 
         //prepare available customer roles
         await _baseAdminModelFactory.PrepareCustomerRolesAsync(searchModel.AvailableCustomerRoles);
+
+        //prepare available newsletter subscription types
+        await _baseAdminModelFactory.PrepareSubscriptionTypesAsync(searchModel.AvailableSubscriptionTypes);
 
         //prepare "activated" filter (0 - all; 1 - activated only; 2 - deactivated only)
         searchModel.ActiveList.Add(new SelectListItem
@@ -116,6 +122,7 @@ public partial class NewsletterSubscriptionModelFactory : INewsletterSubscriptio
         //get newsletter subscriptions
         var newsletterSubscriptions = await _newsLetterSubscriptionService.GetAllNewsLetterSubscriptionsAsync(email: searchModel.SearchEmail,
             customerRoleId: searchModel.CustomerRoleId,
+            subscriptionTypeId: searchModel.SubscriptionTypeId,
             storeId: searchModel.StoreId,
             isActive: isActivatedOnly,
             createdFromUtc: startDateValue,
@@ -136,6 +143,9 @@ public partial class NewsletterSubscriptionModelFactory : INewsletterSubscriptio
                 //fill in additional values (not existing in the entity)
                 subscriptionModel.StoreName = (await _storeService.GetStoreByIdAsync(subscription.StoreId))?.Name ?? "Deleted";
                 subscriptionModel.LanguageName = (await _languageService.GetLanguageByIdAsync(subscription.LanguageId))?.Name ?? string.Empty;
+
+                subscriptionModel.SubscriptionTypes = string.Join(", ",
+                    _newsLetterSubscriptionTypeService.GetSubscriptionTypesByNewsLetter(subscription).Select(subscriptionType => subscriptionType.Name));
 
                 return subscriptionModel;
             });

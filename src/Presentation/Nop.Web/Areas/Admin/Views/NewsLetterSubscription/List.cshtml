@@ -99,6 +99,14 @@
                                             <nop-select asp-for="CustomerRoleId" asp-items="Model.AvailableCustomerRoles" />
                                         </div>
                                     </div>
+                                        <div class="form-group row">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SubscriptionTypeId" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-select asp-for="SubscriptionTypeId" asp-items="Model.AvailableSubscriptionTypes" />
+                                            </div>
+                                        </div>
                                 </div>
                             </div>
                             <div class="row">
@@ -133,7 +141,8 @@
                                 new FilterParameter(nameof(Model.SearchEmail)),
                                 new FilterParameter(nameof(Model.ActiveId)),
                                 new FilterParameter(nameof(Model.StoreId)),
-                                new FilterParameter(nameof(Model.CustomerRoleId))
+                                new FilterParameter(nameof(Model.CustomerRoleId)),
+                                new FilterParameter(nameof(Model.SubscriptionTypeId))
                             },
                             ColumnCollection = new List<ColumnProperty>
                                 {
@@ -143,6 +152,11 @@
                                         Width = "300",
                                         Editable = true,
                                         EditType = EditType.String
+                                    },
+                                    new ColumnProperty(nameof(NewsletterSubscriptionModel.SubscriptionTypes))
+                                    {
+                                        Title = T("Admin.Promotions.NewsLetterSubscriptions.Fields.SubscriptionTypes").Text,
+                                        Width = "100"
                                     },
                                     new ColumnProperty(nameof(NewsletterSubscriptionModel.Active))
                                     {

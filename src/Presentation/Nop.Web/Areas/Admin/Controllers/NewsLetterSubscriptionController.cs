@@ -125,7 +125,7 @@ public partial class NewsLetterSubscriptionController : BaseAdminController
             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
 
         var subscriptions = await _newsLetterSubscriptionService.GetAllNewsLetterSubscriptionsAsync(model.SearchEmail,
-            startDateValue, endDateValue, model.StoreId, isActive, model.CustomerRoleId);
+            startDateValue, endDateValue, model.StoreId, isActive, model.CustomerRoleId, model.SubscriptionTypeId);
 
         var result = await _exportManager.ExportNewsletterSubscribersToTxtAsync(subscriptions);
 

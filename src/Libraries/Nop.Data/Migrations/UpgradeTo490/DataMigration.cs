@@ -1,6 +1,7 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Messages;
+using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.UpgradeTo490;
 
@@ -46,6 +47,32 @@ public class DataMigration : Migration
                     Name = "Public store. Change password"
                 }
             );
+        }
+
+        //#6874 Multiple newsletter lists
+        var newsLetterSubscriptionTypeTable = _dataProvider.GetTable<NewsLetterSubscriptionType>();
+        if (!newsLetterSubscriptionTypeTable.Any(alt => string.Compare(alt.Name, MessageDefaults.DefaultSubscriptionType, StringComparison.InvariantCultureIgnoreCase) == 0))
+        {
+            var subscriptionType = _dataProvider.InsertEntity(
+                new NewsLetterSubscriptionType
+                {
+                    Name = MessageDefaults.DefaultSubscriptionType,
+                    TickedByDefault = true,
+                    DisplayOrder = 0
+                }
+            );
+
+            var newsLetterSubscriptionTypeMapping = NameCompatibilityManager.GetTableName(typeof(NewsLetterSubscriptionTypeMapping));
+
+            var newsLetterSubscriptions = _dataProvider.GetTable<NewsLetterSubscription>().ToList();
+            var subscriptionListMap = (from newsLetterSubscription in newsLetterSubscriptions
+                                       let nlsMap = new NewsLetterSubscriptionTypeMapping
+                                       {
+                                           NewsLetterSubscriptionId = newsLetterSubscription.Id,
+                                           NewsLetterSubscriptionTypeId = subscriptionType.Id
+                                       }
+                                       select nlsMap).ToList();
+            _dataProvider.BulkInsertEntities(subscriptionListMap);
         }
     }
 

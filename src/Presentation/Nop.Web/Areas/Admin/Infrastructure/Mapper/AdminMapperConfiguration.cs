@@ -1178,6 +1178,7 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
         CreateMap<Campaign, CampaignModel>()
             .ForMember(model => model.AllowedTokens, options => options.Ignore())
             .ForMember(model => model.AvailableCustomerRoles, options => options.Ignore())
+            .ForMember(model => model.AvailableNewsLetterSubscriptionTypes, options => options.Ignore())
             .ForMember(model => model.AvailableEmailAccounts, options => options.Ignore())
             .ForMember(model => model.AvailableStores, options => options.Ignore())
             .ForMember(model => model.CreatedOn, options => options.Ignore())
@@ -1217,6 +1218,11 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(entity => entity.NewsLetterSubscriptionGuid, options => options.Ignore())
             .ForMember(entity => entity.LanguageId, option => option.Ignore())
             .ForMember(entity => entity.StoreId, options => options.Ignore());
+
+
+        //NewsLetter subscription type
+        CreateMap<NewsLetterSubscriptionType, NewsLetterSubscriptionTypeModel>();
+        CreateMap<NewsLetterSubscriptionTypeModel, NewsLetterSubscriptionType>();
 
         CreateMap<QueuedEmail, QueuedEmailModel>()
             .ForMember(model => model.CreatedOn, options => options.Ignore())

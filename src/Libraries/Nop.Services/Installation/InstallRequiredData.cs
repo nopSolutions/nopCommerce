@@ -1090,6 +1090,24 @@ public partial class InstallationService
     }
 
     /// <summary>
+    /// Installs a default type of newsletter subscription
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    protected virtual async Task InstallNewsLetterSubscriptionType()
+    {
+        var newsLetterSubscriptionType = new List<NewsLetterSubscriptionType>
+        {
+            new() {
+                Name = MessageDefaults.DefaultSubscriptionType,
+                TickedByDefault = true,
+                DisplayOrder = 0
+            }
+        };
+
+        await _dataProvider.BulkInsertEntitiesAsync(newsLetterSubscriptionType);
+    }
+
+    /// <summary>
     /// Installs a default topic templates
     /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>
@@ -1505,8 +1523,6 @@ public partial class InstallationService
             PhoneEnabled = false,
             FaxEnabled = false,
             AcceptPrivacyPolicyEnabled = false,
-            NewsletterEnabled = true,
-            NewsletterTickedByDefault = true,
             HideNewsletterBlock = false,
             NewsletterBlockAllowToUnsubscribe = false,
             OnlineCustomerMinutes = 20,

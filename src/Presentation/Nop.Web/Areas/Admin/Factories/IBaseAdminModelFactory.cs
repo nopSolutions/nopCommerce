@@ -91,6 +91,15 @@ public partial interface IBaseAdminModelFactory
     Task PrepareCustomerRolesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null);
 
     /// <summary>
+    /// Prepare available newsletter subscription types
+    /// </summary>
+    /// <param name="items">Newsletter subscription type items</param>
+    /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+    /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task PrepareSubscriptionTypesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null);
+
+    /// <summary>
     /// Prepare available email accounts
     /// </summary>
     /// <param name="items">Email account items</param>

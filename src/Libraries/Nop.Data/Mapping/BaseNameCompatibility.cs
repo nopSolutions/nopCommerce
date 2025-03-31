@@ -3,6 +3,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Forums;
+using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
@@ -39,7 +40,8 @@ public partial class BaseNameCompatibility : INameCompatibility
         { typeof(ForumSubscription), "Forums_Subscription" },
         { typeof(ForumTopic), "Forums_Topic" },
         { typeof(PrivateMessage), "Forums_PrivateMessage" },
-        { typeof(NewsItem), "News" }
+        { typeof(NewsItem), "News" },
+        { typeof(NewsLetterSubscriptionTypeMapping), "NewsLetterSubscription_Type_Mapping" }
     };
 
     public Dictionary<(Type, string), string> ColumnName => new()
