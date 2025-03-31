@@ -1,5 +1,3 @@
-@using Nop.Web.Components
-@using Nop.Web.Framework.Mvc.Routing
 @using Nop.Core.Domain.Catalog
 @using Nop.Core.Domain.Media
 
@@ -52,7 +50,13 @@
                         </div>
                         <div class="inputs">
                             <label asp-for="Status" asp-postfix=":"></label>
-                            <label>@Model.Status</label>
+                            <label>
+                                @Model.Status
+                                @if (Model.QuoteId.HasValue)
+                                {
+                                    <text> (</text><a class="rfq-link" href='@Url.RouteUrl(RfqDefaults.CustomerQuoteRouteName, new { quoteId = Model.QuoteId })'>@T("Plugins.Misc.RFQ.CustomerQuote.Info")</a><text>)</text>
+                                }
+                            </label>
                         </div>
                     }
                     <div class="inputs">
@@ -104,7 +108,7 @@
                                     <td>
                                         @if (item.Editable)
                                         {
-                                            <input asp-for="@item.Quantity" name="@($"{RfqDefaults.QUANTITY_FORM_KEY}{item.Id}")"/>
+                                            <input asp-for="@item.Quantity" name="@($"{RfqDefaults.QUANTITY_FORM_KEY}{item.Id}")" />
                                         }
                                         else
                                         {
@@ -125,7 +129,7 @@
                             }
                         </tbody>
                     </table>
-                    
+
                     @await Html.PartialAsync("_CustomerRequest.buttons.cshtml", Model)
                 </div>
             </div>

@@ -5,7 +5,7 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 namespace Nop.Plugin.Misc.RFQ.Models.Admin;
 
 /// <summary>
-/// Represents a product search model to add to the request quote
+/// Represents a product search model to add to the quote
 /// </summary>
 public record ProductSearchModel : BaseSearchModel
 {

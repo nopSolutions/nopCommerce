@@ -18,10 +18,10 @@ public record RequestQuoteItemModel : BaseNopEntityModel
     public string OriginalProductCost { get; set; }
 
     public string AttributeInfo { get; set; }
-    
+
     public string ProductSeName { get; set; }
-    
+
     public string PictureUrl { get; set; }
-    
+
     public bool Editable { get; set; }
 }

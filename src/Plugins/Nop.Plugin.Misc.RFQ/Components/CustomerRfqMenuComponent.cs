@@ -25,6 +25,6 @@ public class CustomerRfqMenuComponent : NopViewComponent
         if (await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()))
             return Content(string.Empty);
 
-        return View(model);
+        return View("~/Plugins/Misc.RFQ/Views/Components/CustomerRfqMenu.cshtml", model);
     }
 }

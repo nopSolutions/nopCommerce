@@ -12,25 +12,25 @@ public record QuoteModel : BaseNopEntityModel
     [NopResourceDisplayName("Plugins.Misc.RFQ.Fields.CustomerEmail")]
     public string CustomerEmail { get; set; }
 
-    [NopResourceDisplayName("Plugins.Misc.RFQ.Fields.CreatedOn")]
+    [NopResourceDisplayName("Plugins.Misc.RFQ.Fields.Quote.CreatedOn")]
     public DateTime CreatedOn { get; set; }
 
-    [NopResourceDisplayName("Plugins.Misc.RFQ.Common.Fields.ExpirationDate")]
+    [NopResourceDisplayName("Plugins.Misc.RFQ.Fields.Quote.ExpirationDate")]
     [UIHint("DateTimeNullable")]
     public DateTime? ExpirationDateUtc { get; set; }
 
-    [NopResourceDisplayName("Plugins.Misc.RFQ.Fields.Status")]
+    [NopResourceDisplayName("Plugins.Misc.RFQ.Fields.RequestQuote.Status")]
     public string Status { get; set; }
 
     public QuoteStatus StatusType { get; set; }
-    
+
     [NopResourceDisplayName("Plugins.Misc.RFQ.Fields.AdminNotes")]
     public string AdminNotes { get; set; }
 
     [NopResourceDisplayName("Plugins.Misc.RFQ.Fields.RequestQuoteId")]
     public int? RequestQuoteId { get; set; }
 
-    public bool DisplayAddNewProductButton => 
+    public bool DisplayAddNewProductButton =>
         StatusType == QuoteStatus.CreatedFromRequestQuote ||
         StatusType == QuoteStatus.CreatedManuallyByStoreOwner;
 

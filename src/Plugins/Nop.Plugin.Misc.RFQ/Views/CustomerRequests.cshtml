@@ -1,5 +1,3 @@
-@using Nop.Web.Components
-
 @model List<Nop.Plugin.Misc.RFQ.Models.Customer.RequestQuoteModel>
 
 @{
@@ -41,8 +39,8 @@
                         <strong>@string.Format(T("Plugins.Misc.RFQ.RequestQuoteNumber").Text, request.Id)</strong>
                     </div>
                     <ul class="info">
-                        <li>@T("Plugins.Misc.RFQ.Fields.CreatedOn"): <span>@request.CreatedOnUtc</span></li>
-                        <li>@T("Plugins.Misc.RFQ.Fields.Status"): <span>@request.Status</span></li>
+                        <li>@T("Plugins.Misc.RFQ.Fields.RequestQuote.CreatedOn"): <span>@request.CreatedOnUtc</span></li>
+                        <li>@T("Plugins.Misc.RFQ.Fields.RequestQuote.Status"): <span>@request.Status</span></li>
                     </ul>
                     <div class="buttons">
                         <button type="button" class="button-2" onclick="setLocation('@Url.RouteUrl(RfqDefaults.CustomerRequestRouteName, new { requestId = request.Id })')">@T("Plugins.Misc.RFQ.CustomerRequest.Info")</button>

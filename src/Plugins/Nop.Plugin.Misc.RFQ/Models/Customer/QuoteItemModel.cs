@@ -12,7 +12,7 @@ public record QuoteItemModel : BaseNopEntityModel
     public string UnitPrice { get; set; }
 
     public string AttributeInfo { get; set; }
-    
+
     public string PictureUrl { get; set; }
 
     public string ProductName { get; set; }

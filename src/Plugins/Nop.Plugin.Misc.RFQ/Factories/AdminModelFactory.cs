@@ -25,7 +25,7 @@ using ProductSearchModel = Nop.Plugin.Misc.RFQ.Models.Admin.ProductSearchModel;
 
 namespace Nop.Plugin.Misc.RFQ.Factories;
 
-public class AdminModelFactory : CommonModelFactory
+public class AdminModelFactory
 {
     #region Fields
 
@@ -35,6 +35,7 @@ public class AdminModelFactory : CommonModelFactory
     private readonly ICustomerService _customerService;
     private readonly IDateTimeHelper _dateTimeHelper;
     private readonly ILocalizationService _localizationService;
+    private readonly IPictureService _pictureService;
     private readonly IPriceCalculationService _priceCalculationService;
     private readonly IPriceFormatter _priceFormatter;
     private readonly IProductAttributeFormatter _productAttributeFormatter;
@@ -67,7 +68,7 @@ public class AdminModelFactory : CommonModelFactory
         ITaxService taxService,
         IUrlRecordService urlRecordService,
         RfqService rfqService
-    ) : base(pictureService)
+    )
     {
         _currencySettings = currencySettings;
         _baseAdminModelFactory = baseAdminModelFactory;
@@ -75,6 +76,7 @@ public class AdminModelFactory : CommonModelFactory
         _customerService = customerService;
         _dateTimeHelper = dateTimeHelper;
         _localizationService = localizationService;
+        _pictureService = pictureService;
         _priceCalculationService = priceCalculationService;
         _priceFormatter = priceFormatter;
         _productAttributeFormatter = productAttributeFormatter;
@@ -90,6 +92,13 @@ public class AdminModelFactory : CommonModelFactory
     #endregion
 
     #region Utilities
+
+    private async Task<string> GetPictureUrlAsync(Product product, string attributesXml, string productName, int imageSize = 200)
+    {
+        var sciPicture = await _pictureService.GetProductPictureAsync(product, attributesXml);
+
+        return (await _pictureService.GetPictureUrlAsync(sciPicture, imageSize)).Url;
+    }
 
     private async Task PrepareProductAttributeModelsAsync(IList<AddProductModel.ProductAttributeModel> models, Customer customer, Product product)
     {
@@ -154,12 +163,9 @@ public class AdminModelFactory : CommonModelFactory
         }
     }
 
-    private async Task<RequestQuoteItemModel> PreparedRequestQuoteItemModelAsync(RequestQuoteItem item)
+    private async Task<RequestQuoteItemModel> PreparedRequestQuoteItemModelAsync(RFQRequestQuoteItem item, Currency primaryStoreCurrency)
     {
         var product = await _productService.GetProductByIdAsync(item.ProductId);
-        var productName = await _localizationService.GetLocalizedAsync(product, x => x.Name);
-
-        var primaryStoreCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
 
         return new RequestQuoteItemModel
         {
@@ -167,30 +173,27 @@ public class AdminModelFactory : CommonModelFactory
             RequestedQty = item.RequestedQty,
             AdminNotes = item.AdminNotes.Replace("\r\n", "<br />"),
             OriginalProductPrice = await _priceFormatter.FormatPriceAsync(item.OriginalProductPrice, true, primaryStoreCurrency),
-            ProductName = productName,
-            ProductId = product.Id,
+            ProductName = product != null ? product.Name : await _localizationService.GetResourceAsync("Plugins.Misc.RFQ.ProductDeleted"),
+            ProductId = item.ProductId,
             RequestedUnitPrice = await _priceFormatter.FormatPriceAsync(item.RequestedUnitPrice, true, primaryStoreCurrency),
             RequestedUnitPriceValue = item.RequestedUnitPrice,
-            ProductAttributeInfo = await _productAttributeFormatter.FormatAttributesAsync(product, item.ProductAttributesXml)
+            ProductAttributeInfo = product != null ? await _productAttributeFormatter.FormatAttributesAsync(product, item.ProductAttributesXml) : string.Empty
         };
     }
-    
-    private async Task<QuoteItemModel> PreparedQuoteItemModelAsync(QuoteItem item)
+
+    private async Task<QuoteItemModel> PreparedQuoteItemModelAsync(RFQQuoteItem item, Currency primaryStoreCurrency)
     {
         var product = await _productService.GetProductByIdAsync(item.ProductId);
-        var productName = await _localizationService.GetLocalizedAsync(product, x => x.Name);
-
-        var primaryStoreCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
 
         return new QuoteItemModel
         {
             Id = item.Id,
             OfferedQty = item.OfferedQty,
-            ProductName = productName,
-            ProductId = product.Id,
+            ProductName = product != null ? product.Name : await _localizationService.GetResourceAsync("Plugins.Misc.RFQ.ProductDeleted"),
+            ProductId = item.ProductId,
             OfferedUnitPrice = await _priceFormatter.FormatPriceAsync(item.OfferedUnitPrice, true, primaryStoreCurrency),
             OfferedUnitPriceValue = item.OfferedUnitPrice,
-            ProductAttributeInfo = await _productAttributeFormatter.FormatAttributesAsync(product, item.AttributesXml),
+            ProductAttributeInfo = product != null ? await _productAttributeFormatter.FormatAttributesAsync(product, item.AttributesXml) : string.Empty,
             RequestedQty = item.RequestedQty,
             RequestedUnitPrice = item.RequestedUnitPrice.HasValue ? await _priceFormatter.FormatPriceAsync(item.RequestedUnitPrice.Value, true, primaryStoreCurrency) : string.Empty,
         };
@@ -218,7 +221,7 @@ public class AdminModelFactory : CommonModelFactory
         var defaultItemText = await _localizationService.GetResourceAsync("Admin.Common.All");
         //insert this default item at first
         searchModel.AvailableRequestQuoteStatuses.Insert(0, new SelectListItem { Text = defaultItemText, Value = "-1" });
-        
+
         //prepare page parameters
         searchModel.SetGridPageSize();
 
@@ -243,7 +246,7 @@ public class AdminModelFactory : CommonModelFactory
         var defaultItemText = await _localizationService.GetResourceAsync("Admin.Common.All");
         //insert this default item at first
         searchModel.AvailableQuoteStatuses.Insert(0, new SelectListItem { Text = defaultItemText, Value = "-1" });
-        
+
         //prepare page parameters
         searchModel.SetGridPageSize();
 
@@ -260,8 +263,14 @@ public class AdminModelFactory : CommonModelFactory
     /// </returns>
     public async Task<RequestListModel> PrepareRequestQuoteListModelAsync(RequestQuoteSearchModel searchModel)
     {
-        var items = await _rfqService.SearchRequestsQuoteAsync(searchModel.RequestQuoteStatus, searchModel.CreatedOnFrom,
-            searchModel.CreatedOnTo, searchModel.CustomerEmail, searchModel.Page - 1, searchModel.PageSize);
+        var createdOnFromValue = !searchModel.CreatedOnFrom.HasValue ? null
+            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnFrom.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
+        var createdOnToValue = !searchModel.CreatedOnTo.HasValue ? null
+            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnTo.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
+
+
+        var items = await _rfqService.SearchRequestsQuoteAsync(searchModel.RequestQuoteStatus, createdOnFromValue,
+            createdOnToValue, searchModel.CustomerEmail, searchModel.Page - 1, searchModel.PageSize);
 
         var customerEmails = (await _customerRepository.GetByIdsAsync(items.Select(p => p.CustomerId).Distinct().ToArray())).ToDictionary(p => p.Id, p => p.Email);
 
@@ -284,7 +293,7 @@ public class AdminModelFactory : CommonModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the request a quote model
     /// </returns>
-    public async Task<RequestQuoteModel> PreparedRequestQuoteModelAsync(RequestQuote requestQuote, IDictionary<int, string> customerEmails = null)
+    public async Task<RequestQuoteModel> PreparedRequestQuoteModelAsync(RFQRequestQuote requestQuote, IDictionary<int, string> customerEmails = null)
     {
         string email;
 
@@ -320,8 +329,9 @@ public class AdminModelFactory : CommonModelFactory
     public async Task<List<RequestQuoteItemModel>> PrepareRequestItemListModelAsync(int requestQuoteId)
     {
         var items = await _rfqService.GetRequestQuoteItemsAsync(requestQuoteId);
+        var primaryStoreCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
 
-        return await items.SelectAwait(async p => await PreparedRequestQuoteItemModelAsync(p)).ToListAsync();
+        return await items.SelectAwait(async p => await PreparedRequestQuoteItemModelAsync(p, primaryStoreCurrency)).ToListAsync();
     }
 
     /// <summary>
@@ -335,21 +345,22 @@ public class AdminModelFactory : CommonModelFactory
     public async Task<List<QuoteItemModel>> PrepareQuoteItemListModelAsync(int quoteId)
     {
         var items = await _rfqService.GetQuoteItemsAsync(quoteId);
-       
-        return await items.SelectAwait(async p => await PreparedQuoteItemModelAsync(p)).ToListAsync();
+        var primaryStoreCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
+
+        return await items.SelectAwait(async p => await PreparedQuoteItemModelAsync(p, primaryStoreCurrency)).ToListAsync();
     }
 
     /// <summary>
-    /// Prepare product model to add to the request quote
+    /// Prepare product model to add to the quote
     /// </summary>
-    /// <param name="model">Product model to add to the request quote</param>
+    /// <param name="model">Product model to add to the quote</param>
     /// <param name="quote">Quote</param>
     /// <param name="product">Product</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the product model to add to the request quote
+    /// The task result contains the product model to add to the quote
     /// </returns>
-    public virtual async Task<AddProductModel> PrepareAddProductToRequestModelAsync(AddProductModel model, Quote quote, Product product)
+    public virtual async Task<AddProductModel> PrepareAddProductModelAsync(AddProductModel model, RFQQuote quote, Product product)
     {
         ArgumentNullException.ThrowIfNull(model);
         ArgumentNullException.ThrowIfNull(product);
@@ -387,13 +398,13 @@ public class AdminModelFactory : CommonModelFactory
     }
 
     /// <summary>
-    /// Prepare product search model to add to the request quote
+    /// Prepare product search model to add to the quote
     /// </summary>
     /// <param name="searchModel">Product search model to add to the order</param>
-    /// <param name="entityId">Request a quote or Quote identifier</param>
+    /// <param name="entityId">The quote identifier</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the product search model to add to the request quote
+    /// The task result contains the product search model to add to the quote
     /// </returns>
     public async Task<ProductSearchModel> PrepareAddProductSearchModelAsync(ProductSearchModel searchModel, int entityId)
     {
@@ -417,12 +428,12 @@ public class AdminModelFactory : CommonModelFactory
     }
 
     /// <summary>
-    /// Prepare a product to request a quote list model
+    /// Prepare a product to a quote list model
     /// </summary>
     /// <param name="searchModel">Product search model</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the product to request a quote list model
+    /// The task result contains the product to a quote list model
     /// </returns>
     public async Task<ProductToRequestListModel> PrepareProductListModelAsync(ProductSearchModel searchModel)
     {
@@ -454,7 +465,7 @@ public class AdminModelFactory : CommonModelFactory
     }
 
     /// <summary>
-    /// Prepare an quote model
+    /// Prepare a quote model
     /// </summary>
     /// <param name="quote">The quote</param>
     /// <param name="customerEmails">Preloaded customers emails</param>
@@ -462,7 +473,7 @@ public class AdminModelFactory : CommonModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the quote model
     /// </returns>
-    public async Task<QuoteModel> PreparedQuoteModelAsync(Quote quote, IDictionary<int, string> customerEmails = null)
+    public async Task<QuoteModel> PreparedQuoteModelAsync(RFQQuote quote, IDictionary<int, string> customerEmails = null)
     {
         string email;
 
@@ -503,8 +514,12 @@ public class AdminModelFactory : CommonModelFactory
     /// </returns>
     public async Task<QuoteListModel> PrepareQuoteListModelAsync(QuoteSearchModel searchModel)
     {
-        var items = await _rfqService.SearchQuotesAsync(searchModel.QuoteStatus, searchModel.CreatedOnFrom,
-            searchModel.CreatedOnTo, searchModel.CustomerEmail, searchModel.Page - 1, searchModel.PageSize);
+        var createdOnFromValue = !searchModel.CreatedOnFrom.HasValue ? null
+            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnFrom.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
+        var createdOnToValue = !searchModel.CreatedOnTo.HasValue ? null
+            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnTo.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
+
+        var items = await _rfqService.SearchQuotesAsync(searchModel.QuoteStatus, createdOnFromValue, createdOnToValue, searchModel.CustomerEmail, searchModel.Page - 1, searchModel.PageSize);
 
         var customerEmails = (await _customerRepository.GetByIdsAsync(items.Select(p => p.CustomerId).Distinct().ToArray())).ToDictionary(p => p.Id, p => p.Email);
 
@@ -515,7 +530,7 @@ public class AdminModelFactory : CommonModelFactory
             return items.SelectAwait(async item =>
             {
                 var model = await PreparedQuoteModelAsync(item, customerEmails);
-                
+
                 if (model.Editable && model.ExpirationDateUtc.HasValue)
                     model.ExpirationDateUtc = await _dateTimeHelper.ConvertToUserTimeAsync(model.ExpirationDateUtc.Value, DateTimeKind.Utc);
 

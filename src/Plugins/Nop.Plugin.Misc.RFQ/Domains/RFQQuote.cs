@@ -5,7 +5,7 @@ namespace Nop.Plugin.Misc.RFQ.Domains;
 /// <summary>
 /// Represent the quote entity
 /// </summary>
-public class Quote : BaseEntity, IAdminNote
+public class RFQQuote : BaseEntity, IAdminNote
 {
     /// <summary>
     /// Gets or sets the customer identifier

@@ -3,9 +3,9 @@
 namespace Nop.Plugin.Misc.RFQ.Domains;
 
 /// <summary>
-/// Represents an quote item entity
+/// Represents a quote item entity
 /// </summary>
-public class QuoteItem : BaseEntity
+public class RFQQuoteItem : BaseEntity
 {
     /// <summary>
     /// Gets or sets the quote identifier
@@ -36,7 +36,7 @@ public class QuoteItem : BaseEntity
     /// Gets or sets the unit price in primary store currency (include tax)
     /// </summary>
     public decimal OfferedUnitPrice { get; set; }
-    
+
     /// <summary>
     /// Gets or sets the product attributes in XML format
     /// </summary>

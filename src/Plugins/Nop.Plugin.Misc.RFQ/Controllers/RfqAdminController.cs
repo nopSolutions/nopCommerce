@@ -32,7 +32,6 @@ public partial class RfqAdminController : BasePluginController
     private readonly ICustomerService _customerService;
     private readonly ILocalizationService _localizationService;
     private readonly INotificationService _notificationService;
-    private readonly IPermissionService _permissionService;
     private readonly IProductAttributeParser _productAttributeParser;
     private readonly IProductAttributeService _productAttributeService;
     private readonly IProductService _productService;
@@ -49,7 +48,6 @@ public partial class RfqAdminController : BasePluginController
         ICustomerService customerService,
         ILocalizationService localizationService,
         INotificationService notificationService,
-        IPermissionService permissionService,
         IProductAttributeParser productAttributeParser,
         IProductAttributeService productAttributeService,
         IProductService productService,
@@ -61,7 +59,6 @@ public partial class RfqAdminController : BasePluginController
         _customerModelFactory = customerModelFactory;
         _customerService = customerService;
         _localizationService = localizationService;
-        _permissionService = permissionService;
         _productAttributeParser = productAttributeParser;
         _productAttributeService = productAttributeService;
         _productService = productService;
@@ -75,36 +72,23 @@ public partial class RfqAdminController : BasePluginController
 
     #region Methods
 
-    #region Configure
-
-    public Task<IActionResult> Configure()
-    {
-        throw new NotImplementedException();
-    }
-
-    #endregion
-
     #region Add product to quote
 
     [HttpPost]
+    [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
     public virtual async Task<IActionResult> AddNewProduct(ProductSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ) ||
-            !await _permissionService.AuthorizeAsync(StandardPermission.Catalog.PRODUCTS_VIEW))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _modelFactory.PrepareProductListModelAsync(searchModel);
 
         return Json(model);
     }
 
+    [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
     public virtual async Task<IActionResult> AddProductDetails(int productId, int quoteId)
     {
-        if (!await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ) ||
-            !await _permissionService.AuthorizeAsync(StandardPermission.Catalog.PRODUCTS_VIEW))
-            return AccessDeniedView();
-        
         var quote = await _rfqService.GetQuoteByIdAsync(quoteId)
             ?? throw new ArgumentException("No quote found with the specified id");
 
@@ -112,18 +96,16 @@ public partial class RfqAdminController : BasePluginController
             ?? throw new ArgumentException("No product found with the specified id");
 
         //prepare model
-        var model = await _modelFactory.PrepareAddProductToRequestModelAsync(new AddProductModel(), quote, product);
+        var model = await _modelFactory.PrepareAddProductModelAsync(new AddProductModel(), quote, product);
 
-        return View(model);
+        return View("~/Plugins/Misc.RFQ/Views/Admin/AddProductDetails.cshtml", model);
     }
 
     [HttpPost]
+    [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
     public virtual async Task<IActionResult> AddProductDetails(int quoteId, int productId, IFormCollection form)
     {
-        if (!await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ) ||
-            !await _permissionService.AuthorizeAsync(StandardPermission.Catalog.PRODUCTS_VIEW))
-            return AccessDeniedView();
-
         ArgumentNullException.ThrowIfNull(quoteId);
 
         var product = await _productService.GetProductByIdAsync(productId)
@@ -154,7 +136,7 @@ public partial class RfqAdminController : BasePluginController
 
         if (!warnings.Any())
         {
-            var quoteItem = new QuoteItem
+            var quoteItem = new RFQQuoteItem
             {
                 AttributesXml = attributesXml,
                 ProductId = product.Id,
@@ -169,10 +151,10 @@ public partial class RfqAdminController : BasePluginController
         }
 
         //prepare model
-        var model = await _modelFactory.PrepareAddProductToRequestModelAsync(new AddProductModel(), quote, product);
+        var model = await _modelFactory.PrepareAddProductModelAsync(new AddProductModel(), quote, product);
         model.Warnings.AddRange(warnings);
 
-        return View(model);
+        return View("~/Plugins/Misc.RFQ/Views/Admin/AddProductDetails.cshtml", model);
     }
 
     [HttpPost]
@@ -216,50 +198,42 @@ public partial class RfqAdminController : BasePluginController
     }
 
     [HttpPost]
+    [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
+    [CheckPermission(StandardPermission.Customers.CUSTOMERS_VIEW)]
     public virtual async Task<IActionResult> CustomerList(CustomerSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermission.Customers.CUSTOMERS_VIEW) ||
-            !await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _customerModelFactory.PrepareCustomerListModelAsync(searchModel);
 
         return Json(model);
     }
 
+    [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
+    [CheckPermission(StandardPermission.Customers.CUSTOMERS_VIEW)]
     public async Task<IActionResult> SelectCustomerPopup()
     {
-        if (!await _permissionService.AuthorizeAsync(StandardPermission.Customers.CUSTOMERS_VIEW) ||
-            !await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _customerModelFactory.PrepareCustomerSearchModelAsync(new CustomerSearchModel());
 
-        return View(model);
+        return View("~/Plugins/Misc.RFQ/Views/Admin/SelectCustomerPopup.cshtml", model);
     }
 
     #endregion
 
     #region Request a quote
 
+    [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
     public async Task<IActionResult> AdminRequests()
     {
-        if (!await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _modelFactory.PrepareRequestQuoteSearchModelAsync();
 
-        return View(model);
+        return View("~/Plugins/Misc.RFQ/Views/Admin/AdminRequests.cshtml", model);
     }
 
+    [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
     public async Task<IActionResult> AdminRequest(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ))
-            return AccessDeniedView();
-
         if (id <= 0)
             return RedirectToAction("AdminRequests");
 
@@ -268,16 +242,16 @@ public partial class RfqAdminController : BasePluginController
         if (requestQuote == null)
             return RedirectToAction("AdminRequests");
 
-        return View(await _modelFactory.PreparedRequestQuoteModelAsync(requestQuote));
+        var model = await _modelFactory.PreparedRequestQuoteModelAsync(requestQuote);
+
+        return View("~/Plugins/Misc.RFQ/Views/Admin/AdminRequest.cshtml", model);
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
     [FormValueRequired("save", "save-continue")]
+    [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
     public virtual async Task<IActionResult> AdminRequest(RequestQuoteModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ))
-            return AccessDeniedView();
-
         var requestQuote = await _rfqService.GetRequestQuoteByIdAsync(model.Id);
 
         if (requestQuote == null)
@@ -297,16 +271,16 @@ public partial class RfqAdminController : BasePluginController
         }
 
         //if we got this far, something failed, redisplay form
-        return View(await _modelFactory.PreparedRequestQuoteModelAsync(requestQuote));
+        model = await _modelFactory.PreparedRequestQuoteModelAsync(requestQuote);
+
+        return View("~/Plugins/Misc.RFQ/Views/Admin/AdminRequest.cshtml", model);
     }
 
     [HttpPost, ActionName("AdminRequest")]
     [FormValueRequired(FormValueRequirement.StartsWith, "btnSave")]
+    [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
     public virtual async Task<IActionResult> EditRequestItem(int id, IFormCollection form)
     {
-        if (!await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ))
-            return AccessDeniedView();
-
         if (id <= 0)
             return RedirectToAction("AdminRequests");
 
@@ -323,7 +297,7 @@ public partial class RfqAdminController : BasePluginController
 
         if (!string.IsNullOrEmpty(saveButtonId))
             requestQuoteItemId = Convert.ToInt32(saveButtonId["btnSave".Length..]);
-        
+
         if (requestQuoteItemId <= 0)
             return await AdminRequest(id);
 
@@ -338,16 +312,16 @@ public partial class RfqAdminController : BasePluginController
             await _rfqService.UpdateRequestQuoteAsync(requestQuote);
         }
 
+        _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Misc.RFQ.AdminRequest.Updated"));
+
         return await AdminRequest(id);
     }
 
     [HttpPost, ActionName("AdminRequest")]
     [FormValueRequired(FormValueRequirement.StartsWith, "btnDelete")]
+    [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
     public virtual async Task<IActionResult> DeleteRequestItem(int id, IFormCollection form)
     {
-        if (!await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ))
-            return AccessDeniedView();
-
         if (id <= 0)
             return RedirectToAction("AdminRequests");
 
@@ -370,28 +344,28 @@ public partial class RfqAdminController : BasePluginController
 
         await _rfqService.DeleteRequestQuoteItemAsync(requestQuoteItemId);
 
+        _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Misc.RFQ.AdminRequest.Updated"));
+
         return await AdminRequest(id);
     }
 
     [HttpPost, ActionName("AdminRequest")]
     [FormValueRequired("deleteRequest")]
+    [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
     public async Task<IActionResult> DeleteRequest(RequestQuoteModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ))
-            return AccessDeniedView();
-
         await _rfqService.DeleteRequestQuoteAsync(model.Id);
+
+        _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Misc.RFQ.AdminRequest.Deleted"));
 
         return RedirectToAction("AdminRequests");
     }
 
     [HttpPost, ActionName("AdminRequest")]
     [FormValueRequired("cancelRequest")]
+    [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
     public async Task<IActionResult> CancelRequest(RequestQuoteModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ))
-            return AccessDeniedView();
-
         var requestQuote = await _rfqService.GetRequestQuoteByIdAsync(model.Id);
 
         if (requestQuote == null)
@@ -400,52 +374,48 @@ public partial class RfqAdminController : BasePluginController
         await _rfqService.ChangeAndLogRequestQuoteStatusAsync(requestQuote, RequestQuoteStatus.Canceled);
         await _rfqService.UpdateRequestQuoteAsync(requestQuote);
 
+        _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Misc.RFQ.AdminRequest.Canceled"));
+
         return RedirectToAction("AdminRequest", new { id = requestQuote.Id });
     }
 
     [HttpPost]
+    [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
     public async Task<IActionResult> DeleteSelectedRequests(ICollection<int> selectedIds)
     {
-        if (!await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ))
-            return AccessDeniedView();
-
         await _rfqService.DeleteRequestsQuoteByIdsAsync(selectedIds);
+
+        _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Misc.RFQ.AdminRequest.Selected.Deleted"));
 
         return new NullJsonResult();
     }
 
     [HttpPost]
+    [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
     public virtual async Task<IActionResult> RequestList(RequestQuoteSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _modelFactory.PrepareRequestQuoteListModelAsync(searchModel);
 
         return Json(model);
     }
-    
+
     #endregion
 
     #region Quote
 
     [HttpPost]
+    [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
     public virtual async Task<IActionResult> CreateQuote(RequestQuoteModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ))
-            return await AccessDeniedJsonAsync();
-
         var quoteId = await _rfqService.CreateQuoteByRequestAsync(model.Id);
 
         return RedirectToAction("AdminQuote", new { id = quoteId });
     }
 
+    [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
     public async Task<IActionResult> AdminQuote(int id)
     {
-        if (!await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ))
-            return AccessDeniedView();
-
         if (id <= 0)
             return RedirectToAction("AdminQuotes");
 
@@ -454,11 +424,14 @@ public partial class RfqAdminController : BasePluginController
         if (quote == null)
             return RedirectToAction("AdminQuotes");
 
-        return View(await _modelFactory.PreparedQuoteModelAsync(quote));
+        var model = await _modelFactory.PreparedQuoteModelAsync(quote);
+
+        return View("~/Plugins/Misc.RFQ/Views/Admin/AdminQuote.cshtml", model);
     }
 
     [HttpPost]
     [FormValueRequired("btnCreate")]
+    [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
     public async Task<IActionResult> AdminQuotes(QuoteSearchModel model)
     {
         var requestQuote = await _rfqService.CreateQuoteAsync(model.CustomerId);
@@ -466,46 +439,40 @@ public partial class RfqAdminController : BasePluginController
         return RedirectToAction("AdminQuote", new { id = requestQuote.Id });
     }
 
+    [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
     public async Task<IActionResult> AdminQuotes()
     {
-        if (!await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ))
-            return AccessDeniedView();
-
         //prepare model
         var model = await _modelFactory.PrepareQuoteSearchModelAsync();
 
-        return View(model);
+        return View("~/Plugins/Misc.RFQ/Views/Admin/AdminQuotes.cshtml", model);
     }
 
     [HttpPost]
+    [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
     public async Task<IActionResult> DeleteSelectedQuotes(ICollection<int> selectedIds)
     {
-        if (!await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ))
-            return AccessDeniedView();
-
         await _rfqService.DeleteQuotesByIdsAsync(selectedIds);
+
+        _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Misc.RFQ.AdminQuote.Selected.Deleted"));
 
         return new NullJsonResult();
     }
 
     [HttpPost]
+    [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
     public virtual async Task<IActionResult> QuoteList(QuoteSearchModel searchModel)
     {
-        if (!await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ))
-            return await AccessDeniedJsonAsync();
-
         //prepare model
         var model = await _modelFactory.PrepareQuoteListModelAsync(searchModel);
 
         return Json(model);
     }
 
+    [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
     public async Task<IActionResult> AddProductToQuote(int quoteId)
     {
-        if (!await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ) ||
-            !await _permissionService.AuthorizeAsync(StandardPermission.Catalog.PRODUCTS_VIEW))
-            return AccessDeniedView();
-
         var quote = await _rfqService.GetQuoteByIdAsync(quoteId);
 
         if (quote == null)
@@ -514,16 +481,14 @@ public partial class RfqAdminController : BasePluginController
         //prepare model
         var model = await _modelFactory.PrepareAddProductSearchModelAsync(new ProductSearchModel(), quote.Id);
 
-        return View(model);
+        return View("~/Plugins/Misc.RFQ/Views/Admin/AddProductToQuote.cshtml", model);
     }
 
     [HttpPost, ActionName("AdminQuote")]
     [FormValueRequired("sendQuote")]
+    [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
     public async Task<IActionResult> SendQuote(QuoteModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ))
-            return AccessDeniedView();
-
         var quote = await _rfqService.GetQuoteByIdAsync(model.Id);
 
         if (quote == null)
@@ -540,23 +505,21 @@ public partial class RfqAdminController : BasePluginController
 
     [HttpPost, ActionName("AdminQuote")]
     [FormValueRequired("deleteQuote")]
+    [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
     public async Task<IActionResult> DeleteQuote(QuoteModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ))
-            return AccessDeniedView();
-
         await _rfqService.DeleteQuoteAsync(model.Id);
+
+        _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Misc.RFQ.Quote.Deleted"));
 
         return RedirectToAction("AdminQuotes");
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
     [FormValueRequired("save", "save-continue")]
+    [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
     public virtual async Task<IActionResult> AdminQuote(QuoteModel model, bool continueEditing)
     {
-        if (!await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ))
-            return AccessDeniedView();
-
         var quote = await _rfqService.GetQuoteByIdAsync(model.Id);
 
         if (quote == null)
@@ -587,16 +550,16 @@ public partial class RfqAdminController : BasePluginController
         }
 
         //if we got this far, something failed, redisplay form
-        return View(await _modelFactory.PreparedQuoteModelAsync(quote));
+        model = await _modelFactory.PreparedQuoteModelAsync(quote);
+
+        return View("~/Plugins/Misc.RFQ/Views/Admin/AdminQuote.cshtml", model);
     }
 
     [HttpPost, ActionName("AdminQuote")]
     [FormValueRequired(FormValueRequirement.StartsWith, "btnSave")]
+    [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
     public virtual async Task<IActionResult> EditQuoteItem(int id, IFormCollection form)
     {
-        if (!await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ))
-            return AccessDeniedView();
-
         if (id <= 0)
             return RedirectToAction("AdminQuotes");
 
@@ -628,16 +591,16 @@ public partial class RfqAdminController : BasePluginController
             await _rfqService.UpdateQuoteAsync(quote);
         }
 
+        _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Misc.RFQ.AdminQuote.Updated"));
+
         return await AdminQuote(id);
     }
 
     [HttpPost, ActionName("AdminQuote")]
     [FormValueRequired(FormValueRequirement.StartsWith, "btnDelete")]
+    [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
     public virtual async Task<IActionResult> DeleteQuoteItem(int id, IFormCollection form)
     {
-        if (!await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ))
-            return AccessDeniedView();
-
         if (id <= 0)
             return RedirectToAction("AdminQuotes");
 
@@ -660,9 +623,11 @@ public partial class RfqAdminController : BasePluginController
 
         await _rfqService.DeleteQuoteItemAsync(quoteItemId);
 
+        _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Misc.RFQ.AdminQuote.Updated"));
+
         return await AdminQuote(id);
     }
-    
+
     #endregion
 
     #endregion

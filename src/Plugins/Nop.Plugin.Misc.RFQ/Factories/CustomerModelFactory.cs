@@ -1,4 +1,5 @@
 ﻿using Nop.Core;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Media;
 using Nop.Plugin.Misc.RFQ.Domains;
@@ -13,13 +14,14 @@ using Nop.Services.Seo;
 
 namespace Nop.Plugin.Misc.RFQ.Factories;
 
-public class CustomerModelFactory : CommonModelFactory
+public class CustomerModelFactory
 {
     #region Fields
 
     private readonly ICurrencyService _currencyService;
     private readonly IDateTimeHelper _dateTimeHelper;
     private readonly ILocalizationService _localizationService;
+    private readonly IPictureService _pictureService;
     private readonly IPriceFormatter _priceFormatter;
     private readonly IProductAttributeFormatter _productAttributeFormatter;
     private readonly IProductService _productService;
@@ -42,11 +44,12 @@ public class CustomerModelFactory : CommonModelFactory
         IUrlRecordService urlRecordService,
         IWorkContext workContext,
         MediaSettings mediaSettings,
-        RfqService rfqService) : base(pictureService)
+        RfqService rfqService)
     {
         _currencyService = currencyService;
         _dateTimeHelper = dateTimeHelper;
         _localizationService = localizationService;
+        _pictureService = pictureService;
         _priceFormatter = priceFormatter;
         _productAttributeFormatter = productAttributeFormatter;
         _productService = productService;
@@ -60,20 +63,36 @@ public class CustomerModelFactory : CommonModelFactory
 
     #region Utilities
 
-    private async Task<QuoteItemModel> PrepareQuoteItemModelAsync(QuoteItem item, Currency currentCurrency)
+    /// <summary>
+    /// Prepare the picture model
+    /// </summary>
+    /// <param name="product">Product</param>
+    /// <param name="attributesXml">Product attributes xml</param>
+    /// <param name="imageSize">Image size</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the picture model
+    /// </returns>
+    private async Task<string> GetPictureUrlAsync(Product product, string attributesXml, int imageSize = 200)
+    {
+        var sciPicture = await _pictureService.GetProductPictureAsync(product, attributesXml);
+
+        return (await _pictureService.GetPictureUrlAsync(sciPicture, imageSize)).Url;
+    }
+
+    private async Task<QuoteItemModel> PrepareQuoteItemModelAsync(RFQQuoteItem item, Currency currentCurrency)
     {
         var product = await _productService.GetProductByIdAsync(item.ProductId);
-        var productName = await _localizationService.GetLocalizedAsync(product, x => x.Name);
 
         return new QuoteItemModel
         {
             Id = item.Id,
             Quantity = item.OfferedQty,
-            ProductName = productName,
+            ProductName = product != null ? await _localizationService.GetLocalizedAsync(product, x => x.Name) : await _localizationService.GetResourceAsync("Plugins.Misc.RFQ.ProductDeleted"),
             ProductSeName = await _urlRecordService.GetSeNameAsync(product),
             UnitPrice = await _priceFormatter.FormatPriceAsync(await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(item.OfferedUnitPrice, currentCurrency), true, currentCurrency),
-            AttributeInfo = await _productAttributeFormatter.FormatAttributesAsync(product, item.AttributesXml),
-            PictureUrl = await GetPictureUrlAsync(product, item.AttributesXml, productName, _mediaSettings.CartThumbPictureSize),
+            AttributeInfo = product != null ? await _productAttributeFormatter.FormatAttributesAsync(product, item.AttributesXml) : string.Empty,
+            PictureUrl = product != null ? await GetPictureUrlAsync(product, item.AttributesXml, _mediaSettings.CartThumbPictureSize) : await _pictureService.GetDefaultPictureUrlAsync(_mediaSettings.CartThumbPictureSize),
         };
     }
 
@@ -81,7 +100,7 @@ public class CustomerModelFactory : CommonModelFactory
 
     #region Methods
 
-    public async Task<RequestQuoteModel> PrepareRequestQuoteModelAsync(RequestQuote requestQuote, IList<RequestQuoteItem> requestQuoteItems = null, RequestQuoteModel model = null)
+    public async Task<RequestQuoteModel> PrepareRequestQuoteModelAsync(RFQRequestQuote requestQuote, IList<RFQRequestQuoteItem> requestQuoteItems = null, RequestQuoteModel model = null)
     {
         ArgumentNullException.ThrowIfNull(requestQuote);
 
@@ -94,18 +113,19 @@ public class CustomerModelFactory : CommonModelFactory
 
         if (requestQuote.Status != 0)
             model.Status = await _localizationService.GetLocalizedEnumAsync(requestQuote.Status);
-        
+
         model.StatusType = requestQuote.Status;
         model.CreatedOnUtc = await _dateTimeHelper.ConvertToUserTimeAsync(requestQuote.CreatedOnUtc, DateTimeKind.Utc);
         model.CustomerNotes = requestQuote.CustomerNotes;
         model.Id = requestQuote.Id;
         model.CustomerId = requestQuote.CustomerId;
         model.CustomerItems = modelItems;
+        model.QuoteId = requestQuote.QuoteId;
 
         return model;
     }
 
-    public async Task<QuoteModel> PrepareQuoteModelAsync(Quote quote, IList<QuoteItem> quoteItems = null, QuoteModel model = null)
+    public async Task<QuoteModel> PrepareQuoteModelAsync(RFQQuote quote, IList<RFQQuoteItem> quoteItems = null, QuoteModel model = null)
     {
         ArgumentNullException.ThrowIfNull(quote);
 
@@ -130,10 +150,9 @@ public class CustomerModelFactory : CommonModelFactory
         return model;
     }
 
-    public async Task<RequestQuoteItemModel> PrepareRequestQuoteItemModelAsync(RequestQuote requestQuote, RequestQuoteItem item, Currency currentCurrency)
+    public async Task<RequestQuoteItemModel> PrepareRequestQuoteItemModelAsync(RFQRequestQuote requestQuote, RFQRequestQuoteItem item, Currency currentCurrency)
     {
         var product = await _productService.GetProductByIdAsync(item.ProductId);
-        var productName = await _localizationService.GetLocalizedAsync(product, x => x.Name);
 
         var unitPrice = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(item.RequestedUnitPrice, currentCurrency);
 
@@ -142,12 +161,12 @@ public class CustomerModelFactory : CommonModelFactory
             Id = item.Id,
             Quantity = item.RequestedQty,
             OriginalProductCost = await _priceFormatter.FormatPriceAsync(item.OriginalProductPrice, true, currentCurrency),
-            ProductName = productName,
-            ProductSeName = await _urlRecordService.GetSeNameAsync(product),
+            ProductName = product != null ? await _localizationService.GetLocalizedAsync(product, x => x.Name) : await _localizationService.GetResourceAsync("Plugins.Misc.RFQ.ProductDeleted"),
+            ProductSeName = product != null ? await _urlRecordService.GetSeNameAsync(product) : string.Empty,
             UnitPrice = unitPrice,
             UnitPriceText = await _priceFormatter.FormatPriceAsync(unitPrice, true, currentCurrency),
-            AttributeInfo = await _productAttributeFormatter.FormatAttributesAsync(product, item.ProductAttributesXml),
-            PictureUrl = await GetPictureUrlAsync(product, item.ProductAttributesXml, productName, _mediaSettings.CartThumbPictureSize),
+            AttributeInfo = product != null ? await _productAttributeFormatter.FormatAttributesAsync(product, item.ProductAttributesXml) : string.Empty,
+            PictureUrl = product != null ? await GetPictureUrlAsync(product, item.ProductAttributesXml, _mediaSettings.CartThumbPictureSize) : await _pictureService.GetDefaultPictureUrlAsync(_mediaSettings.CartThumbPictureSize),
             Editable = requestQuote.Status == 0
         };
     }

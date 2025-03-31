@@ -10,7 +10,7 @@ public record RequestQuoteItemModel : BaseNopEntityModel
     public string ProductName { get; set; }
 
     public int RequestedQty { get; set; }
-    
+
     public string RequestedUnitPrice { get; set; }
 
     public decimal RequestedUnitPriceValue { get; set; }
@@ -18,8 +18,8 @@ public record RequestQuoteItemModel : BaseNopEntityModel
     public string OriginalProductPrice { get; set; }
 
     public string ProductAttributeInfo { get; set; }
-    
+
     public string AdminNotes { get; set; }
-    
+
     public int ProductId { get; set; }
 }

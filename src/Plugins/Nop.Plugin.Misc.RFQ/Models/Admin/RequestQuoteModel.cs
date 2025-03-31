@@ -14,10 +14,10 @@ public record RequestQuoteModel : BaseNopEntityModel
     [NopResourceDisplayName("Plugins.Misc.RFQ.Fields.CustomerEmail")]
     public string CustomerEmail { get; set; }
 
-    [NopResourceDisplayName("Plugins.Misc.RFQ.Fields.CreatedOn")]
+    [NopResourceDisplayName("Plugins.Misc.RFQ.Fields.RequestQuote.CreatedOn")]
     public DateTime CreatedOnUtc { get; set; }
 
-    [NopResourceDisplayName("Plugins.Misc.RFQ.Fields.Status")]
+    [NopResourceDisplayName("Plugins.Misc.RFQ.Fields.RequestQuote.Status")]
     public string Status { get; set; }
     public RequestQuoteStatus StatusType { get; set; }
 
@@ -29,16 +29,16 @@ public record RequestQuoteModel : BaseNopEntityModel
 
     [NopResourceDisplayName("Plugins.Misc.RFQ.Fields.AdminNotes")]
     public string AdminNotes { get; set; }
-    
+
     public bool DisplaySaveButtons =>
         StatusType != RequestQuoteStatus.Canceled &&
         StatusType != RequestQuoteStatus.QuoteIsCreated;
 
     public bool DisplayDeleteRequestButton => StatusType != RequestQuoteStatus.QuoteIsCreated;
-    
+
     public bool DisplayCreateQuoteButton => DisplaySaveButtons;
 
-    public bool DisplayCancelRequestButton => 
+    public bool DisplayCancelRequestButton =>
         StatusType != RequestQuoteStatus.Canceled &&
         StatusType != RequestQuoteStatus.QuoteIsCreated;
 

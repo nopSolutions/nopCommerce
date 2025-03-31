@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Nop.Core.Domain.Cms;
+﻿using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Messages;
 using Nop.Plugin.Misc.RFQ.Components;
 using Nop.Plugin.Misc.RFQ.Services;
@@ -23,13 +20,11 @@ public class RfqPlugin : BasePlugin, IWidgetPlugin
     #region Fields
 
     private readonly EmailAccountSettings _emailAccountSettings;
-    private readonly IActionContextAccessor _actionContextAccessor;
     private readonly IEmailAccountService _emailAccountService;
     private readonly ILocalizationService _localizationService;
     private readonly IMessageTemplateService _messageTemplateService;
     private readonly IPermissionService _permissionService;
     private readonly ISettingService _settingService;
-    private readonly IUrlHelperFactory _urlHelperFactory;
     private readonly WidgetSettings _widgetSettings;
 
     #endregion
@@ -37,41 +32,25 @@ public class RfqPlugin : BasePlugin, IWidgetPlugin
     #region Ctor
 
     public RfqPlugin(EmailAccountSettings emailAccountSettings,
-        IActionContextAccessor actionContextAccessor,
         IEmailAccountService emailAccountService,
         ILocalizationService localizationService,
         IMessageTemplateService messageTemplateService,
         IPermissionService permissionService,
         ISettingService settingService,
-        IUrlHelperFactory urlHelperFactory,
         WidgetSettings widgetSettings)
     {
         _emailAccountSettings = emailAccountSettings;
-        _actionContextAccessor = actionContextAccessor;
         _emailAccountService = emailAccountService;
         _localizationService = localizationService;
         _messageTemplateService = messageTemplateService;
         _permissionService = permissionService;
         _settingService = settingService;
-        _urlHelperFactory = urlHelperFactory;
         _widgetSettings = widgetSettings;
     }
 
     #endregion
 
     #region Methods
-
-    /// <summary>
-    /// Gets a configuration page URL
-    /// </summary>
-    public override string GetConfigurationPageUrl()
-    {
-        if (_actionContextAccessor.ActionContext != null)
-            return _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext)
-                .RouteUrl(RfqDefaults.ConfigurationRouteName);
-
-        return base.GetConfigurationPageUrl();
-    }
 
     /// <summary>
     /// Gets widget zones where this widget should be rendered
@@ -142,7 +121,7 @@ public class RfqPlugin : BasePlugin, IWidgetPlugin
                 {
                     Name = RfqDefaults.ADMIN_SENT_NEW_QUOTE,
                     Subject = "%Store.Name%. The new quote #%Quote.Id% received",
-                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Store owner has just sent a new quote.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Quote number: %Quote.Id%{Environment.NewLine}<br />{Environment.NewLine}Date of the quote: %Quote.CreatedOn%{Environment.NewLine}<br />%if(%Quote.ExpirationOn% != null)Expiration date of the quote: %Quote.ExpirationOn%{Environment.NewLine}<br />%endif{Environment.NewLine}<br />{Environment.NewLine}See details on the <a href=\"%Quote.URL%\">The quote page</a>{Environment.NewLine}</p>{Environment.NewLine}",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Store owner has just sent a new quote.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Quote number: %Quote.Id%{Environment.NewLine}<br />{Environment.NewLine}Date of the quote: %Quote.CreatedOn%{Environment.NewLine}<br />%if(%ExpirationOnIsSet%)Expiration date of the quote: %Quote.ExpirationOn%{Environment.NewLine}<br />%endif{Environment.NewLine}<br />{Environment.NewLine}See details on the <a href=\"%Quote.URL%\">The quote page</a>{Environment.NewLine}</p>{Environment.NewLine}",
                     IsActive = true,
                     EmailAccountId = eaGeneral.Id
                 });
@@ -163,17 +142,27 @@ public class RfqPlugin : BasePlugin, IWidgetPlugin
             ["Plugins.Misc.RFQ.Quotes"] = "Quotes",
             ["Plugins.Misc.RFQ.CustomerRequest.Info"] = "Request info",
             ["Plugins.Misc.RFQ.CustomerQuote.Info"] = "Quote info",
-            ["Plugins.Misc.RFQ.Fields.CreatedOn"] = "Created on",
-            ["Plugins.Misc.RFQ.Fields.Status"] = "Status",
+            ["Plugins.Misc.RFQ.Fields.Quote.CreatedOn"] = "Created on",
+            ["Plugins.Misc.RFQ.Fields.Quote.CreatedOn.Hint"] = "The date/time that the quote was created.",
+            ["Plugins.Misc.RFQ.Fields.RequestQuote.CreatedOn"] = "Created on",
+            ["Plugins.Misc.RFQ.Fields.RequestQuote.CreatedOn.Hint"] = "The date/time that the request a quote was created.",
+            ["Plugins.Misc.RFQ.Fields.Quote.Status"] = "Status",
+            ["Plugins.Misc.RFQ.Fields.Quote.Status.Hint"] = "The status of the quote",
+            ["Plugins.Misc.RFQ.Fields.RequestQuote.Status"] = "Status",
+            ["Plugins.Misc.RFQ.Fields.RequestQuote.Status.Hint"] = "The status of the request a quote",
             ["Plugins.Misc.RFQ.Fields.Order"] = "Order",
+            ["Plugins.Misc.RFQ.Fields.Order.Hint"] = "Order",
             ["Plugins.Misc.RFQ.Fields.CustomerNotes"] = "Customer notes",
+            ["Plugins.Misc.RFQ.Fields.CustomerNotes.Hint"] = "The customer notes and additional information",
             ["Plugins.Misc.RFQ.Products"] = "Products",
             ["Plugins.Misc.RFQ.Product"] = "Product",
+            ["Plugins.Misc.RFQ.ProductDeleted"] = "The product has been deleted",
             ["Plugins.Misc.RFQ.OriginalProductPrice"] = "Original unit price",
             ["Plugins.Misc.RFQ.CustomerRequest.RequestedQty"] = "Requested qty",
             ["Plugins.Misc.RFQ.CustomerRequest.RequestedUnitPrice"] = "Requested unit price",
             ["Plugins.Misc.RFQ.RequestQuoteItem.Fields.CustomerNotes"] = "Customer notes",
             ["Plugins.Misc.RFQ.Fields.AdminNotes"] = "Admin notes",
+            ["Plugins.Misc.RFQ.Fields.AdminNotes.Hint"] = "The admin notes and changes log",
             ["Plugins.Misc.RFQ.CustomerRequests.NoRequests"] = "You don't have any discount requests yet, you can create one on the cart page",
             ["Plugins.Misc.RFQ.CustomerRequests.NoQuotes"] = "You don't have any quotes yet",
             ["Plugins.Misc.RFQ.CreatedOnFrom"] = "Created from",
@@ -203,14 +192,20 @@ public class RfqPlugin : BasePlugin, IWidgetPlugin
             ["Plugins.Misc.RFQ.CreateQuote"] = "Create the quote",
             ["Plugins.Misc.RFQ.AdminQuote.QuoteCreatedByRequest"] = "Quote created from the request by {0}",
             ["Plugins.Misc.RFQ.AdminQuote.QuoteCreatedManuallyByStoreOwner"] = "Quote created manual by {0}",
-            ["Plugins.Misc.RFQ.Common.Fields.ExpirationDate"] = "Expiration date",
+            ["Plugins.Misc.RFQ.Fields.Quote.ExpirationDate"] = "Expiration date",
+            ["Plugins.Misc.RFQ.Fields.Quote.ExpirationDateHint"] = "The date/time that the quote will expire",
             ["Plugins.Misc.RFQ.AdminQuote.QuoteStatus"] = "Quote status",
             ["Plugins.Misc.RFQ.AdminQuote.QuoteStatus.Hint"] = "Select the quote status",
             ["Plugins.Misc.RFQ.AdminRequest.Updated"] = "The request a quote has been updated successfully.",
+            ["Plugins.Misc.RFQ.AdminRequest.Deleted"] = "The request a quote has been deleted successfully.",
+            ["Plugins.Misc.RFQ.AdminRequest.Canceled"] = "The request a quote has been canceled successfully.",
+            ["Plugins.Misc.RFQ.AdminRequest.Selected.Deleted"] = "The selected requests a quote has been deleted successfully.",
             ["Plugins.Misc.RFQ.AdminQuote.Updated"] = "The quote has been updated successfully.",
+            ["Plugins.Misc.RFQ.AdminQuote.Deleted"] = "The quote has been deleted successfully.",
             ["Plugins.Misc.RFQ.AdminQuote.QuoteSubmitted"] = "The quote has been submitted successfully",
             ["Plugins.Misc.RFQ.AdminQuote.RequestedUnitPrice"] = "Requested unit price",
             ["Plugins.Misc.RFQ.AdminQuote.RequestedQty"] = "Requested qty",
+            ["Plugins.Misc.RFQ.AdminQuote.Selected.Deleted"] = "The selected quotes has been deleted successfully.",
             ["Plugins.Misc.RFQ.OfferedQty"] = "Offered qty",
             ["Plugins.Misc.RFQ.OfferedUnitPrice"] = "Offered unit price",
             ["Plugins.Misc.RFQ.SendQuote"] = "Send quote",
@@ -233,9 +228,15 @@ public class RfqPlugin : BasePlugin, IWidgetPlugin
             ["Plugins.Misc.RFQ.Image"] = "Image",
             ["Plugins.Misc.RFQ.Product(s)"] = "Product(s)",
             ["Plugins.Misc.RFQ.Fields.RequestQuoteId"] = "Related request a quote",
+            ["Plugins.Misc.RFQ.Fields.RequestQuoteId.Hint"] = "The link to the related request a quote",
             ["Plugins.Misc.RFQ.Fields.QuoteId"] = "Related quote",
+            ["Plugins.Misc.RFQ.Fields.QuoteId.Hint"] = "The link to the related quote",
             ["Plugins.Misc.RFQ.BackToShoppingCart"] = "Back to shopping cart",
-            ["Plugins.Misc.RFQ.QuoteExpired"] = "Status changed to expired"
+            ["Plugins.Misc.RFQ.QuoteExpired"] = "Status changed to expired",
+            [$"Admin.ContentManagement.MessageTemplates.Description.{RfqDefaults.CUSTOMER_SENT_NEW_REQUEST_QUOTE}"] = "This message template is used to notify a store owner that the new request a quote sent",
+            [$"Admin.ContentManagement.MessageTemplates.Description.{RfqDefaults.ADMIN_SENT_NEW_QUOTE}"] = "This message template is used to notify a customer that the new a quote sent",
+            ["Security.Permission.Misc.RFQ.AccessRFQ.Admin.AccessRFQ"] = "Access to the customer’s Request and Price Offer functionality",
+            ["Security.Permission.Misc.RFQ.AccessRFQ.PublicStore.AccessRFQ"] = "Public store. Access to the customer’s Request and Price Offer functionality"
         });
 
         await base.InstallAsync();
@@ -249,9 +250,15 @@ public class RfqPlugin : BasePlugin, IWidgetPlugin
     {
         //delete permission
         var permissionRecord = (await _permissionService.GetAllPermissionRecordsAsync())
+            .FirstOrDefault(x => x.SystemName == RfqPermissionConfigManager.ADMIN_ACCESS_RFQ);
+
+        if (permissionRecord != null)
+            await _permissionService.DeletePermissionRecordAsync(permissionRecord);
+
+        permissionRecord = (await _permissionService.GetAllPermissionRecordsAsync())
             .FirstOrDefault(x => x.SystemName == RfqPermissionConfigManager.ACCESS_RFQ);
 
-        if (permissionRecord != null) 
+        if (permissionRecord != null)
             await _permissionService.DeletePermissionRecordAsync(permissionRecord);
 
         if (_widgetSettings.ActiveWidgetSystemNames.Contains(RfqDefaults.SystemName))
@@ -262,6 +269,7 @@ public class RfqPlugin : BasePlugin, IWidgetPlugin
 
         var deletedMessageTemplates = new List<MessageTemplate>();
         deletedMessageTemplates.AddRange((await _messageTemplateService.GetMessageTemplatesByNameAsync(RfqDefaults.CUSTOMER_SENT_NEW_REQUEST_QUOTE)).ToList());
+        deletedMessageTemplates.AddRange((await _messageTemplateService.GetMessageTemplatesByNameAsync(RfqDefaults.ADMIN_SENT_NEW_QUOTE)).ToList());
 
         deletedMessageTemplates = deletedMessageTemplates.Where(mt => mt != null).ToList();
 
@@ -269,6 +277,12 @@ public class RfqPlugin : BasePlugin, IWidgetPlugin
             await Task.WhenAll(deletedMessageTemplates.Select(_messageTemplateService.DeleteMessageTemplateAsync));
 
         await _localizationService.DeleteLocaleResourcesAsync("Plugins.Misc.RFQ");
+        await _localizationService.DeleteLocaleResourcesAsync("Enums.Nop.Plugin.Misc.RFQ.Domains.RequestQuoteStatus");
+        await _localizationService.DeleteLocaleResourcesAsync("Enums.Nop.Plugin.Misc.RFQ.Domains.QuoteStatus");
+        await _localizationService.DeleteLocaleResourceAsync($"Admin.ContentManagement.MessageTemplates.Description.{RfqDefaults.CUSTOMER_SENT_NEW_REQUEST_QUOTE}");
+        await _localizationService.DeleteLocaleResourceAsync($"Admin.ContentManagement.MessageTemplates.Description.{RfqDefaults.ADMIN_SENT_NEW_QUOTE}");
+        await _localizationService.DeleteLocaleResourcesAsync("Security.Permission.Misc.RFQ.AccessRFQ.Admin.AccessRFQ");
+        await _localizationService.DeleteLocaleResourcesAsync("Security.Permission.Misc.RFQ.AccessRFQ.PublicStore.AccessRFQ");
     }
 
     #endregion

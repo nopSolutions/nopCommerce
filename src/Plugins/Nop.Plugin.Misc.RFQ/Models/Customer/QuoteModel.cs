@@ -14,13 +14,13 @@ public record QuoteModel : BaseNopEntityModel
     [NopResourceDisplayName("Plugins.Misc.RFQ.Fields.CustomerEmail")]
     public string CustomerEmail { get; set; }
 
-    [NopResourceDisplayName("Plugins.Misc.RFQ.Fields.CreatedOn")]
+    [NopResourceDisplayName("Plugins.Misc.RFQ.Fields.Quote.CreatedOn")]
     public DateTime CreatedOn { get; set; }
 
-    [NopResourceDisplayName("Plugins.Misc.RFQ.Common.Fields.ExpirationDate")]
+    [NopResourceDisplayName("Plugins.Misc.RFQ.Fields.Quote.ExpirationDate")]
     public DateTime? ExpirationDate { get; set; }
 
-    [NopResourceDisplayName("Plugins.Misc.RFQ.Fields.Status")]
+    [NopResourceDisplayName("Plugins.Misc.RFQ.Fields.Quote.Status")]
     public string Status { get; set; }
 
     [NopResourceDisplayName("Plugins.Misc.RFQ.Fields.Order")]

@@ -10,19 +10,22 @@ namespace Nop.Plugin.Misc.RFQ.Models.Customer;
 public record RequestQuoteModel : BaseNopEntityModel
 {
     public int CustomerId { get; set; }
-    
-    [NopResourceDisplayName("Plugins.Misc.RFQ.Fields.CreatedOn")]
+
+    [NopResourceDisplayName("Plugins.Misc.RFQ.Fields.RequestQuote.CreatedOn")]
     public DateTime CreatedOnUtc { get; set; }
 
-    [NopResourceDisplayName("Plugins.Misc.RFQ.Fields.Status")]
+    [NopResourceDisplayName("Plugins.Misc.RFQ.Fields.RequestQuote.Status")]
     public string Status { get; set; }
     public RequestQuoteStatus StatusType { get; set; }
 
     [NopResourceDisplayName("Plugins.Misc.RFQ.Fields.CustomerNotes")]
     public string CustomerNotes { get; set; }
-    
+
+    [NopResourceDisplayName("Plugins.Misc.RFQ.CustomerQuote.Info")]
+    public int? QuoteId { get; set; }
+
     public IList<RequestQuoteItemModel> CustomerItems { get; set; }
-    
+
     public bool DisplayCancelRequestButton => StatusType != 0 &&
         StatusType != RequestQuoteStatus.Canceled &&
         StatusType != RequestQuoteStatus.QuoteIsCreated;
@@ -30,7 +33,7 @@ public record RequestQuoteModel : BaseNopEntityModel
     public bool DisplayDeleteRequestButton => StatusType != 0 &&
         StatusType != RequestQuoteStatus.QuoteIsCreated;
 
-    public bool DisplaySendRequestButton => 
+    public bool DisplaySendRequestButton =>
         StatusType != RequestQuoteStatus.Canceled &&
         StatusType != RequestQuoteStatus.QuoteIsCreated &&
         StatusType != RequestQuoteStatus.Submitted;
