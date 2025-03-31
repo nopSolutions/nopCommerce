@@ -915,7 +915,7 @@ public partial class BrevoManager
         catch (Exception exception)
         {
             //log full error
-            _logger.Error($"Brevo error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
+            await _logger.ErrorAsync($"Brevo error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
             return false;
         }
 
