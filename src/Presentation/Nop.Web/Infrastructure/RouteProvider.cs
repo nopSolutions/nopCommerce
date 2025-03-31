@@ -95,8 +95,16 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             defaults: new { controller = "Customer", action = "RemoveExternalAssociation" });
 
         endpointRouteBuilder.MapControllerRoute(name: "CustomerOrders",
-            pattern: $"{lang}/order/history",
+            pattern: $"{lang}/order/history/{{limit?}}",
             defaults: new { controller = "Order", action = "CustomerOrders" });
+
+        endpointRouteBuilder.MapControllerRoute(name: "CustomerOrdersPaged",
+            pattern: $"{lang}/order/history/{{limit?}}/page/{{pageNumber:min(0)}}",
+            defaults: new { controller = "Order", action = "CustomerOrders" });
+
+        endpointRouteBuilder.MapControllerRoute(name: "CustomerRecurringPayments",
+            pattern: $"{lang}/customer/recurringpayments",
+            defaults: new { controller = "Order", action = "CustomerRecurringPayments" });
 
         //contact us
         endpointRouteBuilder.MapControllerRoute(name: "ContactUs",

@@ -121,6 +121,17 @@ public class LocalizationMigration : MigrationBase
             //#820
             ["Currency.Selector.Text.Pattern"] = "{0}, {1}",
 
+            //#1266
+            ["Account.CustomerOrders.Period"] = "Orders from",
+            ["Account.CustomerRecurringPayments"] = "Recurring payments",
+            ["Account.CustomerRecurringPayments.NoPayments"] = "No payments",
+            ["Enums.Nop.Web.Models.Order.OrderHistoryPeriods.All"] = "all time",
+            ["Enums.Nop.Web.Models.Order.OrderHistoryPeriods.Day"] = "the past day",
+            ["Enums.Nop.Web.Models.Order.OrderHistoryPeriods.Week"] = "the past week",
+            ["Enums.Nop.Web.Models.Order.OrderHistoryPeriods.Month"] = "the past month",
+            ["Enums.Nop.Web.Models.Order.OrderHistoryPeriods.HalfYear"] = "the past six months",
+            ["Enums.Nop.Web.Models.Order.OrderHistoryPeriods.Year"] = "the past year",
+
         }, languageId);
 
         #endregion

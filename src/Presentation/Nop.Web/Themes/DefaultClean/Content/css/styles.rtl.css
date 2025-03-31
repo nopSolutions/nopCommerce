@@ -3965,6 +3965,36 @@ label, label + * {
   color: #4ab2f1;
 }
 
+.order-filters {
+  display: flex;
+  flex-direction: column;
+  padding-inline: 20px;
+  padding-block-end: 20px;
+}
+
+.order-filters__row {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  margin-block-end: 10px;
+  justify-content: end;
+}
+
+.order-filters__label {
+  line-height: 26px;
+  color: #444;
+  margin-inline-end: 10px;
+  min-width: 50px;
+}
+
+.order-filters__input {
+  background-color: #fff;
+  height: 36px;
+  border: 1px solid #ddd;
+  padding: 8px;
+  vertical-align: middle;
+}
+
 .address-list-page .add-button {
   margin: 0 0 20px;
   text-align: center;
@@ -6716,6 +6746,10 @@ label, label + * {
   .estimate-shipping-row-item.address-item + .estimate-shipping-row-item.address-item {
     padding-right: 0px;
     padding-top: 8px;
+  }
+
+  .order-filters__row {
+    justify-content: center;
   }
 }
 

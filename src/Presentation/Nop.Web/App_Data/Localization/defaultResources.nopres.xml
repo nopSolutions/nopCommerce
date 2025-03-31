@@ -177,6 +177,9 @@
   <LocaleResource Name="Account.CustomerOrders.OrderTotal">
     <Value>Order Total</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.CustomerOrders.Period">
+    <Value>Orders from</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.CustomerOrders.RecurringOrders">
     <Value>Recurring payments</Value>
   </LocaleResource>
@@ -251,6 +254,12 @@
   </LocaleResource>
   <LocaleResource Name="Account.CustomerReturnRequests.UploadedFile.Download">
     <Value>Download</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerRecurringPayments">
+    <Value>Recurring payments</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerRecurringPayments.NoPayments">
+    <Value>No payments</Value>
   </LocaleResource>
   <LocaleResource Name="Account.DownloadableProducts">
     <Value>Downloadable products</Value>
@@ -17771,6 +17780,24 @@
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Services.Plugins.LoadPluginsMode.NotInstalledOnly">
     <Value>Not installed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Web.Models.Order.OrderHistoryPeriods.All">
+    <Value>all time</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Web.Models.Order.OrderHistoryPeriods.Day">
+    <Value>the past day</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Web.Models.Order.OrderHistoryPeriods.Week">
+    <Value>the past week</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Web.Models.Order.OrderHistoryPeriods.Month">
+    <Value>the past month</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Web.Models.Order.OrderHistoryPeriods.HalfYear">
+    <Value>the past six months</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Web.Models.Order.OrderHistoryPeriods.Year">
+    <Value>the past year</Value>
   </LocaleResource>
   <LocaleResource Name="EUCookieLaw.Description">
     <Value>On 26 May 2011, the rules about cookies on websites changed. This site uses cookies. One or more of the cookies we use is essential for parts of this website to operate and has already been set. You may delete and block all cookies from this site, but parts of the site will not work. To find out more about cookies used on this website and how to delete cookies, see our privacy policy</Value>
