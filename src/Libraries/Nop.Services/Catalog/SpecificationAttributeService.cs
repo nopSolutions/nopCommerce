@@ -227,17 +227,29 @@ public partial class SpecificationAttributeService : ISpecificationAttributeServ
     /// <summary>
     /// Gets specification attributes
     /// </summary>
+    /// <param name="name">The specification attribute name</param>
+    /// <param name="groupId">The specification attribute group identifier</param>
     /// <param name="pageIndex">Page index</param>
     /// <param name="pageSize">Page size</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the specification attributes
     /// </returns>
-    public virtual async Task<IPagedList<SpecificationAttribute>> GetSpecificationAttributesAsync(int pageIndex = 0, int pageSize = int.MaxValue)
+    public virtual async Task<IPagedList<SpecificationAttribute>> GetSpecificationAttributesAsync(
+        string name = null,
+        int? groupId = null,
+        int pageIndex = 0,
+        int pageSize = int.MaxValue)
     {
-        var query = from sa in _specificationAttributeRepository.Table
-            orderby sa.DisplayOrder, sa.Id
-            select sa;
+        var query = _specificationAttributeRepository.Table;
+
+        if (groupId > 0)
+            query = query.Where(sa => sa.SpecificationAttributeGroupId == groupId);
+
+        if (!string.IsNullOrEmpty(name))
+            query = query.Where(sa => sa.Name.Contains(name));
+
+        query = query.OrderBy(sa => sa.DisplayOrder).ThenBy(sa => sa.Id);
 
         return await query.ToPagedListAsync(pageIndex, pageSize);
     }
@@ -257,25 +269,6 @@ public partial class SpecificationAttributeService : ISpecificationAttributeServ
             select sa;
 
         return await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.SpecificationAttributesWithOptionsCacheKey), async () => await query.ToListAsync());
-    }
-
-    /// <summary>
-    /// Gets specification attributes by group identifier
-    /// </summary>
-    /// <param name="specificationAttributeGroupId">The specification attribute group identifier</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the specification attributes
-    /// </returns>
-    public virtual async Task<IList<SpecificationAttribute>> GetSpecificationAttributesByGroupIdAsync(int? specificationAttributeGroupId = null)
-    {
-        var query = _specificationAttributeRepository.Table;
-        if (!specificationAttributeGroupId.HasValue || specificationAttributeGroupId > 0)
-            query = query.Where(sa => sa.SpecificationAttributeGroupId == specificationAttributeGroupId);
-
-        query = query.OrderBy(sa => sa.DisplayOrder).ThenBy(sa => sa.Id);
-
-        return await query.ToListAsync();
     }
 
     /// <summary>

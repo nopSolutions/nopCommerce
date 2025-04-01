@@ -95,14 +95,14 @@ public partial class SpecificationAttributeController : BaseAdminController
     [CheckPermission(StandardPermission.Catalog.SPECIFICATION_ATTRIBUTES_VIEW)]
     public virtual async Task<IActionResult> List()
     {
-        var model = await _specificationAttributeModelFactory.PrepareSpecificationAttributeGroupSearchModelAsync(new SpecificationAttributeGroupSearchModel());
+        var model = await _specificationAttributeModelFactory.PrepareSpecificationAttributeSearchModelAsync(new SpecificationAttributeSearchModel());
 
         return View(model);
     }
 
     [HttpPost]
     [CheckPermission(StandardPermission.Catalog.SPECIFICATION_ATTRIBUTES_VIEW)]
-    public virtual async Task<IActionResult> SpecificationAttributeGroupList(SpecificationAttributeGroupSearchModel searchModel)
+    public virtual async Task<IActionResult> SpecificationAttributeGroupList(SpecificationAttributeSearchModel searchModel)
     {
         var model = await _specificationAttributeModelFactory.PrepareSpecificationAttributeGroupListModelAsync(searchModel);
 

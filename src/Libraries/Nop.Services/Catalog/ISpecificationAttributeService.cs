@@ -89,13 +89,19 @@ public partial interface ISpecificationAttributeService
     /// <summary>
     /// Gets specification attributes
     /// </summary>
+    /// <param name="name">The specification attribute name</param>
+    /// <param name="groupId">The specification attribute group identifier</param>
     /// <param name="pageIndex">Page index</param>
     /// <param name="pageSize">Page size</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the specification attributes
     /// </returns>
-    Task<IPagedList<SpecificationAttribute>> GetSpecificationAttributesAsync(int pageIndex = 0, int pageSize = int.MaxValue);
+    Task<IPagedList<SpecificationAttribute>> GetSpecificationAttributesAsync(
+        string name = null,
+        int? groupId = null,
+        int pageIndex = 0,
+        int pageSize = int.MaxValue);
 
     /// <summary>
     /// Gets specification attributes that have options
@@ -105,16 +111,6 @@ public partial interface ISpecificationAttributeService
     /// The task result contains the specification attributes that have available options
     /// </returns>
     Task<IList<SpecificationAttribute>> GetSpecificationAttributesWithOptionsAsync();
-
-    /// <summary>
-    /// Gets specification attributes by group identifier
-    /// </summary>
-    /// <param name="specificationAttributeGroupId">The specification attribute group identifier</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the specification attributes
-    /// </returns>
-    Task<IList<SpecificationAttribute>> GetSpecificationAttributesByGroupIdAsync(int? specificationAttributeGroupId = null);
 
     /// <summary>
     /// Deletes a specification attribute

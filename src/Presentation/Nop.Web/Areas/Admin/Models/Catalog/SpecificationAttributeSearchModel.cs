@@ -1,4 +1,5 @@
 ﻿using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Catalog;
 
@@ -10,6 +11,9 @@ public partial record SpecificationAttributeSearchModel : BaseSearchModel
     #region Properties
 
     public int SpecificationAttributeGroupId { get; set; }
+
+    [NopResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.List.SearchName")]
+    public string AttributeName { get; set; }
 
     #endregion
 }

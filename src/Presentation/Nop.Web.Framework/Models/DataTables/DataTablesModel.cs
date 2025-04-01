@@ -80,6 +80,11 @@ public partial record DataTablesModel : BaseNopModel
     public bool ServerSide { get; set; }
 
     /// <summary>
+    /// Gets or sets how many items are in the initial data set to delay the loading of server-side data until second draw
+    /// </summary>
+    public int? DeferLoading { get; set; }
+
+    /// <summary>
     /// Enable or disable table pagination.
     /// </summary>
     public bool Paging { get; set; }
