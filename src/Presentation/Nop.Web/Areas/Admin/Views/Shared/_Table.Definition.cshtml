@@ -61,6 +61,12 @@
     processing: @Model.Processing.ToString().ToLowerInvariant(),
     </text>
 }
+@if (Model.DeferLoading.HasValue)
+{
+    <text>
+    deferLoading: @Model.DeferLoading.ToString(),
+    </text>
+}
 @if (Model.ServerSide)
 {
     <text>

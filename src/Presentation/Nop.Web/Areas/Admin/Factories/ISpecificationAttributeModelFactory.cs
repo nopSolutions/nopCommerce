@@ -11,22 +11,22 @@ public partial interface ISpecificationAttributeModelFactory
     /// <summary>
     /// Prepare specification attribute group search model
     /// </summary>
-    /// <param name="searchModel">Specification attribute group search model</param>
+    /// <param name="searchModel">Specification attribute search model</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the specification attribute group search model
+    /// The task result contains the specification attribute search model
     /// </returns>
-    Task<SpecificationAttributeGroupSearchModel> PrepareSpecificationAttributeGroupSearchModelAsync(SpecificationAttributeGroupSearchModel searchModel);
+    Task<SpecificationAttributeSearchModel> PrepareSpecificationAttributeSearchModelAsync(SpecificationAttributeSearchModel searchModel);
 
     /// <summary>
     /// Prepare paged specification attribute group list model
     /// </summary>
-    /// <param name="searchModel">Specification attribute group search model</param>
+    /// <param name="searchModel">Specification attribute search model</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the specification attribute group list model
     /// </returns>
-    Task<SpecificationAttributeGroupListModel> PrepareSpecificationAttributeGroupListModelAsync(SpecificationAttributeGroupSearchModel searchModel);
+    Task<SpecificationAttributeGroupListModel> PrepareSpecificationAttributeGroupListModelAsync(SpecificationAttributeSearchModel searchModel);
 
     /// <summary>
     /// Prepare specification attribute group model
@@ -50,7 +50,7 @@ public partial interface ISpecificationAttributeModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the specification attribute list model
     /// </returns>
-    Task<SpecificationAttributeListModel> PrepareSpecificationAttributeListModelAsync(SpecificationAttributeSearchModel searchModel, SpecificationAttributeGroup group);
+    Task<SpecificationAttributeListModel> PrepareSpecificationAttributeListModelAsync(SpecificationAttributeSearchModel searchModel, SpecificationAttributeGroup group = null);
 
     /// <summary>
     /// Prepare specification attribute model
