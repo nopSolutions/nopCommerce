@@ -458,18 +458,11 @@ public partial class ProductModelFactory : IProductModelFactory
         var finalPriceWithoutDiscount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(finalPriceWithoutDiscountBase, currentCurrency);
         var finalPriceWithDiscount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(finalPriceWithDiscountBase, currentCurrency);
 
-        var strikeThroughPrice = decimal.Zero;
-
+        model.Price = await _priceFormatter.FormatPriceAsync(finalPriceWithoutDiscount);
         if (finalPriceWithoutDiscountBase != oldPriceBase && oldPriceBase > decimal.Zero)
-            strikeThroughPrice = oldPrice;
-
-        if (finalPriceWithoutDiscountBase != finalPriceWithDiscountBase)
-            strikeThroughPrice = finalPriceWithoutDiscount;
-
-        if (strikeThroughPrice > decimal.Zero)
         {
-            model.OldPrice = await _priceFormatter.FormatPriceAsync(strikeThroughPrice);
-            model.OldPriceValue = strikeThroughPrice;
+            model.OldPrice = await _priceFormatter.FormatPriceAsync(oldPrice);
+            model.OldPriceValue = oldPrice;
         }
         else
         {
@@ -477,9 +470,21 @@ public partial class ProductModelFactory : IProductModelFactory
             model.OldPriceValue = null;
         }
 
-        model.Price = await _priceFormatter.FormatPriceAsync(finalPriceWithDiscount);
-        if (hasMultiplePrices)
-            model.Price = string.Format(await _localizationService.GetResourceAsync("Products.PriceRangeFrom"), model.Price);
+        if (addPriceRangeFrom)
+        {
+            var strikeThroughPrice = decimal.Zero;
+
+            if (finalPriceWithoutDiscountBase != finalPriceWithDiscountBase)
+                strikeThroughPrice = finalPriceWithoutDiscount;
+
+            if (strikeThroughPrice > decimal.Zero)
+            {
+                model.OldPrice = await _priceFormatter.FormatPriceAsync(strikeThroughPrice);
+                model.OldPriceValue = strikeThroughPrice;
+            }
+
+            model.Price = await _priceFormatter.FormatPriceAsync(finalPriceWithDiscount);
+        }
 
         if (finalPriceWithoutDiscountBase != finalPriceWithDiscountBase)
         {
@@ -488,6 +493,9 @@ public partial class ProductModelFactory : IProductModelFactory
         }
 
         model.PriceValue = finalPriceWithDiscount;
+
+        if (hasMultiplePrices)
+            model.Price = string.Format(await _localizationService.GetResourceAsync("Products.PriceRangeFrom"), model.Price);
 
         //property for German market
         //we display tax/shipping info only with "shipping enabled" for this product
