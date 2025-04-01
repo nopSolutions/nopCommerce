@@ -37,6 +37,11 @@ public static partial class MessageTemplateSystemNames
     /// </summary>
     public const string DELETE_CUSTOMER_REQUEST_STORE_OWNER_NOTIFICATION = "Customer.Gdpr.DeleteRequest";
 
+    /// <summary>
+    /// Represents system name of the failed login attempt notification
+    /// </summary>
+    public const string CUSTOMER_FAILED_LOGIN_ATTEMPT_NOTIFICATION = "Customer.FailedLoginAttempt";
+
     #endregion
 
     #region Order

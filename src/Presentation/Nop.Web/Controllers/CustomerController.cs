@@ -498,6 +498,18 @@ public partial class CustomerController : BasePublicController
                     ModelState.AddModelError("", await _localizationService.GetResourceAsync("Account.Login.WrongCredentials"));
                     break;
             }
+
+            if (loginResult == CustomerLoginResults.WrongPassword && _customerSettings.NotifyFailedLoginAttempt)
+            {
+                var customer = _customerSettings.UsernamesEnabled
+                        ? await _customerService.GetCustomerByUsernameAsync(customerUserName)
+                        : await _customerService.GetCustomerByEmailAsync(customerEmail);
+
+                await _workflowMessageService.SendCustomerFailedLoginAttemptNotificationAsync(customer, customer.LanguageId ?? 0);
+            }
+
+            await _customerActivityService.InsertActivityAsync("PublicStore.FailedLogin",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.Login.Fail"), _customerSettings.UsernamesEnabled ? customerUserName : customerEmail));
         }
 
         //If we got this far, something failed, redisplay form
@@ -1652,7 +1664,7 @@ public partial class CustomerController : BasePublicController
             {
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Account.ChangePassword.Success"));
 
-                await _customerActivityService.InsertActivityAsync(customer, "PublicStore.PasswordChanged", await 
+                await _customerActivityService.InsertActivityAsync(customer, "PublicStore.PasswordChanged", await
                     _localizationService.GetResourceAsync("ActivityLog.PublicStore.PasswordChanged"));
 
                 //authenticate customer after changing password

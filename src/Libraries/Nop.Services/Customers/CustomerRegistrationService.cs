@@ -450,8 +450,8 @@ public partial class CustomerRegistrationService : ICustomerRegistrationService
         await _eventPublisher.PublishAsync(new CustomerLoggedinEvent(customer, guestCustomer));
 
         //activity log
-        await _customerActivityService.InsertActivityAsync(customer, "PublicStore.Login",
-            await _localizationService.GetResourceAsync("ActivityLog.PublicStore.Login"), customer);
+        await _customerActivityService.InsertActivityAsync(customer, "PublicStore.SuccessfulLogin",
+            await _localizationService.GetResourceAsync("ActivityLog.PublicStore.Login.Success"), customer);
 
         var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 
