@@ -130,10 +130,10 @@ public class LocalizationMigration : MigrationBase
             ["Admin.System.SystemInfo.DatabaseCollation.Hint"] = "The collation defines the rules for sorting and comparing data.",
 
 			//#1779
-            ["ActivityLog.PublicStore.Login.Fail"] = "Public store. Custommer has failed to log in: {0}",
+            ["ActivityLog.PublicStore.Login.Fail"] = "Public store. Customer has failed to log in: {0}",
             ["Admin.Configuration.Settings.CustomerUser.NotifyFailedLoginAttempt"] = "Notify customers about failed login attempts",
             ["Admin.Configuration.Settings.CustomerUser.NotifyFailedLoginAttempt.Hint"] = "Check to enable customer notifications on failed login attempts.",
-            ["ActivityLog.PublicStore.Login.Success"] = "Public store. Custommer has logged in",
+            ["ActivityLog.PublicStore.Login.Success"] = "Public store. Customer has logged in",
 
         }, languageId);
 

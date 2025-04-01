@@ -1159,10 +1159,10 @@
     <Value>Used contact us form</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.PublicStore.Login.Success">
-    <Value>Public store. Custommer has logged in</Value>
+    <Value>Public store. Customer has logged in</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.PublicStore.Login.Fail">
-    <Value>Public store. Custommer has failed to log in: {0}</Value>
+    <Value>Public store. Customer has failed to log in: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.PublicStore.Logout">
     <Value>Logout</Value>
