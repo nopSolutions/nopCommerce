@@ -5,10 +5,10 @@
     string GetUrl(DataUrl dataUrl)
     {
         return !string.IsNullOrEmpty(dataUrl?.ActionName) && !string.IsNullOrEmpty(dataUrl.ControllerName)
-            ? Url.Action(dataUrl.ActionName, dataUrl.ControllerName, dataUrl.RouteValues)
-            : !string.IsNullOrEmpty(dataUrl.Url)
-                ? $"{(dataUrl.Url.StartsWith("~/", StringComparison.Ordinal) ? Url.Content(dataUrl.Url) : dataUrl.Url).TrimEnd('/')}" + (!dataUrl.TrimEnd ? "/" : "")
-                : string.Empty;
+    ? Url.Action(dataUrl.ActionName, dataUrl.ControllerName, dataUrl.RouteValues)
+    : !string.IsNullOrEmpty(dataUrl.Url)
+        ? $"{(dataUrl.Url.StartsWith("~/", StringComparison.Ordinal) ? Url.Content(dataUrl.Url) : dataUrl.Url).TrimEnd('/')}" + (!dataUrl.TrimEnd ? "/" : "")
+        : string.Empty;
     }
 
     string ReplaceName(string str)
@@ -27,6 +27,46 @@
     //layout options
     var buttons = Model.RefreshButton && !Model.IsChildTable ? "buttons" : "";
 
+    var layoutOptions = new List<LayoutOption>
+    {
+        new LayoutOption
+        {
+            Name = "topStart",
+            OptionType = LayoutOptionType.Null
+        },
+        new LayoutOption
+        {
+            Name = "topEnd",
+            OptionType = LayoutOptionType.Null
+        },
+        new LayoutOption
+        {
+            Name = "bottomStart",
+            OptionType = LayoutOptionType.Array,
+            Value = new List<string>()
+        },
+        new LayoutOption
+        {
+            Name = "bottomEnd",
+            OptionType = LayoutOptionType.Array,
+            Value = new List<string>()
+        },
+        new LayoutOption
+        {
+            Name = "bottom",
+            OptionType = LayoutOptionType.Array,
+            Value = new List<string>
+            {
+                "paging", "pageLength", "info", buttons
+            }
+        }
+    };
+
+    if (Model.LayoutCollection.Any())
+    {
+        layoutOptions = Model.LayoutCollection;
+    }
+
     //check using MasterCheckBox
     var isMasterCheckBoxUsed = Model.ColumnCollection.Any(x => x.IsMasterCheckBox);
 }
@@ -36,64 +76,64 @@
     <text>
         headerCallback: function (thead, data, start, end, display) {
         return @(Model.HeaderCallback)(thead, data, start, end, display);
-    },
+        },
     </text>
 }
 @if (!string.IsNullOrEmpty(Model.FooterCallback))
 {
     <text>
-    footerCallback: function (tfoot, data, start, end, display) {
+        footerCallback: function (tfoot, data, start, end, display) {
         return @(Model.FooterCallback)(tfoot, data, start, end, display);
-    },
+        },
     </text>
 }
 @if (!string.IsNullOrEmpty(Model.DrawCallback))
 {
     <text>
-    drawCallback: function (settings) {
-    return @(Model.DrawCallback)(settings);
-    },
+        drawCallback: function (settings) {
+        return @(Model.DrawCallback)(settings);
+        },
     </text>
 }
 @if (Model.Processing)
 {
     <text>
-    processing: @Model.Processing.ToString().ToLowerInvariant(),
+        processing: @Model.Processing.ToString().ToLowerInvariant(),
     </text>
 }
 @if (Model.ServerSide)
 {
     <text>
-    serverSide: @Model.ServerSide.ToString().ToLowerInvariant(),
+        serverSide: @Model.ServerSide.ToString().ToLowerInvariant(),
     </text>
 }
 @if (!string.IsNullOrEmpty(Model.RowIdBasedOnField))
 {
     <text>
-    rowId: function (item) {
-    var rowId = '';
-    if (item.hasOwnProperty('@(Model.RowIdBasedOnField)'))
-    {
+        rowId: function (item) {
+        var rowId = '';
+        if (item.hasOwnProperty('@(Model.RowIdBasedOnField)'))
+        {
         if(item.@(Model.RowIdBasedOnField)){
-            var val = item.@(Model.RowIdBasedOnField).replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
-            rowId = 'row_' + val;
+        var val = item.@(Model.RowIdBasedOnField).replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+        rowId = 'row_' + val;
         } else return;
-    }
-    return rowId;
-    },
+        }
+        return rowId;
+        },
     </text>
 }
 @if (Model.Data != null)
 {
     <text>
-    data: @Html.Raw(Model.Data.ToString()),
+        data: @Html.Raw(Model.Data.ToString()),
     </text>
 }
 else
 {
     <text>
-    ajax:
-    {
+        ajax:
+        {
         url: "@Html.Raw(GetUrl(Model.UrlRead))",
         type: "POST",
         dataType: "json",
@@ -102,69 +142,69 @@ else
         @if (isMasterCheckBoxUsed)
         {
             <text>
-            clearMasterCheckbox('#@Model.Name');
+                clearMasterCheckbox('#@Model.Name');
             </text>
         }
         },
         data: function(data) {
-            @if (Model.Filters != null)
+        @if (Model.Filters != null)
+        {
+            foreach (var filter in Model.Filters)
             {
-                foreach (var filter in Model.Filters)
+                if (filter.Type == typeof(string))
                 {
-                    if (filter.Type == typeof(string))
+                    if (Model.IsChildTable && !string.IsNullOrEmpty(filter.ParentName))
                     {
-                        if (Model.IsChildTable && !string.IsNullOrEmpty(filter.ParentName))
-                        {
-                            <text>
+                        <text>
                             data.@filter.Name = row.data().@filter.ParentName;
-                            </text>
-                            continue;
-                        }
+                        </text>
+                        continue;
+                    }
 
-                        if (!string.IsNullOrEmpty(filter.ModelName))
-                        {
-                            <text>
+                    if (!string.IsNullOrEmpty(filter.ModelName))
+                    {
+                        <text>
                             data.@filter.Name = $('#@(filter.ModelName)_@filter.Name').val();
-                            </text>
-                        }
-                        else
-                        {
-                            <text>
+                        </text>
+                    }
+                    else
+                    {
+                        <text>
                             data.@filter.Name = $('#@filter.Name').val();
-                            </text>
-                        }
-                        continue;
+                        </text>
                     }
-                    if (filter.Type == typeof(bool))
-                    {
-                        <text>
+                    continue;
+                }
+                if (filter.Type == typeof(bool))
+                {
+                    <text>
                         data.@filter.Name = $('#@filter.Name').is(':checked');
-                        </text>
-                        continue;
-                    }
-                    if (filter.Type == typeof(int))
-                    {
-                        if (int.TryParse(@filter.Value.ToString(), out int val))
-                        {
-                            <text>
-                            data.@filter.Name = @val;
-                            </text>
-                        }
-                        continue;
-                    }
-                    if (filter.Type == typeof(DateTime?))
+                    </text>
+                    continue;
+                }
+                if (filter.Type == typeof(int))
+                {
+                    if (int.TryParse(@filter.Value.ToString(), out int val))
                     {
                         <text>
-                        data.@filter.Name = $('#@filter.Name').val();
+                            data.@filter.Name = @val;
                         </text>
-                        continue;
                     }
+                    continue;
+                }
+                if (filter.Type == typeof(DateTime?))
+                {
+                    <text>
+                        data.@filter.Name = $('#@filter.Name').val();
+                    </text>
+                    continue;
                 }
             }
-            addAntiForgeryToken(data);
-            return data;
         }
-    },
+        addAntiForgeryToken(data);
+        return data;
+        }
+        },
     </text>
 }
 scrollX: true,
@@ -176,45 +216,80 @@ pageLength: @Model.Length,
 @if (!string.IsNullOrEmpty(Model.LengthMenu))
 {
     <text>
-    lengthMenu: [@Model.LengthMenu],
+        lengthMenu: [@Model.LengthMenu],
     </text>
 }
 else
 {
     <text>
-    lengthChange: false,
+        lengthChange: false,
     </text>
 }
 ordering: @Model.Ordering.ToString().ToLowerInvariant(),
 @if (Model.RefreshButton)
 {
     <text>
-    buttons: [{
+        buttons: [{
         name: 'refresh',
         text: '<i class="fas fa-rotate" style="padding-left: 5px"></i>',
         action: function() {
-            @if (Model.ServerSide)
-            {
-                <text>
+        @if (Model.ServerSide)
+        {
+            <text>
                 updateTable('#@Model.Name', @isMasterCheckBoxUsed.ToString().ToLowerInvariant());
-                </text>
-            }
-            else
-            {
-                <text>
-                updateTableSrc('#@Model.Name', @isMasterCheckBoxUsed.ToString().ToLowerInvariant());
-                </text>
-            }
+            </text>
         }
-    }],
+        else
+        {
+            <text>
+                updateTableSrc('#@Model.Name', @isMasterCheckBoxUsed.ToString().ToLowerInvariant());
+            </text>
+        }
+        }
+        }],
     </text>
 }
 layout: {
-    topStart: null,
-    topEnd: null,
-    bottomStart: [],
-    bottomEnd: [],
-    bottom: ['paging', 'pageLength', 'info', '@buttons']
+    @foreach (var layoutOption in layoutOptions)
+    {
+        @switch (layoutOption.OptionType)
+        {
+            case LayoutOptionType.Null:
+                <text>
+                    @JavaScriptEncoder.Default.Encode(layoutOption.Name): null,
+                </text>
+                break;
+            case LayoutOptionType.String:
+                <text>
+                    @JavaScriptEncoder.Default.Encode(layoutOption.Name): '@JavaScriptEncoder.Default.Encode(layoutOption.Value.ToString())',
+                </text>
+                break;
+            case LayoutOptionType.Object:
+                <text>
+                    @JavaScriptEncoder.Default.Encode(layoutOption.Name): @layoutOption.Value,
+                </text>
+                break;
+            case LayoutOptionType.Array:
+                var listValues = ((List<string>)layoutOption.Value);
+                <text>
+                    @JavaScriptEncoder.Default.Encode(layoutOption.Name): [ 
+                        @foreach (var val in listValues)
+                        {
+                            <text>
+                                '@JavaScriptEncoder.Default.Encode(val)'
+                            </text>
+                            if (val != listValues.Last())
+                            {
+                                <text>
+                                    ,
+                                </text>
+                            }
+                        }
+                    ],
+                </text>
+                break;
+        }
+    }
 },
 columns: [    
     @for (int i = 0; i < Model.ColumnCollection.Count; i++)

@@ -28,6 +28,7 @@ public partial record DataTablesModel : BaseNopModel
 
         Filters = new List<FilterParameter>();
         ColumnCollection = new List<ColumnProperty>();
+        LayoutCollection = new List<LayoutOption>();
     }
 
     #endregion
@@ -166,6 +167,11 @@ public partial record DataTablesModel : BaseNopModel
     /// Gets or set column collection 
     /// </summary>
     public IList<ColumnProperty> ColumnCollection { get; set; }
+
+    /// <summary>
+    /// Gets or set layout option collection 
+    /// </summary>
+    public List<LayoutOption> LayoutCollection {  get; set; }
 
     #endregion
 }
