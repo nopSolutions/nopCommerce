@@ -35,7 +35,7 @@ public record ProductPriceModel : BaseNopModel
     /// </summary>
     public string CurrencyCode { get; set; }
     
-    public string PriceWithDiscount { get; set; }
+    public string PriceWithoutDiscount { get; set; }
     public decimal? PriceWithDiscountValue { get; set; }
 
     public bool CustomerEntersPrice { get; set; }

@@ -32,7 +32,7 @@
                     <span>@Model.OldPrice</span>
                 </div>
             }
-            <div class="@if (string.IsNullOrWhiteSpace(Model.PriceWithDiscount))
+            <div class="@if (string.IsNullOrWhiteSpace(Model.PriceWithoutDiscount))
                         {
                             <text>product-price</text>
                         }
@@ -40,23 +40,23 @@
                         {
                             <text>non-discounted-price</text>
                         }">
-                @if (!string.IsNullOrWhiteSpace(Model.OldPrice) || !string.IsNullOrWhiteSpace(Model.PriceWithDiscount))
+                @if (!string.IsNullOrWhiteSpace(Model.OldPrice) || !string.IsNullOrWhiteSpace(Model.PriceWithoutDiscount))
                 {
                     @*display "Price:" label if we have old price or discounted one*@
                     <label for="price-value-@(Model.ProductId)">@T("Products.Price"):</label>
                 }
                 @*render price*@
-                <span @if (string.IsNullOrWhiteSpace(Model.PriceWithDiscount)) { <text> id="price-value-@(Model.ProductId)" class="price-value-@(Model.ProductId)" </text> }>
+                <span @if (string.IsNullOrWhiteSpace(Model.PriceWithoutDiscount)) { <text> id="price-value-@(Model.ProductId)" class="price-value-@(Model.ProductId)" </text> }>
                     @Html.Raw(Model.Price)
                 </span>
             </div>
-            if (!string.IsNullOrWhiteSpace(Model.PriceWithDiscount))
+            if (!string.IsNullOrWhiteSpace(Model.PriceWithoutDiscount))
             {
                 @*discounted price*@
                 <div class="product-price discounted-price">
                     <span>@T("Products.Price.WithDiscount"):</span>
                     <span class="price-value-@(Model.ProductId)">
-                        @Html.Raw(Model.PriceWithDiscount)
+                        @Html.Raw(Model.PriceWithoutDiscount)
                     </span>
                 </div>
             }
