@@ -137,7 +137,7 @@ public class LocalizationMigration : MigrationBase
 
             //#7515
             ["Admin.Catalog.Attributes.ProductAttributes.List.SearchProductAttributeName"] = "Product attribute name",
-            ["Admin.Catalog.Attributes.ProductAttributes.List.SearchProductAttributeName.Hint"] = "A Product attribute name.",
+            ["Admin.Catalog.Attributes.ProductAttributes.List.SearchProductAttributeName.Hint"] = "A product attribute name.",
         }, languageId);
 
         #endregion

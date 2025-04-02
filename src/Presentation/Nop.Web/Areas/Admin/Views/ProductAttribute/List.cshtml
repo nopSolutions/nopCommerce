@@ -74,38 +74,38 @@
                                 <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.ProductAttributes", Docs.ProductAttributes + Utm.OnAdmin)" asp-add-wrapper="false" />
                             </p>
                             @await Html.PartialAsync("Table", new DataTablesModel
-                       {
-                           Name = "products-grid",
-                           UrlRead = new DataUrl("List", "ProductAttribute", null),
-                           SearchButtonId = "search-productattributes",
-                           Length = Model.PageSize,
-                           LengthMenu = Model.AvailablePageSizes,
-                           Filters = new List<FilterParameter>
                             {
-                            new FilterParameter(nameof(Model.SearchProductAttributeName))
-                            },
-                           ColumnCollection = new List<ColumnProperty>
-                            {
-                            new ColumnProperty(nameof(ProductAttributeModel.Id))
-                            {
-                            IsMasterCheckBox = true,
-                            Render = new RenderCheckBox("checkbox_productattributes"),
-                            ClassName =  NopColumnClassDefaults.CenterAll,
-                            Width = "50"
-                            },
-                            new ColumnProperty(nameof(ProductAttributeModel.Name))
-                            {
-                            Title = T("Admin.Catalog.Attributes.ProductAttributes.Fields.Name").Text
-                            },
-                            new ColumnProperty(nameof(ProductAttributeModel.Id))
-                            {
-                            Title = T("Admin.Common.Edit").Text,
-                            Width = "100",
-                            ClassName =  NopColumnClassDefaults.Button,
-                            Render = new RenderButtonEdit(new DataUrl("~/Admin/ProductAttribute/Edit"))
-                            }
-                            }
-                       })
+                                Name = "products-grid",
+                                UrlRead = new DataUrl("List", "ProductAttribute", null),
+                                SearchButtonId = "search-productattributes",
+                                Length = Model.PageSize,
+                                LengthMenu = Model.AvailablePageSizes,
+                                Filters = new List<FilterParameter>
+                                {
+                                    new FilterParameter(nameof(Model.SearchProductAttributeName))
+                                },
+                                ColumnCollection = new List<ColumnProperty>
+                                {
+                                    new ColumnProperty(nameof(ProductAttributeModel.Id))
+                                    {
+                                       IsMasterCheckBox = true,
+                                       Render = new RenderCheckBox("checkbox_productattributes"),
+                                       ClassName =  NopColumnClassDefaults.CenterAll,
+                                       Width = "50"
+                                    },
+                                    new ColumnProperty(nameof(ProductAttributeModel.Name))
+                                    {
+                                        Title = T("Admin.Catalog.Attributes.ProductAttributes.Fields.Name").Text
+                                    },
+                                    new ColumnProperty(nameof(ProductAttributeModel.Id))
+                                    {
+                                        Title = T("Admin.Common.Edit").Text,
+                                        Width = "100",
+                                        ClassName =  NopColumnClassDefaults.Button,
+                                        Render = new RenderButtonEdit(new DataUrl("~/Admin/ProductAttribute/Edit"))
+                                    }
+                                }
+                            })
 
                             <script>
                                 $(function() {

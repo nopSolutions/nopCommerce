@@ -25,7 +25,7 @@ public partial class ProductAttributeController : BaseAdminController
     protected readonly IProductAttributeModelFactory _productAttributeModelFactory;
     protected readonly IProductAttributeService _productAttributeService;
 
-    #endregion Fields
+    #endregion
 
     #region Ctor
 

@@ -116,8 +116,10 @@ public partial class ProductAttributeModelFactory : IProductAttributeModelFactor
         ArgumentNullException.ThrowIfNull(searchModel);
 
         //get product attributes
-        var productAttributes = await _productAttributeService
-            .GetAllProductAttributesAsync(pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize, name: searchModel.SearchProductAttributeName);
+        var productAttributes = await _productAttributeService.GetAllProductAttributesAsync(
+            name: searchModel.SearchProductAttributeName,
+            pageIndex: searchModel.Page - 1,
+            pageSize: searchModel.PageSize);
 
         //prepare list model
         var model = new ProductAttributeListModel().PrepareToGrid(searchModel, productAttributes, () =>
