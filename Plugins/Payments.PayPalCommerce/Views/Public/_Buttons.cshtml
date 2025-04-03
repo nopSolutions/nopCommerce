@@ -96,6 +96,8 @@
             }
         }
 
+        var noShippingChange = isPaymentMethodPage || @((!Model.Cart.IsShippable).ToString().ToLower());
+
         //render PayPal buttons
         paypalButtonContainer = paypal.Buttons({
             onInit: initCallback,
@@ -104,8 +106,8 @@
             onApprove: approveCallback,
             onCancel: cancelCallback,
             onError: errorCallback,
-            onShippingAddressChange: shippingAddressChangeCallback,
-            onShippingOptionsChange: shippingOptionsChangeCallback,
+            onShippingAddressChange: noShippingChange ? null : shippingAddressChangeCallback,
+            onShippingOptionsChange: noShippingChange ? null : shippingOptionsChangeCallback,
             style: {
                 layout: '@(Model.Placement == ButtonPlacement.Product ? "horizontal" : settings.StyleLayout)',
                 color: '@settings.StyleColor',
