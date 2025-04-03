@@ -79,7 +79,7 @@ public partial class LocalizationService : ILocalizationService
         return locales;
     }
 
-    protected virtual HashSet<(string name, string value)> LoadLocaleResourcesFromStream(StreamReader xmlStreamReader, string language)
+    protected virtual HashSet<(string name, string value)> LoadLocaleResourcesFromStream(StreamReader xmlStreamReader)
     {
         var result = new HashSet<(string name, string value)>();
 
@@ -517,7 +517,7 @@ public partial class LocalizationService : ILocalizationService
         var lrsToUpdateList = new List<LocaleStringResource>();
         var lrsToInsertList = new Dictionary<string, LocaleStringResource>();
 
-        foreach (var (name, value) in LoadLocaleResourcesFromStream(xmlStreamReader, language.Name))
+        foreach (var (name, value) in LoadLocaleResourcesFromStream(xmlStreamReader))
         {
             if (lsNamesList.TryGetValue(name, out var localString))
             {
