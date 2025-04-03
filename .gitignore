@@ -236,7 +236,6 @@ src/Presentation/Nop.Web/Themes/**/Content/css/theme.custom*.css
 !src/Presentation/Nop.Web/Plugins/Shipping.Fedex/
 !src/Presentation/Nop.Web/Plugins/Widgets.AccessiBe/
 !src/Presentation/Nop.Web/Plugins/Widgets.Bronto/
-!src/Presentation/Nop.Web/Plugins/Widgets.PowerReviews/
 !src/Presentation/Nop.Web/Plugins/Misc.LetsEncrypt/
 !src/Presentation/Nop.Web/Plugins/DiscountRules.HasAllProducts/
 !src/Presentation/Nop.Web/Plugins/NopAdvance.DiscountRules.CartSubTotal/

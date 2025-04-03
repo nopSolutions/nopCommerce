@@ -197,19 +197,6 @@ namespace Nop.Plugin.Misc.AbcCore.Mattresses
                 abcMattressModel.ProductId = product.Id;
                 await _abcMattressService.UpdateAbcMattressModelAsync(abcMattressModel);
             }
-            if (!string.IsNullOrWhiteSpace(abcMattressModel.Sku))
-            {
-                await _genericAttributeService.SaveAttributeAsync<string>(
-                    product,
-                    "MattressSku",
-                    abcMattressModel.Sku
-                );
-                await _genericAttributeService.SaveAttributeAsync<string>(
-                    product,
-                    "PowerReviewsSku",
-                    abcMattressModel.Sku
-                );
-            }
 
             // add information relating to Synchrony payments
             await SyncSynchronyPaymentsDataAsync(product, abcMattressModel);
@@ -218,12 +205,6 @@ namespace Nop.Plugin.Misc.AbcCore.Mattresses
             var plpDescription = await _genericAttributeService.GetAttributeAsync<string>(
                 product,
                 "PLPDescription"
-            );
-            // Add description for PowerReviews
-            await _genericAttributeService.SaveAttributeAsync<string>(
-                product,
-                "PowerReviewsDescription",
-                plpDescription
             );
 
             return product;

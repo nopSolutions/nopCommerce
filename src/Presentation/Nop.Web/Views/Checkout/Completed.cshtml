@@ -1,4 +1,7 @@
 ﻿@model CheckoutCompletedModel
+@using Nop.Services.Customers
+@inject ICustomerService _customerService
+
 @{
     Layout = "_ColumnsOne";
 
@@ -7,7 +10,33 @@
     //page class
     Html.AppendPageCssClassParts("html-checkout-page");
     Html.AppendPageCssClassParts("html-order-completed-page");
+
+    var orderTotal = ViewBag.OrderTotal as string;
+    var order = ViewBag.Order as Nop.Core.Domain.Orders.Order;
+    var orderItems = ViewBag.OrderItems as IList<Nop.Core.Domain.Orders.OrderItem>;
+
+    var customerEmail = "Unknown";
+    if (order != null && order.CustomerId > 0)
+    {
+        var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
+        customerEmail = customer?.Email ?? "Unknown";
+    }
+    else
+    {
+        <script>
+            console.error("Invalid order or missing CustomerId.");
+        </script>
+    }
+        
+    if (orderItems == null || !orderItems.Any())
+    {
+        <script>
+            console.error("Order items are missing or empty.");
+        </script>
+        return;
+    }
 }
+
 <div class="page checkout-page order-completed-page">
     @if (!Model.OnePageCheckoutEnabled)
     {
@@ -37,3 +66,26 @@
         @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutCompletedBottom, additionalData = Model })
     </div>
 </div>
+
+<!-- Load Transaction Event and Parameters -->
+<script>
+window.bvCallback = function (BV) {
+  BV.pixel.trackTransaction({
+    "currency": "USD",
+    "orderId": "@Model.CustomOrderNumber",
+    "total": "@Convert.ToDecimal(orderTotal).ToString("0.00")",
+    "items": [
+      @for (int i = 0; i < orderItems.Count; i++)
+      {
+          var item = orderItems[i];
+          @Html.Raw($"{{\"price\": \"{item.UnitPriceInclTax.ToString("0.00")}\", \"quantity\": \"{item.Quantity}\", \"productId\": \"{item.ProductId}\"}}")
+          @if (i < orderItems.Count - 1)
+          {
+              @Html.Raw(",")
+          }
+      }
+    ],
+    "email" : "@customerEmail"
+  });
+};
+</script>

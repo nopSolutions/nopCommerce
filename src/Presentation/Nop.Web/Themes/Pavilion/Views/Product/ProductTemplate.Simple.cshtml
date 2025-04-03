@@ -12,6 +12,8 @@
 @using Nop.Plugin.Misc.AbcCore.Extensions
 @using Nop.Services.Configuration;
 @using Nop.Plugin.Misc.AbcCore.Nop;
+@using Microsoft.Extensions.Logging;
+@using Newtonsoft.Json
 
 @inject Nop.Core.IWebHelper webHelper
 @inject SeoSettings seoSettings
@@ -22,6 +24,7 @@
 @inject ISettingService _settingService
 @inject IProductAttributeService _productAttributeService
 @inject IAbcCategoryService abcCategoryService
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 
 @{
     Layout = "_ColumnsOne";
@@ -191,17 +194,33 @@
                             <span class="product-name__isam-id">@displayIdStr</span>
                         }
                     </div>
-                    <!-- custom: reviews widget -->
-                    @await Component.InvokeAsync(
-                        "Widget",
-                        new {
-                            widgetZone = CustomPublicWidgetZones.ProductDetailsReviews,
-                            additionalData = Model
-                        }
-                    )
 
-                    <!--reviews-->
-                    @await Html.PartialAsync("_ProductReviewOverview", Model.ProductReviewOverview)
+                    <!-- Rating summary goes above the fold near product name or image -->
+                    <div data-bv-show="rating_summary" data-bv-product-id="@currentProduct.Id"></div>
+
+                    <div id="questions_tab" style="display: none;">
+                        <!-- Instruct BV loader to show the Q&A feature for productID123 here -->
+                        <div data-bv-show="questions" data-bv-product-id="@currentProduct.Id"></div>
+                    </div>
+
+                    <script>
+                        // bvCallback must be used when interacting with BV via JavaScript and using the `async` attribute. 
+                        window.bvCallback = function (BV) {
+
+                    // Register a function to be called when a BV feature needs to display the R&R element, such as Rating Summary's stars
+                        BV.reviews.on('show', function () {
+                            // If the R&R container is hidden (such as behind a tab), put code here to make it visible (open the tab)
+                            $('#review_tab').show();
+                        });
+
+                    // Register a function to be called when a BV feature needs to 
+                    // display the Q&A element, such as when selecting the number of questions link
+                        BV.questions.on('show', function () {
+                            // If the container is hidden (such as behind a tab), put code here to make it visible (open the tab) 
+                            $('#questions_tab').show();
+                        });
+                        };
+                    </script>
 
                     <!--rental info-->
                     @{
@@ -275,27 +294,6 @@
                         @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsInsideOverviewButtonsAfter, additionalData = Model })
                     </div>
 
-                    <!--Power Reviews reviews-->
-                    @{
-                        String category = "";
-                        if (Model.Breadcrumb != null && Model.Breadcrumb.CategoryBreadcrumb != null && Model.Breadcrumb.CategoryBreadcrumb.Count > 0)
-                        {
-                            category = Model.Breadcrumb.CategoryBreadcrumb.ToArray().Last().Name;
-                        }
-
-                        var prDesc = " ";
-
-                        if (productIsAbc)
-                        {
-                            prDesc = Html.Encode(abcP.AbcDescription);
-                        }
-                        else if (!string.IsNullOrEmpty(currentProduct.ShortDescription))
-                        {
-                            var truncatedDesc = currentProduct.ShortDescription.Length <= 300 ? currentProduct.ShortDescription : currentProduct.ShortDescription.Substring(0, 300);
-                            prDesc = Html.Encode(truncatedDesc);
-                        }
-                    }
-
                     @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsOverviewBottom, additionalData = Model })
                 </div>
                     <div class="overview-bottom">
@@ -353,3 +351,31 @@
         @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsBottom, additionalData = Model })
     </div>
 </div>
+
+@{
+    var bvProductUrl = $"{HttpContextAccessor.HttpContext.Request.Scheme}://{HttpContextAccessor.HttpContext.Request.Host}{Url.RouteUrl("Product", new { SeName = Model.SeName })}";
+    var productImageUrl = Model.DefaultPictureModel?.ImageUrl;
+}
+<script type="application/ld+json">
+    {
+       "context" : "https://schema.org",
+       "type" : "Product",
+       "id" : "@bvProductUrl",
+       "name" : "@Model.Name",
+       "image" : "@productImageUrl",
+       "description" : "@Model.ShortDescription",
+       "sku" : "@Model.Sku",
+       "brand": "@(string.Join(" ", Model.ProductManufacturers.Select(m => m.Name)))"
+    }
+</script>
+    <!--BV injected code-->
+    <script>
+        // Make sure that BV.configure is defined before running this script
+        BV.configure('global', {
+            events : {
+                bvRender : function (data) {
+                // JavaScript code that executes when the Bazaarvoice application renders.
+                }
+            }
+        });
+    </script>
