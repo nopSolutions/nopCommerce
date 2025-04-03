@@ -385,13 +385,16 @@ public class PayPalCommerceServiceManager
         var items = await details.Cart.SelectAwait(async item =>
         {
             var product = await _productService.GetProductByIdAsync(item.ProductId);
+            if (product is null)
+                return null;
+
             var sku = await _productService.FormatSkuAsync(product, item.AttributesXml);
             var seName = await _urlRecordService.GetSeNameAsync(product);
             var url = await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = seName }, _webHelper.GetCurrentRequestProtocol());
 
             var picture = await _pictureService.GetProductPictureAsync(product, item.AttributesXml);
             //PayPal doesn't currently support WebP images
-            var ext = await _pictureService.GetFileExtensionFromMimeTypeAsync(picture.MimeType);
+            var ext = await _pictureService.GetFileExtensionFromMimeTypeAsync(picture?.MimeType);
             var (imageUrl, _) = ext != "webp" ? await _pictureService.GetPictureUrlAsync(picture) : default;
 
             var (itemSubTotal, itemDiscount, _, _) = await _shoppingCartService.GetSubTotalAsync(item, true);
@@ -411,7 +414,7 @@ public class PayPalCommerceServiceManager
                 ImageUrl = imageUrl,
                 UnitAmount = PrepareMoney(unitPriceExclTax, details.CurrencyCode)
             };
-        }).ToListAsync();
+        }).Where(item => item is not null).ToListAsync();
 
         //and checkout attributes
         var checkoutAttributes = await _genericAttributeService
@@ -1063,11 +1066,12 @@ public class PayPalCommerceServiceManager
     /// <param name="productId">Product id</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the script details, customer details, messages details; error message if exists
+    /// The task result contains the script details, customer details, messages details; cart details; error message if exists
     /// </returns>
     public async Task<(((string ScriptUrl, string ClientToken, string UserToken),
         (string Email, string Name),
-        (string MessageConfig, string Amount)),
+        (string MessageConfig, string Amount),
+        (bool? IsRecurring, bool IsShippable)),
         string Error)>
         PreparePaymentDetailsAsync(PayPalCommerceSettings settings, ButtonPlacement placement, int? productId)
     {
@@ -1168,7 +1172,11 @@ public class PayPalCommerceServiceManager
             };
             var messageConfig = !string.IsNullOrEmpty(config?.Status) ? JsonConvert.SerializeObject(config, Formatting.Indented) : "{}";
 
-            return ((scriptUrl, clientToken, userToken), (email, fullName), (messageConfig, amount));
+            //cart details
+            var (isRecurring, _) = await CheckShoppingCartIsRecurringAsync(placement, productId);
+            var (isShippable, _) = await CheckShippingIsRequiredAsync(productId);
+
+            return ((scriptUrl, clientToken, userToken), (email, fullName), (messageConfig, amount), (isRecurring, isShippable));
         });
     }
 
@@ -1313,6 +1321,35 @@ public class PayPalCommerceServiceManager
                 shippingIsRequired = product.IsShipEnabled;
 
             return shippingIsRequired;
+        }, false);
+    }
+
+    /// <summary>
+    /// Check whether the current cart/product is recurring
+    /// </summary>
+    /// <param name="placement">Button placement</param>
+    /// <param name="productId">Product id</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the check result; error message if exists
+    /// </returns>
+    public async Task<(bool? IsRecurring, string Error)> CheckShoppingCartIsRecurringAsync(ButtonPlacement placement, int? productId = null)
+    {
+        return await HandleFunctionAsync(async () =>
+        {
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+            var isRecurring = await _shoppingCartService.ShoppingCartIsRecurringAsync(cart);
+
+            if (!isRecurring && await _productService.GetProductByIdAsync(productId ?? 0) is Product product)
+                isRecurring = product.IsRecurring;
+
+            //recurring payments not yet supported
+            if (isRecurring)
+                return (bool?)null;
+
+            return isRecurring;
         }, false);
     }
 
@@ -1491,6 +1528,9 @@ public class PayPalCommerceServiceManager
             var savedPaymentToken = await _tokenService.GetByIdAsync(cardId ?? 0);
             if (savedPaymentToken is not null && savedPaymentToken.CustomerId != customer.Id)
                 throw new NopException("Card details not found");
+
+            if (await _shoppingCartService.ShoppingCartIsRecurringAsync(cart))
+                throw new NopException("Recurring payment not supported");
 
             var paymentRequest = await _actionContextAccessor.ActionContext.HttpContext.Session
                 .GetAsync<ProcessPaymentRequest>(PayPalCommerceDefaults.PaymentRequestSessionKey);
@@ -2201,13 +2241,12 @@ public class PayPalCommerceServiceManager
     /// Get Apple Pay transaction info
     /// </summary>
     /// <param name="placement">Button placement</param>
-    /// <param name="withShipping">Whether to prepare shipping details</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the Apple Pay transaction info; error message if exists
     /// </returns>
     public async Task<((OrderMoney Amount, Contact BillingAddress, Contact ShippingAddress, Shipping Shipping, string StoreName), string Error)>
-        GetAppleTransactionInfoAsync(ButtonPlacement placement, bool withShipping)
+        GetAppleTransactionInfoAsync(ButtonPlacement placement)
     {
         return await HandleFunctionAsync(async () =>
         {
@@ -2810,12 +2849,39 @@ public class PayPalCommerceServiceManager
 
                 if (paymentTokenCreated)
                 {
-                    if (string.IsNullOrEmpty(paymentToken.Metadata?.OrderId))
-                        throw new NopException("Webhook error", new NopException("No transaction associated with the payment token"));
+                    var customerId = int.TryParse(paymentToken.Customer?.MerchantCustomerId, out var id) ? id : (int?)null;
 
-                    var paymentTokenOrder = await _httpClient
-                        .RequestAsync<GetOrderRequest, GetOrderResponse>(new GetOrderRequest { OrderId = paymentToken.Metadata.OrderId }, settings);
-                    paymentToken.CustomId = paymentTokenOrder.CustomId;
+                    //try to get associated transaction
+                    if (!string.IsNullOrEmpty(paymentToken.Metadata?.OrderId))
+                    {
+                        try
+                        {
+                            var orderRequest = new GetOrderRequest { OrderId = paymentToken.Metadata.OrderId };
+                            var paymentTokenOrder = await _httpClient.RequestAsync<GetOrderRequest, GetOrderResponse>(orderRequest, settings);
+                            if (Guid.TryParse(paymentTokenOrder.CustomId, out var guid))
+                                customerId = (await _orderService.GetOrderByGuidAsync(guid))?.CustomerId;
+                        }
+                        catch { }
+                    }
+
+                    await _tokenService.InsertAsync(new()
+                    {
+                        ClientId = settings.ClientId,
+                        CustomerId = customerId ?? 0,
+                        IsPrimaryMethod = false,
+                        VaultId = paymentToken.Id,
+                        VaultCustomerId = paymentToken.Customer?.Id,
+                        TransactionId = paymentToken.Metadata?.OrderId,
+                        Type = paymentToken.PaymentSource?.Card is not null
+                            ? nameof(paymentToken.PaymentSource.Card)
+                            : (paymentToken.PaymentSource?.Venmo is not null
+                            ? nameof(paymentToken.PaymentSource.Venmo)
+                            : (paymentToken.PaymentSource?.PayPal is not null
+                            ? nameof(paymentToken.PaymentSource.PayPal)
+                            : null))
+                    });
+
+                    return true;
                 }
 
                 if (paymentTokenDeleted)
@@ -2832,29 +2898,6 @@ public class PayPalCommerceServiceManager
                 await _orderService.GetOrderByGuidAsync(orderGuid) is not NopOrder nopOrder)
             {
                 throw new NopException("Webhook error", new NopException($"Could not find an order '{orderGuid}'"));
-            }
-
-            if (paymentToken is not null)
-            {
-                //payment token actions (continuation)
-                await _tokenService.InsertAsync(new()
-                {
-                    ClientId = settings.ClientId,
-                    CustomerId = nopOrder.CustomerId,
-                    IsPrimaryMethod = false,
-                    VaultId = paymentToken.Id,
-                    VaultCustomerId = paymentToken.Customer?.Id,
-                    TransactionId = paymentToken.Metadata.OrderId,
-                    Type = paymentToken.PaymentSource?.Card is not null
-                        ? nameof(paymentToken.PaymentSource.Card)
-                        : (paymentToken.PaymentSource?.Venmo is not null
-                        ? nameof(paymentToken.PaymentSource.Venmo)
-                        : (paymentToken.PaymentSource?.PayPal is not null
-                        ? nameof(paymentToken.PaymentSource.PayPal)
-                        : null))
-                });
-
-                return true;
             }
 
             await _orderService.InsertOrderNoteAsync(new()
@@ -3304,7 +3347,9 @@ public class PayPalCommerceServiceManager
             foreach (var token in tokens)
             {
                 try
-                { await _httpClient.RequestAsync<DeletePaymentTokenRequest, EmptyResponse>(new() { Id = token.VaultId }, settings); }
+                {
+                    await _httpClient.RequestAsync<DeletePaymentTokenRequest, EmptyResponse>(new() { Id = token.VaultId }, settings);
+                }
                 catch { }
             }
 

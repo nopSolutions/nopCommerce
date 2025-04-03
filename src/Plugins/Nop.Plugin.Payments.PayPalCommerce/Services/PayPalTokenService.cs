@@ -96,6 +96,10 @@ public class PayPalTokenService
             return;
         }
 
+        //don't insert tokens with no customer identifier
+        if (token.CustomerId == 0)
+            return;
+
         if (!tokens.Any())
             token.IsPrimaryMethod = true;
 

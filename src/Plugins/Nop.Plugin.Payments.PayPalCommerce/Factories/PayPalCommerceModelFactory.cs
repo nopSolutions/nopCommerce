@@ -77,7 +77,7 @@ public class PayPalCommerceModelFactory
     /// </returns>
     public async Task<PaymentInfoModel> PreparePaymentInfoModelAsync(ButtonPlacement placement, int? productId = null)
     {
-        var (((scriptUrl, clientToken, userToken), (email, name), (messageConfig, amount)), _) = await _serviceManager
+        var (((scriptUrl, clientToken, userToken), (email, name), (messageConfig, amount), (isRecurring, isShippable)), _) = await _serviceManager
             .PreparePaymentDetailsAsync(_settings, placement, productId);
 
         return new()
@@ -86,7 +86,8 @@ public class PayPalCommerceModelFactory
             ProductId = productId,
             Script = (scriptUrl, clientToken, userToken),
             Customer = (email, name),
-            MessagesModel = new() { Config = messageConfig, Amount = amount }
+            MessagesModel = new() { Config = messageConfig, Amount = amount },
+            Cart = (isRecurring, isShippable)
         };
     }
 
@@ -312,7 +313,7 @@ public class PayPalCommerceModelFactory
         (model.CheckoutIsEnabled, model.LoginIsRequired, _) = await _serviceManager.CheckoutIsEnabledAsync();
 
         var ((amount, billingAddress, shippingAddress, shipping, storeName), error) = await _serviceManager
-            .GetAppleTransactionInfoAsync(placement, !shippingIsSet);
+            .GetAppleTransactionInfoAsync(placement);
         if (!string.IsNullOrEmpty(error))
         {
             model.Error = error;

@@ -20,5 +20,7 @@ public record PaymentInfoModel : BaseNopModel
 
     public MessagesModel MessagesModel { get; set; } = new();
 
+    public (bool? IsRecurring, bool IsShippable) Cart { get; set; } = new();
+
     #endregion
 }

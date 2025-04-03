@@ -176,6 +176,23 @@
                             </div>
                         </div>
                     </div>
+
+                    @if (!string.IsNullOrEmpty(Model.BillingAddress.FormattedCustomAddressAttributes))
+                    {
+                        <div class="form-group row">
+                            <div class="col-md-4">
+                                <div class="label-wrapper">
+                                    <label class="col-form-label">@T("Admin.Orders.Address.CustomAttributes")</label>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="form-text-row">
+                                    @Html.Raw(Model.BillingAddress.FormattedCustomAddressAttributes)
+                                </div>
+                            </div>
+                        </div>
+                    }
+
                 </div>
 
                 @if (!Model.IsLoggedInAsVendor)
@@ -376,12 +393,18 @@
                             @if (!string.IsNullOrEmpty(Model.ShippingAddress.FormattedCustomAddressAttributes))
                             {
                                 <div class="form-group row">
-                                    <div class="offset-md-3 col-md-8 custom-attributes-view">
-                                        @Html.Raw(Model.ShippingAddress.FormattedCustomAddressAttributes)
+                                    <div class="col-md-4">
+                                        <div class="label-wrapper">
+                                            <label class="col-form-label">@T("Admin.Orders.Address.CustomAttributes")</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="form-text-row">
+                                            @Html.Raw(Model.ShippingAddress.FormattedCustomAddressAttributes)
+                                        </div>
                                     </div>
                                 </div>
                             }
-
 
                         </div>
 

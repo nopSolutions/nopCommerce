@@ -84,7 +84,7 @@ public class ButtonsViewComponent : NopViewComponent
                 model = await _modelFactory.PreparePaymentInfoModelAsync(ButtonPlacement.PaymentMethod);
         }
 
-        if (model is null)
+        if (model?.Cart.IsRecurring is null)
             return Content(string.Empty);
 
         return View("~/Plugins/Payments.PayPalCommerce/Views/Public/_Buttons.cshtml", model);
