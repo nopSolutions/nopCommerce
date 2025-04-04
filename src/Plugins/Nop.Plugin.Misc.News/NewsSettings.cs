@@ -5,7 +5,7 @@ namespace Nop.Plugin.Misc.News;
 /// <summary>
 /// News settings
 /// </summary>
-public partial class NewsSettings : ISettings
+public class NewsSettings : ISettings
 {
     /// <summary>
     /// Gets or sets a value indicating whether news are enabled

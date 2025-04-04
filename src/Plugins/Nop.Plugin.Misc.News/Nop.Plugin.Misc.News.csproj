@@ -11,7 +11,6 @@
     <RepositoryType>Git</RepositoryType>
     <OutputPath>$(SolutionDir)\Presentation\Nop.Web\Plugins\Misc.News</OutputPath>
     <OutDir>$(OutputPath)</OutDir>
-
     <!--Set this parameter to true to get the dlls copied from the NuGet cache to the output of your project.
     You need to set this parameter to true if your plugin has a nuget package 
     to ensure that the dlls copied from the NuGet cache to the output of your project-->
@@ -30,10 +29,17 @@
     <None Remove="Admin\Views\_CreateOrUpdate.cshtml" />
     <None Remove="Admin\Views\_CreateOrUpdate.Info.cshtml" />
     <None Remove="Admin\Views\_CreateOrUpdate.Seo.cshtml" />
+    <None Remove="Admin\Views\_ViewImports.cshtml" />
+    <None Remove="Admin\Views\_ViewStart.cshtml" />
     <None Remove="Content\styles.css" />
     <None Remove="logo.png" />
     <None Remove="plugin.json" />
+    <None Remove="Public\Views\Components\HomepageNews.cshtml" />
+    <None Remove="Public\Views\Components\NewsRssHeaderLink.cshtml" />
+    <None Remove="Public\Views\List.cshtml" />
     <None Remove="Public\Views\NewsItem.cshtml" />
+    <None Remove="Public\Views\_ViewImports.cshtml" />
+    <None Remove="Public\Views\_ViewStart.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -67,6 +73,12 @@
     <Content Include="Admin\Views\_CreateOrUpdate.Seo.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Admin\Views\_ViewImports.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Admin\Views\_ViewStart.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\styles.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -76,14 +88,6 @@
     <Content Include="plugin.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Admin\Views\_ViewImports.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Admin\Views\_ViewStart.cshtml">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Public\Views\Components\HomepageNews.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -91,8 +95,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Public\Views\List.cshtml">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Public\Views\NewsItem.cshtml">
@@ -103,8 +105,6 @@
     </Content>
     <Content Include="Public\Views\_ViewStart.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
 

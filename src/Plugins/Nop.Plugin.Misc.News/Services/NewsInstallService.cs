@@ -84,7 +84,7 @@ public class NewsInstallService
                 await _settingService.DeleteSettingAsync(sitemapIncludeNews); //<- clear cache
             }
 
-            var sitemapXmlIncludeNews = await _settingService.GetSettingAsync($"{nameof(SitemapSettings)}.SitemapXmlIncludeNews");
+            var sitemapXmlIncludeNews = await _settingService.GetSettingAsync($"{nameof(SitemapXmlSettings)}.SitemapXmlIncludeNews");
             if (sitemapXmlIncludeNews is not null)
             {
                 newsSettings.SitemapXmlIncludeNews = CommonHelper.To<bool>(sitemapXmlIncludeNews.Value);
@@ -96,7 +96,6 @@ public class NewsInstallService
             if (showCaptchaOnNewsCommentPage is not null)
             {
                 newsSettings.ShowCaptchaOnNewsCommentPage = CommonHelper.To<bool>(showCaptchaOnNewsCommentPage.Value);
-                ;
                 await _settingService.SaveSettingAsync(newsSettings, settings => settings.ShowCaptchaOnNewsCommentPage, clearCache: false);
                 await _settingService.DeleteSettingAsync(showCaptchaOnNewsCommentPage); //<- clear cache
             }
@@ -237,8 +236,8 @@ public class NewsInstallService
         if (await _messageTemplateService.GetMessageTemplatesByNameAsync(NewsDefaults.NewsCommentStoreOwnerNotification) is not null)
             return;
 
-        var eaGeneral = await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId) ??
-                (await _emailAccountService.GetAllEmailAccountsAsync()).FirstOrDefault();
+        var eaGeneral = await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId)
+            ?? (await _emailAccountService.GetAllEmailAccountsAsync()).FirstOrDefault();
 
         if (eaGeneral is null)
             return;
@@ -296,7 +295,6 @@ public class NewsInstallService
                 _permissionMappingRepository.Delete(pr => pr.PermissionRecordId == oldRec.Id);
                 _permissionRepository.Delete(pr => pr.Id == oldRec.Id);
             }
-
         }
     }
 
@@ -315,7 +313,8 @@ public class NewsInstallService
     /// <summary>
     /// Adds the necessary data for the plugin to work correctly
     /// </summary>
-    public virtual async Task InstallRequiredDataAsync()
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public async Task InstallRequiredDataAsync()
     {
         await InsertSettingsAsync();
 
@@ -331,7 +330,8 @@ public class NewsInstallService
     /// <summary>
     /// Removes the data inserted in <see cref="InstallRequiredDataAsync"/>
     /// </summary>
-    public virtual async Task UnInstallRequiredDataAsync()
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public async Task UnInstallRequiredDataAsync()
     {
         //settings
         await _settingService.DeleteSettingAsync<NewsSettings>();

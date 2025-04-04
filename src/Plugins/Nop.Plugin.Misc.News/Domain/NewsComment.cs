@@ -5,7 +5,7 @@ namespace Nop.Plugin.Misc.News.Domain;
 /// <summary>
 /// Represents a news comment
 /// </summary>
-public partial class NewsComment : BaseEntity
+public class NewsComment : BaseEntity
 {
     /// <summary>
     /// Gets or sets the comment title

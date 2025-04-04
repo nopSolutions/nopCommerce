@@ -5,7 +5,6 @@ using Nop.Core.Domain.Messages;
 using Nop.Core.Events;
 using Nop.Plugin.Misc.News.Domain;
 using Nop.Services.Events;
-using Nop.Services.Messages;
 using Nop.Web.Infrastructure.Cache;
 
 namespace Nop.Plugin.Misc.News.Services.Events;
@@ -29,8 +28,7 @@ public class EventConsumer : IConsumer<CustomerPermanentlyDeleted>,
 
     #region Ctor
 
-    public EventConsumer(
-        IStaticCacheManager staticCacheManager,
+    public EventConsumer(IStaticCacheManager staticCacheManager,
         NewsService newsService)
     {
         _staticCacheManager = staticCacheManager;
@@ -55,11 +53,14 @@ public class EventConsumer : IConsumer<CustomerPermanentlyDeleted>,
         await _newsService.DeleteNewsCommentsAsync(newsComments);
     }
 
-
     #endregion
 
     #region News items
 
+    /// <summary>
+    /// Handle entity inserted event
+    /// </summary>
+    /// <param name="eventMessage">Event message</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(EntityInsertedEvent<NewsItem> eventMessage)
     {
@@ -67,6 +68,10 @@ public class EventConsumer : IConsumer<CustomerPermanentlyDeleted>,
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
     }
 
+    /// <summary>
+    /// Handle entity updated event
+    /// </summary>
+    /// <param name="eventMessage">Event message</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(EntityUpdatedEvent<NewsItem> eventMessage)
     {
@@ -74,6 +79,10 @@ public class EventConsumer : IConsumer<CustomerPermanentlyDeleted>,
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
     }
 
+    /// <summary>
+    /// Handle entity deleted event
+    /// </summary>
+    /// <param name="eventMessage">Event message</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(EntityDeletedEvent<NewsItem> eventMessage)
     {
@@ -85,6 +94,10 @@ public class EventConsumer : IConsumer<CustomerPermanentlyDeleted>,
 
     #region Setting
 
+    /// <summary>
+    /// Handle entity updated event
+    /// </summary>
+    /// <param name="eventMessage">Event message</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(EntityUpdatedEvent<Setting> eventMessage)
     {
@@ -96,6 +109,11 @@ public class EventConsumer : IConsumer<CustomerPermanentlyDeleted>,
 
     #region Message templates
 
+    /// <summary>
+    /// Handle entity inserted event
+    /// </summary>
+    /// <param name="eventMessage">Event message</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
     public Task HandleEventAsync(AdditionalTokensAddedEvent eventMessage)
     {
         eventMessage.AddTokens("%NewsComment.NewsTitle%");

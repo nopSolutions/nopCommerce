@@ -6,7 +6,7 @@ namespace Nop.Plugin.Misc.News.Admin.Models;
 /// <summary>
 /// Represents a news content model
 /// </summary>
-public partial record NewsContentModel : BaseNopModel
+public record NewsContentModel : BaseNopModel
 {
     #region Ctor
 

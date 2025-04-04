@@ -8,7 +8,7 @@ namespace Nop.Plugin.Misc.News.Admin.Models;
 /// <summary>
 /// Represents a news item model
 /// </summary>
-public partial record NewsItemModel : BaseNopEntityModel, IStoreMappingSupportedModel
+public record NewsItemModel : BaseNopEntityModel, IStoreMappingSupportedModel
 {
     #region Ctor
 

@@ -47,8 +47,8 @@ public class SchemaMigration : Migration
             var customerTableName = NameCompatibilityManager.GetTableName(typeof(Customer));
             var customerIdColumnName = NameCompatibilityManager.GetColumnName(typeof(Customer), nameof(BaseEntity.Id));
 
-            var constraintName = _dataProvider.CreateForeignKeyName(newsCommentTableName, NameCompatibilityManager.GetColumnName(typeof(NewsComment), nameof(NewsComment.CustomerId)),
-                customerTableName, customerIdColumnName);
+            var constraintName = _dataProvider
+                .CreateForeignKeyName(newsCommentTableName, newsCommentCustomerIdColunbName, customerTableName, customerIdColumnName);
 
             Delete.ForeignKey(constraintName).OnTable(newsCommentTableName);
             Alter.Column(newsCommentCustomerIdColunbName)

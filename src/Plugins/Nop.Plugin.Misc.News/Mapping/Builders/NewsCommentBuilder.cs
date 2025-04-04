@@ -11,7 +11,7 @@ namespace Nop.Plugin.Misc.News.Mapping.Builders;
 /// <summary>
 /// Represents a news comment entity builder
 /// </summary>
-public partial class NewsCommentBuilder : NopEntityBuilder<NewsComment>
+public class NewsCommentBuilder : NopEntityBuilder<NewsComment>
 {
     #region Methods
 

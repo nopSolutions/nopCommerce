@@ -22,7 +22,7 @@ using Nop.Web.Framework.Mvc.Routing;
 namespace Nop.Plugin.Misc.News.Public.Controllers;
 
 [AutoValidateAntiforgeryToken]
-public partial class NewsController : BasePublicController
+public class NewsController : BasePublicController
 {
     #region Fields
 
@@ -86,7 +86,7 @@ public partial class NewsController : BasePublicController
 
     #region Methods
 
-    public virtual async Task<IActionResult> List(NewsPagingFilteringModel command)
+    public async Task<IActionResult> List(NewsPagingFilteringModel command)
     {
         if (!_newsSettings.Enabled)
             return RedirectToRoute("Homepage");
@@ -96,7 +96,7 @@ public partial class NewsController : BasePublicController
     }
 
     [CheckLanguageSeoCode(ignore: true)]
-    public virtual async Task<IActionResult> ListRss(int languageId)
+    public async Task<IActionResult> ListRss(int languageId)
     {
         var store = await _storeContext.GetCurrentStoreAsync();
         var feed = new RssFeed(
@@ -120,7 +120,7 @@ public partial class NewsController : BasePublicController
         return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
     }
 
-    public virtual async Task<IActionResult> NewsItem(int newsItemId)
+    public async Task<IActionResult> NewsItem(int newsItemId)
     {
         if (!_newsSettings.Enabled)
             return RedirectToRoute("Homepage");
@@ -154,7 +154,7 @@ public partial class NewsController : BasePublicController
 
     [HttpPost]
     [ValidateCaptcha]
-    public virtual async Task<IActionResult> NewsCommentAdd(int newsItemId, NewsItemModel model, bool captchaValid)
+    public async Task<IActionResult> NewsCommentAdd(int newsItemId, NewsItemModel model, bool captchaValid)
     {
         if (!_newsSettings.Enabled)
             return RedirectToRoute("Homepage");

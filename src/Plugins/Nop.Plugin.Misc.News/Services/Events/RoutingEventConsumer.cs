@@ -6,6 +6,9 @@ using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Plugin.Misc.News.Services.Events;
 
+/// <summary>
+/// Represents the plugin event consumer
+/// </summary>
 public class RoutingEventConsumer : IConsumer<GenericRoutingEvent>
 {
     #region Fields
@@ -25,6 +28,11 @@ public class RoutingEventConsumer : IConsumer<GenericRoutingEvent>
 
     #region Methods
 
+    /// <summary>
+    /// Handle routing event
+    /// </summary>
+    /// <param name="eventMessage">Event message</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(GenericRoutingEvent eventMessage)
     {
         if (string.IsNullOrEmpty(eventMessage?.UrlRecord?.EntityName) ||

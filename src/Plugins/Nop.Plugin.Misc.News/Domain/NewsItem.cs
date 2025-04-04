@@ -7,7 +7,7 @@ namespace Nop.Plugin.Misc.News.Domain;
 /// <summary>
 /// Represents a news item
 /// </summary>
-public partial class NewsItem : BaseEntity, ISlugSupported, IStoreMappingSupported
+public class NewsItem : BaseEntity, ISlugSupported, IStoreMappingSupported
 {
     /// <summary>
     /// Gets or sets the language identifier

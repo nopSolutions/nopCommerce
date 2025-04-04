@@ -1,9 +1,9 @@
-namespace Nop.Plugin.Misc.News.Domain;
+﻿namespace Nop.Plugin.Misc.News.Domain;
 
 /// <summary>
 /// News comment approved event
 /// </summary>
-public partial class NewsCommentApprovedEvent
+public class NewsCommentApprovedEvent
 {
     /// <summary>
     /// Ctor

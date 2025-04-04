@@ -3,20 +3,32 @@ using Nop.Web.Framework.Components;
 
 namespace Nop.Plugin.Misc.News.Public.Components;
 
-public partial class NewsRssHeaderLinkViewComponent : NopViewComponent
+public class NewsRssHeaderLinkViewComponent : NopViewComponent
 {
+    #region Fields
+
     protected readonly NewsSettings _newsSettings;
+
+    #endregion
+
+    #region Ctor
 
     public NewsRssHeaderLinkViewComponent(NewsSettings newsSettings)
     {
         _newsSettings = newsSettings;
     }
 
-    public IViewComponentResult Invoke(int currentCategoryId, int currentProductId)
+    #endregion
+
+    #region Methods
+
+    public IViewComponentResult Invoke()
     {
         if (!_newsSettings.Enabled || !_newsSettings.ShowHeaderRssUrl)
             return Content("");
 
         return View("~/Plugins/Misc.News/Public/Views/Components/NewsRssHeaderLink.cshtml");
     }
+
+    #endregion
 }

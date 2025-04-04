@@ -17,7 +17,7 @@ namespace Nop.Plugin.Misc.News.Public.Factories;
 /// <summary>
 /// Represents the news model factory
 /// </summary>
-public partial class NewsModelFactory
+public class NewsModelFactory
 {
     #region Fields
 
@@ -82,7 +82,7 @@ public partial class NewsModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the news item model
     /// </returns>
-    public virtual async Task<NewsItemModel> PrepareNewsItemModelAsync(NewsItemModel model, NewsItem newsItem, bool prepareComments)
+    public async Task<NewsItemModel> PrepareNewsItemModelAsync(NewsItemModel model, NewsItem newsItem, bool prepareComments)
     {
         ArgumentNullException.ThrowIfNull(model);
 
@@ -105,11 +105,8 @@ public partial class NewsModelFactory
         model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(newsItem.StartDateUtc ?? newsItem.CreatedOnUtc, DateTimeKind.Utc);
         model.AddNewComment.DisplayCaptcha = _captchaSettings.Enabled && _newsSettings.ShowCaptchaOnNewsCommentPage;
 
-        //number of news comments
         var store = await _storeContext.GetCurrentStoreAsync();
         var storeId = _newsSettings.ShowNewsCommentsPerStore ? store.Id : 0;
-
-        model.NumberOfComments = await _newsService.GetNewsCommentsCountAsync(newsItem, storeId, true);
 
         if (prepareComments)
         {
@@ -135,7 +132,7 @@ public partial class NewsModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the home page news items model
     /// </returns>
-    public virtual async Task<HomepageNewsItemsModel> PrepareHomepageNewsItemsModelAsync()
+    public async Task<HomepageNewsItemsModel> PrepareHomepageNewsItemsModelAsync()
     {
         var store = await _storeContext.GetCurrentStoreAsync();
         var language = await _workContext.GetWorkingLanguageAsync();
@@ -146,7 +143,6 @@ public partial class NewsModelFactory
 
             return new HomepageNewsItemsModel
             {
-                WorkingLanguageId = language.Id,
                 NewsItems = await newsItems.SelectAwait(async newsItem =>
                 {
                     var newsModel = new NewsItemModel();
@@ -174,7 +170,7 @@ public partial class NewsModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the news item list model
     /// </returns>
-    public virtual async Task<NewsItemListModel> PrepareNewsItemListModelAsync(NewsPagingFilteringModel command)
+    public async Task<NewsItemListModel> PrepareNewsItemListModelAsync(NewsPagingFilteringModel command)
     {
         if (command.PageSize <= 0)
             command.PageSize = _newsSettings.NewsArchivePageSize;
@@ -208,7 +204,7 @@ public partial class NewsModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the news comment model
     /// </returns>
-    public virtual async Task<NewsCommentModel> PrepareNewsCommentModelAsync(NewsComment newsComment)
+    public async Task<NewsCommentModel> PrepareNewsCommentModelAsync(NewsComment newsComment)
     {
         ArgumentNullException.ThrowIfNull(newsComment);
 

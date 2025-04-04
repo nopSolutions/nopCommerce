@@ -3,7 +3,7 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Plugin.Misc.News.Admin.Models;
 
-public partial record ConfigurationModel : BaseNopModel, ISettingsModel
+public record ConfigurationModel : BaseNopModel, ISettingsModel
 {
     #region Properties
 

@@ -2,6 +2,6 @@
 
 namespace Nop.Plugin.Misc.News.Public.Models;
 
-public partial record NewsPagingFilteringModel : BasePageableModel
+public record NewsPagingFilteringModel : BasePageableModel
 {
 }

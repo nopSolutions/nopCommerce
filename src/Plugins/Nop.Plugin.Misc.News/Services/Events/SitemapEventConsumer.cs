@@ -14,6 +14,9 @@ using Nop.Web.Models.Sitemap;
 
 namespace Nop.Plugin.Misc.News.Services.Events;
 
+/// <summary>
+/// Represents the plugin event consumer
+/// </summary>
 public class SitemapEventConsumer : IConsumer<SitemapCreatedEvent>, IConsumer<ModelPreparedEvent<BaseNopModel>>
 {
     #region Fields
@@ -32,8 +35,7 @@ public class SitemapEventConsumer : IConsumer<SitemapCreatedEvent>, IConsumer<Mo
 
     #region Ctor
 
-    public SitemapEventConsumer(
-        IActionContextAccessor actionContextAccessor,
+    public SitemapEventConsumer(IActionContextAccessor actionContextAccessor,
         ILanguageService languageService,
         ILocalizationService localizationService,
         IStoreContext storeContext,
@@ -98,16 +100,15 @@ public class SitemapEventConsumer : IConsumer<SitemapCreatedEvent>, IConsumer<Mo
         var protocol = store.SslEnabled ? Uri.UriSchemeHttps : Uri.UriSchemeHttp;
         var allNews = await _newsService.GetAllNewsAsync(storeId: store.Id);
 
-        return await allNews.SelectAwait(
-            async newsItem =>
-            {
-                var routeValues = new { SeName = await _urlRecordService.GetSeNameAsync(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false) };
-                return await PrepareLocalizedSitemapUrlAsync(NewsDefaults.Routes.Public.NewsItemRouteName, routeValues, protocol, store);
-            }).ToListAsync();
+        return await allNews.SelectAwait(async newsItem =>
+        {
+            var routeValues = new { SeName = await _urlRecordService.GetSeNameAsync(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false) };
+            return await PrepareLocalizedSitemapUrlAsync(NewsDefaults.Routes.Public.NewsItemRouteName, routeValues, protocol, store);
+        }).ToListAsync();
     }
 
-    private async Task<SitemapUrlModel> PrepareLocalizedSitemapUrlAsync(
-        string routeName, object values, string protocol, Store store, DateTime? dateTimeUpdatedOn = null)
+    private async Task<SitemapUrlModel> PrepareLocalizedSitemapUrlAsync(string routeName, object values, string protocol,
+        Store store, DateTime? dateTimeUpdatedOn = null)
     {
         var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 
@@ -140,16 +141,16 @@ public class SitemapEventConsumer : IConsumer<SitemapCreatedEvent>, IConsumer<Mo
     /// Handle sitemap URLs created event
     /// </summary>
     /// <param name="eventMessage">Event message</param>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
+    /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(SitemapCreatedEvent eventMessage)
     {
         if (!_newsSettings.Enabled)
             return;
 
         var store = await _storeContext.GetCurrentStoreAsync();
+        var protocol = store.SslEnabled ? Uri.UriSchemeHttps : Uri.UriSchemeHttp;
 
-        eventMessage.SitemapUrls.Add(await PrepareLocalizedSitemapUrlAsync("NewsArchive", null, null, store));
+        eventMessage.SitemapUrls.Add(await PrepareLocalizedSitemapUrlAsync(NewsDefaults.Routes.Public.NewsArchive, null, protocol, store));
 
         if (!_newsSettings.SitemapXmlIncludeNews)
             return;
@@ -158,11 +159,14 @@ public class SitemapEventConsumer : IConsumer<SitemapCreatedEvent>, IConsumer<Mo
             eventMessage.SitemapUrls.Add(smUrl);
     }
 
+    /// <summary>
+    /// Handle model prepared event
+    /// </summary>
+    /// <param name="eventMessage">Event message</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(ModelPreparedEvent<BaseNopModel> eventMessage)
     {
-        var sitemapModel = eventMessage.Model as SitemapModel;
-
-        if (sitemapModel is null || !_newsSettings.Enabled)
+        if (eventMessage.Model is not SitemapModel sitemapModel || !_newsSettings.Enabled)
             return;
 
         var store = await _storeContext.GetCurrentStoreAsync();
@@ -180,7 +184,6 @@ public class SitemapEventConsumer : IConsumer<SitemapCreatedEvent>, IConsumer<Mo
         {
             var newsGroupTitle = await _localizationService.GetResourceAsync("Plugins.Misc.News.Sitemap.News");
             var news = await _newsService.GetAllNewsAsync(storeId: store.Id);
-
 
             sitemapModel.Items.AddRange(await news.SelectAwait(async newsItem => new SitemapModel.SitemapItemModel
             {

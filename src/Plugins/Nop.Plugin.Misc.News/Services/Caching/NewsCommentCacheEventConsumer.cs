@@ -6,7 +6,7 @@ namespace Nop.Plugin.Misc.News.Services.Caching;
 /// <summary>
 /// Represents a news comment cache event consumer
 /// </summary>
-public partial class NewsCommentCacheEventConsumer : CacheEventConsumer<NewsComment>
+public class NewsCommentCacheEventConsumer : CacheEventConsumer<NewsComment>
 {
     /// <summary>
     /// Clear cache data

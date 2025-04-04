@@ -8,6 +8,9 @@ using Nop.Web.Framework.Menu;
 
 namespace Nop.Plugin.Misc.News.Services.Events;
 
+/// <summary>
+/// Represents the plugin event consumer
+/// </summary>
 public class AdminMenuCreatedEventConsumer : IConsumer<AdminMenuCreatedEvent>
 {
     #region Fields
@@ -20,8 +23,7 @@ public class AdminMenuCreatedEventConsumer : IConsumer<AdminMenuCreatedEvent>
 
     #region Ctor
 
-    public AdminMenuCreatedEventConsumer(
-        IActionContextAccessor actionContextAccessor,
+    public AdminMenuCreatedEventConsumer(IActionContextAccessor actionContextAccessor,
         ILocalizationService localizationService,
         IUrlHelperFactory urlHelperFactory)
     {
@@ -32,9 +34,13 @@ public class AdminMenuCreatedEventConsumer : IConsumer<AdminMenuCreatedEvent>
 
     #endregion
 
-
     #region Methods
 
+    /// <summary>
+    /// Handle admin menu created event
+    /// </summary>
+    /// <param name="eventMessage">Event message</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(AdminMenuCreatedEvent eventMessage)
     {
         var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
@@ -57,5 +63,4 @@ public class AdminMenuCreatedEventConsumer : IConsumer<AdminMenuCreatedEvent>
     }
 
     #endregion
-
 }

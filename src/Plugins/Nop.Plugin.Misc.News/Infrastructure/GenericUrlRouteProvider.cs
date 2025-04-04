@@ -8,7 +8,7 @@ namespace Nop.Plugin.Misc.News.Infrastructure;
 /// <summary>
 /// Represents provider that provided generic routes
 /// </summary>
-public partial class GenericUrlRouteProvider : BaseRouteProvider, IRouteProvider
+public class GenericUrlRouteProvider : BaseRouteProvider, IRouteProvider
 {
     #region Methods
 

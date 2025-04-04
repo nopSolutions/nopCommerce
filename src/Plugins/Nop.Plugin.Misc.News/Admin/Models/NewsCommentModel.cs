@@ -6,7 +6,7 @@ namespace Nop.Plugin.Misc.News.Admin.Models;
 /// <summary>
 /// Represents a news comment model
 /// </summary>
-public partial record NewsCommentModel : BaseNopEntityModel
+public record NewsCommentModel : BaseNopEntityModel
 {
     #region Properties
 

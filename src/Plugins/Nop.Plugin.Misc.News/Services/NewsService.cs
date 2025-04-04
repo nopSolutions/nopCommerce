@@ -18,7 +18,6 @@ public class NewsService
 {
     #region Fields
 
-
     private readonly EmailAccountSettings _emailAccountSettings;
     private readonly ICustomerService _customerService;
     private readonly IEmailAccountService _emailAccountService;
@@ -36,8 +35,7 @@ public class NewsService
 
     #region Ctor
 
-    public NewsService(
-        EmailAccountSettings emailAccountSettings,
+    public NewsService(EmailAccountSettings emailAccountSettings,
         ICustomerService customerService,
         IEmailAccountService emailAccountService,
         IEventPublisher eventPublisher,
@@ -89,11 +87,15 @@ public class NewsService
     /// Get email and name to send email for store owner
     /// </summary>
     /// <param name="messageTemplateEmailAccount">Message template email account</param>
-    /// <returns>Email address and name to send email fore store owner</returns>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the email address and name to send email fore store owner
+    /// </returns>
     private async Task<(string email, string name)> GetStoreOwnerNameAndEmailAsync(EmailAccount messageTemplateEmailAccount)
     {
-        var storeOwnerEmailAccount = _messagesSettings.UseDefaultEmailAccountForSendStoreOwnerEmails ?
-            await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId) : null;
+        var storeOwnerEmailAccount = _messagesSettings.UseDefaultEmailAccountForSendStoreOwnerEmails
+            ? await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId)
+            : null;
         storeOwnerEmailAccount ??= messageTemplateEmailAccount;
 
         return (storeOwnerEmailAccount.Email, storeOwnerEmailAccount.DisplayName);
@@ -104,7 +106,10 @@ public class NewsService
     /// </summary>
     /// <param name="messageTemplate">Message template</param>
     /// <param name="customer">Customer</param>
-    /// <returns>Email address and name when reply to email</returns>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the email address and name when reply to email
+    /// </returns>
     private async Task<(string email, string name)> GetCustomerReplyToNameAndEmailAsync(MessageTemplate messageTemplate, Customer customer)
     {
         if (!messageTemplate.AllowDirectReply)
@@ -132,7 +137,7 @@ public class NewsService
     /// </summary>
     /// <param name="newsItem">News item</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task DeleteNewsAsync(NewsItem newsItem)
+    public async Task DeleteNewsAsync(NewsItem newsItem)
     {
         await _newsItemRepository.DeleteAsync(newsItem);
     }
@@ -145,7 +150,7 @@ public class NewsService
     /// A task that represents the asynchronous operation
     /// The task result contains the news
     /// </returns>
-    public virtual async Task<NewsItem> GetNewsByIdAsync(int newsId)
+    public async Task<NewsItem> GetNewsByIdAsync(int newsId)
     {
         return await _newsItemRepository.GetByIdAsync(newsId, cache => default);
     }
@@ -163,7 +168,7 @@ public class NewsService
     /// A task that represents the asynchronous operation
     /// The task result contains the news items
     /// </returns>
-    public virtual async Task<IPagedList<NewsItem>> GetAllNewsAsync(int languageId = 0, int storeId = 0,
+    public async Task<IPagedList<NewsItem>> GetAllNewsAsync(int languageId = 0, int storeId = 0,
         int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false, string title = null)
     {
         var news = await _newsItemRepository.GetAllPagedAsync(async query =>
@@ -199,7 +204,7 @@ public class NewsService
     /// </summary>
     /// <param name="news">News item</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task InsertNewsAsync(NewsItem news)
+    public async Task InsertNewsAsync(NewsItem news)
     {
         await _newsItemRepository.InsertAsync(news);
     }
@@ -209,7 +214,7 @@ public class NewsService
     /// </summary>
     /// <param name="news">News item</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task UpdateNewsAsync(NewsItem news)
+    public async Task UpdateNewsAsync(NewsItem news)
     {
         await _newsItemRepository.UpdateAsync(news);
     }
@@ -220,7 +225,7 @@ public class NewsService
     /// <param name="newsItem">News item</param>
     /// <param name="dateTime">Datetime to check; pass null to use current date</param>
     /// <returns>Result</returns>
-    public virtual bool IsNewsAvailable(NewsItem newsItem, DateTime? dateTime = null)
+    public bool IsNewsAvailable(NewsItem newsItem, DateTime? dateTime = null)
     {
         ArgumentNullException.ThrowIfNull(newsItem);
 
@@ -232,6 +237,7 @@ public class NewsService
 
         return true;
     }
+
     #endregion
 
     #region News comments
@@ -250,7 +256,7 @@ public class NewsService
     /// A task that represents the asynchronous operation
     /// The task result contains the comments
     /// </returns>
-    public virtual async Task<IList<NewsComment>> GetAllCommentsAsync(int customerId = 0, int storeId = 0, int? newsItemId = null,
+    public async Task<IList<NewsComment>> GetAllCommentsAsync(int customerId = 0, int storeId = 0, int? newsItemId = null,
         bool? approved = null, DateTime? fromUtc = null, DateTime? toUtc = null, string commentText = null)
     {
         return await _newsCommentRepository.GetAllAsync(query =>
@@ -274,8 +280,7 @@ public class NewsService
                 query = query.Where(comment => toUtc.Value >= comment.CreatedOnUtc);
 
             if (!string.IsNullOrEmpty(commentText))
-                query = query.Where(
-                    c => c.CommentText.Contains(commentText) || c.CommentTitle.Contains(commentText));
+                query = query.Where(c => c.CommentText.Contains(commentText) || c.CommentTitle.Contains(commentText));
 
             query = query.OrderBy(nc => nc.CreatedOnUtc);
 
@@ -291,7 +296,7 @@ public class NewsService
     /// A task that represents the asynchronous operation
     /// The task result contains the news comment
     /// </returns>
-    public virtual async Task<NewsComment> GetNewsCommentByIdAsync(int newsCommentId)
+    public async Task<NewsComment> GetNewsCommentByIdAsync(int newsCommentId)
     {
         return await _newsCommentRepository.GetByIdAsync(newsCommentId, cache => default, useShortTermCache: true);
     }
@@ -304,7 +309,7 @@ public class NewsService
     /// A task that represents the asynchronous operation
     /// The task result contains the news comments
     /// </returns>
-    public virtual async Task<IList<NewsComment>> GetNewsCommentsByIdsAsync(int[] commentIds)
+    public async Task<IList<NewsComment>> GetNewsCommentsByIdsAsync(int[] commentIds)
     {
         return await _newsCommentRepository.GetByIdsAsync(commentIds);
     }
@@ -319,7 +324,7 @@ public class NewsService
     /// A task that represents the asynchronous operation
     /// The task result contains the number of news comments
     /// </returns>
-    public virtual async Task<int> GetNewsCommentsCountAsync(NewsItem newsItem, int storeId = 0, bool? isApproved = null)
+    public async Task<int> GetNewsCommentsCountAsync(NewsItem newsItem, int storeId = 0, bool? isApproved = null)
     {
         var query = _newsCommentRepository.Table.Where(comment => comment.NewsItemId == newsItem.Id);
 
@@ -339,7 +344,7 @@ public class NewsService
     /// </summary>
     /// <param name="newsComment">News comment</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task DeleteNewsCommentAsync(NewsComment newsComment)
+    public async Task DeleteNewsCommentAsync(NewsComment newsComment)
     {
         await _newsCommentRepository.DeleteAsync(newsComment);
     }
@@ -349,7 +354,7 @@ public class NewsService
     /// </summary>
     /// <param name="newsComments">News comments</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task DeleteNewsCommentsAsync(IList<NewsComment> newsComments)
+    public async Task DeleteNewsCommentsAsync(IList<NewsComment> newsComments)
     {
         ArgumentNullException.ThrowIfNull(newsComments);
 
@@ -362,7 +367,7 @@ public class NewsService
     /// </summary>
     /// <param name="comment">News comment</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task InsertNewsCommentAsync(NewsComment comment)
+    public async Task InsertNewsCommentAsync(NewsComment comment)
     {
         await _newsCommentRepository.InsertAsync(comment);
     }
@@ -372,7 +377,7 @@ public class NewsService
     /// </summary>
     /// <param name="comment">News comment</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task UpdateNewsCommentAsync(NewsComment comment)
+    public async Task UpdateNewsCommentAsync(NewsComment comment)
     {
         await _newsCommentRepository.UpdateAsync(comment);
     }
@@ -390,7 +395,7 @@ public class NewsService
     /// A task that represents the asynchronous operation
     /// The task result contains the queued email identifier
     /// </returns>
-    public virtual async Task<IList<int>> SendNewsCommentStoreOwnerNotificationMessageAsync(NewsComment newsComment, int languageId)
+    public async Task<IList<int>> SendNewsCommentStoreOwnerNotificationMessageAsync(NewsComment newsComment, int languageId)
     {
         ArgumentNullException.ThrowIfNull(newsComment);
 

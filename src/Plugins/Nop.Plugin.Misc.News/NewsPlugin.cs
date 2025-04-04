@@ -29,8 +29,7 @@ public class NewsPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
 
     #region Ctor
 
-    public NewsPlugin(
-        IActionContextAccessor actionContextAccessor,
+    public NewsPlugin(IActionContextAccessor actionContextAccessor,
         ISettingService settingService,
         IUrlHelperFactory urlHelperFactory,
         NewsInstallService newsInstallService,
@@ -91,6 +90,11 @@ public class NewsPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
 
     #region IWidgetPlugin
 
+    /// <summary>
+    /// Gets a type of a view component for displaying widget
+    /// </summary>
+    /// <param name="widgetZone">Name of the widget zone</param>
+    /// <returns>View component type</returns>
     public Type GetWidgetViewComponent(string widgetZone)
     {
         if (widgetZone == PublicWidgetZones.HeadHtmlTag)
@@ -99,6 +103,13 @@ public class NewsPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
         return typeof(HomepageNewsViewComponent);
     }
 
+    /// <summary>
+    /// Gets widget zones where this widget should be rendered
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the widget zones
+    /// </returns>
     public Task<IList<string>> GetWidgetZonesAsync()
     {
         return Task.FromResult<IList<string>>([PublicWidgetZones.HeadHtmlTag, PublicWidgetZones.HomepageBottom]);

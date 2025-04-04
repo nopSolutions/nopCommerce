@@ -7,7 +7,7 @@ namespace Nop.Plugin.Misc.News.Admin.Models;
 /// <summary>
 /// Represents a news item search model
 /// </summary>
-public partial record NewsItemSearchModel : BaseSearchModel
+public record NewsItemSearchModel : BaseSearchModel
 {
     #region Ctor
 

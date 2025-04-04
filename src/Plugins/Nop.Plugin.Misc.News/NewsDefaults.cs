@@ -46,7 +46,7 @@ public class NewsDefaults
     /// {0} : language ID
     /// {1} : current store ID
     /// </remarks>
-    public static CacheKey HomepageNewsModelKey => new("Nop.pres.news.homepage-{0}-{1}", NewsPrefixCacheKey);
+    public static CacheKey HomepageNewsModelKey => new("Nop.pres.news.homepage-{0}-{1}");
     public static string NewsPrefixCacheKey => "Nop.pres.news";
 
     /// <summary>
@@ -57,7 +57,7 @@ public class NewsDefaults
     /// {1} : store ID
     /// {2} : are only approved comments?
     /// </remarks>
-    public static CacheKey NewsCommentsNumberCacheKey => new("Nop.newsitem.comments.number.{0}-{1}-{2}", NewsCommentsNumberPrefix);
+    public static CacheKey NewsCommentsNumberCacheKey => new("Nop.newsitem.comments.number.{0}-{1}-{2}");
 
     /// <summary>
     /// Gets a key pattern to clear cache
@@ -73,23 +73,23 @@ public class NewsDefaults
 
     public static class Routes
     {
-        private const string RoutePrefix = "Plugin.Misc.News.Route.";
+        private const string ROUTE_PREFIX = "Plugin.Misc.News.Route.";
 
         public static class Admin
         {
-            public static string ConfigurationRouteName => RoutePrefix + "Configure";
-            public static string NewsItemsRouteName => RoutePrefix + "NewsItems";
-            public static string NewsItemEditRouteName => RoutePrefix + "NewsItemEdit";
-            public static string NewsItemCreateRouteName => RoutePrefix + "NewsItemCreate";
-            public static string NewsItemDeleteRouteName => RoutePrefix + "NewsItemDelete";
-            public static string NewsCommentsRouteName => RoutePrefix + "NewsComments";
+            public static string ConfigurationRouteName => ROUTE_PREFIX + "Configure";
+            public static string NewsItemsRouteName => ROUTE_PREFIX + "NewsItems";
+            public static string NewsItemEditRouteName => ROUTE_PREFIX + "NewsItemEdit";
+            public static string NewsItemCreateRouteName => ROUTE_PREFIX + "NewsItemCreate";
+            public static string NewsItemDeleteRouteName => ROUTE_PREFIX + "NewsItemDelete";
+            public static string NewsCommentsRouteName => ROUTE_PREFIX + "NewsComments";
         }
 
         public static class Public
         {
-            public static string NewsItemRouteName => RoutePrefix + "NewsItem";
-            public static string NewsArchive => RoutePrefix + "NewsArchive";
-            public static string NewsRSS => RoutePrefix + "NewsRSS";
+            public static string NewsItemRouteName => ROUTE_PREFIX + "NewsItem";
+            public static string NewsArchive => ROUTE_PREFIX + "NewsArchive";
+            public static string NewsRSS => ROUTE_PREFIX + "NewsRSS";
         }
 
         /// <summary>
@@ -104,10 +104,10 @@ public class NewsDefaults
 
     public static class Permissions
     {
-        public const string NEWS_VIEW = $"News.View";
-        public const string NEWS_MANAGE = $"News.Manage";
-        public const string NEWS_COMMENTS_VIEW = $"News.CommentsView";
-        public const string NEWS_COMMENTS_MANAGE = $"News.CommentsManage";
+        public const string NEWS_VIEW = "News.View";
+        public const string NEWS_MANAGE = "News.Manage";
+        public const string NEWS_COMMENTS_VIEW = "News.CommentsView";
+        public const string NEWS_COMMENTS_MANAGE = "News.CommentsManage";
     }
 
     #endregion

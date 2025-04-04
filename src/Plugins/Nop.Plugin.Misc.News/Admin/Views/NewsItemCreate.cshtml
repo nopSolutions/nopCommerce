@@ -4,7 +4,7 @@
     //page title
     ViewBag.PageTitle = T("Plugins.Misc.News.NewsItems.AddNew").Text;
     //active menu item (system name)
-    NopHtml.SetActiveMenuItemSystemName("News items");
+    NopHtml.SetActiveMenuItemSystemName(NewsDefaults.NewsItemsMenuSystemName);
 }
 
 <form asp-controller="NewsAdmin" asp-action="NewsItemCreate" method="post">

@@ -5,6 +5,6 @@ namespace Nop.Plugin.Misc.News.Admin.Models;
 /// <summary>
 /// Represents a news item list model
 /// </summary>
-public partial record NewsItemListModel : BasePagedListModel<NewsItemModel>
+public record NewsItemListModel : BasePagedListModel<NewsItemModel>
 {
 }

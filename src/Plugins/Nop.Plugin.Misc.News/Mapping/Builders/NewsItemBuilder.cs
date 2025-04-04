@@ -9,7 +9,7 @@ namespace Nop.Plugin.Misc.News.Mapping.Builders;
 /// <summary>
 /// Represents a news item entity builder
 /// </summary>
-public partial class NewsItemBuilder : NopEntityBuilder<NewsItem>
+public class NewsItemBuilder : NopEntityBuilder<NewsItem>
 {
     #region Methods
 

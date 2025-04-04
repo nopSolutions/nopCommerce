@@ -2,7 +2,7 @@
 
 namespace Nop.Plugin.Misc.News.Public.Models;
 
-public partial record NewsCommentModel : BaseNopEntityModel
+public record NewsCommentModel : BaseNopEntityModel
 {
     public int CustomerId { get; set; }
 

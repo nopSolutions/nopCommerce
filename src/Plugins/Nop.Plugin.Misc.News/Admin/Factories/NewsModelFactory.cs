@@ -23,7 +23,7 @@ namespace Nop.Plugin.Misc.News.Admin.Factories;
 /// <summary>
 /// Represents the news model factory implementation
 /// </summary>
-public partial class NewsModelFactory
+public class NewsModelFactory
 {
     #region Fields
 
@@ -86,7 +86,7 @@ public partial class NewsModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the news settings model
     /// </returns>
-    public virtual async Task<ConfigurationModel> PrepareNewsConfigurationModelAsync(ConfigurationModel model = null)
+    public async Task<ConfigurationModel> PrepareNewsConfigurationModelAsync(ConfigurationModel model = null)
     {
         //load settings for a chosen store scope
         var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
@@ -110,7 +110,6 @@ public partial class NewsModelFactory
         model.NewsArchivePageSize_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.NewsArchivePageSize, storeId);
         model.ShowHeaderRssUrl_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.ShowHeaderRssUrl, storeId);
         model.NewsCommentsMustBeApproved_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.NewsCommentsMustBeApproved, storeId);
-        model.SitemapIncludeNews = await _settingService.SettingExistsAsync(newsSettings, x => x.SitemapIncludeNews, storeId);
         //model.DisplayNewsFooterItem_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.DisplayNewsFooterItem, storeId);
         model.ShowCaptchaOnNewsCommentPage_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.ShowCaptchaOnNewsCommentPage, storeId);
         model.SitemapIncludeNews_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.SitemapIncludeNews, storeId);
@@ -127,7 +126,7 @@ public partial class NewsModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the news content model
     /// </returns>
-    public virtual async Task<NewsContentModel> PrepareNewsContentModelAsync(NewsContentModel newsContentModel, int? filterByNewsItemId)
+    public async Task<NewsContentModel> PrepareNewsContentModelAsync(NewsContentModel newsContentModel, int? filterByNewsItemId)
     {
         ArgumentNullException.ThrowIfNull(newsContentModel);
 
@@ -147,7 +146,7 @@ public partial class NewsModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the news item list model
     /// </returns>
-    public virtual async Task<NewsItemListModel> PrepareNewsItemListModelAsync(NewsItemSearchModel searchModel)
+    public async Task<NewsItemListModel> PrepareNewsItemListModelAsync(NewsItemSearchModel searchModel)
     {
         ArgumentNullException.ThrowIfNull(searchModel);
 
@@ -198,7 +197,7 @@ public partial class NewsModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the news item model
     /// </returns>
-    public virtual async Task<NewsItemModel> PrepareNewsItemModelAsync(NewsItemModel model, NewsItem newsItem, bool excludeProperties = false)
+    public async Task<NewsItemModel> PrepareNewsItemModelAsync(NewsItemModel model, NewsItem newsItem, bool excludeProperties = false)
     {
         //fill in model values from the entity
         if (newsItem != null)
@@ -238,7 +237,7 @@ public partial class NewsModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the news comment search model
     /// </returns>
-    public virtual async Task<NewsCommentSearchModel> PrepareNewsCommentSearchModelAsync(NewsCommentSearchModel searchModel, NewsItem newsItem)
+    public async Task<NewsCommentSearchModel> PrepareNewsCommentSearchModelAsync(NewsCommentSearchModel searchModel, NewsItem newsItem)
     {
         ArgumentNullException.ThrowIfNull(searchModel);
 
@@ -276,7 +275,7 @@ public partial class NewsModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the news comment list model
     /// </returns>
-    public virtual async Task<NewsCommentListModel> PrepareNewsCommentListModelAsync(NewsCommentSearchModel searchModel, int? newsItemId)
+    public async Task<NewsCommentListModel> PrepareNewsCommentListModelAsync(NewsCommentSearchModel searchModel, int? newsItemId)
     {
         ArgumentNullException.ThrowIfNull(searchModel);
 
@@ -337,7 +336,7 @@ public partial class NewsModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the news item search model
     /// </returns>
-    public virtual async Task<NewsItemSearchModel> PrepareNewsItemSearchModelAsync(NewsItemSearchModel searchModel)
+    public async Task<NewsItemSearchModel> PrepareNewsItemSearchModelAsync(NewsItemSearchModel searchModel)
     {
         ArgumentNullException.ThrowIfNull(searchModel);
 
