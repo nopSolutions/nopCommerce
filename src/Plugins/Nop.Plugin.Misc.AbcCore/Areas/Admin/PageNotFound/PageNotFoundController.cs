@@ -19,6 +19,9 @@ using System;
 using Nop.Services.Customers;
 using System.Collections.Generic;
 using Nop.Core.Domain.Logging;
+using Nop.Services.ExportImport;
+using Nop.Services.Messages;
+using System.Text;
 
 namespace Nop.Plugin.Misc.AbcCore.Areas.Admin.PageNotFound
 {
@@ -26,16 +29,43 @@ namespace Nop.Plugin.Misc.AbcCore.Areas.Admin.PageNotFound
     {
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IAbcExportManager _exportManager;
+        private readonly INotificationService _notificationService;
         private readonly IAbcLogger _logger;
+        // temporary
+        private readonly ICategoryService _categoryService;
 
         public PageNotFoundController(
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
+            IAbcExportManager exportManager,
+            INotificationService notificationService,
+            ICategoryService categoryService,
             IAbcLogger logger)
         {
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
+            _exportManager = exportManager;
+            _notificationService = notificationService;
+            _categoryService = categoryService;
             _logger = logger;
+        }
+
+        public virtual async Task<IActionResult> ExportXlsx()
+        {
+            try
+            {
+                var logs = _logger.GetPageNotFoundLogs();
+                var bytes = await _exportManager
+                    .ExportPageNotFoundRecordsToXlsxAsync(logs);
+
+                return File(bytes, MimeTypes.TextXlsx, "page-not-found-records.xlsx");
+            }
+            catch (Exception exc)
+            {
+                await _notificationService.ErrorNotificationAsync(exc);
+                return RedirectToAction("List");
+            }
         }
 
         public IActionResult List()
