@@ -115,7 +115,7 @@
                                     }
                                 }).bind("click", function () {
                                     return validateWarehouseAvailability("save");
-                                });;
+                                });
 
                                 $("#shipment-save-continue").bind("focus", function () {
                                     if (validateWarehouseAvailability("continue")) {
@@ -124,7 +124,7 @@
                                     }
                                 }).bind("click", function () {
                                     return validateWarehouseAvailability("continue");
-                                });;
+                                });
                             });
 
                             function validateWarehouseAvailability(action) {

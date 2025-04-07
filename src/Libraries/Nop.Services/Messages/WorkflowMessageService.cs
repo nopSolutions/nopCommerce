@@ -2268,10 +2268,6 @@ public partial class WorkflowMessageService : IWorkflowMessageService
         if (await _customerService.IsGuestAsync(customer))
             return new List<int>();
 
-        //We should not send notifications to guests
-        if (await _customerService.IsGuestAsync(customer))
-            return new List<int>();
-
         //tokens
         var commonTokens = new List<Token>();
         await _messageTokenProvider.AddProductReviewTokensAsync(commonTokens, productReview);
