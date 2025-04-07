@@ -3,32 +3,15 @@ using Nop.Plugin.Payments.PayPalCommerce.Services;
 
 namespace Nop.Plugin.Payments.PayPalCommerce.Controllers;
 
-public class PayPalCommerceWebhookController : Controller
+public class PayPalCommerceWebhookController(PayPalCommerceServiceManager serviceManager,
+        PayPalCommerceSettings settings) : Controller
 {
-    #region Fields
-
-    private readonly PayPalCommerceServiceManager _serviceManager;
-    private readonly PayPalCommerceSettings _settings;
-
-    #endregion
-
-    #region Ctor
-
-    public PayPalCommerceWebhookController(PayPalCommerceServiceManager serviceManager,
-        PayPalCommerceSettings settings)
-    {
-        _serviceManager = serviceManager;
-        _settings = settings;
-    }
-
-    #endregion
-
     #region Methods
 
     [HttpPost]
     public async Task<IActionResult> WebhookHandler()
     {
-        await _serviceManager.HandleWebhookAsync(_settings, Request);
+        await serviceManager.HandleWebhookAsync(settings, Request);
         return Ok();
     }
 

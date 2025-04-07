@@ -8,26 +8,10 @@ namespace Nop.Plugin.Misc.OmnibusDirective;
 /// <summary>
 /// Represents EU Omnibus Directive plugin
 /// </summary>
-public class OmnibusDirectivePlugin : BasePlugin, IMiscPlugin
+public class OmnibusDirectivePlugin(IPermissionService permissionService,
+        IWebHelper webHelper) 
+    : BasePlugin, IMiscPlugin
 {
-    #region Fields
-
-    private readonly IPermissionService _permissionService;
-    private readonly IWebHelper _webHelper;
-
-    #endregion
-
-    #region Ctor
-
-    public OmnibusDirectivePlugin(IPermissionService permissionService,
-        IWebHelper webHelper)
-    {
-        _permissionService = permissionService;
-        _webHelper = webHelper;
-    }
-
-    #endregion
-
     #region Methods
 
     /// <summary>
@@ -35,7 +19,7 @@ public class OmnibusDirectivePlugin : BasePlugin, IMiscPlugin
     /// </summary>
     public override string GetConfigurationPageUrl()
     {
-        return $"{_webHelper.GetStoreLocation()}Admin/OmnibusDirective/Configure";
+        return $"{webHelper.GetStoreLocation()}Admin/OmnibusDirective/Configure";
     }
 
     /// <summary>

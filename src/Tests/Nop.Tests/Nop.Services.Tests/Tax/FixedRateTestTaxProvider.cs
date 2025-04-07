@@ -8,28 +8,12 @@ using Nop.Services.Tax;
 
 namespace Nop.Tests.Nop.Services.Tests.Tax;
 
-public class FixedRateTestTaxProvider : BasePlugin, ITaxProvider
-{
-    private readonly IGenericAttributeService _genericAttributeService;
-    private readonly IOrderTotalCalculationService _orderTotalCalculationService;
-    private readonly IPaymentService _paymentService;
-    private readonly ITaxService _taxService;
-    private readonly TaxSettings _taxSettings;
-
-    public FixedRateTestTaxProvider(IGenericAttributeService genericAttributeService,
+public class FixedRateTestTaxProvider(IGenericAttributeService genericAttributeService,
         IOrderTotalCalculationService orderTotalCalculationService,
         IPaymentService paymentService,
         ITaxService taxService,
-        TaxSettings taxSettings
-    )
-    {
-        _genericAttributeService = genericAttributeService;
-        _orderTotalCalculationService = orderTotalCalculationService;
-        _paymentService = paymentService;
-        _taxService = taxService;
-        _taxSettings = taxSettings;
-    }
-
+        TaxSettings taxSettings) : BasePlugin, ITaxProvider
+{
     /// <summary>
     /// Gets tax rate
     /// </summary>
@@ -55,12 +39,12 @@ public class FixedRateTestTaxProvider : BasePlugin, ITaxProvider
 
         var paymentMethodSystemName = string.Empty;
         if (customer != null)
-            paymentMethodSystemName = await _genericAttributeService.GetAttributeAsync<string>(customer,
+            paymentMethodSystemName = await genericAttributeService.GetAttributeAsync<string>(customer,
                 NopCustomerDefaults.SelectedPaymentMethodAttribute, storeId);
 
         //order sub total (items + checkout attributes)
         var subTotalTaxTotal = decimal.Zero;
-        var (_, _, _, _, orderSubTotalTaxRates) = await _orderTotalCalculationService.GetShoppingCartSubTotalAsync(cart, false);
+        var (_, _, _, _, orderSubTotalTaxRates) = await orderTotalCalculationService.GetShoppingCartSubTotalAsync(cart, false);
         foreach (var kvp in orderSubTotalTaxRates)
         {
             var taxRate = kvp.Key;
@@ -78,10 +62,10 @@ public class FixedRateTestTaxProvider : BasePlugin, ITaxProvider
 
         //shipping
         var shippingTax = decimal.Zero;
-        if (_taxSettings.ShippingIsTaxable)
+        if (taxSettings.ShippingIsTaxable)
         {
-            var (shippingExclTax, _, _) = await _orderTotalCalculationService.GetShoppingCartShippingTotalAsync(cart, false);
-            var (shippingInclTax, taxRate, _) = await _orderTotalCalculationService.GetShoppingCartShippingTotalAsync(cart, true);
+            var (shippingExclTax, _, _) = await orderTotalCalculationService.GetShoppingCartShippingTotalAsync(cart, false);
+            var (shippingInclTax, taxRate, _) = await orderTotalCalculationService.GetShoppingCartShippingTotalAsync(cart, true);
             if (shippingExclTax.HasValue && shippingInclTax.HasValue)
             {
                 shippingTax = shippingInclTax.Value - shippingExclTax.Value;
@@ -102,11 +86,11 @@ public class FixedRateTestTaxProvider : BasePlugin, ITaxProvider
 
         //payment method additional fee
         var paymentMethodAdditionalFeeTax = decimal.Zero;
-        if (usePaymentMethodAdditionalFee && _taxSettings.PaymentMethodAdditionalFeeIsTaxable)
+        if (usePaymentMethodAdditionalFee && taxSettings.PaymentMethodAdditionalFeeIsTaxable)
         {
-            var paymentMethodAdditionalFee = await _paymentService.GetAdditionalHandlingFeeAsync(cart, paymentMethodSystemName);
-            var (paymentMethodAdditionalFeeExclTax, _) = await _taxService.GetPaymentMethodAdditionalFeeAsync(paymentMethodAdditionalFee, false, customer);
-            var (paymentMethodAdditionalFeeInclTax, taxRate) = await _taxService.GetPaymentMethodAdditionalFeeAsync(paymentMethodAdditionalFee, true, customer);
+            var paymentMethodAdditionalFee = await paymentService.GetAdditionalHandlingFeeAsync(cart, paymentMethodSystemName);
+            var (paymentMethodAdditionalFeeExclTax, _) = await taxService.GetPaymentMethodAdditionalFeeAsync(paymentMethodAdditionalFee, false, customer);
+            var (paymentMethodAdditionalFeeInclTax, taxRate) = await taxService.GetPaymentMethodAdditionalFeeAsync(paymentMethodAdditionalFee, true, customer);
 
             paymentMethodAdditionalFeeTax = paymentMethodAdditionalFeeInclTax - paymentMethodAdditionalFeeExclTax;
             //ensure that tax is equal or greater than zero

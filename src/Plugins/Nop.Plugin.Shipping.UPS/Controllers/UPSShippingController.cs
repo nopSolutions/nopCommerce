@@ -18,41 +18,14 @@ namespace Nop.Plugin.Shipping.UPS.Controllers;
 [AuthorizeAdmin]
 [Area(AreaNames.ADMIN)]
 [AutoValidateAntiforgeryToken]
-public class UPSShippingController : BasePluginController
-{
-    #region Fields
-
-    private readonly ILocalizationService _localizationService;
-    private readonly IMeasureService _measureService;
-    private readonly INotificationService _notificationService;
-    private readonly IPermissionService _permissionService;
-    private readonly ISettingService _settingService;
-    private readonly UPSService _upsService;
-    private readonly UPSSettings _upsSettings;
-
-    #endregion
-
-    #region Ctor
-
-    public UPSShippingController(ILocalizationService localizationService,
+public class UPSShippingController(ILocalizationService localizationService,
         IMeasureService measureService,
         INotificationService notificationService,
         IPermissionService permissionService,
         ISettingService settingService,
         UPSService upsService,
-        UPSSettings upsSettings)
-    {
-        _localizationService = localizationService;
-        _measureService = measureService;
-        _notificationService = notificationService;
-        _permissionService = permissionService;
-        _settingService = settingService;
-        _upsService = upsService;
-        _upsSettings = upsSettings;
-    }
-
-    #endregion
-
+        UPSSettings upsSettings) : BasePluginController
+{
     #region Methods
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_SHIPPING_SETTINGS)]
@@ -61,26 +34,26 @@ public class UPSShippingController : BasePluginController
         //prepare common model
         var model = new UPSShippingModel
         {
-            AccountNumber = _upsSettings.AccountNumber,
-            ClientId = _upsSettings.ClientId,
-            ClientSecret = _upsSettings.ClientSecret,
-            UseSandbox = _upsSettings.UseSandbox,
-            AdditionalHandlingCharge = _upsSettings.AdditionalHandlingCharge,
-            InsurePackage = _upsSettings.InsurePackage,
-            CustomerClassification = (int)_upsSettings.CustomerClassification,
-            PickupType = (int)_upsSettings.PickupType,
-            PackagingType = (int)_upsSettings.PackagingType,
-            SaturdayDeliveryEnabled = _upsSettings.SaturdayDeliveryEnabled,
-            PassDimensions = _upsSettings.PassDimensions,
-            PackingPackageVolume = _upsSettings.PackingPackageVolume,
-            PackingType = (int)_upsSettings.PackingType,
-            Tracing = _upsSettings.Tracing,
-            WeightType = _upsSettings.WeightType,
-            DimensionsType = _upsSettings.DimensionsType
+            AccountNumber = upsSettings.AccountNumber,
+            ClientId = upsSettings.ClientId,
+            ClientSecret = upsSettings.ClientSecret,
+            UseSandbox = upsSettings.UseSandbox,
+            AdditionalHandlingCharge = upsSettings.AdditionalHandlingCharge,
+            InsurePackage = upsSettings.InsurePackage,
+            CustomerClassification = (int)upsSettings.CustomerClassification,
+            PickupType = (int)upsSettings.PickupType,
+            PackagingType = (int)upsSettings.PackagingType,
+            SaturdayDeliveryEnabled = upsSettings.SaturdayDeliveryEnabled,
+            PassDimensions = upsSettings.PassDimensions,
+            PackingPackageVolume = upsSettings.PackingPackageVolume,
+            PackingType = (int)upsSettings.PackingType,
+            Tracing = upsSettings.Tracing,
+            WeightType = upsSettings.WeightType,
+            DimensionsType = upsSettings.DimensionsType
         };
 
         //prepare offered delivery services
-        var servicesCodes = _upsSettings.CarrierServicesOffered?.Split(':', StringSplitOptions.RemoveEmptyEntries)
+        var servicesCodes = upsSettings.CarrierServicesOffered?.Split(':', StringSplitOptions.RemoveEmptyEntries)
             .Select(idValue => idValue.Trim('[', ']')).ToList() ?? new List<string>();
 
         //prepare available options
@@ -95,20 +68,20 @@ public class UPSShippingController : BasePluginController
         model.AvailableCarrierServices = (await DeliveryService.Standard.ToSelectListAsync(false))
             .Select(item =>
             {
-                var serviceCode = _upsService.GetUpsCode((DeliveryService)int.Parse(item.Value));
+                var serviceCode = upsService.GetUpsCode((DeliveryService)int.Parse(item.Value));
                 return new SelectListItem($"UPS {item.Text?.TrimStart('_')}", serviceCode, servicesCodes.Contains(serviceCode));
             }).ToList();
         model.AvaliableWeightTypes = new List<SelectListItem> { new SelectListItem("LBS", "LBS"), new SelectListItem("KGS", "KGS") };
         model.AvaliableDimensionsTypes = new List<SelectListItem> { new SelectListItem("IN", "IN"), new SelectListItem("CM", "CM") };
 
         //check measures
-        var weightSystemName = _upsSettings.WeightType switch { "LBS" => "lb", "KGS" => "kg", _ => null };
-        if (await _measureService.GetMeasureWeightBySystemKeywordAsync(weightSystemName) == null)
-            _notificationService.ErrorNotification($"Could not load '{weightSystemName}' <a href=\"{Url.Action("List", "Measure")}\" target=\"_blank\">measure weight</a>", false);
+        var weightSystemName = upsSettings.WeightType switch { "LBS" => "lb", "KGS" => "kg", _ => null };
+        if (await measureService.GetMeasureWeightBySystemKeywordAsync(weightSystemName) == null)
+            notificationService.ErrorNotification($"Could not load '{weightSystemName}' <a href=\"{Url.Action("List", "Measure")}\" target=\"_blank\">measure weight</a>", false);
 
-        var dimensionSystemName = _upsSettings.DimensionsType switch { "IN" => "inches", "CM" => "centimeters", _ => null };
-        if (await _measureService.GetMeasureDimensionBySystemKeywordAsync(dimensionSystemName) == null)
-            _notificationService.ErrorNotification($"Could not load '{dimensionSystemName}' <a href=\"{Url.Action("List", "Measure")}\" target=\"_blank\">measure dimension</a>", false);
+        var dimensionSystemName = upsSettings.DimensionsType switch { "IN" => "inches", "CM" => "centimeters", _ => null };
+        if (await measureService.GetMeasureDimensionBySystemKeywordAsync(dimensionSystemName) == null)
+            notificationService.ErrorNotification($"Could not load '{dimensionSystemName}' <a href=\"{Url.Action("List", "Measure")}\" target=\"_blank\">measure dimension</a>", false);
 
         return View("~/Plugins/Shipping.UPS/Views/Configure.cshtml", model);
     }
@@ -121,39 +94,39 @@ public class UPSShippingController : BasePluginController
             return await Configure();
 
         //save settings
-        _upsSettings.AccountNumber = model.AccountNumber;
-        _upsSettings.ClientId = model.ClientId;
-        _upsSettings.ClientSecret = model.ClientSecret;
-        _upsSettings.UseSandbox = model.UseSandbox;
-        _upsSettings.AdditionalHandlingCharge = model.AdditionalHandlingCharge;
-        _upsSettings.CustomerClassification = (CustomerClassification)model.CustomerClassification;
-        _upsSettings.PickupType = (PickupType)model.PickupType;
-        _upsSettings.PackagingType = (PackagingType)model.PackagingType;
-        _upsSettings.InsurePackage = model.InsurePackage;
-        _upsSettings.SaturdayDeliveryEnabled = model.SaturdayDeliveryEnabled;
-        _upsSettings.PassDimensions = model.PassDimensions;
-        _upsSettings.PackingPackageVolume = model.PackingPackageVolume;
-        _upsSettings.PackingType = (PackingType)model.PackingType;
-        _upsSettings.Tracing = model.Tracing;
-        _upsSettings.WeightType = model.WeightType;
-        _upsSettings.DimensionsType = model.DimensionsType;
+        upsSettings.AccountNumber = model.AccountNumber;
+        upsSettings.ClientId = model.ClientId;
+        upsSettings.ClientSecret = model.ClientSecret;
+        upsSettings.UseSandbox = model.UseSandbox;
+        upsSettings.AdditionalHandlingCharge = model.AdditionalHandlingCharge;
+        upsSettings.CustomerClassification = (CustomerClassification)model.CustomerClassification;
+        upsSettings.PickupType = (PickupType)model.PickupType;
+        upsSettings.PackagingType = (PackagingType)model.PackagingType;
+        upsSettings.InsurePackage = model.InsurePackage;
+        upsSettings.SaturdayDeliveryEnabled = model.SaturdayDeliveryEnabled;
+        upsSettings.PassDimensions = model.PassDimensions;
+        upsSettings.PackingPackageVolume = model.PackingPackageVolume;
+        upsSettings.PackingType = (PackingType)model.PackingType;
+        upsSettings.Tracing = model.Tracing;
+        upsSettings.WeightType = model.WeightType;
+        upsSettings.DimensionsType = model.DimensionsType;
 
         //use default services if no one is selected 
         if (!model.CarrierServices.Any())
         {
             model.CarrierServices = new List<string>
             {
-                _upsService.GetUpsCode(DeliveryService.Ground),
-                _upsService.GetUpsCode(DeliveryService.WorldwideExpedited),
-                _upsService.GetUpsCode(DeliveryService.Standard),
-                _upsService.GetUpsCode(DeliveryService._3DaySelect)
+                upsService.GetUpsCode(DeliveryService.Ground),
+                upsService.GetUpsCode(DeliveryService.WorldwideExpedited),
+                upsService.GetUpsCode(DeliveryService.Standard),
+                upsService.GetUpsCode(DeliveryService._3DaySelect)
             };
         }
-        _upsSettings.CarrierServicesOffered = string.Join(':', model.CarrierServices.Select(service => $"[{service}]"));
+        upsSettings.CarrierServicesOffered = string.Join(':', model.CarrierServices.Select(service => $"[{service}]"));
 
-        await _settingService.SaveSettingAsync(_upsSettings);
+        await settingService.SaveSettingAsync(upsSettings);
 
-        _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
+        notificationService.SuccessNotification(await localizationService.GetResourceAsync("Admin.Plugins.Saved"));
 
         return await Configure();
     }

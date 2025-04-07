@@ -5,25 +5,18 @@ using Nop.Core.Domain.Messages;
 namespace Nop.Data.Migrations.UpgradeTo490;
 
 [NopUpdateMigration("2024-12-25 00:00:00", "4.90", UpdateMigrationType.Data)]
-public class DataMigration : Migration
+public class DataMigration(INopDataProvider dataProvider) : Migration
 {
-    private readonly INopDataProvider _dataProvider;
-
-    public DataMigration(INopDataProvider dataProvider)
-    {
-        _dataProvider = dataProvider;
-    }
-
     /// <summary>
     /// Collect the UP migration expressions
     /// </summary>
     public override void Up()
     {
         //#3425
-        if (!_dataProvider.GetTable<MessageTemplate>().Any(st => string.Compare(st.Name, MessageTemplateSystemNames.ORDER_COMPLETED_STORE_OWNER_NOTIFICATION, StringComparison.InvariantCultureIgnoreCase) == 0))
+        if (!dataProvider.GetTable<MessageTemplate>().Any(st => string.Compare(st.Name, MessageTemplateSystemNames.ORDER_COMPLETED_STORE_OWNER_NOTIFICATION, StringComparison.InvariantCultureIgnoreCase) == 0))
         {
-            var eaGeneral = _dataProvider.GetTable<EmailAccount>().FirstOrDefault() ?? throw new Exception("Default email account cannot be loaded");
-            _dataProvider.InsertEntity(new MessageTemplate()
+            var eaGeneral = dataProvider.GetTable<EmailAccount>().FirstOrDefault() ?? throw new Exception("Default email account cannot be loaded");
+            dataProvider.InsertEntity(new MessageTemplate()
             {
                 Name = MessageTemplateSystemNames.ORDER_COMPLETED_STORE_OWNER_NOTIFICATION,
                 Subject = "%Store.Name%. Order #%Order.OrderNumber% completed",
@@ -33,12 +26,12 @@ public class DataMigration : Migration
             });
         }
 
-        var activityLogTypeTable = _dataProvider.GetTable<ActivityLogType>();
+        var activityLogTypeTable = dataProvider.GetTable<ActivityLogType>();
 
         //#6407
         if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "PublicStore.PasswordChanged", StringComparison.InvariantCultureIgnoreCase) == 0))
         {
-            _dataProvider.InsertEntity(
+            dataProvider.InsertEntity(
                 new ActivityLogType
                 {
                     SystemKeyword = "PublicStore.PasswordChanged",
@@ -53,11 +46,11 @@ public class DataMigration : Migration
             is ActivityLogType loginActivity)
         {
             loginActivity.SystemKeyword = "PublicStore.SuccessfulLogin";
-            _dataProvider.UpdateEntity(loginActivity);
+            dataProvider.UpdateEntity(loginActivity);
         }
         else
         {
-            _dataProvider.InsertEntity(
+            dataProvider.InsertEntity(
                 new ActivityLogType
                 {
                     SystemKeyword = "PublicStore.SuccessfulLogin",
@@ -69,7 +62,7 @@ public class DataMigration : Migration
 
         if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "PublicStore.FailedLogin", StringComparison.InvariantCultureIgnoreCase) == 0))
         {
-            _dataProvider.InsertEntity(
+            dataProvider.InsertEntity(
                 new ActivityLogType
                 {
                     SystemKeyword = "PublicStore.FailedLogin",
@@ -79,10 +72,10 @@ public class DataMigration : Migration
             );
         }
 
-        if (!_dataProvider.GetTable<MessageTemplate>().Any(st => string.Compare(st.Name, MessageTemplateSystemNames.CUSTOMER_FAILED_LOGIN_ATTEMPT_NOTIFICATION, StringComparison.InvariantCultureIgnoreCase) == 0))
+        if (!dataProvider.GetTable<MessageTemplate>().Any(st => string.Compare(st.Name, MessageTemplateSystemNames.CUSTOMER_FAILED_LOGIN_ATTEMPT_NOTIFICATION, StringComparison.InvariantCultureIgnoreCase) == 0))
         {
-            var eaGeneral = _dataProvider.GetTable<EmailAccount>().FirstOrDefault() ?? throw new Exception("Default email account cannot be loaded");
-            _dataProvider.InsertEntity(new MessageTemplate()
+            var eaGeneral = dataProvider.GetTable<EmailAccount>().FirstOrDefault() ?? throw new Exception("Default email account cannot be loaded");
+            dataProvider.InsertEntity(new MessageTemplate()
             {
                 Name = MessageTemplateSystemNames.CUSTOMER_FAILED_LOGIN_ATTEMPT_NOTIFICATION,
                 Subject = "%Store.Name%. Failed Login Attempt",

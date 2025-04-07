@@ -22,32 +22,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services;
 /// <summary>
 /// Represents the plugin event consumer
 /// </summary>
-public class EventConsumer :
-    BaseAdminMenuCreatedEventConsumer,
-    IConsumer<CustomerPermanentlyDeleted>,
-    IConsumer<ModelPreparedEvent<BaseNopModel>>,
-    IConsumer<ModelReceivedEvent<BaseNopModel>>,
-    IConsumer<ShipmentCreatedEvent>,
-    IConsumer<ShipmentTrackingNumberSetEvent>,
-    IConsumer<SystemWarningCreatedEvent>
-{
-    #region Fields
-
-    private readonly IAdminMenu _adminMenu;
-    private readonly IGenericAttributeService _genericAttributeService;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly ILocalizationService _localizationService;
-    private readonly IShipmentService _shipmentService;
-    private readonly PayPalCommerceServiceManager _serviceManager;
-    private readonly PayPalCommerceSettings _settings;
-    private readonly IPermissionService _permissionService;
-    private readonly IWorkContext _workContext;
-
-    #endregion
-
-    #region Ctor
-
-    public EventConsumer(IAdminMenu adminMenu,
+public class EventConsumer(IAdminMenu adminMenu,
         IGenericAttributeService genericAttributeService,
         IHttpContextAccessor httpContextAccessor,
         ILocalizationService localizationService,
@@ -56,21 +31,15 @@ public class EventConsumer :
         PayPalCommerceSettings settings,
         IPermissionService permissionService,
         IPluginManager<IPlugin> pluginManager,
-        IWorkContext workContext) : base(pluginManager)
-    {
-        _adminMenu = adminMenu;
-        _genericAttributeService = genericAttributeService;
-        _httpContextAccessor = httpContextAccessor;
-        _localizationService = localizationService;
-        _shipmentService = shipmentService;
-        _serviceManager = serviceManager;
-        _settings = settings;
-        _permissionService = permissionService;
-        _workContext = workContext;
-    }
-
-    #endregion
-
+        IWorkContext workContext) :
+    BaseAdminMenuCreatedEventConsumer(pluginManager),
+    IConsumer<CustomerPermanentlyDeleted>,
+    IConsumer<ModelPreparedEvent<BaseNopModel>>,
+    IConsumer<ModelReceivedEvent<BaseNopModel>>,
+    IConsumer<ShipmentCreatedEvent>,
+    IConsumer<ShipmentTrackingNumberSetEvent>,
+    IConsumer<SystemWarningCreatedEvent>
+{
     #region Utilities
 
     /// <summary>
@@ -82,7 +51,7 @@ public class EventConsumer :
     /// </returns>
     protected override async Task<bool> CheckAccessAsync()
     {
-        return await _permissionService.AuthorizeAsync(StandardPermission.Configuration.MANAGE_PAYMENT_METHODS);
+        return await permissionService.AuthorizeAsync(StandardPermission.Configuration.MANAGE_PAYMENT_METHODS);
     }
 
     /// <summary>
@@ -101,7 +70,7 @@ public class EventConsumer :
         {
             Visible = true,
             SystemName = descriptor.SystemName,
-            Title = await _localizationService.GetLocalizedFriendlyNameAsync(plugin, (await _workContext.GetWorkingLanguageAsync()).Id),
+            Title = await localizationService.GetLocalizedFriendlyNameAsync(plugin, (await workContext.GetWorkingLanguageAsync()).Id),
             IconClass = "far fa-dot-circle",
             ChildNodes = new List<AdminMenuItem>
             {
@@ -109,16 +78,16 @@ public class EventConsumer :
                 {
                     Visible = true,
                     SystemName = $"{PayPalCommerceDefaults.SystemName} Configuration",
-                    Title = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Configuration"),
+                    Title = await localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Configuration"),
                     Url = plugin.GetConfigurationPageUrl(),
                     IconClass = "far fa-circle"
                 },
                 new()
                 {
-                    Visible = _settings.UseSandbox || _settings.ConfiguratorSupported,
+                    Visible = settings.UseSandbox || settings.ConfiguratorSupported,
                     SystemName = $"{PayPalCommerceDefaults.SystemName} Pay Later",
-                    Title = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.PayLater"),
-                    Url = _adminMenu.GetMenuItemUrl("PayPalCommerce", "PayLater"),
+                    Title = await localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.PayLater"),
+                    Url = adminMenu.GetMenuItemUrl("PayPalCommerce", "PayLater"),
                     IconClass = "far fa-circle"
                 }
             }
@@ -137,7 +106,7 @@ public class EventConsumer :
     public async Task HandleEventAsync(CustomerPermanentlyDeleted eventMessage)
     {
         //delete customer's payment tokens
-        await _serviceManager.DeletePaymentTokensAsync(_settings, eventMessage.CustomerId);
+        await serviceManager.DeletePaymentTokensAsync(settings, eventMessage.CustomerId);
     }
 
     /// <summary>
@@ -154,12 +123,12 @@ public class EventConsumer :
         if (eventMessage.Model is not CustomerNavigationModel navigationModel)
             return;
 
-        var (active, _) = await _serviceManager.IsActiveAsync(_settings);
+        var (active, _) = await serviceManager.IsActiveAsync(settings);
         if (!active)
             return;
 
-        var (tokens, _) = await _serviceManager.GetPaymentTokensAsync(_settings);
-        if (!_settings.UseVault && !tokens.Any())
+        var (tokens, _) = await serviceManager.GetPaymentTokensAsync(settings);
+        if (!settings.UseVault && !tokens.Any())
             return;
 
         //add a new menu item in the customer navigation
@@ -170,7 +139,7 @@ public class EventConsumer :
             RouteName = PayPalCommerceDefaults.Route.PaymentTokens,
             ItemClass = "paypal-payment-tokens",
             Tab = PayPalCommerceDefaults.PaymentTokensMenuTab,
-            Title = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.PaymentTokens")
+            Title = await localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.PaymentTokens")
         });
     }
 
@@ -184,24 +153,24 @@ public class EventConsumer :
         if (eventMessage.Model is not ShipmentModel shipmentModel)
             return;
 
-        if (!PayPalCommerceServiceManager.IsConnected(_settings))
+        if (!PayPalCommerceServiceManager.IsConnected(settings))
             return;
 
-        if (!_settings.UseShipmentTracking)
+        if (!settings.UseShipmentTracking)
             return;
 
         //save specified shipment carrier
-        var (exists, carrier) = await _httpContextAccessor.HttpContext.Request.TryGetFormValueAsync(PayPalCommerceDefaults.ShipmentCarrierAttribute);
+        var (exists, carrier) = await httpContextAccessor.HttpContext.Request.TryGetFormValueAsync(PayPalCommerceDefaults.ShipmentCarrierAttribute);
         if (exists)
         {
-            var shipment = await _shipmentService.GetShipmentByIdAsync(shipmentModel.Id);
+            var shipment = await shipmentService.GetShipmentByIdAsync(shipmentModel.Id);
             if (shipment is not null)
-                await _genericAttributeService.SaveAttributeAsync(shipment, PayPalCommerceDefaults.ShipmentCarrierAttribute, carrier);
+                await genericAttributeService.SaveAttributeAsync(shipment, PayPalCommerceDefaults.ShipmentCarrierAttribute, carrier);
             else if (!string.IsNullOrEmpty(carrier))
             {
                 //when we add a new shipping, it's not in the db yet and we cannot save a generic attribute to it,
                 //so we temporarily store the data in the context, we'll move it to the attribute later during the same request
-                _httpContextAccessor.HttpContext.Items.TryAdd(PayPalCommerceDefaults.ShipmentCarrierAttribute, carrier);
+                httpContextAccessor.HttpContext.Items.TryAdd(PayPalCommerceDefaults.ShipmentCarrierAttribute, carrier);
             }
         }
     }
@@ -213,16 +182,16 @@ public class EventConsumer :
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(ShipmentCreatedEvent eventMessage)
     {
-        if (!PayPalCommerceServiceManager.IsConnected(_settings))
+        if (!PayPalCommerceServiceManager.IsConnected(settings))
             return;
 
-        if (!_settings.UseShipmentTracking || eventMessage.Shipment is null)
+        if (!settings.UseShipmentTracking || eventMessage.Shipment is null)
             return;
 
         //move the saved data from context to the generic attribute
-        if (_httpContextAccessor.HttpContext.Items.TryGetValue(PayPalCommerceDefaults.ShipmentCarrierAttribute, out var carrier))
+        if (httpContextAccessor.HttpContext.Items.TryGetValue(PayPalCommerceDefaults.ShipmentCarrierAttribute, out var carrier))
         {
-            await _genericAttributeService
+            await genericAttributeService
                 .SaveAttributeAsync(eventMessage.Shipment, PayPalCommerceDefaults.ShipmentCarrierAttribute, carrier.ToString());
         }
     }
@@ -234,13 +203,13 @@ public class EventConsumer :
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(ShipmentTrackingNumberSetEvent eventMessage)
     {
-        if (!PayPalCommerceServiceManager.IsConnected(_settings))
+        if (!PayPalCommerceServiceManager.IsConnected(settings))
             return;
 
-        if (!_settings.UseShipmentTracking)
+        if (!settings.UseShipmentTracking)
             return;
 
-        await _serviceManager.SetTrackingAsync(_settings, eventMessage.Shipment);
+        await serviceManager.SetTrackingAsync(settings, eventMessage.Shipment);
     }
 
     /// <summary>
@@ -250,14 +219,14 @@ public class EventConsumer :
     /// <returns>A task that represents the asynchronous operation</returns>
     public Task HandleEventAsync(SystemWarningCreatedEvent eventMessage)
     {
-        if (!PayPalCommerceServiceManager.IsConnected(_settings))
+        if (!PayPalCommerceServiceManager.IsConnected(settings))
             return Task.CompletedTask;
 
-        if (!_settings.MerchantIdRequired)
+        if (!settings.MerchantIdRequired)
             return Task.CompletedTask;
 
         //the plugin was updated, but no merchant ID was specified
-        var warning = _settings.SetCredentialsManually
+        var warning = settings.SetCredentialsManually
             ? "PayPal Commerce plugin. Merchant ID is required for payments, please specify it on the plugin configuration page"
             : "PayPal Commerce plugin. PayPal account ID of the merchant was not set correctly when updating the plugin. " +
                 "You should either complete onboarding process again on the plugin configuration page or " +

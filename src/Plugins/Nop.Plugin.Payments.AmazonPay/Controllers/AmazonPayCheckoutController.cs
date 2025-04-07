@@ -7,50 +7,33 @@ using Nop.Web.Controllers;
 namespace Nop.Plugin.Payments.AmazonPay.Controllers;
 
 [AutoValidateAntiforgeryToken]
-public class AmazonPayCheckoutController : BasePublicController
+public class AmazonPayCheckoutController(AmazonPayCheckoutService amazonPayCheckoutService,
+        INotificationService notificationService) : BasePublicController
 {
-    #region Fields
-
-    private readonly AmazonPayCheckoutService _amazonPayCheckoutService;
-    private readonly INotificationService _notificationService;
-
-    #endregion
-
-    #region Ctor
-
-    public AmazonPayCheckoutController(AmazonPayCheckoutService amazonPayCheckoutService,
-        INotificationService notificationService)
-    {
-        _amazonPayCheckoutService = amazonPayCheckoutService;
-        _notificationService = notificationService;
-    }
-
-    #endregion
-
     #region Methods
 
     public async Task<IActionResult> Confirm()
     {
         try
         {
-            await _amazonPayCheckoutService.ReadAndSaveCheckoutSessionIdAsync();
+            await amazonPayCheckoutService.ReadAndSaveCheckoutSessionIdAsync();
 
             //validation
-            var cart = await _amazonPayCheckoutService.GetCartAsync();
+            var cart = await amazonPayCheckoutService.GetCartAsync();
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
-            if (!await _amazonPayCheckoutService.IsAllowedToCheckoutAsync())
+            if (!await amazonPayCheckoutService.IsAllowedToCheckoutAsync())
                 return Challenge();
 
             //model
-            var model = await _amazonPayCheckoutService.PrepareConfirmOrderModelAsync(cart);
+            var model = await amazonPayCheckoutService.PrepareConfirmOrderModelAsync(cart);
 
             return View("~/Plugins/Payments.AmazonPay/Views/Confirm.cshtml", model);
         }
         catch (Exception exception)
         {
-            _notificationService.ErrorNotification(exception.Message);
+            notificationService.ErrorNotification(exception.Message);
 
             return RedirectToRoute("ShoppingCart");
         }
@@ -62,38 +45,38 @@ public class AmazonPayCheckoutController : BasePublicController
         try
         {
             //validation
-            var cart = await _amazonPayCheckoutService.GetCartAsync();
+            var cart = await amazonPayCheckoutService.GetCartAsync();
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
-            if (!await _amazonPayCheckoutService.IsAllowedToCheckoutAsync())
+            if (!await amazonPayCheckoutService.IsAllowedToCheckoutAsync())
                 return Challenge();
 
-            if (!await _amazonPayCheckoutService.ShoppingCartRequiresShippingAsync(cart))
-                await _amazonPayCheckoutService.SetShippingMethodToNullAsync();
+            if (!await amazonPayCheckoutService.ShoppingCartRequiresShippingAsync(cart))
+                await amazonPayCheckoutService.SetShippingMethodToNullAsync();
             else
             {
-                var success = await _amazonPayCheckoutService.SetShippingMethodAsync(cart, shippingoption);
+                var success = await amazonPayCheckoutService.SetShippingMethodAsync(cart, shippingoption);
 
                 if (!success)
                     return RedirectToAction("Confirm");
             }
 
-            var scWarnings = await _amazonPayCheckoutService.GetShoppingCartWarningsAsync(cart);
+            var scWarnings = await amazonPayCheckoutService.GetShoppingCartWarningsAsync(cart);
             if (!string.IsNullOrEmpty(scWarnings))
             {
-                _notificationService.WarningNotification(string.Join("<br />", scWarnings));
+                notificationService.WarningNotification(string.Join("<br />", scWarnings));
 
                 return RedirectToRoute("ShoppingCart");
             }
 
-            var url = await _amazonPayCheckoutService.UpdateCheckoutSessionAsync();
+            var url = await amazonPayCheckoutService.UpdateCheckoutSessionAsync();
 
             return Redirect(url);
         }
         catch (Exception exception)
         {
-            _notificationService.ErrorNotification(exception.Message);
+            notificationService.ErrorNotification(exception.Message);
 
             return RedirectToRoute("ShoppingCart");
         }
@@ -102,7 +85,7 @@ public class AmazonPayCheckoutController : BasePublicController
     [HttpPost]
     public async Task<IActionResult> GetPaymentInfo(int placement)
     {
-        var (payload, signature, amount) = await _amazonPayCheckoutService.CreateCheckoutSessionAsync((ButtonPlacement)placement);
+        var (payload, signature, amount) = await amazonPayCheckoutService.CreateCheckoutSessionAsync((ButtonPlacement)placement);
 
         if (string.IsNullOrEmpty(payload))
             return ErrorJson($"{AmazonPayDefaults.PluginSystemName} error: Payload creation failed");
@@ -117,16 +100,16 @@ public class AmazonPayCheckoutController : BasePublicController
     {
         try
         {
-            var cart = await _amazonPayCheckoutService.GetCartAsync();
+            var cart = await amazonPayCheckoutService.GetCartAsync();
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
-            var (order, warnings, model) = await _amazonPayCheckoutService.CompleteCheckoutAsync();
+            var (order, warnings, model) = await amazonPayCheckoutService.CompleteCheckoutAsync();
 
             if (order == null)
             {
                 if (warnings.Any())
-                    _notificationService.WarningNotification(string.Join("<br />", warnings));
+                    notificationService.WarningNotification(string.Join("<br />", warnings));
 
                 return RedirectToRoute("ShoppingCart");
             }
@@ -135,7 +118,7 @@ public class AmazonPayCheckoutController : BasePublicController
         }
         catch (Exception exception)
         {
-            _notificationService.ErrorNotification(exception.Message);
+            notificationService.ErrorNotification(exception.Message);
 
             return RedirectToRoute("ShoppingCart");
         }

@@ -8,11 +8,9 @@ namespace Nop.Core.Caching;
 /// <remarks>
 /// This class should be registered on IoC as singleton instance
 /// </remarks>
-public partial class SynchronizedMemoryCacheManager : MemoryCacheManager
-{
-    public SynchronizedMemoryCacheManager(AppSettings appSettings,
+public partial class SynchronizedMemoryCacheManager(AppSettings appSettings,
         ISynchronizedMemoryCache memoryCache,
-        ICacheKeyManager cacheKeyManager) : base(appSettings, memoryCache, cacheKeyManager)
-    {
-    }
+        ICacheKeyManager cacheKeyManager) 
+    : MemoryCacheManager(appSettings, memoryCache, cacheKeyManager)
+{
 }

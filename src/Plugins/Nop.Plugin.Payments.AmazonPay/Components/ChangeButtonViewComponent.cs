@@ -11,26 +11,9 @@ namespace Nop.Plugin.Payments.AmazonPay.Components;
 /// <summary>
 /// Represents the view component to display change button
 /// </summary>
-public class ChangeButtonViewComponent : NopViewComponent
+public class ChangeButtonViewComponent(AmazonPayApiService amazonPayApiService,
+        AmazonPayCheckoutService amazonPayCheckoutService) : NopViewComponent
 {
-    #region Fields
-
-    private readonly AmazonPayApiService _amazonPayApiService;
-    private readonly AmazonPayCheckoutService _amazonPayCheckoutService;
-
-    #endregion
-
-    #region Ctor
-
-    public ChangeButtonViewComponent(AmazonPayApiService amazonPayApiService,
-        AmazonPayCheckoutService amazonPayCheckoutService)
-    {
-        _amazonPayApiService = amazonPayApiService;
-        _amazonPayCheckoutService = amazonPayCheckoutService;
-    }
-
-    #endregion
-
     #region Methods
 
     /// <summary>
@@ -56,14 +39,14 @@ public class ChangeButtonViewComponent : NopViewComponent
             return Content(string.Empty);
 
         //ensure that plugin is active and configured
-        if (!await _amazonPayApiService.IsActiveAndConfiguredAsync())
+        if (!await amazonPayApiService.IsActiveAndConfiguredAsync())
             return Content(string.Empty);
 
         var routeName = HttpContext.GetEndpoint()?.Metadata.GetMetadata<RouteNameMetadata>()?.RouteName;
         if (routeName == null || routeName != AmazonPayDefaults.ConfirmRouteName)
             return Content(string.Empty);
 
-        model.CheckoutSessionId = await _amazonPayCheckoutService.GetCheckoutSessionIdAsync();
+        model.CheckoutSessionId = await amazonPayCheckoutService.GetCheckoutSessionIdAsync();
 
         return View("~/Plugins/Payments.AmazonPay/Views/ChangeLink.cshtml", model);
     }

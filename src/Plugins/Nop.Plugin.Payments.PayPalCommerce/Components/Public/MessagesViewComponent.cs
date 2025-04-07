@@ -12,29 +12,10 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Components.Public;
 /// <summary>
 /// Represents the view component to display Pay Later messages in the public store
 /// </summary>
-public class MessagesViewComponent : NopViewComponent
-{
-    #region Fields
-
-    private readonly PayPalCommerceModelFactory _modelFactory;
-    private readonly PayPalCommerceServiceManager _serviceManager;
-    private readonly PayPalCommerceSettings _settings;
-
-    #endregion
-
-    #region Ctor
-
-    public MessagesViewComponent(PayPalCommerceModelFactory modelFactory,
+public class MessagesViewComponent(PayPalCommerceModelFactory modelFactory,
         PayPalCommerceServiceManager serviceManager,
-        PayPalCommerceSettings settings)
-    {
-        _modelFactory = modelFactory;
-        _serviceManager = serviceManager;
-        _settings = settings;
-    }
-
-    #endregion
-
+        PayPalCommerceSettings settings) : NopViewComponent
+{
     #region Methods
 
     /// <summary>
@@ -48,14 +29,14 @@ public class MessagesViewComponent : NopViewComponent
     /// </returns>
     public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
     {
-        var (active, _) = await _serviceManager.IsActiveAsync(_settings);
+        var (active, _) = await serviceManager.IsActiveAsync(settings);
         if (!active)
             return Content(string.Empty);
 
         if (!widgetZone.Equals(PublicWidgetZones.OrderSummaryTotals))
             return Content(string.Empty);
 
-        if (!_settings.UseSandbox && !_settings.ConfiguratorSupported)
+        if (!settings.UseSandbox && !settings.ConfiguratorSupported)
             return Content(string.Empty);
 
         //get messages placement
@@ -70,7 +51,7 @@ public class MessagesViewComponent : NopViewComponent
         //load script only on checkout pages (excluding payment method page) to avoid double loading
         var loadScript = !isCartPage && !isPaymentMethodPage;
         var placement = isCartPage ? ButtonPlacement.Cart : ButtonPlacement.PaymentMethod;
-        var model = await _modelFactory.PrepareMessagesModelAsync(placement, loadScript);
+        var model = await modelFactory.PrepareMessagesModelAsync(placement, loadScript);
 
         return View("~/Plugins/Payments.PayPalCommerce/Views/Public/_Messages.cshtml", model);
     }

@@ -11,39 +11,18 @@ using Nop.Web.Framework.Mvc.Filters;
 namespace Nop.Plugin.Payments.PayPalCommerce.Controllers;
 
 [AutoValidateAntiforgeryToken]
-public class PayPalCommercePublicController : BasePublicController
-{
-    #region Fields
-
-    private readonly ILocalizationService _localizationService;
-    private readonly INotificationService _notificationService;
-    private readonly IWebHelper _webHelper;
-    private readonly PayPalCommerceModelFactory _modelFactory;
-
-    #endregion
-
-    #region Ctor
-
-    public PayPalCommercePublicController(ILocalizationService localizationService,
+public class PayPalCommercePublicController(ILocalizationService localizationService,
         INotificationService notificationService,
         IWebHelper webHelper,
-        PayPalCommerceModelFactory modelFactory)
-    {
-        _localizationService = localizationService;
-        _notificationService = notificationService;
-        _webHelper = webHelper;
-        _modelFactory = modelFactory;
-    }
-
-    #endregion
-
+        PayPalCommerceModelFactory modelFactory) : BasePublicController
+{
     #region Methods
 
     #region Checkout
 
     public async Task<IActionResult> PluginPaymentInfo()
     {
-        var model = await _modelFactory.PrepareCheckoutPaymentInfoModelAsync();
+        var model = await modelFactory.PrepareCheckoutPaymentInfoModelAsync();
 
         return View("~/Plugins/Payments.PayPalCommerce/Views/Public/PluginPaymentInfo.cshtml", model);
     }
@@ -51,7 +30,7 @@ public class PayPalCommercePublicController : BasePublicController
     [CheckLanguageSeoCode(ignore: true)]
     public async Task<IActionResult> ValidateShoppingCart()
     {
-        var warnings = await _modelFactory.GetShoppingCartWarningsAsync();
+        var warnings = await modelFactory.GetShoppingCartWarningsAsync();
         if (warnings?.Any() ?? false)
             return ErrorJson(warnings.ToArray());
 
@@ -61,7 +40,7 @@ public class PayPalCommercePublicController : BasePublicController
     [HttpPost]
     public async Task<IActionResult> CreateOrder(int placement, string paymentSource, int cardId, bool saveCard)
     {
-        var model = await _modelFactory.PrepareOrderModelAsync((ButtonPlacement)placement, null, paymentSource, cardId, saveCard);
+        var model = await modelFactory.PrepareOrderModelAsync((ButtonPlacement)placement, null, paymentSource, cardId, saveCard);
         if (model.LoginIsRequired)
             return Json(new { redirect = Url.RouteUrl("Login", new { returnUrl = Url.RouteUrl(PayPalCommerceDefaults.Route.ShoppingCart) }) });
 
@@ -81,7 +60,7 @@ public class PayPalCommercePublicController : BasePublicController
     [HttpPost]
     public async Task<IActionResult> GetOrderStatus(int placement, string orderId)
     {
-        var model = await _modelFactory.PrepareOrderModelAsync((ButtonPlacement)placement, orderId, null, null, false);
+        var model = await modelFactory.PrepareOrderModelAsync((ButtonPlacement)placement, orderId, null, null, false);
         if (!string.IsNullOrEmpty(model.Error))
             return ErrorJson(model.Error);
 
@@ -91,7 +70,7 @@ public class PayPalCommercePublicController : BasePublicController
     [HttpPost]
     public async Task<IActionResult> UpdateOrderShipping(OrderShippingModel model)
     {
-        model = await _modelFactory.PrepareOrderShippingModelAsync(model);
+        model = await modelFactory.PrepareOrderShippingModelAsync(model);
         if (!string.IsNullOrEmpty(model.Error))
             return ErrorJson(model.Error);
 
@@ -101,7 +80,7 @@ public class PayPalCommercePublicController : BasePublicController
     [HttpPost]
     public async Task<IActionResult> ApproveOrder(string orderId, string liabilityShift)
     {
-        var model = await _modelFactory.PrepareOrderApprovedModelAsync(orderId, liabilityShift);
+        var model = await modelFactory.PrepareOrderApprovedModelAsync(orderId, liabilityShift);
         if (model.LoginIsRequired)
             return Json(new { redirect = Url.RouteUrl("Login", new { returnUrl = Url.RouteUrl(PayPalCommerceDefaults.Route.ShoppingCart) }) });
 
@@ -121,7 +100,7 @@ public class PayPalCommercePublicController : BasePublicController
         }
 
         //or pay it right now
-        var completedModel = await _modelFactory.PrepareOrderCompletedModelAsync(orderId, liabilityShift);
+        var completedModel = await modelFactory.PrepareOrderCompletedModelAsync(orderId, liabilityShift);
         if (!string.IsNullOrEmpty(completedModel.Error))
             return ErrorJson(completedModel.Error);
 
@@ -131,9 +110,9 @@ public class PayPalCommercePublicController : BasePublicController
     public async Task<IActionResult> ConfirmOrder(string orderId, string token, string liabilityShift, bool approve)
     {
         if (string.IsNullOrEmpty(liabilityShift))
-            liabilityShift = _webHelper.QueryString<string>("liability_shift");
+            liabilityShift = webHelper.QueryString<string>("liability_shift");
 
-        var model = await _modelFactory.PrepareOrderConfirmModelAsync(orderId, token, liabilityShift, approve);
+        var model = await modelFactory.PrepareOrderConfirmModelAsync(orderId, token, liabilityShift, approve);
         if (model.LoginIsRequired)
             return RedirectToRoute("Login", new { returnUrl = Url.RouteUrl(PayPalCommerceDefaults.Route.ShoppingCart) });
 
@@ -141,7 +120,7 @@ public class PayPalCommercePublicController : BasePublicController
             return RedirectToRoute(PayPalCommerceDefaults.Route.ShoppingCart);
 
         if (!string.IsNullOrEmpty(model.Error))
-            _notificationService.ErrorNotification(model.Error);
+            notificationService.ErrorNotification(model.Error);
 
         return View("~/Plugins/Payments.PayPalCommerce/Views/Public/ConfirmOrder.cshtml", model);
     }
@@ -150,7 +129,7 @@ public class PayPalCommercePublicController : BasePublicController
     [HttpPost]
     public async Task<IActionResult> ConfirmOrderPost(string orderId, string orderGuid, string liabilityShift, bool captchaValid)
     {
-        var model = await _modelFactory.PrepareOrderConfirmModelAsync(orderId, orderGuid, null, false);
+        var model = await modelFactory.PrepareOrderConfirmModelAsync(orderId, orderGuid, null, false);
         if (model.LoginIsRequired)
             return RedirectToRoute("Login", new { returnUrl = Url.RouteUrl(PayPalCommerceDefaults.Route.ShoppingCart) });
 
@@ -158,24 +137,24 @@ public class PayPalCommercePublicController : BasePublicController
             return RedirectToRoute(PayPalCommerceDefaults.Route.ShoppingCart);
 
         if (!string.IsNullOrEmpty(model.Error))
-            _notificationService.ErrorNotification(model.Error);
+            notificationService.ErrorNotification(model.Error);
 
         if (model.DisplayCaptcha && !captchaValid)
         {
-            model.Warnings.Add(await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
+            model.Warnings.Add(await localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
             return View("~/Plugins/Payments.PayPalCommerce/Views/Public/ConfirmOrder.cshtml", model);
         }
 
-        var completedModel = await _modelFactory.PrepareOrderCompletedModelAsync(orderId, liabilityShift);
+        var completedModel = await modelFactory.PrepareOrderCompletedModelAsync(orderId, liabilityShift);
 
         if (!string.IsNullOrEmpty(completedModel.Error))
         {
-            _notificationService.ErrorNotification(completedModel.Error);
+            notificationService.ErrorNotification(completedModel.Error);
             return View("~/Plugins/Payments.PayPalCommerce/Views/Public/ConfirmOrder.cshtml", model);
         }
 
         if (!string.IsNullOrEmpty(completedModel.Warning))
-            _notificationService.ErrorNotification(completedModel.Warning);
+            notificationService.ErrorNotification(completedModel.Warning);
 
         return RedirectToRoute(PayPalCommerceDefaults.Route.CheckoutCompleted, new { orderId = completedModel.OrderId });
     }
@@ -183,7 +162,7 @@ public class PayPalCommercePublicController : BasePublicController
     [HttpPost]
     public async Task<IActionResult> AppleTransactionInfo(int placement)
     {
-        var model = await _modelFactory.PrepareApplePayModelAsync((ButtonPlacement)placement);
+        var model = await modelFactory.PrepareApplePayModelAsync((ButtonPlacement)placement);
         if (model.LoginIsRequired)
             return Json(new { redirect = Url.RouteUrl("Login", new { returnUrl = Url.RouteUrl(PayPalCommerceDefaults.Route.ShoppingCart) }) });
 
@@ -239,7 +218,7 @@ public class PayPalCommercePublicController : BasePublicController
     [HttpPost]
     public async Task<IActionResult> UpdateAppleShipping(ApplePayShippingModel model)
     {
-        model = await _modelFactory.PrepareApplePayShippingModelAsync(model);
+        model = await modelFactory.PrepareApplePayShippingModelAsync(model);
         if (!string.IsNullOrEmpty(model.Error))
             return ErrorJson(model.Error);
 
@@ -261,7 +240,7 @@ public class PayPalCommercePublicController : BasePublicController
     [HttpPost]
     public async Task<IActionResult> GoogleTransactionInfo(int placement)
     {
-        var model = await _modelFactory.PrepareGooglePayModelAsync((ButtonPlacement)placement);
+        var model = await modelFactory.PrepareGooglePayModelAsync((ButtonPlacement)placement);
         if (model.LoginIsRequired)
             return Json(new { redirect = Url.RouteUrl("Login", new { returnUrl = Url.RouteUrl(PayPalCommerceDefaults.Route.ShoppingCart) }) });
 
@@ -301,7 +280,7 @@ public class PayPalCommercePublicController : BasePublicController
     [HttpPost]
     public async Task<IActionResult> CheckGoogleShipping(int placement, int? productId)
     {
-        var (shippingIsRequired, error) = await _modelFactory.CheckShippingIsRequiredAsync(productId);
+        var (shippingIsRequired, error) = await modelFactory.CheckShippingIsRequiredAsync(productId);
         if (!string.IsNullOrEmpty(error))
             return ErrorJson(error);
 
@@ -311,7 +290,7 @@ public class PayPalCommercePublicController : BasePublicController
     [HttpPost]
     public async Task<IActionResult> UpdateGoogleShipping(GooglePayShippingModel model)
     {
-        model = await _modelFactory.PrepareGooglePayShippingModelAsync(model);
+        model = await modelFactory.PrepareGooglePayShippingModelAsync(model);
         if (!string.IsNullOrEmpty(model.Error))
             return ErrorJson(model.Error);
 
@@ -350,7 +329,7 @@ public class PayPalCommercePublicController : BasePublicController
     [HttpPost]
     public async Task<IActionResult> CreateSetupToken()
     {
-        var model = await _modelFactory.PrepareSetupTokenModelAsync();
+        var model = await modelFactory.PrepareSetupTokenModelAsync();
         if (model.LoginIsRequired)
             return Json(new { redirect = Url.RouteUrl("Login", new { returnUrl = Url.RouteUrl(PayPalCommerceDefaults.Route.ShoppingCart) }) });
 
@@ -366,10 +345,10 @@ public class PayPalCommercePublicController : BasePublicController
     public async Task<IActionResult> ApproveToken(string approvalTokenId)
     {
         if (string.IsNullOrEmpty(approvalTokenId))
-            approvalTokenId = _webHelper.QueryString<string>("approval_token_id");
+            approvalTokenId = webHelper.QueryString<string>("approval_token_id");
 
         //create new recurring order
-        var orderModel = await _modelFactory.PrepareRecurringOrderModelAsync(approvalTokenId);
+        var orderModel = await modelFactory.PrepareRecurringOrderModelAsync(approvalTokenId);
         if (orderModel.LoginIsRequired)
             return RedirectToRoute("Login", new { returnUrl = Url.RouteUrl(PayPalCommerceDefaults.Route.ShoppingCart) });
 
@@ -378,17 +357,17 @@ public class PayPalCommercePublicController : BasePublicController
 
         if (!string.IsNullOrEmpty(orderModel.Error))
         {
-            _notificationService.ErrorNotification(orderModel.Error);
+            notificationService.ErrorNotification(orderModel.Error);
             return RedirectToRoute(PayPalCommerceDefaults.Route.ShoppingCart);
         }
 
         //order is created, let's approve it
         var liabilityShift = string.Empty;
-        var approvedModel = await _modelFactory.PrepareOrderApprovedModelAsync(orderModel.OrderId, liabilityShift);
+        var approvedModel = await modelFactory.PrepareOrderApprovedModelAsync(orderModel.OrderId, liabilityShift);
 
         if (!string.IsNullOrEmpty(approvedModel.Error))
         {
-            _notificationService.ErrorNotification(approvedModel.Error);
+            notificationService.ErrorNotification(approvedModel.Error);
             return RedirectToRoute(PayPalCommerceDefaults.Route.ShoppingCart);
         }
 
@@ -397,10 +376,10 @@ public class PayPalCommercePublicController : BasePublicController
             return RedirectToRoute(PayPalCommerceDefaults.Route.ConfirmOrder, new { orderId = approvedModel.OrderId, liabilityShift = liabilityShift });
 
         //or pay it right now
-        var completedModel = await _modelFactory.PrepareOrderCompletedModelAsync(orderModel.OrderId, liabilityShift);
+        var completedModel = await modelFactory.PrepareOrderCompletedModelAsync(orderModel.OrderId, liabilityShift);
         if (!string.IsNullOrEmpty(completedModel.Error))
         {
-            _notificationService.ErrorNotification(completedModel.Error);
+            notificationService.ErrorNotification(completedModel.Error);
             return RedirectToRoute(PayPalCommerceDefaults.Route.ShoppingCart);
         }
 
@@ -411,12 +390,12 @@ public class PayPalCommercePublicController : BasePublicController
 
     public async Task<IActionResult> PaymentTokens()
     {
-        var model = await _modelFactory.PreparePaymentTokenListModelAsync();
+        var model = await modelFactory.PreparePaymentTokenListModelAsync();
         if (!model.VaultIsEnabled)
             return RedirectToRoute(PayPalCommerceDefaults.Route.CustomerInfo);
 
         if (!string.IsNullOrEmpty(model.Error))
-            _notificationService.ErrorNotification(model.Error);
+            notificationService.ErrorNotification(model.Error);
 
         return View("~/Plugins/Payments.PayPalCommerce/Views/Public/PaymentTokens.cshtml", model);
 
@@ -425,7 +404,7 @@ public class PayPalCommercePublicController : BasePublicController
     [HttpPost]
     public async Task<IActionResult> PaymentTokensDelete(int tokenId)
     {
-        var model = await _modelFactory.PreparePaymentTokenListModelAsync(deleteTokenId: tokenId);
+        var model = await modelFactory.PreparePaymentTokenListModelAsync(deleteTokenId: tokenId);
         if (!model.VaultIsEnabled)
             return Json(new { redirect = Url.RouteUrl(PayPalCommerceDefaults.Route.CustomerInfo) });
 
@@ -438,7 +417,7 @@ public class PayPalCommercePublicController : BasePublicController
     [HttpPost]
     public async Task<IActionResult> PaymentTokensMarkDefault(int tokenId)
     {
-        var model = await _modelFactory.PreparePaymentTokenListModelAsync(defaultTokenId: tokenId);
+        var model = await modelFactory.PreparePaymentTokenListModelAsync(defaultTokenId: tokenId);
         if (!model.VaultIsEnabled)
             return Json(new { redirect = Url.RouteUrl(PayPalCommerceDefaults.Route.CustomerInfo) });
 
@@ -451,7 +430,7 @@ public class PayPalCommercePublicController : BasePublicController
     [HttpPost]
     public async Task<IActionResult> GetSavedCards(int placement)
     {
-        var model = await _modelFactory.PrepareSavedCardListModelAsync((ButtonPlacement)placement);
+        var model = await modelFactory.PrepareSavedCardListModelAsync((ButtonPlacement)placement);
         if (!string.IsNullOrEmpty(model.Error))
             return ErrorJson(model.Error);
 

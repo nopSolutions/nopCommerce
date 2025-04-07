@@ -12,22 +12,11 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services;
 /// <summary>
 /// Represents the HTTP client to request PayPal API
 /// </summary>
-public class PayPalCommerceHttpClient
+public class PayPalCommerceHttpClient(HttpClient httpClient)
 {
     #region Fields
 
-    private readonly HttpClient _httpClient;
-
     private static Dictionary<string, AccessToken> _accessTokens = new();
-
-    #endregion
-
-    #region Ctor
-
-    public PayPalCommerceHttpClient(HttpClient httpClient)
-    {
-        _httpClient = httpClient;
-    }
 
     #endregion
 
@@ -102,8 +91,8 @@ public class PayPalCommerceHttpClient
         try
         {
             var timeout = TimeSpan.FromSeconds(settings.RequestTimeout ?? PayPalCommerceDefaults.RequestTimeout);
-            if (_httpClient.Timeout != timeout)
-                _httpClient.Timeout = timeout;
+            if (httpClient.Timeout != timeout)
+                httpClient.Timeout = timeout;
         }
         catch { }
 
@@ -125,7 +114,7 @@ public class PayPalCommerceHttpClient
         requestMessage.Headers.Add("Prefer", "return=representation");
 
         //execute the request and get a result
-        var httpResponse = await _httpClient.SendAsync(requestMessage);
+        var httpResponse = await httpClient.SendAsync(requestMessage);
         var responseString = await httpResponse.Content.ReadAsStringAsync();
 
         //successful request processing

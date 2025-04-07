@@ -14,35 +14,13 @@ namespace Nop.Plugin.Payments.AmazonPay.Components;
 /// <summary>
 /// Represents a view component to render an additional field on product and category details
 /// </summary>
-public class DoNotUseWithAmazonPayViewComponent : NopViewComponent
-{
-    #region Fields
-
-    private readonly AmazonPayApiService _amazonPayApiService;
-    private readonly ICategoryService _categoryService;
-    private readonly IGenericAttributeService _genericAttributeService;
-    private readonly IPermissionService _permissionService;
-    private readonly IProductService _productService;
-
-    #endregion
-
-    #region Ctor
-
-    public DoNotUseWithAmazonPayViewComponent(AmazonPayApiService amazonPayApiService,
+public class DoNotUseWithAmazonPayViewComponent(AmazonPayApiService amazonPayApiService,
         ICategoryService categoryService,
         IGenericAttributeService genericAttributeService,
         IPermissionService permissionService,
-        IProductService productService)
-    {
-        _amazonPayApiService = amazonPayApiService;
-        _categoryService = categoryService;
-        _genericAttributeService = genericAttributeService;
-        _permissionService = permissionService;
-        _productService = productService;
-    }
-
-    #endregion
-
+        IProductService productService) 
+    : NopViewComponent
+{
     #region Methods
 
     /// <summary>
@@ -61,10 +39,10 @@ public class DoNotUseWithAmazonPayViewComponent : NopViewComponent
             return Content(string.Empty);
 
         //ensure that plugin is active and configured
-        if (!await _amazonPayApiService.IsActiveAndConfiguredAsync())
+        if (!await amazonPayApiService.IsActiveAndConfiguredAsync())
             return Content(string.Empty);
 
-        if (!await _permissionService.AuthorizeAsync(StandardPermission.Configuration.MANAGE_PAYMENT_METHODS))
+        if (!await permissionService.AuthorizeAsync(StandardPermission.Configuration.MANAGE_PAYMENT_METHODS))
             return Content(string.Empty);
 
         //ensure that it's a proper widget zone
@@ -78,14 +56,14 @@ public class DoNotUseWithAmazonPayViewComponent : NopViewComponent
         BaseEntity entity = null;
 
         if (widgetZone.Equals(AdminWidgetZones.ProductDetailsBlock))
-            entity = await _productService.GetProductByIdAsync(entityModel.Id);
+            entity = await productService.GetProductByIdAsync(entityModel.Id);
 
         if (widgetZone.Equals(AdminWidgetZones.CategoryDetailsBlock))
-            entity = await _categoryService.GetCategoryByIdAsync(entityModel.Id);
+            entity = await categoryService.GetCategoryByIdAsync(entityModel.Id);
 
         //try to get previously saved value
         model.DoNotUseWithAmazonPay = entity != null &&
-            await _genericAttributeService.GetAttributeAsync<bool>(entity, AmazonPayDefaults.DoNotUseWithAmazonPayAttributeName);
+            await genericAttributeService.GetAttributeAsync<bool>(entity, AmazonPayDefaults.DoNotUseWithAmazonPayAttributeName);
 
         return View("~/Plugins/Payments.AmazonPay/Views/DoNotUseWithAmazonPay.cshtml", model);
     }

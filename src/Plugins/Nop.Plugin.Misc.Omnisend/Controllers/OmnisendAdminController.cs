@@ -14,40 +14,17 @@ namespace Nop.Plugin.Misc.Omnisend.Controllers;
 [Area(AreaNames.ADMIN)]
 [AuthorizeAdmin]
 [AutoValidateAntiforgeryToken]
-public class OmnisendAdminController : BasePluginController
-{
-    #region Fields
-
-    private readonly ILocalizationService _localizationService;
-    private readonly INotificationService _notificationService;
-    private readonly ISettingService _settingService;
-    private readonly OmnisendService _omnisendService;
-    private readonly OmnisendSettings _omnisendSettings;
-
-    #endregion
-
-    #region Ctor
-
-    public OmnisendAdminController(ILocalizationService localizationService,
+public class OmnisendAdminController(ILocalizationService localizationService,
         INotificationService notificationService,
         ISettingService settingService,
         OmnisendService omnisendService,
-        OmnisendSettings omnisendSettings)
-    {
-        _localizationService = localizationService;
-        _notificationService = notificationService;
-        _settingService = settingService;
-        _omnisendService = omnisendService;
-        _omnisendSettings = omnisendSettings;
-    }
-
-    #endregion
-
+        OmnisendSettings omnisendSettings) : BasePluginController
+{
     #region Utilities
 
     private async Task FillBatchesAsync(ConfigurationModel model)
     {
-        if (!_omnisendSettings.BatchesIds.Any())
+        if (!omnisendSettings.BatchesIds.Any())
             return;
 
         bool needBlock(BatchResponse response, string endpoint)
@@ -57,7 +34,7 @@ public class OmnisendAdminController : BasePluginController
                     StringComparison.InvariantCultureIgnoreCase);
         }
 
-        var batches = await _omnisendService.GetStoredBatchesAsync();
+        var batches = await omnisendService.GetStoredBatchesAsync();
         model.Batches = batches;
 
         model.BlockSyncContacts = model.Batches.Any(p => needBlock(p, OmnisendDefaults.ContactsEndpoint));
@@ -74,8 +51,8 @@ public class OmnisendAdminController : BasePluginController
     {
         var model = new ConfigurationModel
         {
-            ApiKey = _omnisendSettings.ApiKey,
-            UseTracking = _omnisendSettings.UseTracking
+            ApiKey = omnisendSettings.ApiKey,
+            UseTracking = omnisendSettings.UseTracking
         };
 
         await FillBatchesAsync(model);
@@ -90,29 +67,29 @@ public class OmnisendAdminController : BasePluginController
         if (!ModelState.IsValid)
             return await Configure();
 
-        if (_omnisendSettings.ApiKey != model.ApiKey || string.IsNullOrEmpty(_omnisendSettings.BrandId))
+        if (omnisendSettings.ApiKey != model.ApiKey || string.IsNullOrEmpty(omnisendSettings.BrandId))
         {
-            var brandId = await _omnisendService.GetBrandIdAsync(model.ApiKey);
+            var brandId = await omnisendService.GetBrandIdAsync(model.ApiKey);
 
             if (brandId != null)
             {
-                _omnisendSettings.ApiKey = model.ApiKey;
-                _omnisendSettings.BrandId = brandId;
+                omnisendSettings.ApiKey = model.ApiKey;
+                omnisendSettings.BrandId = brandId;
 
-                await _omnisendService.SendCustomerDataAsync();
+                await omnisendService.SendCustomerDataAsync();
             }
         }
 
         //_omnisendSettings.UseTracking = model.UseTracking;
         //recommended not to change this setting
-        _omnisendSettings.UseTracking = true;
+        omnisendSettings.UseTracking = true;
 
-        await _settingService.SaveSettingAsync(_omnisendSettings);
+        await settingService.SaveSettingAsync(omnisendSettings);
 
-        if (string.IsNullOrEmpty(_omnisendSettings.BrandId))
-            _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Plugins.Misc.Omnisend.CantGetBrandId"));
+        if (string.IsNullOrEmpty(omnisendSettings.BrandId))
+            notificationService.ErrorNotification(await localizationService.GetResourceAsync("Plugins.Misc.Omnisend.CantGetBrandId"));
         else
-            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
+            notificationService.SuccessNotification(await localizationService.GetResourceAsync("Admin.Plugins.Saved"));
 
         return await Configure();
     }
@@ -121,10 +98,10 @@ public class OmnisendAdminController : BasePluginController
     [FormValueRequired("sync-contacts")]
     public async Task<IActionResult> SyncContacts()
     {
-        if (!ModelState.IsValid || string.IsNullOrEmpty(_omnisendSettings.BrandId))
+        if (!ModelState.IsValid || string.IsNullOrEmpty(omnisendSettings.BrandId))
             return await Configure();
 
-        await _omnisendService.SyncContactsAsync();
+        await omnisendService.SyncContactsAsync();
 
         return await Configure();
     }
@@ -133,11 +110,11 @@ public class OmnisendAdminController : BasePluginController
     [FormValueRequired("sync-products")]
     public async Task<IActionResult> SyncProducts()
     {
-        if (!ModelState.IsValid || string.IsNullOrEmpty(_omnisendSettings.BrandId))
+        if (!ModelState.IsValid || string.IsNullOrEmpty(omnisendSettings.BrandId))
             return await Configure();
 
-        await _omnisendService.SyncCategoriesAsync();
-        await _omnisendService.SyncProductsAsync();
+        await omnisendService.SyncCategoriesAsync();
+        await omnisendService.SyncProductsAsync();
 
         return await Configure();
     }
@@ -146,11 +123,11 @@ public class OmnisendAdminController : BasePluginController
     [FormValueRequired("sync-orders")]
     public async Task<IActionResult> SyncOrders()
     {
-        if (!ModelState.IsValid || string.IsNullOrEmpty(_omnisendSettings.BrandId))
+        if (!ModelState.IsValid || string.IsNullOrEmpty(omnisendSettings.BrandId))
             return await Configure();
 
-        await _omnisendService.SyncOrdersAsync();
-        await _omnisendService.SyncCartsAsync();
+        await omnisendService.SyncOrdersAsync();
+        await omnisendService.SyncCartsAsync();
 
         return await Configure();
     }

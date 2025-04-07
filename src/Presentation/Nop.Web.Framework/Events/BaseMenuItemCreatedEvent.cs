@@ -5,15 +5,8 @@ namespace Nop.Web.Framework.Events;
 /// <summary>
 /// Represents the base event that occurs after admin menu item create
 /// </summary>
-public abstract partial class BaseMenuItemCreatedEvent
+public abstract partial class BaseMenuItemCreatedEvent(IAdminMenu adminMenu)
 {
-    private readonly IAdminMenu _adminMenu;
-
-    protected BaseMenuItemCreatedEvent(IAdminMenu adminMenu)
-    {
-        _adminMenu = adminMenu;
-    }
-
     /// <summary>
     /// Generates an admin menu item URL 
     /// </summary>
@@ -21,6 +14,6 @@ public abstract partial class BaseMenuItemCreatedEvent
     /// <param name="actionName">The name of the action method</param>
     public virtual string GetMenuItemUrl(string controllerName, string actionName)
     {
-        return _adminMenu.GetMenuItemUrl(controllerName, actionName);
+        return adminMenu.GetMenuItemUrl(controllerName, actionName);
     }
 }

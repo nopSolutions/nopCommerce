@@ -20,26 +20,7 @@ namespace Nop.Plugin.Payments.AmazonPay;
 /// <summary>
 /// Represents Amazon Pay plugin
 /// </summary>
-public class AmazonPayPlugin : BasePlugin, IExternalAuthenticationMethod, IPaymentMethod, IWidgetPlugin
-{
-    #region Fields
-
-    private readonly AmazonPayApiService _amazonPayApiService;
-    private readonly AmazonPayPaymentService _amazonPayPaymentService;
-    private readonly AmazonPaySettings _amazonPaySettings;
-    private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly ILocalizationService _localizationService;
-    private readonly ISettingService _settingService;
-    private readonly IWebHelper _webHelper;
-    private readonly PaymentSettings _paymentSettings;
-    private readonly WidgetSettings _widgetSettings;
-
-    #endregion
-
-    #region Ctor
-
-    public AmazonPayPlugin(AmazonPayApiService amazonPayApiService,
+public class AmazonPayPlugin(AmazonPayApiService amazonPayApiService,
         AmazonPayPaymentService amazonPayPaymentService,
         AmazonPaySettings amazonPaySettings,
         ExternalAuthenticationSettings externalAuthenticationSettings,
@@ -48,22 +29,9 @@ public class AmazonPayPlugin : BasePlugin, IExternalAuthenticationMethod, IPayme
         ISettingService settingService,
         IWebHelper webHelper,
         PaymentSettings paymentSettings,
-        WidgetSettings widgetSettings)
-    {
-        _amazonPayApiService = amazonPayApiService;
-        _amazonPayPaymentService = amazonPayPaymentService;
-        _amazonPaySettings = amazonPaySettings;
-        _externalAuthenticationSettings = externalAuthenticationSettings;
-        _httpContextAccessor = httpContextAccessor;
-        _localizationService = localizationService;
-        _settingService = settingService;
-        _webHelper = webHelper;
-        _paymentSettings = paymentSettings;
-        _widgetSettings = widgetSettings;
-    }
-
-    #endregion
-
+        WidgetSettings widgetSettings) 
+    : BasePlugin, IExternalAuthenticationMethod, IPaymentMethod, IWidgetPlugin
+{
     #region Methods
 
     /// <summary>
@@ -73,7 +41,7 @@ public class AmazonPayPlugin : BasePlugin, IExternalAuthenticationMethod, IPayme
     public override async Task InstallAsync()
     {
         //settings
-        await _settingService.SaveSettingAsync(new AmazonPaySettings
+        await settingService.SaveSettingAsync(new AmazonPaySettings
         {
             SetCredentialsManually = false,
             PaymentRegion = PaymentRegion.Us,
@@ -86,7 +54,7 @@ public class AmazonPayPlugin : BasePlugin, IExternalAuthenticationMethod, IPayme
         });
 
         //locales
-        await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
+        await localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
         {
             ["Enums.Nop.Plugin.Payments.AmazonPay.Enums.ButtonColor.DarkGray"] = "Dark gray",
             ["Enums.Nop.Plugin.Payments.AmazonPay.Enums.ButtonColor.Gold"] = "Gold",
@@ -167,16 +135,16 @@ public class AmazonPayPlugin : BasePlugin, IExternalAuthenticationMethod, IPayme
             ["Plugins.Payments.AmazonPay.SignIn.LinkAccounts.ByEmail"] = "There is already a customer account registered for your email address in this store, you can associate it with your Amazon Pay account, use 'Link accounts' button below"
         });
 
-        if (!_widgetSettings.ActiveWidgetSystemNames.Contains(AmazonPayDefaults.PluginSystemName))
+        if (!widgetSettings.ActiveWidgetSystemNames.Contains(AmazonPayDefaults.PluginSystemName))
         {
-            _widgetSettings.ActiveWidgetSystemNames.Add(AmazonPayDefaults.PluginSystemName);
-            await _settingService.SaveSettingAsync(_widgetSettings);
+            widgetSettings.ActiveWidgetSystemNames.Add(AmazonPayDefaults.PluginSystemName);
+            await settingService.SaveSettingAsync(widgetSettings);
         }
 
-        if (!_externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Contains(AmazonPayDefaults.PluginSystemName))
+        if (!externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Contains(AmazonPayDefaults.PluginSystemName))
         {
-            _externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Add(AmazonPayDefaults.PluginSystemName);
-            await _settingService.SaveSettingAsync(_externalAuthenticationSettings);
+            externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Add(AmazonPayDefaults.PluginSystemName);
+            await settingService.SaveSettingAsync(externalAuthenticationSettings);
         }
 
         await base.InstallAsync();
@@ -188,23 +156,23 @@ public class AmazonPayPlugin : BasePlugin, IExternalAuthenticationMethod, IPayme
     /// <returns>A task that represents the asynchronous operation</returns>
     public override async Task UninstallAsync()
     {
-        if (_widgetSettings.ActiveWidgetSystemNames.Contains(AmazonPayDefaults.PluginSystemName))
+        if (widgetSettings.ActiveWidgetSystemNames.Contains(AmazonPayDefaults.PluginSystemName))
         {
-            _widgetSettings.ActiveWidgetSystemNames.Remove(AmazonPayDefaults.PluginSystemName);
-            await _settingService.SaveSettingAsync(_widgetSettings);
+            widgetSettings.ActiveWidgetSystemNames.Remove(AmazonPayDefaults.PluginSystemName);
+            await settingService.SaveSettingAsync(widgetSettings);
         }
 
-        if (_paymentSettings.ActivePaymentMethodSystemNames.Contains(AmazonPayDefaults.PluginSystemName))
+        if (paymentSettings.ActivePaymentMethodSystemNames.Contains(AmazonPayDefaults.PluginSystemName))
         {
-            _paymentSettings.ActivePaymentMethodSystemNames.Remove(AmazonPayDefaults.PluginSystemName);
-            await _settingService.SaveSettingAsync(_paymentSettings);
+            paymentSettings.ActivePaymentMethodSystemNames.Remove(AmazonPayDefaults.PluginSystemName);
+            await settingService.SaveSettingAsync(paymentSettings);
         }
 
-        await _settingService.DeleteSettingAsync<AmazonPaySettings>();
+        await settingService.DeleteSettingAsync<AmazonPaySettings>();
 
         //locales
-        await _localizationService.DeleteLocaleResourcesAsync("Enums.Nop.Plugin.Payments.AmazonPay.Enums.");
-        await _localizationService.DeleteLocaleResourcesAsync("Plugins.Payments.AmazonPay.");
+        await localizationService.DeleteLocaleResourcesAsync("Enums.Nop.Plugin.Payments.AmazonPay.Enums.");
+        await localizationService.DeleteLocaleResourcesAsync("Plugins.Payments.AmazonPay.");
 
         await base.UninstallAsync();
     }
@@ -271,7 +239,7 @@ public class AmazonPayPlugin : BasePlugin, IExternalAuthenticationMethod, IPayme
     /// </returns>
     public async Task<CapturePaymentResult> CaptureAsync(CapturePaymentRequest capturePaymentRequest)
     {
-        return await _amazonPayPaymentService.CaptureAsync(capturePaymentRequest);
+        return await amazonPayPaymentService.CaptureAsync(capturePaymentRequest);
     }
 
     /// <summary>
@@ -284,7 +252,7 @@ public class AmazonPayPlugin : BasePlugin, IExternalAuthenticationMethod, IPayme
     /// </returns>
     public async Task<RefundPaymentResult> RefundAsync(RefundPaymentRequest refundPaymentRequest)
     {
-        return await _amazonPayPaymentService.RefundAsync(refundPaymentRequest);
+        return await amazonPayPaymentService.RefundAsync(refundPaymentRequest);
     }
 
     /// <summary>
@@ -297,7 +265,7 @@ public class AmazonPayPlugin : BasePlugin, IExternalAuthenticationMethod, IPayme
     /// </returns>
     public async Task<VoidPaymentResult> VoidAsync(VoidPaymentRequest voidPaymentRequest)
     {
-        return await _amazonPayPaymentService.VoidAsync(voidPaymentRequest);
+        return await amazonPayPaymentService.VoidAsync(voidPaymentRequest);
     }
 
     /// <summary>
@@ -310,7 +278,7 @@ public class AmazonPayPlugin : BasePlugin, IExternalAuthenticationMethod, IPayme
     /// </returns>
     public async Task<ProcessPaymentResult> ProcessRecurringPaymentAsync(ProcessPaymentRequest processPaymentRequest)
     {
-        return await _amazonPayPaymentService.ProcessRecurringPaymentAsync(processPaymentRequest);
+        return await amazonPayPaymentService.ProcessRecurringPaymentAsync(processPaymentRequest);
     }
 
     /// <summary>
@@ -323,7 +291,7 @@ public class AmazonPayPlugin : BasePlugin, IExternalAuthenticationMethod, IPayme
     /// </returns>
     public async Task<CancelRecurringPaymentResult> CancelRecurringPaymentAsync(CancelRecurringPaymentRequest cancelPaymentRequest)
     {
-        return await _amazonPayPaymentService.CancelRecurringPaymentAsync(cancelPaymentRequest);
+        return await amazonPayPaymentService.CancelRecurringPaymentAsync(cancelPaymentRequest);
     }
 
     /// <summary>
@@ -344,7 +312,7 @@ public class AmazonPayPlugin : BasePlugin, IExternalAuthenticationMethod, IPayme
     /// </summary>
     public override string GetConfigurationPageUrl()
     {
-        return $"{_webHelper.GetStoreLocation()}Admin/AmazonPay/Configure";
+        return $"{webHelper.GetStoreLocation()}Admin/AmazonPay/Configure";
     }
 
     /// <summary>
@@ -388,7 +356,7 @@ public class AmazonPayPlugin : BasePlugin, IExternalAuthenticationMethod, IPayme
     /// <returns>View component name</returns>
     Type IExternalAuthenticationMethod.GetPublicViewComponent()
     {
-        if (_amazonPayApiService.IsActiveAndConfiguredAsync().Result)
+        if (amazonPayApiService.IsActiveAndConfiguredAsync().Result)
             return typeof(PaymentInfoViewComponent);
 
         return null;
@@ -400,7 +368,7 @@ public class AmazonPayPlugin : BasePlugin, IExternalAuthenticationMethod, IPayme
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task<string> GetPaymentMethodDescriptionAsync()
     {
-        return await _localizationService.GetResourceAsync("Plugins.Payments.AmazonPay.PaymentMethodDescription");
+        return await localizationService.GetResourceAsync("Plugins.Payments.AmazonPay.PaymentMethodDescription");
     }
 
     /// <summary>
@@ -498,13 +466,13 @@ public class AmazonPayPlugin : BasePlugin, IExternalAuthenticationMethod, IPayme
     {
         get
         {
-            var values = _httpContextAccessor.HttpContext?.Request.RouteValues;
+            var values = httpContextAccessor.HttpContext?.Request.RouteValues;
 
             //checkout
             if (values != null &&
                 values.ContainsKey("controller") &&
                 (values["controller"]?.Equals("Checkout") ?? false) &&
-                _amazonPaySettings.ButtonPlacement.Contains(ButtonPlacement.PaymentMethod))
+                amazonPaySettings.ButtonPlacement.Contains(ButtonPlacement.PaymentMethod))
                 return PaymentMethodType.Standard;
 
             return PaymentMethodType.Button;

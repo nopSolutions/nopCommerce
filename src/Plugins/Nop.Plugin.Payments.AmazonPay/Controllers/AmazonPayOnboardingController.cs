@@ -4,23 +4,8 @@ using Nop.Plugin.Payments.AmazonPay.Services;
 
 namespace Nop.Plugin.Payments.AmazonPay.Controllers;
 
-public class AmazonPayOnboardingController : Controller
+public class AmazonPayOnboardingController(AmazonPayOnboardingService amazonPayOnboardingService) : Controller
 {
-    #region Fields
-
-    private readonly AmazonPayOnboardingService _amazonPayOnboardingService;
-
-    #endregion
-
-    #region Ctor
-
-    public AmazonPayOnboardingController(AmazonPayOnboardingService amazonPayOnboardingService)
-    {
-        _amazonPayOnboardingService = amazonPayOnboardingService;
-    }
-
-    #endregion
-
     #region Methods
 
     [HttpPost]
@@ -31,7 +16,7 @@ public class AmazonPayOnboardingController : Controller
         Response.Headers.TryAdd("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
         Response.Headers.TryAdd("Access-Control-Allow-Headers", "Content-Type, X-CSRF-Token");
 
-        var error = await _amazonPayOnboardingService.AutomaticKeyExchangeAsync(model.Payload);
+        var error = await amazonPayOnboardingService.AutomaticKeyExchangeAsync(model.Payload);
 
         if (string.IsNullOrEmpty(error))
             return Json(new { result = "success" });

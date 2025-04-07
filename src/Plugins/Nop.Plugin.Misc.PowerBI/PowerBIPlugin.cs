@@ -7,23 +7,8 @@ namespace Nop.Plugin.Misc.PowerBI;
 /// <summary>
 /// Represents the Power BI helper plugin
 /// </summary>
-public class PowerBIPlugin : BasePlugin, IMiscPlugin
+public class PowerBIPlugin(IWebHelper webHelper) : BasePlugin, IMiscPlugin
 {
-    #region Fields
-
-    private readonly IWebHelper _webHelper;
-
-    #endregion
-
-    #region Ctor
-
-    public PowerBIPlugin(IWebHelper webHelper)
-    {
-        _webHelper = webHelper;
-    }
-
-    #endregion
-
     #region Methods
 
     /// <summary>
@@ -31,7 +16,7 @@ public class PowerBIPlugin : BasePlugin, IMiscPlugin
     /// </summary>
     public override string GetConfigurationPageUrl()
     {
-        return $"{_webHelper.GetStoreLocation()}Admin/PowerBI/Configure";
+        return $"{webHelper.GetStoreLocation()}Admin/PowerBI/Configure";
     }
 
     /// <summary>

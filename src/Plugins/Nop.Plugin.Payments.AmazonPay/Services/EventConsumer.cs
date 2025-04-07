@@ -21,31 +21,7 @@ namespace Nop.Plugin.Payments.AmazonPay.Services;
 /// <summary>
 /// Represents plugin event consumer
 /// </summary>
-public class EventConsumer :
-    IConsumer<PageRenderingEvent>,
-    IConsumer<ModelPreparedEvent<BaseNopModel>>,
-    IConsumer<ModelReceivedEvent<BaseNopModel>>,
-    IConsumer<CustomerAutoRegisteredByExternalMethodEvent>,
-    IConsumer<ResetCheckoutDataEvent>
-{
-    #region Fields
-
-    private readonly AmazonPayApiService _amazonPayApiService;
-    private readonly AmazonPayCheckoutService _amazonPayCheckoutService;
-    private readonly DisallowedProducts _disallowedProducts;
-    private readonly ICategoryService _categoryService;
-    private readonly ICustomerService _customerService;
-    private readonly IGenericAttributeService _genericAttributeService;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly INopHtmlHelper _nopHtmlHelper;
-    private readonly IPermissionService _permissionService;
-    private readonly IProductService _productService;
-
-    #endregion
-
-    #region Ctor
-
-    public EventConsumer(AmazonPayApiService amazonPayApiService,
+public class EventConsumer(AmazonPayApiService amazonPayApiService,
         AmazonPayCheckoutService amazonPayCheckoutService,
         DisallowedProducts disallowedProducts,
         ICategoryService categoryService,
@@ -54,22 +30,13 @@ public class EventConsumer :
         IHttpContextAccessor httpContextAccessor,
         INopHtmlHelper nopHtmlHelper,
         IPermissionService permissionService,
-        IProductService productService)
-    {
-        _amazonPayApiService = amazonPayApiService;
-        _amazonPayCheckoutService = amazonPayCheckoutService;
-        _disallowedProducts = disallowedProducts;
-        _categoryService = categoryService;
-        _customerService = customerService;
-        _genericAttributeService = genericAttributeService;
-        _httpContextAccessor = httpContextAccessor;
-        _nopHtmlHelper = nopHtmlHelper;
-        _permissionService = permissionService;
-        _productService = productService;
-    }
-
-    #endregion
-
+        IProductService productService) :
+    IConsumer<PageRenderingEvent>,
+    IConsumer<ModelPreparedEvent<BaseNopModel>>,
+    IConsumer<ModelReceivedEvent<BaseNopModel>>,
+    IConsumer<CustomerAutoRegisteredByExternalMethodEvent>,
+    IConsumer<ResetCheckoutDataEvent>
+{
     #region Methods
 
     /// <summary>
@@ -79,17 +46,17 @@ public class EventConsumer :
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(PageRenderingEvent eventMessage)
     {
-        if (!await _amazonPayApiService.IsActiveAndConfiguredAsync())
+        if (!await amazonPayApiService.IsActiveAndConfiguredAsync())
             return;
 
         var routeName = eventMessage.GetRouteName(true) ?? string.Empty;
 
         if (routeName == AmazonPayDefaults.CurrenciesPageRouteName)
-            await _amazonPayApiService.EnsureCurrencyIsValidAsync();
+            await amazonPayApiService.EnsureCurrencyIsValidAsync();
 
         //add js script to one page checkout
         if (routeName == AmazonPayDefaults.OnePageCheckoutRouteName)
-            _nopHtmlHelper.AddScriptParts(ResourceLocation.Footer, _amazonPayApiService.AmazonPayScriptUrl, excludeFromBundle: true);
+            nopHtmlHelper.AddScriptParts(ResourceLocation.Footer, amazonPayApiService.AmazonPayScriptUrl, excludeFromBundle: true);
     }
 
     /// <summary>
@@ -104,12 +71,12 @@ public class EventConsumer :
         if (shoppingCartModel is null && customerAddressListModel is null)
             return;
 
-        if (!await _amazonPayApiService.IsActiveAndConfiguredAsync())
+        if (!await amazonPayApiService.IsActiveAndConfiguredAsync())
             return;
 
         if (shoppingCartModel is not null)
         {
-            var paymentDescriptor = await _amazonPayCheckoutService.GetPaymentDescriptorAsync();
+            var paymentDescriptor = await amazonPayCheckoutService.GetPaymentDescriptorAsync();
             if (string.IsNullOrEmpty(paymentDescriptor) || !string.IsNullOrEmpty(shoppingCartModel.OrderReviewData.PaymentMethod))
                 return;
 
@@ -118,7 +85,7 @@ public class EventConsumer :
 
         if (customerAddressListModel is not null)
         {
-            var addressIds = await _amazonPayCheckoutService.RemoveCustomerAddressesAsync();
+            var addressIds = await amazonPayCheckoutService.RemoveCustomerAddressesAsync();
             customerAddressListModel.Addresses = customerAddressListModel.Addresses
                 .Where(addressModel => !addressIds.Contains(addressModel.Id))
                 .ToList();
@@ -135,21 +102,21 @@ public class EventConsumer :
         //get entity by received model
         var entity = eventMessage.Model switch
         {
-            CategoryModel customerModel => (BaseEntity)await _categoryService.GetCategoryByIdAsync(customerModel.Id),
-            ProductModel productModel => await _productService.GetProductByIdAsync(productModel.Id),
+            CategoryModel customerModel => (BaseEntity)await categoryService.GetCategoryByIdAsync(customerModel.Id),
+            ProductModel productModel => await productService.GetProductByIdAsync(productModel.Id),
             _ => null
         };
 
         if (entity == null)
             return;
 
-        if (!await _amazonPayApiService.IsActiveAndConfiguredAsync())
+        if (!await amazonPayApiService.IsActiveAndConfiguredAsync())
             return;
 
-        if (!await _permissionService.AuthorizeAsync(StandardPermission.Configuration.MANAGE_PAYMENT_METHODS))
+        if (!await permissionService.AuthorizeAsync(StandardPermission.Configuration.MANAGE_PAYMENT_METHODS))
             return;
 
-        var request = _httpContextAccessor.HttpContext?.Request;
+        var request = httpContextAccessor.HttpContext?.Request;
         if (request == null)
             return;
 
@@ -160,9 +127,9 @@ public class EventConsumer :
             //save attribute
             if (bool.TryParse(doNotUseWithAmazonPay.FirstOrDefault(), out var flag))
             {
-                await _genericAttributeService
+                await genericAttributeService
                     .SaveAttributeAsync(entity, AmazonPayDefaults.DoNotUseWithAmazonPayAttributeName, flag);
-                await _disallowedProducts.UpdateDataAsync(entity, flag);
+                await disallowedProducts.UpdateDataAsync(entity, flag);
             }
     }
 
@@ -193,7 +160,7 @@ public class EventConsumer :
         if (!string.IsNullOrEmpty(lastName))
             customer.LastName = lastName;
 
-        await _customerService.UpdateCustomerAsync(customer);
+        await customerService.UpdateCustomerAsync(customer);
     }
 
     /// <summary>
@@ -203,10 +170,10 @@ public class EventConsumer :
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(ResetCheckoutDataEvent eventMessage)
     {
-        if (!await _amazonPayApiService.IsActiveAndConfiguredAsync())
+        if (!await amazonPayApiService.IsActiveAndConfiguredAsync())
             return;
 
-        await _amazonPayCheckoutService.RemoveCustomerAddressesAsync(eventMessage.Customer);
+        await amazonPayCheckoutService.RemoveCustomerAddressesAsync(eventMessage.Customer);
     }
 
     #endregion

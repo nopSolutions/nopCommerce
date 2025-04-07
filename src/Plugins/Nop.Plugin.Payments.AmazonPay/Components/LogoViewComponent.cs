@@ -10,26 +10,9 @@ namespace Nop.Plugin.Payments.AmazonPay.Components;
 /// <summary>
 /// Represents the view component to display logo
 /// </summary>
-public class LogoViewComponent : NopViewComponent
+public class LogoViewComponent(AmazonPayApiService amazonPayApiService,
+        AmazonPaySettings amazonPaySettings) : NopViewComponent
 {
-    #region Fields
-
-    private readonly AmazonPayApiService _amazonPayApiService;
-    private readonly AmazonPaySettings _amazonPaySettings;
-
-    #endregion
-
-    #region Ctor
-
-    public LogoViewComponent(AmazonPayApiService amazonPayApiService,
-        AmazonPaySettings amazonPaySettings)
-    {
-        _amazonPayApiService = amazonPayApiService;
-        _amazonPaySettings = amazonPaySettings;
-    }
-
-    #endregion
-
     #region Methods
 
     /// <summary>
@@ -46,10 +29,10 @@ public class LogoViewComponent : NopViewComponent
         if (!widgetZone.Equals(PublicWidgetZones.Footer))
             return Content(string.Empty);
 
-        if (!await _amazonPayApiService.IsActiveAndConfiguredAsync())
+        if (!await amazonPayApiService.IsActiveAndConfiguredAsync())
             return Content(string.Empty);
 
-        return new HtmlContentViewComponentResult(new HtmlString(_amazonPaySettings.LogoInFooter ?? string.Empty));
+        return new HtmlContentViewComponentResult(new HtmlString(amazonPaySettings.LogoInFooter ?? string.Empty));
     }
 
     #endregion

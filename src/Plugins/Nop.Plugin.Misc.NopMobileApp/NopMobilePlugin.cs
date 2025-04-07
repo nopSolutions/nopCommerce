@@ -7,23 +7,8 @@ namespace Nop.Plugin.Misc.NopMobileApp;
 /// <summary>
 /// Represents the nopCommerce mobile application helper plugin
 /// </summary>
-public class NopMobilePlugin : BasePlugin, IMiscPlugin
+public class NopMobilePlugin(IWebHelper webHelper) : BasePlugin, IMiscPlugin
 {
-    #region Fields
-
-    private readonly IWebHelper _webHelper;
-
-    #endregion
-
-    #region Ctor
-
-    public NopMobilePlugin(IWebHelper webHelper)
-    {
-        _webHelper = webHelper;
-    }
-
-    #endregion
-
     #region Methods
 
     /// <summary>
@@ -31,7 +16,7 @@ public class NopMobilePlugin : BasePlugin, IMiscPlugin
     /// </summary>
     public override string GetConfigurationPageUrl()
     {
-        return $"{_webHelper.GetStoreLocation()}Admin/NopMobileApp/Configure";
+        return $"{webHelper.GetStoreLocation()}Admin/NopMobileApp/Configure";
     }
 
     /// <summary>

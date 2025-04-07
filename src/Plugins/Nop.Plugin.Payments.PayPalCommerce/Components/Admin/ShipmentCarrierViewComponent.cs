@@ -12,32 +12,11 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Components.Admin;
 /// <summary>
 /// Represents the view component to render an additional input on the shipment details page in the admin area
 /// </summary>
-public class ShipmentCarrierViewComponent : NopViewComponent
-{
-    #region Fields
-
-    private readonly IGenericAttributeService _genericAttributeService;
-    private readonly IShipmentService _shipmentService;
-    private readonly PayPalCommerceServiceManager _serviceManager;
-    private readonly PayPalCommerceSettings _settings;
-
-    #endregion
-
-    #region Ctor
-
-    public ShipmentCarrierViewComponent(IGenericAttributeService genericAttributeService,
+public class ShipmentCarrierViewComponent(IGenericAttributeService genericAttributeService,
         IShipmentService shipmentService,
         PayPalCommerceServiceManager serviceManager,
-        PayPalCommerceSettings settings)
-    {
-        _genericAttributeService = genericAttributeService;
-        _shipmentService = shipmentService;
-        _serviceManager = serviceManager;
-        _settings = settings;
-    }
-
-    #endregion
-
+        PayPalCommerceSettings settings) : NopViewComponent
+{
     #region Methods
 
     /// <summary>
@@ -51,11 +30,11 @@ public class ShipmentCarrierViewComponent : NopViewComponent
     /// </returns>
     public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
     {
-        var (active, _) = await _serviceManager.IsActiveAsync(_settings);
+        var (active, _) = await serviceManager.IsActiveAsync(settings);
         if (!active)
             return Content(string.Empty);
 
-        if (!_settings.UseShipmentTracking)
+        if (!settings.UseShipmentTracking)
             return Content(string.Empty);
 
         if (!widgetZone.Equals(AdminWidgetZones.OrderShipmentDetailsButtons) && !widgetZone.Equals(AdminWidgetZones.OrderShipmentAddButtons))
@@ -64,12 +43,12 @@ public class ShipmentCarrierViewComponent : NopViewComponent
         if (additionalData is not ShipmentModel shipmentModel)
             return Content(string.Empty);
 
-        var shipment = await _shipmentService.GetShipmentByIdAsync(shipmentModel.Id);
+        var shipment = await shipmentService.GetShipmentByIdAsync(shipmentModel.Id);
         var model = new ShipmentCarrierModel
         {
             TrackingNumber = shipmentModel.TrackingNumber,
             PayPalCommerceShipmentCarrier = shipment is not null
-                ? await _genericAttributeService.GetAttributeAsync<string>(shipment, PayPalCommerceDefaults.ShipmentCarrierAttribute)
+                ? await genericAttributeService.GetAttributeAsync<string>(shipment, PayPalCommerceDefaults.ShipmentCarrierAttribute)
                 : null
         };
 

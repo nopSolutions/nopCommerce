@@ -8,26 +8,9 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Components.Admin;
 /// <summary>
 /// Represents the view component to display PayPal on the payment methods page in the admin area
 /// </summary>
-public class PaymentMethodViewComponent : NopViewComponent
+public class PaymentMethodViewComponent(PayPalCommerceSettings settings,
+        PayPalCommerceServiceManager serviceManager) : NopViewComponent
 {
-    #region Fields
-
-    private readonly PayPalCommerceSettings _settings;
-    private readonly PayPalCommerceServiceManager _serviceManager;
-
-    #endregion
-
-    #region Ctor
-
-    public PaymentMethodViewComponent(PayPalCommerceSettings settings,
-        PayPalCommerceServiceManager serviceManager)
-    {
-        _settings = settings;
-        _serviceManager = serviceManager;
-    }
-
-    #endregion
-
     #region Methods
 
     /// <summary>
@@ -44,7 +27,7 @@ public class PaymentMethodViewComponent : NopViewComponent
         if (!widgetZone.Equals(AdminWidgetZones.PaymentMethodListTop))
             return Content(string.Empty);
 
-        var (active, _) = await _serviceManager.IsActiveAsync(_settings);
+        var (active, _) = await serviceManager.IsActiveAsync(settings);
 
         return View("~/Plugins/Payments.PayPalCommerce/Views/Admin/_PaymentMethod.cshtml", active);
     }

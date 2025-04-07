@@ -9,23 +9,8 @@ namespace Nop.Plugin.Misc.NopMobileApp.Controllers;
 [AutoValidateAntiforgeryToken]
 [AuthorizeAdmin]
 [Area(AreaNames.ADMIN)]
-public class NopMobileAppController : BasePluginController
+public class NopMobileAppController(IPermissionService permissionService) : BasePluginController
 {
-    #region Fields
-
-    private readonly IPermissionService _permissionService;
-
-    #endregion
-
-    #region Ctor 
-
-    public NopMobileAppController(IPermissionService permissionService)
-    {
-        _permissionService = permissionService;
-    }
-
-    #endregion
-
     #region Methods
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]

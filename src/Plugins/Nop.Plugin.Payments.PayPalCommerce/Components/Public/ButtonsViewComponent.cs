@@ -15,32 +15,11 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Components.Public;
 /// <summary>
 /// Represents the view component to display PayPal buttons in the public store
 /// </summary>
-public class ButtonsViewComponent : NopViewComponent
-{
-    #region Fields
-
-    private readonly IProductService _productService;
-    private readonly PayPalCommerceModelFactory _modelFactory;
-    private readonly PayPalCommerceServiceManager _serviceManager;
-    private readonly PayPalCommerceSettings _settings;
-
-    #endregion
-
-    #region Ctor
-
-    public ButtonsViewComponent(IProductService productService,
+public class ButtonsViewComponent(IProductService productService,
         PayPalCommerceModelFactory modelFactory,
         PayPalCommerceServiceManager serviceManager,
-        PayPalCommerceSettings settings)
-    {
-        _productService = productService;
-        _modelFactory = modelFactory;
-        _serviceManager = serviceManager;
-        _settings = settings;
-    }
-
-    #endregion
-
+        PayPalCommerceSettings settings) : NopViewComponent
+{
     #region Methods
 
     /// <summary>
@@ -54,7 +33,7 @@ public class ButtonsViewComponent : NopViewComponent
     /// </returns>
     public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
     {
-        var (active, _) = await _serviceManager.IsActiveAsync(_settings);
+        var (active, _) = await serviceManager.IsActiveAsync(settings);
         if (!active)
             return Content(string.Empty);
 
@@ -62,26 +41,26 @@ public class ButtonsViewComponent : NopViewComponent
 
         if (widgetZone.Equals(PublicWidgetZones.ProductDetailsAddInfo))
         {
-            if (_settings.DisplayButtonsOnProductDetails)
+            if (settings.DisplayButtonsOnProductDetails)
             {
                 var productId = additionalData is ProductDetailsModel.AddToCartModel product ? (int?)product.ProductId : null;
-                if (productId is null || (await _productService.GetProductByIdAsync(productId ?? 0))?.ParentGroupedProductId == 0)
-                    model = await _modelFactory.PreparePaymentInfoModelAsync(ButtonPlacement.Product, productId);
+                if (productId is null || (await productService.GetProductByIdAsync(productId ?? 0))?.ParentGroupedProductId == 0)
+                    model = await modelFactory.PreparePaymentInfoModelAsync(ButtonPlacement.Product, productId);
             }
         }
         else if (widgetZone.Equals(PublicWidgetZones.OrderSummaryContentBefore))
         {
-            if (_settings.DisplayButtonsOnShoppingCart)
+            if (settings.DisplayButtonsOnShoppingCart)
             {
                 var routeName = HttpContext.GetEndpoint()?.Metadata.GetMetadata<RouteNameMetadata>()?.RouteName;
                 if (routeName == PayPalCommerceDefaults.Route.ShoppingCart)
-                    model = await _modelFactory.PreparePaymentInfoModelAsync(ButtonPlacement.Cart);
+                    model = await modelFactory.PreparePaymentInfoModelAsync(ButtonPlacement.Cart);
             }
         }
         else
         {
-            if (_settings.DisplayButtonsOnPaymentMethod)
-                model = await _modelFactory.PreparePaymentInfoModelAsync(ButtonPlacement.PaymentMethod);
+            if (settings.DisplayButtonsOnPaymentMethod)
+                model = await modelFactory.PreparePaymentInfoModelAsync(ButtonPlacement.PaymentMethod);
         }
 
         if (model?.Cart.IsRecurring is null)

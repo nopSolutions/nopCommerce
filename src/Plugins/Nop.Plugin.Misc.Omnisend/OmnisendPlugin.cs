@@ -16,35 +16,12 @@ namespace Nop.Plugin.Misc.Omnisend;
 /// <summary>
 /// Represents Omnisend plugin
 /// </summary>
-public class OmnisendPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
-{
-    #region Fields
-
-    private readonly IActionContextAccessor _actionContextAccessor;
-    private readonly ILocalizationService _localizationService;
-    private readonly ISettingService _settingService;
-    private readonly IUrlHelperFactory _urlHelperFactory;
-    private readonly WidgetSettings _widgetSettings;
-
-    #endregion
-
-    #region Ctor
-
-    public OmnisendPlugin(IActionContextAccessor actionContextAccessor,
+public class OmnisendPlugin(IActionContextAccessor actionContextAccessor,
         ILocalizationService localizationService,
         ISettingService settingService,
         IUrlHelperFactory urlHelperFactory,
-        WidgetSettings widgetSettings)
-    {
-        _actionContextAccessor = actionContextAccessor;
-        _localizationService = localizationService;
-        _settingService = settingService;
-        _urlHelperFactory = urlHelperFactory;
-        _widgetSettings = widgetSettings;
-    }
-
-    #endregion
-
+        WidgetSettings widgetSettings) : BasePlugin, IMiscPlugin, IWidgetPlugin
+{
     #region Methods
 
     /// <summary>
@@ -52,8 +29,8 @@ public class OmnisendPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
     /// </summary>
     public override string GetConfigurationPageUrl()
     {
-        if (_actionContextAccessor.ActionContext != null)
-            return _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext)
+        if (actionContextAccessor.ActionContext != null)
+            return urlHelperFactory.GetUrlHelper(actionContextAccessor.ActionContext)
                 .RouteUrl(OmnisendDefaults.ConfigurationRouteName);
 
         return base.GetConfigurationPageUrl();
@@ -93,7 +70,7 @@ public class OmnisendPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
     public override async Task InstallAsync()
     {
         //ensure MediaSettings.UseAbsoluteImagePath is enabled (used for images uploading)
-        await _settingService.SetSettingAsync($"{nameof(MediaSettings)}.{nameof(MediaSettings.UseAbsoluteImagePath)}", true, clearCache: false);
+        await settingService.SetSettingAsync($"{nameof(MediaSettings)}.{nameof(MediaSettings.UseAbsoluteImagePath)}", true, clearCache: false);
 
         var omnisendTrackingScript =
             @$"<!-- Omnisend starts -->
@@ -138,15 +115,15 @@ public class OmnisendPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
             RequestTimeout = OmnisendDefaults.RequestTimeout
         };
 
-        await _settingService.SaveSettingAsync(settings);
+        await settingService.SaveSettingAsync(settings);
 
-        if (!_widgetSettings.ActiveWidgetSystemNames.Contains(OmnisendDefaults.SystemName))
+        if (!widgetSettings.ActiveWidgetSystemNames.Contains(OmnisendDefaults.SystemName))
         {
-            _widgetSettings.ActiveWidgetSystemNames.Add(OmnisendDefaults.SystemName);
-            await _settingService.SaveSettingAsync(_widgetSettings);
+            widgetSettings.ActiveWidgetSystemNames.Add(OmnisendDefaults.SystemName);
+            await settingService.SaveSettingAsync(widgetSettings);
         }
 
-        await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
+        await localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
         {
             ["Plugins.Misc.Omnisend.CantGetBrandId"] = "Failed to get the required data from the Omnisend server. Please check if the API key is correct and save the settings again. Error details can be found in the Log page",
             ["Plugins.Misc.Omnisend.Credentials"] = "Credentials",
@@ -179,14 +156,14 @@ public class OmnisendPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
     /// <returns>A task that represents the asynchronous operation</returns>
     public override async Task UninstallAsync()
     {
-        if (_widgetSettings.ActiveWidgetSystemNames.Contains(OmnisendDefaults.SystemName))
+        if (widgetSettings.ActiveWidgetSystemNames.Contains(OmnisendDefaults.SystemName))
         {
-            _widgetSettings.ActiveWidgetSystemNames.Remove(OmnisendDefaults.SystemName);
-            await _settingService.SaveSettingAsync(_widgetSettings);
+            widgetSettings.ActiveWidgetSystemNames.Remove(OmnisendDefaults.SystemName);
+            await settingService.SaveSettingAsync(widgetSettings);
         }
-        await _settingService.DeleteSettingAsync<OmnisendSettings>();
+        await settingService.DeleteSettingAsync<OmnisendSettings>();
 
-        await _localizationService.DeleteLocaleResourcesAsync("Plugins.Misc.Omnisend");
+        await localizationService.DeleteLocaleResourcesAsync("Plugins.Misc.Omnisend");
 
         await base.UninstallAsync();
     }
