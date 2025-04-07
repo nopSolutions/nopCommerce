@@ -11,35 +11,12 @@ namespace Nop.Web.Areas.Admin.Factories;
 /// <summary>
 /// Represents the language model factory implementation
 /// </summary>
-public partial class LanguageModelFactory : ILanguageModelFactory
-{
-    #region Fields
-
-    private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-    private readonly INopFileProvider _fileProvider;
-    private readonly ILanguageService _languageService;
-    private readonly ILocalizationService _localizationService;
-    private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
-
-    #endregion
-
-    #region Ctor
-
-    public LanguageModelFactory(IBaseAdminModelFactory baseAdminModelFactory,
+public partial class LanguageModelFactory(IBaseAdminModelFactory baseAdminModelFactory,
         INopFileProvider fileProvider,
         ILanguageService languageService,
         ILocalizationService localizationService,
-        IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory)
-    {
-        _baseAdminModelFactory = baseAdminModelFactory;
-        _fileProvider = fileProvider;
-        _languageService = languageService;
-        _localizationService = localizationService;
-        _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
-    }
-
-    #endregion
-
+        IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory) : ILanguageModelFactory
+{
     #region Utilities
 
     /// <summary>
@@ -97,7 +74,7 @@ public partial class LanguageModelFactory : ILanguageModelFactory
         ArgumentNullException.ThrowIfNull(searchModel);
 
         //get languages
-        var languages = (await _languageService.GetAllLanguagesAsync(showHidden: true)).ToPagedList(searchModel);
+        var languages = (await languageService.GetAllLanguagesAsync(showHidden: true)).ToPagedList(searchModel);
 
         //prepare list model
         var model = new LanguageListModel().PrepareToGrid(searchModel, languages, () =>
@@ -132,12 +109,12 @@ public partial class LanguageModelFactory : ILanguageModelFactory
         //set default values for the new model
         if (language == null)
         {
-            model.DisplayOrder = (await _languageService.GetAllLanguagesAsync()).Max(l => l.DisplayOrder) + 1;
+            model.DisplayOrder = (await languageService.GetAllLanguagesAsync()).Max(l => l.DisplayOrder) + 1;
             model.Published = true;
         }
-        var flagNames = _fileProvider
-            .EnumerateFiles(_fileProvider.GetAbsolutePath(@"images\flags"), "*.png")
-            .Select(_fileProvider.GetFileName)
+        var flagNames = fileProvider
+            .EnumerateFiles(fileProvider.GetAbsolutePath(@"images\flags"), "*.png")
+            .Select(fileProvider.GetFileName)
             .ToList();
 
         model.AvailableFlagImages = flagNames.ConvertAll(flagName => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
@@ -147,11 +124,11 @@ public partial class LanguageModelFactory : ILanguageModelFactory
         });
 
         //prepare available currencies
-        await _baseAdminModelFactory.PrepareCurrenciesAsync(model.AvailableCurrencies,
-            defaultItemText: await _localizationService.GetResourceAsync("Admin.Common.EmptyItemText"));
+        await baseAdminModelFactory.PrepareCurrenciesAsync(model.AvailableCurrencies,
+            defaultItemText: await localizationService.GetResourceAsync("Admin.Common.EmptyItemText"));
 
         //prepare available stores
-        await _storeMappingSupportedModelFactory.PrepareModelStoresAsync(model, language, excludeProperties);
+        await storeMappingSupportedModelFactory.PrepareModelStoresAsync(model, language, excludeProperties);
 
         return model;
     }
@@ -172,7 +149,7 @@ public partial class LanguageModelFactory : ILanguageModelFactory
         ArgumentNullException.ThrowIfNull(language);
 
         //get locale resources
-        var localeResources = (await _localizationService.GetAllResourceValuesAsync(language.Id, loadPublicLocales: null))
+        var localeResources = (await localizationService.GetAllResourceValuesAsync(language.Id, loadPublicLocales: null))
             .OrderBy(localeResource => localeResource.Key).AsQueryable();
 
         //filter locale resources

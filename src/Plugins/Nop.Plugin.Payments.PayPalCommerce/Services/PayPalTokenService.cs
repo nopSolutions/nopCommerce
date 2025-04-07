@@ -6,23 +6,8 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services;
 /// <summary>
 /// Represents the payment token service
 /// </summary>
-public class PayPalTokenService
+public class PayPalTokenService(IRepository<PayPalToken> tokenRepository)
 {
-    #region Fields
-
-    private readonly IRepository<PayPalToken> _tokenRepository;
-
-    #endregion
-
-    #region Ctor
-
-    public PayPalTokenService(IRepository<PayPalToken> tokenRepository)
-    {
-        _tokenRepository = tokenRepository;
-    }
-
-    #endregion
-
     #region Methods
 
     /// <summary>
@@ -40,7 +25,7 @@ public class PayPalTokenService
     public async Task<IList<PayPalToken>> GetAllTokensAsync(string clientId, int customerId = 0,
         string vaultId = null, string vaultCustomerId = null, string type = null)
     {
-        return await _tokenRepository.GetAllAsync(query =>
+        return await tokenRepository.GetAllAsync(query =>
         {
             query = query.Where(token => token.ClientId == clientId);
 
@@ -86,7 +71,7 @@ public class PayPalTokenService
     /// </returns>
     public async Task<PayPalToken> GetByIdAsync(int id)
     {
-        return await _tokenRepository.GetByIdAsync(id, null);
+        return await tokenRepository.GetByIdAsync(id, null);
     }
 
     /// <summary>
@@ -120,7 +105,7 @@ public class PayPalTokenService
             token.IsPrimaryMethod = true;
 
         //or insert a new one
-        await _tokenRepository.InsertAsync(token, false);
+        await tokenRepository.InsertAsync(token, false);
     }
 
     /// <summary>
@@ -130,7 +115,7 @@ public class PayPalTokenService
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task UpdateAsync(PayPalToken token)
     {
-        await _tokenRepository.UpdateAsync(token, false);
+        await tokenRepository.UpdateAsync(token, false);
     }
 
     /// <summary>
@@ -140,7 +125,7 @@ public class PayPalTokenService
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task DeleteAsync(PayPalToken token)
     {
-        await _tokenRepository.DeleteAsync(token, false);
+        await tokenRepository.DeleteAsync(token, false);
 
         //mark one of the remaining tokens as default
         var tokens = await GetAllTokensAsync(token.ClientId, token.CustomerId);
@@ -162,7 +147,7 @@ public class PayPalTokenService
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task DeleteAsync(IList<PayPalToken> tokens)
     {
-        await _tokenRepository.DeleteAsync(tokens, false);
+        await tokenRepository.DeleteAsync(tokens, false);
     }
 
     #endregion

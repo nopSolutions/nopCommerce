@@ -7,23 +7,8 @@ namespace Nop.Plugin.Misc.Dynamics365;
 /// <summary>
 /// Represents the Dynamics 365 helper plugin
 /// </summary>
-public class Dynamics365Plugin : BasePlugin, IMiscPlugin
+public class Dynamics365Plugin(IWebHelper webHelper) : BasePlugin, IMiscPlugin
 {
-    #region Fields
-
-    private readonly IWebHelper _webHelper;
-
-    #endregion
-
-    #region Ctor
-
-    public Dynamics365Plugin(IWebHelper webHelper)
-    {
-        _webHelper = webHelper;
-    }
-
-    #endregion
-
     #region Methods
 
     /// <summary>
@@ -31,7 +16,7 @@ public class Dynamics365Plugin : BasePlugin, IMiscPlugin
     /// </summary>
     public override string GetConfigurationPageUrl()
     {
-        return $"{_webHelper.GetStoreLocation()}Admin/Dynamics365/Configure";
+        return $"{webHelper.GetStoreLocation()}Admin/Dynamics365/Configure";
     }
 
     /// <summary>

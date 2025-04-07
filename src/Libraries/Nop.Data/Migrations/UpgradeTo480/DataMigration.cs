@@ -4,25 +4,18 @@ using Nop.Core.Domain.Messages;
 namespace Nop.Data.Migrations.UpgradeTo480;
 
 [NopUpdateMigration("2023-10-30 12:00:00", "4.80", UpdateMigrationType.Data)]
-public class DataMigration : Migration
+public class DataMigration(INopDataProvider dataProvider) : Migration
 {
-    private readonly INopDataProvider _dataProvider;
-
-    public DataMigration(INopDataProvider dataProvider)
-    {
-        _dataProvider = dataProvider;
-    }
-
     /// <summary>
     /// Collect the UP migration expressions
     /// </summary>
     public override void Up()
     {
         //#7108 New message template
-        if (!_dataProvider.GetTable<MessageTemplate>().Any(st => string.Compare(st.Name, MessageTemplateSystemNames.ORDER_CANCELLED_VENDOR_NOTIFICATION, StringComparison.InvariantCultureIgnoreCase) == 0))
+        if (!dataProvider.GetTable<MessageTemplate>().Any(st => string.Compare(st.Name, MessageTemplateSystemNames.ORDER_CANCELLED_VENDOR_NOTIFICATION, StringComparison.InvariantCultureIgnoreCase) == 0))
         {
-            var eaGeneral = _dataProvider.GetTable<EmailAccount>().FirstOrDefault() ?? throw new Exception("Default email account cannot be loaded");
-            _dataProvider.InsertEntity(new MessageTemplate()
+            var eaGeneral = dataProvider.GetTable<EmailAccount>().FirstOrDefault() ?? throw new Exception("Default email account cannot be loaded");
+            dataProvider.InsertEntity(new MessageTemplate()
             {
                 Name = MessageTemplateSystemNames.ORDER_CANCELLED_VENDOR_NOTIFICATION,
                 Subject = "%Store.Name%. Order #%Order.OrderNumber% cancelled",
@@ -33,10 +26,10 @@ public class DataMigration : Migration
         }
 
         //#5898
-        if (!_dataProvider.GetTable<MessageTemplate>().Any(st => string.Compare(st.Name, MessageTemplateSystemNames.QUANTITY_BELOW_VENDOR_NOTIFICATION, StringComparison.InvariantCultureIgnoreCase) == 0))
+        if (!dataProvider.GetTable<MessageTemplate>().Any(st => string.Compare(st.Name, MessageTemplateSystemNames.QUANTITY_BELOW_VENDOR_NOTIFICATION, StringComparison.InvariantCultureIgnoreCase) == 0))
         {
-            var eaGeneral = _dataProvider.GetTable<EmailAccount>().FirstOrDefault() ?? throw new Exception("Default email account cannot be loaded");
-            _dataProvider.InsertEntity(new MessageTemplate()
+            var eaGeneral = dataProvider.GetTable<EmailAccount>().FirstOrDefault() ?? throw new Exception("Default email account cannot be loaded");
+            dataProvider.InsertEntity(new MessageTemplate()
             {
                 Name = MessageTemplateSystemNames.QUANTITY_BELOW_VENDOR_NOTIFICATION,
                 Subject = "%Store.Name%. Quantity below notification. %Product.Name%\"",
@@ -46,10 +39,10 @@ public class DataMigration : Migration
             });
         }
 
-        if (!_dataProvider.GetTable<MessageTemplate>().Any(st => string.Compare(st.Name, MessageTemplateSystemNames.QUANTITY_BELOW_ATTRIBUTE_COMBINATION_VENDOR_NOTIFICATION, StringComparison.InvariantCultureIgnoreCase) == 0))
+        if (!dataProvider.GetTable<MessageTemplate>().Any(st => string.Compare(st.Name, MessageTemplateSystemNames.QUANTITY_BELOW_ATTRIBUTE_COMBINATION_VENDOR_NOTIFICATION, StringComparison.InvariantCultureIgnoreCase) == 0))
         {
-            var eaGeneral = _dataProvider.GetTable<EmailAccount>().FirstOrDefault() ?? throw new Exception("Default email account cannot be loaded");
-            _dataProvider.InsertEntity(new MessageTemplate()
+            var eaGeneral = dataProvider.GetTable<EmailAccount>().FirstOrDefault() ?? throw new Exception("Default email account cannot be loaded");
+            dataProvider.InsertEntity(new MessageTemplate()
             {
                 Name = MessageTemplateSystemNames.QUANTITY_BELOW_ATTRIBUTE_COMBINATION_VENDOR_NOTIFICATION,
                 Subject = "%Store.Name%. Quantity below notification. %Product.Name%\"",

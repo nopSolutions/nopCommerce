@@ -24,28 +24,7 @@ namespace Nop.Plugin.Payments.AmazonPay.Services;
 /// <summary>
 /// Represents the service for payment related methods
 /// </summary>
-public class AmazonPayPaymentService
-{
-    #region Fields
-
-    private readonly AmazonPayApiService _amazonPayApiService;
-    private readonly AmazonPaySettings _amazonPaySettings;
-    private readonly IActionContextAccessor _actionContextAccessor;
-    private readonly ICurrencyService _currencyService;
-    private readonly ICustomerService _customerService;
-    private readonly IGenericAttributeService _genericAttributeService;
-    private readonly ILogger _logger;
-    private readonly IOrderProcessingService _orderProcessingService;
-    private readonly IOrderService _orderService;
-    private readonly IPriceCalculationService _priceCalculationService;
-    private readonly IStoreContext _storeContext;
-    private readonly IStoreService _storeService;
-
-    #endregion
-
-    #region Ctor
-
-    public AmazonPayPaymentService(AmazonPayApiService amazonPayApiService,
+public class AmazonPayPaymentService(AmazonPayApiService amazonPayApiService,
         AmazonPaySettings amazonPaySettings,
         IActionContextAccessor actionContextAccessor,
         ICurrencyService currencyService,
@@ -57,23 +36,7 @@ public class AmazonPayPaymentService
         IPriceCalculationService priceCalculationService,
         IStoreContext storeContext,
         IStoreService storeService)
-    {
-        _amazonPayApiService = amazonPayApiService;
-        _amazonPaySettings = amazonPaySettings;
-        _actionContextAccessor = actionContextAccessor;
-        _currencyService = currencyService;
-        _customerService = customerService;
-        _genericAttributeService = genericAttributeService;
-        _logger = logger;
-        _orderProcessingService = orderProcessingService;
-        _orderService = orderService;
-        _priceCalculationService = priceCalculationService;
-        _storeContext = storeContext;
-        _storeService = storeService;
-    }
-
-    #endregion
-
+{
     #region Utilities
 
     private async Task<bool> IsInProgressAsync(Order order, InProgressType inProgressType, bool? flag = null)
@@ -85,12 +48,12 @@ public class AmazonPayPaymentService
         {
             if (flag.HasValue)
             {
-                await _genericAttributeService.SaveAttributeAsync(order, key, flag.Value);
+                await genericAttributeService.SaveAttributeAsync(order, key, flag.Value);
 
                 return flag.Value;
             }
 
-            return await _genericAttributeService.GetAttributeAsync<bool>(order, key);
+            return await genericAttributeService.GetAttributeAsync<bool>(order, key);
         }
 
         return inProgressType switch
@@ -105,7 +68,7 @@ public class AmazonPayPaymentService
     private async Task<Order> GetOrderByChargeAsync(string chargeId)
     {
         // send the request
-        var result = await _amazonPayApiService.PerformRequestAsync(client => client.GetCharge(chargeId));
+        var result = await amazonPayApiService.PerformRequestAsync(client => client.GetCharge(chargeId));
 
         return await GetOrderByChargeAsync(result);
     }
@@ -113,7 +76,7 @@ public class AmazonPayPaymentService
     private async Task<Order> GetOrderByChargeAsync(ChargeResponse charge)
     {
         if (Guid.TryParse(charge.MerchantMetadata.MerchantReferenceId, out var orderGuid))
-            return await _orderService.GetOrderByGuidAsync(orderGuid);
+            return await orderService.GetOrderByGuidAsync(orderGuid);
 
         return null;
     }
@@ -121,14 +84,14 @@ public class AmazonPayPaymentService
     private async Task<Order> GetOrderByChargePermissionAsync(ChargePermissionResponse chargePermission)
     {
         if (Guid.TryParse(chargePermission.MerchantMetadata.MerchantReferenceId, out var orderGuid))
-            return await _orderService.GetOrderByGuidAsync(orderGuid);
+            return await orderService.GetOrderByGuidAsync(orderGuid);
 
         return null;
     }
 
     private async Task RefundOrderAsync(IpnMessage message)
     {
-        var result = await _amazonPayApiService.PerformRequestAsync(client => client.GetRefund(message.ObjectId));
+        var result = await amazonPayApiService.PerformRequestAsync(client => client.GetRefund(message.ObjectId));
 
         if (!result.StatusDetails.State.Equals("refunded", StringComparison.InvariantCultureIgnoreCase))
             return;
@@ -139,19 +102,19 @@ public class AmazonPayPaymentService
 
         var refundAmount = result.RefundAmount.Amount;
 
-        if (!await _orderProcessingService.CanPartiallyRefundAsync(order, refundAmount))
+        if (!await orderProcessingService.CanPartiallyRefundAsync(order, refundAmount))
             return;
 
-        await _genericAttributeService
-            .SaveAttributeAsync(order, AmazonPayDefaults.RefundRequestAttributeName, 0, (await _storeContext.GetCurrentStoreAsync()).Id);
+        await genericAttributeService
+            .SaveAttributeAsync(order, AmazonPayDefaults.RefundRequestAttributeName, 0, (await storeContext.GetCurrentStoreAsync()).Id);
 
         await IsInProgressAsync(order, InProgressType.Refund, true);
-        await _orderProcessingService.PartiallyRefundAsync(order, refundAmount);
+        await orderProcessingService.PartiallyRefundAsync(order, refundAmount);
     }
 
     private async Task ChangePaymentStatusAsync(IpnMessage message)
     {
-        var result = await _amazonPayApiService.PerformRequestAsync(client => client.GetCharge(message.ObjectId));
+        var result = await amazonPayApiService.PerformRequestAsync(client => client.GetCharge(message.ObjectId));
 
         if (result.StatusDetails.State.Equals("captured", StringComparison.InvariantCultureIgnoreCase))
         {
@@ -170,14 +133,14 @@ public class AmazonPayPaymentService
             if (string.IsNullOrEmpty(order.AuthorizationTransactionId))
                 return;
 
-            if (!await _orderProcessingService.CanCaptureAsync(order))
+            if (!await orderProcessingService.CanCaptureAsync(order))
                 return;
 
             order.CaptureTransactionId = order.AuthorizationTransactionId;
             order.AuthorizationTransactionId = null;
 
             await IsInProgressAsync(order, InProgressType.Capture, true);
-            await _orderProcessingService.CaptureAsync(order);
+            await orderProcessingService.CaptureAsync(order);
         }
 
         if (result.StatusDetails.State.Equals("canceled", StringComparison.InvariantCultureIgnoreCase))
@@ -197,18 +160,18 @@ public class AmazonPayPaymentService
             if (string.IsNullOrEmpty(order.AuthorizationTransactionId))
                 return;
 
-            if (!await _orderProcessingService.CanVoidAsync(order))
+            if (!await orderProcessingService.CanVoidAsync(order))
                 return;
 
             order.AuthorizationTransactionId = null;
             await IsInProgressAsync(order, InProgressType.Void, true);
-            await _orderProcessingService.VoidAsync(order);
+            await orderProcessingService.VoidAsync(order);
         }
     }
 
     private async Task ChangeSubscriptionStatusAsync(IpnMessage message)
     {
-        var result = await _amazonPayApiService.PerformRequestAsync(client => client.GetChargePermission(message.ObjectId));
+        var result = await amazonPayApiService.PerformRequestAsync(client => client.GetChargePermission(message.ObjectId));
 
         if (result.ChargePermissionType != ChargePermissionType.Recurring)
             return;
@@ -220,20 +183,20 @@ public class AmazonPayPaymentService
         if (order is null)
             return;
 
-        var recurringPayment = (await _orderService.SearchRecurringPaymentsAsync(initialOrderId: order.Id)).FirstOrDefault();
+        var recurringPayment = (await orderService.SearchRecurringPaymentsAsync(initialOrderId: order.Id)).FirstOrDefault();
         if (recurringPayment is null)
             return;
 
-        var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
-        if (!await _orderProcessingService.CanCancelRecurringPaymentAsync(customer, recurringPayment))
+        var customer = await customerService.GetCustomerByIdAsync(order.CustomerId);
+        if (!await orderProcessingService.CanCancelRecurringPaymentAsync(customer, recurringPayment))
             return;
 
-        await _orderProcessingService.CancelRecurringPaymentAsync(recurringPayment);
+        await orderProcessingService.CancelRecurringPaymentAsync(recurringPayment);
     }
 
     private async Task<bool> IsChargePermissionChargeableAsync(string chargePermissionId)
     {
-        var result = await _amazonPayApiService.PerformRequestAsync(client => client.GetChargePermission(chargePermissionId));
+        var result = await amazonPayApiService.PerformRequestAsync(client => client.GetChargePermission(chargePermissionId));
 
         return result.StatusDetails.State.Equals("Chargeable", StringComparison.InvariantCultureIgnoreCase);
     }
@@ -250,7 +213,7 @@ public class AmazonPayPaymentService
     {
         try
         {
-            var request = _actionContextAccessor.ActionContext?.HttpContext.Request;
+            var request = actionContextAccessor.ActionContext?.HttpContext.Request;
 
             if (request == null || (request.ContentLength ?? 0) == 0)
                 return;
@@ -261,10 +224,10 @@ public class AmazonPayPaymentService
             if (string.IsNullOrEmpty(body))
                 return;
 
-            if (_amazonPaySettings.EnableLogging)
+            if (amazonPaySettings.EnableLogging)
             {
                 var logMessage = $"{AmazonPayDefaults.PluginSystemName} IPN request details:{System.Environment.NewLine}{body}";
-                await _logger.InsertLogAsync(Core.Domain.Logging.LogLevel.Debug, $"{AmazonPayDefaults.PluginSystemName} IPN request details", logMessage);
+                await logger.InsertLogAsync(Core.Domain.Logging.LogLevel.Debug, $"{AmazonPayDefaults.PluginSystemName} IPN request details", logMessage);
             }
 
             var rawData = JsonConvert.DeserializeAnonymousType(body, new { MessageId = string.Empty, Message = string.Empty });
@@ -293,7 +256,7 @@ public class AmazonPayPaymentService
         catch (Exception exception)
         {
             var logMessage = $"{AmazonPayDefaults.PluginSystemName} error:{System.Environment.NewLine}{exception.Message}";
-            await _logger.ErrorAsync(logMessage, exception);
+            await logger.ErrorAsync(logMessage, exception);
         }
     }
 
@@ -327,14 +290,14 @@ public class AmazonPayPaymentService
             return result;
         }
 
-        var (currencyCode, _) = await _amazonPayApiService.GetCurrencyAsync(order.CustomerCurrencyCode);
-        var orderTotal = _currencyService.ConvertCurrency(order.OrderTotal, order.CurrencyRate);
+        var (currencyCode, _) = await amazonPayApiService.GetCurrencyAsync(order.CustomerCurrencyCode);
+        var orderTotal = currencyService.ConvertCurrency(order.OrderTotal, order.CurrencyRate);
 
         // prepare the request
         var request = new CaptureChargeRequest(orderTotal, currencyCode);
 
         await IsInProgressAsync(order, InProgressType.Capture, true);
-        await _amazonPayApiService.PerformRequestAsync(client => client.CaptureCharge(order.AuthorizationTransactionId, request, _amazonPayApiService.Headers));
+        await amazonPayApiService.PerformRequestAsync(client => client.CaptureCharge(order.AuthorizationTransactionId, request, amazonPayApiService.Headers));
 
         result.CaptureTransactionId = order.AuthorizationTransactionId;
         result.NewPaymentStatus = PaymentStatus.Paid;
@@ -375,7 +338,7 @@ public class AmazonPayPaymentService
 
         // prepare the request
         var request = new CancelChargeRequest(string.Empty);
-        await _amazonPayApiService.PerformRequestAsync(client => client.CancelCharge(order.AuthorizationTransactionId, request));
+        await amazonPayApiService.PerformRequestAsync(client => client.CancelCharge(order.AuthorizationTransactionId, request));
 
         result.NewPaymentStatus = PaymentStatus.Voided;
         order.AuthorizationTransactionId = null;
@@ -407,8 +370,8 @@ public class AmazonPayPaymentService
             return result;
         }
 
-        var store = await _storeContext.GetCurrentStoreAsync();
-        var refundAmount = await _genericAttributeService
+        var store = await storeContext.GetCurrentStoreAsync();
+        var refundAmount = await genericAttributeService
             .GetAttributeAsync<decimal>(order, AmazonPayDefaults.RefundRequestAttributeName, store.Id);
 
         if (refundAmount != 0)
@@ -418,18 +381,18 @@ public class AmazonPayPaymentService
             return result;
         }
 
-        var (currencyCode, _) = await _amazonPayApiService.GetCurrencyAsync(order.CustomerCurrencyCode);
-        var amountToRefund = _currencyService.ConvertCurrency(refundPaymentRequest.AmountToRefund, order.CurrencyRate);
-        await _genericAttributeService
+        var (currencyCode, _) = await amazonPayApiService.GetCurrencyAsync(order.CustomerCurrencyCode);
+        var amountToRefund = currencyService.ConvertCurrency(refundPaymentRequest.AmountToRefund, order.CurrencyRate);
+        await genericAttributeService
             .SaveAttributeAsync(order, AmazonPayDefaults.RefundRequestAttributeName, amountToRefund, store.Id);
 
         // prepare the request
         var request = new CreateRefundRequest(order.CaptureTransactionId, amountToRefund, currencyCode);
-        await _amazonPayApiService.PerformRequestAsync(client => client.CreateRefund(request, _amazonPayApiService.Headers), async message =>
+        await amazonPayApiService.PerformRequestAsync(client => client.CreateRefund(request, amazonPayApiService.Headers), async message =>
         {
             result.AddError(message.Message);
 
-            await _genericAttributeService
+            await genericAttributeService
                 .SaveAttributeAsync<decimal>(order, AmazonPayDefaults.RefundRequestAttributeName, 0, store.Id);
         });
 
@@ -453,18 +416,18 @@ public class AmazonPayPaymentService
         if (processPaymentRequest.InitialOrder == null)
             return new ProcessPaymentResult();
 
-        var store = await _storeService.GetStoreByIdAsync(processPaymentRequest.InitialOrder.StoreId);
+        var store = await storeService.GetStoreByIdAsync(processPaymentRequest.InitialOrder.StoreId);
         var processResult = new ProcessPaymentResult();
         var chargePermissionId = processPaymentRequest.InitialOrder.SubscriptionTransactionId;
 
-        var (currencyCode, currency) = await _amazonPayApiService.GetCurrencyAsync(processPaymentRequest.InitialOrder.CustomerCurrencyCode);
-        var orderTotal = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(processPaymentRequest.OrderTotal, currency);
-        orderTotal = await _priceCalculationService.RoundPriceAsync(orderTotal, currency);
+        var (currencyCode, currency) = await amazonPayApiService.GetCurrencyAsync(processPaymentRequest.InitialOrder.CustomerCurrencyCode);
+        var orderTotal = await currencyService.ConvertFromPrimaryStoreCurrencyAsync(processPaymentRequest.OrderTotal, currency);
+        orderTotal = await priceCalculationService.RoundPriceAsync(orderTotal, currency);
 
         //prepare the request
         var request = new CreateChargeRequest(chargePermissionId, orderTotal, currencyCode)
         {
-            CaptureNow = _amazonPaySettings.PaymentType == PaymentType.Capture,
+            CaptureNow = amazonPaySettings.PaymentType == PaymentType.Capture,
             CanHandlePendingAuthorization = false,
             PlatformId = AmazonPayDefaults.SpId
         };
@@ -472,7 +435,7 @@ public class AmazonPayPaymentService
         request.MerchantMetadata.MerchantStoreName = store.Name;
         request.MerchantMetadata.MerchantReferenceId = processPaymentRequest.OrderGuid.ToString();
 
-        var response = await _amazonPayApiService.PerformRequestAsync(client => client.CreateCharge(request, _amazonPayApiService.Headers),
+        var response = await amazonPayApiService.PerformRequestAsync(client => client.CreateCharge(request, amazonPayApiService.Headers),
             async message =>
             {
                 processResult.Errors.Add(message.Message ?? message.ReasonCode);
@@ -521,7 +484,7 @@ public class AmazonPayPaymentService
         var chargePermissionId = cancelPaymentRequest.Order.SubscriptionTransactionId;
         var request = new CloseChargePermissionRequest("No more charges required");
 
-        await _amazonPayApiService.PerformRequestAsync(
+        await amazonPayApiService.PerformRequestAsync(
             client => client.CloseChargePermission(chargePermissionId, request),
             message =>
             {

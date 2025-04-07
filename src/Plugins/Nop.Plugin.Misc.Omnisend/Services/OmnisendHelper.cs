@@ -13,40 +13,17 @@ namespace Nop.Plugin.Misc.Omnisend.Services;
 /// <summary>
 /// Represents the plugins helpers class
 /// </summary>
-public class OmnisendHelper
-{
-    #region Fields
-
-    private string _primaryStoreCurrencyCode;
-
-    private readonly CurrencySettings _currencySettings;
-    private readonly ICurrencyService _currencyService;
-    private readonly INopUrlHelper _nopUrlHelper;
-    private readonly IPictureService _pictureService;
-    private readonly IProductAttributeParser _productAttributeParser;
-    private readonly IUrlRecordService _urlRecordService;
-    private readonly IWebHelper _webHelper;
-
-    #endregion
-
-    #region Ctor
-
-    public OmnisendHelper(CurrencySettings currencySettings,
+public class OmnisendHelper(CurrencySettings currencySettings,
         ICurrencyService currencyService,
         INopUrlHelper nopUrlHelper,
         IPictureService pictureService,
         IProductAttributeParser productAttributeParser,
         IUrlRecordService urlRecordService,
         IWebHelper webHelper)
-    {
-        _currencySettings = currencySettings;
-        _currencyService = currencyService;
-        _nopUrlHelper = nopUrlHelper;
-        _pictureService = pictureService;
-        _productAttributeParser = productAttributeParser;
-        _urlRecordService = urlRecordService;
-        _webHelper = webHelper;
-    }
+{
+    #region Fields
+
+    private string _primaryStoreCurrencyCode;
 
     #endregion
 
@@ -60,7 +37,7 @@ public class OmnisendHelper
         if (!string.IsNullOrEmpty(_primaryStoreCurrencyCode))
             return _primaryStoreCurrencyCode;
 
-        var currency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
+        var currency = await currencyService.GetCurrencyByIdAsync(currencySettings.PrimaryStoreCurrencyId);
 
         _primaryStoreCurrencyCode = currency.CurrencyCode;
 
@@ -78,7 +55,7 @@ public class OmnisendHelper
         var variantId = product.Id;
 
         var combination =
-            await _productAttributeParser.FindProductAttributeCombinationAsync(product, attributesXml);
+            await productAttributeParser.FindProductAttributeCombinationAsync(product, attributesXml);
 
         if (combination == null)
             return (sku, variantId);
@@ -95,9 +72,9 @@ public class OmnisendHelper
     /// <param name="product">Product</param>
     public async Task<string> GetProductUrlAsync(Product product)
     {
-        var values = new { SeName = await _urlRecordService.GetSeNameAsync(product) };
+        var values = new { SeName = await urlRecordService.GetSeNameAsync(product) };
 
-        return await _nopUrlHelper.RouteGenericUrlAsync<Product>(values, _webHelper.GetCurrentRequestProtocol());
+        return await nopUrlHelper.RouteGenericUrlAsync<Product>(values, webHelper.GetCurrentRequestProtocol());
     }
 
     /// <summary>
@@ -106,12 +83,12 @@ public class OmnisendHelper
     /// <param name="product">Product</param>
     public async Task<ProductDto.Image> GetProductPictureUrlAsync(Product product)
     {
-        var picture = (await _pictureService
+        var picture = (await pictureService
             .GetPicturesByProductIdAsync(product.Id, 1)).DefaultIfEmpty(null).FirstOrDefault();
 
-        var (url, _) = await _pictureService.GetPictureUrlAsync(picture);
+        var (url, _) = await pictureService.GetPictureUrlAsync(picture);
 
-        var storeLocation = _webHelper.GetStoreLocation();
+        var storeLocation = webHelper.GetStoreLocation();
 
         if (!url.StartsWith(storeLocation))
             url = storeLocation + url;

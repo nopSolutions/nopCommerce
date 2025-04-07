@@ -7,23 +7,8 @@ namespace Nop.Plugin.Shipping.UPS;
 /// <summary>
 /// Represents the USP shipment tracker
 /// </summary>
-public class UPSShipmentTracker : IShipmentTracker
+public class UPSShipmentTracker(UPSService upsService) : IShipmentTracker
 {
-    #region Fields
-
-    private readonly UPSService _upsService;
-
-    #endregion
-
-    #region Ctor
-
-    public UPSShipmentTracker(UPSService upsService)
-    {
-        _upsService = upsService;
-    }
-
-    #endregion
-
     #region Methods
 
     /// <summary>
@@ -56,7 +41,7 @@ public class UPSShipmentTracker : IShipmentTracker
         if (string.IsNullOrEmpty(trackingNumber))
             return result;
 
-        result.AddRange(await _upsService.GetShipmentEventsAsync(trackingNumber));
+        result.AddRange(await upsService.GetShipmentEventsAsync(trackingNumber));
 
         return result;
     }

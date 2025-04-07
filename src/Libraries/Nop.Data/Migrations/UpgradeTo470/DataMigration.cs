@@ -11,27 +11,20 @@ using Nop.Data.Mapping;
 namespace Nop.Data.Migrations.UpgradeTo470;
 
 [NopUpdateMigration("2023-01-01 00:00:00", "4.70", UpdateMigrationType.Data)]
-public class DataMigration : Migration
+public class DataMigration(INopDataProvider dataProvider) : Migration
 {
-    private readonly INopDataProvider _dataProvider;
-
-    public DataMigration(INopDataProvider dataProvider)
-    {
-        _dataProvider = dataProvider;
-    }
-
     /// <summary>
     /// Collect the UP migration expressions
     /// </summary>
     public override void Up()
     {
         //#5312 new activity log type
-        var activityLogTypeTable = _dataProvider.GetTable<ActivityLogType>();
+        var activityLogTypeTable = dataProvider.GetTable<ActivityLogType>();
 
         if (!activityLogTypeTable.Any(alt =>
                 string.Compare(alt.SystemKeyword, "ImportCustomers", StringComparison.InvariantCultureIgnoreCase) ==
                 0))
-            _dataProvider.InsertEntity(
+            dataProvider.InsertEntity(
                 new ActivityLogType
                 {
                     SystemKeyword = "ImportCustomers",
@@ -44,7 +37,7 @@ public class DataMigration : Migration
         if (!activityLogTypeTable.Any(alt =>
                 string.Compare(alt.SystemKeyword, "UpdatePlugin", StringComparison.InvariantCultureIgnoreCase) ==
                 0))
-            _dataProvider.InsertEntity(
+            dataProvider.InsertEntity(
                 new ActivityLogType { SystemKeyword = "UpdatePlugin", Enabled = true, Name = "Update a plugin" }
             );
 
@@ -60,8 +53,8 @@ public class DataMigration : Migration
         {
 #pragma warning disable CS0618
             var combinationQuery =
-                from c in _dataProvider.GetTable<ProductAttributeCombination>()
-                join p in _dataProvider.GetTable<Picture>() on c.PictureId equals p.Id
+                from c in dataProvider.GetTable<ProductAttributeCombination>()
+                join p in dataProvider.GetTable<Picture>() on c.PictureId equals p.Id
                 select c;
 #pragma warning restore CS0618
 
@@ -80,7 +73,7 @@ public class DataMigration : Migration
                     if (!combination.PictureId.HasValue)
                         continue;
 
-                    _dataProvider.InsertEntity(new ProductAttributeCombinationPicture
+                    dataProvider.InsertEntity(new ProductAttributeCombinationPicture
                     {
                         PictureId = combination.PictureId.Value,
                         ProductAttributeCombinationId = combination.Id
@@ -90,7 +83,7 @@ public class DataMigration : Migration
                 }
 #pragma warning restore CS0618
 
-                _dataProvider.UpdateEntitiesAsync(combinations);
+                dataProvider.UpdateEntitiesAsync(combinations);
 
                 pageIndex++;
             }
@@ -103,8 +96,8 @@ public class DataMigration : Migration
         {
 #pragma warning disable CS0618
             var valueQuery =
-                from c in _dataProvider.GetTable<ProductAttributeValue>()
-                join p in _dataProvider.GetTable<Picture>() on c.PictureId equals p.Id
+                from c in dataProvider.GetTable<ProductAttributeValue>()
+                join p in dataProvider.GetTable<Picture>() on c.PictureId equals p.Id
                 select c;
 #pragma warning restore CS0618
 
@@ -123,7 +116,7 @@ public class DataMigration : Migration
                     if (!value.PictureId.HasValue)
                         continue;
 
-                    _dataProvider.InsertEntity(new ProductAttributeValuePicture
+                    dataProvider.InsertEntity(new ProductAttributeValuePicture
                     {
                         PictureId = value.PictureId.Value,
                         ProductAttributeValueId = value.Id
@@ -133,16 +126,16 @@ public class DataMigration : Migration
                 }
 #pragma warning restore CS0618
 
-                _dataProvider.UpdateEntitiesAsync(values);
+                dataProvider.UpdateEntitiesAsync(values);
 
                 pageIndex++;
             }
         }
 
         // new permission
-        if (_dataProvider.GetTable<PermissionRecord>().Any(pr => string.Compare(pr.SystemName, "AccessProfiling", StringComparison.InvariantCultureIgnoreCase) == 0))
+        if (dataProvider.GetTable<PermissionRecord>().Any(pr => string.Compare(pr.SystemName, "AccessProfiling", StringComparison.InvariantCultureIgnoreCase) == 0))
         {
-            _dataProvider.BulkDeleteEntitiesAsync<PermissionRecord>(pr => pr.SystemName == "AccessProfiling");
+            dataProvider.BulkDeleteEntitiesAsync<PermissionRecord>(pr => pr.SystemName == "AccessProfiling");
         }
 
         //#6890
@@ -154,10 +147,10 @@ public class DataMigration : Migration
             Delete.Column(isTelecommunicationsOrBroadcastingOrElectronicServicesColumnName).FromTable(productTableName);
 
         //New message template
-        if (!_dataProvider.GetTable<MessageTemplate>().Any(st => string.Compare(st.Name, MessageTemplateSystemNames.DELETE_CUSTOMER_REQUEST_STORE_OWNER_NOTIFICATION, StringComparison.InvariantCultureIgnoreCase) == 0))
+        if (!dataProvider.GetTable<MessageTemplate>().Any(st => string.Compare(st.Name, MessageTemplateSystemNames.DELETE_CUSTOMER_REQUEST_STORE_OWNER_NOTIFICATION, StringComparison.InvariantCultureIgnoreCase) == 0))
         {
-            var eaGeneral = _dataProvider.GetTable<EmailAccount>().FirstOrDefault() ?? throw new Exception("Default email account cannot be loaded");
-            _dataProvider.InsertEntity(new MessageTemplate()
+            var eaGeneral = dataProvider.GetTable<EmailAccount>().FirstOrDefault() ?? throw new Exception("Default email account cannot be loaded");
+            dataProvider.InsertEntity(new MessageTemplate()
             {
                 Name = MessageTemplateSystemNames.DELETE_CUSTOMER_REQUEST_STORE_OWNER_NOTIFICATION,
                 Subject = "%Store.Name%. New request to delete customer (GDPR)",
@@ -173,14 +166,14 @@ public class DataMigration : Migration
 
         if (Schema.Table(emailAccountTableName).Column(credentialsColumnName).Exists())
         {
-            var emailAccounts = _dataProvider.GetTable<EmailAccount>().ToList();
+            var emailAccounts = dataProvider.GetTable<EmailAccount>().ToList();
             foreach (var item in emailAccounts)
             {
                 if (!string.IsNullOrEmpty(item.Username))
                     item.EmailAuthenticationMethod = EmailAuthenticationMethod.Login;
             }
 
-            _dataProvider.UpdateEntities(emailAccounts);
+            dataProvider.UpdateEntities(emailAccounts);
 
             //remove column
             Delete.Column(credentialsColumnName).FromTable(emailAccountTableName);
@@ -191,9 +184,9 @@ public class DataMigration : Migration
         var languageIdColumnName = nameof(NewsLetterSubscription.LanguageId);
         if (Schema.Table(newsLetterSubscriptionTableName).Column(languageIdColumnName).Exists())
         {
-            var defaultLanguageId = _dataProvider.GetTable<Language>().FirstOrDefault()?.Id ?? 0;
+            var defaultLanguageId = dataProvider.GetTable<Language>().FirstOrDefault()?.Id ?? 0;
 
-            _dataProvider.GetTable<NewsLetterSubscription>()
+            dataProvider.GetTable<NewsLetterSubscription>()
                 .Set(p => p.LanguageId, defaultLanguageId)
                 .Update();
         }

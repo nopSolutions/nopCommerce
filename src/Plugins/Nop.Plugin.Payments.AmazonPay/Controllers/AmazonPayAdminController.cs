@@ -17,25 +17,7 @@ namespace Nop.Plugin.Payments.AmazonPay.Controllers;
 [AuthorizeAdmin]
 [Area(AreaNames.ADMIN)]
 [AutoValidateAntiforgeryToken]
-public class AmazonPayController : BasePaymentController
-{
-    #region Fields
-
-    private readonly AmazonPayApiService _amazonPayApiService;
-    private readonly AmazonPayOnboardingService _amazonPayOnboardingService;
-    private readonly IGenericAttributeService _genericAttributeService;
-    private readonly ILocalizationService _localizationService;
-    private readonly INotificationService _notificationService;
-    private readonly IPermissionService _permissionService;
-    private readonly ISettingService _settingService;
-    private readonly IStoreContext _storeContext;
-    private readonly IWorkContext _workContext;
-
-    #endregion
-
-    #region Ctor
-
-    public AmazonPayController(AmazonPayApiService amazonPayApiService,
+public class AmazonPayController(AmazonPayApiService amazonPayApiService,
         AmazonPayOnboardingService amazonPayOnboardingService,
         IGenericAttributeService genericAttributeService,
         ILocalizationService localizationService,
@@ -43,30 +25,18 @@ public class AmazonPayController : BasePaymentController
         IPermissionService permissionService,
         ISettingService settingService,
         IStoreContext storeContext,
-        IWorkContext workContext)
-    {
-        _amazonPayApiService = amazonPayApiService;
-        _amazonPayOnboardingService = amazonPayOnboardingService;
-        _genericAttributeService = genericAttributeService;
-        _localizationService = localizationService;
-        _notificationService = notificationService;
-        _permissionService = permissionService;
-        _settingService = settingService;
-        _storeContext = storeContext;
-        _workContext = workContext;
-    }
-
-    #endregion
-
+        IWorkContext workContext) 
+    : BasePaymentController
+{
     #region Methods
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_PAYMENT_METHODS)]
     public async Task<IActionResult> Configure()
     {
-        var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-        var settings = await _settingService.LoadSettingAsync<AmazonPaySettings>(storeId);
+        var storeId = await storeContext.GetActiveStoreScopeConfigurationAsync();
+        var settings = await settingService.LoadSettingAsync<AmazonPaySettings>(storeId);
 
-        var customer = await _workContext.GetCurrentCustomerAsync();
+        var customer = await workContext.GetCurrentCustomerAsync();
 
         var model = new ConfigurationModel
         {
@@ -86,32 +56,32 @@ public class AmazonPayController : BasePaymentController
 
             IsConnected = !string.IsNullOrEmpty(settings.MerchantId) && !string.IsNullOrEmpty(settings.StoreId) && !string.IsNullOrEmpty(settings.PublicKeyId),
             ActiveStoreScopeConfiguration = storeId,
-            HideCredentialsBlock = await _genericAttributeService.GetAttributeAsync<bool>(customer, AmazonPayDefaults.HideCredentialsBlock),
-            HideConfigurationBlock = await _genericAttributeService.GetAttributeAsync<bool>(customer, AmazonPayDefaults.HideConfigurationBlock),
-            IpnUrl = _amazonPayApiService.GetUrl(AmazonPayDefaults.IPNHandlerRouteName)
+            HideCredentialsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, AmazonPayDefaults.HideCredentialsBlock),
+            HideConfigurationBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, AmazonPayDefaults.HideConfigurationBlock),
+            IpnUrl = amazonPayApiService.GetUrl(AmazonPayDefaults.IPNHandlerRouteName)
         };
 
         if (storeId > 0)
         {
-            model.SetCredentialsManually_OverrideForStore = await _settingService.SettingExistsAsync(settings, setting => setting.SetCredentialsManually, storeId);
-            model.Region_OverrideForStore = await _settingService.SettingExistsAsync(settings, setting => setting.PaymentRegion, storeId);
-            model.Payload_OverrideForStore = await _settingService.SettingExistsAsync(settings, setting => setting.Payload, storeId);
-            model.PaymentRegion_OverrideForStore = await _settingService.SettingExistsAsync(settings, setting => setting.PaymentRegion, storeId);
-            model.PrivateKey_OverrideForStore = await _settingService.SettingExistsAsync(settings, setting => setting.PrivateKey, storeId);
-            model.PublicKeyId_OverrideForStore = await _settingService.SettingExistsAsync(settings, setting => setting.PublicKeyId, storeId);
-            model.MerchantId_OverrideForStore = await _settingService.SettingExistsAsync(settings, setting => setting.MerchantId, storeId);
-            model.StoreId_OverrideForStore = await _settingService.SettingExistsAsync(settings, setting => setting.StoreId, storeId);
+            model.SetCredentialsManually_OverrideForStore = await settingService.SettingExistsAsync(settings, setting => setting.SetCredentialsManually, storeId);
+            model.Region_OverrideForStore = await settingService.SettingExistsAsync(settings, setting => setting.PaymentRegion, storeId);
+            model.Payload_OverrideForStore = await settingService.SettingExistsAsync(settings, setting => setting.Payload, storeId);
+            model.PaymentRegion_OverrideForStore = await settingService.SettingExistsAsync(settings, setting => setting.PaymentRegion, storeId);
+            model.PrivateKey_OverrideForStore = await settingService.SettingExistsAsync(settings, setting => setting.PrivateKey, storeId);
+            model.PublicKeyId_OverrideForStore = await settingService.SettingExistsAsync(settings, setting => setting.PublicKeyId, storeId);
+            model.MerchantId_OverrideForStore = await settingService.SettingExistsAsync(settings, setting => setting.MerchantId, storeId);
+            model.StoreId_OverrideForStore = await settingService.SettingExistsAsync(settings, setting => setting.StoreId, storeId);
 
-            model.UseSandbox_OverrideForStore = await _settingService.SettingExistsAsync(settings, setting => setting.UseSandbox, storeId);
-            model.PaymentType_OverrideForStore = await _settingService.SettingExistsAsync(settings, setting => setting.PaymentType, storeId);
-            model.ButtonPlacement_OverrideForStore = await _settingService.SettingExistsAsync(settings, setting => setting.ButtonPlacement, storeId);
-            model.ButtonColor_OverrideForStore = await _settingService.SettingExistsAsync(settings, setting => setting.ButtonColor, storeId);
-            model.EnableLogging_OverrideForStore = await _settingService.SettingExistsAsync(settings, setting => setting.EnableLogging, storeId);
+            model.UseSandbox_OverrideForStore = await settingService.SettingExistsAsync(settings, setting => setting.UseSandbox, storeId);
+            model.PaymentType_OverrideForStore = await settingService.SettingExistsAsync(settings, setting => setting.PaymentType, storeId);
+            model.ButtonPlacement_OverrideForStore = await settingService.SettingExistsAsync(settings, setting => setting.ButtonPlacement, storeId);
+            model.ButtonColor_OverrideForStore = await settingService.SettingExistsAsync(settings, setting => setting.ButtonColor, storeId);
+            model.EnableLogging_OverrideForStore = await settingService.SettingExistsAsync(settings, setting => setting.EnableLogging, storeId);
         }
 
         //check currency
         if (model.IsConnected)
-            await _amazonPayApiService.EnsureCurrencyIsValidAsync();
+            await amazonPayApiService.EnsureCurrencyIsValidAsync();
 
         return View("~/Plugins/Payments.AmazonPay/Views/Configure.cshtml", model);
     }
@@ -123,18 +93,18 @@ public class AmazonPayController : BasePaymentController
         if (!ModelState.IsValid)
             return await Configure();
 
-        var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-        var amazonPaySettings = await _settingService.LoadSettingAsync<AmazonPaySettings>(storeId);
+        var storeId = await storeContext.GetActiveStoreScopeConfigurationAsync();
+        var amazonPaySettings = await settingService.LoadSettingAsync<AmazonPaySettings>(storeId);
 
         //set credentials from payload
         if (!string.IsNullOrEmpty(model.Payload))
         {
-            var (credentials, error) = await _amazonPayOnboardingService.PrepareCredentialsAsync(model.Payload, amazonPaySettings.PrivateKey);
+            var (credentials, error) = await amazonPayOnboardingService.PrepareCredentialsAsync(model.Payload, amazonPaySettings.PrivateKey);
             if (!string.IsNullOrEmpty(error) || string.IsNullOrEmpty(credentials?.PublicKeyId))
             {
-                var locale = await _localizationService.GetResourceAsync("Plugins.Payments.AmazonPay.Onboarding.Error");
+                var locale = await localizationService.GetResourceAsync("Plugins.Payments.AmazonPay.Onboarding.Error");
                 var errorMessage = string.Format(locale, error, Url.Action("List", "Log"));
-                _notificationService.ErrorNotification(errorMessage, false);
+                notificationService.ErrorNotification(errorMessage, false);
             }
             else
             {
@@ -160,22 +130,22 @@ public class AmazonPayController : BasePaymentController
         amazonPaySettings.ButtonColor = model.ButtonColor > 0 ? (ButtonColor)model.ButtonColor : amazonPaySettings.ButtonColor;
         amazonPaySettings.EnableLogging = model.EnableLogging;
 
-        await _settingService.SaveSettingOverridablePerStoreAsync(amazonPaySettings, settings => settings.SetCredentialsManually, model.SetCredentialsManually_OverrideForStore, storeId, false);
-        await _settingService.SaveSettingOverridablePerStoreAsync(amazonPaySettings, settings => settings.PaymentRegion, model.PaymentRegion_OverrideForStore, storeId, false);
-        await _settingService.SaveSettingOverridablePerStoreAsync(amazonPaySettings, settings => settings.Payload, model.Payload_OverrideForStore, storeId, false);
-        await _settingService.SaveSettingOverridablePerStoreAsync(amazonPaySettings, settings => settings.PrivateKey, model.PrivateKey_OverrideForStore, storeId, false);
-        await _settingService.SaveSettingOverridablePerStoreAsync(amazonPaySettings, settings => settings.PublicKeyId, model.PublicKeyId_OverrideForStore, storeId, false);
-        await _settingService.SaveSettingOverridablePerStoreAsync(amazonPaySettings, settings => settings.MerchantId, model.MerchantId_OverrideForStore, storeId, false);
-        await _settingService.SaveSettingOverridablePerStoreAsync(amazonPaySettings, settings => settings.StoreId, model.StoreId_OverrideForStore, storeId, false);
-        await _settingService.SaveSettingOverridablePerStoreAsync(amazonPaySettings, settings => settings.UseSandbox, model.UseSandbox_OverrideForStore, storeId, false);
-        await _settingService.SaveSettingOverridablePerStoreAsync(amazonPaySettings, settings => settings.PaymentType, model.PaymentType_OverrideForStore, storeId, false);
-        await _settingService.SaveSettingOverridablePerStoreAsync(amazonPaySettings, settings => settings.ButtonPlacement, model.ButtonPlacement_OverrideForStore, storeId, false);
-        await _settingService.SaveSettingOverridablePerStoreAsync(amazonPaySettings, settings => settings.ButtonColor, model.ButtonColor_OverrideForStore, storeId, false);
-        await _settingService.SaveSettingOverridablePerStoreAsync(amazonPaySettings, settings => settings.EnableLogging, model.EnableLogging_OverrideForStore, storeId, false);
+        await settingService.SaveSettingOverridablePerStoreAsync(amazonPaySettings, settings => settings.SetCredentialsManually, model.SetCredentialsManually_OverrideForStore, storeId, false);
+        await settingService.SaveSettingOverridablePerStoreAsync(amazonPaySettings, settings => settings.PaymentRegion, model.PaymentRegion_OverrideForStore, storeId, false);
+        await settingService.SaveSettingOverridablePerStoreAsync(amazonPaySettings, settings => settings.Payload, model.Payload_OverrideForStore, storeId, false);
+        await settingService.SaveSettingOverridablePerStoreAsync(amazonPaySettings, settings => settings.PrivateKey, model.PrivateKey_OverrideForStore, storeId, false);
+        await settingService.SaveSettingOverridablePerStoreAsync(amazonPaySettings, settings => settings.PublicKeyId, model.PublicKeyId_OverrideForStore, storeId, false);
+        await settingService.SaveSettingOverridablePerStoreAsync(amazonPaySettings, settings => settings.MerchantId, model.MerchantId_OverrideForStore, storeId, false);
+        await settingService.SaveSettingOverridablePerStoreAsync(amazonPaySettings, settings => settings.StoreId, model.StoreId_OverrideForStore, storeId, false);
+        await settingService.SaveSettingOverridablePerStoreAsync(amazonPaySettings, settings => settings.UseSandbox, model.UseSandbox_OverrideForStore, storeId, false);
+        await settingService.SaveSettingOverridablePerStoreAsync(amazonPaySettings, settings => settings.PaymentType, model.PaymentType_OverrideForStore, storeId, false);
+        await settingService.SaveSettingOverridablePerStoreAsync(amazonPaySettings, settings => settings.ButtonPlacement, model.ButtonPlacement_OverrideForStore, storeId, false);
+        await settingService.SaveSettingOverridablePerStoreAsync(amazonPaySettings, settings => settings.ButtonColor, model.ButtonColor_OverrideForStore, storeId, false);
+        await settingService.SaveSettingOverridablePerStoreAsync(amazonPaySettings, settings => settings.EnableLogging, model.EnableLogging_OverrideForStore, storeId, false);
 
-        await _settingService.ClearCacheAsync();
+        await settingService.ClearCacheAsync();
 
-        _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
+        notificationService.SuccessNotification(await localizationService.GetResourceAsync("Admin.Plugins.Saved"));
 
         return RedirectToAction("Configure");
     }
@@ -188,33 +158,33 @@ public class AmazonPayController : BasePaymentController
         if (!ModelState.IsValid)
             return await Configure();
 
-        var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-        var amazonPaySettings = await _settingService.LoadSettingAsync<AmazonPaySettings>(storeId);
+        var storeId = await storeContext.GetActiveStoreScopeConfigurationAsync();
+        var amazonPaySettings = await settingService.LoadSettingAsync<AmazonPaySettings>(storeId);
 
         amazonPaySettings.PaymentRegion = (PaymentRegion)model.Region;
-        await _settingService.SaveSettingOverridablePerStoreAsync(amazonPaySettings, settings => settings.PaymentRegion, model.Region_OverrideForStore, storeId, false);
+        await settingService.SaveSettingOverridablePerStoreAsync(amazonPaySettings, settings => settings.PaymentRegion, model.Region_OverrideForStore, storeId, false);
 
         if (model.Region == (int)PaymentRegion.Eu || model.Region == (int)PaymentRegion.Uk || model.Region == (int)PaymentRegion.Jp)
         {
             amazonPaySettings.SetCredentialsManually = true;
-            await _settingService.SaveSettingOverridablePerStoreAsync(amazonPaySettings, settings => settings.SetCredentialsManually, model.Region_OverrideForStore, storeId, false);
-            await _settingService.ClearCacheAsync();
+            await settingService.SaveSettingOverridablePerStoreAsync(amazonPaySettings, settings => settings.SetCredentialsManually, model.Region_OverrideForStore, storeId, false);
+            await settingService.ClearCacheAsync();
 
-            _notificationService.WarningNotification(await _localizationService.GetResourceAsync("Plugins.Payments.AmazonPay.Onboarding.Region.Warning"));
+            notificationService.WarningNotification(await localizationService.GetResourceAsync("Plugins.Payments.AmazonPay.Onboarding.Region.Warning"));
 
             return RedirectToAction("Configure");
         }
 
         //try to register merchant (US only)
-        var (privateKey, publicKey) = await _amazonPayOnboardingService.RegisterAsync((PaymentRegion)model.Region, amazonPaySettings);
+        var (privateKey, publicKey) = await amazonPayOnboardingService.RegisterAsync((PaymentRegion)model.Region, amazonPaySettings);
 
         amazonPaySettings.SetCredentialsManually = model.SetCredentialsManually;
         amazonPaySettings.PrivateKey = privateKey;
         amazonPaySettings.PublicKey = publicKey;
-        await _settingService.SaveSettingOverridablePerStoreAsync(amazonPaySettings, settings => settings.SetCredentialsManually, model.Region_OverrideForStore, storeId, false);
-        await _settingService.SaveSettingOverridablePerStoreAsync(amazonPaySettings, settings => settings.PrivateKey, model.Region_OverrideForStore, storeId, false);
-        await _settingService.SaveSettingOverridablePerStoreAsync(amazonPaySettings, settings => settings.PublicKey, model.Region_OverrideForStore, storeId, false);
-        await _settingService.ClearCacheAsync();
+        await settingService.SaveSettingOverridablePerStoreAsync(amazonPaySettings, settings => settings.SetCredentialsManually, model.Region_OverrideForStore, storeId, false);
+        await settingService.SaveSettingOverridablePerStoreAsync(amazonPaySettings, settings => settings.PrivateKey, model.Region_OverrideForStore, storeId, false);
+        await settingService.SaveSettingOverridablePerStoreAsync(amazonPaySettings, settings => settings.PublicKey, model.Region_OverrideForStore, storeId, false);
+        await settingService.ClearCacheAsync();
 
         return Empty;
     }

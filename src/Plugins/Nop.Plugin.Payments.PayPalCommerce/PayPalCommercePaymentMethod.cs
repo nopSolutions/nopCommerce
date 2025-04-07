@@ -22,25 +22,7 @@ namespace Nop.Plugin.Payments.PayPalCommerce;
 /// <summary>
 /// Represents the PayPal Commerce payment method
 /// </summary>
-public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPlugin
-{
-    #region Fields
-
-    private readonly IActionContextAccessor _actionContextAccessor;
-    private readonly ILocalizationService _localizationService;
-    private readonly ISettingService _settingService;
-    private readonly IStoreService _storeService;
-    private readonly IUrlHelperFactory _urlHelperFactory;
-    private readonly PaymentSettings _paymentSettings;
-    private readonly PayPalCommerceServiceManager _serviceManager;
-    private readonly PayPalCommerceSettings _settings;
-    private readonly WidgetSettings _widgetSettings;
-
-    #endregion
-
-    #region Ctor
-
-    public PayPalCommercePaymentMethod(IActionContextAccessor actionContextAccessor,
+public class PayPalCommercePaymentMethod(IActionContextAccessor actionContextAccessor,
         ILocalizationService localizationService,
         ISettingService settingService,
         IStoreService storeService,
@@ -48,21 +30,8 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
         PaymentSettings paymentSettings,
         PayPalCommerceServiceManager serviceManager,
         PayPalCommerceSettings settings,
-        WidgetSettings widgetSettings)
-    {
-        _actionContextAccessor = actionContextAccessor;
-        _localizationService = localizationService;
-        _settingService = settingService;
-        _storeService = storeService;
-        _urlHelperFactory = urlHelperFactory;
-        _paymentSettings = paymentSettings;
-        _serviceManager = serviceManager;
-        _settings = settings;
-        _widgetSettings = widgetSettings;
-    }
-
-    #endregion
-
+        WidgetSettings widgetSettings) : BasePlugin, IPaymentMethod, IWidgetPlugin
+{
     #region Methods
 
     /// <summary>
@@ -99,7 +68,7 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
     public async Task<CapturePaymentResult> CaptureAsync(CapturePaymentRequest capturePaymentRequest)
     {
         //capture previously authorized payment
-        var (capture, error) = await _serviceManager.CaptureAuthorizationAsync(_settings, capturePaymentRequest.Order.AuthorizationTransactionId);
+        var (capture, error) = await serviceManager.CaptureAuthorizationAsync(settings, capturePaymentRequest.Order.AuthorizationTransactionId);
         if (!string.IsNullOrEmpty(error))
             return new() { Errors = new[] { error } };
 
@@ -123,7 +92,7 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
     public async Task<VoidPaymentResult> VoidAsync(VoidPaymentRequest voidPaymentRequest)
     {
         //void previously authorized payment
-        var (_, error) = await _serviceManager.VoidAsync(_settings, voidPaymentRequest.Order.AuthorizationTransactionId);
+        var (_, error) = await serviceManager.VoidAsync(settings, voidPaymentRequest.Order.AuthorizationTransactionId);
         if (!string.IsNullOrEmpty(error))
             return new() { Errors = new[] { error } };
 
@@ -146,7 +115,7 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
             ? (decimal?)refundPaymentRequest.AmountToRefund
             : null;
 
-        var (_, error) = await _serviceManager.RefundAsync(_settings, refundPaymentRequest.Order, amount);
+        var (_, error) = await serviceManager.RefundAsync(settings, refundPaymentRequest.Order, amount);
         if (!string.IsNullOrEmpty(error))
             return new() { Errors = new[] { error } };
 
@@ -168,7 +137,7 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
         if (processPaymentRequest.InitialOrder is null)
             return new();
 
-        var (_, error) = await _serviceManager.ProcessNextRecurringPaymentAsync(_settings, processPaymentRequest);
+        var (_, error) = await serviceManager.ProcessNextRecurringPaymentAsync(settings, processPaymentRequest);
         if (!string.IsNullOrEmpty(error))
             return new() { Errors = new[] { error }, RecurringPaymentFailed = true };
 
@@ -186,7 +155,7 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
     /// </returns>
     public async Task<CancelRecurringPaymentResult> CancelRecurringPaymentAsync(CancelRecurringPaymentRequest cancelPaymentRequest)
     {
-        var (_, error) = await _serviceManager.CancelRecurringPaymentAsync(_settings, cancelPaymentRequest.Order);
+        var (_, error) = await serviceManager.CancelRecurringPaymentAsync(settings, cancelPaymentRequest.Order);
         if (!string.IsNullOrEmpty(error))
             return new() { Errors = new[] { error } };
 
@@ -203,7 +172,7 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
     /// </returns>
     public Task<bool> HidePaymentMethodAsync(IList<ShoppingCartItem> cart)
     {
-        var notConnected = !PayPalCommerceServiceManager.IsConnected(_settings);
+        var notConnected = !PayPalCommerceServiceManager.IsConnected(settings);
         return Task.FromResult(notConnected);
     }
 
@@ -264,7 +233,7 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
     /// </summary>
     public override string GetConfigurationPageUrl()
     {
-        return _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext).RouteUrl(PayPalCommerceDefaults.Route.Configuration);
+        return urlHelperFactory.GetUrlHelper(actionContextAccessor.ActionContext).RouteUrl(PayPalCommerceDefaults.Route.Configuration);
     }
 
     /// <summary>
@@ -330,7 +299,7 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
     /// <returns>A task that represents the asynchronous operation</returns>
     public override async Task InstallAsync()
     {
-        await _settingService.SaveSettingAsync(new PayPalCommerceSettings
+        await settingService.SaveSettingAsync(new PayPalCommerceSettings
         {
             SetCredentialsManually = false,
             UseSandbox = false,
@@ -374,19 +343,19 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
                 "border=\"0\" alt=\"PayPal Acceptance Mark\"></a></div><!-- PayPal Logo -->",
         });
 
-        if (!_paymentSettings.ActivePaymentMethodSystemNames.Contains(PayPalCommerceDefaults.SystemName))
+        if (!paymentSettings.ActivePaymentMethodSystemNames.Contains(PayPalCommerceDefaults.SystemName))
         {
-            _paymentSettings.ActivePaymentMethodSystemNames.Add(PayPalCommerceDefaults.SystemName);
-            await _settingService.SaveSettingAsync(_paymentSettings);
+            paymentSettings.ActivePaymentMethodSystemNames.Add(PayPalCommerceDefaults.SystemName);
+            await settingService.SaveSettingAsync(paymentSettings);
         }
 
-        if (!_widgetSettings.ActiveWidgetSystemNames.Contains(PayPalCommerceDefaults.SystemName))
+        if (!widgetSettings.ActiveWidgetSystemNames.Contains(PayPalCommerceDefaults.SystemName))
         {
-            _widgetSettings.ActiveWidgetSystemNames.Add(PayPalCommerceDefaults.SystemName);
-            await _settingService.SaveSettingAsync(_widgetSettings);
+            widgetSettings.ActiveWidgetSystemNames.Add(PayPalCommerceDefaults.SystemName);
+            await settingService.SaveSettingAsync(widgetSettings);
         }
 
-        await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
+        await localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
         {
             ["Enums.Nop.Plugin.Payments.PayPalCommerce.Domain.ButtonPlacement.Cart"] = "Shopping cart",
             ["Enums.Nop.Plugin.Payments.PayPalCommerce.Domain.ButtonPlacement.Product"] = "Product",
@@ -505,31 +474,31 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
     public override async Task UninstallAsync()
     {
         //clear webhooks when uninstall
-        var stores = await _storeService.GetAllStoresAsync();
+        var stores = await storeService.GetAllStoresAsync();
         var storeIds = new List<int> { 0 }.Union(stores.Select(store => store.Id));
         foreach (var storeId in storeIds)
         {
-            var settings = await _settingService.LoadSettingAsync<PayPalCommerceSettings>(storeId);
+            var settings = await settingService.LoadSettingAsync<PayPalCommerceSettings>(storeId);
             if (PayPalCommerceServiceManager.IsConnected(settings))
-                await _serviceManager.DeleteWebhookAsync(settings);
+                await serviceManager.DeleteWebhookAsync(settings);
         }
 
-        if (_paymentSettings.ActivePaymentMethodSystemNames.Contains(PayPalCommerceDefaults.SystemName))
+        if (paymentSettings.ActivePaymentMethodSystemNames.Contains(PayPalCommerceDefaults.SystemName))
         {
-            _paymentSettings.ActivePaymentMethodSystemNames.Remove(PayPalCommerceDefaults.SystemName);
-            await _settingService.SaveSettingAsync(_paymentSettings);
+            paymentSettings.ActivePaymentMethodSystemNames.Remove(PayPalCommerceDefaults.SystemName);
+            await settingService.SaveSettingAsync(paymentSettings);
         }
 
-        if (_widgetSettings.ActiveWidgetSystemNames.Contains(PayPalCommerceDefaults.SystemName))
+        if (widgetSettings.ActiveWidgetSystemNames.Contains(PayPalCommerceDefaults.SystemName))
         {
-            _widgetSettings.ActiveWidgetSystemNames.Remove(PayPalCommerceDefaults.SystemName);
-            await _settingService.SaveSettingAsync(_widgetSettings);
+            widgetSettings.ActiveWidgetSystemNames.Remove(PayPalCommerceDefaults.SystemName);
+            await settingService.SaveSettingAsync(widgetSettings);
         }
 
-        await _settingService.DeleteSettingAsync<PayPalCommerceSettings>();
+        await settingService.DeleteSettingAsync<PayPalCommerceSettings>();
 
-        await _localizationService.DeleteLocaleResourcesAsync("Enums.Nop.Plugin.Payments.PayPalCommerce");
-        await _localizationService.DeleteLocaleResourcesAsync("Plugins.Payments.PayPalCommerce");
+        await localizationService.DeleteLocaleResourcesAsync("Enums.Nop.Plugin.Payments.PayPalCommerce");
+        await localizationService.DeleteLocaleResourcesAsync("Plugins.Payments.PayPalCommerce");
 
         await base.UninstallAsync();
     }
@@ -540,7 +509,7 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task<string> GetPaymentMethodDescriptionAsync()
     {
-        return await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.PaymentMethodDescription");
+        return await localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.PaymentMethodDescription");
     }
 
     #endregion

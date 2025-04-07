@@ -12,32 +12,11 @@ namespace Nop.Plugin.Shipping.UPS;
 /// <summary>
 /// Represents UPS computation method
 /// </summary>
-public class UPSComputationMethod : BasePlugin, IShippingRateComputationMethod
-{
-    #region Fields
-
-    private readonly ILocalizationService _localizationService;
-    private readonly ISettingService _settingService;
-    private readonly IWebHelper _webHelper;
-    private readonly UPSService _upsService;
-
-    #endregion
-
-    #region Ctor
-
-    public UPSComputationMethod(ILocalizationService localizationService,
+public class UPSComputationMethod(ILocalizationService localizationService,
         ISettingService settingService,
         IWebHelper webHelper,
-        UPSService upsService)
-    {
-        _localizationService = localizationService;
-        _settingService = settingService;
-        _webHelper = webHelper;
-        _upsService = upsService;
-    }
-
-    #endregion
-
+        UPSService upsService) : BasePlugin, IShippingRateComputationMethod
+{
     #region Methods
 
     /// <summary>
@@ -58,7 +37,7 @@ public class UPSComputationMethod : BasePlugin, IShippingRateComputationMethod
         if (getShippingOptionRequest.ShippingAddress?.CountryId == null)
             return new GetShippingOptionResponse { Errors = new[] { "Shipping address is not set" } };
 
-        return await _upsService.GetRatesAsync(getShippingOptionRequest);
+        return await upsService.GetRatesAsync(getShippingOptionRequest);
     }
 
     /// <summary>
@@ -83,7 +62,7 @@ public class UPSComputationMethod : BasePlugin, IShippingRateComputationMethod
     /// </returns>
     public Task<IShipmentTracker> GetShipmentTrackerAsync()
     {
-        return Task.FromResult<IShipmentTracker>(new UPSShipmentTracker(_upsService));
+        return Task.FromResult<IShipmentTracker>(new UPSShipmentTracker(upsService));
     }
 
     /// <summary>
@@ -91,7 +70,7 @@ public class UPSComputationMethod : BasePlugin, IShippingRateComputationMethod
     /// </summary>
     public override string GetConfigurationPageUrl()
     {
-        return $"{_webHelper.GetStoreLocation()}Admin/UPSShipping/Configure";
+        return $"{webHelper.GetStoreLocation()}Admin/UPSShipping/Configure";
     }
 
     /// <summary>
@@ -101,7 +80,7 @@ public class UPSComputationMethod : BasePlugin, IShippingRateComputationMethod
     public override async Task InstallAsync()
     {
         //settings
-        await _settingService.SaveSettingAsync(new UPSSettings
+        await settingService.SaveSettingAsync(new UPSSettings
         {
             UseSandbox = true,
             CustomerClassification = CustomerClassification.StandardListRates,
@@ -116,7 +95,7 @@ public class UPSComputationMethod : BasePlugin, IShippingRateComputationMethod
         });
 
         //locales
-        await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
+        await localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
         {
             ["Enums.Nop.Plugin.Shipping.UPS.PackingType.PackByDimensions"] = "Pack by dimensions",
             ["Enums.Nop.Plugin.Shipping.UPS.PackingType.PackByOneItemPerPackage"] = "Pack by one item per package",
@@ -175,11 +154,11 @@ public class UPSComputationMethod : BasePlugin, IShippingRateComputationMethod
     public override async Task UninstallAsync()
     {
         //settings
-        await _settingService.DeleteSettingAsync<UPSSettings>();
+        await settingService.DeleteSettingAsync<UPSSettings>();
 
         //locales
-        await _localizationService.DeleteLocaleResourcesAsync("Enums.Nop.Plugin.Shipping.UPS");
-        await _localizationService.DeleteLocaleResourcesAsync("Plugins.Shipping.UPS");
+        await localizationService.DeleteLocaleResourcesAsync("Enums.Nop.Plugin.Shipping.UPS");
+        await localizationService.DeleteLocaleResourcesAsync("Plugins.Shipping.UPS");
 
         await base.UninstallAsync();
     }

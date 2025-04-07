@@ -7,23 +7,8 @@ namespace Nop.Plugin.Search.Lucene;
 /// <summary>
 /// Represents Lucene search provider helper plugin
 /// </summary>
-public class LuceneSearchProvider : BasePlugin, IMiscPlugin
+public class LuceneSearchProvider(IWebHelper webHelper) : BasePlugin, IMiscPlugin
 {
-    #region Fields
-
-    private readonly IWebHelper _webHelper;
-
-    #endregion
-
-    #region Ctor
-
-    public LuceneSearchProvider(IWebHelper webHelper)
-    {
-        _webHelper = webHelper;
-    }
-
-    #endregion
-
     #region Methods
 
     /// <summary>
@@ -31,7 +16,7 @@ public class LuceneSearchProvider : BasePlugin, IMiscPlugin
     /// </summary>
     public override string GetConfigurationPageUrl()
     {
-        return $"{_webHelper.GetStoreLocation()}Admin/Lucene/Configure";
+        return $"{webHelper.GetStoreLocation()}Admin/Lucene/Configure";
     }
 
     /// <summary>

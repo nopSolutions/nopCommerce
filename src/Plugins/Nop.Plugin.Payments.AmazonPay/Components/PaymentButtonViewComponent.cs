@@ -14,41 +14,15 @@ namespace Nop.Plugin.Payments.AmazonPay.Components;
 /// <summary>
 /// Represents the view component to display payment button
 /// </summary>
-public class PaymentButtonViewComponent : NopViewComponent
-{
-    #region Fields
-
-    private readonly AmazonPayApiService _amazonPayApiService;
-    private readonly AmazonPayCheckoutService _amazonPayCheckoutService;
-    private readonly AmazonPaySettings _amazonPaySettings;
-    private readonly DisallowedProducts _disallowedProducts;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IShoppingCartService _shoppingCartService;
-    private readonly OrderSettings _orderSettings;
-
-    #endregion
-
-    #region Ctor
-
-    public PaymentButtonViewComponent(AmazonPayApiService amazonPayApiService,
+public class PaymentButtonViewComponent(AmazonPayApiService amazonPayApiService,
         AmazonPayCheckoutService amazonPayCheckoutService,
         AmazonPaySettings amazonPaySettings,
         DisallowedProducts disallowedProducts,
         IHttpContextAccessor httpContextAccessor,
         IShoppingCartService shoppingCartService,
-        OrderSettings orderSettings)
-    {
-        _amazonPayApiService = amazonPayApiService;
-        _amazonPayCheckoutService = amazonPayCheckoutService;
-        _amazonPaySettings = amazonPaySettings;
-        _disallowedProducts = disallowedProducts;
-        _httpContextAccessor = httpContextAccessor;
-        _shoppingCartService = shoppingCartService;
-        _orderSettings = orderSettings;
-    }
-
-    #endregion
-
+        OrderSettings orderSettings) 
+    : NopViewComponent
+{
     #region Methods
 
     /// <summary>
@@ -63,30 +37,30 @@ public class PaymentButtonViewComponent : NopViewComponent
     public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
     {
         //ensure that plugin is active and configured
-        if (!await _amazonPayApiService.IsActiveAndConfiguredAsync())
+        if (!await amazonPayApiService.IsActiveAndConfiguredAsync())
             return Content(string.Empty);
 
         if (widgetZone.Equals(PublicWidgetZones.ProductDetailsAddInfo))
         {
-            if (!_amazonPaySettings.ButtonPlacement.Contains(ButtonPlacement.Product))
+            if (!amazonPaySettings.ButtonPlacement.Contains(ButtonPlacement.Product))
                 return Content(string.Empty);
 
             var productId = additionalData is ProductDetailsModel.AddToCartModel data ? (int?)data.ProductId : null;
-            var model = await _amazonPayCheckoutService.GetPaymentInfoModelAsync(ButtonPlacement.Product, productId);
+            var model = await amazonPayCheckoutService.GetPaymentInfoModelAsync(ButtonPlacement.Product, productId);
             if (model is null)
                 return Content(string.Empty);
 
-            model.IsCartContainsNoAllowedProducts = model.IsCartContainsNoAllowedProducts || await _disallowedProducts.IsProductDisallowAsync(model.ProductId ?? 0);
+            model.IsCartContainsNoAllowedProducts = model.IsCartContainsNoAllowedProducts || await disallowedProducts.IsProductDisallowAsync(model.ProductId ?? 0);
 
             return View("~/Plugins/Payments.AmazonPay/Views/PaymentInfo.cshtml", model);
         }
 
         if (widgetZone.Equals(PublicWidgetZones.BodyStartHtmlTagAfter))
         {
-            if (!_amazonPaySettings.ButtonPlacement.Contains(ButtonPlacement.MiniCart))
+            if (!amazonPaySettings.ButtonPlacement.Contains(ButtonPlacement.MiniCart))
                 return Content(string.Empty);
 
-            var model = await _amazonPayCheckoutService.GetPaymentInfoModelAsync(ButtonPlacement.MiniCart);
+            var model = await amazonPayCheckoutService.GetPaymentInfoModelAsync(ButtonPlacement.MiniCart);
             if (model is null)
                 return Content(string.Empty);
 
@@ -96,10 +70,10 @@ public class PaymentButtonViewComponent : NopViewComponent
         if (!new List<string> { PublicWidgetZones.CheckoutProgressBefore, PublicWidgetZones.OpcContentBefore }.Contains(widgetZone))
             return Content(string.Empty);
 
-        if (!_amazonPaySettings.ButtonPlacement.Contains(ButtonPlacement.Checkout))
+        if (!amazonPaySettings.ButtonPlacement.Contains(ButtonPlacement.Checkout))
             return Content(string.Empty);
 
-        var values = _httpContextAccessor.HttpContext?.Request.RouteValues;
+        var values = httpContextAccessor.HttpContext?.Request.RouteValues;
         if (values == null)
             return Content(string.Empty);
 
@@ -107,33 +81,33 @@ public class PaymentButtonViewComponent : NopViewComponent
         if (routeName == null)
             return Content(string.Empty);
 
-        if (_orderSettings.OnePageCheckoutEnabled)
+        if (orderSettings.OnePageCheckoutEnabled)
         {
             if (!routeName.Equals(AmazonPayDefaults.OnePageCheckoutRouteName))
                 return Content(string.Empty);
 
-            var onePageModel = await _amazonPayCheckoutService.GetPaymentInfoModelAsync(ButtonPlacement.Checkout);
+            var onePageModel = await amazonPayCheckoutService.GetPaymentInfoModelAsync(ButtonPlacement.Checkout);
             if (onePageModel is null)
                 return Content(string.Empty);
 
             return View("~/Plugins/Payments.AmazonPay/Views/PaymentInfo.cshtml", onePageModel);
         }
 
-        if (!_orderSettings.DisableBillingAddressCheckoutStep
+        if (!orderSettings.DisableBillingAddressCheckoutStep
             && !routeName.Equals("CheckoutBillingAddress", StringComparison.InvariantCultureIgnoreCase))
             return Content(string.Empty);
 
-        if (_orderSettings.DisableBillingAddressCheckoutStep
-            && await _shoppingCartService.ShoppingCartRequiresShippingAsync(await _amazonPayCheckoutService.GetCartAsync())
+        if (orderSettings.DisableBillingAddressCheckoutStep
+            && await shoppingCartService.ShoppingCartRequiresShippingAsync(await amazonPayCheckoutService.GetCartAsync())
             && !routeName.Equals("CheckoutShippingAddress", StringComparison.InvariantCultureIgnoreCase))
             return Content(string.Empty);
 
-        if (_orderSettings.DisableBillingAddressCheckoutStep
-            && !await _shoppingCartService.ShoppingCartRequiresShippingAsync(await _amazonPayCheckoutService.GetCartAsync())
+        if (orderSettings.DisableBillingAddressCheckoutStep
+            && !await shoppingCartService.ShoppingCartRequiresShippingAsync(await amazonPayCheckoutService.GetCartAsync())
             && !routeName.Equals("CheckoutShippingMethod", StringComparison.InvariantCultureIgnoreCase))
             return Content(string.Empty);
 
-        var checkoutModel = await _amazonPayCheckoutService.GetPaymentInfoModelAsync(ButtonPlacement.Checkout);
+        var checkoutModel = await amazonPayCheckoutService.GetPaymentInfoModelAsync(ButtonPlacement.Checkout);
         if (checkoutModel is null)
             return Content(string.Empty);
 

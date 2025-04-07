@@ -8,27 +8,11 @@ namespace Nop.Plugin.Widgets.Swiper.Infrastructure.Cache;
 /// <summary>
 /// Model cache event consumer (used for caching of presentation layer models)
 /// </summary>
-public class ModelCacheEventConsumer :
+public class ModelCacheEventConsumer(IStaticCacheManager staticCacheManager) :
     IConsumer<EntityInsertedEvent<Setting>>,
     IConsumer<EntityUpdatedEvent<Setting>>,
     IConsumer<EntityDeletedEvent<Setting>>
 {
-
-    #region Fields
-
-    private readonly IStaticCacheManager _staticCacheManager;
-
-    #endregion
-
-    #region Ctor
-
-    public ModelCacheEventConsumer(IStaticCacheManager staticCacheManager)
-    {
-        _staticCacheManager = staticCacheManager;
-    }
-
-    #endregion
-
     #region Methods
 
     /// <summary>
@@ -38,7 +22,7 @@ public class ModelCacheEventConsumer :
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(EntityInsertedEvent<Setting> eventMessage)
     {
-        await _staticCacheManager.RemoveByPrefixAsync(PictureUrlPrefix);
+        await staticCacheManager.RemoveByPrefixAsync(PictureUrlPrefix);
     }
 
     /// <summary>
@@ -48,7 +32,7 @@ public class ModelCacheEventConsumer :
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(EntityUpdatedEvent<Setting> eventMessage)
     {
-        await _staticCacheManager.RemoveByPrefixAsync(PictureUrlPrefix);
+        await staticCacheManager.RemoveByPrefixAsync(PictureUrlPrefix);
     }
 
     /// <summary>
@@ -58,7 +42,7 @@ public class ModelCacheEventConsumer :
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(EntityDeletedEvent<Setting> eventMessage)
     {
-        await _staticCacheManager.RemoveByPrefixAsync(PictureUrlPrefix);
+        await staticCacheManager.RemoveByPrefixAsync(PictureUrlPrefix);
     }
 
     #endregion

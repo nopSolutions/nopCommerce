@@ -27,44 +27,7 @@ namespace Nop.Plugin.Payments.AmazonPay.Services;
 /// <summary>
 /// Represents the service for checkout related methods
 /// </summary>
-public class AmazonPayCheckoutService
-{
-    #region Fields
-
-    private readonly AmazonPayApiService _amazonPayApiService;
-    private readonly AmazonPaySettings _amazonPaySettings;
-    private readonly CustomerSettings _customerSettings;
-    private readonly DisallowedProducts _disallowedProducts;
-    private readonly IAddressService _addressService;
-    private readonly ICheckoutModelFactory _checkoutModelFactory;
-    private readonly ICountryService _countryService;
-    private readonly ICurrencyService _currencyService;
-    private readonly ICustomerService _customerService;
-    private readonly IExternalAuthenticationService _externalAuthenticationService;
-    private readonly IGenericAttributeService _genericAttributeService;
-    private readonly ILocalizationService _localizationService;
-    private readonly ILogger _logger;
-    private readonly INotificationService _notificationService;
-    private readonly IOrderProcessingService _orderProcessingService;
-    private readonly IOrderService _orderService;
-    private readonly IOrderTotalCalculationService _orderTotalCalculationService;
-    private readonly IPaymentPluginManager _paymentPluginManager;
-    private readonly IPriceCalculationService _priceCalculationService;
-    private readonly IPriceFormatter _priceFormatter;
-    private readonly IProductService _productService;
-    private readonly IShippingService _shippingService;
-    private readonly IShoppingCartService _shoppingCartService;
-    private readonly IStateProvinceService _stateProvinceService;
-    private readonly IStoreContext _storeContext;
-    private readonly IWebHelper _webHelper;
-    private readonly IWorkContext _workContext;
-    private readonly OrderSettings _orderSettings;
-
-    #endregion
-
-    #region Ctor
-
-    public AmazonPayCheckoutService(AmazonPayApiService amazonPayApiService,
+public class AmazonPayCheckoutService(AmazonPayApiService amazonPayApiService,
         AmazonPaySettings amazonPaySettings,
         CustomerSettings customerSettings,
         DisallowedProducts disallowedProducts,
@@ -92,45 +55,13 @@ public class AmazonPayCheckoutService
         IWebHelper webHelper,
         IWorkContext workContext,
         OrderSettings orderSettings)
-    {
-        _amazonPayApiService = amazonPayApiService;
-        _amazonPaySettings = amazonPaySettings;
-        _customerSettings = customerSettings;
-        _disallowedProducts = disallowedProducts;
-        _addressService = addressService;
-        _checkoutModelFactory = checkoutModelFactory;
-        _countryService = countryService;
-        _currencyService = currencyService;
-        _customerService = customerService;
-        _externalAuthenticationService = externalAuthenticationService;
-        _genericAttributeService = genericAttributeService;
-        _localizationService = localizationService;
-        _logger = logger;
-        _notificationService = notificationService;
-        _orderProcessingService = orderProcessingService;
-        _orderService = orderService;
-        _orderTotalCalculationService = orderTotalCalculationService;
-        _paymentPluginManager = paymentPluginManager;
-        _priceCalculationService = priceCalculationService;
-        _priceFormatter = priceFormatter;
-        _productService = productService;
-        _shippingService = shippingService;
-        _shoppingCartService = shoppingCartService;
-        _stateProvinceService = stateProvinceService;
-        _storeContext = storeContext;
-        _webHelper = webHelper;
-        _workContext = workContext;
-        _orderSettings = orderSettings;
-    }
-
-    #endregion
-
+{
     #region Utilities
 
     private async Task FillAddressAsync(CreateCheckoutSessionRequest request)
     {
-        var customer = await _workContext.GetCurrentCustomerAsync();
-        var shippingAddress = await _addressService.GetAddressByIdAsync(customer.ShippingAddressId ?? 0);
+        var customer = await workContext.GetCurrentCustomerAsync();
+        var shippingAddress = await addressService.GetAddressByIdAsync(customer.ShippingAddressId ?? 0);
 
         if (shippingAddress == null)
             return;
@@ -143,14 +74,14 @@ public class AmazonPayCheckoutService
         request.AddressDetails.PostalCode = shippingAddress.ZipPostalCode;
         request.AddressDetails.DistrictOrCounty = shippingAddress.County;
 
-        var country = await _countryService.GetCountryByIdAsync(shippingAddress.CountryId ?? 0);
+        var country = await countryService.GetCountryByIdAsync(shippingAddress.CountryId ?? 0);
 
         if (country == null)
             return;
 
         request.AddressDetails.CountryCode = country.TwoLetterIsoCode;
 
-        var state = await _stateProvinceService.GetStateProvinceByIdAsync(shippingAddress.StateProvinceId ?? 0);
+        var state = await stateProvinceService.GetStateProvinceByIdAsync(shippingAddress.StateProvinceId ?? 0);
 
         if (state == null)
             return;
@@ -160,29 +91,29 @@ public class AmazonPayCheckoutService
 
     private async Task<bool> IsCartContainsNoAllowedProductsAsync(int? productId)
     {
-        if (productId != null && await _disallowedProducts.IsProductDisallowAsync(productId.Value))
+        if (productId != null && await disallowedProducts.IsProductDisallowAsync(productId.Value))
             return true;
 
         var cart = await GetCartAsync();
 
         return await cart.AnyAwaitAsync(async item =>
-            await _disallowedProducts.IsProductDisallowAsync(item.ProductId));
+            await disallowedProducts.IsProductDisallowAsync(item.ProductId));
     }
 
     private async Task<bool> IsMinimumOrderPlacementIntervalValidAsync(Customer customer)
     {
         //prevent 2 orders being placed within an X seconds time frame
-        if (_orderSettings.MinimumOrderPlacementInterval == 0)
+        if (orderSettings.MinimumOrderPlacementInterval == 0)
             return true;
 
-        var store = await _storeContext.GetCurrentStoreAsync();
-        var lastOrder = (await _orderService.SearchOrdersAsync(store.Id, customerId: customer.Id, pageSize: 1)).FirstOrDefault();
+        var store = await storeContext.GetCurrentStoreAsync();
+        var lastOrder = (await orderService.SearchOrdersAsync(store.Id, customerId: customer.Id, pageSize: 1)).FirstOrDefault();
         if (lastOrder == null)
             return true;
 
         var interval = DateTime.UtcNow - lastOrder.CreatedOnUtc;
 
-        return interval.TotalSeconds > _orderSettings.MinimumOrderPlacementInterval;
+        return interval.TotalSeconds > orderSettings.MinimumOrderPlacementInterval;
     }
 
     private async Task<(Order placedOrder, List<string> warnings)> PlaceOrderAsync(string orderGuid)
@@ -191,12 +122,12 @@ public class AmazonPayCheckoutService
 
         try
         {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var store = await _storeContext.GetCurrentStoreAsync();
+            var customer = await workContext.GetCurrentCustomerAsync();
+            var store = await storeContext.GetCurrentStoreAsync();
 
             //prevent 2 orders being placed within an X seconds time frame
             if (!await IsMinimumOrderPlacementIntervalValidAsync(customer))
-                throw new NopException(await _localizationService.GetResourceAsync("Checkout.MinOrderPlacementInterval"));
+                throw new NopException(await localizationService.GetResourceAsync("Checkout.MinOrderPlacementInterval"));
 
             var request = new ProcessPaymentRequest
             {
@@ -208,7 +139,7 @@ public class AmazonPayCheckoutService
             };
 
             //place order
-            var placeOrderResult = await _orderProcessingService.PlaceOrderAsync(request);
+            var placeOrderResult = await orderProcessingService.PlaceOrderAsync(request);
 
             if (placeOrderResult.Success)
                 return (placeOrderResult.PlacedOrder, warnings);
@@ -218,7 +149,7 @@ public class AmazonPayCheckoutService
         }
         catch (Exception exc)
         {
-            await _logger.ErrorAsync(exc.Message, exc);
+            await logger.ErrorAsync(exc.Message, exc);
             warnings.Add(exc.Message);
         }
 
@@ -227,29 +158,29 @@ public class AmazonPayCheckoutService
 
     private string ReadCheckoutSessionId()
     {
-        var checkoutSessionId = _webHelper.QueryString<string>(AmazonPayDefaults.CheckoutSessionQueryParamName);
+        var checkoutSessionId = webHelper.QueryString<string>(AmazonPayDefaults.CheckoutSessionQueryParamName);
 
         return checkoutSessionId;
     }
 
     private async Task<CheckoutConfirmModel> FillCheckoutDataBySessionAsync()
     {
-        var customer = await _workContext.GetCurrentCustomerAsync();
-        var store = await _storeContext.GetCurrentStoreAsync();
+        var customer = await workContext.GetCurrentCustomerAsync();
+        var store = await storeContext.GetCurrentStoreAsync();
 
         var model = new CheckoutConfirmModel
         {
-            AmazonPayScript = _amazonPayApiService.AmazonPayScriptUrl
+            AmazonPayScript = amazonPayApiService.AmazonPayScriptUrl
         };
 
-        var skip = await _genericAttributeService
+        var skip = await genericAttributeService
             .GetAttributeAsync<bool?>(customer, AmazonPayDefaults.SkipFillDataBySessionAttributeName, store.Id);
         if (skip.HasValue && skip.Value)
             return model;
 
         // send the request
         var checkoutSessionId = await GetCheckoutSessionIdAsync();
-        var result = await _amazonPayApiService.PerformRequestAsync(client => client.GetCheckoutSession(checkoutSessionId));
+        var result = await amazonPayApiService.PerformRequestAsync(client => client.GetCheckoutSession(checkoutSessionId));
 
         if (!string.IsNullOrEmpty(result.Buyer?.BuyerId) && !string.IsNullOrEmpty(result.Buyer.Email))
         {
@@ -262,35 +193,35 @@ public class AmazonPayCheckoutService
                 ExternalIdentifier = result.Buyer.BuyerId,
                 ProviderSystemName = AmazonPayDefaults.PluginSystemName
             };
-            var associatedCustomer = await _externalAuthenticationService
+            var associatedCustomer = await externalAuthenticationService
                 .GetUserByExternalAuthenticationParametersAsync(authenticationParameters);
 
-            if (await _customerService.IsGuestAsync(customer))
+            if (await customerService.IsGuestAsync(customer))
             {
                 if (associatedCustomer is not null)
-                    await _externalAuthenticationService.AuthenticateAsync(authenticationParameters, _webHelper.GetThisPageUrl(true));
+                    await externalAuthenticationService.AuthenticateAsync(authenticationParameters, webHelper.GetThisPageUrl(true));
                 else
                 {
-                    var customerByEmail = await _customerService.GetCustomerByEmailAsync(result.Buyer.Email);
+                    var customerByEmail = await customerService.GetCustomerByEmailAsync(result.Buyer.Email);
                     if (customerByEmail is null)
                     {
-                        if (_customerSettings.UserRegistrationType != UserRegistrationType.Disabled)
+                        if (customerSettings.UserRegistrationType != UserRegistrationType.Disabled)
                         {
                             model.CanCreateAccount = true;
-                            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Payments.AmazonPay.SignIn.CreateAccount"));
+                            notificationService.SuccessNotification(await localizationService.GetResourceAsync("Plugins.Payments.AmazonPay.SignIn.CreateAccount"));
                         }
                     }
                     else
                     {
                         model.CanAssociateAccount = true;
-                        _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Payments.AmazonPay.SignIn.LinkAccounts.ByEmail"));
+                        notificationService.SuccessNotification(await localizationService.GetResourceAsync("Plugins.Payments.AmazonPay.SignIn.LinkAccounts.ByEmail"));
                     }
                 }
             }
             else if (associatedCustomer is null)
             {
                 model.CanAssociateAccount = true;
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Payments.AmazonPay.SignIn.LinkAccounts"));
+                notificationService.SuccessNotification(await localizationService.GetResourceAsync("Plugins.Payments.AmazonPay.SignIn.LinkAccounts"));
             }
         }
 
@@ -301,10 +232,10 @@ public class AmazonPayCheckoutService
             var firstName = names[0];
             var lastName = names.Length > 1 ? names[1] : string.Empty;
 
-            var countryId = (await _countryService.GetCountryByTwoLetterIsoCodeAsync(address.CountryCode))?.Id ?? 0;
+            var countryId = (await countryService.GetCountryByTwoLetterIsoCodeAsync(address.CountryCode))?.Id ?? 0;
             var stateProvinceId = 0;
             if (!string.IsNullOrEmpty(address.StateOrRegion))
-                stateProvinceId = (await _stateProvinceService.GetStateProvinceByAbbreviationAsync(address.StateOrRegion))?.Id ?? 0;
+                stateProvinceId = (await stateProvinceService.GetStateProvinceByAbbreviationAsync(address.StateOrRegion))?.Id ?? 0;
 
             var email = result.Buyer.Email ?? customer.Email;
 
@@ -323,7 +254,7 @@ public class AmazonPayCheckoutService
                 CountryId = countryId
             };
 
-            var existsAddress = _addressService.FindAddress((await _customerService.GetAddressesByCustomerIdAsync(customer.Id)).ToList(),
+            var existsAddress = addressService.FindAddress((await customerService.GetAddressesByCustomerIdAsync(customer.Id)).ToList(),
                 addressForSearch.FirstName, addressForSearch.LastName, addressForSearch.PhoneNumber,
                 addressForSearch.Email, null, null,
                 addressForSearch.Address1, addressForSearch.Address2, addressForSearch.City,
@@ -342,9 +273,9 @@ public class AmazonPayCheckoutService
             if (addressForSearch.StateProvinceId == 0)
                 addressForSearch.StateProvinceId = null;
 
-            await _addressService.InsertAddressAsync(addressForSearch);
-            await _customerService.InsertCustomerAddressAsync(customer, addressForSearch);
-            await _genericAttributeService.SaveAttributeAsync(addressForSearch, AmazonPayDefaults.AddressAttributeName, true);
+            await addressService.InsertAddressAsync(addressForSearch);
+            await customerService.InsertCustomerAddressAsync(customer, addressForSearch);
+            await genericAttributeService.SaveAttributeAsync(addressForSearch, AmazonPayDefaults.AddressAttributeName, true);
 
             return addressForSearch.Id;
         }
@@ -376,11 +307,11 @@ public class AmazonPayCheckoutService
         }
 
         if (needCustomerUpdate)
-            await _customerService.UpdateCustomerAsync(customer);
+            await customerService.UpdateCustomerAsync(customer);
 
         var paymentDescriptor = result.PaymentPreferences?.FirstOrDefault()?.PaymentDescriptor ?? string.Empty;
 
-        await _genericAttributeService
+        await genericAttributeService
             .SaveAttributeAsync(customer, NopCustomerDefaults.SelectedPaymentMethodAttribute, paymentDescriptor, store.Id);
 
         return model;
@@ -400,9 +331,9 @@ public class AmazonPayCheckoutService
     /// </returns>
     public async Task<IList<ShoppingCartItem>> GetCartAsync(Customer customer = null)
     {
-        customer ??= await _workContext.GetCurrentCustomerAsync();
-        var store = await _storeContext.GetCurrentStoreAsync();
-        var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+        customer ??= await workContext.GetCurrentCustomerAsync();
+        var store = await storeContext.GetCurrentStoreAsync();
+        var cart = await shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
 
         return cart;
     }
@@ -417,12 +348,12 @@ public class AmazonPayCheckoutService
     /// </returns>
     public async Task<string> GetShoppingCartWarningsAsync(IList<ShoppingCartItem> shoppingCart)
     {
-        var customer = await _workContext.GetCurrentCustomerAsync();
-        var store = await _storeContext.GetCurrentStoreAsync();
-        var checkoutAttributesXml = await _genericAttributeService
+        var customer = await workContext.GetCurrentCustomerAsync();
+        var store = await storeContext.GetCurrentStoreAsync();
+        var checkoutAttributesXml = await genericAttributeService
             .GetAttributeAsync<string>(customer, NopCustomerDefaults.CheckoutAttributes, store.Id);
 
-        var scWarnings = await _shoppingCartService.GetShoppingCartWarningsAsync(shoppingCart, checkoutAttributesXml, true);
+        var scWarnings = await shoppingCartService.GetShoppingCartWarningsAsync(shoppingCart, checkoutAttributesXml, true);
 
         return scWarnings.Any() ? string.Join("<br />", scWarnings) : string.Empty;
     }
@@ -437,8 +368,8 @@ public class AmazonPayCheckoutService
     /// </returns>
     public async Task<bool> IsAllowedToCheckoutAsync(Customer customer = null)
     {
-        customer ??= await _workContext.GetCurrentCustomerAsync();
-        return !(await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed);
+        customer ??= await workContext.GetCurrentCustomerAsync();
+        return !(await customerService.IsGuestAsync(customer) && !orderSettings.AnonymousCheckoutAllowed);
     }
 
     /// <summary>
@@ -453,36 +384,36 @@ public class AmazonPayCheckoutService
     {
         try
         {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var (_, currency) = await _amazonPayApiService.GetCurrencyAsync();
+            var customer = await workContext.GetCurrentCustomerAsync();
+            var (_, currency) = await amazonPayApiService.GetCurrencyAsync();
 
             var model = await FillCheckoutDataBySessionAsync();
 
             if (await ShoppingCartRequiresShippingAsync(cart))
             {
-                var shippingAddress = await _addressService.GetAddressByIdAsync(customer.ShippingAddressId ?? 0);
-                var shippingMethodModel = await _checkoutModelFactory.PrepareShippingMethodModelAsync(await GetCartAsync(),
+                var shippingAddress = await addressService.GetAddressByIdAsync(customer.ShippingAddressId ?? 0);
+                var shippingMethodModel = await checkoutModelFactory.PrepareShippingMethodModelAsync(await GetCartAsync(),
                     shippingAddress);
 
                 model.SetShippingMethodData(shippingMethodModel);
             }
 
             //min order amount validation
-            var minOrderTotalAmountOk = await _orderProcessingService.ValidateMinOrderTotalAmountAsync(cart);
+            var minOrderTotalAmountOk = await orderProcessingService.ValidateMinOrderTotalAmountAsync(cart);
             if (minOrderTotalAmountOk)
                 return model;
 
-            var minOrderTotalAmount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(_orderSettings.MinOrderTotalAmount, currency);
-            minOrderTotalAmount = await _priceCalculationService.RoundPriceAsync(minOrderTotalAmount, currency);
-            model.MinOrderTotalWarning = string.Format(await _localizationService.GetResourceAsync("Checkout.MinOrderTotalAmount"),
-                await _priceFormatter.FormatPriceAsync(minOrderTotalAmount, true, false));
+            var minOrderTotalAmount = await currencyService.ConvertFromPrimaryStoreCurrencyAsync(orderSettings.MinOrderTotalAmount, currency);
+            minOrderTotalAmount = await priceCalculationService.RoundPriceAsync(minOrderTotalAmount, currency);
+            model.MinOrderTotalWarning = string.Format(await localizationService.GetResourceAsync("Checkout.MinOrderTotalAmount"),
+                await priceFormatter.FormatPriceAsync(minOrderTotalAmount, true, false));
 
             return model;
         }
         catch (Exception exception)
         {
             var logMessage = $"{AmazonPayDefaults.PluginSystemName} error:{System.Environment.NewLine}{exception.Message}";
-            await _logger.ErrorAsync(logMessage, exception, await _workContext.GetCurrentCustomerAsync());
+            await logger.ErrorAsync(logMessage, exception, await workContext.GetCurrentCustomerAsync());
 
             return null;
         }
@@ -498,7 +429,7 @@ public class AmazonPayCheckoutService
     /// </returns>
     public async Task<bool> ShoppingCartRequiresShippingAsync(IList<ShoppingCartItem> cart = null)
     {
-        return await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart ?? await GetCartAsync());
+        return await shoppingCartService.ShoppingCartRequiresShippingAsync(cart ?? await GetCartAsync());
     }
 
     /// <summary>
@@ -513,25 +444,25 @@ public class AmazonPayCheckoutService
     {
         async Task<int?> removeAddressAsync(int addressId)
         {
-            var address = await _addressService.GetAddressByIdAsync(addressId);
+            var address = await addressService.GetAddressByIdAsync(addressId);
             if (address is null)
                 return null;
 
-            var isAmazonAddress = await _genericAttributeService.GetAttributeAsync<bool>(address, AmazonPayDefaults.AddressAttributeName);
+            var isAmazonAddress = await genericAttributeService.GetAttributeAsync<bool>(address, AmazonPayDefaults.AddressAttributeName);
             if (!isAmazonAddress)
                 return null;
 
-            await _customerService.RemoveCustomerAddressAsync(customer, address);
-            await _customerService.UpdateCustomerAsync(customer);
-            await _genericAttributeService.SaveAttributeAsync<bool?>(address, AmazonPayDefaults.AddressAttributeName, null);
-            await _addressService.DeleteAddressAsync(address);
+            await customerService.RemoveCustomerAddressAsync(customer, address);
+            await customerService.UpdateCustomerAsync(customer);
+            await genericAttributeService.SaveAttributeAsync<bool?>(address, AmazonPayDefaults.AddressAttributeName, null);
+            await addressService.DeleteAddressAsync(address);
 
             return addressId;
         }
 
         //per Amazon policy, it is prohibited to use Amazon provided details (e.g. addresses),
         //so we unlink them from customers and leave only in orders
-        customer ??= await _workContext.GetCurrentCustomerAsync();
+        customer ??= await workContext.GetCurrentCustomerAsync();
         var addressIds = new List<int?>
         {
             await removeAddressAsync(customer.BillingAddressId ?? 0),
@@ -547,9 +478,9 @@ public class AmazonPayCheckoutService
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task SetShippingMethodToNullAsync()
     {
-        var customer = await _workContext.GetCurrentCustomerAsync();
-        var store = await _storeContext.GetCurrentStoreAsync();
-        await _genericAttributeService
+        var customer = await workContext.GetCurrentCustomerAsync();
+        var store = await storeContext.GetCurrentStoreAsync();
+        await genericAttributeService
             .SaveAttributeAsync<ShippingOption>(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, null, store.Id);
     }
 
@@ -575,19 +506,19 @@ public class AmazonPayCheckoutService
         var selectedName = splittedOption[0];
         var shippingRateComputationMethodSystemName = splittedOption[1];
 
-        var customer = await _workContext.GetCurrentCustomerAsync();
-        var store = await _storeContext.GetCurrentStoreAsync();
+        var customer = await workContext.GetCurrentCustomerAsync();
+        var store = await storeContext.GetCurrentStoreAsync();
 
         //find it
         //performance optimization. try cache first
-        var shippingOptions = await _genericAttributeService
+        var shippingOptions = await genericAttributeService
             .GetAttributeAsync<List<ShippingOption>>(customer, NopCustomerDefaults.OfferedShippingOptionsAttribute, store.Id);
         if (shippingOptions == null || shippingOptions.Count == 0)
         {
-            var shippingAddress = await _addressService.GetAddressByIdAsync(customer.ShippingAddressId ?? 0);
+            var shippingAddress = await addressService.GetAddressByIdAsync(customer.ShippingAddressId ?? 0);
 
             //not found? let's load them using shipping service
-            shippingOptions = (await _shippingService
+            shippingOptions = (await shippingService
                 .GetShippingOptionsAsync(cart, shippingAddress,
                 allowedShippingRateComputationMethodSystemName: shippingRateComputationMethodSystemName))
                 .ShippingOptions
@@ -604,7 +535,7 @@ public class AmazonPayCheckoutService
             return false;
 
         //save
-        await _genericAttributeService
+        await genericAttributeService
             .SaveAttributeAsync(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, shippingOption, store.Id);
 
         return true;
@@ -617,9 +548,9 @@ public class AmazonPayCheckoutService
     public async Task<string> ReadAndSaveCheckoutSessionIdAsync()
     {
         var checkoutSessionId = ReadCheckoutSessionId();
-        var customer = await _workContext.GetCurrentCustomerAsync();
-        var store = await _storeContext.GetCurrentStoreAsync();
-        await _genericAttributeService
+        var customer = await workContext.GetCurrentCustomerAsync();
+        var store = await storeContext.GetCurrentStoreAsync();
+        await genericAttributeService
             .SaveAttributeAsync(customer, AmazonPayDefaults.CheckoutSessionIdAttributeName, checkoutSessionId, store.Id);
 
         return checkoutSessionId;
@@ -634,9 +565,9 @@ public class AmazonPayCheckoutService
     /// </returns>
     public async Task<string> GetCheckoutSessionIdAsync()
     {
-        var customer = await _workContext.GetCurrentCustomerAsync();
-        var store = await _storeContext.GetCurrentStoreAsync();
-        var checkoutSessionId = await _genericAttributeService
+        var customer = await workContext.GetCurrentCustomerAsync();
+        var store = await storeContext.GetCurrentStoreAsync();
+        var checkoutSessionId = await genericAttributeService
             .GetAttributeAsync<string>(customer, AmazonPayDefaults.CheckoutSessionIdAttributeName, store.Id);
         checkoutSessionId ??= await ReadAndSaveCheckoutSessionIdAsync();
 
@@ -652,9 +583,9 @@ public class AmazonPayCheckoutService
     /// </returns>
     public async Task<string> GetPaymentDescriptorAsync()
     {
-        var customer = await _workContext.GetCurrentCustomerAsync();
-        var store = await _storeContext.GetCurrentStoreAsync();
-        var paymentDescriptor = await _genericAttributeService
+        var customer = await workContext.GetCurrentCustomerAsync();
+        var store = await storeContext.GetCurrentStoreAsync();
+        var paymentDescriptor = await genericAttributeService
             .GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedPaymentMethodAttribute, store.Id);
 
         return paymentDescriptor;
@@ -676,20 +607,20 @@ public class AmazonPayCheckoutService
             var shippingIsRequired = await ShoppingCartRequiresShippingAsync();
 
             //when the model is prepared for the product page, this product is not yet in the cart, so we check it separately
-            if (!shippingIsRequired && await _productService.GetProductByIdAsync(productId ?? 0) is Product product)
+            if (!shippingIsRequired && await productService.GetProductByIdAsync(productId ?? 0) is Product product)
                 shippingIsRequired = product.IsShipEnabled;
 
-            var (currencyCode, _) = await _amazonPayApiService.GetCurrencyAsync();
+            var (currencyCode, _) = await amazonPayApiService.GetCurrencyAsync();
             var model = new PaymentInfoModel
             {
-                LedgerCurrency = _amazonPayApiService.LedgerCurrency?.ToString(),
+                LedgerCurrency = amazonPayApiService.LedgerCurrency?.ToString(),
                 Currency = currencyCode.ToString(),
-                ButtonColor = _amazonPaySettings.ButtonColor.ToString(),
+                ButtonColor = amazonPaySettings.ButtonColor.ToString(),
                 ProductType = shippingIsRequired
                     ? AmazonPayDefaults.ProductType.PayAndShip
                     : AmazonPayDefaults.ProductType.PayOnly,
                 Placement = placement,
-                AmazonPayScript = _amazonPayApiService.AmazonPayScriptUrl,
+                AmazonPayScript = amazonPayApiService.AmazonPayScriptUrl,
                 ProductId = productId,
                 IsCartContainsNoAllowedProducts = await IsCartContainsNoAllowedProductsAsync(productId)
             };
@@ -699,7 +630,7 @@ public class AmazonPayCheckoutService
         catch (Exception exception)
         {
             var logMessage = $"{AmazonPayDefaults.PluginSystemName} error:{System.Environment.NewLine}{exception.Message}";
-            await _logger.ErrorAsync(logMessage, exception, await _workContext.GetCurrentCustomerAsync());
+            await logger.ErrorAsync(logMessage, exception, await workContext.GetCurrentCustomerAsync());
 
             return null;
         }
@@ -717,13 +648,13 @@ public class AmazonPayCheckoutService
     {
         try
         {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var (currencyCode, currency) = await _amazonPayApiService.GetCurrencyAsync();
+            var customer = await workContext.GetCurrentCustomerAsync();
+            var store = await storeContext.GetCurrentStoreAsync();
+            var (currencyCode, currency) = await amazonPayApiService.GetCurrencyAsync();
 
-            await _genericAttributeService
+            await genericAttributeService
                 .SaveAttributeAsync<string>(customer, AmazonPayDefaults.CheckoutSessionIdAttributeName, null, store.Id);
-            await _genericAttributeService
+            await genericAttributeService
                 .SaveAttributeAsync<bool?>(customer, AmazonPayDefaults.SkipFillDataBySessionAttributeName, null, store.Id);
 
             var scopes = new List<CheckoutSessionScope>
@@ -747,11 +678,11 @@ public class AmazonPayCheckoutService
             // prepare the request
             var request = new CreateCheckoutSessionRequest
             (
-                checkoutReviewReturnUrl: _amazonPayApiService.GetUrl(AmazonPayDefaults.ConfirmRouteName),
-                storeId: _amazonPaySettings.StoreId,
+                checkoutReviewReturnUrl: amazonPayApiService.GetUrl(AmazonPayDefaults.ConfirmRouteName),
+                storeId: amazonPaySettings.StoreId,
                 scopes.ToArray()
             )
-            { WebCheckoutDetails = { CheckoutCancelUrl = _amazonPayApiService.GetUrl("ShoppingCart") } };
+            { WebCheckoutDetails = { CheckoutCancelUrl = amazonPayApiService.GetUrl("ShoppingCart") } };
 
             request.PlatformId = AmazonPayDefaults.SpId;
             request.MerchantMetadata.CustomInformation = AmazonPayDefaults.IntegrationName;
@@ -760,21 +691,21 @@ public class AmazonPayCheckoutService
 
             //init address restrictions
             request.DeliverySpecifications.AddressRestrictions.Type = RestrictionType.NotAllowed;
-            var method = await _paymentPluginManager.LoadPluginBySystemNameAsync(AmazonPayDefaults.PluginSystemName);
-            var restrictedCountries = await _paymentPluginManager.GetRestrictedCountryIdsAsync(method);
-            var countries = await _countryService.GetCountriesByIdsAsync(restrictedCountries.ToArray());
+            var method = await paymentPluginManager.LoadPluginBySystemNameAsync(AmazonPayDefaults.PluginSystemName);
+            var restrictedCountries = await paymentPluginManager.GetRestrictedCountryIdsAsync(method);
+            var countries = await countryService.GetCountriesByIdsAsync(restrictedCountries.ToArray());
 
             foreach (var country in countries)
                 request.DeliverySpecifications.AddressRestrictions.AddCountryRestriction(country.TwoLetterIsoCode.ToUpper());
 
             var cart = await GetCartAsync();
-            var cartTotal = (await _orderTotalCalculationService.GetShoppingCartTotalAsync(cart)).shoppingCartTotal ?? 0;
+            var cartTotal = (await orderTotalCalculationService.GetShoppingCartTotalAsync(cart)).shoppingCartTotal ?? 0;
             cartTotal = cartTotal != 0
                 ? cartTotal
-                : (await _orderTotalCalculationService.GetShoppingCartSubTotalAsync(cart, true))
+                : (await orderTotalCalculationService.GetShoppingCartSubTotalAsync(cart, true))
                 .subTotalWithoutDiscount;
-            cartTotal = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(cartTotal, currency);
-            cartTotal = await _priceCalculationService.RoundPriceAsync(cartTotal, currency);
+            cartTotal = await currencyService.ConvertFromPrimaryStoreCurrencyAsync(cartTotal, currency);
+            cartTotal = await priceCalculationService.RoundPriceAsync(cartTotal, currency);
 
             request.PaymentDetails = new() { PresentmentCurrency = currencyCode };
 
@@ -782,7 +713,7 @@ public class AmazonPayCheckoutService
                 await SetShippingMethodToNullAsync();
             else
             {
-                await _genericAttributeService
+                await genericAttributeService
                     .SaveAttributeAsync<bool?>(customer, AmazonPayDefaults.SkipFillDataBySessionAttributeName, true, store.Id);
             }
 
@@ -792,13 +723,13 @@ public class AmazonPayCheckoutService
                     await FillAddressAsync(request);
 
                 request.WebCheckoutDetails.CheckoutMode = CheckoutMode.ProcessOrder;
-                request.WebCheckoutDetails.CheckoutResultReturnUrl = _amazonPayApiService.GetUrl(AmazonPayDefaults.CheckoutResultHandlerRouteName);
+                request.WebCheckoutDetails.CheckoutResultReturnUrl = amazonPayApiService.GetUrl(AmazonPayDefaults.CheckoutResultHandlerRouteName);
                 request.WebCheckoutDetails.CheckoutReviewReturnUrl = null;
 
                 request.PaymentDetails = new()
                 {
                     ChargeAmount = { Amount = cartTotal, CurrencyCode = currencyCode },
-                    PaymentIntent = _amazonPaySettings.PaymentType == PaymentType.Capture
+                    PaymentIntent = amazonPaySettings.PaymentType == PaymentType.Capture
                         ? PaymentIntent.AuthorizeWithCapture
                         : PaymentIntent.Authorize,
                     PresentmentCurrency = currencyCode
@@ -808,9 +739,9 @@ public class AmazonPayCheckoutService
                 request.MerchantMetadata.MerchantReferenceId = Guid.NewGuid().ToString().ToUpper();
             }
 
-            if (await _shoppingCartService.ShoppingCartIsRecurringAsync(cart))
+            if (await shoppingCartService.ShoppingCartIsRecurringAsync(cart))
             {
-                var (error, cycleLength, cyclePeriod, _) = await _shoppingCartService.GetRecurringCycleInfoAsync(cart);
+                var (error, cycleLength, cyclePeriod, _) = await shoppingCartService.GetRecurringCycleInfoAsync(cart);
                 if (!string.IsNullOrEmpty(error))
                     throw new NopException(error);
 
@@ -829,7 +760,7 @@ public class AmazonPayCheckoutService
             }
 
             //generate the button signature
-            var signature = await _amazonPayApiService.GenerateButtonSignatureAsync(request);
+            var signature = await amazonPayApiService.GenerateButtonSignatureAsync(request);
 
             // the payload as JSON string that you must assign to the button in the next step
             var payload = request.ToJson();
@@ -839,7 +770,7 @@ public class AmazonPayCheckoutService
         catch (Exception exception)
         {
             var logMessage = $"{AmazonPayDefaults.PluginSystemName} error:{System.Environment.NewLine}{exception.Message}";
-            await _logger.ErrorAsync(logMessage, exception, await _workContext.GetCurrentCustomerAsync());
+            await logger.ErrorAsync(logMessage, exception, await workContext.GetCurrentCustomerAsync());
 
             return (null, null, decimal.Zero);
         }
@@ -854,20 +785,20 @@ public class AmazonPayCheckoutService
     /// </returns>
     public async Task<string> UpdateCheckoutSessionAsync()
     {
-        var store = await _storeContext.GetCurrentStoreAsync();
-        var (currencyCode, currency) = await _amazonPayApiService.GetCurrencyAsync();
+        var store = await storeContext.GetCurrentStoreAsync();
+        var (currencyCode, currency) = await amazonPayApiService.GetCurrencyAsync();
 
         var cart = await GetCartAsync();
-        var cartTotal = (await _orderTotalCalculationService.GetShoppingCartTotalAsync(cart)).shoppingCartTotal ?? 0;
-        cartTotal = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(cartTotal, currency);
-        cartTotal = await _priceCalculationService.RoundPriceAsync(cartTotal, currency);
+        var cartTotal = (await orderTotalCalculationService.GetShoppingCartTotalAsync(cart)).shoppingCartTotal ?? 0;
+        cartTotal = await currencyService.ConvertFromPrimaryStoreCurrencyAsync(cartTotal, currency);
+        cartTotal = await priceCalculationService.RoundPriceAsync(cartTotal, currency);
 
         // prepare the request
         var request = new UpdateCheckoutSessionRequest
         {
             WebCheckoutDetails =
             {
-                CheckoutResultReturnUrl = _amazonPayApiService.GetUrl(AmazonPayDefaults.CheckoutResultHandlerRouteName),
+                CheckoutResultReturnUrl = amazonPayApiService.GetUrl(AmazonPayDefaults.CheckoutResultHandlerRouteName),
             },
             PaymentDetails =
             {
@@ -877,7 +808,7 @@ public class AmazonPayCheckoutService
                     Amount = cartTotal,
                     CurrencyCode = currencyCode
                 },
-                PaymentIntent = _amazonPaySettings.PaymentType == PaymentType.Capture ? PaymentIntent.AuthorizeWithCapture : PaymentIntent.Authorize
+                PaymentIntent = amazonPaySettings.PaymentType == PaymentType.Capture ? PaymentIntent.AuthorizeWithCapture : PaymentIntent.Authorize
             },
             MerchantMetadata =
             {
@@ -886,9 +817,9 @@ public class AmazonPayCheckoutService
             }
         };
 
-        if (await _shoppingCartService.ShoppingCartIsRecurringAsync(cart))
+        if (await shoppingCartService.ShoppingCartIsRecurringAsync(cart))
         {
-            var (error, cycleLength, cyclePeriod, _) = await _shoppingCartService.GetRecurringCycleInfoAsync(cart);
+            var (error, cycleLength, cyclePeriod, _) = await shoppingCartService.GetRecurringCycleInfoAsync(cart);
             if (!string.IsNullOrEmpty(error))
                 throw new NopException(error);
 
@@ -908,7 +839,7 @@ public class AmazonPayCheckoutService
 
         // send the request
         var checkoutSessionId = await GetCheckoutSessionIdAsync();
-        var result = await _amazonPayApiService.PerformRequestAsync(client => client.UpdateCheckoutSession(checkoutSessionId, request, _amazonPayApiService.Headers));
+        var result = await amazonPayApiService.PerformRequestAsync(client => client.UpdateCheckoutSession(checkoutSessionId, request, amazonPayApiService.Headers));
 
         return result.WebCheckoutDetails.AmazonPayRedirectUrl;
     }
@@ -922,26 +853,26 @@ public class AmazonPayCheckoutService
     /// </returns>
     public async Task<(Order placedOrder, List<string> warnings, CheckoutCompletedModel completedModel)> CompleteCheckoutAsync()
     {
-        var customer = await _workContext.GetCurrentCustomerAsync();
-        var store = await _storeContext.GetCurrentStoreAsync();
-        var (currencyCode, currency) = await _amazonPayApiService.GetCurrencyAsync();
+        var customer = await workContext.GetCurrentCustomerAsync();
+        var store = await storeContext.GetCurrentStoreAsync();
+        var (currencyCode, currency) = await amazonPayApiService.GetCurrencyAsync();
 
         var cart = await GetCartAsync();
-        var cartTotal = (await _orderTotalCalculationService.GetShoppingCartTotalAsync(cart)).shoppingCartTotal ?? 0;
-        cartTotal = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(cartTotal, currency);
-        cartTotal = await _priceCalculationService.RoundPriceAsync(cartTotal, currency);
+        var cartTotal = (await orderTotalCalculationService.GetShoppingCartTotalAsync(cart)).shoppingCartTotal ?? 0;
+        cartTotal = await currencyService.ConvertFromPrimaryStoreCurrencyAsync(cartTotal, currency);
+        cartTotal = await priceCalculationService.RoundPriceAsync(cartTotal, currency);
 
         var checkoutSessionId = ReadCheckoutSessionId();
-        var checkoutSession = await _amazonPayApiService.PerformRequestAsync(client => client.GetCheckoutSession(checkoutSessionId));
+        var checkoutSession = await amazonPayApiService.PerformRequestAsync(client => client.GetCheckoutSession(checkoutSessionId));
 
         // prepare the request
         var request = new CompleteCheckoutSessionRequest(cartTotal, currencyCode);
 
         // send the request
-        var result = await _amazonPayApiService.PerformRequestAsync(client => client.CompleteCheckoutSession(checkoutSessionId, request, _amazonPayApiService.Headers));
-        var chargeInfo = await _amazonPayApiService.PerformRequestAsync(client => client.GetCharge(result.ChargeId));
+        var result = await amazonPayApiService.PerformRequestAsync(client => client.CompleteCheckoutSession(checkoutSessionId, request, amazonPayApiService.Headers));
+        var chargeInfo = await amazonPayApiService.PerformRequestAsync(client => client.GetCharge(result.ChargeId));
 
-        var chargePermissionId = await _shoppingCartService.ShoppingCartIsRecurringAsync(cart)
+        var chargePermissionId = await shoppingCartService.ShoppingCartIsRecurringAsync(cart)
             ? result.ChargePermissionId
             : string.Empty;
 
@@ -952,19 +883,19 @@ public class AmazonPayCheckoutService
 
         order.SubscriptionTransactionId = chargePermissionId;
 
-        switch (_amazonPaySettings.PaymentType)
+        switch (amazonPaySettings.PaymentType)
         {
             case PaymentType.Capture:
                 order.CaptureTransactionId = result.ChargeId;
-                await _orderProcessingService.MarkOrderAsPaidAsync(order);
+                await orderProcessingService.MarkOrderAsPaidAsync(order);
                 break;
             case PaymentType.Authorize:
                 order.AuthorizationTransactionId = result.ChargeId;
-                await _orderProcessingService.MarkAsAuthorizedAsync(order);
+                await orderProcessingService.MarkAsAuthorizedAsync(order);
                 break;
         }
 
-        await _genericAttributeService
+        await genericAttributeService
             .SaveAttributeAsync<string>(customer, AmazonPayDefaults.CheckoutSessionIdAttributeName, null, store.Id);
 
         await SetShippingMethodToNullAsync();
@@ -973,7 +904,7 @@ public class AmazonPayCheckoutService
         {
             CustomOrderNumber = order.CustomOrderNumber,
             OrderId = order.Id,
-            AmazonPayScript = _amazonPayApiService.AmazonPayScriptUrl,
+            AmazonPayScript = amazonPayApiService.AmazonPayScriptUrl,
             BuyerId = checkoutSession.Buyer?.BuyerId
         };
 

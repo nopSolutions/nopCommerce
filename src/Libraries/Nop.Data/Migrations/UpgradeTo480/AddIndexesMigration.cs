@@ -6,15 +6,8 @@ using Nop.Core.Domain.Topics;
 namespace Nop.Data.Migrations.UpgradeTo480;
 
 [NopSchemaMigration("2024-11-25 00:00:00", "AddIndexesMigration for 4.80.0")]
-public class AddIndexesMigration : ForwardOnlyMigration
+public class AddIndexesMigration(INopDataProvider dataProvider) : ForwardOnlyMigration
 {
-    private readonly INopDataProvider _dataProvider;
-
-    public AddIndexesMigration(INopDataProvider dataProvider)
-    {
-        _dataProvider = dataProvider;
-    }
-
     /// <summary>
     /// Collect the UP migration expressions
     /// </summary>
@@ -30,7 +23,7 @@ public class AddIndexesMigration : ForwardOnlyMigration
         if (!Schema.Table(nameof(Order)).Index("AK_Order_OrderGuid").Exists() &&
             !Schema.Table(nameof(Order)).Constraint("AK_Order_OrderGuid").Exists())
         {
-            var orders = _dataProvider.GetTable<Order>().GroupBy(p => p.OrderGuid, p => p)
+            var orders = dataProvider.GetTable<Order>().GroupBy(p => p.OrderGuid, p => p)
                 .Where(p => p.Count() > 1)
                 .SelectMany(p => p)
                 .ToList();
@@ -40,7 +33,7 @@ public class AddIndexesMigration : ForwardOnlyMigration
                 foreach (var order in orders)
                     order.OrderGuid = Guid.NewGuid();
 
-                _dataProvider.UpdateEntities(orders);
+                dataProvider.UpdateEntities(orders);
             }
 
             Create.UniqueConstraint("AK_Order_OrderGuid")

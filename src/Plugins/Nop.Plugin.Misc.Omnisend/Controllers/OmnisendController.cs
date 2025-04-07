@@ -7,48 +7,26 @@ using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.Misc.Omnisend.Controllers;
 
-public class OmnisendController : BasePluginController
-{
-    #region Fields
-
-    private readonly ICustomerService _customerService;
-    private readonly IGenericAttributeService _genericAttributeService;
-    private readonly IWebHelper _webHelper;
-    private readonly IWorkContext _workContext;
-    private readonly OmnisendService _omnisendService;
-
-    #endregion
-
-    #region Ctor
-
-    public OmnisendController(ICustomerService customerService,
+public class OmnisendController(ICustomerService customerService,
         IGenericAttributeService genericAttributeService,
         IWebHelper webHelper,
         IWorkContext workContext,
-        OmnisendService omnisendService)
-    {
-        _customerService = customerService;
-        _genericAttributeService = genericAttributeService;
-        _webHelper = webHelper;
-        _workContext = workContext;
-        _omnisendService = omnisendService;
-    }
-
-    #endregion
-
+        OmnisendService omnisendService) 
+    : BasePluginController
+{
     #region Methods
 
     public async Task<IActionResult> AbandonedCheckout(string cartId)
     {
-        var customer = await _workContext.GetCurrentCustomerAsync();
-        if (await _customerService.IsGuestAsync(customer))
-            return RedirectToRoute("Login", new { ReturnUrl = _webHelper.GetRawUrl(Request) });
+        var customer = await workContext.GetCurrentCustomerAsync();
+        if (await customerService.IsGuestAsync(customer))
+            return RedirectToRoute("Login", new { ReturnUrl = webHelper.GetRawUrl(Request) });
 
-        var customerEmail = await _genericAttributeService.GetAttributeAsync<string>(customer, OmnisendDefaults.CustomerEmailAttribute);
+        var customerEmail = await genericAttributeService.GetAttributeAsync<string>(customer, OmnisendDefaults.CustomerEmailAttribute);
         if (!string.IsNullOrEmpty(customerEmail) && !customerEmail.Equals(customer.Email, StringComparison.InvariantCultureIgnoreCase))
-            return RedirectToRoute("Login", new { ReturnUrl = _webHelper.GetRawUrl(Request) });
+            return RedirectToRoute("Login", new { ReturnUrl = webHelper.GetRawUrl(Request) });
 
-        await _omnisendService.RestoreShoppingCartAsync(cartId);
+        await omnisendService.RestoreShoppingCartAsync(cartId);
 
         return RedirectToRoute("ShoppingCart");
     }

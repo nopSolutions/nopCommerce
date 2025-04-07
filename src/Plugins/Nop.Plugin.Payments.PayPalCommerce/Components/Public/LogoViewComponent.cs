@@ -10,26 +10,9 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Components.Public;
 /// <summary>
 /// Represents the view component to display PayPal logo in the public store
 /// </summary>
-public class LogoViewComponent : NopViewComponent
+public class LogoViewComponent(PayPalCommerceSettings settings,
+        PayPalCommerceServiceManager serviceManager) : NopViewComponent
 {
-    #region Fields
-
-    private readonly PayPalCommerceSettings _settings;
-    private readonly PayPalCommerceServiceManager _serviceManager;
-
-    #endregion
-
-    #region Ctor
-
-    public LogoViewComponent(PayPalCommerceSettings settings,
-        PayPalCommerceServiceManager serviceManager)
-    {
-        _settings = settings;
-        _serviceManager = serviceManager;
-    }
-
-    #endregion
-
     #region Methods
 
     /// <summary>
@@ -43,14 +26,14 @@ public class LogoViewComponent : NopViewComponent
     /// </returns>
     public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
     {
-        var (active, _) = await _serviceManager.IsActiveAsync(_settings);
+        var (active, _) = await serviceManager.IsActiveAsync(settings);
         if (!active)
             return Content(string.Empty);
 
-        var script = widgetZone.Equals(PublicWidgetZones.HeaderLinksBefore) && _settings.DisplayLogoInHeaderLinks
-            ? _settings.LogoInHeaderLinks
-            : widgetZone.Equals(PublicWidgetZones.Footer) && _settings.DisplayLogoInFooter
-            ? _settings.LogoInFooter
+        var script = widgetZone.Equals(PublicWidgetZones.HeaderLinksBefore) && settings.DisplayLogoInHeaderLinks
+            ? settings.LogoInHeaderLinks
+            : widgetZone.Equals(PublicWidgetZones.Footer) && settings.DisplayLogoInFooter
+            ? settings.LogoInFooter
             : null;
 
         return new HtmlContentViewComponentResult(new HtmlString(script ?? string.Empty));
