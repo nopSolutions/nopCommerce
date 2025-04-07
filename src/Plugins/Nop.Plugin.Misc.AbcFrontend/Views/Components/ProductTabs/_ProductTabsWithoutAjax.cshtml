@@ -98,16 +98,16 @@
 
         </div>
     }
-    <!-- custom: reviews quicktab -->
-    <div id="quickTab-Reviews-tab">
-        <div data-bv-show="reviews" data-bv-product-id="@Model.ProductModel.Id"></div>
-    </div>
     @if (!string.IsNullOrEmpty(addnlDocumentContent))
     {
         <div id="quickTab-AdditionalDocuments">
             @Html.Raw(addnlDocumentContent)
         </div>
     }
+    <!-- custom: reviews quicktab -->
+    <div id="quickTab-Reviews-tab">
+        <div data-bv-show="reviews" data-bv-product-id="@Model.ProductModel.Id"></div>
+    </div>
 </div>
 
 <script src="//scontent.webcollage.net/api/v2/product-content"></script>
