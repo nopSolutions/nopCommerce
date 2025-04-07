@@ -10,18 +10,16 @@
 @await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
 
 @if (Model.IsConfigured)
-{
     @await Component.InvokeAsync(typeof(SettingModeViewComponent))
-}
 
 <script>
     $(function () {
-        if ($('#@Html.IdFor(model => model.SetCredentialsManually)').length > 0) {
+        if ($('#@Html.IdFor(model => model.SetCredentialsManually)').length > 0) 
             $('#@Html.IdFor(model => model.SetCredentialsManually)').click(toggleCredentials);
-        }
-        if ($('#@Html.IdFor(model => model.UseSandbox)').length > 0) {
+        
+        if ($('#@Html.IdFor(model => model.UseSandbox)').length > 0) 
             $('#@Html.IdFor(model => model.UseSandbox)').change(toggleUseSandbox);
-        }
+        
         $('#@Html.IdFor(model => model.UseApplePay)').change(toggleUseApplePay);
         toggleCredentials();
         toggleUseSandbox();
@@ -478,6 +476,4 @@
 <nop-alert asp-alert-id="signUpFailed" />
 
 @if (await Html.IsTourActiveAsync())
-{
     @await Html.PartialAsync("~/Plugins/Payments.PayPalCommerce/Views/Admin/_Configure.Tour.cshtml")
-}
