@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Language Name="Lietuviu" IsDefault="false" IsRightToLeft="false">
+<Language Name="Lietuvių" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Administratoriaus el. pašto adresas</Value>
   </LocaleResource>
   <LocaleResource Name="AdminEmailRequired">
-    <Value>Įveskite administratoriaus vartotojo slaptažodį</Value>
+    <Value>Įveskite administratoriaus el. pašto adresą</Value>
   </LocaleResource>
   <LocaleResource Name="AdminPassword">
-    <Value>Administratoriaus vartotojo slaptažodis</Value>
+    <Value>Administratoriaus slaptažodis</Value>
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>Įveskite administratoriaus slaptažodį</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
-    <Value>Vartotojas  '{0}' neturi teisių keisti katalogą  '{1}'. Prašome pakeisti teisių nustatymus.</Value>
+    <Value>Vartotojas '{0}' neturi teisių keisti katalogą '{1}'. Prašome pakeisti teisių nustatymus.</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureFilePermissions">
     <Value>Vartotojas '{0}' neturi teisių keisti bylą '{1}'. Prašome pakeisti teisių nustatymus.</Value>
@@ -28,31 +28,31 @@
     <Value>Prisijungimo eilutė</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringRequired">
-    <Value>A SQL connection string is required</Value>
+    <Value>SQL prisijungimo eilutė yra būtina</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringWrongFormat">
     <Value>Neteisinga SQL prisijungimo struktūra</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Country</Value>
+    <Value>Šalis</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Select your country...</Value>
+    <Value>Pasirinkite savo šalį...</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
-    <Value>Sukurti duomenų bazė jei tokia neegzistuoja</Value>
+    <Value>Sukurti duomenų bazę jei tokia neegzistuoja</Value>
   </LocaleResource>
   <LocaleResource Name="CreateSampleData">
     <Value>Sukurti pavyzdinius duomenis</Value>
   </LocaleResource>
   <LocaleResource Name="CustomCollation">
-    <Value>Specify custom collation</Value>
+    <Value>Nurodyti pasirinktinį rikiavimą</Value>
   </LocaleResource>
   <LocaleResource Name="Database">
     <Value>Duomenų bazė</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseCreationError">
-    <Value>Įvyko klaida kuriant kalbą:{0}</Value>
+    <Value>Įvyko klaida kuriant duomenų bazę: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>Duomenų bazės informacija</Value>
@@ -61,7 +61,7 @@
     <Value>Duomenų bazės pavadinimas</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseNotExists">
-    <Value>Duomenų bazės nėra arba jūs neturite leidimų prisijungti prie jos</Value>
+    <Value>Duomenų bazės nėra arba jūs neturite leidimo prie jos prisijungti</Value>
   </LocaleResource>
   <LocaleResource Name="DataProviderRequired">
     <Value>Pasirinkite duomenų teikėją</Value>
@@ -70,55 +70,55 @@
     <Value>Jei jums reikia informacijos, kaip naudotis nopCommerce, apsilankykite</Value>
   </LocaleResource>
   <LocaleResource Name="Documentation2">
-    <Value>the documentation section on nopCommerce.com</Value>
+    <Value>dokumentacijos skyriuje nopCommerce.com svetainėje</Value>
   </LocaleResource>
   <LocaleResource Name="Example">
-    <Value>Example</Value>
+    <Value>Pavyzdys</Value>
   </LocaleResource>
   <LocaleResource Name="Install">
-    <Value>Install</Value>
+    <Value>Įdiegti</Value>
   </LocaleResource>
   <LocaleResource Name="Installing">
-    <Value>Installing nopCommerce...</Value>
+    <Value>Diegiamas nopCommerce...</Value>
   </LocaleResource>
   <LocaleResource Name="IntegratedAuthentication">
-    <Value>Use integrated Windows authentication</Value>
+    <Value>Naudokite integruotą Windows autentifikavimą</Value>
   </LocaleResource>
   <LocaleResource Name="MySql">
     <Value>MySQL</Value>
   </LocaleResource>
   <LocaleResource Name="PasswordsDoNotMatch">
-    <Value>The passwords do not match</Value>
+    <Value>Slaptažodžiai nesutampa</Value>
   </LocaleResource>
   <LocaleResource Name="PostgreSQL">
     <Value>PostgreSQL</Value>
   </LocaleResource>
   <LocaleResource Name="RawConnectionString">
-    <Value>Enter raw connection string (advanced)</Value>
+    <Value>Įvesti neapdorotą prisijungimo eilutę (pažengusiems)</Value>
   </LocaleResource>
   <LocaleResource Name="RestartInstallation">
-    <Value>Restart installation</Value>
+    <Value>Iš naujo paleiskite diegimą</Value>
   </LocaleResource>
   <LocaleResource Name="RestartInstallationTooltip">
-    <Value>Click to restart the installation process (clear all cached values)</Value>
+    <Value>Spustelėkite, kad iš naujo paleistumėte diegimo procesą (išvalykite visas talpykloje esančias reikšmes)</Value>
   </LocaleResource>
   <LocaleResource Name="RestartProgress">
-    <Value>Restarting...</Value>
+    <Value>Perkraunama...</Value>
   </LocaleResource>
   <LocaleResource Name="ServerName">
-    <Value>Server name</Value>
+    <Value>Serverio pavadinimas</Value>
   </LocaleResource>
   <LocaleResource Name="ServerNameRequired">
-    <Value>Server name is required</Value>
+    <Value>Serverio pavadinimas yra būtinas</Value>
   </LocaleResource>
   <LocaleResource Name="SetupFailed">
-    <Value>Setup failed: {0}</Value>
+    <Value>Diegimas nepavyko: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="SqlPassword">
     <Value>SQL Password</Value>
   </LocaleResource>
   <LocaleResource Name="SqlPasswordRequired">
-    <Value>SQL Password is required</Value>
+    <Value>SQL Password yra būtinas</Value>
   </LocaleResource>
   <LocaleResource Name="SqlServer">
     <Value>Microsoft SQL Server</Value>
@@ -127,18 +127,18 @@
     <Value>SQL Username</Value>
   </LocaleResource>
   <LocaleResource Name="SqlUsernameRequired">
-    <Value>SQL Username is required</Value>
+    <Value>SQL Username yra būtinas</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
-    <Value>Store information</Value>
+    <Value>Parduotuvės informacija</Value>
   </LocaleResource>
   <LocaleResource Name="SubscribeNewsletters">
-    <Value>Subscribe to nopCommerce newsletter</Value>
+    <Value>Prenumeruoti nopCommerce naujienlaiškį</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
-    <Value>nopCommerce installation</Value>
+    <Value>nopCommerce diegimas</Value>
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
-    <Value>To complete this wizard, you must know some information regarding your database server ("connection string"). Please contact your ISP if necessary. If you're installing on a local machine or server, you might need information from your System Admin.</Value>
+    <Value>Norint užbaigti šį diegimą, turite žinoti kai kurią informaciją apie jūsų duomenų bazės serverį ("prisijungimo eilutę"). Jei reikia, susisiekite su jūsų interneto paslaugų teikėju. Jei diegiate vietiniame kompiuteryje ar serveryje, jums gali prireikti informacijos iš jūsų sistemos administratoriaus.</Value>
   </LocaleResource>
 </Language>
