@@ -79,11 +79,10 @@
                             }
 
                             function renderColumnConfigure(data, type, row, meta) {
-                                if (row.ConfigurationUrl && row.ConfigurationUrl.length > 0) {
+                                if (row.ConfigurationUrl && row.ConfigurationUrl.length > 0) 
                                     return '<a class="btn btn-default" href="' + row.ConfigurationUrl + '"><i class="fas fa-gear"></i>@T("Admin.Configuration.Tax.Providers.Configure").Text</a>';
-                                } else {
+                                else 
                                     return '';
-                                }
                             }
                             </script>
                         </div>
@@ -95,6 +94,4 @@
 </form>
 
 @if (await Html.IsTourActiveAsync())
-{
     @await Html.PartialAsync("_Providers.Tour")
-}

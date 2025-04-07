@@ -39,6 +39,4 @@
 <nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="emailAccount-delete" />
 
 @if (await Html.IsTourActiveAsync())
-{
     @await Html.PartialAsync("_Edit.Tour")
-}
