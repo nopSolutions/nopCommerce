@@ -346,12 +346,17 @@
 
             <script type="application/ld+json">
                 {
-                "context" : "https://schema.org",
-                "type" : "Product",
-                "id" : "@Model.Id",
-                "name" : "@Model.Name",
-                "description" : "@Model.ShortDescription",
-                "sku" : "@Model.Sku"
+                    "context" : "https://schema.org",
+                    "type" : "Product",
+                    "id" : "@Model.Id",
+                    "name" : "@Model.Name",
+                    "description" : "@Model.ShortDescription",
+                    "sku" : "@Model.Sku",
+                    "aggregateRating": {
+                    "type": "AggregateRating",
+                    "ratingValue": "",
+                    "reviewCount": ""
+                    }
                 }
             </script>
 
