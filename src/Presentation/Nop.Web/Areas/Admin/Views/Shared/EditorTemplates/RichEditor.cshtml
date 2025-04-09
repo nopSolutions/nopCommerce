@@ -87,7 +87,8 @@
                 'searchreplace', 'visualblocks', 'code', 'fullscreen',
                 'insertdatetime', 'media', 'table'
             ],
-            toolbar: "ltr rtl | insertfile undo redo | styleselect | fontselect | fontsizeselect | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+			// Updated toolbar items for TinyMCE v6: styleselect -> style, fontselect -> fontfamily, fontsizeselect -> fontsize
+			toolbar: "ltr rtl | insertfile undo redo | style | fontfamily | fontsize | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
             relative_urls: false,
             suffix: '.min',
             base_url: '@Url.Content("~/lib_npm/tinymce")',
