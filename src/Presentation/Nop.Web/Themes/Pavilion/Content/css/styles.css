@@ -6229,15 +6229,31 @@ width: 250px !important;
 
 
 /* Customer Name */
-#customerName {
+.storeId8 #customerName {
     font-size: 1em;
     display: inline-block;
-    max-width: 150px; 
+    width: 111px; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+	text-align: left;
+}
+
+.storeId3 #customerName {
+    font-size: 1em;
+    display: inline-block;
+    max-width: 150px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
+@media screen and (min-width: 1025px)
+{
+label#hawthMyAccount {
+	margin-left: -20px;
+}
+}
 
 @media screen and (max-width: 1024px) {
 #customerName {
@@ -6259,6 +6275,18 @@ width: 250px !important;
 	left: -20px;
 	margin-top: 52px;
   }
+
+  .storeId8 .header-links {
+	
+	margin-top: 20px;
+  }
+
+  .storeId8 label#customerName {
+	margin-top: -3px;
+	margin-left: -12px;
+}
+
+
 .header-links-wrapper label:hover {
     cursor: pointer;
 }
@@ -6285,11 +6313,11 @@ width: 250px !important;
     padding: 10px 10px;
     height: auto;
     width: auto;
-    margin-top: 0px;
+    margin-top: -10px;
 }
 .hawthorne.top-menu li {
     padding: 0px 15px;
-    border-left: solid 1px #515151;
+    border-right: solid 1px #515151;
 }
 .hawthorne.top-menu li a {
 	color: #515151
@@ -6347,7 +6375,7 @@ img.hawthorne-logo {
 }
 .storeId8 .hawthorne-lower #flyout-cart {
     margin-right: 0;
-    padding-left: 41px;
+    padding-left: 50px;
 }
 .hawthorne-lower .cart-trigger {
 	background: #fff;
@@ -6644,7 +6672,7 @@ div#storeDropDown div {
         clear: both;
         margin-left: 0;
     }
-	.top-level-manufacturer .item-box.item-box:nth-child(4n+1) {
+	.storeId3 .top-level-manufacturer .item-box.item-box:nth-child(4n+1) {
 		clear: none;
 		margin-left: 2%;
 	}
@@ -6656,6 +6684,14 @@ div#storeDropDown div {
 		padding: 30% 0;
 	}
 }
+
+/* Hawthorne only grid change */
+ @media (min-width: 1281px) {
+    .storeId8 .top-level-manufacturer .item-box.item-box:nth-child(3n+1) {
+        clear: none;
+        margin-left: 2%;
+    }
+} 
 
 /*Angelo*/
  /* Mobile Menu Padding Fix*/

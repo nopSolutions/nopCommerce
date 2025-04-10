@@ -162,6 +162,21 @@
     'https://connect.facebook.net/en_US/fbevents.js');
     fbq('init', '279056429645080'); 
     fbq('track', 'PageView');
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Check if .storeId8 exists
+  if (document.querySelector('.storeId8')) {
+    // Update Instagram link only if .storeId8 is present
+    const instagramLink = document.querySelector('li.instagram a');
+    if (instagramLink) {
+      instagramLink.href = "https://www.instagram.com/hawthorneappliance_/?fbclid=IwZXh0bgNhZW0CMTEAAR4fisWP1oVHnse9_TcMzDIhZ2zH2NpFFDTtwy5duz6V0C3E3mxhpyKMQY46iQ_aem_DquFc1PXxU6EMA7rq7vKKg";
+    }
+  }
+
+  
+});    
+
+
     </script>
     <noscript>
     <img height="1" width="1" 

@@ -138,6 +138,15 @@
 	margin: 4px 0 0 10px;
 	transition: all 0.2s ease;
 }
+
+.storeId8 .header-links-wrapper,
+.header-selectors-wrapper {
+	
+	float: none;
+	transition: opacity 0.3s, visibility 0.3s, all 0.2s ease;
+	
+}
+
 .header-links-wrapper label,
 .header-selectors-wrapper label {
 	display: block;
@@ -159,7 +168,7 @@
 	display: none;
 	position: absolute;
 	left: -15px;
-	z-index: 1020;
+	z-index: 1021;
 	min-width: 150px;
 	background-color: #fff;
 	border-top: 3px solid #f74258;
@@ -265,6 +274,32 @@
     .header-menu > ul > li > a, .header-menu > ul > li > span {      
         padding: 5px 0px;
     }
+}
+
+/* Hawthorne My Account Header Changes */
+
+.storeId8 a.ico-wishlist {
+    margin-right: 33px;
+}
+
+.storeId8 a.ico-logout {
+    margin-right: 51px;
+}
+
+.storeId8 .ico-account {
+    /* margin-right: 39px; */
+	width: 120px;
+	text-align: left;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.storeId8 .ico-login {
+    margin-right: 60px;
+}
+
+.storeId8 .ico-register {
+    margin-right: 49px;
 }
 
 
@@ -701,6 +736,27 @@
 
 /* FOOTER */
 
+
+.storeId8 #newsletter-subscribe-block {
+    background-color: white;
+    margin-left: 9px;
+}
+
+.storeId8 li.pinterest {
+    display: none;
+} 
+
+.storeId8 li.linkedin {
+    display: none;
+}
+
+.storeId8 li.tiktok {
+    display: none;
+}
+
+.storeId8 .footer-upper, .ui-datepicker-header, .ui-datepicker-calendar .ui-state-active {
+    background-color: #02463b;
+}
 .footer {
 	text-align: left;
 }

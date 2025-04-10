@@ -52,15 +52,32 @@
                     <li class="top-header-logo">
                         <a href="https://www.abcwarehouse.com/"><img class="hawthorne-logo" src="https://www.abcwarehouse.com/images/thumbs/1200766_abc_web-logo_60th_2.png" alt="Hawthorne"/></a>
                     </li>
-                    <li class="red">
-                        <a href="@clearanceUrl">Clearance</a>
+                    <li>
+                        <a href="/hawthorne-lookbook">Lookbook</a>
                     </li>
                     <li>
-                        <a href="/sale-ad">Weekly Ad</a>
-                    </li>
-                    <li>
-                        <a href="/customer/info"><label>@T("SevenSpikes.Themes.Pavilion.Header.MyAccount")</label></a>
-                        @await Component.InvokeAsync("HeaderLinks")
+                             <div class="header-links-wrapper">  
+                    <a href="/customer/info">
+                        
+                        @* Code for the Account  *@
+                        @* This basically just checks if the user is logged in, if they are then it displays their name
+                         instead of MyAccount and if they arent it just displays MyAccount *@
+                        @if (headerLinksModel.IsAuthenticated)
+                        {
+                            <label id="customerName">@headerLinksModel.CustomerName</label>
+                            }
+                        else {
+                       <label id="hawthMyAccount">@T("SevenSpikes.Themes.Pavilion.Header.MyAccount")</label>
+                        }
+                        
+                        
+                        </a>
+                    @await Component.InvokeAsync("HeaderLinks")
+                 </div> 
+                        
+
+                        @* <a href="/customer/info"><label>@T("SevenSpikes.Themes.Pavilion.Header.MyAccount")</label></a>
+                        @await Component.InvokeAsync("HeaderLinks") *@
                     </li>
                 </ul>
             </div>
@@ -97,9 +114,15 @@
                 }
             </div>
             
-            <div class="hours-desktop">
+           
+            
+          
+             <div class="hours-desktop">
                 @await Component.InvokeAsync("Widget", new { widgetZone = "hawthorne_hours" })
+                
             </div>
+           
+           
 
                 <div class="header-menu-parent">
                     <div class="header-menu @if (showCategoriesInSideMenu){<text>categories-in-side-panel</text>}">
@@ -124,7 +147,11 @@
                     </div>
                 </div>
                 @await Component.InvokeAsync("FlyoutShoppingCart")
+
+                
             </div>
+
+            
         </div>
     }
     else

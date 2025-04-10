@@ -923,6 +923,16 @@ opacity: 1 !important;
 	left: -20px !important;
   }
 
+  .storeId3 .header-links {
+	left: -10px !important;
+  }
+
+  .storeId8 .header-links {
+    margin-left: -6px;
+	top: 22px;
+}
+
+
   body .header-menu .first li>a {
 	padding: 5px 5px;
 	padding-bottom: 10px;
