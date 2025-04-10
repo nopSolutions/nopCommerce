@@ -733,7 +733,7 @@
                     </div>
                 </div>
             }
-            @if (Model.CustomValues != null && Model.CustomValues.Count > 0)
+            @if (Model.CustomValues?.Any() ?? false)
             {
                 <div class="form-group row">
                     <div class="col-md-3">
@@ -745,7 +745,7 @@
                             {
                                 <ul class="common-list">
                                     <li>
-                                        @item.Key: @(item.Value != null ? item.Value.ToString() : "")
+                                        @item.Key: @(item.Value ?? string.Empty)
                                     </li>
                                 </ul>
                             }

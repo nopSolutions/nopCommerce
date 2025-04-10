@@ -3245,9 +3245,11 @@ public partial class OrderProcessingService : IOrderProcessingService
     /// A task that represents the asynchronous operation
     /// The task contains the process payment request
     /// </returns>
-    public async Task<ProcessPaymentRequest> GetProcessPaymentRequestAsync()
+    public virtual async Task<ProcessPaymentRequest> GetProcessPaymentRequestAsync()
     {
-        var json = await _genericAttributeService.GetAttributeAsync<string>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.ProcessPaymentRequestAttribute, (await _storeContext.GetCurrentStoreAsync()).Id);
+        var customer = await _workContext.GetCurrentCustomerAsync();
+        var store = await _storeContext.GetCurrentStoreAsync();
+        var json = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.ProcessPaymentRequestAttribute, store.Id);
 
         return string.IsNullOrEmpty(json) ? null : JsonConvert.DeserializeObject<ProcessPaymentRequest>(json);
     }
@@ -3257,11 +3259,14 @@ public partial class OrderProcessingService : IOrderProcessingService
     /// </summary>
     /// <param name="processPaymentRequest">Process payment request. Pass null for delete</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task SetProcessPaymentRequestAsync(ProcessPaymentRequest processPaymentRequest)
+    public virtual async Task SetProcessPaymentRequestAsync(ProcessPaymentRequest processPaymentRequest)
     {
-        if (processPaymentRequest == null)
+        var customer = await _workContext.GetCurrentCustomerAsync();
+        var store = await _storeContext.GetCurrentStoreAsync();
+
+        if (processPaymentRequest is null)
         {
-            await _genericAttributeService.SaveAttributeAsync<string>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.ProcessPaymentRequestAttribute, null, (await _storeContext.GetCurrentStoreAsync()).Id);
+            await _genericAttributeService.SaveAttributeAsync<string>(customer, NopCustomerDefaults.ProcessPaymentRequestAttribute, null, store.Id);
 
             return;
         }
@@ -3285,7 +3290,8 @@ public partial class OrderProcessingService : IOrderProcessingService
             }
         }
 
-        await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.ProcessPaymentRequestAttribute, JsonConvert.SerializeObject(processPaymentRequest), (await _storeContext.GetCurrentStoreAsync()).Id);
+        var json = JsonConvert.SerializeObject(processPaymentRequest);
+        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.ProcessPaymentRequestAttribute, json, store.Id);
     }
 
     #endregion

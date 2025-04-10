@@ -1534,14 +1534,14 @@ public class PayPalCommerceServiceManager
 
             var orderIdKey = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Order.Id");
             if (!paymentRequest.CustomValues.TryGetValue(orderIdKey, out var orderIdValue) ||
-                !string.Equals(orderIdValue.ToString(), orderId, StringComparison.InvariantCultureIgnoreCase))
+                !string.Equals(orderIdValue, orderId, StringComparison.InvariantCultureIgnoreCase))
             {
                 throw new NopException("Failed to get PayPal order info");
             }
 
             var placementKey = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Order.Placement");
             if (!paymentRequest.CustomValues.TryGetValue(placementKey, out var placementValue) ||
-                !Enum.TryParse<ButtonPlacement>(placementValue.ToString(), out var placement))
+                !Enum.TryParse<ButtonPlacement>(placementValue, out var placement))
             {
                 throw new NopException("Failed to get PayPal order info");
             }
@@ -1573,12 +1573,12 @@ public class PayPalCommerceServiceManager
                 return null;
 
             var orderIdKey = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Order.Id");
-            if (!paymentRequest.CustomValues.TryGetValue(orderIdKey, out var orderIdValue) || string.IsNullOrEmpty(orderIdValue.ToString()))
+            if (!paymentRequest.CustomValues.TryGetValue(orderIdKey, out var orderIdValue) || string.IsNullOrEmpty(orderIdValue))
                 return null;
 
             var placementKey = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Order.Placement");
             if (!paymentRequest.CustomValues.TryGetValue(placementKey, out var placementValue) ||
-                !Enum.TryParse<ButtonPlacement>(placementValue.ToString(), out var previousPlacement) ||
+                !Enum.TryParse<ButtonPlacement>(placementValue, out var previousPlacement) ||
                 previousPlacement != placement)
             {
                 return null;
@@ -1833,14 +1833,14 @@ public class PayPalCommerceServiceManager
 
             var orderIdKey = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Order.Id");
             if (!paymentRequest.CustomValues.TryGetValue(orderIdKey, out var orderIdValue) ||
-                (!string.IsNullOrEmpty(orderId) && !string.Equals(orderIdValue.ToString(), orderId, StringComparison.InvariantCultureIgnoreCase)))
+                (!string.IsNullOrEmpty(orderId) && !string.Equals(orderIdValue, orderId, StringComparison.InvariantCultureIgnoreCase)))
             {
                 throw new NopException("Failed to get PayPal order info");
             }
 
             var placementKey = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Order.Placement");
             if (!paymentRequest.CustomValues.TryGetValue(placementKey, out var placementValue) ||
-                !Enum.TryParse<ButtonPlacement>(placementValue.ToString(), out var placement))
+                !Enum.TryParse<ButtonPlacement>(placementValue, out var placement))
             {
                 throw new NopException("Failed to get PayPal order info");
             }
@@ -1953,14 +1953,14 @@ public class PayPalCommerceServiceManager
 
             var orderIdKey = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Order.Id");
             if (!paymentRequest.CustomValues.TryGetValue(orderIdKey, out var orderIdValue) ||
-                (!string.IsNullOrEmpty(orderId) && !string.Equals(orderIdValue.ToString(), orderId, StringComparison.InvariantCultureIgnoreCase)))
+                (!string.IsNullOrEmpty(orderId) && !string.Equals(orderIdValue, orderId, StringComparison.InvariantCultureIgnoreCase)))
             {
                 throw new NopException("Failed to get PayPal order info");
             }
 
             var placementKey = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Order.Placement");
             if (!paymentRequest.CustomValues.TryGetValue(placementKey, out var placementValue) ||
-                !Enum.TryParse<ButtonPlacement>(placementValue.ToString(), out var placement))
+                !Enum.TryParse<ButtonPlacement>(placementValue, out var placement))
             {
                 throw new NopException("Failed to get PayPal order info");
             }
@@ -2122,7 +2122,7 @@ public class PayPalCommerceServiceManager
             var orderIdKey = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Order.Id");
             if (paymentRequest is null ||
                 !paymentRequest.CustomValues.TryGetValue(orderIdKey, out var orderIdValue) ||
-                !string.Equals(orderIdValue.ToString(), orderId, StringComparison.InvariantCultureIgnoreCase))
+                !string.Equals(orderIdValue, orderId, StringComparison.InvariantCultureIgnoreCase))
             {
                 throw new NopException("Failed to get the PayPal order ID");
             }
@@ -2166,7 +2166,7 @@ public class PayPalCommerceServiceManager
             }
 
             var tokenId = paymentRequest.CustomValues
-                .TryGetValue(PayPalCommerceDefaults.TokenIdAttributeName, out var tokenIdValue) && int.TryParse(tokenIdValue.ToString(), out var id)
+                .TryGetValue(PayPalCommerceDefaults.TokenIdAttributeName, out var tokenIdValue) && int.TryParse(tokenIdValue, out var id)
                 ? id : 0;
 
             paymentRequest.StoreId = store.Id;
@@ -2911,7 +2911,7 @@ public class PayPalCommerceServiceManager
                 throw new NopException("Failed to get PayPal order info");
 
             var order = await _httpClient
-                .RequestAsync<GetOrderRequest, GetOrderResponse>(new GetOrderRequest { OrderId = orderIdValue.ToString() }, settings) as Order;
+                .RequestAsync<GetOrderRequest, GetOrderResponse>(new GetOrderRequest { OrderId = orderIdValue }, settings) as Order;
             if (order.Status?.ToUpper() != OrderStatusType.COMPLETED.ToString())
                 throw new NopException($"Unable to assign tracking information to orders in {order.Status} status");
 

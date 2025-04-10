@@ -1,7 +1,4 @@
-﻿using System.Xml;
-using System.Xml.Linq;
-using System.Xml.Serialization;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Services.Catalog;

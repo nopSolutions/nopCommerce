@@ -160,7 +160,7 @@
                                             @item.Key:
                                         </span>
                                         <span class="value">
-                                            @(item.Value != null ? item.Value.ToString() : "")
+                                            @(item.Value ?? string.Empty)
                                         </span>
                                     </li>
                                 }
