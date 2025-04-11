@@ -1,6 +1,7 @@
 ﻿using Nop.Core.Domain.Messages;
 
 namespace Nop.Services.Messages;
+
 public partial interface INewsLetterSubscriptionTypeService
 {
     #region NewsLetterSubscriptionType
@@ -51,9 +52,9 @@ public partial interface INewsLetterSubscriptionTypeService
     /// <param name="newsletter">Newsletter subscription</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the result
+    /// The task result contains the list of subscription types
     /// </returns>
-    IList<NewsLetterSubscriptionType> GetSubscriptionTypesByNewsLetter(NewsLetterSubscription newsletter);
+    Task<List<NewsLetterSubscriptionType>> GetSubscriptionTypesByNewsLetterAsync(NewsLetterSubscription newsletter);
 
     #endregion
 

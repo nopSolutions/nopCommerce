@@ -1093,7 +1093,7 @@ public partial class InstallationService
     /// Installs a default type of newsletter subscription
     /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>
-    protected virtual async Task InstallNewsLetterSubscriptionType()
+    protected virtual async Task InstallNewsLetterSubscriptionTypeAsync()
     {
         var newsLetterSubscriptionType = new List<NewsLetterSubscriptionType>
         {

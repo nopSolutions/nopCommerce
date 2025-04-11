@@ -32,7 +32,7 @@ public partial interface INewsletterSubscriptionTypeModelFactory
     /// Prepare newsletter subscription type model
     /// </summary>
     /// <param name="model">Newsletter subscription type model</param>
-    /// <param name="subscriptionType">Review type</param>
+    /// <param name="subscriptionType">Subscription type</param>
     /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
     /// <returns>
     /// A task that represents the asynchronous operation

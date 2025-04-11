@@ -55,7 +55,7 @@ public partial class BaseAdminModelFactory : IBaseAdminModelFactory
     protected readonly IShippingService _shippingService;
     protected readonly IStateProvinceService _stateProvinceService;
     protected readonly IStaticCacheManager _staticCacheManager;
-    protected readonly IStoreService _storeService;    
+    protected readonly IStoreService _storeService;
     protected readonly ITaxCategoryService _taxCategoryService;
     protected readonly ITopicTemplateService _topicTemplateService;
     protected readonly IVendorService _vendorService;

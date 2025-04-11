@@ -144,8 +144,9 @@ public partial class NewsletterSubscriptionModelFactory : INewsletterSubscriptio
                 subscriptionModel.StoreName = (await _storeService.GetStoreByIdAsync(subscription.StoreId))?.Name ?? "Deleted";
                 subscriptionModel.LanguageName = (await _languageService.GetLanguageByIdAsync(subscription.LanguageId))?.Name ?? string.Empty;
 
-                subscriptionModel.SubscriptionTypes = string.Join(", ",
-                    _newsLetterSubscriptionTypeService.GetSubscriptionTypesByNewsLetter(subscription).Select(subscriptionType => subscriptionType.Name));
+                var types = (await _newsLetterSubscriptionTypeService.GetSubscriptionTypesByNewsLetterAsync(subscription))
+                    .Select(subscriptionType => subscriptionType.Name);
+                subscriptionModel.SubscriptionTypes = string.Join(", ", types);
 
                 return subscriptionModel;
             });

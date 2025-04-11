@@ -1,5 +1,4 @@
-﻿using Nop.Core.Caching;
-using Nop.Core.Domain.Messages;
+﻿using Nop.Core.Domain.Messages;
 using Nop.Data;
 using Nop.Services.Catalog;
 
@@ -14,19 +13,16 @@ public partial class NewsLetterSubscriptionTypeService : INewsLetterSubscription
 
     protected readonly IRepository<NewsLetterSubscriptionType> _newsLetterSubscriptionTypeRepository;
     protected readonly IRepository<NewsLetterSubscriptionTypeMapping> _newsLetterSubscriptionTypeMappingRepository;
-    protected readonly IStaticCacheManager _staticCacheManager;
 
     #endregion
 
     #region Ctor
 
     public NewsLetterSubscriptionTypeService(IRepository<NewsLetterSubscriptionType> newsLetterSubscriptionTypeRepository,
-        IRepository<NewsLetterSubscriptionTypeMapping> newsLetterSubscriptionTypeMappingRepository,
-        IStaticCacheManager staticCacheManager)
+        IRepository<NewsLetterSubscriptionTypeMapping> newsLetterSubscriptionTypeMappingRepository)
     {
         _newsLetterSubscriptionTypeRepository = newsLetterSubscriptionTypeRepository;
         _newsLetterSubscriptionTypeMappingRepository = newsLetterSubscriptionTypeMappingRepository;
-        _staticCacheManager = staticCacheManager;
     }
 
     #endregion
@@ -43,6 +39,7 @@ public partial class NewsLetterSubscriptionTypeService : INewsLetterSubscription
     public virtual async Task InsertNewsLetterSubscriptionTypeAsync(NewsLetterSubscriptionType newsLetterSubscriptionType)
     {
         ArgumentNullException.ThrowIfNull(newsLetterSubscriptionType);
+
         await _newsLetterSubscriptionTypeRepository.InsertAsync(newsLetterSubscriptionType);
     }
 
@@ -54,6 +51,7 @@ public partial class NewsLetterSubscriptionTypeService : INewsLetterSubscription
     public virtual async Task UpdateNewsLetterSubscriptionTypeAsync(NewsLetterSubscriptionType newsLetterSubscriptionType)
     {
         ArgumentNullException.ThrowIfNull(newsLetterSubscriptionType);
+
         await _newsLetterSubscriptionTypeRepository.UpdateAsync(newsLetterSubscriptionType);
     }
 
@@ -105,18 +103,18 @@ public partial class NewsLetterSubscriptionTypeService : INewsLetterSubscription
     /// <param name="newsletter">Newsletter subscription</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the result
+    /// The task result contains the list of subscription types
     /// </returns>
-    public virtual IList<NewsLetterSubscriptionType> GetSubscriptionTypesByNewsLetter(NewsLetterSubscription newsletter)
+    public virtual async Task<List<NewsLetterSubscriptionType>> GetSubscriptionTypesByNewsLetterAsync(NewsLetterSubscription newsletter)
     {
         ArgumentNullException.ThrowIfNull(newsletter);
 
-        return _newsLetterSubscriptionTypeMappingRepository.Table
+        return await _newsLetterSubscriptionTypeMappingRepository.Table
             .Join(_newsLetterSubscriptionTypeRepository.Table, x => x.NewsLetterSubscriptionTypeId, y => y.Id,
                 (x, y) => new { Mapping = x, Type = y })
             .Where(z => z.Mapping.NewsLetterSubscriptionId == newsletter.Id)
             .Select(z => z.Type)
-            .ToList();
+            .ToListAsync();
     }
 
     #endregion
@@ -134,15 +132,14 @@ public partial class NewsLetterSubscriptionTypeService : INewsLetterSubscription
     /// </returns>
     public virtual async Task<IList<NewsLetterSubscriptionTypeMapping>> GeNewsLetterSubscriptionTypeMappingsAsync(int subscriptionTypeId, int subscriptionId = 0)
     {
-        var query = from nstm in _newsLetterSubscriptionTypeMappingRepository.Table
-                    orderby nstm.Id
-                    where nstm.NewsLetterSubscriptionTypeId == subscriptionTypeId
-                    select nstm;
-        
+        var query =
+            from nstm in _newsLetterSubscriptionTypeMappingRepository.Table
+            orderby nstm.Id
+            where nstm.NewsLetterSubscriptionTypeId == subscriptionTypeId
+            select nstm;
+
         if (subscriptionId > 0)
-        {
             query = query.Where(s => s.NewsLetterSubscriptionId == subscriptionId);
-        }
 
         return await query.ToListAsync();
     }
@@ -155,6 +152,7 @@ public partial class NewsLetterSubscriptionTypeService : INewsLetterSubscription
     public virtual async Task InsertNewsLetterSubscriptionTypeMappingsAsync(NewsLetterSubscriptionTypeMapping newsLetterSubscriptionTypeMapping)
     {
         ArgumentNullException.ThrowIfNull(newsLetterSubscriptionTypeMapping);
+
         await _newsLetterSubscriptionTypeMappingRepository.InsertAsync(newsLetterSubscriptionTypeMapping);
     }
 
@@ -166,6 +164,7 @@ public partial class NewsLetterSubscriptionTypeService : INewsLetterSubscription
     public virtual async Task DeleteNewsLetterSubscriptionTypeMappingsAsync(NewsLetterSubscriptionTypeMapping newsLetterSubscriptionTypeMapping)
     {
         ArgumentNullException.ThrowIfNull(newsLetterSubscriptionTypeMapping);
+
         await _newsLetterSubscriptionTypeMappingRepository.DeleteAsync(newsLetterSubscriptionTypeMapping);
     }
 
@@ -176,12 +175,13 @@ public partial class NewsLetterSubscriptionTypeService : INewsLetterSubscription
     /// <returns>A task that represents the asynchronous operation</returns>
     public virtual async Task ClearNewsLetterSubscriptionTypeMappingsAsync(NewsLetterSubscription subscription)
     {
-        var query = from nstm in _newsLetterSubscriptionTypeMappingRepository.Table
-                    orderby nstm.Id
-                    where nstm.NewsLetterSubscriptionId == subscription.Id
-                    select nstm;
+        var query =
+            from nstm in _newsLetterSubscriptionTypeMappingRepository.Table
+            orderby nstm.Id
+            where nstm.NewsLetterSubscriptionId == subscription.Id
+            select nstm;
 
-        foreach(var newsLetterSubscriptionTypeMapping in query)
+        foreach (var newsLetterSubscriptionTypeMapping in query)
         {
             await _newsLetterSubscriptionTypeMappingRepository.DeleteAsync(newsLetterSubscriptionTypeMapping);
         }

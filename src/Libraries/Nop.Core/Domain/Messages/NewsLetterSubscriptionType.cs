@@ -8,7 +8,7 @@ namespace Nop.Core.Domain.Messages;
 public partial class NewsLetterSubscriptionType : BaseEntity, ILocalizedEntity
 {
     /// <summary>
-    /// Gets or sets the name of subscribtion type
+    /// Gets or sets the name of subscription type
     /// </summary>
     public string Name { get; set; }
 

@@ -189,7 +189,7 @@ public partial class InstallationService : IInstallationService
         await InstallProductAvailabilityRangesAsync();
         await InstallEmailAccountsAsync();
         await InstallMessageTemplatesAsync();
-        await InstallNewsLetterSubscriptionType();
+        await InstallNewsLetterSubscriptionTypeAsync();
         await InstallTopicTemplatesAsync();
         await InstallSettingsAsync();
         await InstallCustomersAndUsersAsync();

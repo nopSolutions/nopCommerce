@@ -8,7 +8,6 @@ using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories;
 
-
 /// <summary>
 /// Represents the newsletter subscription types model factory implementation
 /// </summary>
@@ -84,7 +83,7 @@ public partial class NewsLetterSubscriptionTypeModelFactory : INewsletterSubscri
     /// Prepare newsletter subscription type model
     /// </summary>
     /// <param name="model">Newsletter subscription type model</param>
-    /// <param name="subscriptionType">Review type</param>
+    /// <param name="subscriptionType">Subscription type</param>
     /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
     /// <returns>
     /// A task that represents the asynchronous operation

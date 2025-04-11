@@ -71,19 +71,19 @@ public partial class NewsLetterSubscriptionService : INewsLetterSubscriptionServ
     #region Methods
 
     /// <summary>
-    /// Gets a newsletter subscription by newsletter subscription identifier
+    /// Check whether the newsletter subscription is active
     /// </summary>
     /// <param name="newsLetterSubscriptionId">The newsletter subscription identifier</param>
     /// <returns>
-    /// The result contains true if the newsletter is active, false otherwise
+    /// A task that represents the asynchronous operation
+    /// The task result contains true if the newsletter is active, false otherwise
     /// </returns>
-    public virtual bool IsActiveNewsletter(NewsLetterSubscription newsLetterSubscription)
+    public virtual async Task<bool> IsNewsletterActiveAsync(NewsLetterSubscription newsLetterSubscription)
     {
         ArgumentNullException.ThrowIfNull(newsLetterSubscription);
 
-        return newsLetterSubscription.Active && 
-            _newsLetterSubscriptionTypeMappingRepository.Table
-                .Where(x => x.NewsLetterSubscriptionId == newsLetterSubscription.Id).Any();
+        return newsLetterSubscription.Active &&
+            await _newsLetterSubscriptionTypeMappingRepository.Table.AnyAsync(x => x.NewsLetterSubscriptionId == newsLetterSubscription.Id);
     }
 
     /// <summary>
@@ -188,7 +188,8 @@ public partial class NewsLetterSubscriptionService : INewsLetterSubscriptionServ
         if (newsLetterSubscriptionGuid == Guid.Empty)
             return null;
 
-        var newsLetterSubscriptions = from nls in _subscriptionRepository.Table
+        var newsLetterSubscriptions = 
+            from nls in _subscriptionRepository.Table
             where nls.NewsLetterSubscriptionGuid == newsLetterSubscriptionGuid
             orderby nls.Id
             select nls;
@@ -212,7 +213,8 @@ public partial class NewsLetterSubscriptionService : INewsLetterSubscriptionServ
 
         email = email.Trim();
 
-        var newsLetterSubscriptions = from nls in _subscriptionRepository.Table
+        var newsLetterSubscriptions = 
+            from nls in _subscriptionRepository.Table
             where nls.Email == email && nls.StoreId == storeId
             orderby nls.Id
             select nls;
@@ -257,7 +259,7 @@ public partial class NewsLetterSubscriptionService : INewsLetterSubscriptionServ
                 if (subscriptionTypeId > 0)
                 {
                     query = query.Join(_newsLetterSubscriptionTypeMappingRepository.Table, x => x.Id, y => y.NewsLetterSubscriptionId,
-                        (x, y) => new { Subscription = x, Mapping = y})
+                        (x, y) => new { Subscription = x, Mapping = y })
                     .Where(z => subscriptionTypeId == z.Mapping.NewsLetterSubscriptionTypeId)
                     .Select(z => z.Subscription)
                     .Distinct();

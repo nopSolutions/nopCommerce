@@ -9,13 +9,14 @@ namespace Nop.Services.Messages;
 public partial interface INewsLetterSubscriptionService
 {
     /// <summary>
-    /// Gets a newsletter subscription by newsletter subscription identifier
+    /// Check whether the newsletter subscription is active
     /// </summary>
     /// <param name="newsLetterSubscriptionId">The newsletter subscription identifier</param>
     /// <returns>
-    /// The result contains true if the newsletter is active, false otherwise
+    /// A task that represents the asynchronous operation
+    /// The task result contains true if the newsletter is active, false otherwise
     /// </returns>
-    bool IsActiveNewsletter(NewsLetterSubscription newsLetterSubscription);
+    Task<bool> IsNewsletterActiveAsync(NewsLetterSubscription newsLetterSubscription);
 
     /// <summary>
     /// Inserts a newsletter subscription
@@ -81,7 +82,7 @@ public partial interface INewsLetterSubscriptionService
     /// <param name="storeId">Store identifier. 0 to load all records.</param>
     /// <param name="isActive">Value indicating whether subscriber record should be active or not; null to load all records</param>
     /// <param name="customerRoleId">Customer role identifier. Used to filter subscribers by customer role. 0 to load all records.</param>
-    ///  /// <param name="subscriptionTypeId">Subscription type identifier. Used to filter subscribers by subscription type. 0 to load all records.</param>
+    /// <param name="subscriptionTypeId">Subscription type identifier. Used to filter subscribers by subscription type. 0 to load all records.</param>
     /// <param name="pageIndex">Page index</param>
     /// <param name="pageSize">Page size</param>
     /// <returns>

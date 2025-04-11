@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using LinqToDB.Tools;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -243,9 +242,9 @@ public partial class CustomerModelFactory : ICustomerModelFactory
             if (newsletter != null)
             {
                 var newsLetterSubscriptionTypes = await _newsLetterSubscriptionTypeService.GetAllNewsLetterSubscriptionTypesAsync();
-                var activeSubscriptions = _newsLetterSubscriptionTypeService.GetSubscriptionTypesByNewsLetter(newsletter);
+                var activeSubscriptions = await _newsLetterSubscriptionTypeService.GetSubscriptionTypesByNewsLetterAsync(newsletter);
 
-                model.Newsletter = _newsLetterSubscriptionService.IsActiveNewsletter(newsletter);
+                model.Newsletter = await _newsLetterSubscriptionService.IsNewsletterActiveAsync(newsletter);
 
                 foreach (var newsLetterSubscriptionType in newsLetterSubscriptionTypes)
                 {
