@@ -93,8 +93,6 @@ public partial class NopHttpClient
             WebUtility.UrlEncode(emailAccount.Email),
             language).ToLowerInvariant();
 
-        _httpClient.Timeout = TimeSpan.FromSeconds(3);
-
         return await _httpClient.GetStringAsync(url);
     }
 
@@ -144,7 +142,12 @@ public partial class NopHttpClient
             .ToLowerInvariant();
 
         //this request takes some more time
-        _httpClient.Timeout = TimeSpan.FromSeconds(30);
+        try
+        {
+            if (_httpClient.Timeout != TimeSpan.FromSeconds(30))
+                _httpClient.Timeout = TimeSpan.FromSeconds(30);
+        }
+        catch { }
 
         return await _httpClient.GetStringAsync(url);
     }
