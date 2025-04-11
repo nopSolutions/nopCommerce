@@ -65,6 +65,9 @@ public static class ProductExtensions
             ProductSortingEnum.PriceDesc => productsQuery.OrderByDescending(p => p.Price),
             ProductSortingEnum.CreatedOn => productsQuery.OrderByDescending(p => p.CreatedOnUtc),
             ProductSortingEnum.Position when productsQuery is IOrderedQueryable => productsQuery,
+            ProductSortingEnum.InStock =>  productsQuery
+                .OrderByDescending(p => p.StockQuantity > 0)
+                .ThenByDescending(p => p.UpdatedOnUtc),
             _ => productsQuery.OrderBy(p => p.DisplayOrder).ThenBy(p => p.Id)
         };
     }
