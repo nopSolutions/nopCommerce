@@ -9315,6 +9315,24 @@
   <LocaleResource Name="Admin.Configuration.Settings.Tax.HideZeroTax.Hint">
     <Value>A value indicating whether to hide zero tax in order summary.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.HmrcApiUrl">
+    <Value>HMRC API URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.HmrcApiUrl.Hint">
+    <Value>The base HMRC access API URL.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.HmrcClientId">
+    <Value>HMRC API client ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.HmrcClientId.Hint">
+    <Value>Your HMRC API client ID is a unique identifier which created when you added your application.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.HmrcClientSecret">
+    <Value>HMRC API client secret</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.HmrcClientSecret.Hint">
+    <Value>Your client secret is a unique passphrase that you generate to authorise your application.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.PaymentMethodAdditionalFeeIncludesTax">
     <Value>Payment method additional fee includes tax</Value>
   </LocaleResource>

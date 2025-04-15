@@ -138,6 +138,14 @@ public class LocalizationMigration : MigrationBase
             //#7515
             ["Admin.Catalog.Attributes.ProductAttributes.List.SearchProductAttributeName"] = "Product attribute name",
             ["Admin.Catalog.Attributes.ProductAttributes.List.SearchProductAttributeName.Hint"] = "A product attribute name.",
+
+            //#7630
+            ["Admin.Configuration.Settings.Tax.HmrcApiUrl"] = "HMRC API URL",
+            ["Admin.Configuration.Settings.Tax.HmrcApiUrl.Hint"] = "The base HMRC access API URL.",
+            ["Admin.Configuration.Settings.Tax.HmrcClientId"] = "HMRC API client ID",
+            ["Admin.Configuration.Settings.Tax.HmrcClientId.Hint"] = "Your HMRC API client ID is a unique identifier which created when you added your application.",
+            ["Admin.Configuration.Settings.Tax.HmrcClientSecret"] = "HMRC API client secret",
+            ["Admin.Configuration.Settings.Tax.HmrcClientSecret.Hint"] = "Your client secret is a unique passphrase that you generate to authorise your application.",
         }, languageId);
 
         #endregion

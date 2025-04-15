@@ -5,6 +5,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Infrastructure;
 using Nop.Data;
@@ -125,6 +126,27 @@ public class SettingMigration : MigrationBase
         {
             customerSettings.NotifyFailedLoginAttempt = false;
             settingService.SaveSetting(customerSettings, settings => settings.NotifyFailedLoginAttempt);
+        }
+
+        //#7630
+        var taxSettings = settingService.LoadSetting<TaxSettings>();
+
+        if (!settingService.SettingExists(taxSettings, settings => settings.HmrcApiUrl))
+        {
+            taxSettings.HmrcApiUrl = "https://api.service.hmrc.gov.uk";
+            settingService.SaveSetting(taxSettings, settings => taxSettings.HmrcApiUrl);
+        }
+
+        if (!settingService.SettingExists(taxSettings, settings => settings.HmrcClientId))
+        {
+            taxSettings.HmrcClientId = string.Empty;
+            settingService.SaveSetting(taxSettings, settings => taxSettings.HmrcClientId);
+        }
+
+        if (!settingService.SettingExists(taxSettings, settings => settings.HmrcClientSecret))
+        {
+            taxSettings.HmrcClientSecret = string.Empty;
+            settingService.SaveSetting(taxSettings, settings => taxSettings.HmrcClientSecret);
         }
     }
 

@@ -1792,14 +1792,14 @@ public partial class InstallationService
             EuVatEnabled = isEurope,
             EuVatEnabledForGuests = false,
             EuVatRequired = false,
-            EuVatShopCountryId =
-                isEurope
-                    ? (await GetFirstEntityIdAsync<Country>(x => x.TwoLetterIsoCode == country) ?? 0)
-                    : 0,
+            EuVatShopCountryId = isEurope ? (await GetFirstEntityIdAsync<Country>(x => x.TwoLetterIsoCode == country) ?? 0) : 0,
             EuVatAllowVatExemption = true,
             EuVatUseWebService = false,
             EuVatAssumeValid = false,
             EuVatEmailAdminWhenNewVatSubmitted = false,
+            HmrcApiUrl = "https://api.service.hmrc.gov.uk",
+            HmrcClientId = string.Empty,
+            HmrcClientSecret = string.Empty,
             LogErrors = false
         });
 
