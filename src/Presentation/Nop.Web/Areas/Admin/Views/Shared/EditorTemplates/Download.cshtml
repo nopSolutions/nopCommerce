@@ -1,5 +1,6 @@
 ﻿@model int
 @inject IDownloadService downloadService
+@using System.Text.Json
 @using Nop.Services.Media
 
 @{
@@ -18,7 +19,7 @@
 <script asp-exclude-from-bundle="true" src="~/lib_npm/filepond-plugin-get-file/filepond-plugin-get-file.min.js" asp-location="Footer"></script>
 
 <script>
-    $(function() {
+    $(function () {
         $('#cbUseDownloadURL@(randomNumber)').on('click', toggleDownloadRecordType@(randomNumber));
 
         $('#saveDownloadUrl@(randomNumber)').on('click', function () {
@@ -130,58 +131,83 @@
 <nop-alert asp-alert-id="saveDownloadUrlFailed" />
 
 <script asp-location="Footer"> 
+    @{
+        var hasExistingFile = download != null;
+        var files = new List<object>();
+        if (hasExistingFile)
+        {
+            var fileName = $"{download.Filename ?? download.DownloadGuid.ToString()}{download.Extension}";
+            files.Add(
+                new
+                {
+                    source = fileName,
+                    options = new
+                    {
+                        type = "local",
+                        file = new
+                        {
+                            name = fileName,
+                            size = download.DownloadBinary?.Length,
+                            type = MimeTypes.ApplicationOctetStream
+                        },
+                        metadata = new
+                        {
+                            url = Url.Action("DownloadFile", "Download", new { downloadGuid = download.DownloadGuid, area = AreaNames.ADMIN })
+                        }
+                    }
+                });
+        }
+
+        var jsonModel = new
+        {
+            clientId = clientId,
+            modelId = Html.IdForModel(),
+            uploadUrl = Url.Action("AsyncUpload", "Download", new { area = AreaNames.ADMIN }),
+            filePondProps = new
+            {
+                files,
+                labelIdle = $"{T("Common.FileUploader.DropFiles")} / <span class=\"filepond--label-action\">{T("Common.FileUploader.Browse")}</span>",
+                labelFileProcessing = T("Common.FileUploader.Processing"),
+            }
+        };
+    }
     $(function () {
+        const model = @Html.Raw(Json.Serialize(jsonModel));
+        
         // Register the plugin
         FilePond.registerPlugin(FilePondPluginGetFile);
 
+        const $modelEl = $(`#${model.modelId}`);
+
         // Create a FilePond instance
-        FilePond.create(document.querySelector('#@(clientId)'), {
+        FilePond.create(document.querySelector(`#${model.clientId}`), {
             credits: false,
             allowMultiple: false,
             maxFiles: 1,
             allowDownloadByUrl: true,
-            @if (download != null)
-            {
-            <text>
-                files: [
-                {
-                    source: '@Html.Raw($"{download.Filename ?? download.DownloadGuid.ToString()}{download.Extension}")',
-                    options: {
-                        type: 'local',
-                        metadata: {
-                            url: '@(Url.Action("DownloadFile", "Download", new { downloadGuid = download.DownloadGuid, area = AreaNames.ADMIN }))' 
-                        }
-                    }
-                },
-            ],
-            </text>
-            }
             server: {
                 process: {
-                    url:'@(Url.Action("AsyncUpload", "Download", new { area = AreaNames.ADMIN }))',
-                    onload: function(response) {
-                        var r = JSON.parse(response);
-
-                        $("#@(Html.IdForModel())").val(r.downloadId);
+                    url: model.uploadUrl,
+                    onload: function (response) {
+                        const r = JSON.parse(response);
+                        $modelEl.val(r.downloadId);
                     }
                 },
-                remove: (source, load, error) => {                                      
-                    $("#@(Html.IdForModel())").val('');
+                remove: (source, load, error) => {
+                    $modelEl.val('');
                     load();
                 },
                 revert: (uniqueFileId, load, error) => {
-                    $("#@(Html.IdForModel())").val('');
+                    $modelEl.val('');
                     load();
                 },
             },
             onprocessfiles: (error) => {
                 if (error) {
                     alert(error);
-                    return;
                 }
             },
-            labelIdle: '@T("Common.FileUploader.DropFiles") / <span class="filepond--label-action">@T("Common.FileUploader.Browse")</span>',
-            labelFileProcessing: '@T("Common.FileUploader.Processing")',
+            ...model.filePondProps
         });
     });
 </script>

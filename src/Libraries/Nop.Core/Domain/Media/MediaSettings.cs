@@ -141,4 +141,22 @@ public partial class MediaSettings : ISettings
     /// Gets or sets the product default image id. If 0, then wwwroot/images/default-image.png will be used
     /// </summary>
     public int ProductDefaultImageId { get; set; }
+    
+
+    private static readonly string[] BaseMimeTypes =
+    [
+        "image/bmp", "image/gif", "image/jpeg", "image/jpg", "image/jpe", "image/jfif",
+        "image/pjpeg", "image/pjp", "image/png", "image/tiff", "image/tif", "image/webp"
+    ];
+
+    /// <summary>
+    /// Get accepted mime types for pictures
+    /// </summary>
+    /// <returns></returns>
+    public IReadOnlyList<string> GetAcceptedMimeTypes()
+    {
+        return AllowSVGUploads
+            ? BaseMimeTypes.Append("image/svg+xml").ToList()
+            : BaseMimeTypes.ToList();
+    }
 }
