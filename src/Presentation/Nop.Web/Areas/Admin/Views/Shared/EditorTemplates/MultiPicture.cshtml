@@ -26,17 +26,7 @@
     $(function () {
         // Register the plugin
         FilePond.registerPlugin(FilePondPluginFileValidateType);
-
-        var allowedExtensions = ["image/bmp", "image/gif", "image/jpeg", "image/jpg", "image/jpe", "image/jfif", "image/pjpeg", "image/pjp", "image/png", "image/tiff", "image/tif", "image/webp"];
-        
-        @{
-            if (mediaSettings.AllowSVGUploads)
-            {
-                <text>
-                    allowedExtensions.push("image/svg+xml");
-                </text>
-            }
-        }
+        const allowedExtensions = @Json.Serialize(mediaSettings.GetAcceptedMimeTypes());
 
         // Create a FilePond instance
         FilePond.create(document.querySelector('#@(clientId)element'), {
@@ -65,7 +55,7 @@
                             return;
                         }
 
-                        var r = JSON.parse(request.responseText);
+                        const r = JSON.parse(request.responseText);
                         if (!r.success) {
                             error(r.message || commonError);
                             return;
