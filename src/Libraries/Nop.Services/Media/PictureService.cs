@@ -390,7 +390,8 @@ public partial class PictureService : IPictureService
         }
         try
         {
-            using var resizedBitmap = image.Resize(new SKImageInfo((int)width, (int)height), SKFilterQuality.Medium);
+            var samplingOption = new SKSamplingOptions(SKFilterMode.Linear, SKMipmapMode.Linear);
+            using var resizedBitmap = image.Resize(new SKImageInfo((int)width, (int)height), samplingOption);
             using var cropImage = SKImage.FromBitmap(resizedBitmap);
 
             //In order to exclude saving pictures in low quality at the time of installation, we will set the value of this parameter to 80 (as by default)
