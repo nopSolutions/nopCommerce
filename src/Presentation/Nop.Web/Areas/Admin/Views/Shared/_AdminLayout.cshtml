@@ -5,13 +5,11 @@
 @inject LocalizationSettings localizationSettings
 @inject StoreInformationSettings storeInformationSettings
 @inject AdminAreaSettings adminAreaSettings
-@inject Nop.Services.Localization.ILanguageService languageService
 
 @using Nop.Core.Domain
 @using Nop.Core.Domain.Localization
 @using Nop.Services.Customers
 @using Nop.Services.Helpers
-
 
 @{
     var returnUrl = webHelper.GetRawUrl(Context.Request);
@@ -67,7 +65,7 @@
     <div class="wrapper">
         @if (IsSectionDefined("header"))
         {
-            @RenderSection("header")
+            @await RenderSectionAsync("header")
         }
         else
         {
@@ -131,7 +129,7 @@
                                             </button>
                                             <script>
                                                 $(function() {
-                                                    $("#restart-application").click(function (e) {
+                                                    $("#restart-application").on('click', function () {
                                                         showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Header.RestartApplication.Progress").Text))');
                                                     });
                                                 });
