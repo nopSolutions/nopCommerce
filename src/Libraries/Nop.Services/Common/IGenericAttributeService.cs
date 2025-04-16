@@ -27,7 +27,7 @@ public partial interface IGenericAttributeService
     /// </summary>
     /// <param name="key">Key</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    Task DeleteAttributesAsync(string key);
+    Task DeleteAttributesAsync<TEntity>(string key);
 
     /// <summary>
     /// Inserts an attribute

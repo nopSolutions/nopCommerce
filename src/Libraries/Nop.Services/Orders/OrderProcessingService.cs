@@ -3271,22 +3271,22 @@ public partial class OrderProcessingService : IOrderProcessingService
             return;
         }
 
-        if (_paymentSettings.RegenerateOrderGuidInterval <= 0)
-            return;
-
-        //we should use the same GUID for multiple payment attempts
-        //this way a payment gateway can prevent security issues such as credit card brute-force attacks
-        //in order to avoid any possible limitations by payment gateway we reset GUID periodically
-        var previousPaymentRequest = await GetProcessPaymentRequestAsync();
-
-        //set previous order GUID (if exists)
-        if (previousPaymentRequest is { OrderGuidGeneratedOnUtc: not null })
+        if (_paymentSettings.RegenerateOrderGuidInterval > 0)
         {
-            var interval = DateTime.UtcNow - previousPaymentRequest.OrderGuidGeneratedOnUtc.Value;
-            if (interval.TotalSeconds < _paymentSettings.RegenerateOrderGuidInterval)
+            //we should use the same GUID for multiple payment attempts
+            //this way a payment gateway can prevent security issues such as credit card brute-force attacks
+            //in order to avoid any possible limitations by payment gateway we reset GUID periodically
+            var previousPaymentRequest = await GetProcessPaymentRequestAsync();
+
+            //set previous order GUID (if exists)
+            if (previousPaymentRequest is { OrderGuidGeneratedOnUtc: not null })
             {
-                processPaymentRequest.OrderGuid = previousPaymentRequest.OrderGuid;
-                processPaymentRequest.OrderGuidGeneratedOnUtc = previousPaymentRequest.OrderGuidGeneratedOnUtc;
+                var interval = DateTime.UtcNow - previousPaymentRequest.OrderGuidGeneratedOnUtc.Value;
+                if (interval.TotalSeconds < _paymentSettings.RegenerateOrderGuidInterval)
+                {
+                    processPaymentRequest.OrderGuid = previousPaymentRequest.OrderGuid;
+                    processPaymentRequest.OrderGuidGeneratedOnUtc = previousPaymentRequest.OrderGuidGeneratedOnUtc;
+                }
             }
         }
 

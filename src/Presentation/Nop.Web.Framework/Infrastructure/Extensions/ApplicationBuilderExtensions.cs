@@ -88,7 +88,7 @@ public static class ApplicationBuilderExtensions
 
             //clear payment info requests
             var genericAttributeService = engine.Resolve<IGenericAttributeService>();
-            await genericAttributeService.DeleteAttributesAsync(NopCustomerDefaults.ProcessPaymentRequestAttribute);
+            await genericAttributeService.DeleteAttributesAsync<Customer>(NopCustomerDefaults.ProcessPaymentRequestAttribute);
         }
     }
 
