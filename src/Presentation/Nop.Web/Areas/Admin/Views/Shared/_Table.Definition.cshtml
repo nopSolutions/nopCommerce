@@ -252,7 +252,7 @@ ordering: @Model.Ordering.ToString().ToLowerInvariant(),
 layout: {
     @foreach (var layoutOption in layoutOptions)
     {
-        @switch (layoutOption.OptionType)
+        switch (layoutOption.OptionType)
         {
             case LayoutOptionType.Null:
                 <text>
@@ -276,14 +276,8 @@ layout: {
                         @foreach (var val in listValues)
                         {
                             <text>
-                                '@JavaScriptEncoder.Default.Encode(val)'
+                                '@JavaScriptEncoder.Default.Encode(val)',
                             </text>
-                            if (val != listValues.Last())
-                            {
-                                <text>
-                                    ,
-                                </text>
-                            }
                         }
                     ],
                 </text>
