@@ -15,6 +15,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
+using Nop.Core.Domain.Tax;
 using Nop.Core.Http.Extensions;
 using Nop.Plugin.Payments.PayPalCommerce.Domain;
 using Nop.Plugin.Payments.PayPalCommerce.Services.Api;
@@ -96,6 +97,7 @@ public class PayPalCommerceServiceManager
     private readonly PayPalCommerceHttpClient _httpClient;
     private readonly PayPalTokenService _tokenService;
     private readonly ShippingSettings _shippingSettings;
+    private readonly TaxSettings _taxSettings;
 
     #endregion
 
@@ -137,7 +139,8 @@ public class PayPalCommerceServiceManager
         OrderSettings orderSettings,
         PayPalCommerceHttpClient httpClient,
         PayPalTokenService tokenService,
-        ShippingSettings shippingSettings)
+        ShippingSettings shippingSettings,
+        TaxSettings taxSettings)
     {
         _currencySettings = currencySettings;
         _customerSettings = customerSettings;
@@ -176,6 +179,7 @@ public class PayPalCommerceServiceManager
         _httpClient = httpClient;
         _tokenService = tokenService;
         _shippingSettings = shippingSettings;
+        _taxSettings = taxSettings;
     }
 
     #endregion
@@ -573,7 +577,8 @@ public class PayPalCommerceServiceManager
         }
         var orderTotal = PrepareMoney(total.Value, details.CurrencyCode);
 
-        var (shippingTotal, _, _) = await _orderTotalCalculationService.GetShoppingCartShippingTotalAsync(details.Cart, includingTax: false);
+        var (shippingTotal, _, _) = await _orderTotalCalculationService
+            .GetShoppingCartShippingTotalAsync(details.Cart, includingTax: _taxSettings.ShippingPriceIncludesTax);
         var orderShippingTotal = PrepareMoney(shippingTotal ?? decimal.Zero, details.CurrencyCode);
 
         var (taxTotal, _) = await _orderTotalCalculationService.GetTaxTotalAsync(details.Cart, usePaymentMethodAdditionalFee: false);
