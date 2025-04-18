@@ -26,7 +26,7 @@
     $(function () {
         // Register the plugin
         FilePond.registerPlugin(FilePondPluginFileValidateType);
-        const allowedExtensions = @Json.Serialize(mediaSettings.GetAcceptedMimeTypes());
+        const allowedExtensions = @Html.Raw(Json.Serialize(mediaSettings.GetAcceptedMimeTypes()));
 
         // Create a FilePond instance
         FilePond.create(document.querySelector('#@(clientId)element'), {

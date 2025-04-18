@@ -172,7 +172,7 @@
         };
     }
     $(function () {
-        const model = @Html.Raw(JsonSerializer.Serialize(jsonModel, JsonSerializerHelper.DefaultSerializationOptions()));
+        const model = @Html.Raw(Json.Serialize(jsonModel));
         
         // Register the plugin
         FilePond.registerPlugin(FilePondPluginGetFile);

@@ -5,6 +5,7 @@
 @inject LocalizationSettings localizationSettings
 @inject StoreInformationSettings storeInformationSettings
 @inject AdminAreaSettings adminAreaSettings
+@inject Nop.Services.Localization.ILanguageService languageService
 
 @using Nop.Core.Domain
 @using Nop.Core.Domain.Localization
@@ -65,7 +66,7 @@
     <div class="wrapper">
         @if (IsSectionDefined("header"))
         {
-            @await RenderSectionAsync("header")
+            @RenderSection("header")
         }
         else
         {
@@ -129,7 +130,7 @@
                                             </button>
                                             <script>
                                                 $(function() {
-                                                    $("#restart-application").on('click', function () {
+                                                    $("#restart-application").click(function (e) {
                                                         showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Header.RestartApplication.Progress").Text))');
                                                     });
                                                 });

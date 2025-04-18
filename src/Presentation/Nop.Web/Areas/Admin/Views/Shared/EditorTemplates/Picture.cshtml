@@ -72,7 +72,7 @@
 <div class="upload-picture-block">
     <div class="picture-container">
         <div class="uploaded-image">
-            <img alt="photo" id="@(jsonModel.imageId)" src="@jsonModel.currentPictureUrl" width="@(pictureSize)"/>
+            <img id="@(jsonModel.imageId)" src="@jsonModel.currentPictureUrl" width="@(pictureSize)"/>
         </div>
     </div>
 </div>
@@ -93,7 +93,7 @@
 
         // Register the plugins
         FilePond.registerPlugin(FilePondPluginFileValidateType, FilePondPluginGetFile);
-        const model = @Html.Raw(JsonSerializer.Serialize(jsonModel, JsonSerializerHelper.DefaultSerializationOptions()));
+        const model = @Html.Raw(Json.Serialize(jsonModel));
         
         const $modelEl = $(`#${model.modelId}`);
         const $imageEl = $(`#${model.imageId}`);
