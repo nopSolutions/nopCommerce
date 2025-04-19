@@ -1,4 +1,6 @@
-﻿@{
+﻿@using Nop.Core.Domain.Messages
+@inject MessagesSettings messageSettings
+@{
     Layout = "_Root.Head";
 }
 @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BodyStartHtmlTagAfter })
@@ -11,7 +13,7 @@
         var localized_data = {
             AjaxCartFailure: "@T("AjaxCart.Failure")"
         };
-        AjaxCart.init(false, '.header-links .cart-qty', '.header-links .wishlist-qty', '#flyout-cart', localized_data);
+        AjaxCart.init(@messageSettings.UsePopupNotifications.ToString().ToLowerInvariant(), '.header-links .cart-qty', '.header-links .wishlist-qty', '#flyout-cart', localized_data);
     </script>
     <div class="header-menu">
         @await Component.InvokeAsync(typeof(TopMenuViewComponent))
