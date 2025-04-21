@@ -262,6 +262,18 @@ public partial class SqLiteNopDataProvider : BaseDataProvider, INopDataProvider
     }
 
     /// <summary>
+    /// Shrinks database
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual Task ShrinkDatabaseAsync()
+    {
+        using (new ReaderWriteLockDisposable(_locker))
+            DataContext.Execute("VACUUM;");
+
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
     /// Build the connection string
     /// </summary>
     /// <param name="nopConnectionString">Connection string info</param>

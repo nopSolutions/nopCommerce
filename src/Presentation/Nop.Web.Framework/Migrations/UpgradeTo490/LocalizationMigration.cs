@@ -135,6 +135,12 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Configuration.Settings.CustomerUser.NotifyFailedLoginAttempt.Hint"] = "Check to enable customer notifications on failed login attempts.",
             ["ActivityLog.PublicStore.Login.Success"] = "Public store. Customer has logged in",
 
+            //2921
+            ["Admin.System.Maintenance.ShrinkDatabase"] = "Shrink database",
+            ["Admin.System.Maintenance.ShrinkDatabase.Complete"] = "Database shrinking completed",
+            ["Admin.System.Maintenance.ShrinkDatabase.Progress"] = "Processing...",
+            ["Admin.System.Maintenance.ShrinkDatabase.Text"] = "Reclaim disk space by reorganizing physical data storage",
+
             //#7515
             ["Admin.Catalog.Attributes.ProductAttributes.List.SearchProductAttributeName"] = "Product attribute name",
             ["Admin.Catalog.Attributes.ProductAttributes.List.SearchProductAttributeName.Hint"] = "A product attribute name.",

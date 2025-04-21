@@ -254,6 +254,16 @@ public partial class MsSqlNopDataProvider : BaseDataProvider, INopDataProvider
     }
 
     /// <summary>
+    /// Shrinks database
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task ShrinkDatabaseAsync()
+    {
+        using var currentConnection = CreateDataConnection();
+        await currentConnection.ExecuteAsync($"DBCC SHRINKDATABASE ({currentConnection.Connection.Database});");
+    }
+
+    /// <summary>
     /// Build the connection string
     /// </summary>
     /// <param name="nopConnectionString">Connection string info</param>
