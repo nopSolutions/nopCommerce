@@ -2,7 +2,7 @@
   "Group": "Payment methods",
   "FriendlyName": "PayPal Commerce",
   "SystemName": "Payments.PayPalCommerce",
-  "Version": "4.80.16",
+  "Version": "4.80.17",
   "SupportedVersions": [ "4.80" ],
   "Author": "nopCommerce team",
   "DisplayOrder": -1,
