@@ -139,6 +139,17 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Catalog.Attributes.ProductAttributes.List.SearchProductAttributeName"] = "Product attribute name",
             ["Admin.Catalog.Attributes.ProductAttributes.List.SearchProductAttributeName.Hint"] = "A product attribute name.",
 
+            //#1266
+            ["Account.CustomerOrders.Period"] = "Orders from",
+            ["Account.CustomerRecurringPayments"] = "Recurring payments",
+            ["Account.CustomerRecurringPayments.NoPayments"] = "No payments",
+            ["Enums.Nop.Web.Models.Order.OrderHistoryPeriods.All"] = "all time",
+            ["Enums.Nop.Web.Models.Order.OrderHistoryPeriods.Day"] = "the past day",
+            ["Enums.Nop.Web.Models.Order.OrderHistoryPeriods.Week"] = "the past week",
+            ["Enums.Nop.Web.Models.Order.OrderHistoryPeriods.Month"] = "the past month",
+            ["Enums.Nop.Web.Models.Order.OrderHistoryPeriods.HalfYear"] = "the past six months",
+            ["Enums.Nop.Web.Models.Order.OrderHistoryPeriods.Year"] = "the past year",
+
             //#7630
             ["Admin.Configuration.Settings.Tax.HmrcApiUrl"] = "HMRC API URL",
             ["Admin.Configuration.Settings.Tax.HmrcApiUrl.Hint"] = "The base HMRC access API URL.",

@@ -11,6 +11,7 @@ using Nop.Services.Shipping;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Models.Order;
 
 namespace Nop.Web.Controllers;
 
@@ -68,17 +69,27 @@ public partial class OrderController : BasePublicController
     #region Methods
 
     //My account / Orders
-    public virtual async Task<IActionResult> CustomerOrders()
+    public virtual async Task<IActionResult> CustomerOrders(int? pageNumber, OrderHistoryPeriods limit)
     {
         if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
             return Challenge();
 
-        var model = await _orderModelFactory.PrepareCustomerOrderListModelAsync();
+        var model = await _orderModelFactory.PrepareCustomerOrderListModelAsync(pageNumber, limit);
+        return View(model);
+    }
+
+    //My account / Recurring payments
+    public virtual async Task<IActionResult> CustomerRecurringPayments()
+    {
+        if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
+            return Challenge();
+
+        var model = await _orderModelFactory.PrepareCustomerRecurringPaymentListModelAsync();
         return View(model);
     }
 
     //My account / Orders / Cancel recurring order
-    [HttpPost, ActionName("CustomerOrders")]
+    [HttpPost, ActionName("CustomerRecurringPayments")]
     [FormValueRequired(FormValueRequirement.StartsWith, "cancelRecurringPayment")]
     public virtual async Task<IActionResult> CancelRecurringPayment(IFormCollection form)
     {
@@ -95,24 +106,24 @@ public partial class OrderController : BasePublicController
         var recurringPayment = await _orderService.GetRecurringPaymentByIdAsync(recurringPaymentId);
         if (recurringPayment == null)
         {
-            return RedirectToRoute("CustomerOrders");
+            return RedirectToRoute("CustomerRecurringPayments");
         }
 
         if (await _orderProcessingService.CanCancelRecurringPaymentAsync(customer, recurringPayment))
         {
             var errors = await _orderProcessingService.CancelRecurringPaymentAsync(recurringPayment);
 
-            var model = await _orderModelFactory.PrepareCustomerOrderListModelAsync();
-            model.RecurringPaymentErrors = errors;
+            var model = await _orderModelFactory.PrepareCustomerRecurringPaymentListModelAsync();
+            model.RecurringPaymentErrors = errors.ToList();
 
             return View(model);
         }
 
-        return RedirectToRoute("CustomerOrders");
+        return RedirectToRoute("CustomerRecurringPayments");
     }
 
     //My account / Orders / Retry last recurring order
-    [HttpPost, ActionName("CustomerOrders")]
+    [HttpPost, ActionName("CustomerRecurringPayments")]
     [FormValueRequired(FormValueRequirement.StartsWith, "retryLastPayment")]
     public virtual async Task<IActionResult> RetryLastRecurringPayment(IFormCollection form)
     {
@@ -125,18 +136,18 @@ public partial class OrderController : BasePublicController
         if (!form.Keys.Any(formValue => formValue.StartsWith("retryLastPayment", StringComparison.InvariantCultureIgnoreCase) &&
                                         int.TryParse(formValue[(formValue.IndexOf('_') + 1)..], out recurringPaymentId)))
         {
-            return RedirectToRoute("CustomerOrders");
+            return RedirectToRoute("CustomerRecurringPayments");
         }
 
         var recurringPayment = await _orderService.GetRecurringPaymentByIdAsync(recurringPaymentId);
         if (recurringPayment == null)
-            return RedirectToRoute("CustomerOrders");
+            return RedirectToRoute("CustomerRecurringPayments");
 
         if (!await _orderProcessingService.CanRetryLastRecurringPaymentAsync(customer, recurringPayment))
-            return RedirectToRoute("CustomerOrders");
+            return RedirectToRoute("CustomerRecurringPayments");
 
         var errors = await _orderProcessingService.ProcessNextRecurringPaymentAsync(recurringPayment);
-        var model = await _orderModelFactory.PrepareCustomerOrderListModelAsync();
+        var model = await _orderModelFactory.PrepareCustomerRecurringPaymentListModelAsync();
         model.RecurringPaymentErrors = errors.ToList();
 
         return View(model);

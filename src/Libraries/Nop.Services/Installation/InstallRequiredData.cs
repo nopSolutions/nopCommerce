@@ -1714,7 +1714,8 @@ public partial class InstallationService
             ShowProductThumbnailInOrderDetailsPage = true,
             DisplayCustomerCurrencyOnOrders = false,
             DisplayOrderSummary = true,
-            PlaceOrderWithLock = false
+            PlaceOrderWithLock = false,
+            CustomerOrdersPageSize = 10
         });
 
         await SaveSettingAsync(dictionary, new SecuritySettings
