@@ -3,6 +3,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Tax;
@@ -147,6 +148,14 @@ public class SettingMigration : MigrationBase
         {
             taxSettings.HmrcClientSecret = string.Empty;
             settingService.SaveSetting(taxSettings, settings => taxSettings.HmrcClientSecret);
+        }
+
+        //#1266
+        var orderSettings = settingService.LoadSetting<OrderSettings>();
+        if (!settingService.SettingExists(orderSettings, settings => settings.CustomerOrdersPageSize))
+        {
+            orderSettings.CustomerOrdersPageSize = 10;
+            settingService.SaveSetting(orderSettings, settings => settings.CustomerOrdersPageSize);
         }
     }
 

@@ -135,9 +135,26 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Configuration.Settings.CustomerUser.NotifyFailedLoginAttempt.Hint"] = "Check to enable customer notifications on failed login attempts.",
             ["ActivityLog.PublicStore.Login.Success"] = "Public store. Customer has logged in",
 
+            //2921
+            ["Admin.System.Maintenance.ShrinkDatabase"] = "Shrink database",
+            ["Admin.System.Maintenance.ShrinkDatabase.Complete"] = "Database shrinking completed",
+            ["Admin.System.Maintenance.ShrinkDatabase.Progress"] = "Processing...",
+            ["Admin.System.Maintenance.ShrinkDatabase.Text"] = "Reclaim disk space by reorganizing physical data storage",
+
             //#7515
             ["Admin.Catalog.Attributes.ProductAttributes.List.SearchProductAttributeName"] = "Product attribute name",
             ["Admin.Catalog.Attributes.ProductAttributes.List.SearchProductAttributeName.Hint"] = "A product attribute name.",
+
+            //#1266
+            ["Account.CustomerOrders.Period"] = "Orders from",
+            ["Account.CustomerRecurringPayments"] = "Recurring payments",
+            ["Account.CustomerRecurringPayments.NoPayments"] = "No payments",
+            ["Enums.Nop.Web.Models.Order.OrderHistoryPeriods.All"] = "all time",
+            ["Enums.Nop.Web.Models.Order.OrderHistoryPeriods.Day"] = "the past day",
+            ["Enums.Nop.Web.Models.Order.OrderHistoryPeriods.Week"] = "the past week",
+            ["Enums.Nop.Web.Models.Order.OrderHistoryPeriods.Month"] = "the past month",
+            ["Enums.Nop.Web.Models.Order.OrderHistoryPeriods.HalfYear"] = "the past six months",
+            ["Enums.Nop.Web.Models.Order.OrderHistoryPeriods.Year"] = "the past year",
 
             //#7630
             ["Admin.Configuration.Settings.Tax.HmrcApiUrl"] = "HMRC API URL",

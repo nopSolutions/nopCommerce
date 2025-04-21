@@ -228,6 +228,12 @@ public partial interface INopDataProvider
     Task ReIndexTablesAsync();
 
     /// <summary>
+    /// Shrinks database
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task ShrinkDatabaseAsync();
+
+    /// <summary>
     /// Build the connection string
     /// </summary>
     /// <param name="nopConnectionString">Connection string info</param>
