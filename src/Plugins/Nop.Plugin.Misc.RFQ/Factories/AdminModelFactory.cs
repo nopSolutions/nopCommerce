@@ -13,7 +13,6 @@ using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
-using Nop.Services.Media;
 using Nop.Services.Seo;
 using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Factories;
@@ -35,7 +34,6 @@ public class AdminModelFactory
     private readonly ICustomerService _customerService;
     private readonly IDateTimeHelper _dateTimeHelper;
     private readonly ILocalizationService _localizationService;
-    private readonly IPictureService _pictureService;
     private readonly IPriceCalculationService _priceCalculationService;
     private readonly IPriceFormatter _priceFormatter;
     private readonly IProductAttributeFormatter _productAttributeFormatter;
@@ -57,7 +55,6 @@ public class AdminModelFactory
         ICustomerService customerService,
         IDateTimeHelper dateTimeHelper,
         ILocalizationService localizationService,
-        IPictureService pictureService,
         IPriceCalculationService priceCalculationService,
         IPriceFormatter priceFormatter,
         IProductAttributeFormatter productAttributeFormatter,
@@ -67,8 +64,7 @@ public class AdminModelFactory
         IStoreContext storeContext,
         ITaxService taxService,
         IUrlRecordService urlRecordService,
-        RfqService rfqService
-    )
+        RfqService rfqService)
     {
         _currencySettings = currencySettings;
         _baseAdminModelFactory = baseAdminModelFactory;
@@ -76,7 +72,6 @@ public class AdminModelFactory
         _customerService = customerService;
         _dateTimeHelper = dateTimeHelper;
         _localizationService = localizationService;
-        _pictureService = pictureService;
         _priceCalculationService = priceCalculationService;
         _priceFormatter = priceFormatter;
         _productAttributeFormatter = productAttributeFormatter;
@@ -92,13 +87,6 @@ public class AdminModelFactory
     #endregion
 
     #region Utilities
-
-    private async Task<string> GetPictureUrlAsync(Product product, string attributesXml, string productName, int imageSize = 200)
-    {
-        var sciPicture = await _pictureService.GetProductPictureAsync(product, attributesXml);
-
-        return (await _pictureService.GetPictureUrlAsync(sciPicture, imageSize)).Url;
-    }
 
     private async Task PrepareProductAttributeModelsAsync(IList<AddProductModel.ProductAttributeModel> models, Customer customer, Product product)
     {
@@ -119,9 +107,11 @@ public class AdminModelFactory
                 HasCondition = !string.IsNullOrEmpty(attribute.ConditionAttributeXml)
             };
             if (!string.IsNullOrEmpty(attribute.ValidationFileAllowedExtensions))
+            {
                 attributeModel.AllowedFileExtensions = attribute.ValidationFileAllowedExtensions
                     .Split(',', StringSplitOptions.RemoveEmptyEntries)
                     .ToList();
+            }
 
             if (attribute.ShouldHaveValues())
             {
@@ -144,7 +134,11 @@ public class AdminModelFactory
                             priceAdjustmentStr = priceAdjustment > 0 ? $"+{priceAdjustmentStr}%" : $"{priceAdjustmentStr}%";
                         }
                         else
-                            priceAdjustmentStr = priceAdjustment > 0 ? $"+{await _priceFormatter.FormatPriceAsync(priceAdjustment, false, false)}" : $"-{await _priceFormatter.FormatPriceAsync(-priceAdjustment, false, false)}";
+                        {
+                            priceAdjustmentStr = priceAdjustment > 0
+                                ? $"+{await _priceFormatter.FormatPriceAsync(priceAdjustment, false, false)}"
+                                : $"-{await _priceFormatter.FormatPriceAsync(-priceAdjustment, false, false)}";
+                        }
                     }
 
                     attributeModel.Values.Add(new AddProductModel.ProductAttributeValueModel
@@ -163,7 +157,7 @@ public class AdminModelFactory
         }
     }
 
-    private async Task<RequestQuoteItemModel> PreparedRequestQuoteItemModelAsync(RFQRequestQuoteItem item, Currency primaryStoreCurrency)
+    private async Task<RequestQuoteItemModel> PreparedRequestQuoteItemModelAsync(RequestQuoteItem item, Currency primaryStoreCurrency)
     {
         var product = await _productService.GetProductByIdAsync(item.ProductId);
 
@@ -181,7 +175,7 @@ public class AdminModelFactory
         };
     }
 
-    private async Task<QuoteItemModel> PreparedQuoteItemModelAsync(RFQQuoteItem item, Currency primaryStoreCurrency)
+    private async Task<QuoteItemModel> PreparedQuoteItemModelAsync(QuoteItem item, Currency primaryStoreCurrency)
     {
         var product = await _productService.GetProductByIdAsync(item.ProductId);
 
@@ -293,7 +287,7 @@ public class AdminModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the request a quote model
     /// </returns>
-    public async Task<RequestQuoteModel> PreparedRequestQuoteModelAsync(RFQRequestQuote requestQuote, IDictionary<int, string> customerEmails = null)
+    public async Task<RequestQuoteModel> PreparedRequestQuoteModelAsync(RequestQuote requestQuote, IDictionary<int, string> customerEmails = null)
     {
         string email;
 
@@ -360,7 +354,7 @@ public class AdminModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the product model to add to the quote
     /// </returns>
-    public virtual async Task<AddProductModel> PrepareAddProductModelAsync(AddProductModel model, RFQQuote quote, Product product)
+    public async Task<AddProductModel> PrepareAddProductModelAsync(AddProductModel model, Quote quote, Product product)
     {
         ArgumentNullException.ThrowIfNull(model);
         ArgumentNullException.ThrowIfNull(product);
@@ -473,7 +467,7 @@ public class AdminModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the quote model
     /// </returns>
-    public async Task<QuoteModel> PreparedQuoteModelAsync(RFQQuote quote, IDictionary<int, string> customerEmails = null)
+    public async Task<QuoteModel> PreparedQuoteModelAsync(Quote quote, IDictionary<int, string> customerEmails = null)
     {
         string email;
 

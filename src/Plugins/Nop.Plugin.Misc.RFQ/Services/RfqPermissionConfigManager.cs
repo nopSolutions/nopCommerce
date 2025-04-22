@@ -17,7 +17,7 @@ public class RfqPermissionConfigManager : IPermissionConfigManager
     public IList<PermissionConfig> AllConfigs =>
         new List<PermissionConfig>
         {
-            new("Access to the customer’s Request and Price Offer functionality", ADMIN_ACCESS_RFQ , nameof(StandardPermission.Orders), NopCustomerDefaults.AdministratorsRoleName),
+            new("Admin area. Access to the customer’s Request and Price Offer functionality", ADMIN_ACCESS_RFQ , nameof(StandardPermission.Orders), NopCustomerDefaults.AdministratorsRoleName),
             new("Public store. Access to the customer’s Request and Price Offer functionality", ACCESS_RFQ , nameof(StandardPermission.Orders), NopCustomerDefaults.AdministratorsRoleName, NopCustomerDefaults.RegisteredRoleName)
         };
 }

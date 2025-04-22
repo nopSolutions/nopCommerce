@@ -5,7 +5,7 @@ namespace Nop.Plugin.Misc.RFQ.Domains;
 /// <summary>
 /// Represents a request for quote item entity
 /// </summary>
-public class RFQRequestQuoteItem : BaseEntity, IAdminNote
+public class RequestQuoteItem : BaseEntity, IAdminNote
 {
     /// <summary>
     /// Gets or sets the product identifier

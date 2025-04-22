@@ -47,7 +47,7 @@ public class RfqCustomerController : BaseController
         return await CheckCustomerPermissionAsync(await _rfqService.GetRequestQuoteByIdAsync(model.Id));
     }
 
-    private async Task<IActionResult> CheckCustomerPermissionAsync(RFQRequestQuote request)
+    private async Task<IActionResult> CheckCustomerPermissionAsync(RequestQuote request)
     {
         var customer = await _workContext.GetCurrentCustomerAsync();
 
@@ -223,7 +223,7 @@ public class RfqCustomerController : BaseController
 
         var items = await _rfqService.GetCustomerRequestsAsync(customer.Id);
         var model = await items.OrderBy(item => item.CreatedOnUtc).SelectAwait(async item =>
-            await _modelFactory.PrepareRequestQuoteModelAsync(item, new List<RFQRequestQuoteItem>())).ToListAsync();
+            await _modelFactory.PrepareRequestQuoteModelAsync(item, new List<RequestQuoteItem>())).ToListAsync();
 
         return View("~/Plugins/Misc.RFQ/Views/CustomerRequests.cshtml", model);
     }
@@ -244,7 +244,7 @@ public class RfqCustomerController : BaseController
 
         var items = await _rfqService.GetCustomerQuotesAsync(customer.Id);
         var model = await items.OrderBy(item => item.CreatedOnUtc)
-            .SelectAwait(async item => await _modelFactory.PrepareQuoteModelAsync(item, new List<RFQQuoteItem>()))
+            .SelectAwait(async item => await _modelFactory.PrepareQuoteModelAsync(item, new List<QuoteItem>()))
             .ToListAsync();
 
         return View("~/Plugins/Misc.RFQ/Views/CustomerQuotes.cshtml", model);

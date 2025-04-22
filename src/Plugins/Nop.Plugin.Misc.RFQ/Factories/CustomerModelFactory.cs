@@ -64,14 +64,14 @@ public class CustomerModelFactory
     #region Utilities
 
     /// <summary>
-    /// Prepare the picture model
+    /// Prepare the picture URL
     /// </summary>
     /// <param name="product">Product</param>
     /// <param name="attributesXml">Product attributes xml</param>
     /// <param name="imageSize">Image size</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the picture model
+    /// The task result contains the picture URL
     /// </returns>
     private async Task<string> GetPictureUrlAsync(Product product, string attributesXml, int imageSize = 200)
     {
@@ -80,7 +80,7 @@ public class CustomerModelFactory
         return (await _pictureService.GetPictureUrlAsync(sciPicture, imageSize)).Url;
     }
 
-    private async Task<QuoteItemModel> PrepareQuoteItemModelAsync(RFQQuoteItem item, Currency currentCurrency)
+    private async Task<QuoteItemModel> PrepareQuoteItemModelAsync(QuoteItem item, Currency currentCurrency)
     {
         var product = await _productService.GetProductByIdAsync(item.ProductId);
 
@@ -100,7 +100,7 @@ public class CustomerModelFactory
 
     #region Methods
 
-    public async Task<RequestQuoteModel> PrepareRequestQuoteModelAsync(RFQRequestQuote requestQuote, IList<RFQRequestQuoteItem> requestQuoteItems = null, RequestQuoteModel model = null)
+    public async Task<RequestQuoteModel> PrepareRequestQuoteModelAsync(RequestQuote requestQuote, IList<RequestQuoteItem> requestQuoteItems = null, RequestQuoteModel model = null)
     {
         ArgumentNullException.ThrowIfNull(requestQuote);
 
@@ -125,7 +125,7 @@ public class CustomerModelFactory
         return model;
     }
 
-    public async Task<QuoteModel> PrepareQuoteModelAsync(RFQQuote quote, IList<RFQQuoteItem> quoteItems = null, QuoteModel model = null)
+    public async Task<QuoteModel> PrepareQuoteModelAsync(Quote quote, IList<QuoteItem> quoteItems = null, QuoteModel model = null)
     {
         ArgumentNullException.ThrowIfNull(quote);
 
@@ -150,7 +150,7 @@ public class CustomerModelFactory
         return model;
     }
 
-    public async Task<RequestQuoteItemModel> PrepareRequestQuoteItemModelAsync(RFQRequestQuote requestQuote, RFQRequestQuoteItem item, Currency currentCurrency)
+    public async Task<RequestQuoteItemModel> PrepareRequestQuoteItemModelAsync(RequestQuote requestQuote, RequestQuoteItem item, Currency currentCurrency)
     {
         var product = await _productService.GetProductByIdAsync(item.ProductId);
 

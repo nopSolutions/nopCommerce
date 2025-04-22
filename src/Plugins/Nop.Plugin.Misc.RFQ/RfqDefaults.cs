@@ -16,12 +16,19 @@ public class RfqDefaults
     /// {0} : shopping cart item ID
     /// </remarks>
     public static CacheKey QuoteItemByShoppingCartItemCacheKey => new("Misc.RFQ.QuoteItemByShoppingCartItem.{0}");
-    
+
     #endregion
 
-    public const string CUSTOMER_SENT_NEW_REQUEST_QUOTE = "RequestQuote.CustomerSentNewRequest.StoreOwnerNotification";
-    public const string ADMIN_SENT_NEW_QUOTE = "Quote.AdminSentNewQuote.CustomerNotification";
-    
+    /// <summary>
+    /// Gets a system name of store owner notification about new request quote
+    /// </summary>
+    public const string CUSTOMER_SENT_NEW_REQUEST_QUOTE = "Misc.RFQ.CustomerSentNewRequest.StoreOwnerNotification";
+
+    /// <summary>
+    /// Gets a system name of customer notification about new quote
+    /// </summary>
+    public const string ADMIN_SENT_NEW_QUOTE = "Misc.RFQ.AdminSentNewQuote.CustomerNotification";
+
     /// <summary>
     /// Gets a quantity form key prefix
     /// </summary>
@@ -31,7 +38,7 @@ public class RfqDefaults
     /// Gets a unit price form key prefix
     /// </summary>
     public const string UNIT_PRICE_FORM_KEY = "unit_price_";
-    
+
     /// <summary>
     /// Gets a plugin system name
     /// </summary>

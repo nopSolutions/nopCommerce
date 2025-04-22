@@ -96,35 +96,37 @@ public class RfqPlugin : BasePlugin, IWidgetPlugin
             await _settingService.SaveSettingAsync(_widgetSettings);
         }
 
-        var eaGeneral = await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId) ??
-            (await _emailAccountService.GetAllEmailAccountsAsync()).FirstOrDefault() ??
-            throw new Exception("Default email account cannot be loaded");
+        var eaGeneral = await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId)
+            ?? (await _emailAccountService.GetAllEmailAccountsAsync()).FirstOrDefault()
+            ?? throw new Exception("Default email account cannot be loaded");
 
         var messageTemplates = new List<MessageTemplate>();
         var allMessageTemplates = await _messageTemplateService.GetAllMessageTemplatesAsync(0);
         var existsMessageTemplateNames = allMessageTemplates.Select(t => t.Name).ToList();
 
         if (!existsMessageTemplateNames.Contains(RfqDefaults.CUSTOMER_SENT_NEW_REQUEST_QUOTE))
-            messageTemplates.Add(
-                new MessageTemplate
-                {
-                    Name = RfqDefaults.CUSTOMER_SENT_NEW_REQUEST_QUOTE,
-                    Subject = "%Store.Name%. The new request a quote #%RequestQuote.Id% sent",
-                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%Customer.FullName% (%Customer.Email%) has just sent a new request a quote.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Request a quote number: %RequestQuote.Id%{Environment.NewLine}<br />{Environment.NewLine}Date of request a quote: %RequestQuote.CreatedOn%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}See details on the <a href=\"%RequestQuote.URL%\">request a quote page</a>{Environment.NewLine}</p>{Environment.NewLine}",
-                    IsActive = true,
-                    EmailAccountId = eaGeneral.Id
-                });
+        {
+            messageTemplates.Add(new MessageTemplate
+            {
+                Name = RfqDefaults.CUSTOMER_SENT_NEW_REQUEST_QUOTE,
+                Subject = "%Store.Name%. The new request a quote #%RequestQuote.Id% sent",
+                Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%Customer.FullName% (%Customer.Email%) has just sent a new request a quote.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Request a quote number: %RequestQuote.Id%{Environment.NewLine}<br />{Environment.NewLine}Date of request a quote: %RequestQuote.CreatedOn%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}See details on the <a href=\"%RequestQuote.URL%\">request a quote page</a>{Environment.NewLine}</p>{Environment.NewLine}",
+                IsActive = true,
+                EmailAccountId = eaGeneral.Id
+            });
+        }
 
         if (!existsMessageTemplateNames.Contains(RfqDefaults.ADMIN_SENT_NEW_QUOTE))
-            messageTemplates.Add(
-                new MessageTemplate
-                {
-                    Name = RfqDefaults.ADMIN_SENT_NEW_QUOTE,
-                    Subject = "%Store.Name%. The new quote #%Quote.Id% received",
-                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Store owner has just sent a new quote.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Quote number: %Quote.Id%{Environment.NewLine}<br />{Environment.NewLine}Date of the quote: %Quote.CreatedOn%{Environment.NewLine}<br />%if(%ExpirationOnIsSet%)Expiration date of the quote: %Quote.ExpirationOn%{Environment.NewLine}<br />%endif{Environment.NewLine}<br />{Environment.NewLine}See details on the <a href=\"%Quote.URL%\">The quote page</a>{Environment.NewLine}</p>{Environment.NewLine}",
-                    IsActive = true,
-                    EmailAccountId = eaGeneral.Id
-                });
+        {
+            messageTemplates.Add(new MessageTemplate
+            {
+                Name = RfqDefaults.ADMIN_SENT_NEW_QUOTE,
+                Subject = "%Store.Name%. The new quote #%Quote.Id% received",
+                Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Store owner has just sent a new quote.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Quote number: %Quote.Id%{Environment.NewLine}<br />{Environment.NewLine}Date of the quote: %Quote.CreatedOn%{Environment.NewLine}<br />%if(%Quote.ExpirationOnIsSet%)Expiration date of the quote: %Quote.ExpirationOn%{Environment.NewLine}<br />endif%{Environment.NewLine}<br />{Environment.NewLine}See details on the <a href=\"%Quote.URL%\">The quote page</a>{Environment.NewLine}</p>{Environment.NewLine}",
+                IsActive = true,
+                EmailAccountId = eaGeneral.Id
+            });
+        }
 
         if (messageTemplates.Any())
             await Task.WhenAll(messageTemplates.Select(_messageTemplateService.InsertMessageTemplateAsync));
@@ -234,8 +236,8 @@ public class RfqPlugin : BasePlugin, IWidgetPlugin
             ["Plugins.Misc.RFQ.BackToShoppingCart"] = "Back to shopping cart",
             ["Plugins.Misc.RFQ.QuoteExpired"] = "Status changed to expired",
             [$"Admin.ContentManagement.MessageTemplates.Description.{RfqDefaults.CUSTOMER_SENT_NEW_REQUEST_QUOTE}"] = "This message template is used to notify a store owner that the new request a quote sent",
-            [$"Admin.ContentManagement.MessageTemplates.Description.{RfqDefaults.ADMIN_SENT_NEW_QUOTE}"] = "This message template is used to notify a customer that the new a quote sent",
-            ["Security.Permission.Misc.RFQ.AccessRFQ.Admin.AccessRFQ"] = "Access to the customer’s Request and Price Offer functionality",
+            [$"Admin.ContentManagement.MessageTemplates.Description.{RfqDefaults.ADMIN_SENT_NEW_QUOTE}"] = "This message template is used to notify a customer that the new quote sent",
+            ["Security.Permission.Misc.RFQ.AccessRFQ.Admin.AccessRFQ"] = "Admin area. Access to the customer’s Request and Price Offer functionality",
             ["Security.Permission.Misc.RFQ.AccessRFQ.PublicStore.AccessRFQ"] = "Public store. Access to the customer’s Request and Price Offer functionality"
         });
 

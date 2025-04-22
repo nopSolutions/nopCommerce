@@ -23,7 +23,7 @@ namespace Nop.Plugin.Misc.RFQ.Controllers;
 [Area(AreaNames.ADMIN)]
 [AuthorizeAdmin]
 [AutoValidateAntiforgeryToken]
-public partial class RfqAdminController : BasePluginController
+public class RfqAdminController : BasePluginController
 {
     #region Fields
 
@@ -77,7 +77,7 @@ public partial class RfqAdminController : BasePluginController
     [HttpPost]
     [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
     [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
-    public virtual async Task<IActionResult> AddNewProduct(ProductSearchModel searchModel)
+    public async Task<IActionResult> AddNewProduct(ProductSearchModel searchModel)
     {
         //prepare model
         var model = await _modelFactory.PrepareProductListModelAsync(searchModel);
@@ -87,7 +87,7 @@ public partial class RfqAdminController : BasePluginController
 
     [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
     [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
-    public virtual async Task<IActionResult> AddProductDetails(int productId, int quoteId)
+    public async Task<IActionResult> AddProductDetails(int productId, int quoteId)
     {
         var quote = await _rfqService.GetQuoteByIdAsync(quoteId)
             ?? throw new ArgumentException("No quote found with the specified id");
@@ -104,10 +104,8 @@ public partial class RfqAdminController : BasePluginController
     [HttpPost]
     [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
     [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
-    public virtual async Task<IActionResult> AddProductDetails(int quoteId, int productId, IFormCollection form)
+    public async Task<IActionResult> AddProductDetails(int quoteId, int productId, IFormCollection form)
     {
-        ArgumentNullException.ThrowIfNull(quoteId);
-
         var product = await _productService.GetProductByIdAsync(productId)
             ?? throw new ArgumentException("No product found with the specified id");
 
@@ -136,7 +134,7 @@ public partial class RfqAdminController : BasePluginController
 
         if (!warnings.Any())
         {
-            var quoteItem = new RFQQuoteItem
+            var quoteItem = new QuoteItem
             {
                 AttributesXml = attributesXml,
                 ProductId = product.Id,
@@ -158,7 +156,7 @@ public partial class RfqAdminController : BasePluginController
     }
 
     [HttpPost]
-    public virtual async Task<IActionResult> ProductDetailsAttributeChange(int productId, bool validateAttributeConditions, IFormCollection form)
+    public async Task<IActionResult> ProductDetailsAttributeChange(int productId, bool validateAttributeConditions, IFormCollection form)
     {
         var product = await _productService.GetProductByIdAsync(productId);
         if (product == null)
@@ -200,7 +198,7 @@ public partial class RfqAdminController : BasePluginController
     [HttpPost]
     [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
     [CheckPermission(StandardPermission.Customers.CUSTOMERS_VIEW)]
-    public virtual async Task<IActionResult> CustomerList(CustomerSearchModel searchModel)
+    public async Task<IActionResult> CustomerList(CustomerSearchModel searchModel)
     {
         //prepare model
         var model = await _customerModelFactory.PrepareCustomerListModelAsync(searchModel);
@@ -250,7 +248,7 @@ public partial class RfqAdminController : BasePluginController
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
     [FormValueRequired("save", "save-continue")]
     [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
-    public virtual async Task<IActionResult> AdminRequest(RequestQuoteModel model, bool continueEditing)
+    public async Task<IActionResult> AdminRequest(RequestQuoteModel model, bool continueEditing)
     {
         var requestQuote = await _rfqService.GetRequestQuoteByIdAsync(model.Id);
 
@@ -279,7 +277,7 @@ public partial class RfqAdminController : BasePluginController
     [HttpPost, ActionName("AdminRequest")]
     [FormValueRequired(FormValueRequirement.StartsWith, "btnSave")]
     [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
-    public virtual async Task<IActionResult> EditRequestItem(int id, IFormCollection form)
+    public async Task<IActionResult> EditRequestItem(int id, IFormCollection form)
     {
         if (id <= 0)
             return RedirectToAction("AdminRequests");
@@ -320,7 +318,7 @@ public partial class RfqAdminController : BasePluginController
     [HttpPost, ActionName("AdminRequest")]
     [FormValueRequired(FormValueRequirement.StartsWith, "btnDelete")]
     [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
-    public virtual async Task<IActionResult> DeleteRequestItem(int id, IFormCollection form)
+    public async Task<IActionResult> DeleteRequestItem(int id, IFormCollection form)
     {
         if (id <= 0)
             return RedirectToAction("AdminRequests");
@@ -392,7 +390,7 @@ public partial class RfqAdminController : BasePluginController
 
     [HttpPost]
     [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
-    public virtual async Task<IActionResult> RequestList(RequestQuoteSearchModel searchModel)
+    public async Task<IActionResult> RequestList(RequestQuoteSearchModel searchModel)
     {
         //prepare model
         var model = await _modelFactory.PrepareRequestQuoteListModelAsync(searchModel);
@@ -406,7 +404,7 @@ public partial class RfqAdminController : BasePluginController
 
     [HttpPost]
     [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
-    public virtual async Task<IActionResult> CreateQuote(RequestQuoteModel model)
+    public async Task<IActionResult> CreateQuote(RequestQuoteModel model)
     {
         var quoteId = await _rfqService.CreateQuoteByRequestAsync(model.Id);
 
@@ -461,7 +459,7 @@ public partial class RfqAdminController : BasePluginController
 
     [HttpPost]
     [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
-    public virtual async Task<IActionResult> QuoteList(QuoteSearchModel searchModel)
+    public async Task<IActionResult> QuoteList(QuoteSearchModel searchModel)
     {
         //prepare model
         var model = await _modelFactory.PrepareQuoteListModelAsync(searchModel);
@@ -518,7 +516,7 @@ public partial class RfqAdminController : BasePluginController
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
     [FormValueRequired("save", "save-continue")]
     [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
-    public virtual async Task<IActionResult> AdminQuote(QuoteModel model, bool continueEditing)
+    public async Task<IActionResult> AdminQuote(QuoteModel model, bool continueEditing)
     {
         var quote = await _rfqService.GetQuoteByIdAsync(model.Id);
 
@@ -558,7 +556,7 @@ public partial class RfqAdminController : BasePluginController
     [HttpPost, ActionName("AdminQuote")]
     [FormValueRequired(FormValueRequirement.StartsWith, "btnSave")]
     [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
-    public virtual async Task<IActionResult> EditQuoteItem(int id, IFormCollection form)
+    public async Task<IActionResult> EditQuoteItem(int id, IFormCollection form)
     {
         if (id <= 0)
             return RedirectToAction("AdminQuotes");
@@ -599,7 +597,7 @@ public partial class RfqAdminController : BasePluginController
     [HttpPost, ActionName("AdminQuote")]
     [FormValueRequired(FormValueRequirement.StartsWith, "btnDelete")]
     [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
-    public virtual async Task<IActionResult> DeleteQuoteItem(int id, IFormCollection form)
+    public async Task<IActionResult> DeleteQuoteItem(int id, IFormCollection form)
     {
         if (id <= 0)
             return RedirectToAction("AdminQuotes");

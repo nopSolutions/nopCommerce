@@ -85,7 +85,7 @@ public class RfqMessageService : WorkflowMessageService
 
     #region Utilities
 
-    private async Task AddAdminRequestQuoteTokensAsync(IList<Token> tokens, RFQRequestQuote requestQuote, Language language)
+    private async Task AddAdminRequestQuoteTokensAsync(IList<Token> tokens, RequestQuote requestQuote, Language language)
     {
         tokens.Add(new Token("RequestQuote.Id", requestQuote.Id));
         tokens.Add(new Token("RequestQuote.CreatedOn", requestQuote.CreatedOnUtc.ToString("D", new CultureInfo(language.LanguageCulture))));
@@ -95,7 +95,7 @@ public class RfqMessageService : WorkflowMessageService
         await _eventPublisher.EntityTokensAddedAsync(requestQuote, tokens);
     }
 
-    private async Task AddCustomerQuoteTokensAsync(IList<Token> tokens, RFQQuote quote, Language language)
+    private async Task AddCustomerQuoteTokensAsync(IList<Token> tokens, Quote quote, Language language)
     {
         tokens.Add(new Token("Quote.Id", quote.Id));
         tokens.Add(new Token("Quote.CreatedOn", quote.CreatedOnUtc.ToString("D", new CultureInfo(language.LanguageCulture))));
@@ -129,7 +129,7 @@ public class RfqMessageService : WorkflowMessageService
     /// A task that represents the asynchronous operation
     /// The task result contains the queued email identifier
     /// </returns>
-    public async Task<IList<int>> CustomerSentNewRequestQuoteAsync(RFQRequestQuote requestQuote)
+    public async Task<IList<int>> CustomerSentNewRequestQuoteAsync(RequestQuote requestQuote)
     {
         ArgumentNullException.ThrowIfNull(requestQuote);
 
@@ -174,7 +174,7 @@ public class RfqMessageService : WorkflowMessageService
     /// A task that represents the asynchronous operation
     /// The task result contains the queued email identifier
     /// </returns>
-    public async Task<IList<int>> AdminSentNewQuoteAsync(RFQQuote quote)
+    public async Task<IList<int>> AdminSentNewQuoteAsync(Quote quote)
     {
         ArgumentNullException.ThrowIfNull(quote);
 

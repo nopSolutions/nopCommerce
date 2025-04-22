@@ -7,7 +7,7 @@ using Nop.Plugin.Misc.RFQ.Domains;
 
 namespace Nop.Plugin.Misc.RFQ.Data.Mapping.Builders;
 
-public class RFQQuoteBuilder : NopEntityBuilder<RFQQuote>
+public class QuoteBuilder : NopEntityBuilder<Quote>
 {
     #region Methods
 
@@ -17,9 +17,9 @@ public class RFQQuoteBuilder : NopEntityBuilder<RFQQuote>
     /// <param name="table">Create table expression builder</param>
     public override void MapEntity(CreateTableExpressionBuilder table)
     {
-        table.WithColumn(nameof(RFQQuote.CustomerId)).AsInt32().ForeignKey<Customer>();
-        table.WithColumn(nameof(RFQQuote.RequestQuoteId)).AsInt32().Nullable()
-            .ForeignKey<RFQRequestQuote>(onDelete: Rule.SetNull);
+        table.WithColumn(nameof(Quote.CustomerId)).AsInt32().ForeignKey<Customer>();
+        table.WithColumn(nameof(Quote.RequestQuoteId)).AsInt32().Nullable()
+            .ForeignKey<RequestQuote>(onDelete: Rule.SetNull);
     }
 
     #endregion

@@ -5,7 +5,7 @@ namespace Nop.Plugin.Misc.RFQ.Domains;
 /// <summary>
 /// Represents a quote item entity
 /// </summary>
-public class RFQQuoteItem : BaseEntity
+public class QuoteItem : BaseEntity
 {
     /// <summary>
     /// Gets or sets the quote identifier

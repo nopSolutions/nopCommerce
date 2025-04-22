@@ -26,6 +26,8 @@ public class EventConsumer : IConsumer<AdminMenuCreatedEvent>,
     IConsumer<EntityInsertedEvent<ShoppingCartItem>>,
     IConsumer<ShoppingCartItemMovedToOrderItemEvent>
 {
+    #region Fields
+
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly ILocalizationService _localizationService;
     private readonly IPermissionService _permissionService;
@@ -34,6 +36,10 @@ public class EventConsumer : IConsumer<AdminMenuCreatedEvent>,
     private readonly IStoreContext _storeContext;
     private readonly IWorkContext _workContext;
     private readonly RfqService _rfqService;
+
+    #endregion
+
+    #region Ctor
 
     public EventConsumer(IHttpContextAccessor httpContextAccessor,
         ILocalizationService localizationService,
@@ -54,6 +60,15 @@ public class EventConsumer : IConsumer<AdminMenuCreatedEvent>,
         _rfqService = rfqService;
     }
 
+    #endregion
+
+    #region Methods
+
+    /// <summary>
+    /// Handle admin menu created event
+    /// </summary>
+    /// <param name="eventMessage">Event message</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(AdminMenuCreatedEvent eventMessage)
     {
         var visible = !await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ);
@@ -61,26 +76,29 @@ public class EventConsumer : IConsumer<AdminMenuCreatedEvent>,
         var menuItemSystemName = "Current shopping carts and wishlists";
 
         var baseMenuItem = eventMessage.RootMenuItem.GetItemBySystemName("Sales");
-        baseMenuItem.InsertAfter(menuItemSystemName,
-            new AdminMenuItem
-            {
-                Visible = visible,
-                SystemName = RfqDefaults.RequestsAdminMenuSystemName,
-                Title = await _localizationService.GetResourceAsync("Plugins.Misc.RFQ.RequestsQuote"),
-                Url = eventMessage.GetMenuItemUrl("RfqAdmin", "AdminRequests"),
-                IconClass = "far fa-dot-circle"
-            });
-        baseMenuItem.InsertAfter(menuItemSystemName,
-            new AdminMenuItem
-            {
-                Visible = visible,
-                SystemName = RfqDefaults.QuotesAdminMenuSystemName,
-                Title = await _localizationService.GetResourceAsync("Plugins.Misc.RFQ.Quotes"),
-                Url = eventMessage.GetMenuItemUrl("RfqAdmin", "AdminQuotes"),
-                IconClass = "far fa-dot-circle"
-            });
+        baseMenuItem.InsertAfter(menuItemSystemName, new AdminMenuItem
+        {
+            Visible = visible,
+            SystemName = RfqDefaults.RequestsAdminMenuSystemName,
+            Title = await _localizationService.GetResourceAsync("Plugins.Misc.RFQ.RequestsQuote"),
+            Url = eventMessage.GetMenuItemUrl("RfqAdmin", "AdminRequests"),
+            IconClass = "far fa-dot-circle"
+        });
+        baseMenuItem.InsertAfter(menuItemSystemName, new AdminMenuItem
+        {
+            Visible = visible,
+            SystemName = RfqDefaults.QuotesAdminMenuSystemName,
+            Title = await _localizationService.GetResourceAsync("Plugins.Misc.RFQ.Quotes"),
+            Url = eventMessage.GetMenuItemUrl("RfqAdmin", "AdminQuotes"),
+            IconClass = "far fa-dot-circle"
+        });
     }
 
+    /// <summary>
+    /// Handle get shopping cart item unit price event
+    /// </summary>
+    /// <param name="eventMessage">Event message</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(GetShoppingCartItemUnitPriceEvent eventMessage)
     {
         var quoteItem = await _staticCacheManager.GetAsync(
@@ -97,6 +115,11 @@ public class EventConsumer : IConsumer<AdminMenuCreatedEvent>,
         eventMessage.StopProcessing = true;
     }
 
+    /// <summary>
+    /// Handle model prepared event
+    /// </summary>
+    /// <param name="eventMessage">Event message</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(ModelPreparedEvent<BaseNopModel> eventMessage)
     {
         if (eventMessage.Model is ShoppingCartModel model)
@@ -137,6 +160,11 @@ public class EventConsumer : IConsumer<AdminMenuCreatedEvent>,
         }
     }
 
+    /// <summary>
+    /// Handle shopping cart item inserted event
+    /// </summary>
+    /// <param name="eventMessage">Event message</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(EntityInsertedEvent<ShoppingCartItem> eventMessage)
     {
         var customer = await _workContext.GetCurrentCustomerAsync();
@@ -157,6 +185,11 @@ public class EventConsumer : IConsumer<AdminMenuCreatedEvent>,
         await _rfqService.UpdateQuoteItemsAsync(quoteItems);
     }
 
+    /// <summary>
+    /// Handle shopping cart item moved to order item event
+    /// </summary>
+    /// <param name="eventMessage">Event message</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(ShoppingCartItemMovedToOrderItemEvent eventMessage)
     {
         var quoteItem = await _rfqService.GetQuoteItemByShoppingCartItemIdAsync(eventMessage.ShoppingCartItem.Id);
@@ -179,4 +212,6 @@ public class EventConsumer : IConsumer<AdminMenuCreatedEvent>,
 
         await _rfqService.UpdateQuoteItemsAsync(items);
     }
+
+    #endregion
 }

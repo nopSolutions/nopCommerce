@@ -13,11 +13,11 @@ public class SchemaMigration : Migration
     /// </summary>
     public override void Up()
     {
-        Create.TableFor<RFQRequestQuote>();
-        Create.TableFor<RFQRequestQuoteItem>();
+        Create.TableFor<RequestQuote>();
+        Create.TableFor<RequestQuoteItem>();
 
-        Create.TableFor<RFQQuote>();
-        Create.TableFor<RFQQuoteItem>();
+        Create.TableFor<Quote>();
+        Create.TableFor<QuoteItem>();
     }
 
     /// <summary>
@@ -25,10 +25,10 @@ public class SchemaMigration : Migration
     /// </summary>
     public override void Down()
     {
-        Delete.Table(nameof(RFQQuoteItem));
-        Delete.Table(nameof(RFQQuote));
+        Delete.Table(nameof(QuoteItem));
+        Delete.Table(nameof(Quote));
 
-        Delete.Table(nameof(RFQRequestQuoteItem));
-        Delete.Table(nameof(RFQRequestQuote));
+        Delete.Table(nameof(RequestQuoteItem));
+        Delete.Table(nameof(RequestQuote));
     }
 }
