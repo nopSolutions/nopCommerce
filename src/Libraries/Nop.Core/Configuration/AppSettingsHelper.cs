@@ -39,7 +39,11 @@ public partial class AppSettingsHelper
         //create file if not exists
         var filePath = fileProvider.MapPath(NopConfigurationDefaults.AppSettingsFilePath);
         var fileExists = fileProvider.FileExists(filePath);
-        fileProvider.CreateFile(filePath);
+        // Only create the file if it doesn't exist
+        if (!fileExists)
+        {
+            fileProvider.CreateFile(filePath);
+        }
 
         //get raw configuration parameters
         var configuration = JsonConvert.DeserializeObject<AppSettings>(fileProvider.ReadAllText(filePath, Encoding.UTF8))
