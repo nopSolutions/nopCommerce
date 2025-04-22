@@ -65,10 +65,14 @@
 .storeId8 #flyout-cart {
     width: auto;
     float: right;
-    margin-right: 115px;
+    margin-right: 16px;
     margin-top: 0px;
-    margin-bottom: -15px;
-    padding-bottom: 15px;
+    margin-bottom: 0px;
+    padding: 10px 0px;
+}
+
+.storeId8 .hawthorne-lower #flyout-cart {
+    margin-left: 60px;
 }
 
 .storeId3 #flyout-cart {
@@ -81,6 +85,11 @@
     display: flex;
 }
 
+@media (min-width: 1025px) {
+.storeId8 .header-logo.desktop {
+    margin-top: 0px;
+}
+}
 /* Have logo match category width - other header logo fixes */
 .header-logo {
     width: 250px;

@@ -3,7 +3,7 @@
 
 @* Injected HeaderLinksModel *@
 @using Nop.Web.Models.Common
-@using Nop.Web.Factories;
+@using Nop.Web.Factories
 
 @inject IStoreContext storeContext
 @inject ISettingService settingService
@@ -52,7 +52,10 @@
                     <li class="top-header-logo">
                         <a href="https://www.abcwarehouse.com/"><img class="hawthorne-logo" src="https://www.abcwarehouse.com/images/thumbs/1200766_abc_web-logo_60th_2.png" alt="Hawthorne"/></a>
                     </li>
-                    <li>
+                    <div class="hours-desktop">
+                        @await Component.InvokeAsync("Widget", new { widgetZone = "hawthorne_hours" })
+                    </div>
+                    <li class="lookbook">
                         <a href="/hawthorne-lookbook">Lookbook</a>
                     </li>
                     <li>
@@ -97,7 +100,7 @@
                     <img class="hawthorne-logo" src="https://www.abcwarehouse.com/images/hawthorne/Hawthorne%20Logo%20Gold.png" alt="hawthorne logo">
                 </a>
             </div>
-            <div class="header-menu nav-panel">
+            <div class="header-menu nav-panel test2">
                 <div class="close-button close-menu">
                     <span>@T("SevenSpikes.Themes.Common.CloseMenu")</span>
                 </div>
@@ -113,18 +116,8 @@
                     @menu
                 }
             </div>
-            
-           
-            
-          
-             <div class="hours-desktop">
-                @await Component.InvokeAsync("Widget", new { widgetZone = "hawthorne_hours" })
-                
-            </div>
-           
-           
 
-                <div class="header-menu-parent">
+                <div class="header-menu-parent test1">
                     <div class="header-menu @if (showCategoriesInSideMenu){<text>categories-in-side-panel</text>}">
                         <div class="close-menu">
                             <span>@T("SevenSpikes.Themes.Common.CloseMenu")</span>
@@ -141,16 +134,13 @@
                 </div>
 
             <div class="search-cart-wrapper">
-                <div class="search-box store-search-box nav-panel">
-                    <div class="close-button close-search">
-                        <span>@T("SevenSpikes.Themes.Common.CloseMenu")</span>
-                    </div>
-                </div>
-                @await Component.InvokeAsync("FlyoutShoppingCart")
-
-                
+                @await Component.InvokeAsync("InstantSearch")
+                @await Component.InvokeAsync("FlyoutShoppingCart") 
             </div>
 
+            <div class="admin-header-links">
+                <a href="/Admin" class="administration">Administration</a>
+            </div>
             
         </div>
     }
@@ -201,19 +191,29 @@
                     @await Component.InvokeAsync("Widget", new { widgetZone = "store_hours" })
                 </div>
 
-                <div class="header-menu-parent">
+                <div class="header-menu-parent test3">
                     <div class="header-menu @if (showCategoriesInSideMenu){<text>categories-in-side-panel</text>}">
                         <div class="close-menu">
                             <span>@T("SevenSpikes.Themes.Common.CloseMenu")</span>
                         </div>
-                        @if (!String.IsNullOrEmpty(await menuHtml.RenderHtmlContentAsync()))
+                        @if(storeId == 8)
                         {
-                            @menuHtml
+                            <div class="header-menu-parent">
+                                @await Component.InvokeAsync("Widget", new { widgetZone = "mobile_menu" });
+                            </div>
                         }
                         else
                         {
-                            @await Component.InvokeAsync("TopMenu")
+                            @if (!String.IsNullOrEmpty(await menuHtml.RenderHtmlContentAsync()))
+                            {
+                                @menuHtml
+                            }
+                            else
+                            {
+                                @await Component.InvokeAsync("TopMenu")
+                            }
                         }
+                        
                     </div>
                 </div>
                 @* Old location of the cart *@
@@ -234,7 +234,7 @@
                         </div>
                     }
                 }
-                <div class="search-box store-search-box @if (!showCategoriesInSideMenu){<text>full-width</text>}">
+                <div class="search-box store-search-box testtesttest @if (!showCategoriesInSideMenu){<text>full-width</text>}">
                     @* can only have one search box for InstantSearch
                     @await Component.InvokeAsync("SearchBox")
                     *@

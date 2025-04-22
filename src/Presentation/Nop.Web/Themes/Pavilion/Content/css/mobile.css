@@ -26,7 +26,7 @@
 	z-index: 1020;
 	width: 100%;
 	height: 53px !important; /*override inline height*/
-	border-top: 3px solid #00a1b1;
+	border-top: 3px solid #02463b;
 	background-color: #02463b;
 }
 
@@ -182,7 +182,7 @@
 .header-menu {
     position: fixed;
     top: 0; left: 0;
-    width: 320px;
+    width: 313px;
     height: 100%;
     text-align: left;
     background-color: #f6f6f6;
@@ -193,16 +193,26 @@
     -ms-transform: translate(-320px);
     transform: translate(-320px);
 }
+
+.storeId8 .sublist-wrap.active {
+	    border-top: solid 42px #02463b;
+}
 .header-menu.open {
     box-shadow: 1px 0 5px rgba(0,0,0,0.5);
     -webkit-transform: translate(0);
     -ms-transform: translate(0);
     transform: translate(0);
 }
-.header-menu .close-menu,
+.storeId8 .header-menu .close-menu,
 .header-menu .back-button {
-	background-color: #f6f6f6;
+	background-color: #02463b;
 	cursor: pointer;
+}
+
+.storeId8 .header-menu .close-menu,
+.header-menu .back-button {
+	background-color: #02463b;
+	
 }
 .header-menu .close-menu span,
 .header-menu .back-button span {

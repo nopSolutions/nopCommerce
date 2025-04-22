@@ -262,13 +262,20 @@
 .header-menu > ul > li > a,
 .header-menu > ul > li > span {
 	display: block;
-	padding: 5px 0px;
+	padding: 36px 0px;
 	font-size: 14px; /*reset zeroing*/
 	font-weight: bold;
 	color: #333;
 	text-transform: uppercase;
 	cursor: pointer;
 }
+
+
+
+
+
+
+
 
 @media (min-width: 1281px) {
     .header-menu > ul > li > a, .header-menu > ul > li > span {      
@@ -307,9 +314,9 @@
 	position: relative;
 	display: table-cell;
 	width: 190px; /*prevents the cell from expanding when header menu is empty*/
-	padding: 0 0 0 32px;
+	/* padding: 0 0 0 32px;
 	vertical-align: middle;
-	text-align: right;
+	text-align: right; */
 }
 .cart-trigger {
 	display: inline-block;
@@ -755,7 +762,7 @@
 }
 
 .storeId8 .footer-upper, .ui-datepicker-header, .ui-datepicker-calendar .ui-state-active {
-    background-color: #02463b;
+    background-color: #02463b !important;
 }
 .footer {
 	text-align: left;

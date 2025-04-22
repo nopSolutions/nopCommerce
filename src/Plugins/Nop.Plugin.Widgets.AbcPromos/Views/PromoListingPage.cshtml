@@ -1,11 +1,13 @@
 @model IList<AbcPromo>
-
+@using Nop.Core
 @using Nop.Plugin.Misc.AbcCore.Domain
 @using Nop.Services.Catalog
 @using Nop.Services.Seo
 
 @inject IManufacturerService manufacturerService
 @inject IUrlRecordService urlRecordService
+@inject IStoreContext storeContext
+
 
 @{
     Layout = "_ColumnsOne";
@@ -15,18 +17,31 @@
 
     //page class
     Html.AppendPageCssClassParts("html-promo-listing-page");
+    var currentStore = await storeContext.GetCurrentStoreAsync();
+    int storeId = currentStore.Id;
 }
+
+
 
 <div class="page category-page">
     <div class="page-title">
         <h1>Rebates and Promos</h1>
     </div>
    
-   
-         <picture>
+        @if (storeId == 3) {
+            <picture class = "abcRebate">
             <source media="(max-width: 767px)" srcset="https://www.abcwarehouse.com/images/1200x500RebateMobile.jpg">
             <img src="https://www.abcwarehouse.com/images/1200x1000Rebate.jpg" alt="RebateBanner" class="responsive-banner">
         </picture>
+        }
+         else {
+             <picture class = "hawRebate">
+            <source media="(max-width: 767px)" srcset="https://www.abcwarehouse.com/images/1200x500RebateMobileHaw.jpg">
+            <img src="https://www.abcwarehouse.com/images/1200x1000RebateHaw.jpg" alt="RebateBanner" class="responsive-banner">
+        </picture>
+         }
+
+       
    
     <div class="page-body">
         <div class="abc-container abc-promo-container">

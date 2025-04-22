@@ -166,6 +166,14 @@
 document.addEventListener('DOMContentLoaded', function() {
   // Check if .storeId8 exists
   if (document.querySelector('.storeId8')) {
+
+    @* This forces the webpage to always scroll to teh top on a refresh *@
+    window.onload = function() {
+  window.scrollTo(0, 0);
+};
+
+
+
     // Update Instagram link only if .storeId8 is present
     const instagramLink = document.querySelector('li.instagram a');
     if (instagramLink) {

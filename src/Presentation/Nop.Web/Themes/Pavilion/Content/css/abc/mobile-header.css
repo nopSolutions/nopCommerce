@@ -120,6 +120,7 @@ input.search-box-text {
     flex-grow: 1;
     max-width: calc(100% - 300px);
     padding-right: 20px;
+    margin-right: 40px;
 }
 
 

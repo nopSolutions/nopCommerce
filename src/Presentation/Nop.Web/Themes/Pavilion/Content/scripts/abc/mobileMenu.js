@@ -16,6 +16,7 @@ var imageArray = new Array('Default.png', 'HomeButton.png', 'LocationsButton.png
 var element;
 var elementArray = new Array();
 var categoryArray = new Array();
+
 categoryArray[0] = "SHOP ALL CATEGORIES";
 
 $(document).ready(function () {
@@ -42,10 +43,22 @@ $(document).ready(function () {
     //Update Link based on category name, gonna remove stage if it works
     function updateCategoryLink(categoryName) {
         const baseURL = "https://abcwarehouse.com/";
+        const baseURL1 = "https://hawthorne.abcwarehouse.com/";
+
+         // Check if we're on Hawthorne store by checking if createForHawthorne exists
+    const isHawthorne = typeof createForHawthorne !== 'undefined' && 
+    window.location.href.indexOf("hawthorneonline") > -1;
 
          // Special case for "shop-all-categories"
     if (categoryName.toLowerCase() === "shop all categories") {
+
+        if(!isHawthorne)
+        {
+            selectCategory.attr("href", baseURL1 + "filterSearch");
+        }
+        else {
         selectCategory.attr("href", baseURL + "filterSearch");
+        }
         return;
     }
       // Special case for "dishwashers"
