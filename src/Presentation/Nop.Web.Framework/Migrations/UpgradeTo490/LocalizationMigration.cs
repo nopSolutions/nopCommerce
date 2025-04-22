@@ -146,6 +146,9 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Configuration.Settings.Tax.HmrcClientId.Hint"] = "Your HMRC API client ID is a unique identifier which created when you added your application.",
             ["Admin.Configuration.Settings.Tax.HmrcClientSecret"] = "HMRC API client secret",
             ["Admin.Configuration.Settings.Tax.HmrcClientSecret.Hint"] = "Your client secret is a unique passphrase that you generate to authorise your application.",
+
+            //#5199
+            ["Enums.Nop.Core.Domain.Forums.EditorType.MDCodeEditor"] = "Markdown code editor",
         }, languageId);
 
         #endregion

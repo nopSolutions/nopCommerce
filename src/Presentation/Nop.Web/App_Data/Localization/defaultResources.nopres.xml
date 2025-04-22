@@ -17559,6 +17559,9 @@
   <LocaleResource Name="Enums.Nop.Core.Domain.Forums.EditorType.HtmlEditor">
     <Value>Html editor</Value>
   </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Forums.EditorType.MDCodeEditor">
+    <Value>Markdown code editor</Value>
+  </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Forums.EditorType.SimpleTextBox">
     <Value>Simple textbox</Value>
   </LocaleResource>
