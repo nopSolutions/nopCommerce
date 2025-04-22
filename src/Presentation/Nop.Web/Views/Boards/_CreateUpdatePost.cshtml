@@ -31,14 +31,25 @@
                     <label>@T("Forum.TopicTitle"):</label>
                     <strong class="topic-subject">@Model.ForumTopicSubject</strong>
                 </div>
-                <div class="inputs">
-                    @if (Model.ForumEditor == EditorType.BBCodeEditor)
-                    {
+                @if (Model.ForumEditor == EditorType.MarkdownEditor)
+                {
+                    @await Html.PartialAsync("_MarkdownEditor", new ForumPostTextModel { Text = Model.Text })
+                }
+                @if (Model.ForumEditor == EditorType.BBCodeEditor)
+                {
+                    <div class="inputs">
                         <nop-bb-code-editor asp-for="Text" />
-                    }
-                    <textarea asp-for="Text" class="forum-post-text"></textarea>
-                    <span asp-validation-for="Text"></span>
-                </div>
+                        <textarea asp-for="Text" class="forum-post-text"></textarea>
+                        <span asp-validation-for="Text"></span>
+                    </div>
+                }
+                @if ((Model.ForumEditor == EditorType.SimpleTextBox))
+                {
+                    <div class="inputs">
+                        <textarea asp-for="Text" class="forum-post-text"></textarea>
+                        <span asp-validation-for="Text"></span>
+                    </div>
+                }
                 @if (Model.IsCustomerAllowedToSubscribe)
                 {
                     <div class="inputs reversed">

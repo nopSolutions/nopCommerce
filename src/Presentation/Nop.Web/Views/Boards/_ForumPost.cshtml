@@ -1,5 +1,7 @@
 ﻿@model ForumPostModel
 @using Nop.Core
+@using Nop.Core.Domain.Forums
+
 @inject IWebHelper webHelper;
 @{
     var thisPageUrl = webHelper.GetThisPageUrl(true);
@@ -92,7 +94,8 @@
             </div>
         </div>
         <div class="post-body">
-            <div class="post-text">
+            <div class="post-text" data-post-content="@Model.Id">
+                @* Original content will be replaced by JavaScript for Markdown editor*@
                 @Html.Raw(Model.FormattedText)
             </div>
             @if (Model.AllowPostVoting)

@@ -1853,7 +1853,7 @@ public partial class InstallationService
             ActiveDiscussionsPageSize = 50,
             LatestCustomerPostsPageSize = 10,
             ShowCustomersPostCount = true,
-            ForumEditor = EditorType.BBCodeEditor,
+            ForumEditor = EditorType.MarkdownEditor,
             SignaturesEnabled = true,
             AllowPrivateMessages = false,
             ShowAlertForPM = false,
