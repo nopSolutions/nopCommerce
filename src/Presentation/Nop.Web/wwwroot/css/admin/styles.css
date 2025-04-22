@@ -780,13 +780,17 @@ i.false-icon {
   padding-top: 0;
 }
 
+.select2-blue {
+  width: 100%;
+}
+
 .card-search .select2-blue {
   max-width: 425px;
 }
 
-  .select2-blue .select2-container--default .select2-selection--single {
-    height: 38px;
-  }
+.select2-blue .select2-container--default .select2-selection--single {
+  height: 38px;
+}
 
 .select2-selection--multiple {
   height: auto;
@@ -797,9 +801,9 @@ i.false-icon {
   border-radius: 0px;
 }
 
-  .select2-blue .select2-container--default .select2-selection--single .select2-selection__arrow {
-    top: 6px;
-  }
+.select2-blue .select2-container--default .select2-selection--single .select2-selection__arrow {
+  top: 6px;
+}
 
 .select2-blue .select2-container--default.select2-container--focus .select2-selection--single {
   border-color: #80bdff;
