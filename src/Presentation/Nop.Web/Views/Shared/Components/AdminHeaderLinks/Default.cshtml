@@ -1,17 +1,6 @@
 ﻿@model AdminHeaderLinksModel
-@using Nop.Core
-@using Nop.Services.Customers
-@inject IWorkContext workContext
-@inject ICustomerService customerService
 
-@{
-    var currentCustomer = await workContext.GetCurrentCustomerAsync();
-    bool isAdmin = await customerService.IsAdminAsync(currentCustomer);
-}
-
-@* Added role check using `ICustomerService.IsAdminAsync()` to ensure only admin users see the admin link   *@
-
-@if (Model.IsCustomerImpersonated || (Model.DisplayAdminLink && isAdmin))
+@if (Model.IsCustomerImpersonated || Model.DisplayAdminLink)
 {
     <div class="admin-header-links">
         @if (Model.IsCustomerImpersonated)
@@ -21,7 +10,7 @@
                 <a href="@Url.RouteUrl("Logout")" class="finish-impersonation" title="@T("Account.ImpersonatedAs.Finish.Hint")">@T("Account.ImpersonatedAs.Finish")</a>
             </div>
         }
-        @if (Model.DisplayAdminLink && isAdmin)
+        @if (Model.DisplayAdminLink)
         {
             <a href="@Url.Content("~/Admin")" class="administration">@T("Account.Administration")</a>
         }
