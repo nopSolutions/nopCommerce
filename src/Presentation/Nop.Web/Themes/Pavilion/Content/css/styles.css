@@ -1131,6 +1131,19 @@ input#sli_search_1 {
 	background-position: -224px 0;
 }
 
+
+.storeId8 .social-sharing .pinterest a {
+	display: none;
+}
+
+.storeId8 .social-sharing .linkedin a {
+	display: none;
+}
+
+.storeId8 .social-sharing .tiktok a {
+	display: none;
+}
+
 .footer-middle {
 	overflow: hidden;
 	background-color: #f6f6f6;
@@ -7651,6 +7664,9 @@ a.us-ap-button {
 .flyout-cart {
     top: 70px;
 }
+.storeId8 .hawHours {
+    vertical-align: middle;
+}
 
 .header-links ul {
  margin-left: -6px; }
@@ -7662,6 +7678,6 @@ a.us-ap-button {
 		display: inline-flex;
 	}
 	.storeId8 .lookbook {
-		border-left: solid 1px #515151;
+		
 	}
 	

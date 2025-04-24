@@ -49,12 +49,26 @@
         <div class="top-header last">
             <div class="hawthorne top-menu">
                 <ul>
-                    <li class="top-header-logo">
-                        <a href="https://www.abcwarehouse.com/"><img class="hawthorne-logo" src="https://www.abcwarehouse.com/images/thumbs/1200766_abc_web-logo_60th_2.png" alt="Hawthorne"/></a>
+                    <li class="BacktoAbc">
+                        <a href="https://www.abcwarehouse.com/">Back to abcwarehouse.com</a>
                     </li>
-                    <div class="hours-desktop">
+                    @* <li class="top-header-logo">
+                        <a href="https://www.abcwarehouse.com/"><img class="hawthorne-logo" src="https://www.abcwarehouse.com/images/thumbs/1200766_abc_web-logo_60th_2.png" alt="Hawthorne"/></a>
+                    </li> *@
+
+                    <li class="hawHours">
+                       
+                     <div class="hours-desktop">
                         @await Component.InvokeAsync("Widget", new { widgetZone = "hawthorne_hours" })
-                    </div>
+                     </div>
+
+                    </li>
+
+                    <li class="storelocate">
+                        <a href="/hawthorne-store-locations">Locations</a>
+                    </li>
+
+
                     <li class="lookbook">
                         <a href="/hawthorne-lookbook">Lookbook</a>
                     </li>
