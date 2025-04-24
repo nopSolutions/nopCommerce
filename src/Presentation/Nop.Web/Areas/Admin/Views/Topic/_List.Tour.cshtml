@@ -44,17 +44,6 @@
                                 side: "bottom",
                                 align: 'start'
                             }});
-
-                        if (topicShipping.data().IncludeInFooterColumn1 === true) {
-                            steps.push({
-                                element: topicShipping.node().querySelector('.column-footer-column1'),
-                                popover: {
-                                    title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TopicList.Location.Title").Text)',
-                                    description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TopicList.Location.Text").Text)',
-                                    side: "left",
-                                    align: 'start'
-                                }});
-                        }
                     }
 
                     steps.push({

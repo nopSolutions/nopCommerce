@@ -36,11 +36,6 @@ public partial class SampleCategory
     public bool ShowOnHomepage { get; set; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether to include this category in the top menu
-    /// </summary>
-    public bool IncludeInTopMenu { get; set; }
-
-    /// <summary>
     /// Gets or sets a value indicating whether the entity is published
     /// </summary>
     public bool Published { get; set; }

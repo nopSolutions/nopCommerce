@@ -578,7 +578,7 @@ public partial class ProductService : IProductService
     }
 
     /// <summary>
-    /// Gets product
+    /// Gets a product
     /// </summary>
     /// <param name="productId">Product identifier</param>
     /// <returns>

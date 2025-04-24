@@ -466,7 +466,9 @@ public partial class CategoryService : ICategoryService
     /// </returns>
     public virtual async Task<Category> GetCategoryByIdAsync(int categoryId)
     {
-        return await _categoryRepository.GetByIdAsync(categoryId, cache => default);
+        var category = await _categoryRepository.GetByIdAsync(categoryId, cache => default);
+
+        return category;
     }
 
     /// <summary>

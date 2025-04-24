@@ -15,9 +15,8 @@ public static partial class NopTopicDefaults
     /// <remarks>
     /// {0} : store ID
     /// {1} : show hidden?
-    /// {2} : include in top menu?
     /// </remarks>
-    public static CacheKey TopicsAllCacheKey => new("Nop.topic.all.{0}-{1}-{2}");
+    public static CacheKey TopicsAllCacheKey => new("Nop.topic.all.{0}-{1}");
 
     /// <summary>
     /// Gets a key for caching
@@ -25,10 +24,9 @@ public static partial class NopTopicDefaults
     /// <remarks>
     /// {0} : store ID
     /// {1} : show hidden?
-    /// {2} : include in top menu?
-    /// {3} : customer role IDs hash
+    /// {2} : customer role IDs hash
     /// </remarks>
-    public static CacheKey TopicsAllWithACLCacheKey => new("Nop.topic.all.withacl.{0}-{1}-{2}-{3}");
+    public static CacheKey TopicsAllWithACLCacheKey => new("Nop.topic.all.withacl.{0}-{1}-{2}");
 
     /// <summary>
     /// Gets a key for caching

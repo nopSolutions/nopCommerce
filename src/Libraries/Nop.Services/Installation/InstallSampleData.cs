@@ -1361,7 +1361,6 @@ public partial class InstallationService
                 PageSizeOptions = sample.PageSizeOptions,
                 ParentCategoryId = parentCategoryId,
                 PictureId = await InsertPictureAsync(sample.ImageFileName, sample.Name),
-                IncludeInTopMenu = sample.IncludeInTopMenu,
                 Published = sample.Published,
                 DisplayOrder = sample.DisplayOrder,
                 CreatedOnUtc = DateTime.UtcNow,

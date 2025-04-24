@@ -48,7 +48,6 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected readonly CommonSettings _commonSettings;
     protected readonly CurrencySettings _currencySettings;
     protected readonly CustomerSettings _customerSettings;
-    protected readonly DisplayDefaultFooterItemSettings _displayDefaultFooterItemSettings;
     protected readonly ForumSettings _forumSettings;
     protected readonly ICurrencyService _currencyService;
     protected readonly ICustomerService _customerService;
@@ -90,7 +89,6 @@ public partial class CommonModelFactory : ICommonModelFactory
         CommonSettings commonSettings,
         CurrencySettings currencySettings,
         CustomerSettings customerSettings,
-        DisplayDefaultFooterItemSettings displayDefaultFooterItemSettings,
         ForumSettings forumSettings,
         ICurrencyService currencyService,
         ICustomerService customerService,
@@ -128,7 +126,6 @@ public partial class CommonModelFactory : ICommonModelFactory
         _commonSettings = commonSettings;
         _currencySettings = currencySettings;
         _customerSettings = customerSettings;
-        _displayDefaultFooterItemSettings = displayDefaultFooterItemSettings;
         _forumSettings = forumSettings;
         _currencyService = currencyService;
         _customerService = customerService;
@@ -439,59 +436,13 @@ public partial class CommonModelFactory : ICommonModelFactory
     /// </returns>
     public virtual async Task<FooterModel> PrepareFooterModelAsync()
     {
-        //footer topics
-        var store = await _storeContext.GetCurrentStoreAsync();
-        var topicModels = await (await _topicService.GetAllTopicsAsync(store.Id))
-            .Where(t => t.IncludeInFooterColumn1 || t.IncludeInFooterColumn2 || t.IncludeInFooterColumn3)
-            .SelectAwait(async t => new FooterModel.FooterTopicModel
-            {
-                Id = t.Id,
-                Name = await _localizationService.GetLocalizedAsync(t, x => x.Title),
-                SeName = await _urlRecordService.GetSeNameAsync(t),
-                IncludeInFooterColumn1 = t.IncludeInFooterColumn1,
-                IncludeInFooterColumn2 = t.IncludeInFooterColumn2,
-                IncludeInFooterColumn3 = t.IncludeInFooterColumn3
-            }).ToListAsync();
-
-        //model
-        var model = new FooterModel
+        return new FooterModel
         {
-            StoreName = await _localizationService.GetLocalizedAsync(store, x => x.Name),
-            WishlistEnabled = await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_WISHLIST),
-            ShoppingCartEnabled = await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_SHOPPING_CART),
-            SitemapEnabled = _sitemapSettings.SitemapEnabled,
-            SearchEnabled = _catalogSettings.ProductSearchEnabled,
-            WorkingLanguageId = (await _workContext.GetWorkingLanguageAsync()).Id,
-            BlogEnabled = _blogSettings.Enabled,
-            CompareProductsEnabled = _catalogSettings.CompareProductsEnabled,
-            ForumEnabled = _forumSettings.ForumsEnabled,
-            NewsEnabled = _newsSettings.Enabled,
-            RecentlyViewedProductsEnabled = _catalogSettings.RecentlyViewedProductsEnabled,
-            NewProductsEnabled = _catalogSettings.NewProductsEnabled,
-            DisplayTaxShippingInfoFooter = _catalogSettings.DisplayTaxShippingInfoFooter,
+            StoreName = await _localizationService.GetLocalizedAsync(await _storeContext.GetCurrentStoreAsync(), x => x.Name),
             HidePoweredByNopCommerce = _storeInformationSettings.HidePoweredByNopCommerce,
-            IsHomePage = await IsHomePageAsync(),
-            AllowCustomersToApplyForVendorAccount = _vendorSettings.AllowCustomersToApplyForVendorAccount,
-            AllowCustomersToCheckGiftCardBalance = _customerSettings.AllowCustomersToCheckGiftCardBalance,
-            Topics = topicModels,
-            DisplaySitemapFooterItem = _displayDefaultFooterItemSettings.DisplaySitemapFooterItem,
-            DisplayContactUsFooterItem = _displayDefaultFooterItemSettings.DisplayContactUsFooterItem,
-            DisplayProductSearchFooterItem = _displayDefaultFooterItemSettings.DisplayProductSearchFooterItem,
-            DisplayNewsFooterItem = _displayDefaultFooterItemSettings.DisplayNewsFooterItem,
-            DisplayBlogFooterItem = _displayDefaultFooterItemSettings.DisplayBlogFooterItem,
-            DisplayForumsFooterItem = _displayDefaultFooterItemSettings.DisplayForumsFooterItem,
-            DisplayRecentlyViewedProductsFooterItem = _displayDefaultFooterItemSettings.DisplayRecentlyViewedProductsFooterItem,
-            DisplayCompareProductsFooterItem = _displayDefaultFooterItemSettings.DisplayCompareProductsFooterItem,
-            DisplayNewProductsFooterItem = _displayDefaultFooterItemSettings.DisplayNewProductsFooterItem,
-            DisplayCustomerInfoFooterItem = _displayDefaultFooterItemSettings.DisplayCustomerInfoFooterItem,
-            DisplayCustomerOrdersFooterItem = _displayDefaultFooterItemSettings.DisplayCustomerOrdersFooterItem,
-            DisplayCustomerAddressesFooterItem = _displayDefaultFooterItemSettings.DisplayCustomerAddressesFooterItem,
-            DisplayShoppingCartFooterItem = _displayDefaultFooterItemSettings.DisplayShoppingCartFooterItem,
-            DisplayWishlistFooterItem = _displayDefaultFooterItemSettings.DisplayWishlistFooterItem,
-            DisplayApplyVendorAccountFooterItem = _displayDefaultFooterItemSettings.DisplayApplyVendorAccountFooterItem
+            DisplayTaxShippingInfoFooter = _catalogSettings.DisplayTaxShippingInfoFooter,
+            IsHomePage = await IsHomePageAsync()
         };
-
-        return model;
     }
 
     /// <summary>

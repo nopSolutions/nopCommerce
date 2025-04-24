@@ -1,0 +1,32 @@
+﻿@model MenuModel
+
+@{
+    const string hideInfoBlockAttributeName = "MenuPage.HideInfoBlock";
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
+
+    const string hideMenuItemsBlockAttributeName = "MenuPage.HideMenuItemsBlock";
+    var hideMenuItemsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideMenuItemsBlockAttributeName);
+}
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-md-12 clearfix">
+                    <div class="float-left">
+                        @await Component.InvokeAsync(typeof(SettingModeViewComponent), new { modeName = "menu-advanced-mode" })
+                    </div>
+                </div>
+            </div>
+
+            <nop-cards id="menu-cards">
+                <nop-card asp-name="menu-info" asp-icon="fas fa-info" asp-title="@T("Admin.ContentManagement.Menus.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-card>
+                <nop-card asp-name="menu-menuitems" asp-icon="fas fa-tv" asp-title="@T("Admin.ContentManagement.Menus.MenuItems")" asp-hide-block-attribute-name="@hideMenuItemsBlockAttributeName" asp-hide="@hideMenuItemsBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.MenuItems", Model)</nop-card>
+            </nop-cards>
+        </div>
+    </div>
+</section>

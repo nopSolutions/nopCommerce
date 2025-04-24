@@ -360,6 +360,14 @@ public partial class AdminMenu : IAdminMenu
                         },
                         new()
                         {
+                            SystemName = "Menus",
+                            Title = await _localizationService.GetResourceAsync("Admin.ContentManagement.Menus"),
+                            PermissionNames = new List<string> { StandardPermission.ContentManagement.MENU_VIEW },
+                            Url = GetMenuItemUrl("Menu", "List"),
+                            IconClass = "far fa-dot-circle"
+                        },
+                        new()
+                        {
                             SystemName = "Message templates",
                             Title = await _localizationService.GetResourceAsync("Admin.ContentManagement.MessageTemplates"),
                             PermissionNames =
@@ -1051,7 +1059,7 @@ public partial class AdminMenu : IAdminMenu
         if (await _permissionService.AuthorizeAsync(StandardPermission.Configuration.MANAGE_PLUGINS, customer))
         {
             await _eventPublisher.PublishAsync(new ThirdPartyPluginsMenuItemCreatedEvent(this, root.GetItemBySystemName("Third party plugins")));
-            
+
             var adminMenuPlugins = await _adminMenuPluginManager.LoadAllPluginsAsync(customer);
 
             foreach (var adminMenuPlugin in adminMenuPlugins)

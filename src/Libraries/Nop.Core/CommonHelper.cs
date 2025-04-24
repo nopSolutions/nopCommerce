@@ -189,7 +189,7 @@ public partial class CommonHelper
         ArgumentNullException.ThrowIfNull(propertyName);
 
         var instanceType = instance.GetType();
-        var pi = instanceType.GetProperty(propertyName) 
+        var pi = instanceType.GetProperty(propertyName)
                  ?? throw new NopException("No property '{0}' found on the instance of type '{1}'.", propertyName, instanceType);
 
         if (!pi.CanWrite)
@@ -271,6 +271,23 @@ public partial class CommonHelper
         result = result.TrimStart();
 
         return result;
+    }
+
+    /// <summary>
+    /// Converts a string from <c>SNAKE_CASE</c> to <c>PascalCase</c>
+    /// </summary>
+    /// <param name="str">Input string</param>
+    /// <returns>Splitted <c>PascalCase</c></returns>
+    public static string SnakeCaseToPascalCase(string str)
+    {
+        if (string.IsNullOrEmpty(str))
+            return string.Empty;
+
+        var tempString = str.ToLower().Replace("_", " ");
+
+        return CultureInfo.InvariantCulture.TextInfo
+            .ToTitleCase(tempString)
+            .Replace(" ", string.Empty);
     }
 
     /// <summary>

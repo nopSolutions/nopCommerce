@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -271,8 +272,11 @@ public partial class BaseAdminModelFactory : IBaseAdminModelFactory
 
         foreach (var prop in fields)
         {
-            var resourceName = $"{NopLocalizationDefaults.LiteralLocaleStringResourcesPrefix}{type.FullName}.{prop.Name}";
-            var resourceValue = useLocalization ? await _localizationService.GetResourceAsync(resourceName) : CommonHelper.SplitCamelCaseWord(prop.Name);
+            var resourceTypeName = Regex.Replace(type.FullName, "\\W+", ".");
+            var resourceConstantName = CommonHelper.SnakeCaseToPascalCase(prop.Name);
+
+            var resourceName = $"{NopLocalizationDefaults.LiteralLocaleStringResourcesPrefix}{resourceTypeName}.{resourceConstantName}";
+            var resourceValue = useLocalization ? await _localizationService.GetResourceAsync(resourceName) : resourceConstantName;
 
             result.Add(new SelectListItem { Value = (string)prop.GetRawConstantValue(), Text = resourceValue });
         }

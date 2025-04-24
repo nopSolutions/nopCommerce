@@ -1,0 +1,34 @@
+﻿@model MenuItemModel
+
+<div class="menu__item @(Model.ChildrenItems.Any() ? "menu-dropdown" : "") @Model.CssClass" data-item-id="@Model.Id">
+    <div class="menu__item-toggle">
+        @await Html.PartialAsync("_MenuItem.cshtml", Model)
+    </div>
+    <div class="menu__grid-view">
+        @foreach (var item in Model.ChildrenItems)
+        {
+            <div class="menu__group">
+                <a href="@item.Url" class="menu__image-link @(string.IsNullOrEmpty(item.Url) ? "menu__link--inactive" : "" )">
+                    @if (item.Picture is not null)
+                    {
+                        <img src="@item.Picture.ImageUrl" alt="@item.Picture.AlternateText" title="@item.Picture.Title" class="menu__image">
+                    }
+                    <h4 class="menu__group-title">@item.Title</h4>
+                </a>
+
+                @if (item.ChildrenItems.Any())
+                {
+                    foreach (var menuItem in item.ChildrenItems)
+                    {
+                        @await Html.PartialAsync("_MenuItem.cshtml", menuItem)
+                    }
+                }
+            </div>
+
+            @if (Model.NumberOfItemsPerGridRow > 0 && (Model.ChildrenItems.IndexOf(item) + 1) % Model.NumberOfItemsPerGridRow == 0)
+            {
+                <div class="menu__row-braker"></div>
+            }
+        }
+    </div>
+</div>

@@ -77,29 +77,6 @@ public class CatalogModelFactoryBaseTests : WebTest
     }
 
     [Test]
-    public async Task CanPrepareTopMenuModel()
-    {
-        var model = await _catalogModelFactory.PrepareTopMenuModelAsync();
-
-        model.Categories.Count.Should().Be(7);
-        model.Topics.Any().Should().BeFalse();
-        model.NewProductsEnabled.Should().BeTrue();
-        model.BlogEnabled.Should().BeTrue();
-        model.HasOnlyCategories.Should().BeTrue();
-
-        var topic = await _topicService.GetTopicByIdAsync(1);
-
-        topic.IncludeInTopMenu = true;
-        await _topicService.UpdateTopicAsync(topic);
-        model = await _catalogModelFactory.PrepareTopMenuModelAsync();
-        topic.IncludeInTopMenu = false;
-
-        await _topicService.UpdateTopicAsync(topic);
-        model.Topics.Any().Should().BeTrue();
-        model.Topics.Count.Should().Be(1);
-    }
-
-    [Test]
     public async Task CanPrepareCategoryModel()
     {
         var model = await _catalogModelFactory.PrepareCategoryModelAsync(_category, new CatalogProductsCommand());
@@ -167,27 +144,6 @@ public class CatalogModelFactoryBaseTests : WebTest
 
         foreach (var categoryModel in model)
             categoryModel.Name.Should().BeOneOf(categories);
-    }
-
-    [Test]
-    public async Task CanPrepareRootCategories()
-    {
-        var model = await _catalogModelFactory.PrepareRootCategoriesAsync();
-        model.Any().Should().BeTrue();
-        model.Count.Should().Be(7);
-    }
-
-    [Test]
-    public async Task CanPrepareSubCategories()
-    {
-        var model = await _catalogModelFactory.PrepareSubCategoriesAsync(_category.Id);
-        model.Any().Should().BeTrue();
-        model.Count.Should().Be(3);
-
-        var categories = new[] { "Desktops", "Notebooks", "Software" };
-
-        foreach (var categorySimpleModel in model)
-            categorySimpleModel.Name.Should().BeOneOf(categories);
     }
 
     [Test]

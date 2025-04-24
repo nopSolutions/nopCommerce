@@ -19,8 +19,6 @@ public partial record GeneralCommonSettingsModel : BaseNopModel, ISettingsModel
         PdfSettings = new PdfSettingsModel();
         LocalizationSettings = new LocalizationSettingsModel();
         TranslationSettings = new TranslationSettingsModel();
-        DisplayDefaultMenuItemSettings = new DisplayDefaultMenuItemSettingsModel();
-        DisplayDefaultFooterItemSettings = new DisplayDefaultFooterItemSettingsModel();
         AdminAreaSettings = new AdminAreaSettingsModel();
         MinificationSettings = new MinificationSettingsModel();
         CustomHtmlSettings = new CustomHtmlSettingsModel();
@@ -48,10 +46,6 @@ public partial record GeneralCommonSettingsModel : BaseNopModel, ISettingsModel
     public LocalizationSettingsModel LocalizationSettings { get; set; }
 
     public TranslationSettingsModel TranslationSettings { get; set; }
-
-    public DisplayDefaultMenuItemSettingsModel DisplayDefaultMenuItemSettings { get; set; }
-
-    public DisplayDefaultFooterItemSettingsModel DisplayDefaultFooterItemSettings { get; set; }
 
     public AdminAreaSettingsModel AdminAreaSettings { get; set; }
 

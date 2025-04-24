@@ -4,8 +4,10 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Menus;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
@@ -17,7 +19,6 @@ using Nop.Data.Migrations;
 using Nop.Services.ArtificialIntelligence;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
-using Nop.Core.Domain.Forums;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo490;
 
@@ -306,6 +307,47 @@ public class SettingMigration : MigrationBase
             aiSettings.ProductDescriptionQuery = ArtificialIntelligenceDefaults.ProductDescriptionQuery;
             settingService.SaveSetting(aiSettings, settings => settings.ProductDescriptionQuery);
         }
+        //#7390
+        var menuSettings = settingService.LoadSetting<MenuSettings>();
+        if (!settingService.SettingExists(menuSettings, settings => settings.MaximumNumberEntities))
+        {
+            menuSettings.MaximumNumberEntities = 8;
+            settingService.SaveSetting(menuSettings, settings => settings.MaximumNumberEntities);
+        }
+
+        if (!settingService.SettingExists(menuSettings, settings => settings.NumberOfItemsPerGridRow))
+        {
+            menuSettings.NumberOfItemsPerGridRow = 4;
+            settingService.SaveSetting(menuSettings, settings => settings.NumberOfItemsPerGridRow);
+        }
+
+        if (!settingService.SettingExists(menuSettings, settings => settings.NumberOfSubItemsPerGridElement))
+        {
+            menuSettings.NumberOfSubItemsPerGridElement = 3;
+            settingService.SaveSetting(menuSettings, settings => settings.NumberOfSubItemsPerGridElement);
+        }
+
+        if (!settingService.SettingExists(menuSettings, settings => settings.MaximumMainMenuLevels))
+        {
+            menuSettings.MaximumMainMenuLevels = 2;
+            settingService.SaveSetting(menuSettings, settings => settings.MaximumMainMenuLevels);
+        }
+
+        if (!settingService.SettingExists(menuSettings, settings => settings.GridThumbPictureSize))
+        {
+            menuSettings.GridThumbPictureSize = 340;
+            settingService.SaveSetting(menuSettings, settings => settings.GridThumbPictureSize);
+        }
+
+        var displayDefaultMenuItemSettings = settingService.GetAllSettings()
+            .Where(s => s.Name.StartsWith("DisplayDefaultMenuItemSettings.", StringComparison.OrdinalIgnoreCase));
+
+        if (displayDefaultMenuItemSettings.Any())
+            settingService.DeleteSettingsAsync(displayDefaultMenuItemSettings.ToList());
+
+        var useajaxloadmenu = settingService.GetSetting("catalogsettings.useajaxloadmenu");
+        if (useajaxloadmenu is not null)
+            settingService.DeleteSettingAsync(useajaxloadmenu);
     }
 
     public override void Down()

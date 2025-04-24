@@ -34,18 +34,6 @@ public partial record TopicModel : BaseNopEntityModel, IAclSupportedModel, ILoca
     [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.IncludeInSitemap")]
     public bool IncludeInSitemap { get; set; }
 
-    [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.IncludeInTopMenu")]
-    public bool IncludeInTopMenu { get; set; }
-
-    [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn1")]
-    public bool IncludeInFooterColumn1 { get; set; }
-
-    [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn2")]
-    public bool IncludeInFooterColumn2 { get; set; }
-
-    [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn3")]
-    public bool IncludeInFooterColumn3 { get; set; }
-
     [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.DisplayOrder")]
     public int DisplayOrder { get; set; }
 
