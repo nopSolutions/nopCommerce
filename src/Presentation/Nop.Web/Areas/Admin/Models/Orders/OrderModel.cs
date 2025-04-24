@@ -15,7 +15,7 @@ public partial record OrderModel : BaseNopEntityModel
 
     public OrderModel()
     {
-        CustomValues = new Dictionary<string, object>();
+        CustomValues = new Dictionary<string, string>();
         TaxRates = new List<TaxRate>();
         GiftCards = new List<GiftCard>();
         Items = new List<OrderItemModel>();
@@ -56,7 +56,7 @@ public partial record OrderModel : BaseNopEntityModel
     public string CustomerIp { get; set; }
 
     [NopResourceDisplayName("Admin.Orders.Fields.CustomValues")]
-    public Dictionary<string, object> CustomValues { get; set; }
+    public Dictionary<string, string> CustomValues { get; set; }
 
     [NopResourceDisplayName("Admin.Orders.Fields.Affiliate")]
     public int AffiliateId { get; set; }
