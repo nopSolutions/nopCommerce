@@ -7664,6 +7664,9 @@ a.us-ap-button {
 .flyout-cart {
     top: 70px;
 }
+.storeId8 .hawHours {
+    vertical-align: middle;
+}
 
 .header-links ul {
  margin-left: -6px; }
