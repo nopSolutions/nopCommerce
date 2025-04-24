@@ -1,12 +1,7 @@
-﻿using System.Xml;
-using System.Xml.Linq;
-using System.Xml.Serialization;
-using System.Xml.XPath;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -22,7 +17,6 @@ using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Seo;
-using Nop.Services.Topics;
 using Nop.Services.Vendors;
 using Nop.Web.Framework.Events;
 using Nop.Web.Framework.Mvc.Routing;
@@ -36,10 +30,8 @@ public partial class CatalogModelFactory : ICatalogModelFactory
 {
     #region Fields
 
-    protected readonly BlogSettings _blogSettings;
     protected readonly CatalogSettings _catalogSettings;
     protected readonly CustomerSettings _customerSettings;
-    protected readonly DisplayDefaultMenuItemSettings _displayDefaultMenuItemSettings;
     protected readonly ForumSettings _forumSettings;
     protected readonly ICategoryService _categoryService;
     protected readonly ICategoryTemplateService _categoryTemplateService;
@@ -61,7 +53,6 @@ public partial class CatalogModelFactory : ICatalogModelFactory
     protected readonly ISpecificationAttributeService _specificationAttributeService;
     protected readonly IStaticCacheManager _staticCacheManager;
     protected readonly IStoreContext _storeContext;
-    protected readonly ITopicService _topicService;
     protected readonly IUrlRecordService _urlRecordService;
     protected readonly IVendorService _vendorService;
     protected readonly IWebHelper _webHelper;
@@ -75,10 +66,8 @@ public partial class CatalogModelFactory : ICatalogModelFactory
 
     #region Ctor
 
-    public CatalogModelFactory(BlogSettings blogSettings,
-        CatalogSettings catalogSettings,
+    public CatalogModelFactory(CatalogSettings catalogSettings,
         CustomerSettings customerSettings,
-        DisplayDefaultMenuItemSettings displayDefaultMenuItemSettings,
         ForumSettings forumSettings,
         ICategoryService categoryService,
         ICategoryTemplateService categoryTemplateService,
@@ -100,7 +89,6 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         ISpecificationAttributeService specificationAttributeService,
         IStaticCacheManager staticCacheManager,
         IStoreContext storeContext,
-        ITopicService topicService,
         IUrlRecordService urlRecordService,
         IVendorService vendorService,
         IWebHelper webHelper,
@@ -109,10 +97,8 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         SeoSettings seoSettings,
         VendorSettings vendorSettings)
     {
-        _blogSettings = blogSettings;
         _catalogSettings = catalogSettings;
         _customerSettings = customerSettings;
-        _displayDefaultMenuItemSettings = displayDefaultMenuItemSettings;
         _forumSettings = forumSettings;
         _categoryService = categoryService;
         _categoryTemplateService = categoryTemplateService;
@@ -134,7 +120,6 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         _specificationAttributeService = specificationAttributeService;
         _staticCacheManager = staticCacheManager;
         _storeContext = storeContext;
-        _topicService = topicService;
         _urlRecordService = urlRecordService;
         _vendorService = vendorService;
         _webHelper = webHelper;
@@ -147,31 +132,6 @@ public partial class CatalogModelFactory : ICatalogModelFactory
     #endregion
 
     #region Utilities
-
-    /// <summary>
-    /// Gets the category simple model
-    /// </summary>
-    /// <param name="elem">Category (simple) xml</param>
-    /// <returns>Category simple model</returns>
-    protected virtual CategorySimpleModel GetCategorySimpleModel(XElement elem)
-    {
-        var model = new CategorySimpleModel
-        {
-            Id = int.Parse(elem.XPathSelectElement("Id").Value),
-            Name = elem.XPathSelectElement("Name").Value,
-            SeName = elem.XPathSelectElement("SeName").Value,
-
-            NumberOfProducts = !string.IsNullOrEmpty(elem.XPathSelectElement("NumberOfProducts").Value)
-                ? int.Parse(elem.XPathSelectElement("NumberOfProducts").Value)
-                : (int?)null,
-
-            IncludeInTopMenu = bool.Parse(elem.XPathSelectElement("IncludeInTopMenu").Value),
-            HaveSubCategories = bool.Parse(elem.XPathSelectElement("HaveSubCategories").Value),
-            Route = _nopUrlHelper.RouteGenericUrlAsync<Category>(new { SeName = elem.XPathSelectElement("SeName").Value }).Result
-        };
-
-        return model;
-    }
 
     /// <summary>
     /// Gets the price range converted to primary store currency
@@ -617,51 +577,6 @@ public partial class CatalogModelFactory : ICatalogModelFactory
     }
 
     /// <summary>
-    /// Prepare top menu model
-    /// </summary>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the op menu model
-    /// </returns>
-    public virtual async Task<TopMenuModel> PrepareTopMenuModelAsync()
-    {
-        var cachedCategoriesModel = new List<CategorySimpleModel>();
-        //categories
-        if (!_catalogSettings.UseAjaxLoadMenu)
-            cachedCategoriesModel = await PrepareCategorySimpleModelsAsync();
-
-        var store = await _storeContext.GetCurrentStoreAsync();
-
-        //top menu topics
-        var topicModel = await (await _topicService.GetAllTopicsAsync(store.Id, onlyIncludedInTopMenu: true))
-            .SelectAwait(async t => new TopMenuModel.TopicModel
-            {
-                Id = t.Id,
-                Name = await _localizationService.GetLocalizedAsync(t, x => x.Title),
-                SeName = await _urlRecordService.GetSeNameAsync(t)
-            }).ToListAsync();
-
-        var model = new TopMenuModel
-        {
-            Categories = cachedCategoriesModel,
-            Topics = topicModel,
-            NewProductsEnabled = _catalogSettings.NewProductsEnabled,
-            BlogEnabled = _blogSettings.Enabled,
-            ForumEnabled = _forumSettings.ForumsEnabled,
-            DisplayHomepageMenuItem = _displayDefaultMenuItemSettings.DisplayHomepageMenuItem,
-            DisplayNewProductsMenuItem = _displayDefaultMenuItemSettings.DisplayNewProductsMenuItem,
-            DisplayProductSearchMenuItem = _displayDefaultMenuItemSettings.DisplayProductSearchMenuItem,
-            DisplayCustomerInfoMenuItem = _displayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem,
-            DisplayBlogMenuItem = _displayDefaultMenuItemSettings.DisplayBlogMenuItem,
-            DisplayForumsMenuItem = _displayDefaultMenuItemSettings.DisplayForumsMenuItem,
-            DisplayContactUsMenuItem = _displayDefaultMenuItemSettings.DisplayContactUsMenuItem,
-            UseAjaxMenu = _catalogSettings.UseAjaxLoadMenu
-        };
-
-        return model;
-    }
-
-    /// <summary>
     /// Prepare homepage category models
     /// </summary>
     /// <returns>
@@ -700,45 +615,6 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         });
 
         return model;
-    }
-
-    /// <summary>
-    /// Prepare root categories for menu
-    /// </summary>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the list of category (simple) models
-    /// </returns>
-    public virtual async Task<List<CategorySimpleModel>> PrepareRootCategoriesAsync()
-    {
-        var doc = await PrepareCategoryXmlDocumentAsync();
-
-        var models = from xe in doc.Root.XPathSelectElements("CategorySimpleModel")
-                     select GetCategorySimpleModel(xe);
-
-        return models.ToList();
-    }
-
-    /// <summary>
-    /// Prepare subcategories for menu
-    /// </summary>
-    /// <param name="id">Id of category to get subcategory</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the 
-    /// </returns>
-    public virtual async Task<List<CategorySimpleModel>> PrepareSubCategoriesAsync(int id)
-    {
-        var doc = await PrepareCategoryXmlDocumentAsync();
-
-        var model = from xe in doc.Descendants("CategorySimpleModel")
-                    where xe.XPathSelectElement("Id").Value == id.ToString()
-                    select xe;
-
-        var models = from xe in model.First().XPathSelectElements("SubCategories/CategorySimpleModel")
-                     select GetCategorySimpleModel(xe);
-
-        return models.ToList();
     }
 
     /// <summary>
@@ -902,8 +778,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
             {
                 Id = category.Id,
                 Name = await _localizationService.GetLocalizedAsync(category, x => x.Name),
-                SeName = await _urlRecordService.GetSeNameAsync(category),
-                IncludeInTopMenu = category.IncludeInTopMenu
+                SeName = await _urlRecordService.GetSeNameAsync(category)
             };
 
             //number of products in each category
@@ -925,50 +800,10 @@ public partial class CatalogModelFactory : ICatalogModelFactory
                 categoryModel.SubCategories.AddRange(subCategories);
             }
 
-            categoryModel.HaveSubCategories = categoryModel.SubCategories.Count > 0 &
-                                              categoryModel.SubCategories.Any(x => x.IncludeInTopMenu);
-
             result.Add(categoryModel);
         }
 
         return result;
-    }
-
-    /// <summary>
-    /// Prepare category (simple) xml document
-    /// </summary>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the xml document of category (simple) models
-    /// </returns>
-    public virtual async Task<XDocument> PrepareCategoryXmlDocumentAsync()
-    {
-        var language = await _workContext.GetWorkingLanguageAsync();
-        var customer = await _workContext.GetCurrentCustomerAsync();
-        var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
-        var store = await _storeContext.GetCurrentStoreAsync();
-        var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryXmlAllModelKey,
-            language, customerRoleIds, store);
-
-        return await _staticCacheManager.GetAsync(cacheKey, async () =>
-        {
-            var categories = await PrepareCategorySimpleModelsAsync();
-
-            var xsSubmit = new XmlSerializer(typeof(List<CategorySimpleModel>));
-
-            var settings = new XmlWriterSettings
-            {
-                Async = true,
-                ConformanceLevel = ConformanceLevel.Auto
-            };
-
-            await using var strWriter = new StringWriter();
-            await using var writer = XmlWriter.Create(strWriter, settings);
-            xsSubmit.Serialize(writer, categories);
-            var xml = strWriter.ToString();
-
-            return XDocument.Parse(xml);
-        });
     }
 
     #endregion

@@ -21,26 +21,6 @@ public partial class Topic : BaseEntity, ILocalizedEntity, ISlugSupported, IStor
     public bool IncludeInSitemap { get; set; }
 
     /// <summary>
-    /// Gets or sets the value indicating whether this topic should be included in top menu
-    /// </summary>
-    public bool IncludeInTopMenu { get; set; }
-
-    /// <summary>
-    /// Gets or sets the value indicating whether this topic should be included in footer (column 1)
-    /// </summary>
-    public bool IncludeInFooterColumn1 { get; set; }
-
-    /// <summary>
-    /// Gets or sets the value indicating whether this topic should be included in footer (column 1)
-    /// </summary>
-    public bool IncludeInFooterColumn2 { get; set; }
-
-    /// <summary>
-    /// Gets or sets the value indicating whether this topic should be included in footer (column 1)
-    /// </summary>
-    public bool IncludeInFooterColumn3 { get; set; }
-
-    /// <summary>
     /// Gets or sets the display order
     /// </summary>
     public int DisplayOrder { get; set; }

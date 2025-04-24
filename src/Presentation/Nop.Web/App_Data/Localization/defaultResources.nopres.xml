@@ -786,6 +786,12 @@
   <LocaleResource Name="ActivityLog.AddNewMeasureWeight">
     <Value>Added a new measure weight (ID = {0})</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewMenu">
+    <Value>Added a new menu ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewMenuItem">
+    <Value>Added a new menu item ('{0}')</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.AddNewNews">
     <Value>Added a new news (ID = {0})</Value>
   </LocaleResource>
@@ -899,6 +905,12 @@
   </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteMessageTemplate">
     <Value>Deleted a message template (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteMenu">
+    <Value>Deleted a menu ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteMenuItem">
+    <Value>Deleted a menu item ('{0}')</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteNews">
     <Value>Deleted a news (ID = {0})</Value>
@@ -1031,6 +1043,12 @@
   </LocaleResource>
   <LocaleResource Name="ActivityLog.EditMessageTemplate">
     <Value>Edited a message template (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditMenu">
+    <Value>Edited a menu ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditMenuItem">
+    <Value>Edited a menu item ('{0}')</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.EditNews">
     <Value>Edited a news (ID = {0})</Value>
@@ -2198,12 +2216,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.DisplayOrder.Hint">
     <Value>Set the category's display order. 1 represents the top of the list.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Categories.Fields.IncludeInTopMenu">
-    <Value>Include in top menu</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Categories.Fields.IncludeInTopMenu.Hint">
-    <Value>Display in the top menu bar. If this category is a subcategory, then ensure that its parent category also has this property enabled.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.LimitedToStores">
     <Value>Limited to stores</Value>
@@ -7518,9 +7530,6 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.FaviconAndAppIcons">
     <Value>Favicon and app icons</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.FooterItems">
-    <Value>Footer items</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.Localization">
     <Value>Localization</Value>
   </LocaleResource>
@@ -7544,9 +7553,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.SocialMedia">
     <Value>Social media</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.TopMenuItems">
-    <Value>Top menu items</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.Translation">
     <Value>Translation</Value>
@@ -7691,138 +7697,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisablePdfInvoicesForPendingOrders.Hint">
     <Value>If checked, customers won't be allowed to print PDF invoices for pending orders.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayApplyVendorAccountFooterItem">
-    <Value>Display "Apply for vendor account"</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayApplyVendorAccountFooterItem.Hint">
-    <Value>Check if "Apply for vendor account" menu item should be displayed in the footer. Vendor functionality should be also enabled in this case.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayBlogFooterItem">
-    <Value>Display "Blog"</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayBlogFooterItem.Hint">
-    <Value>Check if "Blog" menu item should be displayed in the footer. Blog functionality should be also enabled in this case.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayCompareProductsFooterItem">
-    <Value>Display "Compare products list"</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayCompareProductsFooterItem.Hint">
-    <Value>Check if "Compare products list" menu item should be displayed in the footer. Compare products functionality should be also enabled in this case.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayContactUsFooterItem">
-    <Value>Display "Contact us"</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayContactUsFooterItem.Hint">
-    <Value>Check if "Contact us" menu item should be displayed in the footer.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayCustomerAddressesFooterItem">
-    <Value>Display "Addresses"</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayCustomerAddressesFooterItem.Hint">
-    <Value>Check if "Addresses" menu item should be displayed in the footer.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayCustomerInfoFooterItem">
-    <Value>Display "My account"</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayCustomerInfoFooterItem.Hint">
-    <Value>Check if "My account" menu item should be displayed in the footer.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayCustomerOrdersFooterItem">
-    <Value>Display "Orders"</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayCustomerOrdersFooterItem.Hint">
-    <Value>Check if "Orders" menu item should be displayed in the footer.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayForumsFooterItem">
-    <Value>Display "Forums"</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayForumsFooterItem.Hint">
-    <Value>Check if "Forums" menu item should be displayed in the footer. Forums functionality should be also enabled in this case.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayNewProductsFooterItem">
-    <Value>Display "New products"</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayNewProductsFooterItem.Hint">
-    <Value>Check if "New products" menu item should be displayed in the footer.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayNewsFooterItem">
-    <Value>Display "News"</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayNewsFooterItem.Hint">
-    <Value>Check if "News" menu item should be displayed in the footer. News functionality should be also enabled in this case.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayProductSearchFooterItem">
-    <Value>Display "Search"</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayProductSearchFooterItem.Hint">
-    <Value>Check if "Search" menu item should be displayed in the footer.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayRecentlyViewedProductsFooterItem">
-    <Value>Display "Recently viewed products"</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayRecentlyViewedProductsFooterItem.Hint">
-    <Value>Check if "Recently viewed products" menu item should be displayed in the footer. "Recently viewed products" functionality should be also enabled in this case.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayShoppingCartFooterItem">
-    <Value>Display "Shopping cart"</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayShoppingCartFooterItem.Hint">
-    <Value>Check if "Shopping cart" menu item should be displayed in the footer.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplaySitemapFooterItem">
-    <Value>Display "Sitemap"</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplaySitemapFooterItem.Hint">
-    <Value>Check if "Sitemap" menu item should be displayed in the footer.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayWishlistFooterItem">
-    <Value>Display "Wishlist"</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayWishlistFooterItem.Hint">
-    <Value>Check if "Wishlist" menu item should be displayed in the footer.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayBlogMenuItem">
-    <Value>Display "Blog"</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayBlogMenuItem.Hint">
-    <Value>Check if "Blog" menu item should be displayed in the top menu.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayContactUsMenuItem">
-    <Value>Display "Contact us"</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayContactUsMenuItem.Hint">
-    <Value>Check if "Contact us" menu item should be displayed in the top menu.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem">
-    <Value>Display "My account"</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem.Hint">
-    <Value>Check if "My account" menu item should be displayed in the top menu.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayForumsMenuItem">
-    <Value>Display "Forums"</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayForumsMenuItem.Hint">
-    <Value>Check if "Forums" menu item should be displayed in the top menu.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayHomepageMenuItem">
-    <Value>Display "Home page"</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayHomepageMenuItem.Hint">
-    <Value>Check if "Home page" menu item should be displayed in the top menu.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayNewProductsMenuItem">
-    <Value>Display "New products"</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayNewProductsMenuItem.Hint">
-    <Value>Check if "New products" menu item should be displayed in the top menu.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayProductSearchMenuItem">
-    <Value>Display "Search"</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayDefaultMenuItemSettings.DisplayProductSearchMenuItem.Hint">
-    <Value>Check if "Search" menu item should be displayed in the top menu.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayEuCookieLawWarning">
     <Value>Display EU cookie law warning</Value>
@@ -10564,12 +10438,6 @@
   <LocaleResource Name="Admin.ConfigurationSteps.TopicList.Edit.Title">
     <Value>Edit the page</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.ConfigurationSteps.TopicList.Location.Text">
-    <Value>As you can see, this topic is included in the first column of the footer.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ConfigurationSteps.TopicList.Location.Title">
-    <Value>Page link location</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.TopicList.Shipping.Text">
     <Value>For example, this is a shipping info topic. It contains shipping information that customers can access by clicking the appropriate link in your store.</Value>
   </LocaleResource>
@@ -10896,6 +10764,258 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Forums.ForumGroup.Updated">
     <Value>The forum group has been updated successfully.</Value>
+  </LocaleResource>
+<LocaleResource Name="Admin.ContentManagement.Menus">
+  <Value>Menus</Value>
+</LocaleResource>
+<LocaleResource Name="Admin.ContentManagement.Menus.Added">
+  <Value>The new menu has been added successfully.</Value>
+</LocaleResource>
+<LocaleResource Name="Admin.ContentManagement.Menus.AddNew">
+  <Value>Add a new menu</Value>
+</LocaleResource>
+<LocaleResource Name="Admin.ContentManagement.Menus.BackToList">
+  <Value>back to menu list</Value>
+</LocaleResource>
+<LocaleResource Name="Admin.ContentManagement.Menus.Deleted">
+  <Value>The menu has been deleted successfully.</Value>
+</LocaleResource>
+<LocaleResource Name="Admin.ContentManagement.Menus.EditMenuDetails">
+  <Value>Edit menu details</Value>
+</LocaleResource>
+<LocaleResource Name="Admin.ContentManagement.Menus.Info">
+  <Value>Info</Value>
+</LocaleResource>
+<LocaleResource Name="Admin.ContentManagement.Menus.Fields.DisplayAllCategories">
+  <Value>Display all categories</Value>
+</LocaleResource>
+<LocaleResource Name="Admin.ContentManagement.Menus.Fields.DisplayAllCategories.Hint">
+  <Value>Check to automatically display all categories in the menu. Otherwise, you may add appropriate menu items manually for all categories you want to be displayed in the menu.</Value>
+</LocaleResource>
+<LocaleResource Name="Admin.ContentManagement.Menus.Fields.DisplayOrder">
+  <Value>Display order</Value>
+</LocaleResource>
+<LocaleResource Name="Admin.ContentManagement.Menus.Fields.DisplayOrder.Hint">
+  <Value>The display order of the menu item. 1 represents the top of the list.</Value>
+</LocaleResource>
+<LocaleResource Name="Admin.ContentManagement.Menus.Fields.LimitedToStores">
+  <Value>Limited to stores</Value>
+</LocaleResource>
+<LocaleResource Name="Admin.ContentManagement.Menus.Fields.LimitedToStores.Hint">
+  <Value>Option to limit this menu to a certain store. If you have multiple stores, choose one or several from the list. If you don't use this option just leave this field empty.</Value>
+</LocaleResource>
+<LocaleResource Name="Admin.ContentManagement.Menus.Fields.Name">
+  <Value>Name</Value>
+</LocaleResource>
+<LocaleResource Name="Admin.ContentManagement.Menus.Fields.Name.Hint">
+  <Value>The name of the menu.</Value>
+</LocaleResource>
+<LocaleResource Name="Admin.ContentManagement.Menus.Fields.Name.Required">
+  <Value>The name is required.</Value>
+</LocaleResource>
+<LocaleResource Name="Admin.ContentManagement.Menus.Fields.MenuType">
+  <Value>Menu type</Value>
+</LocaleResource>
+<LocaleResource Name="Admin.ContentManagement.Menus.Fields.MenuType.Hint">
+  <Value>The type of the menu.</Value>
+</LocaleResource>
+<LocaleResource Name="Admin.ContentManagement.Menus.Fields.CssClass">
+  <Value>CSS class</Value>
+</LocaleResource>
+<LocaleResource Name="Admin.ContentManagement.Menus.Fields.CssClass.Hint">
+  <Value>Additional CSS class will be added to the menu element. It can be useful for styling purposes.</Value>
+</LocaleResource>
+<LocaleResource Name="Admin.ContentManagement.Menus.Fields.Published">
+  <Value>Published</Value>
+</LocaleResource>
+<LocaleResource Name="Admin.ContentManagement.Menus.Fields.Published.Hint">
+  <Value>Check to publish this menu (visible in store). Uncheck to unpublish (menu not available in store).</Value>
+</LocaleResource>
+<LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.BackToMenu">
+  <Value>back to menu details</Value>
+</LocaleResource>
+<LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.EditDetails">
+  <Value>Edit menu item details</Value>
+</LocaleResource>
+<LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.Category">
+  <Value>Category</Value>
+</LocaleResource>
+<LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.Category.Hint">
+  <Value>Select one of the available categories.</Value>
+</LocaleResource>
+<LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.Manufacturer">
+  <Value>Manufacturer</Value>
+</LocaleResource>
+<LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.Manufacturer.Hint">
+  <Value>Select one of the available manufacturers.</Value>
+</LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.MenuItemType">
+    <Value>Menu item type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.MenuItemType.Hint">
+    <Value>The type of the menu item.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.Published">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.Published.Hint">
+    <Value>Check to publish this menu item (visible in store). Uncheck to unpublish (menu item not available in store).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.Title">
+    <Value>Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.Title.Hint">
+    <Value>The title of this menu item.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.Title.Required">
+    <Value>The title is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.Topic">
+    <Value>Topic</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.Topic.Hint">
+    <Value>Select one of the available topics.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.Topic.Required">
+    <Value>The topic is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.Url">
+    <Value>URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.Url.Hint">
+    <Value>Specify the URL for menu item link.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.Url.Required">
+    <Value>The URL is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.Vendor">
+    <Value>Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.Vendor.Hint">
+    <Value>Select one of the available vendors.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.DisplayOrder.Hint">
+    <Value>The display order of the menu item. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.CssClass">
+    <Value>CSS class</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.CssClass.Hint">
+    <Value>Additional CSS class will be added to the menu item element. It can be useful for styling purposes.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.LimitedToStores">
+    <Value>Limited to stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.LimitedToStores.Hint">
+    <Value>Option to limit this menu item to a certain store. If you have multiple stores, choose one or several from the list. If you don't use this option just leave this field empty.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.MaximumNumberEntities">
+    <Value>Maximum number of elements</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.MaximumNumberEntities.Hint">
+    <Value>The maximum number of elements to display in the list or grid.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.NumberOfItemsPerGridRow">
+    <Value>Number of elements per row</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.NumberOfItemsPerGridRow.Hint">
+    <Value>The maximum number of elements that can be shown in each row of the grid.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.NumberOfSubItemsPerGridElement">
+    <Value>Number of subcategories per category item</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.NumberOfSubItemsPerGridElement.Hint">
+    <Value>Number of subcategories that can be shown for each category item in the grid.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.Parent">
+    <Value>Parent menu item</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.Parent.Hint">
+    <Value>Select one of the parent menu items.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.Product">
+    <Value>Select a product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.Product.Hint">
+    <Value>Select one of the available products.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.Product.Remove">
+    <Value>Remove</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.Product.Select">
+    <Value>Select</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.Product.Required">
+    <Value>The product is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.RouteName">
+    <Value>Standard page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.RouteName.Hint">
+    <Value>Select one of the available pages.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.RouteName.Required">
+    <Value>The standard page is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.Template">
+    <Value>Template</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.Template.Hint">
+    <Value>Select one of the available templates.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Template.List.Description">
+    <Value>List - elements are displayed as a list of simple links.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Template.Grid.Description">
+    <Value>Grid - elements are displayed in a grid layout, each genedated with an image and their associated children.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Template.Simple.Description">
+    <Value>Simple - the selected entity is displayed as a simple link</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItems">
+    <Value>Menu items</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItems.SaveBeforeEdit">
+    <Value>You need to save the menu before you can add menu items for this menu page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItems.AddNew">
+    <Value>Add a new menu item</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItems.Updated">
+    <Value>The menu item has been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItems.Deleted">
+    <Value>The menu item has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItems.SelectProduct">
+    <Value>Select product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItems.SelectProduct.Fields.ProductName">
+    <Value>Product name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItems.SelectProduct.Fields.Published">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItems.SelectProduct.SearchKeywords">
+    <Value>Search keywords</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItems.SelectProduct.SearchKeywords.Hint">
+    <Value>Search products by specific keywords.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItems.SelectProduct.SearchStore">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItems.SelectProduct.SearchStore.Hint">
+    <Value>Search by a specific store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.SelectRoute">
+    <Value>Select page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Menus.Updated">
+    <Value>The menu has been updated successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates">
     <Value>Message templates</Value>
@@ -11596,35 +11716,11 @@
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.DisplayOrder.Hint">
     <Value>The topic display order. 1 represents the first item in the list. It's used with properties such as "Include in top menu" or "Include in footer".</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn1">
-    <Value>Include in footer (column 1)</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn1.Hint">
-    <Value>Check to include this topic in the footer (column 1). Ensure that your theme supports it.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn2">
-    <Value>Include in footer (column 2)</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn2.Hint">
-    <Value>Check to include this topic in the footer (column 2). Ensure that your theme supports it.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn3">
-    <Value>Include in footer (column 3)</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn3.Hint">
-    <Value>Check to include this topic in the footer (column 3). Ensure that your theme supports it.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInSitemap">
     <Value>Include in sitemap</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInSitemap.Hint">
     <Value>Check to include this topic in the sitemap.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInTopMenu">
-    <Value>Include in top menu</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInTopMenu.Hint">
-    <Value>Check to include this topic in the top menu.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IsPasswordProtected">
     <Value>Password protected</Value>
@@ -17896,6 +17992,36 @@
   <LocaleResource Name="Enums.Nop.Core.Domain.Logging.LogLevel.Warning">
     <Value>Warning</Value>
   </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Menus.MenuType.Main">
+    <Value>Main menu</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Menus.MenuType.Footer">
+    <Value>Footer menu</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Menus.MenuItemType.StandardPage">
+    <Value>Standard page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Menus.MenuItemType.CustomLink">
+    <Value>Custom link</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Menus.MenuItemType.TopicPage">
+    <Value>Topic (page)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Menus.MenuItemType.Category">
+    <Value>Category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Menus.MenuItemType.Manufacturer">
+    <Value>Manufacturer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Menus.MenuItemType.Vendor">
+    <Value>Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Menus.MenuItemType.Product">
+      <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Menus.MenuItemType.Text">
+      <Value>Text without link</Value>
+  </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Messages.EmailAuthenticationMethod.None">
     <Value>No authentication</Value>
   </LocaleResource>
@@ -18139,9 +18265,6 @@
   <LocaleResource Name="Filtering.SpecificationFilter">
     <Value>Filter by attributes</Value>
   </LocaleResource>
-  <LocaleResource Name="Footer.CustomerService">
-    <Value>Customer service</Value>
-  </LocaleResource>
   <LocaleResource Name="Footer.FollowUs">
     <Value>Follow us</Value>
   </LocaleResource>
@@ -18159,12 +18282,6 @@
   </LocaleResource>
   <LocaleResource Name="Footer.FollowUs.Youtube">
     <Value>YouTube</Value>
-  </LocaleResource>
-  <LocaleResource Name="Footer.Information">
-    <Value>Information</Value>
-  </LocaleResource>
-  <LocaleResource Name="Footer.MyAccount">
-    <Value>My account</Value>
   </LocaleResource>
   <LocaleResource Name="Footer.TaxShipping.ExclTax">
     <Value><![CDATA[All prices are entered excluding tax. Excluding <a href="{0}">shipping</a>]]></Value>
@@ -18517,8 +18634,65 @@
   <LocaleResource Name="Languages.Selector.Label">
     <Value>Languages selector</Value>
   </LocaleResource>
-  <LocaleResource Name="MainMenu.AjaxFailure">
-    <Value>Failed to open menu. Please refresh the page and try one more time.</Value>
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.ApplyVendorAccount">
+    <Value>Apply for vendor account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.CheckGiftCardBalance">
+    <Value>Check gift card balance</Value>
+  </LocaleResource>
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.Homepage">
+    <Value>Homepage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.CompareProducts">
+    <Value>Compare products list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.CustomerAddresses">
+    <Value>Addresses</Value>
+  </LocaleResource>
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.CustomerInfo">
+    <Value>My account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.CustomerOrders">
+    <Value>Orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.ContactUs">
+    <Value>Contact us</Value>
+  </LocaleResource>
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.Search">
+    <Value>Search</Value>
+  </LocaleResource>
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.RecentlyViewedProducts">
+    <Value>Recently viewed products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.NewProducts">
+    <Value>New products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.Blog">
+    <Value>Blog</Value>
+  </LocaleResource>
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.News">
+    <Value>News archive</Value>
+  </LocaleResource>
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.Boards">
+    <Value>Forums</Value>
+  </LocaleResource>
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.ProductTags">
+    <Value>Product tags</Value>
+  </LocaleResource>
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.Manufacturers">
+    <Value>Manufacturers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.Vendors">
+    <Value>Vendors</Value>
+  </LocaleResource>
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.Sitemap">
+    <Value>Sitemap</Value>
+  </LocaleResource>
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.Cart">
+    <Value>Shopping cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.Wishlist">
+    <Value>Wishlist</Value>
   </LocaleResource>
   <LocaleResource Name="Manufacturers">
     <Value>Manufacturers</Value>

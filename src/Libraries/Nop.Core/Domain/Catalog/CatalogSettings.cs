@@ -540,11 +540,6 @@ public partial class CatalogSettings : ISettings
     public bool DisplayDatePreOrderAvailability { get; set; }
 
     /// <summary>
-    /// Get or set a value indicating whether to use a standard menu in public store or use Ajax to load a menu
-    /// </summary>
-    public bool UseAjaxLoadMenu { get; set; }
-
-    /// <summary>
     /// Get or set a value indicating whether to use standard or AJAX products loading (applicable to 'paging', 'filtering', 'view modes') in catalog
     /// </summary>
     public bool UseAjaxCatalogProductsLoading { get; set; }

@@ -308,4 +308,16 @@ public static partial class NopModelCacheDefaults
     /// </remarks>
     public static CacheKey SitemapSeoModelKey => new("Nop.pres.sitemap.seo-{0}-{1}-{2}-{3}");
     public static string SitemapPrefixCacheKey => "Nop.pres.sitemap";
+
+    /// <summary>
+    /// Key for menu caching
+    /// </summary>
+    /// <remarks>
+    /// {0} : menu type
+    /// {1} : roles of the current user
+    /// {2} : current store ID
+    /// {3} : language ID
+    /// </remarks>
+    public static CacheKey MenuByTypeModelKey => new("Nop.pres.menu.bytype-{0}-{1}-{2}-{3}");
+    public static string MenuPrefixCacheKey => "Nop.pres.menu";
 }

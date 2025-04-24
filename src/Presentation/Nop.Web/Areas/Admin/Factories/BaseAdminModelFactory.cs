@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Core;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
@@ -62,7 +60,6 @@ public partial class BaseAdminModelFactory : IBaseAdminModelFactory
     protected readonly ITopicTemplateService _topicTemplateService;
     protected readonly IVendorService _vendorService;
     protected readonly IWarehouseService _warehouseService;
-    protected readonly IWorkContext _workContext;
     protected readonly TranslationSettings _translationSettings;
 
     #endregion
@@ -93,7 +90,6 @@ public partial class BaseAdminModelFactory : IBaseAdminModelFactory
         ITopicTemplateService topicTemplateService,
         IVendorService vendorService,
         IWarehouseService warehouseService,
-        IWorkContext workContext,
         TranslationSettings translationSettings)
     {
         _categoryService = categoryService;
@@ -120,7 +116,6 @@ public partial class BaseAdminModelFactory : IBaseAdminModelFactory
         _topicTemplateService = topicTemplateService;
         _vendorService = vendorService;
         _warehouseService = warehouseService;
-        _workContext = workContext;
         _translationSettings = translationSettings;
     }
 
@@ -247,38 +242,6 @@ public partial class BaseAdminModelFactory : IBaseAdminModelFactory
     #endregion
 
     #region Methods
-
-    /// <summary>
-    /// Prepare a select list from the constants defined in the passed type 
-    /// </summary>
-    /// <param name="items">Collection add items</param>
-    /// <param name="type">Type to extract constants</param>
-    /// <param name="useLocalization">Localize</param>
-    /// <param name="sortItems">Sort resulting items (<see cref="SelectListItem"/>)</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the select list
-    /// </returns>
-    public virtual async Task ConstantsToSelectListAsync(IList<SelectListItem> items, Type type, bool useLocalization = true, bool sortItems = false)
-    {
-        ArgumentNullException.ThrowIfNull(items);
-        ArgumentNullException.ThrowIfNull(type);
-
-        var result = new List<SelectListItem>();
-        var fields = type
-            .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
-            .Where(f => f.IsLiteral && !f.IsInitOnly);
-
-        foreach (var prop in fields)
-        {
-            var resourceName = $"{NopLocalizationDefaults.LiteralLocaleStringResourcesPrefix}{type.FullName}.{prop.Name}";
-            var resourceValue = useLocalization ? await _localizationService.GetResourceAsync(resourceName) : CommonHelper.SplitCamelCaseWord(prop.Name);
-
-            result.Add(new SelectListItem { Value = (string)prop.GetRawConstantValue(), Text = resourceValue });
-        }
-
-        ((List<SelectListItem>)items).AddRange(sortItems ? result.OrderBy(x => x.Text) : result);
-    }
 
     /// <summary>
     /// Prepare available activity log types

@@ -542,15 +542,6 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             pattern: $"topic/authenticate",
             defaults: new { controller = "Topic", action = "Authenticate" });
 
-        //prepare top menu (AJAX)
-        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.GET_CATALOG_ROOT,
-            pattern: $"catalog/getcatalogroot",
-            defaults: new { controller = "Catalog", action = "GetCatalogRoot" });
-
-        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.GET_CATALOG_SUB_CATEGORIES,
-            pattern: $"catalog/getcatalogsubcategories",
-            defaults: new { controller = "Catalog", action = "GetCatalogSubCategories" });
-
         //Catalog products (AJAX)
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.GET_CATEGORY_PRODUCTS,
             pattern: $"category/products/",
