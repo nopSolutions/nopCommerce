@@ -22,7 +22,7 @@
         var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
         customerEmail = customer?.Email ?? "Unknown";
 
-        orderDiscount = order.OrderDiscount + order.OrderSubTotalDiscountInclTax;
+        orderDiscount = order.OrderDiscount;
     }
     else
     {
@@ -87,13 +87,12 @@ window.bvCallback = function (BV) {
                 @Html.Raw(",")
             }
         }
-
-        @if (orderDiscount > 0)
-        {
-            @Html.Raw($"{{\"price\": \"-{orderDiscount.ToString("0.00")}\", \"quantity\": \"1\", \"productId\": \"Discount\"}}")
-        }
     ],
-    "email": "@customerEmail"
+    "email": "@customerEmail",
+    @if (orderDiscount > 0)
+        {
+            "Discount": "@orderDiscount.ToString("0.00")",
+        }
   });
 };
 </script>
