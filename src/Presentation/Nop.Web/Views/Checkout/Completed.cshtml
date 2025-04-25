@@ -1,6 +1,7 @@
 ﻿@model CheckoutCompletedModel
 @using Nop.Services.Customers
 @inject ICustomerService _customerService
+@inject IOrderService _orderService
 
 @{
     Layout = "_ColumnsOne";
@@ -11,7 +12,8 @@
     Html.AppendPageCssClassParts("html-order-completed-page");
 
     var orderTotal = ViewBag.OrderTotal as string;
-    var order = ViewBag.Order as Nop.Core.Domain.Orders.Order;
+    var orderId = Model.OrderId;
+    var order = await _orderService.GetOrderByIdAsync(orderId);
     var orderItems = ViewBag.OrderItems as IList<Nop.Core.Domain.Orders.OrderItem>;
     decimal orderDiscount = 0;
     var customerEmail = "Unknown";
