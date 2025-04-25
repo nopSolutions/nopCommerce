@@ -74,25 +74,29 @@
 <script>
 window.bvCallback = function (BV) {
   BV.pixel.trackTransaction({
-    "currency": "USD",
-    "orderId": "@Model.CustomOrderNumber",
-    "total": "@Convert.ToDecimal(orderTotal).ToString("0.00")",
-    "items": [
-        @for (int i = 0; i < orderItems.Count; i++)
-        {
-            var item = orderItems[i];
-            @Html.Raw($"{{\"price\": \"{item.UnitPriceInclTax.ToString("0.00")}\", \"quantity\": \"{item.Quantity}\", \"productId\": \"{item.ProductId}\"}}")
-            @if (i < orderItems.Count - 1 || orderDiscount > 0)
-            {
-                @Html.Raw(",")
-            }
-        }
+    currency: "USD",
+    orderId: "@Model.CustomOrderNumber",
+    total: "@Convert.ToDecimal(orderTotal).ToString("0.00")",
+    items: [
+      @for (int i = 0; i < orderItems.Count; i++)
+      {
+          var item = orderItems[i];
+          @Html.Raw("{")
+          @Html.Raw($"\"price\": \"{item.UnitPriceInclTax.ToString("0.00")}\", ")
+          @Html.Raw($"\"quantity\": \"{item.Quantity}\", ")
+          @Html.Raw($"\"productId\": \"{item.ProductId}\"")
+          @Html.Raw("}")
+          @if (i < orderItems.Count - 1 || orderDiscount > 0)
+          {
+              @Html.Raw(",")
+          }
+      }
     ],
-    "email": "@customerEmail",
+    email: "@customerEmail"
     @if (orderDiscount > 0)
-        {
-            "Discount": "@orderDiscount.ToString("0.00")",
-        }
+    {
+      ,discount: "@orderDiscount.ToString("0.00")"
+    }
   });
 };
 </script>
