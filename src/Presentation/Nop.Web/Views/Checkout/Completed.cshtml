@@ -5,9 +5,8 @@
 @{
     Layout = "_ColumnsOne";
 
-    //title
+    // title
     Html.AddTitleParts(T("PageTitle.Checkout").Text);
-    //page class
     Html.AppendPageCssClassParts("html-checkout-page");
     Html.AppendPageCssClassParts("html-order-completed-page");
 
@@ -21,7 +20,6 @@
     {
         var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
         customerEmail = customer?.Email ?? "Unknown";
-
         orderDiscount = order.OrderSubTotalDiscountInclTax;
     }
     else
@@ -39,6 +37,22 @@
         return;
     }
 }
+
+<script>
+  console.log("Debug: orderTotal = @orderTotal");
+  console.log("Debug: order.OrderSubTotalDiscountInclTax = @order?.OrderSubTotalDiscountInclTax");
+  console.log("Debug: Calculated orderDiscount = @orderDiscount");
+
+  @if (order == null)
+  {
+      @:console.warn("Debug: Order object is null.");
+  }
+  else
+  {
+      @:console.log("Debug: Order found with ID = @order.Id");
+      @:console.log("Debug: OrderSubTotalDiscountInclTax = @order.OrderSubTotalDiscountInclTax");
+  }
+</script>
 
 <div class="page checkout-page order-completed-page">
     @if (!Model.OnePageCheckoutEnabled)
@@ -73,6 +87,9 @@
 <!-- Load Transaction Event and Parameters -->
 <script>
 window.bvCallback = function (BV) {
+  console.log("bvCallback triggered");
+  console.log("bvCallback: orderDiscount = @orderDiscount");
+
   BV.pixel.trackTransaction({
     currency: "USD",
     orderId: "@Model.CustomOrderNumber",
