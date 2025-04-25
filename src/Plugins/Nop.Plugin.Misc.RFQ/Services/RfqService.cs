@@ -445,6 +445,13 @@ public class RfqService
         if (requestQuote == null)
             return;
 
+        if (requestQuote.QuoteId.HasValue)
+        {
+            var quote = await GetQuoteByIdAsync(requestQuote.QuoteId.Value);
+            quote.RequestQuoteId = null;
+            await UpdateQuoteAsync(quote);
+        }
+
         await _requestQuoteRepository.DeleteAsync(requestQuote);
     }
 
