@@ -179,7 +179,7 @@ public abstract class PdfDocument<TItem>
         {
             foreach (var (key, value) in address.CustomValues)
             {
-                addressTable.AddCell(new PdfPCell(new Phrase { new Chunk(key), new Chunk(":"), new Chunk(value.ToString()) }));
+                addressTable.AddCell(new PdfPCell(new Phrase { new Chunk(key), new Chunk(":"), new Chunk(value) }));
             }
         }
 

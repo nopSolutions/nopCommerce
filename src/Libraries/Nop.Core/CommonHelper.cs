@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Net;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 using Nop.Core.Infrastructure;
 
 namespace Nop.Core;
@@ -307,6 +308,60 @@ public partial class CommonHelper
         }
         catch { }
         return date;
+    }
+
+    /// <summary>
+    /// Serialize dictionary of custom values into XML format
+    /// </summary>
+    /// <param name="customValues">Custom values</param>
+    /// <returns>XML of custom values</returns>
+    public static string SerializeCustomValuesToXml(IDictionary<string, string> customValues)
+    {
+        ArgumentNullException.ThrowIfNull(customValues);
+
+        if (!customValues.Any())
+            return null;
+
+        using var textWriter = new StringWriter();
+
+        var root = new XElement("DictionarySerializer");
+        root.Add(customValues.Select(p => new XElement("item", new XElement("key", p.Key), new XElement("value", p.Value))));
+
+        var document = new XDocument();
+        document.Add(root);
+        document.Save(textWriter, SaveOptions.DisableFormatting);
+
+        var result = textWriter.ToString();
+
+        return result;
+    }
+
+    /// <summary>
+    /// Deserialize XML of custom values into dictionary
+    /// </summary>
+    /// <param name="customValuesXml">XML of custom values</param>
+    /// <returns>Dictionary of custom values</returns>
+    public static Dictionary<string, string> DeserializeCustomValuesFromXml(string customValuesXml)
+    {
+        var dictionary = new Dictionary<string, string>();
+
+        if (string.IsNullOrWhiteSpace(customValuesXml))
+            return dictionary;
+
+        try
+        {
+            using var textReader = new StringReader(customValuesXml);
+            var rootElement = XDocument.Load(textReader).Root;
+            dictionary = rootElement!.Elements("item")
+                .Select(i => new KeyValuePair<string, string>(i.Element("key")!.Value, i.Element("value")!.Value))
+                .ToDictionary();
+        }
+        catch
+        {
+            return dictionary;
+        }
+
+        return dictionary;
     }
 
     #endregion

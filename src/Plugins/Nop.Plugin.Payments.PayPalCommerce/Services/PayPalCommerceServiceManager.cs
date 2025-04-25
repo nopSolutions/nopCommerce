@@ -16,7 +16,6 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
-using Nop.Core.Http.Extensions;
 using Nop.Plugin.Payments.PayPalCommerce.Domain;
 using Nop.Plugin.Payments.PayPalCommerce.Services.Api;
 using Nop.Plugin.Payments.PayPalCommerce.Services.Api.Authentication;
@@ -1535,20 +1534,19 @@ public class PayPalCommerceServiceManager
             if (!IsConfigured(settings))
                 throw new NopException("Plugin not configured");
 
-            var paymentRequest = await _actionContextAccessor.ActionContext.HttpContext.Session
-                .GetAsync<ProcessPaymentRequest>(PayPalCommerceDefaults.PaymentRequestSessionKey)
+            var paymentRequest = await _orderProcessingService.GetProcessPaymentRequestAsync()
                 ?? throw new NopException("Order payment info not found");
 
             var orderIdKey = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Order.Id");
             if (!paymentRequest.CustomValues.TryGetValue(orderIdKey, out var orderIdValue) ||
-                !string.Equals(orderIdValue.ToString(), orderId, StringComparison.InvariantCultureIgnoreCase))
+                !string.Equals(orderIdValue, orderId, StringComparison.InvariantCultureIgnoreCase))
             {
                 throw new NopException("Failed to get PayPal order info");
             }
 
             var placementKey = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Order.Placement");
             if (!paymentRequest.CustomValues.TryGetValue(placementKey, out var placementValue) ||
-                !Enum.TryParse<ButtonPlacement>(placementValue.ToString(), out var placement))
+                !Enum.TryParse<ButtonPlacement>(placementValue, out var placement))
             {
                 throw new NopException("Failed to get PayPal order info");
             }
@@ -1580,12 +1578,12 @@ public class PayPalCommerceServiceManager
                 return null;
 
             var orderIdKey = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Order.Id");
-            if (!paymentRequest.CustomValues.TryGetValue(orderIdKey, out var orderIdValue) || string.IsNullOrEmpty(orderIdValue.ToString()))
+            if (!paymentRequest.CustomValues.TryGetValue(orderIdKey, out var orderIdValue) || string.IsNullOrEmpty(orderIdValue))
                 return null;
 
             var placementKey = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Order.Placement");
             if (!paymentRequest.CustomValues.TryGetValue(placementKey, out var placementValue) ||
-                !Enum.TryParse<ButtonPlacement>(placementValue.ToString(), out var previousPlacement) ||
+                !Enum.TryParse<ButtonPlacement>(placementValue, out var previousPlacement) ||
                 previousPlacement != placement)
             {
                 return null;
@@ -1673,14 +1671,10 @@ public class PayPalCommerceServiceManager
                     throw new NopException(error);
             }
 
-            var paymentRequest = await _actionContextAccessor.ActionContext.HttpContext.Session
-                .GetAsync<ProcessPaymentRequest>(PayPalCommerceDefaults.PaymentRequestSessionKey);
+            var paymentRequest = await _orderProcessingService.GetProcessPaymentRequestAsync();
             var (order, _) = await GetCreatedOrderAsync(settings, paymentRequest, placement, details.ShippingIsRequired, paymentSource);
             if (paymentRequest is null || order is null)
-            {
                 paymentRequest = new();
-                await _orderProcessingService.GenerateOrderGuidAsync(paymentRequest);
-            }
 
             //prepare purchase unit
             var purchaseUnit = await PreparePurchaseUnitAsync(settings, details, paymentRequest.OrderGuid.ToString());
@@ -1802,9 +1796,8 @@ public class PayPalCommerceServiceManager
             var placementKey = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Order.Placement");
             paymentRequest.CustomValues[placementKey] = placement.ToString();
             if (isRecurring && !string.IsNullOrEmpty(savedPaymentToken?.VaultId))
-                paymentRequest.CustomValues[PayPalCommerceDefaults.TokenIdAttributeName] = savedPaymentToken.Id;
-            await _actionContextAccessor.ActionContext.HttpContext.Session
-                .SetAsync(PayPalCommerceDefaults.PaymentRequestSessionKey, paymentRequest);
+                paymentRequest.CustomValues[PayPalCommerceDefaults.TokenIdAttributeName] = savedPaymentToken.Id.ToString();
+            await _orderProcessingService.SetProcessPaymentRequestAsync(paymentRequest);
 
             return order;
         });
@@ -1840,20 +1833,19 @@ public class PayPalCommerceServiceManager
             if (!cart.Any())
                 throw new NopException("Shopping cart is empty");
 
-            var paymentRequest = await _actionContextAccessor.ActionContext.HttpContext.Session
-                .GetAsync<ProcessPaymentRequest>(PayPalCommerceDefaults.PaymentRequestSessionKey)
+            var paymentRequest = await _orderProcessingService.GetProcessPaymentRequestAsync()
                 ?? throw new NopException("Order payment info not found");
 
             var orderIdKey = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Order.Id");
             if (!paymentRequest.CustomValues.TryGetValue(orderIdKey, out var orderIdValue) ||
-                (!string.IsNullOrEmpty(orderId) && !string.Equals(orderIdValue.ToString(), orderId, StringComparison.InvariantCultureIgnoreCase)))
+                (!string.IsNullOrEmpty(orderId) && !string.Equals(orderIdValue, orderId, StringComparison.InvariantCultureIgnoreCase)))
             {
                 throw new NopException("Failed to get PayPal order info");
             }
 
             var placementKey = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Order.Placement");
             if (!paymentRequest.CustomValues.TryGetValue(placementKey, out var placementValue) ||
-                !Enum.TryParse<ButtonPlacement>(placementValue.ToString(), out var placement))
+                !Enum.TryParse<ButtonPlacement>(placementValue, out var placement))
             {
                 throw new NopException("Failed to get PayPal order info");
             }
@@ -1955,8 +1947,7 @@ public class PayPalCommerceServiceManager
             if (!cart.Any())
                 throw new NopException("Shopping cart is empty");
 
-            var paymentRequest = await _actionContextAccessor.ActionContext.HttpContext.Session
-                .GetAsync<ProcessPaymentRequest>(PayPalCommerceDefaults.PaymentRequestSessionKey)
+            var paymentRequest = await _orderProcessingService.GetProcessPaymentRequestAsync()
                 ?? throw new NopException("Order payment info not found");
 
             if (!string.IsNullOrEmpty(orderGuid) &&
@@ -1967,14 +1958,14 @@ public class PayPalCommerceServiceManager
 
             var orderIdKey = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Order.Id");
             if (!paymentRequest.CustomValues.TryGetValue(orderIdKey, out var orderIdValue) ||
-                (!string.IsNullOrEmpty(orderId) && !string.Equals(orderIdValue.ToString(), orderId, StringComparison.InvariantCultureIgnoreCase)))
+                (!string.IsNullOrEmpty(orderId) && !string.Equals(orderIdValue, orderId, StringComparison.InvariantCultureIgnoreCase)))
             {
                 throw new NopException("Failed to get PayPal order info");
             }
 
             var placementKey = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Order.Placement");
             if (!paymentRequest.CustomValues.TryGetValue(placementKey, out var placementValue) ||
-                !Enum.TryParse<ButtonPlacement>(placementValue.ToString(), out var placement))
+                !Enum.TryParse<ButtonPlacement>(placementValue, out var placement))
             {
                 throw new NopException("Failed to get PayPal order info");
             }
@@ -2132,12 +2123,11 @@ public class PayPalCommerceServiceManager
             if (!cart.Any())
                 throw new NopException("Shopping cart is empty");
 
-            var paymentRequest = await _actionContextAccessor.ActionContext.HttpContext.Session
-                .GetAsync<ProcessPaymentRequest>(PayPalCommerceDefaults.PaymentRequestSessionKey);
+            var paymentRequest = await _orderProcessingService.GetProcessPaymentRequestAsync();
             var orderIdKey = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Order.Id");
             if (paymentRequest is null ||
                 !paymentRequest.CustomValues.TryGetValue(orderIdKey, out var orderIdValue) ||
-                !string.Equals(orderIdValue.ToString(), orderId, StringComparison.InvariantCultureIgnoreCase))
+                !string.Equals(orderIdValue, orderId, StringComparison.InvariantCultureIgnoreCase))
             {
                 throw new NopException("Failed to get the PayPal order ID");
             }
@@ -2181,7 +2171,7 @@ public class PayPalCommerceServiceManager
             }
 
             var tokenId = paymentRequest.CustomValues
-                .TryGetValue(PayPalCommerceDefaults.TokenIdAttributeName, out var tokenIdValue) && int.TryParse(tokenIdValue.ToString(), out var id)
+                .TryGetValue(PayPalCommerceDefaults.TokenIdAttributeName, out var tokenIdValue) && int.TryParse(tokenIdValue, out var id)
                 ? id : 0;
 
             paymentRequest.StoreId = store.Id;
@@ -2199,8 +2189,7 @@ public class PayPalCommerceServiceManager
                 await _genericAttributeService.SaveAttributeAsync(nopOrder, PayPalCommerceDefaults.TokenIdAttributeName, tokenId);
 
             //clear payment request
-            await _actionContextAccessor.ActionContext.HttpContext.Session
-                .SetAsync<ProcessPaymentRequest>(PayPalCommerceDefaults.PaymentRequestSessionKey, null);
+            await _orderProcessingService.SetProcessPaymentRequestAsync(null);
 
             return (nopOrder, order);
         });
@@ -2765,7 +2754,6 @@ public class PayPalCommerceServiceManager
             });
 
             var paymentRequest = new ProcessPaymentRequest();
-            await _orderProcessingService.GenerateOrderGuidAsync(paymentRequest);
 
             //prepare purchase unit
             var purchaseUnit = await PreparePurchaseUnitAsync(settings, details, paymentRequest.OrderGuid.ToString());
@@ -2800,9 +2788,8 @@ public class PayPalCommerceServiceManager
             var placementKey = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Order.Placement");
             paymentRequest.CustomValues[placementKey] = ButtonPlacement.PaymentMethod.ToString();
             if (await _tokenService.GetTokenAsync(settings.ClientId, details.Customer.Id, paymentToken.Id) is PayPalToken token)
-                paymentRequest.CustomValues[PayPalCommerceDefaults.TokenIdAttributeName] = token.Id;
-            await _actionContextAccessor.ActionContext.HttpContext.Session
-                .SetAsync(PayPalCommerceDefaults.PaymentRequestSessionKey, paymentRequest);
+                paymentRequest.CustomValues[PayPalCommerceDefaults.TokenIdAttributeName] = token.Id.ToString();
+            await _orderProcessingService.SetProcessPaymentRequestAsync(paymentRequest);
 
             return order;
         });
@@ -2923,13 +2910,13 @@ public class PayPalCommerceServiceManager
             if (!string.Equals(nopOrder.PaymentMethodSystemName, PayPalCommerceDefaults.SystemName, StringComparison.InvariantCultureIgnoreCase))
                 return false;
 
-            var customValues = _paymentService.DeserializeCustomValues(nopOrder);
+            var customValues = CommonHelper.DeserializeCustomValuesFromXml(nopOrder.CustomValuesXml);
             var orderIdKey = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Order.Id");
             if (!customValues.TryGetValue(orderIdKey, out var orderIdValue))
                 throw new NopException("Failed to get PayPal order info");
 
             var order = await _httpClient
-                .RequestAsync<GetOrderRequest, GetOrderResponse>(new GetOrderRequest { OrderId = orderIdValue.ToString() }, settings) as Order;
+                .RequestAsync<GetOrderRequest, GetOrderResponse>(new GetOrderRequest { OrderId = orderIdValue }, settings) as Order;
             if (order.Status?.ToUpper() != OrderStatusType.COMPLETED.ToString())
                 throw new NopException($"Unable to assign tracking information to orders in {order.Status} status");
 

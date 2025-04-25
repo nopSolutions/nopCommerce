@@ -1,6 +1,4 @@
-﻿using System.Xml;
-using System.Xml.Serialization;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Services.Catalog;
@@ -357,57 +355,6 @@ public partial class PaymentService : IPaymentService
         }
 
         return maskedChars + last4;
-    }
-
-    /// <summary>
-    /// Serialize CustomValues of ProcessPaymentRequest
-    /// </summary>
-    /// <param name="request">Request</param>
-    /// <returns>Serialized CustomValues</returns>
-    public virtual string SerializeCustomValues(ProcessPaymentRequest request)
-    {
-        ArgumentNullException.ThrowIfNull(request);
-
-        if (!request.CustomValues.Any())
-            return null;
-
-        //XmlSerializer won't serialize objects that implement IDictionary by default.
-        //http://msdn.microsoft.com/en-us/magazine/cc164135.aspx 
-
-        //also see http://ropox.ru/tag/ixmlserializable/ (Russian language)
-
-        var ds = new DictionarySerializer(request.CustomValues);
-        var xs = new XmlSerializer(typeof(DictionarySerializer));
-
-        using var textWriter = new StringWriter();
-        using (var xmlWriter = XmlWriter.Create(textWriter))
-        {
-            xs.Serialize(xmlWriter, ds);
-        }
-
-        var result = textWriter.ToString();
-        return result;
-    }
-
-    /// <summary>
-    /// Deserialize CustomValues of Order
-    /// </summary>
-    /// <param name="order">Order</param>
-    /// <returns>Serialized CustomValues CustomValues</returns>
-    public virtual Dictionary<string, object> DeserializeCustomValues(Order order)
-    {
-        ArgumentNullException.ThrowIfNull(order);
-
-        if (string.IsNullOrWhiteSpace(order.CustomValuesXml))
-            return new Dictionary<string, object>();
-
-        var serializer = new XmlSerializer(typeof(DictionarySerializer));
-
-        using var textReader = new StringReader(order.CustomValuesXml);
-        using var xmlReader = XmlReader.Create(textReader);
-        if (serializer.Deserialize(xmlReader) is DictionarySerializer ds)
-            return ds.Dictionary;
-        return [];
     }
 
     #endregion

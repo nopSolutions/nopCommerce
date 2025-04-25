@@ -1,10 +1,8 @@
 ﻿using FluentAssertions;
-using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
-using Nop.Core.Http.Extensions;
 using Nop.Data;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
@@ -18,14 +16,12 @@ public class OrderProcessingServiceTests : ServiceTest
 {
     private IOrderService _orderService;
     private IOrderProcessingService _orderProcessingService;
-    private IHttpContextAccessor _httpContextAccessor;
 
     [OneTimeSetUp]
     public void SetUp()
     {
         _orderService = GetService<IOrderService>();
         _orderProcessingService = GetService<IOrderProcessingService>();
-        _httpContextAccessor = GetService<IHttpContextAccessor>();
     }
 
     [OneTimeTearDown]
@@ -43,22 +39,12 @@ public class OrderProcessingServiceTests : ServiceTest
     public async Task CanGenerateOrderGuid()
     {
         var request = new ProcessPaymentRequest();
-        request.OrderGuid.Should().Be(Guid.Empty);
-        await _orderProcessingService.GenerateOrderGuidAsync(request);
         request.OrderGuid.Should().NotBe(Guid.Empty);
         var oldGuid = request.OrderGuid;
-        await _orderProcessingService.GenerateOrderGuidAsync(request);
-        request.OrderGuid.Should().Be(oldGuid);
+        await _orderProcessingService.SetProcessPaymentRequestAsync(request);
         request = new ProcessPaymentRequest();
-        await _orderProcessingService.GenerateOrderGuidAsync(request);
         request.OrderGuid.Should().NotBe(oldGuid);
-        oldGuid = request.OrderGuid;
-        ArgumentNullException.ThrowIfNull(_httpContextAccessor.HttpContext);
-        await _httpContextAccessor.HttpContext.Session.SetAsync("OrderPaymentInfo", request);
-        await _orderProcessingService.GenerateOrderGuidAsync(request);
-        request.OrderGuid.Should().Be(oldGuid);
-        request = new ProcessPaymentRequest();
-        await _orderProcessingService.GenerateOrderGuidAsync(request);
+        await _orderProcessingService.SetProcessPaymentRequestAsync(request);
         request.OrderGuid.Should().Be(oldGuid);
     }
 

@@ -151,18 +151,4 @@ public partial interface IPaymentService
     /// <param name="creditCardNumber">Credit card number</param>
     /// <returns>Masked credit card number</returns>
     string GetMaskedCreditCardNumber(string creditCardNumber);
-
-    /// <summary>
-    /// Serialize CustomValues of ProcessPaymentRequest
-    /// </summary>
-    /// <param name="request">Request</param>
-    /// <returns>Serialized CustomValues</returns>
-    string SerializeCustomValues(ProcessPaymentRequest request);
-
-    /// <summary>
-    /// Deserialize CustomValues of Order
-    /// </summary>
-    /// <param name="order">Order</param>
-    /// <returns>Serialized CustomValues CustomValues</returns>
-    Dictionary<string, object> DeserializeCustomValues(Order order);
 }
