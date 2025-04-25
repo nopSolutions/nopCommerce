@@ -17646,6 +17646,24 @@
   <LocaleResource Name="Enums.Nop.Core.Domain.Messages.QueuedEmailPriority.Low">
     <Value>Low</Value>
   </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Orders.OrderHistoryPeriods.All">
+    <Value>all time</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Orders.OrderHistoryPeriods.Day">
+    <Value>the past day</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Orders.OrderHistoryPeriods.Week">
+    <Value>the past week</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Orders.OrderHistoryPeriods.Month">
+    <Value>the past month</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Orders.OrderHistoryPeriods.HalfYear">
+    <Value>the past six months</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Orders.OrderHistoryPeriods.Year">
+    <Value>the past year</Value>
+  </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Orders.OrderStatus.Cancelled">
     <Value>Cancelled</Value>
   </LocaleResource>
@@ -17819,24 +17837,6 @@
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Services.Plugins.LoadPluginsMode.NotInstalledOnly">
     <Value>Not installed</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Web.Models.Order.OrderHistoryPeriods.All">
-    <Value>all time</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Web.Models.Order.OrderHistoryPeriods.Day">
-    <Value>the past day</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Web.Models.Order.OrderHistoryPeriods.Week">
-    <Value>the past week</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Web.Models.Order.OrderHistoryPeriods.Month">
-    <Value>the past month</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Web.Models.Order.OrderHistoryPeriods.HalfYear">
-    <Value>the past six months</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Web.Models.Order.OrderHistoryPeriods.Year">
-    <Value>the past year</Value>
   </LocaleResource>
   <LocaleResource Name="EUCookieLaw.Description">
     <Value>On 26 May 2011, the rules about cookies on websites changed. This site uses cookies. One or more of the cookies we use is essential for parts of this website to operate and has already been set. You may delete and block all cookies from this site, but parts of the site will not work. To find out more about cookies used on this website and how to delete cookies, see our privacy policy</Value>
