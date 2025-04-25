@@ -19,6 +19,7 @@ using Nop.Core.Configuration;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Events;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Data;
@@ -56,7 +57,7 @@ public static class ApplicationBuilderExtensions
         EngineContext.Current.ConfigureRequestPipeline(application);
     }
 
-    public static async Task StartEngineAsync(this IApplicationBuilder _)
+    public static async Task StartEngineAsync(this IApplicationBuilder app)
     {
         var engine = EngineContext.Current;
 
@@ -89,6 +90,21 @@ public static class ApplicationBuilderExtensions
             //clear payment info requests
             var genericAttributeService = engine.Resolve<IGenericAttributeService>();
             await genericAttributeService.DeleteAttributesAsync<Customer>(NopCustomerDefaults.ProcessPaymentRequestAttribute);
+
+            // Publish AppStartedEvent in background to avoid delaying HTTP request handling
+            var eventPublisher = engine.Resolve<IEventPublisher>();
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await eventPublisher.PublishAsync(new AppStartedEvent());
+                }
+                catch (Exception ex)
+                {
+                    var logger = engine.Resolve<ILogger>();
+                    await logger.ErrorAsync(ex.Message, ex);
+                }
+            });
         }
     }
 
