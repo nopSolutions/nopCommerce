@@ -81,21 +81,18 @@ window.bvCallback = function (BV) {
       @for (int i = 0; i < orderItems.Count; i++)
       {
           var item = orderItems[i];
-          <text>
-            {
-              "price": "@item.UnitPriceInclTax.ToString("0.00")",
-              "quantity": "@item.Quantity",
-              "productId": "@item.ProductId"
-            }
-          </text>
+          @: {
+          @:   "price": "@item.UnitPriceInclTax.ToString("0.00")",
+          @:   "quantity": "@item.Quantity",
+          @:   "productId": "@item.ProductId"
+          @: }@(i < orderItems.Count - 1 ? "," : "")
       }
     ],
     email: "@customerEmail"
     @if (orderDiscount > 0)
     {
-      ,"discount": "@orderDiscount"
+      @:,"discount": "@orderDiscount"
     }
   });
 };
 </script>
-
