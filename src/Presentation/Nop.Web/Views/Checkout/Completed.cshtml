@@ -17,12 +17,12 @@
     decimal orderDiscount = 0;
     var customerEmail = "Unknown";
 
-    if (order != null && order.CustomerId > 0)
+    if (order != null)
     {
         var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
         customerEmail = customer?.Email ?? "Unknown";
 
-        orderDiscount = order.OrderDiscount;
+        orderDiscount = order.OrderSubTotalDiscountInclTax;
     }
     else
     {
@@ -86,14 +86,14 @@ window.bvCallback = function (BV) {
               "price": "@item.UnitPriceInclTax.ToString("0.00")",
               "quantity": "@item.Quantity",
               "productId": "@item.ProductId"
-            }@(i < orderItems.Count - 1 || orderDiscount > 0 ? "," : "")
+            }
           </text>
       }
     ],
     email: "@customerEmail"
     @if (orderDiscount > 0)
     {
-      <text>,discount: "@orderDiscount.ToString("0.00")"</text>
+      ,"discount": "@orderDiscount"
     }
   });
 };
