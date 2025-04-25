@@ -1,5 +1,6 @@
 ﻿@model CheckoutCompletedModel
 @using Nop.Services.Customers
+@using Nop.Services.Orders
 @inject ICustomerService _customerService
 @inject IOrderService _orderService
 
@@ -22,7 +23,7 @@
     {
         var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
         customerEmail = customer?.Email ?? "Unknown";
-        orderDiscount = order.OrderDiscount;
+        orderDiscount = order.OrderSubTotalDiscountInclTax;
     }
     else
     {
@@ -42,7 +43,7 @@
 
 <script>
   console.log("Debug: orderTotal = @orderTotal");
-  console.log("Debug: order.OrderSubTotalDiscountInclTax = @order?.OrderDiscount");
+  console.log("Debug: order.OrderSubTotalDiscountInclTax = @order?.OrderSubTotalDiscountInclTax");
   console.log("Debug: Calculated orderDiscount = @orderDiscount");
 
   @if (order == null)
@@ -52,7 +53,7 @@
   else
   {
       @:console.log("Debug: Order found with ID = @order.Id");
-      @:console.log("Debug: OrderSubTotalDiscountInclTax = @order.OrderDiscount");
+      @:console.log("Debug: OrderSubTotalDiscountInclTax = @order.OrderSubTotalDiscountInclTax");
   }
 </script>
 
