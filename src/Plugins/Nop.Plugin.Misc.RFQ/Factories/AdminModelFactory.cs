@@ -3,6 +3,7 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Tax;
 using Nop.Data;
 using Nop.Plugin.Misc.RFQ.Domains;
 using Nop.Plugin.Misc.RFQ.Models.Admin;
@@ -363,6 +364,7 @@ public class AdminModelFactory
         var customerId = quote.CustomerId;
 
         var customer = await _customerService.GetCustomerByIdAsync(customerId);
+        var taxDisplayType = await _customerService.GetCustomerTaxDisplayTypeAsync(customer);
         var store = await _storeContext.GetCurrentStoreAsync();
 
         model.ProductId = product.Id;
@@ -374,7 +376,7 @@ public class AdminModelFactory
         var presetQty = 1;
         var (_, presetPrice, _, _) = await _priceCalculationService.GetFinalPriceAsync(product, customer, store, decimal.Zero, true, presetQty);
 
-        var (presetPriceInclTax, _) = await _taxService.GetProductPriceAsync(product, presetPrice, true, customer);
+        var (presetPriceInclTax, _) = await _taxService.GetProductPriceAsync(product, presetPrice, taxDisplayType == TaxDisplayType.IncludingTax, customer);
 
         model.UnitPriceInclTax = presetPriceInclTax;
         model.Quantity = presetQty;
