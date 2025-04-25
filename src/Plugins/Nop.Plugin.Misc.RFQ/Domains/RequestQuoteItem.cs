@@ -3,7 +3,7 @@
 namespace Nop.Plugin.Misc.RFQ.Domains;
 
 /// <summary>
-/// Represents a request for quote item entity
+/// Represents a request a quote item entity
 /// </summary>
 public class RequestQuoteItem : BaseEntity, IAdminNote
 {

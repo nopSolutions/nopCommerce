@@ -122,6 +122,12 @@ public class CustomerModelFactory
         model.CustomerItems = modelItems;
         model.QuoteId = requestQuote.QuoteId;
 
+        if (!requestQuote.QuoteId.HasValue) 
+            return model;
+
+        var quote = await _rfqService.GetQuoteByIdAsync(requestQuote.QuoteId.Value);
+        model.QuoteStatus = quote.Status;
+
         return model;
     }
 

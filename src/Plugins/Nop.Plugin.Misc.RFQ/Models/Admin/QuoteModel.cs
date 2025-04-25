@@ -19,7 +19,7 @@ public record QuoteModel : BaseNopEntityModel
     [UIHint("DateTimeNullable")]
     public DateTime? ExpirationDateUtc { get; set; }
 
-    [NopResourceDisplayName("Plugins.Misc.RFQ.Fields.RequestQuote.Status")]
+    [NopResourceDisplayName("Plugins.Misc.RFQ.Fields.Quote.Status")]
     public string Status { get; set; }
 
     public QuoteStatus StatusType { get; set; }
@@ -29,6 +29,9 @@ public record QuoteModel : BaseNopEntityModel
 
     [NopResourceDisplayName("Plugins.Misc.RFQ.Fields.RequestQuoteId")]
     public int? RequestQuoteId { get; set; }
+
+    [NopResourceDisplayName("Plugins.Misc.RFQ.Fields.Order")]
+    public int? OrderId { get; set; }
 
     public bool DisplayAddNewProductButton =>
         StatusType == QuoteStatus.CreatedFromRequestQuote ||

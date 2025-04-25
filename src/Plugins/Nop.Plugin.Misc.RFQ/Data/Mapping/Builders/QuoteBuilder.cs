@@ -1,5 +1,4 @@
-﻿using System.Data;
-using FluentMigrator.Builders.Create.Table;
+﻿using FluentMigrator.Builders.Create.Table;
 using Nop.Core.Domain.Customers;
 using Nop.Data.Extensions;
 using Nop.Data.Mapping.Builders;
@@ -18,8 +17,6 @@ public class QuoteBuilder : NopEntityBuilder<Quote>
     public override void MapEntity(CreateTableExpressionBuilder table)
     {
         table.WithColumn(nameof(Quote.CustomerId)).AsInt32().ForeignKey<Customer>();
-        table.WithColumn(nameof(Quote.RequestQuoteId)).AsInt32().Nullable()
-            .ForeignKey<RequestQuote>(onDelete: Rule.SetNull);
     }
 
     #endregion

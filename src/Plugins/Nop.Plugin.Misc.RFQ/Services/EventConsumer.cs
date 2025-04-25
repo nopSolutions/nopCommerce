@@ -6,10 +6,11 @@ using Nop.Core.Caching;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Events;
 using Nop.Plugin.Misc.RFQ.Domains;
+using Nop.Services.Common;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
-using Nop.Services.Security;
+using Nop.Services.Plugins;
 using Nop.Web.Framework.Events;
 using Nop.Web.Framework.Menu;
 using Nop.Web.Framework.Models;
@@ -30,9 +31,9 @@ public class EventConsumer : IConsumer<AdminMenuCreatedEvent>,
 
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly ILocalizationService _localizationService;
-    private readonly IPermissionService _permissionService;
+    private readonly IPluginManager<IMiscPlugin> _pluginManager;
     private readonly IShoppingCartService _shoppingCartService;
-    private readonly IStaticCacheManager _staticCacheManager;
+    private readonly IShortTermCacheManager _shortTermCacheManager;
     private readonly IStoreContext _storeContext;
     private readonly IWorkContext _workContext;
     private readonly RfqService _rfqService;
@@ -43,18 +44,18 @@ public class EventConsumer : IConsumer<AdminMenuCreatedEvent>,
 
     public EventConsumer(IHttpContextAccessor httpContextAccessor,
         ILocalizationService localizationService,
-        IPermissionService permissionService,
+        IPluginManager<IMiscPlugin> pluginManager,
         IShoppingCartService shoppingCartService,
-        IStaticCacheManager staticCacheManager,
+        IShortTermCacheManager shortTermCacheManager,
         IStoreContext storeContext,
         IWorkContext workContext,
         RfqService rfqService)
     {
         _httpContextAccessor = httpContextAccessor;
         _localizationService = localizationService;
-        _permissionService = permissionService;
+        _pluginManager = pluginManager;
         _shoppingCartService = shoppingCartService;
-        _staticCacheManager = staticCacheManager;
+        _shortTermCacheManager = shortTermCacheManager;
         _storeContext = storeContext;
         _workContext = workContext;
         _rfqService = rfqService;
@@ -71,26 +72,33 @@ public class EventConsumer : IConsumer<AdminMenuCreatedEvent>,
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(AdminMenuCreatedEvent eventMessage)
     {
-        var visible = !await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ);
+        var plugin = await _pluginManager.LoadPluginBySystemNameAsync(RfqDefaults.SystemName);
+
+        //the LoadPluginBySystemNameAsync method returns only plugins that are already fully installed,
+        //while the IConsumer<AdminMenuCreatedEvent> event can be called before the installation is complete
+        if (plugin == null)
+            return;
 
         var menuItemSystemName = "Current shopping carts and wishlists";
 
         var baseMenuItem = eventMessage.RootMenuItem.GetItemBySystemName("Sales");
         baseMenuItem.InsertAfter(menuItemSystemName, new AdminMenuItem
         {
-            Visible = visible,
+            Visible = true,
             SystemName = RfqDefaults.RequestsAdminMenuSystemName,
             Title = await _localizationService.GetResourceAsync("Plugins.Misc.RFQ.RequestsQuote"),
             Url = eventMessage.GetMenuItemUrl("RfqAdmin", "AdminRequests"),
-            IconClass = "far fa-dot-circle"
+            IconClass = "far fa-dot-circle",
+            PermissionNames = new List<string>{ RfqPermissionConfigManager.ADMIN_ACCESS_RFQ }
         });
         baseMenuItem.InsertAfter(menuItemSystemName, new AdminMenuItem
         {
-            Visible = visible,
+            Visible = true,
             SystemName = RfqDefaults.QuotesAdminMenuSystemName,
             Title = await _localizationService.GetResourceAsync("Plugins.Misc.RFQ.Quotes"),
             Url = eventMessage.GetMenuItemUrl("RfqAdmin", "AdminQuotes"),
-            IconClass = "far fa-dot-circle"
+            IconClass = "far fa-dot-circle",
+            PermissionNames = new List<string> { RfqPermissionConfigManager.ADMIN_ACCESS_RFQ }
         });
     }
 
@@ -101,10 +109,7 @@ public class EventConsumer : IConsumer<AdminMenuCreatedEvent>,
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(GetShoppingCartItemUnitPriceEvent eventMessage)
     {
-        var quoteItem = await _staticCacheManager.GetAsync(
-            _staticCacheManager.PrepareKey(RfqDefaults.QuoteItemByShoppingCartItemCacheKey,
-                eventMessage.ShoppingCartItem.Id),
-            async () => await _rfqService.GetQuoteItemByShoppingCartItemIdAsync(eventMessage.ShoppingCartItem.Id));
+        var quoteItem = await _shortTermCacheManager.GetAsync(async () => await _rfqService.GetQuoteItemByShoppingCartItemIdAsync(eventMessage.ShoppingCartItem.Id), RfqDefaults.QuoteItemByShoppingCartItemCacheKey, eventMessage.ShoppingCartItem.Id);
 
         if (quoteItem == null)
             return;
@@ -178,7 +183,7 @@ public class EventConsumer : IConsumer<AdminMenuCreatedEvent>,
         foreach (var quoteItem in quoteItems)
         {
             await _shoppingCartService.DeleteShoppingCartItemAsync(quoteItem.ShoppingCartItemId!.Value);
-            await _staticCacheManager.RemoveAsync(RfqDefaults.QuoteItemByShoppingCartItemCacheKey, quoteItem.ShoppingCartItemId);
+            _shortTermCacheManager.Remove(RfqDefaults.QuoteItemByShoppingCartItemCacheKey.Key, quoteItem.ShoppingCartItemId);
             quoteItem.ShoppingCartItemId = null;
         }
 
@@ -206,7 +211,7 @@ public class EventConsumer : IConsumer<AdminMenuCreatedEvent>,
 
         foreach (var item in items)
         {
-            await _staticCacheManager.RemoveAsync(RfqDefaults.QuoteItemByShoppingCartItemCacheKey, quoteItem.ShoppingCartItemId);
+            _shortTermCacheManager.Remove(RfqDefaults.QuoteItemByShoppingCartItemCacheKey.Key, quoteItem.ShoppingCartItemId);
             item.ShoppingCartItemId = null;
         }
 

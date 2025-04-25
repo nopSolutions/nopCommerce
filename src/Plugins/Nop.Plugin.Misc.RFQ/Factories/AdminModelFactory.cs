@@ -487,6 +487,7 @@ public class AdminModelFactory
             CustomerEmail = email ?? string.Empty,
             AdminNotes = quote.AdminNotes,
             RequestQuoteId = quote.RequestQuoteId,
+            OrderId = quote.OrderId,
             Items = await PrepareQuoteItemListModelAsync(quote.Id)
         };
 

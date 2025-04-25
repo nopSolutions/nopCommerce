@@ -508,7 +508,7 @@ public class RfqAdminController : BasePluginController
     {
         await _rfqService.DeleteQuoteAsync(model.Id);
 
-        _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Misc.RFQ.Quote.Deleted"));
+        _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Misc.RFQ.AdminQuote.Deleted"));
 
         return RedirectToAction("AdminQuotes");
     }

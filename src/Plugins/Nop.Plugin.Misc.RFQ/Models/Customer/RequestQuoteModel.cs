@@ -23,6 +23,7 @@ public record RequestQuoteModel : BaseNopEntityModel
 
     [NopResourceDisplayName("Plugins.Misc.RFQ.CustomerQuote.Info")]
     public int? QuoteId { get; set; }
+    public QuoteStatus QuoteStatus { get; set; }
 
     public IList<RequestQuoteItemModel> CustomerItems { get; set; }
 

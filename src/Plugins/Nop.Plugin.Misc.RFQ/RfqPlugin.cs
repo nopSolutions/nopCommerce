@@ -3,6 +3,7 @@ using Nop.Core.Domain.Messages;
 using Nop.Plugin.Misc.RFQ.Components;
 using Nop.Plugin.Misc.RFQ.Services;
 using Nop.Services.Cms;
+using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
@@ -13,9 +14,9 @@ using Nop.Web.Framework.Infrastructure;
 namespace Nop.Plugin.Misc.RFQ;
 
 /// <summary>
-/// Represents the "Request for quote" and "Quotes" plugin
+/// Represents the "Request a quote" and "Quotes" plugin
 /// </summary>
-public class RfqPlugin : BasePlugin, IWidgetPlugin
+public class RfqPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
 {
     #region Fields
 
@@ -134,12 +135,12 @@ public class RfqPlugin : BasePlugin, IWidgetPlugin
         //locales
         await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
         {
-            ["Plugins.Misc.RFQ.CreateRequest"] = "Request for quote",
+            ["Plugins.Misc.RFQ.CreateRequest"] = "Request a quote",
             ["Plugins.Misc.RFQ.CreateNew"] = "Add new",
             ["Plugins.Misc.RFQ.SendRequest"] = "Send request",
             ["Plugins.Misc.RFQ.RequestsQuote"] = "Requests for quote",
-            ["Plugins.Misc.RFQ.RequestQuoteNumber"] = "Request for quote #{0}",
-            ["Plugins.Misc.RFQ.NewRequestQuote"] = "Create a new request for quote",
+            ["Plugins.Misc.RFQ.RequestQuoteNumber"] = "Request a quote #{0}",
+            ["Plugins.Misc.RFQ.NewRequestQuote"] = "Create a new request a quote",
             ["Plugins.Misc.RFQ.QuoteNumber"] = "Quote #{0}",
             ["Plugins.Misc.RFQ.Quotes"] = "Quotes",
             ["Plugins.Misc.RFQ.CustomerRequest.Info"] = "Request info",
@@ -150,10 +151,11 @@ public class RfqPlugin : BasePlugin, IWidgetPlugin
             ["Plugins.Misc.RFQ.Fields.RequestQuote.CreatedOn.Hint"] = "The date/time that the request a quote was created.",
             ["Plugins.Misc.RFQ.Fields.Quote.Status"] = "Status",
             ["Plugins.Misc.RFQ.Fields.Quote.Status.Hint"] = "The status of the quote",
+            ["Plugins.Misc.RFQ.Fields.Quote.OrderId"] = "",
             ["Plugins.Misc.RFQ.Fields.RequestQuote.Status"] = "Status",
             ["Plugins.Misc.RFQ.Fields.RequestQuote.Status.Hint"] = "The status of the request a quote",
             ["Plugins.Misc.RFQ.Fields.Order"] = "Order",
-            ["Plugins.Misc.RFQ.Fields.Order.Hint"] = "Order",
+            ["Plugins.Misc.RFQ.Fields.Order.Hint"] = "Created order",
             ["Plugins.Misc.RFQ.Fields.CustomerNotes"] = "Customer notes",
             ["Plugins.Misc.RFQ.Fields.CustomerNotes.Hint"] = "The customer notes and additional information",
             ["Plugins.Misc.RFQ.Products"] = "Products",
@@ -195,7 +197,7 @@ public class RfqPlugin : BasePlugin, IWidgetPlugin
             ["Plugins.Misc.RFQ.AdminQuote.QuoteCreatedByRequest"] = "Quote created from the request by {0}",
             ["Plugins.Misc.RFQ.AdminQuote.QuoteCreatedManuallyByStoreOwner"] = "Quote created manual by {0}",
             ["Plugins.Misc.RFQ.Fields.Quote.ExpirationDate"] = "Expiration date",
-            ["Plugins.Misc.RFQ.Fields.Quote.ExpirationDateHint"] = "The date/time that the quote will expire",
+            ["Plugins.Misc.RFQ.Fields.Quote.ExpirationDate.Hint"] = "The date/time that the quote will expire",
             ["Plugins.Misc.RFQ.AdminQuote.QuoteStatus"] = "Quote status",
             ["Plugins.Misc.RFQ.AdminQuote.QuoteStatus.Hint"] = "Select the quote status",
             ["Plugins.Misc.RFQ.AdminRequest.Updated"] = "The request a quote has been updated successfully.",

@@ -222,7 +222,7 @@ public class RfqService
 
         var note = string.Format(
             await _localizationService.GetResourceAsync("Plugins.Misc.RFQ.RequestQuoteStatusChanged"),
-            requestQuote.Status, newStatus,
+            await _localizationService.GetLocalizedEnumAsync(requestQuote.Status), await _localizationService.GetLocalizedEnumAsync(newStatus),
             await GetCurrentCustomerEmailAsync());
 
         LogNote(requestQuote, note);
@@ -230,11 +230,11 @@ public class RfqService
     }
 
     /// <summary>
-    /// Creates request for quote by shopping cart items
+    /// Creates request a quote by shopping cart items
     /// </summary>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the request for quote and its items
+    /// The task result contains the request a quote and its items
     /// </returns>
     public async Task<(RequestQuote requestQuote, List<RequestQuoteItem> requestQuoteItem)> CreateRequestQuoteByShoppingCartAsync()
     {
@@ -411,7 +411,7 @@ public class RfqService
             {
                 query = from rq in query
                         join customer in _customerRepository.Table on rq.CustomerId equals customer.Id
-                        where customer.Email.Equals(customerEmail)
+                        where customer.Email.Contains(customerEmail)
                         select rq;
             }
 
@@ -616,7 +616,7 @@ public class RfqService
             {
                 query = from rq in query
                         join customer in _customerRepository.Table on rq.CustomerId equals customer.Id
-                        where customer.Email.Equals(customerEmail)
+                        where customer.Email.Contains(customerEmail)
                         select rq;
             }
             query = query.OrderByDescending(l => l.CreatedOnUtc);
@@ -702,7 +702,7 @@ public class RfqService
             return;
 
         var note = string.Format(await _localizationService.GetResourceAsync("Plugins.Misc.RFQ.QuoteStatusChanged"),
-            quote.Status, newStatus,
+            await _localizationService.GetLocalizedEnumAsync(quote.Status), await _localizationService.GetLocalizedEnumAsync(newStatus),
             await GetCurrentCustomerEmailAsync());
 
         LogNote(quote, note);

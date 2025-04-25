@@ -6,12 +6,13 @@ using Nop.Plugin.Misc.RFQ.Models.Customer;
 using Nop.Plugin.Misc.RFQ.Services;
 using Nop.Services.Customers;
 using Nop.Services.Security;
+using Nop.Web.Controllers;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.Misc.RFQ.Controllers;
 
 [AutoValidateAntiforgeryToken]
-public class RfqCustomerController : BaseController
+public class RfqCustomerController : BasePublicController
 {
     #region Fields
 
@@ -222,7 +223,7 @@ public class RfqCustomerController : BaseController
             return RedirectToRoute("Homepage");
 
         var items = await _rfqService.GetCustomerRequestsAsync(customer.Id);
-        var model = await items.OrderBy(item => item.CreatedOnUtc).SelectAwait(async item =>
+        var model = await items.SelectAwait(async item =>
             await _modelFactory.PrepareRequestQuoteModelAsync(item, new List<RequestQuoteItem>())).ToListAsync();
 
         return View("~/Plugins/Misc.RFQ/Views/CustomerRequests.cshtml", model);
@@ -243,7 +244,7 @@ public class RfqCustomerController : BaseController
             return RedirectToRoute("Homepage");
 
         var items = await _rfqService.GetCustomerQuotesAsync(customer.Id);
-        var model = await items.OrderBy(item => item.CreatedOnUtc)
+        var model = await items
             .SelectAwait(async item => await _modelFactory.PrepareQuoteModelAsync(item, new List<QuoteItem>()))
             .ToListAsync();
 

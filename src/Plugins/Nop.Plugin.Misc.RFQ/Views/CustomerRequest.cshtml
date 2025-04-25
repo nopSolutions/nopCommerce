@@ -1,5 +1,6 @@
 @using Nop.Core.Domain.Catalog
 @using Nop.Core.Domain.Media
+@using Nop.Plugin.Misc.RFQ.Domains
 
 @model Nop.Plugin.Misc.RFQ.Models.Customer.RequestQuoteModel
 @inject MediaSettings mediaSettings
@@ -52,7 +53,7 @@
                             <label asp-for="Status" asp-postfix=":"></label>
                             <label>
                                 @Model.Status
-                                @if (Model.QuoteId.HasValue)
+                                @if (Model.QuoteId.HasValue && Model.QuoteStatus == QuoteStatus.Submitted)
                                 {
                                     <text> (</text><a class="rfq-link" href='@Url.RouteUrl(RfqDefaults.CustomerQuoteRouteName, new { quoteId = Model.QuoteId })'>@T("Plugins.Misc.RFQ.CustomerQuote.Info")</a><text>)</text>
                                 }
