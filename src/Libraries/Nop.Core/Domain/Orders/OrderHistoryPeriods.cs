@@ -1,4 +1,4 @@
-﻿namespace Nop.Web.Models.Order;
+﻿namespace Nop.Core.Domain.Orders;
 
 public enum OrderHistoryPeriods
 {
