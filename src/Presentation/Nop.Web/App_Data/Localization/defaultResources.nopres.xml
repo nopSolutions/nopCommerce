@@ -58,7 +58,7 @@
     <Value>Delete selected</Value>
   </LocaleResource>
   <LocaleResource Name="Account.BackInStockSubscriptions.Description">
-    <Value>You will receive an e-mail when a particular product is back in stock.</Value>
+    <Value>You will receive an email when a particular product is back in stock.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.BackInStockSubscriptions.NoSubscriptions">
     <Value>You are not currently subscribed to any Back In Stock notification lists</Value>
