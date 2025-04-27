@@ -91,20 +91,9 @@ public static class ApplicationBuilderExtensions
             var genericAttributeService = engine.Resolve<IGenericAttributeService>();
             await genericAttributeService.DeleteAttributesAsync<Customer>(NopCustomerDefaults.ProcessPaymentRequestAttribute);
 
-            // Publish AppStartedEvent in background to avoid delaying HTTP request handling
+            //publish AppStartedEvent
             var eventPublisher = engine.Resolve<IEventPublisher>();
-            _ = Task.Run(async () =>
-            {
-                try
-                {
-                    await eventPublisher.PublishAsync(new AppStartedEvent());
-                }
-                catch (Exception ex)
-                {
-                    var logger = engine.Resolve<ILogger>();
-                    await logger.ErrorAsync(ex.Message, ex);
-                }
-            });
+            await eventPublisher.PublishAsync(new AppStartedEvent());
         }
     }
 
