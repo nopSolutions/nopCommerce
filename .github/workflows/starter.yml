@@ -1,0 +1,15 @@
+name: starter pipeline
+
+on:
+    pull_request:
+        branches:
+            - develop
+
+jobs:
+    build:
+        runs-on: ubuntu-24.04
+        steps:
+            - uses: action/chekcout@develop
+            - name: Maven Clean Packege
+              run: mvn clean package
+              
