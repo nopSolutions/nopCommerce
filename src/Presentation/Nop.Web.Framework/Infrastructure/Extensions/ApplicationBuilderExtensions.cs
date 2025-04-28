@@ -57,7 +57,7 @@ public static class ApplicationBuilderExtensions
         EngineContext.Current.ConfigureRequestPipeline(application);
     }
 
-    public static async Task StartEngineAsync(this IApplicationBuilder app)
+    public static async Task StartEngineAsync(this IApplicationBuilder _)
     {
         var engine = EngineContext.Current;
 
