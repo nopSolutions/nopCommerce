@@ -497,6 +497,12 @@ label, label + * {
 	}
 }
 
+.storeId8 .MobileLoc {
+    width: 30px;
+    margin-top: 10px;
+
+}
+
 /*********** NOTIFICATIONS & POPUPS  ***********/
 
 
@@ -3728,7 +3734,7 @@ input#sli_search_1 {
 	background: url('../img/fb-login.png') center no-repeat !important;
 }
 .password-recovery-page .tooltip {
-	margin: 0 0 30px;
+	/* margin: 0 0 30px; */
 }
 .password-recovery-page .result {
 	margin: 0 0 20px;

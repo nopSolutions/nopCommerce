@@ -583,7 +583,7 @@
     <Value>Enter your email</Value>
   </LocaleResource>
   <LocaleResource Name="Account.PasswordRecovery.EmailHasBeenSent">
-    <Value>Email with instructions has been sent to you.</Value>
+    <Value>If an account on our site exists, we’ll send instructions for resetting your password. If you don't see the email, please check your spam folder or send the email again.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.PasswordRecovery.EmailNotFound">
     <Value>Email not found.</Value>

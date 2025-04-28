@@ -152,10 +152,12 @@
                 @await Component.InvokeAsync("FlyoutShoppingCart") 
             </div>
 
-            <div class="admin-header-links">
+            @* <div class="admin-header-links">
                 <a href="/Admin" class="administration">Administration</a>
-            </div>
-            
+            </div> *@
+
+            @await Component.InvokeAsync("AdminHeaderLinks")
+
         </div>
     }
     else
