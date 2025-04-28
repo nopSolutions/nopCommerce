@@ -1015,7 +1015,7 @@ label, label + * {
 }
 
 .header-logo a img {
-  max-width: 100%;
+  max-width: 125%;
   opacity: 1;
 }
 
@@ -8994,3 +8994,87 @@ a.skip:hover {
   width: 100%;
   font-size: 16px;
 }
+
+/* Derrick tabs for products */
+
+.tabs {
+  position: relative;
+  /*margin: 3rem 0;*/
+  background: #1abc9c;
+   min-height: 14.75rem;
+}
+
+  .tabs::before,
+  .tabs::after {
+    content: "";
+    display: table;
+  }
+
+  .tabs::after {
+    clear: both;
+  }
+
+.tab {
+  float: left;
+}
+
+.tab-switch {
+  display: none;
+}
+
+.tab-label {
+  position: relative;
+  display: block;
+  line-height: 2.75em;
+  height: 3em;
+  padding: 0 1.618em;
+  background: #1abc9c;
+  border-right: 0.125rem solid #16a085;
+  color: #fff;
+  cursor: pointer;
+  top: 0;
+  transition: all 0.25s;
+}
+
+  .tab-label:hover {
+    top: -0.25rem;
+    transition: all 0.25s;
+  }
+
+.tab-content {
+  padding: 1.618rem;
+  background: #bbf6e2;
+  color: #2c3e50;
+  /*border-bottom: 0.25rem solid #bdc3c7;
+  height: 12rem;*/
+  min-height: 12rem; /*Added DM 16/08/2018 */
+  position: absolute;
+  width: 100%;
+  z-index: 1;
+  top: 2.75em;
+  left: 0;
+  opacity: 0;
+  transition: all 0.35s;
+}
+
+.tab-switch:checked + .tab-label {
+  background: #bbf6e2;
+  color: #2c3e50;
+  border-bottom: 0;
+  border-right: 0.0625rem solid #fff;
+  transition: all 0.35s;
+  z-index: 2;
+  top: -0.0625rem;
+}
+
+  .tab-switch:checked + .tab-label:hover {
+    top: -0.0625rem;
+  }
+
+  .tab-switch:checked + .tab-label + .tab-content {
+    opacity: 1;
+    transition: all 0.35s;
+    z-index: 3;
+  }
+
+/* End Derrick tabs for products */
