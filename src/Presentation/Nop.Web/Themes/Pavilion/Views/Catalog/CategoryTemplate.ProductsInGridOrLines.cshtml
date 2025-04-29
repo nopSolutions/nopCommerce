@@ -122,7 +122,6 @@
 
 			var i = 0;
 			for (i = 0; i < specificationPanels.length; i++) {
-
 				var anchorTitle = $(specificationPanels[i]).find('.toggleControl');
 				var title = $(anchorTitle).text();
 				if (title.toLowerCase() === 'category') {
@@ -137,6 +136,13 @@
 				}
 				else if (!isClearance && title.toLowerCase() === 'category') {
 					$(specificationPanels[i]).hide();
+				}
+
+				if (title.toLowerCase() === 'capacity') {
+					$(specificationPanels[i]).hide();
+				}
+				if (title.toLowerCase() === 'capacity_range') {
+					anchorTitle.text("Capacity Range");
 				}
 			}
 
