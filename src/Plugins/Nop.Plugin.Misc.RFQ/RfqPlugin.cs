@@ -151,7 +151,6 @@ public class RfqPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
             ["Plugins.Misc.RFQ.Fields.RequestQuote.CreatedOn.Hint"] = "The date/time that the request a quote was created.",
             ["Plugins.Misc.RFQ.Fields.Quote.Status"] = "Status",
             ["Plugins.Misc.RFQ.Fields.Quote.Status.Hint"] = "The status of the quote",
-            ["Plugins.Misc.RFQ.Fields.Quote.OrderId"] = "",
             ["Plugins.Misc.RFQ.Fields.RequestQuote.Status"] = "Status",
             ["Plugins.Misc.RFQ.Fields.RequestQuote.Status.Hint"] = "The status of the request a quote",
             ["Plugins.Misc.RFQ.Fields.Order"] = "Order",

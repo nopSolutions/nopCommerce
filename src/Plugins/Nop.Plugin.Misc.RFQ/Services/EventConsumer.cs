@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Events;
+using Nop.Data;
 using Nop.Plugin.Misc.RFQ.Domains;
 using Nop.Services.Common;
 using Nop.Services.Events;
@@ -25,6 +26,7 @@ public class EventConsumer : IConsumer<AdminMenuCreatedEvent>,
     IConsumer<GetShoppingCartItemUnitPriceEvent>,
     IConsumer<ModelPreparedEvent<BaseNopModel>>,
     IConsumer<EntityInsertedEvent<ShoppingCartItem>>,
+    IConsumer<EntityUpdatedEvent<ShoppingCartItem>>,
     IConsumer<ShoppingCartItemMovedToOrderItemEvent>
 {
     #region Fields
@@ -32,6 +34,7 @@ public class EventConsumer : IConsumer<AdminMenuCreatedEvent>,
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly ILocalizationService _localizationService;
     private readonly IPluginManager<IMiscPlugin> _pluginManager;
+    private readonly IRepository<ShoppingCartItem> _shoppingCartItemsRepository;
     private readonly IShoppingCartService _shoppingCartService;
     private readonly IShortTermCacheManager _shortTermCacheManager;
     private readonly IStoreContext _storeContext;
@@ -45,6 +48,7 @@ public class EventConsumer : IConsumer<AdminMenuCreatedEvent>,
     public EventConsumer(IHttpContextAccessor httpContextAccessor,
         ILocalizationService localizationService,
         IPluginManager<IMiscPlugin> pluginManager,
+        IRepository<ShoppingCartItem> shoppingCartItemsRepository,
         IShoppingCartService shoppingCartService,
         IShortTermCacheManager shortTermCacheManager,
         IStoreContext storeContext,
@@ -54,6 +58,7 @@ public class EventConsumer : IConsumer<AdminMenuCreatedEvent>,
         _httpContextAccessor = httpContextAccessor;
         _localizationService = localizationService;
         _pluginManager = pluginManager;
+        _shoppingCartItemsRepository = shoppingCartItemsRepository;
         _shoppingCartService = shoppingCartService;
         _shortTermCacheManager = shortTermCacheManager;
         _storeContext = storeContext;
@@ -149,10 +154,7 @@ public class EventConsumer : IConsumer<AdminMenuCreatedEvent>,
 
                 shoppingCartItemModel.AllowItemEditing = false;
                 shoppingCartItemModel.DisableRemoval = true;
-                shoppingCartItemModel.AllowedQuantities ??= new List<SelectListItem>();
-                shoppingCartItemModel.AllowedQuantities.Clear();
-                shoppingCartItemModel.AllowedQuantities.Add(new SelectListItem(quoteItem.OfferedQty.ToString(),
-                    quoteItem.OfferedQty.ToString(), true));
+                shoppingCartItemModel.Quantity = quoteItem.OfferedQty;
 
                 disableEdit = true;
             }
@@ -216,6 +218,23 @@ public class EventConsumer : IConsumer<AdminMenuCreatedEvent>,
         }
 
         await _rfqService.UpdateQuoteItemsAsync(items);
+    }
+
+    /// <summary>
+    /// Handle event
+    /// </summary>
+    /// <param name="eventMessage">Event</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public async Task HandleEventAsync(EntityUpdatedEvent<ShoppingCartItem> eventMessage)
+    {
+        var quoteItem = await _rfqService.GetQuoteItemByShoppingCartItemIdAsync(eventMessage.Entity.Id);
+        
+        if (eventMessage.Entity.Quantity == quoteItem.OfferedQty)
+            return;
+
+        eventMessage.Entity.Quantity = quoteItem.OfferedQty;
+
+        await _shoppingCartItemsRepository.UpdateAsync(eventMessage.Entity);
     }
 
     #endregion
