@@ -3258,8 +3258,9 @@ public partial class OrderProcessingService : IOrderProcessingService
     /// Sets process payment request
     /// </summary>
     /// <param name="processPaymentRequest">Process payment request. Pass null for delete</param>
+    /// <param name="useNewOrderGuid">Whether to use new order GUID; pass false to set GUID according to PaymentSettings.RegenerateOrderGuidInterval value</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task SetProcessPaymentRequestAsync(ProcessPaymentRequest processPaymentRequest)
+    public virtual async Task SetProcessPaymentRequestAsync(ProcessPaymentRequest processPaymentRequest, bool useNewOrderGuid = false)
     {
         var customer = await _workContext.GetCurrentCustomerAsync();
         var store = await _storeContext.GetCurrentStoreAsync();
@@ -3271,7 +3272,7 @@ public partial class OrderProcessingService : IOrderProcessingService
             return;
         }
 
-        if (_paymentSettings.RegenerateOrderGuidInterval > 0)
+        if (_paymentSettings.RegenerateOrderGuidInterval > 0 && !useNewOrderGuid)
         {
             //we should use the same GUID for multiple payment attempts
             //this way a payment gateway can prevent security issues such as credit card brute-force attacks

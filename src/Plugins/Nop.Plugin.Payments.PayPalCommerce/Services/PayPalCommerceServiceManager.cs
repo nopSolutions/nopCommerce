@@ -1797,7 +1797,7 @@ public class PayPalCommerceServiceManager
             paymentRequest.CustomValues[placementKey] = placement.ToString();
             if (isRecurring && !string.IsNullOrEmpty(savedPaymentToken?.VaultId))
                 paymentRequest.CustomValues[PayPalCommerceDefaults.TokenIdAttributeName] = savedPaymentToken.Id.ToString();
-            await _orderProcessingService.SetProcessPaymentRequestAsync(paymentRequest);
+            await _orderProcessingService.SetProcessPaymentRequestAsync(paymentRequest, true);
 
             return order;
         });
@@ -2789,7 +2789,7 @@ public class PayPalCommerceServiceManager
             paymentRequest.CustomValues[placementKey] = ButtonPlacement.PaymentMethod.ToString();
             if (await _tokenService.GetTokenAsync(settings.ClientId, details.Customer.Id, paymentToken.Id) is PayPalToken token)
                 paymentRequest.CustomValues[PayPalCommerceDefaults.TokenIdAttributeName] = token.Id.ToString();
-            await _orderProcessingService.SetProcessPaymentRequestAsync(paymentRequest);
+            await _orderProcessingService.SetProcessPaymentRequestAsync(paymentRequest, true);
 
             return order;
         });
