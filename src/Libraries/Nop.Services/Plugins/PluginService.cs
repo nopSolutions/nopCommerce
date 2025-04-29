@@ -6,7 +6,9 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
 using Nop.Data.Migrations;
+using Nop.Services.Configuration;
 using Nop.Services.Customers;
+using Nop.Services.Installation;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 
@@ -26,6 +28,7 @@ public partial class PluginService : IPluginService
     protected readonly ILogger _logger;
     protected readonly INopFileProvider _fileProvider;
     protected readonly IPluginsInfo _pluginsInfo;
+    protected readonly ISettingService _settingService;
     protected readonly IWebHelper _webHelper;
     protected readonly MediaSettings _mediaSettings;
 
@@ -39,6 +42,7 @@ public partial class PluginService : IPluginService
         Lazy<IMigrationManager> migrationManager,
         ILogger logger,
         INopFileProvider fileProvider,
+        ISettingService settingService,
         IWebHelper webHelper,
         MediaSettings mediaSettings)
     {
@@ -49,6 +53,7 @@ public partial class PluginService : IPluginService
         _logger = logger;
         _fileProvider = fileProvider;
         _pluginsInfo = Singleton<IPluginsInfo>.Instance;
+        _settingService = settingService;
         _webHelper = webHelper;
         _mediaSettings = mediaSettings;
     }
@@ -491,6 +496,12 @@ public partial class PluginService : IPluginService
         var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
         var customerActivityService = EngineContext.Current.Resolve<ICustomerActivityService>();
 
+        var installPluginSampleDataSetting =
+            await _settingService.GetSettingAsync(NopInstallationDefaults.InstallPluginSampleDataSettingName);
+
+        bool.TryParse(installPluginSampleDataSetting?.Value, out var installPluginSampleData);
+        var removeInstallPluginSampleDataSetting = true;
+
         //install plugins
         foreach (var descriptor in pluginDescriptors.OrderBy(pluginDescriptor => pluginDescriptor.pluginDescriptor.DisplayOrder))
         {
@@ -498,8 +509,13 @@ public partial class PluginService : IPluginService
             {
                 InsertPluginData(descriptor.pluginDescriptor.PluginType, MigrationProcessType.Installation);
 
+                var pluginInstance = descriptor.pluginDescriptor.Instance<IPlugin>();
                 //try to install an instance
-                await descriptor.pluginDescriptor.Instance<IPlugin>().InstallAsync();
+                await pluginInstance.InstallAsync();
+
+                if (installPluginSampleData)
+                    //try to install a sample data of plugin
+                    await pluginInstance.InstallSampleDataAsync();
 
                 //remove and add plugin system name to appropriate lists
                 var pluginToInstall = _pluginsInfo.PluginNamesToInstall
@@ -521,11 +537,16 @@ public partial class PluginService : IPluginService
                 //log error
                 var message = string.Format(await localizationService.GetResourceAsync("Admin.Plugins.Errors.NotInstalled"), descriptor.pluginDescriptor.SystemName);
                 await _logger.ErrorAsync(message, exception);
+
+                removeInstallPluginSampleDataSetting = false;
             }
         }
 
         //save changes
         await _pluginsInfo.SaveAsync();
+
+        if (removeInstallPluginSampleDataSetting && installPluginSampleDataSetting != null)
+            await _settingService.DeleteSettingAsync(installPluginSampleDataSetting);
     }
 
     /// <summary>

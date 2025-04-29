@@ -28,6 +28,15 @@ public abstract partial class BasePlugin : IPlugin
     }
 
     /// <summary>
+    /// Install sample data of plugin
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual Task InstallSampleDataAsync()
+    {
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
     /// Uninstall plugin
     /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>
