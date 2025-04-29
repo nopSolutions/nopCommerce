@@ -105,7 +105,16 @@ window.bvCallback = function (BV) {
           @:   "price": "@item.UnitPriceInclTax.ToString("0.00")",
           @:   "quantity": "@item.Quantity",
           @:   "productId": "@item.ProductId"
-          @: }@(i < orderItems.Count - 1 ? "," : "")
+          @: }@(i < orderItems.Count - 1 || (order != null && order.OrderShippingInclTax > 0) ? "," : "")
+      }
+      @* Add shipping as a separate item if it exists *@
+      @if (order != null && order.OrderShippingInclTax > 0)
+      {
+          @: {
+          @:   "price": "@order.OrderShippingInclTax.ToString("0.00")",
+          @:   "quantity": 1,
+          @:   "productId": "SHIPPING"
+          @: }
       }
     ],
     email: "@customerEmail"
