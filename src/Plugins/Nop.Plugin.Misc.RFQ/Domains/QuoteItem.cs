@@ -47,5 +47,8 @@ public class QuoteItem : BaseEntity
     /// </summary>
     public int? RequestQuoteId { get; set; }
 
+    /// <summary>
+    /// Shopping cart item identifier
+    /// </summary>
     public int? ShoppingCartItemId { get; set; }
 }

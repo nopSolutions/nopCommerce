@@ -21,8 +21,6 @@ public record RequestQuoteSearchModel : BaseSearchModel
 
     #region Properties
 
-    public int RequestQuoteId { get; set; }
-
     [NopResourceDisplayName("Plugins.Misc.RFQ.Fields.CustomerEmail")]
     public string CustomerEmail { get; set; }
 
@@ -38,7 +36,6 @@ public record RequestQuoteSearchModel : BaseSearchModel
 
     [NopResourceDisplayName("Plugins.Misc.RFQ.AdminRequests.RequestQuoteStatus")]
     public int RequestQuoteStatus { get; set; }
-
     public List<SelectListItem> AvailableRequestQuoteStatuses { get; set; }
 
     #endregion

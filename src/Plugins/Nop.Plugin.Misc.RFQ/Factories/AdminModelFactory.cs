@@ -224,7 +224,7 @@ public class AdminModelFactory
     }
 
     /// <summary>
-    /// Prepare an quote search model
+    /// Prepare a quote search model
     /// </summary>
     /// <returns>
     /// A task that represents the asynchronous operation
@@ -330,7 +330,7 @@ public class AdminModelFactory
     }
 
     /// <summary>
-    /// Prepare an quote item list model
+    /// Prepare a quote item list model
     /// </summary>
     /// <param name="quoteId">Quote item identifier</param>
     /// <returns>
@@ -502,7 +502,7 @@ public class AdminModelFactory
     }
 
     /// <summary>
-    /// Prepare an quote list model
+    /// Prepare a quote list model
     /// </summary>
     /// <param name="searchModel">Quote search model</param>
     /// <returns>

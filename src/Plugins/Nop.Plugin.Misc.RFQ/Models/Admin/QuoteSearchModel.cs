@@ -39,7 +39,5 @@ public record QuoteSearchModel : BaseSearchModel
 
     public List<SelectListItem> AvailableQuoteStatuses { get; set; }
 
-    public int QuoteId { get; set; }
-
     #endregion
 }

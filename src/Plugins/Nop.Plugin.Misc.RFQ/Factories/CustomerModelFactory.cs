@@ -100,6 +100,16 @@ public class CustomerModelFactory
 
     #region Methods
 
+    /// <summary>
+    /// Prepare a request a quote model
+    /// </summary>
+    /// <param name="requestQuote">The request a quote</param>
+    /// <param name="requestQuoteItems">The request a quote items</param>
+    /// <param name="model">Request a quote model to extend</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the request a quote model
+    /// </returns>
     public async Task<RequestQuoteModel> PrepareRequestQuoteModelAsync(RequestQuote requestQuote, IList<RequestQuoteItem> requestQuoteItems = null, RequestQuoteModel model = null)
     {
         ArgumentNullException.ThrowIfNull(requestQuote);
@@ -122,7 +132,7 @@ public class CustomerModelFactory
         model.CustomerItems = modelItems;
         model.QuoteId = requestQuote.QuoteId;
 
-        if (!requestQuote.QuoteId.HasValue) 
+        if (!requestQuote.QuoteId.HasValue)
             return model;
 
         var quote = await _rfqService.GetQuoteByIdAsync(requestQuote.QuoteId.Value);
@@ -131,6 +141,16 @@ public class CustomerModelFactory
         return model;
     }
 
+    /// <summary>
+    /// Prepare a quote model
+    /// </summary>
+    /// <param name="quote">The quote</param>
+    /// <param name="quoteItems">The quote items</param>
+    /// <param name="model">Quote model to extend</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the quote model
+    /// </returns>
     public async Task<QuoteModel> PrepareQuoteModelAsync(Quote quote, IList<QuoteItem> quoteItems = null, QuoteModel model = null)
     {
         ArgumentNullException.ThrowIfNull(quote);
@@ -156,6 +176,16 @@ public class CustomerModelFactory
         return model;
     }
 
+    /// <summary>
+    /// Prepare a request a quote item model
+    /// </summary>
+    /// <param name="requestQuote">The request a quote</param>
+    /// <param name="item">The request a quote item</param>
+    /// <param name="currentCurrency">The current currency</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the request a quote item model
+    /// </returns>
     public async Task<RequestQuoteItemModel> PrepareRequestQuoteItemModelAsync(RequestQuote requestQuote, RequestQuoteItem item, Currency currentCurrency)
     {
         var product = await _productService.GetProductByIdAsync(item.ProductId);
@@ -177,16 +207,42 @@ public class CustomerModelFactory
         };
     }
 
+    /// <summary>
+    /// Prepare a request a quote model
+    /// </summary>
+    /// <param name="requestId">The request a quote identifier</param>
+    /// <param name="model">Request a quote model to extend</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the request a quote model
+    /// </returns>
     public async Task<RequestQuoteModel> PrepareRequestQuoteModelAsync(int requestId, RequestQuoteModel model = null)
     {
         return await PrepareRequestQuoteModelAsync(await _rfqService.GetRequestQuoteByIdAsync(requestId), model: model);
     }
 
+    /// <summary>
+    /// Prepare a request a quote model
+    /// </summary>
+    /// <param name="model">Request a quote model to extend</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the request a quote model
+    /// </returns>
     public async Task<RequestQuoteModel> PrepareRequestQuoteModelAsync(RequestQuoteModel model)
     {
         return await PrepareRequestQuoteModelAsync(await _rfqService.GetRequestQuoteByIdAsync(model.Id), model: model);
     }
 
+    /// <summary>
+    /// Prepare a quote model
+    /// </summary>
+    /// <param name="quoteId">The quote identifier</param>
+    /// <param name="model">Quote model to extend</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the quote model
+    /// </returns>
     public async Task<QuoteModel> PrepareQuoteModelAsync(int quoteId, QuoteModel model = null)
     {
         return await PrepareQuoteModelAsync(await _rfqService.GetQuoteByIdAsync(quoteId), model: model);
