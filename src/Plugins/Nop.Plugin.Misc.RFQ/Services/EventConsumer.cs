@@ -229,7 +229,7 @@ public class EventConsumer : IConsumer<AdminMenuCreatedEvent>,
     {
         var quoteItem = await _rfqService.GetQuoteItemByShoppingCartItemIdAsync(eventMessage.Entity.Id);
         
-        if (eventMessage.Entity.Quantity == quoteItem.OfferedQty)
+        if (quoteItem == null || eventMessage.Entity.Quantity == quoteItem.OfferedQty)
             return;
 
         eventMessage.Entity.Quantity = quoteItem.OfferedQty;
