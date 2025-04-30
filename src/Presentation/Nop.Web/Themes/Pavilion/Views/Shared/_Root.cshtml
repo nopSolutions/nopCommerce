@@ -49,11 +49,14 @@
     <div class="responsive-nav-wrapper-parent">
         <div class="responsive-nav-wrapper">
 
+            @if (storeId == 8)
+            {
             <div class="mobileLocation">
             <a href="https://stagehawthorne.abcwarehouse.com/hawthorne-store-locations">
             <img class="MobileLoc" src="https://www.abcwarehouse.com/images/hawthorne/Icons/HawMobileLocation.png" alt="HawLocations" />
             </a>
             </div>
+            }
 
             <div id="mobile-header-logo">
                 @await Component.InvokeAsync("Logo")
