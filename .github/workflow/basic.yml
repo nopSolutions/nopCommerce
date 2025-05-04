@@ -7,7 +7,7 @@ on:
 jobs:
    build:
       name: build
-      run-on: ubuntu-24.04
+      run-on: "ubuntu-24.04"
       steps:
          - uses: actions/checkout@v4
            uses: actions/setup-dotnet@v4
