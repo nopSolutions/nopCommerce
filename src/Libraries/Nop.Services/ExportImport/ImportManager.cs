@@ -1243,7 +1243,7 @@ public partial class ImportManager : IImportManager
 
             specificationAttributeManager.SetSelectList("AttributeType", await SpecificationAttributeType.Option.ToSelectListAsync(useLocalization: false));
             specificationAttributeManager.SetSelectList("SpecificationAttribute", (await _specificationAttributeService
-                    .GetSpecificationAttributesAsync())
+                    .GetAllSpecificationAttributesAsync())
                 .Select(sa => sa as BaseEntity)
                 .ToSelectList(p => (p as SpecificationAttribute)?.Name ?? string.Empty));
 

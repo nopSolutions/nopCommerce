@@ -543,7 +543,7 @@ public partial class ExportManager : IExportManager
             },
             new PropertyByName<ExportSpecificationAttribute>("SpecificationAttribute", (p, _) => p.SpecificationAttributeId)
             {
-                DropDownElements = (await _specificationAttributeService.GetSpecificationAttributesAsync()).Select(sa => sa as BaseEntity).ToSelectList(p => (p as SpecificationAttribute)?.Name ?? string.Empty)
+                DropDownElements = (await _specificationAttributeService.GetAllSpecificationAttributesAsync()).Select(sa => sa as BaseEntity).ToSelectList(p => (p as SpecificationAttribute)?.Name ?? string.Empty)
             },
             new PropertyByName<ExportSpecificationAttribute>("CustomValue", (p, _) => p.CustomValue),
             new PropertyByName<ExportSpecificationAttribute>("SpecificationAttributeOptionId", (p, _) => p.SpecificationAttributeOptionId),

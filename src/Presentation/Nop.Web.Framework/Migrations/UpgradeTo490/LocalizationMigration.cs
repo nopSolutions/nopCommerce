@@ -156,6 +156,10 @@ public class LocalizationMigration : MigrationBase
             ["Enums.Nop.Core.Domain.Orders.OrderHistoryPeriods.HalfYear"] = "the past six months",
             ["Enums.Nop.Core.Domain.Orders.OrderHistoryPeriods.Year"] = "the past year",
 
+            //#7545
+            ["Admin.Catalog.Attributes.SpecificationAttributes.List.SearchName"] = "Name",
+            ["Admin.Catalog.Attributes.SpecificationAttributes.List.SearchName.Hint"] = "Search by specification attribute name.",
+
             //#7630
             ["Admin.Configuration.Settings.Tax.HmrcApiUrl"] = "HMRC API URL",
             ["Admin.Configuration.Settings.Tax.HmrcApiUrl.Hint"] = "The base HMRC access API URL.",
