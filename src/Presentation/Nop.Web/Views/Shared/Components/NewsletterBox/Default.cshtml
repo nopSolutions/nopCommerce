@@ -1,89 +1,81 @@
 ﻿@model NewsletterBoxModel
-<div class="newsletter">
-    <div class="title">
-        <strong>@T("Newsletter.Title")</strong>
-    </div>
-    <div class="newsletter-subscribe" id="newsletter-subscribe-block">
-        <div class="newsletter-email">
-            <input asp-for="NewsletterEmail" id="newsletter-email" class="newsletter-subscribe-text" placeholder=@T("Newsletter.Email.Placeholder") aria-label="@T("Newsletter.Subscribe")" />
 
-            <button type="button" id="newsletter-subscribe-button" class="button-1 newsletter-subscribe-button">@T(Model.AllowToUnsubscribe ? "Newsletter.Options.Send" : "Newsletter.Options.Subscribe")</button>
+<form id="marketingForm" novalidate>
+  <input type="email" id="newsletter-email" name="email" placeholder="Email Address" required />
+  <input type="tel" id="phone" name="phoneNumber" placeholder="Phone Number" required
+         pattern="^(\(\d{3}\)|\d{3})[-.\s]?\d{3}[-.\s]?\d{4}$" />
+  <button type="submit">Subscribe</button>
+</form>
 
-            @if (Model.AllowToUnsubscribe)
-            {
-                <div class="options">
-                    <span class="subscribe">
-                        <input id="newsletter_subscribe" type="radio" value="newsletter_subscribe" name="newsletter_block" checked="checked" />
-                        <label for="newsletter_subscribe">@T("Newsletter.Options.Subscribe")</label>
-                    </span>
-                    <span class="unsubscribe">
-                        <input id="newsletter_unsubscribe" type="radio" value="newsletter_unsubscribe" name="newsletter_block" />
-                        <label for="newsletter_unsubscribe">@T("Newsletter.Options.Unsubscribe")</label>
-                    </span>
-                </div>
-            }
-        </div>
-        <div class="newsletter-validation">
-            <span id="subscribe-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait")</span>
-            <span asp-validation-for="NewsletterEmail"></span>
-        </div>
-    </div>
-    <div class="newsletter-result" id="newsletter-result-block"></div>
-    <script asp-location="Footer">
-        function newsletter_subscribe(subscribe) {
-            var subscribeProgress = $("#subscribe-loading-progress");
-            subscribeProgress.show();
-            var postData = {
-                subscribe: subscribe,
-                email: $("#newsletter-email").val()
-            };
-            $.ajax({
-                cache: false,
-                type: "POST",
-                url: "@(Url.RouteUrl("SubscribeNewsletter"))",
-                data: postData,
-                success: function (data, textStatus, jqXHR) {
-                    $("#newsletter-result-block").html(data.Result);
-                    if (data.Success) {
-                        $('#newsletter-subscribe-block').hide();
-                        $('#newsletter-result-block').show();
+<script>
+  document.getElementById("marketingForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
 
-                        // ABC: add to Listrak
-                        _ltk.Signup.New('newsletter-abc', 'newsletter-email', _ltk.Signup.TYPE.CLICK, 'newsletter-subscribe-button');
-                    } else {
-                        $('#newsletter-result-block').fadeIn("slow").delay(2000).fadeOut("slow");
-                    }
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    alert('Failed to subscribe.');
-                },
-                complete: function (jqXHR, textStatus) {
-                    subscribeProgress.hide();
-                }
-            });
-        }
+    const email = document.getElementById("newsletter-email").value.trim();
+    const rawPhone = document.getElementById("phone").value.trim();
+    const phone = rawPhone.replace(/\D/g, ''); // Only digits
 
-        $(document).ready(function () {
-            $('#newsletter-subscribe-button').on('click', function () {
-                @if (Model.AllowToUnsubscribe)
-                {
-                    <text>if ($('#newsletter_subscribe').is(':checked')) {
-                    newsletter_subscribe('true');
-                } else {
-                    newsletter_subscribe('false');
-                }</text>
-                }
-                else
-                {
-                    <text>newsletter_subscribe('true');</text>
-                }
-            });
-            $("#newsletter-email").on("keydown", function (event) {
-                if (event.keyCode == 13) {
-                    $("#newsletter-subscribe-button").trigger("click");
-                    return false;
-                }
-            });
+    if (!email) {
+      alert("Please enter a valid email address.");
+      return;
+    }
+
+    // 1. Subscribe to newsletter
+    const subscribeToNewsletter = async () => {
+      try {
+        const response = await fetch('@(Url.RouteUrl("SubscribeNewsletter"))', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({
+            subscribe: 'true',
+            email: email
+          })
         });
-    </script>
-</div>
+
+        const result = await response.json(); // Assumes the endpoint returns JSON
+        if (result.Success) {
+          alert(result.Result || 'Subscribed to newsletter!');
+        } else {
+          alert(result.Result || 'Newsletter subscription failed.');
+        }
+      } catch (error) {
+        alert("Error subscribing to newsletter.");
+      }
+    };
+
+    // 2. Optionally subscribe to SMS if phone number is given
+    const subscribeToSms = async () => {
+      if (phone.length === 0) return;
+
+      if (phone.length !== 10) {
+        alert("Please enter a valid 10-digit phone number.");
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/marketingSms/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ emailAddress: email, phoneNumber: phone })
+        });
+
+        const result = await response.json();
+        alert(result.message || "SMS subscription successful.");
+      } catch (error) {
+        alert("Error subscribing to SMS.");
+      }
+    };
+
+    // Execute both
+    await subscribeToNewsletter();
+    await subscribeToSms();
+  });
+
+  // Optional: Allow Enter key to trigger submission from email field
+  document.getElementById("newsletter-email").addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      document.getElementById("marketingForm").requestSubmit();
+    }
+  });
+</script>

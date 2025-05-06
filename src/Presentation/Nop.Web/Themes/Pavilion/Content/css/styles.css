@@ -6257,6 +6257,58 @@ h1.search-page-title {
 }
 }
 
+form#marketingForm {
+    max-width: 550px;
+    margin-left: auto;
+    margin-right: auto;
+}
+form#marketingForm button {
+    background: #ec232a;
+    color: #fff;
+    padding: 8px 15px;
+    border: solid 2px #454545;
+    font-weight: bold;
+    border-radius: 4px;
+    margin-left: 5px;
+}
+.newsletter-signup {
+    text-align: center;
+    padding: 30px 10px;
+}
+.sms-disclaimer p {
+    max-width: 1040px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 10px 10px;
+    font-size: 10px;
+}
+.newsletter-signup h2 {
+    font-size: 45px;
+	color: #ec232a;
+}
+.footer h3 {
+    font-size: 26px;
+    padding-bottom: 10px;
+}
+form#marketingForm input {
+	padding: 0 10px;
+}
+@media screen and (max-width: 560px) {
+	form#marketingForm button {
+		width: 90%;
+	}
+}
+@media screen and (max-width: 1024px) {
+	.newsletter-signup {
+		padding-top: 0px;
+	}
+	form#marketingForm input {
+		width: 90%;
+		margin: 10px 10px;
+	}
+	
+}
+
 /* @media (max-width: 1024px) {
 .header-middle .hours-desktop {
 	margin-top: 32px;

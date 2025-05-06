@@ -51,9 +51,29 @@
     }
 </style>
 <div class="footer">
+    <div class="newsletter-signup">
+        
+        
+        <h2>NEVER MISS A DEAL!</h2>
+        <h3>$50 OFF YOUR PURCHASE*</h3>
+
+        @await Component.InvokeAsync("NewsletterBox")
+
+        <div class="sms-disclaimer">
+            <p> I agree to receive text messages about my orders to the mobile number provided at opt-in 
+            from ABC Warehouse. Only U.S. mobile numbers are eligible to participate. Consent is not a condition of 
+           purchase. Msg frequency may vary. Msg & data rates may apply. Reply HELP for help and STOP to cancel. See 
+             Terms and Conditions & Privacy Policy.</p>
+             <p>
+                *$249 Minimum. Valid IN STORE ONLY. This offer cannot be combined with other offers. Exclusions Apply. View 
+                <a href="https://www.abcwarehouse.com/policies-information#promo-offers">Terms & Conditions</a>.
+             </p>
+
+        </div>
+    </div>
+
     <div class="footer-upper">
         <div class="center">
-            @await Component.InvokeAsync("NewsletterBox")
             @await Component.InvokeAsync("SocialButtons")
         </div>
     </div>
