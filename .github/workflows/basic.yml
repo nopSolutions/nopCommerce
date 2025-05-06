@@ -7,7 +7,7 @@ on:
 jobs:
    build:
       name: build
-      runs-on: "self-hosted"
+      runs-on: 'self-hosted'
       steps:
         - uses: actions/checkout@v4
         - uses: actions/setup-dotnet@v4
