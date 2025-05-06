@@ -503,6 +503,11 @@ label, label + * {
 
 }
 
+.storeId3 .jcarousel li {   
+    margin: 0px 10px;
+}
+
+
 /*********** NOTIFICATIONS & POPUPS  ***********/
 
 
