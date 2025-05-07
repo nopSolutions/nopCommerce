@@ -3,7 +3,7 @@ name: "dotnetcore"
 on:
   push:
     branches:
-       - develop
+       - main
 jobs:
    build:
       name: build
