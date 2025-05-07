@@ -3,7 +3,7 @@
 namespace Nop.Plugin.Misc.CloudflareImages.Domain;
 
 /// <summary>
-/// Represents a cloudflare images
+/// Represents a Cloudflare Images
 /// </summary>
 public class CloudflareImages : BaseEntity
 {

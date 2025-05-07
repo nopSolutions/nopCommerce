@@ -13,7 +13,7 @@ public partial interface IThumbService
     /// <param name="pictureUrl">Picture URL</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the 
+    /// The task result contains the local picture thumb path
     /// </returns>
     Task<string> GetThumbLocalPathAsync(string pictureUrl);
 
@@ -24,12 +24,12 @@ public partial interface IThumbService
     /// <param name="thumbFileName">Thumb file name</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the result
+    /// The task result contains the check result
     /// </returns>
     Task<bool> GeneratedThumbExistsAsync(string thumbFilePath, string thumbFileName);
 
     /// <summary>
-    /// Save a value indicating whether some file (thumb) already exists
+    /// Save a picture thumb
     /// </summary>
     /// <param name="thumbFilePath">Thumb file path</param>
     /// <param name="thumbFileName">Thumb file name</param>

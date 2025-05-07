@@ -1,4 +1,5 @@
 ﻿using Nop.Core.Configuration;
+using Nop.Plugin.Misc.CloudflareImages.Models;
 using Nop.Services.Events;
 
 namespace Nop.Plugin.Misc.CloudflareImages.Services;
@@ -34,7 +35,7 @@ public class EventConsumer : IConsumer<AppSettingsSavingEvent>
     {
         var config = _appSettings.Get<CloudflareImagesConfig>();
 
-        string getKey(string name) => $"CloudflareImagesConfiguration.{name}";
+        string getKey(string name) => $"{nameof(ConfigurationModel.CloudflareImagesConfiguration)}.{name}";
 
         var form = eventMessage.FormData;
 

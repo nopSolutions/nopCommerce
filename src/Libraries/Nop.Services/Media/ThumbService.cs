@@ -2,10 +2,6 @@
 using Nop.Core;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
-using Nop.Services.Catalog;
-using Nop.Services.Configuration;
-using Nop.Services.Logging;
-using Nop.Services.Seo;
 
 namespace Nop.Services.Media;
 
@@ -17,12 +13,7 @@ public partial class ThumbService : IThumbService
     #region Fields
 
     protected readonly IHttpContextAccessor _httpContextAccessor;
-    protected readonly ILogger _logger;
     protected readonly INopFileProvider _fileProvider;
-    protected readonly IProductAttributeParser _productAttributeParser;
-    protected readonly IProductAttributeService _productAttributeService;
-    protected readonly ISettingService _settingService;
-    protected readonly IUrlRecordService _urlRecordService;
     protected readonly IWebHelper _webHelper;
     protected readonly MediaSettings _mediaSettings;
 
@@ -31,22 +22,12 @@ public partial class ThumbService : IThumbService
     #region Ctor
 
     public ThumbService(IHttpContextAccessor httpContextAccessor,
-        ILogger logger,
         INopFileProvider fileProvider,
-        IProductAttributeParser productAttributeParser,
-        IProductAttributeService productAttributeService,
-        ISettingService settingService,
-        IUrlRecordService urlRecordService,
         IWebHelper webHelper,
         MediaSettings mediaSettings)
     {
         _httpContextAccessor = httpContextAccessor;
-        _logger = logger;
         _fileProvider = fileProvider;
-        _productAttributeParser = productAttributeParser;
-        _productAttributeService = productAttributeService;
-        _settingService = settingService;
-        _urlRecordService = urlRecordService;
         _webHelper = webHelper;
         _mediaSettings = mediaSettings;
     }
@@ -106,7 +87,7 @@ public partial class ThumbService : IThumbService
     /// <param name="thumbFileName">Thumb file name</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the result
+    /// The task result contains the check result
     /// </returns>
     public virtual Task<bool> GeneratedThumbExistsAsync(string thumbFilePath, string thumbFileName)
     {
@@ -119,7 +100,7 @@ public partial class ThumbService : IThumbService
     /// <param name="pictureUrl">Picture URL</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the 
+    /// The task result contains the local picture thumb path
     /// </returns>
     public virtual async Task<string> GetThumbLocalPathAsync(string pictureUrl)
     {
@@ -130,7 +111,7 @@ public partial class ThumbService : IThumbService
     }
 
     /// <summary>
-    /// Save a value indicating whether some file (thumb) already exists
+    /// Save a picture thumb
     /// </summary>
     /// <param name="thumbFilePath">Thumb file path</param>
     /// <param name="thumbFileName">Thumb file name</param>

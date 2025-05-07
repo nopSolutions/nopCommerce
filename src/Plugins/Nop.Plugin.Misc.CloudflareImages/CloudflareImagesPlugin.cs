@@ -8,8 +8,9 @@ using Nop.Services.Plugins;
 using Nop.Web.Framework.Infrastructure;
 
 namespace Nop.Plugin.Misc.CloudflareImages;
+
 /// <summary>
-/// Rename this file and change to the correct type
+/// Represents Cloudflare Images plugin
 /// </summary>
 public class CloudflareImagesPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
 {
@@ -45,16 +46,16 @@ public class CloudflareImagesPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
         await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
         {
             ["Nop.Plugin.Misc.CloudflareImages.Enabled"] = "Enabled",
-            ["Nop.Plugin.Misc.CloudflareImages.Enabled.Hint"] = "Enable this setting to use Cloudflare images",
-            ["Nop.Plugin.Misc.CloudflareImages.AppSettings"] = "Cloudflare images storage configuration",
+            ["Nop.Plugin.Misc.CloudflareImages.Enabled.Hint"] = "Enable this setting to use Cloudflare Images",
+            ["Nop.Plugin.Misc.CloudflareImages.AppSettings"] = "Cloudflare Images configuration",
             ["Nop.Plugin.Misc.CloudflareImages.DeliveryUrl"] = "Delivery URL",
-            ["Nop.Plugin.Misc.CloudflareImages.DeliveryUrl.Hint"] = "Specify the Image Delivery URL for Cloudflare images. Normally it look like https://imagedelivery.net/8gpWmT5e4kJqST1MOqpoVg/<image_id>/<variant_name>. Please just copy it from Cloudflare and live as is.",
+            ["Nop.Plugin.Misc.CloudflareImages.DeliveryUrl.Hint"] = "Specify the Image Delivery URL for Cloudflare Images. Normally it looks like https://imagedelivery.net/8gpWmT5e4kJqST1MOqpoVg/<image_id>/<variant_name>. Please just copy it from Cloudflare and live as is.",
             ["Nop.Plugin.Misc.CloudflareImages.RequestTimeout"] = "Request timeout",
             ["Nop.Plugin.Misc.CloudflareImages.RequestTimeout.Hint"] = "Period (in seconds) before the request times out",
             ["Nop.Plugin.Misc.CloudflareImages.AccountId"] = "Account ID",
-            ["Nop.Plugin.Misc.CloudflareImages.AccountId.Hint"] = "Cloudflare images Account ID.",
+            ["Nop.Plugin.Misc.CloudflareImages.AccountId.Hint"] = "Cloudflare Images Account ID.",
             ["Nop.Plugin.Misc.CloudflareImages.AccessToken"] = "Access token",
-            ["Nop.Plugin.Misc.CloudflareImages.AccessToken.Hint"] = "Cloudflare images Access token."
+            ["Nop.Plugin.Misc.CloudflareImages.AccessToken.Hint"] = "Cloudflare Images Access token."
         });
 
         if (!_widgetSettings.ActiveWidgetSystemNames.Contains(CloudflareImagesDefaults.SystemName))
@@ -112,7 +113,7 @@ public class CloudflareImagesPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
     /// <summary>
     /// Gets a value indicating whether to hide this plugin on the widget list page in the admin area
     /// </summary>
-    public bool HideInWidgetList => false;
+    public bool HideInWidgetList => true;
 
     #endregion
 }

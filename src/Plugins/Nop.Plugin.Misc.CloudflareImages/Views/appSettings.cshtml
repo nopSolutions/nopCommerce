@@ -1,7 +1,5 @@
-@using Nop.Plugin.Misc.CloudflareImages.Models
 @model ConfigurationModel
-@inject IGenericAttributeService genericAttributeService
-@inject IWorkContext workContext
+
 @{
     var customer = await workContext.GetCurrentCustomerAsync();
 
@@ -9,7 +7,7 @@
     var hideCloudflareImagesBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCloudflareImagesBlockAttributeName);
 }
 
-<nop-card asp-name="misc.azure-blob-config" asp-icon="fas fa-gears" asp-title="@T("Nop.Plugin.Misc.CloudflareImages.AppSettings")" asp-hide-block-attribute-name="@hideCloudflareImagesBlockAttributeName" asp-hide="@hideCloudflareImagesBlock" asp-advanced="false">
+<nop-card asp-name="cloudflare-images-config" asp-icon="fas fa-gears" asp-title="@T("Nop.Plugin.Misc.CloudflareImages.AppSettings")" asp-hide-block-attribute-name="@hideCloudflareImagesBlockAttributeName" asp-hide="@hideCloudflareImagesBlock" asp-advanced="false">
     <div class="card-body">
         <div class="form-group row">
             <div class="col-md-3">

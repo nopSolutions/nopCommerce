@@ -89,7 +89,7 @@ public partial interface IPictureService
         bool showDefaultPicture = true,
         string storeLocation = null,
         PictureType defaultPictureType = PictureType.Entity);
-    
+
     /// <summary>
     /// Gets a picture
     /// </summary>

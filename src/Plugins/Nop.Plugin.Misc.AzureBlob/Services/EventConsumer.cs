@@ -1,4 +1,5 @@
 ﻿using Nop.Core.Configuration;
+using Nop.Plugin.Misc.AzureBlob.Models;
 using Nop.Services.Events;
 
 namespace Nop.Plugin.Misc.AzureBlob.Services;
@@ -34,7 +35,7 @@ public class EventConsumer : IConsumer<AppSettingsSavingEvent>
     {
         var config = _appSettings.Get<AzureBlobConfig>();
 
-        string getKey(string name) => $"AzureBlobConfiguration.{name}";
+        string getKey(string name) => $"{nameof(ConfigurationModel.AzureBlobConfiguration)}.{name}";
 
         var form = eventMessage.FormData;
 

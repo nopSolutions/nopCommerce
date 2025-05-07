@@ -9,6 +9,9 @@ using Nop.Web.Framework.Infrastructure.Extensions;
 
 namespace Nop.Plugin.Misc.CloudflareImages.Infrastructure;
 
+/// <summary>
+/// Represents the object for the configuring services on application startup
+/// </summary>
 public class PluginNopStartup : INopStartup
 {
     /// <summary>

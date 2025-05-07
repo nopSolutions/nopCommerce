@@ -1,4 +1,6 @@
-﻿namespace Nop.Plugin.Misc.AzureBlob;
+﻿using Nop.Core.Caching;
+
+namespace Nop.Plugin.Misc.AzureBlob;
 
 /// <summary>
 /// Represents plugin constants
@@ -9,4 +11,21 @@ public static class AzureBlobDefaults
     /// Gets a plugin system name
     /// </summary>
     public static string SystemName => "Misc.AzureBlob";
+
+    #region Caching defaults
+
+    /// <summary>
+    /// Gets a key to cache whether thumb exists
+    /// </summary>
+    /// <remarks>
+    /// {0} : thumb file name
+    /// </remarks>
+    public static CacheKey ThumbExistsCacheKey => new("Nop.azure.thumb.exists.{0}");
+
+    /// <summary>
+    /// Gets a key pattern to clear cache
+    /// </summary>
+    public static string ThumbsExistsPrefix => "Nop.azure.thumb.exists.";
+
+    #endregion
 }

@@ -3,12 +3,12 @@
 namespace Nop.Plugin.Misc.CloudflareImages;
 
 /// <summary>
-/// Represents Cloudflare Images storage configuration parameters
+/// Represents Cloudflare Images configuration parameters
 /// </summary>
-public partial class CloudflareImagesConfig : IConfig
+public class CloudflareImagesConfig : IConfig
 {
     /// <summary>
-    /// Gets a value indicating whether we should use Cloudflare Images storage
+    /// Gets a value indicating whether we should use Cloudflare Images
     /// </summary>
     public bool Enabled { get; set; } = false;
 

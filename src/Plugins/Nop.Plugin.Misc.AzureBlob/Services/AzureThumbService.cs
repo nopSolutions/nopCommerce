@@ -11,11 +11,10 @@ namespace Nop.Plugin.Misc.AzureBlob.Services;
 /// <summary>
 /// Picture service for Windows Azure
 /// </summary>
-public partial class AzureThumbService : IThumbService
+public class AzureThumbService : IThumbService
 {
     #region Fields
 
-    private readonly AzureBlobConfig _azureBlobConfig;
     private static BlobContainerClient _blobContainerClient;
     private static BlobServiceClient _blobServiceClient;
     private static bool _azureBlobStorageAppendContainerName;
@@ -24,7 +23,8 @@ public partial class AzureThumbService : IThumbService
     private static string _azureBlobStorageContainerName;
     private static string _azureBlobStorageEndPoint;
 
-    private INopFileProvider _fileProvider;
+    private readonly AzureBlobConfig _azureBlobConfig;
+    private readonly INopFileProvider _fileProvider;
     private readonly IStaticCacheManager _staticCacheManager;
 
     private readonly object _locker = new();
@@ -118,7 +118,7 @@ public partial class AzureThumbService : IThumbService
     }
 
     /// <summary>
-    /// Initiates an asynchronous operation to delete picture thumbs
+    /// Delete picture thumbs
     /// </summary>
     /// <param name="picture">Picture</param>
     /// <returns>A task that represents the asynchronous operation</returns>
@@ -127,10 +127,14 @@ public partial class AzureThumbService : IThumbService
         //create a string containing the Blob name prefix
         var prefix = $"{picture.Id:0000000}";
 
-        var tasks = await _blobContainerClient.GetBlobsAsync(BlobTraits.All, BlobStates.All, prefix).Select(blob => _blobContainerClient.DeleteBlobIfExistsAsync(blob.Name, DeleteSnapshotsOption.IncludeSnapshots)).Select(dummy => (Task)dummy).ToListAsync();
+        var tasks = await _blobContainerClient
+            .GetBlobsAsync(BlobTraits.All, BlobStates.All, prefix)
+            .Select(blob => _blobContainerClient.DeleteBlobIfExistsAsync(blob.Name, DeleteSnapshotsOption.IncludeSnapshots))
+            .Select(dummy => (Task)dummy)
+            .ToListAsync();
         await Task.WhenAll(tasks);
 
-        await _staticCacheManager.RemoveByPrefixAsync(NopMediaDefaults.ThumbsExistsPrefix);
+        await _staticCacheManager.RemoveByPrefixAsync(AzureBlobDefaults.ThumbsExistsPrefix);
     }
 
     /// <summary>
@@ -139,7 +143,7 @@ public partial class AzureThumbService : IThumbService
     /// <param name="pictureUrl">Picture URL</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the 
+    /// The task result contains the local picture thumb path
     /// </returns>
     public async Task<string> GetThumbLocalPathAsync(string pictureUrl)
     {
@@ -150,19 +154,19 @@ public partial class AzureThumbService : IThumbService
     }
 
     /// <summary>
-    /// Initiates an asynchronous operation to get a value indicating whether some file (thumb) already exists
+    /// Get a value indicating whether some file (thumb) already exists
     /// </summary>
     /// <param name="thumbFilePath">Thumb file path</param>
     /// <param name="thumbFileName">Thumb file name</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the result
+    /// The task result contains the check result
     /// </returns>
     public async Task<bool> GeneratedThumbExistsAsync(string thumbFilePath, string thumbFileName)
     {
         try
         {
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopMediaDefaults.ThumbExistsCacheKey, thumbFileName);
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(AzureBlobDefaults.ThumbExistsCacheKey, thumbFileName);
 
             return await _staticCacheManager.GetAsync(key, async () => await _blobContainerClient.GetBlobClient(thumbFileName).ExistsAsync());
         }
@@ -173,7 +177,7 @@ public partial class AzureThumbService : IThumbService
     }
 
     /// <summary>
-    /// Initiates an asynchronous operation to save a value indicating whether some file (thumb) already exists
+    /// Save a picture thumb
     /// </summary>
     /// <param name="thumbFilePath">Thumb file path</param>
     /// <param name="thumbFileName">Thumb file name</param>
@@ -188,10 +192,7 @@ public partial class AzureThumbService : IThumbService
         //set mime type
         BlobHttpHeaders headers = null;
         if (!string.IsNullOrWhiteSpace(mimeType))
-            headers = new BlobHttpHeaders
-            {
-                ContentType = mimeType
-            };
+            headers = new BlobHttpHeaders { ContentType = mimeType };
 
         //set cache control
         if (!string.IsNullOrWhiteSpace(_azureBlobConfig.AzureCacheControlHeader))
@@ -207,7 +208,7 @@ public partial class AzureThumbService : IThumbService
         else
             await blobClient.UploadAsync(ms, new BlobUploadOptions { HttpHeaders = headers });
 
-        await _staticCacheManager.RemoveByPrefixAsync(NopMediaDefaults.ThumbsExistsPrefix);
+        await _staticCacheManager.RemoveByPrefixAsync(AzureBlobDefaults.ThumbsExistsPrefix);
     }
 
     #endregion

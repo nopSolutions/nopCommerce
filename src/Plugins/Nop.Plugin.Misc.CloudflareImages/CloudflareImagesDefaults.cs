@@ -16,11 +16,17 @@ public static class CloudflareImagesDefaults
     public static int RequestTimeout => 30;
 
     /// <summary>
-    /// Base cloudflare images API URL
+    /// Gets the base Cloudflare Images API URL
     /// </summary>
     public static string BaseApiUrl => "https://api.cloudflare.com/client/v4/accounts/{0}/images/v1{1}";
 
+    /// <summary>
+    /// Gets a image id pattern
+    /// </summary>
     public static string ImageIdPattern => "<image_id>";
 
+    /// <summary>
+    /// Gets a variant name pattern
+    /// </summary>
     public static string VariantNamePattern => "<variant_name>";
 }

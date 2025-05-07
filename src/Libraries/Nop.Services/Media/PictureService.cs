@@ -121,7 +121,7 @@ public partial class PictureService : IPictureService
         var filePath = await GetPictureLocalPathAsync(fileName);
         _fileProvider.DeleteFile(filePath);
     }
-    
+
     /// <summary>
     /// Get images path URL 
     /// </summary>
@@ -139,7 +139,7 @@ public partial class PictureService : IPictureService
 
         return Task.FromResult(imagesPathUrl);
     }
-    
+
     /// <summary>
     /// Get picture local path. Used when images stored on file system (not in the database)
     /// </summary>
@@ -172,8 +172,6 @@ public partial class PictureService : IPictureService
 
         return result;
     }
-
-    
 
     /// <summary>
     /// Updates the picture binary data
@@ -596,7 +594,7 @@ public partial class PictureService : IPictureService
             //we can't use semaphore here, because it produces PlatformNotSupportedException exception on UNIX based systems
             using var mutex = new Mutex(false, thumbFileName);
             mutex.WaitOne();
-           
+
             try
             {
                 var format = GetImageFormatByMimeType(picture.MimeType);
@@ -1017,7 +1015,7 @@ public partial class PictureService : IPictureService
                 image = SKBitmap.Decode(pictureBinary);
 
             //resize the image in accordance with the maximum size
-            if (Math.Max(image.Height, image.Width) <= _mediaSettings.MaximumImageSize) 
+            if (Math.Max(image.Height, image.Width) <= _mediaSettings.MaximumImageSize)
                 return pictureBinary;
 
             var format = GetImageFormatByMimeType(mimeType);

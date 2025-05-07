@@ -43,7 +43,7 @@ public partial class CloudflareThumbService : IThumbService
     /// <param name="pictureUrl">Picture URL</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the 
+    /// The task result contains the local picture thumb path
     /// </returns>
     public async Task<string> GetThumbLocalPathAsync(string pictureUrl)
     {
@@ -60,7 +60,7 @@ public partial class CloudflareThumbService : IThumbService
     /// <param name="thumbFileName">Thumb file name</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the result
+    /// The task result contains the check result
     /// </returns>
     public async Task<bool> GeneratedThumbExistsAsync(string thumbFilePath, string thumbFileName)
     {
@@ -68,7 +68,7 @@ public partial class CloudflareThumbService : IThumbService
     }
 
     /// <summary>
-    /// Save a value indicating whether some file (thumb) already exists
+    /// Save a picture thumb
     /// </summary>
     /// <param name="thumbFilePath">Thumb file path</param>
     /// <param name="thumbFileName">Thumb file name</param>
@@ -77,8 +77,10 @@ public partial class CloudflareThumbService : IThumbService
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task SaveThumbAsync(string thumbFilePath, string thumbFileName, string mimeType, byte[] binary)
     {
-        var dataContent = new MultipartFormDataContent();
-        dataContent.Add(new StreamContent(new MemoryStream(binary)), "file", thumbFileName);
+        var dataContent = new MultipartFormDataContent
+        {
+            { new StreamContent(new MemoryStream(binary)), "file", thumbFileName }
+        };
 
         var response = await _cloudflareImagesHttpClient.SaveThumbAsync(dataContent);
 
@@ -89,7 +91,7 @@ public partial class CloudflareThumbService : IThumbService
         {
             ImageId = response.Result.Id,
             ThumbFileName = thumbFileName
-        });
+        }, false);
     }
 
     /// <summary>
@@ -103,11 +105,12 @@ public partial class CloudflareThumbService : IThumbService
     public async Task<string> GetThumbLocalPathByFileNameAsync(string thumbFileName)
     {
         var image = await _cloudflareImagesRepository.Table.FirstOrDefaultAsync(i => i.ThumbFileName.Equals(thumbFileName));
-        
-        if (image == null) 
+
+        if (image == null)
             return null;
 
-        return _cloudflareImagesConfig.DeliveryUrl.Replace(CloudflareImagesDefaults.ImageIdPattern, image.ImageId)
+        return _cloudflareImagesConfig.DeliveryUrl
+            .Replace(CloudflareImagesDefaults.ImageIdPattern, image.ImageId)
             .Replace(CloudflareImagesDefaults.VariantNamePattern, "public");
     }
 
@@ -132,13 +135,14 @@ public partial class CloudflareThumbService : IThumbService
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task DeletePictureThumbsAsync(Picture picture)
     {
-        var items = await _cloudflareImagesRepository.Table.Where(i => i.ThumbFileName.Contains($"_{picture.SeoFilename}.") || i.ThumbFileName.Contains($"_{picture.SeoFilename}_"))
+        var items = await _cloudflareImagesRepository.Table
+            .Where(i => i.ThumbFileName.Contains($"_{picture.SeoFilename}.") || i.ThumbFileName.Contains($"_{picture.SeoFilename}_"))
             .ToListAsync();
 
         foreach (var item in items)
             await _cloudflareImagesHttpClient.DeleteThumbAsync(item.ImageId);
 
-        await _cloudflareImagesRepository.DeleteAsync(items);
+        await _cloudflareImagesRepository.DeleteAsync(items, false);
     }
 
     #endregion

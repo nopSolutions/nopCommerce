@@ -7,7 +7,7 @@ using Nop.Core.Configuration;
 namespace Nop.Plugin.Misc.CloudflareImages.Services;
 
 /// <summary>
-/// Represents the HTTP client to request Cloudflare images
+/// Represents the HTTP client to request Cloudflare Images
 /// </summary>
 public class CloudflareImagesHttpClient
 {
@@ -40,8 +40,7 @@ public class CloudflareImagesHttpClient
     /// <returns>The asynchronous task whose result contains response details</returns>
     private async Task<string> RequestAsync(string apiUri = "", HttpContent data = null, HttpMethod httpMethod = null)
     {
-        if (httpMethod == null)
-            httpMethod = HttpMethod.Get;
+        httpMethod ??= HttpMethod.Get;
 
         var requestUri = new Uri(string.Format(CloudflareImagesDefaults.BaseApiUrl, _config.AccountId, apiUri));
 
@@ -72,6 +71,14 @@ public class CloudflareImagesHttpClient
 
     #region Methods
 
+    /// <summary>
+    /// Save a picture thumb
+    /// </summary>
+    /// <param name="dataContent">Content</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the response details
+    /// </returns>
     public async Task<CloudflareImagesResponse> SaveThumbAsync(MultipartFormDataContent dataContent)
     {
         try
@@ -85,6 +92,11 @@ public class CloudflareImagesHttpClient
         }
     }
 
+    /// <summary>
+    /// Delete picture thumb
+    /// </summary>
+    /// <param name="imageId">Image identifier</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
     public async Task DeleteThumbAsync(string imageId)
     {
         try

@@ -8,8 +8,9 @@ using Nop.Services.Plugins;
 using Nop.Web.Framework.Infrastructure;
 
 namespace Nop.Plugin.Misc.AzureBlob;
+
 /// <summary>
-/// Rename this file and change to the correct type
+/// Represents Azure Blob Storage plugin
 /// </summary>
 public class AzureBlobPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
 {
@@ -45,14 +46,14 @@ public class AzureBlobPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
         await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
         {
             ["Nop.Plugin.Misc.AzureBlob.Enabled"] = "Enabled",
-            ["Nop.Plugin.Misc.AzureBlob.Enabled.Hint"] = "Enable this setting to use Azure Blob storage",
-            ["Nop.Plugin.Misc.AzureBlob.AppSettings"] = "Azure Blob storage configuration",
+            ["Nop.Plugin.Misc.AzureBlob.Enabled.Hint"] = "Enable this setting to use Azure Blob Storage",
+            ["Nop.Plugin.Misc.AzureBlob.AppSettings"] = "Azure Blob Storage configuration",
             ["Nop.Plugin.Misc.AzureBlob.ConnectionString"] = "Connection string",
-            ["Nop.Plugin.Misc.AzureBlob.ConnectionString.Hint"] = "Specify the connection string for Azure Blob storage.",
+            ["Nop.Plugin.Misc.AzureBlob.ConnectionString.Hint"] = "Specify the connection string for Azure Blob Storage.",
             ["Nop.Plugin.Misc.AzureBlob.ContainerName"] = "Container name",
-            ["Nop.Plugin.Misc.AzureBlob.ContainerName.Hint"] = "Specify the container name for Azure Blob storage.",
+            ["Nop.Plugin.Misc.AzureBlob.ContainerName.Hint"] = "Specify the container name for Azure Blob Storage.",
             ["Nop.Plugin.Misc.AzureBlob.EndPoint"] = "Endpoint",
-            ["Nop.Plugin.Misc.AzureBlob.EndPoint.Hint"] = "Specify the endpoint for Azure Blob storage.",
+            ["Nop.Plugin.Misc.AzureBlob.EndPoint.Hint"] = "Specify the endpoint for Azure Blob Storage.",
             ["Nop.Plugin.Misc.AzureBlob.AppendContainerName"] = "Append container name",
             ["Nop.Plugin.Misc.AzureBlob.AppendContainerName.Hint"] = "Enable this setting to append the endpoint with the container name when constructing the URL.",
             ["Nop.Plugin.Misc.AzureBlob.StoreDataProtectionKeys"] = "Store Data Protection keys",
@@ -118,7 +119,7 @@ public class AzureBlobPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
     /// <summary>
     /// Gets a value indicating whether to hide this plugin on the widget list page in the admin area
     /// </summary>
-    public bool HideInWidgetList => false;
+    public bool HideInWidgetList => true;
 
     #endregion
 }

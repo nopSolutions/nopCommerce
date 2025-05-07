@@ -1,7 +1,5 @@
-@using Nop.Plugin.Misc.AzureBlob.Models
 @model ConfigurationModel
-@inject IGenericAttributeService genericAttributeService
-@inject IWorkContext workContext
+
 @{
     var customer = await workContext.GetCurrentCustomerAsync();
 
@@ -9,7 +7,7 @@
     var hideAzureBlobBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideAzureBlobBlockAttributeName);
 }
 
-<nop-card asp-name="misc.azure-blob-config" asp-icon="fas fa-gears" asp-title="@T("Nop.Plugin.Misc.AzureBlob.AppSettings")" asp-hide-block-attribute-name="@hideAzureBlobBlockAttributeName" asp-hide="@hideAzureBlobBlock" asp-advanced="false">
+<nop-card asp-name="azure-blob-config" asp-icon="fas fa-gears" asp-title="@T("Nop.Plugin.Misc.AzureBlob.AppSettings")" asp-hide-block-attribute-name="@hideAzureBlobBlockAttributeName" asp-hide="@hideAzureBlobBlock" asp-advanced="false">
     <div class="card-body">
         <div class="form-group row">
             <div class="col-md-3">
@@ -21,71 +19,71 @@
             </div>
         </div>
         <nop-nested-setting asp-for="AzureBlobConfiguration.Enabled">
-        <div class="form-group row">
-            <div class="col-md-3">
-                <nop-label asp-for="AzureBlobConfiguration.ConnectionString"/>
-            </div>
-            <div class="col-md-9">
-                <nop-editor asp-for="AzureBlobConfiguration.ConnectionString"/>
-                <span asp-validation-for="AzureBlobConfiguration.ConnectionString"></span>
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-md-3">
-                <nop-label asp-for="AzureBlobConfiguration.ContainerName"/>
-            </div>
-            <div class="col-md-9">
-                <nop-editor asp-for="AzureBlobConfiguration.ContainerName"/>
-                <span asp-validation-for="AzureBlobConfiguration.ContainerName"></span>
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-md-3">
-                <nop-label asp-for="AzureBlobConfiguration.EndPoint"/>
-            </div>
-            <div class="col-md-9">
-                <nop-editor asp-for="AzureBlobConfiguration.EndPoint"/>
-                <span asp-validation-for="AzureBlobConfiguration.EndPoint"></span>
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-md-3">
-                <nop-label asp-for="AzureBlobConfiguration.AppendContainerName"/>
-            </div>
-            <div class="col-md-9">
-                <nop-editor asp-for="AzureBlobConfiguration.AppendContainerName"/>
-                <span asp-validation-for="AzureBlobConfiguration.AppendContainerName"></span>
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-md-3">
-                <nop-label asp-for="AzureBlobConfiguration.StoreDataProtectionKeys"/>
-            </div>
-            <div class="col-md-9">
-                <nop-editor asp-for="AzureBlobConfiguration.StoreDataProtectionKeys"/>
-                <span asp-validation-for="AzureBlobConfiguration.StoreDataProtectionKeys"></span>
-            </div>
-        </div>
-        <nop-nested-setting asp-for="AzureBlobConfiguration.StoreDataProtectionKeys">
             <div class="form-group row">
                 <div class="col-md-3">
-                    <nop-label asp-for="AzureBlobConfiguration.DataProtectionKeysContainerName"/>
+                    <nop-label asp-for="AzureBlobConfiguration.ConnectionString"/>
                 </div>
                 <div class="col-md-9">
-                    <nop-editor asp-for="AzureBlobConfiguration.DataProtectionKeysContainerName"/>
-                    <span asp-validation-for="AzureBlobConfiguration.DataProtectionKeysContainerName"></span>
+                    <nop-editor asp-for="AzureBlobConfiguration.ConnectionString"/>
+                    <span asp-validation-for="AzureBlobConfiguration.ConnectionString"></span>
                 </div>
             </div>
             <div class="form-group row">
                 <div class="col-md-3">
-                    <nop-label asp-for="AzureBlobConfiguration.DataProtectionKeysVaultId"/>
+                    <nop-label asp-for="AzureBlobConfiguration.ContainerName"/>
                 </div>
                 <div class="col-md-9">
-                    <nop-editor asp-for="AzureBlobConfiguration.DataProtectionKeysVaultId"/>
-                    <span asp-validation-for="AzureBlobConfiguration.DataProtectionKeysVaultId"></span>
+                    <nop-editor asp-for="AzureBlobConfiguration.ContainerName"/>
+                    <span asp-validation-for="AzureBlobConfiguration.ContainerName"></span>
                 </div>
             </div>
-        </nop-nested-setting>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="AzureBlobConfiguration.EndPoint"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="AzureBlobConfiguration.EndPoint"/>
+                    <span asp-validation-for="AzureBlobConfiguration.EndPoint"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="AzureBlobConfiguration.AppendContainerName"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="AzureBlobConfiguration.AppendContainerName"/>
+                    <span asp-validation-for="AzureBlobConfiguration.AppendContainerName"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="AzureBlobConfiguration.StoreDataProtectionKeys"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="AzureBlobConfiguration.StoreDataProtectionKeys"/>
+                    <span asp-validation-for="AzureBlobConfiguration.StoreDataProtectionKeys"></span>
+                </div>
+            </div>
+            <nop-nested-setting asp-for="AzureBlobConfiguration.StoreDataProtectionKeys">
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="AzureBlobConfiguration.DataProtectionKeysContainerName"/>
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="AzureBlobConfiguration.DataProtectionKeysContainerName"/>
+                        <span asp-validation-for="AzureBlobConfiguration.DataProtectionKeysContainerName"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="AzureBlobConfiguration.DataProtectionKeysVaultId"/>
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="AzureBlobConfiguration.DataProtectionKeysVaultId"/>
+                        <span asp-validation-for="AzureBlobConfiguration.DataProtectionKeysVaultId"></span>
+                    </div>
+                </div>
+            </nop-nested-setting>
         </nop-nested-setting>
     </div>
 </nop-card>

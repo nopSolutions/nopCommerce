@@ -11,6 +11,10 @@ using Nop.Plugin.Misc.AzureBlob.Services;
 using Nop.Services.Media;
 
 namespace Nop.Plugin.Misc.AzureBlob.Infrastructure;
+
+/// <summary>
+/// Represents the object for the configuring services on application startup
+/// </summary>
 public class PluginNopStartup : INopStartup
 {
     /// <summary>
