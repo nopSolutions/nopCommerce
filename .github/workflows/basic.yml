@@ -7,13 +7,21 @@ on:
 jobs:
    build:
       name: build
-      runs-on: 'dotnet9'
+      runs-on: 'ubuntu-20.4'
       steps:
         - uses: actions/checkout@v4
-        # - uses: actions/setup-dotnet@v4
-        #   with:
-        #    dotnet-version: "9.0.100"
+        - uses: actions/setup-dotnet@v4   
+          with:                                        
+           dotnet-version: "9.0.100"
         - name: restore
           run: dotnet restore  src/Presentation/Nop.Web/Nop.Web.csproj
         - name: build
           run: dotnet build  src/Presentation/Nop.Web/Nop.Web.csproj --configuration Debug
+        - name: Build and analyze
+          env:
+            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          shell: powershell
+          run: |
+            .\.sonar\scanner\dotnet-sonarscanner begin /k:"mohitingole_nopCommerce" /o:"mohitingole" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+            dotnet build
+            .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"  
