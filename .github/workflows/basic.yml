@@ -25,3 +25,5 @@ jobs:
              dotnet sonarscanner begin /k:"mohitingole_nopCommerce" /o:"mohitingole" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
              dotnet build src/Presentation/Nop.Web/Nop.Web.csproj
              dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+
+             
