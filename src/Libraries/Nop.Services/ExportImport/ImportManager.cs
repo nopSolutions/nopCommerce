@@ -845,13 +845,13 @@ public partial class ImportManager : IImportManager
             var productPictureIds = (await _pictureService.GetPicturesByProductIdAsync(product.Id))
                 .Select(p => p.Id).ToList();
 
-            //delete manufacturers
-            foreach (var existingValuePicture in existingValuePictures)
-                if (pictureIds.Contains(existingValuePicture.PictureId) ||
-                    !productPictureIds.Contains(existingValuePicture.PictureId))
-                    await _productAttributeService.DeleteProductAttributeValuePictureAsync(existingValuePicture);
+            //delete attribute value pictures
+            var picturesToDelete = existingValuePictures
+                .Where(p => pictureIds.Contains(p.PictureId) || !productPictureIds.Contains(p.PictureId))
+                .ToList();
+            await _productAttributeService.DeleteProductAttributeValuePicturesAsync(picturesToDelete);
 
-            //add manufacturers
+            //add attribute value pictures
             foreach (var pictureId in pictureIds)
             {
                 if (!productPictureIds.Contains(pictureId))
@@ -2575,8 +2575,7 @@ public partial class ImportManager : IImportManager
                 var deletedProductCategories = await categories.Where(categoryId => !importedCategories.Contains(categoryId))
                     .SelectAwait(async categoryId => (await _categoryService.GetProductCategoriesByProductIdAsync(product.Id, true)).FirstOrDefault(pc => pc.CategoryId == categoryId)).Where(pc => pc != null).ToListAsync();
 
-                foreach (var deletedProductCategory in deletedProductCategories)
-                    await _categoryService.DeleteProductCategoryAsync(deletedProductCategory);
+                await _categoryService.DeleteProductCategoriesAsync(deletedProductCategories);
             }
 
             tempProperty = metadata.Manager.GetDefaultProperty("Manufacturers");
@@ -2624,8 +2623,9 @@ public partial class ImportManager : IImportManager
                 //delete product manufacturers
                 var deletedProductsManufacturers = await manufacturers.Where(manufacturerId => !importedManufacturers.Contains(manufacturerId))
                     .SelectAwait(async manufacturerId => (await _manufacturerService.GetProductManufacturersByProductIdAsync(product.Id)).FirstOrDefault(pc => pc.ManufacturerId == manufacturerId)).ToListAsync();
-                foreach (var deletedProductManufacturer in deletedProductsManufacturers.Where(m => m != null))
-                    await _manufacturerService.DeleteProductManufacturerAsync(deletedProductManufacturer);
+                
+                deletedProductsManufacturers = deletedProductsManufacturers.Where(m => m != null).ToList();
+                await _manufacturerService.DeleteProductManufacturersAsync(deletedProductsManufacturers);
             }
 
             tempProperty = metadata.Manager.GetDefaultProperty("ProductTags");
