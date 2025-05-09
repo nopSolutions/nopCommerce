@@ -56,8 +56,16 @@ namespace AbcWarehouse.Plugin.Widgets.PercentOffAppliancesMessageViewComponent.C
             if (product == null)
             {
                 await _logger.WarningAsync($"Percent Off Appliances Message Widget: Unable to find product with ID '{productId}', was the product ID passed in?");
+                return Content("");
             }
 
+            // Don't display for call for pricing products
+            if (product.CallForPrice)
+            {
+                return Content("");
+            }
+
+            // exclude specific brands
             var exceptionBrands = new string[] {
                 "LG",
                 "LG SIGNATURE",
@@ -68,8 +76,6 @@ namespace AbcWarehouse.Plugin.Widgets.PercentOffAppliancesMessageViewComponent.C
                 "GE MONOGRAM",
                 "GE PROFILE",
             };
-
-            // exclude LG and GE
             var pms = await _manufacturerService.GetProductManufacturersByProductIdAsync(productId);
             foreach (var pm in pms)
             {
