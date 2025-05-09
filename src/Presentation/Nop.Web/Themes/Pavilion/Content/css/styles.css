@@ -1673,7 +1673,7 @@ input#sli_search_1 {
 .item-box .picture img {
 	position: absolute;
 	top: 0;
-	right: 0;
+	right: 0px;
 	bottom: 0;
 	left: 0;
 	max-width: 100%;

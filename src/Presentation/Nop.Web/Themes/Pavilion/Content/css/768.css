@@ -221,7 +221,7 @@
 	clear: none; /*revert the second item*/
 	margin-left: 2%; /*revert the second item*/
 }
-.item-box:nth-child(3n+1) {
+.item-box:nth-child(4n+1) {
 	clear: both;
 	margin-left: 0;
 }

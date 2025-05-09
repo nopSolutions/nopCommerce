@@ -160,10 +160,10 @@ span.price.you-save {
 
 @media (min-width: 769px) {
 	.item-box {
-		width: 32%;
+		width: 23.5%;
 	}
 	
-	.item-box:nth-child(3n+1) {
+	.item-box:nth-child(4n+1) {
 		margin-left: 0;
 	}
 
