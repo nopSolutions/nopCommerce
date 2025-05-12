@@ -11,13 +11,14 @@ namespace Nop.Web.Areas.Admin.Factories;
 /// <summary>
 /// Represents the newsletter subscription types model factory implementation
 /// </summary>
-public partial class NewsLetterSubscriptionTypeModelFactory : INewsletterSubscriptionTypeModelFactory
+public partial class NewsLetterSubscriptionTypeModelFactory : INewsLetterSubscriptionTypeModelFactory
 {
     #region Fields
 
     protected readonly ILocalizationService _localizationService;
     protected readonly ILocalizedModelFactory _localizedModelFactory;
     protected readonly INewsLetterSubscriptionTypeService _newsLetterSubscriptionTypeService;
+    protected readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
 
     #endregion
 
@@ -25,11 +26,13 @@ public partial class NewsLetterSubscriptionTypeModelFactory : INewsletterSubscri
 
     public NewsLetterSubscriptionTypeModelFactory(ILocalizationService localizationService,
         ILocalizedModelFactory localizedModelFactory,
-        INewsLetterSubscriptionTypeService newsLetterSubscriptionTypeService)
+        INewsLetterSubscriptionTypeService newsLetterSubscriptionTypeService,
+        IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory)
     {
         _localizationService = localizationService;
         _localizedModelFactory = localizedModelFactory;
         _newsLetterSubscriptionTypeService = newsLetterSubscriptionTypeService;
+        _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
     }
 
     #endregion
@@ -44,7 +47,7 @@ public partial class NewsLetterSubscriptionTypeModelFactory : INewsletterSubscri
     /// A task that represents the asynchronous operation
     /// The task result contains the newsletter subscription type search model
     /// </returns>
-    public virtual Task<NewsLetterSubscriptionTypeSearchModel> PrepareNewsletterSubscriptionTypeSearchModelAsync(NewsLetterSubscriptionTypeSearchModel searchModel)
+    public virtual Task<NewsLetterSubscriptionTypeSearchModel> PrepareNewsLetterSubscriptionTypeSearchModelAsync(NewsLetterSubscriptionTypeSearchModel searchModel)
     {
         ArgumentNullException.ThrowIfNull(searchModel);
 
@@ -62,7 +65,7 @@ public partial class NewsLetterSubscriptionTypeModelFactory : INewsletterSubscri
     /// A task that represents the asynchronous operation
     /// The task result contains the newsletter subscription type list model
     /// </returns>
-    public virtual async Task<NewsLetterSubscriptionTypeListModel> PrepareNewsletterSubscriptionTypeListModelAsync(NewsLetterSubscriptionTypeSearchModel searchModel)
+    public virtual async Task<NewsLetterSubscriptionTypeListModel> PrepareNewsLetterSubscriptionTypeListModelAsync(NewsLetterSubscriptionTypeSearchModel searchModel)
     {
         ArgumentNullException.ThrowIfNull(searchModel);
 
@@ -89,7 +92,7 @@ public partial class NewsLetterSubscriptionTypeModelFactory : INewsletterSubscri
     /// A task that represents the asynchronous operation
     /// The task result contains the newsletter subscription type model
     /// </returns>
-    public virtual async Task<NewsLetterSubscriptionTypeModel> PrepareNewsletterSubscriptionTypeModelAsync(NewsLetterSubscriptionTypeModel model,
+    public virtual async Task<NewsLetterSubscriptionTypeModel> PrepareNewsLetterSubscriptionTypeModelAsync(NewsLetterSubscriptionTypeModel model,
         NewsLetterSubscriptionType subscriptionType, bool excludeProperties = false)
     {
         Func<NewsLetterSubscriptionTypeLocalizedModel, int, Task> localizedModelConfiguration = null;
@@ -109,6 +112,9 @@ public partial class NewsLetterSubscriptionTypeModelFactory : INewsletterSubscri
         //prepare localized models
         if (!excludeProperties)
             model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
+
+        //prepare available stores
+        await _storeMappingSupportedModelFactory.PrepareModelStoresAsync(model, subscriptionType, excludeProperties);
 
         return model;
     }

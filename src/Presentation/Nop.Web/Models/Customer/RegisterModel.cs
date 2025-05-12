@@ -150,16 +150,4 @@ public partial record RegisterModel : BaseNopModel
     public IList<CustomerAttributeModel> CustomerAttributes { get; set; }
 
     public IList<GdprConsentModel> GdprConsents { get; set; }
-
-    #region Nested classes
-
-    public partial record NewsLetterSubscriptionModel : BaseNopEntityModel
-    {
-        public int TypeId { get; set; }
-        public string Name { get; set; }
-        public bool IsActive { get; set; }
-
-    }
-
-    #endregion
 }

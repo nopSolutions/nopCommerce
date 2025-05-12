@@ -34,6 +34,7 @@ public class BrevoController : BasePluginController
     protected readonly ILogger _logger;
     protected readonly IMessageTemplateService _messageTemplateService;
     protected readonly IMessageTokenProvider _messageTokenProvider;
+    protected readonly INewsLetterSubscriptionTypeService _newsLetterSubscriptionTypeService;
     protected readonly INotificationService _notificationService;
     protected readonly ISettingService _settingService;
     protected readonly IStaticCacheManager _staticCacheManager;
@@ -54,6 +55,7 @@ public class BrevoController : BasePluginController
         ILogger logger,
         IMessageTemplateService messageTemplateService,
         IMessageTokenProvider messageTokenProvider,
+        INewsLetterSubscriptionTypeService newsLetterSubscriptionTypeService,
         INotificationService notificationService,
         ISettingService settingService,
         IStaticCacheManager staticCacheManager,
@@ -70,6 +72,7 @@ public class BrevoController : BasePluginController
         _logger = logger;
         _messageTemplateService = messageTemplateService;
         _messageTokenProvider = messageTokenProvider;
+        _newsLetterSubscriptionTypeService = newsLetterSubscriptionTypeService;
         _notificationService = notificationService;
         _settingService = settingService;
         _staticCacheManager = staticCacheManager;
@@ -102,14 +105,13 @@ public class BrevoController : BasePluginController
         //prepare common properties
         model.ActiveStoreScopeConfiguration = storeId;
         model.ApiKey = brevoSettings.ApiKey;
-        model.ListId = brevoSettings.ListId;
         model.SmtpKey = brevoSettings.SmtpKey;
         model.SenderId = brevoSettings.SenderId;
         model.UseSmsNotifications = brevoSettings.UseSmsNotifications;
         model.SmsSenderName = brevoSettings.SmsSenderName;
         model.StoreOwnerPhoneNumber = brevoSettings.StoreOwnerPhoneNumber;
         model.UseMarketingAutomation = brevoSettings.UseMarketingAutomation;
-        model.TrackingScript = brevoSettings.TrackingScript;
+        model.TrackingScript = brevoSettings.TrackingScript;        
 
         var customer = await _workContext.GetCurrentCustomerAsync();
         model.HideGeneralBlock = await _genericAttributeService.GetAttributeAsync<bool>(customer, BrevoDefaults.HideGeneralBlock);
@@ -160,7 +162,6 @@ public class BrevoController : BasePluginController
         //prepare overridable settings
         if (storeId > 0)
         {
-            model.ListId_OverrideForStore = await _settingService.SettingExistsAsync(brevoSettings, settings => settings.ListId, storeId);
             model.UseSmtp_OverrideForStore = await _settingService.SettingExistsAsync(brevoSettings, settings => settings.UseSmtp, storeId);
             model.SenderId_OverrideForStore = await _settingService.SettingExistsAsync(brevoSettings, settings => settings.SenderId, storeId);
             model.UseSmsNotifications_OverrideForStore = await _settingService.SettingExistsAsync(brevoSettings, settings => settings.UseSmsNotifications, storeId);
@@ -172,6 +173,17 @@ public class BrevoController : BasePluginController
         var (smtpEnabled, smtpErrors) = await _brevoEmailManager.SmtpIsEnabledAsync();
         if (!string.IsNullOrEmpty(smtpErrors))
             _notificationService.ErrorNotification($"{BrevoDefaults.NotificationMessage} {smtpErrors}");
+
+        var newsLetterSubscriptionTypes = await _newsLetterSubscriptionTypeService.GetAllNewsLetterSubscriptionTypesAsync(storeId);
+        model.NewsLetterSubscriptionTypes = await newsLetterSubscriptionTypes.Select(subscriptionType =>
+        {
+            return new NewsLetterSubscriptionMapModel
+            {
+                TypeId = subscriptionType.Id,
+                Name = subscriptionType.Name,
+                ListId = brevoSettings.SubscriptionTypeListBrevoList.TryGetValue(subscriptionType.Id, out var value) ? value : 0,
+            };
+        }).ToListAsync();
 
         //get available contact lists to synchronize
         var (lists, listsErrors) = await _brevoEmailManager.GetListsAsync();
@@ -261,8 +273,8 @@ public class BrevoController : BasePluginController
         await _settingService.SaveSettingAsync(brevoSettings, settings => settings.UnsubscribeWebhookId, clearCache: false);
 
         //set list of contacts to synchronize
-        brevoSettings.ListId = model.ListId;
-        await _settingService.SaveSettingOverridablePerStoreAsync(brevoSettings, settings => settings.ListId, model.ListId_OverrideForStore, storeId, false);
+        brevoSettings.SubscriptionTypeListBrevoList = model.NewsLetterSubscriptionTypes.ToDictionary(subscriptionType => subscriptionType.TypeId, subscriptionType => subscriptionType.ListId);
+        await _settingService.SaveSettingAsync(brevoSettings, settings => settings.SubscriptionTypeListBrevoList, clearCache: false);
 
         //now clear settings cache
         await _settingService.ClearCacheAsync();

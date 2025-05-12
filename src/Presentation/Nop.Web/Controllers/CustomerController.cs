@@ -896,18 +896,24 @@ public partial class CustomerController : BasePublicController
 
                 //save newsletter value
                 var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customerEmail, store.Id);
+                var currentLanguage = await _workContext.GetWorkingLanguageAsync();
                 if (newsletter != null)
                 {
                     foreach(var newsLetterSubscription in model.NewsLetterSubscriptions)
                     {
-                        var subscriptionList = (await _newsLetterSubscriptionTypeService.GeNewsLetterSubscriptionTypeMappingsAsync(newsLetterSubscription.TypeId, newsletter.Id)).FirstOrDefault();
+                        var subscriber = (await _newsLetterSubscriptionService.GetAllNewsLetterSubscriptionsAsync(email: newsletter.Email, subscriptionTypeId: newsLetterSubscription.TypeId)).FirstOrDefault();
 
-                        if (subscriptionList == null && newsLetterSubscription.IsActive)
+                        if (subscriber == null && newsLetterSubscription.IsActive)
                         {
-                            await _newsLetterSubscriptionTypeService.InsertNewsLetterSubscriptionTypeMappingsAsync(new NewsLetterSubscriptionTypeMapping
+                            await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new NewsLetterSubscription
                             {
-                                NewsLetterSubscriptionId = newsletter.Id,
-                                NewsLetterSubscriptionTypeId = newsLetterSubscription.TypeId
+                                NewsLetterSubscriptionGuid = newsletter.NewsLetterSubscriptionGuid,
+                                Email = customer.Email,
+                                Active = newsLetterSubscription.IsActive,
+                                TypeId = newsLetterSubscription.TypeId,
+                                StoreId = store.Id,
+                                LanguageId = customer.LanguageId ?? currentLanguage.Id,
+                                CreatedOnUtc = DateTime.UtcNow
                             });
                             isNewsletter = true;
                         }
@@ -935,27 +941,19 @@ public partial class CustomerController : BasePublicController
                     var activeSubscriptions = model.NewsLetterSubscriptions.Where(x => x.IsActive);
                     if (activeSubscriptions.Any())
                     {
-                        await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new NewsLetterSubscription
+                        var newsLetterSubscriptionGuid = Guid.NewGuid();
+                        foreach (var activeSubscription in activeSubscriptions)
                         {
-                            NewsLetterSubscriptionGuid = Guid.NewGuid(),
-                            Email = customerEmail,
-                            Active = isNewsletterActive,
-                            StoreId = store.Id,
-                            LanguageId = customer.LanguageId ?? store.DefaultLanguageId,
-                            CreatedOnUtc = DateTime.UtcNow
-                        });
-
-                        var addedNewsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id);
-                        if (addedNewsletter != null)
-                        {
-                            foreach (var activeSubscription in activeSubscriptions)
+                            await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new NewsLetterSubscription
                             {
-                                await _newsLetterSubscriptionTypeService.InsertNewsLetterSubscriptionTypeMappingsAsync(new NewsLetterSubscriptionTypeMapping
-                                {
-                                    NewsLetterSubscriptionId = addedNewsletter.Id,
-                                    NewsLetterSubscriptionTypeId = activeSubscription.TypeId
-                                });
-                            }
+                                NewsLetterSubscriptionGuid = newsLetterSubscriptionGuid,
+                                Email = customer.Email,
+                                Active = activeSubscription.IsActive,
+                                TypeId = activeSubscription.TypeId,
+                                StoreId = store.Id,
+                                LanguageId = customer.LanguageId ?? currentLanguage.Id,
+                                CreatedOnUtc = DateTime.UtcNow
+                            });
                         }
 
                         //GDPR
@@ -1045,8 +1043,7 @@ public partial class CustomerController : BasePublicController
                         _localizationSettings.DefaultAdminLanguageId);
 
                 //raise event       
-                await _eventPublisher.PublishAsync(new CustomerRegisteredEvent(customer));
-                var currentLanguage = await _workContext.GetWorkingLanguageAsync();
+                await _eventPublisher.PublishAsync(new CustomerRegisteredEvent(customer));                
 
                 switch (_customerSettings.UserRegistrationType)
                 {
@@ -1322,24 +1319,31 @@ public partial class CustomerController : BasePublicController
                 //save newsletter value
                 var store = await _storeContext.GetCurrentStoreAsync();
                 var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id);
+                var currentLanguage = await _workContext.GetWorkingLanguageAsync();
 
                 if (newsletter != null)
                 {
                     foreach (var newsLetterSubscription in model.NewsLetterSubscriptions)
                     {
-                        var subscriptionList = (await _newsLetterSubscriptionTypeService.GeNewsLetterSubscriptionTypeMappingsAsync(newsLetterSubscription.TypeId, newsletter.Id)).FirstOrDefault();
+                        var subscriber = (await _newsLetterSubscriptionService.GetAllNewsLetterSubscriptionsAsync(email: newsletter.Email, subscriptionTypeId: newsLetterSubscription.TypeId)).FirstOrDefault();
 
-                        if (subscriptionList != null && !newsLetterSubscription.IsActive)
+                        if (subscriber != null)
                         {
-                            await _newsLetterSubscriptionTypeService.DeleteNewsLetterSubscriptionTypeMappingsAsync(subscriptionList);
+                            subscriber.Active = newsLetterSubscription.IsActive;
+                            await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(subscriber);
                         }
-                            
-                        if (subscriptionList == null && newsLetterSubscription.IsActive)
+
+                        if (subscriber == null && newsLetterSubscription.IsActive)
                         {
-                            await _newsLetterSubscriptionTypeService.InsertNewsLetterSubscriptionTypeMappingsAsync(new NewsLetterSubscriptionTypeMapping
+                            await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new NewsLetterSubscription
                             {
-                                NewsLetterSubscriptionId = newsletter.Id,
-                                NewsLetterSubscriptionTypeId = newsLetterSubscription.TypeId
+                                NewsLetterSubscriptionGuid = newsletter.NewsLetterSubscriptionGuid,
+                                Email = customer.Email,
+                                Active = newsLetterSubscription.IsActive,
+                                TypeId = newsLetterSubscription.TypeId,
+                                StoreId = store.Id,
+                                LanguageId = customer.LanguageId ?? currentLanguage.Id,
+                                CreatedOnUtc = DateTime.UtcNow
                             });
                         }
                     }
@@ -1347,30 +1351,20 @@ public partial class CustomerController : BasePublicController
                 else
                 {
                     var activeSubscriptions = model.NewsLetterSubscriptions.Where(x => x.IsActive);
-                    if (activeSubscriptions.Any())
+                    var newsLetterSubscriptionGuid = Guid.NewGuid();
+
+                    foreach (var activeSubscription in activeSubscriptions)
                     {
                         await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new NewsLetterSubscription
                         {
-                            NewsLetterSubscriptionGuid = Guid.NewGuid(),
+                            NewsLetterSubscriptionGuid = newsLetterSubscriptionGuid,
                             Email = customer.Email,
                             Active = true,
                             StoreId = store.Id,
-                            LanguageId = customer.LanguageId ?? store.DefaultLanguageId,
+                            TypeId = activeSubscription.TypeId,
+                            LanguageId = customer.LanguageId ?? currentLanguage.Id,
                             CreatedOnUtc = DateTime.UtcNow
                         });
-
-                        var addedNewsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id);
-                        if (addedNewsletter != null)
-                        {
-                            foreach (var activeSubscription in activeSubscriptions)
-                            {
-                                await _newsLetterSubscriptionTypeService.InsertNewsLetterSubscriptionTypeMappingsAsync(new NewsLetterSubscriptionTypeMapping
-                                {
-                                    NewsLetterSubscriptionId = addedNewsletter.Id,
-                                    NewsLetterSubscriptionTypeId = activeSubscription.TypeId
-                                });
-                            }
-                        }
                     }
                 }
 

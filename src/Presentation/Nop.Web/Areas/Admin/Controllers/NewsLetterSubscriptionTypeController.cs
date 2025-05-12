@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Security;
+using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Messages;
@@ -14,32 +16,66 @@ public partial class NewsLetterSubscriptionTypeController : BaseAdminController
 {
     #region Fields
 
+    protected readonly ICustomerActivityService _customerActivityService;
     protected readonly ILocalizationService _localizationService;
     protected readonly ILocalizedEntityService _localizedEntityService;
-    protected readonly INewsletterSubscriptionTypeModelFactory _newsletterSubscriptionTypeModelFactory;
+    protected readonly INewsLetterSubscriptionTypeModelFactory _newsletterSubscriptionTypeModelFactory;
     protected readonly INewsLetterSubscriptionTypeService _newsLetterSubscriptionTypeService;
     protected readonly INotificationService _notificationService;
+    protected readonly IStoreMappingService _storeMappingService;
+    protected readonly IStoreService _storeService;
 
     #endregion
 
     #region Ctor
 
-    public NewsLetterSubscriptionTypeController(ILocalizationService localizationService,
+    public NewsLetterSubscriptionTypeController(ICustomerActivityService customerActivityService,
+        ILocalizationService localizationService,
         ILocalizedEntityService localizedEntityService,
-        INewsletterSubscriptionTypeModelFactory newsletterSubscriptionTypeModelFactory,
+        INewsLetterSubscriptionTypeModelFactory newsletterSubscriptionTypeModelFactory,
         INewsLetterSubscriptionTypeService newsLetterSubscriptionTypeService,
-        INotificationService notificationService)
+        INotificationService notificationService,
+        IStoreMappingService storeMappingService,
+        IStoreService storeService)
     {
+        _customerActivityService = customerActivityService;
         _localizationService = localizationService;
         _localizedEntityService = localizedEntityService;
         _newsletterSubscriptionTypeModelFactory = newsletterSubscriptionTypeModelFactory;
         _newsLetterSubscriptionTypeService = newsLetterSubscriptionTypeService;
         _notificationService = notificationService;
+        _storeMappingService = storeMappingService;
+        _storeService = storeService;
     }
 
     #endregion
 
     #region Utilities
+
+    protected virtual async Task SaveStoreMappingsAsync(NewsLetterSubscriptionType subscriptionType, NewsLetterSubscriptionTypeModel model)
+    {
+        subscriptionType.LimitedToStores = model.SelectedStoreIds.Any();
+        await _newsLetterSubscriptionTypeService.UpdateNewsLetterSubscriptionTypeAsync(subscriptionType);
+
+        var existingStoreMappings = await _storeMappingService.GetStoreMappingsAsync(subscriptionType);
+        var allStores = await _storeService.GetAllStoresAsync();
+        foreach (var store in allStores)
+        {
+            if (model.SelectedStoreIds.Contains(store.Id))
+            {
+                //new store
+                if (!existingStoreMappings.Any(sm => sm.StoreId == store.Id))
+                    await _storeMappingService.InsertStoreMappingAsync(subscriptionType, store.Id);
+            }
+            else
+            {
+                //remove store
+                var storeMappingToDelete = existingStoreMappings.FirstOrDefault(sm => sm.StoreId == store.Id);
+                if (storeMappingToDelete != null)
+                    await _storeMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
+            }
+        }
+    }
 
     protected virtual async Task UpdateSubscriptionTypeLocalesAsync(NewsLetterSubscriptionType subscriptionType, NewsLetterSubscriptionTypeModel model)
     {
@@ -61,42 +97,49 @@ public partial class NewsLetterSubscriptionTypeController : BaseAdminController
         return RedirectToAction("List");
     }
 
-    [CheckPermission(StandardPermission.Promotions.SUBSCRIBERS_VIEW)]
+    [CheckPermission(StandardPermission.Promotions.SUBSCRIPTION_TYPE_VIEW)]
     public virtual async Task<IActionResult> List()
     {
         //prepare model
-        var model = await _newsletterSubscriptionTypeModelFactory.PrepareNewsletterSubscriptionTypeSearchModelAsync(new NewsLetterSubscriptionTypeSearchModel());
+        var model = await _newsletterSubscriptionTypeModelFactory.PrepareNewsLetterSubscriptionTypeSearchModelAsync(new NewsLetterSubscriptionTypeSearchModel());
 
         return View(model);
     }
 
     [HttpPost]
-    [CheckPermission(StandardPermission.Promotions.SUBSCRIBERS_VIEW)]
+    [CheckPermission(StandardPermission.Promotions.SUBSCRIPTION_TYPE_VIEW)]
     public virtual async Task<IActionResult> List(NewsLetterSubscriptionTypeSearchModel searchModel)
     {
         //prepare model
-        var model = await _newsletterSubscriptionTypeModelFactory.PrepareNewsletterSubscriptionTypeListModelAsync(searchModel);
+        var model = await _newsletterSubscriptionTypeModelFactory.PrepareNewsLetterSubscriptionTypeListModelAsync(searchModel);
 
         return Json(model);
     }
 
-    [CheckPermission(StandardPermission.Promotions.SUBSCRIBERS_CREATE_EDIT_DELETE)]
+    [CheckPermission(StandardPermission.Promotions.SUBSCRIPTION_TYPE_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Create()
     {
         //prepare model
-        var model = await _newsletterSubscriptionTypeModelFactory.PrepareNewsletterSubscriptionTypeModelAsync(new NewsLetterSubscriptionTypeModel(), null);
+        var model = await _newsletterSubscriptionTypeModelFactory.PrepareNewsLetterSubscriptionTypeModelAsync(new NewsLetterSubscriptionTypeModel(), null);
 
         return View(model);
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-    [CheckPermission(StandardPermission.Promotions.SUBSCRIBERS_CREATE_EDIT_DELETE)]
+    [CheckPermission(StandardPermission.Promotions.SUBSCRIPTION_TYPE_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Create(NewsLetterSubscriptionTypeModel model, bool continueEditing)
     {
         if (ModelState.IsValid)
         {
             var subscriptionType = model.ToEntity<NewsLetterSubscriptionType>();
             await _newsLetterSubscriptionTypeService.InsertNewsLetterSubscriptionTypeAsync(subscriptionType);
+
+            //activity log
+            await _customerActivityService.InsertActivityAsync("AddSubscriptionType",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddSubscriptionType"), subscriptionType.Id), subscriptionType);
+
+            //Stores
+            await SaveStoreMappingsAsync(subscriptionType, model);
 
             //locales                
             await UpdateSubscriptionTypeLocalesAsync(subscriptionType, model);
@@ -107,13 +150,13 @@ public partial class NewsLetterSubscriptionTypeController : BaseAdminController
         }
 
         //prepare model
-        model = await _newsletterSubscriptionTypeModelFactory.PrepareNewsletterSubscriptionTypeModelAsync(model, null, true);
+        model = await _newsletterSubscriptionTypeModelFactory.PrepareNewsLetterSubscriptionTypeModelAsync(model, null, true);
 
         //if we got this far, something failed, redisplay form
         return View(model);
     }
 
-    [CheckPermission(StandardPermission.Promotions.SUBSCRIBERS_CREATE_EDIT_DELETE)]
+    [CheckPermission(StandardPermission.Promotions.SUBSCRIPTION_TYPE_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Edit(int id)
     {
         //try to get an product subscription type with the specified id
@@ -122,13 +165,13 @@ public partial class NewsLetterSubscriptionTypeController : BaseAdminController
             return RedirectToAction("List");
 
         //prepare model
-        var model = await _newsletterSubscriptionTypeModelFactory.PrepareNewsletterSubscriptionTypeModelAsync(null, subscriptionType);
+        var model = await _newsletterSubscriptionTypeModelFactory.PrepareNewsLetterSubscriptionTypeModelAsync(null, subscriptionType);
 
         return View(model);
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-    [CheckPermission(StandardPermission.Promotions.SUBSCRIBERS_CREATE_EDIT_DELETE)]
+    [CheckPermission(StandardPermission.Promotions.SUBSCRIPTION_TYPE_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Edit(NewsLetterSubscriptionTypeModel model, bool continueEditing)
     {
         //try to get an product subscription type with the specified id
@@ -142,6 +185,14 @@ public partial class NewsLetterSubscriptionTypeController : BaseAdminController
             subscriptionType = model.ToEntity(subscriptionType);
             await _newsLetterSubscriptionTypeService.UpdateNewsLetterSubscriptionTypeAsync(subscriptionType);
 
+            //activity log
+            await _customerActivityService.InsertActivityAsync("EditSubscriptionType",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditSubscriptionType"), subscriptionType.Id),
+                subscriptionType);
+
+            //Stores
+            await SaveStoreMappingsAsync(subscriptionType, model);
+
             //locales                
             await UpdateSubscriptionTypeLocalesAsync(subscriptionType, model);
 
@@ -151,14 +202,14 @@ public partial class NewsLetterSubscriptionTypeController : BaseAdminController
         }
 
         //prepare model
-        model = await _newsletterSubscriptionTypeModelFactory.PrepareNewsletterSubscriptionTypeModelAsync(model, subscriptionType, true);
+        model = await _newsletterSubscriptionTypeModelFactory.PrepareNewsLetterSubscriptionTypeModelAsync(model, subscriptionType, true);
 
         //if we got this far, something failed, redisplay form
         return View(model);
     }
 
     [HttpPost]
-    [CheckPermission(StandardPermission.Promotions.SUBSCRIBERS_CREATE_EDIT_DELETE)]
+    [CheckPermission(StandardPermission.Promotions.SUBSCRIPTION_TYPE_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Delete(int id)
     {
         //try to get an product subscription type with the specified id
@@ -169,6 +220,11 @@ public partial class NewsLetterSubscriptionTypeController : BaseAdminController
         try
         {
             await _newsLetterSubscriptionTypeService.DeleteNewsLetterSubscriptionTypeAsync(subscriptionType);
+
+            //activity log
+            await _customerActivityService.InsertActivityAsync("DeleteSubscriptionType",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteSubscriptionType"), subscriptionType.Id),
+                subscriptionType);
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptionType.Deleted"));
 

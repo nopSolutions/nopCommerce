@@ -31,6 +31,11 @@ public partial class Campaign : BaseEntity
     public int CustomerRoleId { get; set; }
 
     /// <summary>
+    /// Gets or sets the newsletter subscription type identifier  which subscribers it will be sent to; set 0 for all newsletter subscribers
+    /// </summary>
+    public int NewsLetterSubscriptionTypeId { get; set; }
+
+    /// <summary>
     /// Gets or sets the date and time of instance creation
     /// </summary>
     public DateTime CreatedOnUtc { get; set; }

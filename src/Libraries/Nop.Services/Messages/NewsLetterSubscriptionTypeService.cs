@@ -1,6 +1,7 @@
 ﻿using Nop.Core.Domain.Messages;
 using Nop.Data;
 using Nop.Services.Catalog;
+using Nop.Services.Stores;
 
 namespace Nop.Services.Messages;
 
@@ -11,25 +12,26 @@ public partial class NewsLetterSubscriptionTypeService : INewsLetterSubscription
 {
     #region Fields
 
+    protected readonly IRepository<NewsLetterSubscription> _subscriptionRepository;
     protected readonly IRepository<NewsLetterSubscriptionType> _newsLetterSubscriptionTypeRepository;
-    protected readonly IRepository<NewsLetterSubscriptionTypeMapping> _newsLetterSubscriptionTypeMappingRepository;
+    protected readonly IStoreMappingService _storeMappingService;
 
     #endregion
 
     #region Ctor
 
-    public NewsLetterSubscriptionTypeService(IRepository<NewsLetterSubscriptionType> newsLetterSubscriptionTypeRepository,
-        IRepository<NewsLetterSubscriptionTypeMapping> newsLetterSubscriptionTypeMappingRepository)
+    public NewsLetterSubscriptionTypeService(IRepository<NewsLetterSubscription> subscriptionRepository,
+        IRepository<NewsLetterSubscriptionType> newsLetterSubscriptionTypeRepository,
+        IStoreMappingService storeMappingService)
     {
+        _subscriptionRepository = subscriptionRepository;
         _newsLetterSubscriptionTypeRepository = newsLetterSubscriptionTypeRepository;
-        _newsLetterSubscriptionTypeMappingRepository = newsLetterSubscriptionTypeMappingRepository;
+        _storeMappingService = storeMappingService;
     }
 
     #endregion
 
     #region Methods
-
-    #region NewsLetter subscription type
 
     /// <summary>
     /// Inserts a newsletter subscription type
@@ -87,107 +89,43 @@ public partial class NewsLetterSubscriptionTypeService : INewsLetterSubscription
     /// <summary>
     /// Gets the newsletter subscription type list
     /// </summary>
+    /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the newsLetterSubscriptionType entities
     /// </returns>
-    public virtual async Task<IList<NewsLetterSubscriptionType>> GetAllNewsLetterSubscriptionTypesAsync()
+    public virtual async Task<IList<NewsLetterSubscriptionType>> GetAllNewsLetterSubscriptionTypesAsync(int storeId = 0)
     {
-        return await _newsLetterSubscriptionTypeRepository.GetAllAsync(
-            query => query.OrderBy(subscriptionType => subscriptionType.DisplayOrder).ThenBy(subscriptionType => subscriptionType.Id));
+        return await _newsLetterSubscriptionTypeRepository.GetAllAsync(async query =>
+            {
+                if (storeId > 0)
+                    query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+
+                query.OrderBy(subscriptionType => subscriptionType.DisplayOrder).ThenBy(subscriptionType => subscriptionType.Id);
+                return query;
+            });
     }
 
     /// <summary>
-    /// Gets list of subscription types by newsletter subscription
+    /// Gets list of active subscription types by newsletter subscription
     /// </summary>
     /// <param name="newsletter">Newsletter subscription</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the list of subscription types
+    /// The task result contains the list of active subscription types
     /// </returns>
     public virtual async Task<List<NewsLetterSubscriptionType>> GetSubscriptionTypesByNewsLetterAsync(NewsLetterSubscription newsletter)
     {
         ArgumentNullException.ThrowIfNull(newsletter);
-
-        return await _newsLetterSubscriptionTypeMappingRepository.Table
-            .Join(_newsLetterSubscriptionTypeRepository.Table, x => x.NewsLetterSubscriptionTypeId, y => y.Id,
-                (x, y) => new { Mapping = x, Type = y })
-            .Where(z => z.Mapping.NewsLetterSubscriptionId == newsletter.Id)
+        
+        return await _subscriptionRepository.Table
+            .Join(_newsLetterSubscriptionTypeRepository.Table, x => x.TypeId, y => y.Id,
+                (x, y) => new { NLS = x, Type = y })
+            .Where(z => z.NLS.NewsLetterSubscriptionGuid == newsletter.NewsLetterSubscriptionGuid && z.NLS.Active)
             .Select(z => z.Type)
             .ToListAsync();
     }
 
     #endregion
 
-    #region NewsLetter subscription type mapping
-
-    /// <summary>
-    /// Get newsLetter subscription type mappings by subscription type identifier
-    /// </summary>
-    /// <param name="subscriptionTypeId">The newsLetter subscription type identifier</param>
-    /// <param name="subscriptionId">The newsLetter subscription identifier</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the newsLetter subscription type mappings collection
-    /// </returns>
-    public virtual async Task<IList<NewsLetterSubscriptionTypeMapping>> GeNewsLetterSubscriptionTypeMappingsAsync(int subscriptionTypeId, int subscriptionId = 0)
-    {
-        var query =
-            from nstm in _newsLetterSubscriptionTypeMappingRepository.Table
-            orderby nstm.Id
-            where nstm.NewsLetterSubscriptionTypeId == subscriptionTypeId
-            select nstm;
-
-        if (subscriptionId > 0)
-            query = query.Where(s => s.NewsLetterSubscriptionId == subscriptionId);
-
-        return await query.ToListAsync();
-    }
-
-    /// <summary>
-    /// Insert a newsLetter subscription type mapping
-    /// </summary>
-    /// <param name="newsLetterSubscriptionTypeMapping">NewsLetter subscription type mapping</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task InsertNewsLetterSubscriptionTypeMappingsAsync(NewsLetterSubscriptionTypeMapping newsLetterSubscriptionTypeMapping)
-    {
-        ArgumentNullException.ThrowIfNull(newsLetterSubscriptionTypeMapping);
-
-        await _newsLetterSubscriptionTypeMappingRepository.InsertAsync(newsLetterSubscriptionTypeMapping);
-    }
-
-    /// <summary>
-    /// Delete a newsLetter subscription type mapping
-    /// </summary>
-    /// <param name="newsLetterSubscriptionTypeMapping">NewsLetter subscription type mapping</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task DeleteNewsLetterSubscriptionTypeMappingsAsync(NewsLetterSubscriptionTypeMapping newsLetterSubscriptionTypeMapping)
-    {
-        ArgumentNullException.ThrowIfNull(newsLetterSubscriptionTypeMapping);
-
-        await _newsLetterSubscriptionTypeMappingRepository.DeleteAsync(newsLetterSubscriptionTypeMapping);
-    }
-
-    /// <summary>
-    /// Clear all newsLetter subscription type mappings
-    /// </summary>
-    /// <param name="subscription">Newsletter subscription</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task ClearNewsLetterSubscriptionTypeMappingsAsync(NewsLetterSubscription subscription)
-    {
-        var query =
-            from nstm in _newsLetterSubscriptionTypeMappingRepository.Table
-            orderby nstm.Id
-            where nstm.NewsLetterSubscriptionId == subscription.Id
-            select nstm;
-
-        foreach (var newsLetterSubscriptionTypeMapping in query)
-        {
-            await _newsLetterSubscriptionTypeMappingRepository.DeleteAsync(newsLetterSubscriptionTypeMapping);
-        }
-    }
-
-    #endregion
-
-    #endregion
 }

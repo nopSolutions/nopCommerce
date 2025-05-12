@@ -4,8 +4,6 @@ namespace Nop.Services.Messages;
 
 public partial interface INewsLetterSubscriptionTypeService
 {
-    #region NewsLetterSubscriptionType
-
     /// <summary>
     /// Inserts a newsletter subscription type
     /// </summary>
@@ -40,57 +38,20 @@ public partial interface INewsLetterSubscriptionTypeService
     /// <summary>
     /// Gets the newsletter subscription type list
     /// </summary>
+    /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the newsLetterSubscriptionType entities
     /// </returns>
-    Task<IList<NewsLetterSubscriptionType>> GetAllNewsLetterSubscriptionTypesAsync();
+    Task<IList<NewsLetterSubscriptionType>> GetAllNewsLetterSubscriptionTypesAsync(int storeId = 0);
 
     /// <summary>
-    /// Gets list of subscription types by newsletter subscription
+    /// Gets list of active subscription types by newsletter subscription
     /// </summary>
     /// <param name="newsletter">Newsletter subscription</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the list of subscription types
+    /// The task result contains the list of active subscription types
     /// </returns>
     Task<List<NewsLetterSubscriptionType>> GetSubscriptionTypesByNewsLetterAsync(NewsLetterSubscription newsletter);
-
-    #endregion
-
-    #region NewsLetterSubscriptionTypeMapping
-
-    /// <summary>
-    /// Get newsLetter subscription type mappings by subscription type identifier
-    /// </summary>
-    /// <param name="subscriptionTypeId">The newsLetter subscription type identifier</param>
-    /// <param name="subscriptionId">The newsLetter subscription identifier</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the newsLetter subscription type mappings collection
-    /// </returns>
-    Task<IList<NewsLetterSubscriptionTypeMapping>> GeNewsLetterSubscriptionTypeMappingsAsync(int subscriptionTypeId, int subscriptionId = 0);
-
-    /// <summary>
-    /// Insert a newsLetter subscription type mapping
-    /// </summary>
-    /// <param name="newsLetterSubscriptionTypeMapping">NewsLetter subscription type mapping</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    Task InsertNewsLetterSubscriptionTypeMappingsAsync(NewsLetterSubscriptionTypeMapping newsLetterSubscriptionTypeMapping);
-
-    /// <summary>
-    /// Delete a newsLetter subscription type mapping
-    /// </summary>
-    /// <param name="newsLetterSubscriptionTypeMapping">NewsLetter subscription type mapping</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    Task DeleteNewsLetterSubscriptionTypeMappingsAsync(NewsLetterSubscriptionTypeMapping newsLetterSubscriptionTypeMapping);
-
-    /// <summary>
-    /// Clear all newsLetter subscription type mappings
-    /// </summary>
-    /// <param name="subscription">Newsletter subscription</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    Task ClearNewsLetterSubscriptionTypeMappingsAsync(NewsLetterSubscription subscription);
-
-    #endregion
 }

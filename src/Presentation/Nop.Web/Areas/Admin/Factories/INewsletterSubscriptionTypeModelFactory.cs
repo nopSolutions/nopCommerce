@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Factories;
 /// <summary>
 /// Represents the newsletter subscription type list model factory
 /// </summary>
-public partial interface INewsletterSubscriptionTypeModelFactory
+public partial interface INewsLetterSubscriptionTypeModelFactory
 {
     /// <summary>
     /// Prepare newsletter subscription type search model
@@ -16,7 +16,7 @@ public partial interface INewsletterSubscriptionTypeModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the newsletter subscription type search model
     /// </returns>
-    Task<NewsLetterSubscriptionTypeSearchModel> PrepareNewsletterSubscriptionTypeSearchModelAsync(NewsLetterSubscriptionTypeSearchModel searchModel);
+    Task<NewsLetterSubscriptionTypeSearchModel> PrepareNewsLetterSubscriptionTypeSearchModelAsync(NewsLetterSubscriptionTypeSearchModel searchModel);
 
     /// <summary>
     /// Prepare paged newsletter subscription type list model
@@ -26,7 +26,7 @@ public partial interface INewsletterSubscriptionTypeModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the newsletter subscription type list model
     /// </returns>
-    Task<NewsLetterSubscriptionTypeListModel> PrepareNewsletterSubscriptionTypeListModelAsync(NewsLetterSubscriptionTypeSearchModel searchModel);
+    Task<NewsLetterSubscriptionTypeListModel> PrepareNewsLetterSubscriptionTypeListModelAsync(NewsLetterSubscriptionTypeSearchModel searchModel);
 
     /// <summary>
     /// Prepare newsletter subscription type model
@@ -38,6 +38,6 @@ public partial interface INewsletterSubscriptionTypeModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the newsletter subscription type model
     /// </returns>
-    Task<NewsLetterSubscriptionTypeModel> PrepareNewsletterSubscriptionTypeModelAsync(NewsLetterSubscriptionTypeModel model,
+    Task<NewsLetterSubscriptionTypeModel> PrepareNewsLetterSubscriptionTypeModelAsync(NewsLetterSubscriptionTypeModel model,
         NewsLetterSubscriptionType subscriptionType, bool excludeProperties = false);
 }

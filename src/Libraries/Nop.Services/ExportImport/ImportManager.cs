@@ -2707,7 +2707,7 @@ public partial class ImportManager : IImportManager
     /// A task that represents the asynchronous operation
     /// The task result contains the number of imported subscribers
     /// </returns>
-    public virtual async Task<int> ImportNewsletterSubscribersFromTxtAsync(Stream stream)
+    public virtual async Task<int> ImportNewsLetterSubscribersFromTxtAsync(Stream stream)
     {
         var count = 0;
         using (var reader = new StreamReader(stream))
@@ -2718,13 +2718,14 @@ public partial class ImportManager : IImportManager
                     continue;
                 var tmp = line.Split(',');
 
-                if (tmp.Length > 3)
+                if (tmp.Length > 5)
                     throw new NopException("Wrong file format");
 
                 var isActive = true;
 
                 var store = await _storeContext.GetCurrentStoreAsync();
                 var storeId = store.Id;
+                var typeId = 0;
 
                 //"email" field specified
                 var email = tmp[0].Trim();
@@ -2736,12 +2737,16 @@ public partial class ImportManager : IImportManager
                 if (tmp.Length >= 2)
                     isActive = bool.Parse(tmp[1].Trim());
 
+                //"typeId" field specified
+                if (tmp.Length >= 3)
+                    typeId = int.Parse(tmp[2].Trim());
+
                 //"storeId" field specified
-                if (tmp.Length == 3)
-                    storeId = int.Parse(tmp[2].Trim());
+                if (tmp.Length == 4)
+                    storeId = int.Parse(tmp[3].Trim());
 
                 //import
-                var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(email, storeId);
+                var subscription = (await _newsLetterSubscriptionService.GetAllNewsLetterSubscriptionsAsync(email: email, storeId: storeId, subscriptionTypeId: typeId)).FirstOrDefault();
                 if (subscription != null)
                 {
                     subscription.Email = email;
@@ -2757,7 +2762,8 @@ public partial class ImportManager : IImportManager
                         CreatedOnUtc = DateTime.UtcNow,
                         Email = email,
                         StoreId = storeId,
-                        LanguageId = customer?.LanguageId ?? store.DefaultLanguageId,
+                        LanguageId = customer?.LanguageId ?? (await _workContext.GetWorkingLanguageAsync()).Id,
+                        TypeId = typeId,
                         NewsLetterSubscriptionGuid = Guid.NewGuid()
                     };
                     await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(subscription);

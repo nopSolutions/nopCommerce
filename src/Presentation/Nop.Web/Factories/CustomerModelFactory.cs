@@ -239,16 +239,15 @@ public partial class CustomerModelFactory : ICustomerModelFactory
 
             //newsletter
             var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id);
+            var newsLetterSubscriptionTypes = await _newsLetterSubscriptionTypeService.GetAllNewsLetterSubscriptionTypesAsync(store.Id);
             if (newsletter != null)
             {
-                var newsLetterSubscriptionTypes = await _newsLetterSubscriptionTypeService.GetAllNewsLetterSubscriptionTypesAsync();
                 var activeSubscriptions = await _newsLetterSubscriptionTypeService.GetSubscriptionTypesByNewsLetterAsync(newsletter);
-
-                model.Newsletter = await _newsLetterSubscriptionService.IsNewsletterActiveAsync(newsletter);
+                model.Newsletter = newsletter.Active;
 
                 foreach (var newsLetterSubscriptionType in newsLetterSubscriptionTypes)
                 {
-                    var nsModel = new CustomerInfoModel.NewsLetterSubscriptionModel
+                    var nsModel = new NewsLetterSubscriptionModel
                     {
                         TypeId = newsLetterSubscriptionType.Id,
                         Name = await _localizationService.GetLocalizedAsync(newsLetterSubscriptionType, x => x.Name),
@@ -257,9 +256,21 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                     model.NewsLetterSubscriptions.Add(nsModel);
                 }
             }
+            else
+            {
+                foreach (var newsLetterSubscriptionType in newsLetterSubscriptionTypes)
+                {
+                    var nsModel = new NewsLetterSubscriptionModel
+                    {
+                        TypeId = newsLetterSubscriptionType.Id,
+                        Name = await _localizationService.GetLocalizedAsync(newsLetterSubscriptionType, x => x.Name),
+                        IsActive = false
+                    };
+                    model.NewsLetterSubscriptions.Add(nsModel);
+                }
+            }
 
             model.Signature = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SignatureAttribute);
-
             model.Email = customer.Email;
             model.Username = customer.Username;
         }
@@ -462,10 +473,11 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         if (setDefaultValues)
         {
             //enable newsletter by default
-            var newsLetterSubscriptionTypes = await _newsLetterSubscriptionTypeService.GetAllNewsLetterSubscriptionTypesAsync();
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var newsLetterSubscriptionTypes = await _newsLetterSubscriptionTypeService.GetAllNewsLetterSubscriptionTypesAsync(store.Id);
             foreach (var newsLetterSubscriptionType in newsLetterSubscriptionTypes)
             {
-                var nsModel = new RegisterModel.NewsLetterSubscriptionModel
+                var nsModel = new NewsLetterSubscriptionModel
                 {
                     TypeId = newsLetterSubscriptionType.Id,
                     Name = await _localizationService.GetLocalizedAsync(newsLetterSubscriptionType, x => x.Name),

@@ -171,170 +171,177 @@ public partial class BrevoManager
             foreach (var storeId in storeIds)
             {
                 //get list identifier from the settings
-                var key = $"{nameof(BrevoSettings)}.{nameof(BrevoSettings.ListId)}";
-                var listId = await _settingService.GetSettingByKeyAsync<int>(key, storeId: storeId);
-                if (listId == 0)
+                var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>(storeId);
+                var listIdMaps = brevoSettings.SubscriptionTypeListBrevoList.ToList();
+
+                foreach (var listIdMap in listIdMaps)
                 {
-                    await _logger.WarningAsync($"Brevo synchronization warning: List ID is empty for store #{storeId}");
-                    messages.Add((NotifyType.Warning, $"List ID is empty for store #{storeId}"));
-                    continue;
-                }
-
-                //try to get store subscriptions
-                var subscriptions = await _newsLetterSubscriptionService.GetAllNewsLetterSubscriptionsAsync(storeId: storeId, isActive: true);
-                if (!subscriptions.Any())
-                {
-                    await _logger.WarningAsync($"Brevo synchronization warning: There are no subscriptions for store #{storeId}");
-                    messages.Add((NotifyType.Warning, $"There are no subscriptions for store #{storeId}"));
-                    continue;
-                }
-
-                //get notification URL
-                var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
-                var notificationUrl = urlHelper.RouteUrl(BrevoDefaults.ImportContactsRoute, null, _webHelper.GetCurrentRequestProtocol());
-
-                var name = string.Empty;
-
-                switch (await GetAccountLanguageAsync())
-                {
-                    case BrevoAccountLanguage.French:
-                        name =
-                            $"{BrevoDefaults.FirstNameFrenchServiceAttribute};" +
-                            $"{BrevoDefaults.LastNameFrenchServiceAttribute};";
-                        break;
-                    case BrevoAccountLanguage.German:
-                        name =
-                            $"{BrevoDefaults.FirstNameGermanServiceAttribute};" +
-                            $"{BrevoDefaults.LastNameGermanServiceAttribute};";
-                        break;
-                    case BrevoAccountLanguage.Italian:
-                        name =
-                            $"{BrevoDefaults.FirstNameItalianServiceAttribute};" +
-                            $"{BrevoDefaults.LastNameItalianServiceAttribute};";
-                        break;
-                    case BrevoAccountLanguage.Portuguese:
-                        name =
-                            $"{BrevoDefaults.FirstNamePortugueseServiceAttribute};" +
-                            $"{BrevoDefaults.LastNamePortugueseServiceAttribute};";
-                        break;
-                    case BrevoAccountLanguage.Spanish:
-                        name =
-                            $"{BrevoDefaults.FirstNameSpanishServiceAttribute};" +
-                            $"{BrevoDefaults.LastNameSpanishServiceAttribute};";
-                        break;
-
-                    case BrevoAccountLanguage.English:
-                        name =
-                            $"{BrevoDefaults.FirstNameServiceAttribute};" +
-                            $"{BrevoDefaults.LastNameServiceAttribute};";
-                        break;
-                }
-
-                var languages = await _languageService.GetAllLanguagesAsync(storeId: storeId);
-
-                //prepare CSV 
-                var title =
-                    $"{BrevoDefaults.EmailServiceAttribute};" +
-                    name +
-                    $"{BrevoDefaults.UsernameServiceAttribute};" +
-                    $"{BrevoDefaults.SMSServiceAttribute};" +
-                    $"{BrevoDefaults.PhoneServiceAttribute};" +
-                    $"{BrevoDefaults.CountryServiceAttribute};" +
-                    $"{BrevoDefaults.StoreIdServiceAttribute};" +
-                    $"{BrevoDefaults.GenderServiceAttribute};" +
-                    $"{BrevoDefaults.DateOfBirthServiceAttribute};" +
-                    $"{BrevoDefaults.CompanyServiceAttribute};" +
-                    $"{BrevoDefaults.Address1ServiceAttribute};" +
-                    $"{BrevoDefaults.Address2ServiceAttribute};" +
-                    $"{BrevoDefaults.ZipCodeServiceAttribute};" +
-                    $"{BrevoDefaults.CityServiceAttribute};" +
-                    $"{BrevoDefaults.CountyServiceAttribute};" +
-                    $"{BrevoDefaults.StateServiceAttribute};" +
-                    $"{BrevoDefaults.FaxServiceAttribute};" +
-                    $"{BrevoDefaults.LanguageAttribute};";
-                var csv = await subscriptions.AggregateAwaitAsync(title, async (all, subscription) =>
-                {
-                    var firstName = string.Empty;
-                    var lastName = string.Empty;
-                    var phone = string.Empty;
-                    var countryName = string.Empty;
-                    var sms = string.Empty;
-                    var gender = string.Empty;
-                    var dateOfBirth = string.Empty;
-                    var company = string.Empty;
-                    var address1 = string.Empty;
-                    var address2 = string.Empty;
-                    var zipCode = string.Empty;
-                    var city = string.Empty;
-                    var county = string.Empty;
-                    var state = string.Empty;
-                    var fax = string.Empty;
-                    Language language = null;
-
-                    var customer = await _customerService.GetCustomerByEmailAsync(subscription.Email);
-                    if (customer != null)
+                    //var listId = await _settingService.GetSettingByKeyAsync<int>(key, storeId: storeId);
+                    var typeId = listIdMap.Key;
+                    var listId = listIdMap.Value;
+                    if (listId == 0)
                     {
-                        firstName = customer.FirstName;
-                        lastName = customer.LastName;
-                        phone = customer.Phone;
-                        var countryId = customer.CountryId;
-                        var country = await _countryService.GetCountryByIdAsync(countryId);
-                        countryName = country?.Name;
-                        var countryIsoCode = country?.NumericIsoCode ?? 0;
-                        if (countryIsoCode > 0 && !string.IsNullOrEmpty(phone))
-                        {
-                            //use the first phone code only
-                            var phoneCode = ISO3166.FromISOCode(countryIsoCode)
-                                ?.DialCodes?.FirstOrDefault()?.Replace(" ", string.Empty) ?? string.Empty;
-                            sms = phone.Replace($"+{phoneCode}", string.Empty);
-                        }
-                        gender = customer.Gender;
-                        dateOfBirth = customer.DateOfBirth?.ToString("yyyy-MM-dd");
-                        company = customer.Company;
-                        address1 = customer.StreetAddress;
-                        address2 = customer.StreetAddress2;
-                        zipCode = customer.ZipPostalCode;
-                        city = customer.City;
-                        county = customer.County;
-                        state = (await _stateProvinceService.GetStateProvinceByIdAsync(customer.StateProvinceId))?.Name;
-                        fax = customer.Fax;
+                        await _logger.WarningAsync($"Brevo synchronization warning: List ID is empty for store #{storeId}");
+                        messages.Add((NotifyType.Warning, $"List ID is empty for store #{storeId}"));
+                        continue;
                     }
 
-                    language = languages.FirstOrDefault(lang => lang.Id == (customer?.LanguageId ?? subscription.LanguageId))
-                        ?? languages.FirstOrDefault();
+                    //try to get store subscriptions
+                    var subscriptions = await _newsLetterSubscriptionService.GetAllNewsLetterSubscriptionsAsync(storeId: storeId, isActive: true, subscriptionTypeId: typeId);
+                    if (!subscriptions.Any())
+                    {
+                        await _logger.WarningAsync($"Brevo synchronization warning: There are no subscriptions for store #{storeId}");
+                        messages.Add((NotifyType.Warning, $"There are no subscriptions for store #{storeId}"));
+                        continue;
+                    }
 
-                    return $"{all}\n" +
-                           $"{subscription.Email};" +
-                           $"{firstName};" +
-                           $"{lastName};" +
-                           $"{customer?.Username};" +
-                           $"{sms};" +
-                           $"{phone};" +
-                           $"{countryName};" +
-                           $"{subscription.StoreId};" +
-                           $"{gender};" +
-                           $"{dateOfBirth};" +
-                           $"{company};" +
-                           $"{address1};" +
-                           $"{address2};" +
-                           $"{zipCode};" +
-                           $"{city};" +
-                           $"{county};" +
-                           $"{state};" +
-                           $"{fax};" +
-                           $"{language?.LanguageCulture};";
-                });
+                    //get notification URL
+                    var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+                    var notificationUrl = urlHelper.RouteUrl(BrevoDefaults.ImportContactsRoute, null, _webHelper.GetCurrentRequestProtocol());
 
-                //prepare data to import
-                var requestContactImport = new RequestContactImport
-                {
-                    NotifyUrl = notificationUrl,
-                    FileBody = csv,
-                    ListIds = [listId]
-                };
+                    var name = string.Empty;
 
-                //start import
-                await client.ImportContactsAsync(requestContactImport);
+                    switch (await GetAccountLanguageAsync())
+                    {
+                        case BrevoAccountLanguage.French:
+                            name =
+                                $"{BrevoDefaults.FirstNameFrenchServiceAttribute};" +
+                                $"{BrevoDefaults.LastNameFrenchServiceAttribute};";
+                            break;
+                        case BrevoAccountLanguage.German:
+                            name =
+                                $"{BrevoDefaults.FirstNameGermanServiceAttribute};" +
+                                $"{BrevoDefaults.LastNameGermanServiceAttribute};";
+                            break;
+                        case BrevoAccountLanguage.Italian:
+                            name =
+                                $"{BrevoDefaults.FirstNameItalianServiceAttribute};" +
+                                $"{BrevoDefaults.LastNameItalianServiceAttribute};";
+                            break;
+                        case BrevoAccountLanguage.Portuguese:
+                            name =
+                                $"{BrevoDefaults.FirstNamePortugueseServiceAttribute};" +
+                                $"{BrevoDefaults.LastNamePortugueseServiceAttribute};";
+                            break;
+                        case BrevoAccountLanguage.Spanish:
+                            name =
+                                $"{BrevoDefaults.FirstNameSpanishServiceAttribute};" +
+                                $"{BrevoDefaults.LastNameSpanishServiceAttribute};";
+                            break;
+
+                        case BrevoAccountLanguage.English:
+                            name =
+                                $"{BrevoDefaults.FirstNameServiceAttribute};" +
+                                $"{BrevoDefaults.LastNameServiceAttribute};";
+                            break;
+                    }
+
+                    var languages = await _languageService.GetAllLanguagesAsync(storeId: storeId);
+
+                    //prepare CSV 
+                    var title =
+                        $"{BrevoDefaults.EmailServiceAttribute};" +
+                        name +
+                        $"{BrevoDefaults.UsernameServiceAttribute};" +
+                        $"{BrevoDefaults.SMSServiceAttribute};" +
+                        $"{BrevoDefaults.PhoneServiceAttribute};" +
+                        $"{BrevoDefaults.CountryServiceAttribute};" +
+                        $"{BrevoDefaults.StoreIdServiceAttribute};" +
+                        $"{BrevoDefaults.GenderServiceAttribute};" +
+                        $"{BrevoDefaults.DateOfBirthServiceAttribute};" +
+                        $"{BrevoDefaults.CompanyServiceAttribute};" +
+                        $"{BrevoDefaults.Address1ServiceAttribute};" +
+                        $"{BrevoDefaults.Address2ServiceAttribute};" +
+                        $"{BrevoDefaults.ZipCodeServiceAttribute};" +
+                        $"{BrevoDefaults.CityServiceAttribute};" +
+                        $"{BrevoDefaults.CountyServiceAttribute};" +
+                        $"{BrevoDefaults.StateServiceAttribute};" +
+                        $"{BrevoDefaults.FaxServiceAttribute};" +
+                        $"{BrevoDefaults.LanguageAttribute};";
+                    var csv = await subscriptions.AggregateAwaitAsync(title, async (all, subscription) =>
+                    {
+                        var firstName = string.Empty;
+                        var lastName = string.Empty;
+                        var phone = string.Empty;
+                        var countryName = string.Empty;
+                        var sms = string.Empty;
+                        var gender = string.Empty;
+                        var dateOfBirth = string.Empty;
+                        var company = string.Empty;
+                        var address1 = string.Empty;
+                        var address2 = string.Empty;
+                        var zipCode = string.Empty;
+                        var city = string.Empty;
+                        var county = string.Empty;
+                        var state = string.Empty;
+                        var fax = string.Empty;
+                        Language language = null;
+
+                        var customer = await _customerService.GetCustomerByEmailAsync(subscription.Email);
+                        if (customer != null)
+                        {
+                            firstName = customer.FirstName;
+                            lastName = customer.LastName;
+                            phone = customer.Phone;
+                            var countryId = customer.CountryId;
+                            var country = await _countryService.GetCountryByIdAsync(countryId);
+                            countryName = country?.Name;
+                            var countryIsoCode = country?.NumericIsoCode ?? 0;
+                            if (countryIsoCode > 0 && !string.IsNullOrEmpty(phone))
+                            {
+                                //use the first phone code only
+                                var phoneCode = ISO3166.FromISOCode(countryIsoCode)
+                                    ?.DialCodes?.FirstOrDefault()?.Replace(" ", string.Empty) ?? string.Empty;
+                                sms = phone.Replace($"+{phoneCode}", string.Empty);
+                            }
+                            gender = customer.Gender;
+                            dateOfBirth = customer.DateOfBirth?.ToString("yyyy-MM-dd");
+                            company = customer.Company;
+                            address1 = customer.StreetAddress;
+                            address2 = customer.StreetAddress2;
+                            zipCode = customer.ZipPostalCode;
+                            city = customer.City;
+                            county = customer.County;
+                            state = (await _stateProvinceService.GetStateProvinceByIdAsync(customer.StateProvinceId))?.Name;
+                            fax = customer.Fax;
+                        }
+
+                        language = languages.FirstOrDefault(lang => lang.Id == (customer?.LanguageId ?? subscription.LanguageId))
+                            ?? languages.FirstOrDefault();
+
+                        return $"{all}\n" +
+                               $"{subscription.Email};" +
+                               $"{firstName};" +
+                               $"{lastName};" +
+                               $"{customer?.Username};" +
+                               $"{sms};" +
+                               $"{phone};" +
+                               $"{countryName};" +
+                               $"{subscription.StoreId};" +
+                               $"{gender};" +
+                               $"{dateOfBirth};" +
+                               $"{company};" +
+                               $"{address1};" +
+                               $"{address2};" +
+                               $"{zipCode};" +
+                               $"{city};" +
+                               $"{county};" +
+                               $"{state};" +
+                               $"{fax};" +
+                               $"{language?.LanguageCulture};";
+                    });
+
+                    //prepare data to import
+                    var requestContactImport = new RequestContactImport
+                    {
+                        NotifyUrl = notificationUrl,
+                        FileBody = csv,
+                        ListIds = [listId]
+                    };
+
+                    //start import
+                    await client.ImportContactsAsync(requestContactImport);
+                }
             }
         }
         catch (Exception exception)
@@ -367,32 +374,39 @@ public partial class BrevoManager
             foreach (var storeId in storeIds)
             {
                 //get list identifier from the settings
-                var key = $"{nameof(BrevoSettings)}.{nameof(BrevoSettings.ListId)}";
-                var listId = await _settingService.GetSettingByKeyAsync<int>(key, storeId: storeId, loadSharedValueIfNotFound: true);
-                if (listId == 0)
-                {
-                    await _logger.WarningAsync($"Brevo synchronization warning: List ID is empty for store #{storeId}");
-                    messages.Add((NotifyType.Warning, $"List ID is empty for store #{storeId}"));
-                    continue;
-                }
+                var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>(storeId);
+                var listIdMaps = brevoSettings.SubscriptionTypeListBrevoList.ToList();
 
-                //check whether there are contacts in the list
-                var contacts = await client.GetContactsFromListAsync(listId);
-                var template = new { contacts = new[] { new { email = string.Empty, emailBlacklisted = false } } };
-                var contactObjects = JsonConvert.DeserializeAnonymousType(contacts.ToJson(), template);
-                var blackListedEmails = contactObjects?.contacts?.Where(contact => contact.emailBlacklisted)
-                    .Select(contact => contact.email).ToList() ?? new List<string>();
-
-                foreach (var email in blackListedEmails)
+                foreach (var listIdMap in listIdMaps)
                 {
-                    //email in black list, so unsubscribe contact from all stores
-                    foreach (var id in (await _storeService.GetAllStoresAsync()).Select(store => store.Id))
+                    var typeId = listIdMap.Key;
+                    var listId = listIdMap.Value;
+
+                    if (listId == 0)
                     {
-                        var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(email, id);
-                        if (subscription != null)
+                        await _logger.WarningAsync($"Brevo synchronization warning: List ID is empty for store #{storeId}");
+                        messages.Add((NotifyType.Warning, $"List ID is empty for store #{storeId}"));
+                        continue;
+                    }
+
+                    //check whether there are contacts in the list
+                    var contacts = await client.GetContactsFromListAsync(listId);
+                    var template = new { contacts = new[] { new { email = string.Empty, emailBlacklisted = false } } };
+                    var contactObjects = JsonConvert.DeserializeAnonymousType(contacts.ToJson(), template);
+                    var blackListedEmails = contactObjects?.contacts?.Where(contact => contact.emailBlacklisted)
+                        .Select(contact => contact.email).ToList() ?? new List<string>();
+
+                    foreach (var email in blackListedEmails)
+                    {
+                        //email in black list, so unsubscribe contact from all stores
+                        foreach (var id in (await _storeService.GetAllStoresAsync()).Select(store => store.Id))
                         {
-                            subscription.Active = false;
-                            await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(subscription, false);
+                            var subscriptions = await _newsLetterSubscriptionService.GetAllNewsLetterSubscriptionsAsync(email: email, storeId: id, subscriptionTypeId: typeId);
+                            foreach (var subscription in subscriptions)
+                            {
+                                subscription.Active = false;
+                                await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(subscription, false);
+                            }
                         }
                     }
                 }
@@ -512,150 +526,154 @@ public partial class BrevoManager
             var client = await CreateApiClientAsync(config => new ContactsApi(config));
 
             //try to get list identifier
-            var key = $"{nameof(BrevoSettings)}.{nameof(BrevoSettings.ListId)}";
-            var listId = await _settingService.GetSettingByKeyAsync<int>(key, storeId: subscription.StoreId);
-            if (listId == 0)
-                listId = await _settingService.GetSettingByKeyAsync<int>(key);
-            if (listId == 0)
-            {
-                await _logger.WarningAsync($"Brevo synchronization warning: List ID is empty for store #{subscription.StoreId}");
-                return;
-            }
+            var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>(subscription.StoreId);
+            var listIdMaps = brevoSettings.SubscriptionTypeListBrevoList.ToList();
 
-            GetExtendedContactDetails contactObject = null;
-            try
+            foreach (var listIdMap in listIdMaps)
             {
-                contactObject = await client.GetContactInfoAsync(subscription.Email);
-            }
-            catch (ApiException apiException)
-            {
-                if (apiException.ErrorCode != 404)
+                var listId = listIdMap.Value;
+
+                if (listId == 0)
                 {
-                    await _logger.ErrorAsync($"Brevo error: {apiException.Message}.", apiException, await _workContext.GetCurrentCustomerAsync());
+                    await _logger.WarningAsync($"Brevo synchronization warning: List ID is empty for store #{subscription.StoreId}");
                     return;
                 }
-            }
 
-            //prepare attributes
-            var firstName = string.Empty;
-            var lastName = string.Empty;
-            var phone = string.Empty;
-            var sms = string.Empty;
-            var countryName = string.Empty;
-            var gender = string.Empty;
-            var dateOfBirth = string.Empty;
-            var company = string.Empty;
-            var address1 = string.Empty;
-            var address2 = string.Empty;
-            var zipCode = string.Empty;
-            var city = string.Empty;
-            var county = string.Empty;
-            var state = string.Empty;
-            var fax = string.Empty;
-            Language language = null;
-
-            var customer = await _customerService.GetCustomerByEmailAsync(subscription.Email);
-            if (customer != null)
-            {
-                firstName = customer.FirstName;
-                lastName = customer.LastName;
-                phone = customer.Phone;
-                var countryId = customer.CountryId;
-                var country = await _countryService.GetCountryByIdAsync(countryId);
-                countryName = country?.Name;
-                var countryIsoCode = country?.NumericIsoCode ?? 0;
-                if (countryIsoCode > 0 && !string.IsNullOrEmpty(phone))
+                GetExtendedContactDetails contactObject = null;
+                try
                 {
-                    //use the first phone code only
-                    var phoneCode = ISO3166.FromISOCode(countryIsoCode)
-                        ?.DialCodes?.FirstOrDefault()?.Replace(" ", string.Empty) ?? string.Empty;
-                    sms = phone.Replace($"+{phoneCode}", string.Empty);
+                    contactObject = await client.GetContactInfoAsync(subscription.Email);
                 }
-                gender = customer.Gender;
-                dateOfBirth = customer.DateOfBirth?.ToString("yyyy-MM-dd");
-                company = customer.Company;
-                address1 = customer.StreetAddress;
-                address2 = customer.StreetAddress2;
-                zipCode = customer.ZipPostalCode;
-                city = customer.City;
-                county = customer.County;
-                state = (await _stateProvinceService.GetStateProvinceByIdAsync(customer.StateProvinceId))?.Name;
-                fax = customer.Fax;
-            }
-
-            language = await _languageService.GetLanguageByIdAsync(customer?.LanguageId ?? subscription.LanguageId)
-                ?? (await _languageService.GetAllLanguagesAsync(storeId: subscription.StoreId)).FirstOrDefault();
-
-            var attributes = new Dictionary<string, string>
-            {
-                [BrevoDefaults.UsernameServiceAttribute] = customer?.Username,
-                [BrevoDefaults.SMSServiceAttribute] = sms,
-                [BrevoDefaults.PhoneServiceAttribute] = phone,
-                [BrevoDefaults.CountryServiceAttribute] = countryName,
-                [BrevoDefaults.StoreIdServiceAttribute] = subscription.StoreId.ToString(),
-                [BrevoDefaults.GenderServiceAttribute] = gender,
-                [BrevoDefaults.DateOfBirthServiceAttribute] = dateOfBirth,
-                [BrevoDefaults.CompanyServiceAttribute] = company,
-                [BrevoDefaults.Address1ServiceAttribute] = address1,
-                [BrevoDefaults.Address2ServiceAttribute] = address2,
-                [BrevoDefaults.ZipCodeServiceAttribute] = zipCode,
-                [BrevoDefaults.CityServiceAttribute] = city,
-                [BrevoDefaults.CountyServiceAttribute] = county,
-                [BrevoDefaults.StateServiceAttribute] = state,
-                [BrevoDefaults.FaxServiceAttribute] = fax,
-                [BrevoDefaults.LanguageAttribute] = language?.LanguageCulture
-            };
-
-            switch (await GetAccountLanguageAsync())
-            {
-                case BrevoAccountLanguage.French:
-                    attributes.Add(BrevoDefaults.FirstNameFrenchServiceAttribute, firstName);
-                    attributes.Add(BrevoDefaults.LastNameFrenchServiceAttribute, lastName);
-                    break;
-                case BrevoAccountLanguage.German:
-                    attributes.Add(BrevoDefaults.FirstNameGermanServiceAttribute, firstName);
-                    attributes.Add(BrevoDefaults.LastNameGermanServiceAttribute, lastName);
-                    break;
-                case BrevoAccountLanguage.Italian:
-                    attributes.Add(BrevoDefaults.FirstNameItalianServiceAttribute, firstName);
-                    attributes.Add(BrevoDefaults.LastNameItalianServiceAttribute, lastName);
-                    break;
-                case BrevoAccountLanguage.Portuguese:
-                    attributes.Add(BrevoDefaults.FirstNamePortugueseServiceAttribute, firstName);
-                    attributes.Add(BrevoDefaults.LastNamePortugueseServiceAttribute, lastName);
-                    break;
-                case BrevoAccountLanguage.Spanish:
-                    attributes.Add(BrevoDefaults.FirstNameSpanishServiceAttribute, firstName);
-                    attributes.Add(BrevoDefaults.LastNameSpanishServiceAttribute, lastName);
-                    break;
-                case BrevoAccountLanguage.English:
-                    attributes.Add(BrevoDefaults.FirstNameServiceAttribute, firstName);
-                    attributes.Add(BrevoDefaults.LastNameServiceAttribute, lastName);
-                    break;
-            }
-
-            //Add new contact
-            if (contactObject == null)
-            {
-                var createContact = new CreateContact
+                catch (ApiException apiException)
                 {
-                    Email = subscription.Email,
-                    Attributes = attributes,
-                    ListIds = [listId],
-                    UpdateEnabled = true
-                };
-                await client.CreateContactAsync(createContact);
-            }
-            else
-            {
-                //update contact
-                var updateContact = new UpdateContact
+                    if (apiException.ErrorCode != 404)
+                    {
+                        await _logger.ErrorAsync($"Brevo error: {apiException.Message}.", apiException, await _workContext.GetCurrentCustomerAsync());
+                        return;
+                    }
+                }
+
+                //prepare attributes
+                var firstName = string.Empty;
+                var lastName = string.Empty;
+                var phone = string.Empty;
+                var sms = string.Empty;
+                var countryName = string.Empty;
+                var gender = string.Empty;
+                var dateOfBirth = string.Empty;
+                var company = string.Empty;
+                var address1 = string.Empty;
+                var address2 = string.Empty;
+                var zipCode = string.Empty;
+                var city = string.Empty;
+                var county = string.Empty;
+                var state = string.Empty;
+                var fax = string.Empty;
+                Language language = null;
+
+                var customer = await _customerService.GetCustomerByEmailAsync(subscription.Email);
+                if (customer != null)
                 {
-                    Attributes = attributes,
-                    ListIds = [listId],
-                    EmailBlacklisted = false
+                    firstName = customer.FirstName;
+                    lastName = customer.LastName;
+                    phone = customer.Phone;
+                    var countryId = customer.CountryId;
+                    var country = await _countryService.GetCountryByIdAsync(countryId);
+                    countryName = country?.Name;
+                    var countryIsoCode = country?.NumericIsoCode ?? 0;
+                    if (countryIsoCode > 0 && !string.IsNullOrEmpty(phone))
+                    {
+                        //use the first phone code only
+                        var phoneCode = ISO3166.FromISOCode(countryIsoCode)
+                            ?.DialCodes?.FirstOrDefault()?.Replace(" ", string.Empty) ?? string.Empty;
+                        sms = phone.Replace($"+{phoneCode}", string.Empty);
+                    }
+                    gender = customer.Gender;
+                    dateOfBirth = customer.DateOfBirth?.ToString("yyyy-MM-dd");
+                    company = customer.Company;
+                    address1 = customer.StreetAddress;
+                    address2 = customer.StreetAddress2;
+                    zipCode = customer.ZipPostalCode;
+                    city = customer.City;
+                    county = customer.County;
+                    state = (await _stateProvinceService.GetStateProvinceByIdAsync(customer.StateProvinceId))?.Name;
+                    fax = customer.Fax;
+                }
+
+                language = await _languageService.GetLanguageByIdAsync(customer?.LanguageId ?? subscription.LanguageId)
+                    ?? (await _languageService.GetAllLanguagesAsync(storeId: subscription.StoreId)).FirstOrDefault();
+
+                var attributes = new Dictionary<string, string>
+                {
+                    [BrevoDefaults.UsernameServiceAttribute] = customer?.Username,
+                    [BrevoDefaults.SMSServiceAttribute] = sms,
+                    [BrevoDefaults.PhoneServiceAttribute] = phone,
+                    [BrevoDefaults.CountryServiceAttribute] = countryName,
+                    [BrevoDefaults.StoreIdServiceAttribute] = subscription.StoreId.ToString(),
+                    [BrevoDefaults.GenderServiceAttribute] = gender,
+                    [BrevoDefaults.DateOfBirthServiceAttribute] = dateOfBirth,
+                    [BrevoDefaults.CompanyServiceAttribute] = company,
+                    [BrevoDefaults.Address1ServiceAttribute] = address1,
+                    [BrevoDefaults.Address2ServiceAttribute] = address2,
+                    [BrevoDefaults.ZipCodeServiceAttribute] = zipCode,
+                    [BrevoDefaults.CityServiceAttribute] = city,
+                    [BrevoDefaults.CountyServiceAttribute] = county,
+                    [BrevoDefaults.StateServiceAttribute] = state,
+                    [BrevoDefaults.FaxServiceAttribute] = fax,
+                    [BrevoDefaults.LanguageAttribute] = language?.LanguageCulture
                 };
-                await client.UpdateContactAsync(subscription.Email, updateContact);
+
+                switch (await GetAccountLanguageAsync())
+                {
+                    case BrevoAccountLanguage.French:
+                        attributes.Add(BrevoDefaults.FirstNameFrenchServiceAttribute, firstName);
+                        attributes.Add(BrevoDefaults.LastNameFrenchServiceAttribute, lastName);
+                        break;
+                    case BrevoAccountLanguage.German:
+                        attributes.Add(BrevoDefaults.FirstNameGermanServiceAttribute, firstName);
+                        attributes.Add(BrevoDefaults.LastNameGermanServiceAttribute, lastName);
+                        break;
+                    case BrevoAccountLanguage.Italian:
+                        attributes.Add(BrevoDefaults.FirstNameItalianServiceAttribute, firstName);
+                        attributes.Add(BrevoDefaults.LastNameItalianServiceAttribute, lastName);
+                        break;
+                    case BrevoAccountLanguage.Portuguese:
+                        attributes.Add(BrevoDefaults.FirstNamePortugueseServiceAttribute, firstName);
+                        attributes.Add(BrevoDefaults.LastNamePortugueseServiceAttribute, lastName);
+                        break;
+                    case BrevoAccountLanguage.Spanish:
+                        attributes.Add(BrevoDefaults.FirstNameSpanishServiceAttribute, firstName);
+                        attributes.Add(BrevoDefaults.LastNameSpanishServiceAttribute, lastName);
+                        break;
+                    case BrevoAccountLanguage.English:
+                        attributes.Add(BrevoDefaults.FirstNameServiceAttribute, firstName);
+                        attributes.Add(BrevoDefaults.LastNameServiceAttribute, lastName);
+                        break;
+                }
+
+                //Add new contact
+                if (contactObject == null)
+                {
+                    var createContact = new CreateContact
+                    {
+                        Email = subscription.Email,
+                        Attributes = attributes,
+                        ListIds = [listId],
+                        UpdateEnabled = true
+                    };
+                    await client.CreateContactAsync(createContact);
+                }
+                else
+                {
+                    //update contact
+                    var updateContact = new UpdateContact
+                    {
+                        Attributes = attributes,
+                        ListIds = [listId],
+                        EmailBlacklisted = false
+                    };
+                    await client.UpdateContactAsync(subscription.Email, updateContact);
+                }
             }
         }
         catch (Exception exception)
@@ -677,23 +695,27 @@ public partial class BrevoManager
             //create API client
             var client = await CreateApiClientAsync(config => new ContactsApi(config));
 
-            //try to get list identifier
-            var key = $"{nameof(BrevoSettings)}.{nameof(BrevoSettings.ListId)}";
-            var listId = await _settingService.GetSettingByKeyAsync<int>(key, storeId: subscription.StoreId);
-            if (listId == 0)
-                listId = await _settingService.GetSettingByKeyAsync<int>(key);
-            if (listId == 0)
-            {
-                await _logger.WarningAsync($"Brevo synchronization warning: List ID is empty for store #{subscription.StoreId}");
-                return;
-            }
+            var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>(subscription.StoreId);
+            var listIdMaps = brevoSettings.SubscriptionTypeListBrevoList.ToList();
 
-            //update contact
-            var updateContact = new UpdateContact
+            foreach (var listIdMap in listIdMaps)
             {
-                UnlinkListIds = [listId]
-            };
-            await client.UpdateContactAsync(subscription.Email, updateContact);
+                var listId = listIdMap.Value;
+
+                //try to get list identifier
+                if (listId == 0)
+                {
+                    await _logger.WarningAsync($"Brevo synchronization warning: List ID is empty for store #{subscription.StoreId}");
+                    return;
+                }
+
+                //update contact
+                var updateContact = new UpdateContact
+                {
+                    UnlinkListIds = [listId]
+                };
+                await client.UpdateContactAsync(subscription.Email, updateContact);
+            }
         }
         catch (Exception exception)
         {
@@ -725,14 +747,17 @@ public partial class BrevoManager
 
             //get subscription by email and store identifier
             var email = unsubscriber?.email;
-            var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(email, storeId.Value);
-            if (subscription == null)
+            var subscriptions = await _newsLetterSubscriptionService.GetAllNewsLetterSubscriptionsAsync(email: email, storeId: storeId.Value);
+            if (!subscriptions.Any())
                 return true;
 
             //update subscription
-            subscription.Active = false;
-            await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(subscription);
-            await _logger.InformationAsync($"{BrevoDefaults.SystemName} unsubscription: email {email}, store #{storeId}, date {unsubscriber?.date_event}");
+            foreach (var subscription in subscriptions)
+            {
+                subscription.Active = false;
+                await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(subscription);
+                await _logger.InformationAsync($"{BrevoDefaults.SystemName} unsubscription: email {email}, store #{storeId}, subscription type #{subscription.TypeId}, date {unsubscriber?.date_event}");
+            }
 
             return true;
         });

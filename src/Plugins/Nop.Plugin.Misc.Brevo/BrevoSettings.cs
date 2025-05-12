@@ -7,15 +7,15 @@ namespace Nop.Plugin.Misc.Brevo;
 /// </summary>
 public class BrevoSettings : ISettings
 {
+    public BrevoSettings()
+    {
+        SubscriptionTypeListBrevoList = new Dictionary<int, int>();
+    }
+
     /// <summary>
     /// Gets or sets the API key
     /// </summary>
     public string ApiKey { get; set; }
-
-    /// <summary>
-    /// Gets or sets the identifier of list to synchronize contacts
-    /// </summary>
-    public int ListId { get; set; }
 
     /// <summary>
     /// Gets or sets the identifier of unsubscribe event webhook
@@ -76,4 +76,9 @@ public class BrevoSettings : ISettings
     /// Gets or sets a value indicating whether to use Marketing Automation
     /// </summary>
     public bool UseMarketingAutomation { get; set; }
+
+    /// <summary>
+    /// Gets or sets the dictionary identifier of subscription type list and Brevo list
+    /// </summary>
+    public Dictionary<int, int> SubscriptionTypeListBrevoList { get; set; }
 }

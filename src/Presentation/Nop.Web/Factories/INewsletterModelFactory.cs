@@ -5,7 +5,7 @@ namespace Nop.Web.Factories;
 /// <summary>
 /// Represents the interface of the newsletter model factory
 /// </summary>
-public partial interface INewsletterModelFactory
+public partial interface INewsLetterModelFactory
 {
     /// <summary>
     /// Prepare the newsletter box model
@@ -14,7 +14,7 @@ public partial interface INewsletterModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the newsletter box model
     /// </returns>
-    Task<NewsletterBoxModel> PrepareNewsletterBoxModelAsync();
+    Task<NewsLetterBoxModel> PrepareNewsLetterBoxModelAsync();
 
     /// <summary>
     /// Prepare the subscription activation model

@@ -16,7 +16,18 @@ public class NewsLetterSubscriptionMigration : ForwardOnlyMigration
         if (!Schema.Table(NameCompatibilityManager.GetTableName(typeof(NewsLetterSubscriptionType))).Exists())
             Create.TableFor<NewsLetterSubscriptionType>();
 
-        if (!Schema.Table(NameCompatibilityManager.GetTableName(typeof(NewsLetterSubscriptionTypeMapping))).Exists())
-            Create.TableFor<NewsLetterSubscriptionTypeMapping>();
+        if (!Schema.Table(nameof(NewsLetterSubscription)).Column(nameof(NewsLetterSubscription.TypeId)).Exists())
+        {
+            //add new column
+            Alter.Table(nameof(NewsLetterSubscription))
+                .AddColumn(nameof(NewsLetterSubscription.TypeId)).AsInt32().NotNullable().SetExistingRowsTo(0);
+        }
+
+        if (!Schema.Table(nameof(Campaign)).Column(nameof(Campaign.NewsLetterSubscriptionTypeId)).Exists())
+        {
+            //add new column
+            Alter.Table(nameof(Campaign))
+                .AddColumn(nameof(Campaign.NewsLetterSubscriptionTypeId)).AsInt32().NotNullable().SetExistingRowsTo(0);
+        }
     }
 }

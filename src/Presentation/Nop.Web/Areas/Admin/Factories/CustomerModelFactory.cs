@@ -21,7 +21,6 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
-using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
@@ -63,7 +62,6 @@ public partial class CustomerModelFactory : ICustomerModelFactory
     protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly IGeoLookupService _geoLookupService;
     protected readonly ILocalizationService _localizationService;
-    protected readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
     protected readonly IOrderService _orderService;
     protected readonly IPictureService _pictureService;
     protected readonly IPriceFormatter _priceFormatter;
@@ -107,7 +105,6 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         IGenericAttributeService genericAttributeService,
         IGeoLookupService geoLookupService,
         ILocalizationService localizationService,
-        INewsLetterSubscriptionService newsLetterSubscriptionService,
         IOrderService orderService,
         IPictureService pictureService,
         IPriceFormatter priceFormatter,
@@ -147,7 +144,6 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         _genericAttributeService = genericAttributeService;
         _geoLookupService = geoLookupService;
         _localizationService = localizationService;
-        _newsLetterSubscriptionService = newsLetterSubscriptionService;
         _orderService = orderService;
         _pictureService = pictureService;
         _priceFormatter = priceFormatter;
@@ -708,14 +704,6 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                     model.AffiliateId = affiliate.Id;
                     model.AffiliateName = await _affiliateService.GetAffiliateFullNameAsync(affiliate);
                 }
-
-                //prepare model newsletter subscriptions
-                if (!string.IsNullOrEmpty(customer.Email))
-                {
-                    model.SelectedNewsletterSubscriptionStoreIds = await (await _storeService.GetAllStoresAsync())
-                        .WhereAwait(async store => await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id) != null)
-                        .Select(store => store.Id).ToListAsync();
-                }
             }
             //prepare reward points model
             model.DisplayRewardPointsHistory = _rewardPointsSettings.Enabled;
@@ -774,14 +762,6 @@ public partial class CustomerModelFactory : ICustomerModelFactory
 
         //prepare model customer attributes
         await PrepareCustomerAttributeModelsAsync(model.CustomerAttributes, customer);
-
-        //prepare model stores for newsletter subscriptions
-        model.AvailableNewsletterSubscriptionStores = (await _storeService.GetAllStoresAsync()).Select(store => new SelectListItem
-        {
-            Value = store.Id.ToString(),
-            Text = store.Name,
-            Selected = model.SelectedNewsletterSubscriptionStoreIds.Contains(store.Id)
-        }).ToList();
 
         //prepare available customer roles
         var availableRoles = await _customerService.GetAllCustomerRolesAsync(showHidden: true);

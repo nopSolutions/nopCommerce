@@ -51,28 +51,60 @@ public class DataMigration : Migration
 
         //#6874 Multiple newsletter lists
         var newsLetterSubscriptionTypeTable = _dataProvider.GetTable<NewsLetterSubscriptionType>();
-        if (!newsLetterSubscriptionTypeTable.Any(alt => string.Compare(alt.Name, MessageDefaults.DefaultSubscriptionType, StringComparison.InvariantCultureIgnoreCase) == 0))
+        if (!newsLetterSubscriptionTypeTable.Any(alt => string.Compare(alt.Name, "Newsletter", StringComparison.InvariantCultureIgnoreCase) == 0))
         {
             var subscriptionType = _dataProvider.InsertEntity(
                 new NewsLetterSubscriptionType
                 {
-                    Name = MessageDefaults.DefaultSubscriptionType,
+                    Name = "Newsletter",
                     TickedByDefault = true,
                     DisplayOrder = 0
                 }
             );
 
-            var newsLetterSubscriptionTypeMapping = NameCompatibilityManager.GetTableName(typeof(NewsLetterSubscriptionTypeMapping));
-
             var newsLetterSubscriptions = _dataProvider.GetTable<NewsLetterSubscription>().ToList();
-            var subscriptionListMap = (from newsLetterSubscription in newsLetterSubscriptions
-                                       let nlsMap = new NewsLetterSubscriptionTypeMapping
-                                       {
-                                           NewsLetterSubscriptionId = newsLetterSubscription.Id,
-                                           NewsLetterSubscriptionTypeId = subscriptionType.Id
-                                       }
-                                       select nlsMap).ToList();
-            _dataProvider.BulkInsertEntities(subscriptionListMap);
+            foreach (var newsLetterSubscription in newsLetterSubscriptions)
+            {
+                newsLetterSubscription.TypeId = subscriptionType.Id;
+            }
+
+            _dataProvider.UpdateEntities(newsLetterSubscriptions);
+        }
+
+        if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "AddSubscriptionType", StringComparison.InvariantCultureIgnoreCase) == 0))
+        {
+            _dataProvider.InsertEntity(
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddSubscriptionType",
+                    Enabled = true,
+                    Name = "Add a new subscription type"
+                }
+            );
+        }
+
+        if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "DeleteSubscriptionType", StringComparison.InvariantCultureIgnoreCase) == 0))
+        {
+            _dataProvider.InsertEntity(
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteSubscriptionType",
+                    Enabled = true,
+                    Name = "Delete a subscription type"
+                }
+            );
+        }
+
+        if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "EditSubscriptionType", StringComparison.InvariantCultureIgnoreCase) == 0))
+        {
+            _dataProvider.InsertEntity(
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditSubscriptionType",
+                    Enabled = true,
+                    Name = "Edit a subscription type"
+                }
+            );
         }
     }
 

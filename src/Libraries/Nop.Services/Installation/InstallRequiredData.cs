@@ -35,6 +35,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
+using Nop.Services.Messages;
 using Nop.Services.Seo;
 
 namespace Nop.Services.Installation;
@@ -1098,7 +1099,7 @@ public partial class InstallationService
         var newsLetterSubscriptionType = new List<NewsLetterSubscriptionType>
         {
             new() {
-                Name = MessageDefaults.DefaultSubscriptionType,
+                Name = NopMessageDefaults.DefaultSubscriptionType,
                 TickedByDefault = true,
                 DisplayOrder = 0
             }
@@ -2586,6 +2587,11 @@ public partial class InstallationService
                     Name = "Add a new widget"
                 },
                 new() {
+                    SystemKeyword = "AddSubscriptionType",
+                    Enabled = true,
+                    Name = "Add a new subscription type"
+                },
+                new() {
                     SystemKeyword = "DeleteActivityLog",
                     Enabled = true,
                     Name = "Delete activity log"
@@ -2769,6 +2775,11 @@ public partial class InstallationService
                     SystemKeyword = "DeleteStore",
                     Enabled = true,
                     Name = "Delete a store"
+                },
+                new() {
+                    SystemKeyword = "DeleteSubscriptionType",
+                    Enabled = true,
+                    Name = "Delete a subscription type"
                 },
                 new() {
                     SystemKeyword = "DeleteSystemLog",
@@ -2974,6 +2985,11 @@ public partial class InstallationService
                     SystemKeyword = "EditStore",
                     Enabled = true,
                     Name = "Edit a store"
+                },
+                new() {
+                    SystemKeyword = "EditSubscriptionType",
+                    Enabled = true,
+                    Name = "Edit a subscription type"
                 },
                 new() {
                     SystemKeyword = "EditTask",

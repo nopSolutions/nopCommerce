@@ -40,8 +40,7 @@ public partial class BaseNameCompatibility : INameCompatibility
         { typeof(ForumSubscription), "Forums_Subscription" },
         { typeof(ForumTopic), "Forums_Topic" },
         { typeof(PrivateMessage), "Forums_PrivateMessage" },
-        { typeof(NewsItem), "News" },
-        { typeof(NewsLetterSubscriptionTypeMapping), "NewsLetterSubscription_Type_Mapping" }
+        { typeof(NewsItem), "News" }
     };
 
     public Dictionary<(Type, string), string> ColumnName => new()

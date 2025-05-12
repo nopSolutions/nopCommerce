@@ -9,16 +9,6 @@ namespace Nop.Services.Messages;
 public partial interface INewsLetterSubscriptionService
 {
     /// <summary>
-    /// Check whether the newsletter subscription is active
-    /// </summary>
-    /// <param name="newsLetterSubscriptionId">The newsletter subscription identifier</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains true if the newsletter is active, false otherwise
-    /// </returns>
-    Task<bool> IsNewsletterActiveAsync(NewsLetterSubscription newsLetterSubscription);
-
-    /// <summary>
     /// Inserts a newsletter subscription
     /// </summary>
     /// <param name="newsLetterSubscription">NewsLetter subscription</param>
@@ -53,14 +43,14 @@ public partial interface INewsLetterSubscriptionService
     Task<NewsLetterSubscription> GetNewsLetterSubscriptionByIdAsync(int newsLetterSubscriptionId);
 
     /// <summary>
-    /// Gets a newsletter subscription by newsletter subscription GUID
+    /// Gets the newsletter subscription list by newsletter subscription GUID
     /// </summary>
     /// <param name="newsLetterSubscriptionGuid">The newsletter subscription GUID</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the newsLetter subscription
+    /// The task result contains the newsLetter subscription list
     /// </returns>
-    Task<NewsLetterSubscription> GetNewsLetterSubscriptionByGuidAsync(Guid newsLetterSubscriptionGuid);
+    Task<IList<NewsLetterSubscription>> GetNewsLetterSubscriptionByGuidAsync(Guid newsLetterSubscriptionGuid);
 
     /// <summary>
     /// Gets a newsletter subscription by email and store ID

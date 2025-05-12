@@ -97,6 +97,8 @@ public partial class DefaultPermissionConfigManager : IPermissionConfigManager
         new ("Admin area. Newsletter Subscribers. View", StandardPermission.Promotions.SUBSCRIBERS_VIEW, nameof(StandardPermission.Promotions), NopCustomerDefaults.AdministratorsRoleName),
         new ("Admin area. Newsletter Subscribers. Create, edit, delete", StandardPermission.Promotions.SUBSCRIBERS_CREATE_EDIT_DELETE, nameof(StandardPermission.Promotions), NopCustomerDefaults.AdministratorsRoleName),
         new ("Admin area. Newsletter Subscribers. Import and export", StandardPermission.Promotions.SUBSCRIBERS_IMPORT_EXPORT, nameof(StandardPermission.Promotions), NopCustomerDefaults.AdministratorsRoleName),
+        new ("Admin area. Newsletter Subscription type. View", StandardPermission.Promotions.SUBSCRIPTION_TYPE_VIEW, nameof(StandardPermission.Promotions), NopCustomerDefaults.AdministratorsRoleName),
+        new ("Admin area. Newsletter Subscription type. Create, edit, delete", StandardPermission.Promotions.SUBSCRIPTION_TYPE_CREATE_EDIT_DELETE, nameof(StandardPermission.Promotions), NopCustomerDefaults.AdministratorsRoleName),
         new ("Admin area. Campaigns. View", StandardPermission.Promotions.CAMPAIGNS_VIEW, nameof(StandardPermission.Promotions), NopCustomerDefaults.AdministratorsRoleName),
         new ("Admin area. Campaigns. Create and Edit", StandardPermission.Promotions.CAMPAIGNS_CREATE_EDIT, nameof(StandardPermission.Promotions), NopCustomerDefaults.AdministratorsRoleName),
         new ("Admin area. Campaigns. Delete", StandardPermission.Promotions.CAMPAIGNS_DELETE, nameof(StandardPermission.Promotions), NopCustomerDefaults.AdministratorsRoleName),

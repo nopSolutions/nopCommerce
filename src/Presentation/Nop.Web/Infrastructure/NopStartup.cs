@@ -55,8 +55,8 @@ public partial class NopStartup : INopStartup
         services.AddScoped<IMeasureModelFactory, MeasureModelFactory>();
         services.AddScoped<IMessageTemplateModelFactory, MessageTemplateModelFactory>();
         services.AddScoped<IMultiFactorAuthenticationMethodModelFactory, MultiFactorAuthenticationMethodModelFactory>();
-        services.AddScoped<INewsletterSubscriptionModelFactory, NewsletterSubscriptionModelFactory>();
-        services.AddScoped<INewsletterSubscriptionTypeModelFactory, NewsLetterSubscriptionTypeModelFactory>();
+        services.AddScoped<INewsLetterSubscriptionModelFactory, NewsLetterSubscriptionModelFactory>();
+        services.AddScoped<INewsLetterSubscriptionTypeModelFactory, NewsLetterSubscriptionTypeModelFactory>();
         services.AddScoped<INewsModelFactory, NewsModelFactory>();
         services.AddScoped<IOrderModelFactory, OrderModelFactory>();
         services.AddScoped<IPaymentModelFactory, PaymentModelFactory>();
@@ -96,7 +96,7 @@ public partial class NopStartup : INopStartup
         services.AddScoped<Factories.IExternalAuthenticationModelFactory, Factories.ExternalAuthenticationModelFactory>();
         services.AddScoped<Factories.IJsonLdModelFactory, Factories.JsonLdModelFactory>();
         services.AddScoped<Factories.INewsModelFactory, Factories.NewsModelFactory>();
-        services.AddScoped<Factories.INewsletterModelFactory, Factories.NewsletterModelFactory>();
+        services.AddScoped<Factories.INewsLetterModelFactory, Factories.NewsLetterModelFactory>();
         services.AddScoped<Factories.IOrderModelFactory, Factories.OrderModelFactory>();
         services.AddScoped<Factories.IPollModelFactory, Factories.PollModelFactory>();
         services.AddScoped<Factories.IPrivateMessagesModelFactory, Factories.PrivateMessagesModelFactory>();

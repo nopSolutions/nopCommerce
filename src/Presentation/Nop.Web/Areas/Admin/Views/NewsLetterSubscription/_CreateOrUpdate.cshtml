@@ -1,0 +1,111 @@
+@model NewsLetterSubscriptionModel
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.NewsLetterSubscriptionTop, additionalData = Model })
+                <div class="card card-default">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Email" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="Email" asp-required="true" />
+                                <span asp-validation-for="Email"></span>
+                            </div>
+                        </div>
+                        @if (Model.AvailableNewsLetterSubscriptionTypes != null && Model.AvailableNewsLetterSubscriptionTypes.Count > 0)
+                        {
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="SelectedNewsLetterSubscriptionTypeId" />
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="input-group-append">
+                                        <div class="input-group">
+                                            <nop-select asp-for="SelectedNewsLetterSubscriptionTypeId" asp-items="Model.AvailableNewsLetterSubscriptionTypes" asp-multiple="false" asp-required="true" />
+                                        </div>
+                                        <div class="input-group-btn"></div>
+                                    </div>
+                                    <script>
+                                        $(function() {
+                                            var newsletterSubscriptionTypeIdInput = $('#@Html.IdFor(model => model.SelectedNewsLetterSubscriptionTypeId)').select2();
+                                        });
+                                    </script>
+                                </div>
+                            </div>
+                        }
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Active" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="Active" />
+                                <span asp-validation-for="Active"></span>
+                            </div>
+                        </div>
+                        @if (Model.AvailableNewsLetterSubscriptionStores != null && Model.AvailableNewsLetterSubscriptionStores.Count > 0)
+                        {
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="SelectedNewsLetterSubscriptionStoreId" />
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="input-group-append">
+                                        <div class="input-group">
+                                            <nop-select asp-for="SelectedNewsLetterSubscriptionStoreId" asp-items="Model.AvailableNewsLetterSubscriptionStores" asp-multiple="false" asp-required="true" />
+                                        </div>
+                                        <div class="input-group-btn"></div>
+                                    </div>
+                                    <script>
+                                        $(function() {
+                                            var newsletterSubscriptionStoreIdInput = $('#@Html.IdFor(model => model.SelectedNewsLetterSubscriptionStoreId)').select2();
+                                        });
+                                    </script>
+                                </div>
+                            </div>
+                        }
+                        @if (Model.AvailableNewsLetterSubscriptionLanguages != null && Model.AvailableNewsLetterSubscriptionLanguages.Count > 0)
+                        {
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="SelectedNewsLetterSubscriptionLanguageId" />
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="input-group-append">
+                                        <div class="input-group">
+                                            <nop-select asp-for="SelectedNewsLetterSubscriptionLanguageId" asp-items="Model.AvailableNewsLetterSubscriptionLanguages" asp-multiple="false" asp-required="true" />
+                                        </div>
+                                        <div class="input-group-btn"></div>
+                                    </div>
+                                    <script>
+                                        $(function() {
+                                            var newsletterSubscriptionLanguageIdInput = $('#@Html.IdFor(model => model.SelectedNewsLetterSubscriptionLanguageId)').select2();
+                                        });
+                                    </script>
+                                </div>
+                            </div>
+                        }
+                        @if (Model.Id > 0)
+                        {
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="CreatedOn" />
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="form-text-row">@Model.CreatedOn</div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.NewsLetterSubscriptionBottom, additionalData = Model })
+            </div>
+        </div>
+    </div>
+</section>

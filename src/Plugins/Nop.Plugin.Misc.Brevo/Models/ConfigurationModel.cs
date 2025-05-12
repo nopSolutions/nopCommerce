@@ -15,6 +15,7 @@ public record ConfigurationModel : BaseNopModel
     public ConfigurationModel()
     {
         AvailableLists = new List<SelectListItem>();
+        NewsLetterSubscriptionTypes = new List<NewsLetterSubscriptionMapModel>();
         AvailableSenders = new List<SelectListItem>();
         AvailableMessageTemplates = new List<SelectListItem>();
         MessageTemplateSearchModel = new BrevoMessageTemplateSearchModel();
@@ -31,10 +32,9 @@ public record ConfigurationModel : BaseNopModel
     [NopResourceDisplayName("Plugins.Misc.Brevo.Fields.ApiKey")]
     public string ApiKey { get; set; }
 
-    [NopResourceDisplayName("Plugins.Misc.Brevo.Fields.List")]
-    public int ListId { get; set; }
-    public bool ListId_OverrideForStore { get; set; }
     public IList<SelectListItem> AvailableLists { get; set; }
+
+    public IList<NewsLetterSubscriptionMapModel> NewsLetterSubscriptionTypes { get; set; }
 
     [NopResourceDisplayName("Plugins.Misc.Brevo.Fields.SmtpKey")]
     public string SmtpKey { get; set; }

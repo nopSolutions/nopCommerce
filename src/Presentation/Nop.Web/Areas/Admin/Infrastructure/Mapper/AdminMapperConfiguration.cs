@@ -880,8 +880,6 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(model => model.VatNumberStatusNote, options => options.Ignore())
             .ForMember(model => model.DisplayVatNumber, options => options.Ignore())
             .ForMember(model => model.LastVisitedPage, options => options.Ignore())
-            .ForMember(model => model.AvailableNewsletterSubscriptionStores, options => options.Ignore())
-            .ForMember(model => model.SelectedNewsletterSubscriptionStoreIds, options => options.Ignore())
             .ForMember(model => model.DisplayRewardPointsHistory, options => options.Ignore())
             .ForMember(model => model.AddRewardPoints, options => options.Ignore())
             .ForMember(model => model.CustomerRewardPointsSearchModel, options => options.Ignore())
@@ -1076,7 +1074,7 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
         CreateMap<GdprSettings, GdprSettingsModel>()
             .ForMember(model => model.GdprConsentSearchModel, options => options.Ignore())
             .ForMember(model => model.GdprEnabled_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.LogNewsletterConsent_OverrideForStore, options => options.Ignore())
+            .ForMember(model => model.LogNewsLetterConsent_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.LogPrivacyPolicyConsent_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.LogUserProfileChanges_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.DeleteInactiveCustomersAfterMonths_OverrideForStore, options => options.Ignore());
@@ -1209,16 +1207,23 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
         CreateMap<MessageTemplateModel, MessageTemplate>()
             .ForMember(entity => entity.DelayPeriod, options => options.Ignore());
 
-        CreateMap<NewsLetterSubscription, NewsletterSubscriptionModel>()
+        CreateMap<NewsLetterSubscription, NewsLetterSubscriptionModel>()
             .ForMember(model => model.CreatedOn, options => options.Ignore())
+            .ForMember(model => model.SubscriptionTypeName, options => options.Ignore())
+            .ForMember(model => model.AvailableNewsLetterSubscriptionTypes, options => options.Ignore())
+            .ForMember(model => model.AvailableNewsLetterSubscriptionStores, options => options.Ignore())
+            .ForMember(model => model.AvailableNewsLetterSubscriptionLanguages, options => options.Ignore())
+            .ForMember(model => model.SelectedNewsLetterSubscriptionTypeId, options => options.Ignore())
+            .ForMember(model => model.SelectedNewsLetterSubscriptionStoreId, options => options.Ignore())
+            .ForMember(model => model.SelectedNewsLetterSubscriptionLanguageId, options => options.Ignore())
             .ForMember(model => model.LanguageName, options => options.Ignore())
             .ForMember(model => model.StoreName, options => options.Ignore());
-        CreateMap<NewsletterSubscriptionModel, NewsLetterSubscription>()
+        CreateMap<NewsLetterSubscriptionModel, NewsLetterSubscription>()
             .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
+            .ForMember(entity => entity.TypeId, options => options.Ignore())
             .ForMember(entity => entity.NewsLetterSubscriptionGuid, options => options.Ignore())
             .ForMember(entity => entity.LanguageId, option => option.Ignore())
             .ForMember(entity => entity.StoreId, options => options.Ignore());
-
 
         //NewsLetter subscription type
         CreateMap<NewsLetterSubscriptionType, NewsLetterSubscriptionTypeModel>();
@@ -1515,7 +1520,7 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(model => model.ShowOnEmailWishlistToFriendPage_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.ShowOnLoginPage_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.ShowOnNewsCommentPage_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowOnNewsletterPage_OverrideForStore, options => options.Ignore())
+            .ForMember(model => model.ShowOnNewsLetterPage_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.ShowOnProductReviewPage_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.ShowOnRegistrationPage_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.ShowOnForgotPasswordPage_OverrideForStore, options => options.Ignore())

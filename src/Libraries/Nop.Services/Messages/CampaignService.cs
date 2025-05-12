@@ -66,6 +66,7 @@ public partial class CampaignService : ICampaignService
             Body = campaign.Body,
             StoreId = campaign.StoreId,
             CustomerRoleId = campaign.CustomerRoleId,
+            NewsLetterSubscriptionTypeId = campaign.NewsLetterSubscriptionTypeId,
             CreatedOnUtc = DateTime.UtcNow
         };
 

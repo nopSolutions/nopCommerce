@@ -328,7 +328,7 @@ public partial class AdminMenu : IAdminMenu
                         {
                             SystemName = "Newsletter subscription types",
                             Title = await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptionType"),
-                            PermissionNames = new List<string> { StandardPermission.Promotions.SUBSCRIBERS_VIEW },
+                            PermissionNames = new List<string> { StandardPermission.Promotions.SUBSCRIPTION_TYPE_VIEW },
                             Url = GetMenuItemUrl("NewsLetterSubscriptionType", "List"),
                             IconClass = "far fa-dot-circle"
                         },

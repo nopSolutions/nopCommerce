@@ -19,7 +19,6 @@ public partial class NewsLetterSubscriptionService : INewsLetterSubscriptionServ
     protected readonly IRepository<Customer> _customerRepository;
     protected readonly IRepository<CustomerCustomerRoleMapping> _customerCustomerRoleMappingRepository;
     protected readonly IRepository<NewsLetterSubscription> _subscriptionRepository;
-    protected readonly IRepository<NewsLetterSubscriptionTypeMapping> _newsLetterSubscriptionTypeMappingRepository;
 
     #endregion
 
@@ -29,15 +28,13 @@ public partial class NewsLetterSubscriptionService : INewsLetterSubscriptionServ
         IEventPublisher eventPublisher,
         IRepository<Customer> customerRepository,
         IRepository<CustomerCustomerRoleMapping> customerCustomerRoleMappingRepository,
-        IRepository<NewsLetterSubscription> subscriptionRepository,
-        IRepository<NewsLetterSubscriptionTypeMapping> newsLetterSubscriptionTypeMappingRepository)
+        IRepository<NewsLetterSubscription> subscriptionRepository)
     {
         _customerService = customerService;
         _eventPublisher = eventPublisher;
         _customerRepository = customerRepository;
         _customerCustomerRoleMappingRepository = customerCustomerRoleMappingRepository;
         _subscriptionRepository = subscriptionRepository;
-        _newsLetterSubscriptionTypeMappingRepository = newsLetterSubscriptionTypeMappingRepository;
     }
 
     #endregion
@@ -58,33 +55,17 @@ public partial class NewsLetterSubscriptionService : INewsLetterSubscriptionServ
 
         if (isSubscribe)
         {
-            await _eventPublisher.PublishNewsletterSubscribeAsync(subscription);
+            await _eventPublisher.PublishNewsLetterSubscribeAsync(subscription);
         }
         else
         {
-            await _eventPublisher.PublishNewsletterUnsubscribeAsync(subscription);
+            await _eventPublisher.PublishNewsLetterUnsubscribeAsync(subscription);
         }
     }
 
     #endregion
 
-    #region Methods
-
-    /// <summary>
-    /// Check whether the newsletter subscription is active
-    /// </summary>
-    /// <param name="newsLetterSubscriptionId">The newsletter subscription identifier</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains true if the newsletter is active, false otherwise
-    /// </returns>
-    public virtual async Task<bool> IsNewsletterActiveAsync(NewsLetterSubscription newsLetterSubscription)
-    {
-        ArgumentNullException.ThrowIfNull(newsLetterSubscription);
-
-        return newsLetterSubscription.Active &&
-            await _newsLetterSubscriptionTypeMappingRepository.Table.AnyAsync(x => x.NewsLetterSubscriptionId == newsLetterSubscription.Id);
-    }
+    #region Methods    
 
     /// <summary>
     /// Inserts a newsletter subscription
@@ -176,25 +157,25 @@ public partial class NewsLetterSubscriptionService : INewsLetterSubscriptionServ
     }
 
     /// <summary>
-    /// Gets a newsletter subscription by newsletter subscription GUID
+    /// Gets the newsletter subscription list by newsletter subscription GUID
     /// </summary>
     /// <param name="newsLetterSubscriptionGuid">The newsletter subscription GUID</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the newsLetter subscription
+    /// The task result contains the newsLetter subscription list
     /// </returns>
-    public virtual async Task<NewsLetterSubscription> GetNewsLetterSubscriptionByGuidAsync(Guid newsLetterSubscriptionGuid)
+    public virtual async Task<IList<NewsLetterSubscription>> GetNewsLetterSubscriptionByGuidAsync(Guid newsLetterSubscriptionGuid)
     {
         if (newsLetterSubscriptionGuid == Guid.Empty)
             return null;
 
-        var newsLetterSubscriptions = 
+        var newsLetterSubscriptions =
             from nls in _subscriptionRepository.Table
             where nls.NewsLetterSubscriptionGuid == newsLetterSubscriptionGuid
             orderby nls.Id
             select nls;
 
-        return await newsLetterSubscriptions.FirstOrDefaultAsync();
+        return await newsLetterSubscriptions.ToListAsync();
     }
 
     /// <summary>
@@ -258,11 +239,7 @@ public partial class NewsLetterSubscriptionService : INewsLetterSubscriptionServ
                     query = query.Where(nls => nls.StoreId == storeId);
                 if (subscriptionTypeId > 0)
                 {
-                    query = query.Join(_newsLetterSubscriptionTypeMappingRepository.Table, x => x.Id, y => y.NewsLetterSubscriptionId,
-                        (x, y) => new { Subscription = x, Mapping = y })
-                    .Where(z => subscriptionTypeId == z.Mapping.NewsLetterSubscriptionTypeId)
-                    .Select(z => z.Subscription)
-                    .Distinct();
+                    query = query.Where(nls => nls.TypeId == subscriptionTypeId).Distinct();
                 }
                 if (isActive.HasValue)
                     query = query.Where(nls => nls.Active == isActive.Value);
@@ -293,11 +270,7 @@ public partial class NewsLetterSubscriptionService : INewsLetterSubscriptionServ
                     query = query.Where(nls => nls.StoreId == storeId);
                 if (subscriptionTypeId > 0)
                 {
-                    query = query.Join(_newsLetterSubscriptionTypeMappingRepository.Table, x => x.Id, y => y.NewsLetterSubscriptionId,
-                        (x, y) => new { Subscription = x, Mapping = y })
-                    .Where(z => subscriptionTypeId == z.Mapping.NewsLetterSubscriptionTypeId)
-                    .Select(z => z.Subscription)
-                    .Distinct();
+                    query = query.Where(nls => nls.TypeId == subscriptionTypeId).Distinct();
                 }
                 if (isActive.HasValue)
                     query = query.Where(nls => nls.Active == isActive.Value);
@@ -317,33 +290,29 @@ public partial class NewsLetterSubscriptionService : INewsLetterSubscriptionServ
                 var joindQuery = query.Join(_customerRepository.Table,
                     nls => nls.Email,
                     c => c.Email,
-                    (nls, c) => new { NewsletterSubscribers = nls, Customer = c });
+                    (nls, c) => new { NewsLetterSubscription = nls, Customer = c });
 
                 joindQuery = joindQuery.Where(x => _customerCustomerRoleMappingRepository.Table.Any(ccrm =>
                     ccrm.CustomerId == x.Customer.Id && ccrm.CustomerRoleId == customerRoleId));
 
                 if (!string.IsNullOrEmpty(email))
-                    joindQuery = joindQuery.Where(x => x.NewsletterSubscribers.Email.Contains(email));
+                    joindQuery = joindQuery.Where(x => x.NewsLetterSubscription.Email.Contains(email));
                 if (createdFromUtc.HasValue)
-                    joindQuery = joindQuery.Where(x => x.NewsletterSubscribers.CreatedOnUtc >= createdFromUtc.Value);
+                    joindQuery = joindQuery.Where(x => x.NewsLetterSubscription.CreatedOnUtc >= createdFromUtc.Value);
                 if (createdToUtc.HasValue)
-                    joindQuery = joindQuery.Where(x => x.NewsletterSubscribers.CreatedOnUtc <= createdToUtc.Value);
+                    joindQuery = joindQuery.Where(x => x.NewsLetterSubscription.CreatedOnUtc <= createdToUtc.Value);
                 if (storeId > 0)
-                    joindQuery = joindQuery.Where(x => x.NewsletterSubscribers.StoreId == storeId);
+                    joindQuery = joindQuery.Where(x => x.NewsLetterSubscription.StoreId == storeId);
                 if (subscriptionTypeId > 0)
                 {
-                    query = query.Join(_newsLetterSubscriptionTypeMappingRepository.Table, x => x.Id, y => y.NewsLetterSubscriptionId,
-                        (x, y) => new { Subscription = x, Mapping = y })
-                    .Where(z => subscriptionTypeId == z.Mapping.NewsLetterSubscriptionTypeId)
-                    .Select(z => z.Subscription)
-                    .Distinct();
+                    query = query.Where(nls => nls.TypeId == subscriptionTypeId).Distinct();
                 }
                 if (isActive.HasValue)
-                    joindQuery = joindQuery.Where(x => x.NewsletterSubscribers.Active == isActive.Value);
+                    joindQuery = joindQuery.Where(x => x.NewsLetterSubscription.Active == isActive.Value);
 
-                joindQuery = joindQuery.OrderBy(x => x.NewsletterSubscribers.Email);
+                joindQuery = joindQuery.OrderBy(x => x.NewsLetterSubscription.Email);
 
-                return joindQuery.Select(x => x.NewsletterSubscribers);
+                return joindQuery.Select(x => x.NewsLetterSubscription);
             }, pageIndex, pageSize);
 
             return subscriptions;

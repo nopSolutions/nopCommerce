@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Messages;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
@@ -14,7 +15,7 @@ namespace Nop.Web.Areas.Admin.Factories;
 /// <summary>
 /// Represents the newsletter subscription model factory implementation
 /// </summary>
-public partial class NewsletterSubscriptionModelFactory : INewsletterSubscriptionModelFactory
+public partial class NewsLetterSubscriptionModelFactory : INewsLetterSubscriptionModelFactory
 {
     #region Fields
 
@@ -31,7 +32,7 @@ public partial class NewsletterSubscriptionModelFactory : INewsletterSubscriptio
 
     #region Ctor
 
-    public NewsletterSubscriptionModelFactory(CatalogSettings catalogSettings,
+    public NewsLetterSubscriptionModelFactory(CatalogSettings catalogSettings,
         IBaseAdminModelFactory baseAdminModelFactory,
         IDateTimeHelper dateTimeHelper,
         ILanguageService languageService,
@@ -62,7 +63,7 @@ public partial class NewsletterSubscriptionModelFactory : INewsletterSubscriptio
     /// A task that represents the asynchronous operation
     /// The task result contains the newsletter subscription search model
     /// </returns>
-    public virtual async Task<NewsletterSubscriptionSearchModel> PrepareNewsletterSubscriptionSearchModelAsync(NewsletterSubscriptionSearchModel searchModel)
+    public virtual async Task<NewsLetterSubscriptionSearchModel> PrepareNewsLetterSubscriptionSearchModelAsync(NewsLetterSubscriptionSearchModel searchModel)
     {
         ArgumentNullException.ThrowIfNull(searchModel);
 
@@ -108,7 +109,7 @@ public partial class NewsletterSubscriptionModelFactory : INewsletterSubscriptio
     /// A task that represents the asynchronous operation
     /// The task result contains the newsletter subscription list model
     /// </returns>
-    public virtual async Task<NewsletterSubscriptionListModel> PrepareNewsletterSubscriptionListModelAsync(NewsletterSubscriptionSearchModel searchModel)
+    public virtual async Task<NewsLetterSubscriptionListModel> PrepareNewsLetterSubscriptionListModelAsync(NewsLetterSubscriptionSearchModel searchModel)
     {
         ArgumentNullException.ThrowIfNull(searchModel);
 
@@ -130,12 +131,12 @@ public partial class NewsletterSubscriptionModelFactory : INewsletterSubscriptio
             pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
         //prepare list model
-        var model = await new NewsletterSubscriptionListModel().PrepareToGridAsync(searchModel, newsletterSubscriptions, () =>
+        var model = await new NewsLetterSubscriptionListModel().PrepareToGridAsync(searchModel, newsletterSubscriptions, () =>
         {
             return newsletterSubscriptions.SelectAwait(async subscription =>
             {
                 //fill in model values from the entity
-                var subscriptionModel = subscription.ToModel<NewsletterSubscriptionModel>();
+                var subscriptionModel = subscription.ToModel<NewsLetterSubscriptionModel>();
 
                 //convert dates to the user time
                 subscriptionModel.CreatedOn = (await _dateTimeHelper.ConvertToUserTimeAsync(subscription.CreatedOnUtc, DateTimeKind.Utc)).ToString();
@@ -144,13 +145,71 @@ public partial class NewsletterSubscriptionModelFactory : INewsletterSubscriptio
                 subscriptionModel.StoreName = (await _storeService.GetStoreByIdAsync(subscription.StoreId))?.Name ?? "Deleted";
                 subscriptionModel.LanguageName = (await _languageService.GetLanguageByIdAsync(subscription.LanguageId))?.Name ?? string.Empty;
 
-                var types = (await _newsLetterSubscriptionTypeService.GetSubscriptionTypesByNewsLetterAsync(subscription))
-                    .Select(subscriptionType => subscriptionType.Name);
-                subscriptionModel.SubscriptionTypes = string.Join(", ", types);
+                subscriptionModel.SubscriptionTypeName = (await _newsLetterSubscriptionTypeService.GetNewsLetterSubscriptionTypeByIdAsync(subscription.TypeId)).Name;
 
                 return subscriptionModel;
             });
         });
+
+        return model;
+    }
+
+    /// <summary>
+    /// Prepare newsletter subscription model
+    /// </summary>
+    /// <param name="model">Newsletter subscription model</param>
+    /// <param name="subscription">Subscription</param>
+    /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the newsletter subscription model
+    /// </returns>
+    public virtual async Task<NewsLetterSubscriptionModel> PrepareNewsLetterSubscriptionModelAsync(NewsLetterSubscriptionModel model,
+        NewsLetterSubscription subscription, bool excludeProperties = false)
+    {
+        if (subscription != null)
+        {
+            //fill in model values from the entity
+            model ??= subscription.ToModel<NewsLetterSubscriptionModel>();            
+
+            //convert dates to the user time
+            model.CreatedOn = (await _dateTimeHelper.ConvertToUserTimeAsync(subscription.CreatedOnUtc, DateTimeKind.Utc)).ToString();
+
+            model.SubscriptionTypeName = (await _newsLetterSubscriptionTypeService.GetNewsLetterSubscriptionTypeByIdAsync(subscription.TypeId)).Name;
+
+            //prepare localized models
+            if (!excludeProperties)
+            {
+                //prepare model newsletter subscriptions
+                model.SelectedNewsLetterSubscriptionTypeId = subscription.TypeId;
+                model.SelectedNewsLetterSubscriptionStoreId = subscription.StoreId;
+                model.SelectedNewsLetterSubscriptionLanguageId = subscription.LanguageId;
+            }
+        }
+
+        //prepare model subscription types for newsletter subscription
+        model.AvailableNewsLetterSubscriptionTypes = (await _newsLetterSubscriptionTypeService.GetAllNewsLetterSubscriptionTypesAsync()).Select(type => new SelectListItem
+        {
+            Value = type.Id.ToString(),
+            Text = type.Name,
+            Selected = model.SelectedNewsLetterSubscriptionTypeId == type.Id
+        }).ToList();
+
+        //prepare model stores for newsletter subscription
+        model.AvailableNewsLetterSubscriptionStores = (await _storeService.GetAllStoresAsync()).Select(store => new SelectListItem
+        {
+            Value = store.Id.ToString(),
+            Text = store.Name,
+            Selected = model.SelectedNewsLetterSubscriptionStoreId == store.Id
+        }).ToList();
+
+        //prepare model languages for newsletter subscription
+        model.AvailableNewsLetterSubscriptionLanguages = (await _languageService.GetAllLanguagesAsync()).Select(language => new SelectListItem
+        {
+            Value = language.Id.ToString(),
+            Text = language.Name,
+            Selected = model.SelectedNewsLetterSubscriptionLanguageId == language.Id
+        }).ToList();
 
         return model;
     }

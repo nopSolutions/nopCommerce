@@ -1,0 +1,32 @@
+@model NewsLetterSubscriptionModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Promotions.NewsLetterSubscription.AddNew").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Newsletter subscriptions");
+}
+
+<form asp-controller="NewsLetterSubscription" asp-action="Create" method="post" id="subscription-form">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Promotions.NewsLetterSubscription.AddNew")
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="List">@T("Admin.Promotions.NewsLetterSubscription.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-floppy-disk"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn btn-primary">
+                <i class="far fa-floppy-disk"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.NewsLetterSubscriptionButtons, additionalData = Model })
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdate", Model)
+</form>

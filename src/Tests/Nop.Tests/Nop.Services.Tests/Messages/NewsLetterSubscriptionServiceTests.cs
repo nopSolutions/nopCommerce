@@ -82,7 +82,7 @@ public class NewsLetterSubscriptionServiceTests : ServiceTest
         subscription.Active.Should().BeTrue();
         subscription.Active = false;
         await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(subscription);
-        subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByGuidAsync(guid);
+        subscription = (await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByGuidAsync(guid)).FirstOrDefault();
         subscription.Active.Should().BeFalse();
 
         subscription =
@@ -91,7 +91,7 @@ public class NewsLetterSubscriptionServiceTests : ServiceTest
         subscription.Should().NotBeNull();
 
         await _newsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(subscription);
-        subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByGuidAsync(guid);
+        subscription = (await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByGuidAsync(guid)).FirstOrDefault();
         subscription.Should().BeNull();
         subscription =
             await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(

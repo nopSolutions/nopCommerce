@@ -8,11 +8,11 @@ namespace Nop.Web.Areas.Admin.Models.Messages;
 /// <summary>
 /// Represents a newsletter subscription search model
 /// </summary>
-public partial record NewsletterSubscriptionSearchModel : BaseSearchModel
+public partial record NewsLetterSubscriptionSearchModel : BaseSearchModel
 {
     #region Ctor
 
-    public NewsletterSubscriptionSearchModel()
+    public NewsLetterSubscriptionSearchModel()
     {
         AvailableStores = new List<SelectListItem>();
         ActiveList = new List<SelectListItem>();

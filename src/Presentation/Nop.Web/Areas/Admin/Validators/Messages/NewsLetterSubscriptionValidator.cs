@@ -6,11 +6,11 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Web.Areas.Admin.Validators.Messages;
 
-public partial class NewsLetterSubscriptionValidator : BaseNopValidator<NewsletterSubscriptionModel>
+public partial class NewsLetterSubscriptionValidator : BaseNopValidator<NewsLetterSubscriptionModel>
 {
     public NewsLetterSubscriptionValidator(ILocalizationService localizationService)
     {
-        RuleFor(x => x.Email).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptions.Fields.Email.Required"));
+        RuleFor(x => x.Email).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscription.Fields.Email.Required"));
         RuleFor(x => x.Email)
             .IsEmailAddress()
             .WithMessageAwait(localizationService.GetResourceAsync("Admin.Common.WrongEmail"));

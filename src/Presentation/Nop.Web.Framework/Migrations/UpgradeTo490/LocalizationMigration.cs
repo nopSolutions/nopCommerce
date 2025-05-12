@@ -36,7 +36,15 @@ public class LocalizationMigration : MigrationBase
             "Admin.Configuration.Settings.CustomerUser.NewsletterEnabled",
             "Admin.Configuration.Settings.CustomerUser.NewsletterEnabled.Hint",
             "Admin.Configuration.Settings.CustomerUser.NewsletterTickedByDefault",
-            "Admin.Configuration.Settings.CustomerUser.NewsletterTickedByDefault.Hint"
+            "Admin.Configuration.Settings.CustomerUser.NewsletterTickedByDefault.Hint",
+            "Admin.Customers.Customers.Fields.Newsletter",
+            "Admin.Customers.Customers.Fields.Newsletter.Hint",
+            "Admin.Promotions.NewsLetterSubscriptions.Fields.Active",
+            "Admin.Promotions.NewsLetterSubscriptions.Fields.CreatedOn",
+            "Admin.Promotions.NewsLetterSubscriptions.Fields.Email",
+            "Admin.Promotions.NewsLetterSubscriptions.Fields.Email.Required",
+            "Admin.Promotions.NewsLetterSubscriptions.Fields.Language",
+            "Admin.Promotions.NewsLetterSubscriptions.Fields.Store"
         });
 
         #endregion
@@ -127,8 +135,11 @@ public class LocalizationMigration : MigrationBase
 
             //#6874
             ["Admin.Promotions.NewsLetterSubscriptionType"] = "Subscription types",
+            ["Admin.Promotions.NewsLetterSubscriptionType.Fields.LimitedToStores"] = "Limited to stores",
+            ["Admin.Promotions.NewsLetterSubscriptionType.Fields.LimitedToStores.Hint"] = "Option to limit this attribute to a certain store. If you have multiple stores, choose one or several from the list. If you don't use this option just leave this field empty.",
             ["Admin.Promotions.NewsLetterSubscriptionType.Fields.Name"] = "Name",
             ["Admin.Promotions.NewsLetterSubscriptionType.Fields.Name.Hint"] = "Enter the name of subscription type.",
+            ["Admin.Promotions.NewsLetterSubscriptionType.Fields.Name.Required"] = "Please provide a name.",
             ["Admin.Promotions.NewsLetterSubscriptionType.Fields.TickedByDefault"] = "Ticked by default",
             ["Admin.Promotions.NewsLetterSubscriptionType.Fields.TickedByDefault.Hint"] = "Indicated whether the subscription type is ticked by default.",
             ["Admin.Promotions.NewsLetterSubscriptionType.Fields.DisplayOrder"] = "Display order",
@@ -138,13 +149,36 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Promotions.NewsLetterSubscriptionType.Updated"] = "The subscription type has been updated successfully.",
             ["Admin.Promotions.NewsLetterSubscriptionType.EditSubscriptionTypeDetails"] = "Edit subscription type",
             ["Admin.Promotions.NewsLetterSubscriptionType.BackToList"] = "back to subscription types list",
-            ["Admin.Promotions.NewsLetterSubscriptionType.AddNew"] = "Add a new subscription type",
+            ["Admin.Promotions.NewsLetterSubscriptionType.AddNew"] = "Add a new subscription type",            
             ["Admin.Promotions.NewsLetterSubscriptions.List.SubscriptionTypes"] = "Subscription types",
-            ["Admin.Promotions.NewsLetterSubscriptions.List.SubscriptionTypes.Hint"] = "Search by a specific subscription type.",
-            ["Admin.Promotions.NewsLetterSubscriptions.Fields.SubscriptionTypes"] = "Subscription types",
+            ["Admin.Promotions.NewsLetterSubscriptions.List.SubscriptionTypes.Hint"] = "Search by a specific subscription type.",            
             ["Admin.Promotions.Campaigns.Fields.NewsLetterSubscriptionType"] = "Limited to subscription types",
             ["Admin.Promotions.Campaigns.Fields.NewsLetterSubscriptionType.Hint"] = "Choose a subscription type to which this email will be sent.",
             ["Account.Fields.NewsLetterSubscriptionType"] = "NewsLetter subscription list",
+            ["ActivityLog.AddSubscriptionType"] = "Added a new subscription type (ID = {0})",
+            ["ActivityLog.EditSubscriptionType"] = "Edited a subscription type (ID = {0})",
+            ["ActivityLog.DeleteSubscriptionType"] = "Deleted a subscription type (ID = {0})",
+            ["Admin.Promotions.NewsLetterSubscription.EditSubscriptionDetails"] = "Edit subscription",
+            ["Admin.Promotions.NewsLetterSubscription.BackToList"] = "back to subscriptions list",
+            ["Admin.Promotions.NewsLetterSubscription.AddNew"] = "Add a new subscription",
+            ["Admin.Promotions.NewsLetterSubscription.Deleted"] = "The subscription has been deleted successfully.",
+            ["Admin.Promotions.NewsLetterSubscription.Added"] = "The subscription has been added successfully.",
+            ["Admin.Promotions.NewsLetterSubscription.Updated"] = "The subscription has been updated successfully.",
+            ["Admin.Promotions.NewsLetterSubscription.Warning"] = "An entity with this subscription type cannot be added or already exists.",
+
+            ["Admin.Promotions.NewsLetterSubscription.Fields.SubscriptionType"] = "Subscription type",
+            ["Admin.Promotions.NewsLetterSubscription.Fields.SubscriptionType.Hint"] = "Enter the type of subscription.",
+            ["Admin.Promotions.NewsLetterSubscription.Fields.Active"] = "Active",
+            ["Admin.Promotions.NewsLetterSubscription.Fields.Active.Hint"] = "A value indicating whether the subscription is active.",
+            ["Admin.Promotions.NewsLetterSubscription.Fields.Email"] = "Email",
+            ["Admin.Promotions.NewsLetterSubscription.Fields.Email.Hint"] = "Enter the email of subscription.",
+            ["Admin.Promotions.NewsLetterSubscription.Fields.Email.Required"] = "Email is required.",
+            ["Admin.Promotions.NewsLetterSubscription.Fields.Store"] = "Store",
+            ["Admin.Promotions.NewsLetterSubscription.Fields.Store.Hint"] = "Choose store to subscribe to newsletter.",
+            ["Admin.Promotions.NewsLetterSubscription.Fields.Language"] = "Language",
+            ["Admin.Promotions.NewsLetterSubscription.Fields.Language.Hint"] = "Choose language to subscribe to newsletter.",
+            ["Admin.Promotions.NewsLetterSubscription.Fields.CreatedOn"] = "Created on",
+            ["Admin.Promotions.NewsLetterSubscription.Fields.CreatedOn.Hint"] = "Date/Time the newsletter subscriptions entry was created.",
         }, languageId);
 
         #endregion

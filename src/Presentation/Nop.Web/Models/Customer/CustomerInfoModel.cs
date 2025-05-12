@@ -157,13 +157,5 @@ public partial record CustomerInfoModel : BaseNopModel
         public string AuthMethodName { get; set; }
     }
 
-    public partial record NewsLetterSubscriptionModel : BaseNopEntityModel
-    {
-        public int TypeId { get; set; }
-        public string Name { get; set; }
-        public bool IsActive { get; set; }
-
-    }
-
     #endregion
 }

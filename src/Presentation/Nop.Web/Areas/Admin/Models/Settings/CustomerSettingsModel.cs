@@ -114,10 +114,10 @@ public partial record CustomerSettingsModel : BaseNopModel, ISettingsModel
     public int FailedPasswordLockoutMinutes { get; set; }
 
     [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.HideNewsletterBlock")]
-    public bool HideNewsletterBlock { get; set; }
+    public bool HideNewsLetterBlock { get; set; }
 
     [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.NewsletterBlockAllowToUnsubscribe")]
-    public bool NewsletterBlockAllowToUnsubscribe { get; set; }
+    public bool NewsLetterBlockAllowToUnsubscribe { get; set; }
 
     [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.StoreLastVisitedPage")]
     public bool StoreLastVisitedPage { get; set; }

@@ -18,7 +18,7 @@ public partial class NewsletterController : BasePublicController
     protected readonly ICustomerService _customerService;
     protected readonly ILanguageService _languageService;
     protected readonly ILocalizationService _localizationService;
-    protected readonly INewsletterModelFactory _newsletterModelFactory;
+    protected readonly INewsLetterModelFactory _newsletterModelFactory;
     protected readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
     protected readonly INewsLetterSubscriptionTypeService _newsLetterSubscriptionTypeService;
     protected readonly IStoreContext _storeContext;
@@ -29,7 +29,7 @@ public partial class NewsletterController : BasePublicController
         ICustomerService customerService,
         ILanguageService languageService,
         ILocalizationService localizationService,
-        INewsletterModelFactory newsletterModelFactory,
+        INewsLetterModelFactory newsletterModelFactory,
         INewsLetterSubscriptionService newsLetterSubscriptionService,
         INewsLetterSubscriptionTypeService newsLetterSubscriptionTypeService,
         IStoreContext storeContext,
@@ -75,66 +75,74 @@ public partial class NewsletterController : BasePublicController
             var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(email, store.Id);
             var currentLanguage = await _workContext.GetWorkingLanguageAsync();
 
-            var newsLetterSubscriptionTypes = await _newsLetterSubscriptionTypeService.GetAllNewsLetterSubscriptionTypesAsync();
-            var newsLetterSubscriptionTypesByDefault = newsLetterSubscriptionTypes.Where(s => s.TickedByDefault);
-            if (newsLetterSubscriptionTypesByDefault.Any())
-            {
-                newsLetterSubscriptionTypes = newsLetterSubscriptionTypesByDefault.ToList();
-            }
+            var newsLetterSubscriptionTypes = (await _newsLetterSubscriptionTypeService.GetAllNewsLetterSubscriptionTypesAsync(store.Id))
+                .Where(s => s.TickedByDefault);
 
             if (subscription != null)
             {
+                var currentSubscriptions = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByGuidAsync(subscription.NewsLetterSubscriptionGuid);
                 subscription.LanguageId = subscription.LanguageId == 0 ? currentLanguage.Id : subscription.LanguageId;
                 if (subscribe)
                 {
-                    if (!subscription.Active)
+                    //delete Subscriptions
+                    foreach (var currentSubscription in currentSubscriptions)
                     {
-                        await _workflowMessageService.SendNewsLetterSubscriptionActivationMessageAsync(subscription);
-                        await _newsLetterSubscriptionTypeService.ClearNewsLetterSubscriptionTypeMappingsAsync(subscription);
-                        foreach (var newsLetterSubscriptionType in newsLetterSubscriptionTypes)
+                        await _newsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(currentSubscription);
+                    }
+
+                    var newsLetterSubscriptionGuid = new Guid();
+                    var isSendActivation = false;
+                    foreach (var newsLetterSubscriptionType in newsLetterSubscriptionTypes)
+                    {
+                        var newsLetterSubscription = new NewsLetterSubscription
                         {
-                            await _newsLetterSubscriptionTypeService.InsertNewsLetterSubscriptionTypeMappingsAsync(new NewsLetterSubscriptionTypeMapping
-                            {
-                                NewsLetterSubscriptionId = subscription.Id,
-                                NewsLetterSubscriptionTypeId = newsLetterSubscriptionType.Id
-                            });
+                            NewsLetterSubscriptionGuid = newsLetterSubscriptionGuid,
+                            Email = email,
+                            Active = false,
+                            TypeId = newsLetterSubscriptionType.Id,
+                            StoreId = store.Id,
+                            LanguageId = currentLanguage.Id,
+                            CreatedOnUtc = DateTime.UtcNow
+                        };
+                        await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(newsLetterSubscription);
+                        
+                        if (!isSendActivation)
+                        {
+                            await _workflowMessageService.SendNewsLetterSubscriptionActivationMessageAsync(newsLetterSubscription);
+                            isSendActivation = true;
                         }
                     }
                     result = await _localizationService.GetResourceAsync("Newsletter.SubscribeEmailSent");
                 }
                 else
                 {
-                    if (subscription.Active)
+                    if (currentSubscriptions.Where(s => s.Active).Any())
                     {
                         await _workflowMessageService.SendNewsLetterSubscriptionDeactivationMessageAsync(subscription);
-                        await _newsLetterSubscriptionTypeService.ClearNewsLetterSubscriptionTypeMappingsAsync(subscription);
                     }
                     result = await _localizationService.GetResourceAsync("Newsletter.UnsubscribeEmailSent");
                 }
             }
             else if (subscribe)
             {
-                subscription = new NewsLetterSubscription
-                {
-                    NewsLetterSubscriptionGuid = Guid.NewGuid(),
-                    Email = email,
-                    Active = false,
-                    StoreId = store.Id,
-                    LanguageId = currentLanguage.Id,
-                    CreatedOnUtc = DateTime.UtcNow
-                };
-                await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(subscription);
-                await _workflowMessageService.SendNewsLetterSubscriptionActivationMessageAsync(subscription);
-
-                var addedNewsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(subscription.Email, store.Id);
+                var newsLetterSubscriptionGuid = Guid.NewGuid();
                 foreach (var newsLetterSubscriptionType in newsLetterSubscriptionTypes)
                 {
-                    await _newsLetterSubscriptionTypeService.InsertNewsLetterSubscriptionTypeMappingsAsync(new NewsLetterSubscriptionTypeMapping
+                    var subscriber = new NewsLetterSubscription
                     {
-                        NewsLetterSubscriptionId = addedNewsletter.Id,
-                        NewsLetterSubscriptionTypeId = newsLetterSubscriptionType.Id
-                    });
+                        NewsLetterSubscriptionGuid = newsLetterSubscriptionGuid,
+                        Email = email,
+                        Active = false,
+                        TypeId = newsLetterSubscriptionType.Id,
+                        StoreId = store.Id,
+                        LanguageId = currentLanguage.Id,
+                        CreatedOnUtc = DateTime.UtcNow
+                    };
+                    await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(subscriber);
                 }
+
+                var currentSubscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(email, store.Id);
+                await _workflowMessageService.SendNewsLetterSubscriptionActivationMessageAsync(currentSubscription);
 
                 result = await _localizationService.GetResourceAsync("Newsletter.SubscribeEmailSent");
             }
@@ -156,23 +164,31 @@ public partial class NewsletterController : BasePublicController
     [CheckAccessClosedStore(ignore: true)]
     public virtual async Task<IActionResult> SubscriptionActivation(Guid token, bool active)
     {
-        var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByGuidAsync(token);
-        if (subscription == null)
+        var subscriptionList = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByGuidAsync(token);
+        if (subscriptionList == null)
             return RedirectToRoute("Homepage");
 
         if (active)
         {
-            subscription.Active = true;
-            await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(subscription);
-
-            if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()) &&
-                await _languageService.GetLanguageByIdAsync(subscription.LanguageId) is Language language)
+            foreach(var subscription in subscriptionList)
             {
-                await _workContext.SetWorkingLanguageAsync(language);
+                subscription.Active = true;
+                await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(subscription);
+
+                if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()) &&
+                await _languageService.GetLanguageByIdAsync(subscription.LanguageId) is Language language)
+                {
+                    await _workContext.SetWorkingLanguageAsync(language);
+                }
             }
         }
         else
-            await _newsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(subscription);
+        {
+            foreach(var subscription in subscriptionList)
+            {
+                await _newsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(subscription);
+            }
+        }
 
         var model = await _newsletterModelFactory.PrepareSubscriptionActivationModelAsync(active);
         return View(model);

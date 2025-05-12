@@ -305,27 +305,6 @@
             </div>
         </div>
     }
-    @if (Model.AvailableNewsletterSubscriptionStores != null && Model.AvailableNewsletterSubscriptionStores.Count > 0)
-    {
-        <div class="form-group row">
-            <div class="col-md-3">
-                <nop-label asp-for="SelectedNewsletterSubscriptionStoreIds" />
-            </div>
-            <div class="col-md-9">
-                <div class="input-group-append">
-                    <div class="input-group">
-                        <nop-select asp-for="SelectedNewsletterSubscriptionStoreIds" asp-items="Model.AvailableNewsletterSubscriptionStores" asp-multiple="true" />
-                    </div>
-                    <div class="input-group-btn"></div>
-                </div>
-                <script>
-                $(function() {
-                    var newsletterSubscriptionStoreIdsInput = $('#@Html.IdFor(model => model.SelectedNewsletterSubscriptionStoreIds)').select2();
-                });
-                </script>
-            </div>
-        </div>
-    }
     <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="SelectedCustomerRoleIds" />
