@@ -5,9 +5,23 @@
   <input type="tel" id="phone" name="phoneNumber" placeholder="Phone Number" required
          pattern="^(\(\d{3}\)|\d{3})[-.\s]?\d{3}[-.\s]?\d{4}$" />
   <button type="submit">Subscribe</button>
+  <div id="form-message" style="margin-top: 10px; color: #fff; padding: 10px; display: none; border-radius: 5px;"></div>
 </form>
 
-<script>
+ <script>
+  const formMessage = document.getElementById("form-message");
+
+  function showMessage(message, type = "success") {
+    const colors = {
+      success: "#28a745",
+      error: "#dc3545",
+      warning: "#ffc107"
+    };
+    formMessage.style.display = "block";
+    formMessage.style.backgroundColor = colors[type] || colors.success;
+    formMessage.textContent = message;
+  }
+
   document.getElementById("marketingForm").addEventListener("submit", async function (e) {
     e.preventDefault();
 
@@ -16,11 +30,10 @@
     const phone = rawPhone.replace(/\D/g, ''); // Only digits
 
     if (!email) {
-      alert("Please enter a valid email address.");
+      showMessage("Please enter your email address.", "error");
       return;
     }
 
-    // 1. Subscribe to newsletter
     const subscribeToNewsletter = async () => {
       try {
         const response = await fetch('@(Url.RouteUrl("SubscribeNewsletter"))', {
@@ -32,23 +45,22 @@
           })
         });
 
-        const result = await response.json(); // Assumes the endpoint returns JSON
+        const result = await response.json();
         if (result.Success) {
-          alert(result.Result || 'Subscribed to newsletter!');
+          showMessage(result.Result || "Thanks for subscribing to our newsletter!");
         } else {
-          alert(result.Result || 'Newsletter subscription failed.');
+          showMessage(result.Result || "We couldn't complete your newsletter signup. Please try again.", "error");
         }
       } catch (error) {
-        alert("Error subscribing to newsletter.");
+        showMessage("Sorry! Something went wrong with the newsletter signup.", "error");
       }
     };
 
-    // 2. Optionally subscribe to SMS if phone number is given
     const subscribeToSms = async () => {
       if (phone.length === 0) return;
 
       if (phone.length !== 10) {
-        alert("Please enter a valid 10-digit phone number.");
+        showMessage("Please enter a valid 10-digit phone number.", "warning");
         return;
       }
 
@@ -59,19 +71,42 @@
           body: JSON.stringify({ emailAddress: email, phoneNumber: phone })
         });
 
-        const result = await response.json();
-        alert(result.message || "SMS subscription successful.");
+        let result = await response.json();
+
+        // Handle stringified JSON in result.message
+        let parsedMessage = result.message;
+        try {
+          const maybeParsed = JSON.parse(result.message);
+          if (maybeParsed && typeof maybeParsed.message === "string") {
+            parsedMessage = maybeParsed.message;
+          }
+        } catch (e) {
+          // result.message is not JSON, proceed as-is
+        }
+
+        if (response.status === 400) {
+          // Friendly override for known error
+          if (result.error === "ERROR_SUBSCRIBED_PHONE_NUMBER") {
+            parsedMessage = "You're already subscribed to SMS alerts at this number.";
+          }
+
+          showMessage(parsedMessage, "warning");
+        } else if (!response.ok) {
+          showMessage("Something went wrong with SMS signup. Please try again later.", "error");
+        } else {
+          showMessage(parsedMessage || "You're signed up for SMS alerts!");
+        }
+
       } catch (error) {
-        alert("Error subscribing to SMS.");
+        showMessage("Sorry! We couldn't complete your SMS signup.", "error");
       }
     };
 
-    // Execute both
+
     await subscribeToNewsletter();
     await subscribeToSms();
   });
 
-  // Optional: Allow Enter key to trigger submission from email field
   document.getElementById("newsletter-email").addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
       event.preventDefault();
