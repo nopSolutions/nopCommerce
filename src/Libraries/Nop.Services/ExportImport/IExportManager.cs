@@ -78,6 +78,38 @@ public partial interface IExportManager
     /// <returns>A task that represents the asynchronous operation</returns>
     Task<byte[]> ExportOrdersToXlsxAsync(IList<Order> orders);
 
+    Task<string> ExportSalesSummaryToXmlAsync(IList<SalesSummaryReportLine> salesSummaries);
+
+    Task<byte[]> ExportSalesSummaryToXlsxAsync(IList<SalesSummaryReportLine> salesSummaries);
+
+    Task<string> ExportLowStockToXmlAsync(IList<LowStockProductReportLine> products);
+
+    Task<byte[]> ExportLowStockToXlsxAsync(IList<LowStockProductReportLine> products);
+
+    Task<string> ExportBestSellersToXmlAsync(IList<BestsellersReportLine> products);
+
+    Task<byte[]> ExportBestSellersToXlsxAsync(IList<BestsellersReportLine> products);
+
+    Task<string> ExportNeverSoldToXmlAsync(IList<Product> products);
+
+    Task<byte[]> ExportNeverSoldToXlsxAsync(IList<Product> products);
+
+    Task<string> ExportCountrySalesToXmlAsync(IList<OrderByCountryReportLine> orders);
+
+    Task<byte[]> ExportCountrySalesToXlsxAsync(IList<OrderByCountryReportLine> orders);
+
+    Task<string> ExportRegisteredCustomersToXmlAsync(IList<RegisteredCustomersReportLine> customers);
+
+    Task<byte[]> ExportRegisteredCustomersToXlsxAsync(IList<RegisteredCustomersReportLine> customers);
+
+    Task<string> ExportBestCustomersByOrderTotalToXmlAsync(IList<BestCustomerReportLine> customers);
+
+    Task<byte[]> ExportBestCustomersByOrderTotalToXlsxAsync(IList<BestCustomerReportLine> customers);
+
+    Task<string> ExportBestCustomersByNumberOfOrdersToXmlAsync(IList<BestCustomerReportLine> customers);
+
+    Task<byte[]> ExportBestCustomersByNumberOfOrdersToXlsxAsync(IList<BestCustomerReportLine> customers);
+
     /// <summary>
     /// Export customer list to XLSX
     /// </summary>
