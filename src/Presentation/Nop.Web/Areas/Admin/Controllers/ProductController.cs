@@ -281,9 +281,8 @@ public partial class ProductController : BaseAdminController
         var existingProductCategories = await _categoryService.GetProductCategoriesByProductIdAsync(product.Id, true);
 
         //delete categories
-        foreach (var existingProductCategory in existingProductCategories)
-            if (!model.SelectedCategoryIds.Contains(existingProductCategory.CategoryId))
-                await _categoryService.DeleteProductCategoryAsync(existingProductCategory);
+        var productCategoriesToDelete = existingProductCategories.Where(pc => !model.SelectedCategoryIds.Contains(pc.CategoryId)).ToList();
+        await _categoryService.DeleteProductCategoriesAsync(productCategoriesToDelete);
 
         //add categories
         foreach (var categoryId in model.SelectedCategoryIds)
@@ -317,9 +316,8 @@ public partial class ProductController : BaseAdminController
         var existingProductManufacturers = await _manufacturerService.GetProductManufacturersByProductIdAsync(product.Id, true);
 
         //delete manufacturers
-        foreach (var existingProductManufacturer in existingProductManufacturers)
-            if (!model.SelectedManufacturerIds.Contains(existingProductManufacturer.ManufacturerId))
-                await _manufacturerService.DeleteProductManufacturerAsync(existingProductManufacturer);
+        var productManufacturersToDelete = existingProductManufacturers.Where(pm => !model.SelectedManufacturerIds.Contains(pm.ManufacturerId)).ToList();
+        await _manufacturerService.DeleteProductManufacturersAsync(productManufacturersToDelete);
 
         //add manufacturers
         foreach (var manufacturerId in model.SelectedManufacturerIds)
@@ -776,12 +774,11 @@ public partial class ProductController : BaseAdminController
         var existingValuePictures = await _productAttributeService.GetProductAttributeValuePicturesAsync(value.Id);
         var productPictureIds = (await _pictureService.GetPicturesByProductIdAsync(product.Id)).Select(p => p.Id).ToList();
 
-        //delete manufacturers
-        foreach (var existingValuePicture in existingValuePictures)
-            if (!model.PictureIds.Contains(existingValuePicture.PictureId) || !productPictureIds.Contains(existingValuePicture.PictureId))
-                await _productAttributeService.DeleteProductAttributeValuePictureAsync(existingValuePicture);
+        //delete product attribute value picture
+        var existingPicturesToDelete = existingValuePictures.Where(pavp => !model.PictureIds.Contains(pavp.PictureId) || !productPictureIds.Contains(pavp.PictureId)).ToList();
+        await _productAttributeService.DeleteProductAttributeValuePicturesAsync(existingPicturesToDelete);
 
-        //add manufacturers
+        //add product attribute value picture
         foreach (var pictureId in model.PictureIds)
         {
             if (!productPictureIds.Contains(pictureId))
