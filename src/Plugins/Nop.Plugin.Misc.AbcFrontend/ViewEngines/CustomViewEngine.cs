@@ -17,6 +17,8 @@ namespace Nop.Plugin.Misc.AbcFrontend.ViewEngines
 
             this.AddAdminViewLocationFormats(
                 new List<string> {
+                    // this will need to be fixed to allow both Category and Product to be used.
+                    "~/Areas/Admin/Views/Category/{0}.cshtml",
                     "~/Areas/Admin/Views/Product/{0}.cshtml"
                 }, false);
         }

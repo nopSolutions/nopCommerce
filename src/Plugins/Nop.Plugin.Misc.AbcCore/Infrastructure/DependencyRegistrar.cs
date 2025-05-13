@@ -18,6 +18,7 @@ using Nop.Services.Shipping;
 using Nop.Services.Logging;
 using SevenSpikes.Nop.Services.Catalog;
 using Nop.Services.Catalog;
+using ICategoryModelFactory = Nop.Web.Areas.Admin.Factories.ICategoryModelFactory;
 
 namespace Nop.Plugin.Misc.AbcCore.Infrastructure
 {

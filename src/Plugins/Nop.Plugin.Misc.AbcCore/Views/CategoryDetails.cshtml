@@ -1,0 +1,32 @@
+@using Nop.Plugin.Misc.AbcCore.Models;
+
+@model AbcCategoryDetailsModel
+
+<nop-card id="HawthorneImage" asp-name="hawthorne-image" asp-icon="fas fa-info" asp-title="Hawthorne Image" asp-hide-block-attribute-name="HawthorneImage" asp-hide="false">
+    <div class="card-body">
+        <div class="card card-default">
+            <div class="card-body">
+                <section class="content">
+                    Optional image to be displayed on Hawthorne. If this is not provided, default picture will be used.
+                </section>
+                <div class="form-group advanced-setting row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.HawthornePictureId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.HawthornePictureId" />
+                        <span asp-validation-for="@Model.HawthornePictureId"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var element = document.getElementById('HawthorneImage');
+            var parent = document.getElementById('category-cards');
+
+            parent.prepend(element);
+        });
+	</script> 
+</nop-card>

@@ -23,6 +23,7 @@
     <None Remove="Views\Configure.cshtml" />
     <None Remove="Views\_ViewImports.cshtml" />
     <None Remove="Views\ProductDetails.cshtml" />
+    <None Remove="Views\CategoryDetails.cshtml" />
     <None Remove="Areas\Admin\Views\_ViewImports.cshtml" />
     <None Remove="Areas\Admin\Views\AbcPromo\List.cshtml" />
     <None Remove="Areas\Admin\Views\AbcPromo\Products.cshtml" />
@@ -51,6 +52,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\ProductDetails.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\CategoryDetails.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Admin\Views\_ViewImports.cshtml">

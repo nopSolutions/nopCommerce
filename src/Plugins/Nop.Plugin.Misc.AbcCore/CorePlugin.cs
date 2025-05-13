@@ -108,7 +108,8 @@ namespace Nop.Plugin.Misc.AbcCore
                 {
                     AdminWidgetZones.ProductDetailsBlock,
                     AdminWidgetZones.HeaderBefore,
-                    PublicWidgetZones.Footer
+                    PublicWidgetZones.Footer,
+                    AdminWidgetZones.CategoryDetailsBlock
                 }
             );
         }

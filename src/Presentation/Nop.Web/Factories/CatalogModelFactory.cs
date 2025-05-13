@@ -34,6 +34,8 @@ using Nop.Web.Framework.Events;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Media;
+// ABC
+using Nop.Core.Infrastructure;
 
 namespace Nop.Web.Factories
 {
@@ -439,7 +441,19 @@ namespace Nop.Web.Factories
 
                     subCatModel.PictureModel = await _staticCacheManager.GetAsync(categoryPictureCacheKey, async () =>
                     {
-                        var picture = await _pictureService.GetPictureByIdAsync(curCategory.PictureId);
+                        // ABC: need to do this since otherwise we break 7Spikes functionality
+                        var HAWTHORNE_STORE_ID = 8;
+                        var genericAttributeService = EngineContext.Current.Resolve<IGenericAttributeService>();
+                        
+                        var hawthornePictureId = currentStore.Id == HAWTHORNE_STORE_ID ?
+                            await genericAttributeService.GetAttributeAsync<int>(curCategory, "HawthornePictureId") :
+                            0;
+                        var pictureId = hawthornePictureId != 0 ?
+                            hawthornePictureId :
+                            curCategory.PictureId;
+
+                        var picture = await _pictureService.GetPictureByIdAsync(pictureId);
+                        // ABC: end custom
                         string fullSizeImageUrl, imageUrl;
 
                         (fullSizeImageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture);

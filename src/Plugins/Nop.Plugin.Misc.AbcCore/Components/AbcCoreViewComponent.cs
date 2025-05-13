@@ -20,6 +20,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Plugin.Misc.AbcCore.Models;
 using Nop.Web.Framework.Infrastructure;
+using nopWebAdminCatalog = Nop.Web.Areas.Admin.Models.Catalog;
 
 namespace Nop.Plugin.Misc.AbcCore.Components
 {
@@ -40,11 +41,11 @@ namespace Nop.Plugin.Misc.AbcCore.Components
             _notificationService = notificationService;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(string widgetZone, ProductModel additionalData = null)
+        public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData = null)
         {
             if (widgetZone == AdminWidgetZones.ProductDetailsBlock)
             {
-                var productId = additionalData.Id;
+                var productId = (additionalData as ProductModel).Id;
                 var plpDescription = await _genericAttributeService.GetAttributeAsync<Product, string>(
                     productId, "PLPDescription"
                 );
@@ -70,6 +71,21 @@ namespace Nop.Plugin.Misc.AbcCore.Components
                 string sha = File.ReadAllText("Plugins/Misc.AbcCore/sha.txt").Trim();
                 string branch = File.ReadAllText("Plugins/Misc.AbcCore/branch.txt").Trim();
                 return View("~/Plugins/Misc.AbcCore/Views/BuildInfo.cshtml", (sha, branch));
+            }
+            else if (widgetZone == AdminWidgetZones.CategoryDetailsBlock)
+            {
+                var categoryId = (additionalData as nopWebAdminCatalog.CategoryModel).Id;
+                var hawthornePictureId = await _genericAttributeService.GetAttributeAsync<Category, int>(
+                    categoryId, "HawthornePictureId"
+                );
+
+                var model = new AbcCategoryDetailsModel
+                {
+                    CategoryId = categoryId,
+                    HawthornePictureId = hawthornePictureId
+                };
+
+                return View("~/Plugins/Misc.AbcCore/Views/CategoryDetails.cshtml", model);
             }
 
             return Content("");
