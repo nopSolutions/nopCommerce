@@ -167,6 +167,14 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Configuration.Settings.Tax.HmrcClientId.Hint"] = "Your HMRC API client ID is a unique identifier which created when you added your application.",
             ["Admin.Configuration.Settings.Tax.HmrcClientSecret"] = "HMRC API client secret",
             ["Admin.Configuration.Settings.Tax.HmrcClientSecret.Hint"] = "Your client secret is a unique passphrase that you generate to authorise your application.",
+
+            //#7694
+            ["Account.BackInStockSubscriptions.Description"] = "You will receive an email when a particular product is back in stock.",
+            ["Account.EmailUsernameErrors.EmailAlreadyExists"] = "The email address is already in use",
+            ["Account.EmailUsernameErrors.EmailTooLong"] = "Email address is too long",
+            ["Account.ForumSubscriptions.Description"] = "You will receive an email when a new forum topic/post is created.",
+            ["Admin.ContentManagement.MessageTemplates.Fields.BccEmailAddresses.Hint"] = "The blind carbon copy (BCC) recipients for this email message.",
+            ["BackInStockSubscriptions.Tooltip"] = "You'll receive a onetime email when this product is available for ordering again. We will not send you any other emails or add you to our newsletter; you will only be emailed about this product!",
         }, languageId);
 
         #endregion
