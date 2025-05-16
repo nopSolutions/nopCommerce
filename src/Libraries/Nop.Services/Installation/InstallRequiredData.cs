@@ -1554,7 +1554,8 @@ public partial class InstallationService
             PhoneEnabled = true,
             PhoneRequired = true,
             FaxEnabled = true,
-            DefaultCountryId = await GetFirstEntityIdAsync<Country>(c => c.ThreeLetterIsoCode == _installationSettings.RegionInfo.ThreeLetterISORegionName)
+            DefaultCountryId = await GetFirstEntityIdAsync<Country>(c => c.ThreeLetterIsoCode == _installationSettings.RegionInfo.ThreeLetterISORegionName),
+            PrePopulateCountryByCustomer = true
         });
 
         await SaveSettingAsync(dictionary, new MediaSettings
