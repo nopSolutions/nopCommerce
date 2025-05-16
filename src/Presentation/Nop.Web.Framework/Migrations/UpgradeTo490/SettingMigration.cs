@@ -157,6 +157,14 @@ public class SettingMigration : MigrationBase
             orderSettings.CustomerOrdersPageSize = 10;
             settingService.SaveSetting(orderSettings, settings => settings.CustomerOrdersPageSize);
         }
+
+        //#7625
+        var addressSetting = settingService.LoadSetting<AddressSettings>();
+        if (!settingService.SettingExists(addressSetting, settings => settings.PrePopulateCountryByCustomer))
+        {
+            addressSetting.PrePopulateCountryByCustomer = true;
+            settingService.SaveSetting(addressSetting, settings => settings.PrePopulateCountryByCustomer);
+        }
     }
 
     public override void Down()

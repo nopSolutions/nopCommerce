@@ -106,4 +106,9 @@ public partial class AddressSettings : ISettings
     /// Gets or sets a value indicating whether we have to preselect a country if there's only one country available (public store)
     /// </summary>
     public bool PreselectCountryIfOnlyOne { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether we have to prepopulate a country and state by customer
+    /// </summary>
+    public bool PrePopulateCountryByCustomer { get; set; }
 }
