@@ -11,6 +11,7 @@ using Nop.Core;
 using Nop.Services.Catalog;
 using System.Linq;
 using Nop.Core.Domain.Catalog;
+using Nop.Data;
 
 namespace Nop.Plugin.Misc.AbcCore.Tasks
 {
@@ -18,15 +19,18 @@ namespace Nop.Plugin.Misc.AbcCore.Tasks
     {
         private readonly IAbcCategoryService _categoryService;
         private readonly IBackendStockService _backendStockService;
+        private readonly INopDataProvider _nopDataProvider;
         private readonly ISpecificationAttributeService _specificationAttributeService;
 
         public UpdateClearanceStoreSpecAttrsTask(
             IAbcCategoryService categoryService,
             IBackendStockService backendStockService,
+            INopDataProvider nopDataProvider,
             ISpecificationAttributeService specificationAttributeService)
         {
             _categoryService = categoryService;
             _backendStockService = backendStockService;
+            _nopDataProvider = nopDataProvider;
             _specificationAttributeService = specificationAttributeService;
         }
 
@@ -63,7 +67,7 @@ namespace Nop.Plugin.Misc.AbcCore.Tasks
                 var availableStores = backendStockResponse.ProductStocks
                                                           .Where(ps => ps.Available)
                                                           .Select(ps => ps.Shop.Name);
-                
+
                 var toInsert = availableStores.Except(currentStoreNames);
                 foreach (var store in toInsert)
                 {
@@ -85,6 +89,20 @@ namespace Nop.Plugin.Misc.AbcCore.Tasks
                     await _specificationAttributeService.DeleteProductSpecificationAttributeAsync(psa);
                 }
             }
+
+            // Now we remove any spec attrs for products no longer in clearance
+            await _nopDataProvider.ExecuteNonQueryAsync(@"
+                DELETE psam FROM Product_SpecificationAttribute_Mapping psam
+                JOIN SpecificationAttributeOption sao ON sao.Id = psam.SpecificationAttributeOptionId
+                JOIN SpecificationAttribute sa ON sa.Id = sao.SpecificationAttributeId
+                JOIN Product_Category_Mapping pcm ON pcm.ProductId = psam.ProductId
+                JOIN Category c ON c.Id = pcm.CategoryId
+                JOIN Product p ON p.Id = psam.ProductId
+                WHERE sa.Name = 'Shop by Store'
+                AND c.Name != 'Clearance'
+                AND p.Published = 1
+                AND p.[Deleted] = 0
+            ");
         }
     }
 }
