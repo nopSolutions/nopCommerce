@@ -110,11 +110,13 @@
 
                     @* more custom *@
                     @{
-                        string giftCardUrl = Nop.Plugin.Misc.AbcCore.HtmlHelpers.GetGiftCardUrl();
                         string brandUrl = "/manufacturer/all";
                     }
                     <li><a href="@brandUrl">Shop by Brand</a></li>
-                    <li><a href="@giftCardUrl">Gift Card</a></li>
+                    @if (storeId != 8)
+                    {
+                        <li><a href="/gift">Gift Card</a></li>
+                    }
                     <li><a href="/blog">Blog</a></li>
                 </ul>
             </div>

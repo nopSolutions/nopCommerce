@@ -59,15 +59,6 @@ namespace Nop.Plugin.Misc.AbcCore
             });
         }
 
-        public static string GetGiftCardUrl()
-        {
-            var staticCacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
-            return staticCacheManager.Get(new CacheKey(GIFTCARDURL_KEY, "Abc."), () =>
-            {
-                return "/GIFT";
-            });
-        }
-
         public static string GetSelectedShopClass(int selectedShopId, int shopId)
         {
             return selectedShopId == shopId ? "selected-store" : "";
