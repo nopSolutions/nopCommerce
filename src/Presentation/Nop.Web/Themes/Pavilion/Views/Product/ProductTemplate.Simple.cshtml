@@ -14,6 +14,8 @@
 @using Nop.Plugin.Misc.AbcCore.Nop;
 @using Microsoft.Extensions.Logging;
 @using Newtonsoft.Json
+@using System.Text.RegularExpressions
+@using System.Globalization
 
 @inject Nop.Core.IWebHelper webHelper
 @inject SeoSettings seoSettings
@@ -356,17 +358,23 @@
     var bvProductUrl = $"{HttpContextAccessor.HttpContext.Request.Scheme}://{HttpContextAccessor.HttpContext.Request.Host}{Url.RouteUrl("Product", new { SeName = Model.SeName })}";
     var productImageUrl = Model.DefaultPictureModel?.ImageUrl;
 }
-<script type="application/ld+json">
+@{
+    var schema = new Dictionary<string, object>
     {
-       "context" : "https://schema.org",
-       "type" : "Product",
-       "id" : "@bvProductUrl",
-       "name" : "@Model.Name",
-       "image" : "@productImageUrl",
-       "description" : "@Model.ShortDescription",
-       "sku" : "@Model.Sku",
-       "brand": "@(string.Join(" ", Model.ProductManufacturers.Select(m => m.Name)))"
-    }
+        ["@context"] = "https://schema.org",
+        ["@type"] = "Product",
+        ["@id"] = bvProductUrl,
+        ["name"] = Model.Name,
+        ["image"] = productImageUrl,
+        ["description"] = Regex.Replace(Model.ShortDescription ?? "", "<.*?>", string.Empty),
+        ["sku"] = Model.Sku,
+        ["brand"] = string.Join(" ", Model.ProductManufacturers.Select(m => m.Name))
+    };
+
+    var jsonLd = JsonConvert.SerializeObject(schema, Formatting.Indented);
+}
+<script type="application/ld+json">
+@Html.Raw(jsonLd)
 </script>
     <!--BV injected code-->
     <script>
