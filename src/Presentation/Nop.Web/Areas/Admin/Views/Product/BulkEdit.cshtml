@@ -228,6 +228,7 @@
         var includeSubCategories = $("#@Html.IdFor(model => model.SearchIncludeSubCategories)")[0].checked;
         var manufacturer = $("#@Html.IdFor(model => model.SearchManufacturerId)").val();
         var vendor = $("#@Html.IdFor(model => model.SearchVendorId)").val();
+        var store = $("#@Html.IdFor(model => model.SearchStoreId)").val();
         var warehouse = $("#@Html.IdFor(model => model.SearchWarehouseId)").val();
         var published = $("#@Html.IdFor(model => model.SearchPublishedId)").val();
         var productType = $("#@Html.IdFor(model => model.SearchProductTypeId)").val();
@@ -256,6 +257,7 @@
             SearchIncludeSubCategories: includeSubCategories,
             SearchManufacturerId: manufacturer,
             SearchVendorId: vendor,
+            SearchStoreId: store,
             SearchWarehouseId: warehouse,
             SearchPublishedId: published,
             SearchProductTypeId: productType,
