@@ -5,12 +5,12 @@
         
         @if (Model.DisplayDeleteRequestButton)
         {
-            <button type="submit" name="delete" class="button-1">@T("Admin.Common.Delete")</button>
+            <button id="delete-request" type="submit" name="delete" class="button-1">@T("Admin.Common.Delete")</button>
         }
 
         @if (Model.DisplayCancelRequestButton)
         {
-            <button type="submit" name="cancel" class="button-1">@T("Admin.Common.Cancel")</button>
+            <button id="cancel-request" type="submit" name="cancel" class="button-1">@T("Admin.Common.Cancel")</button>
         }
 
         @if (Model.DisplaySendRequestButton)
@@ -20,3 +20,15 @@
         }
     </div>
 </div>
+
+<script asp-location="Footer">
+    $(function() {
+        $('#delete-request').on('click', function() {
+            return confirm('@T("Common.AreYouSure")');
+        });
+
+        $('#cancel-request').on('click', function() {
+            return confirm('@T("Common.AreYouSure")');
+        });
+    });
+</script>

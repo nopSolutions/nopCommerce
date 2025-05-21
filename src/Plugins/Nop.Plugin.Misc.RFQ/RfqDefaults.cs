@@ -52,7 +52,12 @@ public class RfqDefaults
     /// <summary>
     /// Gets the customer request route name
     /// </summary>
-    public static string CustomerRequestRouteName => "Nop.Plugin.Misc.RFQ.CustomerRequest";
+    public static string CreateCustomerRequestRouteName => "Nop.Plugin.Misc.RFQ.CreateCustomerRequest";
+
+    /// <summary>
+    /// Gets the customer request route name
+    /// </summary>
+    public static string ClearCustomerRequestRouteName => "Nop.Plugin.Misc.RFQ.ClearCustomerRequest";
 
     /// <summary>
     /// Gets the customer requests route name

@@ -15,15 +15,19 @@ public class CustomerRfqMenuComponent : NopViewComponent
 
     private readonly ICustomerService _customerService;
     private readonly IWorkContext _workContext;
+    private readonly RfqSettings _rfqSettings;
 
     #endregion
 
     #region Ctor
 
-    public CustomerRfqMenuComponent(ICustomerService customerService, IWorkContext workContext)
+    public CustomerRfqMenuComponent(ICustomerService customerService, 
+        IWorkContext workContext,
+        RfqSettings rfqSettings)
     {
         _customerService = customerService;
         _workContext = workContext;
+        _rfqSettings = rfqSettings;
     }
 
     #endregion
@@ -45,6 +49,9 @@ public class CustomerRfqMenuComponent : NopViewComponent
             return Content(string.Empty);
 
         if (await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()))
+            return Content(string.Empty);
+
+        if (!_rfqSettings.Enabled)
             return Content(string.Empty);
 
         return View("~/Plugins/Misc.RFQ/Views/Components/CustomerRfqMenu.cshtml", model);

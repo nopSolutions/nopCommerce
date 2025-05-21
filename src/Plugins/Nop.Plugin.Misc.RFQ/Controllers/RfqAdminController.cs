@@ -6,6 +6,7 @@ using Nop.Plugin.Misc.RFQ.Factories;
 using Nop.Plugin.Misc.RFQ.Models.Admin;
 using Nop.Plugin.Misc.RFQ.Services;
 using Nop.Services.Catalog;
+using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
@@ -35,9 +36,11 @@ public class RfqAdminController : BasePluginController
     private readonly IProductAttributeParser _productAttributeParser;
     private readonly IProductAttributeService _productAttributeService;
     private readonly IProductService _productService;
+    private readonly ISettingService _settingService;
     private readonly IShoppingCartService _shoppingCartService;
     private readonly RfqMessageService _rfqMessageService;
     private readonly RfqService _rfqService;
+    private readonly RfqSettings _rfqSettings;
 
     #endregion
 
@@ -51,9 +54,11 @@ public class RfqAdminController : BasePluginController
         IProductAttributeParser productAttributeParser,
         IProductAttributeService productAttributeService,
         IProductService productService,
+        ISettingService settingService,
         IShoppingCartService shoppingCartService,
         RfqMessageService rfqMessageService,
-        RfqService rfqService)
+        RfqService rfqService,
+        RfqSettings rfqSettings)
     {
         _modelFactory = modelFactory;
         _customerModelFactory = customerModelFactory;
@@ -63,14 +68,46 @@ public class RfqAdminController : BasePluginController
         _productAttributeService = productAttributeService;
         _productService = productService;
         _notificationService = notificationService;
+        _settingService = settingService;
         _shoppingCartService = shoppingCartService;
         _rfqMessageService = rfqMessageService;
         _rfqService = rfqService;
+        _rfqSettings = rfqSettings;
     }
 
     #endregion
 
     #region Methods
+
+    #region Configure
+
+    public async Task<IActionResult> Configure()
+    {
+        var model = new ConfigurationModel
+        {
+            Enabled = _rfqSettings.Enabled
+        };
+
+        return View("~/Plugins/Misc.RFQ/Views/Admin/Configure.cshtml", model);
+    }
+
+    [HttpPost, ActionName("Configure")]
+    [FormValueRequired("save")]
+    public async Task<IActionResult> Configure(ConfigurationModel model)
+    {
+        if (!ModelState.IsValid)
+            return await Configure();
+        
+        _rfqSettings.Enabled = model.Enabled;
+
+        await _settingService.SaveSettingAsync(_rfqSettings);
+        
+        _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
+
+        return await Configure();
+    }
+
+    #endregion
 
     #region Add product to quote
 

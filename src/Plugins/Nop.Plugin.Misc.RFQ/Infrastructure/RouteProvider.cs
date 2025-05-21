@@ -20,23 +20,26 @@ public class RouteProvider : BaseRouteProvider, IRouteProvider
         endpointRouteBuilder.MapControllerRoute(name: RfqDefaults.ConfigurationRouteName,
             pattern: "Admin/RFQ/Configure",
             defaults: new { controller = "RfqAdmin", action = "Configure", area = AreaNames.ADMIN });
-
         var lang = GetLanguageRoutePattern();
 
-        endpointRouteBuilder.MapControllerRoute(name: RfqDefaults.CustomerRequestRouteName,
-            pattern: $"{lang}/Customer/RFQ/RequestForQuote/{{requestId?}}",
+        endpointRouteBuilder.MapControllerRoute(name: RfqDefaults.CreateCustomerRequestRouteName,
+            pattern: $"{lang}/rfq/requestforquote/{{requestId?}}",
             defaults: new { controller = "RfqCustomer", action = "CustomerRequest" });
 
+        endpointRouteBuilder.MapControllerRoute(name: RfqDefaults.ClearCustomerRequestRouteName,
+            pattern: $"{lang}/rfq/exitquotemode",
+            defaults: new { controller = "RfqCustomer", action = "ExitQuoteMode" });
+
         endpointRouteBuilder.MapControllerRoute(name: RfqDefaults.CustomerRequestsRouteName,
-            pattern: $"{lang}/Customer/RFQ/RequestsForQuote/",
+            pattern: $"{lang}/rfq/requestsforquote/",
             defaults: new { controller = "RfqCustomer", action = "CustomerRequests" });
 
         endpointRouteBuilder.MapControllerRoute(name: RfqDefaults.CustomerQuotesRouteName,
-            pattern: $"{lang}/Customer/RFQ/Quotes/",
+            pattern: $"{lang}/rfq/quotes/",
             defaults: new { controller = "RfqCustomer", action = "CustomerQuotes" });
 
         endpointRouteBuilder.MapControllerRoute(name: RfqDefaults.CustomerQuoteRouteName,
-            pattern: $"{lang}/Customer/RFQ/Quote/{{quoteId}}",
+            pattern: $"{lang}/rfq/quote/{{quoteId}}",
             defaults: new { controller = "RfqCustomer", action = "CustomerQuote" });
     }
 

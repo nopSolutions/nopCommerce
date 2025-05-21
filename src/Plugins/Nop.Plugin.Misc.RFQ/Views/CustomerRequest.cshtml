@@ -82,8 +82,8 @@
                 <div class="title">
                     <strong>@T("Plugins.Misc.RFQ.Products")</strong>
                 </div>
-                <div class="form-fields">
-                    <table class="request-items">
+                <div>
+                    <table class="data-table">
                         <thead>
                             <tr>
                                 <th width="@(mediaSettings.CartThumbPictureSize)px">@T("Plugins.Misc.RFQ.Image")</th>
@@ -97,10 +97,10 @@
                             @foreach (var item in Model.CustomerItems)
                             {
                                 <tr>
-                                    <td style="text-align:center;"><img src="@item.PictureUrl" /></td>
-                                    <td>
+                                    <td class="picture"><img src="@item.PictureUrl" /></td>
+                                    <td class="product">
                                         <a href="@(Url.RouteUrl<Product>(new { SeName = item.ProductSeName }))">
-                                            <strong>@item.ProductName</strong>
+                                            @item.ProductName
                                         </a>
                                         <br />
                                         @Html.Raw(item.AttributeInfo)
@@ -130,7 +130,7 @@
                             }
                         </tbody>
                     </table>
-
+                    <br />
                     @await Html.PartialAsync("_CustomerRequest.buttons.cshtml", Model)
                 </div>
             </div>

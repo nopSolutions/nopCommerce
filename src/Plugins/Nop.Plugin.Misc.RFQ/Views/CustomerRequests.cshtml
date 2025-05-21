@@ -43,7 +43,7 @@
                         <li>@T("Plugins.Misc.RFQ.Fields.RequestQuote.Status"): <span>@request.Status</span></li>
                     </ul>
                     <div class="buttons">
-                        <button type="button" class="button-2" onclick="setLocation('@Url.RouteUrl(RfqDefaults.CustomerRequestRouteName, new { requestId = request.Id })')">@T("Plugins.Misc.RFQ.CustomerRequest.Info")</button>
+                        <button type="button" class="button-2" onclick="setLocation('@Url.RouteUrl(RfqDefaults.CreateCustomerRequestRouteName, new { requestId = request.Id })')">@T("Plugins.Misc.RFQ.CustomerRequest.Info")</button>
                     </div>
                 </div>
             }

@@ -5,9 +5,11 @@ using Nop.Plugin.Misc.RFQ.Factories;
 using Nop.Plugin.Misc.RFQ.Models.Customer;
 using Nop.Plugin.Misc.RFQ.Services;
 using Nop.Services.Customers;
+using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Web.Controllers;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.Misc.RFQ.Controllers;
 
@@ -19,6 +21,8 @@ public class RfqCustomerController : BasePublicController
     private readonly CustomerModelFactory _modelFactory;
     private readonly ICustomerService _customerService;
     private readonly IPermissionService _permissionService;
+    private readonly IShoppingCartService _shoppingCartService;
+    private readonly IStoreContext _storeContext;
     private readonly IWorkContext _workContext;
     private readonly RfqService _rfqService;
 
@@ -29,12 +33,16 @@ public class RfqCustomerController : BasePublicController
     public RfqCustomerController(CustomerModelFactory modelFactory,
         ICustomerService customerService,
         IPermissionService permissionService,
+        IShoppingCartService shoppingCartService,
+        IStoreContext storeContext,
         IWorkContext workContext,
         RfqService rfqService)
     {
         _modelFactory = modelFactory;
         _customerService = customerService;
         _permissionService = permissionService;
+        _shoppingCartService = shoppingCartService;
+        _storeContext = storeContext;
         _workContext = workContext;
         _rfqService = rfqService;
     }
@@ -300,6 +308,18 @@ public class RfqCustomerController : BasePublicController
         model = await _modelFactory.PrepareQuoteModelAsync(model.Id, model);
 
         return View("~/Plugins/Misc.RFQ/Views/CustomerQuote.cshtml", model);
+    }
+
+    public async Task<IActionResult> ExitQuoteMode()
+    {
+        if (!await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ))
+            return RedirectToRoute("Homepage");
+
+        var store = await _storeContext.GetCurrentStoreAsync();
+
+        await _shoppingCartService.ClearShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), store.Id);
+
+        return RedirectToRoute("Homepage");
     }
 
     #endregion

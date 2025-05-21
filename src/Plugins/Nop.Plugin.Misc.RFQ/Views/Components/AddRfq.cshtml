@@ -1,7 +1,11 @@
+@{
+    NopHtml.AddCssFileParts(@"~/Plugins/Misc.RFQ/Content/styles.css", null);
+}
+
 <script asp-location="Footer">
     $(function () {
         if ($('#checkout').length > 0) {
-            $('#checkout').after('<div style="margin-top:10px;"><a class="button-1 checkout-button" href="@Url.RouteUrl(RfqDefaults.CustomerRequestRouteName)">@T("Plugins.Misc.RFQ.CreateRequest")</a></div>');
+            $('#checkout').after('<div style="margin-top:10px;"><a class="rfq-button-2" href="@Url.RouteUrl(RfqDefaults.CreateCustomerRequestRouteName)">@T("Plugins.Misc.RFQ.CreateRequest")</a></div>');
         }
     });
 </script>

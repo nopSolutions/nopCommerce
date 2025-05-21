@@ -4,14 +4,14 @@
 <table class="table table-hover table-bordered">
     <thead>
     <tr>
-        <td style="width: 30%">@T("Plugins.Misc.RFQ.Product")</td>
-        <td style="width: 7%">@T("Plugins.Misc.RFQ.OriginalProductPrice")</td>
-        <td style="width: 7%">@T("Plugins.Misc.RFQ.CustomerRequest.RequestedUnitPrice")</td>
-        <td style="width: 7%">@T("Plugins.Misc.RFQ.CustomerRequest.RequestedQty")</td>
-        <td>@T("Plugins.Misc.RFQ.Fields.AdminNotes")</td>
+        <th style="width: 30%">@T("Plugins.Misc.RFQ.Product")</th>
+        <th style="width: 7%">@T("Plugins.Misc.RFQ.OriginalProductPrice")</th>
+        <th style="width: 7%">@T("Plugins.Misc.RFQ.CustomerRequest.RequestedUnitPrice")</th>
+        <th style="width: 7%">@T("Plugins.Misc.RFQ.CustomerRequest.RequestedQty")</th>
+        <th>@T("Plugins.Misc.RFQ.Fields.AdminNotes")</th>
         @if (Model.DisplaySaveButtons || Model.DisplayCreateQuoteButton)
         {
-            <td style="width: 15%">@T("Admin.Common.Edit")</td>
+            <th style="width: 15%">@T("Admin.Common.Edit")</th>
         }
     </tr>
     </thead>

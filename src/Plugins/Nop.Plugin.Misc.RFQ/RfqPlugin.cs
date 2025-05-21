@@ -1,4 +1,7 @@
-﻿using Nop.Core.Domain.Cms;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Messages;
 using Nop.Plugin.Misc.RFQ.Components;
 using Nop.Plugin.Misc.RFQ.Services;
@@ -16,16 +19,18 @@ namespace Nop.Plugin.Misc.RFQ;
 /// <summary>
 /// Represents the "Request a quote" and "Quotes" plugin
 /// </summary>
-public class RfqPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
+public class RfqPlugin : BasePlugin, IWidgetPlugin, IMiscPlugin
 {
     #region Fields
 
     private readonly EmailAccountSettings _emailAccountSettings;
+    private readonly IActionContextAccessor _actionContextAccessor;
     private readonly IEmailAccountService _emailAccountService;
     private readonly ILocalizationService _localizationService;
     private readonly IMessageTemplateService _messageTemplateService;
     private readonly IPermissionService _permissionService;
     private readonly ISettingService _settingService;
+    private readonly IUrlHelperFactory _urlHelperFactory;
     private readonly WidgetSettings _widgetSettings;
 
     #endregion
@@ -33,25 +38,42 @@ public class RfqPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
     #region Ctor
 
     public RfqPlugin(EmailAccountSettings emailAccountSettings,
+        IActionContextAccessor actionContextAccessor,
         IEmailAccountService emailAccountService,
         ILocalizationService localizationService,
         IMessageTemplateService messageTemplateService,
         IPermissionService permissionService,
         ISettingService settingService,
+        IUrlHelperFactory urlHelperFactory,
         WidgetSettings widgetSettings)
     {
         _emailAccountSettings = emailAccountSettings;
+        _actionContextAccessor = actionContextAccessor;
         _emailAccountService = emailAccountService;
         _localizationService = localizationService;
         _messageTemplateService = messageTemplateService;
         _permissionService = permissionService;
         _settingService = settingService;
+        _urlHelperFactory = urlHelperFactory;
         _widgetSettings = widgetSettings;
     }
 
     #endregion
 
     #region Methods
+
+    /// <summary>
+    /// Gets a configuration page URL
+    /// </summary>
+    public override string GetConfigurationPageUrl()
+    {
+        if (_actionContextAccessor.ActionContext != null)
+            return _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext)
+                .RouteUrl(RfqDefaults.ConfigurationRouteName);
+
+        return base.GetConfigurationPageUrl();
+    }
+
 
     /// <summary>
     /// Gets widget zones where this widget should be rendered
@@ -91,6 +113,12 @@ public class RfqPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
     /// <returns>A task that represents the asynchronous operation</returns>
     public override async Task InstallAsync()
     {
+        //settings
+        await _settingService.SaveSettingAsync(new RfqSettings
+        {
+            Enabled = true
+        });
+
         if (!_widgetSettings.ActiveWidgetSystemNames.Contains(RfqDefaults.SystemName))
         {
             _widgetSettings.ActiveWidgetSystemNames.Add(RfqDefaults.SystemName);
@@ -110,7 +138,7 @@ public class RfqPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
             messageTemplates.Add(new MessageTemplate
             {
                 Name = RfqDefaults.CUSTOMER_SENT_NEW_REQUEST_QUOTE,
-                Subject = "%Store.Name%. The new request a quote #%RequestQuote.Id% sent",
+                Subject = "%Store.Name%. New request a quote #%RequestQuote.Id% sent",
                 Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%Customer.FullName% (%Customer.Email%) has just sent a new request a quote.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Request a quote number: %RequestQuote.Id%{Environment.NewLine}<br />{Environment.NewLine}Date of request a quote: %RequestQuote.CreatedOn%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}See details on the <a href=\"%RequestQuote.URL%\">request a quote page</a>{Environment.NewLine}</p>{Environment.NewLine}",
                 IsActive = true,
                 EmailAccountId = eaGeneral.Id
@@ -122,7 +150,7 @@ public class RfqPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
             messageTemplates.Add(new MessageTemplate
             {
                 Name = RfqDefaults.ADMIN_SENT_NEW_QUOTE,
-                Subject = "%Store.Name%. The new quote #%Quote.Id% received",
+                Subject = "%Store.Name%. New quote #%Quote.Id% received",
                 Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Store owner has just sent a new quote.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Quote number: %Quote.Id%{Environment.NewLine}<br />{Environment.NewLine}Date of the quote: %Quote.CreatedOn%{Environment.NewLine}<br />%if(%Quote.ExpirationOnIsSet%)Expiration date of the quote: %Quote.ExpirationOn%{Environment.NewLine}<br />endif%{Environment.NewLine}<br />{Environment.NewLine}See details on the <a href=\"%Quote.URL%\">The quote page</a>{Environment.NewLine}</p>{Environment.NewLine}",
                 IsActive = true,
                 EmailAccountId = eaGeneral.Id
@@ -135,7 +163,10 @@ public class RfqPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
         //locales
         await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
         {
+            ["Plugins.Misc.RFQ.Enabled"] = "Enabled",
+            ["Plugins.Misc.RFQ.Enabled.Hint"] = "Check to activate RFQ functionality.",
             ["Plugins.Misc.RFQ.CreateRequest"] = "Request a quote",
+            ["Plugins.Misc.RFQ.ClearRequest"] = "Exit quote mode",
             ["Plugins.Misc.RFQ.CreateNew"] = "Add new",
             ["Plugins.Misc.RFQ.SendRequest"] = "Send request",
             ["Plugins.Misc.RFQ.RequestsQuote"] = "Requests for quote",
@@ -157,7 +188,7 @@ public class RfqPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
             ["Plugins.Misc.RFQ.Fields.Order.Hint"] = "Created order",
             ["Plugins.Misc.RFQ.Fields.CustomerNotes"] = "Customer notes",
             ["Plugins.Misc.RFQ.Fields.CustomerNotes.Hint"] = "The customer notes and additional information",
-            ["Plugins.Misc.RFQ.Products"] = "Products",
+            ["Plugins.Misc.RFQ.Products"] = "Product(s)",
             ["Plugins.Misc.RFQ.Product"] = "Product",
             ["Plugins.Misc.RFQ.ProductDeleted"] = "The product has been deleted",
             ["Plugins.Misc.RFQ.OriginalProductPrice"] = "Original unit price",
@@ -165,9 +196,9 @@ public class RfqPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
             ["Plugins.Misc.RFQ.CustomerRequest.RequestedUnitPrice"] = "Requested unit price",
             ["Plugins.Misc.RFQ.RequestQuoteItem.Fields.CustomerNotes"] = "Customer notes",
             ["Plugins.Misc.RFQ.Fields.AdminNotes"] = "Admin notes",
-            ["Plugins.Misc.RFQ.Fields.AdminNotes.Hint"] = "The admin notes and changes log",
-            ["Plugins.Misc.RFQ.CustomerRequests.NoRequests"] = "You don't have any discount requests yet, you can create one on the cart page",
-            ["Plugins.Misc.RFQ.CustomerRequests.NoQuotes"] = "You don't have any quotes yet",
+            ["Plugins.Misc.RFQ.Fields.AdminNotes.Hint"] = "The admin notes and changelog",
+            ["Plugins.Misc.RFQ.CustomerRequests.NoRequests"] = "You don't have any requests for quote.",
+            ["Plugins.Misc.RFQ.CustomerRequests.NoQuotes"] = "You don't have any quotes yet.",
             ["Plugins.Misc.RFQ.CreatedOnFrom"] = "Created from",
             ["Plugins.Misc.RFQ.CreatedOnFrom.Hint"] = "The creation from date for the search.",
             ["Plugins.Misc.RFQ.CreatedOnTo"] = "Created to",
@@ -194,9 +225,9 @@ public class RfqPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
             ["Plugins.Misc.RFQ.CustomerNoteChanged"] = "Customer changed the notes",
             ["Plugins.Misc.RFQ.CreateQuote"] = "Create the quote",
             ["Plugins.Misc.RFQ.AdminQuote.QuoteCreatedByRequest"] = "Quote created from the request by {0}",
-            ["Plugins.Misc.RFQ.AdminQuote.QuoteCreatedManuallyByStoreOwner"] = "Quote created manual by {0}",
+            ["Plugins.Misc.RFQ.AdminQuote.QuoteCreatedManuallyByStoreOwner"] = "Quote created manually by {0}",
             ["Plugins.Misc.RFQ.Fields.Quote.ExpirationDate"] = "Expiration date",
-            ["Plugins.Misc.RFQ.Fields.Quote.ExpirationDate.Hint"] = "The date/time that the quote will expire",
+            ["Plugins.Misc.RFQ.Fields.Quote.ExpirationDate.Hint"] = "The date/time that the quote will expire in Coordinated Universal Time (UTC).",
             ["Plugins.Misc.RFQ.AdminQuote.QuoteStatus"] = "Quote status",
             ["Plugins.Misc.RFQ.AdminQuote.QuoteStatus.Hint"] = "Select the quote status",
             ["Plugins.Misc.RFQ.AdminRequest.Updated"] = "The request a quote has been updated successfully.",
@@ -213,8 +244,6 @@ public class RfqPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
             ["Plugins.Misc.RFQ.OfferedUnitPrice"] = "Offered unit price",
             ["Plugins.Misc.RFQ.SendQuote"] = "Send quote",
             ["Plugins.Misc.RFQ.CreateOrder"] = "Create the order",
-            ["Plugins.Misc.RFQ.QuoteIsExpired"] = "Quote is expired",
-            ["Plugins.Misc.RFQ.OrderCreated"] = "Order by this quote is already created",
             ["Enums.Nop.Plugin.Misc.RFQ.Domains.RequestQuoteStatus.Submitted"] = "Submitted to store owner",
             ["Enums.Nop.Plugin.Misc.RFQ.Domains.RequestQuoteStatus.Canceled"] = "Canceled",
             ["Enums.Nop.Plugin.Misc.RFQ.Domains.RequestQuoteStatus.QuoteIsCreated"] = "Quote is created",
@@ -251,6 +280,9 @@ public class RfqPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
     /// <returns>A task that represents the asynchronous operation</returns>
     public override async Task UninstallAsync()
     {
+        //settings
+        await _settingService.DeleteSettingAsync<RfqSettings>();
+
         //delete permission
         var permissionRecord = (await _permissionService.GetAllPermissionRecordsAsync())
             .FirstOrDefault(x => x.SystemName == RfqPermissionConfigManager.ADMIN_ACCESS_RFQ);
