@@ -11,6 +11,7 @@ using Nop.Services.Seo;
 using Nop.Plugin.Misc.AbcCore.Services.Custom;
 using System.Threading.Tasks;
 using Nop.Services.Stores;
+using Nop.Core.Domain.Catalog;
 
 namespace Nop.Plugin.Misc.AbcCore.Areas.Admin.Controllers
 {
@@ -124,12 +125,16 @@ namespace Nop.Plugin.Misc.AbcCore.Areas.Admin.Controllers
 
             var model = await new AbcPromoProductListModel().PrepareToGridAsync(searchModel, productsPaged, () =>
             {
-                return products.SelectAwait(async product =>
+                return productsPaged.SelectAwait(async product =>
                 {
                     var productAbcDescription =
                         await _productAbcDescriptionService.GetProductAbcDescriptionByProductIdAsync(product.Id);
                     var abcItemNumber = productAbcDescription?.AbcItemNumber;
                     var storeMappings = await _storeMappingService.GetStoreMappingsAsync(product);
+                    var manufacturerMapping = (await _manufacturerService.GetProductManufacturersByProductIdAsync(product.Id)).FirstOrDefault();
+                    Manufacturer manufacturer = manufacturerMapping != null ?
+                        await _manufacturerService.GetManufacturerByIdAsync(manufacturerMapping.ManufacturerId) :
+                        null;
 
                     var abcPromoProductModel = new AbcPromoProductModel()
                     {
@@ -138,6 +143,7 @@ namespace Nop.Plugin.Misc.AbcCore.Areas.Admin.Controllers
                         Published = product.Published,
                         IsABC = storeMappings.FirstOrDefault(storeMappings => storeMappings.StoreId == abcStore.Id) != null,
                         IsHawthorne = storeMappings.FirstOrDefault(storeMappings => storeMappings.StoreId == hawStore.Id) != null,
+                        Brand = manufacturer?.Name
                     };
 
                     return abcPromoProductModel;

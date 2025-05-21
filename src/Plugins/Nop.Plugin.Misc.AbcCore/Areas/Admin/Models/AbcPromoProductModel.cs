@@ -10,5 +10,6 @@ namespace Nop.Plugin.Misc.AbcCore.Areas.Admin.Models
         public bool Published { get; set; }
         public bool IsABC { get; set; }
         public bool IsHawthorne { get; set; }
+        public string Brand { get; set; }
     }
 }

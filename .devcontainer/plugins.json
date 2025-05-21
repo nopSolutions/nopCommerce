@@ -266,6 +266,10 @@
       {
         "SystemName": "Widgets.PercentOffAppliancesMessage",
         "Version": "4.40.0"
+      },
+      {
+        "SystemName": "SevenSpikes.Nop.Plugins.InstantSearch",
+        "Version": "4.4"
       }
     ],
     "PluginNamesToUninstall": [],

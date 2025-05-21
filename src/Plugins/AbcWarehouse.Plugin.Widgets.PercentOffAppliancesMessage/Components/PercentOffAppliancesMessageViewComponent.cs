@@ -65,6 +65,13 @@ namespace AbcWarehouse.Plugin.Widgets.PercentOffAppliancesMessageViewComponent.C
                 return Content("");
             }
 
+            // Don't display for Add to cart to see price
+            if (await product.IsAddToCartToSeePriceAsync())
+            {
+                return Content("");
+            }
+
+
             // exclude specific brands
             var exceptionBrands = new string[] {
                 "LG",
