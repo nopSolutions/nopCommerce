@@ -154,7 +154,7 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Promotions.NewsLetterSubscriptions.List.SubscriptionTypes.Hint"] = "Search by a specific subscription type.",            
             ["Admin.Promotions.Campaigns.Fields.NewsLetterSubscriptionType"] = "Limited to subscription types",
             ["Admin.Promotions.Campaigns.Fields.NewsLetterSubscriptionType.Hint"] = "Choose a subscription type to which this email will be sent.",
-            ["Account.Fields.NewsLetterSubscriptionType"] = "NewsLetter subscription list",
+            ["Account.Fields.NewsLetterSubscriptionType"] = "Newsletter subscription list",
             ["ActivityLog.AddSubscriptionType"] = "Added a new subscription type (ID = {0})",
             ["ActivityLog.EditSubscriptionType"] = "Edited a subscription type (ID = {0})",
             ["ActivityLog.DeleteSubscriptionType"] = "Deleted a subscription type (ID = {0})",

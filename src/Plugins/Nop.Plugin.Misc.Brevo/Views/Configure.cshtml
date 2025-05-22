@@ -122,25 +122,25 @@
             <nop-card asp-name="brevo-synchronization" asp-icon="fas fa-exchange" asp-title="@T("Plugins.Misc.Brevo.Synchronization")" asp-hide-block-attribute-name="@BrevoDefaults.HideSynchronizationBlock" asp-hide="@Model.HideSynchronizationBlock" asp-advanced="false">
                 <script>
                     $(function() {
-                    //$("#progressBar").hide();
-                    if (@((ViewData["synchronizationStart"] != null && (bool)ViewData["synchronizationStart"]).ToString().ToLowerInvariant())) {
-                    $("#progressBar").show();
-                    refresh();
-                    }
+                        //$("#progressBar").hide();
+                        if (@((ViewData["synchronizationStart"] != null && (bool)ViewData["synchronizationStart"]).ToString().ToLowerInvariant())) {
+                            $("#progressBar").show();
+                            refresh();
+                        }
                     });
 
                     function refresh(){
-                    setTimeout(function(){
-                    $.get('@(Url.Action("GetSynchronizationInfo", "Brevo"))', function(data) {
-                    if (!data) {
-                    refresh();
-                    }
-                    else {
-                    $('#synchronizationInfo').text(data);
-                    $("#progressBar").hide();
-                    }
-                    });
-                    }, 3000);
+                        setTimeout(function(){
+                            $.get('@(Url.Action("GetSynchronizationInfo", "Brevo"))', function(data) {
+                                if (!data) {
+                                    refresh();
+                                }
+                                else {
+                                    $('#synchronizationInfo').text(data);
+                                    $("#progressBar").hide();
+                                }
+                            });
+                        }, 3000);
                     };
 
                 </script>

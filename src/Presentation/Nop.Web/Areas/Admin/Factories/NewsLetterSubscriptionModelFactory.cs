@@ -130,6 +130,8 @@ public partial class NewsLetterSubscriptionModelFactory : INewsLetterSubscriptio
             createdToUtc: endDateValue,
             pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
+        var types = await _newsLetterSubscriptionTypeService.GetAllNewsLetterSubscriptionTypesAsync(searchModel.StoreId);
+
         //prepare list model
         var model = await new NewsLetterSubscriptionListModel().PrepareToGridAsync(searchModel, newsletterSubscriptions, () =>
         {
@@ -145,7 +147,7 @@ public partial class NewsLetterSubscriptionModelFactory : INewsLetterSubscriptio
                 subscriptionModel.StoreName = (await _storeService.GetStoreByIdAsync(subscription.StoreId))?.Name ?? "Deleted";
                 subscriptionModel.LanguageName = (await _languageService.GetLanguageByIdAsync(subscription.LanguageId))?.Name ?? string.Empty;
 
-                subscriptionModel.SubscriptionTypeName = (await _newsLetterSubscriptionTypeService.GetNewsLetterSubscriptionTypeByIdAsync(subscription.TypeId)).Name;
+                subscriptionModel.SubscriptionTypeName = types.FirstOrDefault(type => type.Id == subscription.TypeId)?.Name ?? string.Empty;
 
                 return subscriptionModel;
             });
@@ -170,12 +172,13 @@ public partial class NewsLetterSubscriptionModelFactory : INewsLetterSubscriptio
         if (subscription != null)
         {
             //fill in model values from the entity
-            model ??= subscription.ToModel<NewsLetterSubscriptionModel>();            
+            model ??= subscription.ToModel<NewsLetterSubscriptionModel>();
 
             //convert dates to the user time
             model.CreatedOn = (await _dateTimeHelper.ConvertToUserTimeAsync(subscription.CreatedOnUtc, DateTimeKind.Utc)).ToString();
 
-            model.SubscriptionTypeName = (await _newsLetterSubscriptionTypeService.GetNewsLetterSubscriptionTypeByIdAsync(subscription.TypeId)).Name;
+            model.SubscriptionTypeName = (await _newsLetterSubscriptionTypeService.GetNewsLetterSubscriptionTypeByIdAsync(subscription.TypeId))?.Name;
+            model.EmailNotEditable = true;
 
             //prepare localized models
             if (!excludeProperties)
@@ -188,28 +191,13 @@ public partial class NewsLetterSubscriptionModelFactory : INewsLetterSubscriptio
         }
 
         //prepare model subscription types for newsletter subscription
-        model.AvailableNewsLetterSubscriptionTypes = (await _newsLetterSubscriptionTypeService.GetAllNewsLetterSubscriptionTypesAsync()).Select(type => new SelectListItem
-        {
-            Value = type.Id.ToString(),
-            Text = type.Name,
-            Selected = model.SelectedNewsLetterSubscriptionTypeId == type.Id
-        }).ToList();
+        await _baseAdminModelFactory.PrepareSubscriptionTypesAsync(model.AvailableNewsLetterSubscriptionTypes, false);
 
         //prepare model stores for newsletter subscription
-        model.AvailableNewsLetterSubscriptionStores = (await _storeService.GetAllStoresAsync()).Select(store => new SelectListItem
-        {
-            Value = store.Id.ToString(),
-            Text = store.Name,
-            Selected = model.SelectedNewsLetterSubscriptionStoreId == store.Id
-        }).ToList();
+        await _baseAdminModelFactory.PrepareStoresAsync(model.AvailableNewsLetterSubscriptionStores, false);
 
         //prepare model languages for newsletter subscription
-        model.AvailableNewsLetterSubscriptionLanguages = (await _languageService.GetAllLanguagesAsync()).Select(language => new SelectListItem
-        {
-            Value = language.Id.ToString(),
-            Text = language.Name,
-            Selected = model.SelectedNewsLetterSubscriptionLanguageId == language.Id
-        }).ToList();
+        await _baseAdminModelFactory.PrepareLanguagesAsync(model.AvailableNewsLetterSubscriptionLanguages, false);
 
         return model;
     }

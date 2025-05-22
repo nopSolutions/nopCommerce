@@ -4,7 +4,7 @@ using Nop.Web.Areas.Admin.Models.Messages;
 namespace Nop.Web.Areas.Admin.Factories;
 
 /// <summary>
-/// Represents the newsletter subscription type list model factory
+/// Represents the newsletter subscription type model factory
 /// </summary>
 public partial interface INewsLetterSubscriptionTypeModelFactory
 {

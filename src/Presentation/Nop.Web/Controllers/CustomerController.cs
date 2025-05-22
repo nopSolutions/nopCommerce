@@ -10,7 +10,6 @@ using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
-using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Events;
@@ -79,7 +78,6 @@ public partial class CustomerController : BasePublicController
     protected readonly ILogger _logger;
     protected readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
     protected readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-    protected readonly INewsLetterSubscriptionTypeService _newsLetterSubscriptionTypeService;
     protected readonly INotificationService _notificationService;
     protected readonly IOrderService _orderService;
     protected readonly IPermissionService _permissionService;
@@ -132,7 +130,6 @@ public partial class CustomerController : BasePublicController
         ILogger logger,
         IMultiFactorAuthenticationPluginManager multiFactorAuthenticationPluginManager,
         INewsLetterSubscriptionService newsLetterSubscriptionService,
-        INewsLetterSubscriptionTypeService newsLetterSubscriptionTypeService,
         INotificationService notificationService,
         IOrderService orderService,
         IPermissionService permissionService,
@@ -180,7 +177,6 @@ public partial class CustomerController : BasePublicController
         _logger = logger;
         _multiFactorAuthenticationPluginManager = multiFactorAuthenticationPluginManager;
         _newsLetterSubscriptionService = newsLetterSubscriptionService;
-        _newsLetterSubscriptionTypeService = newsLetterSubscriptionTypeService;
         _notificationService = notificationService;
         _orderService = orderService;
         _permissionService = permissionService;
@@ -351,9 +347,11 @@ public partial class CustomerController : BasePublicController
             //newsletter subscriptions
             if (_gdprSettings.LogNewsletterConsent)
             {
-                if (oldCustomerInfoModel.Newsletter && !newCustomerInfoModel.Newsletter)
+                var oldNewsletter = oldCustomerInfoModel.NewsLetterSubscriptions.Any(subscriptionModel => subscriptionModel.IsActive);
+                var newNewsletter = newCustomerInfoModel.NewsLetterSubscriptions.Any(subscriptionModel => subscriptionModel.IsActive);
+                if (oldNewsletter && !newNewsletter)
                     await _gdprService.InsertLogAsync(customer, 0, GdprRequestType.ConsentDisagree, await _localizationService.GetResourceAsync("Gdpr.Consent.Newsletter"));
-                if (!oldCustomerInfoModel.Newsletter && newCustomerInfoModel.Newsletter)
+                if (!oldNewsletter && newNewsletter)
                     await _gdprService.InsertLogAsync(customer, 0, GdprRequestType.ConsentAgree, await _localizationService.GetResourceAsync("Gdpr.Consent.Newsletter"));
             }
 
@@ -783,7 +781,10 @@ public partial class CustomerController : BasePublicController
         if (_customerSettings.UserRegistrationType == UserRegistrationType.Disabled)
             return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.Disabled, returnUrl });
 
+        var store = await _storeContext.GetCurrentStoreAsync();
         var customer = await _workContext.GetCurrentCustomerAsync();
+        var language = await _workContext.GetWorkingLanguageAsync();
+
         if (await _customerService.IsRegisteredAsync(customer))
         {
             //Already registered customer. 
@@ -798,7 +799,6 @@ public partial class CustomerController : BasePublicController
             await _workContext.SetCurrentCustomerAsync(customer);
         }
 
-        var store = await _storeContext.GetCurrentStoreAsync();
         customer.RegisteredInStoreId = store.Id;
 
         //custom customer attributes
@@ -890,78 +890,68 @@ public partial class CustomerController : BasePublicController
                 customer.CustomCustomerAttributesXML = customerAttributesXml;
                 await _customerService.UpdateCustomerAsync(customer);
 
-                //newsletter
+                //newsletter subscriptions
+                var anyNewSubscriptions = false;
                 var isNewsletterActive = _customerSettings.UserRegistrationType != UserRegistrationType.EmailValidation;
-                var isNewsletter = false;
-
-                //save newsletter value
-                var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customerEmail, store.Id);
-                var currentLanguage = await _workContext.GetWorkingLanguageAsync();
-                if (newsletter != null)
+                var activeSubscriptions = model.NewsLetterSubscriptions.Where(subscriptionModel => subscriptionModel.IsActive);
+                var currentSubscriptions = await _newsLetterSubscriptionService
+                    .GetNewsLetterSubscriptionsByEmailAsync(customerEmail, storeId: store.Id);
+                if (currentSubscriptions.Any())
                 {
-                    foreach(var newsLetterSubscription in model.NewsLetterSubscriptions)
+                    var subscriptionGuid = currentSubscriptions.FirstOrDefault().NewsLetterSubscriptionGuid;
+                    foreach (var activeSubscription in activeSubscriptions)
                     {
-                        var subscriber = (await _newsLetterSubscriptionService.GetAllNewsLetterSubscriptionsAsync(email: newsletter.Email, subscriptionTypeId: newsLetterSubscription.TypeId)).FirstOrDefault();
-
-                        if (subscriber == null && newsLetterSubscription.IsActive)
+                        var existingSubscription = currentSubscriptions
+                            ?.FirstOrDefault(subscription => subscription.TypeId == activeSubscription.TypeId);
+                        if (existingSubscription is not null)
                         {
-                            await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new NewsLetterSubscription
+                            if (!existingSubscription.Active && isNewsletterActive)
                             {
-                                NewsLetterSubscriptionGuid = newsletter.NewsLetterSubscriptionGuid,
+                                existingSubscription.Active = true;
+                                existingSubscription.LanguageId = customer.LanguageId ?? language.Id;
+                                await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(existingSubscription);
+                            }
+                        }
+                        else
+                        {
+                            await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new()
+                            {
+                                NewsLetterSubscriptionGuid = subscriptionGuid,
                                 Email = customer.Email,
-                                Active = newsLetterSubscription.IsActive,
-                                TypeId = newsLetterSubscription.TypeId,
+                                Active = isNewsletterActive,
+                                TypeId = activeSubscription.TypeId,
                                 StoreId = store.Id,
-                                LanguageId = customer.LanguageId ?? currentLanguage.Id,
+                                LanguageId = customer.LanguageId ?? language.Id,
                                 CreatedOnUtc = DateTime.UtcNow
                             });
-                            isNewsletter = true;
+                            anyNewSubscriptions = true;
                         }
                     }
-
-                    if (isNewsletter)
-                    {
-                        newsletter.Active = isNewsletterActive;
-                        await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(newsletter);
-
-                        //GDPR
-                        if (_gdprSettings.GdprEnabled && _gdprSettings.LogNewsletterConsent)
-                        {
-                            await _gdprService.InsertLogAsync(customer, 0, GdprRequestType.ConsentAgree, await _localizationService.GetResourceAsync("Gdpr.Consent.Newsletter"));
-                        }
-                    }
-                    //else
-                    //{
-                    //When registering, not checking the newsletter check box should not take an existing email address off of the subscription list.
-                    //_newsLetterSubscriptionService.DeleteNewsLetterSubscription(newsletter);
-                    //}
                 }
                 else
                 {
-                    var activeSubscriptions = model.NewsLetterSubscriptions.Where(x => x.IsActive);
-                    if (activeSubscriptions.Any())
+                    var subscriptionGuid = Guid.NewGuid();
+                    foreach (var activeSubscription in activeSubscriptions)
                     {
-                        var newsLetterSubscriptionGuid = Guid.NewGuid();
-                        foreach (var activeSubscription in activeSubscriptions)
+                        await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new()
                         {
-                            await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new NewsLetterSubscription
-                            {
-                                NewsLetterSubscriptionGuid = newsLetterSubscriptionGuid,
-                                Email = customer.Email,
-                                Active = activeSubscription.IsActive,
-                                TypeId = activeSubscription.TypeId,
-                                StoreId = store.Id,
-                                LanguageId = customer.LanguageId ?? currentLanguage.Id,
-                                CreatedOnUtc = DateTime.UtcNow
-                            });
-                        }
-
-                        //GDPR
-                        if (_gdprSettings.GdprEnabled && _gdprSettings.LogNewsletterConsent)
-                        {
-                            await _gdprService.InsertLogAsync(customer, 0, GdprRequestType.ConsentAgree, await _localizationService.GetResourceAsync("Gdpr.Consent.Newsletter"));
-                        }
+                            NewsLetterSubscriptionGuid = subscriptionGuid,
+                            Email = customer.Email,
+                            Active = isNewsletterActive,
+                            TypeId = activeSubscription.TypeId,
+                            StoreId = store.Id,
+                            LanguageId = customer.LanguageId ?? language.Id,
+                            CreatedOnUtc = DateTime.UtcNow
+                        });
+                        anyNewSubscriptions = true;
                     }
+                }
+
+                //GDPR
+                if (anyNewSubscriptions && _gdprSettings.GdprEnabled && _gdprSettings.LogNewsletterConsent)
+                {
+                    var consentMessage = await _localizationService.GetResourceAsync("Gdpr.Consent.Newsletter");
+                    await _gdprService.InsertLogAsync(customer, 0, GdprRequestType.ConsentAgree, consentMessage);
                 }
 
                 if (_customerSettings.AcceptPrivacyPolicyEnabled)
@@ -1043,14 +1033,14 @@ public partial class CustomerController : BasePublicController
                         _localizationSettings.DefaultAdminLanguageId);
 
                 //raise event       
-                await _eventPublisher.PublishAsync(new CustomerRegisteredEvent(customer));                
+                await _eventPublisher.PublishAsync(new CustomerRegisteredEvent(customer));
 
                 switch (_customerSettings.UserRegistrationType)
                 {
                     case UserRegistrationType.EmailValidation:
                         //email validation message
                         await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.AccountActivationTokenAttribute, Guid.NewGuid().ToString());
-                        await _workflowMessageService.SendCustomerEmailValidationMessageAsync(customer, currentLanguage.Id);
+                        await _workflowMessageService.SendCustomerEmailValidationMessageAsync(customer, language.Id);
 
                         //result
                         return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.EmailValidation, returnUrl });
@@ -1060,7 +1050,7 @@ public partial class CustomerController : BasePublicController
 
                     case UserRegistrationType.Standard:
                         //send customer welcome message
-                        await _workflowMessageService.SendCustomerWelcomeMessageAsync(customer, currentLanguage.Id);
+                        await _workflowMessageService.SendCustomerWelcomeMessageAsync(customer, language.Id);
 
                         //raise event       
                         await _eventPublisher.PublishAsync(new CustomerActivatedEvent(customer));
@@ -1166,13 +1156,14 @@ public partial class CustomerController : BasePublicController
         //authenticate customer after activation
         await _customerRegistrationService.SignInCustomerAsync(customer, null, true);
 
-        //activating newsletter if need
+        //activating newsletter subscriptions
         var store = await _storeContext.GetCurrentStoreAsync();
-        var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id);
-        if (newsletter != null && !newsletter.Active)
+        var subscriptions = await _newsLetterSubscriptionService
+            .GetNewsLetterSubscriptionsByEmailAsync(customer.Email, storeId: store.Id, isActive: false);
+        foreach (var subscription in subscriptions)
         {
-            newsletter.Active = true;
-            await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(newsletter);
+            subscription.Active = true;
+            await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(subscription);
         }
 
         model.Result = await _localizationService.GetResourceAsync("Account.AccountActivation.Activated");
@@ -1199,6 +1190,9 @@ public partial class CustomerController : BasePublicController
     public virtual async Task<IActionResult> Info(CustomerInfoModel model, IFormCollection form)
     {
         var customer = await _workContext.GetCurrentCustomerAsync();
+        var store = await _storeContext.GetCurrentStoreAsync();
+        var language = await _workContext.GetWorkingLanguageAsync();
+
         if (!await _customerService.IsRegisteredAsync(customer))
             return Challenge();
 
@@ -1315,34 +1309,32 @@ public partial class CustomerController : BasePublicController
                 customer.CustomCustomerAttributesXML = customerAttributesXml;
                 await _customerService.UpdateCustomerAsync(customer);
 
-                //newsletter
-                //save newsletter value
-                var store = await _storeContext.GetCurrentStoreAsync();
-                var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id);
-                var currentLanguage = await _workContext.GetWorkingLanguageAsync();
-
-                if (newsletter != null)
+                //newsletter subscriptions
+                var currentSubscriptions = await _newsLetterSubscriptionService
+                    .GetNewsLetterSubscriptionsByEmailAsync(customer.Email, storeId: store.Id);
+                if (currentSubscriptions.Any())
                 {
-                    foreach (var newsLetterSubscription in model.NewsLetterSubscriptions)
+                    var subscriptionGuid = currentSubscriptions.FirstOrDefault().NewsLetterSubscriptionGuid;
+                    foreach (var newsLetterSubscriptionModel in model.NewsLetterSubscriptions)
                     {
-                        var subscriber = (await _newsLetterSubscriptionService.GetAllNewsLetterSubscriptionsAsync(email: newsletter.Email, subscriptionTypeId: newsLetterSubscription.TypeId)).FirstOrDefault();
-
-                        if (subscriber != null)
+                        var existingSubscription = currentSubscriptions
+                            .FirstOrDefault(subscription => subscription.TypeId == newsLetterSubscriptionModel.TypeId);
+                        if (existingSubscription is not null && existingSubscription.Active != newsLetterSubscriptionModel.IsActive)
                         {
-                            subscriber.Active = newsLetterSubscription.IsActive;
-                            await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(subscriber);
+                            existingSubscription.Active = newsLetterSubscriptionModel.IsActive;
+                            await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(existingSubscription);
                         }
 
-                        if (subscriber == null && newsLetterSubscription.IsActive)
+                        if (existingSubscription is null && newsLetterSubscriptionModel.IsActive)
                         {
-                            await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new NewsLetterSubscription
+                            await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new()
                             {
-                                NewsLetterSubscriptionGuid = newsletter.NewsLetterSubscriptionGuid,
+                                NewsLetterSubscriptionGuid = subscriptionGuid,
                                 Email = customer.Email,
-                                Active = newsLetterSubscription.IsActive,
-                                TypeId = newsLetterSubscription.TypeId,
+                                Active = true,
+                                TypeId = newsLetterSubscriptionModel.TypeId,
                                 StoreId = store.Id,
-                                LanguageId = customer.LanguageId ?? currentLanguage.Id,
+                                LanguageId = customer.LanguageId ?? language.Id,
                                 CreatedOnUtc = DateTime.UtcNow
                             });
                         }
@@ -1350,19 +1342,18 @@ public partial class CustomerController : BasePublicController
                 }
                 else
                 {
-                    var activeSubscriptions = model.NewsLetterSubscriptions.Where(x => x.IsActive);
-                    var newsLetterSubscriptionGuid = Guid.NewGuid();
-
+                    var subscriptionGuid = Guid.NewGuid();
+                    var activeSubscriptions = model.NewsLetterSubscriptions.Where(subscriptionModel => subscriptionModel.IsActive);
                     foreach (var activeSubscription in activeSubscriptions)
                     {
-                        await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new NewsLetterSubscription
+                        await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new()
                         {
-                            NewsLetterSubscriptionGuid = newsLetterSubscriptionGuid,
+                            NewsLetterSubscriptionGuid = subscriptionGuid,
                             Email = customer.Email,
                             Active = true,
                             StoreId = store.Id,
                             TypeId = activeSubscription.TypeId,
-                            LanguageId = customer.LanguageId ?? currentLanguage.Id,
+                            LanguageId = customer.LanguageId ?? language.Id,
                             CreatedOnUtc = DateTime.UtcNow
                         });
                     }
@@ -1697,7 +1688,7 @@ public partial class CustomerController : BasePublicController
             {
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Account.ChangePassword.Success"));
 
-                await _customerActivityService.InsertActivityAsync(customer, "PublicStore.PasswordChanged", await 
+                await _customerActivityService.InsertActivityAsync(customer, "PublicStore.PasswordChanged", await
                     _localizationService.GetResourceAsync("ActivityLog.PublicStore.PasswordChanged"));
 
                 //authenticate customer after changing password
@@ -1889,7 +1880,7 @@ public partial class CustomerController : BasePublicController
     [CheckAccessClosedStore(ignore: true)]
     public virtual async Task<IActionResult> CheckGiftCardBalance()
     {
-        if (!_customerSettings.AllowCustomersToCheckGiftCardBalance) 
+        if (!_customerSettings.AllowCustomersToCheckGiftCardBalance)
             return RedirectToRoute("CustomerInfo");
 
         var model = await _customerModelFactory.PrepareCheckGiftCardBalanceModelAsync();
@@ -1906,7 +1897,7 @@ public partial class CustomerController : BasePublicController
             return RedirectToRoute("CustomerInfo");
 
         //validate CAPTCHA
-        if (_captchaSettings.Enabled && _captchaSettings.ShowOnCheckGiftCardBalance && !captchaValid) 
+        if (_captchaSettings.Enabled && _captchaSettings.ShowOnCheckGiftCardBalance && !captchaValid)
             ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
 
         if (ModelState.IsValid)

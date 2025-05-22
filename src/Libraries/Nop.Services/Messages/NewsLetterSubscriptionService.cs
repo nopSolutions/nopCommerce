@@ -54,23 +54,19 @@ public partial class NewsLetterSubscriptionService : INewsLetterSubscriptionServ
             return;
 
         if (isSubscribe)
-        {
             await _eventPublisher.PublishNewsLetterSubscribeAsync(subscription);
-        }
         else
-        {
             await _eventPublisher.PublishNewsLetterUnsubscribeAsync(subscription);
-        }
     }
 
     #endregion
 
-    #region Methods    
+    #region Methods
 
     /// <summary>
     /// Inserts a newsletter subscription
     /// </summary>
-    /// <param name="newsLetterSubscription">NewsLetter subscription</param>
+    /// <param name="newsLetterSubscription">Newsletter subscription</param>
     /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     public virtual async Task InsertNewsLetterSubscriptionAsync(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true)
@@ -91,7 +87,7 @@ public partial class NewsLetterSubscriptionService : INewsLetterSubscriptionServ
     /// <summary>
     /// Updates a newsletter subscription
     /// </summary>
-    /// <param name="newsLetterSubscription">NewsLetter subscription</param>
+    /// <param name="newsLetterSubscription">Newsletter subscription</param>
     /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     public virtual async Task UpdateNewsLetterSubscriptionAsync(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true)
@@ -108,7 +104,7 @@ public partial class NewsLetterSubscriptionService : INewsLetterSubscriptionServ
         await _subscriptionRepository.UpdateAsync(newsLetterSubscription);
 
         //Publish the subscription event 
-        if ((originalSubscription.Active == false && newsLetterSubscription.Active) ||
+        if ((!originalSubscription.Active && newsLetterSubscription.Active) ||
             (newsLetterSubscription.Active && originalSubscription.Email != newsLetterSubscription.Email))
         {
             //If the previous entry was false, but this one is true, publish a subscribe.
@@ -130,7 +126,7 @@ public partial class NewsLetterSubscriptionService : INewsLetterSubscriptionServ
     /// <summary>
     /// Deletes a newsletter subscription
     /// </summary>
-    /// <param name="newsLetterSubscription">NewsLetter subscription</param>
+    /// <param name="newsLetterSubscription">Newsletter subscription</param>
     /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     public virtual async Task DeleteNewsLetterSubscriptionAsync(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true)
@@ -149,7 +145,7 @@ public partial class NewsLetterSubscriptionService : INewsLetterSubscriptionServ
     /// <param name="newsLetterSubscriptionId">The newsletter subscription identifier</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the newsLetter subscription
+    /// The task result contains the newsletter subscription
     /// </returns>
     public virtual async Task<NewsLetterSubscription> GetNewsLetterSubscriptionByIdAsync(int newsLetterSubscriptionId)
     {
@@ -162,12 +158,12 @@ public partial class NewsLetterSubscriptionService : INewsLetterSubscriptionServ
     /// <param name="newsLetterSubscriptionGuid">The newsletter subscription GUID</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the newsLetter subscription list
+    /// The task result contains the newsletter subscription list
     /// </returns>
-    public virtual async Task<IList<NewsLetterSubscription>> GetNewsLetterSubscriptionByGuidAsync(Guid newsLetterSubscriptionGuid)
+    public virtual async Task<IList<NewsLetterSubscription>> GetNewsLetterSubscriptionsByGuidAsync(Guid newsLetterSubscriptionGuid)
     {
         if (newsLetterSubscriptionGuid == Guid.Empty)
-            return null;
+            return new List<NewsLetterSubscription>();
 
         var newsLetterSubscriptions =
             from nls in _subscriptionRepository.Table
@@ -179,45 +175,62 @@ public partial class NewsLetterSubscriptionService : INewsLetterSubscriptionServ
     }
 
     /// <summary>
-    /// Gets a newsletter subscription by email and store ID
+    /// Gets newsletter subscriptions by the passed email (exact match)
     /// </summary>
-    /// <param name="email">The newsletter subscription email</param>
-    /// <param name="storeId">Store identifier</param>
+    /// <param name="email">Email to search</param>
+    /// <param name="storeId">Store identifier. Pass 0 to load all records.</param>
+    /// <param name="subscriptionTypeId">Subscription type identifier. Pass 0 to load all records.</param>
+    /// <param name="isActive">Value indicating whether subscriber record should be active or not; Pass null to load all records</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the newsLetter subscription
+    /// The task result contains the newsletter subscriptions
     /// </returns>
-    public virtual async Task<NewsLetterSubscription> GetNewsLetterSubscriptionByEmailAndStoreIdAsync(string email, int storeId)
+    public virtual async Task<IList<NewsLetterSubscription>> GetNewsLetterSubscriptionsByEmailAsync(string email,
+        int storeId = 0, int subscriptionTypeId = 0, bool? isActive = null)
     {
+        email = email?.Trim();
         if (!CommonHelper.IsValidEmail(email))
-            return null;
+            return new List<NewsLetterSubscription>();
 
-        email = email.Trim();
+        return await _subscriptionRepository.GetAllAsync(query =>
+        {
+            if (!string.IsNullOrEmpty(email))
+                query = query.Where(subscription => subscription.Email == email);
 
-        var newsLetterSubscriptions = 
-            from nls in _subscriptionRepository.Table
-            where nls.Email == email && nls.StoreId == storeId
-            orderby nls.Id
-            select nls;
+            if (storeId > 0)
+                query = query.Where(subscription => subscription.StoreId == storeId);
 
-        return await newsLetterSubscriptions.FirstOrDefaultAsync();
+            if (subscriptionTypeId > 0)
+                query = query.Where(subscription => subscription.TypeId == subscriptionTypeId);
+
+            if (isActive.HasValue)
+                query = query.Where(subscription => subscription.Active == isActive.Value);
+
+            query = query
+                .OrderBy(subscription => subscription.Email)
+                .ThenBy(subscription => subscription.StoreId)
+                .ThenBy(subscription => subscription.TypeId)
+                .ThenBy(subscription => subscription.Id);
+
+            return query;
+        });
     }
 
     /// <summary>
-    /// Gets the newsletter subscription list
+    /// Gets the paged newsletter subscription list
     /// </summary>
     /// <param name="email">Email to search or string. Empty to load all records.</param>
     /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
     /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
     /// <param name="storeId">Store identifier. 0 to load all records.</param>
+    /// <param name="isActive">Value indicating whether subscriber record should be active or not; null to load all records</param>
     /// <param name="customerRoleId">Customer role identifier. Used to filter subscribers by customer role. 0 to load all records.</param>
     /// <param name="subscriptionTypeId">Subscription type identifier. Used to filter subscribers by subscription type. 0 to load all records.</param>
-    /// <param name="isActive">Value indicating whether subscriber record should be active or not; null to load all records</param>
     /// <param name="pageIndex">Page index</param>
     /// <param name="pageSize">Page size</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the newsLetterSubscription entities
+    /// The task result contains the newsletter subscription paged list
     /// </returns>
     public virtual async Task<IPagedList<NewsLetterSubscription>> GetAllNewsLetterSubscriptionsAsync(string email = null,
         DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
@@ -238,9 +251,7 @@ public partial class NewsLetterSubscriptionService : INewsLetterSubscriptionServ
                 if (storeId > 0)
                     query = query.Where(nls => nls.StoreId == storeId);
                 if (subscriptionTypeId > 0)
-                {
-                    query = query.Where(nls => nls.TypeId == subscriptionTypeId).Distinct();
-                }
+                    query = query.Where(nls => nls.TypeId == subscriptionTypeId);
                 if (isActive.HasValue)
                     query = query.Where(nls => nls.Active == isActive.Value);
                 query = query.OrderBy(nls => nls.Email);
@@ -253,7 +264,7 @@ public partial class NewsLetterSubscriptionService : INewsLetterSubscriptionServ
 
         //filter by customer role
         var guestRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GuestsRoleName)
-                        ?? throw new NopException("'Guests' role could not be loaded");
+            ?? throw new NopException("'Guests' role could not be loaded");
 
         if (guestRole.Id == customerRoleId)
         {
@@ -269,9 +280,7 @@ public partial class NewsLetterSubscriptionService : INewsLetterSubscriptionServ
                 if (storeId > 0)
                     query = query.Where(nls => nls.StoreId == storeId);
                 if (subscriptionTypeId > 0)
-                {
-                    query = query.Where(nls => nls.TypeId == subscriptionTypeId).Distinct();
-                }
+                    query = query.Where(nls => nls.TypeId == subscriptionTypeId);
                 if (isActive.HasValue)
                     query = query.Where(nls => nls.Active == isActive.Value);
                 query = query.Where(nls => !_customerRepository.Table.Any(c => c.Email == nls.Email));
@@ -304,9 +313,7 @@ public partial class NewsLetterSubscriptionService : INewsLetterSubscriptionServ
                 if (storeId > 0)
                     joindQuery = joindQuery.Where(x => x.NewsLetterSubscription.StoreId == storeId);
                 if (subscriptionTypeId > 0)
-                {
-                    query = query.Where(nls => nls.TypeId == subscriptionTypeId).Distinct();
-                }
+                    query = query.Where(nls => nls.TypeId == subscriptionTypeId);
                 if (isActive.HasValue)
                     joindQuery = joindQuery.Where(x => x.NewsLetterSubscription.Active == isActive.Value);
 

@@ -1,7 +1,6 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Messages;
 using Nop.Data.Extensions;
-using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.UpgradeTo490;
 
@@ -13,7 +12,7 @@ public class NewsLetterSubscriptionMigration : ForwardOnlyMigration
     /// </summary>
     public override void Up()
     {
-        if (!Schema.Table(NameCompatibilityManager.GetTableName(typeof(NewsLetterSubscriptionType))).Exists())
+        if (!Schema.Table(nameof(NewsLetterSubscriptionType)).Exists())
             Create.TableFor<NewsLetterSubscriptionType>();
 
         if (!Schema.Table(nameof(NewsLetterSubscription)).Column(nameof(NewsLetterSubscription.TypeId)).Exists())

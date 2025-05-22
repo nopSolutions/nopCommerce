@@ -45,10 +45,14 @@ public class CustomerEventConsumer : IConsumer<CustomerChangeWorkingLanguageEven
         if (await _customerService.IsGuestAsync(customer))
             return;
 
+        //change language for all customer subscriptions
         var store = await _storeContext.GetCurrentStoreAsync();
-        var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id);
-        if (subscription != null && subscription.LanguageId != customer.LanguageId)
+        var subscriptions = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionsByEmailAsync(customer.Email, storeId: store.Id);
+        foreach (var subscription in subscriptions)
         {
+            if (subscription.LanguageId == customer.LanguageId)
+                continue;
+
             subscription.LanguageId = customer.LanguageId ?? 0;
             await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(subscription);
         }

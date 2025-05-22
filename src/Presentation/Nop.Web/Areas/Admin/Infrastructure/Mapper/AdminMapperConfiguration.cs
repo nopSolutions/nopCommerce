@@ -1217,7 +1217,8 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(model => model.SelectedNewsLetterSubscriptionStoreId, options => options.Ignore())
             .ForMember(model => model.SelectedNewsLetterSubscriptionLanguageId, options => options.Ignore())
             .ForMember(model => model.LanguageName, options => options.Ignore())
-            .ForMember(model => model.StoreName, options => options.Ignore());
+            .ForMember(model => model.StoreName, options => options.Ignore())
+            .ForMember(model => model.EmailNotEditable, options => options.Ignore());
         CreateMap<NewsLetterSubscriptionModel, NewsLetterSubscription>()
             .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
             .ForMember(entity => entity.TypeId, options => options.Ignore())
@@ -1225,7 +1226,7 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(entity => entity.LanguageId, option => option.Ignore())
             .ForMember(entity => entity.StoreId, options => options.Ignore());
 
-        //NewsLetter subscription type
+        //Newsletter subscription type
         CreateMap<NewsLetterSubscriptionType, NewsLetterSubscriptionTypeModel>();
         CreateMap<NewsLetterSubscriptionTypeModel, NewsLetterSubscriptionType>();
 

@@ -1,7 +1,6 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Messages;
-using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.UpgradeTo490;
 

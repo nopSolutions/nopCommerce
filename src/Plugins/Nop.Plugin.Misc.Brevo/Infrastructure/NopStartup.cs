@@ -28,7 +28,6 @@ public class NopStartup : INopStartup
 
         //override services
         services.AddScoped<IWorkflowMessageService, BrevoMessageService>();
-        services.AddScoped<IEmailSender, BrevoEmailSender>();
     }
 
     /// <summary>

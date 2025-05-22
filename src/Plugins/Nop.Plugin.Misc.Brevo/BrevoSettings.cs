@@ -7,11 +7,6 @@ namespace Nop.Plugin.Misc.Brevo;
 /// </summary>
 public class BrevoSettings : ISettings
 {
-    public BrevoSettings()
-    {
-        SubscriptionTypeListBrevoList = new Dictionary<int, int>();
-    }
-
     /// <summary>
     /// Gets or sets the API key
     /// </summary>
@@ -78,7 +73,7 @@ public class BrevoSettings : ISettings
     public bool UseMarketingAutomation { get; set; }
 
     /// <summary>
-    /// Gets or sets the dictionary identifier of subscription type list and Brevo list
+    /// Gets or sets the collection of subscription type and Brevo list mappings
     /// </summary>
-    public Dictionary<int, int> SubscriptionTypeListBrevoList { get; set; }
+    public Dictionary<int, int> SubscriptionTypeMappings { get; set; } = new();
 }

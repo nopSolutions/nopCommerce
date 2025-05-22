@@ -103,17 +103,14 @@ public partial class NewsLetterSubscriptionController : BaseAdminController
             subscription.StoreId = model.SelectedNewsLetterSubscriptionStoreId;
             subscription.LanguageId = model.SelectedNewsLetterSubscriptionLanguageId;
 
-            var currentSubscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(subscription.Email, subscription.StoreId);
-            var guid = currentSubscription != null ? currentSubscription.NewsLetterSubscriptionGuid : Guid.NewGuid();
+            var subscriptionsByEmail = await _newsLetterSubscriptionService
+                .GetNewsLetterSubscriptionsByEmailAsync(subscription.Email, storeId: subscription.StoreId);
+            var availableSubscriptionTypes = await _newsLetterSubscriptionTypeService.GetAllNewsLetterSubscriptionTypesAsync(subscription.StoreId);
 
-            var existingSubscription = (await _newsLetterSubscriptionService.GetAllNewsLetterSubscriptionsAsync(email: subscription.Email, storeId: subscription.StoreId, subscriptionTypeId: subscription.TypeId)).FirstOrDefault();
-
-            var availableubscriptionTypes = await _newsLetterSubscriptionTypeService.GetAllNewsLetterSubscriptionTypesAsync(subscription.StoreId);
-            var currentSubscriptionType = await _newsLetterSubscriptionTypeService.GetNewsLetterSubscriptionTypeByIdAsync(subscription.TypeId);
-
-            if (existingSubscription == null && availableubscriptionTypes.Where(x => x.Id == currentSubscriptionType.Id).Any())
+            var existingSubscription = subscriptionsByEmail.FirstOrDefault(s => s.TypeId == subscription.TypeId);
+            if (existingSubscription == null && availableSubscriptionTypes.Any(x => x.Id == subscription.TypeId))
             {
-                subscription.NewsLetterSubscriptionGuid = guid;
+                subscription.NewsLetterSubscriptionGuid = subscriptionsByEmail.FirstOrDefault()?.NewsLetterSubscriptionGuid ?? Guid.NewGuid();
                 subscription.CreatedOnUtc = DateTime.UtcNow;
                 await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(subscription);
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscription.Added"));
@@ -163,13 +160,14 @@ public partial class NewsLetterSubscriptionController : BaseAdminController
             subscription.LanguageId = model.SelectedNewsLetterSubscriptionLanguageId;
             subscription.StoreId = model.SelectedNewsLetterSubscriptionStoreId;
 
-            var currentSubscription = (await _newsLetterSubscriptionService.GetAllNewsLetterSubscriptionsAsync(email: subscription.Email, storeId: subscription.StoreId, subscriptionTypeId: subscription.TypeId)).FirstOrDefault();
+            var currentSubscription = (await _newsLetterSubscriptionService
+                .GetNewsLetterSubscriptionsByEmailAsync(subscription.Email, storeId: subscription.StoreId, subscriptionTypeId: subscription.TypeId))
+                .FirstOrDefault();
 
-            var availableubscriptionTypes = await _newsLetterSubscriptionTypeService.GetAllNewsLetterSubscriptionTypesAsync(subscription.StoreId);
-            var currentSubscriptionType = await _newsLetterSubscriptionTypeService.GetNewsLetterSubscriptionTypeByIdAsync(subscription.TypeId);
-            var isAvailableubscriptionType = availableubscriptionTypes.Where(x => x.Id == currentSubscriptionType.Id).Any();
+            var availableSubscriptionTypes = await _newsLetterSubscriptionTypeService.GetAllNewsLetterSubscriptionTypesAsync(subscription.StoreId);
+            var isAvailableSubscriptionType = availableSubscriptionTypes.Any(x => x.Id == subscription.TypeId);
 
-            if ((currentSubscription == null || (currentSubscription != null && currentSubscription.Id == subscription.Id)) && isAvailableubscriptionType)
+            if ((currentSubscription == null || (currentSubscription.Id == subscription.Id)) && isAvailableSubscriptionType)
             {
                 await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(subscription);
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscription.Updated"));
@@ -230,8 +228,8 @@ public partial class NewsLetterSubscriptionController : BaseAdminController
         var endDateValue = model.EndDate == null ? null
             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
 
-        var subscriptions = await _newsLetterSubscriptionService.GetAllNewsLetterSubscriptionsAsync(model.SearchEmail,
-            startDateValue, endDateValue, model.StoreId, isActive, model.CustomerRoleId, model.SubscriptionTypeId);
+        var subscriptions = (await _newsLetterSubscriptionService.GetAllNewsLetterSubscriptionsAsync(model.SearchEmail,
+            startDateValue, endDateValue, model.StoreId, isActive, model.CustomerRoleId, model.SubscriptionTypeId)).ToList();
 
         var result = await _exportManager.ExportNewsLetterSubscribersToTxtAsync(subscriptions);
 

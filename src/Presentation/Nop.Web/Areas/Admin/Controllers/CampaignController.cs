@@ -219,7 +219,8 @@ public partial class CampaignController : BaseAdminController
             var emailAccount = await GetEmailAccountAsync(model.EmailAccountId);
             var store = await _storeContext.GetCurrentStoreAsync();
             var subscription = (await _newsLetterSubscriptionService
-                .GetAllNewsLetterSubscriptionsAsync(email: model.TestEmail, storeId: store.Id, subscriptionTypeId: model.NewsLetterSubscriptionTypeId)).FirstOrDefault();
+                .GetNewsLetterSubscriptionsByEmailAsync(model.TestEmail, storeId: store.Id, subscriptionTypeId: model.NewsLetterSubscriptionTypeId))
+                .FirstOrDefault();
             if (subscription != null)
             {
                 //there's a subscription. let's use it

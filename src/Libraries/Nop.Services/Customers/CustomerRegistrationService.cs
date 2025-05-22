@@ -12,7 +12,6 @@ using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Security;
-using Nop.Services.Stores;
 
 namespace Nop.Services.Customers;
 
@@ -39,7 +38,6 @@ public partial class CustomerRegistrationService : ICustomerRegistrationService
     protected readonly IRewardPointService _rewardPointService;
     protected readonly IShoppingCartService _shoppingCartService;
     protected readonly IStoreContext _storeContext;
-    protected readonly IStoreService _storeService;
     protected readonly IUrlHelperFactory _urlHelperFactory;
     protected readonly IWorkContext _workContext;
     protected readonly IWorkflowMessageService _workflowMessageService;
@@ -65,7 +63,6 @@ public partial class CustomerRegistrationService : ICustomerRegistrationService
         IRewardPointService rewardPointService,
         IShoppingCartService shoppingCartService,
         IStoreContext storeContext,
-        IStoreService storeService,
         IUrlHelperFactory urlHelperFactory,
         IWorkContext workContext,
         IWorkflowMessageService workflowMessageService,
@@ -87,7 +84,6 @@ public partial class CustomerRegistrationService : ICustomerRegistrationService
         _rewardPointService = rewardPointService;
         _shoppingCartService = shoppingCartService;
         _storeContext = storeContext;
-        _storeService = storeService;
         _urlHelperFactory = urlHelperFactory;
         _workContext = workContext;
         _workflowMessageService = workflowMessageService;
@@ -506,16 +502,24 @@ public partial class CustomerRegistrationService : ICustomerRegistrationService
             if (string.IsNullOrEmpty(oldEmail) || oldEmail.Equals(newEmail, StringComparison.InvariantCultureIgnoreCase))
                 return;
 
-            //update newsletter subscription (if required)
-            foreach (var store in await _storeService.GetAllStoresAsync())
+            //copy active newsletter subscriptions and deactivate the old
+            var subscriptions = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionsByEmailAsync(oldEmail, isActive: true);
+            var subscriptionGuid = Guid.NewGuid();
+            foreach (var subscription in subscriptions)
             {
-                var subscriptionOld = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(oldEmail, store.Id);
+                await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new()
+                {
+                    NewsLetterSubscriptionGuid = subscriptionGuid,
+                    Email = newEmail,
+                    Active = true,
+                    TypeId = subscription.TypeId,
+                    StoreId = subscription.StoreId,
+                    LanguageId = subscription.LanguageId,
+                    CreatedOnUtc = DateTime.UtcNow
+                });
 
-                if (subscriptionOld == null)
-                    continue;
-
-                subscriptionOld.Email = newEmail;
-                await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(subscriptionOld);
+                subscription.Active = false;
+                await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(subscription);
             }
         }
     }

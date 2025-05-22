@@ -303,7 +303,7 @@ public partial class GdprService : IGdprService
             await _forumService.DeletePrivateMessageAsync(pm);
 
         //newsletter
-        var newsletters = await _newsLetterSubscriptionService.GetAllNewsLetterSubscriptionsAsync(email: customer.Email);
+        var newsletters = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionsByEmailAsync(customer.Email);
         foreach (var newsletter in newsletters)
             await _newsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(newsletter);
 

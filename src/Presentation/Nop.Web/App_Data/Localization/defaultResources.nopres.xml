@@ -379,7 +379,7 @@
     <Value>Last name is required.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Fields.NewsLetterSubscriptionType">
-    <Value>NewsLetter subscription list</Value>
+    <Value>Newsletter subscription list</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Fields.Password">
     <Value>Password</Value>

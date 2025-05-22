@@ -12,6 +12,6 @@ public partial class NewsLetterSubscriptionTypeValidator : BaseNopValidator<News
     {
         RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptionType.Fields.Name.Required"));
 
-        SetDatabaseValidationRules<NewsLetterSubscription>();
+        SetDatabaseValidationRules<NewsLetterSubscriptionType>();
     }
 }

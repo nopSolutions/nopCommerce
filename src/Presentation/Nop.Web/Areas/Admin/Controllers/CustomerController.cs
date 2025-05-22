@@ -797,8 +797,8 @@ public partial class CustomerController : BaseAdminController
             //delete
             await _customerService.DeleteCustomerAsync(customer);
 
-            //remove newsletter subscription (if exists)
-            var subscriptions = await _newsLetterSubscriptionService.GetAllNewsLetterSubscriptionsAsync(email: customerEmail);
+            //remove newsletter subscriptions (if exist)
+            var subscriptions = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionsByEmailAsync(customerEmail);
             foreach (var subscription in subscriptions)
                 await _newsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(subscription);
 

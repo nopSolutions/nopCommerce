@@ -11,7 +11,7 @@ public partial interface INewsLetterSubscriptionService
     /// <summary>
     /// Inserts a newsletter subscription
     /// </summary>
-    /// <param name="newsLetterSubscription">NewsLetter subscription</param>
+    /// <param name="newsLetterSubscription">Newsletter subscription</param>
     /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     Task InsertNewsLetterSubscriptionAsync(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true);
@@ -19,7 +19,7 @@ public partial interface INewsLetterSubscriptionService
     /// <summary>
     /// Updates a newsletter subscription
     /// </summary>
-    /// <param name="newsLetterSubscription">NewsLetter subscription</param>
+    /// <param name="newsLetterSubscription">Newsletter subscription</param>
     /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     Task UpdateNewsLetterSubscriptionAsync(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true);
@@ -27,7 +27,7 @@ public partial interface INewsLetterSubscriptionService
     /// <summary>
     /// Deletes a newsletter subscription
     /// </summary>
-    /// <param name="newsLetterSubscription">NewsLetter subscription</param>
+    /// <param name="newsLetterSubscription">Newsletter subscription</param>
     /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     Task DeleteNewsLetterSubscriptionAsync(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true);
@@ -38,7 +38,7 @@ public partial interface INewsLetterSubscriptionService
     /// <param name="newsLetterSubscriptionId">The newsletter subscription identifier</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the newsLetter subscription
+    /// The task result contains the newsletter subscription
     /// </returns>
     Task<NewsLetterSubscription> GetNewsLetterSubscriptionByIdAsync(int newsLetterSubscriptionId);
 
@@ -48,23 +48,26 @@ public partial interface INewsLetterSubscriptionService
     /// <param name="newsLetterSubscriptionGuid">The newsletter subscription GUID</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the newsLetter subscription list
+    /// The task result contains the newsletter subscription list
     /// </returns>
-    Task<IList<NewsLetterSubscription>> GetNewsLetterSubscriptionByGuidAsync(Guid newsLetterSubscriptionGuid);
+    Task<IList<NewsLetterSubscription>> GetNewsLetterSubscriptionsByGuidAsync(Guid newsLetterSubscriptionGuid);
 
     /// <summary>
-    /// Gets a newsletter subscription by email and store ID
+    /// Gets newsletter subscriptions by the passed email (exact match)
     /// </summary>
-    /// <param name="email">The newsletter subscription email</param>
-    /// <param name="storeId">Store identifier</param>
+    /// <param name="email">Email to search</param>
+    /// <param name="storeId">Store identifier. Pass 0 to load all records.</param>
+    /// <param name="subscriptionTypeId">Subscription type identifier. Pass 0 to load all records.</param>
+    /// <param name="isActive">Value indicating whether subscriber record should be active or not; Pass null to load all records</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the newsLetter subscription
+    /// The task result contains the newsletter subscriptions
     /// </returns>
-    Task<NewsLetterSubscription> GetNewsLetterSubscriptionByEmailAndStoreIdAsync(string email, int storeId);
+    Task<IList<NewsLetterSubscription>> GetNewsLetterSubscriptionsByEmailAsync(string email,
+        int storeId = 0, int subscriptionTypeId = 0, bool? isActive = null);
 
     /// <summary>
-    /// Gets the newsletter subscription list
+    /// Gets the paged newsletter subscription list
     /// </summary>
     /// <param name="email">Email to search or string. Empty to load all records.</param>
     /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
@@ -77,7 +80,7 @@ public partial interface INewsLetterSubscriptionService
     /// <param name="pageSize">Page size</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the newsLetterSubscription entities
+    /// The task result contains the newsletter subscription paged list
     /// </returns>
     Task<IPagedList<NewsLetterSubscription>> GetAllNewsLetterSubscriptionsAsync(string email = null,
         DateTime? createdFromUtc = null, DateTime? createdToUtc = null,

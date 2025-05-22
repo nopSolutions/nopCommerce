@@ -9,7 +9,7 @@ using Nop.Web.Framework.Models.Extensions;
 namespace Nop.Web.Areas.Admin.Factories;
 
 /// <summary>
-/// Represents the newsletter subscription types model factory implementation
+/// Represents the newsletter subscription type model factory implementation
 /// </summary>
 public partial class NewsLetterSubscriptionTypeModelFactory : INewsLetterSubscriptionTypeModelFactory
 {
