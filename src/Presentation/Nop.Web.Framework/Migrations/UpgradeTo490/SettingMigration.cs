@@ -157,6 +157,19 @@ public class SettingMigration : MigrationBase
             orderSettings.CustomerOrdersPageSize = 10;
             settingService.SaveSetting(orderSettings, settings => settings.CustomerOrdersPageSize);
         }
+
+        //#1921
+        var shoppingCartSettings = settingService.LoadSetting<ShoppingCartSettings>();
+        if (!settingService.SettingExists(shoppingCartSettings, settings => settings.AllowMultipleWishlist))
+        {
+            shoppingCartSettings.AllowMultipleWishlist = true;
+            settingService.SaveSetting(shoppingCartSettings, settings => settings.AllowMultipleWishlist);
+        }
+        if (!settingService.SettingExists(shoppingCartSettings, settings => settings.MaximumNumberOfCustomWishlist))
+        {
+            shoppingCartSettings.MaximumNumberOfCustomWishlist = 10;
+            settingService.SaveSetting(shoppingCartSettings, settings => settings.MaximumNumberOfCustomWishlist);
+        }
     }
 
     public override void Down()

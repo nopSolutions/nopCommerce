@@ -1704,12 +1704,13 @@ public partial class WorkflowMessageService : IWorkflowMessageService
     /// <param name="customerEmail">Customer's email</param>
     /// <param name="friendsEmail">Friend's email</param>
     /// <param name="personalMessage">Personal message</param>
+    /// <param name="wishlistUrl">Wishlist URL</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the queued email identifier
     /// </returns>
     public virtual async Task<IList<int>> SendWishlistEmailAFriendMessageAsync(Customer customer, int languageId,
-        string customerEmail, string friendsEmail, string personalMessage)
+        string customerEmail, string friendsEmail, string personalMessage, string wishlistUrl)
     {
         ArgumentNullException.ThrowIfNull(customer);
 
@@ -1725,6 +1726,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
         await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
         commonTokens.Add(new Token("Wishlist.PersonalMessage", personalMessage, true));
         commonTokens.Add(new Token("Wishlist.Email", customerEmail));
+        commonTokens.Add(new Token("Wishlist.URLForCustomer", wishlistUrl, true));
 
         return await messageTemplates.SelectAwait(async messageTemplate =>
         {

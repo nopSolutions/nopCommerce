@@ -26,6 +26,11 @@ public partial class ShoppingCartItem : BaseEntity
     public int ProductId { get; set; }
 
     /// <summary>
+    /// Gets or sets the custom wishlist identifier
+    /// </summary>
+    public int? CustomWishlistId { get; set; }
+
+    /// <summary>
     /// Gets or sets the product attributes in XML format
     /// </summary>
     public string AttributesXml { get; set; }

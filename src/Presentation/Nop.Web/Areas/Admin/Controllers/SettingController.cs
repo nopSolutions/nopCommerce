@@ -972,6 +972,8 @@ public partial class SettingController : BaseAdminController
             await _settingService.SaveSettingOverridablePerStoreAsync(shoppingCartSettings, x => x.DisplayWishlistAfterAddingProduct, model.DisplayWishlistAfterAddingProduct_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(shoppingCartSettings, x => x.MaximumShoppingCartItems, model.MaximumShoppingCartItems_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(shoppingCartSettings, x => x.MaximumWishlistItems, model.MaximumWishlistItems_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(shoppingCartSettings, x => x.AllowMultipleWishlist, model.AllowMultipleWishlist_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(shoppingCartSettings, x => x.MaximumNumberOfCustomWishlist, model.MaximumNumberOfCustomWishlist_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(shoppingCartSettings, x => x.AllowOutOfStockItemsToBeAddedToWishlist, model.AllowOutOfStockItemsToBeAddedToWishlist_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(shoppingCartSettings, x => x.MoveItemsFromWishlistToCart, model.MoveItemsFromWishlistToCart_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(shoppingCartSettings, x => x.CartsSharedBetweenStores, model.CartsSharedBetweenStores_OverrideForStore, storeScope, false);

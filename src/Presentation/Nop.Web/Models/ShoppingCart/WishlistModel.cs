@@ -9,8 +9,11 @@ public partial record WishlistModel : BaseNopModel
     public WishlistModel()
     {
         Items = new List<ShoppingCartItemModel>();
+        CustomWishlistItems = new List<CustomWishlistModel>();
         Warnings = new List<string>();
     }
+
+    public int? ListId { get; set; }
 
     public Guid CustomerGuid { get; set; }
     public string CustomerFullname { get; set; }
@@ -23,6 +26,12 @@ public partial record WishlistModel : BaseNopModel
 
     public bool IsEditable { get; set; }
 
+    public bool AllowMultipleWishlist { get; set; }
+
+    public IList<CustomWishlistModel> CustomWishlistItems { get; set; }
+
+    public string CustomWishlistName { get; set; }
+
     public bool DisplayAddToCart { get; set; }
 
     public bool DisplayTaxShippingInfo { get; set; }
@@ -31,7 +40,7 @@ public partial record WishlistModel : BaseNopModel
 
     public IList<string> Warnings { get; set; }
 
-    #region Nested Classes
+    #region Nested Classes    
 
     public partial record ShoppingCartItemModel : BaseNopEntityModel
     {

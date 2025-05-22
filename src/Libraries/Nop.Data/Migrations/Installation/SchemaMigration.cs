@@ -88,6 +88,7 @@ public class SchemaMigration : ForwardOnlyMigration
         Create.TableFor<OrderNote>();
         Create.TableFor<RecurringPayment>();
         Create.TableFor<RecurringPaymentHistory>();
+        Create.TableFor<CustomWishlist>();
         Create.TableFor<ShoppingCartItem>();
         Create.TableFor<Store>();
         Create.TableFor<StoreMapping>();

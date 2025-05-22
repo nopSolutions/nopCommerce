@@ -200,6 +200,26 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             pattern: $"addproducttocart/details/{{productId:min(0)}}/{{shoppingCartTypeId:min(0)}}",
             defaults: new { controller = "ShoppingCart", action = "AddProductToCart_Details" });
 
+        //move product to custom wishlist - catalog/product detail page. (AJAX)
+        endpointRouteBuilder.MapControllerRoute(name: "MoveProductToCustomWishList",
+            pattern: $"moveproducttocustomwishlist/{{productId:min(0)}}",
+            defaults: new { controller = "ShoppingCart", action = "MoveProductToCustomWishlist" });
+
+        //move shopping cart to wishlist. (AJAX)
+        endpointRouteBuilder.MapControllerRoute(name: "MoveToCustomWishlist",
+            pattern: $"movetocustomwishlist",
+            defaults: new { controller = "ShoppingCart", action = "MoveToCustomWishlist" });
+
+        //delete custom wishlist. (AJAX)
+        endpointRouteBuilder.MapControllerRoute(name: "DeleteCustomWishlist",
+            pattern: $"deletecustomwishlist/{{wishlistId:min(0)}}",
+            defaults: new { controller = "ShoppingCart", action = "DeleteWishlist" });
+
+        // add custom wishlist. (AJAX)
+        endpointRouteBuilder.MapControllerRoute(name: "AddWishlist",
+            pattern: $"addcustomwishlist",
+            defaults: new { controller = "ShoppingCart", action = "AddWishlist" });
+
         //comparing products (AJAX)
         endpointRouteBuilder.MapControllerRoute(name: "AddProductToCompare",
             pattern: $"compareproducts/add/{{productId:min(0)}}",

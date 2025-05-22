@@ -1659,6 +1659,8 @@ public partial class InstallationService
             DisplayWishlistAfterAddingProduct = false,
             MaximumShoppingCartItems = 1000,
             MaximumWishlistItems = 1000,
+            AllowMultipleWishlist = true,
+            MaximumNumberOfCustomWishlist = 10,
             AllowOutOfStockItemsToBeAddedToWishlist = false,
             MoveItemsFromWishlistToCart = true,
             CartsSharedBetweenStores = false,

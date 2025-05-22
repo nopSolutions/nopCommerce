@@ -147,6 +147,7 @@ public partial record ProductDetailsModel : BaseNopEntityModel
         public AddToCartModel()
         {
             AllowedQuantities = new List<SelectListItem>();
+            ProductToWishlist = new ProductToWishlistModel();
         }
         public int ProductId { get; set; }
 
@@ -177,6 +178,7 @@ public partial record ProductDetailsModel : BaseNopEntityModel
         //updating existing shopping cart or wishlist item?
         public int UpdatedShoppingCartItemId { get; set; }
         public ShoppingCartType? UpdateShoppingCartItemType { get; set; }
+        public ProductToWishlistModel ProductToWishlist { get; set; }
     }
     
     public partial record GiftCardModel : BaseNopModel
