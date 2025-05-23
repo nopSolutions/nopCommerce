@@ -93,6 +93,28 @@ div.mobile-cart-qty {
     height: 50px;
     font-size: 0;
 }
+.mobile-menu2 {
+    float: right;
+    /* background-image: url(/Plugins/Misc.AbcFrontend/Images/mobile-menu.png); */
+    background-size: 52px;
+    width: 52px;
+    height: 50px;
+}
+.storeId8 .fa-solid.fa-bars {
+    margin-top: 15px;
+    margin-left: 11px;
+}
+.storeId8 .fa-bars:before, .fa-navicon:before {
+    content: "\f0c9";
+    font-size: 20px;
+}
+
+@media (max-width: 1024px) {
+    .storeId8 div#header
+ {
+        margin-top: 53px;
+    }
+}
 
 /* styles search box input */
 input.search-box-text {

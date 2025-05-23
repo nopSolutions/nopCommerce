@@ -179,9 +179,10 @@
 .overlayOffCanvas.show {
 	background: rgba(0,0,0,0.6);
 }
-.header-menu {
+.storeId3 .header-menu {
     position: fixed;
-    top: 0; left: 0;
+    top: 0;
+	left: 0;
     width: 313px;
     height: 100%;
     text-align: left;
@@ -192,6 +193,29 @@
     -webkit-transform: translate(-320px);
     -ms-transform: translate(-320px);
     transform: translate(-320px);
+}
+
+.storeId8 .header-menu {
+    position: fixed;
+    top: 0;
+	right: 0;
+    width: 313px;
+    height: 100%;
+    text-align: left;
+    background-color: #f6f6f6;
+    overflow: hidden;
+	z-index: 1070;
+    /* transition: all 0.5s ease; */
+    -webkit-transform: translate(-320px);
+    -ms-transform: translate(-320px);
+    transform: translate(-320px);
+}
+
+.storeId8 .header-menu.categories-in-side-panel {  
+	  left: 0px;
+}
+.storeId8 .header-menu.categories-in-side-panel.open {  
+	  left: auto;
 }
 
 .storeId8 .sublist-wrap.active {
