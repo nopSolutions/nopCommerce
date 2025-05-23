@@ -34,6 +34,7 @@
     <None Remove="Views\Admin\_ProductAddAttributes.cshtml" />
     <None Remove="Views\Admin\_SelectProductToAdd.cshtml" />
     <None Remove="Views\Components\AddRfq.cshtml" />
+    <None Remove="Views\Components\ClearRfq.cshtml" />
     <None Remove="Views\Components\CustomerRfqMenu.cshtml" />
     <None Remove="Views\CustomerQuote.cshtml" />
     <None Remove="Views\CustomerQuotes.cshtml" />
@@ -46,7 +47,6 @@
   <ItemGroup>
     <Content Include="Content\details.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
     <Content Include="Content\styles.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -96,6 +96,9 @@
     <Content Include="Views\Components\AddRfq.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\Components\ClearRfq.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Views\Components\CustomerRfqMenu.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -122,12 +125,6 @@
   <ItemGroup>
     <ProjectReference Include="$(SolutionDir)\Presentation\Nop.Web\Nop.Web.csproj" />
     <ClearPluginAssemblies Include="$(SolutionDir)\Build\ClearPluginAssemblies.proj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Views\Components\ClearRfq.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
   <!-- This target execute after "Build" target -->
