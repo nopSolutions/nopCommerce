@@ -28,6 +28,7 @@
     <None Remove="Views\Admin\AdminQuotes.cshtml" />
     <None Remove="Views\Admin\AdminRequest.cshtml" />
     <None Remove="Views\Admin\AdminRequests.cshtml" />
+    <None Remove="Views\Admin\Configure.cshtml" />
     <None Remove="Views\Admin\SelectCustomerPopup.cshtml" />
     <None Remove="Views\Admin\_AdminQuote.Products.cshtml" />
     <None Remove="Views\Admin\_AdminRequest.Products.cshtml" />
