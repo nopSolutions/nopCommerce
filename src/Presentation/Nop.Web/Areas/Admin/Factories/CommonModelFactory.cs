@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Net.Http.Headers;
+using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
@@ -239,6 +240,34 @@ public partial class CommonModelFactory : ICommonModelFactory
             Text = string.Format(await _localizationService.GetResourceAsync("Admin.System.Warnings.URL.NoMatch"),
                 currentStoreUrl, _webHelper.GetStoreLocation(false))
         });
+    }
+
+    /// <summary>
+    /// Prepare recommendations/warnings model
+    /// </summary>
+    /// <param name="models">List of system warning models</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    protected virtual async Task PrepareRecommendationsModelAsync(IList<SystemWarningModel> models)
+    {
+        ArgumentNullException.ThrowIfNull(models);
+
+        var recommendations = new List<string>();
+        try
+        {
+            var text = await _nopHttpClient.GetRecommendationsAsync();
+            recommendations = JsonConvert.DeserializeObject<List<string>>(text);
+        }
+        catch { }
+
+        foreach (var recommendation in recommendations ?? new())
+        {
+            models.Add(new SystemWarningModel
+            {
+                Level = SystemWarningLevel.Recommendation,
+                Text = recommendation,
+                DontEncode = true
+            });
+        }
     }
 
     /// <summary>
@@ -906,6 +935,9 @@ public partial class CommonModelFactory : ICommonModelFactory
 
         //store URL
         await PrepareStoreUrlWarningModelAsync(models);
+
+        //recommendations
+        await PrepareRecommendationsModelAsync(models);
 
         //primary exchange rate currency
         await PrepareExchangeRateCurrencyWarningModelAsync(models);

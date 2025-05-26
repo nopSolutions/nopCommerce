@@ -71,6 +71,32 @@ public partial class NopHttpClient
     }
 
     /// <summary>
+    /// Check the current store for any recommendations/warnings
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the asynchronous task whose result contains the result string
+    /// </returns>
+    public virtual async Task<string> GetRecommendationsAsync()
+    {
+        var isLocal = _webHelper.IsLocalRequest(_httpContextAccessor.HttpContext.Request);
+        var storeUrl = _webHelper.GetStoreLocation();
+        if (isLocal || storeUrl.Contains("localhost"))
+            return string.Empty;
+
+        var emailAccount = await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId)
+            ?? (await _emailAccountService.GetAllEmailAccountsAsync()).FirstOrDefault();
+        var language = _languageService.GetTwoLetterIsoLanguageName(await _workContext.GetWorkingLanguageAsync());
+        var url = string.Format(NopCommonDefaults.NopWarningPath,
+            storeUrl,
+            NopVersion.FULL_VERSION,
+            WebUtility.UrlEncode(emailAccount.Email),
+            language).ToLowerInvariant();
+
+        return await _httpClient.GetStringAsync(url);
+    }
+
+    /// <summary>
     /// Check the current store for license compliance
     /// </summary>
     /// <returns>
