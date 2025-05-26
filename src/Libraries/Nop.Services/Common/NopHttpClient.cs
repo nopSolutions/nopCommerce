@@ -111,7 +111,7 @@ public partial class NopHttpClient
             return string.Empty;
 
         var emailAccount = await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId)
-                           ?? (await _emailAccountService.GetAllEmailAccountsAsync()).FirstOrDefault();
+            ?? (await _emailAccountService.GetAllEmailAccountsAsync()).FirstOrDefault();
         var language = _languageService.GetTwoLetterIsoLanguageName(await _workContext.GetWorkingLanguageAsync());
         var url = string.Format(NopCommonDefaults.NopLicenseCheckPath,
             storeUrl,
@@ -159,13 +159,12 @@ public partial class NopHttpClient
     {
         //prepare URL to request
         var url = string.Format(NopCommonDefaults.NopInstallationCompletedPath,
-                NopVersion.FULL_VERSION,
-                _webHelper.IsLocalRequest(_httpContextAccessor.HttpContext.Request),
-                WebUtility.UrlEncode(email),
-                _webHelper.GetStoreLocation(),
-                languageCode,
-                culture)
-            .ToLowerInvariant();
+            NopVersion.FULL_VERSION,
+            _webHelper.IsLocalRequest(_httpContextAccessor.HttpContext.Request),
+            WebUtility.UrlEncode(email),
+            _webHelper.GetStoreLocation(),
+            languageCode,
+            culture).ToLowerInvariant();
 
         //this request takes some more time
         try
@@ -189,9 +188,7 @@ public partial class NopHttpClient
     public virtual async Task<HttpResponseMessage> SubscribeNewslettersAsync(string email)
     {
         //prepare URL to request
-        var url = string.Format(NopCommonDefaults.NopSubscribeNewslettersPath,
-                WebUtility.UrlEncode(email))
-            .ToLowerInvariant();
+        var url = string.Format(NopCommonDefaults.NopSubscribeNewslettersPath, WebUtility.UrlEncode(email)).ToLowerInvariant();
 
         return await _httpClient.GetAsync(url);
     }

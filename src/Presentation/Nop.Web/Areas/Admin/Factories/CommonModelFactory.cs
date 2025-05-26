@@ -966,10 +966,9 @@ public partial class CommonModelFactory : ICommonModelFactory
         //proxy connection
         await PrepareProxyConnectionWarningModelAsync(models);
 
-        //publish event
+        //publish event and add another warnings (for example from plugins) 
         var warningEvent = new SystemWarningCreatedEvent();
         await _eventPublisher.PublishAsync(warningEvent);
-        //add another warnings (for example from plugins) 
         models.AddRange(warningEvent.SystemWarnings);
 
         return models;
