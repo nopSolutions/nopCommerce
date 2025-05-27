@@ -11,7 +11,6 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
-using Nop.Core.Infrastructure;
 using Nop.Services.Attributes;
 using Nop.Services.Authentication.External;
 using Nop.Services.Authentication.MultiFactor;
@@ -56,6 +55,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
     protected readonly ICountryService _countryService;
     protected readonly ICustomerService _customerService;
     protected readonly IDateTimeHelper _dateTimeHelper;
+    protected readonly IExternalAuthenticationModelFactory _externalAuthenticationModelFactory;
     protected readonly IExternalAuthenticationService _externalAuthenticationService;
     protected readonly IGdprService _gdprService;
     protected readonly IGenericAttributeService _genericAttributeService;
@@ -99,6 +99,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         ICountryService countryService,
         ICustomerService customerService,
         IDateTimeHelper dateTimeHelper,
+        IExternalAuthenticationModelFactory externalAuthenticationModelFactory,
         IExternalAuthenticationService externalAuthenticationService,
         IGdprService gdprService,
         IGenericAttributeService genericAttributeService,
@@ -128,6 +129,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         _commonSettings = commonSettings;
         _customerSettings = customerSettings;
         _dateTimeSettings = dateTimeSettings;
+        _externalAuthenticationModelFactory = externalAuthenticationModelFactory;
         _externalAuthenticationService = externalAuthenticationService;
         _externalAuthenticationSettings = externalAuthenticationSettings;
         _forumSettings = forumSettings;
@@ -338,8 +340,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         //external authentication
         var currentCustomer = await _workContext.GetCurrentCustomerAsync();
         model.AllowCustomersToRemoveAssociations = _externalAuthenticationSettings.AllowCustomersToRemoveAssociations;
-        var externalAuthenticationModelFactory = EngineContext.Current.Resolve<IExternalAuthenticationModelFactory>();
-        var authenticationProviders = await externalAuthenticationModelFactory.PrepareExternalMethodsModelAsync();
+        var authenticationProviders = await _externalAuthenticationModelFactory.PrepareExternalMethodsModelAsync();
         model.NumberOfExternalAuthenticationProviders = authenticationProviders.Count;
         foreach (var record in await _externalAuthenticationService.GetCustomerExternalAuthenticationRecordsAsync(customer))
         {
