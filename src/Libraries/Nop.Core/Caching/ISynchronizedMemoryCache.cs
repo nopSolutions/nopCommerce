@@ -7,4 +7,9 @@ namespace Nop.Core.Caching;
 /// </summary>
 public partial interface ISynchronizedMemoryCache : IMemoryCache
 {
+    /// <summary>
+    /// Clear all cache data
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task ClearCacheAsync();
 }

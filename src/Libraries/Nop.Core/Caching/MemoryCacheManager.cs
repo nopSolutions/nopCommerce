@@ -24,7 +24,7 @@ public partial class MemoryCacheManager : CacheKeyService, IStaticCacheManager
     /// </summary>
     protected readonly ICacheKeyManager _keyManager;
 
-    protected static CancellationTokenSource _clearToken = new();
+    protected CancellationTokenSource _clearToken = new();
 
     #endregion
 
@@ -259,14 +259,15 @@ public partial class MemoryCacheManager : CacheKeyService, IStaticCacheManager
     /// Clear all cache data
     /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public Task ClearAsync()
+    public async Task ClearAsync()
     {
-        _clearToken.Cancel();
+        await _clearToken.CancelAsync();
         _clearToken.Dispose();
         _clearToken = new CancellationTokenSource();
         _keyManager.Clear();
 
-        return Task.CompletedTask;
+        if (_memoryCache is ISynchronizedMemoryCache cache)
+            await cache.ClearCacheAsync();
     }
 
     public void Dispose()

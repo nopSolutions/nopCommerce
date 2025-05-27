@@ -17,6 +17,8 @@ public partial class RedisSynchronizedMemoryCache : ISynchronizedMemoryCache
 {
     #region Fields
 
+    protected const string CLEAR_CACHE_EVENT_KEY = "__NOP_CLEAR_CACHE__";
+
     protected readonly string _processId;
     protected bool _disposed;
 
@@ -76,11 +78,21 @@ public partial class RedisSynchronizedMemoryCache : ISynchronizedMemoryCache
             if (keys == null)
                 return;
 
-            foreach (var key in keys)
-            {
-                _memoryCache.Remove(key);
-                _keyManager.RemoveKey(key);
-            }
+            if (keys.Any(key => key.Equals(CLEAR_CACHE_EVENT_KEY)))
+                foreach (var key in _keyManager.Keys.ToList())
+                {
+                    _memoryCache.Remove(key);
+                    _keyManager.RemoveKey(key);
+                }
+            else
+                foreach (var key in keys)
+                {
+                    if (key.Equals(CLEAR_CACHE_EVENT_KEY))
+                        _keyManager.Clear();
+
+                    _memoryCache.Remove(key);
+                    _keyManager.RemoveKey(key);
+                }
         });
     }
 
@@ -187,6 +199,17 @@ public partial class RedisSynchronizedMemoryCache : ISynchronizedMemoryCache
     public bool TryGetValue(object key, out object value)
     {
         return _memoryCache.TryGetValue(key, out value);
+    }
+
+    /// <summary>
+    /// Clear all cache data
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public Task ClearCacheAsync()
+    {
+        BatchPublishChangeEvents(CLEAR_CACHE_EVENT_KEY);
+
+        return Task.CompletedTask;
     }
 
     /// <summary>
