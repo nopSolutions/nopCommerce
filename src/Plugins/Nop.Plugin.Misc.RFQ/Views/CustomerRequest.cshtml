@@ -36,8 +36,6 @@
     <form asp-controller="RfqCustomer" asp-action="CustomerRequest" method="post">
         <input asp-for="Id" type="hidden" />
         <div class="page-body">
-            @await Html.PartialAsync("_CustomerRequest.buttons.cshtml", Model)
-
             <div class="fieldset">
                 <div class="title">
                     <strong>@T("Plugins.Misc.RFQ.CustomerRequest.Info")</strong>
@@ -55,7 +53,11 @@
                                 @Model.Status
                                 @if (Model.QuoteId.HasValue && Model.QuoteStatus == QuoteStatus.Submitted)
                                 {
-                                    <text> (</text><a class="rfq-link" href='@Url.RouteUrl(RfqDefaults.CustomerQuoteRouteName, new { quoteId = Model.QuoteId })'>@T("Plugins.Misc.RFQ.CustomerQuote.Info")</a><text>)</text>
+                                    <text> (</text>
+
+                                    <a class="rfq-link" href='@Url.RouteUrl(RfqDefaults.CustomerQuoteRouteName, new { quoteId = Model.QuoteId })'>@T("Plugins.Misc.RFQ.CustomerQuote.Info")</a>
+
+                                    <text>)</text>
                                 }
                             </label>
                         </div>
@@ -109,7 +111,7 @@
                                     <td>
                                         @if (item.Editable)
                                         {
-                                            <input asp-for="@item.Quantity" name="@($"{RfqDefaults.QUANTITY_FORM_KEY}{item.Id}")" />
+                                            <input type="number" asp-for="@item.Quantity" name="@($"{RfqDefaults.QUANTITY_FORM_KEY}{item.Id}")" />
                                         }
                                         else
                                         {
@@ -119,7 +121,7 @@
                                     <td>
                                         @if (item.Editable)
                                         {
-                                            <input asp-for="@item.UnitPrice" name="@($"{RfqDefaults.UNIT_PRICE_FORM_KEY}{item.Id}")" />
+                                            <input type="number" step=".01" asp-for="@item.UnitPrice" name="@($"{RfqDefaults.UNIT_PRICE_FORM_KEY}{item.Id}")" />
                                         }
                                         else
                                         {

@@ -15,7 +15,7 @@
   font-size: 12px;
   color: #444;
   background-color: white;
-  background: url('~/Plugins/Misc.RFQ/Content/details.png') left center no-repeat
+  background: url('~/images/details.png') left center no-repeat
 }
 
   .request-list-page .button-2:hover,
@@ -70,3 +70,10 @@ textarea {
   .rfq-button-2:focus {
     background-color: #999;
   }
+
+input[type="number"] {
+  height: 36px; /*safari padding fix*/
+  border: 1px solid #ddd;
+  padding: 8px;
+  vertical-align: middle;
+}

@@ -164,7 +164,7 @@ public class RfqPlugin : BasePlugin, IWidgetPlugin, IMiscPlugin
         await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
         {
             ["Plugins.Misc.RFQ.Enabled"] = "Enabled",
-            ["Plugins.Misc.RFQ.Enabled.Hint"] = "Check to activate RFQ functionality.",
+            ["Plugins.Misc.RFQ.Enabled.Hint"] = "Check to enable RFQ functionality.",
             ["Plugins.Misc.RFQ.CreateRequest"] = "Request a quote",
             ["Plugins.Misc.RFQ.ClearRequest"] = "Exit quote mode",
             ["Plugins.Misc.RFQ.CreateNew"] = "Add new",

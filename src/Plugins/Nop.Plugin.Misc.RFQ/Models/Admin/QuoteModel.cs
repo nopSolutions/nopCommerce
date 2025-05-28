@@ -37,7 +37,7 @@ public record QuoteModel : BaseNopEntityModel
         StatusType == QuoteStatus.CreatedFromRequestQuote ||
         StatusType == QuoteStatus.CreatedManuallyByStoreOwner;
 
-    public bool DisplaySendQuoteButton => DisplayAddNewProductButton;
+    public bool DisplaySendQuoteButton => DisplayAddNewProductButton && Items.Any();
     public bool DisplayDeleteQuoteButton => StatusType != QuoteStatus.OrderCreated;
     public bool DisplaySaveButtons => DisplayAddNewProductButton;
 

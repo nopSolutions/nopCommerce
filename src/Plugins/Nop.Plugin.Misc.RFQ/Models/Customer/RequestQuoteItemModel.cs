@@ -1,4 +1,5 @@
-﻿using Nop.Web.Framework.Models;
+﻿using System.ComponentModel.DataAnnotations;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Plugin.Misc.RFQ.Models.Customer;
 
@@ -11,6 +12,7 @@ public record RequestQuoteItemModel : BaseNopEntityModel
 
     public int Quantity { get; set; }
 
+    [UIHint("Decimal")]
     public decimal UnitPrice { get; set; }
 
     public string UnitPriceText { get; set; }

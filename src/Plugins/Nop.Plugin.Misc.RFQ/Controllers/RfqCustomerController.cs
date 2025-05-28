@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
+using Nop.Core.Domain.Customers;
 using Nop.Plugin.Misc.RFQ.Domains;
 using Nop.Plugin.Misc.RFQ.Factories;
 using Nop.Plugin.Misc.RFQ.Models.Customer;
@@ -9,7 +10,6 @@ using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Web.Controllers;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.Misc.RFQ.Controllers;
 
@@ -25,6 +25,7 @@ public class RfqCustomerController : BasePublicController
     private readonly IStoreContext _storeContext;
     private readonly IWorkContext _workContext;
     private readonly RfqService _rfqService;
+    private readonly RfqSettings _rfqSettings;
 
     #endregion
 
@@ -36,7 +37,8 @@ public class RfqCustomerController : BasePublicController
         IShoppingCartService shoppingCartService,
         IStoreContext storeContext,
         IWorkContext workContext,
-        RfqService rfqService)
+        RfqService rfqService,
+        RfqSettings rfqSettings)
     {
         _modelFactory = modelFactory;
         _customerService = customerService;
@@ -45,23 +47,35 @@ public class RfqCustomerController : BasePublicController
         _storeContext = storeContext;
         _workContext = workContext;
         _rfqService = rfqService;
+        _rfqSettings = rfqSettings;
     }
 
     #endregion
 
     #region Utilities
 
-    private async Task<IActionResult> CheckCustomerPermissionAsync(RequestQuoteModel model)
+    private async Task<IActionResult> CheckCustomerPermissionAsync(Customer customer)
     {
-        return await CheckCustomerPermissionAsync(await _rfqService.GetRequestQuoteByIdAsync(model.Id));
+        if (!_rfqSettings.Enabled)
+            return RedirectToRoute("Homepage");
+
+        if (await _customerService.IsGuestAsync(customer))
+            return Challenge();
+
+        if (!await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ, customer))
+            return RedirectToRoute("Homepage");
+
+        return null;
     }
 
     private async Task<IActionResult> CheckCustomerPermissionAsync(RequestQuote request)
     {
         var customer = await _workContext.GetCurrentCustomerAsync();
 
-        if (await _customerService.IsGuestAsync(customer))
-            return Challenge();
+        var result = await CheckCustomerPermissionAsync(customer);
+
+        if (result != null)
+            return result;
 
         if (request == null)
             return null;
@@ -71,23 +85,7 @@ public class RfqCustomerController : BasePublicController
 
         return null;
     }
-
-    private async Task<IActionResult> CheckCustomerPermissionAsync(QuoteModel quote)
-    {
-        var customer = await _workContext.GetCurrentCustomerAsync();
-
-        if (await _customerService.IsGuestAsync(customer))
-            return Challenge();
-
-        if (quote == null)
-            return null;
-
-        if (quote.CustomerId != customer.Id)
-            return RedirectToAction("CustomerQuotes");
-
-        return null;
-    }
-
+    
     #endregion
 
     #region Methods
@@ -98,11 +96,10 @@ public class RfqCustomerController : BasePublicController
     {
         var customer = await _workContext.GetCurrentCustomerAsync();
 
-        if (await _customerService.IsGuestAsync(customer))
-            return Challenge();
+        var result = await CheckCustomerPermissionAsync(customer);
 
-        if (!await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ, customer))
-            return RedirectToRoute("Homepage");
+        if (result != null)
+            return result;
 
         RequestQuoteModel model;
 
@@ -137,12 +134,14 @@ public class RfqCustomerController : BasePublicController
     [FormValueRequired("send")]
     public async Task<IActionResult> SendRequest(RequestQuoteModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ))
-            return RedirectToRoute("Homepage");
+        var result = await CheckCustomerPermissionAsync(await _workContext.GetCurrentCustomerAsync());
+
+        if (result != null)
+            return result;
 
         if (ModelState.IsValid)
         {
-            var checkResult = await CheckCustomerPermissionAsync(model);
+            var checkResult = await CheckCustomerPermissionAsync(await _rfqService.GetRequestQuoteByIdAsync(model.Id));
 
             if (checkResult != null)
                 return checkResult;
@@ -168,8 +167,10 @@ public class RfqCustomerController : BasePublicController
     [FormValueRequired("cancel")]
     public async Task<IActionResult> CancelRequest(RequestQuoteModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ))
-            return RedirectToRoute("Homepage");
+        var result = await CheckCustomerPermissionAsync(await _workContext.GetCurrentCustomerAsync());
+
+        if (result != null)
+            return result;
 
         if (ModelState.IsValid)
         {
@@ -198,8 +199,10 @@ public class RfqCustomerController : BasePublicController
     [FormValueRequired("delete")]
     public async Task<IActionResult> DeleteRequest(RequestQuoteModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ))
-            return RedirectToRoute("Homepage");
+        var result = await CheckCustomerPermissionAsync(await _workContext.GetCurrentCustomerAsync());
+
+        if (result != null)
+            return result;
 
         if (ModelState.IsValid)
         {
@@ -224,11 +227,10 @@ public class RfqCustomerController : BasePublicController
     {
         var customer = await _workContext.GetCurrentCustomerAsync();
 
-        if (await _customerService.IsGuestAsync(customer))
-            return Challenge();
+        var result = await CheckCustomerPermissionAsync(customer);
 
-        if (!await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ, customer))
-            return RedirectToRoute("Homepage");
+        if (result != null)
+            return result;
 
         var items = await _rfqService.GetCustomerRequestsAsync(customer.Id);
         var model = await items.SelectAwait(async item =>
@@ -245,11 +247,10 @@ public class RfqCustomerController : BasePublicController
     {
         var customer = await _workContext.GetCurrentCustomerAsync();
 
-        if (await _customerService.IsGuestAsync(customer))
-            return Challenge();
+        var result = await CheckCustomerPermissionAsync(customer);
 
-        if (!await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ, customer))
-            return RedirectToRoute("Homepage");
+        if (result != null)
+            return result;
 
         var items = await _rfqService.GetCustomerQuotesAsync(customer.Id);
         var model = await items
@@ -261,11 +262,13 @@ public class RfqCustomerController : BasePublicController
 
     public async Task<IActionResult> CustomerQuote(int quoteId)
     {
+        var result = await CheckCustomerPermissionAsync(await _workContext.GetCurrentCustomerAsync());
+
+        if (result != null)
+            return result;
+
         QuoteModel model;
-
-        if (!await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ))
-            return RedirectToRoute("Homepage");
-
+        
         try
         {
             model = await _modelFactory.PrepareQuoteModelAsync(quoteId);
@@ -290,15 +293,21 @@ public class RfqCustomerController : BasePublicController
     [FormValueRequired("createOrder")]
     public async Task<IActionResult> CustomerQuote(QuoteModel model)
     {
-        if (!await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ))
-            return RedirectToRoute("Homepage");
+        var customer = await _workContext.GetCurrentCustomerAsync();
+
+        var result = await CheckCustomerPermissionAsync(customer);
+
+        if (result != null)
+            return result;
 
         if (ModelState.IsValid)
         {
-            var checkResult = await CheckCustomerPermissionAsync(model);
+            if (model.CustomerId != customer.Id)
+                return RedirectToAction("CustomerQuotes");
 
-            if (checkResult != null)
-                return checkResult;
+            var quote = await _rfqService.GetQuoteByIdAsync(model.Id);
+            if (quote.Status is QuoteStatus.Expired or QuoteStatus.OrderCreated)
+                return RedirectToAction("CustomerQuotes");
 
             await _rfqService.CreateShoppingCartAsync(model.Id);
 
@@ -312,12 +321,16 @@ public class RfqCustomerController : BasePublicController
 
     public async Task<IActionResult> ExitQuoteMode()
     {
-        if (!await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ))
-            return RedirectToRoute("Homepage");
+        var customer = await _workContext.GetCurrentCustomerAsync();
+
+        var result = await CheckCustomerPermissionAsync(customer);
+
+        if (result != null)
+            return result;
 
         var store = await _storeContext.GetCurrentStoreAsync();
 
-        await _shoppingCartService.ClearShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), store.Id);
+        await _shoppingCartService.ClearShoppingCartAsync(customer, store.Id);
 
         return RedirectToRoute("Homepage");
     }

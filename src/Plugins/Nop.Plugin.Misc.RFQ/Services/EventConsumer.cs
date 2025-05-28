@@ -115,6 +115,9 @@ public class EventConsumer : IConsumer<AdminMenuCreatedEvent>,
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(GetShoppingCartItemUnitPriceEvent eventMessage)
     {
+        if (!_rfqSettings.Enabled)
+            return;
+
         var quoteItem = await _shortTermCacheManager.GetAsync(async () => await _rfqService.GetQuoteItemByShoppingCartItemIdAsync(eventMessage.ShoppingCartItem.Id), RfqDefaults.QuoteItemByShoppingCartItemCacheKey, eventMessage.ShoppingCartItem.Id);
 
         if (quoteItem == null)
