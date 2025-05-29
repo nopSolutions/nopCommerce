@@ -311,13 +311,13 @@ public partial class ProductAttributeService : IProductAttributeService
     #region Product attribute value pictures
 
     /// <summary>
-    /// Deletes a product attribute value picture
+    /// Deletes a list of product attribute value picture
     /// </summary>
-    /// <param name="value">Product attribute value picture</param>
+    /// <param name="value">Product attribute value pictures</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task DeleteProductAttributeValuePictureAsync(ProductAttributeValuePicture valuePicture)
+    public virtual async Task DeleteProductAttributeValuePicturesAsync(IList<ProductAttributeValuePicture> valuePictures)
     {
-        await _productAttributeValuePictureRepository.DeleteAsync(valuePicture);
+        await _productAttributeValuePictureRepository.DeleteAsync(valuePictures);
     }
 
     /// <summary>
