@@ -101,7 +101,7 @@ public class ItemClassificationService
         if (!productIds?.Any() ?? true)
             return;
 
-        var newProductIds = productIds.Except(_itemClassificationRepository.Table.Select(record => record.ProductId)).ToList();
+        var newProductIds = productIds.Except(await _itemClassificationRepository.Table.Select(record => record.ProductId).ToListAsync()).ToList();
         if (!newProductIds.Any())
             return;
 

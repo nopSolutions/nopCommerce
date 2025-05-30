@@ -2,6 +2,7 @@
 
 @inject IGenericAttributeService genericAttributeService
 @inject INopHtmlHelper NopHtml
+@inject IPermissionService permissionService
 @inject IWorkContext workContext
 
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
@@ -19,6 +20,7 @@
 @using Nop.Core.Events
 @using Nop.Core.Infrastructure
 @using Nop.Services.Common
+@using Nop.Services.Security
 @using static Nop.Services.Common.NopLinksDefaults
 @using Nop.Web.Areas.Admin.Components
 @using Nop.Web.Areas.Admin.Models.Affiliates
@@ -59,7 +61,6 @@
 @using Nop.Web.Framework.Events
 @using Nop.Web.Framework.Extensions
 @using Nop.Web.Framework.Infrastructure
-@using Nop.Web.Framework.Menu
 @using Nop.Web.Framework.Models
 @using Nop.Web.Framework.Models.Cms
 @using Nop.Web.Framework.Models.DataTables

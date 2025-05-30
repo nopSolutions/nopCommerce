@@ -1,10 +1,6 @@
-﻿using System.Xml;
-using System.Xml.Serialization;
-using Microsoft.AspNetCore.Http;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
-using Nop.Core.Http.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 
@@ -18,7 +14,6 @@ public partial class PaymentService : IPaymentService
     #region Fields
 
     protected readonly ICustomerService _customerService;
-    protected readonly IHttpContextAccessor _httpContextAccessor;
     protected readonly IPaymentPluginManager _paymentPluginManager;
     protected readonly IPriceCalculationService _priceCalculationService;
     protected readonly PaymentSettings _paymentSettings;
@@ -29,14 +24,12 @@ public partial class PaymentService : IPaymentService
     #region Ctor
 
     public PaymentService(ICustomerService customerService,
-        IHttpContextAccessor httpContextAccessor,
         IPaymentPluginManager paymentPluginManager,
         IPriceCalculationService priceCalculationService,
         PaymentSettings paymentSettings,
         ShoppingCartSettings shoppingCartSettings)
     {
         _customerService = customerService;
-        _httpContextAccessor = httpContextAccessor;
         _paymentPluginManager = paymentPluginManager;
         _priceCalculationService = priceCalculationService;
         _paymentSettings = paymentSettings;
@@ -362,89 +355,6 @@ public partial class PaymentService : IPaymentService
         }
 
         return maskedChars + last4;
-    }
-
-    /// <summary>
-    /// Serialize CustomValues of ProcessPaymentRequest
-    /// </summary>
-    /// <param name="request">Request</param>
-    /// <returns>Serialized CustomValues</returns>
-    public virtual string SerializeCustomValues(ProcessPaymentRequest request)
-    {
-        ArgumentNullException.ThrowIfNull(request);
-
-        if (!request.CustomValues.Any())
-            return null;
-
-        //XmlSerializer won't serialize objects that implement IDictionary by default.
-        //http://msdn.microsoft.com/en-us/magazine/cc164135.aspx 
-
-        //also see http://ropox.ru/tag/ixmlserializable/ (Russian language)
-
-        var ds = new DictionarySerializer(request.CustomValues);
-        var xs = new XmlSerializer(typeof(DictionarySerializer));
-
-        using var textWriter = new StringWriter();
-        using (var xmlWriter = XmlWriter.Create(textWriter))
-        {
-            xs.Serialize(xmlWriter, ds);
-        }
-
-        var result = textWriter.ToString();
-        return result;
-    }
-
-    /// <summary>
-    /// Deserialize CustomValues of Order
-    /// </summary>
-    /// <param name="order">Order</param>
-    /// <returns>Serialized CustomValues CustomValues</returns>
-    public virtual Dictionary<string, object> DeserializeCustomValues(Order order)
-    {
-        ArgumentNullException.ThrowIfNull(order);
-
-        if (string.IsNullOrWhiteSpace(order.CustomValuesXml))
-            return new Dictionary<string, object>();
-
-        var serializer = new XmlSerializer(typeof(DictionarySerializer));
-
-        using var textReader = new StringReader(order.CustomValuesXml);
-        using var xmlReader = XmlReader.Create(textReader);
-        if (serializer.Deserialize(xmlReader) is DictionarySerializer ds)
-            return ds.Dictionary;
-        return [];
-    }
-
-    /// <summary>
-    /// Generate an order GUID
-    /// </summary>
-    /// <param name="processPaymentRequest">Process payment request</param>
-    public virtual async Task GenerateOrderGuidAsync(ProcessPaymentRequest processPaymentRequest)
-    {
-        if (processPaymentRequest == null)
-            return;
-
-        //we should use the same GUID for multiple payment attempts
-        //this way a payment gateway can prevent security issues such as credit card brute-force attacks
-        //in order to avoid any possible limitations by payment gateway we reset GUID periodically
-        var previousPaymentRequest = await _httpContextAccessor.HttpContext.Session.GetAsync<ProcessPaymentRequest>("OrderPaymentInfo");
-        if (_paymentSettings.RegenerateOrderGuidInterval > 0 &&
-            previousPaymentRequest != null &&
-            previousPaymentRequest.OrderGuidGeneratedOnUtc.HasValue)
-        {
-            var interval = DateTime.UtcNow - previousPaymentRequest.OrderGuidGeneratedOnUtc.Value;
-            if (interval.TotalSeconds < _paymentSettings.RegenerateOrderGuidInterval)
-            {
-                processPaymentRequest.OrderGuid = previousPaymentRequest.OrderGuid;
-                processPaymentRequest.OrderGuidGeneratedOnUtc = previousPaymentRequest.OrderGuidGeneratedOnUtc;
-            }
-        }
-
-        if (processPaymentRequest.OrderGuid == Guid.Empty)
-        {
-            processPaymentRequest.OrderGuid = Guid.NewGuid();
-            processPaymentRequest.OrderGuidGeneratedOnUtc = DateTime.UtcNow;
-        }
     }
 
     #endregion

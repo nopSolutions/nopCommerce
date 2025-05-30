@@ -25,7 +25,7 @@ public partial class ProductAttributeController : BaseAdminController
     protected readonly IProductAttributeModelFactory _productAttributeModelFactory;
     protected readonly IProductAttributeService _productAttributeService;
 
-    #endregion Fields
+    #endregion
 
     #region Ctor
 
@@ -224,11 +224,9 @@ public partial class ProductAttributeController : BaseAdminController
         var productAttributes = await _productAttributeService.GetProductAttributeByIdsAsync(selectedIds.ToArray());
         await _productAttributeService.DeleteProductAttributesAsync(productAttributes);
 
-        foreach (var productAttribute in productAttributes)
-        {
-            await _customerActivityService.InsertActivityAsync("DeleteProductAttribute",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteProductAttribute"), productAttribute.Name), productAttribute);
-        }
+        //activity log
+        var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.DeleteProductAttribute");
+        await _customerActivityService.InsertActivitiesAsync("DeleteProductAttribute", productAttributes, productAttribute => string.Format(activityLogFormat, productAttribute.Name));
 
         return Json(new { Result = true });
     }
@@ -239,7 +237,6 @@ public partial class ProductAttributeController : BaseAdminController
 
     [HttpPost]
     [CheckPermission(StandardPermission.Catalog.PRODUCT_ATTRIBUTES_VIEW)]
-    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
     public virtual async Task<IActionResult> UsedByProducts(ProductAttributeProductSearchModel searchModel)
     {
         //try to get a product attribute with the specified id

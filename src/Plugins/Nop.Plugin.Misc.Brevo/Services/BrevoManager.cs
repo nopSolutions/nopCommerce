@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Text;
 using System.Text.RegularExpressions;
 using brevo_csharp.Api;
 using brevo_csharp.Client;
@@ -6,7 +7,9 @@ using brevo_csharp.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Messages;
@@ -101,7 +104,7 @@ public partial class BrevoManager
         {
             //whether plugin is configured
             var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>();
-            if (string.IsNullOrEmpty(brevoSettings.ApiKey))
+            if (!IsConfigured(brevoSettings))
                 throw new NopException("Plugin not configured");
 
             return (await function(), default);
@@ -130,8 +133,8 @@ public partial class BrevoManager
     {
         //check whether plugin is configured to request services (validate API key)
         var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>();
-        if (string.IsNullOrEmpty(brevoSettings.ApiKey))
-            throw new NopException($"Plugin not configured");
+        if (!IsConfigured(brevoSettings))
+            throw new NopException("Plugin not configured");
 
         var apiConfiguration = new Configuration()
         {
@@ -833,6 +836,17 @@ public partial class BrevoManager
     #region Common
 
     /// <summary>
+    /// Check whether the plugin is configured
+    /// </summary>
+    /// <param name="settings">Plugin settings</param>
+    /// <returns>Result</returns>
+    public static bool IsConfigured(BrevoSettings settings)
+    {
+        //API key is required to request remote services
+        return !string.IsNullOrEmpty(settings?.ApiKey);
+    }
+
+    /// <summary>
     /// Get account information
     /// </summary>
     /// <returns>
@@ -868,6 +882,79 @@ public partial class BrevoManager
             //log full error
             await _logger.ErrorAsync($"Brevo error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
             return (null, false, null, exception.Message);
+        }
+    }
+
+    /// <summary>
+    /// Set partner value
+    /// </summary>
+    /// <returns>True if partner successfully set; otherwise false</returns>
+    public async Task<bool> SetPartnerAsync()
+    {
+        try
+        {
+            var stores = (await _storeService.GetAllStoresAsync()).ToList();
+            var storeCredentials = new Dictionary<string, string>();
+            foreach (var store in stores)
+            {
+                var bSettings = await _settingService.LoadSettingAsync<BrevoSettings>(store.Id);
+                var apiKey = bSettings.ApiKey;
+                if (!string.IsNullOrEmpty(apiKey) && !storeCredentials.Where(s => s.Value == apiKey).Any())
+                    storeCredentials.Add(store.Url, apiKey);
+            }
+
+            //whether plugin is configured
+            if (!storeCredentials.Any())
+                return false;
+
+            foreach (var storeCredential in storeCredentials)
+            {
+                await HttpBrevoClientAsync(storeCredential.Key, storeCredential.Value);
+            }
+        }
+        catch (Exception exception)
+        {
+            //log full error
+            await _logger.ErrorAsync($"Brevo error: {exception.Message}.", exception, await _workContext.GetCurrentCustomerAsync());
+            return false;
+        }
+
+        return true;
+
+        async System.Threading.Tasks.Task HttpBrevoClientAsync(string storeUrl, string apiKey)
+        {
+            //create API client
+            var httpClient = new HttpClient
+            {
+                //configure client
+                BaseAddress = new Uri(BrevoDefaults.AccountApiUrl),
+                Timeout = TimeSpan.FromSeconds(10),
+            };
+
+            //Default Request Headers needed to be added in the HttpClient Object
+            httpClient.DefaultRequestHeaders.Add(BrevoDefaults.ApiKeyHeader, apiKey);
+            httpClient.DefaultRequestHeaders.Add(BrevoDefaults.SibPluginHeader, BrevoDefaults.PluginVersion);
+            httpClient.DefaultRequestHeaders.Add(HeaderNames.UserAgent, BrevoDefaults.UserAgentAccountAPI);
+            httpClient.DefaultRequestHeaders.Add(HeaderNames.Accept, MimeTypes.ApplicationJson);
+
+            var requestObject = new JObject
+            {
+                { "partnerName", BrevoDefaults.PartnerName },
+                { "active", true },
+                { "plugin_version", "1.0.0" },
+                { "shop_version", NopVersion.FULL_VERSION },
+                { "shop_url", storeUrl },
+                { "created_at", DateTime.UtcNow },
+                { "activated_at", DateTime.UtcNow },
+                { "type", "sib" }
+            };
+
+            var requestString = JsonConvert.SerializeObject(requestObject);
+            var requestContent = new StringContent(requestString, Encoding.Default, MimeTypes.ApplicationJson);
+            var requestMessage = new HttpRequestMessage(HttpMethod.Post, "partner/information") { Content = requestContent };
+
+            var httpResponse = await httpClient.SendAsync(requestMessage);
+            httpResponse.EnsureSuccessStatusCode();
         }
     }
 

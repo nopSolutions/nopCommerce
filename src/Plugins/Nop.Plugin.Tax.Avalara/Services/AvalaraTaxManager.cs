@@ -162,20 +162,20 @@ public class AvalaraTaxManager : IDisposable
     /// <returns>True if it's configured; otherwise false</returns>
     protected bool IsConfigured()
     {
-        return !string.IsNullOrEmpty(_avalaraTaxSettings.AccountId)
-               && !string.IsNullOrEmpty(_avalaraTaxSettings.LicenseKey);
+        return !string.IsNullOrEmpty(_avalaraTaxSettings.AccountId) && !string.IsNullOrEmpty(_avalaraTaxSettings.LicenseKey);
     }
 
     /// <summary>
-    /// Handle function and get result with Error message in view
+    /// Handle function and get result
     /// </summary>
     /// <typeparam name="TResult">Result type</typeparam>
     /// <param name="function">Function</param>
+    /// <param name="logErrors">Whether to log errors</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the result
+    /// The task result contains the result; error if exists
     /// </returns>
-    protected async Task<(TResult Result, string Error)> HandleFunctionExAsync<TResult>(Func<Task<TResult>> function)
+    protected async Task<(TResult Result, string Error)> HandleFunctionAsync<TResult>(Func<Task<TResult>> function, bool logErrors = true)
     {
         try
         {
@@ -183,10 +183,15 @@ public class AvalaraTaxManager : IDisposable
             if (!IsConfigured())
                 throw new NopException("Tax provider is not configured");
 
-            return (await function(), default);
+            var result = await function();
+
+            return (result, default);
         }
         catch (Exception exception)
         {
+            if (!logErrors)
+                return (default, exception.Message);
+
             //compose an error message
             var errorMessage = exception.Message;
             if (exception is AvaTaxError avaTaxError && avaTaxError.error != null)
@@ -210,50 +215,6 @@ public class AvalaraTaxManager : IDisposable
         }
     }
 
-    /// <summary>
-    /// Handle function and get result
-    /// </summary>
-    /// <typeparam name="TResult">Result type</typeparam>
-    /// <param name="function">Function</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the result
-    /// </returns>
-    protected async Task<TResult> HandleFunctionAsync<TResult>(Func<Task<TResult>> function)
-    {
-        try
-        {
-            //ensure that Avalara tax provider is configured
-            if (!IsConfigured())
-                throw new NopException("Tax provider is not configured");
-
-            return await function();
-        }
-        catch (Exception exception)
-        {
-            //compose an error message
-            var errorMessage = exception.Message;
-            if (exception is AvaTaxError avaTaxError && avaTaxError.error != null)
-            {
-                var errorInfo = avaTaxError.error.error;
-                if (errorInfo != null)
-                {
-                    errorMessage = $"{errorInfo.code} - {errorInfo.message}{Environment.NewLine}";
-                    if (errorInfo.details?.Any() ?? false)
-                    {
-                        var errorDetails = errorInfo.details.Aggregate(string.Empty, (error, detail) => $"{error}{detail.description}{Environment.NewLine}");
-                        errorMessage = $"{errorMessage} Details: {errorDetails}";
-                    }
-                }
-            }
-
-            //log errors
-            await _logger.ErrorAsync($"{AvalaraTaxDefaults.SystemName} error. {errorMessage}", exception, await _workContext.GetCurrentCustomerAsync());
-
-            return default;
-        }
-    }
-
     #endregion
 
     #region Tax calculation
@@ -266,16 +227,16 @@ public class AvalaraTaxManager : IDisposable
     protected TransactionModel CreateTransaction(CreateTransactionModel model)
     {
         var transaction = ServiceClient.CreateTransaction(null, model)
-                          ?? throw new NopException("No response from the service");
+            ?? throw new NopException("No response from the service");
 
         //whether there are any errors
-        if (transaction.messages?.Any() ?? false)
-        {
-            var message = transaction.messages.Aggregate(string.Empty, (error, message) => $"{error}{message.summary}{Environment.NewLine}");
-            throw new NopException(message);
-        }
+        var errors = transaction.messages?.Where(m => !m.severity?.ToLower().Equals("success") ?? true).ToList() ?? [];
 
-        return transaction;
+        if (!errors.Any())
+            return transaction;
+
+        var message = errors.Aggregate(string.Empty, (error, message) => $"{error}{message.summary}{Environment.NewLine}");
+        throw new NopException(message);
     }
 
     /// <summary>
@@ -298,8 +259,7 @@ public class AvalaraTaxManager : IDisposable
         };
 
         //set company code
-        var companyCode = !string.IsNullOrEmpty(_avalaraTaxSettings.CompanyCode)
-                          && !_avalaraTaxSettings.CompanyCode.Equals(Guid.Empty.ToString())
+        var companyCode = !string.IsNullOrEmpty(_avalaraTaxSettings.CompanyCode) && !_avalaraTaxSettings.CompanyCode.Equals(Guid.Empty.ToString())
             ? _avalaraTaxSettings.CompanyCode
             : null;
         model.companyCode = CommonHelper.EnsureMaximumLength(companyCode, 25);
@@ -731,6 +691,34 @@ public class AvalaraTaxManager : IDisposable
         return taxRates;
     }
 
+    /// <summary>
+    /// Check address details before creating a transaction
+    /// </summary>
+    /// <param name="address">Address to check</param>
+    protected void CheckAddressDetails(AddressLocationInfo address)
+    {
+        if (address is null)
+            throw new NopException("Address not set");
+
+        //for international transactions, the two digit ISO country code is required to determine tax jurisdictions
+        if (!string.IsNullOrEmpty(address.country) &&
+            !string.Equals(address.country, "US", StringComparison.InvariantCultureIgnoreCase) &&
+            !string.Equals(address.country, "CA", StringComparison.InvariantCultureIgnoreCase))
+        {
+            return;
+        }
+
+        //for US and Canadian addresses a postal code is required
+        if (!string.IsNullOrEmpty(address.postalCode))
+            return;
+
+        //however a full address (street address, city, state, and zip code) will return the best tax calculation
+        if (!string.IsNullOrEmpty(address.line1) && !string.IsNullOrEmpty(address.city) && !string.IsNullOrEmpty(address.region))
+            return;
+
+        throw new NopException("Address is incomplete");
+    }
+
     #endregion
 
     #region Certificates
@@ -834,7 +822,8 @@ public class AvalaraTaxManager : IDisposable
     /// </returns>
     public async Task<PingResultModel> PingAsync()
     {
-        return await HandleFunctionAsync(() => Task.FromResult(ServiceClient.Ping() ?? throw new NopException("No response from the service")));
+        return (await HandleFunctionAsync(() =>
+            Task.FromResult(ServiceClient.Ping() ?? throw new NopException("No response from the service")))).Result;
     }
 
     /// <summary>
@@ -846,13 +835,13 @@ public class AvalaraTaxManager : IDisposable
     /// </returns>
     public async Task<List<CompanyModel>> GetAccountCompaniesAsync()
     {
-        return await HandleFunctionAsync(() =>
+        return (await HandleFunctionAsync(() =>
         {
             var result = ServiceClient.QueryCompanies(null, null, null, null, null)
-                         ?? throw new NopException("No response from the service");
+                ?? throw new NopException("No response from the service");
 
             return Task.FromResult(result.value);
-        });
+        })).Result;
     }
 
     /// <summary>
@@ -864,13 +853,13 @@ public class AvalaraTaxManager : IDisposable
     /// </returns>
     public async Task<List<EntityUseCodeModel>> GetEntityUseCodesAsync()
     {
-        return await HandleFunctionAsync(() =>
+        return (await HandleFunctionAsync(() =>
         {
             var result = ServiceClient.ListEntityUseCodes(null, null, null, null)
-                         ?? throw new NopException("No response from the service");
+                ?? throw new NopException("No response from the service");
 
             return Task.FromResult(result.value);
-        });
+        })).Result;
     }
 
     /// <summary>
@@ -882,13 +871,13 @@ public class AvalaraTaxManager : IDisposable
     /// </returns>
     public async Task<Dictionary<string, string>> GetTaxCodeTypesAsync()
     {
-        return await HandleFunctionAsync(() =>
+        return (await HandleFunctionAsync(() =>
         {
             var result = ServiceClient.ListTaxCodeTypes(null, null)
-                         ?? throw new NopException("No response from the service");
+                ?? throw new NopException("No response from the service");
 
             return Task.FromResult(result.types);
-        });
+        })).Result;
     }
 
     /// <summary>
@@ -900,11 +889,11 @@ public class AvalaraTaxManager : IDisposable
     /// </returns>
     public async Task<int?> ImportTaxCodesAsync()
     {
-        return await HandleFunctionAsync<int?>(async () =>
+        return (await HandleFunctionAsync<int?>(async () =>
         {
             //get Avalara pre-defined system tax codes (only active)
             var systemTaxCodes = await ServiceClient.ListTaxCodesAsync("isActive eq true", null, null, null)
-                                 ?? throw new NopException("No response from the service");
+                ?? throw new NopException("No response from the service");
 
             if (!systemTaxCodes.value?.Any() ?? true)
                 return null;
@@ -936,7 +925,7 @@ public class AvalaraTaxManager : IDisposable
             }
 
             return importedTaxCodesNumber;
-        });
+        })).Result;
     }
 
     /// <summary>
@@ -948,19 +937,19 @@ public class AvalaraTaxManager : IDisposable
     /// </returns>
     public async Task<int?> ExportTaxCodesAsync()
     {
-        return await HandleFunctionAsync<int?>(async () =>
+        return (await HandleFunctionAsync<int?>(async () =>
         {
             if (string.IsNullOrEmpty(_avalaraTaxSettings.CompanyCode) || _avalaraTaxSettings.CompanyCode.Equals(Guid.Empty.ToString()))
                 throw new NopException("Company not selected");
 
             //get selected company
             var selectedCompany = (await GetAccountCompaniesAsync())
-                                  ?.FirstOrDefault(company => _avalaraTaxSettings.CompanyCode.Equals(company?.companyCode))
-                                  ?? throw new NopException("Failed to retrieve company");
+                ?.FirstOrDefault(company => _avalaraTaxSettings.CompanyCode.Equals(company?.companyCode))
+                ?? throw new NopException("Failed to retrieve company");
 
             //get existing tax codes (only active)
             var taxCodes = await ServiceClient.ListTaxCodesByCompanyAsync(selectedCompany.id, "isActive eq true", null, null, null, null)
-                           ?? throw new NopException("No response from the service");
+                ?? throw new NopException("No response from the service");
 
             var existingTaxCodes = taxCodes.value?.Select(taxCode => taxCode.taxCode).ToList() ?? new List<string>();
 
@@ -977,7 +966,7 @@ public class AvalaraTaxManager : IDisposable
 
             //add Avalara pre-defined system tax codes
             var systemTaxCodesResult = await ServiceClient.ListTaxCodesAsync("isActive eq true", null, null, null)
-                                       ?? throw new NopException("No response from the service");
+                ?? throw new NopException("No response from the service");
 
             var systemTaxCodes = systemTaxCodesResult.value?.Select(taxCode => taxCode.taxCode).ToList() ?? new List<string>();
             existingTaxCodes.AddRange(systemTaxCodes);
@@ -991,7 +980,7 @@ public class AvalaraTaxManager : IDisposable
 
             //create items and get the result
             var createdTaxCodes = await ServiceClient.CreateTaxCodesAsync(selectedCompany.id, taxCodesToExport)
-                                  ?? throw new NopException("No response from the service");
+                ?? throw new NopException("No response from the service");
 
             //display results
             var result = createdTaxCodes?.Count;
@@ -999,7 +988,7 @@ public class AvalaraTaxManager : IDisposable
                 return result.Value;
 
             return null;
-        });
+        })).Result;
     }
 
     /// <summary>
@@ -1011,11 +1000,11 @@ public class AvalaraTaxManager : IDisposable
     /// </returns>
     public async Task<bool> DeleteSystemTaxCodesAsync()
     {
-        return await HandleFunctionAsync(async () =>
+        return (await HandleFunctionAsync(async () =>
         {
             //get Avalara pre-defined system tax codes (only active)
             var systemTaxCodesResult = await ServiceClient.ListTaxCodesAsync("isActive eq true", null, null, null)
-                                       ?? throw new NopException("No response from the service");
+                ?? throw new NopException("No response from the service");
 
             var systemTaxCodes = systemTaxCodesResult.value?.Select(taxCode => taxCode.taxCode).ToList();
             if (!systemTaxCodes?.Any() ?? true)
@@ -1036,7 +1025,7 @@ public class AvalaraTaxManager : IDisposable
                 .DeleteAsync(attribute => attribute.KeyGroup == nameof(TaxCategory) && categoriesIds.Contains(attribute.EntityId));
 
             return true;
-        });
+        })).Result;
     }
 
     /// <summary>
@@ -1047,8 +1036,10 @@ public class AvalaraTaxManager : IDisposable
     {
         await DeleteSystemTaxCodesAsync();
 
-        await _genericAttributeRepository.DeleteAsync(attribute => attribute.Key == AvalaraTaxDefaults.EntityUseCodeAttribute ||
-                                                                   attribute.Key == AvalaraTaxDefaults.TaxCodeTypeAttribute || attribute.Key == AvalaraTaxDefaults.TaxCodeDescriptionAttribute);
+        await _genericAttributeRepository.DeleteAsync(attribute =>
+            attribute.Key == AvalaraTaxDefaults.EntityUseCodeAttribute ||
+            attribute.Key == AvalaraTaxDefaults.TaxCodeTypeAttribute ||
+            attribute.Key == AvalaraTaxDefaults.TaxCodeDescriptionAttribute);
     }
 
     /// <summary>
@@ -1060,19 +1051,19 @@ public class AvalaraTaxManager : IDisposable
     /// </returns>
     public async Task<int?> ExportProductsAsync(string selectedIds)
     {
-        return await HandleFunctionAsync<int?>(async () =>
+        return (await HandleFunctionAsync<int?>(async () =>
         {
             if (string.IsNullOrEmpty(_avalaraTaxSettings.CompanyCode) || _avalaraTaxSettings.CompanyCode.Equals(Guid.Empty.ToString()))
                 throw new NopException("Company not selected");
 
             //get selected company
             var selectedCompany = (await GetAccountCompaniesAsync())
-                                  ?.FirstOrDefault(company => _avalaraTaxSettings.CompanyCode.Equals(company?.companyCode))
-                                  ?? throw new NopException("Failed to retrieve company");
+                ?.FirstOrDefault(company => _avalaraTaxSettings.CompanyCode.Equals(company?.companyCode))
+                ?? throw new NopException("Failed to retrieve company");
 
             //get existing items
             var items = await ServiceClient.ListItemsByCompanyAsync(selectedCompany.id, null, null, null, null, null, null)
-                        ?? throw new NopException("No response from the service");
+                ?? throw new NopException("No response from the service");
 
             //return the paginated and filtered list
             var existingItemCodes = items.value?.Select(item => item.itemCode).ToList() ?? new List<string>();
@@ -1126,7 +1117,7 @@ public class AvalaraTaxManager : IDisposable
 
             //create items and get the result
             var createdItems = await ServiceClient.CreateItemsAsync(selectedCompany.id, exportedItems)
-                               ?? throw new NopException("No response from the service");
+                ?? throw new NopException("No response from the service");
 
             //display results
             var result = createdItems?.Count;
@@ -1134,7 +1125,7 @@ public class AvalaraTaxManager : IDisposable
                 return result.Value;
 
             return null;
-        });
+        })).Result;
     }
 
     #endregion
@@ -1160,7 +1151,7 @@ public class AvalaraTaxManager : IDisposable
             postalCode = CommonHelper.EnsureMaximumLength(address.ZipPostalCode, 11),
             region = CommonHelper.EnsureMaximumLength((await _stateProvinceService.GetStateProvinceByAddressAsync(address))?.Abbreviation, 3),
             textCase = TextCase.Mixed
-        }) ?? throw new NopException("No response from the service")));
+        }) ?? throw new NopException("No response from the service"), false)).Result;
     }
 
     #endregion
@@ -1173,11 +1164,11 @@ public class AvalaraTaxManager : IDisposable
     /// <param name="address">Tax address</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the ransaction
+    /// The task result contains the transaction
     /// </returns>
     public async Task<TransactionModel> CreateTestTaxTransactionAsync(Address address)
     {
-        return await HandleFunctionAsync(async () =>
+        return (await HandleFunctionAsync(async () =>
         {
             if (_avalaraTaxSettings.UseTaxRateTables)
             {
@@ -1201,29 +1192,36 @@ public class AvalaraTaxManager : IDisposable
             var model = await PrepareTransactionModelAsync(address, customer.Id.ToString(), DocumentType.SalesOrder);
             model.lines = [new LineItemModel { amount = 100, quantity = 1 }];
             return CreateTransaction(model);
-        });
+        }, false)).Result;
     }
 
     /// <summary>
-    /// Create transaction to get tax rate
+    /// Get tax rate by request
     /// </summary>
     /// <param name="taxRateRequest">Tax rate request</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the ransaction
+    /// The task result contains the tax rate; error if exists
     /// </returns>
-    public async Task<decimal?> GetTaxRateAsync(TaxRateRequest taxRateRequest)
+    public async Task<(decimal TaxRate, string Error)> GetTaxRateAsync(TaxRateRequest taxRateRequest)
     {
         if (_avalaraTaxSettings.UseTaxRateTables)
         {
+            if (string.IsNullOrEmpty(taxRateRequest.Address.ZipPostalCode))
+                return (decimal.Zero, "Zip/postal code not set");
+
             var key = _staticCacheManager
                 .PrepareKeyForDefaultCache(AvalaraTaxDefaults.TaxRateByZipCacheKey, taxRateRequest.Address.ZipPostalCode);
-            return await _staticCacheManager.GetAsync(key, async () => await HandleFunctionAsync(async () =>
+            var taxRateByZip = await _staticCacheManager.GetAsync(key, async () => (await HandleFunctionAsync(async () =>
             {
                 var taxRates = await GetTaxRatesFromFileAsync();
-                var taxRate = taxRates.FirstOrDefault(record => taxRateRequest.Address.ZipPostalCode?.StartsWith(record.Zip) ?? false);
+                var taxRate = taxRates.FirstOrDefault(record => taxRateRequest.Address.ZipPostalCode.StartsWith(record.Zip));
                 return taxRate?.TotalTax * 100;
-            }));
+            }, false)).Result);
+            if (taxRateByZip is null)
+                return (decimal.Zero, "Tax rate not found for the specified address");
+
+            return (taxRateByZip.Value, null);
         }
 
         //prepare cache key
@@ -1243,17 +1241,24 @@ public class AvalaraTaxManager : IDisposable
         if (_avalaraTaxSettings.GetTaxRateByAddressOnly && _avalaraTaxSettings.TaxRateByAddressCacheTime > 0)
             cacheKey.CacheTime = _avalaraTaxSettings.TaxRateByAddressCacheTime;
 
-        //get tax rate
-        return await _staticCacheManager.GetAsync(cacheKey, async () =>
+        //try to get previously cached tax rate
+        var taxRate = await _staticCacheManager.GetAsync<decimal?>(cacheKey);
+        if (taxRate is not null)
+            return (taxRate.Value, null);
+
+        //or specify it now
+        (taxRate, var error) = await HandleFunctionAsync(async () =>
         {
-            return await HandleFunctionAsync(async () =>
-            {
-                //create tax transaction for a single item and without saving
-                var model = await PrepareTransactionModelAsync(address, customer.Id.ToString(), DocumentType.SalesOrder);
-                var taxCategory = await _taxCategoryService.GetTaxCategoryByIdAsync(taxCategoryId);
-                model.lines =
-                [
-                    new LineItemModel
+            //create tax transaction for a single item and without saving
+            var model = await PrepareTransactionModelAsync(address, customer.Id.ToString(), DocumentType.SalesOrder);
+
+            //check some address details before creating a transaction
+            CheckAddressDetails(model.addresses?.shipTo);
+
+            var taxCategory = await _taxCategoryService.GetTaxCategoryByIdAsync(taxCategoryId);
+            model.lines =
+            [
+                new ()
                 {
                     amount = 100,
                     quantity = 1,
@@ -1263,18 +1268,24 @@ public class AvalaraTaxManager : IDisposable
                         ? CommonHelper.EnsureMaximumLength($"Exempt-product-#{taxRateRequest.Product.Id}", 25)
                         : string.Empty
                 }
-                ];
+            ];
 
-                //prepare tax exemption 
-                if (!_avalaraTaxSettings.GetTaxRateByAddressOnly)
-                    await PrepareModelTaxExemptionAsync(model, customer);
+            //prepare tax exemption 
+            if (!_avalaraTaxSettings.GetTaxRateByAddressOnly)
+                await PrepareModelTaxExemptionAsync(model, customer);
 
-                var transaction = CreateTransaction(model);
+            var transaction = CreateTransaction(model);
 
-                //we return the tax total, since we used the amount of 100 when requesting, so the total is the same as the rate
-                return transaction?.totalTax;
-            });
-        });
+            //we return the tax total, since we used the amount of 100 when requesting, so the total is the same as the rate
+            return transaction?.totalTax;
+        }, false);
+        if (!string.IsNullOrEmpty(error))
+            return (decimal.Zero, error);
+
+        //and cache it
+        await _staticCacheManager.SetAsync(cacheKey, taxRate);
+
+        return (taxRate ?? decimal.Zero, null);
     }
 
     /// <summary>
@@ -1283,9 +1294,9 @@ public class AvalaraTaxManager : IDisposable
     /// <param name="taxTotalRequest">Tax total request</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the ransaction
+    /// The task result contains the transaction; error if exists
     /// </returns>
-    public async Task<TransactionModel> CreateTaxTotalTransactionAsync(TaxTotalRequest taxTotalRequest)
+    public async Task<(TransactionModel Transaction, string Error)> CreateTaxTotalTransactionAsync(TaxTotalRequest taxTotalRequest)
     {
         return await HandleFunctionAsync(async () =>
         {
@@ -1333,13 +1344,20 @@ public class AvalaraTaxManager : IDisposable
             model.email = CommonHelper.EnsureMaximumLength(customer.Email, 50);
             model.discount = order.OrderSubTotalDiscountExclTax;
 
+            //check some address details before creating a transaction
+            CheckAddressDetails(model.addresses?.shipTo);
+
             //set purchased item lines
             model.lines = await GetItemLinesAsync(order, orderItems, address.CountryId);
 
             //set whole request tax exemption
             await PrepareModelTaxExemptionAsync(model, customer);
 
-            return CreateTransaction(model);
+            var transaction = CreateTransaction(model);
+            if (transaction?.totalTax is null)
+                throw new NopException("No response from the service");
+
+            return transaction;
         });
     }
 
@@ -1349,11 +1367,11 @@ public class AvalaraTaxManager : IDisposable
     /// <param name="order">Order</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the ransaction
+    /// The task result contains the transaction
     /// </returns>
     public async Task<TransactionModel> CreateOrderTaxTransactionAsync(Order order)
     {
-        return await HandleFunctionAsync(async () =>
+        return (await HandleFunctionAsync(async () =>
         {
             //prepare transaction model
             var address = await GetTaxAddressAsync(order);
@@ -1372,7 +1390,7 @@ public class AvalaraTaxManager : IDisposable
             await PrepareModelTaxExemptionAsync(model, customer);
 
             return CreateTransaction(model);
-        });
+        })).Result;
     }
 
     /// <summary>
@@ -1389,7 +1407,7 @@ public class AvalaraTaxManager : IDisposable
 
             var model = new VoidTransactionModel { code = VoidReasonCode.DocVoided };
             var transaction = ServiceClient.VoidTransaction(_avalaraTaxSettings.CompanyCode, order.CustomOrderNumber, null, null, model)
-                              ?? throw new NopException("No response from the service");
+                ?? throw new NopException("No response from the service");
 
             return Task.FromResult(transaction);
         });
@@ -1409,7 +1427,7 @@ public class AvalaraTaxManager : IDisposable
 
             var model = new VoidTransactionModel { code = VoidReasonCode.DocDeleted };
             var transaction = ServiceClient.VoidTransaction(_avalaraTaxSettings.CompanyCode, order.CustomOrderNumber, null, null, model)
-                              ?? throw new NopException("No response from the service");
+                ?? throw new NopException("No response from the service");
 
             return Task.FromResult(transaction);
         });
@@ -1430,7 +1448,7 @@ public class AvalaraTaxManager : IDisposable
 
             //first try to get saved tax transaction
             var transaction = ServiceClient.GetTransactionByCodeAndType(_avalaraTaxSettings.CompanyCode, order.CustomOrderNumber, DocumentType.SalesInvoice, null)
-                              ?? throw new NopException("No response from the service");
+                ?? throw new NopException("No response from the service");
 
             //create refund transaction model
             var model = new RefundTransactionModel
@@ -1449,7 +1467,7 @@ public class AvalaraTaxManager : IDisposable
             }
 
             transaction = ServiceClient.RefundTransaction(_avalaraTaxSettings.CompanyCode, transaction.code, null, null, null, model)
-                          ?? throw new NopException("No response from the service");
+                ?? throw new NopException("No response from the service");
 
             return Task.FromResult(transaction);
         });
@@ -1464,7 +1482,7 @@ public class AvalaraTaxManager : IDisposable
         await HandleFunctionAsync(async () =>
         {
             var file = ServiceClient.DownloadTaxRatesByZipCode(DateTime.UtcNow, null)
-                       ?? throw new NopException("No response from the service");
+                ?? throw new NopException("No response from the service");
 
             var filePath = _fileProvider.MapPath(AvalaraTaxDefaults.TaxRatesFilePath);
             await _fileProvider.WriteAllBytesAsync(filePath, file.Data);
@@ -1487,7 +1505,7 @@ public class AvalaraTaxManager : IDisposable
     /// </returns>
     public async Task<bool?> GetCertificateSetupStatusAsync(bool request = false)
     {
-        return await HandleFunctionAsync<bool?>(async () =>
+        return (await HandleFunctionAsync<bool?>(async () =>
         {
             if (_avalaraTaxSettings.CompanyId is null)
                 throw new NopException("Company not selected");
@@ -1495,13 +1513,13 @@ public class AvalaraTaxManager : IDisposable
             var provisionStatus = request
                 ? await ServiceClient.RequestCertificateSetupAsync(_avalaraTaxSettings.CompanyId.Value)
                 : await ServiceClient.GetCertificateSetupAsync(_avalaraTaxSettings.CompanyId.Value)
-                  ?? throw new NopException("Failed to get certificate setup status");
+                ?? throw new NopException("Failed to get certificate setup status");
 
             if (provisionStatus.status == CertCaptureProvisionStatus.NotProvisioned)
                 return default;
 
             return provisionStatus.status == CertCaptureProvisionStatus.Provisioned;
-        });
+        })).Result;
     }
 
     /// <summary>
@@ -1514,7 +1532,7 @@ public class AvalaraTaxManager : IDisposable
     /// </returns>
     public async Task<string> CreateTokenAsync(Customer customer)
     {
-        return await HandleFunctionAsync(async () =>
+        return (await HandleFunctionAsync(async () =>
         {
             if (_avalaraTaxSettings.CompanyId is null)
                 throw new NopException("Company not selected");
@@ -1532,8 +1550,8 @@ public class AvalaraTaxManager : IDisposable
 
             var model = new CreateECommerceTokenInputModel { customerNumber = customer.Id.ToString() };
             return (await ServiceClient.CreateECommerceTokenAsync(_avalaraTaxSettings.CompanyId.Value, model))?.token
-                   ?? throw new NopException("Failed to get token");
-        });
+                ?? throw new NopException("Failed to get token");
+        })).Result;
     }
 
     /// <summary>
@@ -1545,13 +1563,13 @@ public class AvalaraTaxManager : IDisposable
     /// </returns>
     public async Task<List<ExposureZoneModel>> GetExposureZonesAsync()
     {
-        return await HandleFunctionAsync(async () =>
+        return (await HandleFunctionAsync(async () =>
         {
             var result = await ServiceClient.ListCertificateExposureZonesAsync(null, null, null, null)
-                         ?? throw new NopException("Failed to get exposure zones");
+                ?? throw new NopException("Failed to get exposure zones");
 
             return result.value;
-        });
+        })).Result;
     }
 
     /// <summary>
@@ -1564,7 +1582,7 @@ public class AvalaraTaxManager : IDisposable
     /// </returns>
     public async Task<CustomerModel> CreateOrUpdateCustomerAsync(Customer customer)
     {
-        return await HandleFunctionAsync(async () =>
+        return (await HandleFunctionAsync(async () =>
         {
             if (_avalaraTaxSettings.CompanyId is null)
                 throw new NopException("Company not selected");
@@ -1579,8 +1597,8 @@ public class AvalaraTaxManager : IDisposable
             catch { }
 
             return await CreateOrUpdateCustomerAsync(customer, _avalaraTaxSettings.CompanyId.Value, customerExists)
-                   ?? throw new NopException("Failed to update customer details");
-        });
+                ?? throw new NopException("Failed to update customer details");
+        })).Result;
     }
 
     /// <summary>
@@ -1593,14 +1611,14 @@ public class AvalaraTaxManager : IDisposable
     /// </returns>
     public async Task<CustomerModel> DeleteCustomerAsync(int customerId)
     {
-        return await HandleFunctionAsync(async () =>
+        return (await HandleFunctionAsync(async () =>
         {
             if (_avalaraTaxSettings.CompanyId is null)
                 throw new NopException("Company not selected");
 
             return await ServiceClient.DeleteCustomerAsync(_avalaraTaxSettings.CompanyId.Value, customerId.ToString())
-                   ?? throw new NopException("Failed to delete customer");
-        });
+                ?? throw new NopException("Failed to delete customer");
+        })).Result;
     }
 
     /// <summary>
@@ -1614,7 +1632,7 @@ public class AvalaraTaxManager : IDisposable
     /// </returns>
     public async Task<CertificateModel> GetValidCertificatesAsync(Customer customer, int storeId)
     {
-        return await HandleFunctionAsync(async () =>
+        return (await HandleFunctionAsync(async () =>
         {
             if (_avalaraTaxSettings.CompanyId is null)
                 throw new NopException("Company not selected");
@@ -1627,12 +1645,12 @@ public class AvalaraTaxManager : IDisposable
 
             //check exemption status
             var exemptionStatus = await ServiceClient
-                                      .ListValidCertificatesForCustomerAsync(_avalaraTaxSettings.CompanyId.Value, customer.Id.ToString(), shipTo.country, shipTo.region)
-                                  ?? throw new NopException("Failed to get customer's certificates");
+                .ListValidCertificatesForCustomerAsync(_avalaraTaxSettings.CompanyId.Value, customer.Id.ToString(), shipTo.country, shipTo.region)
+                ?? throw new NopException("Failed to get customer's certificates");
 
             var exempt = string.Equals(exemptionStatus.status, "Exempt", StringComparison.InvariantCultureIgnoreCase);
             return exempt ? exemptionStatus.certificate : null;
-        });
+        })).Result;
     }
 
     /// <summary>
@@ -1645,17 +1663,17 @@ public class AvalaraTaxManager : IDisposable
     /// </returns>
     public async Task<List<CertificateModel>> GetCustomerCertificatesAsync(Customer customer)
     {
-        return await HandleFunctionAsync(async () =>
+        return (await HandleFunctionAsync(async () =>
         {
             if (_avalaraTaxSettings.CompanyId is null)
                 throw new NopException("Company not selected");
 
             var certificates = await ServiceClient
-                                   .ListCertificatesForCustomerAsync(_avalaraTaxSettings.CompanyId.Value, customer.Id.ToString(), null, null, null, null, null)
-                               ?? throw new NopException("Failed to get customer's certificates");
+                .ListCertificatesForCustomerAsync(_avalaraTaxSettings.CompanyId.Value, customer.Id.ToString(), null, null, null, null, null)
+                ?? throw new NopException("Failed to get customer's certificates");
 
             return certificates.value;
-        });
+        })).Result;
     }
 
     /// <summary>
@@ -1668,17 +1686,17 @@ public class AvalaraTaxManager : IDisposable
     /// </returns>
     public async Task<FileResult> DownloadCertificateAsync(int certificateId)
     {
-        return await HandleFunctionAsync(() =>
+        return (await HandleFunctionAsync(() =>
         {
             if (_avalaraTaxSettings.CompanyId is null)
                 throw new NopException("Company not selected");
 
             var file = ServiceClient
-                           .DownloadCertificateImage(_avalaraTaxSettings.CompanyId.Value, certificateId, null, CertificatePreviewType.Pdf)
-                       ?? throw new NopException("Failed to download certificate");
+                .DownloadCertificateImage(_avalaraTaxSettings.CompanyId.Value, certificateId, null, CertificatePreviewType.Pdf)
+                ?? throw new NopException("Failed to download certificate");
 
             return Task.FromResult(file);
-        });
+        })).Result;
     }
 
     /// <summary>
@@ -1691,7 +1709,7 @@ public class AvalaraTaxManager : IDisposable
     /// </returns>
     public async Task<string> GetInvitationAsync(Customer customer)
     {
-        return await HandleFunctionAsync(async () =>
+        return (await HandleFunctionAsync(async () =>
         {
             if (_avalaraTaxSettings.CompanyId is null)
                 throw new NopException("Company not selected");
@@ -1702,12 +1720,12 @@ public class AvalaraTaxManager : IDisposable
                 new() { deliveryMethod = CertificateRequestDeliveryMethod.Download }
             };
             var invitation = (await ServiceClient
-                                 .CreateCertExpressInvitationAsync(_avalaraTaxSettings.CompanyId.Value, customer.Id.ToString(), invitationModel))
-                             ?.FirstOrDefault()?.invitation
-                             ?? throw new NopException("Failed to get invitation");
+                .CreateCertExpressInvitationAsync(_avalaraTaxSettings.CompanyId.Value, customer.Id.ToString(), invitationModel))
+                ?.FirstOrDefault()?.invitation
+                ?? throw new NopException("Failed to get invitation");
 
             return invitation.requestLink;
-        });
+        })).Result;
     }
 
     #endregion
@@ -1723,7 +1741,7 @@ public class AvalaraTaxManager : IDisposable
     /// </returns>
     public async Task<(HSClassificationModel model, string Error)> ClassificationProductsAsync(ItemClassification item)
     {
-        return await HandleFunctionExAsync(async () =>
+        return await HandleFunctionAsync(async () =>
         {
             if (_avalaraTaxSettings.CompanyId is null)
                 throw new NopException("Company not selected");

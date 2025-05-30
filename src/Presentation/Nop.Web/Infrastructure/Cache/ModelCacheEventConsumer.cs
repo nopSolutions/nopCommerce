@@ -171,12 +171,14 @@ public partial class ModelCacheEventConsumer :
     {
         await _staticCacheManager.RemoveAsync(NopModelCacheDefaults.VendorNavigationModelKey);
         await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.VendorPicturePrefixCacheKeyById, eventMessage.Entity.Id));
+        await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.VendorReviewsByVendorIdPrefixCacheKey, eventMessage.Entity.Id));
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(EntityDeletedEvent<Vendor> eventMessage)
     {
         await _staticCacheManager.RemoveAsync(NopModelCacheDefaults.VendorNavigationModelKey);
+        await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.VendorReviewsByVendorIdPrefixCacheKey, eventMessage.Entity.Id));
     }
 
     #endregion
@@ -216,6 +218,7 @@ public partial class ModelCacheEventConsumer :
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryHomepagePrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
+        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SearchBoxCategoryListPrefixCacheKey);
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
@@ -226,6 +229,7 @@ public partial class ModelCacheEventConsumer :
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryHomepagePrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.CategoryPicturePrefixCacheKeyById, eventMessage.Entity.Id));
+        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SearchBoxCategoryListPrefixCacheKey);
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
@@ -235,6 +239,7 @@ public partial class ModelCacheEventConsumer :
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryHomepagePrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
+        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SearchBoxCategoryListPrefixCacheKey);
     }
 
     #endregion
@@ -282,6 +287,7 @@ public partial class ModelCacheEventConsumer :
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductsAlsoPurchasedIdsPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.ProductReviewsPrefixCacheKeyById, eventMessage.Entity.Id));
+        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.VendorReviewsPrefixCacheKey);
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
@@ -290,6 +296,7 @@ public partial class ModelCacheEventConsumer :
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.HomepageBestsellersIdsPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductsAlsoPurchasedIdsPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
+        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.VendorReviewsPrefixCacheKey);
     }
 
     #endregion
@@ -534,6 +541,7 @@ public partial class ModelCacheEventConsumer :
     public async Task HandleEventAsync(EntityDeletedEvent<ProductReview> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.ProductReviewsPrefixCacheKeyById, eventMessage.Entity.ProductId));
+        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.VendorReviewsPrefixCacheKey);
     }
 
     #endregion

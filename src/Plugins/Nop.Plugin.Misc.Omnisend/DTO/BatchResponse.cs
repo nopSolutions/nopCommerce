@@ -13,6 +13,7 @@ public class BatchResponse
     [JsonProperty("totalCount")] public int TotalCount { get; set; }
     [JsonProperty("finishedCount")] public int FinishedCount { get; set; }
     [JsonProperty("errorsCount")] public int ErrorsCount { get; set; }
+    [JsonProperty("method")] public string Method { get; set; }
 
     [JsonIgnore]
     public string SyncType

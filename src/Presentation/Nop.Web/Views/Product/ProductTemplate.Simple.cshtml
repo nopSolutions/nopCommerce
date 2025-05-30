@@ -49,6 +49,8 @@
         NopHtml.AddHeadCustomParts("<meta property=\"twitter:image\" content=\"" + Model.DefaultPictureModel.ImageUrl + "\" />");
         NopHtml.AddHeadCustomParts("<meta property=\"twitter:url\" content=\"" + webHelper.GetThisPageUrl(false) + "\" />");
     }
+    
+    NopHtml.AddJsonLdParts(Model.JsonLd);
 }
 <!--product breadcrumb-->
 @section Breadcrumb
@@ -60,12 +62,6 @@
     <div class="page-body">
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductDetailsTop, additionalData = Model })
         <form asp-route="Product" asp-route-sename="@Model.SeName" method="post" id="product-details-form">
-            @if (seoSettings.MicrodataEnabled)
-            {
-                <script type="application/ld+json">
-                    @Html.Raw(Model.JsonLd)
-                </script>
-            }
             <div data-productid="@Model.Id">
                 <div class="product-essential">
                     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductDetailsEssentialTop, additionalData = Model })

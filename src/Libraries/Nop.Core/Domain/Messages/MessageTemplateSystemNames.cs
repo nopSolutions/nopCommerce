@@ -37,6 +37,11 @@ public static partial class MessageTemplateSystemNames
     /// </summary>
     public const string DELETE_CUSTOMER_REQUEST_STORE_OWNER_NOTIFICATION = "Customer.Gdpr.DeleteRequest";
 
+    /// <summary>
+    /// Represents system name of the failed login attempt notification
+    /// </summary>
+    public const string CUSTOMER_FAILED_LOGIN_ATTEMPT_NOTIFICATION = "Customer.FailedLoginAttempt";
+
     #endregion
 
     #region Order
@@ -105,6 +110,11 @@ public static partial class MessageTemplateSystemNames
     /// Represents system name of notification customer about completed order
     /// </summary>
     public const string ORDER_COMPLETED_CUSTOMER_NOTIFICATION = "OrderCompleted.CustomerNotification";
+
+    /// <summary>
+    /// Represents system name of notification store owner about completed order
+    /// </summary>
+    public const string ORDER_COMPLETED_STORE_OWNER_NOTIFICATION = "OrderCompleted.StoreOwnerNotification";
 
     /// <summary>
     /// Represents system name of notification customer about cancelled order
@@ -250,6 +260,16 @@ public static partial class MessageTemplateSystemNames
     /// Represents system name of notification store owner about below quantity of product attribute combination
     /// </summary>
     public const string QUANTITY_BELOW_ATTRIBUTE_COMBINATION_STORE_OWNER_NOTIFICATION = "QuantityBelow.AttributeCombination.StoreOwnerNotification";
+
+    /// <summary>
+    /// Represents system name of notification vendor about below quantity of product
+    /// </summary>
+    public const string QUANTITY_BELOW_VENDOR_NOTIFICATION = "QuantityBelow.VendorNotification";
+
+    /// <summary>
+    /// Represents system name of notification vendor about below quantity of product attribute combination
+    /// </summary>
+    public const string QUANTITY_BELOW_ATTRIBUTE_COMBINATION_VENDOR_NOTIFICATION = "QuantityBelow.AttributeCombination.VendorNotification";
 
     /// <summary>
     /// Represents system name of notification store owner about submitting new VAT

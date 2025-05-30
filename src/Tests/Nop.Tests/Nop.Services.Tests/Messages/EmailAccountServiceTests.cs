@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace Nop.Tests.Nop.Services.Tests.Messages;
 
 [TestFixture]
-public class EmailAccountServiceTests : BaseNopTest
+public class EmailAccountServiceTests : ServiceTest<EmailAccount>
 {
     private IEmailAccountService _emailAccountService;
 
@@ -15,32 +15,43 @@ public class EmailAccountServiceTests : BaseNopTest
         _emailAccountService = GetService<IEmailAccountService>();
     }
 
-    [Test]
-    public async Task TestCrud()
+    protected override CrudData<EmailAccount> CrudData
     {
-        var insertItem = new EmailAccount
+        get
         {
-            Email = "test@test.com",
-            DisplayName = "Test name",
-            Host = "smtp.test.com",
-            Port = 25,
-            Username = "test_user",
-            Password = "test_password",
-            EnableSsl = false
-        };
+            var insertItem = new EmailAccount
+            {
+                Email = "test@test.com",
+                DisplayName = "Test name",
+                Host = "smtp.test.com",
+                Port = 25,
+                Username = "test_user",
+                Password = "test_password",
+                EnableSsl = false
+            };
 
-        var updateItem = new EmailAccount
-        {
-            Email = "test@test.com",
-            DisplayName = "Test name",
-            Host = "smtp.test.com",
-            Port = 430,
-            Username = "test_user",
-            Password = "test_password",
-            EnableSsl = true
-        };
+            var updateItem = new EmailAccount
+            {
+                Email = "test@test.com",
+                DisplayName = "Test name",
+                Host = "smtp.test.com",
+                Port = 430,
+                Username = "test_user",
+                Password = "test_password",
+                EnableSsl = true
+            };
 
-        await TestCrud(insertItem, _emailAccountService.InsertEmailAccountAsync, updateItem, _emailAccountService.UpdateEmailAccountAsync, _emailAccountService.GetEmailAccountByIdAsync, (item, other) => item.Port.Equals(other.Port) && item.EnableSsl.Equals(other.EnableSsl), _emailAccountService.DeleteEmailAccountAsync);
+            return new CrudData<EmailAccount>
+            {
+                BaseEntity = insertItem,
+                UpdatedEntity = updateItem,
+                Insert = _emailAccountService.InsertEmailAccountAsync,
+                Update = _emailAccountService.UpdateEmailAccountAsync,
+                GetById = _emailAccountService.GetEmailAccountByIdAsync,
+                IsEqual = (item, other) => item.Port.Equals(other.Port) && item.EnableSsl.Equals(other.EnableSsl),
+                Delete = _emailAccountService.DeleteEmailAccountAsync
+            };
+        }
     }
 
 }

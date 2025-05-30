@@ -1,5 +1,6 @@
 ﻿using FluentValidation.TestHelper;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Tax;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Web.Models.Customer;
@@ -13,17 +14,19 @@ public class CustomerInfoValidatorTests : BaseNopTest
 {
     private ILocalizationService _localizationService;
     private IStateProvinceService _stateProvinceService;
+    private TaxSettings _taxSettings;
 
     [OneTimeSetUp]
     public void SetUp()
     {
         _localizationService = GetService<ILocalizationService>();
         _stateProvinceService = GetService<IStateProvinceService>();
+        _taxSettings = GetService<TaxSettings>();
     }
 
     private CustomerInfoValidator GetDefaultValidator()
     {
-        return new CustomerInfoValidator(_localizationService, _stateProvinceService, GetService<CustomerSettings>());
+        return new CustomerInfoValidator(_localizationService, _stateProvinceService, GetService<CustomerSettings>(), _taxSettings);
     }
 
     [Test]
@@ -67,12 +70,13 @@ public class CustomerInfoValidatorTests : BaseNopTest
     [Test]
     public void ShouldHaveErrorWhenFirstNameIsNullOrEmpty()
     {
-        var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-            new CustomerSettings
-            {
-                FirstNameEnabled = true,
-                FirstNameRequired = true
-            });
+        var customerSettings = new CustomerSettings
+        {
+            FirstNameEnabled = true,
+            FirstNameRequired = true
+        };
+
+        var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, customerSettings, _taxSettings);
 
         var model = new CustomerInfoModel
         {
@@ -86,12 +90,13 @@ public class CustomerInfoValidatorTests : BaseNopTest
     [Test]
     public void ShouldNotHaveErrorWhenFirstNameIsSpecified()
     {
-        var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-            new CustomerSettings
-            {
-                FirstNameEnabled = true,
-                FirstNameRequired = true
-            });
+        var customerSettings = new CustomerSettings
+        {
+            FirstNameEnabled = true,
+            FirstNameRequired = true
+        };
+
+        var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, customerSettings, _taxSettings);
 
         var model = new CustomerInfoModel
         {
@@ -104,26 +109,24 @@ public class CustomerInfoValidatorTests : BaseNopTest
     public void ShouldHaveErrorWhenLastNameIsNullOrEmpty()
     {
         var model = new CustomerInfoModel();
-
         //required
-        var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-            new CustomerSettings
-            {
-                LastNameEnabled = true,
-                LastNameRequired = true
-            });
+        var customerSettings = new CustomerSettings
+        {
+            LastNameEnabled = true,
+            LastNameRequired = true
+        };
+
+        var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, customerSettings, _taxSettings);
+
         model.LastName = null;
         validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.LastName);
         model.LastName = string.Empty;
         validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.LastName);
 
         //not required
-        validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-            new CustomerSettings
-            {
-                LastNameEnabled = true,
-                LastNameRequired = false
-            });
+        customerSettings.LastNameRequired = false;
+        validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, customerSettings, _taxSettings);
+
         model.LastName = null;
         validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.LastName);
         model.LastName = string.Empty;
@@ -133,11 +136,12 @@ public class CustomerInfoValidatorTests : BaseNopTest
     [Test]
     public void ShouldNotHaveErrorWhenLastNameIsSpecified()
     {
-        var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-            new CustomerSettings
-            {
-                LastNameEnabled = true
-            });
+        var customerSettings = new CustomerSettings
+        {
+            LastNameEnabled = true
+        };
+
+        var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, customerSettings, _taxSettings);
 
         var model = new CustomerInfoModel
         {
@@ -152,24 +156,23 @@ public class CustomerInfoValidatorTests : BaseNopTest
         var model = new CustomerInfoModel();
 
         //required
-        var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-            new CustomerSettings
-            {
-                CompanyEnabled = true,
-                CompanyRequired = true
-            });
+        var customerSettings = new CustomerSettings
+        {
+            CompanyEnabled = true,
+            CompanyRequired = true
+        };
+
+        var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, customerSettings, _taxSettings);
+
         model.Company = null;
         validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Company);
         model.Company = string.Empty;
         validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Company);
 
         //not required
-        validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-            new CustomerSettings
-            {
-                CompanyEnabled = true,
-                CompanyRequired = false
-            });
+        customerSettings.CompanyRequired = false;
+        validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, customerSettings, _taxSettings);
+
         model.Company = null;
         validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.Company);
         model.Company = string.Empty;
@@ -179,11 +182,12 @@ public class CustomerInfoValidatorTests : BaseNopTest
     [Test]
     public void ShouldNotHaveErrorWhenCompanyIsSpecified()
     {
-        var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-            new CustomerSettings
-            {
-                CompanyEnabled = true
-            });
+        var customerSettings = new CustomerSettings
+        {
+            CompanyEnabled = true
+        };
+
+        var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, customerSettings, _taxSettings);
 
         var model = new CustomerInfoModel
         {
@@ -198,24 +202,23 @@ public class CustomerInfoValidatorTests : BaseNopTest
         var model = new CustomerInfoModel();
 
         //required
-        var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-            new CustomerSettings
-            {
-                StreetAddressEnabled = true,
-                StreetAddressRequired = true
-            });
+        var customerSettings = new CustomerSettings
+        {
+            StreetAddressEnabled = true,
+            StreetAddressRequired = true
+        };
+
+        var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, customerSettings, _taxSettings);
+
         model.StreetAddress = null;
         validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.StreetAddress);
         model.StreetAddress = string.Empty;
         validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.StreetAddress);
 
         //not required
-        validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-            new CustomerSettings
-            {
-                StreetAddressEnabled = true,
-                StreetAddressRequired = false
-            });
+        customerSettings.StreetAddressRequired = false;
+        validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, customerSettings, _taxSettings);
+
         model.StreetAddress = null;
         validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.StreetAddress);
         model.StreetAddress = string.Empty;
@@ -225,11 +228,12 @@ public class CustomerInfoValidatorTests : BaseNopTest
     [Test]
     public void ShouldNotHaveErrorWhenStreetAddressIsSpecified()
     {
-        var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-            new CustomerSettings
-            {
-                StreetAddressEnabled = true
-            });
+        var customerSettings = new CustomerSettings
+        {
+            StreetAddressEnabled = true
+        };
+
+        var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, customerSettings, _taxSettings);
 
         var model = new CustomerInfoModel
         {
@@ -244,24 +248,23 @@ public class CustomerInfoValidatorTests : BaseNopTest
         var model = new CustomerInfoModel();
 
         //required
-        var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-            new CustomerSettings
-            {
-                StreetAddress2Enabled = true,
-                StreetAddress2Required = true
-            });
+        var customerSettings = new CustomerSettings
+        {
+            StreetAddress2Enabled = true,
+            StreetAddress2Required = true
+        };
+
+        var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, customerSettings, _taxSettings);
+
         model.StreetAddress2 = null;
         validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.StreetAddress2);
         model.StreetAddress2 = string.Empty;
         validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.StreetAddress2);
 
         //not required
-        validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-            new CustomerSettings
-            {
-                StreetAddress2Enabled = true,
-                StreetAddress2Required = false
-            });
+        customerSettings.StreetAddress2Required = false;
+        validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, customerSettings, _taxSettings);
+
         model.StreetAddress2 = null;
         validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.StreetAddress2);
         model.StreetAddress2 = string.Empty;
@@ -271,11 +274,12 @@ public class CustomerInfoValidatorTests : BaseNopTest
     [Test]
     public void ShouldNotHaveErrorWhenStreetAddress2IsSpecified()
     {
-        var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-            new CustomerSettings
-            {
-                StreetAddress2Enabled = true
-            });
+        var customerSettings = new CustomerSettings
+        {
+            StreetAddress2Enabled = true
+        };
+
+        var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, customerSettings, _taxSettings);
 
         var model = new CustomerInfoModel
         {
@@ -290,24 +294,23 @@ public class CustomerInfoValidatorTests : BaseNopTest
         var model = new CustomerInfoModel();
 
         //required
-        var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-            new CustomerSettings
-            {
-                ZipPostalCodeEnabled = true,
-                ZipPostalCodeRequired = true
-            });
+        var customerSettings = new CustomerSettings
+        {
+            ZipPostalCodeEnabled = true,
+            ZipPostalCodeRequired = true
+        };
+
+        var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, customerSettings, _taxSettings);
+
         model.ZipPostalCode = null;
         validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.ZipPostalCode);
         model.ZipPostalCode = string.Empty;
         validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.ZipPostalCode);
 
         //not required
-        validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-            new CustomerSettings
-            {
-                ZipPostalCodeEnabled = true,
-                ZipPostalCodeRequired = false
-            });
+        customerSettings.ZipPostalCodeRequired = false;
+        validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, customerSettings, _taxSettings);
+
         model.ZipPostalCode = null;
         validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.ZipPostalCode);
         model.ZipPostalCode = string.Empty;
@@ -317,11 +320,12 @@ public class CustomerInfoValidatorTests : BaseNopTest
     [Test]
     public void ShouldNotHaveErrorWhenZipPostalCodeIsSpecified()
     {
-        var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-            new CustomerSettings
-            {
-                StreetAddress2Enabled = true
-            });
+        var customerSettings = new CustomerSettings
+        {
+            ZipPostalCodeEnabled = true
+        };
+
+        var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, customerSettings, _taxSettings);
 
         var model = new CustomerInfoModel
         {
@@ -336,24 +340,23 @@ public class CustomerInfoValidatorTests : BaseNopTest
         var model = new CustomerInfoModel();
 
         //required
-        var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-            new CustomerSettings
-            {
-                CityEnabled = true,
-                CityRequired = true
-            });
+        var customerSettings = new CustomerSettings
+        {
+            CityEnabled = true,
+            CityRequired = true
+        };
+
+        var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, customerSettings, _taxSettings);
+
         model.City = null;
         validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.City);
         model.City = string.Empty;
         validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.City);
 
         //not required
-        validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-            new CustomerSettings
-            {
-                CityEnabled = true,
-                CityRequired = false
-            });
+        customerSettings.CityRequired = false;
+        validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, customerSettings, _taxSettings);
+
         model.City = null;
         validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.City);
         model.City = string.Empty;
@@ -363,11 +366,12 @@ public class CustomerInfoValidatorTests : BaseNopTest
     [Test]
     public void ShouldNotHaveErrorWhenCityIsSpecified()
     {
-        var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-            new CustomerSettings
-            {
-                CityEnabled = true
-            });
+        var customerSettings = new CustomerSettings
+        {
+            CityEnabled = true
+        };
+
+        var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, customerSettings, _taxSettings);
 
         var model = new CustomerInfoModel
         {
@@ -382,24 +386,23 @@ public class CustomerInfoValidatorTests : BaseNopTest
         var model = new CustomerInfoModel();
 
         //required
-        var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-            new CustomerSettings
-            {
-                PhoneEnabled = true,
-                PhoneRequired = true
-            });
+        var customerSettings = new CustomerSettings
+        {
+            PhoneEnabled = true,
+            PhoneRequired = true
+        };
+
+        var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, customerSettings, _taxSettings);
+
         model.Phone = null;
         validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Phone);
         model.Phone = string.Empty;
         validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Phone);
 
         //not required
-        validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-            new CustomerSettings
-            {
-                PhoneEnabled = true,
-                PhoneRequired = false
-            });
+        customerSettings.PhoneRequired = false;
+        validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, customerSettings, _taxSettings);
+
         model.Phone = null;
         validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.Phone);
         model.Phone = string.Empty;
@@ -409,11 +412,12 @@ public class CustomerInfoValidatorTests : BaseNopTest
     [Test]
     public void ShouldNotHaveErrorWhenPhoneIsSpecified()
     {
-        var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-            new CustomerSettings
-            {
-                PhoneEnabled = true
-            });
+        var customerSettings = new CustomerSettings
+        {
+            PhoneEnabled = true
+        };
+
+        var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, customerSettings, _taxSettings);
 
         var model = new CustomerInfoModel
         {
@@ -428,24 +432,23 @@ public class CustomerInfoValidatorTests : BaseNopTest
         var model = new CustomerInfoModel();
 
         //required
-        var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-            new CustomerSettings
-            {
-                FaxEnabled = true,
-                FaxRequired = true
-            });
+        var customerSettings = new CustomerSettings
+        {
+            FaxEnabled = true,
+            FaxRequired = true
+        };
+
+        var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, customerSettings, _taxSettings);
+
         model.Fax = null;
         validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Fax);
         model.Fax = string.Empty;
         validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Fax);
 
         //not required
-        validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-            new CustomerSettings
-            {
-                FaxEnabled = true,
-                FaxRequired = false
-            });
+        customerSettings.FaxRequired = false;
+        validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, customerSettings, _taxSettings);
+
         model.Fax = null;
         validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.Fax);
         model.Fax = string.Empty;
@@ -455,11 +458,12 @@ public class CustomerInfoValidatorTests : BaseNopTest
     [Test]
     public void ShouldNotHaveErrorWhenFaxIsSpecified()
     {
-        var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-            new CustomerSettings
-            {
-                FaxEnabled = true
-            });
+        var customerSettings = new CustomerSettings
+        {
+            FaxEnabled = true
+        };
+
+        var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, customerSettings, _taxSettings);
 
         var model = new CustomerInfoModel
         {

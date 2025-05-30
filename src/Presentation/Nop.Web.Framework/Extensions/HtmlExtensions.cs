@@ -248,7 +248,7 @@ public static class HtmlExtensions
         builder.MergeAttribute("class", "ico-help");
         builder.MergeAttribute("data-toggle", "tooltip");
         var icon = new StringBuilder();
-        icon.Append("<i class='fas fa-question-circle'></i>");
+        icon.Append("<i class='fas fa-circle-question'></i>");
         builder.InnerHtml.AppendHtml(icon.ToString());
 
         //render tag

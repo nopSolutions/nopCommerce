@@ -199,8 +199,9 @@ using SkiaSharp;
          var (width, height) = ValidateImageMeasures(image, maxWidth, maxHeight);
 
          var toBitmap = new SKBitmap(width, height, image.ColorType, image.AlphaType);
+         var samplingOptions = new SKSamplingOptions(SKFilterMode.Nearest, SKMipmapMode.None);
 
-         if (!image.ScalePixels(toBitmap, SKFilterQuality.None))
+         if (!image.ScalePixels(toBitmap, samplingOptions))
              throw new Exception("Image scaling");
 
          var newImage = SKImage.FromBitmap(toBitmap);

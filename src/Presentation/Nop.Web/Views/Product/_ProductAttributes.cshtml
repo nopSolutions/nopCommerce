@@ -15,7 +15,7 @@
             {
                 var controlId = $"{NopCatalogDefaults.ProductAttributePrefix}{attribute.Id}";
                 var textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
-                <dt id="@($"{NopCatalogDefaults.ProductAttributePrefix}label_{attribute.Id}")">
+                <dt id="@($"{NopCatalogDefaults.ProductAttributePrefix}label_{attribute.Id}")" @(attribute.HasCondition ? Html.Raw("style = \"display: none\"") : null)>
                     <label class="text-prompt">
                         @textPrompt
                     </label>
@@ -30,7 +30,7 @@
                         </div>
                     }
                 </dt>
-                <dd id="@($"{NopCatalogDefaults.ProductAttributePrefix}input_{attribute.Id}")">
+                <dd id="@($"{NopCatalogDefaults.ProductAttributePrefix}input_{attribute.Id}")" @(attribute.HasCondition ? Html.Raw("style = \"display: none\"") : null)>
                     @switch (attribute.AttributeControlType)
                     {
                         case AttributeControlType.DropdownList:

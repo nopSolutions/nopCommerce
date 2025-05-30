@@ -13,7 +13,7 @@ public static partial class NopModelCacheDefaults
     /// {2} : roles of the current user
     /// {3} : current store ID
     /// </remarks>
-    public static CacheKey ManufacturerNavigationModelKey => new("Nop.pres.manufacturer.navigation-{0}-{1}-{2}-{3}", ManufacturerNavigationPrefixCacheKey);
+    public static CacheKey ManufacturerNavigationModelKey => new("Nop.pres.manufacturer.navigation-{0}-{1}-{2}-{3}");
     public static string ManufacturerNavigationPrefixCacheKey => "Nop.pres.manufacturer.navigation";
 
     /// <summary>
@@ -29,7 +29,7 @@ public static partial class NopModelCacheDefaults
     /// {1} : roles of the current user
     /// {2} : current store ID
     /// </remarks>
-    public static CacheKey CategoryAllModelKey => new("Nop.pres.category.all-{0}-{1}-{2}", CategoryAllPrefixCacheKey);
+    public static CacheKey CategoryAllModelKey => new("Nop.pres.category.all-{0}-{1}-{2}");
     public static string CategoryAllPrefixCacheKey => "Nop.pres.category.all";
 
     /// <summary>
@@ -42,7 +42,7 @@ public static partial class NopModelCacheDefaults
     /// {3} : language ID
     /// {4} : is connection SSL secured (included in a category picture URL)
     /// </remarks>
-    public static CacheKey CategoryHomepageKey => new("Nop.pres.category.homepage-{0}-{1}-{2}-{3}-{4}", CategoryHomepagePrefixCacheKey);
+    public static CacheKey CategoryHomepageKey => new("Nop.pres.category.homepage-{0}-{1}-{2}-{3}-{4}");
     public static string CategoryHomepagePrefixCacheKey => "Nop.pres.category.homepage";
 
     /// <summary>
@@ -53,7 +53,7 @@ public static partial class NopModelCacheDefaults
     /// {1} : roles of the current user
     /// {2} : current store ID
     /// </remarks>
-    public static CacheKey CategoryXmlAllModelKey => new("Nop.pres.categoryXml.all-{0}-{1}-{2}", CategoryXmlAllPrefixCacheKey);
+    public static CacheKey CategoryXmlAllModelKey => new("Nop.pres.categoryXml.all-{0}-{1}-{2}");
     public static string CategoryXmlAllPrefixCacheKey => "Nop.pres.categoryXml.all";
 
     /// <summary>
@@ -62,7 +62,7 @@ public static partial class NopModelCacheDefaults
     /// <remarks>
     /// {0} : current store ID
     /// </remarks>
-    public static CacheKey HomepageBestsellersIdsKey => new("Nop.pres.bestsellers.homepage-{0}", HomepageBestsellersIdsPrefixCacheKey);
+    public static CacheKey HomepageBestsellersIdsKey => new("Nop.pres.bestsellers.homepage-{0}");
     public static string HomepageBestsellersIdsPrefixCacheKey => "Nop.pres.bestsellers.homepage";
 
     /// <summary>
@@ -72,7 +72,7 @@ public static partial class NopModelCacheDefaults
     /// {0} : current product id
     /// {1} : current store ID
     /// </remarks>
-    public static CacheKey ProductsAlsoPurchasedIdsKey => new("Nop.pres.alsopuchased-{0}-{1}", ProductsAlsoPurchasedIdsPrefixCacheKey);
+    public static CacheKey ProductsAlsoPurchasedIdsKey => new("Nop.pres.alsopuchased-{0}-{1}");
     public static string ProductsAlsoPurchasedIdsPrefixCacheKey => "Nop.pres.alsopuchased";
 
     /// <summary>
@@ -87,7 +87,7 @@ public static partial class NopModelCacheDefaults
     /// {5} : is connection SSL secured?
     /// {6} : current store ID
     /// </remarks>
-    public static CacheKey ProductOverviewPicturesModelKey => new("Nop.pres.product.overviewpictures-{0}-{1}-{2}-{3}-{4}-{5}-{6}", ProductOverviewPicturesPrefixCacheKey, ProductOverviewPicturesPrefixCacheKeyById);
+    public static CacheKey ProductOverviewPicturesModelKey => new("Nop.pres.product.overviewpictures-{0}-{1}-{2}-{3}-{4}-{5}-{6}");
     public static string ProductOverviewPicturesPrefixCacheKey => "Nop.pres.product.overviewpictures";
     public static string ProductOverviewPicturesPrefixCacheKeyById => "Nop.pres.product.overviewpictures-{0}-";
 
@@ -102,7 +102,7 @@ public static partial class NopModelCacheDefaults
     /// {4} : is connection SSL secured?
     /// {5} : current store ID
     /// </remarks>
-    public static CacheKey ProductDetailsPicturesModelKey => new("Nop.pres.product.detailspictures-{0}-{1}-{2}-{3}-{4}-{5}", ProductDetailsPicturesPrefixCacheKey, ProductDetailsPicturesPrefixCacheKeyById);
+    public static CacheKey ProductDetailsPicturesModelKey => new("Nop.pres.product.detailspictures-{0}-{1}-{2}-{3}-{4}-{5}");
     public static string ProductDetailsPicturesPrefixCacheKey => "Nop.pres.product.detailspictures";
     public static string ProductDetailsPicturesPrefixCacheKeyById => "Nop.pres.product.detailspictures-{0}-";
 
@@ -113,7 +113,7 @@ public static partial class NopModelCacheDefaults
     /// {0} : product id
     /// {1} : current store ID
     /// </remarks>
-    public static CacheKey ProductReviewsModelKey => new("Nop.pres.product.reviews-{0}-{1}", ProductReviewsPrefixCacheKey, ProductReviewsPrefixCacheKeyById);
+    public static CacheKey ProductReviewsModelKey => new("Nop.pres.product.reviews-{0}-{1}");
 
     public static string ProductReviewsPrefixCacheKey => "Nop.pres.product.reviews";
     public static string ProductReviewsPrefixCacheKeyById => "Nop.pres.product.reviews-{0}-";
@@ -126,7 +126,7 @@ public static partial class NopModelCacheDefaults
     /// {1} : is connection SSL secured?
     /// {2} : current store ID
     /// </remarks>
-    public static CacheKey ProductAttributePictureModelKey => new("Nop.pres.productattribute.picture-{0}-{1}-{2}", ProductAttributePicturePrefixCacheKey);
+    public static CacheKey ProductAttributePictureModelKey => new("Nop.pres.productattribute.picture-{0}-{1}-{2}");
     public static string ProductAttributePicturePrefixCacheKey => "Nop.pres.productattribute.picture";
 
     /// <summary>
@@ -137,7 +137,7 @@ public static partial class NopModelCacheDefaults
     /// {1} : is connection SSL secured?
     /// {2} : current store ID
     /// </remarks>
-    public static CacheKey ProductAttributeImageSquarePictureModelKey => new("Nop.pres.productattribute.imagesquare.picture-{0}-{1}-{2}", ProductAttributeImageSquarePicturePrefixCacheKey);
+    public static CacheKey ProductAttributeImageSquarePictureModelKey => new("Nop.pres.productattribute.imagesquare.picture-{0}-{1}-{2}");
     public static string ProductAttributeImageSquarePicturePrefixCacheKey => "Nop.pres.productattribute.imagesquare.picture";
 
     /// <summary>
@@ -151,9 +151,19 @@ public static partial class NopModelCacheDefaults
     /// {4} : is connection SSL secured?
     /// {5} : current store ID
     /// </remarks>
-    public static CacheKey CategoryPictureModelKey => new("Nop.pres.category.picture-{0}-{1}-{2}-{3}-{4}-{5}", CategoryPicturePrefixCacheKey, CategoryPicturePrefixCacheKeyById);
+    public static CacheKey CategoryPictureModelKey => new("Nop.pres.category.picture-{0}-{1}-{2}-{3}-{4}-{5}");
     public static string CategoryPicturePrefixCacheKey => "Nop.pres.category.picture";
     public static string CategoryPicturePrefixCacheKeyById => "Nop.pres.category.picture-{0}-";
+
+    /// <summary>
+    /// Cache key for category list of the search box
+    /// </summary>
+    /// <remarks>
+    /// {0} : store id
+    /// {1} : language id
+    /// </remarks>
+    public static CacheKey SearchBoxCategoryListModelKey => new("Nop.pres.searchbox.categories-{0}-{1}");
+    public static string SearchBoxCategoryListPrefixCacheKey => "Nop.pres.searchbox.categories";
 
     /// <summary>
     /// Key for manufacturer picture caching
@@ -166,7 +176,7 @@ public static partial class NopModelCacheDefaults
     /// {4} : is connection SSL secured?
     /// {5} : current store ID
     /// </remarks>
-    public static CacheKey ManufacturerPictureModelKey => new("Nop.pres.manufacturer.picture-{0}-{1}-{2}-{3}-{4}-{5}", ManufacturerPicturePrefixCacheKey, ManufacturerPicturePrefixCacheKeyById);
+    public static CacheKey ManufacturerPictureModelKey => new("Nop.pres.manufacturer.picture-{0}-{1}-{2}-{3}-{4}-{5}");
     public static string ManufacturerPicturePrefixCacheKey => "Nop.pres.manufacturer.picture";
     public static string ManufacturerPicturePrefixCacheKeyById => "Nop.pres.manufacturer.picture-{0}-";
 
@@ -181,9 +191,20 @@ public static partial class NopModelCacheDefaults
     /// {4} : is connection SSL secured?
     /// {5} : current store ID
     /// </remarks>
-    public static CacheKey VendorPictureModelKey => new("Nop.pres.vendor.picture-{0}-{1}-{2}-{3}-{4}-{5}", VendorPicturePrefixCacheKey, VendorPicturePrefixCacheKeyById);
+    public static CacheKey VendorPictureModelKey => new("Nop.pres.vendor.picture-{0}-{1}-{2}-{3}-{4}-{5}");
     public static string VendorPicturePrefixCacheKey => "Nop.pres.vendor.picture";
     public static string VendorPicturePrefixCacheKeyById => "Nop.pres.vendor.picture-{0}-";
+
+    /// <summary>
+    /// Key for vendor reviews caching
+    /// </summary>
+    /// <remarks>
+    /// {0} : vendor id
+    /// {1} : current store ID
+    /// </remarks>
+    public static CacheKey VendorReviewsModelKey => new("Nop.pres.vendor.reviews-{0}-{1}");
+    public static string VendorReviewsPrefixCacheKey => "Nop.pres.vendor.reviews";
+    public static string VendorReviewsByVendorIdPrefixCacheKey => "Nop.pres.vendor.reviews-{0}-";
 
     /// <summary>
     /// Key for cart picture caching
@@ -198,7 +219,7 @@ public static partial class NopModelCacheDefaults
     /// {4} : is connection SSL secured?
     /// {5} : current store ID
     /// </remarks>
-    public static CacheKey CartPictureModelKey => new("Nop.pres.cart.picture-{0}-{1}-{2}-{3}-{4}-{5}", CartPicturePrefixCacheKey);
+    public static CacheKey CartPictureModelKey => new("Nop.pres.cart.picture-{0}-{1}-{2}-{3}-{4}-{5}");
     public static string CartPicturePrefixCacheKey => "Nop.pres.cart.picture";
 
     /// <summary>
@@ -214,7 +235,7 @@ public static partial class NopModelCacheDefaults
     /// {4} : is connection SSL secured?
     /// {5} : current store ID
     /// </remarks>
-    public static CacheKey OrderPictureModelKey => new("Nop.pres.order.picture-{0}-{1}-{2}-{3}-{4}-{5}", OrderPicturePrefixCacheKey);
+    public static CacheKey OrderPictureModelKey => new("Nop.pres.order.picture-{0}-{1}-{2}-{3}-{4}-{5}");
     public static string OrderPicturePrefixCacheKey => "Nop.pres.order.picture";
 
     /// <summary>
@@ -224,7 +245,7 @@ public static partial class NopModelCacheDefaults
     /// {0} : language ID
     /// {1} : current store ID
     /// </remarks>
-    public static CacheKey HomepagePollsModelKey => new("Nop.pres.poll.homepage-{0}-{1}", PollsPrefixCacheKey);
+    public static CacheKey HomepagePollsModelKey => new("Nop.pres.poll.homepage-{0}-{1}");
     /// <summary>
     /// Key for polls by system name
     /// </summary>
@@ -233,7 +254,7 @@ public static partial class NopModelCacheDefaults
     /// {1} : language ID
     /// {2} : current store ID
     /// </remarks>
-    public static CacheKey PollBySystemNameModelKey => new("Nop.pres.poll.systemname-{0}-{1}-{2}", PollsPrefixCacheKey);
+    public static CacheKey PollBySystemNameModelKey => new("Nop.pres.poll.systemname-{0}-{1}-{2}");
     public static string PollsPrefixCacheKey => "Nop.pres.poll";
 
     /// <summary>
@@ -243,7 +264,7 @@ public static partial class NopModelCacheDefaults
     /// {0} : language ID
     /// {1} : current store ID
     /// </remarks>
-    public static CacheKey BlogMonthsModelKey => new("Nop.pres.blog.months-{0}-{1}", BlogPrefixCacheKey);
+    public static CacheKey BlogMonthsModelKey => new("Nop.pres.blog.months-{0}-{1}");
     public static string BlogPrefixCacheKey => "Nop.pres.blog";
 
     /// <summary>
@@ -253,7 +274,7 @@ public static partial class NopModelCacheDefaults
     /// {0} : language ID
     /// {1} : current store ID
     /// </remarks>
-    public static CacheKey HomepageNewsModelKey => new("Nop.pres.news.homepage-{0}-{1}", NewsPrefixCacheKey);
+    public static CacheKey HomepageNewsModelKey => new("Nop.pres.news.homepage-{0}-{1}");
     public static string NewsPrefixCacheKey => "Nop.pres.news";
 
     /// <summary>
@@ -264,7 +285,7 @@ public static partial class NopModelCacheDefaults
     /// {1} : current theme
     /// {2} : is connection SSL secured (included in a picture URL)
     /// </remarks>
-    public static CacheKey StoreLogoPath => new("Nop.pres.logo-{0}-{1}-{2}", StoreLogoPathPrefixCacheKey);
+    public static CacheKey StoreLogoPath => new("Nop.pres.logo-{0}-{1}-{2}");
     public static string StoreLogoPathPrefixCacheKey => "Nop.pres.logo";
 
     /// <summary>
@@ -275,7 +296,7 @@ public static partial class NopModelCacheDefaults
     /// {1} : roles of the current user
     /// {2} : current store ID
     /// </remarks>
-    public static CacheKey SitemapPageModelKey => new("Nop.pres.sitemap.page-{0}-{1}-{2}", SitemapPrefixCacheKey);
+    public static CacheKey SitemapPageModelKey => new("Nop.pres.sitemap.page-{0}-{1}-{2}");
     /// <summary>
     /// Key for sitemap on the sitemap SEO page
     /// </summary>
@@ -285,6 +306,6 @@ public static partial class NopModelCacheDefaults
     /// {2} : roles of the current user
     /// {3} : current store ID
     /// </remarks>
-    public static CacheKey SitemapSeoModelKey => new("Nop.pres.sitemap.seo-{0}-{1}-{2}-{3}", SitemapPrefixCacheKey);
+    public static CacheKey SitemapSeoModelKey => new("Nop.pres.sitemap.seo-{0}-{1}-{2}-{3}");
     public static string SitemapPrefixCacheKey => "Nop.pres.sitemap";
 }

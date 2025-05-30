@@ -1,0 +1,75 @@
+.icon-group-container {
+  --fill: transparent;
+  --text: currentColor;
+  --stroke: #ced4da;
+  --stroke-width: 0px;
+  display: flex;
+  flex-flow: wrap;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 10px;
+  margin: 0px;
+  max-width: 550px;
+  border: 1px solid #788ae2;
+}
+
+.icon-label {
+  all: unset;
+  appearance: none;
+  --stroke-width: 2px;
+  --fill: transparent;
+  --stroke: #ced4da;
+  --text: #3A4B61;
+  box-sizing: border-box;
+  cursor: pointer;
+  background-color: var(--fill);
+  box-shadow: inset 0 0 0 var(--stroke-width) var(--stroke);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 24px;
+  border-radius: 8px;
+  gap: 16px;
+  transition: box-shadow 200ms linear;
+}
+
+.icon-label:hover {
+  --stroke: #2B3E52;
+}
+
+.icon-container {
+  display: flex;
+  height: 32px;
+  aspect-ratio: 1 / 1;
+}
+
+.icon-container svg {
+  width: 100%;
+  height: 100%;
+}
+
+.icon-label:has(input:checked) {
+  --fill: #E0EAFE;
+  --text: #136EF8;
+  --stroke: #136EF8;
+}
+
+.icon-label:has(input:disabled) {
+  --fill: #e9ecef;
+}
+
+.icon-label input {
+  opacity: 0;
+  position: absolute;
+}
+
+.accessibe-form .form-control {
+  border: 1px solid #788AE2;
+}
+
+.accessibe-form .form-control:focus-visible {
+  outline: 2px inset #3b96f7;
+  outline-offset: 1px;
+}

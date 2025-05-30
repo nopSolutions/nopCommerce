@@ -7,6 +7,7 @@ using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
@@ -44,6 +45,7 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected readonly CaptchaSettings _captchaSettings;
     protected readonly CatalogSettings _catalogSettings;
     protected readonly CommonSettings _commonSettings;
+    protected readonly CurrencySettings _currencySettings;
     protected readonly CustomerSettings _customerSettings;
     protected readonly DisplayDefaultFooterItemSettings _displayDefaultFooterItemSettings;
     protected readonly ForumSettings _forumSettings;
@@ -84,6 +86,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         CaptchaSettings captchaSettings,
         CatalogSettings catalogSettings,
         CommonSettings commonSettings,
+        CurrencySettings currencySettings,
         CustomerSettings customerSettings,
         DisplayDefaultFooterItemSettings displayDefaultFooterItemSettings,
         ForumSettings forumSettings,
@@ -120,6 +123,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         _captchaSettings = captchaSettings;
         _catalogSettings = catalogSettings;
         _commonSettings = commonSettings;
+        _currencySettings = currencySettings;
         _customerSettings = customerSettings;
         _displayDefaultFooterItemSettings = displayDefaultFooterItemSettings;
         _forumSettings = forumSettings;
@@ -157,23 +161,17 @@ public partial class CommonModelFactory : ICommonModelFactory
 
     #region Utilities
 
-    private async Task DisallowAjaxRoutesAsync(StringBuilder stringBuilder)
+    private async Task<bool> IsHomePageAsync()
     {
-        var routes = new[] { "/category/products", "/manufacturer/products", "/tag/products", "/product/search", "/vendor/products", "/newproducts/products" };
-        foreach (var route in routes)
-        {
-            stringBuilder.AppendLine($"Disallow: {route}");
-        }
+        var storeLocationUri = new Uri(_webHelper.GetStoreLocation().TrimEnd('/'));
+        var currentPageUri = new Uri(_webHelper.GetThisPageUrl(false).TrimEnd('/'));
 
-        if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
-        {
-            var store = await _storeContext.GetCurrentStoreAsync();
-            foreach (var language in await _languageService.GetAllLanguagesAsync(storeId: store.Id))
-            {
-                foreach (var route in routes)
-                    stringBuilder.AppendLine($"Disallow: /{language.UniqueSeoCode}{route}");
-            }
-        }
+        if (!_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+            return storeLocationUri.Equals(currentPageUri);
+
+        var currentLanguage = await _workContext.GetWorkingLanguageAsync();
+
+        return Uri.TryCreate(storeLocationUri, currentLanguage.UniqueSeoCode, out var result) && result.Equals(currentPageUri);
     }
 
     /// <summary>
@@ -307,7 +305,8 @@ public partial class CommonModelFactory : ICommonModelFactory
         var model = new CurrencySelectorModel
         {
             CurrentCurrencyId = (await _workContext.GetWorkingCurrencyAsync()).Id,
-            AvailableCurrencies = availableCurrencies
+            AvailableCurrencies = availableCurrencies,
+            DisplayCurrencySymbol = _currencySettings.DisplayCurrencySymbolInCurrencySelector,
         };
 
         return model;
@@ -466,9 +465,9 @@ public partial class CommonModelFactory : ICommonModelFactory
             NewProductsEnabled = _catalogSettings.NewProductsEnabled,
             DisplayTaxShippingInfoFooter = _catalogSettings.DisplayTaxShippingInfoFooter,
             HidePoweredByNopCommerce = _storeInformationSettings.HidePoweredByNopCommerce,
-            IsHomePage = _webHelper.GetStoreLocation().Equals(_webHelper.GetThisPageUrl(false), StringComparison.InvariantCultureIgnoreCase),
+            IsHomePage = await IsHomePageAsync(),
             AllowCustomersToApplyForVendorAccount = _vendorSettings.AllowCustomersToApplyForVendorAccount,
-            AllowCustomersToCheckGiftCardBalance = _customerSettings.AllowCustomersToCheckGiftCardBalance && _captchaSettings.Enabled,
+            AllowCustomersToCheckGiftCardBalance = _customerSettings.AllowCustomersToCheckGiftCardBalance,
             Topics = topicModels,
             DisplaySitemapFooterItem = _displayDefaultFooterItemSettings.DisplaySitemapFooterItem,
             DisplayContactUsFooterItem = _displayDefaultFooterItemSettings.DisplayContactUsFooterItem,
@@ -655,12 +654,6 @@ public partial class CommonModelFactory : ICommonModelFactory
                 sb.Append(robotsFileContent);
             }
         }
-
-        #region Issue 7286 Version 4.70 (bug fixes)
-
-        await DisallowAjaxRoutesAsync(sb);
-
-        #endregion
 
         return sb.ToString();
     }

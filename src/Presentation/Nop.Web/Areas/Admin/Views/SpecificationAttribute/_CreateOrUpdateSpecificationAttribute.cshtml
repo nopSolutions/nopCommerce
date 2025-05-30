@@ -24,7 +24,7 @@
                 <nop-card asp-name="specification-attribute-options" asp-icon="fas fa-object-group" asp-title="@T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options")" asp-hide-block-attribute-name="@hideOptionsBlockAttributeName" asp-hide="@hideOptionsBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdateSpecificationAttribute.Options", Model)</nop-card>
                 @if (Model.Id > 0)
                 {
-                    <nop-card asp-name="specification-attribute-usedbyproducts" asp-icon="fas fa-check-square" asp-title="@T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.UsedByProducts")" asp-hide-block-attribute-name="@hideUsedByProductsBlockAttributeName" asp-hide="@hideUsedByProductsBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdateSpecificationAttribute.UsedByProducts", Model)</nop-card>
+                    <nop-card asp-name="specification-attribute-usedbyproducts" asp-icon="fas fa-square-check" asp-title="@T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.UsedByProducts")" asp-hide-block-attribute-name="@hideUsedByProductsBlockAttributeName" asp-hide="@hideUsedByProductsBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdateSpecificationAttribute.UsedByProducts", Model)</nop-card>
                 }
                 @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.SpecificationAttributeDetailsBlock, additionalData = Model })
             </nop-cards>

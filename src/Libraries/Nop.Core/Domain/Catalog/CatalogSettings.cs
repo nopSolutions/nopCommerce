@@ -250,6 +250,11 @@ public partial class CatalogSettings : ISettings
     public int NumberOfBestsellersOnHomepage { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether the category dropdown is displayed with the search box
+    /// </summary>
+    public bool ShowSearchBoxCategories { get; set; }
+
+    /// <summary>
     /// Gets or sets a number of products per page on the search products page
     /// </summary>
     public int SearchPageProductsPerPage { get; set; }
@@ -470,9 +475,19 @@ public partial class CatalogSettings : ISettings
     public bool ExportImportProductUseLimitedToStores { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether need to use "limited to stores" property for exported/imported categories
+    /// </summary>
+    public bool ExportImportCategoryUseLimitedToStores { get; set; }
+
+    /// <summary>
     /// Gets or sets a value indicating whether the products need to be exported/imported with their specification attributes
     /// </summary>
     public bool ExportImportProductSpecificationAttributes { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the products need to be exported/imported with their tier prices
+    /// </summary>
+    public bool ExportImportTierPrices { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether need create dropdown list for export
@@ -589,4 +604,9 @@ public partial class CatalogSettings : ISettings
     /// Gets or sets a value indicating whether standard search will be used when the search provider throws an exception
     /// </summary>
     public bool UseStandardSearchWhenSearchProviderThrowsException { get; set; }
+
+    /// <summary>
+    /// Gets or sets a number of reviews per page on vendor reviews page
+    /// </summary>
+    public int VendorProductReviewsPageSize { get; set; }
 }

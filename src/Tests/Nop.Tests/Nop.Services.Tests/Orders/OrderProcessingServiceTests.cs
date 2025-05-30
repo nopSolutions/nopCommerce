@@ -5,6 +5,7 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Data;
 using Nop.Services.Orders;
+using Nop.Services.Payments;
 using Nop.Tests.Nop.Services.Tests.Payments;
 using NUnit.Framework;
 
@@ -32,6 +33,19 @@ public class OrderProcessingServiceTests : ServiceTest
         TestPaymentMethod.TestSupportVoid = false;
 
         await GetService<IRepository<RecurringPayment>>().TruncateAsync();
+    }
+
+    [Test]
+    public async Task CanGenerateOrderGuid()
+    {
+        var request = new ProcessPaymentRequest();
+        request.OrderGuid.Should().NotBe(Guid.Empty);
+        var oldGuid = request.OrderGuid;
+        await _orderProcessingService.SetProcessPaymentRequestAsync(request);
+        request = new ProcessPaymentRequest();
+        request.OrderGuid.Should().NotBe(oldGuid);
+        await _orderProcessingService.SetProcessPaymentRequestAsync(request);
+        request.OrderGuid.Should().Be(oldGuid);
     }
 
     [Test]

@@ -1,4 +1,5 @@
 ﻿using FluentMigrator;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
 using Nop.Data;
@@ -7,19 +8,22 @@ using Nop.Services.Security;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo480;
 
-[NopMigration("2023-05-21 12:00:00", "ACL. Added advanced permissions")]
+[NopMigration("2023-11-07 12:00:00", "ACL. Added advanced permissions")]
 public class AclMigration : Migration
 {
+    protected readonly IRepository<CustomerRole> _customerRoleRepository;
     protected readonly IRepository<Language> _languageRepository;
     protected readonly IRepository<LocaleStringResource> _localeStringRepository;
     protected readonly IRepository<PermissionRecord> _permissionRepository;
     protected readonly IRepository<PermissionRecordCustomerRoleMapping> _permissionRecordCustomerRoleMappingRepository;
 
-    public AclMigration(IRepository<Language> languageRepository,
+    public AclMigration(IRepository<CustomerRole> customerRoleRepository,
+        IRepository<Language> languageRepository,
         IRepository<LocaleStringResource> localeStringRepository,
         IRepository<PermissionRecord> permissionRepository,
         IRepository<PermissionRecordCustomerRoleMapping> permissionRecordCustomerRoleMappingRepository)
     {
+        _customerRoleRepository = customerRoleRepository;
         _languageRepository = languageRepository;
         _localeStringRepository = localeStringRepository;
         _permissionRepository = permissionRepository;
@@ -152,6 +156,36 @@ public class AclMigration : Migration
         insertMappings("AccessClosedStore", StandardPermission.PublicStore.ACCESS_CLOSED_STORE);
 
         insertMappings("EnableMultiFactorAuthentication", StandardPermission.Security.ENABLE_MULTI_FACTOR_AUTHENTICATION);
+
+        //add new permissions for vendors
+        var vendorRole = _customerRoleRepository.Table
+            .FirstOrDefault(x => x.IsSystemRole && x.SystemName == NopCustomerDefaults.VendorsRoleName);
+
+        if (vendorRole is not null)
+        {
+            var viewDiscountsPermission = _permissionRepository.Table.FirstOrDefault(x => x.SystemName == StandardPermission.Promotions.DISCOUNTS_VIEW);
+            if (viewDiscountsPermission is not null && !_permissionRecordCustomerRoleMappingRepository.Table.Any(x => x.CustomerRoleId == vendorRole.Id && x.PermissionRecordId == viewDiscountsPermission.Id))
+            {
+                _permissionRecordCustomerRoleMappingRepository.Insert(
+                        new PermissionRecordCustomerRoleMapping
+                        {
+                            CustomerRoleId = vendorRole.Id,
+                            PermissionRecordId = viewDiscountsPermission.Id
+                        });
+            }
+
+            var crudDiscountsPermission = _permissionRepository.Table.FirstOrDefault(x => x.SystemName == StandardPermission.Promotions.DISCOUNTS_CREATE_EDIT_DELETE);
+            if (crudDiscountsPermission is not null && !_permissionRecordCustomerRoleMappingRepository.Table.Any(x => x.CustomerRoleId == vendorRole.Id && x.PermissionRecordId == crudDiscountsPermission.Id))
+            {
+                _permissionRecordCustomerRoleMappingRepository.Insert(
+                        new PermissionRecordCustomerRoleMapping
+                        {
+                            CustomerRoleId = vendorRole.Id,
+                            PermissionRecordId = crudDiscountsPermission.Id
+                        });
+            }
+
+        }
     }
 
     public override void Down()

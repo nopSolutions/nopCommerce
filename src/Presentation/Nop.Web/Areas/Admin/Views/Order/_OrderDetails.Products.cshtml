@@ -110,10 +110,10 @@
                     @foreach (var item in Model.Items)
                     {
                         <tr>
-                        <td class="text-center">
-                            <img src="@item.PictureThumbnailUrl" alt="" title="" width="100%"/>
+                        <td class="text-center preview">
+                            <img src="@item.PictureThumbnailUrl" alt="" title=""/>
                         </td>
-                        <td style="width: 15%;" class="text-left">
+                        <td style="width: 25%;" class="text-left">
                             <em><a asp-controller="Product" asp-action="Edit" asp-route-id="@item.ProductId">@item.ProductName</a></em>
                             @if (!string.IsNullOrEmpty(item.AttributeInfo))
                             {
@@ -360,18 +360,18 @@
                         {
                             <td style="width: 15%;" class="text-center">
                                 <button type="submit" class="btn btn-default" name="btnEditOrderItem@(item.Id)" onclick="toggleOrderItemEdit@(item.Id)(true);return false;" id="btnEditOrderItem@(item.Id)">
-                                    <i class="fas fa-pencil-alt"></i>
+                                    <i class="fas fa-pencil"></i>
                                     @T("Admin.Common.Edit")
                                 </button>
 
                                 <button type="submit" class="btn btn-default" name="btnDeleteOrderItem@(item.Id)" id="btnDeleteOrderItem@(item.Id)">
-                                    <i class="far fa-trash-alt"></i>
+                                    <i class="far fa-trash-can"></i>
                                     @T("Admin.Common.Delete")
                                 </button>
                                 <nop-action-confirmation asp-button-id="@("btnDeleteOrderItem" + item.Id)" />
 
                                 <button type="submit" class="btn btn-default" name="btnSaveOrderItem@(item.Id)" id="btnSaveOrderItem@(item.Id)">
-                                    <i class="far fa-save"></i>
+                                    <i class="far fa-floppy-disk"></i>
                                     @T("Admin.Common.Save")
                                 </button>
                                 <nop-action-confirmation asp-button-id="@("btnSaveOrderItem" + item.Id)" />

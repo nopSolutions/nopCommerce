@@ -283,6 +283,12 @@ label, label + * {
   font-weight: normal;
 }
 
+.fieldset .warnings {
+  text-align: center;
+  margin-block-end: 30px;
+  color: #e4444c;
+}
+
 .form-fields {
   position: relative;
   border-top: 1px solid #e6e6e6;
@@ -347,6 +353,11 @@ label, label + * {
   margin: 0 0 0 5px;
 }
 
+.inputs .form-input-wrapper {
+  display: inline-block;
+  max-width: 100%;
+}
+
 .inputs.reversed {
   margin: 0 0 20px;
   text-align: center;
@@ -369,6 +380,7 @@ label, label + * {
   font-size: 13px;
   color: #e4434b;
   margin-top: 5px;
+  white-space: normal;
 }
 
 .field-validation-valid,
@@ -1007,25 +1019,26 @@ label, label + * {
   opacity: 1;
 }
 
-.search-box form {
-  display: inline-block;
-}
+/* Search box */
 
-.search-box form:after {
-  content: "";
-  display: block;
-  clear: both;
+.search-box form {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  gap: 10px 0;
 }
 
 .search-box input.search-box-text {
-  float: left;
   width: 200px;
   height: 36px;
   margin: 0 -1px 0 0;
 }
 
+.search-box .search-box-category {
+  height: 36px;
+}
+
 .search-box .search-box-button {
-  float: left;
   min-width: 86px;
   height: 36px;
   border: none;
@@ -1362,6 +1375,10 @@ label, label + * {
 
 .block a.product-picture {
   display: none;
+}
+
+.block a.product-picture img {
+  max-width: 100%;
 }
 
 .block a.product-picture:before {
@@ -2165,24 +2182,53 @@ label, label + * {
   background: url('../images/rating1.png') repeat-x;
 }
 
+.review-item-info {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px !important;
+}
+
+.vendor-product-reviews .product-review-box {
+  width: auto;
+}
+
+.vendor-product-reviews-title {
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.vendor-page .block {
+  max-width: 100%;
+  text-align: right;
+}
+
+.review-item-info .review-product-name a,
+.vendor-page .block a {
+  display: inline-block;
+  color: #4ab2f1;
+  cursor: pointer;
+}
+
 .product-review-box .rating div {
   height: 14px;
   background: url('../images/rating2.png') repeat-x;
   font-size: 0px;
   line-height: 0px;
 }
+
 .product-review-links {
-    display: inline-block;
+  display: inline-block;
 }
 
-  .product-review-links.add-review::before {
-    content: "|";
-    padding: 0 5px;
-  }
+.product-review-links.add-review::before {
+  content: "|";
+  padding: 0 5px;
+}
 
-  .add-review.product-no-reviews::before {
-      display: none;
-  }
+.add-review.product-no-reviews::before {
+  display: none;
+}
 
 .product-review-links a {
   text-decoration: underline;
@@ -3057,7 +3103,7 @@ label, label + * {
 }
 
 .product-review-item {
-  margin: 0 0 40px;
+  margin: 0 0 20px;
 }
 
 .product-review-item .review-item-head {
@@ -3893,6 +3939,36 @@ label, label + * {
   color: #4ab2f1;
 }
 
+.order-filters {
+  display: flex;
+  flex-direction: column;
+  padding-inline: 20px;
+  padding-block-end: 20px;
+}
+
+.order-filters__row {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  margin-block-end: 10px;
+  justify-content: end;
+}
+
+.order-filters__label {
+  line-height: 26px;
+  color: #444;
+  margin-inline-end: 10px;
+  min-width: 50px;
+}
+
+.order-filters__input {
+  background-color: #fff;
+  height: 36px;
+  border: 1px solid #ddd;
+  padding: 8px;
+  vertical-align: middle;
+}
+
 .address-list-page .add-button {
   margin: 0 0 20px;
   text-align: center;
@@ -3981,6 +4057,12 @@ label, label + * {
 
 .change-password-page .fieldset {
   margin: 0 0 30px;
+}
+
+.change-password-recovery-link {
+  text-align: right;
+  font-size: 13px;
+  margin-top: 5px;
 }
 
 .avatar-page .page-title {
@@ -4204,7 +4286,7 @@ label, label + * {
   font-size: 0;
 }
 
-.checkout-attributes .option-list>li {
+.checkout-attributes .option-list > li {
   display: inline-block;
   margin: 5px;
   border: 1px solid #ddd;
@@ -4219,7 +4301,7 @@ label, label + * {
   line-height: 0;
 }
 
-.checkout-attributes .option-list>li label {
+.checkout-attributes .option-list > li label {
   display: inline-block;
   margin: 0 0 0 5px;
 }
@@ -4820,9 +4902,9 @@ label, label + * {
   margin-top: 5px;
 }
 
-  .vat-number-warning a {
-    text-decoration: underline;
-  }
+.vat-number-warning a {
+  text-decoration: underline;
+}
 
 .checkout-page .pickup-in-store {
   text-align: center;
@@ -4847,12 +4929,12 @@ label, label + * {
 }
 
 .checkout-page .edit-address-button {
-  float: right; 
+  float: right;
   margin: 20px 10px 10px 12px;
 }
 
 .checkout-page .delete-address-button {
-  float: right; 
+  float: right;
   margin: 20px 0 10px 0;
 }
 
@@ -6556,7 +6638,6 @@ label, label + * {
   padding: 10px;
   font-family: "Courier New", Courier, monospace;
   color: #000;
-
   white-space: pre-wrap;
   word-wrap: break-word;
 }
@@ -6634,6 +6715,10 @@ label, label + * {
   .estimate-shipping-row-item.address-item + .estimate-shipping-row-item.address-item {
     padding-left: 0px;
     padding-top: 8px;
+  }
+
+  .order-filters__row {
+    justify-content: center;
   }
 }
 
@@ -8029,14 +8114,13 @@ label, label + * {
     font-size: 0;
   }
 
-  .search-box {
-    display: table-cell;
-    text-align: right;
-    vertical-align: middle;
+  .search-box form {
+    justify-content: flex-end;
   }
 
   .search-box input.search-box-text,
-  .search-box .search-box-button {
+  .search-box .search-box-button,
+  .search-box .search-box-category {
     height: 40px;
   }
 
@@ -8239,7 +8323,7 @@ label, label + * {
     width: auto;
     margin: 0 0 20px;
   }
-  
+
   .block .title {
     margin: 0;
     border-bottom: 1px solid #ddd;
@@ -8262,6 +8346,7 @@ label, label + * {
     width: 30%;
     margin: 0 0 0 -15px;
     vertical-align: middle;
+    text-align: center;
   }
 
   .block a.product-name {
@@ -8504,6 +8589,7 @@ label, label + * {
   }
 
   .customer-info-page .vat-note,
+  .customer-info-page .vat-status,
   .customer-info-page .email-to-revalidate-note {
     margin-left: 150px;
   }
@@ -8525,7 +8611,7 @@ label, label + * {
     margin: -30px 0 15px;
   }
 
-  .shopping-cart-page .checkout-attributes .option-list>li {
+  .shopping-cart-page .checkout-attributes .option-list > li {
     margin: 5px 10px 5px 0;
   }
 
@@ -8781,6 +8867,7 @@ label, label + * {
   }
 
   .customer-info-page .vat-note,
+  .customer-info-page .vat-status,
   .customer-info-page .email-to-revalidate-note {
     margin-left: 225px;
   }

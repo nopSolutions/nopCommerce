@@ -27,6 +27,11 @@ public static partial class NopCustomerServicesDefaults
     /// </summary>
     public static string CustomerAttributePrefix => "customer_attribute_";
 
+    /// <summary>
+    /// Gets default suffix for deleted customer records
+    /// </summary>
+    public static string CustomerDeletedSuffix => "-DELETED";
+
     #region Caching defaults
 
     #region Customer
@@ -57,7 +62,7 @@ public static partial class NopCustomerServicesDefaults
     /// <remarks>
     /// {0} : system name
     /// </remarks>
-    public static CacheKey CustomerRolesBySystemNameCacheKey => new("Nop.customerrole.bysystemname.{0}", CustomerRolesBySystemNamePrefix);
+    public static CacheKey CustomerRolesBySystemNameCacheKey => new("Nop.customerrole.bysystemname.{0}");
 
     /// <summary>
     /// Gets a key pattern to clear cache
@@ -70,7 +75,7 @@ public static partial class NopCustomerServicesDefaults
     /// <remarks>
     /// {0} : customer identifier
     /// </remarks>
-    public static CacheKey CustomerRolesCacheKey => new("Nop.customer.customerrole.{0}", CustomerCustomerRolesPrefix);
+    public static CacheKey CustomerRolesCacheKey => new("Nop.customer.customerrole.{0}");
 
     /// <summary>
     /// Gets a key pattern to clear cache
@@ -87,7 +92,7 @@ public static partial class NopCustomerServicesDefaults
     /// <remarks>
     /// {0} : customer identifier
     /// </remarks>
-    public static CacheKey CustomerAddressesCacheKey => new("Nop.customer.addresses.{0}", CustomerAddressesPrefix);
+    public static CacheKey CustomerAddressesCacheKey => new("Nop.customer.addresses.{0}");
 
     /// <summary>
     /// Gets a key for caching
@@ -96,7 +101,7 @@ public static partial class NopCustomerServicesDefaults
     /// {0} : customer identifier
     /// {1} : address identifier
     /// </remarks>
-    public static CacheKey CustomerAddressCacheKey => new("Nop.customer.addresses.{0}-{1}", CustomerAddressesByCustomerPrefix, CustomerAddressesPrefix);
+    public static CacheKey CustomerAddressCacheKey => new("Nop.customer.addresses.{0}-{1}");
 
     /// <summary>
     /// Gets a key pattern to clear cache

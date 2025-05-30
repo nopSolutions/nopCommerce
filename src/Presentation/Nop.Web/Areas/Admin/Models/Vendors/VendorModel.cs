@@ -75,6 +75,10 @@ public partial record VendorModel : BaseNopEntityModel, ILocalizedModel<VendorLo
     [NopResourceDisplayName("Admin.Vendors.Fields.PageSizeOptions")]
     public string PageSizeOptions { get; set; }
 
+    [NopResourceDisplayName("Admin.Vendors.Fields.PmCustomerId")]
+    public int? PmCustomerId { get; set; }
+    public string PmCustomerInfo { get; set; }
+
     [NopResourceDisplayName("Admin.Vendors.Fields.PriceRangeFiltering")]
     public bool PriceRangeFiltering { get; set; }
 

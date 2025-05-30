@@ -195,14 +195,13 @@ public partial class SettingController : BaseAdminController
                 model.CacheConfigModel.ToConfig(_appSettings.Get<CacheConfig>()),
                 model.HostingConfigModel.ToConfig(_appSettings.Get<HostingConfig>()),
                 model.DistributedCacheConfigModel.ToConfig(_appSettings.Get<DistributedCacheConfig>()),
-                model.AzureBlobConfigModel.ToConfig(_appSettings.Get<AzureBlobConfig>()),
                 model.InstallationConfigModel.ToConfig(_appSettings.Get<InstallationConfig>()),
                 model.PluginConfigModel.ToConfig(_appSettings.Get<PluginConfig>()),
                 model.CommonConfigModel.ToConfig(_appSettings.Get<CommonConfig>()),
                 model.DataConfigModel.ToConfig(_appSettings.Get<DataConfig>()),
                 model.WebOptimizerConfigModel.ToConfig(_appSettings.Get<WebOptimizerConfig>())
             };
-
+            
             await _eventPublisher.PublishAsync(new AppSettingsSavingEvent(configurations));
 
             AppSettingsHelper.SaveAppSettings(configurations, _fileProvider);
@@ -596,11 +595,15 @@ public partial class SettingController : BaseAdminController
             await _settingService.SaveSettingOverridablePerStoreAsync(taxSettings, x => x.PaymentMethodAdditionalFeeTaxClassId, model.PaymentMethodAdditionalFeeTaxClassId_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(taxSettings, x => x.EuVatEnabled, model.EuVatEnabled_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(taxSettings, x => x.EuVatEnabledForGuests, model.EuVatEnabledForGuests_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(taxSettings, x => x.EuVatRequired, model.EuVatRequired_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(taxSettings, x => x.EuVatShopCountryId, model.EuVatShopCountryId_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(taxSettings, x => x.EuVatAllowVatExemption, model.EuVatAllowVatExemption_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(taxSettings, x => x.EuVatUseWebService, model.EuVatUseWebService_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(taxSettings, x => x.EuVatAssumeValid, model.EuVatAssumeValid_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(taxSettings, x => x.EuVatEmailAdminWhenNewVatSubmitted, model.EuVatEmailAdminWhenNewVatSubmitted_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(taxSettings, x => x.HmrcApiUrl, model.HmrcApiUrl_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(taxSettings, x => x.HmrcClientId, model.HmrcClientId_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(taxSettings, x => x.HmrcClientSecret, model.HmrcClientSecret_OverrideForStore, storeScope, false);
 
             //now clear settings cache
             await _settingService.ClearCacheAsync();
@@ -679,6 +682,7 @@ public partial class SettingController : BaseAdminController
             await _settingService.SaveSettingOverridablePerStoreAsync(catalogSettings, x => x.NumberOfBestsellersOnHomepage, model.NumberOfBestsellersOnHomepage_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(catalogSettings, x => x.SearchPageProductsPerPage, model.SearchPageProductsPerPage_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(catalogSettings, x => x.SearchPageAllowCustomersToSelectPageSize, model.SearchPageAllowCustomersToSelectPageSize_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(catalogSettings, x => x.ShowSearchBoxCategories, model.ShowSearchBoxCategories_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(catalogSettings, x => x.SearchPagePageSizeOptions, model.SearchPagePageSizeOptions_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(catalogSettings, x => x.SearchPagePriceRangeFiltering, model.SearchPagePriceRangeFiltering_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(catalogSettings, x => x.SearchPagePriceFrom, model.SearchPagePriceFrom_OverrideForStore, storeScope, false);
@@ -715,6 +719,7 @@ public partial class SettingController : BaseAdminController
             await _settingService.SaveSettingOverridablePerStoreAsync(catalogSettings, x => x.ProductReviewsSortByCreatedDateAscending, model.ProductReviewsSortByCreatedDateAscending_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(catalogSettings, x => x.ExportImportProductAttributes, model.ExportImportProductAttributes_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(catalogSettings, x => x.ExportImportProductSpecificationAttributes, model.ExportImportProductSpecificationAttributes_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(catalogSettings, x => x.ExportImportTierPrices, model.ExportImportTierPrices_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(catalogSettings, x => x.ExportImportProductCategoryBreadcrumb, model.ExportImportProductCategoryBreadcrumb_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(catalogSettings, x => x.ExportImportCategoriesUsingCategoryName, model.ExportImportCategoriesUsingCategoryName_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(catalogSettings, x => x.ExportImportAllowDownloadImages, model.ExportImportAllowDownloadImages_OverrideForStore, storeScope, false);
@@ -722,6 +727,7 @@ public partial class SettingController : BaseAdminController
             await _settingService.SaveSettingOverridablePerStoreAsync(catalogSettings, x => x.RemoveRequiredProducts, model.RemoveRequiredProducts_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(catalogSettings, x => x.ExportImportRelatedEntitiesByName, model.ExportImportRelatedEntitiesByName_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(catalogSettings, x => x.ExportImportProductUseLimitedToStores, model.ExportImportProductUseLimitedToStores_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(catalogSettings, x => x.ExportImportCategoryUseLimitedToStores, model.ExportImportCategoryUseLimitedToStores_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(catalogSettings, x => x.DisplayDatePreOrderAvailability, model.DisplayDatePreOrderAvailability_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(catalogSettings, x => x.UseAjaxCatalogProductsLoading, model.UseAjaxCatalogProductsLoading_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(catalogSettings, x => x.EnableManufacturerFiltering, model.EnableManufacturerFiltering_OverrideForStore, storeScope, false);
@@ -1329,21 +1335,10 @@ public partial class SettingController : BaseAdminController
     #endregion
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
-    public virtual async Task<IActionResult> GeneralCommon(bool showtour = false)
+    public virtual async Task<IActionResult> GeneralCommon()
     {
         //prepare model
         var model = await _settingModelFactory.PrepareGeneralCommonSettingsModelAsync();
-
-        //show configuration tour
-        if (showtour)
-        {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
-            var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
-
-            if (!hideCard && !closeCard)
-                ViewBag.ShowTour = true;
-        }
 
         return View(model);
     }
@@ -1508,6 +1503,7 @@ public partial class SettingController : BaseAdminController
             captchaSettings.ShowOnApplyVendorPage = model.CaptchaSettings.ShowOnApplyVendorPage;
             captchaSettings.ShowOnForum = model.CaptchaSettings.ShowOnForum;
             captchaSettings.ShowOnCheckoutPageForGuests = model.CaptchaSettings.ShowOnCheckoutPageForGuests;
+            captchaSettings.ShowOnCheckGiftCardBalance = model.CaptchaSettings.ShowOnCheckGiftCardBalance;
             captchaSettings.ReCaptchaPublicKey = model.CaptchaSettings.ReCaptchaPublicKey;
             captchaSettings.ReCaptchaPrivateKey = model.CaptchaSettings.ReCaptchaPrivateKey;
             captchaSettings.CaptchaType = (CaptchaType)model.CaptchaSettings.CaptchaType;
@@ -1530,6 +1526,7 @@ public partial class SettingController : BaseAdminController
             await _settingService.SaveSettingOverridablePerStoreAsync(captchaSettings, x => x.ShowOnForgotPasswordPage, model.CaptchaSettings.ShowOnForgotPasswordPage_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(captchaSettings, x => x.ShowOnForum, model.CaptchaSettings.ShowOnForum_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(captchaSettings, x => x.ShowOnCheckoutPageForGuests, model.CaptchaSettings.ShowOnCheckoutPageForGuests_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(captchaSettings, x => x.ShowOnCheckGiftCardBalance, model.CaptchaSettings.ShowOnCheckGiftCardBalance_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(captchaSettings, x => x.ReCaptchaPublicKey, model.CaptchaSettings.ReCaptchaPublicKey_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(captchaSettings, x => x.ReCaptchaPrivateKey, model.CaptchaSettings.ReCaptchaPrivateKey_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(captchaSettings, x => x.ReCaptchaV3ScoreThreshold, model.CaptchaSettings.ReCaptchaV3ScoreThreshold_OverrideForStore, storeScope, false);
@@ -1652,8 +1649,10 @@ public partial class SettingController : BaseAdminController
             //this behavior can increase performance because cached settings will not be cleared 
             //and loaded from database after each update
             adminAreaSettings.UseRichEditorInMessageTemplates = model.AdminAreaSettings.UseRichEditorInMessageTemplates;
+            adminAreaSettings.UseStickyHeaderLayout = model.AdminAreaSettings.UseStickyHeaderLayout;
 
             await _settingService.SaveSettingOverridablePerStoreAsync(adminAreaSettings, x => x.UseRichEditorInMessageTemplates, model.AdminAreaSettings.UseRichEditorInMessageTemplates_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingAsync(adminAreaSettings, x => x.UseStickyHeaderLayout, clearCache: false);
 
             //now clear settings cache
             await _settingService.ClearCacheAsync();

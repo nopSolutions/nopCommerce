@@ -404,6 +404,12 @@ public partial class CustomerRegistrationService : ICustomerRegistrationService
 
         await _customerService.InsertCustomerPasswordAsync(customerPassword);
 
+        if (customer.MustChangePassword)
+        {
+            customer.MustChangePassword = false;
+            await _customerService.UpdateCustomerAsync(customer);
+        }
+
         //publish event
         await _eventPublisher.PublishAsync(new CustomerPasswordChangedEvent(customerPassword));
 
@@ -439,12 +445,13 @@ public partial class CustomerRegistrationService : ICustomerRegistrationService
         //sign in new customer
         await _authenticationService.SignInAsync(customer, isPersist);
 
-        //raise event       
-        await _eventPublisher.PublishAsync(new CustomerLoggedinEvent(customer));
+        //raise event
+        var guestCustomer = await _customerService.IsGuestAsync(currentCustomer) && currentCustomer?.Id != customer.Id ? currentCustomer : null;
+        await _eventPublisher.PublishAsync(new CustomerLoggedinEvent(customer, guestCustomer));
 
         //activity log
-        await _customerActivityService.InsertActivityAsync(customer, "PublicStore.Login",
-            await _localizationService.GetResourceAsync("ActivityLog.PublicStore.Login"), customer);
+        await _customerActivityService.InsertActivityAsync(customer, "PublicStore.SuccessfulLogin",
+            await _localizationService.GetResourceAsync("ActivityLog.PublicStore.Login.Success"), customer);
 
         var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 

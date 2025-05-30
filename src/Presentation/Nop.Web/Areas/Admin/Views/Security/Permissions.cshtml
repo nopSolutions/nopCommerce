@@ -107,7 +107,7 @@
                                     })
                                     <script>
                                         function renderPermissionEdit(data, type, row, meta) {
-                                            return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/Security/PermissionEditPopup/")' + data + '\', 800, 300, true); return false;\" class="btn btn-default"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit").Text</button>';
+                                            return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/Security/PermissionEditPopup/")' + data + '\', 800, 300, true); return false;\" class="btn btn-default"><i class="fas fa-pencil"></i>@T("Admin.Common.Edit").Text</button>';
                                         }
                                         function renderPermissionText(data, type, row, meta) {                                            
                                             return '<span id="permission-applied-for-' + row.Id + '">' + data + '</span>';

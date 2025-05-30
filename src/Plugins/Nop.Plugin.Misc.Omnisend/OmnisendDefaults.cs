@@ -81,12 +81,12 @@ public class OmnisendDefaults
     /// Gets a period (in seconds) before the request times out
     /// </summary>
     public static int RequestTimeout => 30;
-        
+
     /// <summary>
     /// Gets the integration origin
     /// </summary>
     public static string IntegrationOrigin => "nopCommerce";
-        
+
     /// <summary>
     /// Version of the integration
     /// </summary>
@@ -95,7 +95,7 @@ public class OmnisendDefaults
     /// <summary>
     /// Default contact tags
     /// </summary>
-    public static List<string> ContactTags => new() {$"source: nopCommerce {NopVersion.FULL_VERSION}" };
+    public static List<string> ContactTags => new() { $"source: nopCommerce {NopVersion.FULL_VERSION}" };
 
     /// <summary>
     /// ContactId query parameter name
@@ -132,7 +132,7 @@ public class OmnisendDefaults
     public static string BatchFinishedStatus => "finished";
 
     #endregion
-        
+
     #region Endpoints and URLs
 
     /// <summary>
@@ -159,7 +159,7 @@ public class OmnisendDefaults
     /// Get a contacts API URL
     /// </summary>
     public static string ContactsApiUrl => BaseApiUrl + $"/{ContactsEndpoint}";
-        
+
     /// <summary>
     /// Get an orders endpoint
     /// </summary>

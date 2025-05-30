@@ -164,6 +164,16 @@
                 <span asp-validation-for="CaptchaSettings.ShowOnCheckoutPageForGuests"></span>
             </div>
         </div>
+        <div class="form-group row" id="ssCaptchaShowOnCheckGiftCardBalance">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnCheckGiftCardBalance_OverrideForStore" asp-input="CaptchaSettings.ShowOnCheckGiftCardBalance" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="CaptchaSettings.ShowOnCheckGiftCardBalance" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CaptchaSettings.ShowOnCheckGiftCardBalance" />
+                <span asp-validation-for="CaptchaSettings.ShowOnCheckGiftCardBalance"></span>
+            </div>
+        </div>
         <div class="form-group row" id="ssReCaptchaPublicKeypnl">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="CaptchaSettings.ReCaptchaPublicKey_OverrideForStore" asp-input="CaptchaSettings.ReCaptchaPublicKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -217,6 +227,7 @@
             $('#ssCaptchaShowOnApplyVendorPagepnl').showElement();
             $('#ssCaptchaShowOnForumpnl').showElement();
             $('#ssCaptchaShowOnCheckoutPageForGuests').showElement();
+            $('#ssCaptchaShowOnCheckGiftCardBalance').showElement();
             $('#ssReCaptchaPublicKeypnl').showElement();
             $('#ssReCaptchaPrivateKeypnl').showElement();
             toggleReCaptchaV3ScoreThreshold();
@@ -236,6 +247,7 @@
             $('#ssCaptchaShowOnApplyVendorPagepnl').hideElement();
             $('#ssCaptchaShowOnForumpnl').hideElement();
             $('#ssCaptchaShowOnCheckoutPageForGuests').hideElement();
+            $('#ssCaptchaShowOnCheckGiftCardBalance').hideElement();
             $('#ssReCaptchaPublicKeypnl').hideElement();
             $('#ssReCaptchaPrivateKeypnl').hideElement();
         }

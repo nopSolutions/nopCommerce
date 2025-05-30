@@ -35,7 +35,7 @@
         </h1>
         <div class="float-right">
             <button type="submit" name="save" class="btn btn-primary">
-                <i class="far fa-save"></i>
+                <i class="far fa-floppy-disk"></i>
                 @T("Admin.Common.Save")
             </button>
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CustomerUserSettingsButtons, additionalData = Model })
@@ -49,9 +49,9 @@
                 @await Component.InvokeAsync(typeof(SettingModeViewComponent))
                 <nop-cards id="customersettings-cards">
                     <nop-card asp-name="customersettings-common" asp-icon="fas fa-info" asp-title="@T("Admin.Configuration.Settings.CustomerUser.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_CustomerUser.Common", Model)</nop-card>
-                    <nop-card asp-name="customersettings-security" asp-icon="fas fa-shield-alt" asp-title="@T("Admin.Configuration.Settings.CustomerUser.BlockTitle.Password")" asp-hide-block-attribute-name="@hideSecurityBlockAttributeName" asp-hide="@hideSecurityBlock" asp-advanced="true">@await Html.PartialAsync("_CustomerUser.Security", Model)</nop-card>
+                    <nop-card asp-name="customersettings-security" asp-icon="fas fa-shield-halved" asp-title="@T("Admin.Configuration.Settings.CustomerUser.BlockTitle.Password")" asp-hide-block-attribute-name="@hideSecurityBlockAttributeName" asp-hide="@hideSecurityBlock" asp-advanced="true">@await Html.PartialAsync("_CustomerUser.Security", Model)</nop-card>
                     <nop-card asp-name="customersettings-account" asp-icon="fas fa-user" asp-title="@T("Admin.Configuration.Settings.CustomerUser.BlockTitle.Account")" asp-hide-block-attribute-name="@hideAccountBlockAttributeName" asp-hide="@hideAccountBlock" asp-advanced="true">@await Html.PartialAsync("_CustomerUser.Account", Model)</nop-card>
-                    <nop-card asp-name="customersettings-profile" asp-icon="fas fa-user-circle" asp-title="@T("Admin.Configuration.Settings.CustomerUser.BlockTitle.Profile")" asp-hide-block-attribute-name="@hideProfileBlockAttributeName" asp-hide="@hideProfileBlock" asp-advanced="true">@await Html.PartialAsync("_CustomerUser.Profile", Model)</nop-card>
+                    <nop-card asp-name="customersettings-profile" asp-icon="fas fa-circle-user" asp-title="@T("Admin.Configuration.Settings.CustomerUser.BlockTitle.Profile")" asp-hide-block-attribute-name="@hideProfileBlockAttributeName" asp-hide="@hideProfileBlock" asp-advanced="true">@await Html.PartialAsync("_CustomerUser.Profile", Model)</nop-card>
                     <nop-card asp-name="customersettings-customerformfields" asp-icon="fas fa-align-justify" asp-title="@T("Admin.Configuration.Settings.CustomerUser.CustomerFormFields")" asp-hide-block-attribute-name="@hideCustomerFormFieldsBlockAttributeName" asp-hide="@hideCustomerFormFieldsBlock" asp-advanced="false">@await Html.PartialAsync("_CustomerUser.CustomerFormFields", Model)</nop-card>
                     <nop-card asp-name="customersettings-addressformfields" asp-icon="far fa-address-book" asp-title="@T("Admin.Configuration.Settings.CustomerUser.AddressFormFields")" asp-hide-block-attribute-name="@hideAddressFormFieldsBlockAttributeName" asp-hide="@hideAddressFormFieldsBlock" asp-advanced="false">@await Html.PartialAsync("_CustomerUser.AddressFormFields", Model)</nop-card>
 

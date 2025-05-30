@@ -161,6 +161,11 @@
                             <div class="inputs">
                                 <label asp-for="VatNumber" asp-postfix=":"></label>
                                 <input asp-for="VatNumber" />
+                                @if (Model.VatNumberRequired)
+                                {
+                                    <nop-required />
+                                }
+                                <span asp-validation-for="VatNumber"></span>
                                 <span class="vat-status">@Model.VatNumberStatusNote</span>
                                 <span class="vat-note">
                                     <em>@T("Account.Fields.VatNumber.Note")</em>

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Nop.Web.Framework.Mvc.Filters;
+using Nop.Services.Security;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
-using Nop.Services.Security;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.Misc.NopMobileApp.Controllers;
 
@@ -29,7 +29,7 @@ public class NopMobileAppController : BasePluginController
     #region Methods
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
-    public virtual async Task<IActionResult> Configure()
+    public virtual IActionResult Configure()
     {
         return View("~/Plugins/Misc.NopMobileApp/Views/Configure.cshtml");
     }

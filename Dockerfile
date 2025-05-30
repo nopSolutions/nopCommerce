@@ -1,22 +1,11 @@
 # create the build instance 
-FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS build
 
 WORKDIR /src                                                                    
 COPY ./src ./
 
-WORKDIR /src/Presentation/Nop.Web   
-
-# build project   
-RUN dotnet build Nop.Web.csproj -c Release
-
-# build plugins
-WORKDIR /src/Plugins
-RUN set -eux; \
-    for dir in *; do \
-        if [ -d "$dir" ]; then \
-            dotnet build "$dir/$dir.csproj" -c Release; \
-        fi; \
-    done
+# build solution   
+RUN dotnet build NopCommerce.sln --no-incremental -c Release
 
 # publish project
 WORKDIR /src/Presentation/Nop.Web   
@@ -41,7 +30,7 @@ RUN chmod 775 App_Data \
 			  wwwroot/sitemaps
 
 # create the runtime instance 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS runtime 
+FROM mcr.microsoft.com/dotnet/aspnet:9.0-alpine AS runtime 
 
 # add globalization support
 RUN apk add --no-cache icu-libs icu-data-full

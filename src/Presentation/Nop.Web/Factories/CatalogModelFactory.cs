@@ -9,6 +9,7 @@ using Nop.Core.Caching;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Seo;
@@ -37,6 +38,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
 
     protected readonly BlogSettings _blogSettings;
     protected readonly CatalogSettings _catalogSettings;
+    protected readonly CustomerSettings _customerSettings;
     protected readonly DisplayDefaultMenuItemSettings _displayDefaultMenuItemSettings;
     protected readonly ForumSettings _forumSettings;
     protected readonly ICategoryService _categoryService;
@@ -44,6 +46,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
     protected readonly ICurrencyService _currencyService;
     protected readonly ICustomerService _customerService;
     protected readonly IEventPublisher _eventPublisher;
+    protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly IHttpContextAccessor _httpContextAccessor;
     protected readonly IJsonLdModelFactory _jsonLdModelFactory;
     protected readonly ILocalizationService _localizationService;
@@ -74,6 +77,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
 
     public CatalogModelFactory(BlogSettings blogSettings,
         CatalogSettings catalogSettings,
+        CustomerSettings customerSettings,
         DisplayDefaultMenuItemSettings displayDefaultMenuItemSettings,
         ForumSettings forumSettings,
         ICategoryService categoryService,
@@ -81,6 +85,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         ICurrencyService currencyService,
         ICustomerService customerService,
         IEventPublisher eventPublisher,
+        IGenericAttributeService genericAttributeService,
         IHttpContextAccessor httpContextAccessor,
         IJsonLdModelFactory jsonLdModelFactory,
         ILocalizationService localizationService,
@@ -106,6 +111,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
     {
         _blogSettings = blogSettings;
         _catalogSettings = catalogSettings;
+        _customerSettings = customerSettings;
         _displayDefaultMenuItemSettings = displayDefaultMenuItemSettings;
         _forumSettings = forumSettings;
         _categoryService = categoryService;
@@ -113,6 +119,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         _currencyService = currencyService;
         _customerService = customerService;
         _eventPublisher = eventPublisher;
+        _genericAttributeService = genericAttributeService;
         _httpContextAccessor = httpContextAccessor;
         _jsonLdModelFactory = jsonLdModelFactory;
         _localizationService = localizationService;
@@ -541,7 +548,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
                     Name = await _localizationService.GetLocalizedAsync(curCategory, y => y.Name),
                     SeName = await _urlRecordService.GetSeNameAsync(curCategory),
                     Description = await _localizationService.GetLocalizedAsync(curCategory, y => y.Description),
-                    PictureModel = await PrepareCategoryPictureModelAsync(category)
+                    PictureModel = await PrepareCategoryPictureModelAsync(curCategory)
                 };
             }).ToListAsync();
 
@@ -815,7 +822,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
 
         if (_catalogSettings.EnableSpecificationAttributeFiltering)
         {
-            model.SpecificationFilter = await PrepareSpecificationFilterModel(command.SpecificationOptionIds, filterableOptions);
+            model.SpecificationFilter = await PrepareSpecificationFilterModel(command.Specs, filterableOptions);
         }
 
         //filterable manufacturers
@@ -823,10 +830,10 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         {
             var manufacturers = await _manufacturerService.GetManufacturersByCategoryIdAsync(category.Id);
 
-            model.ManufacturerFilter = await PrepareManufacturerFilterModel(command.ManufacturerIds, manufacturers);
+            model.ManufacturerFilter = await PrepareManufacturerFilterModel(command.Ms, manufacturers);
         }
 
-        var filteredSpecs = command.SpecificationOptionIds is null ? null : filterableOptions.Where(fo => command.SpecificationOptionIds.Contains(fo.Id)).ToList();
+        var filteredSpecs = command.Specs is null ? null : filterableOptions.Where(fo => command.Specs.Contains(fo.Id)).ToList();
 
         //products
         var products = await _productService.SearchProductsAsync(
@@ -838,7 +845,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
             excludeFeaturedProducts: !_catalogSettings.IgnoreFeaturedProducts && !_catalogSettings.IncludeFeaturedProductsInNormalLists,
             priceMin: selectedPriceRange?.From,
             priceMax: selectedPriceRange?.To,
-            manufacturerIds: command.ManufacturerIds,
+            manufacturerIds: command.Ms,
             filteredSpecOptions: filteredSpecs,
             orderBy: (ProductSortingEnum)command.OrderBy);
 
@@ -1085,10 +1092,10 @@ public partial class CatalogModelFactory : ICatalogModelFactory
 
         if (_catalogSettings.EnableSpecificationAttributeFiltering)
         {
-            model.SpecificationFilter = await PrepareSpecificationFilterModel(command.SpecificationOptionIds, filterableOptions);
+            model.SpecificationFilter = await PrepareSpecificationFilterModel(command.Specs, filterableOptions);
         }
 
-        var filteredSpecs = command.SpecificationOptionIds is null ? null : filterableOptions.Where(fo => command.SpecificationOptionIds.Contains(fo.Id)).ToList();
+        var filteredSpecs = command.Specs is null ? null : filterableOptions.Where(fo => command.Specs.Contains(fo.Id)).ToList();
 
         //products
         var products = await _productService.SearchProductsAsync(
@@ -1234,8 +1241,12 @@ public partial class CatalogModelFactory : ICatalogModelFactory
             SeName = await _urlRecordService.GetSeNameAsync(vendor),
             AllowCustomersToContactVendors = _vendorSettings.AllowCustomersToContactVendors,
             CatalogProductsModel = await PrepareVendorProductsModelAsync(vendor, command),
-            PictureModel = await PrepareVendorPictureModelAsync(vendor)
+            PictureModel = await PrepareVendorPictureModelAsync(vendor),
+            ProductReviews = await PrepareVendorProductReviewsModelAsync(vendor, new VendorReviewsPagingFilteringModel())
         };
+
+        if (_forumSettings.AllowPrivateMessages)
+            model.PmCustomerId = vendor.PmCustomerId;
 
         return model;
     }
@@ -1390,6 +1401,90 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         return cachedModel;
     }
 
+
+    /// <summary>
+    /// Prepare review models for vendor products
+    /// </summary>
+    /// <returns>
+    /// <param name="vendor">Vendor</param>
+    /// <param name="pagingModel">Model to filter product reviews</param>
+    /// A task that represents the asynchronous operation
+    /// The task result contains a list of product reviews
+    /// </returns>
+    public virtual async Task<VendorProductReviewsListModel> PrepareVendorProductReviewsModelAsync(Vendor vendor, VendorReviewsPagingFilteringModel pagingModel)
+    {
+        ArgumentNullException.ThrowIfNull(vendor);
+        ArgumentNullException.ThrowIfNull(pagingModel);
+
+        if (pagingModel.PageSize <= 0)
+            pagingModel.PageSize = _catalogSettings.VendorProductReviewsPageSize;
+        if (pagingModel.PageNumber <= 0)
+            pagingModel.PageNumber = 1;
+
+        var model = new VendorProductReviewsListModel
+        {
+            VendorId = vendor.Id,
+            VendorName = await _localizationService.GetLocalizedAsync(vendor, x => x.Name),
+            VendorUrl = await _nopUrlHelper.RouteGenericUrlAsync<Vendor>(new { SeName = await _urlRecordService.GetSeNameAsync(vendor) })
+        };
+
+        var currentStore = await _storeContext.GetCurrentStoreAsync();
+        var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.VendorReviewsModelKey, vendor, currentStore);
+        var vendorReviewModels = await _staticCacheManager.GetAsync(cacheKey, async () =>
+        {
+            var vendorReviews = await _productService.GetAllProductReviewsAsync(
+                vendorId: vendor.Id,
+                approved: true,
+                storeId: currentStore.Id);
+
+            return await vendorReviews.SelectAwait(async pr =>
+            {
+                var customer = await _customerService.GetCustomerByIdAsync(pr.CustomerId);
+                var product = await _productService.GetProductByIdAsync(pr.ProductId);
+
+                var model = new VendorProductReviewModel
+                {
+                    ProductName = await _localizationService.GetLocalizedAsync(product, x => x.Name),
+                    ProductSeName = await _urlRecordService.GetSeNameAsync(product),
+                    CustomerId = pr.CustomerId,
+                    CustomerName = await _customerService.FormatUsernameAsync(customer),
+                    AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !await _customerService.IsGuestAsync(customer),
+                    Title = pr.Title,
+                    ReviewText = pr.ReviewText,
+                    ReplyText = pr.ReplyText,
+                    Rating = pr.Rating,
+                    Helpfulness = new ProductReviewHelpfulnessModel
+                    {
+                        ProductReviewId = pr.Id,
+                        HelpfulYesTotal = pr.HelpfulYesTotal,
+                        HelpfulNoTotal = pr.HelpfulNoTotal,
+                    },
+                    CreatedOnUtc = pr.CreatedOnUtc,
+                };
+
+                if (_customerSettings.AllowCustomersToUploadAvatars)
+                {
+                    model.CustomerAvatarUrl = await _pictureService.GetPictureUrlAsync(
+                        await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute),
+                        _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
+                }
+
+                return model;
+            })
+            .OrderBy(m => m.CreatedOnUtc)
+            .ToListAsync();
+        });
+
+        var pagedVendorReviews = new PagedList<VendorProductReviewModel>(vendorReviewModels, pagingModel.PageNumber - 1, pagingModel.PageSize);
+
+        //re-init pager
+        model.PagingFilteringContext.LoadPagedList(pagedVendorReviews);
+
+        model.Reviews = pagedVendorReviews;
+
+        return model;
+    }
+
     #endregion
 
     #region Product tags
@@ -1452,6 +1547,9 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         var model = new ProductsByTagModel
         {
             Id = productTag.Id,
+            MetaKeywords = await _localizationService.GetLocalizedAsync(productTag, x => x.MetaKeywords),
+            MetaDescription = await _localizationService.GetLocalizedAsync(productTag, x => x.MetaDescription),
+            MetaTitle = await _localizationService.GetLocalizedAsync(productTag, x => x.MetaTitle),
             TagName = await _localizationService.GetLocalizedAsync(productTag, y => y.Name),
             TagSeName = await _urlRecordService.GetSeNameAsync(productTag),
             CatalogProductsModel = await PrepareTagProductsModelAsync(productTag, command)
@@ -1719,7 +1817,13 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         IPagedList<Product> products = new PagedList<Product>(new List<Product>(), 0, 1);
         //only search if query string search keyword is set (used to avoid searching or displaying search term min length error message on /search page load)
         //we don't use "!string.IsNullOrEmpty(searchTerms)" in cases of "ProductSearchTermMinimumLength" set to 0 but searching by other parameters (e.g. category or price filter)
-        var isSearchTermSpecified = _httpContextAccessor.HttpContext.Request.Query.ContainsKey("q");
+        var request = _httpContextAccessor.HttpContext.Request;
+
+        var isSearchTermSpecified = request.Query.ContainsKey("q");
+
+        if (!isSearchTermSpecified && request.HasFormContentType)
+            isSearchTermSpecified = request.Form.ContainsKey("q");
+
         if (isSearchTermSpecified)
         {
             var currentStore = await _storeContext.GetCurrentStoreAsync();
@@ -1735,7 +1839,9 @@ public partial class CatalogModelFactory : ICatalogModelFactory
                 var categoryIds = new List<int>();
                 var manufacturerId = 0;
                 var searchInDescriptions = false;
+                var searchInProductTags = false;
                 var vendorId = 0;
+
                 if (searchModel.advs)
                 {
                     //advanced search
@@ -1757,10 +1863,9 @@ public partial class CatalogModelFactory : ICatalogModelFactory
                         vendorId = searchModel.vid;
 
                     searchInDescriptions = searchModel.sid;
+                    searchInProductTags = searchModel.sit;
                 }
 
-                //var searchInProductTags = false;
-                var searchInProductTags = searchInDescriptions;
                 var workingLanguage = await _workContext.GetWorkingLanguageAsync();
 
                 //price range
@@ -1872,17 +1977,53 @@ public partial class CatalogModelFactory : ICatalogModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the search box model
     /// </returns>
-    public virtual Task<SearchBoxModel> PrepareSearchBoxModelAsync()
+    public virtual async Task<SearchBoxModel> PrepareSearchBoxModelAsync()
     {
         var model = new SearchBoxModel
         {
             AutoCompleteEnabled = _catalogSettings.ProductSearchAutoCompleteEnabled,
+            AutoCompleteSearchThumbPictureSize = _mediaSettings.AutoCompleteSearchThumbPictureSize,
             ShowProductImagesInSearchAutoComplete = _catalogSettings.ShowProductImagesInSearchAutoComplete,
             SearchTermMinimumLength = _catalogSettings.ProductSearchTermMinimumLength,
-            ShowSearchBox = _catalogSettings.ProductSearchEnabled
+            ShowSearchBox = _catalogSettings.ProductSearchEnabled,
+            ShowSearchBoxCategories = _catalogSettings.ShowSearchBoxCategories,
         };
 
-        return Task.FromResult(model);
+        if (_catalogSettings.ShowSearchBoxCategories)
+        {
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var language = await _workContext.GetWorkingLanguageAsync();
+            var categoriesCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.SearchBoxCategoryListModelKey, store, language);
+
+            model.AvailableCategories = await _staticCacheManager.GetAsync(categoriesCacheKey, async () =>
+            {
+                var allCategories = await _categoryService.GetAllCategoriesAsync(storeId: store.Id);
+                var result = new List<SelectListItem>
+                {
+                    //empty entry
+                    new()
+                    {
+                        Value = "0",
+                        Text = await _localizationService.GetResourceAsync("Search.SearchBox.AllCategories")
+                    }
+                };
+
+                //add top categories
+                foreach (var c in allCategories.Where(c => c.ParentCategoryId == 0).OrderBy(c => c.DisplayOrder).ToList())
+                {
+                    result.Add(new()
+                    {
+                        Value = c.Id.ToString(),
+                        Text = await _localizationService.GetLocalizedAsync(c, x => x.Name, language.Id),
+                        Selected = model.SearchCategoryId == c.Id
+                    });
+                }
+
+                return result;
+            });
+        }
+
+        return model;
     }
 
     #endregion

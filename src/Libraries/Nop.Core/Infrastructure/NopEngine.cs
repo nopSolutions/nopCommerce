@@ -70,7 +70,7 @@ public partial class NopEngine : IEngine
         //create AutoMapper configuration
         var config = new MapperConfiguration(cfg =>
         {
-            foreach (var instance in instances) 
+            foreach (var instance in instances)
                 cfg.AddProfile(instance.GetType());
         });
 

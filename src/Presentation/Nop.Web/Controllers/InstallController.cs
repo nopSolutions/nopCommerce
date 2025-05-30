@@ -171,8 +171,10 @@ public partial class InstallController : Controller
         //validate permissions
         var dirsToCheck = _fileProvider.GetDirectoriesWrite();
         foreach (var dir in dirsToCheck)
+        {
             if (!_fileProvider.CheckPermissions(dir, false, true, true, false))
                 ModelState.AddModelError(string.Empty, string.Format(_locService.Value.GetResource("ConfigureDirectoryPermissions"), CurrentOSUser.FullName, dir));
+        }
 
         var filesToCheck = _fileProvider.GetFilesWrite();
         foreach (var file in filesToCheck)
@@ -222,18 +224,6 @@ public partial class InstallController : Controller
 
             dataProvider.InitializeDatabase();
 
-            if (model.SubscribeNewsletters)
-            {
-                try
-                {
-                    var resultRequest = await _nopHttpClient.Value.SubscribeNewslettersAsync(model.AdminEmail);
-                }
-                catch
-                {
-                    // ignored
-                }
-            }
-
             var cultureInfo = new CultureInfo(NopCommonDefaults.DefaultLanguageCulture);
             var regionInfo = new RegionInfo(NopCommonDefaults.DefaultLanguageCulture);
 
@@ -242,6 +232,7 @@ public partial class InstallController : Controller
             {
                 //try to get CultureInfo and RegionInfo
                 if (model.Country != null)
+                {
                     try
                     {
                         cultureInfo = new CultureInfo(model.Country[3..]);
@@ -251,6 +242,7 @@ public partial class InstallController : Controller
                     {
                         // ignored
                     }
+                }
 
                 //get URL to download language pack
                 if (cultureInfo.Name != NopCommonDefaults.DefaultLanguageCulture)
@@ -278,12 +270,30 @@ public partial class InstallController : Controller
                 await _uploadService.Value.UploadLocalePatternAsync(cultureInfo);
             }
 
-            //now resolve installation service
-            await _installationService.Value.InstallRequiredDataAsync(model.AdminEmail, model.AdminPassword, languagePackInfo, regionInfo, cultureInfo);
+            if (model.SubscribeNewsletters)
+            {
+                try
+                {
+                    var resultRequest = await _nopHttpClient.Value.SubscribeNewslettersAsync(model.AdminEmail);
+                }
+                catch
+                {
+                    // ignored
+                }
+            }
 
-            if (model.InstallSampleData)
-                await _installationService.Value.InstallSampleDataAsync(model.AdminEmail);
-
+            //now resolve installation service and install nopCommerce
+            await _installationService.Value.InstallAsync(new InstallationSettings
+            {
+               AdminEmail = model.AdminEmail,
+               AdminPassword = model.AdminPassword,
+               LanguagePackDownloadLink = languagePackInfo.DownloadUrl,
+               LanguagePackProgress = languagePackInfo.Progress,
+               RegionInfo = regionInfo,
+               CultureInfo = cultureInfo,
+               InstallSampleData = model.InstallSampleData
+            });
+            
             //prepare plugins to install
             _pluginService.Value.ClearInstalledPluginsList();
 
@@ -303,7 +313,7 @@ public partial class InstallController : Controller
             {
                 await _pluginService.Value.PreparePluginToInstallAsync(plugin.SystemName, checkDependencies: false);
             }
-            
+
             return View(new InstallModel { RestartUrl = Url.RouteUrl("Homepage") });
 
         }

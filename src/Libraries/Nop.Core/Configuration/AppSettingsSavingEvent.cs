@@ -5,11 +5,21 @@
 /// </summary>
 public partial class AppSettingsSavingEvent
 {
+    #region Fields
+
+    protected readonly IList<IConfig> _configurations;
+
+    #endregion
+
     #region Ctor
 
+    /// <summary>
+    /// Ctor
+    /// </summary>
+    /// <param name="configurations">List of configuration to save</param>
     public AppSettingsSavingEvent(IList<IConfig> configurations)
     {
-        Configurations = configurations;
+        _configurations = configurations;
     }
 
     #endregion
@@ -22,20 +32,11 @@ public partial class AppSettingsSavingEvent
     /// <param name="config">Configuration to save</param>
     public void AddConfig<TConfig>(TConfig config) where TConfig : class, IConfig
     {
-        if (Configurations.OfType<TConfig>().FirstOrDefault() is TConfig currentConfig)
-            Configurations[Configurations.IndexOf(currentConfig)] = config;
+        if (_configurations.OfType<TConfig>().FirstOrDefault() is { } currentConfig)
+            _configurations[_configurations.IndexOf(currentConfig)] = config;
         else
-            Configurations.Add(config);
+            _configurations.Add(config);
     }
-
-    #endregion
-
-    #region Properties
-
-    /// <summary>
-    /// Gets configurations to save
-    /// </summary>
-    public IList<IConfig> Configurations { get; protected set; }
 
     #endregion
 }

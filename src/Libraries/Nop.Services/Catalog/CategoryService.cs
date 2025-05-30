@@ -29,6 +29,7 @@ public partial class CategoryService : ICategoryService
     protected readonly IStaticCacheManager _staticCacheManager;
     protected readonly IStoreContext _storeContext;
     protected readonly IStoreMappingService _storeMappingService;
+    protected readonly IStoreService _storeService;
     protected readonly IWorkContext _workContext;
 
     #endregion
@@ -46,6 +47,7 @@ public partial class CategoryService : ICategoryService
         IStaticCacheManager staticCacheManager,
         IStoreContext storeContext,
         IStoreMappingService storeMappingService,
+        IStoreService storeService,
         IWorkContext workContext)
     {
         _aclService = aclService;
@@ -58,6 +60,7 @@ public partial class CategoryService : ICategoryService
         _staticCacheManager = staticCacheManager;
         _storeContext = storeContext;
         _storeMappingService = storeMappingService;
+        _storeService = storeService;
         _workContext = workContext;
     }
 
@@ -122,7 +125,7 @@ public partial class CategoryService : ICategoryService
         int parentId = 0,
         bool ignoreCategoriesWithoutExistingParent = false)
     {
-        ArgumentNullException.ThrowIfNull(categoriesByParentId);            
+        ArgumentNullException.ThrowIfNull(categoriesByParentId);
 
         var remaining = parentId > 0
             ? new HashSet<int>(0)
@@ -134,7 +137,7 @@ public partial class CategoryService : ICategoryService
             yield return cat;
 
             remaining.Remove(cat.Id);
-                
+
             foreach (var subCategory in SortCategoriesForTree(categoriesByParentId, cat.Id, true))
             {
                 yield return subCategory;
@@ -151,7 +154,7 @@ public partial class CategoryService : ICategoryService
             .OrderBy(c => c.ParentCategoryId)
             .ThenBy(c => c.DisplayOrder)
             .ThenBy(c => c.Id);
-            
+
         foreach (var orphan in orphans)
             yield return orphan;
     }
@@ -159,6 +162,27 @@ public partial class CategoryService : ICategoryService
     #endregion
 
     #region Methods
+
+    /// <summary>
+    /// Check the possibility of adding products to the category for the current vendor
+    /// </summary>
+    /// <param name="category">Category</param>
+    /// <param name="allCategories">All categories</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task<bool> CanVendorAddProductsAsync(Category category, IList<Category> allCategories = null)
+    {
+        ArgumentNullException.ThrowIfNull(category);
+
+        if (await _workContext.GetCurrentVendorAsync() is null) // check vendors only
+            return true;
+
+        if (category.RestrictFromVendors)
+            return false;
+
+        var breadcrumb = await GetCategoryBreadCrumbAsync(category, allCategories, showHidden: true);
+
+        return !breadcrumb.Any(c => c.RestrictFromVendors);
+    }
 
     /// <summary>
     /// Clean up category references for a  specified discount
@@ -171,7 +195,7 @@ public partial class CategoryService : ICategoryService
 
         var mappings = _discountCategoryMappingRepository.Table.Where(dcm => dcm.DiscountId == discount.Id);
 
-        await _discountCategoryMappingRepository.DeleteAsync(mappings.ToList());
+        await _discountCategoryMappingRepository.DeleteAsync(await mappings.ToListAsync());
     }
 
     /// <summary>
@@ -560,6 +584,16 @@ public partial class CategoryService : ICategoryService
     }
 
     /// <summary>
+    /// Deletes a list of product category mapping
+    /// </summary>
+    /// <param name="productCategories">Product categories</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task DeleteProductCategoriesAsync(IList<ProductCategory> productCategories)
+    {
+        await _productCategoryRepository.DeleteAsync(productCategories);
+    }
+
+    /// <summary>
     /// Gets product category mapping collection
     /// </summary>
     /// <param name="categoryId">Category identifier</param>
@@ -723,11 +757,7 @@ public partial class CategoryService : ICategoryService
     /// <returns>A ProductCategory that has the specified values; otherwise null</returns>
     public virtual ProductCategory FindProductCategory(IList<ProductCategory> source, int productId, int categoryId)
     {
-        foreach (var productCategory in source)
-            if (productCategory.ProductId == productId && productCategory.CategoryId == categoryId)
-                return productCategory;
-
-        return null;
+        return source.FirstOrDefault(pc => pc.ProductId == productId && pc.CategoryId == categoryId);
     }
 
     /// <summary>
@@ -805,6 +835,37 @@ public partial class CategoryService : ICategoryService
 
             return result;
         });
+    }
+
+    /// <summary>
+    /// Update category store mappings
+    /// </summary>
+    /// <param name="category">Category</param>
+    /// <param name="limitedToStoresIds">A list of store ids for mapping</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public async Task UpdateCategoryStoreMappingsAsync(Category category, IList<int> limitedToStoresIds)
+    {
+        category.LimitedToStores = limitedToStoresIds.Any();
+        await UpdateCategoryAsync(category);
+
+        var existingStoreMappings = await _storeMappingService.GetStoreMappingsAsync(category);
+        var allStores = await _storeService.GetAllStoresAsync();
+        foreach (var store in allStores)
+        {
+            if (limitedToStoresIds.Contains(store.Id))
+            {
+                //new store
+                if (existingStoreMappings.All(sm => sm.StoreId != store.Id))
+                    await _storeMappingService.InsertStoreMappingAsync(category, store.Id);
+            }
+            else
+            {
+                //remove store
+                var storeMappingToDelete = existingStoreMappings.FirstOrDefault(sm => sm.StoreId == store.Id);
+                if (storeMappingToDelete != null)
+                    await _storeMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
+            }
+        }
     }
 
     #endregion

@@ -7,7 +7,7 @@ using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo470;
 
-[NopUpdateMigration("2023-01-01 00:00:00", "4.70", UpdateMigrationType.Localization)]
+[NopUpdateMigration("2023-01-01 00:00:03", "4.70", UpdateMigrationType.Localization)]
 public class LocalizationMigration : MigrationBase
 {
     /// <summary>Collect the UP migration expressions</summary>
@@ -56,7 +56,15 @@ public class LocalizationMigration : MigrationBase
 
             //#7031
             "Admin.Configuration.EmailAccounts.Fields.UseDefaultCredentials",
-            "Admin.Configuration.EmailAccounts.Fields.UseDefaultCredentials.Hint"
+            "Admin.Configuration.EmailAccounts.Fields.UseDefaultCredentials.Hint",
+
+            //#7420
+            "Admin.ConfigurationSteps.EmailAccount.DefaultCredentials.Title",
+            "Admin.ConfigurationSteps.EmailAccount.DefaultCredentials.Text",
+            "Admin.ConfigurationSteps.EmailAccount.Username.Title",
+            "Admin.ConfigurationSteps.EmailAccount.Username.Text",
+            "Admin.ConfigurationSteps.EmailAccount.Password.Title",
+            "Admin.ConfigurationSteps.EmailAccount.Password.Text"
         });
 
         #endregion
@@ -245,7 +253,24 @@ public class LocalizationMigration : MigrationBase
             //#6978
             ["Admin.Promotions.NewsLetterSubscriptions.Fields.Language"] = "Language",
 
-            ["Honeypot.BotDetected"] ="A bot detected. Honeypot.",
+            ["Honeypot.BotDetected"] = "A bot detected. Honeypot.",
+
+            //#7326
+            ["Validation.Password.Rule"] = "Password must meet the following rules:",
+            ["Validation.Password.LengthValidation"] = "must have at least {0} characters and not greater than {1} characters",
+            ["Validation.Password.RequireDigit"] = "must have at least one digit",
+            ["Validation.Password.RequireLowercase"] = "must have at least one lowercase",
+            ["Validation.Password.RequireNonAlphanumeric"] = "must have at least one special character (e.g. #?!@$%^&*-)",
+            ["Validation.Password.RequireUppercase"] = "must have at least one uppercase",
+
+            //#7420
+            ["Admin.ConfigurationSteps.EmailAccount.AuthenticationMethod.Title"] = "Authentication method",
+            ["Admin.ConfigurationSteps.EmailAccount.AuthenticationMethod.Text"] = "Select one of the available authentication methods and enter your credentials if required.",
+
+            //#7437
+            ["Admin.Configuration.Plugins.SearchProvider.BackToList"] = "back to plugin list",
+            ["Admin.Configuration.Plugins.SearchProvider.Configure"] = "Configure",
+
         }, languageId);
 
         #endregion

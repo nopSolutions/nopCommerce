@@ -23,6 +23,13 @@ public partial interface IGenericAttributeService
     Task DeleteAttributesAsync(IList<GenericAttribute> attributes);
 
     /// <summary>
+    /// Deletes an attributes
+    /// </summary>
+    /// <param name="key">Key</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task DeleteAttributesAsync<TEntity>(string key);
+
+    /// <summary>
     /// Inserts an attribute
     /// </summary>
     /// <param name="attribute">attribute</param>

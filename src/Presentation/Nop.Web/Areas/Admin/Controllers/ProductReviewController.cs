@@ -282,6 +282,10 @@ public partial class ProductReviewController : BaseAdminController
 
         await _productService.DeleteProductReviewsAsync(productReviews);
 
+        //activity log
+        var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.DeleteProductReview");
+        await _customerActivityService.InsertActivitiesAsync("DeleteProductReview", productReviews, productReview => string.Format(activityLogFormat, productReview.Id));
+
         //update product totals
         foreach (var product in products)
         {

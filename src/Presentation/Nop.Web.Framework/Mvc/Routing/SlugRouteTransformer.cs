@@ -291,10 +291,8 @@ public partial class SlugRouteTransformer : DynamicRouteValueTransformer
     {
         //get values to transform for action selection
         var values = new RouteValueDictionary(routeValues);
-        if (values is null)
-            return values;
 
-        if (!values.TryGetValue(NopRoutingDefaults.RouteValue.SeName, out var slug))
+        if (!values.TryGetValue(NopRoutingDefaults.RouteValue.SeName, out var slug) || slug is null)
             return values;
 
         //find record by the URL slug
@@ -304,7 +302,7 @@ public partial class SlugRouteTransformer : DynamicRouteValueTransformer
         //allow third-party handlers to select an action by the found URL record
         var routingEvent = new GenericRoutingEvent(httpContext, values, urlRecord);
         await _eventPublisher.PublishAsync(routingEvent);
-        if (routingEvent.Handled)
+        if (routingEvent.StopProcessing)
             return values;
 
         //then try to select an action by the found URL record and the catalog path

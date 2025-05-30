@@ -131,4 +131,9 @@ public partial class Category : BaseEntity, ILocalizedEntity, ISlugSupported, IA
     /// Gets or sets a value indicating whether the price range should be entered manually
     /// </summary>
     public bool ManuallyPriceRange { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the vendor cannot add products to the category
+    /// </summary>
+    public bool RestrictFromVendors { get; set; }
 }

@@ -194,6 +194,18 @@ public class BrevoController : BasePluginController
         var attributesErrors = await _brevoEmailManager.PrepareAttributesAsync();
         if (!string.IsNullOrEmpty(attributesErrors))
             _notificationService.ErrorNotification($"{BrevoDefaults.NotificationMessage} {attributesErrors}");
+
+        //try to set account partner
+        if (!brevoSettings.PartnerValueSet)
+        {
+            var partnerSet = await _brevoEmailManager.SetPartnerAsync();
+            if (partnerSet)
+            {
+                brevoSettings.PartnerValueSet = true;
+                _settingService.SaveSetting(brevoSettings, settings => settings.PartnerValueSet, clearCache: false);
+                _settingService.ClearCache();
+            }
+        }
     }
 
     #endregion

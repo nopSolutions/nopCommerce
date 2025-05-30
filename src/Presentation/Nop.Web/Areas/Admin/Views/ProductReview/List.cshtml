@@ -23,15 +23,15 @@
         {
             //these buttons are not visible to vendors
             <button type="button" id="approve-selected" class="btn btn-success">
-                <i class="fas fa-check-square"></i>
+                <i class="fas fa-square-check"></i>
                 @T("Admin.Catalog.ProductReviews.ApproveSelected")
             </button>
             <button type="button" id="disapprove-selected" class="btn btn-secondary">
-                <i class="fas fa-minus-square"></i>
+                <i class="fas fa-square-minus"></i>
                 @T("Admin.Catalog.ProductReviews.DisapproveSelected")
             </button>
             <button type="button" id="delete-selected" class="btn btn-danger">
-                <i class="far fa-trash-alt"></i>
+                <i class="far fa-trash-can"></i>
                 @T("Admin.Catalog.ProductReviews.DeleteSelected")
             </button>
             <nop-action-confirmation asp-button-id="delete-selected" />
@@ -48,7 +48,7 @@
                 <div class="card-body">
                     <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
                         <div class="search-text">@T("Admin.Common.Search")</div>
-                        <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                        <div class="icon-search"><i class="fas fa-magnifying-glass" aria-hidden="true"></i></div>
                         <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
                     </div>
                     <div class="search-body @(hideSearchBlock ? "closed" : "")">
@@ -139,7 +139,7 @@
                         <div class="row">
                             <div class="text-center col-12">
                                 <button type="button" id="search-productreviews" class="btn btn-primary btn-search">
-                                    <i class="fas fa-search"></i>
+                                    <i class="fas fa-magnifying-glass"></i>
                                     @T("Admin.Common.Search")
                                 </button>
                             </div>
@@ -235,7 +235,7 @@
                                 Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
                                 ClassName =  NopColumnClassDefaults.Button,
-                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                Render = new RenderButtonEdit(new DataUrl("~/Admin/ProductReview/Edit"))
                             }
                         }
                     })

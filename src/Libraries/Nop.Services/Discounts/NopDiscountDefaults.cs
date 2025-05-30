@@ -1,5 +1,4 @@
 ﻿using Nop.Core.Caching;
-using Nop.Core.Domain.Discounts;
 
 namespace Nop.Services.Discounts;
 
@@ -39,7 +38,7 @@ public static partial class NopDiscountDefaults
     /// {1} : discount name
     /// {2} : is active
     /// </remarks>
-    public static CacheKey DiscountAllCacheKey => new("Nop.discount.all.{0}-{1}-{2}", NopEntityCacheDefaults<Discount>.AllPrefix);
+    public static CacheKey DiscountAllCacheKey => new("Nop.discount.all.{0}-{1}-{2}");
 
     /// <summary>
     /// Key for caching
@@ -48,7 +47,7 @@ public static partial class NopDiscountDefaults
     /// {0} - entity type
     /// {1} - entity id
     /// </remarks>
-    public static CacheKey AppliedDiscountsCacheKey => new("Nop.discount.applied.{0}-{1}", AppliedDiscountsCachePrefix);
+    public static CacheKey AppliedDiscountsCacheKey => new("Nop.discount.applied.{0}-{1}");
 
     /// <summary>
     /// Gets a key pattern to clear cache
@@ -63,7 +62,7 @@ public static partial class NopDiscountDefaults
     /// {1} : roles of the current user
     /// {2} : current store ID
     /// </remarks>
-    public static CacheKey CategoryIdsByDiscountCacheKey => new("Nop.discount.categoryids.bydiscount.{0}-{1}-{2}", CategoryIdsByDiscountPrefix, CategoryIdsPrefix);
+    public static CacheKey CategoryIdsByDiscountCacheKey => new("Nop.discount.categoryids.bydiscount.{0}-{1}-{2}");
 
     /// <summary>
     /// Gets a key pattern to clear cache
@@ -86,7 +85,7 @@ public static partial class NopDiscountDefaults
     /// {1} : roles of the current user
     /// {2} : current store ID
     /// </remarks>
-    public static CacheKey ManufacturerIdsByDiscountCacheKey => new("Nop.discount.manufacturerids.bydiscount.{0}-{1}-{2}", ManufacturerIdsByDiscountPrefix, ManufacturerIdsPrefix);
+    public static CacheKey ManufacturerIdsByDiscountCacheKey => new("Nop.discount.manufacturerids.bydiscount.{0}-{1}-{2}");
 
     /// <summary>
     /// Gets a key pattern to clear cache

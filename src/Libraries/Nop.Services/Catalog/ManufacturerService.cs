@@ -80,7 +80,7 @@ public partial class ManufacturerService : IManufacturerService
 
         var mappings = _discountManufacturerMappingRepository.Table.Where(dcm => dcm.DiscountId == discount.Id);
 
-        await _discountManufacturerMappingRepository.DeleteAsync(mappings.ToList());
+        await _discountManufacturerMappingRepository.DeleteAsync(await mappings.ToListAsync());
     }
 
     /// <summary>
@@ -337,6 +337,16 @@ public partial class ManufacturerService : IManufacturerService
     }
 
     /// <summary>
+    /// Deletes a list of product manufacturer mapping
+    /// </summary>
+    /// <param name="productManufacturers">Product manufacturer mappings</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task DeleteProductManufacturersAsync(IList<ProductManufacturer> productManufacturers)
+    {
+        await _productManufacturerRepository.DeleteAsync(productManufacturers);
+    }
+
+    /// <summary>
     /// Gets product manufacturer collection
     /// </summary>
     /// <param name="manufacturerId">Manufacturer identifier</param>
@@ -418,7 +428,7 @@ public partial class ManufacturerService : IManufacturerService
             query = query.Where(pm => manufacturersQuery.Any(m => m.Id == pm.ManufacturerId));
         }
 
-        return await _staticCacheManager.GetAsync(key, query.ToList);
+        return await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
     }
 
     /// <summary>
@@ -488,7 +498,7 @@ public partial class ManufacturerService : IManufacturerService
         var query = _manufacturerRepository.Table;//.Where(m => !m.Deleted);
         var queryFilter = manufacturerIdsNames.Distinct().ToArray();
         //filtering by name
-        var filter = query.Select(m => m.Name).Where(m => queryFilter.Contains(m)).ToList();
+        var filter = await query.Select(m => m.Name).Where(m => queryFilter.Contains(m)).ToListAsync();
         queryFilter = queryFilter.Except(filter).ToArray();
 
         //if some names not found
@@ -512,11 +522,7 @@ public partial class ManufacturerService : IManufacturerService
     /// <returns>A ProductManufacturer that has the specified values; otherwise null</returns>
     public virtual ProductManufacturer FindProductManufacturer(IList<ProductManufacturer> source, int productId, int manufacturerId)
     {
-        foreach (var productManufacturer in source)
-            if (productManufacturer.ProductId == productId && productManufacturer.ManufacturerId == manufacturerId)
-                return productManufacturer;
-
-        return null;
+        return source.FirstOrDefault(pm => pm.ProductId == productId && pm.ManufacturerId == manufacturerId);
     }
 
     /// <summary>

@@ -19,7 +19,7 @@
         </h1>
         <div class="float-right">
             <a asp-action="Create" class="btn btn-primary">
-                <i class="fas fa-plus-square"></i>
+                <i class="fas fa-square-plus"></i>
                 @T("Admin.Common.AddNew")
             </a>
             <div class="btn-group">
@@ -76,7 +76,7 @@
                         <div class="card-body">
                             <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
                                 <div class="search-text">@T("Admin.Common.Search")</div>
-                                <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                                <div class="icon-search"><i class="fas fa-magnifying-glass" aria-hidden="true"></i></div>
                                 <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
                             </div>
                             <div class="search-body @(hideSearchBlock ? "closed" : "")">
@@ -247,7 +247,7 @@
                                                                 {
                                                                 <text>
                                                                 disabled: true,
-                                                                placeholder: '@T("Admin.Catalog.Products.CustomerRoles.NoCustomerRolesAvailable")',
+                                                                placeholder: '@T("Admin.Configuration.ACL.NoCustomerRolesAvailable")',
                                                                 </text>
                                                                 }
                                                             });
@@ -260,7 +260,7 @@
                                 <div class="row">
                                     <div class="text-center col-12">
                                         <button type="button" id="search-customers" class="btn btn-primary btn-search">
-                                            <i class="fas fa-search"></i>
+                                            <i class="fas fa-magnifying-glass"></i>
                                             @T("Admin.Common.Search")
                                         </button>
                                     </div>
@@ -371,7 +371,7 @@
                                     Title = T("Admin.Common.Edit").Text,
                                     Width = "80",
                                     ClassName = NopColumnClassDefaults.Button,
-                                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                    Render = new RenderButtonEdit(new DataUrl("~/Admin/Customer/Edit"))
                                 });
                             }
                             @await Html.PartialAsync("Table", gridModel)

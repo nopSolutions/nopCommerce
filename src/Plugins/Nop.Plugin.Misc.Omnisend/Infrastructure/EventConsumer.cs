@@ -66,6 +66,9 @@ internal class EventConsumer : IConsumer<CustomerLoggedinEvent>,
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(CustomerLoggedinEvent eventMessage)
     {
+        if (!_omnisendService.IsConfigured)
+            return;
+
         if (string.IsNullOrEmpty(_settings.IdentifyContactScript))
             return;
 
@@ -82,6 +85,9 @@ internal class EventConsumer : IConsumer<CustomerLoggedinEvent>,
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(CustomerRegisteredEvent eventMessage)
     {
+        if (!_omnisendService.IsConfigured)
+            return;
+
         await _omnisendService.UpdateContactAsync(eventMessage.Customer);
     }
 
@@ -92,6 +98,9 @@ internal class EventConsumer : IConsumer<CustomerLoggedinEvent>,
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(EmailSubscribedEvent eventMessage)
     {
+        if (!_omnisendService.IsConfigured)
+            return;
+
         await _omnisendService.UpdateOrCreateContactAsync(eventMessage.Subscription, true);
     }
 
@@ -102,6 +111,9 @@ internal class EventConsumer : IConsumer<CustomerLoggedinEvent>,
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(EmailUnsubscribedEvent eventMessage)
     {
+        if (!_omnisendService.IsConfigured)
+            return;
+
         await _omnisendService.UpdateOrCreateContactAsync(eventMessage.Subscription);
     }
 
@@ -112,6 +124,9 @@ internal class EventConsumer : IConsumer<CustomerLoggedinEvent>,
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(EntityInsertedEvent<StockQuantityHistory> eventMessage)
     {
+        if (!_omnisendService.IsConfigured)
+            return;
+
         var history = eventMessage.Entity;
 
         await _omnisendService.UpdateProductAsync(history.ProductId);
@@ -124,6 +139,9 @@ internal class EventConsumer : IConsumer<CustomerLoggedinEvent>,
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(EntityInsertedEvent<ProductAttributeCombination> eventMessage)
     {
+        if (!_omnisendService.IsConfigured)
+            return;
+
         await _omnisendService.UpdateProductAsync(eventMessage.Entity.ProductId);
     }
 
@@ -134,6 +152,9 @@ internal class EventConsumer : IConsumer<CustomerLoggedinEvent>,
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(EntityDeletedEvent<ProductAttributeCombination> eventMessage)
     {
+        if (!_omnisendService.IsConfigured)
+            return;
+
         await _omnisendService.UpdateProductAsync(eventMessage.Entity.ProductId);
     }
 
@@ -144,6 +165,9 @@ internal class EventConsumer : IConsumer<CustomerLoggedinEvent>,
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(EntityInsertedEvent<ShoppingCartItem> eventMessage)
     {
+        if (!_omnisendService.IsConfigured)
+            return;
+
         var entity = eventMessage.Entity;
 
         if (entity.ShoppingCartType != ShoppingCartType.ShoppingCart)
@@ -160,6 +184,9 @@ internal class EventConsumer : IConsumer<CustomerLoggedinEvent>,
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(OrderPlacedEvent eventMessage)
     {
+        if (!_omnisendService.IsConfigured)
+            return;
+
         await _omnisendEventsService.SendOrderPlacedEventAsync(eventMessage.Order);
         await _omnisendService.PlaceOrderAsync(eventMessage.Order);
     }
@@ -171,6 +198,9 @@ internal class EventConsumer : IConsumer<CustomerLoggedinEvent>,
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(OrderPaidEvent eventMessage)
     {
+        if (!_omnisendService.IsConfigured)
+            return;
+
         await _omnisendEventsService.SendOrderPaidEventAsync(eventMessage);
         //await _omnisendService.UpdateOrderAsync(eventMessage.Order);
     }
@@ -182,6 +212,9 @@ internal class EventConsumer : IConsumer<CustomerLoggedinEvent>,
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(OrderRefundedEvent eventMessage)
     {
+        if (!_omnisendService.IsConfigured)
+            return;
+
         await _omnisendEventsService.SendOrderRefundedEventAsync(eventMessage);
         //await _omnisendService.UpdateOrderAsync(eventMessage.Order);
     }
@@ -193,6 +226,9 @@ internal class EventConsumer : IConsumer<CustomerLoggedinEvent>,
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(OrderStatusChangedEvent eventMessage)
     {
+        if (!_omnisendService.IsConfigured)
+            return;
+
         await _omnisendEventsService.SendOrderStatusChangedEventAsync(eventMessage);
         //await _omnisendService.UpdateOrderAsync(eventMessage.Order);
     }
@@ -204,6 +240,9 @@ internal class EventConsumer : IConsumer<CustomerLoggedinEvent>,
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(PageRenderingEvent eventMessage)
     {
+        if (!_omnisendService.IsConfigured)
+            return;
+
         await _omnisendEventsService.SendStartedCheckoutEventAsync(eventMessage);
     }
 
@@ -214,8 +253,11 @@ internal class EventConsumer : IConsumer<CustomerLoggedinEvent>,
     /// <returns>A task that represents the asynchronous operation</returns>
     public Task HandleEventAsync(EntityUpdatedEvent<ShoppingCartItem> eventMessage)
     {
+        if (!_omnisendService.IsConfigured)
+            return Task.CompletedTask;
+
         //await _omnisendService.EditShoppingCartItemAsync(eventMessage.Entity);
-            
+
         return Task.CompletedTask;
     }
 
@@ -226,6 +268,9 @@ internal class EventConsumer : IConsumer<CustomerLoggedinEvent>,
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(EntityDeletedEvent<ShoppingCartItem> eventMessage)
     {
+        if (!_omnisendService.IsConfigured)
+            return;
+
         await _omnisendService.DeleteShoppingCartItemAsync(eventMessage.Entity);
     }
 
@@ -236,6 +281,9 @@ internal class EventConsumer : IConsumer<CustomerLoggedinEvent>,
     /// <returns>A task that represents the asynchronous operation</returns>
     public Task HandleEventAsync(OrderAuthorizedEvent eventMessage)
     {
+        if (!_omnisendService.IsConfigured)
+            return Task.CompletedTask;
+
         //await _omnisendService.UpdateOrderAsync(eventMessage.Order);
 
         return Task.CompletedTask;
@@ -248,6 +296,9 @@ internal class EventConsumer : IConsumer<CustomerLoggedinEvent>,
     /// <returns>A task that represents the asynchronous operation</returns>
     public Task HandleEventAsync(OrderVoidedEvent eventMessage)
     {
+        if (!_omnisendService.IsConfigured)
+            return Task.CompletedTask;
+
         //await _omnisendService.UpdateOrderAsync(eventMessage.Order);
 
         return Task.CompletedTask;
@@ -260,6 +311,9 @@ internal class EventConsumer : IConsumer<CustomerLoggedinEvent>,
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(EntityInsertedEvent<OrderItem> eventMessage)
     {
+        if (!_omnisendService.IsConfigured)
+            return;
+
         await _omnisendService.OrderItemAddedAsync(eventMessage.Entity);
     }
 
@@ -270,6 +324,9 @@ internal class EventConsumer : IConsumer<CustomerLoggedinEvent>,
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(EntityUpdatedEvent<Product> eventMessage)
     {
+        if (!_omnisendService.IsConfigured)
+            return;
+
         await _omnisendService.CreateOrUpdateProductAsync(eventMessage.Entity);
     }
 

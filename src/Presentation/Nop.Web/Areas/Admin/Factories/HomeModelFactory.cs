@@ -97,11 +97,7 @@ public partial class HomeModelFactory : IHomeModelFactory
         model.UrlRead = new DataUrl("PopularSearchTermsReport", "Common", null);
         model.Length = searchModel.Length;
         model.LengthMenu = searchModel.AvailablePageSizes;
-        model.Dom = "<'row'<'col-md-12't>>" +
-                    "<'row margin-t-5'" +
-                    "<'col-lg-10 col-xs-12'<'float-lg-left'p>>" +
-                    "<'col-lg-2 col-xs-12'<'float-lg-right text-center'i>>" +
-                    ">";
+        model.RefreshButton = false;
         model.ColumnCollection = new List<ColumnProperty>
         {
             new(nameof(PopularSearchTermModel.Keyword))
@@ -135,11 +131,7 @@ public partial class HomeModelFactory : IHomeModelFactory
         model.Name = "bestsellers-byamount-grid";
         model.UrlRead = new DataUrl("BestsellersBriefReportByAmountList", "Order", new RouteValueDictionary { [nameof(searchModel.OrderBy)] = OrderByEnum.OrderByTotalAmount });
         model.Length = searchModel.PageSize;
-        model.Dom = "<'row'<'col-md-12't>>" +
-                    "<'row margin-t-5'" +
-                    "<'col-lg-10 col-xs-12'<'float-lg-left'p>>" +
-                    "<'col-lg-2 col-xs-12'<'float-lg-right text-center'i>>" +
-                    ">";
+        model.RefreshButton = false;
         model.ColumnCollection = new List<ColumnProperty>
         {
             new(nameof(BestsellerModel.ProductName))
@@ -184,11 +176,7 @@ public partial class HomeModelFactory : IHomeModelFactory
         model.Name = "bestsellers-byquantity-grid";
         model.UrlRead = new DataUrl("BestsellersBriefReportByQuantityList", "Order", new RouteValueDictionary { [nameof(searchModel.OrderBy)] = OrderByEnum.OrderByQuantity });
         model.Length = searchModel.PageSize;
-        model.Dom = "<'row'<'col-md-12't>>" +
-                    "<'row margin-t-5'" +
-                    "<'col-lg-10 col-xs-12'<'float-lg-left'p>>" +
-                    "<'col-lg-2 col-xs-12'<'float-lg-right text-center'i>>" +
-                    ">";
+        model.RefreshButton = false;        
         model.ColumnCollection = new List<ColumnProperty>
         {
             new(nameof(BestsellerModel.ProductName))
@@ -231,11 +219,7 @@ public partial class HomeModelFactory : IHomeModelFactory
         model.Name = "orders-grid";
         model.UrlRead = new DataUrl("OrderList", "Order", null);
         model.Length = 5;
-        model.Dom = "<'row'<'col-md-12't>>" +
-                    "<'row margin-t-5'" +
-                    "<'col-lg-10 col-xs-12'<'float-lg-left'p>>" +
-                    "<'col-lg-2 col-xs-12'<'float-lg-right text-center'i>>" +
-                    ">";
+        model.RefreshButton = false;        
         model.ColumnCollection = new List<ColumnProperty>
         {
             new(nameof(OrderModel.CustomOrderNumber))

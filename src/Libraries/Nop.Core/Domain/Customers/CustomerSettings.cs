@@ -223,7 +223,7 @@ public partial class CustomerSettings : ISettings
     public int LastActivityMinutes { get; set; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether deleted customer records should be prefixed suffixed with "-DELETED"
+    /// Gets or sets a value indicating whether deleted customer records should be suffixed with "-DELETED"
     /// </summary>
     public bool SuffixDeletedCustomers { get; set; }
 
@@ -403,6 +403,11 @@ public partial class CustomerSettings : ISettings
     /// Gets or sets a value indicating whether privacy policy should accepted during registration
     /// </summary>
     public bool AcceptPrivacyPolicyEnabled { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether notification message should be sent to customer on failed login attempt
+    /// </summary>
+    public bool NotifyFailedLoginAttempt { get; set; }
 
     #endregion
 }

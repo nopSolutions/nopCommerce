@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Nop.Core.Domain.Common;
 using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.TagHelpers.Admin;
@@ -24,14 +25,16 @@ public partial class NopSelectTagHelper : TagHelper
 
     #region Fields
 
+    protected readonly AdminAreaSettings _adminAreaSettings;
     protected readonly IHtmlHelper _htmlHelper;
 
     #endregion
 
     #region Ctor
 
-    public NopSelectTagHelper(IHtmlHelper htmlHelper)
+    public NopSelectTagHelper(AdminAreaSettings adminAreaSettings, IHtmlHelper htmlHelper)
     {
+        _adminAreaSettings = adminAreaSettings;
         _htmlHelper = htmlHelper;
     }
 
@@ -82,24 +85,33 @@ public partial class NopSelectTagHelper : TagHelper
 
         //generate editor
         var tagName = For != null ? For.Name : Name;
-        _ = bool.TryParse(IsMultiple, out var multiple);
         if (!string.IsNullOrEmpty(tagName))
         {
+            var templateName = "Select";
+
+            if (bool.TryParse(IsMultiple, out var multiple) && multiple)
+                templateName = $"Multi{templateName}";
+
             IHtmlContent selectList;
-            if (multiple)
+            var modelType = For?.ModelExplorer.ModelType;
+            var additionalData = new { htmlAttributes, SelectList = Items, MinimumItemsForSearch = _adminAreaSettings.MinimumDropdownItemsForSearch };
+
+            if (modelType is null || new[] { typeof(List<string>), typeof(string) }.Contains(modelType))
             {
-                var templateName = For.ModelExplorer.ModelType == typeof(List<string>) ? "MultiSelectString" : "MultiSelect";
-                selectList = _htmlHelper.Editor(tagName, templateName, new { htmlAttributes, SelectList = Items });
+                selectList = _htmlHelper.Editor(tagName, $"{templateName}String", additionalData);
+            }
+            else if (new[] { typeof(List<int>), typeof(int) }.Contains(modelType))
+            {
+                selectList = _htmlHelper.Editor(tagName, templateName, additionalData);
             }
             else
             {
-                if (htmlAttributes.ContainsKey("class"))
+                if (!htmlAttributes.TryAdd("class", "form-control"))
                     htmlAttributes["class"] += " form-control";
-                else
-                    htmlAttributes.Add("class", "form-control");
 
                 selectList = _htmlHelper.DropDownList(tagName, Items, htmlAttributes);
             }
+
             output.Content.SetHtmlContent(await selectList.RenderHtmlContentAsync());
         }
     }

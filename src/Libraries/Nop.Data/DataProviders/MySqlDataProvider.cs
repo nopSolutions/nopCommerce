@@ -253,6 +253,15 @@ public partial class MySqlNopDataProvider : BaseDataProvider, INopDataProvider
     }
 
     /// <summary>
+    /// Shrinks database
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual Task ShrinkDatabaseAsync()
+    {
+        throw new DataException("This database provider does not support database shrinking.  Instead, use Re-index operation to optimize database space. Optimization is only available when the 'innodb_file_per_table' setting is enabled");
+    }
+
+    /// <summary>
     /// Build the connection string
     /// </summary>
     /// <param name="nopConnectionString">Connection string info</param>
@@ -303,6 +312,18 @@ public partial class MySqlNopDataProvider : BaseDataProvider, INopDataProvider
     public virtual string GetIndexName(string targetTable, string targetColumn)
     {
         return "IX_" + HashHelper.CreateHash(Encoding.UTF8.GetBytes($"{targetTable}_{targetColumn}"), HASH_ALGORITHM);
+    }
+
+    /// <summary>
+    /// Gets the name of the database collation
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the collation name
+    /// </returns>
+    public virtual Task<string> GetDataBaseCollationAsync()
+    {
+        return GetSqlStringValueAsync($"SELECT @@collation_database;");
     }
 
     #endregion

@@ -11,6 +11,7 @@ using Nop.Services.Security;
 using Nop.Services.Topics;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Catalog;
+using Nop.Web.Areas.Admin.Models.Customers;
 using Nop.Web.Areas.Admin.Models.Plugins;
 using Nop.Web.Areas.Admin.Models.Topics;
 using Nop.Web.Framework.Events;
@@ -117,6 +118,9 @@ public partial class AclEventConsumer : IConsumer<ModelPreparedEvent<BaseNopMode
                 break;
             case TopicModel topicModel:
                 await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(topicModel, nameof(Topic));
+                break;
+            case CustomerSearchModel customerSearchModel:
+                await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(customerSearchModel);
                 break;
         }
     }

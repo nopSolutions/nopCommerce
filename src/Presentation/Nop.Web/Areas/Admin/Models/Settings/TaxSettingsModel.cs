@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
@@ -111,6 +112,10 @@ public partial record TaxSettingsModel : BaseNopModel, ISettingsModel
     public bool EuVatEnabledForGuests { get; set; }
     public bool EuVatEnabledForGuests_OverrideForStore { get; set; }
 
+    [NopResourceDisplayName("Admin.Configuration.Settings.Tax.EuVatRequired")]
+    public bool EuVatRequired { get; set; }
+    public bool EuVatRequired_OverrideForStore { get; set; }
+
     [NopResourceDisplayName("Admin.Configuration.Settings.Tax.EuVatShopCountry")]
     public int EuVatShopCountryId { get; set; }
     public bool EuVatShopCountryId_OverrideForStore { get; set; }
@@ -131,6 +136,19 @@ public partial record TaxSettingsModel : BaseNopModel, ISettingsModel
     [NopResourceDisplayName("Admin.Configuration.Settings.Tax.EuVatEmailAdminWhenNewVatSubmitted")]
     public bool EuVatEmailAdminWhenNewVatSubmitted { get; set; }
     public bool EuVatEmailAdminWhenNewVatSubmitted_OverrideForStore { get; set; }
+
+    [NopResourceDisplayName("Admin.Configuration.Settings.Tax.HmrcApiUrl")]
+    public string HmrcApiUrl { get; set; }
+    public bool HmrcApiUrl_OverrideForStore { get; set; }
+
+    [NopResourceDisplayName("Admin.Configuration.Settings.Tax.HmrcClientId")]
+    public string HmrcClientId { get; set; }
+    public bool HmrcClientId_OverrideForStore { get; set; }
+
+    [NopResourceDisplayName("Admin.Configuration.Settings.Tax.HmrcClientSecret")]
+    [DataType(DataType.Password)]
+    public string HmrcClientSecret { get; set; }
+    public bool HmrcClientSecret_OverrideForStore { get; set; }
 
     #endregion
 }

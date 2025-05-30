@@ -23,6 +23,12 @@ public partial interface IPlugin
     Task InstallAsync();
 
     /// <summary>
+    /// Install sample data of plugin
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task InstallSampleDataAsync();
+
+    /// <summary>
     /// Uninstall plugin
     /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>

@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace Nop.Tests.Nop.Services.Tests.Configuration;
 
 [TestFixture]
-public class SettingServiceTests : BaseNopTest
+public class SettingServiceTests : ServiceTest<Setting>
 {
     private ISettingService _settingService;
 
@@ -24,34 +24,38 @@ public class SettingServiceTests : BaseNopTest
         await _settingService.DeleteSettingAsync<TestSettings>();
     }
 
-    [Test]
-    public async Task TestCrud()
+    protected override CrudData<Setting> CrudData
     {
-        var newSettings = new Setting { Name = "SettingServiceTests.TestCrud", Value = "TestCrud", StoreId = 1 };
-
-        var updateSettings = new Setting
+        get
         {
-            Name = "SettingServiceTests.TestCrud",
-            Value = "TestCrud updated",
-            StoreId = 1
-        };
+            var newSettings = new Setting { Name = "SettingServiceTests.TestCrud", Value = "TestCrud", StoreId = 1 };
 
-        await TestCrud(newSettings,
-            async (setting) =>
+            var updateSettings = new Setting
             {
-                await _settingService.SetSettingAsync(setting.Name, setting.Value, setting.StoreId);
-                var s = await _settingService.GetSettingAsync("SettingServiceTests.TestCrud", 1);
-                setting.Id = s.Id;
+                Name = "SettingServiceTests.TestCrud",
+                Value = "TestCrud updated",
+                StoreId = 1
+            };
 
-            }, updateSettings,
-            async (setting) =>
-                await _settingService.SetSettingAsync(setting.Name, setting.Value, setting.StoreId),
-            _settingService.GetSettingByIdAsync,
-            (first, second) => first.StoreId == second.StoreId &&
-                               first.Name.Equals(second.Name, StringComparison.InvariantCultureIgnoreCase) &&
-                               first.Value == second.Value, _settingService.DeleteSettingAsync);
+            return new CrudData<Setting>
+            {
+                BaseEntity = newSettings,
+                UpdatedEntity = updateSettings,
+                Insert = async (setting) =>
+                {
+                    await _settingService.SetSettingAsync(setting.Name, setting.Value, setting.StoreId);
+                    var s = await _settingService.GetSettingAsync("SettingServiceTests.TestCrud", 1);
+                    setting.Id = s.Id;
+
+                },
+                Update = async setting => await _settingService.SetSettingAsync(setting.Name, setting.Value, setting.StoreId),
+                GetById = _settingService.GetSettingByIdAsync,
+                Delete = _settingService.DeleteSettingAsync,
+                IsEqual = (first, second) => first.StoreId == second.StoreId && first.Name.Equals(second.Name, StringComparison.InvariantCultureIgnoreCase) && first.Value == second.Value
+            };
+        }
     }
-
+    
     [Test]
     public async Task CanGetSettings()
     {

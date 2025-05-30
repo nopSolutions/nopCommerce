@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Misc",
+  "FriendlyName": "Dynamics 365",
+  "SystemName": "Misc.Dynamics365",
+  "Version": "4.90.01",
+  "SupportedVersions": [ "4.90" ],
+  "Author": "nopCommerce team",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Misc.Dynamics365.dll",
+  "Description": "This plugin allows to sync with Microsoft Dynamics 365. Dynamics 365 is a set of intelligent business applications that helps you run your entire business and deliver greater results through predictive, AI-driven insights."
+}

@@ -5,6 +5,7 @@ using LinqToDB.Common;
 using LinqToDB.Data;
 using LinqToDB.DataProvider;
 using LinqToDB.SqlQuery;
+using LinqToDB.Tools;
 using Nop.Core;
 using Nop.Data.DataProviders.LinqToDB;
 using Nop.Data.Mapping;
@@ -82,6 +83,29 @@ public partial class PostgreSqlDataProvider : BaseDataProvider, INopDataProvider
     #endregion
 
     #region Methods
+
+    /// <summary>
+    /// Performs bulk insert operation for entity collection.
+    /// </summary>
+    /// <param name="entities">Entities for insert operation</param>
+    /// <typeparam name="TEntity">Entity type</typeparam>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public override async Task BulkInsertEntitiesAsync<TEntity>(IEnumerable<TEntity> entities)
+    {
+        using var dataContext = CreateDataConnection(LinqToDbDataProvider);
+        await dataContext.BulkCopyAsync(new BulkCopyOptions() { KeepIdentity = true }, entities.RetrieveIdentity(dataContext, useSequenceName: true));
+    }
+
+    /// <summary>
+    /// Performs bulk insert operation for entity collection.
+    /// </summary>
+    /// <param name="entities">Entities for insert operation</param>
+    /// <typeparam name="TEntity">Entity type</typeparam>
+    public override void BulkInsertEntities<TEntity>(IEnumerable<TEntity> entities)
+    {
+        using var dataContext = CreateDataConnection(LinqToDbDataProvider);
+        dataContext.BulkCopy(new BulkCopyOptions() { KeepIdentity = true }, entities.RetrieveIdentity(dataContext, useSequenceName: true));
+    }
 
     /// <summary>
     /// Creates the database by using the loaded connection string
@@ -307,6 +331,19 @@ public partial class PostgreSqlDataProvider : BaseDataProvider, INopDataProvider
     }
 
     /// <summary>
+    /// Shrinks database
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task ShrinkDatabaseAsync()
+    {
+        using var currentConnection = CreateDataConnection();
+        var tables = currentConnection.Query<string>($"SELECT table_name FROM information_schema.tables WHERE table_type = 'BASE TABLE' AND table_schema = 'public'").ToList();
+
+        foreach (var table in tables)
+            await currentConnection.ExecuteAsync($"VACUUM FULL \"{table}\";");
+    }
+
+    /// <summary>
     /// Build the connection string
     /// </summary>
     /// <param name="nopConnectionString">Connection string info</param>
@@ -352,6 +389,18 @@ public partial class PostgreSqlDataProvider : BaseDataProvider, INopDataProvider
     public virtual string GetIndexName(string targetTable, string targetColumn)
     {
         return $"IX_{targetTable}_{targetColumn}";
+    }
+    
+    /// <summary>
+    /// Gets the name of the database collation
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the collation name
+    /// </returns>
+    public virtual Task<string> GetDataBaseCollationAsync()
+    {
+        return GetSqlStringValueAsync("SELECT datcollate AS collation FROM pg_database WHERE datname = current_database();");
     }
 
     #endregion

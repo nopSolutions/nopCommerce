@@ -93,6 +93,11 @@ public partial class Discount : BaseEntity
     public bool IsActive { get; set; }
 
     /// <summary>
+    /// Gets or sets a vendor identifier
+    /// </summary>
+    public int? VendorId { get; set; }
+
+    /// <summary>
     /// Gets or sets the discount type
     /// </summary>
     public DiscountType DiscountType

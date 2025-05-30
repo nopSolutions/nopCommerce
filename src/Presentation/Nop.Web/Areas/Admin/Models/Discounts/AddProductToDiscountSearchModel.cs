@@ -42,6 +42,8 @@ public partial record AddProductToDiscountSearchModel : BaseSearchModel
     [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
     public int SearchProductTypeId { get; set; }
 
+    public bool IsLoggedInAsVendor { get; set; }
+
     public IList<SelectListItem> AvailableCategories { get; set; }
 
     public IList<SelectListItem> AvailableManufacturers { get; set; }

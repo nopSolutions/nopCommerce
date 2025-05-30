@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.Routing;
 using Nop.Core.Domain.Media;
 using Nop.Plugin.Misc.Zettle.Services;
 using Nop.Services.Common;
@@ -9,22 +8,18 @@ using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Plugins;
 using Nop.Services.ScheduleTasks;
-using Nop.Services.Security;
-using Nop.Web.Framework;
-using Nop.Web.Framework.Menu;
 
 namespace Nop.Plugin.Misc.Zettle;
 
 /// <summary>
 /// Represents Zettle plugin
 /// </summary>
-public class ZettlePlugin : BasePlugin, IAdminMenuPlugin, IMiscPlugin
+public class ZettlePlugin : BasePlugin, IMiscPlugin
 {
     #region Fields
 
     protected readonly IActionContextAccessor _actionContextAccessor;
     protected readonly ILocalizationService _localizationService;
-    protected readonly IPermissionService _permissionService;
     protected readonly IScheduleTaskService _scheduleTaskService;
     protected readonly ISettingService _settingService;
     protected readonly IUrlHelperFactory _urlHelperFactory;
@@ -37,7 +32,6 @@ public class ZettlePlugin : BasePlugin, IAdminMenuPlugin, IMiscPlugin
 
     public ZettlePlugin(IActionContextAccessor actionContextAccessor,
         ILocalizationService localizationService,
-        IPermissionService permissionService,
         IScheduleTaskService scheduleTaskService,
         ISettingService settingService,
         IUrlHelperFactory urlHelperFactory,
@@ -46,7 +40,6 @@ public class ZettlePlugin : BasePlugin, IAdminMenuPlugin, IMiscPlugin
     {
         _actionContextAccessor = actionContextAccessor;
         _localizationService = localizationService;
-        _permissionService = permissionService;
         _scheduleTaskService = scheduleTaskService;
         _settingService = settingService;
         _urlHelperFactory = urlHelperFactory;
@@ -64,53 +57,6 @@ public class ZettlePlugin : BasePlugin, IAdminMenuPlugin, IMiscPlugin
     public override string GetConfigurationPageUrl()
     {
         return _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext).RouteUrl(ZettleDefaults.ConfigurationRouteName);
-    }
-
-    /// <summary>
-    /// Manage sitemap. You can use "SystemName" of menu items to manage existing sitemap or add a new menu item.
-    /// </summary>
-    /// <param name="rootNode">Root node of the sitemap.</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task ManageSiteMapAsync(SiteMapNode rootNode)
-    {
-        if (!await _permissionService.AuthorizeAsync(StandardPermission.Configuration.MANAGE_PLUGINS))
-            return;
-
-        var configurationItem = rootNode.ChildNodes.FirstOrDefault(node => node.SystemName.Equals("Configuration"));
-        if (configurationItem is null)
-            return;
-
-        var shippingItem = configurationItem.ChildNodes.FirstOrDefault(node => node.SystemName.Equals("Shipping"));
-        var widgetsItem = configurationItem.ChildNodes.FirstOrDefault(node => node.SystemName.Equals("Widgets"));
-        if (shippingItem is null && widgetsItem is null)
-            return;
-
-        var index = shippingItem is not null ? configurationItem.ChildNodes.IndexOf(shippingItem) : -1;
-        if (index < 0)
-            index = widgetsItem is not null ? configurationItem.ChildNodes.IndexOf(widgetsItem) : -1;
-        if (index < 0)
-            return;
-
-        configurationItem.ChildNodes.Insert(index + 1, new SiteMapNode
-        {
-            Visible = true,
-            SystemName = "POS plugins",
-            Title = await _localizationService.GetResourceAsync("Plugins.Misc.Zettle.Menu.Pos"),
-            IconClass = "far fa-dot-circle",
-            ChildNodes = new List<SiteMapNode>
-            {
-                new()
-                {
-                    Visible = true,
-                    SystemName = PluginDescriptor.SystemName,
-                    Title = PluginDescriptor.FriendlyName,
-                    ControllerName = "ZettleAdmin",
-                    ActionName = "Configure",
-                    IconClass = "far fa-circle",
-                    RouteValues = new RouteValueDictionary { { "area", AreaNames.ADMIN } }
-                }
-            }
-        });
     }
 
     /// <summary>
@@ -151,8 +97,6 @@ public class ZettlePlugin : BasePlugin, IAdminMenuPlugin, IMiscPlugin
 
         await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
         {
-            ["Plugins.Misc.Zettle.Menu.Pos"] = "POS",
-
             ["Plugins.Misc.Zettle.Credentials"] = "Credentials",
             ["Plugins.Misc.Zettle.Credentials.AccessRevoked"] = "Access to PayPal Zettle organization has been revoked. You need to reconfigure the plugin.",
             ["Plugins.Misc.Zettle.Credentials.Connected"] = "Connected",

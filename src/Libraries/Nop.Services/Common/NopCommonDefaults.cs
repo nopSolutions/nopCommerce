@@ -104,6 +104,17 @@ public static partial class NopCommonDefaults
     #region nopCommerce official site
 
     /// <summary>
+    /// Gets a path to request the nopCommerce official site for any recommendations/warnings
+    /// </summary>
+    /// <remarks>
+    /// {0} : store URL
+    /// {1} : nopCommerce version
+    /// {2} : admin email
+    /// {3} : language code
+    /// </remarks>
+    public static string NopWarningPath => "site-warnings?url={0}&version={1}&email={2}&language={3}";
+
+    /// <summary>
     /// Gets a path to request the nopCommerce official site for license compliance check
     /// </summary>
     /// <remarks>
@@ -195,4 +206,14 @@ public static partial class NopCommonDefaults
     #endregion
 
     #endregion
+
+    /// <summary>
+    /// ~/App_Data/Pdf/OpenSans.ttf
+    /// </summary>
+    public static string PdfLtrFontName => "OpenSans";
+
+    /// <summary>
+    /// ~/App_Data/Pdf/Vazirmatn.ttf
+    /// </summary>
+    public static string PdfRtlFontName => "Vazirmatn";
 }

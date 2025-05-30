@@ -28,6 +28,7 @@ public partial record DataTablesModel : BaseNopModel
 
         Filters = new List<FilterParameter>();
         ColumnCollection = new List<ColumnProperty>();
+        LayoutCollection = new List<LayoutOption>();
     }
 
     #endregion
@@ -80,6 +81,11 @@ public partial record DataTablesModel : BaseNopModel
     public bool ServerSide { get; set; }
 
     /// <summary>
+    /// Gets or sets how many items are in the initial data set to delay the loading of server-side data until second draw
+    /// </summary>
+    public int? DeferLoading { get; set; }
+
+    /// <summary>
     /// Enable or disable table pagination.
     /// </summary>
     public bool Paging { get; set; }
@@ -113,11 +119,6 @@ public partial record DataTablesModel : BaseNopModel
     /// This parameter allows you to readily specify the entries in the length drop down select list that DataTables shows when pagination is enabled
     /// </summary>
     public string LengthMenu { get; set; }
-
-    /// <summary>
-    /// Indicates where particular features appears in the DOM
-    /// </summary>
-    public string Dom { get; set; }
 
     /// <summary>
     /// Feature control ordering (sorting) abilities in DataTables
@@ -171,6 +172,11 @@ public partial record DataTablesModel : BaseNopModel
     /// Gets or set column collection 
     /// </summary>
     public IList<ColumnProperty> ColumnCollection { get; set; }
+
+    /// <summary>
+    /// Gets or set layout option collection 
+    /// </summary>
+    public List<LayoutOption> LayoutCollection {  get; set; }
 
     #endregion
 }

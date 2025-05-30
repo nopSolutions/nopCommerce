@@ -143,6 +143,7 @@ public partial record RegisterModel : BaseNopModel
     [NopResourceDisplayName("Account.Fields.VatNumber")]
     public string VatNumber { get; set; }
     public bool DisplayVatNumber { get; set; }
+    public bool VatNumberRequired { get; set; }
 
     public bool HoneypotEnabled { get; set; }
     public bool DisplayCaptcha { get; set; }

@@ -5,20 +5,10 @@
 @{
   //page title
   ViewBag.PageTitle = T("Admin.Configuration.EmailAccounts").Text;
-  //tour step
-  ViewBag.TourStep = TourStep.EmailAccountList;
+
   //active menu item (system name)
   NopHtml.SetActiveMenuItemSystemName("Email accounts");
-
-  string editQueryString = string.Empty;
-  var showTour = ViewBag.ShowTour ?? false;
-  if (showTour)
-  {
-      editQueryString = "?showtour=true";
-  }
 }
-
-@await Html.PartialAsync("_AdminTour")
 
 <div class="content-header clearfix">
     <h1 class="float-left">
@@ -26,7 +16,7 @@
     </h1>
     <div class="float-right">
         <a asp-action="Create" class="btn btn-primary">
-            <i class="fas fa-plus-square"></i>
+            <i class="fas fa-square-plus"></i>
             @T("Admin.Common.AddNew")
         </a>
         @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.EmailAccountListButtons, additionalData = Model })
@@ -96,6 +86,11 @@
 
 <script>
     function renderColumnEdit(data, type, row, meta) {
-        return '<a href="@Url.Content("~/Admin/EmailAccount/Edit/")' + data + '@(editQueryString)" class="btn btn-default"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit").Text</a>';
+        return '<a href="@Url.Content("~/Admin/EmailAccount/Edit/")' + data + '" class="btn btn-default"><i class="fas fa-pencil"></i>@T("Admin.Common.Edit").Text</a>';
     }
 </script>
+
+@if (await Html.IsTourActiveAsync())
+{
+    @await Html.PartialAsync("_List.Tour")
+}

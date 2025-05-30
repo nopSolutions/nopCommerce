@@ -56,14 +56,16 @@ public class ShippingByWeightByTotalService : IShippingByWeightByTotalService
         int stateProvinceId,
         string zip)
     {
-        var rez = await _shortTermCacheManager.GetAsync(async ()=> await _sbwtRepository.GetAllAsync(async query =>
+        var rez = await _shortTermCacheManager.GetAsync(async () => await _sbwtRepository.GetAllAsync(async query =>
         {
             var data = _pluginSettings.LoadAllRecord
                 ? (await _shortTermCacheManager.GetAsync(async () => await _sbwtRepository.GetAllAsync(q => q), FixedByWeightByTotalDefaults.ShippingByWeightByTotalCacheKey, null, null, null, null, null, null)).AsQueryable()
                 : query;
 
             //filter by shipping method
-            data = data.Where(sbw => sbw.ShippingMethodId == shippingMethodId);
+            data = shippingMethodId <= 0
+                ? data
+                : data = data.Where(sbw => sbw.ShippingMethodId == shippingMethodId);
 
             //filter by store
             data = storeId == 0
@@ -102,7 +104,7 @@ public class ShippingByWeightByTotalService : IShippingByWeightByTotalService
 
             return data;
         }), FixedByWeightByTotalDefaults.ShippingByWeightByTotalCacheKey, shippingMethodId, storeId, warehouseId, countryId, stateProvinceId, zip);
-            
+
         return rez;
     }
 
@@ -134,7 +136,7 @@ public class ShippingByWeightByTotalService : IShippingByWeightByTotalService
         var existingRates =
             (await GetRecordsAsync(shippingMethodId, storeId, warehouseId, countryId, stateProvinceId, zip))
             .Where(sbw => !weight.HasValue || weight >= sbw.WeightFrom && weight <= sbw.WeightTo);
-                
+
         //filter by order subtotal
         existingRates = !orderSubtotal.HasValue ? existingRates :
             existingRates.Where(sbw => orderSubtotal >= sbw.OrderSubtotalFrom && orderSubtotal <= sbw.OrderSubtotalTo);

@@ -95,14 +95,14 @@ public partial class SpecificationAttributeController : BaseAdminController
     [CheckPermission(StandardPermission.Catalog.SPECIFICATION_ATTRIBUTES_VIEW)]
     public virtual async Task<IActionResult> List()
     {
-        var model = await _specificationAttributeModelFactory.PrepareSpecificationAttributeGroupSearchModelAsync(new SpecificationAttributeGroupSearchModel());
+        var model = await _specificationAttributeModelFactory.PrepareSpecificationAttributeSearchModelAsync(new SpecificationAttributeSearchModel());
 
         return View(model);
     }
 
     [HttpPost]
     [CheckPermission(StandardPermission.Catalog.SPECIFICATION_ATTRIBUTES_VIEW)]
-    public virtual async Task<IActionResult> SpecificationAttributeGroupList(SpecificationAttributeGroupSearchModel searchModel)
+    public virtual async Task<IActionResult> SpecificationAttributeGroupList(SpecificationAttributeSearchModel searchModel)
     {
         var model = await _specificationAttributeModelFactory.PrepareSpecificationAttributeGroupListModelAsync(searchModel);
 
@@ -334,12 +334,10 @@ public partial class SpecificationAttributeController : BaseAdminController
 
         var specificationAttributes = await _specificationAttributeService.GetSpecificationAttributeByIdsAsync(selectedIds.ToArray());
         await _specificationAttributeService.DeleteSpecificationAttributesAsync(specificationAttributes);
-
-        foreach (var specificationAttribute in specificationAttributes)
-        {
-            await _customerActivityService.InsertActivityAsync("DeleteSpecAttribute",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteSpecAttribute"), specificationAttribute.Name), specificationAttribute);
-        }
+        
+        //activity log
+        var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.DeleteSpecAttribute");
+        await _customerActivityService.InsertActivitiesAsync("DeleteSpecAttribute", specificationAttributes, specificationAttribute => string.Format(activityLogFormat, specificationAttribute.Name));
 
         return Json(new { Result = true });
     }
@@ -507,7 +505,6 @@ public partial class SpecificationAttributeController : BaseAdminController
 
     [HttpPost]
     [CheckPermission(StandardPermission.Catalog.SPECIFICATION_ATTRIBUTES_VIEW)]
-    [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
     public virtual async Task<IActionResult> UsedByProducts(SpecificationAttributeProductSearchModel searchModel)
     {
         //try to get a specification attribute with the specified id

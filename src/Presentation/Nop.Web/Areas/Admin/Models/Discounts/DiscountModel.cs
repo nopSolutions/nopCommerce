@@ -20,6 +20,7 @@ public partial record DiscountModel : BaseNopEntityModel
         DiscountProductSearchModel = new DiscountProductSearchModel();
         DiscountCategorySearchModel = new DiscountCategorySearchModel();
         DiscountManufacturerSearchModel = new DiscountManufacturerSearchModel();
+        AvailableVendors = new List<SelectListItem>();
     }
 
     #endregion
@@ -93,6 +94,10 @@ public partial record DiscountModel : BaseNopEntityModel
     [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.AppliedToSubCategories")]
     public bool AppliedToSubCategories { get; set; }
 
+    [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.Vendor")]
+    public int? VendorId { get; set; }
+    public IList<SelectListItem> AvailableVendors { get; set; }
+
     [NopResourceDisplayName("Admin.Promotions.Discounts.Requirements.DiscountRequirementType")]
     public string AddDiscountRequirement { get; set; }
 
@@ -105,6 +110,8 @@ public partial record DiscountModel : BaseNopEntityModel
     public int RequirementGroupId { get; set; }
 
     public IList<SelectListItem> AvailableRequirementGroups { get; set; }
+
+    public bool IsLoggedInAsVendor { get; set; }
 
     public DiscountUsageHistorySearchModel DiscountUsageHistorySearchModel { get; set; }
 

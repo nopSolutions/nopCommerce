@@ -319,12 +319,9 @@ public partial class NewsController : BaseAdminController
         await _newsService.DeleteNewsCommentsAsync(comments);
 
         //activity log
-        foreach (var newsComment in comments)
-        {
-            await _customerActivityService.InsertActivityAsync("DeleteNewsComment",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteNewsComment"), newsComment.Id), newsComment);
-        }
-
+        var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.DeleteNewsComment");
+        await _customerActivityService.InsertActivitiesAsync("DeleteNewsComment", comments, newsComment => string.Format(activityLogFormat, newsComment.Id));
+        
         return Json(new { Result = true });
     }
 
@@ -336,7 +333,7 @@ public partial class NewsController : BaseAdminController
             return NoContent();
 
         //filter not approved comments
-        var newsComments = (await _newsService.GetNewsCommentsByIdsAsync(selectedIds.ToArray())).Where(comment => !comment.IsApproved);
+        var newsComments = (await _newsService.GetNewsCommentsByIdsAsync(selectedIds.ToArray())).Where(comment => !comment.IsApproved).ToList();
 
         foreach (var newsComment in newsComments)
         {
@@ -346,11 +343,11 @@ public partial class NewsController : BaseAdminController
 
             //raise event 
             await _eventPublisher.PublishAsync(new NewsCommentApprovedEvent(newsComment));
-
-            //activity log
-            await _customerActivityService.InsertActivityAsync("EditNewsComment",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditNewsComment"), newsComment.Id), newsComment);
         }
+
+        //activity log
+        var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.EditNewsComment");
+        await _customerActivityService.InsertActivitiesAsync("EditNewsComment", newsComments, newsComment => string.Format(activityLogFormat, newsComment.Id));
 
         return Json(new { Result = true });
     }
@@ -363,19 +360,19 @@ public partial class NewsController : BaseAdminController
             return NoContent();
 
         //filter approved comments
-        var newsComments = (await _newsService.GetNewsCommentsByIdsAsync(selectedIds.ToArray())).Where(comment => comment.IsApproved);
+        var newsComments = (await _newsService.GetNewsCommentsByIdsAsync(selectedIds.ToArray())).Where(comment => comment.IsApproved).ToList();
 
         foreach (var newsComment in newsComments)
         {
             newsComment.IsApproved = false;
 
             await _newsService.UpdateNewsCommentAsync(newsComment);
-
-            //activity log
-            await _customerActivityService.InsertActivityAsync("EditNewsComment",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditNewsComment"), newsComment.Id), newsComment);
         }
 
+        //activity log
+        var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.EditNewsComment");
+        await _customerActivityService.InsertActivitiesAsync("EditNewsComment", newsComments, newsComment => string.Format(activityLogFormat, newsComment.Id));
+        
         return Json(new { Result = true });
     }
 

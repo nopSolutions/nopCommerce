@@ -352,9 +352,9 @@ public partial class CustomerService : ICustomerService
         if (_customerSettings.SuffixDeletedCustomers)
         {
             if (!string.IsNullOrEmpty(customer.Email))
-                customer.Email += "-DELETED";
+                customer.Email += NopCustomerServicesDefaults.CustomerDeletedSuffix;
             if (!string.IsNullOrEmpty(customer.Username))
-                customer.Username += "-DELETED";
+                customer.Username += NopCustomerServicesDefaults.CustomerDeletedSuffix;
         }
 
         await _customerRepository.UpdateAsync(customer, false);

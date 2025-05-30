@@ -228,6 +228,12 @@ public partial interface INopDataProvider
     Task ReIndexTablesAsync();
 
     /// <summary>
+    /// Shrinks database
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task ShrinkDatabaseAsync();
+
+    /// <summary>
     /// Build the connection string
     /// </summary>
     /// <param name="nopConnectionString">Connection string info</param>
@@ -296,6 +302,15 @@ public partial interface INopDataProvider
     /// <param name="resetIdentity">Performs reset identity column</param>
     Task TruncateAsync<TEntity>(bool resetIdentity = false) where TEntity : BaseEntity;
 
+    /// <summary>
+    /// Gets the name of the database collation
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the collation name
+    /// </returns>
+    Task<string> GetDataBaseCollationAsync();
+    
     #endregion
 
     #region Properties
@@ -314,6 +329,6 @@ public partial interface INopDataProvider
     /// Gets a value indicating whether this data provider supports backup
     /// </summary>
     bool BackupSupported { get; }
-
+    
     #endregion
 }

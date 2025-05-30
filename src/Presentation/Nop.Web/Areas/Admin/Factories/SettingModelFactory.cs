@@ -633,7 +633,8 @@ public partial class SettingModelFactory : ISettingModelFactory
         //fill in model values from the entity
         var model = new AdminAreaSettingsModel
         {
-            UseRichEditorInMessageTemplates = adminAreaSettings.UseRichEditorInMessageTemplates
+            UseRichEditorInMessageTemplates = adminAreaSettings.UseRichEditorInMessageTemplates,
+            UseStickyHeaderLayout = adminAreaSettings.UseStickyHeaderLayout
         };
 
         //fill in overridden values
@@ -857,7 +858,6 @@ public partial class SettingModelFactory : ISettingModelFactory
             CacheConfigModel = _appSettings.Get<CacheConfig>().ToConfigModel<CacheConfigModel>(),
             HostingConfigModel = _appSettings.Get<HostingConfig>().ToConfigModel<HostingConfigModel>(),
             DistributedCacheConfigModel = _appSettings.Get<DistributedCacheConfig>().ToConfigModel<DistributedCacheConfigModel>(),
-            AzureBlobConfigModel = _appSettings.Get<AzureBlobConfig>().ToConfigModel<AzureBlobConfigModel>(),
             InstallationConfigModel = _appSettings.Get<InstallationConfig>().ToConfigModel<InstallationConfigModel>(),
             PluginConfigModel = _appSettings.Get<PluginConfig>().ToConfigModel<PluginConfigModel>(),
             CommonConfigModel = _appSettings.Get<CommonConfig>().ToConfigModel<CommonConfigModel>(),
@@ -1147,11 +1147,15 @@ public partial class SettingModelFactory : ISettingModelFactory
             model.PaymentMethodAdditionalFeeTaxClassId_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.PaymentMethodAdditionalFeeTaxClassId, storeId);
             model.EuVatEnabled_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.EuVatEnabled, storeId);
             model.EuVatEnabledForGuests_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.EuVatEnabledForGuests, storeId);
+            model.EuVatRequired_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.EuVatRequired, storeId);
             model.EuVatShopCountryId_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.EuVatShopCountryId, storeId);
             model.EuVatAllowVatExemption_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.EuVatAllowVatExemption, storeId);
             model.EuVatUseWebService_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.EuVatUseWebService, storeId);
             model.EuVatAssumeValid_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.EuVatAssumeValid, storeId);
             model.EuVatEmailAdminWhenNewVatSubmitted_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.EuVatEmailAdminWhenNewVatSubmitted, storeId);
+            model.HmrcApiUrl_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.HmrcApiUrl, storeId);
+            model.HmrcClientId_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.HmrcClientId, storeId);
+            model.HmrcClientSecret_OverrideForStore = await _settingService.SettingExistsAsync(taxSettings, x => x.HmrcClientSecret, storeId);
         }
 
         //prepare available tax categories
@@ -1242,6 +1246,7 @@ public partial class SettingModelFactory : ISettingModelFactory
             model.NumberOfBestsellersOnHomepage_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.NumberOfBestsellersOnHomepage, storeId);
             model.SearchPageProductsPerPage_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.SearchPageProductsPerPage, storeId);
             model.SearchPageAllowCustomersToSelectPageSize_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.SearchPageAllowCustomersToSelectPageSize, storeId);
+            model.ShowSearchBoxCategories_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ShowSearchBoxCategories, storeId);
             model.SearchPagePriceRangeFiltering_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.SearchPagePriceRangeFiltering, storeId);
             model.SearchPagePriceFrom_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.SearchPagePriceFrom, storeId);
             model.SearchPagePriceTo_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.SearchPagePriceTo, storeId);
@@ -1277,6 +1282,7 @@ public partial class SettingModelFactory : ISettingModelFactory
             model.ProductReviewsSortByCreatedDateAscending_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ProductReviewsSortByCreatedDateAscending, storeId);
             model.ExportImportProductAttributes_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ExportImportProductAttributes, storeId);
             model.ExportImportProductSpecificationAttributes_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ExportImportProductSpecificationAttributes, storeId);
+            model.ExportImportTierPrices_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ExportImportTierPrices, storeId);
             model.ExportImportProductCategoryBreadcrumb_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ExportImportProductCategoryBreadcrumb, storeId);
             model.ExportImportCategoriesUsingCategoryName_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ExportImportCategoriesUsingCategoryName, storeId);
             model.ExportImportAllowDownloadImages_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ExportImportAllowDownloadImages, storeId);
@@ -1284,6 +1290,7 @@ public partial class SettingModelFactory : ISettingModelFactory
             model.RemoveRequiredProducts_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.RemoveRequiredProducts, storeId);
             model.ExportImportRelatedEntitiesByName_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ExportImportRelatedEntitiesByName, storeId);
             model.ExportImportProductUseLimitedToStores_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ExportImportProductUseLimitedToStores, storeId);
+            model.ExportImportCategoryUseLimitedToStores_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ExportImportCategoryUseLimitedToStores, storeId);
             model.DisplayDatePreOrderAvailability_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.DisplayDatePreOrderAvailability, storeId);
             model.UseAjaxCatalogProductsLoading_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.UseAjaxCatalogProductsLoading, storeId);
             model.EnableManufacturerFiltering_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.EnableManufacturerFiltering, storeId);

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Net.Http.Headers;
+using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
@@ -13,11 +14,13 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
+using Nop.Core.Domain.Seo;
 using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Authentication.External;
 using Nop.Services.Authentication.MultiFactor;
+using Nop.Services.Blogs;
 using Nop.Services.Catalog;
 using Nop.Services.Cms;
 using Nop.Services.Common;
@@ -26,6 +29,7 @@ using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.News;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
@@ -34,10 +38,17 @@ using Nop.Services.Shipping;
 using Nop.Services.Shipping.Pickup;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
+using Nop.Services.Topics;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
+using Nop.Web.Areas.Admin.Models.Blogs;
+using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Localization;
+using Nop.Web.Areas.Admin.Models.News;
+using Nop.Web.Areas.Admin.Models.Topics;
+using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Models.Extensions;
+using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.Security;
 
 namespace Nop.Web.Areas.Admin.Factories;
@@ -55,19 +66,24 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected readonly IActionContextAccessor _actionContextAccessor;
     protected readonly IAuthenticationPluginManager _authenticationPluginManager;
     protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
+    protected readonly IBlogService _blogService;
+    protected readonly ICategoryService _categoryService;
     protected readonly ICurrencyService _currencyService;
     protected readonly ICustomerService _customerService;
-    protected readonly IEventPublisher _eventPublisher;
-    protected readonly INopDataProvider _dataProvider;
     protected readonly IDateTimeHelper _dateTimeHelper;
+    protected readonly IEventPublisher _eventPublisher;
     protected readonly IExchangeRatePluginManager _exchangeRatePluginManager;
     protected readonly IHttpContextAccessor _httpContextAccessor;
     protected readonly ILanguageService _languageService;
     protected readonly ILocalizationService _localizationService;
     protected readonly IMaintenanceService _maintenanceService;
+    protected readonly IManufacturerService _manufacturerService;
     protected readonly IMeasureService _measureService;
     protected readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
+    protected readonly INewsService _newsService;
+    protected readonly INopDataProvider _dataProvider;
     protected readonly INopFileProvider _fileProvider;
+    protected readonly INopUrlHelper _nopUrlHelper;
     protected readonly IOrderService _orderService;
     protected readonly IPaymentPluginManager _paymentPluginManager;
     protected readonly IPickupPluginManager _pickupPluginManager;
@@ -81,6 +97,7 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected readonly IStoreContext _storeContext;
     protected readonly IStoreService _storeService;
     protected readonly ITaxPluginManager _taxPluginManager;
+    protected readonly ITopicService _topicService;
     protected readonly IUrlHelperFactory _urlHelperFactory;
     protected readonly IUrlRecordService _urlRecordService;
     protected readonly IWebHelper _webHelper;
@@ -100,19 +117,24 @@ public partial class CommonModelFactory : ICommonModelFactory
         IActionContextAccessor actionContextAccessor,
         IAuthenticationPluginManager authenticationPluginManager,
         IBaseAdminModelFactory baseAdminModelFactory,
+        IBlogService blogService,
+        ICategoryService categoryService,
         ICurrencyService currencyService,
         ICustomerService customerService,
-        IEventPublisher eventPublisher,
-        INopDataProvider dataProvider,
         IDateTimeHelper dateTimeHelper,
-        INopFileProvider fileProvider,
+        IEventPublisher eventPublisher,
         IExchangeRatePluginManager exchangeRatePluginManager,
         IHttpContextAccessor httpContextAccessor,
         ILanguageService languageService,
         ILocalizationService localizationService,
         IMaintenanceService maintenanceService,
+        IManufacturerService manufacturerService,
         IMeasureService measureService,
         IMultiFactorAuthenticationPluginManager multiFactorAuthenticationPluginManager,
+        INewsService newsService,
+        INopDataProvider dataProvider,
+        INopFileProvider fileProvider,
+        INopUrlHelper nopUrlHelper,
         IOrderService orderService,
         IPaymentPluginManager paymentPluginManager,
         IPickupPluginManager pickupPluginManager,
@@ -126,6 +148,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         IStoreContext storeContext,
         IStoreService storeService,
         ITaxPluginManager taxPluginManager,
+        ITopicService topicService,
         IUrlHelperFactory urlHelperFactory,
         IUrlRecordService urlRecordService,
         IWebHelper webHelper,
@@ -141,6 +164,8 @@ public partial class CommonModelFactory : ICommonModelFactory
         _actionContextAccessor = actionContextAccessor;
         _authenticationPluginManager = authenticationPluginManager;
         _baseAdminModelFactory = baseAdminModelFactory;
+        _blogService = blogService;
+        _categoryService = categoryService;
         _currencyService = currencyService;
         _customerService = customerService;
         _eventPublisher = eventPublisher;
@@ -151,9 +176,12 @@ public partial class CommonModelFactory : ICommonModelFactory
         _languageService = languageService;
         _localizationService = localizationService;
         _maintenanceService = maintenanceService;
+        _manufacturerService = manufacturerService;
         _measureService = measureService;
         _multiFactorAuthenticationPluginManager = multiFactorAuthenticationPluginManager;
+        _newsService = newsService;
         _fileProvider = fileProvider;
+        _nopUrlHelper = nopUrlHelper;
         _orderService = orderService;
         _paymentPluginManager = paymentPluginManager;
         _pickupPluginManager = pickupPluginManager;
@@ -167,6 +195,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         _storeContext = storeContext;
         _storeService = storeService;
         _taxPluginManager = taxPluginManager;
+        _topicService = topicService;
         _urlHelperFactory = urlHelperFactory;
         _urlRecordService = urlRecordService;
         _webHelper = webHelper;
@@ -211,6 +240,34 @@ public partial class CommonModelFactory : ICommonModelFactory
             Text = string.Format(await _localizationService.GetResourceAsync("Admin.System.Warnings.URL.NoMatch"),
                 currentStoreUrl, _webHelper.GetStoreLocation(false))
         });
+    }
+
+    /// <summary>
+    /// Prepare recommendations/warnings model
+    /// </summary>
+    /// <param name="models">List of system warning models</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    protected virtual async Task PrepareRecommendationsModelAsync(IList<SystemWarningModel> models)
+    {
+        ArgumentNullException.ThrowIfNull(models);
+
+        var recommendations = new List<string>();
+        try
+        {
+            var text = await _nopHttpClient.GetRecommendationsAsync();
+            recommendations = JsonConvert.DeserializeObject<List<string>>(text);
+        }
+        catch { }
+
+        foreach (var recommendation in recommendations ?? new())
+        {
+            models.Add(new SystemWarningModel
+            {
+                Level = SystemWarningLevel.Recommendation,
+                Text = recommendation,
+                DontEncode = true
+            });
+        }
     }
 
     /// <summary>
@@ -685,6 +742,38 @@ public partial class CommonModelFactory : ICommonModelFactory
         }
     }
 
+    /// <summary>
+    /// Prepare multistore preview models for an entity
+    /// </summary>
+    /// <typeparam name="TEntity">Entity type</typeparam>
+    /// <param name="entity">Entity</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the list of multistore preview models for an entity
+    /// </returns>
+    protected virtual async Task<IList<MultistorePreviewModel>> PrepareMultistorePreviewModelsForEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity, ISlugSupported
+    {
+        var models = new List<MultistorePreviewModel>();
+
+        var seName = await _urlRecordService.GetSeNameAsync(entity, ensureTwoPublishedLanguages: false);
+        var stores = await _storeService.GetAllStoresAsync();
+
+        foreach (var store in stores)
+        {
+            if (!Uri.TryCreate(store.Url, UriKind.Absolute, out var url))
+                continue;
+
+            models.Add(new MultistorePreviewModel
+            {
+                StoreName = store.Name,
+                Url = await _nopUrlHelper
+                    .RouteGenericUrlAsync<TEntity>(new { SeName = seName }, url.Scheme, url.IsDefaultPort ? url.Host : $"{url.Host}:{url.Port}"),
+            });
+        }
+
+        return models;
+    }
+
     #endregion
 
     #region Methods
@@ -711,6 +800,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         //ensure no exception is thrown
         try
         {
+            model.DatabaseCollation = await _dataProvider.GetDataBaseCollationAsync();
             model.OperatingSystem = Environment.OSVersion.VersionString;
             model.AspNetInfo = RuntimeInformation.FrameworkDescription;
             model.IsFullTrust = AppDomain.CurrentDomain.IsFullyTrusted;
@@ -758,7 +848,6 @@ public partial class CommonModelFactory : ICommonModelFactory
             model.LoadedAssemblies.Add(loadedAssemblyModel);
         }
 
-
         var currentStaticCacheManagerName = _staticCacheManager.GetType().Name;
 
         if (_appSettings.Get<DistributedCacheConfig>().Enabled)
@@ -766,8 +855,6 @@ public partial class CommonModelFactory : ICommonModelFactory
                 $"({await _localizationService.GetLocalizedEnumAsync(_appSettings.Get<DistributedCacheConfig>().DistributedCacheType)})";
 
         model.CurrentStaticCacheManager = currentStaticCacheManagerName;
-
-        model.AzureBlobStorageEnabled = _appSettings.Get<AzureBlobConfig>().Enabled;
 
         return model;
     }
@@ -846,6 +933,9 @@ public partial class CommonModelFactory : ICommonModelFactory
         //store URL
         await PrepareStoreUrlWarningModelAsync(models);
 
+        //recommendations
+        await PrepareRecommendationsModelAsync(models);
+
         //primary exchange rate currency
         await PrepareExchangeRateCurrencyWarningModelAsync(models);
 
@@ -873,10 +963,9 @@ public partial class CommonModelFactory : ICommonModelFactory
         //proxy connection
         await PrepareProxyConnectionWarningModelAsync(models);
 
-        //publish event
+        //publish event and add another warnings (for example from plugins) 
         var warningEvent = new SystemWarningCreatedEvent();
         await _eventPublisher.PublishAsync(warningEvent);
-        //add another warnings (for example from plugins) 
         models.AddRange(warningEvent.SystemWarnings);
 
         return models;
@@ -1151,6 +1240,48 @@ public partial class CommonModelFactory : ICommonModelFactory
             (await _productService.GetLowStockProductCombinationsAsync(getOnlyTotalCount: true)).TotalCount;
 
         return model;
+    }
+
+    /// <summary>
+    /// Prepare multistore preview models
+    /// </summary>
+    /// <typeparam name="TModel">Model type</typeparam>
+    /// <param name="model">Entity model</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the list of multistore preview models
+    /// </returns>
+    public virtual async Task<IList<MultistorePreviewModel>> PrepareMultistorePreviewModelsAsync<TModel>(TModel model) where TModel : BaseNopEntityModel
+    {
+        switch (model)
+        {
+            case BlogPostModel blogPostModel:
+                var blogPost = await _blogService.GetBlogPostByIdAsync(blogPostModel.Id);
+                return await PrepareMultistorePreviewModelsForEntityAsync(blogPost);
+
+            case CategoryModel categoryModel:
+                var category = await _categoryService.GetCategoryByIdAsync(categoryModel.Id);
+                return await PrepareMultistorePreviewModelsForEntityAsync(category);
+
+            case ManufacturerModel manufacturerModel:
+                var manufacturerEntity = await _manufacturerService.GetManufacturerByIdAsync(manufacturerModel.Id);
+                return await PrepareMultistorePreviewModelsForEntityAsync(manufacturerEntity);
+
+            case NewsItemModel newsItemModel:
+                var newsItem = await _newsService.GetNewsByIdAsync(newsItemModel.Id);
+                return await PrepareMultistorePreviewModelsForEntityAsync(newsItem);
+
+            case ProductModel productModel:
+                var product = await _productService.GetProductByIdAsync(productModel.Id);
+                return await PrepareMultistorePreviewModelsForEntityAsync(product);
+
+            case TopicModel topicModel:
+                var topic = await _topicService.GetTopicByIdAsync(topicModel.Id);
+                return await PrepareMultistorePreviewModelsForEntityAsync(topic);
+
+            default:
+                throw new NotImplementedException("Unknown entity type");
+        }
     }
 
     #endregion

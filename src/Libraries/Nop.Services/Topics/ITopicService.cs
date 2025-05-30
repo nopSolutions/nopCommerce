@@ -72,6 +72,14 @@ public partial interface ITopicService
     Task InsertTopicAsync(Topic topic);
 
     /// <summary>
+    /// Get a value indicating whether a topic is available (availability dates)
+    /// </summary>
+    /// <param name="topic">Topic</param>
+    /// <param name="dateTime">Datetime to check; pass null to use current date</param>
+    /// <returns>Result</returns>
+    bool TopicIsAvailable(Topic topic, DateTime? dateTime = null);
+
+    /// <summary>
     /// Updates the topic
     /// </summary>
     /// <param name="topic">Topic</param>

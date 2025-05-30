@@ -56,6 +56,7 @@ Admin.Navigation = (function () {
 
     var init = function () {
         map = buildMap();
+        var result = [];
         $.ajax({
             cache: false,
             url: rootAppPath + 'Admin/Plugin/AdminNavigationPlugins',
@@ -66,7 +67,7 @@ Admin.Navigation = (function () {
             }
         });
 
-        for (i = 0; i < result.length; i++) {
+        for (var i = 0; i < result.length; i++) {
             map[result[i].link] = result[i];
         }
     };

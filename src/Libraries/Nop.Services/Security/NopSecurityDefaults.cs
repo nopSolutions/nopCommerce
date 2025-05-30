@@ -1,5 +1,4 @@
 ﻿using Nop.Core.Caching;
-using Nop.Core.Domain.Security;
 
 namespace Nop.Services.Security;
 
@@ -64,7 +63,7 @@ public static partial class NopSecurityDefaults
     /// {0} : permission system name
     /// {1} : customer role ID
     /// </remarks>
-    public static CacheKey PermissionAllowedCacheKey => new("Nop.permissionrecord.allowed.{0}-{1}", PermissionAllowedPrefix);
+    public static CacheKey PermissionAllowedCacheKey => new("Nop.permissionrecord.allowed.{0}-{1}");
 
     /// <summary>
     /// Gets a key pattern to clear cache
@@ -80,7 +79,7 @@ public static partial class NopSecurityDefaults
     /// <remarks>
     /// {0} : customer role ID
     /// </remarks>
-    public static CacheKey PermissionRecordsAllCacheKey => new("Nop.permissionrecord.all.{0}", NopEntityCacheDefaults<PermissionRecord>.AllPrefix);
+    public static CacheKey PermissionRecordsAllCacheKey => new("Nop.permissionrecord.all.{0}");
 
     #endregion
 

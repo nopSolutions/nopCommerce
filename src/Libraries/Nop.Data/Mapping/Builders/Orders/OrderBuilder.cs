@@ -26,7 +26,8 @@ public partial class OrderBuilder : NopEntityBuilder<Order>
             .WithColumn(nameof(Order.CustomerId)).AsInt32().ForeignKey<Customer>(onDelete: Rule.None)
             .WithColumn(nameof(Order.PickupAddressId)).AsInt32().Nullable().ForeignKey<Address>(onDelete: Rule.None)
             .WithColumn(nameof(Order.ShippingAddressId)).AsInt32().Nullable().ForeignKey<Address>(onDelete: Rule.None)
-            .WithColumn(nameof(Order.CustomerIp)).AsString(100).Nullable();
+            .WithColumn(nameof(Order.CustomerIp)).AsString(100).Nullable()
+            .WithColumn(nameof(Order.OrderGuid)).AsGuid().Unique("AK_Order_OrderGuid");
     }
 
     #endregion

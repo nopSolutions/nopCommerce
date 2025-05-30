@@ -4,20 +4,9 @@
 @{
     //page title
     ViewBag.PageTitle = T("Admin.Configuration.Shipping.Providers.Title").Text;
-    //tour step
-    ViewBag.TourStep = TourStep.ShippingProviders;
     //active menu item (system name)
     NopHtml.SetActiveMenuItemSystemName("Shipping providers");
-
-    string editQueryString = string.Empty;
-    var showTour = ViewBag.ShowTour ?? false;
-    if (showTour)
-    {
-        editQueryString = "?showtour=true";
-    }
 }
-
-@await Html.PartialAsync("_AdminTour")
 
 <div class="content-header clearfix">
     <h1 class="float-left">
@@ -98,7 +87,7 @@
                         <script>
                             function renderColumnConfigure(data, type, row, meta) {
                                 if (row.ConfigurationUrl && row.ConfigurationUrl.length > 0) {
-                                    return '<a class="btn btn-default" href="' + row.ConfigurationUrl + '@(editQueryString)"><i class="fas fa-cog"></i>@T("Admin.Configuration.Shipping.Providers.Configure").Text</a>';
+                                    return '<a class="btn btn-default" href="' + row.ConfigurationUrl + '"><i class="fas fa-gear"></i>@T("Admin.Configuration.Shipping.Providers.Configure").Text</a>';
                                 } else {
                                     return '';
                                 }
@@ -110,3 +99,8 @@
         </div>
     </div>
 </section>
+
+@if (await Html.IsTourActiveAsync())
+{
+    @await Html.PartialAsync("_Providers.Tour")
+}

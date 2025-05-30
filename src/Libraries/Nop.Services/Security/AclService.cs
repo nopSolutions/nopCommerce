@@ -72,7 +72,7 @@ public partial class AclService : IAclService
             where acl.EntityName == entityName
             select acl;
 
-        return await _staticCacheManager.GetAsync(key, query.Any);
+        return await _staticCacheManager.GetAsync(key, async () => await query.AnyAsync());
     }
 
     #endregion
@@ -209,7 +209,7 @@ public partial class AclService : IAclService
                   ur.EntityName == entityName
             select ur.CustomerRoleId;
 
-        return await _staticCacheManager.GetAsync(key, () => query.ToArray());
+        return await _staticCacheManager.GetAsync(key, () => query.ToArrayAsync());
     }
 
     /// <summary>

@@ -275,11 +275,11 @@ public partial class NopStartup : INopStartup
             });
         }
 
+        //picture thumb service
+        services.AddScoped<IThumbService, ThumbService>();
+
         //picture service
-        if (appSettings.Get<AzureBlobConfig>().Enabled)
-            services.AddScoped<IPictureService, AzurePictureService>();
-        else
-            services.AddScoped<IPictureService, PictureService>();
+        services.AddScoped<IPictureService, PictureService>();
 
         //roxy file manager
         services.AddScoped<IRoxyFilemanService, RoxyFilemanService>();
@@ -306,8 +306,8 @@ public partial class NopStartup : INopStartup
                  }, typeof(IConsumer<>)))
             services.AddScoped(findInterface, consumer);
 
-        //XML sitemap
-        services.AddScoped<IXmlSiteMap, XmlSiteMap>();
+        //admin menu
+        services.AddScoped<IAdminMenu, AdminMenu>();
 
         //register the Lazy resolver for .Net IoC
         var useAutofac = appSettings.Get<CommonConfig>().UseAutofac;

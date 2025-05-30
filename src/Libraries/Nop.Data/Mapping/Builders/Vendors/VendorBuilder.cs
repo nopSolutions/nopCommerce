@@ -1,5 +1,7 @@
 ﻿using FluentMigrator.Builders.Create.Table;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Vendors;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Mapping.Builders.Vendors;
 
@@ -21,7 +23,8 @@ public partial class VendorBuilder : NopEntityBuilder<Vendor>
             .WithColumn(nameof(Vendor.Email)).AsString(400).Nullable()
             .WithColumn(nameof(Vendor.MetaKeywords)).AsString(400).Nullable()
             .WithColumn(nameof(Vendor.MetaTitle)).AsString(400).Nullable()
-            .WithColumn(nameof(Vendor.PageSizeOptions)).AsString(200).Nullable();
+            .WithColumn(nameof(Vendor.PageSizeOptions)).AsString(200).Nullable()
+            .WithColumn(nameof(Vendor.PmCustomerId)).AsInt32().Nullable().ForeignKey<Customer>();
     }
 
     #endregion

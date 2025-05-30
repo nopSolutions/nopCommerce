@@ -312,11 +312,20 @@ public partial record ProductModel : BaseNopEntityModel,
     [UIHint("DateTimeNullable")]
     public DateTime? PreOrderAvailabilityStartDateTimeUtc { get; set; }
 
+    [NopResourceDisplayName("Admin.Catalog.Products.Fields.AgeVerification")]
+    public bool AgeVerification { get; set; }
+
+    [NopResourceDisplayName("Admin.Catalog.Products.Fields.MinimumAgeToPurchase")]
+    public int MinimumAgeToPurchase { get; set; }
+
     [NopResourceDisplayName("Admin.Catalog.Products.Fields.CallForPrice")]
     public bool CallForPrice { get; set; }
 
     [NopResourceDisplayName("Admin.Catalog.Products.Fields.Price")]
     public decimal Price { get; set; }
+
+    [NopResourceDisplayName("Admin.Catalog.Products.Fields.Price")]
+    public string FormattedPrice { get; set; }
 
     [NopResourceDisplayName("Admin.Catalog.Products.Fields.OldPrice")]
     public decimal OldPrice { get; set; }

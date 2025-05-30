@@ -40,6 +40,7 @@ public partial class DiscountModelFactory : IDiscountModelFactory
     protected readonly IProductService _productService;
     protected readonly IUrlRecordService _urlRecordService;
     protected readonly IWebHelper _webHelper;
+    protected readonly IWorkContext _workContext;
 
     #endregion
 
@@ -58,7 +59,8 @@ public partial class DiscountModelFactory : IDiscountModelFactory
         IPriceFormatter priceFormatter,
         IProductService productService,
         IUrlRecordService urlRecordService,
-        IWebHelper webHelper)
+        IWebHelper webHelper,
+        IWorkContext workContext)
     {
         _currencySettings = currencySettings;
         _baseAdminModelFactory = baseAdminModelFactory;
@@ -74,6 +76,7 @@ public partial class DiscountModelFactory : IDiscountModelFactory
         _productService = productService;
         _urlRecordService = urlRecordService;
         _webHelper = webHelper;
+        _workContext = workContext;
     }
 
     #endregion
@@ -181,6 +184,11 @@ public partial class DiscountModelFactory : IDiscountModelFactory
         //prepare available discount types
         await _baseAdminModelFactory.PrepareDiscountTypesAsync(searchModel.AvailableDiscountTypes);
 
+        //prepare available vendors
+        searchModel.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
+        if (!searchModel.IsLoggedInAsVendor)
+            await _baseAdminModelFactory.PrepareVendorsAsync(searchModel.AvailableVendors);
+
         //prepare "is active" filter (0 - all; 1 - active only; 2 - inactive only)
         searchModel.AvailableActiveOptions.Add(new SelectListItem
         {
@@ -224,6 +232,13 @@ public partial class DiscountModelFactory : IDiscountModelFactory
             (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.SearchEndDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1) : null;
         var isActive = searchModel.IsActiveId == 0 ? null : (bool?)(searchModel.IsActiveId == 1);
 
+        var currentVendor = await _workContext.GetCurrentVendorAsync();
+        if (currentVendor != null)
+        {
+            searchModel.SearchVendorId = currentVendor.Id;
+            discountType = DiscountType.AssignedToSkus;
+        }
+
         //get discounts
         var discounts = (await _discountService.GetAllDiscountsAsync(showHidden: true,
             discountType: discountType,
@@ -231,7 +246,8 @@ public partial class DiscountModelFactory : IDiscountModelFactory
             discountName: searchModel.SearchDiscountName,
             startDateUtc: startDateUtc,
             endDateUtc: endDateUtc,
-            isActive: isActive)).ToPagedList(searchModel);
+            isActive: isActive,
+            vendorId: searchModel.SearchVendorId)).ToPagedList(searchModel);
 
         //prepare list model
         var model = await new DiscountListModel().PrepareToGridAsync(searchModel, discounts, () =>
@@ -304,6 +320,20 @@ public partial class DiscountModelFactory : IDiscountModelFactory
             PrepareDiscountProductSearchModel(model.DiscountProductSearchModel, discount);
             PrepareDiscountCategorySearchModel(model.DiscountCategorySearchModel, discount);
             PrepareDiscountManufacturerSearchModel(model.DiscountManufacturerSearchModel, discount);
+        }
+
+        model.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
+
+        if (model.IsLoggedInAsVendor)
+        {
+            model.DiscountTypeId = (int)DiscountType.AssignedToSkus;
+        }
+        else
+        {
+            //prepare available vendors
+            model.AvailableVendors.Add(new SelectListItem { Value = string.Empty, Text = await _localizationService.GetResourceAsync("Admin.Promotions.Discounts.Fields.Vendor.None") });
+            await _baseAdminModelFactory.PrepareVendorsAsync(model.AvailableVendors, withSpecialDefaultItem: false);
+
         }
 
         model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
@@ -458,6 +488,7 @@ public partial class DiscountModelFactory : IDiscountModelFactory
                 var discountProductModel = product.ToModel<DiscountProductModel>();
                 discountProductModel.ProductId = product.Id;
                 discountProductModel.ProductName = product.Name;
+                discountProductModel.VendorId = product.VendorId;
 
                 return discountProductModel;
             });
@@ -477,6 +508,8 @@ public partial class DiscountModelFactory : IDiscountModelFactory
     public virtual async Task<AddProductToDiscountSearchModel> PrepareAddProductToDiscountSearchModelAsync(AddProductToDiscountSearchModel searchModel)
     {
         ArgumentNullException.ThrowIfNull(searchModel);
+
+        searchModel.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
 
         //prepare available categories
         await _baseAdminModelFactory.PrepareCategoriesAsync(searchModel.AvailableCategories);
@@ -510,6 +543,11 @@ public partial class DiscountModelFactory : IDiscountModelFactory
     public virtual async Task<AddProductToDiscountListModel> PrepareAddProductToDiscountListModelAsync(AddProductToDiscountSearchModel searchModel)
     {
         ArgumentNullException.ThrowIfNull(searchModel);
+
+        //a vendor should have access only to his products
+        var currentVendor = await _workContext.GetCurrentVendorAsync();
+        if (currentVendor != null)
+            searchModel.SearchVendorId = currentVendor.Id;
 
         //get products
         var products = await _productService.SearchProductsAsync(showHidden: true,

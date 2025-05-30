@@ -1,0 +1,333 @@
+﻿@using System.Text.Encodings.Web
+@model ConfigurationModel
+
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+<link rel="stylesheet" href="~/Plugins/Widgets.AccessiBe/Content/styles.css" />
+
+@await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
+
+<form class="accessibe-form" asp-controller="AccessiBe" asp-action="Configure" method="post">
+    <div class="cards-group">
+        <div class="card card-default">
+            <div class="card-body">
+                <p>
+                    1. Sign up to <a href="https://dashboard.accessibe.com/app/signup?utm_source=nopcommerce.com&utm_medium=web&utm_campaign=nopcommerce_v1" target="_blank">accessibe.com</a><br />
+                    2. Click "<b>Start a 7-day trial</b>" and enter your domain<br />
+                    3. Activate the widget on this page and customize its appearance<br />
+                    <br />
+                </p>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="Enabled_OverrideForStore" asp-input="Enabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="Enabled" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Enabled"
+                                    html-attributes="@(new { data_toggle = "tooltip", title= T("Plugins.Widgets.AccessiBe.Fields.Enabled.Hint").Text, data_trigger="focus", data_placement="top" })" />
+                        <span asp-validation-for="Enabled"></span>
+                    </div>
+                </div>
+
+                <div id="config-section" role="group" aria-labelledby="@Html.IdFor(m => m.Enabled)Label">
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="TriggerModel.HideTrigger_OverrideForStore" asp-input="TriggerModel.HideTrigger" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="TriggerModel.HideTrigger" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="TriggerModel.HideTrigger"
+                                        html-attributes="@(new { data_toggle = "tooltip", title= T("Plugins.Widgets.AccessiBe.Fields.HideTrigger.Hint").Text, data_trigger="focus", data_placement="top" })" />
+                            <span asp-validation-for="TriggerModel.HideTrigger"></span>
+                        </div>
+                    </div>
+                    <div id="trigger-button-section" role="group" aria-labelledby="@Html.IdFor(m => m.TriggerModel.HideTrigger)Label">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="TriggerModel.LeadColor_OverrideForStore" asp-input="TriggerModel.LeadColor" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="TriggerModel.LeadColor" />
+                            </div>
+                            <div class="col-md-9">
+                                <input type="color" asp-for="TriggerModel.LeadColor"
+                                       data-toggle="tooltip" title="@T("Plugins.Widgets.AccessiBe.Fields.LeadColor.Hint")" data-trigger="focus" data-placement="top" />
+                                <span asp-validation-for="TriggerModel.LeadColor"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="TriggerModel.StatementLink_OverrideForStore" asp-input="TriggerModel.StatementLink" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="TriggerModel.StatementLink" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="TriggerModel.StatementLink"
+                                            html-attributes="@(new { data_toggle = "tooltip", title= T("Plugins.Widgets.AccessiBe.Fields.StatementLink.Hint").Text, data_trigger="focus", data_placement="top" })" />
+                                <span asp-validation-for="TriggerModel.StatementLink"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="TriggerModel.FooterHtml_OverrideForStore" asp-input="TriggerModel.FooterHtml" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="TriggerModel.FooterHtml" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="TriggerModel.FooterHtml"
+                                            html-attributes="@(new { data_toggle = "tooltip", title= T("Plugins.Widgets.AccessiBe.Fields.FooterHtml.Hint").Text, data_trigger="focus", data_placement="top" })" />
+                                <span asp-validation-for="TriggerModel.FooterHtml"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="TriggerModel.Language_OverrideForStore" asp-input="TriggerModel.Language" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="TriggerModel.Language" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="TriggerModel.Language" asp-items="@Model.TriggerModel.Languages"
+                                            data-toggle="tooltip" title="@T("Plugins.Widgets.AccessiBe.Fields.Language.Hint")" data-trigger="focus" data-placement="top" />
+                                <span asp-validation-for="TriggerModel.Language"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="TriggerModel.Position_OverrideForStore" asp-input="TriggerModel.Position" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="TriggerModel.Position" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="TriggerModel.Position" asp-items="@await Model.TriggerModel.Position.ToSelectListAsync()"
+                                            data-toggle="tooltip" title="@T("Plugins.Widgets.AccessiBe.Fields.Position.Hint")" data-trigger="focus" data-placement="top" />
+                                <span asp-validation-for="TriggerModel.Position"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="TriggerModel.TriggerColor_OverrideForStore" asp-input="TriggerModel.TriggerColor" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="TriggerModel.TriggerColor" />
+                            </div>
+                            <div class="col-md-9">
+                                <input type="color" asp-for="TriggerModel.TriggerColor"
+                                       data-toggle="tooltip" title="@T("Plugins.Widgets.AccessiBe.Fields.TriggerColor.Hint")" data-trigger="focus" data-placement="top" />
+                                <span asp-validation-for="TriggerModel.TriggerColor"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="TriggerModel.TriggerPositionX_OverrideForStore" asp-input="TriggerModel.TriggerPositionX" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="TriggerModel.TriggerPositionX" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="TriggerModel.TriggerPositionX" asp-items="@await Model.TriggerModel.TriggerPositionX.ToSelectListAsync()"
+                                            data-toggle="tooltip" title="@T("Plugins.Widgets.AccessiBe.Fields.TriggerPositionX.Hint")" data-trigger="focus" data-placement="top" />
+                                <span asp-validation-for="TriggerModel.TriggerPositionX"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="TriggerModel.TriggerPositionY_OverrideForStore" asp-input="TriggerModel.TriggerPositionY" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="TriggerModel.TriggerPositionY" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="TriggerModel.TriggerPositionY" asp-items="@await Model.TriggerModel.TriggerPositionY.ToSelectListAsync()"
+                                            data-toggle="tooltip" title="@T("Plugins.Widgets.AccessiBe.Fields.TriggerPositionY.Hint")" data-trigger="focus" data-placement="top" />
+                                <span asp-validation-for="TriggerModel.TriggerPositionY"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="TriggerModel.TriggerSize_OverrideForStore" asp-input="TriggerModel.TriggerSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="TriggerModel.TriggerSize" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="TriggerModel.TriggerSize" asp-items="@await Model.TriggerModel.TriggerSize.ToSelectListAsync()"
+                                            data-toggle="tooltip" title="@T("Plugins.Widgets.AccessiBe.Fields.TriggerSize.Hint")" data-trigger="focus" data-placement="top" />
+                                <span asp-validation-for="TriggerModel.TriggerSize"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="TriggerModel.TriggerRadius_OverrideForStore" asp-input="TriggerModel.TriggerRadius" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="TriggerModel.TriggerRadius" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="TriggerModel.TriggerRadius" asp-items="@await Model.TriggerModel.TriggerRadius.ToSelectListAsync()"
+                                            data-toggle="tooltip" title="@T("Plugins.Widgets.AccessiBe.Fields.TriggerShape.Hint")" data-trigger="focus" data-placement="top" />
+                                <span asp-validation-for="TriggerModel.TriggerRadius"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="TriggerModel.TriggerOffsetX_OverrideForStore" asp-input="TriggerModel.TriggerOffsetX" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="TriggerModel.TriggerOffsetX" />
+                            </div>
+                            <div class="col-md-9">
+                                <input class="form-control" asp-for="TriggerModel.TriggerOffsetX"
+                                       data-toggle="tooltip" title="@T("Plugins.Widgets.AccessiBe.Fields.TriggerOffsetX.Hint")" data-trigger="focus" data-placement="top" />
+                                <span asp-validation-for="TriggerModel.TriggerOffsetX"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="TriggerModel.TriggerOffsetY_OverrideForStore" asp-input="TriggerModel.TriggerOffsetY" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="TriggerModel.TriggerOffsetY" />
+                            </div>
+                            <div class="col-md-9">
+                                <input class="form-control" asp-for="TriggerModel.TriggerOffsetY"
+                                       data-toggle="tooltip" title="@T("Plugins.Widgets.AccessiBe.Fields.TriggerOffsetY.Hint")" data-trigger="focus" data-placement="top" />
+                                <span asp-validation-for="TriggerModel.TriggerOffsetY"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="TriggerModel.TriggerIcon_OverrideForStore" asp-parent-container="trigger-icon-container" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="TriggerModel.TriggerIcon" />
+                            </div>
+                            <div class="col-md-9">
+                                @await Html.PartialAsync("~/Plugins/Widgets.AccessiBe/Views/_Configure.Icons.cshtml", (Html.IdFor(m => m.TriggerModel.TriggerIcon), Html.NameFor(m => m.TriggerModel.TriggerIcon), Model.TriggerModel.TriggerIcon))
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="TriggerModel.ShowMobile_OverrideForStore" asp-input="TriggerModel.ShowMobile" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="TriggerModel.ShowMobile" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="TriggerModel.ShowMobile"
+                                            html-attributes="@(new { data_toggle = "tooltip", title= T("Plugins.Widgets.AccessiBe.Fields.ShowMobile.Hint").Text, data_trigger="focus", data_placement="top" })" />
+                                <span asp-validation-for="TriggerModel.ShowMobile"></span>
+                            </div>
+                        </div>
+                        <nop-nested-setting asp-for="TriggerModel.ShowMobile">
+                            <div role="group" aria-labeledby="@Html.IdFor(m => m.TriggerModel.ShowMobile)Label">
+                                <div class="form-group row">
+                                    <div class="col-md-3">
+                                        <nop-override-store-checkbox asp-for="TriggerMobileModel.TriggerPositionX_OverrideForStore" asp-input="TriggerMobileModel.TriggerPositionX" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                        <nop-label asp-for="TriggerMobileModel.TriggerPositionX" />
+                                    </div>
+                                    <div class="col-md-9">
+                                        <nop-select asp-for="TriggerMobileModel.TriggerPositionX" asp-items="@await Model.TriggerMobileModel.TriggerPositionX.ToSelectListAsync()"
+                                                    data-toggle="tooltip" title="@T("Plugins.Widgets.AccessiBe.Fields.TriggerPositionX.Hint")" data-trigger="focus" data-placement="top" />
+                                        <span asp-validation-for="TriggerMobileModel.TriggerPositionX"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-3">
+                                        <nop-override-store-checkbox asp-for="TriggerMobileModel.TriggerPositionY_OverrideForStore" asp-input="TriggerMobileModel.TriggerPositionY" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                        <nop-label asp-for="TriggerMobileModel.TriggerPositionY" />
+                                    </div>
+                                    <div class="col-md-9">
+                                        <nop-select asp-for="TriggerMobileModel.TriggerPositionY" asp-items="@await Model.TriggerMobileModel.TriggerPositionY.ToSelectListAsync()"
+                                                    data-toggle="tooltip" title="@T("Plugins.Widgets.AccessiBe.Fields.TriggerPositionY.Hint")" data-trigger="focus" data-placement="top" />
+                                        <span asp-validation-for="TriggerMobileModel.TriggerPositionY"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-3">
+                                        <nop-override-store-checkbox asp-for="TriggerMobileModel.TriggerRadius_OverrideForStore" asp-input="TriggerMobileModel.TriggerRadius" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                        <nop-label asp-for="TriggerMobileModel.TriggerRadius" />
+                                    </div>
+                                    <div class="col-md-9">
+                                        <nop-select asp-for="TriggerMobileModel.TriggerRadius" asp-items="@await Model.TriggerMobileModel.TriggerRadius.ToSelectListAsync()"
+                                                    data-toggle="tooltip" title="@T("Plugins.Widgets.AccessiBe.Fields.TriggerShape.Hint")" data-trigger="focus" data-placement="top" />
+                                        <span asp-validation-for="TriggerMobileModel.TriggerRadius"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-3">
+                                        <nop-override-store-checkbox asp-for="TriggerMobileModel.TriggerSize_OverrideForStore" asp-input="TriggerMobileModel.TriggerSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                        <nop-label asp-for="TriggerMobileModel.TriggerSize" />
+                                    </div>
+                                    <div class="col-md-9">
+                                        <nop-select asp-for="TriggerMobileModel.TriggerSize" asp-items="@await Model.TriggerMobileModel.TriggerSize.ToSelectListAsync()"
+                                                    data-toggle="tooltip" title="@T("Plugins.Widgets.AccessiBe.Fields.TriggerSize.Hint")" data-trigger="focus" data-placement="top" />
+                                        <span asp-validation-for="TriggerMobileModel.TriggerSize"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-3">
+                                        <nop-override-store-checkbox asp-for="TriggerMobileModel.TriggerOffsetX_OverrideForStore" asp-input="TriggerMobileModel.TriggerOffsetX" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                        <nop-label asp-for="TriggerMobileModel.TriggerOffsetX" />
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input class="form-control" asp-for="TriggerMobileModel.TriggerOffsetX"
+                                               data-toggle="tooltip" title="@T("Plugins.Widgets.AccessiBe.Fields.TriggerOffsetX.Hint")" data-trigger="focus" data-placement="top" />
+                                        <span asp-validation-for="TriggerMobileModel.TriggerOffsetX"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-3">
+                                        <nop-override-store-checkbox asp-for="TriggerMobileModel.TriggerOffsetY_OverrideForStore" asp-input="TriggerMobileModel.TriggerOffsetY" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                        <nop-label asp-for="TriggerMobileModel.TriggerOffsetY" />
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input class="form-control" asp-for="TriggerMobileModel.TriggerOffsetY"
+                                               data-toggle="tooltip" title="@T("Plugins.Widgets.AccessiBe.Fields.TriggerOffsetY.Hint")" data-trigger="focus" data-placement="top" />
+                                        <span asp-validation-for="TriggerMobileModel.TriggerOffsetY"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </nop-nested-setting>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-9 offset-md-3">
+                        <input type="submit" name="save" class="btn btn-primary" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script asp-location="Footer">
+    $(function() {
+        const configSection = $('#config-section');
+        const enableCheckBox = $('#@Html.IdFor(m => m.Enabled)');
+
+
+        const triggerButtonSection = $('#trigger-button-section');
+        const triggerButton = $('#@Html.IdFor(m => m.TriggerModel.HideTrigger)');
+
+        const scriptIsCustomized = @Model.ScriptIsCustomized.ToString().ToLower();
+
+        toggleConfig();
+        enableCheckBox.on('change', toggleConfig);
+
+        toggleTriggerButton();
+        triggerButton.on('change', toggleTriggerButton);
+
+        $('[data-toggle="tooltip"]').tooltip('update');
+
+        $('label:not([id])').each(function() {
+            if ($(this).attr('for'))
+                $(this).attr('id', $(this).attr('for') + 'Label')
+        });
+
+        function toggleConfig() {
+            if (enableCheckBox.is(':checked') && !scriptIsCustomized)
+                configSection.showElement();
+            else
+                configSection.hideElement();
+        }
+
+        function toggleTriggerButton() {
+            if (triggerButton.is(':checked') && !scriptIsCustomized)
+                triggerButtonSection.hideElement();
+            else
+                triggerButtonSection.showElement();
+        }
+
+        var notification = $('.alert-dismissable');
+        if (notification.length > 0) {
+            notification.first()
+              .attr("tabindex", "-1")
+              .trigger("focus");
+
+            $(notification)
+                .find('.close')
+                .removeAttr("aria-hidden")
+                .attr('aria-label', '@JavaScriptEncoder.Default.Encode(T("Plugins.Widgets.AccessiBe.Notification.CloseLabel").Text)');
+        }
+    });
+</script>

@@ -6,7 +6,6 @@ using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider;
 using LinqToDB.DataProvider.SQLite;
-using LinqToDB.Tools;
 using Microsoft.Data.Sqlite;
 using Nop.Core;
 using Nop.Core.ComponentModel;
@@ -165,8 +164,8 @@ public partial class SqLiteNopDataProvider : BaseDataProvider, INopDataProvider
     /// <typeparam name="TEntity">Entity type</typeparam>
     public override Task BulkInsertEntitiesAsync<TEntity>(IEnumerable<TEntity> entities)
     {
-        using (new ReaderWriteLockDisposable(_locker))
-            DataContext.BulkCopy(new BulkCopyOptions(), entities.RetrieveIdentity(DataContext));
+        foreach (var entity in entities)
+            InsertEntity(entity);
 
         return Task.CompletedTask;
     }
@@ -255,6 +254,18 @@ public partial class SqLiteNopDataProvider : BaseDataProvider, INopDataProvider
     /// Re-index database tables
     /// </summary>
     public Task ReIndexTablesAsync()
+    {
+        using (new ReaderWriteLockDisposable(_locker))
+            DataContext.Execute("VACUUM;");
+
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// Shrinks database
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual Task ShrinkDatabaseAsync()
     {
         using (new ReaderWriteLockDisposable(_locker))
             DataContext.Execute("VACUUM;");
@@ -377,6 +388,18 @@ public partial class SqLiteNopDataProvider : BaseDataProvider, INopDataProvider
             DataContext.GetTable<TEntity>().Truncate(resetIdentity);
 
         return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// Gets the name of the database collation
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains an empty string
+    /// </returns>
+    public Task<string> GetDataBaseCollationAsync()
+    {
+        return Task.FromResult(string.Empty);
     }
 
     #endregion

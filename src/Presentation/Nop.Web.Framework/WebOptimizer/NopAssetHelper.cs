@@ -1,11 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
+﻿using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
 using Nop.Core;
 using Nop.Core.Configuration;
-using Nop.Services.Localization;
 using Nop.Web.Framework.WebOptimizer.Processors;
 using WebOptimizer;
 
@@ -50,10 +48,6 @@ public partial class NopAssetHelper : INopAssetHelper
         if (sourceFiles.Length == 0)
             sourceFiles = [bundleKey];
 
-        //remove the base path from the generated URL if exists
-        var pathBase = _actionContextAccessor.ActionContext?.HttpContext.Request.PathBase ?? PathString.Empty;
-        sourceFiles = sourceFiles.Select(src => src.RemoveApplicationPathFromRawUrl(pathBase)).ToArray();
-
         if (!_assetPipeline.TryGetAssetFromRoute(bundleKey, out var asset))
         {
             asset = _assetPipeline.AddBundle(bundleKey, $"{MimeTypes.TextJavascript}; charset=UTF-8", sourceFiles)
@@ -86,10 +80,6 @@ public partial class NopAssetHelper : INopAssetHelper
 
         if (sourceFiles.Length == 0)
             sourceFiles = [bundleKey];
-
-        //remove the base path from the generated URL if exists
-        var pathBase = _actionContextAccessor.ActionContext?.HttpContext.Request.PathBase ?? PathString.Empty;
-        sourceFiles = sourceFiles.Select(src => src.RemoveApplicationPathFromRawUrl(pathBase)).ToArray();
 
         if (!_assetPipeline.TryGetAssetFromRoute(bundleKey, out var asset))
         {

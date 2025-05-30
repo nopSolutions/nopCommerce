@@ -232,25 +232,22 @@ public partial class CheckoutModelFactory : ICheckoutModelFactory
     /// <summary>
     /// Prepare billing address model
     /// </summary>
+    /// <param name="model">Billing address model</param>
     /// <param name="cart">Cart</param>
     /// <param name="selectedCountryId">Selected country identifier</param>
     /// <param name="prePopulateNewAddressWithCustomerFields">Pre populate new address with customer fields</param>
     /// <param name="overrideAttributesXml">Override attributes xml</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the billing address model
-    /// </returns>
-    public virtual async Task<CheckoutBillingAddressModel> PrepareBillingAddressModelAsync(IList<ShoppingCartItem> cart,
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task PrepareBillingAddressModelAsync(CheckoutBillingAddressModel model, IList<ShoppingCartItem> cart,
         int? selectedCountryId = null,
         bool prePopulateNewAddressWithCustomerFields = false,
         string overrideAttributesXml = "")
     {
-        var model = new CheckoutBillingAddressModel
-        {
-            ShipToSameAddressAllowed = _shippingSettings.ShipToSameAddress && await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart),
-            //allow customers to enter (choose) a shipping address if "Disable Billing address step" setting is enabled
-            ShipToSameAddress = !_orderSettings.DisableBillingAddressCheckoutStep
-        };
+        ArgumentNullException.ThrowIfNull(model);
+
+        model.ShipToSameAddressAllowed = _shippingSettings.ShipToSameAddress && await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart);
+        //allow customers to enter (choose) a shipping address if "Disable Billing address step" setting is enabled
+        model.ShipToSameAddress = !_orderSettings.DisableBillingAddressCheckoutStep;
 
         var customer = await _workContext.GetCurrentCustomerAsync();
         if (await _customerService.IsGuestAsync(customer) && _taxSettings.EuVatEnabled)
@@ -295,28 +292,21 @@ public partial class CheckoutModelFactory : ICheckoutModelFactory
             prePopulateWithCustomerFields: prePopulateNewAddressWithCustomerFields,
             customer: customer,
             overrideAttributesXml: overrideAttributesXml);
-
-        return model;
     }
 
     /// <summary>
     /// Prepare shipping address model
     /// </summary>
+    /// <param name="model">Shipping address model</param>
     /// <param name="cart">Cart</param>
     /// <param name="selectedCountryId">Selected country identifier</param>
     /// <param name="prePopulateNewAddressWithCustomerFields">Pre populate new address with customer fields</param>
     /// <param name="overrideAttributesXml">Override attributes xml</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the shipping address model
-    /// </returns>
-    public virtual async Task<CheckoutShippingAddressModel> PrepareShippingAddressModelAsync(IList<ShoppingCartItem> cart,
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task PrepareShippingAddressModelAsync(CheckoutShippingAddressModel model, IList<ShoppingCartItem> cart,
         int? selectedCountryId = null, bool prePopulateNewAddressWithCustomerFields = false, string overrideAttributesXml = "")
     {
-        var model = new CheckoutShippingAddressModel
-        {
-            DisplayPickupInStore = !_orderSettings.DisplayPickupInStoreOnShippingMethodPage
-        };
+        model.DisplayPickupInStore = !_orderSettings.DisplayPickupInStoreOnShippingMethodPage;
 
         if (!_orderSettings.DisplayPickupInStoreOnShippingMethodPage)
             model.PickupPointsModel = await PrepareCheckoutPickupPointsModelAsync(cart);
@@ -359,8 +349,6 @@ public partial class CheckoutModelFactory : ICheckoutModelFactory
             overrideAttributesXml: overrideAttributesXml);
 
         model.SelectedBillingAddress = customer.BillingAddressId ?? 0;
-
-        return model;
     }
 
     /// <summary>
@@ -638,12 +626,13 @@ public partial class CheckoutModelFactory : ICheckoutModelFactory
         {
             ShippingRequired = await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart),
             DisableBillingAddressCheckoutStep = _orderSettings.DisableBillingAddressCheckoutStep && (await _customerService.GetAddressesByCustomerIdAsync(customer.Id)).Any(),
-            BillingAddress = await PrepareBillingAddressModelAsync(cart, prePopulateNewAddressWithCustomerFields: true),
-            DisplayCaptcha = await _customerService.IsGuestAsync(await _customerService.GetShoppingCartCustomerAsync(cart))
-                             && _captchaSettings.Enabled && _captchaSettings.ShowOnCheckoutPageForGuests,
+            DisplayCaptcha = await _customerService.IsGuestAsync(await _customerService.GetShoppingCartCustomerAsync(cart)) && _captchaSettings.Enabled && _captchaSettings.ShowOnCheckoutPageForGuests,
             IsReCaptchaV3 = _captchaSettings.CaptchaType == CaptchaType.ReCaptchaV3,
             ReCaptchaPublicKey = _captchaSettings.ReCaptchaPublicKey
         };
+
+        await PrepareBillingAddressModelAsync(model.BillingAddress, cart, prePopulateNewAddressWithCustomerFields: true);
+
         return model;
     }
 

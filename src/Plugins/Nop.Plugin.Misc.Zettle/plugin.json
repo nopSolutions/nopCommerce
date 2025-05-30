@@ -1,9 +1,9 @@
 ﻿{
   "Group": "Misc",
-  "FriendlyName": "PayPal Zettle",
+  "FriendlyName": "PayPal Zettle (POS)",
   "SystemName": "Misc.Zettle",
-  "Version": "4.80.2",
-  "SupportedVersions": [ "4.80" ],
+  "Version": "4.90.2",
+  "SupportedVersions": [ "4.90" ],
   "Author": "nopCommerce team",
   "DisplayOrder": 1,
   "FileName": "Nop.Plugin.Misc.Zettle.dll",

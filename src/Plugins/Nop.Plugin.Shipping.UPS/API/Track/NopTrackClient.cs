@@ -1,5 +1,5 @@
-﻿using Nop.Plugin.Shipping.UPS.Services;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using Nop.Plugin.Shipping.UPS.Services;
 
 namespace Nop.Plugin.Shipping.UPS.API.Track;
 
@@ -42,5 +42,10 @@ public partial class TrackClient
     partial void UpdateJsonSerializerSettings(JsonSerializerSettings settings)
     {
         settings.ContractResolver = new NullToEmptyStringResolver();
+    }
+
+    partial void ProcessResponse(HttpClient client, HttpResponseMessage response)
+    {
+        client.ProcessResponse(response, _upsSettings);
     }
 }

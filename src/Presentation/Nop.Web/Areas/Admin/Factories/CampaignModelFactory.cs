@@ -1,6 +1,7 @@
 ﻿using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Helpers;
+using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Messages;
@@ -21,6 +22,7 @@ public partial class CampaignModelFactory : ICampaignModelFactory
     protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
     protected readonly ICampaignService _campaignService;
     protected readonly IDateTimeHelper _dateTimeHelper;
+    protected readonly ILocalizationService _localizationService;
     protected readonly IMessageTokenProvider _messageTokenProvider;
 
     #endregion
@@ -32,6 +34,7 @@ public partial class CampaignModelFactory : ICampaignModelFactory
         IBaseAdminModelFactory baseAdminModelFactory,
         ICampaignService campaignService,
         IDateTimeHelper dateTimeHelper,
+        ILocalizationService localizationService,
         IMessageTokenProvider messageTokenProvider)
     {
         _catalogSettings = catalogSettings;
@@ -39,6 +42,7 @@ public partial class CampaignModelFactory : ICampaignModelFactory
         _baseAdminModelFactory = baseAdminModelFactory;
         _campaignService = campaignService;
         _dateTimeHelper = dateTimeHelper;
+        _localizationService = localizationService;
         _messageTokenProvider = messageTokenProvider;
     }
 
@@ -125,6 +129,13 @@ public partial class CampaignModelFactory : ICampaignModelFactory
             model ??= campaign.ToModel<CampaignModel>();
             if (campaign.DontSendBeforeDateUtc.HasValue)
                 model.DontSendBeforeDate = await _dateTimeHelper.ConvertToUserTimeAsync(campaign.DontSendBeforeDateUtc.Value, DateTimeKind.Utc);
+
+            //prepare copy campaign model
+            model.CopyCampaignModel = new CopyCampaignModel
+            {
+                OriginalCampaignId = campaign.Id,
+                Name = string.Format(await _localizationService.GetResourceAsync("Admin.Promotions.Campaigns.Copy.Name.New"), campaign.Name)
+            };
         }
 
         model.AllowedTokens = string.Join(", ", await _messageTokenProvider.GetListOfCampaignAllowedTokensAsync());

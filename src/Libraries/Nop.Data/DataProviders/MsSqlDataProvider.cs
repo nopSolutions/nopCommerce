@@ -58,7 +58,7 @@ public partial class MsSqlNopDataProvider : BaseDataProvider, INopDataProvider
         //gets database name
         var databaseName = builder.InitialCatalog;
 
-        //now create connection string to 'master' dabatase. It always exists.
+        //now create connection string to 'master' database. It always exists.
         builder.InitialCatalog = "master";
 
         using (var connection = GetInternalDbConnection(builder.ConnectionString))
@@ -254,6 +254,16 @@ public partial class MsSqlNopDataProvider : BaseDataProvider, INopDataProvider
     }
 
     /// <summary>
+    /// Shrinks database
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task ShrinkDatabaseAsync()
+    {
+        using var currentConnection = CreateDataConnection();
+        await currentConnection.ExecuteAsync($"DBCC SHRINKDATABASE ({currentConnection.Connection.Database});");
+    }
+
+    /// <summary>
     /// Build the connection string
     /// </summary>
     /// <param name="nopConnectionString">Connection string info</param>
@@ -337,6 +347,19 @@ public partial class MsSqlNopDataProvider : BaseDataProvider, INopDataProvider
             .OnTargetKey()
             .UpdateWhenMatched()
             .Merge();
+    }
+    
+    /// <summary>
+    /// Gets the name of the database collation
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the collation name
+    /// </returns>
+    public virtual Task<string> GetDataBaseCollationAsync()
+    {
+        var builder = GetConnectionStringBuilder();
+        return GetSqlStringValueAsync($"SELECT CONVERT (varchar(256), DATABASEPROPERTYEX('{builder.InitialCatalog}','collation'));");
     }
 
     #endregion

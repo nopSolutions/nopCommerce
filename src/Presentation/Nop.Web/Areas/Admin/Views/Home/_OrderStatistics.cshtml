@@ -1,6 +1,4 @@
-﻿@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
-@inject IWorkContext workContext
-@{
+﻿@{
     const string prefix = "order-statistics";
     const string hideCardAttributeName = "Reports.HideOrderStatisticsCard";
     var hideCard = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCardAttributeName);
@@ -11,7 +9,7 @@
 <div class="card card-primary card-outline @if (hideCard){<text>collapsed-card</text>}" id="@(prefix)-card">
     <div class="card-header with-border">
         <h3 class="card-title">
-            <i class="fas fa-shopping-cart"></i>
+            <i class="fas fa-cart-shopping"></i>
             @T("Admin.SalesReport.OrderStatistics")
         </h3>
         <div class="card-tools float-right">

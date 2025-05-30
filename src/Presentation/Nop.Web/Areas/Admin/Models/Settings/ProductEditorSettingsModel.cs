@@ -189,5 +189,8 @@ public partial record ProductEditorSettingsModel : BaseNopModel, ISettingsModel
     [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.StockQuantityHistory")]
     public bool StockQuantityHistory { get; set; }
 
+    [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.AgeVerification")]
+    public bool AgeVerification { get; set; }
+
     #endregion
 }

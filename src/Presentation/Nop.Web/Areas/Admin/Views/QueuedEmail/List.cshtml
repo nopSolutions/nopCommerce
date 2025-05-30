@@ -19,12 +19,12 @@
         </h1>
         <div class="float-right">
             <button type="button" id="delete-selected" class="btn btn-danger">
-                <i class="far fa-trash-alt"></i>
+                <i class="far fa-trash-can"></i>
                 @T("Admin.System.QueuedEmails.DeleteSelected")
             </button>
             <nop-action-confirmation asp-button-id="delete-selected" />
             <button type="button" id="delete-all" name="delete-all" class="btn btn-danger">
-                <i class="far fa-trash-alt"></i>
+                <i class="far fa-trash-can"></i>
                 @T("Admin.System.QueuedEmails.DeleteAll")
             </button>
             <nop-action-confirmation asp-button-id="delete-all" />
@@ -40,7 +40,7 @@
                     <div class="card-body">
                         <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
                             <div class="search-text">@T("Admin.Common.Search")</div>
-                            <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                            <div class="icon-search"><i class="fas fa-magnifying-glass" aria-hidden="true"></i></div>
                             <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
                         </div>
 
@@ -119,7 +119,7 @@
                             <div class="row">
                                 <div class="text-center col-12">
                                     <button type="button" id="search-queuedemails" class="btn btn-primary btn-search">
-                                        <i class="fas fa-search"></i>
+                                        <i class="fas fa-magnifying-glass"></i>
                                         @T("Admin.Common.Search")
                                     </button>
                                 </div>
@@ -204,7 +204,7 @@
                                     Title = T("Admin.Common.Edit").Text,
                                     Width = "50",
                                     ClassName =  NopColumnClassDefaults.Button,
-                                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                    Render = new RenderButtonEdit(new DataUrl("~/Admin/QueuedEmail/Edit"))
                                 }
                             }
                         })

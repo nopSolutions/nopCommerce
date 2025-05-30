@@ -31,12 +31,14 @@ public class TaxServiceTests : ServiceTest
         _defaultEuVatAssumeValid = _taxSettings.EuVatAssumeValid;
         _taxSettings.EuVatAssumeValid = false;
         _taxSettings.EuVatUseWebService = true;
+        _taxSettings.HmrcApiUrl = "https://test-api.service.hmrc.gov.uk";
+        _taxSettings.HmrcClientId = "TTLMDds3fJQhQjJOO5JHo1R6nxxT";
+        _taxSettings.HmrcClientSecret = "cb9da68a-4184-4e8a-a071-11bfcb654ae8";
 
         await _settingService.SaveSettingAsync(_taxSettings);
 
         _taxService = GetService<ITaxService>();
         _taxPluginManager = GetService<ITaxPluginManager>();
-            
             
         _customerService = GetService<ICustomerService>();
 
@@ -87,6 +89,16 @@ public class TaxServiceTests : ServiceTest
     }
 
     [Test]
+    public async Task CanCheckIsPluginActive()
+    {
+        var provider = await _taxPluginManager.LoadPrimaryPluginAsync();
+        provider.Should().NotBeNull();
+        _taxPluginManager.IsPluginActive(provider).Should().BeTrue();
+        var isActive = await _taxPluginManager.IsPluginActiveAsync(provider.PluginDescriptor.SystemName);
+        isActive.Should().BeTrue();
+    }
+
+    [Test]
     public async Task CanGetProductPricePriceIncludesTaxIncludingTaxTaxable()
     {
         var customer = new Customer();
@@ -134,7 +146,7 @@ public class TaxServiceTests : ServiceTest
     }
 
     [Test]
-    [TestCase("GB731331179", VatNumberStatus.Valid)]
+    [TestCase("GB553557881", VatNumberStatus.Valid)]
     [TestCase("NO974761076", VatNumberStatus.Unknown)]
     [TestCase("GB430479893", VatNumberStatus.Invalid)]
     [TestCase("IT00478390347", VatNumberStatus.Valid)]

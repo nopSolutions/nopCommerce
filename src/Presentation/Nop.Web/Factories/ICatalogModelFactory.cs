@@ -218,6 +218,17 @@ public partial interface ICatalogModelFactory
     /// </returns>
     Task<VendorNavigationModel> PrepareVendorNavigationModelAsync();
 
+    /// <summary>
+    /// Prepare review models for vendor products
+    /// </summary>
+    /// <returns>
+    /// <param name="vendor">Vendor</param>
+    /// <param name="pagingModel">Model to filter product reviews</param>
+    /// A task that represents the asynchronous operation
+    /// The task result contains a list of product reviews
+    /// </returns>
+    Task<VendorProductReviewsListModel> PrepareVendorProductReviewsModelAsync(Vendor vendor, VendorReviewsPagingFilteringModel pagingModel);
+
     #endregion
 
     #region Product tags

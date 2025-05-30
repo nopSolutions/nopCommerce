@@ -133,10 +133,10 @@ public class BlogServiceTests : ServiceTest
     public async Task CanGetAllBlogPostTags()
     {
         var blogPostTags = await _blogService.GetAllBlogPostTagsAsync(1, 1);
-        blogPostTags.Count.Should().Be(6);
+        blogPostTags.Count.Should().Be(5);
 
         blogPostTags = await _blogService.GetAllBlogPostTagsAsync(2, 1);
-        blogPostTags.Count.Should().Be(6);
+        blogPostTags.Count.Should().Be(5);
 
         blogPostTags = await _blogService.GetAllBlogPostTagsAsync(1, 2);
         blogPostTags.Count.Should().Be(0);

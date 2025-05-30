@@ -79,9 +79,9 @@ public partial class RewardPointService : IRewardPointService
     {
         //get expired points
         var nowUtc = DateTime.UtcNow;
-        var expiredPoints = query
+        var expiredPoints = await query
             .Where(historyEntry => historyEntry.EndDateUtc < nowUtc && historyEntry.ValidPoints > 0)
-            .OrderBy(historyEntry => historyEntry.CreatedOnUtc).ThenBy(historyEntry => historyEntry.Id).ToList();
+            .OrderBy(historyEntry => historyEntry.CreatedOnUtc).ThenBy(historyEntry => historyEntry.Id).ToListAsync();
 
         //reduce the balance for these points
         foreach (var historyEntry in expiredPoints)
@@ -101,17 +101,18 @@ public partial class RewardPointService : IRewardPointService
         }
 
         //get has not yet activated points, but it's time to do it
-        var notActivatedPoints = query
+        var notActivatedPoints = await query
             .Where(historyEntry => !historyEntry.PointsBalance.HasValue && historyEntry.CreatedOnUtc < nowUtc)
-            .OrderBy(historyEntry => historyEntry.CreatedOnUtc).ThenBy(historyEntry => historyEntry.Id).ToList();
+            .OrderBy(historyEntry => historyEntry.CreatedOnUtc).ThenBy(historyEntry => historyEntry.Id).ToListAsync();
+
         if (!notActivatedPoints.Any())
             return;
 
         //get current points balance
         //LINQ to entities does not support Last method, thus order by desc and use First one
-        var currentPointsBalance = query
+        var currentPointsBalance = (await query
             .OrderByDescending(historyEntry => historyEntry.CreatedOnUtc).ThenByDescending(historyEntry => historyEntry.Id)
-            .FirstOrDefault(historyEntry => historyEntry.PointsBalance.HasValue)
+            .FirstOrDefaultAsync(historyEntry => historyEntry.PointsBalance.HasValue))
             ?.PointsBalance ?? 0;
 
         //update appropriate records
@@ -229,9 +230,10 @@ public partial class RewardPointService : IRewardPointService
         if (points >= 0)
             return newHistoryEntry.Id;
 
-        var withValidPoints = (await GetRewardPointsQueryAsync(customer.Id, storeId))
+        var withValidPoints = await (await GetRewardPointsQueryAsync(customer.Id, storeId))
             .Where(historyEntry => historyEntry.ValidPoints > 0)
-            .OrderBy(historyEntry => historyEntry.CreatedOnUtc).ThenBy(historyEntry => historyEntry.Id).ToList();
+            .OrderBy(historyEntry => historyEntry.CreatedOnUtc).ThenBy(historyEntry => historyEntry.Id).ToListAsync();
+
         foreach (var historyEntry in withValidPoints)
         {
             points += historyEntry.ValidPoints.Value;

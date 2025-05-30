@@ -1,4 +1,6 @@
-﻿using System.IO.Compression;
+﻿using System.Globalization;
+using System.IO.Compression;
+using iTextSharp.text;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -25,8 +27,7 @@ using Nop.Services.Payments;
 using Nop.Services.Shipping;
 using Nop.Services.Stores;
 using Nop.Services.Vendors;
-using QuestPDF.Fluent;
-using QuestPDF.Helpers;
+using PdfRpt.Core.Contracts;
 
 namespace Nop.Services.Common;
 
@@ -63,6 +64,7 @@ public partial class PdfService : IPdfService
     protected readonly IStateProvinceService _stateProvinceService;
     protected readonly IStoreContext _storeContext;
     protected readonly IStoreService _storeService;
+    protected readonly IThumbService _thumbService;
     protected readonly IVendorService _vendorService;
     protected readonly IWorkContext _workContext;
     protected readonly MeasureSettings _measureSettings;
@@ -99,6 +101,7 @@ public partial class PdfService : IPdfService
         IStateProvinceService stateProvinceService,
         IStoreContext storeContext,
         IStoreService storeService,
+        IThumbService thumbService,
         IVendorService vendorService,
         IWorkContext workContext,
         MeasureSettings measureSettings,
@@ -131,6 +134,7 @@ public partial class PdfService : IPdfService
         _storeContext = storeContext;
         _stateProvinceService = stateProvinceService;
         _storeService = storeService;
+        _thumbService = thumbService;
         _vendorService = vendorService;
         _workContext = workContext;
         _measureSettings = measureSettings;
@@ -218,7 +222,7 @@ public partial class PdfService : IPdfService
             }
 
             //custom values
-            var customValues = _paymentService.DeserializeCustomValues(order);
+            var customValues = CommonHelper.DeserializeCustomValuesFromXml(order.CustomValuesXml);
             if (customValues != null)
                 addressResult.CustomValues = customValues;
         }
@@ -625,10 +629,28 @@ public partial class PdfService : IPdfService
 
         //order total
         var orderTotalInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTotal, order.CurrencyRate);
-        var orderTotalStr = await _priceFormatter.FormatPriceAsync(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false, languageId);
-        result.OrderTotal = $"{await _localizationService.GetResourceAsync("Pdf.OrderTotal", languageId)} {orderTotalStr}";
+        result.OrderTotal = await _priceFormatter.FormatPriceAsync(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false, languageId);
 
         return result;
+    }
+
+    /// <summary>
+    /// Resolve font for PDF document
+    /// </summary>
+    /// <param name="language">Language</param>
+    /// <param name="settings">PDF settings</param>
+    /// <returns>A font object</returns>
+    protected virtual Font ResolvePdfFont(Language language, PdfSettings settings)
+    {
+        ArgumentNullException.ThrowIfNull(settings);
+
+        var fontName = language?.Rtl == true
+            ? !string.IsNullOrEmpty(settings.RtlFontName) ? settings.RtlFontName : NopCommonDefaults.PdfRtlFontName
+            : !string.IsNullOrEmpty(settings.LtrFontName) ? settings.LtrFontName : NopCommonDefaults.PdfLtrFontName;
+
+        var fontSize = settings.BaseFontSize >= 0 ? settings.BaseFontSize : 10;
+
+        return PdfDocumentHelper.GetFont(fontName, fontSize);
     }
 
     #endregion
@@ -697,15 +719,16 @@ public partial class PdfService : IPdfService
                 .Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
                 .ToList();
 
-        var source = new InvoiceSource()
+        var document = new InvoiceDocument
         {
             StoreUrl = orderStore.Url?.Trim('/'),
             Language = language,
-            FontFamily = pdfSettingsByStore.FontFamily,
-            OrderDateUser = date,
+            Font = ResolvePdfFont(language, pdfSettingsByStore),
+            ImageTargetSize = pdfSettingsByStore.ImageTargetSize,
+            OrderDateUser = date.ToString("D", new CultureInfo(language.LanguageCulture)),
             LogoData = logo,
             OrderNumberText = order.CustomOrderNumber,
-            PageSize = pdfSettingsByStore.LetterPageSizeEnabled ? PageSizes.Letter : PageSizes.A4,
+            PageSize = pdfSettingsByStore.LetterPageSizeEnabled ? PdfPageSize.Letter : PdfPageSize.A4,
             BillingAddress = await GetBillingAddressAsync(vendor, language, order),
             ShippingAddress = await GetShippingAddressAsync(language, order),
             Products = await GetOrderProductItemsAsync(order, orderItems, language),
@@ -715,12 +738,12 @@ public partial class PdfService : IPdfService
             Totals = vendor is null ? await GetTotalsAsync(language, order) : new(), //vendors cannot see totals
             OrderNotes = await GetOrderNotesAsync(pdfSettingsByStore, order, language),
             FooterTextColumn1 = column1Lines,
-            FooterTextColumn2 = column2Lines
+            FooterTextColumn2 = column2Lines,
+            GetResourceAsync = async (string resourceKey, int languageId) => await _localizationService.GetResourceAsync(resourceKey, languageId)
         };
 
         await using var pdfStream = new MemoryStream();
-        new InvoiceDocument(source, _localizationService)
-            .GeneratePdf(pdfStream);
+        document.Generate(pdfStream);
 
         pdfStream.Position = 0;
         await pdfStream.CopyToAsync(stream);
@@ -746,7 +769,7 @@ public partial class PdfService : IPdfService
 
         foreach (var order in orders)
         {
-            var entryName = string.Format("{0} {1}", await _localizationService.GetResourceAsync("Pdf.Order"), order.CustomOrderNumber);
+            var entryName = string.Format(await _localizationService.GetResourceAsync("Pdf.Order"), order.CustomOrderNumber);
 
             await using var fileStreamInZip = archive.CreateEntry($"{entryName}.pdf").Open();
             await using var pdfStream = new MemoryStream();
@@ -773,7 +796,7 @@ public partial class PdfService : IPdfService
 
         foreach (var shipment in shipments)
         {
-            var entryName = $"{await _localizationService.GetResourceAsync("Pdf.Shipment")}{shipment.Id}";
+            var entryName = string.Format(await _localizationService.GetResourceAsync("Pdf.Shipment"), shipment.Id);
 
             await using var fileStreamInZip = archive.CreateEntry($"{entryName}.pdf").Open();
             await using var pdfStream = new MemoryStream();
@@ -820,21 +843,21 @@ public partial class PdfService : IPdfService
         if (orderItems?.Any() != true)
             return;
 
-        var source = new ShipmentSource
+        await using var pdfStream = new MemoryStream();
+        var document = new ShipmentDocument
         {
-            PageSize = pdfSettingsByStore.LetterPageSizeEnabled ? PageSizes.Letter : PageSizes.A4,
+            PageSize = pdfSettingsByStore.LetterPageSizeEnabled ? PdfPageSize.Letter : PdfPageSize.A4,
             Language = language,
-            FontFamily = pdfSettingsByStore.FontFamily,
+            Font = ResolvePdfFont(language, pdfSettingsByStore),
+            ImageTargetSize = pdfSettingsByStore.ImageTargetSize,
             ShipmentNumberText = shipment.Id.ToString(),
             OrderNumberText = order.CustomOrderNumber,
             Address = await GetShippingAddressAsync(language, order),
-            Products = await GetOrderProductItemsAsync(order, orderItems, language, shipmentItems)
+            Products = await GetOrderProductItemsAsync(order, orderItems, language, shipmentItems),
+            GetResourceAsync = async (string resourceKey, int languageId) => await _localizationService.GetResourceAsync(resourceKey, languageId)
         };
 
-        await using var pdfStream = new MemoryStream();
-
-        new ShipmentDocument(source, _localizationService)
-            .GeneratePdf(pdfStream);
+        document.Generate(pdfStream);
 
         pdfStream.Position = 0;
         await pdfStream.CopyToAsync(stream);
@@ -885,17 +908,20 @@ public partial class PdfService : IPdfService
 
             var pictures = await _pictureService.GetPicturesByProductIdAsync(product.Id);
 
+            //WebP images are not supported
+            pictures = pictures.Where(picture => picture.MimeType != MimeTypes.ImageWebp).ToList();
+
             if (pictures.Any())
             {
                 var picturePaths = new HashSet<string>();
 
                 foreach (var pic in pictures)
                 {
-                    var picPath = await _pictureService.GetThumbLocalPathAsync(pic, 200, false);
+                    var (pictureUrl, _) = await _pictureService.GetPictureUrlAsync(pic, pdfSettingsByStore.ImageTargetSize, false);
+                    var picPath = await _thumbService.GetThumbLocalPathAsync(pictureUrl);
+                    
                     if (!string.IsNullOrEmpty(picPath))
-                    {
                         picturePaths.Add(picPath);
-                    }
                 }
 
                 item.PicturePaths = picturePaths;
@@ -904,18 +930,32 @@ public partial class PdfService : IPdfService
             productItems.Add(item);
         }
 
-        var source = new CatalogSource
+        var catalogDocument = new CatalogDocument
         {
             Language = lang,
-            PageSize = pdfSettingsByStore.LetterPageSizeEnabled ? PageSizes.Letter : PageSizes.A4,
-            FontFamily = pdfSettingsByStore.FontFamily,
-            Products = productItems
+            ImageTargetSize = pdfSettingsByStore.ImageTargetSize,
+            PageSize = pdfSettingsByStore.LetterPageSizeEnabled ? PdfPageSize.Letter : PdfPageSize.A4,
+            Font = ResolvePdfFont(lang, pdfSettingsByStore),
+            Products = productItems,
+            GetImageAsync = async (string path) =>
+            {
+                ArgumentNullException.ThrowIfNullOrEmpty(path);
+
+                var imageType = _pictureService.GetPictureContentTypeByFileExtension(_fileProvider.GetFileExtension(path));
+                if (imageType == MimeTypes.ImageSvg)
+                {
+                    using var svgFileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                    return await _pictureService.ConvertSvgToPngAsync(svgFileStream);
+                }
+
+                return await _fileProvider.ReadAllBytesAsync(path);
+            },
+            GetResourceAsync = async (string resourceKey, int languageId) => await _localizationService.GetResourceAsync(resourceKey, languageId)
         };
 
-        await using var pdfStream = new MemoryStream();
 
-        new CatalogDocument(source, _localizationService)
-            .GeneratePdf(pdfStream);
+        await using var pdfStream = new MemoryStream();
+        catalogDocument.Generate(pdfStream);
 
         pdfStream.Position = 0;
         await pdfStream.CopyToAsync(stream);

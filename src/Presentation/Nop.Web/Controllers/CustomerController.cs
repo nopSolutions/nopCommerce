@@ -498,6 +498,18 @@ public partial class CustomerController : BasePublicController
                     ModelState.AddModelError("", await _localizationService.GetResourceAsync("Account.Login.WrongCredentials"));
                     break;
             }
+
+            if (loginResult == CustomerLoginResults.WrongPassword && _customerSettings.NotifyFailedLoginAttempt)
+            {
+                var customer = _customerSettings.UsernamesEnabled
+                        ? await _customerService.GetCustomerByUsernameAsync(customerUserName)
+                        : await _customerService.GetCustomerByEmailAsync(customerEmail);
+
+                await _workflowMessageService.SendCustomerFailedLoginAttemptNotificationAsync(customer, customer.LanguageId ?? 0);
+            }
+
+            await _customerActivityService.InsertActivityAsync("PublicStore.FailedLogin",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.Login.Fail"), _customerSettings.UsernamesEnabled ? customerUserName : customerEmail));
         }
 
         //If we got this far, something failed, redisplay form
@@ -739,6 +751,9 @@ public partial class CustomerController : BasePublicController
         }
 
         await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute, "");
+
+        await _customerActivityService.InsertActivityAsync(customer, "PublicStore.PasswordChanged", await
+            _localizationService.GetResourceAsync("ActivityLog.PublicStore.PasswordChanged"));
 
         //authenticate customer after changing password
         await _customerRegistrationService.SignInCustomerAsync(customer, null, true);
@@ -1628,11 +1643,7 @@ public partial class CustomerController : BasePublicController
         if (!await _customerService.IsRegisteredAsync(customer))
             return Challenge();
 
-        var model = await _customerModelFactory.PrepareChangePasswordModelAsync();
-
-        //display the cause of the change password 
-        if (await _customerService.IsPasswordExpiredAsync(customer))
-            ModelState.AddModelError(string.Empty, await _localizationService.GetResourceAsync("Account.ChangePassword.PasswordIsExpired"));
+        var model = await _customerModelFactory.PrepareChangePasswordModelAsync(customer);
 
         return View(model);
     }
@@ -1653,6 +1664,9 @@ public partial class CustomerController : BasePublicController
             {
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Account.ChangePassword.Success"));
 
+                await _customerActivityService.InsertActivityAsync(customer, "PublicStore.PasswordChanged", await
+                    _localizationService.GetResourceAsync("ActivityLog.PublicStore.PasswordChanged"));
+
                 //authenticate customer after changing password
                 await _customerRegistrationService.SignInCustomerAsync(customer, null, true);
 
@@ -1672,6 +1686,8 @@ public partial class CustomerController : BasePublicController
         }
 
         //If we got this far, something failed, redisplay form
+        model = await _customerModelFactory.PrepareChangePasswordModelAsync(customer);
+
         return View(model);
     }
 
@@ -1840,10 +1856,8 @@ public partial class CustomerController : BasePublicController
     [CheckAccessClosedStore(ignore: true)]
     public virtual async Task<IActionResult> CheckGiftCardBalance()
     {
-        if (!(_captchaSettings.Enabled && _customerSettings.AllowCustomersToCheckGiftCardBalance))
-        {
+        if (!_customerSettings.AllowCustomersToCheckGiftCardBalance) 
             return RedirectToRoute("CustomerInfo");
-        }
 
         var model = await _customerModelFactory.PrepareCheckGiftCardBalanceModelAsync();
 
@@ -1855,11 +1869,12 @@ public partial class CustomerController : BasePublicController
     [ValidateCaptcha]
     public virtual async Task<IActionResult> CheckBalance(CheckGiftCardBalanceModel model, bool captchaValid)
     {
+        if (!_customerSettings.AllowCustomersToCheckGiftCardBalance)
+            return RedirectToRoute("CustomerInfo");
+
         //validate CAPTCHA
-        if (_captchaSettings.Enabled && !captchaValid)
-        {
+        if (_captchaSettings.Enabled && _captchaSettings.ShowOnCheckGiftCardBalance && !captchaValid) 
             ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
-        }
 
         if (ModelState.IsValid)
         {

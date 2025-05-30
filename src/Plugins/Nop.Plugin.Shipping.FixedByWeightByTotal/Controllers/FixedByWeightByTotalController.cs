@@ -1,13 +1,10 @@
 ﻿using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Core;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Domain;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Models;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Services;
-using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
@@ -41,8 +38,6 @@ public class FixedByWeightByTotalController : BasePluginController
     protected readonly IShippingService _shippingService;
     protected readonly IStateProvinceService _stateProvinceService;
     protected readonly IStoreService _storeService;
-    protected readonly IGenericAttributeService _genericAttributeService;
-    protected readonly IWorkContext _workContext;
     protected readonly MeasureSettings _measureSettings;
 
     #endregion
@@ -61,8 +56,6 @@ public class FixedByWeightByTotalController : BasePluginController
         IShippingService shippingService,
         IStateProvinceService stateProvinceService,
         IStoreService storeService,
-        IGenericAttributeService genericAttributeService,
-        IWorkContext workContext,
         MeasureSettings measureSettings)
     {
         _currencySettings = currencySettings;
@@ -77,8 +70,6 @@ public class FixedByWeightByTotalController : BasePluginController
         _stateProvinceService = stateProvinceService;
         _shippingService = shippingService;
         _storeService = storeService;
-        _genericAttributeService = genericAttributeService;
-        _workContext = workContext;
         _measureSettings = measureSettings;
     }
 
@@ -87,7 +78,7 @@ public class FixedByWeightByTotalController : BasePluginController
     #region Methods
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_SHIPPING_SETTINGS)]
-    public async Task<IActionResult> Configure(bool showtour = false)
+    public async Task<IActionResult> Configure()
     {
         var model = new ConfigurationModel
         {
@@ -104,6 +95,7 @@ public class FixedByWeightByTotalController : BasePluginController
         foreach (var warehouses in await _shippingService.GetAllWarehousesAsync())
             model.AvailableWarehouses.Add(new SelectListItem { Text = warehouses.Name, Value = warehouses.Id.ToString() });
         //shipping methods
+        model.AvailableShippingMethods.Add(new SelectListItem { Text = "*", Value = "0" });
         foreach (var sm in await _shippingService.GetAllShippingMethodsAsync())
             model.AvailableShippingMethods.Add(new SelectListItem { Text = sm.Name, Value = sm.Id.ToString() });
         //countries
@@ -115,17 +107,6 @@ public class FixedByWeightByTotalController : BasePluginController
         model.AvailableStates.Add(new SelectListItem { Text = "*", Value = "0" });
 
         model.SetGridPageSize();
-
-        //show configuration tour
-        if (showtour)
-        {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
-            var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
-
-            if (!hideCard && !closeCard)
-                ViewBag.ShowTour = true;
-        }
 
         return View("~/Plugins/Shipping.FixedByWeightByTotal/Views/Configure.cshtml", model);
     }

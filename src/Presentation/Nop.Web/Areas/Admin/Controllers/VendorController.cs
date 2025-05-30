@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Primitives;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Attributes;
 using Nop.Services.Common;
@@ -26,6 +27,7 @@ public partial class VendorController : BaseAdminController
 {
     #region Fields
 
+    protected readonly ForumSettings _forumSettings;
     protected readonly IAddressService _addressService;
     protected readonly IAttributeParser<AddressAttribute, AddressAttributeValue> _addressAttributeParser;
     protected readonly IAttributeParser<VendorAttribute, VendorAttributeValue> _vendorAttributeParser;
@@ -47,7 +49,8 @@ public partial class VendorController : BaseAdminController
 
     #region Ctor
 
-    public VendorController(IAddressService addressService,
+    public VendorController(ForumSettings forumSettings,
+        IAddressService addressService,
         IAttributeParser<AddressAttribute, AddressAttributeValue> addressAttributeParser,
         IAttributeParser<VendorAttribute, VendorAttributeValue> vendorAttributeParser,
         IAttributeService<VendorAttribute, VendorAttributeValue> vendorAttributeService,
@@ -63,6 +66,7 @@ public partial class VendorController : BaseAdminController
         IVendorModelFactory vendorModelFactory,
         IVendorService vendorService)
     {
+        _forumSettings = forumSettings;
         _addressService = addressService;
         _addressAttributeParser = addressAttributeParser;
         _vendorAttributeParser = vendorAttributeParser;
@@ -205,6 +209,42 @@ public partial class VendorController : BaseAdminController
 
     #region Vendors
 
+    [CheckPermission([StandardPermission.Customers.CUSTOMERS_CREATE_EDIT_DELETE, StandardPermission.Customers.VENDORS_CREATE_EDIT_DELETE])]
+    public virtual async Task<IActionResult> AddCustomerToVendorPopup()
+    {
+        //prepare model
+        var model = await _vendorModelFactory.PrepareVendorCustomerSearchModelAsync(new VendorCustomerSearchModel());
+
+        return View(model);
+    }
+
+    [HttpPost]
+    [FormValueRequired("save")]
+    [CheckPermission([StandardPermission.Customers.CUSTOMERS_CREATE_EDIT_DELETE, StandardPermission.Customers.VENDORS_CREATE_EDIT_DELETE])]
+    public virtual async Task<IActionResult> AddCustomerToVendorPopup([Bind(Prefix = nameof(AddCustomerToVendorModel))] AddCustomerToVendorModel model)
+    {
+        //try to get a customer with the specified id
+        var customer = await _customerService.GetCustomerByIdAsync(model.CustomerId);
+        if (customer == null)
+            return Content("Cannot load a customer");
+
+        ViewBag.RefreshPage = true;
+        ViewBag.customerId = customer.Id;
+        ViewBag.customerInfo = customer.Email;
+
+        return View(new VendorCustomerSearchModel());
+    }
+
+    [HttpPost]
+    [CheckPermission([StandardPermission.Customers.CUSTOMERS_CREATE_EDIT_DELETE, StandardPermission.Customers.VENDORS_CREATE_EDIT_DELETE])]
+    public virtual async Task<IActionResult> AddCustomerToVendorPopupList(VendorCustomerSearchModel searchModel)
+    {
+        //prepare model
+        var model = await _vendorModelFactory.PrepareVendorCustomerListModelAsync(searchModel);
+
+        return Json(model);
+    }
+
     public virtual IActionResult Index()
     {
         return RedirectToAction("List");
@@ -311,6 +351,9 @@ public partial class VendorController : BaseAdminController
 
         //prepare model
         var model = await _vendorModelFactory.PrepareVendorModelAsync(null, vendor);
+
+        if (!_forumSettings.AllowPrivateMessages && model.PmCustomerId > 0)
+            _notificationService.WarningNotification("Private messages are disabled. Do not forget to enable them.");
 
         return View(model);
     }

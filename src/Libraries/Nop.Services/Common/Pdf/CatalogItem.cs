@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 namespace Nop.Services.Common.Pdf;
 
@@ -7,15 +7,6 @@ namespace Nop.Services.Common.Pdf;
 /// </summary>
 public partial class CatalogItem : ProductItem
 {
-    #region Ctor
-
-    public CatalogItem()
-    {
-        PicturePaths = new();
-    }
-
-    #endregion
-
     #region Properties
 
     /// <summary>
@@ -38,7 +29,7 @@ public partial class CatalogItem : ProductItem
     /// <summary>
     /// Gets or sets a set of paths to entry images
     /// </summary>
-    public HashSet<string> PicturePaths { get; set; }
+    public HashSet<string> PicturePaths { get; set; } = new();
 
     #endregion
 }
