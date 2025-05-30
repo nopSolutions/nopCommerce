@@ -1164,22 +1164,27 @@ public partial class ProductService : IProductService
             }
         }
 
-        var products = await productsQuery.OrderBy(_localizedPropertyRepository, await _workContext.GetWorkingLanguageAsync(), orderBy).ToPagedListAsync(pageIndex, pageSize);
+        var products = productsQuery.OrderBy(_localizedPropertyRepository, await _workContext.GetWorkingLanguageAsync(), orderBy);
 
         if (providerResults.Any() && orderBy == ProductSortingEnum.Position && !showHidden)
         {
-            var sortedProducts = products.OrderBy(p => 
-            {
-                var index = providerResults.IndexOf(p.Id);
-                return index == -1 ? products.TotalCount : index;
-            }).ToList();
-
-            return new PagedList<Product>(sortedProducts, pageIndex, pageSize, products.TotalCount);
+            var rankList = providerResults.Select((value, index) => new SortOrderEntry(value, index)).ToList();
+            products = from item in products
+                       join rank in rankList on item.Id equals rank.ProductId into rankingJoin
+                       from ranking in rankingJoin.DefaultIfEmpty()
+                       orderby (ranking != null ? ranking.SortOrder : int.MaxValue)
+                       select item;
         }
 
-        return products;
+        return await products.ToPagedListAsync(pageIndex, pageSize);
     }
 
+    //this should probably go somewhere else, but it's used only here
+    private class SortOrderEntry(int productId, int index)
+    {
+        public int ProductId { get; set; } = productId;
+        public int SortOrder { get; set; } = index;
+    }
     /// <summary>
     /// Gets products by product attribute
     /// </summary>
