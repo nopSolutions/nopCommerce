@@ -1073,10 +1073,20 @@ public partial class ProductService : IProductService
                 }
             }
 
-            productsQuery =
-                from p in productsQuery
-                join pbk in productsByKeywords on p.Id equals pbk
-                select p;
+            if (!runStandardSearch && providerResults?.Any() == true)
+            {
+                productsQuery =
+                    from p in productsQuery
+                    join id in providerResults.Select((id, index) => new { id, index }) on p.Id equals id.id
+                    orderby id.index
+                    select p;
+            }
+
+
+            //productsQuery =
+            //    from p in productsQuery
+            //    join pbk in productsByKeywords on p.Id equals pbk
+            //    select p;
         }
 
         if (categoryIds is not null)
