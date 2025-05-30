@@ -1,0 +1,65 @@
+@model ConfigurationModel
+
+@{
+    Layout = "_ConfigurePlugin";
+}
+<form asp-controller="CloudflareImages" asp-action="Configure" method="post">
+    <nop-cards id="cloudflare-images">
+        <nop-card asp-name="cloudflare-images-config" asp-icon="fas fa-gears" asp-title="@T("Nop.Plugin.Misc.CloudflareImages.Title")" asp-hide-block-attribute-name="cloudflare-images-general" asp-hide="false" asp-advanced="false">
+            <div class="card-body">
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="Enabled" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Enabled" />
+                        <span asp-validation-for="Enabled"></span>
+                    </div>
+                </div>
+                <nop-nested-setting asp-for="Enabled">
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="DeliveryUrl"/>
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="DeliveryUrl" />
+                            <span asp-validation-for="DeliveryUrl"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="AccountId"/>
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="AccountId"/>
+                            <span asp-validation-for="AccountId"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="AccessToken"/>
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="AccessToken"/>
+                            <span asp-validation-for="AccessToken"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="RequestTimeout"/>
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="RequestTimeout"/>
+                            <span asp-validation-for="RequestTimeout"></span>
+                        </div>
+                    </div>
+                </nop-nested-setting>
+                <div class="form-group row">
+                    <div class="col-md-9 offset-md-3">
+                        <button type="submit" name="save" class="btn btn-primary">@T("Admin.Common.Save")</button>
+                    </div>
+                </div>
+            </div>
+        </nop-card>
+    </nop-cards>
+</form>

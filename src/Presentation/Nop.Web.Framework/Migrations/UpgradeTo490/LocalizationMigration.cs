@@ -40,6 +40,27 @@ public class LocalizationMigration : MigrationBase
 
         #region Rename locales
 
+        localizationService.DeleteLocaleResources(new[]
+        {
+            "Admin.Configuration.AppSettings.AzureBlob",
+            "Admin.Configuration.AppSettings.AzureBlob.ConnectionString",
+            "Admin.Configuration.AppSettings.AzureBlob.ConnectionString.Hint",
+            "Admin.Configuration.AppSettings.AzureBlob.ContainerName",
+            "Admin.Configuration.AppSettings.AzureBlob.ContainerName.Hint",
+            "Admin.Configuration.AppSettings.AzureBlob.EndPoint",
+            "Admin.Configuration.AppSettings.AzureBlob.EndPoint.Hint",
+            "Admin.Configuration.AppSettings.AzureBlob.AppendContainerName",
+            "Admin.Configuration.AppSettings.AzureBlob.AppendContainerName.Hint",
+            "Admin.Configuration.AppSettings.AzureBlob.StoreDataProtectionKeys",
+            "Admin.Configuration.AppSettings.AzureBlob.StoreDataProtectionKeys.Hint",
+            "Admin.Configuration.AppSettings.AzureBlob.DataProtectionKeysContainerName",
+            "Admin.Configuration.AppSettings.AzureBlob.DataProtectionKeysContainerName.Hint",
+            "Admin.Configuration.AppSettings.AzureBlob.DataProtectionKeysVaultId",
+            "Admin.Configuration.AppSettings.AzureBlob.DataProtectionKeysVaultId.Hint",
+            "Admin.System.SystemInfo.AzureBlobStorageEnabled",
+            "Admin.System.SystemInfo.AzureBlobStorageEnabled.Hint",
+        });
+
         #endregion
 
         #region Add or update locales

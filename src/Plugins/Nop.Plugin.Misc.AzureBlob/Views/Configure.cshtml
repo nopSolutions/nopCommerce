@@ -1,0 +1,65 @@
+@model ConfigurationModel
+
+@{
+    Layout = "_ConfigurePlugin";
+}
+<form asp-controller="AzureBlob" asp-action="Configure" method="post">
+    <nop-cards id="azure-blob">
+        <nop-card asp-name="azure-blob-config" asp-icon="fas fa-gears" asp-title="@T("Nop.Plugin.Misc.AzureBlob.Title")" asp-hide-block-attribute-name="azure-blob-general" asp-hide="false" asp-advanced="false">
+            <div class="card-body">
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="Enabled" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Enabled" />
+                        <span asp-validation-for="Enabled"></span>
+                    </div>
+                </div>
+                <nop-nested-setting asp-for="Enabled">
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="ConnectionString" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="ConnectionString" />
+                            <span asp-validation-for="ConnectionString"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="ContainerName" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="ContainerName" />
+                            <span asp-validation-for="ContainerName"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="EndPoint" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="EndPoint" />
+                            <span asp-validation-for="EndPoint"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="AppendContainerName" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="AppendContainerName" />
+                            <span asp-validation-for="AppendContainerName"></span>
+                        </div>
+                    </div>
+                </nop-nested-setting>
+                <div class="form-group row">
+                    <div class="col-md-9 offset-md-3">
+                        <button type="submit" name="save" class="btn btn-primary">@T("Admin.Common.Save")</button>
+                    </div>
+                </div>
+            </div>
+        </nop-card>
+    </nop-cards>
+</form>
