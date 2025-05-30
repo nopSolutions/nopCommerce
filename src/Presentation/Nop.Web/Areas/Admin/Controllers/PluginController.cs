@@ -396,7 +396,7 @@ public partial class PluginController : BaseAdminController
             pluginDescriptor.Save();
 
             //raise event
-            await _eventPublisher.PublishAsync(new PluginUpdatedEvent(pluginDescriptor));
+            //await _eventPublisher.PublishAsync(new PluginUpdatedEvent(pluginDescriptor));
 
             //locales
             var pluginInstance = pluginDescriptor.Instance<IPlugin>();
@@ -553,6 +553,11 @@ public partial class PluginController : BaseAdminController
             //activity log
             await _customerActivityService.InsertActivityAsync("EditPlugin",
                 string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditPlugin"), pluginDescriptor.FriendlyName));
+
+            //raise event
+
+            await _eventPublisher.PublishAsync(new PluginUpdatedEvent(pluginDescriptor));
+
 
             return View(model);
         }
