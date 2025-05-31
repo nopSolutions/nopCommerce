@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Common;
@@ -104,6 +105,15 @@ public partial class CommonController : BasePublicController
     {
         return View();
     }
+
+    [CheckAccessPublicStore(true)]
+    public IActionResult AccessDenied()
+    {
+        // You can log or return custom logic here
+        return View();
+    }
+
+
 
     //available even when a store is closed
     [CheckAccessClosedStore(ignore: true)]

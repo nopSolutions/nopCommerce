@@ -40,6 +40,12 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             pattern: $"{lang}/multi-factor-verification/",
             defaults: new { controller = "Customer", action = "MultiFactorVerification" });
 
+
+        //access denied
+        endpointRouteBuilder.MapControllerRoute(name: "AccessDenied",
+            pattern: $"{lang}/access-denied/",
+            defaults: new { controller = "Common", action = "AccessDenied" });
+
         //register
         endpointRouteBuilder.MapControllerRoute(name: "Register",
             pattern: $"{lang}/register/",

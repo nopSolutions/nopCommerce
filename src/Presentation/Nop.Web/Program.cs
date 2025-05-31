@@ -43,7 +43,7 @@ public partial class Program
 
         //configure the application HTTP request pipeline
         app.ConfigureRequestPipeline();
-        await app.StartEngineAsync();
+        await app.PublishAppStartedEventAsync();
 
         await app.RunAsync();
     }

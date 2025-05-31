@@ -20,6 +20,7 @@ public sealed class CheckAccessPublicStoreAttribute : TypeFilterAttribute
     {
         IgnoreFilter = ignore;
         Arguments = [ignore];
+
     }
 
     #endregion
@@ -87,7 +88,7 @@ public sealed class CheckAccessPublicStoreAttribute : TypeFilterAttribute
                 return;
 
             //customer hasn't access to a public store
-            context.Result = new ChallengeResult();
+            context.Result = new RedirectToRouteResult("AccessDenied", null);
         }
 
         #endregion

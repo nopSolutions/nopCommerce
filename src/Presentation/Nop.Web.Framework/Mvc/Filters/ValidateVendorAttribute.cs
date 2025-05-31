@@ -93,7 +93,7 @@ public sealed class ValidateVendorAttribute : TypeFilterAttribute
             //ensure that this user has active vendor record associated
             var vendor = await _workContext.GetCurrentVendorAsync();
             if (vendor == null)
-                context.Result = new ChallengeResult();
+                context.Result = new RedirectToRouteResult("AccessDenied", null);
         }
 
         #endregion
