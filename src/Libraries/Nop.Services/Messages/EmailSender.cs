@@ -172,7 +172,7 @@ public partial class EmailSender : IEmailSender
             new TextPart(TextFormat.Html) { Text = body }
         };
 
-        //create the file attachment for this e-mail message
+        //create the file attachment for this email message
         if (!string.IsNullOrEmpty(attachmentFilePath) && _fileProvider.FileExists(attachmentFilePath))
         {
             multipart.Add(await CreateMimeAttachmentAsync(attachmentFilePath, attachmentFileName));

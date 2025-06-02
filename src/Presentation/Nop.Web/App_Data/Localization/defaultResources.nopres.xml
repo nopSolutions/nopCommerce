@@ -58,7 +58,7 @@
     <Value>Delete selected</Value>
   </LocaleResource>
   <LocaleResource Name="Account.BackInStockSubscriptions.Description">
-    <Value>You will receive an e-mail when a particular product is back in stock.</Value>
+    <Value>You will receive an email when a particular product is back in stock.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.BackInStockSubscriptions.NoSubscriptions">
     <Value>You are not currently subscribed to any Back In Stock notification lists</Value>
@@ -274,10 +274,10 @@
     <Value>Your email has been validated</Value>
   </LocaleResource>
   <LocaleResource Name="Account.EmailUsernameErrors.EmailAlreadyExists">
-    <Value>The e-mail address is already in use</Value>
+    <Value>The email address is already in use</Value>
   </LocaleResource>
   <LocaleResource Name="Account.EmailUsernameErrors.EmailTooLong">
-    <Value>E-mail address is too long</Value>
+    <Value>Email address is too long</Value>
   </LocaleResource>
   <LocaleResource Name="Account.EmailUsernameErrors.NewEmailIsNotValid">
     <Value>New email is not valid</Value>
@@ -460,7 +460,7 @@
     <Value>Delete Selected</Value>
   </LocaleResource>
   <LocaleResource Name="Account.ForumSubscriptions.Description">
-    <Value>You will receive an e-mail when a new forum topic/post is created.</Value>
+    <Value>You will receive an email when a new forum topic/post is created.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.ForumSubscriptions.InfoColumn">
     <Value>Forum/Topic</Value>
@@ -4511,52 +4511,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings">
     <Value>App settings</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob">
-    <Value>Azure Blob storage configuration</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.AppendContainerName">
-    <Value>Append container name</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.AppendContainerName.Hint">
-    <Value>Enable this setting to append the endpoint with the container name when constructing the URL.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.ConnectionString">
-    <Value>Connection string</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.ConnectionString.Hint">
-    <Value>Specify the connection string for Azure Blob storage.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.ContainerName">
-    <Value>Container name</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.ContainerName.Hint">
-    <Value>Specify the container name for Azure Blob storage.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.DataProtectionKeysContainerName">
-    <Value>Container name for Data Protection keys</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.DataProtectionKeysContainerName.Hint">
-    <Value>Specify the container name for the Data Protection keys. This should be a private container separate from the Blob container used for media storage.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.DataProtectionKeysVaultId">
-    <Value>Key vault ID</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.DataProtectionKeysVaultId.Hint">
-    <Value>Specify the Azure key vault ID used to encrypt the Data Protection keys.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.EndPoint">
-    <Value>Endpoint</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.EndPoint.Hint">
-    <Value>Specify the endpoint for Azure Blob storage.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.StoreDataProtectionKeys">
-    <Value>Store Data Protection keys</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.StoreDataProtectionKeys.Hint">
-    <Value>Enable this setting to store the Data Protection keys in Azure Blob Storage.</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Configuration.AppSettings.Cache">
     <Value>Cache configuration</Value>
   </LocaleResource>
@@ -10972,7 +10927,7 @@
     <Value>BCC</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.BccEmailAddresses.Hint">
-    <Value>The blind carbon copy (BCC) recipients for this e-mail message.</Value>
+    <Value>The blind carbon copy (BCC) recipients for this email message.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.Body">
     <Value>Body</Value>
@@ -16115,13 +16070,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.ASPNETInfo.Hint">
     <Value>ASP.NET info.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.SystemInfo.AzureBlobStorageEnabled">
-    <Value>Azure Blob Storage enabled</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.SystemInfo.AzureBlobStorageEnabled.Hint">
-    <Value>Indicates whether Azure Blob Storage is enabled.</Value>
-  </LocaleResource>
+  </LocaleResource> 
   <LocaleResource Name="Admin.System.SystemInfo.CurrentStaticCacheManager">
     <Value>Static cache manager name</Value>
   </LocaleResource>
@@ -16756,7 +16705,7 @@
     <Value>Receive an email when this arrives in stock</Value>
   </LocaleResource>
   <LocaleResource Name="BackInStockSubscriptions.Tooltip">
-    <Value>You'll receive a onetime e-mail when this product is available for ordering again. We will not send you any other e-mails or add you to our newsletter; you will only be e-mailed about this product!</Value>
+    <Value>You'll receive a onetime email when this product is available for ordering again. We will not send you any other emails or add you to our newsletter; you will only be emailed about this product!</Value>
   </LocaleResource>
   <LocaleResource Name="BackInStockSubscriptions.Unsubscribe">
     <Value>Unsubscribe</Value>

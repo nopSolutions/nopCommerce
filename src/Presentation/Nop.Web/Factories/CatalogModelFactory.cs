@@ -1819,12 +1819,10 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         //we don't use "!string.IsNullOrEmpty(searchTerms)" in cases of "ProductSearchTermMinimumLength" set to 0 but searching by other parameters (e.g. category or price filter)
         var request = _httpContextAccessor.HttpContext.Request;
 
-        var isSearchTermSpecified = request?.Method switch
-        {
-            "GET" => request.Query.ContainsKey("q"),
-            "POST" when request.HasFormContentType => request.Form.ContainsKey("q"),
-            _ => false
-        };
+        var isSearchTermSpecified = request.Query.ContainsKey("q");
+
+        if (!isSearchTermSpecified && request.HasFormContentType)
+            isSearchTermSpecified = request.Form.ContainsKey("q");
 
         if (isSearchTermSpecified)
         {

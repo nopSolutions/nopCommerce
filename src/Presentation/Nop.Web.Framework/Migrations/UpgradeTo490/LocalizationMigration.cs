@@ -40,6 +40,27 @@ public class LocalizationMigration : MigrationBase
 
         #region Rename locales
 
+        localizationService.DeleteLocaleResources(new[]
+        {
+            "Admin.Configuration.AppSettings.AzureBlob",
+            "Admin.Configuration.AppSettings.AzureBlob.ConnectionString",
+            "Admin.Configuration.AppSettings.AzureBlob.ConnectionString.Hint",
+            "Admin.Configuration.AppSettings.AzureBlob.ContainerName",
+            "Admin.Configuration.AppSettings.AzureBlob.ContainerName.Hint",
+            "Admin.Configuration.AppSettings.AzureBlob.EndPoint",
+            "Admin.Configuration.AppSettings.AzureBlob.EndPoint.Hint",
+            "Admin.Configuration.AppSettings.AzureBlob.AppendContainerName",
+            "Admin.Configuration.AppSettings.AzureBlob.AppendContainerName.Hint",
+            "Admin.Configuration.AppSettings.AzureBlob.StoreDataProtectionKeys",
+            "Admin.Configuration.AppSettings.AzureBlob.StoreDataProtectionKeys.Hint",
+            "Admin.Configuration.AppSettings.AzureBlob.DataProtectionKeysContainerName",
+            "Admin.Configuration.AppSettings.AzureBlob.DataProtectionKeysContainerName.Hint",
+            "Admin.Configuration.AppSettings.AzureBlob.DataProtectionKeysVaultId",
+            "Admin.Configuration.AppSettings.AzureBlob.DataProtectionKeysVaultId.Hint",
+            "Admin.System.SystemInfo.AzureBlobStorageEnabled",
+            "Admin.System.SystemInfo.AzureBlobStorageEnabled.Hint",
+        });
+
         #endregion
 
         #region Add or update locales
@@ -167,6 +188,14 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Configuration.Settings.Tax.HmrcClientId.Hint"] = "Your HMRC API client ID is a unique identifier which created when you added your application.",
             ["Admin.Configuration.Settings.Tax.HmrcClientSecret"] = "HMRC API client secret",
             ["Admin.Configuration.Settings.Tax.HmrcClientSecret.Hint"] = "Your client secret is a unique passphrase that you generate to authorise your application.",
+
+            //#7694
+            ["Account.BackInStockSubscriptions.Description"] = "You will receive an email when a particular product is back in stock.",
+            ["Account.EmailUsernameErrors.EmailAlreadyExists"] = "The email address is already in use",
+            ["Account.EmailUsernameErrors.EmailTooLong"] = "Email address is too long",
+            ["Account.ForumSubscriptions.Description"] = "You will receive an email when a new forum topic/post is created.",
+            ["Admin.ContentManagement.MessageTemplates.Fields.BccEmailAddresses.Hint"] = "The blind carbon copy (BCC) recipients for this email message.",
+            ["BackInStockSubscriptions.Tooltip"] = "You'll receive a onetime email when this product is available for ordering again. We will not send you any other emails or add you to our newsletter; you will only be emailed about this product!",
         }, languageId);
 
         #endregion

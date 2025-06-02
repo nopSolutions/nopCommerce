@@ -275,11 +275,11 @@ public partial class NopStartup : INopStartup
             });
         }
 
+        //picture thumb service
+        services.AddScoped<IThumbService, ThumbService>();
+
         //picture service
-        if (appSettings.Get<AzureBlobConfig>().Enabled)
-            services.AddScoped<IPictureService, AzurePictureService>();
-        else
-            services.AddScoped<IPictureService, PictureService>();
+        services.AddScoped<IPictureService, PictureService>();
 
         //roxy file manager
         services.AddScoped<IRoxyFilemanService, RoxyFilemanService>();
