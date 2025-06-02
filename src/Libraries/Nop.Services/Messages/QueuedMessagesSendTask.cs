@@ -78,7 +78,7 @@ public partial class QueuedMessagesSendTask : IScheduleTask
                 }
                 catch (Exception exc)
                 {
-                    await _logger.ErrorAsync($"Error sending e-mail. {exc.Message}", exc);
+                    await _logger.ErrorAsync($"Error sending email. {exc.Message}", exc);
                 }
                 finally
                 {

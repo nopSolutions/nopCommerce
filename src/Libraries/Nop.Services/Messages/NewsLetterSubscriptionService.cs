@@ -77,7 +77,7 @@ public partial class NewsLetterSubscriptionService : INewsLetterSubscriptionServ
     {
         ArgumentNullException.ThrowIfNull(newsLetterSubscription);
 
-        //Handle e-mail
+        //Handle email
         newsLetterSubscription.Email = CommonHelper.EnsureSubscriberEmailOrThrow(newsLetterSubscription.Email);
 
         //Persist
@@ -98,7 +98,7 @@ public partial class NewsLetterSubscriptionService : INewsLetterSubscriptionServ
     {
         ArgumentNullException.ThrowIfNull(newsLetterSubscription);
 
-        //Handle e-mail
+        //Handle email
         newsLetterSubscription.Email = CommonHelper.EnsureSubscriberEmailOrThrow(newsLetterSubscription.Email);
 
         //Get original subscription record

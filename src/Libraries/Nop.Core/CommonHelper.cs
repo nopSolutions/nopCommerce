@@ -48,10 +48,10 @@ public partial class CommonHelper
     }
 
     /// <summary>
-    /// Verifies that a string is in valid e-mail format
+    /// Verifies that a string is in valid email format
     /// </summary>
     /// <param name="email">Email to verify</param>
-    /// <returns>true if the string is a valid e-mail address and false if it's not</returns>
+    /// <returns>true if the string is a valid email address and false if it's not</returns>
     public static bool IsValidEmail(string email)
     {
         if (string.IsNullOrEmpty(email))
