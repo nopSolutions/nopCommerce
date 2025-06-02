@@ -1,0 +1,11 @@
+﻿﻿<script>
+	$(document).ready(function () {
+		$("#woocommerce-import-button").click(function () {
+             window.location.href = '@Url.Action("ImportProductImages", "MediaMigration")';
+		});
+	});
+</script>
+
+<button type="button" id="woocommerce-import-button" class="btn bg-navy">
+	<i class="fas fa-sync"></i> همگام‌سازی تصاویر
+</button>
