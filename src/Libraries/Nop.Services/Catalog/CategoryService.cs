@@ -584,6 +584,16 @@ public partial class CategoryService : ICategoryService
     }
 
     /// <summary>
+    /// Deletes a list of product category mapping
+    /// </summary>
+    /// <param name="productCategories">Product categories</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task DeleteProductCategoriesAsync(IList<ProductCategory> productCategories)
+    {
+        await _productCategoryRepository.DeleteAsync(productCategories);
+    }
+
+    /// <summary>
     /// Gets product category mapping collection
     /// </summary>
     /// <param name="categoryId">Category identifier</param>

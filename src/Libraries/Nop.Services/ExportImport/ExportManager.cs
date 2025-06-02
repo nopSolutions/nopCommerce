@@ -90,6 +90,7 @@ public partial class ExportManager : IExportManager
     protected readonly IStoreMappingService _storeMappingService;
     protected readonly IStoreService _storeService;
     protected readonly ITaxCategoryService _taxCategoryService;
+    protected readonly IThumbService _thumbService;
     protected readonly IUrlRecordService _urlRecordService;
     protected readonly IVendorService _vendorService;
     protected readonly IWorkContext _workContext;
@@ -138,6 +139,7 @@ public partial class ExportManager : IExportManager
         IStoreMappingService storeMappingService,
         IStoreService storeService,
         ITaxCategoryService taxCategoryService,
+        IThumbService thumbService,
         IUrlRecordService urlRecordService,
         IVendorService vendorService,
         IWorkContext workContext,
@@ -182,6 +184,7 @@ public partial class ExportManager : IExportManager
         _storeMappingService = storeMappingService;
         _storeService = storeService;
         _taxCategoryService = taxCategoryService;
+        _thumbService = thumbService;
         _urlRecordService = urlRecordService;
         _vendorService = vendorService;
         _workContext = workContext;
@@ -274,7 +277,9 @@ public partial class ExportManager : IExportManager
     {
         var picture = await _pictureService.GetPictureByIdAsync(pictureId);
 
-        return await _pictureService.GetThumbLocalPathAsync(picture);
+        var (pictureUrl, _) = await _pictureService.GetPictureUrlAsync(picture);
+
+        return await _thumbService.GetThumbLocalPathAsync(pictureUrl);
     }
 
     /// <summary>
@@ -408,7 +413,12 @@ public partial class ExportManager : IExportManager
         var recordsToReturn = pictureIndex + 1;
         var pictures = await _pictureService.GetPicturesByProductIdAsync(product.Id, recordsToReturn);
 
-        return pictures.Count > pictureIndex ? await _pictureService.GetThumbLocalPathAsync(pictures[pictureIndex]) : null;
+        if (pictures.Count <= pictureIndex)
+            return null;
+
+        var (pictureUrl, _) = await _pictureService.GetPictureUrlAsync(pictures[pictureIndex]);
+
+        return await _thumbService.GetThumbLocalPathAsync(pictureUrl);
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
