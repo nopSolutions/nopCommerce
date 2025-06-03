@@ -9,13 +9,11 @@ namespace Nop.Web.Areas.Admin.Helpers;
 public partial class SummernoteHelper : ISummernoteHelper
 {
     protected readonly INopFileProvider _nopFileProvider;
-    protected readonly IWebHostEnvironment _webHostEnvironment;
     protected readonly IWorkContext _workContext;
 
-    public SummernoteHelper(INopFileProvider nopFileProvider, IWebHostEnvironment webHostEnvironment, IWorkContext workContext)
+    public SummernoteHelper(INopFileProvider nopFileProvider, IWorkContext workContext)
     {
         _nopFileProvider = nopFileProvider;
-        _webHostEnvironment = webHostEnvironment;
         _workContext = workContext;
     }
 
@@ -31,7 +29,7 @@ public partial class SummernoteHelper : ISummernoteHelper
         var languageCulture = (await _workContext.GetWorkingLanguageAsync()).LanguageCulture;
 
         var langFile = $"summernote-{languageCulture}.min.js";
-        var directoryPath = _nopFileProvider.Combine(_webHostEnvironment.WebRootPath, @"lib_npm\summernote\lang");
+        var directoryPath = _nopFileProvider.GetAbsolutePath(@"lib_npm\summernote\lang");
         var fileExists = _nopFileProvider.FileExists($"{directoryPath}\\{langFile}");
 
         return fileExists ? languageCulture : string.Empty;
