@@ -1927,6 +1927,10 @@ div.dt-container .data-tables-refresh > div {
   background-color: white;
 }
 
+.table .preview img {
+    max-width: 100%;
+}
+
 tr.even {
   background-color: #f4f4f4;
 }
