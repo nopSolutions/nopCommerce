@@ -403,6 +403,9 @@ public partial class BaseNopTest
         services.AddTransient<ITaxPluginManager, TaxPluginManager>();
         services.AddScoped<ISearchPluginManager, SearchPluginManager>();
 
+        //picture thumb service
+        services.AddScoped<IThumbService, ThumbService>();
+
         services.AddTransient<IPictureService, TestPictureService>();
         services.AddScoped<IVideoService, VideoService>();
         services.AddScoped<INopUrlHelper, NopUrlHelper>();

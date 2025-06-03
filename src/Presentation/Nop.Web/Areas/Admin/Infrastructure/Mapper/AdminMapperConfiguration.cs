@@ -753,7 +753,8 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
         CreateMap<AddressSettings, AddressSettingsModel>()
             .ForMember(model => model.AvailableCountries, options => options.Ignore());
         CreateMap<AddressSettingsModel, AddressSettings>()
-            .ForMember(settings => settings.PreselectCountryIfOnlyOne, options => options.Ignore());
+            .ForMember(settings => settings.PreselectCountryIfOnlyOne, options => options.Ignore())
+            .ForMember(settings => settings.PrePopulateCountryByCustomer, options => options.Ignore());
 
         CreateMap<Setting, SettingModel>()
             .ForMember(setting => setting.AvailableStores, options => options.Ignore())
