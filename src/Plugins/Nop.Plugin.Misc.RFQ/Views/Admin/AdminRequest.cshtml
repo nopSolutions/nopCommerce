@@ -1,0 +1,168 @@
+﻿@using Nop.Plugin.Misc.RFQ.Models.Admin
+@model RequestQuoteModel
+@inject Nop.Services.Html.IHtmlFormatter htmlFormatter
+
+@{
+    var title = string.Format(T("Plugins.Misc.RFQ.RequestQuoteNumber").Text, Model.Id);
+
+    Layout = "_AdminLayout";
+    //page title
+    ViewBag.PageTitle = title;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName(RfqDefaults.RequestsAdminMenuSystemName);
+
+    const string hideInfoBlockAttributeName = "AdminRequest.HideInfoBlock";
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
+}
+
+<div asp-validation-summary="All"></div>
+
+
+<form asp-controller="RfqAdmin" asp-action="AdminRequest" method="post">
+    <input asp-for="Id" type="hidden" />
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @title
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="AdminRequests">@T("Plugins.Misc.RFQ.AdminRequest.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            @if (Model.DisplayCreateQuoteButton)
+            {
+                <button type="submit"
+                        name="createQuote"
+                        formaction="@Url.Action("CreateQuote")"
+                        formmethod="post"
+                        class="btn btn-info">
+                    <i class="far fa-file-alt"></i>
+                    @T("Plugins.Misc.RFQ.CreateQuote")
+                </button>
+            }
+            @if (Model.DisplayCancelRequestButton)
+            {
+                <button type="button"
+                        name="cancelRequest"
+                        id="cancel-request"
+                        formaction="@Url.Action("CancelRequest")"
+                        formmethod="post"
+                        class="btn btn-warning">
+                    <i class="fas fa-ban"></i>
+                    @T("Admin.Common.Cancel")
+                </button>
+                <nop-action-confirmation asp-button-id="cancel-request" />
+            }
+            @if (Model.DisplayDeleteRequestButton)
+            {
+                <button type="submit"
+                        id="delete-request"
+                        name="deleteRequest"
+                        formaction="@Url.Action("DeleteRequest")"
+                        formmethod="post"
+                        class="btn btn-danger">
+                    <i class="far fa-trash-alt"></i>
+                    @T("Admin.Common.Delete")
+                </button>
+                <nop-action-confirmation asp-button-id="delete-request" />
+            }
+            @if (Model.DisplaySaveButtons)
+            {
+                <button type="submit" name="save" class="btn btn-primary">
+                    <i class="far fa-save"></i>
+                    @T("Admin.Common.Save")
+                </button>
+                <button type="submit" name="save-continue" class="btn btn-primary">
+                    <i class="far fa-save"></i>
+                    @T("Admin.Common.SaveContinue")
+                </button>
+            }
+        </div>
+    </div>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <nop-cards id="request-cards">
+                    <nop-card asp-name="request-info" asp-icon="fas fa-info" asp-title="@T("Plugins.Misc.RFQ.CustomerRequest.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="CustomerEmail" />
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="form-text-row">
+                                        <a asp-controller="Customer" asp-action="Edit" asp-route-id="@Model.CustomerId">@(!string.IsNullOrEmpty(Model.CustomerEmail) ? Model.CustomerEmail : T("Admin.Customers.Guest").Text)</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="CreatedOnUtc" />
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="form-text-row">@Model.CreatedOnUtc</div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="Status" />
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="form-text-row">@Model.Status</div>
+                                </div>
+                            </div>
+                            @if (!string.IsNullOrEmpty(Model.CustomerNotes))
+                            {
+                                <div class="form-group row">
+                                    <div class="col-md-3">
+                                        <nop-label asp-for="CustomerNotes" />
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="form-text-row">
+                                            @Html.Raw(htmlFormatter.FormatText(Model.CustomerNotes, false, true, false, false, false, false))
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            @if (Model.QuoteId.HasValue)
+                            {
+                                <div class="form-group row">
+                                    <div class="col-md-3">
+                                        <nop-label asp-for="QuoteId"/>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="form-text-row"><a href="~/Admin/RfqAdmin/AdminQuote/@Model.QuoteId.Value">#@Model.QuoteId.Value</a></div>
+                                    </div>
+                                </div>
+                            }
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="AdminNotes" />
+                                </div>
+                                <div class="col-md-9">
+                                    @if (Model.DisplaySaveButtons || Model.DisplayCreateQuoteButton)
+                                    {
+                                        <nop-textarea asp-for="AdminNotes"></nop-textarea>
+                                    }
+                                    else
+                                    {
+                                        <div class="form-text-row">
+                                            @Html.Raw(Model.AdminNotes.Replace(Environment.NewLine, "<br />"))
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-12">
+                                    <h3>@T("Plugins.Misc.RFQ.Products")</h3>
+                                    @await Html.PartialAsync("_AdminRequest.Products.cshtml", Model)
+                                </div>
+                            </div>
+                        </div>
+                    </nop-card>
+                </nop-cards>
+            </div>
+        </div>
+    </section>
+</form>
