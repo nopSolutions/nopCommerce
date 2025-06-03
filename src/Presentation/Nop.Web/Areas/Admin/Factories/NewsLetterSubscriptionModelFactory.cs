@@ -178,7 +178,6 @@ public partial class NewsLetterSubscriptionModelFactory : INewsLetterSubscriptio
             model.CreatedOn = (await _dateTimeHelper.ConvertToUserTimeAsync(subscription.CreatedOnUtc, DateTimeKind.Utc)).ToString();
 
             model.SubscriptionTypeName = (await _newsLetterSubscriptionTypeService.GetNewsLetterSubscriptionTypeByIdAsync(subscription.TypeId))?.Name;
-            model.EmailNotEditable = true;
 
             //prepare localized models
             if (!excludeProperties)

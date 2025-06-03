@@ -127,6 +127,8 @@ public partial record RegisterModel : BaseNopModel
     [NopResourceDisplayName("Account.Fields.Fax")]
     public string Fax { get; set; }
 
+    public bool NewsletterEnabled { get; set; }
+
     public IList<NewsLetterSubscriptionModel> NewsLetterSubscriptions { get; set; }
 
     public bool AcceptPrivacyPolicyEnabled { get; set; }

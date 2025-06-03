@@ -114,6 +114,8 @@ public partial record CustomerInfoModel : BaseNopModel
     [NopResourceDisplayName("Account.Fields.Fax")]
     public string Fax { get; set; }
 
+    public bool NewsletterEnabled { get; set; }
+
     public IList<NewsLetterSubscriptionModel> NewsLetterSubscriptions { get; set; }
 
     //preferences

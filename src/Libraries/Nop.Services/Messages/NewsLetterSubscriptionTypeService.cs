@@ -61,11 +61,7 @@ public partial class NewsLetterSubscriptionTypeService : INewsLetterSubscription
     /// <returns>A task that represents the asynchronous operation</returns>
     public virtual async Task DeleteNewsLetterSubscriptionTypeAsync(NewsLetterSubscriptionType newsLetterSubscriptionType)
     {
-        ArgumentNullException.ThrowIfNull(newsLetterSubscriptionType);
-
-        var allTypes = await GetAllNewsLetterSubscriptionTypesAsync();
-        if (allTypes.Count == 1)
-            throw new Exception("You cannot delete the only configured subscription type");
+        ArgumentNullException.ThrowIfNull(newsLetterSubscriptionType);        
 
         await _newsLetterSubscriptionTypeRepository.DeleteAsync(newsLetterSubscriptionType);
     }

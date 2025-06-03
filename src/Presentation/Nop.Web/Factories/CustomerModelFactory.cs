@@ -340,6 +340,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         model.PhoneRequired = _customerSettings.PhoneRequired;
         model.FaxEnabled = _customerSettings.FaxEnabled;
         model.FaxRequired = _customerSettings.FaxRequired;
+        model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
         model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
         model.AllowUsersToChangeUsernames = _customerSettings.AllowUsersToChangeUsernames;
         model.CheckUsernameAvailabilityEnabled = _customerSettings.CheckUsernameAvailabilityEnabled;
@@ -444,6 +445,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         model.PhoneRequired = _customerSettings.PhoneRequired;
         model.FaxEnabled = _customerSettings.FaxEnabled;
         model.FaxRequired = _customerSettings.FaxRequired;
+        model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
         model.AcceptPrivacyPolicyEnabled = _customerSettings.AcceptPrivacyPolicyEnabled;
         model.AcceptPrivacyPolicyPopup = _commonSettings.PopupForTermsOfServiceLinks;
         model.UsernamesEnabled = _customerSettings.UsernamesEnabled;

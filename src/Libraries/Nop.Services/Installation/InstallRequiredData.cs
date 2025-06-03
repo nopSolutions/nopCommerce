@@ -1524,6 +1524,7 @@ public partial class InstallationService
             PhoneEnabled = false,
             FaxEnabled = false,
             AcceptPrivacyPolicyEnabled = false,
+            NewsletterEnabled = true,
             HideNewsletterBlock = false,
             NewsletterBlockAllowToUnsubscribe = false,
             OnlineCustomerMinutes = 20,

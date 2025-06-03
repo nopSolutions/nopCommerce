@@ -219,14 +219,23 @@ public partial class NewsLetterSubscriptionTypeController : BaseAdminController
 
         try
         {
-            await _newsLetterSubscriptionTypeService.DeleteNewsLetterSubscriptionTypeAsync(subscriptionType);
+            var allTypes = await _newsLetterSubscriptionTypeService.GetAllNewsLetterSubscriptionTypesAsync();
+            if (allTypes.Count == 1)
+            {
+                var locale = await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptionType.NotDeleted");
+                _notificationService.WarningNotification(string.Format(locale, Url.Action("CustomerUser", "Setting")), false);
+            }
+            else
+            {
+                await _newsLetterSubscriptionTypeService.DeleteNewsLetterSubscriptionTypeAsync(subscriptionType);
 
-            //activity log
-            await _customerActivityService.InsertActivityAsync("DeleteSubscriptionType",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteSubscriptionType"), subscriptionType.Id),
-                subscriptionType);
+                //activity log
+                await _customerActivityService.InsertActivityAsync("DeleteSubscriptionType",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteSubscriptionType"), subscriptionType.Id),
+                    subscriptionType);
 
-            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptionType.Deleted"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptionType.Deleted"));
+            }
 
             return RedirectToAction("List");
         }

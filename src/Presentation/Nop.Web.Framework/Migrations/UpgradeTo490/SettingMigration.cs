@@ -111,10 +111,6 @@ public class SettingMigration : MigrationBase
         }
 
         //#6874
-        var newsletterEnabled = settingService.GetSetting("customersettings.newsletterenabled");
-        if (newsletterEnabled is not null)
-            settingService.DeleteSetting(newsletterEnabled);
-
         var newsletterTickedByDefault = settingService.GetSetting("customersettings.newslettertickedbydefault");
         if (newsletterTickedByDefault is not null)
             settingService.DeleteSetting(newsletterTickedByDefault);

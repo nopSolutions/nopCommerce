@@ -675,6 +675,9 @@
   <LocaleResource Name="Account.RewardPoints">
     <Value>Reward points</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.SubscribeToNewsletter">
+    <Value>Subscribe to newsletter</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.UserAgreement">
     <Value>User agreement</Value>
   </LocaleResource>
@@ -6908,6 +6911,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NewsletterBlockAllowToUnsubscribe.Hint">
     <Value>Check if you want to allow customers to display "unsubscribe" option in the newsletter block.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NewsletterEnabled">
+    <Value>'Newsletter' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NewsletterEnabled.Hint">
+    <Value>Set if 'Newsletter' is enabled.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NotifyNewCustomerRegistration">
     <Value>Notify about new customer registration</Value>
@@ -14644,7 +14653,7 @@
     <Value>{0} emails have been successfully imported</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.CustomerRoles">
-    <Value>Customer roles</Value>
+    <Value>Customer role</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.CustomerRoles.Hint">
     <Value>Search by a specific customer role.</Value>
@@ -14689,7 +14698,7 @@
     <Value>The start date for the search.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.SubscriptionTypes">
-    <Value>Subscription types</Value>
+    <Value>Subscription type</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.SubscriptionTypes.Hint">
     <Value>Limited to subscription types</Value>
@@ -14716,7 +14725,7 @@
     <Value>Display order</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.Fields.DisplayOrder.Hint">
-    <Value>Enter of display order of subscription type.</Value>
+    <Value>Display order.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.Fields.LimitedToStores">
     <Value>Limited to stores</Value>
@@ -14737,7 +14746,10 @@
     <Value>Ticked by default</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.Fields.TickedByDefault.Hint">
-    <Value>Indicated whether the subscription type is ticked by default.</Value>
+    <Value>Check to tick this newsletter subscription type by default.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.NotDeleted">
+    <Value><![CDATA[You cannot delete the only subscription type that is configured. To completely disable the newsletter, deactivate the "'Newsletter enabled" setting on the <a href="{0}">Customer settings</a> page]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.Updated">
     <Value>The subscription type has been updated successfully.</Value>

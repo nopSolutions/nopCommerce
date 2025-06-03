@@ -15,7 +15,7 @@
                                 <nop-label asp-for="Email" />
                             </div>
                             <div class="col-md-9">
-                                @if (Model.EmailNotEditable)
+                                @if (Model.Id > 0)
                                 {
                                     <div class="form-text-row">@Model.Email</div>
                                     <input asp-for="Email" type="hidden" />
@@ -50,7 +50,7 @@
                         </div>
                         @if (Model.AvailableNewsLetterSubscriptionStores?.Any() == true)
                         {
-                            <div class="form-group row">
+                            <div class="form-group row" @(Model.AvailableNewsLetterSubscriptionStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                                 <div class="col-md-3">
                                     <nop-label asp-for="SelectedNewsLetterSubscriptionStoreId" />
                                 </div>
@@ -62,7 +62,7 @@
                         }
                         @if (Model.AvailableNewsLetterSubscriptionLanguages?.Any() == true)
                         {
-                            <div class="form-group row">
+                            <div class="form-group row" @(Model.AvailableNewsLetterSubscriptionLanguages.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                                 <div class="col-md-3">
                                     <nop-label asp-for="SelectedNewsLetterSubscriptionLanguageId" />
                                 </div>

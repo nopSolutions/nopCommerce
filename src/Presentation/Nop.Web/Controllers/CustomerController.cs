@@ -891,28 +891,49 @@ public partial class CustomerController : BasePublicController
                 await _customerService.UpdateCustomerAsync(customer);
 
                 //newsletter subscriptions
-                var anyNewSubscriptions = false;
-                var isNewsletterActive = _customerSettings.UserRegistrationType != UserRegistrationType.EmailValidation;
-                var activeSubscriptions = model.NewsLetterSubscriptions.Where(subscriptionModel => subscriptionModel.IsActive);
-                var currentSubscriptions = await _newsLetterSubscriptionService
-                    .GetNewsLetterSubscriptionsByEmailAsync(customerEmail, storeId: store.Id);
-                if (currentSubscriptions.Any())
+                if (_customerSettings.NewsletterEnabled)
                 {
-                    var subscriptionGuid = currentSubscriptions.FirstOrDefault().NewsLetterSubscriptionGuid;
-                    foreach (var activeSubscription in activeSubscriptions)
+                    var anyNewSubscriptions = false;
+                    var isNewsletterActive = _customerSettings.UserRegistrationType != UserRegistrationType.EmailValidation;
+                    var activeSubscriptions = model.NewsLetterSubscriptions.Where(subscriptionModel => subscriptionModel.IsActive);
+                    var currentSubscriptions = await _newsLetterSubscriptionService
+                        .GetNewsLetterSubscriptionsByEmailAsync(customerEmail, storeId: store.Id);
+                    if (currentSubscriptions.Any())
                     {
-                        var existingSubscription = currentSubscriptions
-                            ?.FirstOrDefault(subscription => subscription.TypeId == activeSubscription.TypeId);
-                        if (existingSubscription is not null)
+                        var subscriptionGuid = currentSubscriptions.FirstOrDefault().NewsLetterSubscriptionGuid;
+                        foreach (var activeSubscription in activeSubscriptions)
                         {
-                            if (!existingSubscription.Active && isNewsletterActive)
+                            var existingSubscription = currentSubscriptions
+                                ?.FirstOrDefault(subscription => subscription.TypeId == activeSubscription.TypeId);
+                            if (existingSubscription is not null)
                             {
-                                existingSubscription.Active = true;
-                                existingSubscription.LanguageId = customer.LanguageId ?? language.Id;
-                                await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(existingSubscription);
+                                if (!existingSubscription.Active && isNewsletterActive)
+                                {
+                                    existingSubscription.Active = true;
+                                    existingSubscription.LanguageId = customer.LanguageId ?? language.Id;
+                                    await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(existingSubscription);
+                                }
+                            }
+                            else
+                            {
+                                await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new()
+                                {
+                                    NewsLetterSubscriptionGuid = subscriptionGuid,
+                                    Email = customer.Email,
+                                    Active = isNewsletterActive,
+                                    TypeId = activeSubscription.TypeId,
+                                    StoreId = store.Id,
+                                    LanguageId = customer.LanguageId ?? language.Id,
+                                    CreatedOnUtc = DateTime.UtcNow
+                                });
+                                anyNewSubscriptions = true;
                             }
                         }
-                        else
+                    }
+                    else
+                    {
+                        var subscriptionGuid = Guid.NewGuid();
+                        foreach (var activeSubscription in activeSubscriptions)
                         {
                             await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new()
                             {
@@ -927,31 +948,13 @@ public partial class CustomerController : BasePublicController
                             anyNewSubscriptions = true;
                         }
                     }
-                }
-                else
-                {
-                    var subscriptionGuid = Guid.NewGuid();
-                    foreach (var activeSubscription in activeSubscriptions)
-                    {
-                        await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new()
-                        {
-                            NewsLetterSubscriptionGuid = subscriptionGuid,
-                            Email = customer.Email,
-                            Active = isNewsletterActive,
-                            TypeId = activeSubscription.TypeId,
-                            StoreId = store.Id,
-                            LanguageId = customer.LanguageId ?? language.Id,
-                            CreatedOnUtc = DateTime.UtcNow
-                        });
-                        anyNewSubscriptions = true;
-                    }
-                }
 
-                //GDPR
-                if (anyNewSubscriptions && _gdprSettings.GdprEnabled && _gdprSettings.LogNewsletterConsent)
-                {
-                    var consentMessage = await _localizationService.GetResourceAsync("Gdpr.Consent.Newsletter");
-                    await _gdprService.InsertLogAsync(customer, 0, GdprRequestType.ConsentAgree, consentMessage);
+                    //GDPR
+                    if (anyNewSubscriptions && _gdprSettings.GdprEnabled && _gdprSettings.LogNewsletterConsent)
+                    {
+                        var consentMessage = await _localizationService.GetResourceAsync("Gdpr.Consent.Newsletter");
+                        await _gdprService.InsertLogAsync(customer, 0, GdprRequestType.ConsentAgree, consentMessage);
+                    }
                 }
 
                 if (_customerSettings.AcceptPrivacyPolicyEnabled)
@@ -1310,52 +1313,55 @@ public partial class CustomerController : BasePublicController
                 await _customerService.UpdateCustomerAsync(customer);
 
                 //newsletter subscriptions
-                var currentSubscriptions = await _newsLetterSubscriptionService
-                    .GetNewsLetterSubscriptionsByEmailAsync(customer.Email, storeId: store.Id);
-                if (currentSubscriptions.Any())
+                if (_customerSettings.NewsletterEnabled)
                 {
-                    var subscriptionGuid = currentSubscriptions.FirstOrDefault().NewsLetterSubscriptionGuid;
-                    foreach (var newsLetterSubscriptionModel in model.NewsLetterSubscriptions)
+                    var currentSubscriptions = await _newsLetterSubscriptionService
+                        .GetNewsLetterSubscriptionsByEmailAsync(customer.Email, storeId: store.Id);
+                    if (currentSubscriptions.Any())
                     {
-                        var existingSubscription = currentSubscriptions
-                            .FirstOrDefault(subscription => subscription.TypeId == newsLetterSubscriptionModel.TypeId);
-                        if (existingSubscription is not null && existingSubscription.Active != newsLetterSubscriptionModel.IsActive)
+                        var subscriptionGuid = currentSubscriptions.FirstOrDefault().NewsLetterSubscriptionGuid;
+                        foreach (var newsLetterSubscriptionModel in model.NewsLetterSubscriptions)
                         {
-                            existingSubscription.Active = newsLetterSubscriptionModel.IsActive;
-                            await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(existingSubscription);
-                        }
+                            var existingSubscription = currentSubscriptions
+                                .FirstOrDefault(subscription => subscription.TypeId == newsLetterSubscriptionModel.TypeId);
+                            if (existingSubscription is not null && existingSubscription.Active != newsLetterSubscriptionModel.IsActive)
+                            {
+                                existingSubscription.Active = newsLetterSubscriptionModel.IsActive;
+                                await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(existingSubscription);
+                            }
 
-                        if (existingSubscription is null && newsLetterSubscriptionModel.IsActive)
+                            if (existingSubscription is null && newsLetterSubscriptionModel.IsActive)
+                            {
+                                await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new()
+                                {
+                                    NewsLetterSubscriptionGuid = subscriptionGuid,
+                                    Email = customer.Email,
+                                    Active = true,
+                                    TypeId = newsLetterSubscriptionModel.TypeId,
+                                    StoreId = store.Id,
+                                    LanguageId = customer.LanguageId ?? language.Id,
+                                    CreatedOnUtc = DateTime.UtcNow
+                                });
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var subscriptionGuid = Guid.NewGuid();
+                        var activeSubscriptions = model.NewsLetterSubscriptions.Where(subscriptionModel => subscriptionModel.IsActive);
+                        foreach (var activeSubscription in activeSubscriptions)
                         {
                             await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new()
                             {
                                 NewsLetterSubscriptionGuid = subscriptionGuid,
                                 Email = customer.Email,
                                 Active = true,
-                                TypeId = newsLetterSubscriptionModel.TypeId,
                                 StoreId = store.Id,
+                                TypeId = activeSubscription.TypeId,
                                 LanguageId = customer.LanguageId ?? language.Id,
                                 CreatedOnUtc = DateTime.UtcNow
                             });
                         }
-                    }
-                }
-                else
-                {
-                    var subscriptionGuid = Guid.NewGuid();
-                    var activeSubscriptions = model.NewsLetterSubscriptions.Where(subscriptionModel => subscriptionModel.IsActive);
-                    foreach (var activeSubscription in activeSubscriptions)
-                    {
-                        await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new()
-                        {
-                            NewsLetterSubscriptionGuid = subscriptionGuid,
-                            Email = customer.Email,
-                            Active = true,
-                            StoreId = store.Id,
-                            TypeId = activeSubscription.TypeId,
-                            LanguageId = customer.LanguageId ?? language.Id,
-                            CreatedOnUtc = DateTime.UtcNow
-                        });
                     }
                 }
 
