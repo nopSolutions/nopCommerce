@@ -137,7 +137,7 @@
                                 <script asp-location="Footer">
                                     $(function () {
                                         // Register the plugins
-                                        FilePond.registerPlugin(FilePondPluginFileValidateType,FilePondPluginGetFile);
+                                        FilePond.registerPlugin(FilePondPluginFileValidateType, FilePondPluginGetFile);
 
                                         // Create a FilePond instance
                                         FilePond.create(document.querySelector('#@(controlId)element'), {
@@ -169,7 +169,7 @@
                                                         $("#@(controlId)").val(JSON.parse(response).downloadGuid);
                                                     }
                                                 },
-                                                remove: (source, load, error) => {                                      
+                                                remove: (source, load, error) => {
                                                     $("#@(controlId)").val('');
                                                     load();
                                                 },

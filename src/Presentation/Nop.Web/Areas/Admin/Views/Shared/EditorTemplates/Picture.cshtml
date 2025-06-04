@@ -2,7 +2,6 @@
 @inject IPictureService pictureService
 @inject MediaSettings mediaSettings
 
-@using System.Text.Json
 @using Nop.Core.Domain.Media
 @using Nop.Services.Media
 
@@ -15,8 +14,8 @@
     
     // Constants
     const int pictureSize = 100;
-    var allowedMimeTypes = new List<string> { MimeTypes.ImagePng, MimeTypes.ImageBmp, MimeTypes.ImageGif, MimeTypes.ImageJpeg, MimeTypes.ImagePJpeg, MimeTypes.ImageTiff, MimeTypes.ImageWebp };
 
+    var allowedMimeTypes = new List<string> { MimeTypes.ImagePng, MimeTypes.ImageBmp, MimeTypes.ImageGif, MimeTypes.ImageJpeg, MimeTypes.ImagePJpeg, MimeTypes.ImageTiff, MimeTypes.ImageWebp };
     if (mediaSettings.AllowSVGUploads)
         allowedMimeTypes.Add(MimeTypes.ImageSvg);
 
@@ -45,25 +44,6 @@
             },
         });
     }
-
-    var jsonModel = new
-    {
-        modelId = Html.IdForModel(),
-        clientId = clientId,
-        elementId = elementId,
-        imageId = imageId,
-        defaultPictureUrl = await pictureService.GetDefaultPictureUrlAsync(pictureSize),
-        currentPictureUrl = await pictureService.GetPictureUrlAsync(Model, pictureSize),
-        commonError = T("Common.Error"),
-        imageProcessUrl = Url.Content("~/Admin/Picture/AsyncUpload"),
-        filePondProps = new
-        {
-            acceptedFileTypes = allowedMimeTypes,
-            files,
-            labelIdle = $"{T("Common.FileUploader.DropFiles")} / <span class=\"filepond--label-action\"> {T("Common.FileUploader.Browse")}</span>",
-            labelFileProcessing = T("Common.FileUploader.Processing"),
-        }
-    };
 }
 
 <noscript>
@@ -71,11 +51,11 @@
 </noscript>
 <input type="hidden" asp-for="@Model"/>
 
-<div id="@(jsonModel.elementId)" class="filepond"></div>
+<div id="@(elementId)" class="filepond"></div>
 <div class="upload-picture-block">
     <div class="picture-container">
         <div class="uploaded-image">
-            <img id="@(jsonModel.imageId)" src="@jsonModel.currentPictureUrl" width="@(pictureSize)"/>
+            <img id="@(imageId)" src="@await pictureService.GetPictureUrlAsync(Model, pictureSize)" width="@(pictureSize)" />
         </div>
     </div>
 </div>
@@ -96,15 +76,15 @@
 
         // Register the plugins
         FilePond.registerPlugin(FilePondPluginFileValidateType, FilePondPluginGetFile);
-        const model = @Html.Raw(Json.Serialize(jsonModel));
+        const allowedExtensions = @Html.Raw(Json.Serialize(allowedMimeTypes));
         
-        const $modelEl = $(`#${model.modelId}`);
-        const $imageEl = $(`#${model.imageId}`);
-        const $removeEl = $(`#${model.clientId}`);
+        const $modelEl = $('#@Html.IdForModel()');
+        const $imageEl = $('#@imageId');
+        const $removeEl = $('#@clientId');
 
         function resetImageToDefault() {
             $modelEl.val('0');
-            $imageEl.attr("src", model.defaultPictureUrl);
+            $imageEl.attr("src", '@await pictureService.GetDefaultPictureUrlAsync(pictureSize)');
         }
 
         const serverConfig = {
@@ -113,14 +93,14 @@
                 formData.append(fieldName, file, file.name);
 
                 const request = new XMLHttpRequest();
-                request.open('POST', model.imageProcessUrl);
+                request.open('POST', '@Url.Content("~/Admin/Picture/AsyncUpload")');
 
                 request.upload.onprogress = (e) => {
                     progress(e.lengthComputable, e.loaded, e.total);
                 };
 
                 request.onload = function () {
-                    const commonError = model.commonError;
+                    const commonError = '@T("Common.Error")';
                     if (request.status < 200 || request.status >= 300) {
                         error(commonError);
                         return;
@@ -150,14 +130,17 @@
         };
 
         // Create a FilePond instance
-        const filePondInstance = FilePond.create(document.querySelector(`#${model.elementId}`), {
+        const filePondInstance = FilePond.create(document.querySelector('#@elementId'), {
             credits: false,
             allowMultiple: false,
             maxFiles: 1,
             allowDownloadByUrl: true,
             server: serverConfig,
             labelFileProcessingError: (err) => err.body,
-            ...model.filePondProps,
+            acceptedFileTypes: allowedExtensions,
+            files: @Json.Serialize(files),
+            labelIdle: '@T("Common.FileUploader.DropFiles") / <span class="filepond--label-action">@T("Common.FileUploader.Browse")</span>',
+            labelFileProcessing: '@T("Common.FileUploader.Processing")'
         });
 
         $removeEl.on('click', function (e) {
