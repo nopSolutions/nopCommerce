@@ -20,7 +20,7 @@
 </noscript>
 <input type="hidden" asp-for="@Model"/>
 
-<d id="@(clientId)element" class="filepond"></d   iv>
+<div id="@(clientId)element" class="filepond"></div>
 
 @* register CSS and JS *@
 <link rel="stylesheet" href="~/lib_npm/filepond/filepond.min.css" />
@@ -77,7 +77,7 @@
                 }
             },
             labelIdle: '@T("Common.FileUploader.DropFiles") / <span class="filepond--label-action">@T("Common.FileUploader.Browse")</span>',
-            labelFileProcessing: '@T("Common.FileUploader.Processing")',
+            labelFileProcessing: '@T("Common.FileUploader.Processing").Text',
             labelFileProcessingError: (err) => err.body
         });
     });

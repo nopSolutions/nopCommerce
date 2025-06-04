@@ -1,6 +1,5 @@
 ﻿@model int
 @inject IDownloadService downloadService
-@using System.Text.Json
 @using Nop.Services.Media
 
 @{
@@ -8,8 +7,32 @@
     var randomNumber = CommonHelper.GenerateRandomInteger();
     var clientId = "download" + randomNumber;
     var download = await downloadService.GetDownloadByIdAsync(Model);
-
     var disableUrl = Convert.ToBoolean(ViewData["nop.DownloadEditor.DisableUrl"] ?? false);
+    var files = new List<object>();
+
+    if (download != null)
+    {
+        var fileName = $"{download.Filename ?? download.DownloadGuid.ToString()}{download.Extension}";
+        files.Add(
+            new
+            {
+                source = fileName,
+                options = new
+                {
+                    type = "local",
+                    file = new
+                    {
+                        name = fileName,
+                        size = download.DownloadBinary?.Length,
+                        type = download.ContentType
+                    },
+                    metadata = new
+                    {
+                        url = Url.Action("DownloadFile", "Download", new { downloadGuid = download.DownloadGuid, area = AreaNames.ADMIN })
+                    }
+                }
+            });
+    }
 }
 
 @* register CSS and JS *@
@@ -67,7 +90,6 @@
             $('#pnlDownloadFile@(randomNumber)').showElement();
         }
     }
-
 </script>
 
 <div id="@(clientId + "value")">
@@ -131,62 +153,21 @@
 <nop-alert asp-alert-id="saveDownloadUrlFailed" />
 
 <script asp-location="Footer"> 
-    @{
-        var files = new List<object>();
-        if (download != null)
-        {
-            var fileName = $"{download.Filename ?? download.DownloadGuid.ToString()}{download.Extension}";
-            files.Add(
-                new
-                {
-                    source = fileName,
-                    options = new
-                    {
-                        type = "local",
-                        file = new
-                        {
-                            name = fileName,
-                            size = download.DownloadBinary?.Length,
-                            type = MimeTypes.ApplicationOctetStream
-                        },
-                        metadata = new
-                        {
-                            url = Url.Action("DownloadFile", "Download", new { downloadGuid = download.DownloadGuid, area = AreaNames.ADMIN })
-                        }
-                    }
-                });
-        }
-
-        var jsonModel = new
-        {
-            clientId = clientId,
-            modelId = Html.IdForModel(),
-            uploadUrl = Url.Action("AsyncUpload", "Download", new { area = AreaNames.ADMIN }),
-            filePondProps = new
-            {
-                files,
-                labelIdle = $"{T("Common.FileUploader.DropFiles")} / <span class=\"filepond--label-action\">{T("Common.FileUploader.Browse")}</span>",
-                labelFileProcessing = T("Common.FileUploader.Processing"),
-            }
-        };
-    }
     $(function () {
-        const model = @Html.Raw(Json.Serialize(jsonModel));
-        
         // Register the plugin
         FilePond.registerPlugin(FilePondPluginGetFile);
 
-        const $modelEl = $(`#${model.modelId}`);
+        const $modelEl = $('#@Html.IdForModel()');
 
         // Create a FilePond instance
-        FilePond.create(document.querySelector(`#${model.clientId}`), {
+        FilePond.create(document.querySelector('#@clientId'), {
             credits: false,
             allowMultiple: false,
             maxFiles: 1,
             allowDownloadByUrl: true,
             server: {
                 process: {
-                    url: model.uploadUrl,
+                    url: '@Url.Action("AsyncUpload", "Download", new { area = AreaNames.ADMIN })',
                     onload: function (response) {
                         const r = JSON.parse(response);
                         $modelEl.val(r.downloadId);
@@ -206,7 +187,9 @@
                     alert(error);
                 }
             },
-            ...model.filePondProps
+            files: @Json.Serialize(files),
+            labelIdle: '@T("Common.FileUploader.DropFiles") / <span class="filepond--label-action">@T("Common.FileUploader.Browse")</span>',
+            labelFileProcessing: '@T("Common.FileUploader.Processing")'
         });
     });
 </script>
