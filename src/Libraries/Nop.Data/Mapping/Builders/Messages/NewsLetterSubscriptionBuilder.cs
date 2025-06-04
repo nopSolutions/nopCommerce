@@ -19,7 +19,7 @@ public partial class NewsLetterSubscriptionBuilder : NopEntityBuilder<NewsLetter
     public override void MapEntity(CreateTableExpressionBuilder table)
     {
         table
-            .WithColumn(nameof(NewsLetterSubscription.TypeId)).AsInt32().ForeignKey<NewsLetterSubscriptionType>(onDelete: Rule.Cascade).Nullable()
+            .WithColumn(nameof(NewsLetterSubscription.TypeId)).AsInt32().ForeignKey<NewsLetterSubscriptionType>(onDelete: Rule.Cascade).NotNullable()
             .WithColumn(nameof(NewsLetterSubscription.Email)).AsString(255).NotNullable();
     }
 

@@ -20,7 +20,7 @@ public class NewsLetterSubscriptionMigration : ForwardOnlyMigration
         {
             //add new column
             Alter.Table(nameof(NewsLetterSubscription))
-                .AddColumn(nameof(NewsLetterSubscription.TypeId)).AsInt32().ForeignKey<NewsLetterSubscriptionType>(onDelete: Rule.Cascade).Nullable();
+                .AddColumn(nameof(NewsLetterSubscription.TypeId)).AsInt32().ForeignKey<NewsLetterSubscriptionType>(onDelete: Rule.Cascade).NotNullable();
         }
 
         if (!Schema.Table(nameof(Campaign)).Column(nameof(Campaign.NewsLetterSubscriptionTypeId)).Exists())

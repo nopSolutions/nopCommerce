@@ -19,7 +19,7 @@ public class LocalizationMigration : MigrationBase
         //do not use DI, because it produces exception on the installation process
         var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
 
-        var (languageId, _) = this.GetLanguageData();
+        var (languageId, languages) = this.GetLanguageData();
 
         #region Delete locales
 
@@ -37,17 +37,22 @@ public class LocalizationMigration : MigrationBase
             "Admin.Configuration.Settings.CustomerUser.NewsletterTickedByDefault.Hint",
             "Admin.Customers.Customers.Fields.Newsletter",
             "Admin.Customers.Customers.Fields.Newsletter.Hint",
-            "Admin.Promotions.NewsLetterSubscriptions.Fields.Active",
-            "Admin.Promotions.NewsLetterSubscriptions.Fields.CreatedOn",
-            "Admin.Promotions.NewsLetterSubscriptions.Fields.Email",
-            "Admin.Promotions.NewsLetterSubscriptions.Fields.Email.Required",
-            "Admin.Promotions.NewsLetterSubscriptions.Fields.Language",
-            "Admin.Promotions.NewsLetterSubscriptions.Fields.Store"
         });
 
         #endregion
 
         #region Rename locales
+
+        this.RenameLocales(new Dictionary<string, string>
+        {
+            //#6874
+            ["Admin.Promotions.NewsLetterSubscriptions.Fields.Active"] = "Admin.Promotions.NewsLetterSubscription.Fields.Active",
+            ["Admin.Promotions.NewsLetterSubscriptions.Fields.CreatedOn"] = "Admin.Promotions.NewsLetterSubscription.Fields.CreatedOn",
+            ["Admin.Promotions.NewsLetterSubscriptions.Fields.Email"] = "Admin.Promotions.NewsLetterSubscription.Fields.Email",
+            ["Admin.Promotions.NewsLetterSubscriptions.Fields.Email.Required"] = "Admin.Promotions.NewsLetterSubscription.Fields.Email.Required",
+            ["Admin.Promotions.NewsLetterSubscriptions.Fields.Language"] = "Admin.Promotions.NewsLetterSubscription.Fields.Language",
+            ["Admin.Promotions.NewsLetterSubscriptions.Fields.Store"] = "Admin.Promotions.NewsLetterSubscription.Fields.Store",
+        }, languages, localizationService);
 
         #endregion
 
@@ -154,7 +159,6 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Promotions.NewsLetterSubscriptions.List.SubscriptionTypes.Hint"] = "Search by a specific subscription type.",            
             ["Admin.Promotions.Campaigns.Fields.NewsLetterSubscriptionType"] = "Limited to subscription types",
             ["Admin.Promotions.Campaigns.Fields.NewsLetterSubscriptionType.Hint"] = "Choose a subscription type to which this email will be sent.",
-            ["Account.Fields.NewsLetterSubscriptionType"] = "Newsletter subscription list",
             ["Account.SubscribeToNewsletter"] = "Subscribe to newsletter",
             ["ActivityLog.AddSubscriptionType"] = "Added a new subscription type (ID = {0})",
             ["ActivityLog.EditSubscriptionType"] = "Edited a subscription type (ID = {0})",
@@ -169,16 +173,10 @@ public class LocalizationMigration : MigrationBase
 
             ["Admin.Promotions.NewsLetterSubscription.Fields.SubscriptionType"] = "Subscription type",
             ["Admin.Promotions.NewsLetterSubscription.Fields.SubscriptionType.Hint"] = "Enter the type of subscription.",
-            ["Admin.Promotions.NewsLetterSubscription.Fields.Active"] = "Active",
             ["Admin.Promotions.NewsLetterSubscription.Fields.Active.Hint"] = "A value indicating whether the subscription is active.",
-            ["Admin.Promotions.NewsLetterSubscription.Fields.Email"] = "Email",
             ["Admin.Promotions.NewsLetterSubscription.Fields.Email.Hint"] = "Enter the email of subscription.",
-            ["Admin.Promotions.NewsLetterSubscription.Fields.Email.Required"] = "Email is required.",
-            ["Admin.Promotions.NewsLetterSubscription.Fields.Store"] = "Store",
             ["Admin.Promotions.NewsLetterSubscription.Fields.Store.Hint"] = "Choose store to subscribe to newsletter.",
-            ["Admin.Promotions.NewsLetterSubscription.Fields.Language"] = "Language",
             ["Admin.Promotions.NewsLetterSubscription.Fields.Language.Hint"] = "Choose language to subscribe to newsletter.",
-            ["Admin.Promotions.NewsLetterSubscription.Fields.CreatedOn"] = "Created on",
             ["Admin.Promotions.NewsLetterSubscription.Fields.CreatedOn.Hint"] = "Date/Time the newsletter subscriptions entry was created.",
         }, languageId);
 

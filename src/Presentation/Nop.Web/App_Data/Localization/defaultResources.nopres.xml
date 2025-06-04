@@ -378,9 +378,6 @@
   <LocaleResource Name="Account.Fields.LastName.Required">
     <Value>Last name is required.</Value>
   </LocaleResource>
-  <LocaleResource Name="Account.Fields.NewsLetterSubscriptionType">
-    <Value>Newsletter subscription list</Value>
-  </LocaleResource>
   <LocaleResource Name="Account.Fields.Password">
     <Value>Password</Value>
   </LocaleResource>
