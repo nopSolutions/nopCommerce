@@ -155,7 +155,7 @@
                                             process: {
                                                 url:'@(Url.RouteUrl("UploadFileReturnRequest"))',
                                                 onload: function(response) {
-                                                    var r = JSON.parse(response);
+                                                    const r = JSON.parse(response);
 
                                                     $("#@(controlId)").val(r.downloadGuid);
 
