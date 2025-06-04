@@ -31,9 +31,9 @@
                     <label>@T("Forum.TopicTitle"):</label>
                     <strong class="topic-subject">@Model.ForumTopicSubject</strong>
                 </div>
-                @if (Model.ForumEditor == EditorType.MDCodeEditor)
+                @if (Model.ForumEditor == EditorType.MarkdownEditor)
                 {
-                    <nop-md-code-editor asp-for="Text" />                    
+                    @await Html.PartialAsync("_MarkdownEditor", new ModelExpression(nameof(Model.Text), Html.ViewData.ModelExplorer.GetExplorerForModel(Model.Text)))
                 }
                 @if (Model.ForumEditor == EditorType.BBCodeEditor)
                 {

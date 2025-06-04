@@ -148,7 +148,9 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Configuration.Settings.Tax.HmrcClientSecret.Hint"] = "Your client secret is a unique passphrase that you generate to authorise your application.",
 
             //#5199
-            ["Enums.Nop.Core.Domain.Forums.EditorType.MDCodeEditor"] = "Markdown code editor",
+            ["Enums.Nop.Core.Domain.Forums.EditorType.MarkdownEditor"] = "Markdown editor",
+            ["MarkdownEditor.TabWrite"] = "Write",
+            ["MarkdownEditor.TabPreview"] = "Preview",            
         }, languageId);
 
         #endregion

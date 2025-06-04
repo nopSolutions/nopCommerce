@@ -16,7 +16,7 @@ public enum EditorType
     BBCodeEditor = 20,
 
     /// <summary>
-    /// Markdown code editor
+    /// Markdown editor
     /// </summary>
-    MDCodeEditor = 30
+    MarkdownEditor = 30
 }

@@ -3,7 +3,6 @@
 @using Nop.Core.Domain.Forums
 
 @inject IWebHelper webHelper;
-@inject ForumSettings _forumSettings;
 @{
     var thisPageUrl = webHelper.GetThisPageUrl(true);
 }
@@ -95,23 +94,9 @@
             </div>
         </div>
         <div class="post-body">
-            <div class="post-text"> 
-                @if(_forumSettings.ForumEditor == EditorType.MDCodeEditor)
-                {
-                    <script src="~/lib_npm/marked/marked.min.js"></script>
-                    <div id="formatted-content-@(Model.Id)" class="post-text"></div>
-                    <script>
-                        document.addEventListener('DOMContentLoaded', function() {
-                            var content = @Html.Raw(Json.Serialize(Model.FormattedText));
-                            var formattedContent = marked.parse(content, { gfm: true, breaks: true });
-                            document.getElementById('formatted-content-@(Model.Id)').innerHTML = formattedContent;
-                        });
-                    </script>
-                }
-                else
-                {
-                    @Html.Raw(Model.FormattedText)
-                }
+            <div class="post-text" data-post-content="@Model.Id">
+                @* Original content will be replaced by JavaScript for Markdown editor*@
+                @Html.Raw(Model.FormattedText)
             </div>
             @if (Model.AllowPostVoting)
             {

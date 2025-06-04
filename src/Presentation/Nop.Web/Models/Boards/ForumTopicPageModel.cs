@@ -1,4 +1,5 @@
-﻿using Nop.Web.Framework.Models;
+﻿using Nop.Core.Domain.Forums;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Boards;
 
@@ -21,6 +22,7 @@ public partial record ForumTopicPageModel : BaseNopModel
     public bool IsCustomerAllowedToSubscribe { get; set; }
 
     public IList<ForumPostModel> ForumPostModels { get; set; }
+    public EditorType ForumEditor { get; set; }
     public int PostsPageIndex { get; set; }
     public int PostsPageSize { get; set; }
     public int PostsTotalRecords { get; set; }

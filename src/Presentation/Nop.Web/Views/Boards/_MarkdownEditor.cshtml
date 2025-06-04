@@ -1,0 +1,40 @@
+﻿@using Microsoft.AspNetCore.Mvc.Rendering
+@using Microsoft.AspNetCore.Mvc.ViewFeatures
+@using Nop.Core
+@inject IWebHelper WebHelper
+@model ModelExpression
+
+@{
+    var storeLocation = WebHelper.GetStoreLocation();
+    var mdEditorWebRoot = $"{storeLocation}js/mdeditor/icons/";
+}
+
+<div class="markdown-editor-container" id="md-editor">
+    <script src="@($"{storeLocation}lib_npm/marked/marked.min.js")"></script>
+    <link rel="stylesheet" href="@($"{storeLocation}js/mdeditor/style.css")" />
+
+    <div class="editor-header">
+        <div class="editor-tabs">
+            <button type="button" class="tab-button active" data-tab="write">@T("MarkdownEditor.TabWrite")</button>
+            <button type="button" class="tab-button" data-tab="preview">@T("MarkdownEditor.TabPreview")</button>
+        </div>
+        <div class="toolbar" id="editor-toolbar"></div>
+    </div>
+    <div class="editor-content">
+        <div class="tab-panel active" id="write-panel">
+            <textarea id="@Model.Name" name="@Model.Name" class="forum-post-text">@Model.Model</textarea>
+            <span class="field-validation-valid" data-valmsg-for="@Model.Name" data-valmsg-replace="true"></span>
+        </div>
+        <div class="tab-panel" id="preview-panel">
+            <div class="preview-output" id="html-output"></div>
+        </div>
+    </div>
+
+    <script src="@($"{storeLocation}js/mdeditor/script.js")"></script>
+    <script language="javascript">
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeMarkdownEditor('@Model.Name','@mdEditorWebRoot');
+            setupTabs('md-editor', '@Model.Name');
+        });
+    </script>
+</div>

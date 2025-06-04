@@ -342,6 +342,7 @@ public partial class ForumModelFactory : IForumModelFactory
                 model.WatchTopicText = await _localizationService.GetResourceAsync("Forum.UnwatchTopic");
             }
         }
+        model.ForumEditor = _forumSettings.ForumEditor;
         model.PostsPageIndex = posts.PageIndex;
         model.PostsPageSize = posts.PageSize;
         model.PostsTotalRecords = posts.TotalCount;
@@ -565,7 +566,7 @@ public partial class ForumModelFactory : IForumModelFactory
                         case EditorType.BBCodeEditor:
                             text = $"[quote={username}]{_bbCodeHelper.RemoveQuotes(quotePostText)}[/quote]";
                             break;
-                        case EditorType.MDCodeEditor:
+                        case EditorType.MarkdownEditor:
                             var quotedLines = quotePostText.Split('\n').Select(line => $"> {line}");
                             text = $"**{username}:**\n\n{string.Join("\n", quotedLines)}\n\n";
                             break;
