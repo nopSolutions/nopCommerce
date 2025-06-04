@@ -132,9 +132,8 @@
 
 <script asp-location="Footer"> 
     @{
-        var hasExistingFile = download != null;
         var files = new List<object>();
-        if (hasExistingFile)
+        if (download != null)
         {
             var fileName = $"{download.Filename ?? download.DownloadGuid.ToString()}{download.Extension}";
             files.Add(

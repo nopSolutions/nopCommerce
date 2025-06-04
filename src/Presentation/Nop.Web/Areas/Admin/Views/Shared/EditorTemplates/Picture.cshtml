@@ -15,12 +15,15 @@
     
     // Constants
     const int pictureSize = 100;
-    
+    var allowedMimeTypes = new List<string> { MimeTypes.ImagePng, MimeTypes.ImageBmp, MimeTypes.ImageGif, MimeTypes.ImageJpeg, MimeTypes.ImagePJpeg, MimeTypes.ImageTiff, MimeTypes.ImageWebp };
+
+    if (mediaSettings.AllowSVGUploads)
+        allowedMimeTypes.Add(MimeTypes.ImageSvg);
+
     var picture = await pictureService.GetPictureByIdAsync(Model);
-    var hasExistingPicture = picture != null;
     var files = new List<object>();
 
-    if (hasExistingPicture)
+    if (picture != null)
     {
         var pictureSource = $"{picture.SeoFilename}.{await pictureService.GetFileExtensionFromMimeTypeAsync(picture.MimeType)}";
         files.Add(new
@@ -55,8 +58,8 @@
         imageProcessUrl = Url.Content("~/Admin/Picture/AsyncUpload"),
         filePondProps = new
         {
-            acceptedFileTypes = mediaSettings.GetAcceptedMimeTypes(),
-            files = files,
+            acceptedFileTypes = allowedMimeTypes,
+            files,
             labelIdle = $"{T("Common.FileUploader.DropFiles")} / <span class=\"filepond--label-action\"> {T("Common.FileUploader.Browse")}</span>",
             labelFileProcessing = T("Common.FileUploader.Processing"),
         }

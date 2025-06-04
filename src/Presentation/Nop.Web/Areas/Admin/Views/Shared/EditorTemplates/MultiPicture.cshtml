@@ -8,6 +8,11 @@
     var clientId = "picture" + random;
     var endpoint = ViewData["Endpoint"];
     var tableSelector = ViewData["TableSelector"];
+
+    var allowedMimeTypes = new List<string> { MimeTypes.ImagePng, MimeTypes.ImageBmp, MimeTypes.ImageGif, MimeTypes.ImageJpeg, MimeTypes.ImagePJpeg, MimeTypes.ImageTiff, MimeTypes.ImageWebp };
+
+    if (mediaSettings.AllowSVGUploads)
+        allowedMimeTypes.Add(MimeTypes.ImageSvg);
 }
 
 <noscript>
@@ -15,7 +20,7 @@
 </noscript>
 <input type="hidden" asp-for="@Model"/>
 
-<div id="@(clientId)element" class="filepond"></div>
+<d id="@(clientId)element" class="filepond"></d   iv>
 
 @* register CSS and JS *@
 <link rel="stylesheet" href="~/lib_npm/filepond/filepond.min.css" />
@@ -26,7 +31,7 @@
     $(function () {
         // Register the plugin
         FilePond.registerPlugin(FilePondPluginFileValidateType);
-        const allowedExtensions = @Html.Raw(Json.Serialize(mediaSettings.GetAcceptedMimeTypes()));
+        const allowedExtensions = @Html.Raw(Json.Serialize(allowedMimeTypes));
 
         // Create a FilePond instance
         FilePond.create(document.querySelector('#@(clientId)element'), {
