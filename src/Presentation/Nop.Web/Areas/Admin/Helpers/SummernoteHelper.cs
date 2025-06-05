@@ -1,5 +1,7 @@
-﻿using Nop.Core.Infrastructure;
-using Nop.Core;
+﻿using Nop.Core;
+using Nop.Core.Caching;
+using Nop.Core.Infrastructure;
+using Nop.Web.Areas.Admin.Infrastructure.Cache;
 
 namespace Nop.Web.Areas.Admin.Helpers;
 
@@ -9,11 +11,16 @@ namespace Nop.Web.Areas.Admin.Helpers;
 public partial class SummernoteHelper : ISummernoteHelper
 {
     protected readonly INopFileProvider _nopFileProvider;
+    protected readonly IStaticCacheManager _staticCacheManager;
     protected readonly IWorkContext _workContext;
 
-    public SummernoteHelper(INopFileProvider nopFileProvider, IWorkContext workContext)
+    public SummernoteHelper(
+        INopFileProvider nopFileProvider, 
+        IStaticCacheManager staticCacheManager, 
+        IWorkContext workContext)
     {
         _nopFileProvider = nopFileProvider;
+        _staticCacheManager = staticCacheManager;
         _workContext = workContext;
     }
 
@@ -28,10 +35,16 @@ public partial class SummernoteHelper : ISummernoteHelper
     {
         var languageCulture = (await _workContext.GetWorkingLanguageAsync()).LanguageCulture;
 
-        var langFile = $"summernote-{languageCulture}.min.js";
-        var directoryPath = _nopFileProvider.GetAbsolutePath(@"lib_npm\summernote\lang");
-        var fileExists = _nopFileProvider.FileExists($"{directoryPath}\\{langFile}");
+        var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.SummernoteLanguageKey,
+            languageCulture);
 
-        return fileExists ? languageCulture : string.Empty;
+        return await _staticCacheManager.GetAsync(cacheKey, () =>
+        {
+            var langFile = $"summernote-{languageCulture}.min.js";
+            var directoryPath = _nopFileProvider.GetAbsolutePath(@"lib_npm\summernote\lang");
+            var fileExists = _nopFileProvider.FileExists($"{directoryPath}\\{langFile}");
+
+            return fileExists ? languageCulture : string.Empty;
+        });
     }
 }

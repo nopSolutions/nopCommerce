@@ -117,6 +117,12 @@ public class SettingMigration : MigrationBase
         var richEditorAllowStyleTag = settingService.GetSetting("adminareasettings.richeditorallowstyletag");
         if (richEditorAllowStyleTag is not null)
             settingService.DeleteSetting(richEditorAllowStyleTag);
+
+        if (!settingService.SettingExists(adminAreaSettings, settings => settings.RichEditorAdditionalSettings))
+        {
+            adminAreaSettings.RichEditorAdditionalSettings = string.Empty;
+            settingService.SaveSetting(adminAreaSettings, settings => settings.RichEditorAdditionalSettings);
+        }
     }
 
     public override void Down()
