@@ -615,7 +615,7 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             defaults: new { controller = "Boards", action = "TopicEdit" });
 
         endpointRouteBuilder.MapControllerRoute(name: "TopicDelete",
-            pattern: $"{lang}/boards/topicdelete/{{id:min(0)}}",
+            pattern: $"{lang}/boards/topicdelete/{{id:int?}}",
             defaults: new { controller = "Boards", action = "TopicDelete" });
 
         endpointRouteBuilder.MapControllerRoute(name: "TopicCreate",
