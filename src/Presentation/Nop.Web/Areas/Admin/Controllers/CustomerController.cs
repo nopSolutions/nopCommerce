@@ -490,6 +490,77 @@ public partial class CustomerController : BaseAdminController
         return View(model);
     }
 
+    [HttpGet]
+    [CheckPermission(StandardPermission.Customers.CUSTOMERS_CREATE_EDIT_DELETE)]
+    public virtual async Task<IActionResult> Merge(int id)
+    {
+        if (await _customerService.GetCustomerByIdAsync(id) is Customer customer)
+        {
+            var customerModel = await _customerModelFactory.PrepareCustomerModelAsync(new CustomerModel(), customer);
+            customerModel.FullName = await _customerService.GetCustomerFullNameAsync(customer);
+            return View(new CustomerMergeModel() { FromCustomer = customerModel, CurrentCustomerId = customer.Id });
+        }
+
+        //should be locale resource
+        _notificationService.WarningNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.MergeCustomerError"));
+        return RedirectToAction("List");
+    }
+
+    [HttpPost]
+    [CheckPermission(StandardPermission.Customers.CUSTOMERS_CREATE_EDIT_DELETE)]
+    public virtual async Task<IActionResult> MergeCustomerSearch(int? id, CustomerMergeModel searchModel)
+    {
+        if (id.HasValue)
+        {
+            if (await _customerService.GetCustomerByIdAsync(id.Value) is Customer customer)
+            {
+                var fullName = await _customerService.GetCustomerFullNameAsync(customer);
+                return Json(new { id = customer.Id, fullName = fullName, email = customer.Email });
+            }
+            else
+            {
+                return new NullJsonResult();
+            }
+        }
+        else
+        {
+            searchModel.SelectedCustomerRoleIds = new List<int> { (await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.RegisteredRoleName)).Id };
+            var model = searchModel == null ? new() : await _customerModelFactory.PrepareCustomerListModelAsync(searchModel);
+            model.Data = model.Data.Where(c => c.Id != searchModel.CurrentCustomerId).ToList(); //exclude the customer being merged from the list
+            return Json(model);
+        }
+    }
+
+    [HttpPost]
+    [CheckPermission(StandardPermission.Customers.CUSTOMERS_CREATE_EDIT_DELETE)]
+    public virtual async Task<IActionResult> Merge(int fromId, int toId, bool fromIsSource)
+    {
+        if (await _customerService.GetCustomerByIdAsync(fromId) is Customer fromCustomer &&
+            !fromCustomer.Deleted &&
+            await _customerService.GetCustomerByIdAsync(toId) is Customer toCustomer &&
+            !toCustomer.Deleted)
+        {
+            int resultId;
+            if (fromIsSource)
+            {
+                await _customerService.MergeCustomersAsync(fromCustomer, toCustomer);
+                resultId = toCustomer.Id;
+            }
+            else
+            {
+                await _customerService.MergeCustomersAsync(toCustomer, fromCustomer);
+                resultId = fromCustomer.Id;
+            }
+            return RedirectToAction("Edit", new { id = resultId });
+        }
+        else
+        {
+            //should be locale resource
+            _notificationService.WarningNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.MergeCustomerError"));
+            return RedirectToAction("Merge", new { id = fromId });
+        }
+    }
+
     [CheckPermission(StandardPermission.Customers.CUSTOMERS_VIEW)]
     public virtual async Task<IActionResult> Edit(int id)
     {

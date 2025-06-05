@@ -1553,125 +1553,56 @@ public partial class CustomerService : ICustomerService
 
     #endregion
 
-    #region Customer address mapping
 
-    /// <summary>
-    /// Remove a customer-address mapping record
-    /// </summary>
-    /// <param name="customer">Customer</param>
-    /// <param name="address">Address</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task RemoveCustomerAddressAsync(Customer customer, Address address)
+    #region Customer Merging
+
+    public virtual async Task MergeCustomersAsync(Customer fromCustomer, Customer toCustomer, bool deleteFromCustomer = true)
     {
-        ArgumentNullException.ThrowIfNull(customer);
 
-        if (await _customerAddressMappingRepository.Table
-                .FirstOrDefaultAsync(m => m.AddressId == address.Id && m.CustomerId == customer.Id)
-            is CustomerAddressMapping mapping)
+        var fromOrders = await (from o in _orderRepository.Table
+                                where o.CustomerId == fromCustomer.Id
+                                select o).ToListAsync();
+
+        foreach (var order in fromOrders)
         {
-            if (customer.BillingAddressId == address.Id)
-                customer.BillingAddressId = null;
-            if (customer.ShippingAddressId == address.Id)
-                customer.ShippingAddressId = null;
-
-            await _customerAddressMappingRepository.DeleteAsync(mapping);
+            order.CustomerId = toCustomer.Id;
+            await _orderRepository.UpdateAsync(order);
         }
-    }
 
-    /// <summary>
-    /// Inserts a customer-address mapping record
-    /// </summary>
-    /// <param name="customer">Customer</param>
-    /// <param name="address">Address</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task InsertCustomerAddressAsync(Customer customer, Address address)
-    {
-        ArgumentNullException.ThrowIfNull(customer);
+        var fromAddresses = await (from a in _customerAddressMappingRepository.Table
+                                   where a.CustomerId == fromCustomer.Id
+                                   select a).ToListAsync();
 
-        ArgumentNullException.ThrowIfNull(address);
-
-        if (await _customerAddressMappingRepository.Table
-                .FirstOrDefaultAsync(m => m.AddressId == address.Id && m.CustomerId == customer.Id)
-            is null)
+        foreach (var address in fromAddresses)
         {
-            var mapping = new CustomerAddressMapping
+            address.CustomerId = toCustomer.Id;
+            await _customerAddressMappingRepository.InsertAsync(new CustomerAddressMapping() { AddressId = address.AddressId, CustomerId = toCustomer.Id });
+        }
+
+        await _customerAddressMappingRepository.DeleteAsync(fromAddresses);
+
+        if (fromAddresses.Any())
+            await _staticCacheManager.RemoveByPrefixAsync(NopCustomerServicesDefaults.CustomerAddressesByCustomerPrefix, toCustomer);
+
+        var anyRolesModified = false;
+        foreach (var role in await GetCustomerRolesAsync(fromCustomer, true))
+        {
+            if (!(await IsInCustomerRoleAsync(toCustomer, role.SystemName)))
             {
-                AddressId = address.Id,
-                CustomerId = customer.Id
-            };
-
-            await _customerAddressMappingRepository.InsertAsync(mapping);
+                await AddCustomerRoleMappingAsync(new CustomerCustomerRoleMapping
+                {
+                    CustomerId = toCustomer.Id,
+                    CustomerRoleId = role.Id
+                });
+                anyRolesModified = true;
+            }
         }
-    }
 
-    /// <summary>
-    /// Gets a list of addresses mapped to customer
-    /// </summary>
-    /// <param name="customerId">Customer identifier</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the result
-    /// </returns>
-    public virtual async Task<IList<Address>> GetAddressesByCustomerIdAsync(int customerId)
-    {
-        var query = from address in _customerAddressRepository.Table
-            join cam in _customerAddressMappingRepository.Table on address.Id equals cam.AddressId
-            where cam.CustomerId == customerId
-            select address;
+        if (anyRolesModified)
+            await _staticCacheManager.RemoveByPrefixAsync(NopCustomerServicesDefaults.CustomerCustomerRolesPrefix);
 
-        return await _shortTermCacheManager.GetAsync(async () => await query.ToListAsync(), NopCustomerServicesDefaults.CustomerAddressesCacheKey, customerId);
-    }
+        await _customerRepository.DeleteAsync(fromCustomer);
 
-    /// <summary>
-    /// Gets a address mapped to customer
-    /// </summary>
-    /// <param name="customerId">Customer identifier</param>
-    /// <param name="addressId">Address identifier</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the result
-    /// </returns>
-    public virtual async Task<Address> GetCustomerAddressAsync(int customerId, int addressId)
-    {
-        if (customerId == 0 || addressId == 0)
-            return null;
-
-        var query = from address in _customerAddressRepository.Table
-            join cam in _customerAddressMappingRepository.Table on address.Id equals cam.AddressId
-            where cam.CustomerId == customerId && address.Id == addressId
-            select address;
-
-        return await _shortTermCacheManager.GetAsync(async () => await query.FirstOrDefaultAsync(), NopCustomerServicesDefaults.CustomerAddressCacheKey, customerId, addressId);
-    }
-
-    /// <summary>
-    /// Gets a customer billing address
-    /// </summary>
-    /// <param name="customer">Customer identifier</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the result
-    /// </returns>
-    public virtual async Task<Address> GetCustomerBillingAddressAsync(Customer customer)
-    {
-        ArgumentNullException.ThrowIfNull(customer);
-
-        return await GetCustomerAddressAsync(customer.Id, customer.BillingAddressId ?? 0);
-    }
-
-    /// <summary>
-    /// Gets a customer shipping address
-    /// </summary>
-    /// <param name="customer">Customer</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the result
-    /// </returns>
-    public virtual async Task<Address> GetCustomerShippingAddressAsync(Customer customer)
-    {
-        ArgumentNullException.ThrowIfNull(customer);
-
-        return await GetCustomerAddressAsync(customer.Id, customer.ShippingAddressId ?? 0);
     }
 
     #endregion

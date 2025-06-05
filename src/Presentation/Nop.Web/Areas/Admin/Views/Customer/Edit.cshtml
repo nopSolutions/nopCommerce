@@ -82,6 +82,10 @@
                     </ul>
                 </div>
             }
+            <a asp-action="Merge" asp-controller="Customer" asp-route-id="@Model.Id" class="btn btn-primary">
+                <i class="fas fa-user-friends"></i>
+                @T("Admin.Customers.Customers.MergeCustomer")
+            </a>
             <span id="customer-delete" class="btn btn-danger">
                 <i class="far fa-trash-can"></i>
                 @T("Admin.Common.Delete")

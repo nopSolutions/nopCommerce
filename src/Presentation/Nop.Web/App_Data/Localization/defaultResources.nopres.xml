@@ -11904,6 +11904,12 @@
   <LocaleResource Name="Admin.Customers.Customers.Addresses.Updated">
     <Value>The address has been updated successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.MergeCustomer">
+    <Value>Merge Customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.MergeCustomerError">
+    <Value>Requested merge customer does not exist, has been deleted or already merged.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.AdminAccountShouldExists.Deactivate">
     <Value>You can't deactivate the last administrator. At least one administrator account should exists.</Value>
   </LocaleResource>
