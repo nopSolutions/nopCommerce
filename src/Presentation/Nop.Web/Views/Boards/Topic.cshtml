@@ -28,14 +28,12 @@
                 <script asp-location="Footer">
                     function deletetopic(topicId) {
                         if (confirm('@T("Common.AreYouSure")')) {
-                            var postData = {
-                                id: topicId
-                            };
+                            var postData = {};
                             addAntiForgeryToken(postData);
                             $.ajax({
                                 cache: false,
                                 type: "POST",
-                                url: "@Url.RouteUrl("TopicDelete")",
+                                url: "@Url.RouteUrl("TopicDelete", new { id = Model.Id })",
                                 data: postData,
                                 dataType: "json",
                                 success: function (data, textStatus, jqXHR) {
