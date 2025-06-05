@@ -247,12 +247,14 @@ public partial class MemoryCacheManager : CacheKeyService, IStaticCacheManager
     /// <param name="prefix">Cache key prefix</param>
     /// <param name="prefixParameters">Parameters to create cache key prefix</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public Task RemoveByPrefixAsync(string prefix, params object[] prefixParameters)
+    public async Task RemoveByPrefixAsync(string prefix, params object[] prefixParameters)
     {
-        foreach (var key in _keyManager.RemoveByPrefix(PrepareKeyPrefix(prefix, prefixParameters)))
+        var deletePrefix = PrepareKeyPrefix(prefix, prefixParameters);
+        foreach (var key in _keyManager.RemoveByPrefix(deletePrefix))
             _memoryCache.Remove(key);
 
-        return Task.CompletedTask;
+        if (_memoryCache is ISynchronizedMemoryCache cache)
+            await cache.RemoveByPrefixAsync(deletePrefix);
     }
 
     /// <summary>

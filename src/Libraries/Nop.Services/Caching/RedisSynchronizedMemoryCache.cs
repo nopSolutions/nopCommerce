@@ -18,6 +18,7 @@ public partial class RedisSynchronizedMemoryCache : ISynchronizedMemoryCache
     #region Fields
 
     protected const string CLEAR_CACHE_EVENT_KEY = "__NOP_CLEAR_CACHE__";
+    protected const string REMOVE_BY_PREFIX_EVENT_KEY = "__NOP_REMOVE_BY_PREFIX_";
 
     protected readonly string _processId;
     protected bool _disposed;
@@ -69,7 +70,8 @@ public partial class RedisSynchronizedMemoryCache : ISynchronizedMemoryCache
         var subscriber = _connection.GetSubscriber();
         subscriber.Subscribe(RedisChannel.Pattern(channel + "*"), (redisChannel, value) =>
         {
-            var publisher = ((string)redisChannel).Replace(channel, "");
+            var publisher = redisChannel.ToString().Replace(channel, "");
+
             if (publisher == _processId)
                 return;
 
@@ -87,11 +89,18 @@ public partial class RedisSynchronizedMemoryCache : ISynchronizedMemoryCache
             else
                 foreach (var key in keys)
                 {
-                    if (key.Equals(CLEAR_CACHE_EVENT_KEY))
-                        _keyManager.Clear();
+                    if (key.StartsWith(REMOVE_BY_PREFIX_EVENT_KEY))
+                    {
+                        var prefix = key[..^2].Replace(REMOVE_BY_PREFIX_EVENT_KEY, string.Empty);
 
-                    _memoryCache.Remove(key);
-                    _keyManager.RemoveKey(key);
+                        foreach (var keyToDelete in _keyManager.RemoveByPrefix(prefix))
+                            _memoryCache.Remove(keyToDelete);
+                    }
+                    else
+                    {
+                        _memoryCache.Remove(key);
+                        _keyManager.RemoveKey(key);
+                    }
                 }
         });
     }
@@ -208,6 +217,18 @@ public partial class RedisSynchronizedMemoryCache : ISynchronizedMemoryCache
     public Task ClearCacheAsync()
     {
         BatchPublishChangeEvents(CLEAR_CACHE_EVENT_KEY);
+
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// Remove items by prefix
+    /// </summary>
+    /// <param name="prefix">Prefix to remove cache items</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public Task RemoveByPrefixAsync(string prefix)
+    {
+        BatchPublishChangeEvents($"{REMOVE_BY_PREFIX_EVENT_KEY}{prefix}__");
 
         return Task.CompletedTask;
     }
