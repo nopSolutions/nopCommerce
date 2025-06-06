@@ -490,6 +490,84 @@ public partial class CustomerController : BaseAdminController
         return View(model);
     }
 
+    [HttpGet]
+    [CheckPermission(StandardPermission.Customers.CUSTOMERS_CREATE_EDIT_DELETE)]
+    public virtual async Task<IActionResult> Merge(int id)
+    {
+        if (await _customerService.GetCustomerByIdAsync(id) is Customer customer)
+        {
+            var customerModel = await _customerModelFactory.PrepareCustomerModelAsync(new CustomerModel(), customer);
+            customerModel.FullName = await _customerService.GetCustomerFullNameAsync(customer);
+            return View(new CustomerMergeModel(customerModel));
+        }
+
+        _notificationService.WarningNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.MergeCustomerError"));
+        return RedirectToAction("List");
+    }
+
+    [HttpPost]
+    [CheckPermission(StandardPermission.Customers.CUSTOMERS_CREATE_EDIT_DELETE)]
+    public virtual async Task<IActionResult> MergeCustomerSearch(int? id, CustomerMergeModel searchModel)
+    {
+        if (id.HasValue)
+        {
+            if (await _customerService.GetCustomerByIdAsync(id.Value) is Customer customer)
+            {
+                var fullName = await _customerService.GetCustomerFullNameAsync(customer);
+                return Json(new { id = customer.Id, fullName = fullName, email = customer.Email });
+            }
+            else
+            {
+                return new NullJsonResult();
+            }
+        }
+        else
+        {
+            searchModel.SelectedCustomerRoleIds = new List<int> { (await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.RegisteredRoleName)).Id };
+            var model = searchModel == null ? new() : await _customerModelFactory.PrepareCustomerListModelAsync(searchModel);
+            model.Data = model.Data.Where(c => c.Id != searchModel.CurrentCustomerId).ToList(); //exclude the customer being merged from the list
+            return Json(model);
+        }
+    }
+
+    [HttpPost]
+    [CheckPermission(StandardPermission.Customers.CUSTOMERS_CREATE_EDIT_DELETE)]
+    public virtual async Task<IActionResult> Merge(CustomerMergeModel model)
+    {
+        var mergeModel = model.Merge;
+        if (await _customerService.GetCustomerByIdAsync(mergeModel.FromId) is Customer fromCustomer &&
+            !fromCustomer.Deleted &&
+            await _customerService.GetCustomerByIdAsync(mergeModel.ToId) is Customer toCustomer &&
+            !toCustomer.Deleted)
+        {
+            if (fromCustomer.Id == toCustomer.Id)
+            {
+                //confirm that we are not trying to merge the same customer
+                _notificationService.WarningNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.MergeCustomerError.SameCustomers"));
+                return RedirectToAction("Merge", new { id = mergeModel.FromId });
+            }
+
+            int resultId;
+            if (mergeModel.FromIsSource)
+            {
+                await _customerService.MergeCustomersAsync(fromCustomer, toCustomer, mergeModel.DeleteMergedCustomer);
+                resultId = toCustomer.Id;
+            }
+            else
+            {
+                await _customerService.MergeCustomersAsync(toCustomer, fromCustomer, mergeModel.DeleteMergedCustomer);
+                resultId = fromCustomer.Id;
+            }
+            return RedirectToAction("Edit", new { id = resultId });
+        }
+        else
+        {
+            //should be locale resource
+            _notificationService.WarningNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.MergeCustomerError"));
+            return RedirectToAction("Merge", new { id = mergeModel.FromId });
+        }
+    }
+
     [CheckPermission(StandardPermission.Customers.CUSTOMERS_VIEW)]
     public virtual async Task<IActionResult> Edit(int id)
     {
@@ -877,7 +955,7 @@ public partial class CustomerController : BaseAdminController
             foreach (var store in await _storeService.GetAllStoresAsync())
             {
                 var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customerEmail, store.Id);
-                
+
                 if (subscription != null)
                     await _newsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(subscription);
             }
@@ -1525,7 +1603,7 @@ public partial class CustomerController : BaseAdminController
         {
             //log
             //_gdprService.InsertLog(customer, 0, GdprRequestType.ExportData, await _localizationService.GetResource("Gdpr.Exported"));
-            
+
             //export
             var store = await _storeContext.GetCurrentStoreAsync();
             var bytes = await _exportManager.ExportCustomerGdprInfoToXlsxAsync(customer, store.Id);

@@ -648,4 +648,10 @@ public partial interface ICustomerService
     Task InsertCustomerAddressAsync(Customer customer, Address address);
 
     #endregion
+
+    #region Customer Merging
+
+    Task MergeCustomersAsync(Customer fromCustomer, Customer toCustomer, bool deleteFromCustomer = true);
+
+    #endregion
 }

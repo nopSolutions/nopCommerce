@@ -1,0 +1,259 @@
+﻿@model CustomerMergeModel
+@{
+    ViewBag.PageTitle = T("Admin.Customers.Customers.MergeCustomer").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Customers list");
+}
+
+<form asp-controller="Customer" asp-action="Merge" method="post">
+    <nop-action-confirmation asp-button-id="merge-customer" />
+    <input type="hidden" asp-for="CurrentCustomerId" />
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Customers.Customers.MergeCustomer")
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="Edit" asp-route-id="@Model.FromCustomer.Id">@T("Admin.Customers.Customers.Addresses.BackToCustomer")</a>
+            </small>
+        </h1>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div class="cards-group">
+                    <div class="card card-default">
+                        <div class="card-body">
+                            <div class="form-group row">
+
+                                <div class="col-md-5">
+                                    <input type="hidden" asp-for="Merge.FromId" />
+                                    <input type="text" disabled class="form-control" value="@Model.FromCustomer.Email (@Model.FromCustomer.FullName)" />
+                                </div>
+                                <div class="col-md-2" style="text-align:center;">
+                                    <label for="Merge_ToIsSource" class="btn btn-outline-primary">
+                                        <i class="fas fa-arrow-left"></i>
+                                        <input type="radio" asp-for="Merge.FromIsSource" value="false" id="Merge_ToIsSource" />
+                                    </label>
+                                    <label for="Merge_FromIsSource" class="btn btn-success">
+                                        <i class="fas fa-arrow-right"></i>
+                                        <input type="radio" asp-for="Merge.FromIsSource" value="true" checked />
+                                    </label>
+                                </div>
+                                <div class="col-md-5">
+                                    <input type="hidden" asp-for="Merge.ToId" />
+                                    <input type="text" id="Merge_CustomerText" disabled class="form-control" value="" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-md-5">
+                                    <nop-label asp-for="Merge.DeleteMergedCustomer" />
+                                </div>
+                                <div class="col-md-7">
+                                    <nop-editor asp-for="Merge.DeleteMergedCustomer" />
+                                </div>
+
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-5"></div>
+                                <div class="col-md-7">
+                                    <button id="merge-customer" type="submit" name="save" class="btn btn-success">
+                                        <i class="fas fa-user-friends"></i>
+                                        @T("Admin.Customers.Customers.MergeCustomer")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="SearchEmail" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-editor asp-for="SearchEmail" />
+                                </div>
+                            </div>
+                            @if (Model.UsernamesEnabled)
+                            {
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchUsername" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SearchUsername" />
+                                    </div>
+                                </div>
+                            }
+                            <div class="form-group row">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="SearchFirstName" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-editor asp-for="SearchFirstName" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="SearchLastName" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-editor asp-for="SearchLastName" />
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="text-center col-12">
+                                    <button type="submit" id="search-customers" name="search-customers" class="btn btn-primary btn-search">
+                                        <i class="fas fa-magnifying-glass"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card card-default">
+                            <div class="card-body">
+                                <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Customers", Docs.Customers + Utm.OnAdmin)" />
+
+                                @{
+                                    var gridModel = new DataTablesModel
+                                    {
+                                        Name = "customers-grid",
+                                        UrlRead = new DataUrl("MergeCustomerSearch", "Customer", null),
+                                        SearchButtonId = "search-customers",
+                                        Length = Model.PageSize,
+                                        LengthMenu = Model.AvailablePageSizes,
+                                        Filters = new List<FilterParameter>
+                                                                {
+                                                                new FilterParameter(nameof(Model.SearchEmail)),
+                                                                new FilterParameter(nameof(Model.SearchUsername)),
+                                                                new FilterParameter(nameof(Model.SearchFirstName)),
+                                                                new FilterParameter(nameof(Model.SearchLastName)),
+                                                                new FilterParameter("CurrentCustomerId", Model.CurrentCustomerId)
+                                                                }
+                                    };
+
+                                    gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.Id))
+                                    {
+                                        IsMasterCheckBox = true,
+                                        Render = new RenderCheckBox("checkbox_customers"),
+                                        ClassName = NopColumnClassDefaults.CenterAll,
+                                        Width = "30"
+                                    });
+                                    gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.Email))
+                                    {
+                                        Title = T("Admin.Customers.Customers.Fields.Email").Text
+                                    });
+                                    if (Model.AvatarEnabled)
+                                    {
+                                        gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.AvatarUrl))
+                                        {
+                                            Title = T("Admin.Customers.Customers.Fields.Avatar").Text,
+                                            Width = "140",
+                                            Render = new RenderPicture()
+                                        });
+                                    }
+                                    if (Model.UsernamesEnabled)
+                                    {
+                                        gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.Username))
+                                        {
+                                            Title = T("Admin.Customers.Customers.Fields.Username").Text
+                                        });
+                                    }
+                                    gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.FullName))
+                                    {
+                                        Title = T("Admin.Customers.Customers.Fields.FullName").Text
+                                    });
+                                    gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.CustomerRoleNames))
+                                    {
+                                        Title = T("Admin.Customers.Customers.Fields.CustomerRoles").Text,
+                                        Width = "100"
+                                    });
+                                    if (Model.CompanyEnabled)
+                                    {
+                                        gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.Company))
+                                        {
+                                            Title = T("Admin.Customers.Customers.Fields.Company").Text
+                                        });
+                                    }
+                                    if (Model.PhoneEnabled)
+                                    {
+                                        gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.Phone))
+                                        {
+                                            Title = T("Admin.Customers.Customers.Fields.Phone").Text
+                                        });
+                                    }
+                                    if (Model.ZipPostalCodeEnabled)
+                                    {
+                                        gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.ZipPostalCode))
+                                        {
+                                            Title = T("Admin.Customers.Customers.Fields.ZipPostalCode").Text
+                                        });
+                                    }
+                                    gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.Active))
+                                    {
+                                        Title = T("Admin.Customers.Customers.Fields.Active").Text,
+                                        Width = "70",
+                                        ClassName = NopColumnClassDefaults.CenterAll,
+                                        Render = new RenderBoolean()
+                                    });
+                                    gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.Id))
+                                    {
+                                        Title = T("Admin.Common.Select").Text,
+                                        Width = "80",
+                                        ClassName = NopColumnClassDefaults.Button,
+                                        Render = new RenderButtonCustom(NopButtonClassDefaults.Olive, T("Admin.Common.Select").Text)
+                                        {
+                                            OnClickFunctionName = $"selectCustomer",
+                                        }
+                                    });
+                                }
+                                @await Html.PartialAsync("Table", gridModel)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+<script asp-location="Footer">
+    function selectCustomer(id) {
+        var postData = {
+            id: id
+        };
+        addAntiForgeryToken(postData);
+        $.ajax({
+            cache: false,
+            type: "POST",
+            url: "@(Url.Action("MergeCustomerSearch", "Customer"))",
+            data: postData,
+            success: function (data, textStatus, jqXHR) {
+                document.getElementById("Merge_ToId").value = data.id;
+                document.getElementById("Merge_CustomerText").value = data.email + " (" + data.fullName + ")";
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert("failure");
+            }
+        });
+    }
+
+    var elems = document.querySelectorAll('input[name="Merge.FromIsSource"]');
+    for (let elem of elems) {
+      console.log(elem);
+      if (elem instanceof HTMLInputElement) {
+        elem.addEventListener('change', () => {
+          var elems = document.querySelectorAll('input[name="Merge.FromIsSource"]');
+          for (let elem of elems) {
+            if (elem.checked) {
+                elem.parentElement.classList.remove('btn-outline-primary');
+              elem.parentElement.classList.add('btn-success');
+            } else {
+                elem.parentElement.classList.remove('btn-success');
+              elem.parentElement.classList.add('btn-outline-primary');
+            }
+          }
+        });
+      }
+    }
+</script>
