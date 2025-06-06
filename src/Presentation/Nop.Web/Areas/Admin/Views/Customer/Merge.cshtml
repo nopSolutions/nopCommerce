@@ -27,31 +27,31 @@
                             <div class="form-group row">
 
                                 <div class="col-md-5">
-                                    <input type="hidden" name="fromId" value="@Model.FromCustomer.Id" />
+                                    <input type="hidden" asp-for="Merge.FromId" />
                                     <input type="text" disabled class="form-control" value="@Model.FromCustomer.Email (@Model.FromCustomer.FullName)" />
                                 </div>
                                 <div class="col-md-2" style="text-align:center;">
-                                    <label for="to-is-source" class="btn btn-outline-primary">
+                                    <label for="Merge_ToIsSource" class="btn btn-outline-primary">
                                         <i class="fas fa-arrow-left"></i>
-                                        <input id="to-is-source" type="radio" name="fromIsSource" value="false" />
+                                        <input type="radio" asp-for="Merge.FromIsSource" value="false" id="Merge_ToIsSource" />
                                     </label>
-                                    <label for="from-is-source" class="btn btn-success">
+                                    <label for="Merge_FromIsSource" class="btn btn-success">
                                         <i class="fas fa-arrow-right"></i>
-                                        <input id="from-is-source" type="radio" name="fromIsSource" value="true" checked />
+                                        <input type="radio" asp-for="Merge.FromIsSource" value="true" checked />
                                     </label>
                                 </div>
                                 <div class="col-md-5">
-                                    <input type="hidden" id="toId" name="toId" value="" />
-                                    <input type="text" id="to-customer-text" disabled class="form-control" value="" />
+                                    <input type="hidden" asp-for="Merge.ToId" />
+                                    <input type="text" id="Merge_CustomerText" disabled class="form-control" value="" />
                                 </div>
                             </div>
 
                             <div class="form-group row">
                                 <div class="col-md-5">
-                                    <nop-label asp-for="DeleteMergedCustomer" />
+                                    <nop-label asp-for="Merge.DeleteMergedCustomer" />
                                 </div>
                                 <div class="col-md-7">
-                                    <nop-editor asp-for="DeleteMergedCustomer" />
+                                    <nop-editor asp-for="Merge.DeleteMergedCustomer" />
                                 </div>
 
                             </div>
@@ -229,8 +229,8 @@
             url: "@(Url.Action("MergeCustomerSearch", "Customer"))",
             data: postData,
             success: function (data, textStatus, jqXHR) {
-                document.getElementById("toId").value = data.id;
-                document.getElementById("to-customer-text").value = data.email + " (" + data.fullName + ")";
+                document.getElementById("Merge_ToId").value = data.id;
+                document.getElementById("Merge_CustomerText").value = data.email + " (" + data.fullName + ")";
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 alert("failure");
@@ -238,12 +238,12 @@
         });
     }
 
-    var elems = document.querySelectorAll('input[name=fromIsSource]');
+    var elems = document.querySelectorAll('input[name="Merge.FromIsSource"]');
     for (let elem of elems) {
       console.log(elem);
       if (elem instanceof HTMLInputElement) {
         elem.addEventListener('change', () => {
-          var elems = document.querySelectorAll('input[name=fromIsSource]');
+          var elems = document.querySelectorAll('input[name="Merge.FromIsSource"]');
           for (let elem of elems) {
             if (elem.checked) {
                 elem.parentElement.classList.remove('btn-outline-primary');

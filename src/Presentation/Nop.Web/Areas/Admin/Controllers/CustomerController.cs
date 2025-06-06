@@ -498,7 +498,7 @@ public partial class CustomerController : BaseAdminController
         {
             var customerModel = await _customerModelFactory.PrepareCustomerModelAsync(new CustomerModel(), customer);
             customerModel.FullName = await _customerService.GetCustomerFullNameAsync(customer);
-            return View(new CustomerMergeModel() { FromCustomer = customerModel, CurrentCustomerId = customer.Id });
+            return View(new CustomerMergeModel(customerModel));
         }
 
         //should be locale resource
@@ -533,22 +533,23 @@ public partial class CustomerController : BaseAdminController
 
     [HttpPost]
     [CheckPermission(StandardPermission.Customers.CUSTOMERS_CREATE_EDIT_DELETE)]
-    public virtual async Task<IActionResult> Merge(int fromId, int toId, bool fromIsSource, bool deleteMergedCustomer)
+    public virtual async Task<IActionResult> Merge(CustomerMergeModel model)
     {
-        if (await _customerService.GetCustomerByIdAsync(fromId) is Customer fromCustomer &&
+        var mergeModel = model.Merge;
+        if (await _customerService.GetCustomerByIdAsync(mergeModel.FromId) is Customer fromCustomer &&
             !fromCustomer.Deleted &&
-            await _customerService.GetCustomerByIdAsync(toId) is Customer toCustomer &&
+            await _customerService.GetCustomerByIdAsync(mergeModel.ToId) is Customer toCustomer &&
             !toCustomer.Deleted)
         {
             int resultId;
-            if (fromIsSource)
+            if (mergeModel.FromIsSource)
             {
-                await _customerService.MergeCustomersAsync(fromCustomer, toCustomer, deleteMergedCustomer);
+                await _customerService.MergeCustomersAsync(fromCustomer, toCustomer, mergeModel.DeleteMergedCustomer);
                 resultId = toCustomer.Id;
             }
             else
             {
-                await _customerService.MergeCustomersAsync(toCustomer, fromCustomer, deleteMergedCustomer);
+                await _customerService.MergeCustomersAsync(toCustomer, fromCustomer, mergeModel.DeleteMergedCustomer);
                 resultId = fromCustomer.Id;
             }
             return RedirectToAction("Edit", new { id = resultId });
@@ -557,7 +558,7 @@ public partial class CustomerController : BaseAdminController
         {
             //should be locale resource
             _notificationService.WarningNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.MergeCustomerError"));
-            return RedirectToAction("Merge", new { id = fromId });
+            return RedirectToAction("Merge", new { id = mergeModel.FromId });
         }
     }
 
