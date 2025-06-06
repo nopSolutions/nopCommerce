@@ -118,11 +118,11 @@
                         </div>
                         <script>
                         function renderColumnConfigure(data, type, row, meta) {
-                            if (row.ConfigurationUrl && row.ConfigurationUrl.length > 0) {
+                            if (row.ConfigurationUrl && row.ConfigurationUrl.length > 0) 
                                 return '<a class="btn btn-default" href="' + row.ConfigurationUrl + '"><i class="fas fa-gear"></i>@T("Admin.Configuration.Payment.Methods.Configure").Text</a>';
-                            } else {
+                             else 
                                 return '';
-                            }
+                            
                         }
                         </script>
                     </div>
@@ -134,6 +134,4 @@
 </section>
 
 @if (await Html.IsTourActiveAsync())
-{
     @await Html.PartialAsync("_Methods.Tour")
-}

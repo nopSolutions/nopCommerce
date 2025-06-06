@@ -33,12 +33,8 @@
     @await Html.PartialAsync("_CreateOrUpdate", Model)
 </form>
 @if (!Model.IsLoggedInAsVendor)
-{
     //product editor settings modal
     @await Html.PartialAsync("_ProductEditorSettingsModal", Model)
-}
 
 @if (await Html.IsTourActiveAsync())
-{
     @await Html.PartialAsync("_Create.Tour")
-}
