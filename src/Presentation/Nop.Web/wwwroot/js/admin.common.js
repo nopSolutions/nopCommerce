@@ -366,7 +366,7 @@ function prepareTableCheckboxes(masterCheckbox, childCheckbox) {
   $(masterCheckbox).prop('checked', $(childCheckbox).length == $(childCheckbox + ':checked').length && $(childCheckbox).length > 0);
 }
 
-function displayBarNotification(message, notifyTypeId) {
+function displayBarNotification(message, notifyTypeId, timeout) {
 
   var cssStyles = ["alert-success", "alert-danger", "alert-warning"]
 
@@ -381,9 +381,28 @@ function displayBarNotification(message, notifyTypeId) {
   button.setAttribute('aria-hidden', 'true');
   button.innerHTML = '&times;';
   htmlcode.appendChild(button);
+
   var html = document.createElement('span');
   html.innerHTML = message;
   htmlcode.appendChild(html);
 
   $('#admin-notifications').append(htmlcode);
+
+  //callback for notification removing
+  var removeNoteItem = function () {
+    $(htmlcode).remove();
+  };
+
+  //timeout (if set)
+  if (timeout > 0) {
+    var notificationTimeout = setTimeout(function () {
+      $(htmlcode).fadeOut('slow', removeNoteItem);
+    }, timeout);
+
+    $(htmlcode)
+      .fadeIn('slow')
+      .on('mouseenter', function () {
+        clearTimeout(notificationTimeout);
+      });
+  }
 }

@@ -43,7 +43,8 @@ public partial class NotificationService : INotificationService
     /// <param name="type">Notification type</param>
     /// <param name="message">Message</param>
     /// <param name="encode">A value indicating whether the message should not be encoded</param>
-    protected virtual void PrepareTempData(NotifyType type, string message, bool encode = true)
+    /// <param name="timeout">The time, in milliseconds, on which notification will close automatically; leave 0 if notification shouldn't close automatically</param>
+    protected virtual void PrepareTempData(NotifyType type, string message, bool encode = true, int timeout = 0)
     {
         var context = _httpContextAccessor.HttpContext;
         var tempData = _tempDataDictionaryFactory.GetTempData(context);
@@ -57,7 +58,8 @@ public partial class NotificationService : INotificationService
         {
             Message = message,
             Type = type,
-            Encode = encode
+            Encode = encode,
+            Timeout = timeout
         });
 
         tempData[NopMessageDefaults.NotificationListKey] = JsonConvert.SerializeObject(messages);
@@ -86,9 +88,10 @@ public partial class NotificationService : INotificationService
     /// <param name="type">Notification type</param>
     /// <param name="message">Message</param>
     /// <param name="encode">A value indicating whether the message should not be encoded</param>
-    public virtual void Notification(NotifyType type, string message, bool encode = true)
+    /// <param name="timeout">The time on which notification will close automatically; leave 0 if notification shouldn't close automatically</param>
+    public virtual void Notification(NotifyType type, string message, bool encode = true, int timeout = 0)
     {
-        PrepareTempData(type, message, encode);
+        PrepareTempData(type, message, encode, timeout);
     }
 
     /// <summary>
@@ -96,9 +99,10 @@ public partial class NotificationService : INotificationService
     /// </summary>
     /// <param name="message">Message</param>
     /// <param name="encode">A value indicating whether the message should not be encoded</param>
-    public virtual void SuccessNotification(string message, bool encode = true)
+    /// <param name="timeout">The time on which notification will close automatically; leave 0 if notification shouldn't close automatically</param>
+    public virtual void SuccessNotification(string message, bool encode = true, int timeout = 0)
     {
-        PrepareTempData(NotifyType.Success, message, encode);
+        PrepareTempData(NotifyType.Success, message, encode, timeout);
     }
 
     /// <summary>
@@ -106,19 +110,21 @@ public partial class NotificationService : INotificationService
     /// </summary>
     /// <param name="message">Message</param>
     /// <param name="encode">A value indicating whether the message should not be encoded</param>
-    public virtual void WarningNotification(string message, bool encode = true)
+    /// <param name="timeout">The time on which notification will close automatically; leave 0 if notification shouldn't close automatically</param>
+    public virtual void WarningNotification(string message, bool encode = true, int timeout = 0)
     {
-        PrepareTempData(NotifyType.Warning, message, encode);
+        PrepareTempData(NotifyType.Warning, message, encode, timeout);
     }
-
+    
     /// <summary>
     /// Display error notification
     /// </summary>
     /// <param name="message">Message</param>
     /// <param name="encode">A value indicating whether the message should not be encoded</param>
-    public virtual void ErrorNotification(string message, bool encode = true)
+    /// <param name="timeout">The time on which notification will close automatically; leave 0 if notification shouldn't close automatically</param>
+    public virtual void ErrorNotification(string message, bool encode = true, int timeout = 0)
     {
-        PrepareTempData(NotifyType.Error, message, encode);
+        PrepareTempData(NotifyType.Error, message, encode, timeout);
     }
 
     /// <summary>
@@ -126,8 +132,9 @@ public partial class NotificationService : INotificationService
     /// </summary>
     /// <param name="exception">Exception</param>
     /// <param name="logException">A value indicating whether exception should be logged</param>
+    /// <param name="timeout">The time on which notification will close automatically; leave 0 if notification shouldn't close automatically</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task ErrorNotificationAsync(Exception exception, bool logException = true)
+    public virtual async Task ErrorNotificationAsync(Exception exception, bool logException = true, int timeout = 0)
     {
         if (exception == null)
             return;
@@ -135,7 +142,7 @@ public partial class NotificationService : INotificationService
         if (logException)
             await LogExceptionAsync(exception);
 
-        ErrorNotification(exception.Message);
+        ErrorNotification(exception.Message, timeout: timeout);
     }
 
     #endregion
