@@ -501,7 +501,6 @@ public partial class CustomerController : BaseAdminController
             return View(new CustomerMergeModel(customerModel));
         }
 
-        //should be locale resource
         _notificationService.WarningNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.MergeCustomerError"));
         return RedirectToAction("List");
     }
@@ -541,6 +540,13 @@ public partial class CustomerController : BaseAdminController
             await _customerService.GetCustomerByIdAsync(mergeModel.ToId) is Customer toCustomer &&
             !toCustomer.Deleted)
         {
+            if (fromCustomer.Id == toCustomer.Id)
+            {
+                //confirm that we are not trying to merge the same customer
+                _notificationService.WarningNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.MergeCustomerError.SameCustomers"));
+                return RedirectToAction("Merge", new { id = mergeModel.FromId });
+            }
+
             int resultId;
             if (mergeModel.FromIsSource)
             {
