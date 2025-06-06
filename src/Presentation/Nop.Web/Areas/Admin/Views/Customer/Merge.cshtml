@@ -16,12 +16,6 @@
                 <a asp-action="Edit" asp-route-id="@Model.FromCustomer.Id">@T("Admin.Customers.Customers.Addresses.BackToCustomer")</a>
             </small>
         </h1>
-        <div class="float-right">
-            <button id="merge-customer" type="submit" name="save" class="btn btn-success">
-                <i class="fas fa-user-friends"></i>
-                @T("Admin.Customers.Customers.MergeCustomer")
-            </button>
-        </div>
     </div>
 
     <section class="content">
@@ -49,6 +43,25 @@
                                 <div class="col-md-5">
                                     <input type="hidden" id="toId" name="toId" value="" />
                                     <input type="text" id="to-customer-text" disabled class="form-control" value="" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-md-5">
+                                    <nop-label asp-for="DeleteMergedCustomer" />
+                                </div>
+                                <div class="col-md-7">
+                                    <nop-editor asp-for="DeleteMergedCustomer" />
+                                </div>
+
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-5"></div>
+                                <div class="col-md-7">
+                                    <button id="merge-customer" type="submit" name="save" class="btn btn-success">
+                                        <i class="fas fa-user-friends"></i>
+                                        @T("Admin.Customers.Customers.MergeCustomer")
+                                    </button>
                                 </div>
                             </div>
                         </div>

@@ -11910,6 +11910,9 @@
   <LocaleResource Name="Admin.Customers.Customers.MergeCustomerError">
     <Value>Requested merge customer does not exist, has been deleted or already merged.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerMerge.Fields.DeleteMergedCustomer">
+    <Value>Delete customer after Merge</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.AdminAccountShouldExists.Deactivate">
     <Value>You can't deactivate the last administrator. At least one administrator account should exists.</Value>
   </LocaleResource>

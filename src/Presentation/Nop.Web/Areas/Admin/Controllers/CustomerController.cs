@@ -533,7 +533,7 @@ public partial class CustomerController : BaseAdminController
 
     [HttpPost]
     [CheckPermission(StandardPermission.Customers.CUSTOMERS_CREATE_EDIT_DELETE)]
-    public virtual async Task<IActionResult> Merge(int fromId, int toId, bool fromIsSource)
+    public virtual async Task<IActionResult> Merge(int fromId, int toId, bool fromIsSource, bool deleteMergedCustomer)
     {
         if (await _customerService.GetCustomerByIdAsync(fromId) is Customer fromCustomer &&
             !fromCustomer.Deleted &&
@@ -543,12 +543,12 @@ public partial class CustomerController : BaseAdminController
             int resultId;
             if (fromIsSource)
             {
-                await _customerService.MergeCustomersAsync(fromCustomer, toCustomer);
+                await _customerService.MergeCustomersAsync(fromCustomer, toCustomer, deleteMergedCustomer);
                 resultId = toCustomer.Id;
             }
             else
             {
-                await _customerService.MergeCustomersAsync(toCustomer, fromCustomer);
+                await _customerService.MergeCustomersAsync(toCustomer, fromCustomer, deleteMergedCustomer);
                 resultId = fromCustomer.Id;
             }
             return RedirectToAction("Edit", new { id = resultId });
@@ -948,7 +948,7 @@ public partial class CustomerController : BaseAdminController
             foreach (var store in await _storeService.GetAllStoresAsync())
             {
                 var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customerEmail, store.Id);
-                
+
                 if (subscription != null)
                     await _newsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(subscription);
             }
@@ -1596,7 +1596,7 @@ public partial class CustomerController : BaseAdminController
         {
             //log
             //_gdprService.InsertLog(customer, 0, GdprRequestType.ExportData, await _localizationService.GetResource("Gdpr.Exported"));
-            
+
             //export
             var store = await _storeContext.GetCurrentStoreAsync();
             var bytes = await _exportManager.ExportCustomerGdprInfoToXlsxAsync(customer, store.Id);
