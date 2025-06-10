@@ -158,16 +158,27 @@
                                     <a href="https://get.brevo.com/ypp8fp" class="btn btn-primary" target="_blank">Create a list</a>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <div class="col-md-3">
-                                    <nop-override-store-checkbox asp-for="ListId_OverrideForStore" asp-input="ListId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                    <nop-label asp-for="ListId" />
+                            @for (int i = 0; i < Model.NewsLetterSubscriptionTypes.Count; i++)
+                            {
+                                var brevoLists = await Model.AvailableLists.SelectAwait(async brevoList => new SelectListItem
+                                {
+                                    Text = brevoList.Text,
+                                    Value = brevoList.Value,
+                                    Selected = brevoList.Value.Equals(Model.NewsLetterSubscriptionTypes[i].ListId.ToString())
+                                }).ToListAsync();
+
+                                <div class="form-group row">
+                                    <div class="col-md-3">
+                                        <input type="hidden" asp-for="NewsLetterSubscriptionTypes[i].TypeId" />
+                                        <nop-label asp-for="@(Model.NewsLetterSubscriptionTypes[i].Name)" />
+                                        <span style="padding-top: 7px;margin-right: 5px;float: right;font-weight: 600;">@Model.NewsLetterSubscriptionTypes[i].Name</span>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <nop-select asp-for="NewsLetterSubscriptionTypes[i].ListId" asp-items="@brevoLists" />
+                                        <span asp-validation-for="NewsLetterSubscriptionTypes[i].ListId"></span>
+                                    </div>
                                 </div>
-                                <div class="col-md-9">
-                                    <nop-select asp-for="ListId" asp-items="Model.AvailableLists" />
-                                    <span asp-validation-for="ListId"></span>
-                                </div>
-                            </div>
+                            }
                             <div class="form-group row">
                                 <div class="col-md-9 offset-md-3">
                                     <button type="submit" name="saveSync" class="btn btn-primary">@T("Admin.Common.Save")</button>

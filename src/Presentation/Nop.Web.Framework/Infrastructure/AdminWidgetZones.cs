@@ -141,7 +141,14 @@ public static partial class AdminWidgetZones
     public static string NewsDetailsBlock => "admin_news_details_block";
     public static string NewsDetailsButtons => "admin_news_details_buttons";
     public static string NewsItemsDetailsBlock => "admin_news_items_details_block";
+    public static string NewsLetterSubscriptionBottom => "admin_newsletter_subscription_bottom";
+    public static string NewsLetterSubscriptionButtons => "admin_newsletter_subscription_buttons";
+    public static string NewsLetterSubscriptionTop => "admin_newsletter_subscription_top";
     public static string NewsLetterSubscriptionListButtons => "admin_newsletter_subscription_list_buttons";
+    public static string NewsLetterSubscriptionTypeListButtons => "admin_newsletter_subscription_type_list_buttons";
+    public static string NewsLetterSubscriptionTypeButtons => "admin_newsletter_subscription_type_buttons";
+    public static string NewsLetterSubscriptionTypeTop => "admin_newsletter_subscription_type_top";
+    public static string NewsLetterSubscriptionTypeBottom => "admin_newsletter_subscription_type_bottom";
     public static string NewsListButtons => "admin_news_list_buttons";
     public static string NewsSettingsButtons => "admin_news_settings_buttons";
     public static string OnlineCustomerListButtons => "admin_online_customer_list_buttons";

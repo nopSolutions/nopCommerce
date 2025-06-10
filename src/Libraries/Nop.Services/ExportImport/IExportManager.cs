@@ -103,7 +103,7 @@ public partial interface IExportManager
     /// A task that represents the asynchronous operation
     /// The task result contains the result in TXT (string) format
     /// </returns>
-    Task<string> ExportNewsletterSubscribersToTxtAsync(IList<NewsLetterSubscription> subscriptions);
+    Task<string> ExportNewsLetterSubscribersToTxtAsync(IList<NewsLetterSubscription> subscriptions);
 
     /// <summary>
     /// Export states to TXT

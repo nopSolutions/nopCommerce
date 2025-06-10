@@ -1,6 +1,7 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
@@ -112,6 +113,11 @@ public class SettingMigration : MigrationBase
             pdfSettings.ImageTargetSize = 200;
             settingService.SaveSetting(pdfSettings, settings => pdfSettings.ImageTargetSize);
         }
+
+        //#6874
+        var newsletterTickedByDefault = settingService.GetSetting("customersettings.newslettertickedbydefault");
+        if (newsletterTickedByDefault is not null)
+            settingService.DeleteSetting(newsletterTickedByDefault);
 
         //#820
         var currencySettings = settingService.LoadSetting<CurrencySettings>();

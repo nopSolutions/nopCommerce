@@ -1,5 +1,7 @@
-﻿using FluentMigrator.Builders.Create.Table;
+﻿using System.Data;
+using FluentMigrator.Builders.Create.Table;
 using Nop.Core.Domain.Messages;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Mapping.Builders.Messages;
 
@@ -16,7 +18,9 @@ public partial class NewsLetterSubscriptionBuilder : NopEntityBuilder<NewsLetter
     /// <param name="table">Create table expression builder</param>
     public override void MapEntity(CreateTableExpressionBuilder table)
     {
-        table.WithColumn(nameof(NewsLetterSubscription.Email)).AsString(255).NotNullable();
+        table
+            .WithColumn(nameof(NewsLetterSubscription.TypeId)).AsInt32().ForeignKey<NewsLetterSubscriptionType>(onDelete: Rule.Cascade).NotNullable()
+            .WithColumn(nameof(NewsLetterSubscription.Email)).AsString(255).NotNullable();
     }
 
     #endregion

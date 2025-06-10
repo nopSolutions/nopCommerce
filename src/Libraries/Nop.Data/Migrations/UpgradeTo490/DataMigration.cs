@@ -48,6 +48,64 @@ public class DataMigration : Migration
             );
         }
 
+        //#6874 Multiple newsletter lists
+        var newsLetterSubscriptionTypeTable = _dataProvider.GetTable<NewsLetterSubscriptionType>();
+        if (!newsLetterSubscriptionTypeTable.Any(alt => string.Compare(alt.Name, "Newsletter", StringComparison.InvariantCultureIgnoreCase) == 0))
+        {
+            var subscriptionType = _dataProvider.InsertEntity(
+                new NewsLetterSubscriptionType
+                {
+                    Name = "Newsletter",
+                    TickedByDefault = true,
+                    DisplayOrder = 0
+                }
+            );
+
+            var newsLetterSubscriptions = _dataProvider.GetTable<NewsLetterSubscription>().ToList();
+            foreach (var newsLetterSubscription in newsLetterSubscriptions)
+            {
+                newsLetterSubscription.TypeId = subscriptionType.Id;
+            }
+
+            _dataProvider.UpdateEntities(newsLetterSubscriptions);
+        }
+
+        if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "AddSubscriptionType", StringComparison.InvariantCultureIgnoreCase) == 0))
+        {
+            _dataProvider.InsertEntity(
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddSubscriptionType",
+                    Enabled = true,
+                    Name = "Add a new subscription type"
+                }
+            );
+        }
+
+        if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "DeleteSubscriptionType", StringComparison.InvariantCultureIgnoreCase) == 0))
+        {
+            _dataProvider.InsertEntity(
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteSubscriptionType",
+                    Enabled = true,
+                    Name = "Delete a subscription type"
+                }
+            );
+        }
+
+        if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "EditSubscriptionType", StringComparison.InvariantCultureIgnoreCase) == 0))
+        {
+            _dataProvider.InsertEntity(
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditSubscriptionType",
+                    Enabled = true,
+                    Name = "Edit a subscription type"
+                }
+            );
+        }
+
         //#1779
         if (activityLogTypeTable.FirstOrDefault(alt => string.Compare(alt.SystemKeyword, "PublicStore.Login", StringComparison.InvariantCultureIgnoreCase) == 0)
             is ActivityLogType loginActivity)

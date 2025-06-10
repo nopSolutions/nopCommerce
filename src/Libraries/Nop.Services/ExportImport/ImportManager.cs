@@ -64,6 +64,7 @@ public partial class ImportManager : IImportManager
     protected readonly IManufacturerService _manufacturerService;
     protected readonly IMeasureService _measureService;
     protected readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+    protected readonly INewsLetterSubscriptionTypeService _newsLetterSubscriptionTypeService;
     protected readonly INopFileProvider _fileProvider;
     protected readonly IOrderService _orderService;
     protected readonly IPictureService _pictureService;
@@ -111,6 +112,7 @@ public partial class ImportManager : IImportManager
         IManufacturerService manufacturerService,
         IMeasureService measureService,
         INewsLetterSubscriptionService newsLetterSubscriptionService,
+        INewsLetterSubscriptionTypeService newsLetterSubscriptionTypeService,
         INopFileProvider fileProvider,
         IOrderService orderService,
         IPictureService pictureService,
@@ -154,6 +156,7 @@ public partial class ImportManager : IImportManager
         _manufacturerService = manufacturerService;
         _measureService = measureService;
         _newsLetterSubscriptionService = newsLetterSubscriptionService;
+        _newsLetterSubscriptionTypeService = newsLetterSubscriptionTypeService;
         _orderService = orderService;
         _pictureService = pictureService;
         _productAttributeService = productAttributeService;
@@ -2707,57 +2710,74 @@ public partial class ImportManager : IImportManager
     /// A task that represents the asynchronous operation
     /// The task result contains the number of imported subscribers
     /// </returns>
-    public virtual async Task<int> ImportNewsletterSubscribersFromTxtAsync(Stream stream)
+    public virtual async Task<int> ImportNewsLetterSubscribersFromTxtAsync(Stream stream)
     {
+        var store = await _storeContext.GetCurrentStoreAsync();
+        var defaultLanguageId = store.DefaultLanguageId > 0 ? store.DefaultLanguageId : (await _workContext.GetWorkingLanguageAsync()).Id;
+        var defaultTypeId = ((await _newsLetterSubscriptionTypeService.GetAllNewsLetterSubscriptionTypesAsync(store.Id)).FirstOrDefault()
+            ?? (await _newsLetterSubscriptionTypeService.GetAllNewsLetterSubscriptionTypesAsync()).FirstOrDefault())
+            .Id;
+        var allSubscriptions = (await _newsLetterSubscriptionService.GetAllNewsLetterSubscriptionsAsync()).ToList();
+
         var count = 0;
         using (var reader = new StreamReader(stream))
+        {
             while (!reader.EndOfStream)
             {
                 var line = await reader.ReadLineAsync();
                 if (string.IsNullOrWhiteSpace(line))
                     continue;
+
                 var tmp = line.Split(',');
-
-                if (tmp.Length > 3)
+                if (tmp.Length > 5)
                     throw new NopException("Wrong file format");
-
-                var isActive = true;
-
-                var store = await _storeContext.GetCurrentStoreAsync();
-                var storeId = store.Id;
 
                 //"email" field specified
                 var email = tmp[0].Trim();
-
                 if (!CommonHelper.IsValidEmail(email))
                     continue;
 
                 //"active" field specified
-                if (tmp.Length >= 2)
-                    isActive = bool.Parse(tmp[1].Trim());
+                var isActive = true;
+                if (tmp.Length >= 2 && !bool.TryParse(tmp[1].Trim(), out isActive))
+                    continue;
+
+                //"typeId" field specified
+                var typeId = defaultTypeId;
+                if (tmp.Length >= 3 && !int.TryParse(tmp[2].Trim(), out typeId))
+                    continue;
 
                 //"storeId" field specified
-                if (tmp.Length == 3)
-                    storeId = int.Parse(tmp[2].Trim());
+                var storeId = store.Id;
+                if (tmp.Length >= 4 && !int.TryParse(tmp[3].Trim(), out storeId))
+                    continue;
+
+                //"languageId" field specified
+                var languageId = 0;
+                if (tmp.Length == 5)
+                    _ = int.TryParse(tmp[4].Trim(), out languageId);
 
                 //import
-                var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(email, storeId);
+                var subscription = allSubscriptions.FirstOrDefault(subscription =>
+                    string.Equals(subscription.Email, email, StringComparison.InvariantCultureIgnoreCase) &&
+                    subscription.StoreId == storeId &&
+                    subscription.TypeId == typeId);
                 if (subscription != null)
                 {
-                    subscription.Email = email;
                     subscription.Active = isActive;
+                    subscription.LanguageId = languageId > 0 ? languageId : defaultLanguageId;
                     await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(subscription);
                 }
                 else
                 {
-                    var customer = await _customerService.GetCustomerByEmailAsync(email);
                     subscription = new NewsLetterSubscription
                     {
                         Active = isActive,
                         CreatedOnUtc = DateTime.UtcNow,
                         Email = email,
                         StoreId = storeId,
-                        LanguageId = customer?.LanguageId ?? store.DefaultLanguageId,
+                        LanguageId = languageId > 0 ? languageId : defaultLanguageId,
+                        TypeId = typeId,
                         NewsLetterSubscriptionGuid = Guid.NewGuid()
                     };
                     await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(subscription);
@@ -2765,6 +2785,7 @@ public partial class ImportManager : IImportManager
 
                 count++;
             }
+        }
 
         await _customerActivityService.InsertActivityAsync("ImportNewsLetterSubscriptions",
             string.Format(await _localizationService.GetResourceAsync("ActivityLog.ImportNewsLetterSubscriptions"), count));

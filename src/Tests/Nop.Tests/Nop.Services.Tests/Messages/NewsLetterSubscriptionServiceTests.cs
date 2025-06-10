@@ -82,20 +82,16 @@ public class NewsLetterSubscriptionServiceTests : ServiceTest
         subscription.Active.Should().BeTrue();
         subscription.Active = false;
         await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(subscription);
-        subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByGuidAsync(guid);
+        subscription = (await _newsLetterSubscriptionService.GetNewsLetterSubscriptionsByGuidAsync(guid)).FirstOrDefault();
         subscription.Active.Should().BeFalse();
 
-        subscription =
-            await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(
-                NopTestsDefaults.AdminEmail, 0);
+        subscription = (await _newsLetterSubscriptionService.GetNewsLetterSubscriptionsByEmailAsync(NopTestsDefaults.AdminEmail)).FirstOrDefault();
         subscription.Should().NotBeNull();
 
         await _newsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(subscription);
-        subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByGuidAsync(guid);
+        subscription = (await _newsLetterSubscriptionService.GetNewsLetterSubscriptionsByGuidAsync(guid)).FirstOrDefault();
         subscription.Should().BeNull();
-        subscription =
-            await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(
-                NopTestsDefaults.AdminEmail, 1);
+        subscription = (await _newsLetterSubscriptionService.GetNewsLetterSubscriptionsByEmailAsync(NopTestsDefaults.AdminEmail)).FirstOrDefault();
         subscription.Should().BeNull();
     }
 

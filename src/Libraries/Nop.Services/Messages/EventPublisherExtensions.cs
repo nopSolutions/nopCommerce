@@ -15,7 +15,7 @@ public static class EventPublisherExtensions
     /// <param name="eventPublisher">The event publisher.</param>
     /// <param name="subscription">The newsletter subscription.</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public static async Task PublishNewsletterSubscribeAsync(this IEventPublisher eventPublisher, NewsLetterSubscription subscription)
+    public static async Task PublishNewsLetterSubscribeAsync(this IEventPublisher eventPublisher, NewsLetterSubscription subscription)
     {
         await eventPublisher.PublishAsync(new EmailSubscribedEvent(subscription));
     }
@@ -26,7 +26,7 @@ public static class EventPublisherExtensions
     /// <param name="eventPublisher">The event publisher.</param>
     /// <param name="subscription">The newsletter subscription.</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public static async Task PublishNewsletterUnsubscribeAsync(this IEventPublisher eventPublisher, NewsLetterSubscription subscription)
+    public static async Task PublishNewsLetterUnsubscribeAsync(this IEventPublisher eventPublisher, NewsLetterSubscription subscription)
     {
         await eventPublisher.PublishAsync(new EmailUnsubscribedEvent(subscription));
     }

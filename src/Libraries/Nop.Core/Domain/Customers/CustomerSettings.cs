@@ -188,11 +188,6 @@ public partial class CustomerSettings : ISettings
     public bool NewsletterEnabled { get; set; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether 'Newsletter' checkbox is ticked by default on the registration page
-    /// </summary>
-    public bool NewsletterTickedByDefault { get; set; }
-
-    /// <summary>
     /// Gets or sets a value indicating whether to hide newsletter box
     /// </summary>
     public bool HideNewsletterBlock { get; set; }
