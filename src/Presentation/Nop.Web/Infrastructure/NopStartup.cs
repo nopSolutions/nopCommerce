@@ -109,7 +109,7 @@ public partial class NopStartup : INopStartup
         services.AddScoped<Factories.IVendorModelFactory, Factories.VendorModelFactory>();
 
         //helpers classes
-        services.AddScoped<ITinyMceHelper, TinyMceHelper>();
+        services.AddScoped<ISummernoteHelper, SummernoteHelper>();
     }
 
     /// <summary>

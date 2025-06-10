@@ -56,14 +56,10 @@ export default function copyDependencies()
       .src(`${nodeModules}ionicons/{css,fonts,png}/**`)
       .pipe(gulp.dest(targetPath + '/ionicons')),
 
-    //Tiny MCE
+    //Summernote
     gulp
-      .src(`${nodeModules}tinymce/**/*.min.*`)
-      .pipe(gulp.dest(targetPath + '/tinymce')),
-
-    gulp
-      .src(nodeModules + 'tinymce-langs/langs/*')
-      .pipe(gulp.dest(targetPath + '/tinymce/langs')),
+      .src(`${nodeModules}summernote/dist/{lang,font}/**`)
+      .pipe(gulp.dest(targetPath + '/summernote')),
 
     //OverlayScrollbars
     gulp

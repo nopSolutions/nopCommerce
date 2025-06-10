@@ -114,6 +114,21 @@ public class SettingMigration : MigrationBase
             settingService.SaveSetting(pdfSettings, settings => pdfSettings.ImageTargetSize);
         }
 
+        //#7397
+        var richEditorAllowJavaScript = settingService.GetSetting("adminareasettings.richeditorallowjavascript");
+        if (richEditorAllowJavaScript is not null)
+            settingService.DeleteSetting(richEditorAllowJavaScript);
+
+        var richEditorAllowStyleTag = settingService.GetSetting("adminareasettings.richeditorallowstyletag");
+        if (richEditorAllowStyleTag is not null)
+            settingService.DeleteSetting(richEditorAllowStyleTag);
+
+        if (settingService.SettingExists(adminAreaSettings, settings => settings.RichEditorAdditionalSettings))
+        {
+            adminAreaSettings.RichEditorAdditionalSettings = string.Empty;
+            settingService.SaveSetting(adminAreaSettings, settings => settings.RichEditorAdditionalSettings);
+        }
+
         //#6874
         var newsletterTickedByDefault = settingService.GetSetting("customersettings.newslettertickedbydefault");
         if (newsletterTickedByDefault is not null)
