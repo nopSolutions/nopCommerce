@@ -11,6 +11,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Infrastructure;
 using Nop.Services.Attributes;
 using Nop.Services.Authentication.External;
 using Nop.Services.Authentication.MultiFactor;
@@ -337,9 +338,9 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         //external authentication
         var currentCustomer = await _workContext.GetCurrentCustomerAsync();
         model.AllowCustomersToRemoveAssociations = _externalAuthenticationSettings.AllowCustomersToRemoveAssociations;
-        model.NumberOfExternalAuthenticationProviders = (await _authenticationPluginManager
-                .LoadActivePluginsAsync(currentCustomer, store.Id))
-            .Count;
+        var externalAuthenticationModelFactory = EngineContext.Current.Resolve<IExternalAuthenticationModelFactory>();
+        var authenticationProviders = await externalAuthenticationModelFactory.PrepareExternalMethodsModelAsync();
+        model.NumberOfExternalAuthenticationProviders = authenticationProviders.Count;
         foreach (var record in await _externalAuthenticationService.GetCustomerExternalAuthenticationRecordsAsync(customer))
         {
             var authMethod = await _authenticationPluginManager
