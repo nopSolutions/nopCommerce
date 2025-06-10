@@ -28,6 +28,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
+using Nop.Core.Domain.Translation;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Http;
 using Nop.Core.Security;
@@ -1473,6 +1474,16 @@ public partial class InstallationService
             LoadAllLocalizedPropertiesOnStartup = true,
             LoadAllUrlRecordsOnStartup = false,
             IgnoreRtlPropertyForAdminArea = false
+        });
+
+        await SaveSettingAsync(dictionary, new TranslationSettings
+        {
+            TranslateFromLanguageId = (await Table<Language>().FirstAsync()).Id,
+            AllowPreTranslate = false,
+            GoogleApiKey = string.Empty,
+            NotTranslateLanguages = new List<int>(),
+            DeepLAuthKey = string.Empty,
+            TranslationServiceId = (int)TranslationServiceType.GoogleTranslate
         });
 
         await SaveSettingAsync(dictionary, new CustomerSettings

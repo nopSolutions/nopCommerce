@@ -83,6 +83,7 @@ public partial class NopStartup : INopStartup
         services.AddScoped<IVendorAttributeModelFactory, VendorAttributeModelFactory>();
         services.AddScoped<IVendorModelFactory, VendorModelFactory>();
         services.AddScoped<Areas.Admin.Factories.IWidgetModelFactory, Areas.Admin.Factories.WidgetModelFactory>();
+        services.AddScoped<ITranslationModelFactory, TranslationModelFactory>();
 
         //factories
         services.AddScoped<Factories.IAddressModelFactory, Factories.AddressModelFactory>();

@@ -17,6 +17,7 @@ using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Domain.Translation;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Infrastructure;
 using Nop.Data;
@@ -613,6 +614,40 @@ public partial class SettingModelFactory : ISettingModelFactory
             LoadAllLocalizedPropertiesOnStartup = localizationSettings.LoadAllLocalizedPropertiesOnStartup,
             LoadAllUrlRecordsOnStartup = localizationSettings.LoadAllUrlRecordsOnStartup
         };
+
+        return model;
+    }
+
+    /// <summary>
+    /// Prepare translation settings model
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the translation settings model
+    /// </returns>
+    protected virtual async Task<TranslationSettingsModel> PrepareTranslationSettingsModelAsync()
+    {
+        //load settings for a chosen store scope
+        var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+        var translationSettings = await _settingService.LoadSettingAsync<TranslationSettings>(storeId);
+
+        //fill in model values from the entity
+        var model = new TranslationSettingsModel
+        {
+            AllowPreTranslate = translationSettings.AllowPreTranslate,
+            TranslateFromLanguageId = translationSettings.TranslateFromLanguageId,
+            NotTranslateLanguages = translationSettings.NotTranslateLanguages ?? new List<int>(),
+            GoogleApiKey = translationSettings.GoogleApiKey,
+            DeepLAuthKey = translationSettings.DeepLAuthKey,
+            TranslationServiceId = translationSettings.TranslationServiceId
+        };
+
+        //prepare available translation services
+        var availableTranslationServices = await TranslationServiceType.GoogleTranslate.ToSelectListAsync(false);
+        model.AvailableTranslationService = availableTranslationServices.ToList();
+        
+        //prepare available languages
+        await _baseAdminModelFactory.PrepareLanguagesAsync(model.AvailableLanguages, false);
 
         return model;
     }
@@ -1739,6 +1774,9 @@ public partial class SettingModelFactory : ISettingModelFactory
 
         //prepare localization settings model
         model.LocalizationSettings = await PrepareLocalizationSettingsModelAsync();
+
+        //prepare translation settings model
+        model.TranslationSettings = await PrepareTranslationSettingsModelAsync();
 
         //prepare admin area settings model
         model.AdminAreaSettings = await PrepareAdminAreaSettingsModelAsync();

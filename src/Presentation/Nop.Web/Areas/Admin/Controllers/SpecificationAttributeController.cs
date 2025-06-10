@@ -8,6 +8,8 @@ using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
+using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Translation;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
 
@@ -24,6 +26,7 @@ public partial class SpecificationAttributeController : BaseAdminController
     protected readonly IPermissionService _permissionService;
     protected readonly ISpecificationAttributeModelFactory _specificationAttributeModelFactory;
     protected readonly ISpecificationAttributeService _specificationAttributeService;
+    protected readonly ITranslationModelFactory _translationModelFactory;
 
     #endregion Fields
 
@@ -35,7 +38,8 @@ public partial class SpecificationAttributeController : BaseAdminController
         INotificationService notificationService,
         IPermissionService permissionService,
         ISpecificationAttributeModelFactory specificationAttributeModelFactory,
-        ISpecificationAttributeService specificationAttributeService)
+        ISpecificationAttributeService specificationAttributeService,
+        ITranslationModelFactory translationModelFactory)
     {
         _customerActivityService = customerActivityService;
         _localizationService = localizationService;
@@ -44,6 +48,7 @@ public partial class SpecificationAttributeController : BaseAdminController
         _permissionService = permissionService;
         _specificationAttributeModelFactory = specificationAttributeModelFactory;
         _specificationAttributeService = specificationAttributeService;
+        _translationModelFactory = translationModelFactory;
     }
 
     #endregion
@@ -286,6 +291,25 @@ public partial class SpecificationAttributeController : BaseAdminController
 
         //if we got this far, something failed, redisplay form
         return View(model);
+    }
+
+    [HttpPost]
+    [CheckPermission(StandardPermission.Catalog.SPECIFICATION_ATTRIBUTES_CREATE_EDIT_DELETE)]
+    public virtual async Task<IActionResult> PreTranslate(int itemId)
+    {
+        var translationModel = new TranslationModel();
+
+        //try to get a specification attribute with the specified id
+        var specificationAttribute = await _specificationAttributeService.GetSpecificationAttributeByIdAsync(itemId);
+        if (specificationAttribute == null)
+            return Json(translationModel);
+
+        //prepare model
+        var model = await _specificationAttributeModelFactory.PrepareSpecificationAttributeModelAsync(null, specificationAttribute);
+
+        translationModel = await _translationModelFactory.PrepareTranslationModelAsync(model, nameof(SpecificationAttributeLocalizedModel.Name));
+
+        return Json(translationModel);
     }
 
     [HttpPost]

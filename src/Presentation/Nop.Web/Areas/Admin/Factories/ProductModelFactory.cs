@@ -51,6 +51,7 @@ public partial class ProductModelFactory : IProductModelFactory
     protected readonly IDateTimeHelper _dateTimeHelper;
     protected readonly IDiscountService _discountService;
     protected readonly IDiscountSupportedModelFactory _discountSupportedModelFactory;
+    protected readonly ILanguageService _languageService;
     protected readonly ILocalizationService _localizationService;
     protected readonly ILocalizedModelFactory _localizedModelFactory;
     protected readonly IManufacturerService _manufacturerService;
@@ -95,6 +96,7 @@ public partial class ProductModelFactory : IProductModelFactory
         IDateTimeHelper dateTimeHelper,
         IDiscountService discountService,
         IDiscountSupportedModelFactory discountSupportedModelFactory,
+        ILanguageService languageService,
         ILocalizationService localizationService,
         ILocalizedModelFactory localizedModelFactory,
         IManufacturerService manufacturerService,
@@ -135,6 +137,7 @@ public partial class ProductModelFactory : IProductModelFactory
         _dateTimeHelper = dateTimeHelper;
         _discountService = discountService;
         _discountSupportedModelFactory = discountSupportedModelFactory;
+        _languageService = languageService;
         _localizationService = localizationService;
         _localizedModelFactory = localizedModelFactory;
         _manufacturerService = manufacturerService;
@@ -983,6 +986,8 @@ public partial class ProductModelFactory : IProductModelFactory
         
         //prepare model stores
         await _storeMappingSupportedModelFactory.PrepareModelStoresAsync(model, product, excludeProperties);
+
+        await _baseAdminModelFactory.PreparePreTranslationSupportModelAsync(model);
 
         return model;
     }
@@ -2085,6 +2090,8 @@ public partial class ProductModelFactory : IProductModelFactory
             Text = productAttribute.Name,
             Value = productAttribute.Id.ToString()
         }).ToList();
+
+        await _baseAdminModelFactory.PreparePreTranslationSupportModelAsync(model);
 
         return model;
     }

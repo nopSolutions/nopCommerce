@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Models.Translation;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Catalog;
@@ -9,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog;
 /// Represents a manufacturer model
 /// </summary>
 public partial record ManufacturerModel : BaseNopEntityModel, IAclSupportedModel, IDiscountSupportedModel,
-    ILocalizedModel<ManufacturerLocalizedModel>, IStoreMappingSupportedModel
+    ITranslationSupportedModel, ILocalizedModel<ManufacturerLocalizedModel>, IStoreMappingSupportedModel
 {
     #region Ctor
 
@@ -113,6 +114,8 @@ public partial record ManufacturerModel : BaseNopEntityModel, IAclSupportedModel
     public ManufacturerProductSearchModel ManufacturerProductSearchModel { get; set; }
 
     public string PrimaryStoreCurrencyCode { get; set; }
+
+    public bool PreTranslationAvailable { get; set; }
 
     #endregion
 }

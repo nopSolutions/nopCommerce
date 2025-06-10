@@ -1,0 +1,106 @@
+﻿@using Nop.Core.Domain.Translation
+@model GeneralCommonSettingsModel
+
+<script asp-location="Footer">
+    $(function() {
+        $('#@Html.IdFor(model => model.TranslationSettings.TranslationServiceId)').change(function () {
+            var selectedItem = $(this).val();
+            showApiSetting(selectedItem);
+        });
+    });
+
+    $(function () {
+        showApiSetting($('#@Html.IdFor(model => model.TranslationSettings.TranslationServiceId)').val());
+    });
+
+    function showApiSetting(selectedItem) {
+        switch(selectedItem) {
+            case '@((int)TranslationServiceType.GoogleTranslate)': {
+                $('#pnlApiKey').show();
+                $('#pnlAuthKey').hide();
+            }
+            break;
+
+            case '@((int)TranslationServiceType.DeepL)': {
+                $('#pnlApiKey').hide();
+                $('#pnlAuthKey').show();
+            }
+            break;
+        }
+    }
+</script>
+
+<div class="card-body">
+    <p>@T("Admin.Configuration.Settings.GeneralCommon.Translation.Info")</p>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="TranslationSettings.AllowPreTranslate" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="TranslationSettings.AllowPreTranslate" />
+            <span asp-validation-for="TranslationSettings.AllowPreTranslate"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="TranslationSettings.AllowPreTranslate">
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="TranslationSettings.TranslateFromLanguageId" />
+            </div>
+            <div class="col-md-9">
+                <nop-select asp-for="TranslationSettings.TranslateFromLanguageId" asp-items="Model.TranslationSettings.AvailableLanguages" />
+                <span asp-validation-for="TranslationSettings.TranslateFromLanguageId"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="TranslationSettings.NotTranslateLanguages" />
+            </div>
+            <div class="col-md-9">
+                <nop-select asp-for="TranslationSettings.NotTranslateLanguages" asp-items="Model.TranslationSettings.AvailableLanguages" asp-multiple="true" />
+                <script>
+                        $(function() {
+                            var languagesIdsInput = $('#@Html.IdFor(model => model.TranslationSettings.NotTranslateLanguages)').select2({
+                                closeOnSelect: false,
+                                @if (!Model.TranslationSettings.AvailableLanguages.Any())
+                                {
+                                    <text>
+                                        disabled: true,
+                                        placeholder: 'No languages available',
+                                    </text>
+                                }
+                            });
+                        });
+                    </script>
+                <span asp-validation-for="TranslationSettings.NotTranslateLanguages"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="TranslationSettings.TranslationServiceId" />
+            </div>
+            <div class="col-md-9">
+                <nop-select asp-for="TranslationSettings.TranslationServiceId" asp-items="Model.TranslationSettings.AvailableTranslationService" />
+                <span asp-validation-for="TranslationSettings.TranslationServiceId"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="pnlApiKey">
+            <div class="col-md-3">
+                <nop-label asp-for="TranslationSettings.GoogleApiKey" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="TranslationSettings.GoogleApiKey" />
+                <span asp-validation-for="TranslationSettings.GoogleApiKey"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="pnlAuthKey">
+            <div class="col-md-3">
+                <nop-label asp-for="TranslationSettings.DeepLAuthKey" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="TranslationSettings.DeepLAuthKey" />
+                <span asp-validation-for="TranslationSettings.DeepLAuthKey"></span>
+            </div>
+        </div>
+
+    </nop-nested-setting>
+</div>
