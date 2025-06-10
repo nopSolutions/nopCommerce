@@ -1,9 +1,4 @@
-﻿@using Microsoft.AspNetCore.Mvc.Rendering
-@model ModelExpression
-
-@{
-    var mdEditorWebRoot = "~/js/mdeditor/icons/";
-}
+﻿@model ForumPostTextModel
 
 <div class="markdown-editor-container" id="md-editor">
     <script asp-location="Footer" src="~/lib_npm/marked/marked.min.js"></script>
@@ -19,8 +14,8 @@
     </div>
     <div class="editor-content">
         <div class="tab-panel active" id="write-panel">
-            <textarea id="@Model.Name" name="@Model.Name" class="forum-post-text">@Model.Model</textarea>
-            <span class="field-validation-valid" data-valmsg-for="@Model.Name" data-valmsg-replace="true"></span>
+            <textarea asp-for="Text" class="forum-post-text"></textarea>
+            <span asp-validation-for="Text"></span>
         </div>
         <div class="tab-panel" id="preview-panel">
             <div class="preview-output" id="html-output"></div>
@@ -29,8 +24,8 @@
     
     <script asp-location="Footer">
         document.addEventListener('DOMContentLoaded', () => {
-            initializeMarkdownEditor('@Model.Name','@mdEditorWebRoot');
-            setupTabs('md-editor', '@Model.Name');
+            initializeMarkdownEditor('@Html.IdFor(model => model.Text)','@Url.Content("~/js/mdeditor/icons/")');
+            setupTabs('md-editor', '@Html.IdFor(model => model.Text)');
         });
     </script>
 </div>

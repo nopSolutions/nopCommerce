@@ -34,7 +34,7 @@
                 </div>  
                 @if (Model.ForumEditor == EditorType.MarkdownEditor)  
                 {
-                    @await Html.PartialAsync("_MarkdownEditor", new ModelExpression(nameof(Model.Text), Html.ViewData.ModelExplorer.GetExplorerForModel(Model.Text)))
+                    @await Html.PartialAsync("_MarkdownEditor", new ForumPostTextModel { Text = Model.Text })
                 }  
                 @if (Model.ForumEditor != EditorType.MarkdownEditor)  
                 {  
