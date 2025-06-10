@@ -108,14 +108,12 @@
         @if (Model.ForumEditor == EditorType.MarkdownEditor)
         {
             <script asp-location="Footer" src="~/lib_npm/marked/marked.min.js"></script>
-            <script>
+            <script asp-location="Footer">
                 document.addEventListener('DOMContentLoaded', function() {
                     @foreach (var post in @Model.ForumPostModels)
                     {
                         <Text>
-                            var content = @Html.Raw(Json.Serialize(post.FormattedText));
-                            var formattedContent = marked.parse(content, { gfm: true, breaks: true });
-                            document.querySelector('[data-post-content="@post.Id"]').innerHTML = formattedContent;
+                            document.querySelector('[data-post-content="@post.Id"]').innerHTML = marked.parse(@Html.Raw(Json.Serialize(post.FormattedText)), { gfm: true, breaks: true });
                         </Text>
                     }                    
                 });

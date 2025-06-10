@@ -1,17 +1,14 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Rendering
-@using Microsoft.AspNetCore.Mvc.ViewFeatures
-@using Nop.Core
-@inject IWebHelper WebHelper
 @model ModelExpression
 
 @{
-    var storeLocation = WebHelper.GetStoreLocation();
-    var mdEditorWebRoot = $"{storeLocation}js/mdeditor/icons/";
+    var mdEditorWebRoot = "~/js/mdeditor/icons/";
 }
 
 <div class="markdown-editor-container" id="md-editor">
-    <script src="@($"{storeLocation}lib_npm/marked/marked.min.js")"></script>
-    <link rel="stylesheet" href="@($"{storeLocation}js/mdeditor/style.css")" />
+    <script asp-location="Footer" src="~/lib_npm/marked/marked.min.js"></script>
+    <script asp-location="Footer" src="~/js/mdeditor/script.js"></script>
+    <link rel="stylesheet" href="~/js/mdeditor/style.css" />
 
     <div class="editor-header">
         <div class="editor-tabs">
@@ -29,9 +26,8 @@
             <div class="preview-output" id="html-output"></div>
         </div>
     </div>
-
-    <script src="@($"{storeLocation}js/mdeditor/script.js")"></script>
-    <script language="javascript">
+    
+    <script asp-location="Footer">
         document.addEventListener('DOMContentLoaded', () => {
             initializeMarkdownEditor('@Model.Name','@mdEditorWebRoot');
             setupTabs('md-editor', '@Model.Name');
