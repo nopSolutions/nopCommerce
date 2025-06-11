@@ -1,0 +1,51 @@
+﻿@model (string WidgetZone, int ProductId, string ProductCost)
+
+@if (Model.ProductId > 0)
+{
+    <div>
+        <div class="add-to-cart-panel" id="peachpayments-button-container@($"-{Model.ProductId}")"></div>
+         <div
+            data-pp-message
+            data-pp-layout="text"
+            data-pp-placement="product"
+            data-pp-amount="@Model.ProductCost">
+        </div>
+    </div>
+}
+else
+{
+    <script asp-location="Footer">
+        $(document).ready(function () {
+            $('#checkout').after('<div id="peachpayments-button-container"></div>');
+            $('#checkout').hide();
+
+            $('#peachpayments-button-container').after('<div data-pp-message data-pp-layout="text" data-pp-placement="cart"></div>');
+        });
+    </script>
+}
+
+<script asp-location="Footer">
+    $(document).ready(function() {
+        var paymentForm = peachpayments.Buttons({
+            fundingSource: PeachPayments.FUNDING.PeachPayments,
+            onClick: function (e, n) {
+                if ($('#checkout').length > 0) {
+                    $('#checkout').click();
+                }
+                if ($('#add-to-cart-button-@Model.ProductId').length > 0) {
+                    $('#add-to-cart-button-@Model.ProductId').click();
+                }
+                return false;
+            },
+            style: {
+                layout: '@settings.StyleLayout',
+                color: '@settings.StyleColor',
+                shape: '@settings.StyleShape',
+                label: '@settings.StyleLabel'
+            }
+        });
+        if (paymentForm) {
+            paymentForm.render('#peachpayments-button-container@(Model.ProductId > 0 ? $"-{Model.ProductId}" : null)');
+        }
+    });
+</script>

@@ -1,0 +1,269 @@
+﻿@model ConfigurationModel
+
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+@await Component.InvokeAsync("StoreScopeConfiguration")
+
+@if (Model.IsConfigured)
+{
+    @await Component.InvokeAsync("SettingMode")
+}
+
+<script>
+    $(document).ready(function () {
+        $("#@Html.IdFor(model => model.SetCredentialsManually)").click(toggleCredentials);
+        toggleCredentials();
+         sandbox();
+    });
+    function sandbox() {
+        var sandboxmode = document.getElementById("SandBoxModeId");
+            var sandboxmodeValue = sandboxmode.options[sandboxmode.selectedIndex].text;
+            console.log(sandboxmodeValue);
+            if(sandboxmodeValue=="Enabled")
+            {
+              $(".simple_mode").hideElement();
+              $(".live_mode").showElement();
+
+            }
+            else
+            {
+              $(".simple_mode").showElement();
+              $(".live_mode").hideElement();
+            }
+        }
+    function toggleCredentials() {
+        if ($('#@Html.IdFor(model => model.SetCredentialsManually)').is(':checked')) {
+            $('#pnlOnboarding').hideElement();
+            $('#pnlCredentials').showElement();
+            $('#pnlDescription').showElement();
+            @if (!Model.IsConfigured)
+            {
+                <text>$('#pnlSave').showElement();</text>
+            }
+        }
+        else {
+            $('#pnlOnboarding').showElement();
+            $('#pnlCredentials').hideElement();
+            $('#pnlDescription').hideElement();
+            @if (!Model.IsConfigured)
+            {
+                <text>$('#pnlSave').hideElement();</text>
+            }
+        }
+    }
+</script>
+
+<form asp-controller="PeachPayments" asp-action="Configure" method="post">
+    <div class="cards-group">
+        <div class="card card-default card-outline card-info" id="pnlOnboarding">
+            <div class="card-body">
+                <hr />
+                @if (Model.OnboardingModel.DisplayStatus)
+                {
+                    <div class="onboarding-step-@(Model.OnboardingModel.AccountCreated ? "completed" : "in-process")">
+                        @if (Model.OnboardingModel.AccountCreated)
+                        {
+                            <i class="fas fa-check true-icon" nop-value="true"></i>
+                        }
+                        else
+                        {
+                            <i class="fas fa-times false-icon" nop-value="false"></i>
+                        }
+                        @T("Plugins.Payments.PeachPayments.Onboarding.Process.Account")
+                    </div>
+                    <div class="onboarding-step-@(Model.OnboardingModel.EmailConfirmed ? "completed" : "in-process")">
+                        @if (Model.OnboardingModel.EmailConfirmed)
+                        {
+                            <i class="fas fa-check true-icon" nop-value="true"></i>
+                        }
+                        else
+                        {
+                            <i class="fas fa-times false-icon" nop-value="false"></i>
+                        }
+                        @T("Plugins.Payments.PeachPayments.Onboarding.Process.Email")
+                    </div>
+                    <div class="onboarding-step-@(Model.OnboardingModel.PaymentsReceivable ? "completed" : "in-process")">
+                        @if (Model.OnboardingModel.PaymentsReceivable)
+                        {
+                            <i class="fas fa-check true-icon" nop-value="true"></i>
+                        }
+                        else
+                        {
+                            <i class="fas fa-times false-icon" nop-value="false"></i>
+                        }
+                        @T("Plugins.Payments.PeachPayments.Onboarding.Process.Payments")
+                    </div>
+                    <div class="onboarding-step-@(Model.OnboardingModel.PermissionGranted ? "completed" : "in-process")">
+                        @if (Model.OnboardingModel.PermissionGranted)
+                        {
+                            <i class="fas fa-check true-icon" nop-value="true"></i>
+                        }
+                        else
+                        {
+                            <i class="fas fa-times false-icon" nop-value="false"></i>
+                        }
+                        @T("Plugins.Payments.PeachPayments.Onboarding.Process.Permission")
+                    </div>
+                    <hr />
+                }
+                <div class="form-group row simple_mode">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="CheckoutChannel_OverrideForStore" asp-input="CheckoutChannel" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="CheckoutChannel" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="CheckoutChannel" />
+                        <span asp-validation-for="CheckoutChannel"></span>
+                    </div>
+                </div>
+                <div class="form-group row simple_mode">
+                    <div class="col-md-3 ">
+                        <nop-override-store-checkbox asp-for="SecretToken_OverrideForStore" asp-input="SecretToken" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="SecretToken" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="SecretToken" />
+                        <span asp-validation-for="SecretToken"></span>
+                    </div>
+                </div>
+                <div class="form-group row live_mode">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="CheckoutChannelSandbox_OverrideForStore" asp-input="CheckoutChannelSandbox" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="CheckoutChannelSandbox" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="CheckoutChannelSandbox" />
+                        <span asp-validation-for="CheckoutChannelSandbox"></span>
+                    </div>
+                </div>
+                <div class="form-group row live_mode">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="SecretTokenSandbox_OverrideForStore" asp-input="SecretTokenSandbox" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="SecretTokenSandbox" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="SecretTokenSandbox" />
+                        <span asp-validation-for="SecretTokenSandbox"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="Callbackurl_OverrideForStore" asp-input="Callbackurl" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="Callbackurl" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Callbackurl" html-attributes="@(new { disabled = true, value =  Model.Callbackurl })"/>
+                        <span asp-validation-for="Callbackurl"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="MerchantIdPrefix_OverrideForStore" asp-input="MerchantIdPrefix" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="MerchantIdPrefix" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="MerchantIdPrefix" />
+                        <span asp-validation-for="MerchantIdPrefix"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="PeachPaymentsCheckoutDisplayText_OverrideForStore" asp-input="PeachPaymentsCheckoutDisplayText" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="PeachPaymentsCheckoutDisplayText" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="PeachPaymentsCheckoutDisplayText" />
+                        <span asp-validation-for="PeachPaymentsCheckoutDisplayText"></span>
+                    </div>
+                </div>
+                 <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="SortOrder_OverrideForStore" asp-input="SortOrder" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="SortOrder" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="SortOrder" />
+                        <span asp-validation-for="SortOrder"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="SandBoxModeId_OverrideForStore" asp-input="SandBoxModeId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="SandBoxModeValues" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="SandBoxModeId" asp-items="Model.SandBoxModeValues" onchange="sandbox()"/>
+                        <span asp-validation-for="SandBoxModeId"></span>
+                    </div>
+                </div>
+
+
+                 <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="CurrencyId_OverrideForStore" asp-input="CurrencyId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="CurrencyValues" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="CurrencyId" asp-items="Model.CurrencyValues" />
+                        <span asp-validation-for="CurrencyId"></span>
+                    </div>
+                </div>
+
+              @*<div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="StatusModeId_OverrideForStore" asp-input="StatusModeId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="StatusModeValues" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="StatusModeId" asp-items="Model.StatusModeValues" />
+                        <span asp-validation-for="StatusModeId"></span>
+                    </div>
+                </div>*@
+
+
+             
+
+               
+                
+                <div class="form-group row">
+                    <div class="col-md-9 offset-md-3 mb-3">
+                        <button type="submit" name="onboarding" class="btn btn-primary">
+                            @T("Admin.Common.Save")
+                        </button>
+                        @if (!string.IsNullOrEmpty(Model.OnboardingModel.SignUpUrl))
+                        {
+                            <a href="@Model.OnboardingModel.SignUpUrl&displayMode=minibrowser" target="_blank" class="btn btn-info" data-paypal-onboard-complete="onboardedCallback" data-paypal-button="true">
+                                @T("Plugins.Payments.PeachPayments.Onboarding.Button")
+                            </a>
+                            <script asp-location="Footer">
+                                function onboardedCallback(authCode, sharedId) {
+                                    var postData = {
+                                        MerchantGuid: '@Model.OnboardingModel.MerchantGuid',
+                                        Email_OverrideForStore: '@Model.Email_OverrideForStore.ToString().ToLowerInvariant()',
+                                        SharedId: sharedId,
+                                        AuthCode: authCode
+                                    };
+                                    addAntiForgeryToken(postData);
+                                    $.ajax({
+                                        cache: false,
+                                        type: 'POST',
+                                        url: '@Url.Action("SignUp", "PeachPayments")',
+                                        data: postData
+                                    });
+                                }
+                            </script>
+                        }
+                        else if (!string.IsNullOrEmpty(Model.OnboardingModel.MerchantGuid))
+                        {
+                            <button type="submit" name="revoke" class="btn btn-danger">
+                                @T("Plugins.Payments.PeachPayments.Onboarding.ButtonRevoke")
+                            </button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
