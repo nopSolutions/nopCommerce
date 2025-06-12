@@ -19,6 +19,7 @@
 @using Nop.Web.Framework.Infrastructure
 @using Nop.Web.Models.Catalog
 @using Nop.Plugin.Misc.AbcCore.Nop
+@using Newtonsoft.Json
 
 @inject CatalogSettings catalogSettings
 @inject IWorkContext workContext
@@ -344,16 +345,25 @@
 
             <div class="product-box-review" data-bv-show="inline_rating" data-bv-product-id="@Model.Id"></div>
 
-            <script type="application/ld+json">
+            @{
+                var schema = new Dictionary<string, object>
                 {
-                    "context" : "https://schema.org",
-                    "type" : "Product",
-                    "id" : "@Model.Id",
-                    "name" : "@Model.Name",
-                    "description" : "@Model.ShortDescription",
-                    "sku" : "@Model.Sku"
-                }
+                    ["@context"] = "https://schema.org",
+                    ["@type"] = "Product",
+                    ["name"] = Model.Name,
+                    ["image"] = Model.DefaultPictureModel.ImageUrl,
+                    ["description"] = Model.ShortDescription,
+                    ["sku"] = Model.Sku
+                };
+
+                // Remove null entries
+                var schemaFiltered = schema.Where(kvp => kvp.Value != null).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+                var jsonLd = JsonConvert.SerializeObject(schemaFiltered, Formatting.Indented);
+            }
+            <script type="application/ld+json">
+                @Html.Raw(jsonLd)
             </script>
+
 
             <!-- ABC: custom - adds widget zone for reviews -->
             @await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.ProductBoxAddinfoReviews, additionalData = Model })
