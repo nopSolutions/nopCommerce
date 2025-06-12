@@ -427,13 +427,8 @@ public partial class CheckoutController : BasePublicController
     public virtual async Task<IActionResult> GetAddressById(int addressId)
     {
         var customer = await _workContext.GetCurrentCustomerAsync();
-        Address address = null;
-
-        if (addressId != 0)
-        {
-            address = await _customerService.GetCustomerAddressAsync(customer.Id, addressId);
-            ArgumentNullException.ThrowIfNull(address);
-        }
+        var address = await _customerService.GetCustomerAddressAsync(customer.Id, addressId);
+        ArgumentNullException.ThrowIfNull(address);
 
         var addressModel = new AddressModel();
 

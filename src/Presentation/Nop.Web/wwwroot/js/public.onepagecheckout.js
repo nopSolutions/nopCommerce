@@ -108,21 +108,19 @@ var Checkout = {
 
 var Billing = {
   form: false,
-  getAddressUrl: '',
-  saveUrl: '',
+  saveUrl: false,
   disableBillingAddressCheckoutStep: false,
   guest: false,
-  selectedStateId: 0,  
+  selectedStateId: 0,
 
-  init: function (form, getAddressUrl, saveUrl, disableBillingAddressCheckoutStep, guest) {
-    this.form = form;    
-    this.getAddressUrl = getAddressUrl;
+  init: function(form, saveUrl, disableBillingAddressCheckoutStep, guest) {
+    this.form = form;
     this.saveUrl = saveUrl;
     this.disableBillingAddressCheckoutStep = disableBillingAddressCheckoutStep;
     this.guest = guest;
   },
 
-  newAddress: function (isNew) {
+  newAddress: function(isNew) { 
     $('#save-billing-address-button').hide();
 
     if (isNew) {
@@ -136,9 +134,6 @@ var Billing = {
     }
     $(document).trigger({ type: "onepagecheckout_billing_address_new" });
     Billing.initializeCountrySelect();
-
-    if (isNew)
-      Billing.editAddress();
   },
 
   setDefaultCountry: function (defaultCountry) {
@@ -209,16 +204,16 @@ var Billing = {
     }
   },
 
-  editAddress: function() {
+  editAddress: function(url) {
     Billing.resetBillingForm();
+    //Billing.initializeStateSelect();
 
     var prefix = 'BillingNewAddress_';
     var selectedItem = $('#billing-address-select').children("option:selected").val();
-
     $.ajax({
       cache: false,
       type: "GET",
-      url: this.getAddressUrl,
+      url: url,
       data: {
         addressId: selectedItem,
       },
