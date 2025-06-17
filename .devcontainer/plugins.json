@@ -96,10 +96,6 @@
         "Version": null
       },
       {
-        "SystemName": "AbcWarehouse.SliExport",
-        "Version": null
-      },
-      {
         "SystemName": "Uco.CustomRedirect",
         "Version": null
       },
@@ -149,10 +145,6 @@
       },
       {
         "SystemName": "Misc.EnhancedLogging",
-        "Version": "4.40.0"
-      },
-      {
-        "SystemName": "Misc.AbcSliExport",
         "Version": "4.40.0"
       },
       {
@@ -217,10 +209,6 @@
       },
       {
         "SystemName": "Widgets.Flixmedia",
-        "Version": "4.40.0"
-      },
-      {
-        "SystemName": "Misc.SLI",
         "Version": "4.40.0"
       },
       {

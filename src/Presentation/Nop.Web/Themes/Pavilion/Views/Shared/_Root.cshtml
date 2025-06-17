@@ -7,7 +7,6 @@
 
 @inject IStoreContext storeContext
 @inject ISettingService settingService
-@* ABC: custom inject *@
 @inject IWorkContext workContext
 @inject IShoppingCartService shoppingCartService
 
@@ -22,7 +21,6 @@
     bool isLogoStickyOnMobileDevice = await settingService.GetSettingByKeyAsync("pavilionthemesettings.islogostickyonmobiledevice", false, storeId, true);
     string stickyLogoClass = isLogoStickyOnMobileDevice ? "mobile-sticky-logo" : string.Empty;
 
-    // ABC: modifications
     var mobilePhoneNumber = await settingService.GetSettingByKeyAsync("coresettings.mobilephonenumber", "800-981-3866");
     var customer = await workContext.GetCurrentCustomerAsync();
     var shoppingCartItemCount = (await shoppingCartService.GetShoppingCartAsync(
@@ -31,7 +29,6 @@
     )).Count();
 
     var primaryColor = await HtmlHelpers.GetPavilionPrimaryColorAsync();
-
 }
 
 <style>
@@ -57,14 +54,13 @@
         </div>
            }
         <div class="responsive-nav-wrapper">
-
             @if (storeId == 8)
             {
-            <div class="mobileLocation">
-            <a href="https://stagehawthorne.abcwarehouse.com/hawthorne-store-locations">
-            <img class="MobileLoc" src="https://www.abcwarehouse.com/images/hawthorne/Icons/HawMobileLocation.png" alt="HawLocations" />
-            </a>
-            </div>
+                <div class="mobileLocation">
+                    <a href="https://stagehawthorne.abcwarehouse.com/hawthorne-store-locations">
+                        <img class="MobileLoc" src="https://www.abcwarehouse.com/images/hawthorne/Icons/HawMobileLocation.png" alt="HawLocations" />
+                    </a>
+                </div>
             }
 
    
@@ -94,15 +90,14 @@
 
 
      @if (storeId == 3)
-            {
-                 @* ABC: search bar for mobile *@
-    <div class="mobile-header-content-row">
-        <div class="mobile-menu" onClick="toggleMobileMenu()">
-            <span>Menu</span>
-        </div>
-          @await Component.InvokeAsync("SearchBox")  
-    </div>
-            }
+        {
+            
+            <div class="mobile-header-content-row">
+                <div class="mobile-menu" onClick="toggleMobileMenu()">
+                    <span>Menu</span>
+                </div>
+            </div>
+        }
 
                 
 
@@ -115,28 +110,30 @@
         };
         AjaxCart.init(false, '.header-links .cart-qty', '.header-links .wishlist-qty', '#flyout-cart', localized_data);
     </script>
+
     <div class="overlayOffCanvas"></div>
 
     <div class="master-wrapper-content">
         @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ContentBefore })
-		@await Component.InvokeAsync("Widget", new { widgetZone = "pavilion_color_squares" })
+        @await Component.InvokeAsync("Widget", new { widgetZone = "pavilion_color_squares" })
 
         <div class="master-column-wrapper">
             @RenderBody()
         </div>
+
         @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ContentAfter })
     </div>
+
     @if (isHomePage && storeId != 8)
     {
-		@await Component.InvokeAsync("Widget", new { widgetZone = "homepage_content_after" })
+        @await Component.InvokeAsync("Widget", new { widgetZone = "homepage_content_after" })
     }
 
     @await Component.InvokeAsync("Footer")
 </div>
 
-@* ABC: move the search box if required  *@
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         const isMobile = window.innerWidth <= 1000;
 
         if (isMobile) {
@@ -144,6 +141,130 @@
         } else {
             $("#small-search-box-form").appendTo(".store-search-box");
         }
+    });
+</script>
+
+<!-- ✅ IntelliSuggest Library -->
+<script src="https://cdn.searchspring.net/intellisuggest/is.min.js" async defer></script>
+
+<!-- ✅ Setup IntelliSuggest tracking -->
+<script>
+    window.intellisuggest = window.intellisuggest || function () {
+        (intellisuggest.q = intellisuggest.q || []).push(arguments);
+    };
+
+    intellisuggest('config', {
+        siteId: '4lt84w',
+        autocomplete: {
+            inputSelector: '#small-searchterms',
+            suggestions: true,
+            products: true,
+            categoryResults: true,
+            resultsPage: '/search?q='
+        }
+    });
+
+    intellisuggest('track', 'pageview');
+
+    // Setup tracking holder
+    window.searchspringTracking = {
+        userId: null,
+        sessionId: null
+    };
+
+    document.addEventListener('intellisuggest-ready', function () {
+        const params = window.intellisuggest?.getTrackingParams?.();
+        if (params?.userId && params?.sessionId) {
+            window.searchspringTracking.userId = params.userId;
+            window.searchspringTracking.sessionId = params.sessionId;
+            console.log("✅ Searchspring tracking ready:", params);
+        }
+    });
+</script>
+
+<!-- Autocomplete handler -->
+<script>
+    let searchspringTrackingIds = null;
+
+    window.intellisuggest = window.intellisuggest || function () {
+        (intellisuggest.q = intellisuggest.q || []).push(arguments);
+    };
+
+    // ✅ Get tracking IDs directly from IntelliSuggest
+    intellisuggest('track', function (eventType, trackingData) {
+        if (eventType === 'pageview' && trackingData) {
+            searchspringTrackingIds = {
+                userId: trackingData.userId,
+                sessionId: trackingData.sessionId
+            };
+            console.log("✅ Tracking IDs captured:", searchspringTrackingIds);
+        }
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.getElementById('small-searchterms');
+        const resultsContainer = document.getElementById('autocomplete-results');
+        if (!searchInput || !resultsContainer) return;
+
+        let debounceTimeout;
+
+        searchInput.addEventListener('input', function () {
+            clearTimeout(debounceTimeout);
+            const query = searchInput.value.trim();
+
+            debounceTimeout = setTimeout(() => {
+                if (query.length < 2) {
+                    resultsContainer.innerHTML = '';
+                    resultsContainer.style.display = 'none';
+                    return;
+                }
+
+                if (!searchspringTrackingIds) {
+                    console.warn('⛔ Tracking IDs not available yet');
+                    return;
+                }
+
+                const { userId, sessionId } = searchspringTrackingIds;
+
+                fetch(`/searchspring/suggest?q=${encodeURIComponent(query)}&t=${Date.now()}&userId=${userId}&sessionId=${sessionId}`)
+                    .then(res => res.ok ? res.json() : Promise.reject("Suggest fetch failed"))
+                    .then(data => {
+                        const suggestions = data?.search?.suggestions || [];
+
+                        resultsContainer.innerHTML = '';
+                        resultsContainer.style.display = 'block';
+
+                        if (suggestions.length === 0) {
+                            resultsContainer.innerHTML = '<div class="autocomplete-item">No suggestions found</div>';
+                            return;
+                        }
+
+                        suggestions.forEach(s => {
+                            const item = document.createElement('div');
+                            item.textContent = s.value;
+                            item.className = 'autocomplete-item';
+
+                            item.addEventListener('click', () => {
+                                searchInput.value = s.value;
+                                resultsContainer.innerHTML = '';
+                                document.getElementById('searchForm').submit();
+                            });
+
+                            resultsContainer.appendChild(item);
+                        });
+                    })
+                    .catch(err => {
+                        console.error("Autocomplete error:", err);
+                    });
+            }, 250);
+        });
+
+        document.addEventListener('click', function (e) {
+            if (!resultsContainer.contains(e.target) && e.target !== searchInput) {
+                resultsContainer.innerHTML = '';
+                resultsContainer.style.display = 'none';
+            }
+        });
     });
 </script>
 

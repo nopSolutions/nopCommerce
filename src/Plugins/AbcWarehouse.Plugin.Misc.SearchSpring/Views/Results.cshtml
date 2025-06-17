@@ -1,0 +1,295 @@
+@model AbcWarehouse.Plugin.Misc.SearchSpring.Models.SearchResultModel
+@inject Nop.Services.Catalog.IProductService productService
+@inject Nop.Services.Media.IPictureService pictureService
+@inject Nop.Services.Localization.ILocalizationService localizationService
+@inject Nop.Services.Seo.IUrlRecordService urlRecordService
+@inject Nop.Web.Factories.IProductModelFactory productModelFactory
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor httpContextAccessor
+@inject Nop.Core.IWebHelper webHelper
+@using Nop.Web.Models.Catalog
+@using Nop.Core.Domain.Catalog
+@using Nop.Web.Extensions
+@using Nop.Web.Models.Media
+@using System.Text.Json
+@using System.Web
+@using System.Text.Encodings.Web
+@using Microsoft.AspNetCore.WebUtilities
+
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    // Grab current query string parameters as a dictionary (string key -> string value)
+    var queryParams = Context.Request.Query.ToDictionary(k => k.Key, v => v.Value.ToString());
+
+    // Current search query param
+    var query = Context.Request.Query.ContainsKey("q") ? Context.Request.Query["q"].ToString() : "";
+
+    // Current page param fallback to 1
+    var currentPage = Model.PageNumber > 0 ? Model.PageNumber : 1;
+
+}
+
+@if (!Model.Results.Any())
+{
+    <p>No products found.</p>
+}
+else
+{
+    <div class="master-column-wrapper">
+        <div class="mobile-filter-wrapper">
+            <button id="closeSidebar" class="close-sidebar-btn" aria-label="Close Filters">&times;</button>
+            <div class="mobile-sidebar-title"><h2>Filters</h2></div>
+            <div class="searchspring-sidebar side-2" id="mobileSidebar">
+                @if (Context.Request.Query.Keys.Any(k => k.StartsWith("filter[")))
+                {
+                    <div class="filter-summary" style="margin-bottom: 20px;">
+                        <strong>Active Filters:</strong>
+                        <div class="applied-filters" style="margin-top: 10px;">
+                            @{
+                                var filterParams = Context.Request.Query
+                                    .Where(q => q.Key.StartsWith("filter["))
+                                    .ToList();
+
+                                foreach (var param in filterParams)
+                                {
+                                    var fieldLabel = param.Key.Replace("filter[", "").Replace("]", "");
+                                    var value = param.Value.ToString();
+
+                                    // Build query string without this filter
+                                    var remainingQuery = new List<string>();
+                                    foreach (var q in Context.Request.Query)
+                                    {
+                                        if (q.Key == param.Key) continue;
+
+                                        foreach (var v in q.Value)
+                                        {
+                                            remainingQuery.Add($"{HttpUtility.UrlEncode(q.Key)}={HttpUtility.UrlEncode(v)}");
+                                        }
+                                    }
+
+                                    var removeUrl = "/search/results";
+                                    if (remainingQuery.Any())
+                                        removeUrl += "?" + string.Join("&", remainingQuery);
+
+                                    <div class="remove-button" style="display: inline-block; margin-right: 10px;">
+                                        <a href="@removeUrl" style="color: text-decoration: none;">
+                                            <i class="fa fa-times" aria-hidden="true"></i>
+                                            <span><b>X</b> @value</span>
+                                        </a>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                }
+
+                @foreach (var facet in Model.Facets)
+                {
+                    <div class="searchspring-facet facet">
+                        <strong>@facet.Value.Label</strong>
+                        <ul>
+                            @foreach (var value in facet.Value.Values)
+                            {
+                                // Clone current params to new dict so we can add/replace filter
+                                var allParams = new Dictionary<string, string>(queryParams);
+
+                                var filterKey = $"filter[{facet.Key}]";
+
+                                // Replace or add this filter key with the facet value selected
+                                allParams[filterKey] = value.Value;
+
+                                // Rebuild query string with all params
+                                var queryString = QueryHelpers.AddQueryString("", allParams);
+
+                                var filterUrl = Url.Content($"/search/results{queryString}");
+
+                                <li>
+                                    <a href="@filterUrl">@value.Label (@value.Count)</a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="products-container center-2">
+            <div class="search-top-bar">
+
+                <form method="get" id="sortForm">
+                    <input type="hidden" name="q" value="@Model.Query" />
+                    <select name="sort" onchange="this.form.submit()">
+                        @foreach (var option in Model.SortOptions)
+                        {
+                            var sortValue = $"{option.Field}_{option.Direction}";
+                            var isSelected = Context.Request.Query["sort"] == sortValue ? "selected=\"selected\"" : "";
+                            var label = option.Label;
+
+                            @Html.Raw($"<option value=\"{sortValue}\" {isSelected}>{label}</option>")
+                        }
+                    </select>
+                </form>
+
+                <div class="search-query">Search for "@query" (@Model.TotalResults)</div>
+
+                <button id="filterToggle" class="mobile-filter-btn">Filters</button>
+
+            </div>
+            <div class="products-wrapper">
+                <div class="product-grid">
+                    <div class="item-grid">
+                        @{
+                            var productModels = new List<dynamic>();
+
+                            foreach (var item in Model.Results)
+                            {
+                                var product = productService.GetProductBySkuAsync(item.Sku).GetAwaiter().GetResult();
+                                if (product == null)
+                                {
+                                    product = productService.GetProductBySkuAsync("+" + item.Sku).GetAwaiter().GetResult();
+                                }
+                                if (product != null)
+                                {
+                                    var productUrl = urlRecordService.GetSeNameAsync(product).GetAwaiter().GetResult();
+
+                                    var productOverviewModels = productModelFactory.PrepareProductOverviewModelsAsync(
+                                        new[] { product },
+                                        true,
+                                        true).GetAwaiter().GetResult();
+
+                                    var model = productOverviewModels.FirstOrDefault();
+
+                                    if (model != null)
+                                    {
+                                        productModels.Add(model);
+                                    }
+                                }
+                            }
+
+                            foreach (var model in productModels)
+                            {
+                                <div class="item-box">
+                                    @await Html.PartialAsync("_ProductBox", (ProductOverviewModel)model)
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+
+                @if (Model.TotalPages > 1)
+                {
+                    int maxVisiblePages = 5;
+                    int startPage = Math.Max(1, currentPage - maxVisiblePages / 2);
+                    int endPage = Math.Min(Model.TotalPages, startPage + maxVisiblePages - 1);
+
+                    if ((endPage - startPage + 1) < maxVisiblePages)
+                    {
+                        startPage = Math.Max(1, endPage - maxVisiblePages + 1);
+                    }
+
+                    <nav class="pagination">
+                        <ul>
+                            @if (currentPage > 1)
+                            {
+                                var prevParams = new Dictionary<string, string>(queryParams)
+                                {
+                                    ["page"] = (currentPage - 1).ToString()
+                                };
+                                var prevUrl = Url.Content($"/search/results{QueryHelpers.AddQueryString("", prevParams)}");
+                                <li>
+                                    <a href="@prevUrl">« Prev</a>
+                                </li>
+                            }
+
+                            @for (var i = startPage; i <= endPage; i++)
+                            {
+                                var activeClass = i == currentPage ? "active" : "";
+                                var pageParams = new Dictionary<string, string>(queryParams)
+                                {
+                                    ["page"] = i.ToString()
+                                };
+                                var pageUrl = Url.Content($"/search/results{QueryHelpers.AddQueryString("", pageParams)}");
+
+                                <li class="@activeClass">
+                                    <a href="@pageUrl">@i</a>
+                                </li>
+                            }
+
+                            @if (currentPage < Model.TotalPages)
+                            {
+                                var nextParams = new Dictionary<string, string>(queryParams)
+                                {
+                                    ["page"] = (currentPage + 1).ToString()
+                                };
+                                var nextUrl = Url.Content($"/search/results{QueryHelpers.AddQueryString("", nextParams)}");
+                                <li>
+                                    <a href="@nextUrl">Next »</a>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+<style>
+    .standard-sidebar {
+        display: none;
+    }
+</style>
+
+<script>
+    const searchSpringFacets = @Html.Raw(JsonSerializer.Serialize(
+        Model.Facets,
+        new JsonSerializerOptions {
+            WriteIndented = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+        }));
+
+    console.log("Facets:", searchSpringFacets);
+</script>
+
+<script>
+    document.querySelectorAll('.facet-filter').forEach(button => {
+        button.addEventListener('click', () => {
+            const field = button.dataset.field;
+            const value = button.dataset.value;
+
+            const url = new URL(window.location.href);
+            const params = url.searchParams;
+
+            const q = params.get('q') || '';
+            params.set('q', q);
+
+            params.append(`filter[${field}]`, value);
+
+            params.set('page', 1);
+
+            const newUrl = `${url.pathname}?${params.toString()}`;
+
+            window.location.href = newUrl;
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggleBtn = document.getElementById("filterToggle");
+        const closeBtn = document.getElementById("closeSidebar");
+        const sidebar = document.querySelector(".mobile-filter-wrapper");
+
+        toggleBtn.addEventListener("click", function () {
+            sidebar.classList.toggle("active");
+        });
+
+        closeBtn.addEventListener("click", function () {
+            sidebar.classList.remove("active");
+        });
+    });
+
+</script>
+
+

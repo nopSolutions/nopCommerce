@@ -154,6 +154,16 @@
     <script async src="https://apps.bazaarvoice.com/deployments/abcwarehouse/main_site/production/en_US/bv.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+    <!-- SearchSpring Scripts -->
+    <script src="https://cdn.searchspring.io/script.js"></script>
+    <script async src="https://cdn.searchspring.net/intellisuggest/is.min.js"></script>
+    <script>
+        window.intellisuggest = window.intellisuggest || [];
+        intellisuggest.push(['setSiteId', '4lt84w']);
+    </script>
+
+    <!-- End SearchSpring Scripts -->
+
     <!-- Meta Pixel Code -->
     <script>
     !function(f,b,e,v,n,t,s)
@@ -180,6 +190,11 @@ document.addEventListener('DOMContentLoaded', function() {
     <!-- End Adtaxi Container Tag -->
 
   
+    @* This forces the webpage to always scroll to the top on a refresh *@
+    window.onload = function() {
+  window.scrollTo(0, 0);
+};
+
 
 
     // Update Instagram link only if .storeId8 is present
@@ -202,6 +217,33 @@ document.addEventListener('DOMContentLoaded', function() {
     <!-- End Meta Pixel Code -->
 
     <script src="https://kit.fontawesome.com/6f12e215e1.js" crossorigin="anonymous"></script>
+
+    <!-- Include the uuid library -->
+    <script src="https://cdn.jsdelivr.net/npm/uuid@8.3.2/dist/umd/uuidv4.min.js"></script>
+    <script>
+    function initializeSessionIdNamespace() {
+        var sessionKey = "ssSessionIdNamespace";
+
+        // Log current sessionStorage for debugging purposes
+        console.log("Current sessionStorage value:", sessionStorage.getItem(sessionKey));
+
+        // Check if the ssSessionIdNamespace is already set in sessionStorage
+        if (!sessionStorage.getItem(sessionKey)) {
+        console.log("ssSessionIdNamespace not found, creating a new one...");
+        // Generate a new UUID (ensure uuidv4 is properly loaded in your environment)
+        var uuid = uuidv4();
+        sessionStorage.setItem(sessionKey, uuid);
+        document.cookie = sessionKey + "=" + uuid + "; path=/; SameSite=Lax";
+        }
+
+        // Log the sessionId after ensuring it has been set
+        var sessionId = sessionStorage.getItem(sessionKey);
+        console.log("Session ID for this tab:", sessionId);
+    }
+
+    // Run the function when the page loads
+    window.addEventListener("load", initializeSessionIdNamespace);
+    </script>
 </head>
 
 @functions {
@@ -326,8 +368,7 @@ document.addEventListener('DOMContentLoaded', function() {
             margin-top: 0.5em;
         }
     </style>
-    <!-- ABC: SLI -->
-    <script type="text/javascript" src="@sliRacConfig"></script>
+
     @RenderBody()
     @Html.NopCssFiles(ResourceLocation.Footer)
     @Html.NopScripts(ResourceLocation.Footer)

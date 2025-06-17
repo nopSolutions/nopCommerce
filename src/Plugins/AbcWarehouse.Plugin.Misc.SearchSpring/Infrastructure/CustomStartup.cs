@@ -1,11 +1,11 @@
-﻿using AbcWarehouse.Plugin.Misc.SLI.ViewEngines;
+﻿using AbcWarehouse.Plugin.Misc.SearchSpring;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
 
-namespace AbcWarehouse.Plugin.Misc.SLI.Infrastructure
+namespace AbcWarehouse.Plugin.Misc.SearchSpring.Infrastructure
 {
     public class CustomStartup : INopStartup
     {
@@ -15,7 +15,7 @@ namespace AbcWarehouse.Plugin.Misc.SLI.Infrastructure
         {
             services.Configure<RazorViewEngineOptions>(options =>
             {
-                options.ViewLocationExpanders.Add(new CustomViewEngine());
+
             });
         }
 

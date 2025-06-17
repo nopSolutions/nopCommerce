@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Misc",
+  "FriendlyName": "SearchSpring",
+  "SystemName": "AbcWarehouse.Plugin.Misc.SearchSpring",
+  "Version": "1.0.0",
+  "SupportedVersions": [ "4.40" ],
+  "Author": "Mike Schwartz",
+  "DisplayOrder": 1,
+  "FileName": "AbcWarehouse.Plugin.Misc.SearchSpring.dll",
+  "Description": "With the combined support of searchspring api and the amazing coding of ABC dev savants, this plugin searches databases for AMAZING ABC products and returns them in a beautiful and reliable format that will lead directly to countless sales!"
+}

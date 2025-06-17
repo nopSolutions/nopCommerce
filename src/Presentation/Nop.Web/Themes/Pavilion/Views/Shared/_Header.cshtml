@@ -250,28 +250,23 @@
                         </div>
                     }
                 }
-                <div class="search-box store-search-box testtesttest @if (!showCategoriesInSideMenu){<text>full-width</text>}">
-                    @* can only have one search box for InstantSearch
-                    @await Component.InvokeAsync("SearchBox")
-                    *@
+                <div class="search-spring-container">
+                    @await Component.InvokeAsync("SearchSpring") 
                 </div>
                 @await Component.InvokeAsync("FlyoutShoppingCart")
                 <div class="header-links-wrapper">
                     <a href="/customer/info">
-                        
-                        
                         @* This basically just checks if the user is logged in, if they are then it displays their name
                          instead of MyAccount and if they arent it just displays MyAccount *@
                         @if (headerLinksModel.IsAuthenticated)
                         {
                             <label id="customerName">@headerLinksModel.CustomerName</label>
-                            }
-                        else {
-                       <label> @T("SevenSpikes.Themes.Pavilion.Header.MyAccount")</label>
                         }
-                        
-                        
-                        </a>
+                        else 
+                        {
+                            <label> @T("SevenSpikes.Themes.Pavilion.Header.MyAccount")</label>
+                        }
+                    </a>
                     @await Component.InvokeAsync("HeaderLinks")
                 </div>
             </div>

@@ -1,0 +1,176 @@
+@using Nop.Web.Framework
+@using Nop.Core
+@using Nop.Core.Infrastructure
+@using Nop.Web.Framework.Infrastructure
+
+@inject IWebHelper webHelper
+
+@{
+    var storeUrl = webHelper.GetStoreLocation(); 
+    var searchBaseUrl = $"{storeUrl}search/results?q=";
+}
+
+<script src="https://cdn.searchspring.net/intellisuggest/is.min.js" async defer></script>
+
+<div class="search-container" style="position: relative;">
+    <form id="searchForm" autocomplete="off">
+        <input type="text" id="searchInput" placeholder="What can we help you find?" />
+        <button type="submit"><i class="fas fa-search"></i></button>
+    </form>
+    <div id="searchspring-suggest-results"></div>
+    <div id="autocomplete-results" class="autocomplete-list"></div>
+</div>
+
+<script>
+    function updateZeroPrices() {
+        document.querySelectorAll('.price').forEach(el => {
+            if (el.textContent.trim() === '0.00') {
+                el.textContent = 'Call for price';
+            }
+        });
+    }
+
+    updateZeroPrices();
+
+    const observer = new MutationObserver(updateZeroPrices);
+    observer.observe(document.body, { childList: true, subtree: true });
+</script>
+
+<style>
+    .autocomplete-list {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: white;
+        border: 1px solid #ccc;
+        z-index: 999;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        width: 100%;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .section-title {
+        font-weight: bold;
+        padding: 6px 10px;
+        background: #f9f9f9;
+        border-bottom: 1px solid #eee;
+        font-size: 0.9rem;
+    }
+
+    .suggestion-section,
+    .autocomplete-section {
+        border-bottom: 1px solid #ddd;
+    }
+
+    .suggestion-item,
+    .autocomplete-item {
+        padding: 8px 10px;
+        cursor: pointer;
+    }
+
+    .suggestion-item:hover,
+    .autocomplete-item:hover {
+        background-color: #f0f0f0;
+    }
+</style>
+
+<script>
+    const input = document.getElementById('searchInput');
+    const resultsContainer = document.getElementById('autocomplete-results');
+    const baseUrl = '@searchBaseUrl';
+
+    window.searchspringTracking = {
+        userId: null,
+        sessionId: null
+    };
+
+    let intellisuggestIsReady = false;
+
+    document.addEventListener('intellisuggest-ready', function () {
+        const trackingParams = window.intellisuggest?.getTrackingParams?.();
+        if (trackingParams?.userId && trackingParams?.sessionId) {
+            window.searchspringTracking.userId = trackingParams.userId;
+            window.searchspringTracking.sessionId = trackingParams.sessionId;
+            intellisuggestIsReady = true;
+            console.log("✅ Searchspring tracking ready:", window.searchspringTracking);
+        } else {
+            console.warn("⚠️ Tracking params missing after intellisuggest-ready event.");
+        }
+    });
+
+    function debounce(func, delay) {
+        let timeout;
+        return function (...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), delay);
+        };
+    }
+
+    input.addEventListener('input', debounce(async function () {
+        const query = input.value.trim();
+        if (query.length < 2) {
+            resultsContainer.innerHTML = '';
+            resultsContainer.style.display = 'none';
+            return;
+        }
+
+        let userId = window.searchspringTracking.userId;
+        let sessionId = window.searchspringTracking.sessionId;
+
+        const suggestUrl = `/searchspring/suggest?q=${encodeURIComponent(query)}${userId && sessionId ? `&userId=${userId}&sessionId=${sessionId}` : ''}`;
+        const autocompleteUrl = `/searchspring/autocomplete?q=${encodeURIComponent(query)}${userId && sessionId ? `&userId=${userId}&sessionId=${sessionId}` : ''}`;
+
+        try {
+            const [suggestRes, autoRes] = await Promise.all([
+                fetch(suggestUrl),
+                fetch(autocompleteUrl)
+            ]);
+
+            const suggestData = suggestRes.ok ? await suggestRes.json() : null;
+            const autocompleteData = autoRes.ok ? await autoRes.json() : null;
+
+            const decodeHTML = (escapedStr) => {
+                const textarea = document.createElement('textarea');
+                textarea.innerHTML = escapedStr || '';
+                return textarea.value;
+            };
+
+            const suggestHTML = decodeHTML(suggestData?.results);
+            const autoHTML = decodeHTML(autocompleteData?.results);
+
+            const combinedHtml = `
+                ${suggestHTML ? `<div class="suggestion-section"><div class="section-title">Suggestions</div>${suggestHTML}</div>` : ''}
+                ${autoHTML ? `<div class="autocomplete-section"><div class="section-title">Matching Products</div>${autoHTML}</div>` : ''}
+            `;
+
+            resultsContainer.innerHTML = combinedHtml;
+            resultsContainer.style.display = combinedHtml.trim() ? 'block' : 'none';
+
+        } catch (err) {
+            console.error("❌ Failed to fetch autocomplete/suggest:", err);
+            resultsContainer.style.display = 'none';
+        }
+    }, 500));
+
+    document.getElementById('searchForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        const query = input.value.trim();
+        if (query) {
+            window.location.href = baseUrl + encodeURIComponent(query);
+        }
+    });
+
+    document.addEventListener('click', function (event) {
+        if (!event.target.closest('.search-container') && event.target !== input) {
+            resultsContainer.style.display = 'none';
+        }
+    });
+
+    input.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            resultsContainer.style.display = 'none';
+            input.blur();
+        }
+    });
+</script>
