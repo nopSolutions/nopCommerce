@@ -91,9 +91,6 @@
 
     // ABC: custom stuff
     bool isHawthorne = frontEndService.StoreIsHawthorne(await storeContext.GetCurrentStoreAsync());
-    string sliRacConfig = isHawthorne ?
-                        "https://hawthorneonline.resultspage.com/autocomplete/custom/sli-rac.config.js" :
-                        "https://abcwarehouse.resultspage.com/autocomplete/sli-rac.config.js";
 
     string equalPaymentModalTextColor = isHawthorne ?
         "gray" :
@@ -117,18 +114,6 @@
     <meta name="generator" content="nopCommerce" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,700&display=swap' rel='stylesheet' type='text/css'>
-    
-    @* ABC: link SLI stylesheet based on store *@
-    @if (!isHawthorne)
-    {
-        <link rel="stylesheet" type="text/css" href="//abcwarehouse.resultspage.com/autocomplete/sli-rac.css">
-    }
-    @if (isHawthorne)
-    {
-        <link rel="stylesheet" type="text/css" href="//hawthorneonline.resultspage.com/autocomplete/sli-rac.css">
-        
-    }
-
 
     @Html.NopHeadCustom()
     @*This is used so that themes can inject content into the header*@

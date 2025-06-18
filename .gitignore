@@ -206,7 +206,6 @@ src/Presentation/Nop.Web/Resources
 src/Presentation/Nop.Web/wwwroot/product_images
 src/Presentation/Nop.Web/wwwroot/promo_banners/*
 !src/Presentation/Nop.Web/wwwroot/promo_banners/placeholder.txt
-src/Presentation/Nop.Web/SliExport.xml
 src/Presentation/Nop.Web/wwwroot/bundle_images/
 src/Presentation/Nop.Web/wwwroot/energy_guides/
 src/Presentation/Nop.Web/wwwroot/product_specs/
@@ -215,7 +214,6 @@ src/Presentation/Nop.Web/wwwroot/rebate_images/
 src/Presentation/Nop.Web/wwwroot/css/Slick/
 src/Presentation/Nop.Web/ImageReport.xlsx
 src/Presentation/Nop.Web/wwwroot/ImageReport.xlsx
-src/Presentation/Nop.Web/NopCommerceSliExport.xml
 src/Presentation/Nop.Web/wwwroot/ContentAdmin/*
 src/Presentation/Nop.Web/Themes/**/Content/css/theme.custom*.css
 
