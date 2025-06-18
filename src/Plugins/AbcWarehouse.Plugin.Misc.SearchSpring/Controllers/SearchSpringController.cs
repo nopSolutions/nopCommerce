@@ -76,6 +76,14 @@ namespace AbcWarehouse.Plugin.Misc.SearchSpring.Controllers
                 return Redirect(results.RedirectResponse); // performs 302 HTTP redirect
             }
 
+            // If an ABC item number was provided and one response is given,
+            // redirect to the product URL
+            if (results.Results.Count() == 1 && q.All(char.IsDigit))
+            {
+                var productUrl = results.Results.First().ProductUrl;
+                return Redirect(productUrl);
+            }
+
             results.PageNumber = page;
             results.Query = q;
 

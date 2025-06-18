@@ -258,6 +258,10 @@
       {
         "SystemName": "SevenSpikes.Nop.Plugins.InstantSearch",
         "Version": "4.4"
+      },
+      {
+        "SystemName": "AbcWarehouse.Plugin.Misc.SearchSpring",
+        "Version": "1.0.0"
       }
     ],
     "PluginNamesToUninstall": [],
