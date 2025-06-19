@@ -6,7 +6,11 @@
     Layout = "_ColumnsOne";
 
     //title
-    NopHtml.AddTitleParts(Model.Subject);
+    NopHtml.AddTitleParts(Model.MetaTitle);
+
+    //meta
+    NopHtml.AddMetaDescriptionParts(Model.MetaDescription);
+
     //page class
     NopHtml.AppendPageCssClassParts("html-forum-topic-page");
 }

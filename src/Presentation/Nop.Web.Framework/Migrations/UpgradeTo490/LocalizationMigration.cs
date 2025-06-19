@@ -266,6 +266,9 @@ public class LocalizationMigration : MigrationBase
             ["Enums.Nop.Core.Domain.Forums.EditorType.MarkdownEditor"] = "Markdown editor",
             ["MarkdownEditor.TabWrite"] = "Write",
             ["MarkdownEditor.TabPreview"] = "Preview",            
+
+            //#7747
+            ["Forum.TruncatePostfix"] = "...",
         }, languageId);
 
         #endregion

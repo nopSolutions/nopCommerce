@@ -1059,7 +1059,8 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(settings => settings.PostMaxLength, options => options.Ignore())
             .ForMember(settings => settings.PrivateMessagesPageSize, options => options.Ignore())
             .ForMember(settings => settings.StrippedTopicMaxLength, options => options.Ignore())
-            .ForMember(settings => settings.TopicSubjectMaxLength, options => options.Ignore());
+            .ForMember(settings => settings.TopicSubjectMaxLength, options => options.Ignore())
+            .ForMember(settings => settings.TopicMetaDescriptionLength, options => options.Ignore());
     }
 
     /// <summary>
