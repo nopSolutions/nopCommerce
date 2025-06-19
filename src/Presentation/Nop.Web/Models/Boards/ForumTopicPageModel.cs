@@ -24,4 +24,7 @@ public partial record ForumTopicPageModel : BaseNopModel
     public int PostsPageIndex { get; set; }
     public int PostsPageSize { get; set; }
     public int PostsTotalRecords { get; set; }
+
+    public string MetaDescription { get; set; }
+    public string MetaTitle { get; set; }
 }

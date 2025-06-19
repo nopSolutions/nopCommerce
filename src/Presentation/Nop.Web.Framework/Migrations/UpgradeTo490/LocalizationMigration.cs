@@ -258,6 +258,9 @@ public class LocalizationMigration : MigrationBase
             ["Account.ForumSubscriptions.Description"] = "You will receive an email when a new forum topic/post is created.",
             ["Admin.ContentManagement.MessageTemplates.Fields.BccEmailAddresses.Hint"] = "The blind carbon copy (BCC) recipients for this email message.",
             ["BackInStockSubscriptions.Tooltip"] = "You'll receive a onetime email when this product is available for ordering again. We will not send you any other emails or add you to our newsletter; you will only be emailed about this product!",
+
+            //#7747
+            ["Forum.TruncatePostfix"] = "...",
         }, languageId);
 
         #endregion

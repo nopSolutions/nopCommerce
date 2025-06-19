@@ -1884,7 +1884,8 @@ public partial class InstallationService
             ActiveDiscussionsFeedCount = 25,
             ForumFeedsEnabled = false,
             ForumFeedCount = 10,
-            ForumSearchTermMinimumLength = 3
+            ForumSearchTermMinimumLength = 3,
+            TopicMetaDescriptionLength = 160
         });
 
         await SaveSettingAsync(dictionary, new VendorSettings
