@@ -102,17 +102,35 @@ namespace Nop.Plugin.Misc.AbcCore.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public override async Task<IActionResult> Edit(CategoryModel model, bool continueEditing)
         {
-            // Saves Hawthorne picture ID
-            var hawthornePictureId = Convert.ToInt32(Request.Form["HawthornePictureId"].ToString());
-            if (hawthornePictureId != 0)
-            {
-                var category = await _categoryService.GetCategoryByIdAsync(model.Id);
-                await _genericAttributeService.SaveAttributeAsync<int>(
-                    category, "HawthornePictureId", hawthornePictureId
-                );
-            }
+            await SaveHawthorneIntDataAsync(model.Id, "HawthornePictureId");
+            await SaveHawthorneStringDataAsync(model.Id, "HawthorneMetaTitle");
+            await SaveHawthorneStringDataAsync(model.Id, "HawthorneMetaDescription");
 
             return await base.Edit(model, continueEditing);
+        }
+
+        private async Task SaveHawthorneIntDataAsync(int categoryId, string key)
+        {
+            var value = Convert.ToInt32(Request.Form[key].ToString());
+            if (value != 0)
+            {
+                var category = await _categoryService.GetCategoryByIdAsync(categoryId);
+                await _genericAttributeService.SaveAttributeAsync<int>(
+                    category, key, value
+                );
+            }
+        }
+        
+        private async Task SaveHawthorneStringDataAsync(int categoryId, string key)
+        {
+            var value = Request.Form[key].ToString();
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                var category = await _categoryService.GetCategoryByIdAsync(categoryId);
+                await _genericAttributeService.SaveAttributeAsync<string>(
+                    category, key, value
+                );
+            }
         }
     }
 }

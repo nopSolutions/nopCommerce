@@ -78,11 +78,19 @@ namespace Nop.Plugin.Misc.AbcCore.Components
                 var hawthornePictureId = await _genericAttributeService.GetAttributeAsync<Category, int>(
                     categoryId, "HawthornePictureId"
                 );
+                var hawthorneMetaTitle = await _genericAttributeService.GetAttributeAsync<Category, string>(
+                    categoryId, "HawthorneMetaTitle"
+                );
+                var hawthorneMetaDescription = await _genericAttributeService.GetAttributeAsync<Category, string>(
+                    categoryId, "HawthorneMetaDescription"
+                );
 
                 var model = new AbcCategoryDetailsModel
                 {
                     CategoryId = categoryId,
-                    HawthornePictureId = hawthornePictureId
+                    HawthornePictureId = hawthornePictureId,
+                    HawthorneMetaTitle = hawthorneMetaTitle,
+                    HawthorneMetaDescription = hawthorneMetaDescription
                 };
 
                 return View("~/Plugins/Misc.AbcCore/Views/CategoryDetails.cshtml", model);

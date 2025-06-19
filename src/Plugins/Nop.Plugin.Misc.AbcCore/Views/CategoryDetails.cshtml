@@ -2,7 +2,7 @@
 
 @model AbcCategoryDetailsModel
 
-<nop-card id="HawthorneImage" asp-name="hawthorne-image" asp-icon="fas fa-info" asp-title="Hawthorne Image" asp-hide-block-attribute-name="HawthorneImage" asp-hide="false">
+<nop-card id="HawthorneData" asp-name="hawthorne-data" asp-icon="fas fa-info" asp-title="Hawthorne Data" asp-hide-block-attribute-name="HawthorneImage" asp-hide="false">
     <div class="card-body">
         <div class="card card-default">
             <div class="card-body">
@@ -18,12 +18,30 @@
                         <span asp-validation-for="@Model.HawthornePictureId"></span>
                     </div>
                 </div>
+                <div class="form-group advanced-setting row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.HawthorneMetaTitle" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.HawthorneMetaTitle" />
+                        <span asp-validation-for="@Model.HawthorneMetaTitle"></span>
+                    </div>
+                </div>
+                <div class="form-group advanced-setting row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.HawthorneMetaDescription" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-textarea asp-for="@Model.HawthorneMetaDescription"></nop-textarea>
+                        <span asp-validation-for="@Model.HawthorneMetaDescription"></span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <script type="text/javascript">
         $(document).ready(function () {
-            var element = document.getElementById('HawthorneImage');
+            var element = document.getElementById('HawthorneData');
             var parent = document.getElementById('category-cards');
 
             parent.prepend(element);

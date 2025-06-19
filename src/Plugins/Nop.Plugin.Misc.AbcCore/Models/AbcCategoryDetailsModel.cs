@@ -12,5 +12,9 @@ namespace Nop.Plugin.Misc.AbcCore.Models
 
         [UIHint("Picture")]
         public int HawthornePictureId { get; set; }
+
+        public string HawthorneMetaTitle { get; set; }
+
+        public string HawthorneMetaDescription { get; set; }
     }
 }
