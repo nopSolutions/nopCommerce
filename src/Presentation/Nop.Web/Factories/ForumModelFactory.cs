@@ -342,6 +342,7 @@ public partial class ForumModelFactory : IForumModelFactory
                 model.WatchTopicText = await _localizationService.GetResourceAsync("Forum.UnwatchTopic");
             }
         }
+        model.ForumEditor = _forumSettings.ForumEditor;
         model.PostsPageIndex = posts.PageIndex;
         model.PostsPageSize = posts.PageSize;
         model.PostsTotalRecords = posts.TotalCount;
@@ -554,16 +555,20 @@ public partial class ForumModelFactory : IForumModelFactory
                 if (quotePost != null && quotePost.TopicId == forumTopic.Id)
                 {
                     var customer = await _customerService.GetCustomerByIdAsync(quotePost.CustomerId);
-
+                    var username = await _customerService.FormatUsernameAsync(customer);
                     var quotePostText = quotePost.Text;
 
                     switch (_forumSettings.ForumEditor)
                     {
                         case EditorType.SimpleTextBox:
-                            text = $"{await _customerService.FormatUsernameAsync(customer)}:\n{quotePostText}\n";
+                            text = $"{username}:\n{quotePostText}\n";
                             break;
                         case EditorType.BBCodeEditor:
-                            text = $"[quote={await _customerService.FormatUsernameAsync(customer)}]{_bbCodeHelper.RemoveQuotes(quotePostText)}[/quote]";
+                            text = $"[quote={username}]{_bbCodeHelper.RemoveQuotes(quotePostText)}[/quote]";
+                            break;
+                        case EditorType.MarkdownEditor:
+                            var quotedLines = quotePostText.Split('\n').Select(line => $"> {line}");
+                            text = $"**{username}:**\n\n{string.Join("\n", quotedLines)}\n\n";
                             break;
                     }
                     model.Text = text;

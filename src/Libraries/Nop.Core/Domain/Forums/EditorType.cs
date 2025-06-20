@@ -13,5 +13,10 @@ public enum EditorType
     /// <summary>
     /// BB code editor
     /// </summary>
-    BBCodeEditor = 20
+    BBCodeEditor = 20,
+
+    /// <summary>
+    /// Markdown editor
+    /// </summary>
+    MarkdownEditor = 30
 }
