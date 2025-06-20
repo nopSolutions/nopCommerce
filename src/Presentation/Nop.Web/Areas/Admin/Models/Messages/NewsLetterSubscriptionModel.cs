@@ -26,7 +26,6 @@ public partial record NewsLetterSubscriptionModel : BaseNopEntityModel
     [DataType(DataType.EmailAddress)]
     [NopResourceDisplayName("Admin.Promotions.NewsLetterSubscription.Fields.Email")]
     public string Email { get; set; }
-    public bool EmailNotEditable { get; set; }
 
     public string SubscriptionTypeName { get; set; }
 

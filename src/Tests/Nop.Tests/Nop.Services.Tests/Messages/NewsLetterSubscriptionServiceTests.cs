@@ -24,7 +24,12 @@ public class NewsLetterSubscriptionServiceTests : ServiceTest
     [Test]
     public async Task VerifyActiveInsertTriggersSubscribeEvent()
     {
-        var subscription = new NewsLetterSubscription { Active = true, Email = "test@test.com" };
+        var subscription = new NewsLetterSubscription
+        { 
+            Active = true, 
+            Email = "test@test.com",
+            TypeId = 1
+        };
         await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(subscription);
 
         var eventType = NewsLetterSubscriptionConsumer.LastEventType;
@@ -40,7 +45,12 @@ public class NewsLetterSubscriptionServiceTests : ServiceTest
     [Test]
     public async Task VerifyDeleteTriggersUnsubscribeEvent()
     {
-        var subscription = new NewsLetterSubscription { Active = true, Email = "test@test.com" };
+        var subscription = new NewsLetterSubscription
+        {
+            Active = true,
+            Email = "test@test.com",
+            TypeId = 1
+        };
         await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(subscription);
         await _newsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(subscription);
 
@@ -53,7 +63,11 @@ public class NewsLetterSubscriptionServiceTests : ServiceTest
     [Test]
     public async Task VerifyInsertEventIsFired()
     {
-        var subscription = new NewsLetterSubscription { Email = "test@test.com" };
+        var subscription = new NewsLetterSubscription
+        { 
+            Email = "test@test.com",
+            TypeId = 1
+        };
 
         await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(subscription);
 
@@ -73,7 +87,8 @@ public class NewsLetterSubscriptionServiceTests : ServiceTest
         {
             Active = true,
             Email = NopTestsDefaults.AdminEmail,
-            NewsLetterSubscriptionGuid = guid
+            NewsLetterSubscriptionGuid = guid,
+            TypeId = 1
         };
 
         await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(subscription);
@@ -104,7 +119,8 @@ public class NewsLetterSubscriptionServiceTests : ServiceTest
         {
             Active = true,
             Email = NopTestsDefaults.AdminEmail,
-            NewsLetterSubscriptionGuid = guid
+            NewsLetterSubscriptionGuid = guid,
+            TypeId = 1
         };
         await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(subscription);
 
