@@ -114,11 +114,11 @@ else
         </div>
 
         <div class="products-container center-2">
-            <div class="search-top-bar">
-
-                <form method="get" id="sortForm">
+            <div class="searchspring-top-bar">
+                <div class="search-query">Search for "@query" (@Model.TotalResults)</div>
+                <form method="get">
                     <input type="hidden" name="q" value="@Model.Query" />
-                    <select name="sort" onchange="this.form.submit()">
+                    <select name="sort" id="searchspring-sort" onchange="this.form.submit()">
                         @foreach (var option in Model.SortOptions)
                         {
                             var sortValue = $"{option.Field}_{option.Direction}";
@@ -129,11 +129,7 @@ else
                         }
                     </select>
                 </form>
-
-                <div class="search-query">Search for "@query" (@Model.TotalResults)</div>
-
                 <button id="filterToggle" class="mobile-filter-btn">Filters</button>
-
             </div>
             <div class="products-wrapper">
                 <div class="product-grid">

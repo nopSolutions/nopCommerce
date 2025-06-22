@@ -321,18 +321,9 @@ h2#searchspring-no_results {
 .remove-button {
     margin-bottom: 3px;
 }
-form#sortForm {
-    display: inline-block;
-    float: left;
-	display: none; /*Temp hide */
-}
 .search-query {
     display: inline-block;
 	margin-bottom: 10px;
-}
-.search-top-bar {
-    text-align: center;
-	padding-bottom: 10px;
 }
 
 .mobile-filter-btn {

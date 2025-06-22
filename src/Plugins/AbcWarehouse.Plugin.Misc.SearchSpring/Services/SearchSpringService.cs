@@ -19,7 +19,10 @@ namespace AbcWarehouse.Plugin.Misc.SearchSpring.Services
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<SearchResultModel> SearchAsync(string query, string sessionId = null, string userId = null, string siteId = "4lt84w", int page = 1, Dictionary<string, List<string>> filters = null, string sort = null)
+        public async Task<SearchResultModel> SearchAsync(string query, string sessionId = null,
+                                                         string userId = null, string siteId = "4lt84w",
+                                                         int page = 1, Dictionary<string, List<string>> filters = null,
+                                                         string sort = null)
         {
             if (string.IsNullOrWhiteSpace(query))
                 throw new ArgumentException("Search query must not be null or empty.", nameof(query));
