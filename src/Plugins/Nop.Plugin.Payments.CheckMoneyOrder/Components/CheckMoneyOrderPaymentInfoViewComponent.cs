@@ -24,7 +24,13 @@ public class CheckMoneyOrderViewComponent : NopViewComponent
         _workContext = workContext;
     }
 
-    /// <returns>A task that represents the asynchronous operation</returns>
+    /// <summary>
+    /// Invoke view component
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the view component result
+    /// </returns>
     public async Task<IViewComponentResult> InvokeAsync()
     {
         var store = await _storeContext.GetCurrentStoreAsync();
@@ -35,6 +41,6 @@ public class CheckMoneyOrderViewComponent : NopViewComponent
                 x => x.DescriptionText, (await _workContext.GetWorkingLanguageAsync()).Id, store.Id)
         };
 
-        return View("~/Plugins/Payments.CheckMoneyOrder/Views/PaymentInfo.cshtml", model);
+        return await ViewAsync("~/Plugins/Payments.CheckMoneyOrder/Views/PaymentInfo.cshtml", model);
     }
 }

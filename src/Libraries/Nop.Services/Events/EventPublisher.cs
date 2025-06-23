@@ -48,7 +48,7 @@ public partial class EventPublisher : IEventPublisher
                 }
             }
     }
-
+    
     /// <summary>
     /// Publish event to consumers
     /// </summary>
@@ -63,7 +63,7 @@ public partial class EventPublisher : IEventPublisher
             try
             {
                 //try to handle published event
-                consumer.HandleEventAsync(@event).Wait();
+                consumer.HandleEvent(@event);
 
                 if (@event is IStopProcessingEvent { StopProcessing: true })
                     break;

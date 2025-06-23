@@ -13,9 +13,18 @@ public partial class CategoryNavigationViewComponent : NopViewComponent
         _catalogModelFactory = catalogModelFactory;
     }
 
+    /// <summary>
+    /// Invoke view component
+    /// </summary>
+    /// <param name="currentCategoryId">The current category identifier</param>
+    /// <param name="currentProductId">The current product identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the view component result
+    /// </returns>
     public async Task<IViewComponentResult> InvokeAsync(int currentCategoryId, int currentProductId)
     {
         var model = await _catalogModelFactory.PrepareCategoryNavigationModelAsync(currentCategoryId, currentProductId);
-        return View(model);
+        return await ViewAsync(model);
     }
 }

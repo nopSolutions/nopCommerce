@@ -16,12 +16,21 @@ public partial class BlogMonthsViewComponent : NopViewComponent
         _blogModelFactory = blogModelFactory;
     }
 
+    /// <summary>
+    /// Invoke view component
+    /// </summary>
+    /// <param name="currentCategoryId">The current category identifier</param>
+    /// <param name="currentProductId">The current product identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the view component result
+    /// </returns>
     public async Task<IViewComponentResult> InvokeAsync(int currentCategoryId, int currentProductId)
     {
         if (!_blogSettings.Enabled)
             return Content("");
 
         var model = await _blogModelFactory.PrepareBlogPostYearModelAsync();
-        return View(model);
+        return await ViewAsync(model);
     }
 }

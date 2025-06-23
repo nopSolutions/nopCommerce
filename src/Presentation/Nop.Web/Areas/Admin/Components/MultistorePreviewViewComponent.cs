@@ -39,7 +39,7 @@ public partial class MultistorePreviewViewComponent : NopViewComponent
 
         var multistorePreviewModels = await _commonModelFactory.PrepareMultistorePreviewModelsAsync(entityModel);
 
-        return View(multistorePreviewModels);
+        return await ViewAsync(multistorePreviewModels);
     }
 
     #endregion

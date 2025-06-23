@@ -17,12 +17,19 @@ public partial class StoreThemeSelectorViewComponent : NopViewComponent
         _storeInformationSettings = storeInformationSettings;
     }
 
+    /// <summary>
+    /// Invoke view component
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the view component result
+    /// </returns>
     public async Task<IViewComponentResult> InvokeAsync()
     {
         if (!_storeInformationSettings.AllowCustomerToSelectTheme)
             return Content("");
 
         var model = await _commonModelFactory.PrepareStoreThemeSelectorModelAsync();
-        return View(model);
+        return await ViewAsync(model);
     }
 }

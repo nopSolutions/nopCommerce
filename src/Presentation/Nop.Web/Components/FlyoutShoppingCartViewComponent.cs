@@ -21,6 +21,13 @@ public partial class FlyoutShoppingCartViewComponent : NopViewComponent
         _shoppingCartSettings = shoppingCartSettings;
     }
 
+    /// <summary>
+    /// Invoke view component
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the view component result
+    /// </returns>
     public async Task<IViewComponentResult> InvokeAsync()
     {
         if (!_shoppingCartSettings.MiniShoppingCartEnabled)
@@ -30,6 +37,6 @@ public partial class FlyoutShoppingCartViewComponent : NopViewComponent
             return Content("");
 
         var model = await _shoppingCartModelFactory.PrepareMiniShoppingCartModelAsync();
-        return View(model);
+        return await ViewAsync(model);
     }
 }

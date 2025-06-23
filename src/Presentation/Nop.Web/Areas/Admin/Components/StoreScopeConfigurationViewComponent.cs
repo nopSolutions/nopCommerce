@@ -41,7 +41,7 @@ public partial class StoreScopeConfigurationViewComponent : NopViewComponent
         if (model.Stores.Count < 2)
             return Content(string.Empty);
 
-        return View(model);
+        return await ViewAsync(model);
     }
 
     #endregion

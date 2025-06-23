@@ -33,6 +33,15 @@ public partial class RecentlyViewedProductsBlockViewComponent : NopViewComponent
         _storeMappingService = storeMappingService;
     }
 
+    /// <summary>
+    /// Invoke view component
+    /// </summary>
+    /// <param name="productThumbPictureSize">The product thumb picture size</param>
+    /// <param name="preparePriceModel">Whether to prepare the price model</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the view component result
+    /// </returns>
     public async Task<IViewComponentResult> InvokeAsync(int? productThumbPictureSize, bool? preparePriceModel)
     {
         if (!_catalogSettings.RecentlyViewedProductsEnabled)
@@ -55,6 +64,6 @@ public partial class RecentlyViewedProductsBlockViewComponent : NopViewComponent
             preparePictureModel,
             productThumbPictureSize));
 
-        return View(model);
+        return await ViewAsync(model);
     }
 }

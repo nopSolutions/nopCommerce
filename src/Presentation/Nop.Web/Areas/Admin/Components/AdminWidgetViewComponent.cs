@@ -44,7 +44,7 @@ public partial class AdminWidgetViewComponent : NopViewComponent
         if (!models.Any())
             return Content(string.Empty);
 
-        return View(models);
+        return await ViewAsync(models);
     }
 
     #endregion

@@ -21,6 +21,17 @@ public static class EventPublisherExtensions
     }
 
     /// <summary>
+    /// Publish ModelPrepared event
+    /// </summary>
+    /// <typeparam name="T">Type of the model</typeparam>
+    /// <param name="eventPublisher">Event publisher</param>
+    /// <param name="model">Model</param>
+    public static void ModelPrepared<T>(this IEventPublisher eventPublisher, T model)
+    {
+        eventPublisher.Publish(new ModelPreparedEvent<T>(model));
+    }
+
+    /// <summary>
     /// Publish ModelReceived event
     /// </summary>
     /// <typeparam name="T">Type of the model</typeparam>

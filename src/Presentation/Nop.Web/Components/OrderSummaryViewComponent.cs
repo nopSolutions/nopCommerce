@@ -26,11 +26,20 @@ public partial class OrderSummaryViewComponent : NopViewComponent
         _workContext = workContext;
     }
 
+    /// <summary>
+    /// Invoke view component
+    /// </summary>
+    /// <param name="prepareAndDisplayOrderReviewData">Whether to prepare and display order review data</param>
+    /// <param name="overriddenModel">Overridden model</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the view component result
+    /// </returns>
     public async Task<IViewComponentResult> InvokeAsync(bool? prepareAndDisplayOrderReviewData, ShoppingCartModel overriddenModel)
     {
         //use already prepared (shared) model
         if (overriddenModel != null)
-            return View(overriddenModel);
+            return await ViewAsync(overriddenModel);
 
         //if not passed, then create a new model
         var store = await _storeContext.GetCurrentStoreAsync();
@@ -40,6 +49,6 @@ public partial class OrderSummaryViewComponent : NopViewComponent
         model = await _shoppingCartModelFactory.PrepareShoppingCartModelAsync(model, cart,
             isEditable: false,
             prepareAndDisplayOrderReviewData: prepareAndDisplayOrderReviewData.GetValueOrDefault());
-        return View(model);
+        return await ViewAsync(model);
     }
 }

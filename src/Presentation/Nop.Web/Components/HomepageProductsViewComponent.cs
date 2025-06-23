@@ -25,6 +25,14 @@ public partial class HomepageProductsViewComponent : NopViewComponent
         _storeMappingService = storeMappingService;
     }
 
+    /// <summary>
+    /// Invoke view component
+    /// </summary>
+    /// <param name="productThumbPictureSize">The product thumb picture size</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the view component result
+    /// </returns>
     public async Task<IViewComponentResult> InvokeAsync(int? productThumbPictureSize)
     {
         var products = await (await _productService.GetAllProductsDisplayedOnHomepageAsync())
@@ -40,6 +48,6 @@ public partial class HomepageProductsViewComponent : NopViewComponent
 
         var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, true, true, productThumbPictureSize)).ToList();
 
-        return View(model);
+        return await ViewAsync(model);
     }
 }

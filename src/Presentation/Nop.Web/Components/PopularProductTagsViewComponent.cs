@@ -16,6 +16,13 @@ public partial class PopularProductTagsViewComponent : NopViewComponent
         _catalogModelFactory = catalogModelFactory;
     }
 
+    /// <summary>
+    /// Invoke view component
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the view component result
+    /// </returns>
     public async Task<IViewComponentResult> InvokeAsync()
     {
         if (_catalogSettings.NumberOfProductTags == 0)
@@ -25,6 +32,6 @@ public partial class PopularProductTagsViewComponent : NopViewComponent
         if (!model.Tags.Any())
             return Content("");
 
-        return View(model);
+        return await ViewAsync(model);
     }
 }

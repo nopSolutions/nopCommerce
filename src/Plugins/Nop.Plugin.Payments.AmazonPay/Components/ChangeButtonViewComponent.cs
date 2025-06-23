@@ -65,7 +65,7 @@ public class ChangeButtonViewComponent : NopViewComponent
 
         model.CheckoutSessionId = await _amazonPayCheckoutService.GetCheckoutSessionIdAsync();
 
-        return View("~/Plugins/Payments.AmazonPay/Views/ChangeLink.cshtml", model);
+        return await ViewAsync("~/Plugins/Payments.AmazonPay/Views/ChangeLink.cshtml", model);
     }
 
     #endregion

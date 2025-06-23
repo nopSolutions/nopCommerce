@@ -32,6 +32,14 @@ public partial class ShoppingCartEstimateShippingViewComponent : NopViewComponen
         _shippingSettings = shippingSettings;
     }
 
+    /// <summary>
+    /// Invoke view component
+    /// </summary>
+    /// <param name="prepareAndDisplayOrderReviewData">Whether to prepare and display order review data</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the view component result
+    /// </returns>
     public async Task<IViewComponentResult> InvokeAsync(bool? prepareAndDisplayOrderReviewData)
     {
         if (!_shippingSettings.EstimateShippingCartPageEnabled)
@@ -44,6 +52,6 @@ public partial class ShoppingCartEstimateShippingViewComponent : NopViewComponen
         if (!model.Enabled)
             return Content(string.Empty);
 
-        return View(model);
+        return await ViewAsync(model);
     }
 }

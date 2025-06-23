@@ -17,6 +17,13 @@ public partial class VendorNavigationViewComponent : NopViewComponent
         _vendorSettings = vendorSettings;
     }
 
+    /// <summary>
+    /// Invoke view component
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the view component result
+    /// </returns>
     public async Task<IViewComponentResult> InvokeAsync()
     {
         if (_vendorSettings.VendorsBlockItemsToDisplay == 0)
@@ -26,6 +33,6 @@ public partial class VendorNavigationViewComponent : NopViewComponent
         if (!model.Vendors.Any())
             return Content("");
 
-        return View(model);
+        return await ViewAsync(model);
     }
 }

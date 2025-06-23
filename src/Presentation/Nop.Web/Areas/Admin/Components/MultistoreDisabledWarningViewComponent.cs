@@ -21,9 +21,15 @@ public partial class MultistoreDisabledWarningViewComponent : NopViewComponent
         _storeService = storeService;
     }
 
+    /// <summary>
+    /// Invoke view component
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the view component result
+    /// </returns>
     public async Task<IViewComponentResult> InvokeAsync()
     {
-
         //action displaying notification (warning) to a store owner that "limit per store" feature is ignored
 
         //default setting

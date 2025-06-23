@@ -25,15 +25,18 @@ public class GAVerificationViewComponent : NopViewComponent
     #region Methods
 
     /// <summary>
-    ///  Invoke view component
+    /// Invoke view component
     /// </summary>
     /// <param name="widgetZone">Widget zone name</param>
     /// <param name="additionalData">Additional data</param>
-    /// <returns>View component result</returns>
-    public IViewComponentResult Invoke(string widgetZone, object additionalData)
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the view component result
+    /// </returns>
+    public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
     {
         var model = new TokenModel();
-        return View("~/Plugins/MultiFactorAuth.GoogleAuthenticator/Views/Customer/GAVefification.cshtml", model);
+        return await ViewAsync("~/Plugins/MultiFactorAuth.GoogleAuthenticator/Views/Customer/GAVefification.cshtml", model);
     }
 
     #endregion

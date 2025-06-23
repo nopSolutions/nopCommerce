@@ -8,6 +8,13 @@ namespace Nop.Plugin.Payments.Manual.Components;
 
 public class PaymentManualViewComponent : NopViewComponent
 {
+    /// <summary>
+    /// Invoke view component
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the view component result
+    /// </returns>
     public async Task<IViewComponentResult> InvokeAsync()
     {
         var model = new PaymentInfoModel()
@@ -53,6 +60,6 @@ public class PaymentManualViewComponent : NopViewComponent
                 selectedYear.Selected = true;
         }
 
-        return View("~/Plugins/Payments.Manual/Views/PaymentInfo.cshtml", model);
+        return await ViewAsync("~/Plugins/Payments.Manual/Views/PaymentInfo.cshtml", model);
     }
 }

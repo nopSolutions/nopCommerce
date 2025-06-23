@@ -87,7 +87,7 @@ public class DoNotUseWithAmazonPayViewComponent : NopViewComponent
         model.DoNotUseWithAmazonPay = entity != null &&
             await _genericAttributeService.GetAttributeAsync<bool>(entity, AmazonPayDefaults.DoNotUseWithAmazonPayAttributeName);
 
-        return View("~/Plugins/Payments.AmazonPay/Views/DoNotUseWithAmazonPay.cshtml", model);
+        return await ViewAsync("~/Plugins/Payments.AmazonPay/Views/DoNotUseWithAmazonPay.cshtml", model);
     }
 
     #endregion

@@ -42,6 +42,15 @@ public partial class ProductsAlsoPurchasedViewComponent : NopViewComponent
         _storeMappingService = storeMappingService;
     }
 
+    /// <summary>
+    /// Invoke view component
+    /// </summary>
+    /// <param name="productId">The product identifier</param>
+    /// <param name="productThumbPictureSize">The product thumb picture size</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the view component result
+    /// </returns>
     public async Task<IViewComponentResult> InvokeAsync(int productId, int? productThumbPictureSize)
     {
         if (!_catalogSettings.ProductsAlsoPurchasedEnabled)
@@ -64,6 +73,6 @@ public partial class ProductsAlsoPurchasedViewComponent : NopViewComponent
             return Content("");
 
         var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, true, true, productThumbPictureSize)).ToList();
-        return View(model);
+        return await ViewAsync(model);
     }
 }

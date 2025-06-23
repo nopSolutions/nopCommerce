@@ -16,12 +16,19 @@ public partial class HomepageNewsViewComponent : NopViewComponent
         _newsSettings = newsSettings;
     }
 
+    /// <summary>
+    /// Invoke view component
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the view component result
+    /// </returns>
     public async Task<IViewComponentResult> InvokeAsync()
     {
         if (!_newsSettings.Enabled || !_newsSettings.ShowNewsOnMainPage)
             return Content("");
 
         var model = await _newsModelFactory.PrepareHomepageNewsItemsModelAsync();
-        return View(model);
+        return await ViewAsync(model);
     }
 }

@@ -38,7 +38,7 @@ public partial class AdminLanguageSelectorViewComponent : NopViewComponent
         //prepare model
         var model = await _commonModelFactory.PrepareLanguageSelectorModelAsync();
 
-        return View(model);
+        return await ViewAsync(model);
     }
 
     #endregion

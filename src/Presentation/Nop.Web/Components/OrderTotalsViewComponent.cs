@@ -25,12 +25,20 @@ public partial class OrderTotalsViewComponent : NopViewComponent
         _workContext = workContext;
     }
 
+    /// <summary>
+    /// Invoke view component
+    /// </summary>
+    /// <param name="isEditable">Whether model is editable</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the view component result
+    /// </returns>
     public async Task<IViewComponentResult> InvokeAsync(bool isEditable)
     {
         var store = await _storeContext.GetCurrentStoreAsync();
         var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.ShoppingCart, store.Id);
 
         var model = await _shoppingCartModelFactory.PrepareOrderTotalsModelAsync(cart, isEditable);
-        return View(model);
+        return await ViewAsync(model);
     }
 }

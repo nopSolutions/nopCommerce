@@ -13,6 +13,15 @@ public partial class WidgetViewComponent : NopViewComponent
         _widgetModelFactory = widgetModelFactory;
     }
 
+    /// <summary>
+    /// Invoke view component
+    /// </summary>
+    /// <param name="widgetZone">Widget zone name</param>
+    /// <param name="additionalData">Additional data</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the view component result
+    /// </returns>
     public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData = null)
     {
         var model = await _widgetModelFactory.PrepareRenderWidgetModelAsync(widgetZone, additionalData);
@@ -21,6 +30,6 @@ public partial class WidgetViewComponent : NopViewComponent
         if (!model.Any())
             return Content("");
 
-        return View(model);
+        return await ViewAsync(model);
     }
 }

@@ -70,11 +70,19 @@ public class WidgetsGoogleAnalyticsViewComponent : NopViewComponent
 
     #region Methods
 
-    /// <returns>A task that represents the asynchronous operation</returns>
+    /// <summary>
+    /// Invoke view component
+    /// </summary>
+    /// <param name="widgetZone">Widget zone name</param>
+    /// <param name="additionalData">Additional data</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the view component result
+    /// </returns>
     public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
     {
         var script = await GetScriptAsync();
-        return View("~/Plugins/Widgets.GoogleAnalytics/Views/PublicInfo.cshtml", script);
+        return await ViewAsync("~/Plugins/Widgets.GoogleAnalytics/Views/PublicInfo.cshtml", script);
     }
 
     #endregion

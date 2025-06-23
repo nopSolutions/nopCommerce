@@ -13,6 +13,14 @@ public partial class PollBlockViewComponent : NopViewComponent
         _pollModelFactory = pollModelFactory;
     }
 
+    /// <summary>
+    /// Invoke view component
+    /// </summary>
+    /// <param name="systemKeyword">System keyword</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the view component result
+    /// </returns>
     public async Task<IViewComponentResult> InvokeAsync(string systemKeyword)
     {
 
@@ -23,6 +31,6 @@ public partial class PollBlockViewComponent : NopViewComponent
         if (model == null)
             return Content("");
 
-        return View(model);
+        return await ViewAsync(model);
     }
 }

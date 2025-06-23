@@ -12,4 +12,13 @@ public partial interface IConsumer<T>
     /// <param name="eventMessage">Event</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     Task HandleEventAsync(T eventMessage);
+
+    /// <summary>
+    /// Handle event
+    /// </summary>
+    /// <param name="eventMessage">Event</param>
+    void HandleEvent(T eventMessage)
+    {
+        HandleEventAsync(eventMessage).Wait();
+    }
 }

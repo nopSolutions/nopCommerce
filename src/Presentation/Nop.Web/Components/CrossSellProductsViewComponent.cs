@@ -40,6 +40,14 @@ public partial class CrossSellProductsViewComponent : NopViewComponent
         _shoppingCartSettings = shoppingCartSettings;
     }
 
+    /// <summary>
+    /// Invoke view component
+    /// </summary>
+    /// <param name="productThumbPictureSize">The product thumb picture size</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the view component result
+    /// </returns>
     public async Task<IViewComponentResult> InvokeAsync(int? productThumbPictureSize)
     {
         var store = await _storeContext.GetCurrentStoreAsync();
@@ -64,6 +72,6 @@ public partial class CrossSellProductsViewComponent : NopViewComponent
                 productThumbPictureSize: productThumbPictureSize, forceRedirectionAfterAddingToCart: true))
             .ToList();
 
-        return View(model);
+        return await ViewAsync(model);
     }
 }

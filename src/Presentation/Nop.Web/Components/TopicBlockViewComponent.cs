@@ -13,11 +13,19 @@ public partial class TopicBlockViewComponent : NopViewComponent
         _topicModelFactory = topicModelFactory;
     }
 
+    /// <summary>
+    /// Invoke view component
+    /// </summary>
+    /// <param name="systemName">The topic system name</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the view component result
+    /// </returns>
     public async Task<IViewComponentResult> InvokeAsync(string systemName)
     {
         var model = await _topicModelFactory.PrepareTopicModelBySystemNameAsync(systemName);
         if (model == null)
             return Content("");
-        return View(model);
+        return await ViewAsync(model);
     }
 }

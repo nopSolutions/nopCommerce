@@ -61,7 +61,7 @@ public class PaymentInfoViewComponent : NopViewComponent
             if (string.IsNullOrEmpty(signInModel?.Signature))
                 return Content(string.Empty);
 
-            return View("~/Plugins/Payments.AmazonPay/Views/SignIn.cshtml", signInModel);
+            return await ViewAsync("~/Plugins/Payments.AmazonPay/Views/SignIn.cshtml", signInModel);
         }
 
         if (values != null && values.ContainsKey("controller") && (values["controller"]?.Equals("Checkout") ?? false))
@@ -73,7 +73,7 @@ public class PaymentInfoViewComponent : NopViewComponent
             if (model is null)
                 return Content(string.Empty);
 
-            return View("~/Plugins/Payments.AmazonPay/Views/PaymentInfo.cshtml", model);
+            return await ViewAsync("~/Plugins/Payments.AmazonPay/Views/PaymentInfo.cshtml", model);
         }
 
         if (!_amazonPaySettings.ButtonPlacement.Contains(ButtonPlacement.Cart))
@@ -83,7 +83,7 @@ public class PaymentInfoViewComponent : NopViewComponent
         if (cartModel is null)
             return Content(string.Empty);
 
-        return View("~/Plugins/Payments.AmazonPay/Views/PaymentInfo.cshtml", cartModel);
+        return await ViewAsync("~/Plugins/Payments.AmazonPay/Views/PaymentInfo.cshtml", cartModel);
     }
 
     #endregion

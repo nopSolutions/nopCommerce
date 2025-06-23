@@ -272,7 +272,7 @@ public partial class NopStartup : INopStartup
                     ? serviceProvider.GetRequiredService<IStoreContext>().GetCurrentStore()?.Id ?? 0
                     : 0;
 
-                return serviceProvider.GetRequiredService<ISettingService>().LoadSettingAsync(setting, storeId).Result;
+                return serviceProvider.GetRequiredService<ISettingService>().LoadSetting(setting, storeId);
             });
         }
 

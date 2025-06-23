@@ -87,7 +87,7 @@ public class AppliedCertificateViewComponent : NopViewComponent
             ? validCertificate.exemptionNumber
             : validCertificate?.id?.ToString();
 
-        return View("~/Plugins/Tax.Avalara/Views/Checkout/AppliedCertificate.cshtml", certificateValue);
+        return await ViewAsync("~/Plugins/Tax.Avalara/Views/Checkout/AppliedCertificate.cshtml", certificateValue);
     }
 
     #endregion

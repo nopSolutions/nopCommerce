@@ -78,7 +78,7 @@ public class PaymentButtonViewComponent : NopViewComponent
 
             model.IsCartContainsNoAllowedProducts = model.IsCartContainsNoAllowedProducts || await _disallowedProducts.IsProductDisallowAsync(model.ProductId ?? 0);
 
-            return View("~/Plugins/Payments.AmazonPay/Views/PaymentInfo.cshtml", model);
+            return await ViewAsync("~/Plugins/Payments.AmazonPay/Views/PaymentInfo.cshtml", model);
         }
 
         if (widgetZone.Equals(PublicWidgetZones.BodyStartHtmlTagAfter))
@@ -90,7 +90,7 @@ public class PaymentButtonViewComponent : NopViewComponent
             if (model is null)
                 return Content(string.Empty);
 
-            return View("~/Plugins/Payments.AmazonPay/Views/MiniCart.cshtml", model);
+            return await ViewAsync("~/Plugins/Payments.AmazonPay/Views/MiniCart.cshtml", model);
         }
 
         if (!new List<string> { PublicWidgetZones.CheckoutProgressBefore, PublicWidgetZones.OpcContentBefore }.Contains(widgetZone))
@@ -116,7 +116,7 @@ public class PaymentButtonViewComponent : NopViewComponent
             if (onePageModel is null)
                 return Content(string.Empty);
 
-            return View("~/Plugins/Payments.AmazonPay/Views/PaymentInfo.cshtml", onePageModel);
+            return await ViewAsync("~/Plugins/Payments.AmazonPay/Views/PaymentInfo.cshtml", onePageModel);
         }
 
         if (!_orderSettings.DisableBillingAddressCheckoutStep
@@ -137,7 +137,7 @@ public class PaymentButtonViewComponent : NopViewComponent
         if (checkoutModel is null)
             return Content(string.Empty);
 
-        return View("~/Plugins/Payments.AmazonPay/Views/PaymentInfo.cshtml", checkoutModel);
+        return await ViewAsync("~/Plugins/Payments.AmazonPay/Views/PaymentInfo.cshtml", checkoutModel);
     }
 
     #endregion
