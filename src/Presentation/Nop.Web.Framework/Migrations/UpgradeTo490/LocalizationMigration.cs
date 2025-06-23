@@ -212,6 +212,9 @@ public class LocalizationMigration : MigrationBase
             ["Admin.System.SystemInfo.DatabaseCollation"] = "Database collation",
             ["Admin.System.SystemInfo.DatabaseCollation.Hint"] = "The collation defines the rules for sorting and comparing data.",
 
+            //#2192
+            ["Admin.System.QueuedEmails.RequeueSelected"] = "Requeue selected",
+
 			//#1779
             ["ActivityLog.PublicStore.Login.Fail"] = "Public store. Customer has failed to log in: {0}",
             ["Admin.Configuration.Settings.CustomerUser.NotifyFailedLoginAttempt"] = "Notify customers about failed login attempts",
