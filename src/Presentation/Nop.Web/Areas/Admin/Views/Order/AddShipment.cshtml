@@ -108,21 +108,21 @@
                         </div>
                         <script>
                             $(function() {
-                                $("#shipment-save").bind("focus", function () {
+                                $("#shipment-save").on("focus", function () {
                                     if (validateWarehouseAvailability("save")) {
                                         $("#shipment-save-action-confirmation").remove();
                                         $(this).attr("name", "save").attr("type", "submit");
                                     }
-                                }).bind("click", function () {
+                                }).on("click", function () {
                                     return validateWarehouseAvailability("save");
                                 });
 
-                                $("#shipment-save-continue").bind("focus", function () {
+                                $("#shipment-save-continue").on("focus", function () {
                                     if (validateWarehouseAvailability("continue")) {
                                         $("#shipment-save-continue-action-confirmation").remove();
                                         $(this).attr("name", "save-continue").attr("type", "submit");
                                     }
-                                }).bind("click", function () {
+                                }).on("click", function () {
                                     return validateWarehouseAvailability("continue");
                                 });
                             });
