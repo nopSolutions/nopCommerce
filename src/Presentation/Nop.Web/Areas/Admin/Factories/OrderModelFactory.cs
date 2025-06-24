@@ -70,7 +70,6 @@ public partial class OrderModelFactory : IOrderModelFactory
     protected readonly IOrderReportService _orderReportService;
     protected readonly IOrderService _orderService;
     protected readonly IPaymentPluginManager _paymentPluginManager;
-    protected readonly IPaymentService _paymentService;
     protected readonly IPictureService _pictureService;
     protected readonly IPriceCalculationService _priceCalculationService;
     protected readonly IPriceFormatter _priceFormatter;
@@ -80,12 +79,12 @@ public partial class OrderModelFactory : IOrderModelFactory
     protected readonly IRewardPointService _rewardPointService;
     protected readonly ISettingService _settingService;
     protected readonly IShipmentService _shipmentService;
-    protected readonly IShippingService _shippingService;
     protected readonly IStateProvinceService _stateProvinceService;
     protected readonly IStoreService _storeService;
     protected readonly ITaxService _taxService;
     protected readonly IUrlHelperFactory _urlHelperFactory;
     protected readonly IVendorService _vendorService;
+    protected readonly IWarehouseService _warehouseService;
     protected readonly IWorkContext _workContext;
     protected readonly MeasureSettings _measureSettings;
     protected readonly NopHttpClient _nopHttpClient;
@@ -121,7 +120,6 @@ public partial class OrderModelFactory : IOrderModelFactory
         IOrderReportService orderReportService,
         IOrderService orderService,
         IPaymentPluginManager paymentPluginManager,
-        IPaymentService paymentService,
         IPictureService pictureService,
         IPriceCalculationService priceCalculationService,
         IPriceFormatter priceFormatter,
@@ -131,12 +129,12 @@ public partial class OrderModelFactory : IOrderModelFactory
         IRewardPointService rewardPointService,
         ISettingService settingService,
         IShipmentService shipmentService,
-        IShippingService shippingService,
         IStateProvinceService stateProvinceService,
         IStoreService storeService,
         ITaxService taxService,
         IUrlHelperFactory urlHelperFactory,
         IVendorService vendorService,
+        IWarehouseService warehouseService,
         IWorkContext workContext,
         MeasureSettings measureSettings,
         NopHttpClient nopHttpClient,
@@ -167,7 +165,6 @@ public partial class OrderModelFactory : IOrderModelFactory
         _orderReportService = orderReportService;
         _orderService = orderService;
         _paymentPluginManager = paymentPluginManager;
-        _paymentService = paymentService;
         _pictureService = pictureService;
         _priceCalculationService = priceCalculationService;
         _priceFormatter = priceFormatter;
@@ -177,12 +174,12 @@ public partial class OrderModelFactory : IOrderModelFactory
         _rewardPointService = rewardPointService;
         _settingService = settingService;
         _shipmentService = shipmentService;
-        _shippingService = shippingService;
         _stateProvinceService = stateProvinceService;
         _storeService = storeService;
         _taxService = taxService;
         _urlHelperFactory = urlHelperFactory;
         _vendorService = vendorService;
+        _warehouseService = warehouseService;
         _workContext = workContext;
         _measureSettings = measureSettings;
         _nopHttpClient = nopHttpClient;
@@ -1511,7 +1508,7 @@ public partial class OrderModelFactory : IOrderModelFactory
                 {
                     Id = item.Id,
                     QuantityInThisShipment = item.Quantity,
-                    ShippedFromWarehouse = (await _shippingService.GetWarehouseByIdAsync(item.WarehouseId))?.Name
+                    ShippedFromWarehouse = (await _warehouseService.GetWarehouseByIdAsync(item.WarehouseId))?.Name
                 };
 
                 await PrepareShipmentItemModelAsync(shipmentItemModel, orderItem, product);
@@ -1561,7 +1558,7 @@ public partial class OrderModelFactory : IOrderModelFactory
                 shipmentItemModel.AllowToChooseWarehouse = true;
                 foreach (var pwi in (await _productService.GetAllProductWarehouseInventoryRecordsAsync(orderItem.ProductId)).OrderBy(w => w.WarehouseId).ToList())
                 {
-                    if (await _shippingService.GetWarehouseByIdAsync(pwi.WarehouseId) is Warehouse warehouse)
+                    if (await _warehouseService.GetWarehouseByIdAsync(pwi.WarehouseId) is Warehouse warehouse)
                     {
                         shipmentItemModel.AvailableWarehouses.Add(new ShipmentItemModel.WarehouseInfo
                         {
@@ -1578,7 +1575,7 @@ public partial class OrderModelFactory : IOrderModelFactory
             else
             {
                 //multiple warehouses are not supported
-                var warehouse = await _shippingService.GetWarehouseByIdAsync(product.WarehouseId);
+                var warehouse = await _warehouseService.GetWarehouseByIdAsync(product.WarehouseId);
                 if (warehouse != null)
                 {
                     shipmentItemModel.AvailableWarehouses.Add(new ShipmentItemModel.WarehouseInfo
@@ -1674,7 +1671,7 @@ public partial class OrderModelFactory : IOrderModelFactory
                 shipmentItemModel.ProductId = orderItem.ProductId;
                 shipmentItemModel.ProductName = product.Name;
 
-                shipmentItemModel.ShippedFromWarehouse = (await _shippingService.GetWarehouseByIdAsync(item.WarehouseId))?.Name;
+                shipmentItemModel.ShippedFromWarehouse = (await _warehouseService.GetWarehouseByIdAsync(item.WarehouseId))?.Name;
 
                 var baseWeight = (await _measureService.GetMeasureWeightByIdAsync(_measureSettings.BaseWeightId))?.Name;
                 var baseDimension = (await _measureService.GetMeasureDimensionByIdAsync(_measureSettings.BaseDimensionId))?.Name;

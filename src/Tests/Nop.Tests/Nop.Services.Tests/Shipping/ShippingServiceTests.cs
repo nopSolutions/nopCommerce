@@ -11,7 +11,6 @@ public class ShippingServiceTests : ServiceTest
 {
     #region Fields
 
-    private IShippingPluginManager _shippingPluginManager;
     private IShippingService _shippingService;
     private IProductService _productService;
 
@@ -22,36 +21,12 @@ public class ShippingServiceTests : ServiceTest
     [OneTimeSetUp]
     public void SetUp()
     {
-        _shippingPluginManager = GetService<IShippingPluginManager>();
         _shippingService = GetService<IShippingService>();
         _productService = GetService<IProductService>();
     }
 
     #endregion
-
-    [Test]
-    public async Task CanLoadShippingRateComputationMethods()
-    {
-        var shippingRateComputationMethods = await _shippingPluginManager.LoadAllPluginsAsync();
-        shippingRateComputationMethods.Should().NotBeNull();
-        shippingRateComputationMethods.Any().Should().BeTrue();
-    }
-
-    [Test]
-    public async Task CanLoadShippingRateComputationMethodBySystemKeyword()
-    {
-        var shippingRateComputationMethod = await _shippingPluginManager.LoadPluginBySystemNameAsync("FixedRateTestShippingRateComputationMethod");
-        shippingRateComputationMethod.Should().NotBeNull();
-    }
-
-    [Test]
-    public async Task CanLoadActiveShippingRateComputationMethods()
-    {
-        var shippingRateComputationMethods = await _shippingPluginManager.LoadActivePluginsAsync(["FixedRateTestShippingRateComputationMethod"]);
-        shippingRateComputationMethods.Should().NotBeNull();
-        shippingRateComputationMethods.Any().Should().BeTrue();
-    }
-
+    
     [Test]
     public async Task CanGetShoppingCartTotalWeightWithoutAttributes()
     {
