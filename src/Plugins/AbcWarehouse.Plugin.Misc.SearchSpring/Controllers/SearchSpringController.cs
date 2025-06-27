@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using AbcWarehouse.Plugin.Misc.SearchSpring.Services;
+using AbcWarehouse.Plugin.Misc.SearchSpring.Models;
 using System.Net.Http;
 using System.Net;
 using System;
@@ -9,7 +10,12 @@ using Nop.Services.Logging;
 using System.Web;
 using System.Collections.Generic;
 using System.Linq;
-
+using Nop.Services.Configuration;
+using Nop.Services.Messages;
+using Nop.Services.Localization;
+using Nop.Web.Framework;
+using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace AbcWarehouse.Plugin.Misc.SearchSpring.Controllers
 {
@@ -17,16 +23,27 @@ namespace AbcWarehouse.Plugin.Misc.SearchSpring.Controllers
     {
         private readonly ISearchSpringService _searchSpringService;
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly ILogger _logger; // Inject ILogger for better error reporting
+        private readonly ILogger _logger;
+        private readonly ISettingService _settingService;
+        private readonly ILocalizationService _localizationService;
+        private readonly INotificationService _notificationService;
+        private readonly SearchSpringSettings _settings;
 
-        // Add a logger to the constructor
         public SearchSpringController(ISearchSpringService searchSpringService,
                                       IHttpClientFactory httpClientFactory,
-                                      ILogger logger)
+                                      ILogger logger,
+                                      ISettingService settingService,
+                                      ILocalizationService localizationService,
+                                      INotificationService notificationService,
+                                      SearchSpringSettings settings)
         {
             _searchSpringService = searchSpringService;
             _httpClientFactory = httpClientFactory;
-            _logger = logger; // Initialize logger
+            _logger = logger;
+            _settingService = settingService;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _settings = settings;
         }
 
         [HttpGet]
@@ -93,13 +110,13 @@ namespace AbcWarehouse.Plugin.Misc.SearchSpring.Controllers
                 PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase
             });
 
-            await _logger.InformationAsync($"SearchSpring Results JSON:\n{modelJson}");
+            if (_settings.IsDebugMode)
+            {
+                await _logger.InformationAsync($"SearchSpring Results JSON:\n{modelJson}");
+            }
 
             return View("~/Plugins/AbcWarehouse.Plugin.Misc.SearchSpring/Views/Results.cshtml", results);
         }
-
-
-
 
         private string GetOrCreateSearchSpringSessionId(HttpContext context)
         {
@@ -172,7 +189,7 @@ namespace AbcWarehouse.Plugin.Misc.SearchSpring.Controllers
                 return StatusCode(500, new { error = "An internal server error occurred while fetching suggestions. Message: " + ex.Message });
             }
         }
-        
+
         [Route("searchspring/autocomplete")]
         [HttpGet]
         public async Task<IActionResult> Autocomplete(string q, string userId, string sessionId)
@@ -215,6 +232,34 @@ namespace AbcWarehouse.Plugin.Misc.SearchSpring.Controllers
                 return StatusCode(500, new { error = "An internal server error occurred while fetching autocomplete results. Message: " + ex.Message });
             }
         }
+        
+        [AuthorizeAdmin]
+        [Area(AreaNames.Admin)]
+        [AutoValidateAntiforgeryToken]
+        public ActionResult Configure()
+        {
+            return View(
+                "~/Plugins/AbcWarehouse.Plugin.Misc.SearchSpring/Views/Configure.cshtml",
+                _settings.ToModel());
+        }
 
+        [HttpPost]
+        [AuthorizeAdmin]
+        [Area(AreaNames.Admin)]
+        [AutoValidateAntiforgeryToken]
+        public async Task<ActionResult> Configure(ConfigurationModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Configure();
+            }
+
+            await _settingService.SaveSettingAsync(SearchSpringSettings.FromModel(model));
+
+            _notificationService.SuccessNotification(
+                await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
+
+            return Configure();
+        }
     }
 }
