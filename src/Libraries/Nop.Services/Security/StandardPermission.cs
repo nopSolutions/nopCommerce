@@ -64,6 +64,9 @@ public partial class StandardPermission
         public const string PRODUCT_REVIEWS_CREATE_EDIT_DELETE = $"{nameof(Catalog)}.ProductReviewsCreateEditDelete";
         public const string PRODUCT_TAGS_VIEW = $"{nameof(Catalog)}.ProductTagsView";
         public const string PRODUCT_TAGS_CREATE_EDIT_DELETE = $"{nameof(Catalog)}.ProductTagsCreateEditDelete";
+        public const string FILTER_LEVEL_VALUE_VIEW = $"{nameof(Catalog)}.FilterLevelValueView";
+        public const string FILTER_LEVEL_VALUE_CREATE_EDIT_DELETE = $"{nameof(Catalog)}.FilterLevelValueCreateEditDelete";
+        public const string FILTER_LEVEL_VALUE_IMPORT_EXPORT = $"{nameof(Catalog)}.FilterLevelValueImportExport";
         public const string PRODUCT_ATTRIBUTES_VIEW = $"{nameof(Catalog)}.ProductAttributesView";
         public const string PRODUCT_ATTRIBUTES_CREATE_EDIT_DELETE = $"{nameof(Catalog)}.ProductAttributesCreateEditDelete";
         public const string SPECIFICATION_ATTRIBUTES_VIEW = $"{nameof(Catalog)}.SpecificationAttributesView";

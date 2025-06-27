@@ -117,6 +117,11 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             pattern: $"{lang}/search/",
             defaults: new { controller = "Catalog", action = "Search" });
 
+        //product search by filter level values
+        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.PRODUCT_SEARCH_BY_FILTER_LEVEL_VALUES,
+            pattern: $"{lang}/search-ymm/",
+            defaults: new { controller = "Catalog", action = "SearchByFilterLevelValues" });
+
         //autocomplete search term (AJAX)
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.PRODUCT_SEARCH_AUTOCOMPLETE,
             pattern: $"catalog/searchtermautocomplete",
@@ -537,6 +542,11 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             pattern: $"country/getstatesbycountryid/",
             defaults: new { controller = "Country", action = "GetStatesByCountryId" });
 
+        //get filter level value list by parent ID (AJAX)
+        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.GET_FILTER_LEVEL_VALUES,
+            pattern: $"catalog/getfilterlevelvalues/",
+            defaults: new { controller = "Catalog", action = "GetFilterLevelValues" });
+
         //EU Cookie law accept button handler (AJAX)
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.EU_COOKIE_LAW_ACCEPT,
             pattern: $"eucookielawaccept",
@@ -563,6 +573,10 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.SEARCH_PRODUCTS,
             pattern: "product/search",
             defaults: new { controller = "Catalog", action = "SearchProducts" });
+
+        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.SEARCH_PRODUCTS_BY_FILTER_LEVEL_VALUES,
+            pattern: "product/searchbyflv",
+            defaults: new { controller = "Catalog", action = "SearchProductsByFilterLevelValues" });
 
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.GET_VENDOR_PRODUCTS,
             pattern: $"vendor/products",

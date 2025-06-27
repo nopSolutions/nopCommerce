@@ -48,7 +48,7 @@ public static partial class NopRouteNames
         /// <summary>
         /// Gets the product search route name
         /// </summary>
-        public const string SEARCH = "ProductSearch";
+        public const string SEARCH = "ProductSearch";        
 
         /// <summary>
         /// Gets the compare products route name
@@ -631,6 +631,11 @@ public static partial class NopRouteNames
         /// Gets the page not found route name
         /// </summary>
         public const string PAGE_NOT_FOUND = "PageNotFound";
+
+        /// <summary>
+        /// Gets the product search by filter level values route name
+        /// </summary>
+        public const string PRODUCT_SEARCH_BY_FILTER_LEVEL_VALUES = "ProductSearchByFilterLevelValues";
     }
 
     /// <summary>
@@ -749,6 +754,11 @@ public static partial class NopRouteNames
         public const string GET_STATES_BY_COUNTRY_ID = "GetStatesByCountryId";
 
         /// <summary>
+        /// Gets the filter level values route name
+        /// </summary>
+        public const string GET_FILTER_LEVEL_VALUES = "GetFilterLevelValues";
+
+        /// <summary>
         /// Gets the EU Cookie law accept button handler route name
         /// </summary>
         public const string EU_COOKIE_LAW_ACCEPT = "EuCookieLawAccept";
@@ -777,6 +787,11 @@ public static partial class NopRouteNames
         /// Gets the search products route name
         /// </summary>
         public const string SEARCH_PRODUCTS = "SearchProducts";
+
+        /// <summary>
+        /// Gets the search products by filter level values route name
+        /// </summary>
+        public const string SEARCH_PRODUCTS_BY_FILTER_LEVEL_VALUES = "SearchProductsByFilterLevelValues";
 
         /// <summary>
         /// Gets the vendor products route name

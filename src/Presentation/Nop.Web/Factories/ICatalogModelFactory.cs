@@ -268,6 +268,17 @@ public partial interface ICatalogModelFactory
     Task<CatalogProductsModel> PrepareSearchProductsModelAsync(SearchModel searchModel, CatalogProductsCommand command);
 
     /// <summary>
+    /// Prepares the search products by filter level values model
+    /// </summary>
+    /// <param name="searchModel">Search filter level values model</param>
+    /// <param name="command">Model to get the catalog products</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the search products model
+    /// </returns>
+    Task<CatalogProductsModel> PrepareSearchProductsByFilterLevelValuesModelAsync(SearchFilterLevelValueModel searchModel, CatalogProductsCommand command);
+
+    /// <summary>
     /// Prepare search box model
     /// </summary>
     /// <returns>

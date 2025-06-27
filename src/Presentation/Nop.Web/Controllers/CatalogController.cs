@@ -8,6 +8,7 @@ using Nop.Core.Http;
 using Nop.Core.Rss;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.FilterLevels;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
@@ -32,6 +33,8 @@ public partial class CatalogController : BasePublicController
     protected readonly ICatalogModelFactory _catalogModelFactory;
     protected readonly ICategoryService _categoryService;
     protected readonly ICustomerActivityService _customerActivityService;
+    protected readonly IFilterLevelValueModelFactory _filterLevelValueModelFactory;
+    protected readonly IFilterLevelValueService _filterLevelValueService;
     protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly ILocalizationService _localizationService;
     protected readonly IManufacturerService _manufacturerService;
@@ -57,6 +60,8 @@ public partial class CatalogController : BasePublicController
         ICatalogModelFactory catalogModelFactory,
         ICategoryService categoryService,
         ICustomerActivityService customerActivityService,
+        IFilterLevelValueModelFactory filterLevelValueModelFactory,
+        IFilterLevelValueService filterLevelValueService,
         IGenericAttributeService genericAttributeService,
         ILocalizationService localizationService,
         IManufacturerService manufacturerService,
@@ -78,6 +83,8 @@ public partial class CatalogController : BasePublicController
         _catalogModelFactory = catalogModelFactory;
         _categoryService = categoryService;
         _customerActivityService = customerActivityService;
+        _filterLevelValueModelFactory = filterLevelValueModelFactory;
+        _filterLevelValueService = filterLevelValueService;
         _genericAttributeService = genericAttributeService;
         _localizationService = localizationService;
         _manufacturerService = manufacturerService;
@@ -435,6 +442,56 @@ public partial class CatalogController : BasePublicController
             searchModel = new SearchModel();
 
         var model = await _catalogModelFactory.PrepareSearchProductsModelAsync(searchModel, command);
+
+        return PartialView("_ProductsInGridOrLines", model);
+    }
+
+    #endregion
+
+    #region Filter level values
+
+    //available even when navigation is not allowed
+    [CheckAccessPublicStore(ignore: true)]
+    //ignore SEO friendly URLs checks
+    [CheckLanguageSeoCode(ignore: true)]
+    public virtual async Task<IActionResult> GetFilterLevelValues(string filterLevel1Value = "", string filterLevel2Value = "", string filterLevel3Value = "")
+    {
+        var values = await _filterLevelValueService.GetAllFilterLevelValuesAsync(filterLevel1Value, filterLevel2Value, filterLevel3Value);
+        var result = values.Select(f => new
+        {
+            filterLevel1Value = f.FilterLevel1Value,
+            filterLevel2Value = f.FilterLevel2Value,
+            filterLevel3Value = f.FilterLevel3Value
+        });
+
+        return Json(result);
+    }
+
+    public virtual async Task<IActionResult> SearchByFilterLevelValues(SearchFilterLevelValueModel model, CatalogProductsCommand command)
+    {
+        var store = await _storeContext.GetCurrentStoreAsync();
+
+        //'Continue shopping' URL
+        await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
+            NopCustomerDefaults.LastContinueShoppingPageAttribute,
+            _webHelper.GetThisPageUrl(true),
+            store.Id);
+
+        if (model == null)
+            model = new SearchFilterLevelValueModel();
+
+        model = await _filterLevelValueModelFactory.PrepareSearchFilterLevelValueModelAsync(model, command);
+
+        return View(model);
+    }
+
+    [HttpPost]
+    public virtual async Task<IActionResult> SearchProductsByFilterLevelValues(SearchFilterLevelValueModel searchModel, CatalogProductsCommand command)
+    {
+        if (searchModel == null)
+            searchModel = new SearchFilterLevelValueModel();
+
+        var model = await _catalogModelFactory.PrepareSearchProductsByFilterLevelValuesModelAsync(searchModel, command);
 
         return PartialView("_ProductsInGridOrLines", model);
     }

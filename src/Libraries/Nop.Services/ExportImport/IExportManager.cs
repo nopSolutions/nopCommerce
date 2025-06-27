@@ -1,6 +1,7 @@
 ﻿using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.FilterLevels;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 
@@ -125,4 +126,11 @@ public partial interface IExportManager
     /// The task result contains the customer GDPR info
     /// </returns>
     Task<byte[]> ExportCustomerGdprInfoToXlsxAsync(Customer customer, int storeId);
+
+    /// <summary>
+    /// Export filter level values to XLSX
+    /// </summary>
+    /// <param name="filterLevelValues">Filter level values</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task<byte[]> ExportFilterLevelValuesToXlsxAsync(IList<FilterLevelValue> filterLevelValues);
 }

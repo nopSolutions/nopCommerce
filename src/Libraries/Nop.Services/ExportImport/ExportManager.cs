@@ -9,6 +9,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.FilterLevels;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
@@ -2554,6 +2555,39 @@ public partial class ExportManager : IExportManager
         }
 
         return stream.ToArray();
+    }
+
+    /// <summary>
+    /// Export filter level values to XLSX
+    /// </summary>
+    /// <param name="filterLevelValues">Filter level values</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task<byte[]> ExportFilterLevelValuesToXlsxAsync(IList<FilterLevelValue> filterLevelValues)
+    {
+        var languages = await _languageService.GetAllLanguagesAsync(showHidden: true);
+
+        var localizedProperties = new[]
+        {
+            new PropertyByName<FilterLevelValue>("Id", (p, _) => p.Id),
+            new PropertyByName<FilterLevelValue>("FilterLevel1Value", async (p, l) => await _localizationService.GetLocalizedAsync(p, x => x.FilterLevel1Value, l.Id, false)),
+            new PropertyByName<FilterLevelValue>("FilterLevel2Value", async (p, l) => await _localizationService.GetLocalizedAsync(p, x => x.FilterLevel2Value, l.Id, false)),
+            new PropertyByName<FilterLevelValue>("FilterLevel3Value", async (p, l) => await _localizationService.GetLocalizedAsync(p, x => x.FilterLevel3Value, l.Id, false))
+        };
+
+        //property manager 
+        var manager = new PropertyManager<FilterLevelValue>(new[]
+        {
+            new PropertyByName<FilterLevelValue>("Id", (p, _) => p.Id),
+            new PropertyByName<FilterLevelValue>("FilterLevel1Value", (p, _) => p.FilterLevel1Value),
+            new PropertyByName<FilterLevelValue>("FilterLevel2Value", (p, _) => p.FilterLevel2Value),
+            new PropertyByName<FilterLevelValue>("FilterLevel3Value", (p, _) => p.FilterLevel3Value),
+        }, _catalogSettings, localizedProperties, languages);
+
+        //activity log
+        await _customerActivityService.InsertActivityAsync("ExportFilterLevelValues",
+            string.Format(await _localizationService.GetResourceAsync("ActivityLog.ExportFilterLevelValues"), filterLevelValues.Count));
+
+        return await manager.ExportToXlsxAsync(filterLevelValues);
     }
 
     #endregion

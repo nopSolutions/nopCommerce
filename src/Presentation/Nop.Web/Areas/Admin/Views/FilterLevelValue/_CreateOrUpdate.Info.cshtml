@@ -1,0 +1,40 @@
+﻿@model FilterLevelValueModel
+
+<div class="card-body">
+    @if (Model.FilterLevel1ValueEnabled)
+    {
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="FilterLevel1Value" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="FilterLevel1Value" />
+                <span asp-validation-for="FilterLevel1Value"></span>
+            </div>
+        </div>
+    }
+    @if (Model.FilterLevel2ValueEnabled)
+    {
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="FilterLevel2Value" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="FilterLevel2Value" />
+                <span asp-validation-for="FilterLevel2Value"></span>
+            </div>
+        </div>
+    }
+    @if(Model.FilterLevel3ValueEnabled)
+    {
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="FilterLevel3Value" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="FilterLevel3Value" />
+                <span asp-validation-for="FilterLevel3Value"></span>
+            </div>
+        </div>
+    }
+</div>

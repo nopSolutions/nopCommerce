@@ -151,6 +151,67 @@ public class DataMigration : Migration
             });
         }
 
+        //#7411
+        if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "AddNewFilterLevelValue", StringComparison.InvariantCultureIgnoreCase) == 0))
+        {
+            _dataProvider.InsertEntity(
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewFilterLevelValue",
+                    Enabled = true,
+                    Name = "Add a new filter level value"
+                }
+            );
+        }
+
+        if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "EditFilterLevelValue", StringComparison.InvariantCultureIgnoreCase) == 0))
+        {
+            _dataProvider.InsertEntity(
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditFilterLevelValue",
+                    Enabled = true,
+                    Name = "Edit a filter level value"
+                }
+            );
+        }
+
+        if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "DeleteFilterLevelValue", StringComparison.InvariantCultureIgnoreCase) == 0))
+        {
+            _dataProvider.InsertEntity(
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteFilterLevelValue",
+                    Enabled = true,
+                    Name = "Delete a filter level value"
+                }
+            );
+        }
+        
+        if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "ExportFilterLevelValues", StringComparison.InvariantCultureIgnoreCase) == 0))
+        {
+            _dataProvider.InsertEntity(
+                new ActivityLogType
+                {
+                    SystemKeyword = "ExportFilterLevelValues",
+                    Enabled = true,
+                    Name = "Export filter level values"
+                }
+            );
+        }
+
+        if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "ImportFilterLevelValues", StringComparison.InvariantCultureIgnoreCase) == 0))
+        {
+            _dataProvider.InsertEntity(
+                new ActivityLogType
+                {
+                    SystemKeyword = "ImportFilterLevelValues",
+                    Enabled = true,
+                    Name = "Import filter level values"
+                }
+            );
+        }
+
         //#7390
         if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "AddNewMenu", StringComparison.InvariantCultureIgnoreCase) == 0))
         {

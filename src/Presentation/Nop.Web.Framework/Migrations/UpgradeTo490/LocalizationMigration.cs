@@ -1,5 +1,6 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Domain.Vendors;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -610,6 +611,77 @@ public class LocalizationMigration : MigrationBase
 
             ["Admin.Documentation.Reference.RFQ"] = "Learn more about <a target=\"_blank\" href=\"{0}\">requests for quote</a>",
             ["Admin.Documentation.Reference.Menu"] = "Learn more about <a target=\"_blank\" href=\"{0}\">menus</a>",
+
+            //#7411
+            ["Enums.Nop.Core.Domain.FilterLevels.FilterLevelEnum.FilterLevel1"] = "Year",
+            ["Enums.Nop.Core.Domain.FilterLevels.FilterLevelEnum.FilterLevel1.Hint"] = "Set the filter value.",
+            ["Enums.Nop.Core.Domain.FilterLevels.FilterLevelEnum.FilterLevel2"] = "Make",
+            ["Enums.Nop.Core.Domain.FilterLevels.FilterLevelEnum.FilterLevel2.Hint"] = "Set the filter value.",
+            ["Enums.Nop.Core.Domain.FilterLevels.FilterLevelEnum.FilterLevel3"] = "Model",
+            ["Enums.Nop.Core.Domain.FilterLevels.FilterLevelEnum.FilterLevel3.Hint"] = "Set the filter value.",
+            ["Admin.Configuration.Settings.FilterLevel"] = "Filter (YMM) settings",
+            ["Admin.Documentation.Reference.FilterLevels"] = "Learn more about <a target=\"_blank\" href=\"{0}\">filter level values</a>",
+
+            ["Admin.Configuration.Settings.FilterLevel.Edit"] = "Edit filter level",
+            ["Admin.Configuration.Settings.FilterLevel.BackToList"] = "back to filter level list",
+            ["Admin.Configuration.Settings.FilterLevel.CannotDisableParent"] = "You cannot disable any parent level if one of the child levels is enabled.",
+            ["Admin.Configuration.Settings.FilterLevel.CannotEnableChild"] = "You cannot enable a child level if one of the parent levels is disabled.",
+
+            ["Admin.Configuration.Settings.FilterLevel.Name"] = "Name",
+            ["Admin.Configuration.Settings.FilterLevel.Name.Hint"] = "Enter the name of the filter level.",
+            ["Admin.Configuration.Settings.FilterLevel.Name.Required"] = "Please provide a name.",            
+            ["Admin.Configuration.Settings.FilterLevel.Enabled"] = "Enabled",
+            ["Admin.Configuration.Settings.FilterLevel.Enabled.Hint"] = "Check to enable this filter level.",
+            ["Admin.Configuration.Settings.FilterLevel.Updated"] = "The filter level has been updated successfully.",
+
+            ["Admin.Configuration.Settings.FilterLevel.FilterLevelEnabled"] = "Filter level enabled",
+            ["Admin.Configuration.Settings.FilterLevel.FilterLevelEnabled.Hint"] = "Check to enable the filter level functionality.",
+            ["Admin.Configuration.Settings.FilterLevel.DisplayOnHomePage"] = "Display on home page",
+            ["Admin.Configuration.Settings.FilterLevel.DisplayOnHomePage.Hint"] = "Check to display filter levels on the home page.",
+            ["Admin.Configuration.Settings.FilterLevel.DisplayOnProductDetailsPage"] = "Display on product details page",
+            ["Admin.Configuration.Settings.FilterLevel.DisplayOnProductDetailsPage.Hint"] = "Check to display filter levels on the product details page.",
+
+            ["Admin.Configuration.Settings.FilterLevel.BlockTitle.Common"] = "Common",
+            ["Admin.Configuration.Settings.FilterLevel.BlockTitle.Levels"] = "Levels",
+
+            ["Admin.Catalog.FilterLevelValues"] = "Filter level values (YMM)",
+            ["Admin.Catalog.Products.List.SearchFilterValue1"] = "Year",
+            ["Admin.Catalog.Products.List.SearchFilterValue1.Hint"] = "Search by a specific filter level.",
+            ["Admin.Catalog.Products.List.SearchFilterValue2"] = "Make",
+            ["Admin.Catalog.Products.List.SearchFilterValue2.Hint"] = "Search by a specific filter level.",
+            ["Admin.Catalog.Products.List.SearchFilterValue3"] = "Model",
+            ["Admin.Catalog.Products.List.SearchFilterValue3.Hint"] = "Search by a specific filter level.",
+            ["Admin.Catalog.FilterLevelValue.List.ImportFromExcelTip"] = "Imported filter level values are distinguished by ID. If the ID already exists, then its corresponding filter level value will be updated. You should not specify ID (leave 0) for new filter level values.",
+            ["Admin.Catalog.FilterLevelValue.AddNew"] = "Add a new filter level value",
+            ["Admin.Catalog.FilterLevelValue.BackToList"] = "back to filter level value list",
+            ["Admin.Catalog.FilterLevelValue.Info"] = "Filter level value info",
+            ["Admin.Catalog.FilterLevelValue.Products"] = "Products",
+            ["Admin.Catalog.FilterLevelValue.EditFilterLevelValueDetails"] = "Edit filter level value details",
+            ["Admin.Catalog.FilterLevelValue.Products.AddNew"] = "Add a new product",
+            ["Admin.Catalog.FilterLevelValue.Products.SaveBeforeEdit"] = "You need to save the filter level value before you can add products for this page.",
+            ["Admin.Catalog.FilterLevelValue.Products.Fields.Product"] = "Product",
+
+            ["ActivityLog.AddNewFilterLevelValue"] = "Added a new filter level value (ID = {0})",
+            ["ActivityLog.EditFilterLevelValue"] = "Edited a filter level value (ID = {0})",
+            ["ActivityLog.DeleteFilterLevelValue"] = "Deleted a filter level value (ID = {0})",
+            ["ActivityLog.ExportFilterLevelValues"] = "{0} filter level values were exported",
+            ["ActivityLog.ImportFilterLevelValues"] = "{0} filter level values were imported",
+
+            ["Admin.Catalog.FilterLevelValues.Added"] = "The filter level value has been added successfully.",
+            ["Admin.Catalog.FilterLevelValues.Updated"] = "The filter level value has been updated successfully.",
+            ["Admin.Catalog.FilterLevelValues.Deleted"] = "The filter level value has been deleted successfully.",
+            ["Admin.Catalog.FilterLevelValues.Imported"] = "The filter level values have been imported successfully.",
+            ["Admin.Catalog.FilterLevelValues.Exist"] = "A filter level value with the same value already exists.",
+
+            ["Admin.Catalog.Products.FilterLevelValues"] = "Filter level values (YMM)",
+            ["Admin.Catalog.Products.FilterLevelValues.Hint"] = "Select filter level values for this product.",
+            ["Admin.Configuration.Settings.ProductEditor.FilterLevelValuesProducts"] = "Filter level values products",
+            ["Admin.Catalog.Products.FilterLevelValues.SaveBeforeEdit"] = "You need to save the product before you can add filter level values for this product page.",
+            ["Admin.Catalog.Products.FilterLevelValues.AddNew"] = "Add a new filter level value",
+            ["Products.CompatibleWith"] = "Compatible with",
+            ["Products.CompatibleWith.Items"] = "{0} items are compatible with this product",
+            ["Search.FilterLevelValues"] = "Search by Year Make Model",
+
         }, languageId);
 
         #endregion

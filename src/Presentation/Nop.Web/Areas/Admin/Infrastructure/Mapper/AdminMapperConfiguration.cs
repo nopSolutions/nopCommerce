@@ -9,6 +9,7 @@ using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Domain.FilterLevels;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
@@ -94,6 +95,7 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
         CreateDirectoryMaps();
         CreateDiscountsMaps();
         CreateForumsMaps();
+        CreateFilterLevelMaps();
         CreateGdprMaps();
         CreateLocalizationMaps();
         CreateLoggingMaps();
@@ -437,7 +439,7 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(settings => settings.UseLinksInRequiredProductWarnings, options => options.Ignore())
             .ForMember(settings => settings.UseStandardSearchWhenSearchProviderThrowsException, options => options.Ignore())
             .ForMember(settings => settings.ActiveSearchProviderSystemName, options => options.Ignore())
-            .ForMember(settings => settings.VendorProductReviewsPageSize, options => options.Ignore());
+            .ForMember(settings => settings.VendorProductReviewsPageSize, options => options.Ignore());        
 
         CreateMap<ProductCategory, CategoryProductModel>()
             .ForMember(model => model.ProductName, options => options.Ignore());
@@ -519,6 +521,7 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(model => model.BaseWeightIn, options => options.Ignore())
             .ForMember(model => model.CopyProductModel, options => options.Ignore())
             .ForMember(model => model.CrossSellProductSearchModel, options => options.Ignore())
+            .ForMember(model => model.FilterLevelValueSearchModel, options => options.Ignore())
             .ForMember(model => model.HasAvailableSpecificationAttributes, options => options.Ignore())
             .ForMember(model => model.IsLoggedInAsVendor, options => options.Ignore())
             .ForMember(model => model.LastStockQuantity, options => options.Ignore())
@@ -1073,6 +1076,32 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(settings => settings.TopicSubjectMaxLength, options => options.Ignore())
             .ForMember(settings => settings.TopicMetaDescriptionLength, options => options.Ignore());
     }
+
+    /// <summary>
+    /// Create filter level maps
+    /// </summary>
+    protected virtual void CreateFilterLevelMaps()
+    {
+        CreateMap<FilterLevelSettingsModel, FilterLevelSettings>()
+            .ForMember(settings => settings.FilterLevelEnumDisabled, options => options.Ignore());
+
+        CreateMap<FilterLevelSettings, FilterLevelSettingsModel>()
+            .ForMember(settings => settings.FilterLevelSearchModel, options => options.Ignore());
+
+        CreateMap<FilterLevelValueModel, FilterLevelValue>()
+            .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
+            .ForMember(entity => entity.UpdatedOnUtc, options => options.Ignore());
+        CreateMap<FilterLevelValue, FilterLevelValueModel>()
+            .ForMember(model => model.FilterLevel1ValueEnabled, options => options.Ignore())
+            .ForMember(model => model.FilterLevel2ValueEnabled, options => options.Ignore())
+            .ForMember(model => model.FilterLevel3ValueEnabled, options => options.Ignore())
+            .ForMember(model => model.FilterLevelValueProductSearchModel, options => options.Ignore());
+
+        CreateMap<FilterLevelValueProductModel, FilterLevelValueProductMapping>();
+        CreateMap<FilterLevelValueProductMapping, FilterLevelValueProductModel>()
+            .ForMember(model => model.ProductName, options => options.Ignore());
+    }
+
 
     /// <summary>
     /// Create GDPR maps 

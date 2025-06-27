@@ -1005,7 +1005,7 @@ public partial class BaseAdminModelFactory : IBaseAdminModelFactory
 
         //insert special item for the default value
         await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText, defaultItemValue);
-    }
+    }    
 
     /// <summary>
     /// Prepare translation supported model

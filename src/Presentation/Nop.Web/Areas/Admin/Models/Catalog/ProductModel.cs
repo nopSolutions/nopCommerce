@@ -59,6 +59,7 @@ public partial record ProductModel : BaseNopEntityModel,
 
         RelatedProductSearchModel = new RelatedProductSearchModel();
         CrossSellProductSearchModel = new CrossSellProductSearchModel();
+        FilterLevelValueSearchModel = new FilterLevelValueSearchModel();
         AssociatedProductSearchModel = new AssociatedProductSearchModel();
         ProductPictureSearchModel = new ProductPictureSearchModel();
         ProductVideoSearchModel = new ProductVideoSearchModel();
@@ -470,6 +471,8 @@ public partial record ProductModel : BaseNopEntityModel,
     public RelatedProductSearchModel RelatedProductSearchModel { get; set; }
 
     public CrossSellProductSearchModel CrossSellProductSearchModel { get; set; }
+
+    public FilterLevelValueSearchModel FilterLevelValueSearchModel { get; set; }
 
     public AssociatedProductSearchModel AssociatedProductSearchModel { get; set; }
 

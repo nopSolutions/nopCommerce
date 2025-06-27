@@ -5,6 +5,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.FilterLevels;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
@@ -397,6 +398,24 @@ public class SettingMigration : MigrationBase
         {
             aiSettings.MetaDescriptionQuery = ArtificialIntelligenceDefaults.MetaDescriptionQuery;
             settingService.SaveSetting(aiSettings, settings => settings.MetaDescriptionQuery);
+        }
+
+        //#7411
+        var filterLevelSettings = settingService.LoadSetting<FilterLevelSettings>();
+        if (!settingService.SettingExists(filterLevelSettings, settings => settings.DisplayOnHomePage))
+        {
+            filterLevelSettings.DisplayOnHomePage = true;
+            settingService.SaveSetting(filterLevelSettings, settings => settings.DisplayOnHomePage);
+        }
+        if (!settingService.SettingExists(filterLevelSettings, settings => settings.DisplayOnProductDetailsPage))
+        {
+            filterLevelSettings.DisplayOnProductDetailsPage = true;
+            settingService.SaveSetting(filterLevelSettings, settings => settings.DisplayOnProductDetailsPage);
+        }
+        if (!settingService.SettingExists(productEditorSettings, settings => settings.FilterLevelValuesProducts))
+        {
+            productEditorSettings.FilterLevelValuesProducts = true;
+            settingService.SaveSetting(productEditorSettings, settings => settings.FilterLevelValuesProducts);
         }
 
         //#7384

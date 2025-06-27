@@ -2772,11 +2772,39 @@ label, label + * {
   margin: 0 0 10px;
 }
 
+.search-button-flv:disabled {
+  background-color: #cccccc !important;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.product-filter-level-values-box {
+  margin: 0 0 20px;
+}
+
+.product-filter-level-values-box .title {
+  margin: 0 0 10px;
+  font-size: 18px;
+  color: #444;
+}
+
+.product-filter-level-values-box .title strong {
+  font-weight: normal;
+}
+
+.product-filter-level-values-box .sub-title {
+  margin: 0 0 5px;
+  font-size: 14px;
+  color: #444;
+  font-weight: normal;
+}
+
 .product-specs-box {
   margin: 0 0 40px;
 }
 
-.product-specs-box td {
+.product-specs-box td,
+.product-filter-level-values-box td {
   border: 1px solid #ddd;
   padding: 10px;
 }

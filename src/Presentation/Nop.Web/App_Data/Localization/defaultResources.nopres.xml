@@ -771,6 +771,9 @@
   <LocaleResource Name="ActivityLog.AddNewEmailAccount">
     <Value>Added a new email account (ID = {0})</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewFilterLevelValue">
+    <Value>Added a new filter level value (ID = {0})</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.AddNewGiftCard">
     <Value>Added a new gift card ('{0}')</Value>
   </LocaleResource>
@@ -887,6 +890,9 @@
   </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteEmailAccount">
     <Value>Deleted an email account (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteFilterLevelValue">
+    <Value>Deleted a filter level value (ID = {0})</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteGiftCard">
     <Value>Deleted a gift card ('{0}')</Value>
@@ -1026,6 +1032,9 @@
   <LocaleResource Name="ActivityLog.EditEmailAccount">
     <Value>Edited an email account (ID = {0})</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditFilterLevelValue">
+    <Value>Edited a filter level value (ID = {0})</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.EditGiftCard">
     <Value>Edited a gift card ('{0}')</Value>
   </LocaleResource>
@@ -1119,6 +1128,9 @@
   <LocaleResource Name="ActivityLog.ExportCustomers">
     <Value>{0} customers were exported</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.ExportFilterLevelValues">
+    <Value>{0} filter level values were exported</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.ExportManufacturers">
     <Value>{0} manufacturers were exported</Value>
   </LocaleResource>
@@ -1151,6 +1163,9 @@
   </LocaleResource>
   <LocaleResource Name="ActivityLog.ImportCustomers">
     <Value>{0} customers were imported</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.ImportFilterLevelValues">
+    <Value>{0} filter level values were imported</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.ImportManufacturers">
     <Value>{0} manufacturers were imported</Value>
@@ -2448,6 +2463,51 @@
   <LocaleResource Name="Admin.Catalog.Categories.Updated">
     <Value>The category has been updated successfully.</Value>
   </LocaleResource>
+    <LocaleResource Name="Admin.Catalog.FilterLevelValue.AddNew">
+  <Value>Add a new filter level value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.FilterLevelValue.BackToList">
+    <Value>back to filter level value list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.FilterLevelValue.EditFilterLevelValueDetails">
+    <Value>Edit filter level value details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.FilterLevelValue.Info">
+    <Value>Filter level value info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.FilterLevelValue.List.ImportFromExcelTip">
+    <Value>Imported filter level values are distinguished by ID. If the ID already exists, then its corresponding filter level value will be updated. You should not specify ID ( leave  0) for new filter level values.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.FilterLevelValue.Products">
+    <Value>Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.FilterLevelValue.Products.AddNew">
+    <Value>Add a new product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.FilterLevelValue.Products.Fields.Product">
+    <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.FilterLevelValue.Products.SaveBeforeEdit">
+    <Value>You need to save the filter level value before you can add products for this page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.FilterLevelValues">
+    <Value>Filter level values (YMM)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.FilterLevelValues.Added">
+    <Value>The filter level value has been added successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.FilterLevelValues.Deleted">
+    <Value>The filter level value has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.FilterLevelValues.Exist">
+    <Value>A filter level value with the same value already exists.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.FilterLevelValues.Imported">
+    <Value>The filter level values have been imported successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.FilterLevelValues.Updated">
+    <Value>The filter level value has been updated successfully.</Value>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Catalog.Manufacturers">
     <Value>Manufacturers</Value>
   </LocaleResource>
@@ -3600,6 +3660,18 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.Width.Hint">
     <Value>The product width.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.FilterLevelValues">
+    <Value>Filter level values (YMM)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.FilterLevelValues.AddNew">
+    <Value>Add a new filter level value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.FilterLevelValues.Hint">
+    <Value>Select filter level values for this product.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.FilterLevelValues.SaveBeforeEdit">
+    <Value>You need to save the product before you can add filter level values for this product page.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.GiftCard">
     <Value>Gift card</Value>
   </LocaleResource>
@@ -3656,6 +3728,24 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.List.SearchIncludeSubCategories.Hint">
     <Value>Check to search in subcategories.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.List.SearchFilterValue1">
+    <Value>Year</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.List.SearchFilterValue1.Hint">
+    <Value>Search by a specific filter level.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.List.SearchFilterValue2">
+    <Value>Make</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.List.SearchFilterValue2.Hint">
+    <Value>Search by a specific filter level.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.List.SearchFilterValue3">
+    <Value>Model</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.List.SearchFilterValue3.Hint">
+    <Value>Search by a specific filter level.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.List.SearchManufacturer">
     <Value>Manufacturer</Value>
@@ -7317,6 +7407,63 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ZipPostalCodeRequired.Hint">
     <Value>Check if 'Zip / postal code' is required.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.FilterLevel">
+    <Value>Filter (YMM) settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.FilterLevel.BackToList">
+    <Value>back to filter level list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.FilterLevel.BlockTitle.Common">
+    <Value>Common</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.FilterLevel.BlockTitle.Levels">
+    <Value>Levels</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.FilterLevel.CannotDisableParent">
+    <Value>You cannot disable any parent level if one of the child levels is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.FilterLevel.CannotEnableChild">
+    <Value>You cannot enable a child level if one of the parent levels is disabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.FilterLevel.DisplayOnHomePage">
+    <Value>Display on home page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.FilterLevel.DisplayOnHomePage.Hint">
+    <Value>Check to display filter levels on the home page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.FilterLevel.DisplayOnProductDetailsPage">
+    <Value>Display on product details page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.FilterLevel.DisplayOnProductDetailsPage.Hint">
+    <Value>Check to display filter levels on the product details page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.FilterLevel.Edit">
+    <Value>Edit filter level</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.FilterLevel.Enabled">
+    <Value>Enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.FilterLevel.Enabled.Hint">
+    <Value>Check to enable this filter level.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.FilterLevel.FilterLevelEnabled">
+    <Value>Filter level enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.FilterLevel.FilterLevelEnabled.Hint">
+    <Value>Check to enable the filter level functionality.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.FilterLevel.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.FilterLevel.Name.Hint">
+    <Value>Enter the name of the filter level.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.FilterLevel.Name.Required">
+    <Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.FilterLevel.Updated">
+    <Value>The filter level has been updated successfully.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Forums">
     <Value>Forum settings</Value>
   </LocaleResource>
@@ -8802,6 +8949,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DownloadableProduct">
     <Value>Downloadable product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.FilterLevelValuesProducts">
+    <Value>Filter level values products</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.FreeShipping">
     <Value>Free shipping</Value>
@@ -13033,6 +13183,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.EmailCampaigns">
     <Value><![CDATA[Learn more about <a target="_blank" href="{0}">email campaigns</a>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documentation.Reference.FilterLevels">
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">filter level values</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.ExternalAuthentication">
     <Value><![CDATA[Learn more about <a target="_blank" href="{0}">external authentication methods</a>]]></Value>
@@ -18059,6 +18212,24 @@
   <LocaleResource Name="Enums.Nop.Core.Domain.Discounts.RequirementGroupInteractionType.Or">
     <Value>OR</Value>
   </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.FilterLevels.FilterLevelEnum.FilterLevel1">
+    <Value>Year</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.FilterLevels.FilterLevelEnum.FilterLevel1.Hint">
+    <Value>Set the filter value.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.FilterLevels.FilterLevelEnum.FilterLevel2">
+    <Value>Make</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.FilterLevels.FilterLevelEnum.FilterLevel2.Hint">
+    <Value>Set the filter value.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.FilterLevels.FilterLevelEnum.FilterLevel3">
+    <Value>Model</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.FilterLevels.FilterLevelEnum.FilterLevel3.Hint">
+    <Value>Set the filter value.</Value>
+  </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Forums.EditorType.BBCodeEditor">
     <Value>BBCode editor</Value>
   </LocaleResource>
@@ -19748,6 +19919,12 @@
   <LocaleResource Name="Products.Compare.Title">
     <Value>Compare products</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.CompatibleWith">
+    <Value>Compatible with</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.CompatibleWith.Items">
+    <Value>{0} items are compatible with this product</Value>
+  </LocaleResource>
   <LocaleResource Name="Products.DeliveryDate">
     <Value>Delivery date</Value>
   </LocaleResource>
@@ -20245,6 +20422,9 @@
   </LocaleResource>
   <LocaleResource Name="Search.EnterSearchTerms">
     <Value>Please enter some search keyword</Value>
+  </LocaleResource>
+  <LocaleResource Name="Search.FilterLevelValues">
+    <Value>Search by Year Make Model</Value>
   </LocaleResource>
   <LocaleResource Name="Search.IncludeSubCategories">
     <Value>Automatically search sub categories</Value>

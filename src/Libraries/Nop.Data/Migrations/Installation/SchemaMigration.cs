@@ -7,6 +7,7 @@ using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Domain.FilterLevels;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
@@ -73,6 +74,8 @@ public class SchemaMigration : ForwardOnlyMigration
         Create.TableFor<ProductTemplate>();
         Create.TableFor<BackInStockSubscription>();
         Create.TableFor<RelatedProduct>();
+        Create.TableFor<FilterLevelValue>();
+        Create.TableFor<FilterLevelValueProductMapping>();
         Create.TableFor<ReviewType>();
         Create.TableFor<SpecificationAttributeGroup>();
         Create.TableFor<SpecificationAttribute>();

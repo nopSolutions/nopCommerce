@@ -1,0 +1,62 @@
+﻿@model FilterLevelValueModel
+
+@if (Model.Id > 0)
+{
+    <div class="card-body">
+        @await Html.PartialAsync("Table", new DataTablesModel
+        {
+            Name = "products-grid",
+            UrlRead = new DataUrl("ProductList", "FilterLevelValue", new RouteValueDictionary { [nameof(Model.FilterLevelValueProductSearchModel.FilterLevelValueId)] = Model.FilterLevelValueProductSearchModel.FilterLevelValueId }),
+            UrlDelete = new DataUrl("ProductDelete", "FilterLevelValue", null),
+            Length = Model.FilterLevelValueProductSearchModel.PageSize,
+            LengthMenu = Model.FilterLevelValueProductSearchModel.AvailablePageSizes,
+            ColumnCollection = new List<ColumnProperty>
+                {
+                    new ColumnProperty(nameof(FilterLevelValueProductModel.ProductName))
+                    {
+                        Title = T("Admin.Catalog.FilterLevelValue.Products.Fields.Product").Text
+                    },
+                    new ColumnProperty(nameof(FilterLevelValueProductModel.ProductId))
+                    {
+                        Title = T("Admin.Common.View").Text,
+                        Width = "150",
+                        ClassName = NopColumnClassDefaults.Button,
+                        Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/", nameof(FilterLevelValueProductModel.ProductId)))
+                    },
+                    new ColumnProperty(nameof(FilterLevelValueProductModel.Id))
+                    {
+                        Title = T("Admin.Common.Delete").Text,
+                        Width = "100",
+                        Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                        ClassName = NopColumnClassDefaults.Button
+                    }
+                }
+        })
+    </div>
+    <div class="card-footer">
+        <button type="submit" id="btnAddNewProduct"
+            onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "FilterLevelValue", new { filterLevelValueId = Model.Id, btnId = "btnRefreshProducts", formId = "filter-level-value-form" }))', 800, 800, true); return false;"
+                class="btn btn-primary">
+            @T("Admin.Catalog.FilterLevelValue.Products.AddNew")
+        </button>
+        <button type="submit" id="btnRefreshProducts" style="display: none"></button>
+        <script>
+            $(function() {
+                $('#btnRefreshProducts').click(function () {
+                    //refresh grid
+                    updateTable('#products-grid');
+
+                    //return false to don't reload a page
+                    return false;
+                });
+            });
+        </script>
+    </div>
+}
+else
+{
+    <div class="card-body">
+        @T("Admin.Catalog.FilterLevelValue.Products.SaveBeforeEdit")
+    </div>
+}
+

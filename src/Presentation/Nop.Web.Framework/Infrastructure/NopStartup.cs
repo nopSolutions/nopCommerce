@@ -25,6 +25,7 @@ using Nop.Services.Directory;
 using Nop.Services.Discounts;
 using Nop.Services.Events;
 using Nop.Services.ExportImport;
+using Nop.Services.FilterLevels;
 using Nop.Services.Forums;
 using Nop.Services.Gdpr;
 using Nop.Services.Helpers;
@@ -139,6 +140,7 @@ public partial class NopStartup : INopStartup
         //services
         services.AddScoped<IBackInStockSubscriptionService, BackInStockSubscriptionService>();
         services.AddScoped<ICategoryService, CategoryService>();
+        services.AddScoped<IFilterLevelValueService, FilterLevelValueService>();
         services.AddScoped<ICompareProductsService, CompareProductsService>();
         services.AddScoped<IRecentlyViewedProductsService, RecentlyViewedProductsService>();
         services.AddScoped<IManufacturerService, ManufacturerService>();

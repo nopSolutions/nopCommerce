@@ -8,6 +8,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Domain.FilterLevels;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
@@ -23,6 +24,7 @@ using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
 using Nop.Services.ExportImport;
+using Nop.Services.FilterLevels;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
@@ -63,6 +65,8 @@ public partial class ProductController : BaseAdminController
     protected readonly IDownloadService _downloadService;
     protected readonly IEventPublisher _eventPublisher;
     protected readonly IExportManager _exportManager;
+    protected readonly IFilterLevelValueModelFactory _filterLevelValueModelFactory;
+    protected readonly IFilterLevelValueService _filterLevelValueService;
     protected readonly IHttpClientFactory _httpClientFactory;
     protected readonly IImportManager _importManager;
     protected readonly ILanguageService _languageService;
@@ -115,6 +119,8 @@ public partial class ProductController : BaseAdminController
         IDownloadService downloadService,
         IEventPublisher eventPublisher,
         IExportManager exportManager,
+        IFilterLevelValueModelFactory filterLevelValueModelFactory,
+        IFilterLevelValueService filterLevelValueService,
         IHttpClientFactory httpClientFactory,
         IImportManager importManager,
         ILanguageService languageService,
@@ -162,6 +168,8 @@ public partial class ProductController : BaseAdminController
         _downloadService = downloadService;
         _eventPublisher = eventPublisher;
         _exportManager = exportManager;
+        _filterLevelValueModelFactory = filterLevelValueModelFactory;
+        _filterLevelValueService = filterLevelValueService;
         _httpClientFactory = httpClientFactory;
         _importManager = importManager;
         _languageService = languageService;
@@ -1748,6 +1756,100 @@ public partial class ProductController : BaseAdminController
         ViewBag.RefreshPage = true;
 
         return View(new AddCrossSellProductSearchModel());
+    }
+
+    #endregion
+
+    #region Filter level values
+
+    [HttpPost]
+    [CheckPermission(StandardPermission.Catalog.FILTER_LEVEL_VALUE_VIEW)]
+    public virtual async Task<IActionResult> FilterLevelValueList(FilterLevelValueSearchModel searchModel)
+    {
+        //try to get a product with the specified id
+        var product = await _productService.GetProductByIdAsync(searchModel.ProductId)
+            ?? throw new ArgumentException("No product found with the specified id");
+
+        //a vendor should have access only to his products
+        var currentVendor = await _workContext.GetCurrentVendorAsync();
+        if (currentVendor != null && product.VendorId != currentVendor.Id)
+            return Content("This is not your product");
+
+        //prepare model
+        var model = await _productModelFactory.PrepareFilterLevelValueListModelAsync(searchModel, product);
+
+        return Json(model);
+    }
+
+    [HttpPost]
+    [CheckPermission(StandardPermission.Catalog.FILTER_LEVEL_VALUE_CREATE_EDIT_DELETE)]
+    public virtual async Task<IActionResult> FilterLevelValueDelete(int productId, int id)
+    {
+        //try to get a filter level value mapping with the specified id
+        var existingProductFilterLevelValues = await _filterLevelValueService.GetFilterLevelValueProductsByFilterLevelValueIdAsync(id);
+
+        var filterLevelValueMapping = existingProductFilterLevelValues.FirstOrDefault(pc => pc.ProductId == productId && pc.FilterLevelValueId == id)
+            ?? throw new ArgumentException("No filter level value mapping found with the specified id");
+
+        //a vendor should have access only to his products
+        var currentVendor = await _workContext.GetCurrentVendorAsync();
+        if (currentVendor != null)
+        {
+            var product = await _productService.GetProductByIdAsync(filterLevelValueMapping.ProductId);
+            if (product != null && product.VendorId != currentVendor.Id)
+                return Content("This is not your product");
+        }
+
+        await _filterLevelValueService.DeleteFilterLevelValueProductAsync(filterLevelValueMapping);
+
+        return new NullJsonResult();
+    }
+
+    [CheckPermission(StandardPermission.Catalog.FILTER_LEVEL_VALUE_CREATE_EDIT_DELETE)]
+    public virtual async Task<IActionResult> FilterLevelValuesAddPopup(int productId)
+    {
+        //prepare model
+        var model = await _filterLevelValueModelFactory.PrepareFilterLevelValueSearchModelAsync(new FilterLevelValueSearchModel());
+
+        return View(model);
+    }
+
+    [HttpPost]
+    [CheckPermission(StandardPermission.Catalog.FILTER_LEVEL_VALUE_CREATE_EDIT_DELETE)]
+    public virtual async Task<IActionResult> FilterLevelValuesAddPopupList(FilterLevelValueSearchModel searchModel)
+    {
+        //prepare model
+        var model = await _filterLevelValueModelFactory.PrepareFilterLevelValueListModelAsync(searchModel);
+
+        return Json(model);
+    }
+
+    [HttpPost]
+    [FormValueRequired("save")]
+    [CheckPermission(StandardPermission.Catalog.FILTER_LEVEL_VALUE_CREATE_EDIT_DELETE)]
+    public virtual async Task<IActionResult> FilterLevelValuesAddPopup(AddFilterLevelValueModel model)
+    {
+        var selectedFilterLevelValues = await _filterLevelValueService.GetFilterLevelValuesByIdsAsync(model.SelectedFilterLevelValueIds.ToArray());
+        if (selectedFilterLevelValues.Any())
+        {
+            foreach (var filterLevelValue in selectedFilterLevelValues)
+            {
+                //whether product filter level value with such parameters already exists
+                var existingProductFilterLevelValues = await _filterLevelValueService.GetFilterLevelValueProductsByFilterLevelValueIdAsync(filterLevelValue.Id);
+                if (existingProductFilterLevelValues.FirstOrDefault(pc => pc.ProductId == model.ProductId && pc.FilterLevelValueId == filterLevelValue.Id) != null)
+                    continue;
+
+                await _filterLevelValueService.InsertProductFilterLevelValueAsync(new FilterLevelValueProductMapping
+                {
+                    FilterLevelValueId = filterLevelValue.Id,
+                    ProductId = model.ProductId
+                });
+            }
+        }
+
+        ViewBag.RefreshPage = true;
+
+        return View(new FilterLevelValueSearchModel());
     }
 
     #endregion

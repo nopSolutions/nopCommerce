@@ -17,6 +17,7 @@ using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
+using Nop.Services.FilterLevels;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
@@ -51,6 +52,7 @@ public partial class ProductModelFactory : IProductModelFactory
     protected readonly IDateTimeHelper _dateTimeHelper;
     protected readonly IDiscountService _discountService;
     protected readonly IDiscountSupportedModelFactory _discountSupportedModelFactory;
+    protected readonly IFilterLevelValueService _filterLevelValueService;
     protected readonly ILanguageService _languageService;
     protected readonly ILocalizationService _localizationService;
     protected readonly ILocalizedModelFactory _localizedModelFactory;
@@ -96,6 +98,7 @@ public partial class ProductModelFactory : IProductModelFactory
         IDateTimeHelper dateTimeHelper,
         IDiscountService discountService,
         IDiscountSupportedModelFactory discountSupportedModelFactory,
+        IFilterLevelValueService filterLevelValueService,
         ILanguageService languageService,
         ILocalizationService localizationService,
         ILocalizedModelFactory localizedModelFactory,
@@ -137,6 +140,7 @@ public partial class ProductModelFactory : IProductModelFactory
         _dateTimeHelper = dateTimeHelper;
         _discountService = discountService;
         _discountSupportedModelFactory = discountSupportedModelFactory;
+        _filterLevelValueService = filterLevelValueService;
         _languageService = languageService;
         _localizationService = localizationService;
         _localizedModelFactory = localizedModelFactory;
@@ -421,6 +425,25 @@ public partial class ProductModelFactory : IProductModelFactory
     /// <param name="product">Product</param>
     /// <returns>Cross-sell product search model</returns>
     protected virtual CrossSellProductSearchModel PrepareCrossSellProductSearchModel(CrossSellProductSearchModel searchModel, Product product)
+    {
+        ArgumentNullException.ThrowIfNull(searchModel);
+        ArgumentNullException.ThrowIfNull(product);
+
+        searchModel.ProductId = product.Id;
+
+        //prepare page parameters
+        searchModel.SetGridPageSize();
+
+        return searchModel;
+    }
+
+    /// <summary>
+    /// Prepare filter level values search model
+    /// </summary>
+    /// <param name="searchModel">Filter level value search model</param>
+    /// <param name="product">Product</param>
+    /// <returns>Filter level value search model</returns>
+    protected virtual FilterLevelValueSearchModel PrepareFilterLevelValuesSearchModel(FilterLevelValueSearchModel searchModel, Product product)
     {
         ArgumentNullException.ThrowIfNull(searchModel);
         ArgumentNullException.ThrowIfNull(product);
@@ -853,6 +876,7 @@ public partial class ProductModelFactory : IProductModelFactory
             //prepare nested search model
             PrepareRelatedProductSearchModel(model.RelatedProductSearchModel, product);
             PrepareCrossSellProductSearchModel(model.CrossSellProductSearchModel, product);
+            PrepareFilterLevelValuesSearchModel(model.FilterLevelValueSearchModel, product);
             PrepareAssociatedProductSearchModel(model.AssociatedProductSearchModel, product);
             PrepareProductPictureSearchModel(model.ProductPictureSearchModel, product);
             PrepareProductVideoSearchModel(model.ProductVideoSearchModel, product);
@@ -1217,6 +1241,50 @@ public partial class ProductModelFactory : IProductModelFactory
                 crossSellProductModel.Product2Name = (await _productService.GetProductByIdAsync(crossSellProduct.ProductId2))?.Name;
 
                 return crossSellProductModel;
+            });
+        });
+
+        return model;
+    }
+
+    /// <summary>
+    /// Prepare paged filter level value list model
+    /// </summary>
+    /// <param name="searchModel">Filter level value search model</param>
+    /// <param name="product">Product</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the filter level value list model
+    /// </returns>
+    public virtual async Task<FilterLevelValueListModel> PrepareFilterLevelValueListModelAsync(FilterLevelValueSearchModel searchModel, Product product)
+    {
+        ArgumentNullException.ThrowIfNull(searchModel);
+        ArgumentNullException.ThrowIfNull(product);
+
+        //get filter level values
+        var filterLevelValues = (await _filterLevelValueService
+            .GetFilterLevelValuesByProductIdAsync(productId: product.Id)).ToPagedList(searchModel);
+
+        var (filterLevel1Disabled, filterLevel2Disabled, filterLevel3Disabled) = _filterLevelValueService.IsFilterLevelDisabled();
+
+        //prepare grid model
+        var model = await new FilterLevelValueListModel().PrepareToGridAsync(searchModel, filterLevelValues, () =>
+        {
+            return filterLevelValues.SelectAwait(filterLevelValue =>
+            {
+                //fill in model values from the entity
+                var filterLevelValueModel = new FilterLevelValueModel
+                {
+                    Id = filterLevelValue.Id,
+                    FilterLevel1Value = filterLevelValue.FilterLevel1Value,
+                    FilterLevel2Value = filterLevelValue.FilterLevel2Value,
+                    FilterLevel3Value = filterLevelValue.FilterLevel3Value,
+                    FilterLevel1ValueEnabled = !filterLevel1Disabled,
+                    FilterLevel2ValueEnabled = !filterLevel2Disabled,
+                    FilterLevel3ValueEnabled = !filterLevel3Disabled
+                };
+
+                return new ValueTask<FilterLevelValueModel>(filterLevelValueModel);
             });
         });
 

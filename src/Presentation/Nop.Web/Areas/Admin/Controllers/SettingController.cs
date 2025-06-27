@@ -9,6 +9,7 @@ using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.FilterLevels;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
@@ -134,6 +135,17 @@ public partial class SettingController : BaseAdminController
     #endregion
 
     #region Utilities
+
+    protected virtual async Task UpdateFilterLevelLocalesAsync(FilterLevelEnum filterLevel, FilterLevelModel model)
+    {
+        foreach (var localized in model.Locales)
+        {
+            await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
+            {
+                [$"Enums.Nop.Core.Domain.FilterLevels.FilterLevelEnum.{filterLevel}"] = localized?.Name ?? ""
+            }, localized.LanguageId);
+        }
+    }
 
     protected virtual async Task UpdateGdprConsentLocalesAsync(GdprConsent gdprConsent, GdprConsentModel model)
     {
@@ -782,6 +794,139 @@ public partial class SettingController : BaseAdminController
         //if we got this far, something failed, redisplay form
         return View(model);
     }
+
+    #region FilterLevel
+
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
+    public virtual async Task<IActionResult> FilterLevel()
+    {
+        //prepare model
+        var model = await _settingModelFactory.PrepareFilterLevelSettingsModelAsync();
+
+        return View(model);
+    }
+
+    [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
+    public virtual async Task<IActionResult> FilterLevel(FilterLevelSettingsModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            var filterLevelSettings = await _settingService.LoadSettingAsync<FilterLevelSettings>();
+
+            filterLevelSettings = model.ToSettings(filterLevelSettings);
+
+            await _settingService.SaveSettingAsync(filterLevelSettings, x => x.FilterLevelEnabled, 0, false);
+            await _settingService.SaveSettingAsync(filterLevelSettings, x => x.DisplayOnHomePage, 0, false);
+            await _settingService.SaveSettingAsync(filterLevelSettings, x => x.DisplayOnProductDetailsPage, 0, false);
+
+            //now clear settings cache
+            await _settingService.ClearCacheAsync();
+
+            //activity log
+            await _customerActivityService.InsertActivityAsync("EditSettings", await _localizationService.GetResourceAsync("ActivityLog.EditSettings"));
+
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Updated"));
+
+            return RedirectToAction("FilterLevel");
+        }
+
+        //prepare model
+        model = await _settingModelFactory.PrepareFilterLevelSettingsModelAsync(model);
+
+        //if we got this far, something failed, redisplay form
+        return View(model);
+    }
+
+    [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
+    public virtual async Task<IActionResult> FilterLevelList(FilterLevelSearchModel searchModel)
+    {
+        //prepare model
+        var model = await _settingModelFactory.PrepareFilterLevelListModelAsync(searchModel);
+
+        return Json(model);
+    }
+
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
+    public virtual async Task<IActionResult> EditFilterLevel(int id)
+    {
+        //prepare model
+        var model = await _settingModelFactory.PrepareFilterLevelModelAsync(null, (FilterLevelEnum)id);
+
+        return View(model);
+    }
+
+    [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
+    public virtual async Task<IActionResult> EditFilterLevel(FilterLevelModel model, bool continueEditing)
+    {
+        if (ModelState.IsValid)
+        {
+            var filterLevelSettings = await _settingService.LoadSettingAsync<FilterLevelSettings>();
+            var filterLevelEnumDisabled = filterLevelSettings.FilterLevelEnumDisabled;
+            var filterLevel = (FilterLevelEnum)model.Id;
+
+            if (model.Enabled && filterLevelEnumDisabled.Contains(model.Id))
+            {
+                var parentLevels = Enum.GetValues<FilterLevelEnum>()
+                    .Where(fl => (int)fl < (int)filterLevel && fl != filterLevel);
+
+                if (parentLevels.Any())
+                {
+                    var hasDisabledParent = parentLevels.Any(childLevel => filterLevelEnumDisabled.Contains((int)childLevel));
+
+                    if (hasDisabledParent)
+                    {
+                        _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Settings.FilterLevel.CannotEnableChild"));
+                        return RedirectToAction("EditFilterLevel", new { id = model.Id });
+                    }
+                }
+
+                filterLevelEnumDisabled.Remove(model.Id);
+            }
+
+            if (!model.Enabled && !filterLevelEnumDisabled.Contains(model.Id))
+            {
+                // Check if this is a parent level and any child levels are enabled
+                var childLevels = Enum.GetValues<FilterLevelEnum>()
+                    .Where(fl => (int)fl > (int)filterLevel && fl != filterLevel);
+
+                if (childLevels.Any())
+                {
+                    var hasEnabledChildren = childLevels.Any(childLevel => !filterLevelEnumDisabled.Contains((int)childLevel));
+
+                    if (hasEnabledChildren)
+                    {
+                        _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Settings.FilterLevel.CannotDisableParent"));
+                        return RedirectToAction("EditFilterLevel", new { id = model.Id });
+                    }
+                }
+
+                filterLevelEnumDisabled.Add(model.Id);
+            }
+
+            await _settingService.SaveSettingAsync(filterLevelSettings, x => x.FilterLevelEnumDisabled, 0, false);
+
+            //now clear settings cache
+            await _settingService.ClearCacheAsync();
+
+            //locales                
+            await UpdateFilterLevelLocalesAsync((FilterLevelEnum)model.Id, model);
+
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Settings.FilterLevel.Updated"));
+
+            return continueEditing ? RedirectToAction("EditFilterLevel", model.Id) : RedirectToAction("FilterLevel");
+        }
+
+        //prepare model
+        model = await _settingModelFactory.PrepareFilterLevelModelAsync(model, (FilterLevelEnum)model.Id, true);
+
+        //if we got this far, something failed, redisplay form
+        return View(model);
+    }
+
+    #endregion
 
     [HttpPost]
     [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]

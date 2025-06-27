@@ -1,0 +1,79 @@
+﻿@model ProductModel
+
+<div class="card-body">
+    <p>
+        @T("Admin.Catalog.Products.FilterLevelValues.Hint")
+    </p>
+    @if (Model.Id > 0)
+    {
+    <div class="card card-default">
+
+        <div class="card-body">
+            @await Html.PartialAsync("Table", new DataTablesModel
+            {
+                Name = "filter-level-values-grid",
+                UrlRead = new DataUrl("FilterLevelValueList", "Product", new RouteValueDictionary { [nameof(Model.FilterLevelValueSearchModel.ProductId)] = Model.FilterLevelValueSearchModel.ProductId }),
+                UrlDelete = new DataUrl("FilterLevelValueDelete", "Product", new RouteValueDictionary
+                   {
+                        [nameof(Model.FilterLevelValueSearchModel.ProductId)] = Model.Id
+                   }),
+                Length = Model.FilterLevelValueSearchModel.PageSize,
+                LengthMenu = Model.FilterLevelValueSearchModel.AvailablePageSizes,
+                ColumnCollection = new List<ColumnProperty>
+                {
+                     new ColumnProperty(nameof(FilterLevelValueModel.FilterLevel1Value))
+                     {
+                         Title = T("Enums.Nop.Core.Domain.FilterLevels.FilterLevelEnum.FilterLevel1").Text,
+                         Visible = !Model.FilterLevelValueSearchModel.HideSearchFilterValue1,
+                         Width = "100"
+                     },
+                     new ColumnProperty(nameof(FilterLevelValueModel.FilterLevel2Value))
+                     {
+                         Title = T("Enums.Nop.Core.Domain.FilterLevels.FilterLevelEnum.FilterLevel2").Text,
+                         Visible = !Model.FilterLevelValueSearchModel.HideSearchFilterValue2,
+                         Width = "100",
+                     },
+                     new ColumnProperty(nameof(FilterLevelValueModel.FilterLevel3Value))
+                     {
+                         Title = T("Enums.Nop.Core.Domain.FilterLevels.FilterLevelEnum.FilterLevel3").Text,
+                         Visible = !Model.FilterLevelValueSearchModel.HideSearchFilterValue3,
+                         Width = "100",
+                     },
+                        new ColumnProperty(nameof(FilterLevelValueModel.Id))
+                    {
+                        Title = T("Admin.Common.Delete").Text,
+                        Width = "100",
+                        Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                        ClassName = NopColumnClassDefaults.Button
+                    }
+                }
+            })
+        </div>
+        <div class="card-footer">
+            <button type="submit" id="btnAddNewFilterLevelValues" onclick="javascript:OpenWindow('@(Url.Action("FilterLevelValuesAddPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshFilterLevelValues", formId = "product-form" }))', 800, 800, true); return false;" class="btn btn-primary">
+                @T("Admin.Catalog.Products.FilterLevelValues.AddNew")
+            </button>
+            <button type="submit" id="btnRefreshFilterLevelValues" style="display: none"></button>
+            <script>
+                $(function() {
+                    $('#btnRefreshFilterLevelValues').click(function () {
+                        //refresh grid
+                        updateTable('#filter-level-values-grid');
+
+                        //return false to don't reload a page
+                        return false;
+                    });
+                });
+            </script>
+        </div>
+    </div>
+    }
+    else
+    {
+        <div class="card card-default">
+            <div class="card-body">
+                @T("Admin.Catalog.Products.FilterLevelValues.SaveBeforeEdit")
+            </div>
+        </div>
+    }
+</div>

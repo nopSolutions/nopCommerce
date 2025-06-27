@@ -46,6 +46,7 @@ public partial class NopStartup : INopStartup
         services.AddScoped<IDiscountModelFactory, DiscountModelFactory>();
         services.AddScoped<IEmailAccountModelFactory, EmailAccountModelFactory>();
         services.AddScoped<IExternalAuthenticationMethodModelFactory, ExternalAuthenticationMethodModelFactory>();
+        services.AddScoped<IFilterLevelValueModelFactory, FilterLevelValueModelFactory>();
         services.AddScoped<IForumModelFactory, ForumModelFactory>();
         services.AddScoped<IGiftCardModelFactory, GiftCardModelFactory>();
         services.AddScoped<IHomeModelFactory, HomeModelFactory>();
@@ -95,6 +96,7 @@ public partial class NopStartup : INopStartup
         services.AddScoped<Factories.ICountryModelFactory, Factories.CountryModelFactory>();
         services.AddScoped<Factories.ICustomerModelFactory, Factories.CustomerModelFactory>();
         services.AddScoped<Factories.IForumModelFactory, Factories.ForumModelFactory>();
+        services.AddScoped<Factories.IFilterLevelValueModelFactory, Factories.FilterLevelValueModelFactory>();
         services.AddScoped<Factories.IExternalAuthenticationModelFactory, Factories.ExternalAuthenticationModelFactory>();
         services.AddScoped<Factories.IJsonLdModelFactory, Factories.JsonLdModelFactory>();
         services.AddScoped<Factories.INewsModelFactory, Factories.NewsModelFactory>();
