@@ -56,6 +56,7 @@ using Nop.Web.Framework.Menu;
 using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.UI;
+using Windows.Services.Store;
 using TaskScheduler = Nop.Services.ScheduleTasks.TaskScheduler;
 
 namespace Nop.Web.Framework.Infrastructure;
@@ -295,6 +296,11 @@ public partial class NopStartup : INopStartup
         //schedule tasks
         services.AddSingleton<ITaskScheduler, TaskScheduler>();
         services.AddTransient<IScheduleTaskRunner, ScheduleTaskRunner>();
+
+
+       
+        services.AddScoped<IWebHelper, WebHelper>();
+
 
         //event consumers
         var consumers = typeFinder.FindClassesOfType(typeof(IConsumer<>)).ToList();

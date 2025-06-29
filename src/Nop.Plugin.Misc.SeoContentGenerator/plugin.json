@@ -1,0 +1,9 @@
+{
+  "Group": "Misc",
+  "FriendlyName": "SEO Content Generator",
+  "SystemName": "Misc.SeoContentGenerator",
+  "Version": "1.00",
+  "SupportedVersions": [ "4.60" ],
+  "Author": "Hashim",
+  "DisplayOrder": 1
+}

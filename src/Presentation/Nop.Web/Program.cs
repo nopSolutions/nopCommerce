@@ -1,7 +1,10 @@
 ﻿using Autofac.Extensions.DependencyInjection;
+using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
+using Nop.Services.Media;
 using Nop.Web.Framework.Infrastructure.Extensions;
+using Windows.Services.Store;
 
 namespace Nop.Web;
 
@@ -10,6 +13,10 @@ public partial class Program
     public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        builder.Services.AddTransient(typeof(Lazy<>), typeof(LazyResolver<>));
+        //builder.Services.AddScoped<IStoreContext, StoreContext>();
+
+
 
         builder.Configuration.AddJsonFile(NopConfigurationDefaults.AppSettingsFilePath, true, true);
         if (!string.IsNullOrEmpty(builder.Environment?.EnvironmentName))
@@ -27,7 +34,7 @@ public partial class Program
 
         if (useAutofac)
             builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
-        else
+        
             builder.Host.UseDefaultServiceProvider(options =>
             {
                 //we don't validate the scopes, since at the app start and the initial configuration we need 
@@ -35,9 +42,12 @@ public partial class Program
                 options.ValidateScopes = false;
                 options.ValidateOnBuild = true;
             });
+    
 
         //add services to the application and configure service provider
         builder.Services.ConfigureApplicationServices(builder);
+       
+
 
         var app = builder.Build();
 
@@ -46,5 +56,15 @@ public partial class Program
         await app.StartEngineAsync();
 
         await app.RunAsync();
+    }
+}
+
+
+
+public class LazyResolver<T> : Lazy<T>
+{
+    public LazyResolver(IServiceProvider provider)
+        : base(() => provider.GetRequiredService<T>())
+    {
     }
 }

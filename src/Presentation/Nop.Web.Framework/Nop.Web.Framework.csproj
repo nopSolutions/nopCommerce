@@ -14,6 +14,7 @@
   <ItemGroup>
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.426" />
+    <PackageReference Include="Uno.UI" Version="5.6.99" />
     <PackageReference Include="WebMarkupMin.AspNetCoreLatest" Version="2.18.0" />
     <PackageReference Include="WebMarkupMin.NUglify" Version="2.18.0" />
   </ItemGroup>

@@ -193,6 +193,11 @@
             <div class="col-md-9">
                 <nop-editor asp-for="@Model.Locales[item].FullDescription" asp-template="RichEditor" />
                 <span asp-validation-for="@Model.Locales[item].FullDescription"></span>
+					<!-- SEO generate button -->
+					<button type="button" class="btn btn-primary mt-2 generate-seo-btn" data-langid="@Model.Locales[item].LanguageId">
+						Generate SEO Description
+					</button>
+
             </div>
         </div>
         <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
@@ -659,3 +664,30 @@
         </div>
     </div>
 </div>
+
+
+
+
+@section Scripts {
+	<script>
+		$(document).on('click', '.generate-seo-btn', function() {
+			var langId = $(this).data('langid');
+			var shortDesc = $(this).closest('.form-group').prev().find('textarea').val();
+			var fullDesc = $(this).siblings('textarea, .rich-editor').val();
+
+			$.ajax({
+				url: '/Admin/SeoGeneration/GenerateDescription', // backend controller action
+				method: 'POST',
+				data: {
+					languageId: langId,
+					shortDescription: shortDesc,
+					fullDescription: fullDesc
+				},
+				success: function(response) {
+					alert("SEO description generated!");
+					// Yahan editor ka content update karna hai
+				}
+			});
+		});
+	</script>
+}

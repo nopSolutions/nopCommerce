@@ -882,6 +882,11 @@ public partial class ProductController : BaseAdminController
 
     #region Product list / create / edit / delete
 
+
+
+ 
+
+
     public virtual IActionResult Index()
     {
         return RedirectToAction("List");
@@ -1098,6 +1103,38 @@ public partial class ProductController : BaseAdminController
 
         return View(model);
     }
+
+
+
+    //[HttpPost]
+    //[IgnoreAntiforgeryToken] // optionally for now, if you're not passing anti-forgery
+    [HttpGet]
+    public async Task<IActionResult> GenerateSeo(int id)
+    {
+        var product = await _productService.GetProductByIdAsync(id);
+        if (product == null)
+            return NotFound();
+
+        var seoModel = new
+        {
+            seName = product.Name.Replace(" ", "-").ToLower(),
+            metaKeywords = $"Buy {product.Name} online",
+            metaDescription = $"Find {product.Name} at best price. Free delivery & offers available.",
+            metaTitle = $"{product.Name} | Best Price & Offers"
+        };
+
+        return Json(seoModel);
+    }
+
+    /// <summary>
+    /// ////////////////////add new product
+    /// </summary>
+    /// <param name="model"></param>
+    /// <param name="continueEditing"></param>
+    /// <returns></returns>
+    /// 
+
+
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
     [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
