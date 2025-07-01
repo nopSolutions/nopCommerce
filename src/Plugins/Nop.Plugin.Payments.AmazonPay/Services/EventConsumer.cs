@@ -23,7 +23,8 @@ namespace Nop.Plugin.Payments.AmazonPay.Services;
 /// </summary>
 public class EventConsumer :
     IConsumer<PageRenderingEvent>,
-    IConsumer<ModelPreparedEvent<BaseNopModel>>,
+    IConsumer<ModelPreparedEvent<ShoppingCartModel>>,
+    IConsumer<ModelPreparedEvent<CustomerAddressListModel>>,
     IConsumer<ModelReceivedEvent<BaseNopModel>>,
     IConsumer<CustomerAutoRegisteredByExternalMethodEvent>,
     IConsumer<ResetCheckoutDataEvent>
@@ -97,32 +98,32 @@ public class EventConsumer :
     /// </summary>
     /// <param name="eventMessage">Event message</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(ModelPreparedEvent<BaseNopModel> eventMessage)
+    public async Task HandleEventAsync(ModelPreparedEvent<ShoppingCartModel> eventMessage)
     {
-        var shoppingCartModel = eventMessage.Model as ShoppingCartModel;
-        var customerAddressListModel = eventMessage.Model as CustomerAddressListModel;
-        if (shoppingCartModel is null && customerAddressListModel is null)
-            return;
-
         if (!await _amazonPayApiService.IsActiveAndConfiguredAsync())
             return;
 
-        if (shoppingCartModel is not null)
-        {
-            var paymentDescriptor = await _amazonPayCheckoutService.GetPaymentDescriptorAsync();
-            if (string.IsNullOrEmpty(paymentDescriptor) || !string.IsNullOrEmpty(shoppingCartModel.OrderReviewData.PaymentMethod))
-                return;
+        var paymentDescriptor = await _amazonPayCheckoutService.GetPaymentDescriptorAsync();
+        if (string.IsNullOrEmpty(paymentDescriptor) || !string.IsNullOrEmpty(eventMessage.Model.OrderReviewData.PaymentMethod))
+            return;
 
-            shoppingCartModel.OrderReviewData.PaymentMethod = paymentDescriptor;
-        }
+        eventMessage.Model.OrderReviewData.PaymentMethod = paymentDescriptor;
+    }
 
-        if (customerAddressListModel is not null)
-        {
-            var addressIds = await _amazonPayCheckoutService.RemoveCustomerAddressesAsync();
-            customerAddressListModel.Addresses = customerAddressListModel.Addresses
-                .Where(addressModel => !addressIds.Contains(addressModel.Id))
-                .ToList();
-        }
+    /// <summary>
+    /// Handle model prepared event
+    /// </summary>
+    /// <param name="eventMessage">Event message</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public async Task HandleEventAsync(ModelPreparedEvent<CustomerAddressListModel> eventMessage)
+    {
+        if (!await _amazonPayApiService.IsActiveAndConfiguredAsync())
+            return;
+
+        var addressIds = await _amazonPayCheckoutService.RemoveCustomerAddressesAsync();
+        eventMessage.Model.Addresses = eventMessage.Model.Addresses
+            .Where(addressModel => !addressIds.Contains(addressModel.Id))
+            .ToList();
     }
 
     /// <summary>

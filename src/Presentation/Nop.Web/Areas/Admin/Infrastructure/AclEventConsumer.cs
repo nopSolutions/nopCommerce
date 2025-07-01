@@ -22,7 +22,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure;
 /// <summary>
 /// Represents ACL event consumer
 /// </summary>
-public partial class AclEventConsumer : IConsumer<ModelPreparedEvent<BaseNopModel>>,
+public partial class AclEventConsumer : IConsumer<ModelPreparedEvent<IAclSupportedModel>>,
     IConsumer<ModelReceivedEvent<BaseNopModel>>,
     IConsumer<EntityInsertedEvent<Manufacturer>>,
     IConsumer<EntityInsertedEvent<Product>>,
@@ -92,39 +92,6 @@ public partial class AclEventConsumer : IConsumer<ModelPreparedEvent<BaseNopMode
 
     #region Methods
     
-    /// <summary>
-    /// Handle model prepared event
-    /// </summary>
-    /// <param name="eventMessage">Event message</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task HandleEventAsync(ModelPreparedEvent<BaseNopModel> eventMessage)
-    {
-        if (eventMessage.Model is not IAclSupportedModel)
-            return;
-
-        switch (eventMessage.Model)
-        {
-            case CategoryModel categoryModel:
-                await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(categoryModel, nameof(Category));
-                break;
-            case ManufacturerModel manufacturerModel:
-                await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(manufacturerModel, nameof(Manufacturer));
-                break;
-            case PluginModel pluginModel:
-                await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(pluginModel);
-                break;
-            case ProductModel productModel:
-                await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(productModel, nameof(Product));
-                break;
-            case TopicModel topicModel:
-                await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(topicModel, nameof(Topic));
-                break;
-            case CustomerSearchModel customerSearchModel:
-                await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(customerSearchModel);
-                break;
-        }
-    }
-
     /// <summary>
     /// Handle model received event
     /// </summary>
@@ -213,4 +180,29 @@ public partial class AclEventConsumer : IConsumer<ModelPreparedEvent<BaseNopMode
     }
     
     #endregion
+
+    public async Task HandleEventAsync(ModelPreparedEvent<IAclSupportedModel> eventMessage)
+    {
+        switch (eventMessage.Model)
+        {
+            case CategoryModel categoryModel:
+                await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(categoryModel, nameof(Category));
+                break;
+            case ManufacturerModel manufacturerModel:
+                await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(manufacturerModel, nameof(Manufacturer));
+                break;
+            case PluginModel pluginModel:
+                await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(pluginModel);
+                break;
+            case ProductModel productModel:
+                await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(productModel, nameof(Product));
+                break;
+            case TopicModel topicModel:
+                await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(topicModel, nameof(Topic));
+                break;
+            case CustomerSearchModel customerSearchModel:
+                await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(customerSearchModel);
+                break;
+        }
+    }
 }

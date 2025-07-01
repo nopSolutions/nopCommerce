@@ -19,22 +19,10 @@ public abstract partial class NopViewComponent : ViewComponent
         //as we do in the /Nop.Web.Framework/Mvc/Filters/PublishModelEventsAttribute.cs for controllers
 
         //model prepared event
-        if (model is BaseNopModel)
+        if (model is BaseNopModel or IEnumerable<BaseNopModel>)
         {
             var eventPublisher = EngineContext.Current.Resolve<IEventPublisher>();
-
-            //we publish the ModelPrepared event for all models as the BaseNopModel, 
-            //so you need to implement IConsumer<ModelPrepared<BaseNopModel>> interface to handle this event
-            eventPublisher.ModelPreparedAsync(model as BaseNopModel).Wait();
-        }
-
-        if (model is IEnumerable<BaseNopModel> modelCollection)
-        {
-            var eventPublisher = EngineContext.Current.Resolve<IEventPublisher>();
-
-            //we publish the ModelPrepared event for collection as the IEnumerable<BaseNopModel>, 
-            //so you need to implement IConsumer<ModelPrepared<IEnumerable<BaseNopModel>>> interface to handle this event
-            eventPublisher.ModelPreparedAsync(modelCollection).Wait();
+            eventPublisher.ModelPreparedAsync(model).Wait();
         }
     }
 

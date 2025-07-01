@@ -88,15 +88,8 @@ public sealed class PublishModelEventsAttribute : TypeFilterAttribute
         /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PublishModelPreparedEventAsync(object model)
         {
-            //we publish the ModelPrepared event for all models as the BaseNopModel, 
-            //so you need to implement IConsumer<ModelPrepared<BaseNopModel>> interface to handle this event
-            if (model is BaseNopModel nopModel)
-                await _eventPublisher.ModelPreparedAsync(nopModel);
-
-            //we publish the ModelPrepared event for collection as the IEnumerable<BaseNopModel>, 
-            //so you need to implement IConsumer<ModelPrepared<IEnumerable<BaseNopModel>>> interface to handle this event
-            if (model is IEnumerable<BaseNopModel> nopModelCollection)
-                await _eventPublisher.ModelPreparedAsync(nopModelCollection);
+            if (model is BaseNopModel or IEnumerable<BaseNopModel>) 
+                await _eventPublisher.ModelPreparedAsync(model);
         }
 
         /// <summary>

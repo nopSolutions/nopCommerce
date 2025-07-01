@@ -25,7 +25,8 @@ namespace Nop.Plugin.Payments.PayPalCommerce.Services;
 public class EventConsumer :
     BaseAdminMenuCreatedEventConsumer,
     IConsumer<CustomerPermanentlyDeleted>,
-    IConsumer<ModelPreparedEvent<BaseNopModel>>,
+    IConsumer<ModelPreparedEvent<PaymentMethodListModel>>,
+    IConsumer<ModelPreparedEvent<CustomerNavigationModel>>,
     IConsumer<ModelReceivedEvent<BaseNopModel>>,
     IConsumer<ShipmentCreatedEvent>,
     IConsumer<ShipmentTrackingNumberSetEvent>,
@@ -145,15 +146,21 @@ public class EventConsumer :
     /// </summary>
     /// <param name="eventMessage">Event message</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(ModelPreparedEvent<BaseNopModel> eventMessage)
+    public Task HandleEventAsync(ModelPreparedEvent<PaymentMethodListModel> eventMessage)
     {
         //exclude the plugin from payment providers list, we'll display it another way
-        if (eventMessage.Model is PaymentMethodListModel paymentMethodsModel)
-            paymentMethodsModel.Data = paymentMethodsModel.Data.Where(method => !string.Equals(method.SystemName, PayPalCommerceDefaults.SystemName));
+        eventMessage.Model.Data = eventMessage.Model.Data.Where(method => !string.Equals(method.SystemName, PayPalCommerceDefaults.SystemName));
 
-        if (eventMessage.Model is not CustomerNavigationModel navigationModel)
-            return;
+        return Task.CompletedTask;
+    }
 
+    /// <summary>
+    /// Handle model prepared event
+    /// </summary>
+    /// <param name="eventMessage">Event message</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public async Task HandleEventAsync(ModelPreparedEvent<CustomerNavigationModel> eventMessage)
+    {
         var (active, _) = await _serviceManager.IsActiveAsync(_settings);
         if (!active)
             return;
@@ -163,9 +170,9 @@ public class EventConsumer :
             return;
 
         //add a new menu item in the customer navigation
-        var orderItem = navigationModel.CustomerNavigationItems.FirstOrDefault(item => item.Tab == (int)CustomerNavigationEnum.Orders);
-        var position = navigationModel.CustomerNavigationItems.IndexOf(orderItem) + 1;
-        navigationModel.CustomerNavigationItems.Insert(position, new()
+        var orderItem = eventMessage.Model.CustomerNavigationItems.FirstOrDefault(item => item.Tab == (int)CustomerNavigationEnum.Orders);
+        var position = eventMessage.Model.CustomerNavigationItems.IndexOf(orderItem) + 1;
+        eventMessage.Model.CustomerNavigationItems.Insert(position, new()
         {
             RouteName = PayPalCommerceDefaults.Route.PaymentTokens,
             ItemClass = "paypal-payment-tokens",

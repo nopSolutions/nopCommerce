@@ -12,7 +12,6 @@ using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Web.Framework.Events;
 using Nop.Web.Framework.Menu;
-using Nop.Web.Framework.Models;
 using Nop.Web.Models.ShoppingCart;
 
 namespace Nop.Plugin.Misc.RFQ.Services;
@@ -22,7 +21,7 @@ namespace Nop.Plugin.Misc.RFQ.Services;
 /// </summary>
 public class EventConsumer : IConsumer<AdminMenuCreatedEvent>,
     IConsumer<GetShoppingCartItemUnitPriceEvent>,
-    IConsumer<ModelPreparedEvent<BaseNopModel>>,
+    IConsumer<ModelPreparedEvent<ShoppingCartModel>>,
     IConsumer<EntityInsertedEvent<ShoppingCartItem>>,
     IConsumer<EntityUpdatedEvent<ShoppingCartItem>>,
     IConsumer<ShoppingCartItemMovedToOrderItemEvent>
@@ -79,7 +78,7 @@ public class EventConsumer : IConsumer<AdminMenuCreatedEvent>,
     public async Task HandleEventAsync(AdminMenuCreatedEvent eventMessage)
     {
         var plugin = await _pluginManager.LoadPluginBySystemNameAsync(RfqDefaults.SystemName);
-        
+
         //the LoadPluginBySystemNameAsync method returns only plugins that are already fully installed,
         //while the IConsumer<AdminMenuCreatedEvent> event can be called before the installation is complete
         if (plugin == null || !_pluginManager.IsPluginActive(plugin))
@@ -134,43 +133,40 @@ public class EventConsumer : IConsumer<AdminMenuCreatedEvent>,
     /// </summary>
     /// <param name="eventMessage">Event message</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(ModelPreparedEvent<BaseNopModel> eventMessage)
+    public async Task HandleEventAsync(ModelPreparedEvent<ShoppingCartModel> eventMessage)
     {
         if (!_rfqSettings.Enabled)
             return;
 
-        if (eventMessage.Model is ShoppingCartModel model)
+        var routeName = _httpContextAccessor.HttpContext?.GetEndpoint()?.Metadata.GetMetadata<RouteNameMetadata>()?.RouteName;
+
+        if (routeName is not "ShoppingCart")
+            return;
+
+        //is shopping cart created by quote
+        if (await eventMessage.Model.Items.AnyAwaitAsync(async shoppingCartItemModel => (await _rfqService.GetQuoteItemByShoppingCartItemIdAsync(shoppingCartItemModel.Id)) == null))
+            return;
+
+        var disableEdit = false;
+
+        foreach (var shoppingCartItemModel in eventMessage.Model.Items)
         {
-            var routeName = _httpContextAccessor.HttpContext?.GetEndpoint()?.Metadata.GetMetadata<RouteNameMetadata>()?.RouteName;
+            var quoteItem = await _rfqService.GetQuoteItemByShoppingCartItemIdAsync(shoppingCartItemModel.Id);
 
-            if (routeName is not "ShoppingCart")
+            if (quoteItem == null)
                 return;
 
-            //is shopping cart created by quote
-            if (await model.Items.AnyAwaitAsync(async shoppingCartItemModel => (await _rfqService.GetQuoteItemByShoppingCartItemIdAsync(shoppingCartItemModel.Id)) == null))
-                return;
+            shoppingCartItemModel.AllowItemEditing = false;
+            shoppingCartItemModel.DisableRemoval = true;
+            shoppingCartItemModel.Quantity = quoteItem.OfferedQty;
 
-            var disableEdit = false;
+            disableEdit = true;
+        }
 
-            foreach (var shoppingCartItemModel in model.Items)
-            {
-                var quoteItem = await _rfqService.GetQuoteItemByShoppingCartItemIdAsync(shoppingCartItemModel.Id);
-
-                if (quoteItem == null)
-                    return;
-
-                shoppingCartItemModel.AllowItemEditing = false;
-                shoppingCartItemModel.DisableRemoval = true;
-                shoppingCartItemModel.Quantity = quoteItem.OfferedQty;
-
-                disableEdit = true;
-            }
-
-            if (disableEdit)
-            {
-                model.IsEditable = false;
-                model.IsReadyToCheckout = true;
-            }
+        if (disableEdit)
+        {
+            eventMessage.Model.IsEditable = false;
+            eventMessage.Model.IsReadyToCheckout = true;
         }
     }
 
@@ -244,7 +240,7 @@ public class EventConsumer : IConsumer<AdminMenuCreatedEvent>,
             return;
 
         var quoteItem = await _rfqService.GetQuoteItemByShoppingCartItemIdAsync(eventMessage.Entity.Id);
-        
+
         if (quoteItem == null || eventMessage.Entity.Quantity == quoteItem.OfferedQty)
             return;
 

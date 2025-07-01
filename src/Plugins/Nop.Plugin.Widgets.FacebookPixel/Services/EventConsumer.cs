@@ -8,7 +8,6 @@ using Nop.Services.Events;
 using Nop.Services.Messages;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Events;
-using Nop.Web.Framework.Models;
 using Nop.Web.Models.Catalog;
 
 namespace Nop.Plugin.Widgets.FacebookPixel.Services;
@@ -20,7 +19,7 @@ public class EventConsumer :
     IConsumer<CustomerRegisteredEvent>,
     IConsumer<EntityInsertedEvent<ShoppingCartItem>>,
     IConsumer<MessageTokensAddedEvent<Token>>,
-    IConsumer<ModelPreparedEvent<BaseNopModel>>,
+    IConsumer<ModelPreparedEvent<ProductDetailsModel>>,
     IConsumer<OrderPlacedEvent>,
     IConsumer<PageRenderingEvent>,
     IConsumer<ProductSearchEvent>
@@ -72,10 +71,9 @@ public class EventConsumer :
     /// </summary>
     /// <param name="eventMessage">Event message</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(ModelPreparedEvent<BaseNopModel> eventMessage)
+    public async Task HandleEventAsync(ModelPreparedEvent<ProductDetailsModel> eventMessage)
     {
-        if (eventMessage?.Model is ProductDetailsModel productDetailsModel)
-            await _facebookPixelService.SendViewContentEventAsync(productDetailsModel);
+        await _facebookPixelService.SendViewContentEventAsync(eventMessage.Model);
     }
 
     /// <summary>
