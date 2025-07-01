@@ -138,5 +138,45 @@ namespace Nop.Plugin.Misc.AbcCore.Areas.Admin.PageNotFound
 
             return Json(model);
         }
+
+        public IActionResult Frequency()
+        {
+            return View(
+                "~/Plugins/Misc.AbcCore/Areas/Admin/PageNotFound/Frequency.cshtml",
+                new PageNotFoundFreqSearchModel()
+            );
+        }
+
+        [HttpPost]
+        public virtual IActionResult Frequency(PageNotFoundFreqSearchModel searchModel)
+        {
+            var logs = _logger.GetPageNotFoundLogs();
+            var groupedLogs = logs.GroupBy(l => l.PageUrl)
+                                  .Select(group => new
+                                  {
+                                      Slug = group.Key,
+                                      Count = group.Count()
+                                  })
+                                  .OrderByDescending(g => g.Count)
+                                  .ToList();
+
+            var pagedList = groupedLogs.ToPagedList(searchModel);
+            var model = new PageNotFoundFreqListModel().PrepareToGrid(searchModel, pagedList, () =>
+            {
+                //fill in model values from the entity
+                return pagedList.Select(group =>
+                {
+                    var pageNotFoundFreqModel = new PageNotFoundFreqModel()
+                    {
+                        Slug = group.Slug,
+                        Count = group.Count
+                    };
+
+                    return pageNotFoundFreqModel;
+                });
+            });
+
+            return Json(model);
+        }
     }
 }

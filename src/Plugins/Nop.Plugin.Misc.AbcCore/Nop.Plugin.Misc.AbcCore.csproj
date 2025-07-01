@@ -29,6 +29,7 @@
     <None Remove="Areas\Admin\Views\AbcPromo\Products.cshtml" />
     <None Remove="Areas\Admin\Views\MissingImageProduct\List.cshtml" />
     <None Remove="Areas\Admin\Views\NewProduct\List.cshtml" />
+    <None Remove="Areas\Admin\PageNotFound\Frequency.cshtml" />
     <None Remove="Areas\Admin\PageNotFound\List.cshtml" />
   </ItemGroup>
 
@@ -70,6 +71,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Admin\Views\NewProduct\List.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Admin\PageNotFound\Frequency.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Admin\PageNotFound\List.cshtml">

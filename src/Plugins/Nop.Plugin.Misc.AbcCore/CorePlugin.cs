@@ -270,6 +270,14 @@ namespace Nop.Plugin.Misc.AbcCore
                             Visible = true,
                             ControllerName = "PageNotFound",
                             ActionName = "List"
+                        },
+                        new SiteMapNode()
+                        {
+                            SystemName = "ABCWarehouse.PageNotFoundFreq",
+                            Title = "Page Not Found Frequency",
+                            Visible = true,
+                            ControllerName = "PageNotFound",
+                            ActionName = "Frequency"
                         }
                     }
                 };

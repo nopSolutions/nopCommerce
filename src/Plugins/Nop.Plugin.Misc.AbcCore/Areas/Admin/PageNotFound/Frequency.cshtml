@@ -1,0 +1,68 @@
+@model PageNotFoundFreqSearchModel
+
+@using Nop.Web.Framework.UI
+@using Nop.Web.Framework.Models.DataTables
+@using Nop.Core.Domain.Common
+@using Nop.Plugin.Misc.AbcCore.Areas.Admin.PageNotFound
+@using Nop.Web.Framework.Models.DataTables
+@using Nop.Services.Common
+@using Nop.Core
+
+@inject IGenericAttributeService genericAttributeService
+@inject IWorkContext workContext
+
+@inherits Nop.Web.Framework.Mvc.Razor.NopRazorPage<TModel>
+@addTagHelper *, Nop.Web.Framework
+
+@{
+    //page title
+    ViewBag.PageTitle = "Page Not Found Frequency";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("AbcWarehouse.PageNotFound");
+
+    Layout = "_AdminLayout";
+}
+
+@{
+    const string hideSearchBlockAttributeName = "PageNotFoundPage.HideSearchBlock";
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
+}
+
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        Page Not Found Frequency
+    </h1>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+    <div class="form-horizontal">
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "PageNotFound-grid",
+                        UrlRead = new DataUrl("Frequency", "PageNotFound", null),
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(PageNotFoundFreqModel.Slug))
+                            {
+                                Title = "Slug",
+                                Width = "200"
+                            },
+                            new ColumnProperty(nameof(PageNotFoundFreqModel.Count))
+                            {
+                                Title = "Count",
+                                Width = "200"
+                            }
+                        }
+                    })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
