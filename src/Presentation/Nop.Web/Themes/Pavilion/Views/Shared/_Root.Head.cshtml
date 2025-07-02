@@ -174,11 +174,7 @@ document.addEventListener('DOMContentLoaded', function() {
     })();
     <!-- End Adtaxi Container Tag -->
 
-  
-    @* This forces the webpage to always scroll to the top on a refresh *@
-    window.onload = function() {
-  window.scrollTo(0, 0);
-};
+
 
 
 
@@ -194,6 +190,34 @@ document.addEventListener('DOMContentLoaded', function() {
    
 
     </script>
+
+    <script>
+
+        @* Brand Filter Search *@
+document.addEventListener('DOMContentLoaded', function() {
+    const brandSearchInput = document.getElementById('brandSearchInput');
+    
+    if (brandSearchInput) {
+        // Trigger search on input
+        brandSearchInput.addEventListener('input', function() {
+            const searchTerm = this.value.trim().toLowerCase();
+            const brandItems = document.querySelectorAll('.brand-list li');
+            
+            brandItems.forEach(item => {
+                const brandName = item.getAttribute('data-brand-name');
+                if (brandName.includes(searchTerm)) {
+                    item.style.display = 'block'; // Show matching items
+                } else {
+                    item.style.display = 'none';  // Hide non-matching items
+                }
+            });
+        });
+    }
+});
+    </script>
+
+
+
     <noscript>
     <img height="1" width="1" 
     src="https://www.facebook.com/tr?id=279056429645080&ev=PageView

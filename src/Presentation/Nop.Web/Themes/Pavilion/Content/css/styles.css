@@ -8192,4 +8192,39 @@ a.us-ap-button {
 	.storeId8 .lookbook {
 		
 	}
+
+	/* Filter Search Styling */
+
+
+	.brand-search-container {
+        margin: 10px 0;
+    }
+    
+    .brand-search {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+    
+    .brand-list {
+        list-style: none;
+        padding-left: 0;
+        margin-top: 10px;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    
+    .brand-list li {
+        padding: 5px 0;
+    }
+    
+    .brand-list li a {
+        text-decoration: none;
+        color: #333;
+    }
+    
+    .brand-list li a:hover {
+        color: #0066cc;
+    }
 	
