@@ -320,6 +320,9 @@ public partial class ForumModelFactory : IForumModelFactory
 
         //prepare model
         var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+
+        var firstPostText = posts.FirstOrDefault()?.Text?.Replace(Environment.NewLine, string.Empty);
+
         var model = new ForumTopicPageModel
         {
             Id = forumTopic.Id,
@@ -329,7 +332,10 @@ public partial class ForumModelFactory : IForumModelFactory
             IsCustomerAllowedToEditTopic = await _forumService.IsCustomerAllowedToEditTopicAsync(currentCustomer, forumTopic),
             IsCustomerAllowedToDeleteTopic = await _forumService.IsCustomerAllowedToDeleteTopicAsync(currentCustomer, forumTopic),
             IsCustomerAllowedToMoveTopic = await _forumService.IsCustomerAllowedToMoveTopicAsync(currentCustomer, forumTopic),
-            IsCustomerAllowedToSubscribe = await _forumService.IsCustomerAllowedToSubscribeAsync(currentCustomer)
+            IsCustomerAllowedToSubscribe = await _forumService.IsCustomerAllowedToSubscribeAsync(currentCustomer),
+
+            MetaTitle = forumTopic.Subject,
+            MetaDescription = CommonHelper.EnsureMaximumLength(firstPostText, _forumSettings.TopicMetaDescriptionLength, await _localizationService.GetResourceAsync("Forum.TruncatePostfix"))
         };
 
         if (model.IsCustomerAllowedToSubscribe)
