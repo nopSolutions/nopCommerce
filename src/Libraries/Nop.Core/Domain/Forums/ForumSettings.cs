@@ -171,4 +171,9 @@ public partial class ForumSettings : ISettings
     /// Gets or sets the minimum length for search term
     /// </summary>
     public int ForumSearchTermMinimumLength { get; set; }
+
+    /// <summary>
+    /// Gets or sets a length of the topic meta description
+    /// </summary>
+    public int TopicMetaDescriptionLength { get; set; }
 }
