@@ -1,6 +1,34 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Nop.Services.Events;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Framework.Events;
+
+public partial interface IModelReceivedEventConsumer<T> : IConsumer<ModelReceivedEvent<BaseNopModel>>
+where T : BaseNopModel
+{
+    /// <summary>
+    /// Handle event
+    /// </summary>
+    /// <param name="eventMessage">Event</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    async Task IConsumer<ModelReceivedEvent<BaseNopModel>>.HandleEventAsync(ModelReceivedEvent<BaseNopModel> eventMessage)
+    {
+        var castedModel = eventMessage.Model as T;
+
+        if (castedModel == null)
+            return;
+
+        await HandleEventAsync(new ModelReceivedEvent<T>(castedModel, eventMessage.ModelState));
+    }
+
+    /// <summary>
+    /// Handle event
+    /// </summary>
+    /// <param name="eventMessage">Event</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task HandleEventAsync(ModelReceivedEvent<T> eventMessage);
+}
 
 /// <summary>
 /// Represents an event that occurs after the model is received from the view

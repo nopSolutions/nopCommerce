@@ -4,9 +4,7 @@ using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Events;
 using Nop.Services.Catalog;
-using Nop.Services.Customers;
 using Nop.Services.Events;
-using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Topics;
 using Nop.Web.Areas.Admin.Factories;
@@ -20,10 +18,185 @@ using Nop.Web.Framework.Models;
 namespace Nop.Web.Areas.Admin.Infrastructure;
 
 /// <summary>
+/// Represents ACL CategoryModelReceived event consumer
+/// </summary>
+public partial class AclCategoryModelReceivedEventConsumer: IModelReceivedEventConsumer<CategoryModel>
+{
+    #region Fields
+
+    protected readonly IAclService _aclService;
+    protected readonly ICategoryService _categoryService;
+
+    #endregion
+
+    #region Ctor
+
+    public AclCategoryModelReceivedEventConsumer(IAclService aclService,
+        ICategoryService categoryService)
+    {
+        _aclService = aclService;
+        _categoryService = categoryService;
+    }
+
+    #endregion
+
+    #region Methods
+
+    /// <summary>
+    /// Handle event
+    /// </summary>
+    /// <param name="eventMessage">Event</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public async Task HandleEventAsync(ModelReceivedEvent<CategoryModel> eventMessage)
+    {
+        var categoryModel = eventMessage.Model;
+        var category = await _categoryService.GetCategoryByIdAsync(categoryModel.Id);
+        await _aclService.SaveAclAsync(category, categoryModel.SelectedCustomerRoleIds);
+        var key = category == null ? categoryModel.Name : string.Empty;
+
+        if (!string.IsNullOrEmpty(key))
+            AclEventConsumer.TempData[key] = categoryModel.SelectedCustomerRoleIds;
+    }
+
+    #endregion
+}
+
+/// <summary>
+/// Represents ACL ManufacturerModelReceived event consumer
+/// </summary>
+public partial class AclManufacturerModelReceivedEventConsumer: IModelReceivedEventConsumer<ManufacturerModel>
+{
+    #region Fields
+
+    protected readonly IAclService _aclService;
+    protected readonly IManufacturerService _manufacturerService;
+
+    #endregion
+
+    #region Ctor
+
+    public AclManufacturerModelReceivedEventConsumer(IAclService aclService,
+        IManufacturerService manufacturerService)
+    {
+        _aclService = aclService;
+        _manufacturerService = manufacturerService;
+    }
+
+    #endregion
+
+    #region Methods
+
+    /// <summary>
+    /// Handle event
+    /// </summary>
+    /// <param name="eventMessage">Event</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public async Task HandleEventAsync(ModelReceivedEvent<ManufacturerModel> eventMessage)
+    {
+        var manufacturerModel = eventMessage.Model;
+        var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(manufacturerModel.Id);
+        await _aclService.SaveAclAsync(manufacturer, manufacturerModel.SelectedCustomerRoleIds);
+        var key = manufacturer == null ? manufacturerModel.Name : string.Empty;
+
+        if (!string.IsNullOrEmpty(key))
+            AclEventConsumer.TempData[key] = manufacturerModel.SelectedCustomerRoleIds;
+    }
+
+    #endregion
+}
+
+/// <summary>
+/// Represents ACL ProductModelReceived event consumer
+/// </summary>
+public partial class AclProductModelReceivedEventConsumer: IModelReceivedEventConsumer<ProductModel>
+{
+    #region Fields
+
+    protected readonly IAclService _aclService;
+    protected readonly IProductService _productService;
+
+    #endregion
+
+    #region Ctor
+
+    public AclProductModelReceivedEventConsumer(IAclService aclService,
+        IProductService productService)
+    {
+        _aclService = aclService;
+        _productService = productService;
+    }
+
+    #endregion
+
+    #region Methods
+
+    /// <summary>
+    /// Handle event
+    /// </summary>
+    /// <param name="eventMessage">Event</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public async Task HandleEventAsync(ModelReceivedEvent<ProductModel> eventMessage)
+    {
+        var productModel = eventMessage.Model;
+        var product = await _productService.GetProductByIdAsync(productModel.Id);
+        await _aclService.SaveAclAsync(product, productModel.SelectedCustomerRoleIds);
+        var key = product == null ? productModel.Name : string.Empty;
+
+        if (!string.IsNullOrEmpty(key))
+            AclEventConsumer.TempData[key] = productModel.SelectedCustomerRoleIds;
+    }
+
+    #endregion
+}
+
+/// <summary>
+/// Represents ACL TopicModelReceived event consumer
+/// </summary>
+public partial class AclTopicModelReceivedEventConsumer: IModelReceivedEventConsumer<TopicModel>
+{
+    #region Fields
+
+    protected readonly IAclService _aclService;
+    protected readonly ITopicService _topicService;
+
+    #endregion
+
+    #region Ctor
+
+    public AclTopicModelReceivedEventConsumer(IAclService aclService,
+        ITopicService topicService)
+    {
+        _aclService = aclService;
+        _topicService = topicService;
+    }
+
+    #endregion
+
+    #region Methods
+
+    /// <summary>
+    /// Handle event
+    /// </summary>
+    /// <param name="eventMessage">Event</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public async Task HandleEventAsync(ModelReceivedEvent<TopicModel> eventMessage)
+    {
+        var topicModel = eventMessage.Model;
+        var topic = await _topicService.GetTopicByIdAsync(topicModel.Id);
+        await _aclService.SaveAclAsync(topic, topicModel.SelectedCustomerRoleIds);
+        var key = topic == null ? topicModel.Title : string.Empty;
+
+        if (!string.IsNullOrEmpty(key))
+            AclEventConsumer.TempData[key] = topicModel.SelectedCustomerRoleIds;
+    }
+
+    #endregion
+}
+
+/// <summary>
 /// Represents ACL event consumer
 /// </summary>
 public partial class AclEventConsumer : IConsumer<ModelPreparedEvent<IAclSupportedModel>>,
-    IConsumer<ModelReceivedEvent<BaseNopModel>>,
     IConsumer<EntityInsertedEvent<Manufacturer>>,
     IConsumer<EntityInsertedEvent<Product>>,
     IConsumer<EntityInsertedEvent<Topic>>,
@@ -31,41 +204,20 @@ public partial class AclEventConsumer : IConsumer<ModelPreparedEvent<IAclSupport
 {
     #region Fields
 
-    protected readonly CatalogSettings _catalogSettings;
     protected readonly IAclService _aclService;
     protected readonly IAclSupportedModelFactory _aclSupportedModelFactory;
-    protected readonly ICategoryService _categoryService;
-    protected readonly ICustomerService _customerService;
-    protected readonly ILocalizationService _localizationService;
-    protected readonly IManufacturerService _manufacturerService;
-    protected readonly IProductService _productService;
-    protected readonly ITopicService _topicService;
 
-    private static readonly Dictionary<string, IList<int>> _tempData = new(comparer: StringComparer.InvariantCultureIgnoreCase);
+    public static Dictionary<string, IList<int>> TempData { get; } = new(comparer: StringComparer.InvariantCultureIgnoreCase);
 
     #endregion
 
     #region Ctor
 
-    public AclEventConsumer(CatalogSettings catalogSettings,
-        IAclService aclService,
-        IAclSupportedModelFactory aclSupportedModelFactory,
-        ICategoryService categoryService,
-        ICustomerService customerService,
-        ILocalizationService localizationService,
-        IManufacturerService manufacturerService,
-        IProductService productService,
-        ITopicService topicService)
+    public AclEventConsumer(IAclService aclService,
+        IAclSupportedModelFactory aclSupportedModelFactory)
     {
         _aclService = aclService;
-        _catalogSettings = catalogSettings;
         _aclSupportedModelFactory = aclSupportedModelFactory;
-        _categoryService = categoryService;
-        _customerService = customerService;
-        _localizationService = localizationService;
-        _manufacturerService = manufacturerService;
-        _productService = productService;
-        _topicService = topicService;
     }
 
     #endregion
@@ -81,60 +233,17 @@ public partial class AclEventConsumer : IConsumer<ModelPreparedEvent<IAclSupport
     /// <returns>A task that represents the asynchronous operation</returns>
     protected async Task SaveStoredDataAsync<TEntity>(string key, TEntity entity) where TEntity : BaseEntity, IAclSupported
     {
-        if (!_tempData.ContainsKey(key))
+        if (!TempData.TryGetValue(key, out var value))
             return;
 
-        await _aclService.SaveAclAsync(entity, _tempData[key]);
-        _tempData.Remove(key);
+        await _aclService.SaveAclAsync(entity, value);
+        TempData.Remove(key);
     }
 
     #endregion
 
     #region Methods
     
-    /// <summary>
-    /// Handle model received event
-    /// </summary>
-    /// <param name="eventMessage">Event message</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task HandleEventAsync(ModelReceivedEvent<BaseNopModel> eventMessage)
-    {
-        if (eventMessage.Model is not IAclSupportedModel model)
-            return;
-
-        var key = string.Empty;
-
-        switch (eventMessage.Model)
-        {
-            case ManufacturerModel manufacturerModel:
-                var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(manufacturerModel.Id);
-                await _aclService.SaveAclAsync(manufacturer, manufacturerModel.SelectedCustomerRoleIds);
-                key = manufacturer == null ? manufacturerModel.Name : string.Empty;
-                break;
-
-            case ProductModel productModel:
-                var product = await _productService.GetProductByIdAsync(productModel.Id);
-                await _aclService.SaveAclAsync(product, productModel.SelectedCustomerRoleIds);
-                key = product == null ? productModel.Name : string.Empty;
-                break;
-
-            case TopicModel topicModel:
-                var topic = await _topicService.GetTopicByIdAsync(topicModel.Id);
-                await _aclService.SaveAclAsync(topic, topicModel.SelectedCustomerRoleIds);
-                key = topic == null ? topicModel.Title : string.Empty;
-                break;
-
-            case CategoryModel categoryModel:
-                var category = await _categoryService.GetCategoryByIdAsync(categoryModel.Id);
-                await _aclService.SaveAclAsync(category, categoryModel.SelectedCustomerRoleIds);
-                key = category == null ? categoryModel.Name : string.Empty;
-                break;
-        }
-
-        if (!string.IsNullOrEmpty(key))
-            _tempData[key] = model.SelectedCustomerRoleIds;
-    }
-
     /// <summary>
     /// Handle manufacturer inserted event
     /// </summary>
@@ -178,7 +287,7 @@ public partial class AclEventConsumer : IConsumer<ModelPreparedEvent<IAclSupport
         var entity = eventMessage.Entity;
         await SaveStoredDataAsync(entity.Name, entity);
     }
-    
+
     #endregion
 
     public async Task HandleEventAsync(ModelPreparedEvent<IAclSupportedModel> eventMessage)
