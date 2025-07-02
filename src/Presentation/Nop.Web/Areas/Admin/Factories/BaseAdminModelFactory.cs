@@ -1,5 +1,4 @@
-﻿using DocumentFormat.OpenXml.Office2010.Excel;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -49,6 +48,7 @@ public partial class BaseAdminModelFactory : IBaseAdminModelFactory
     protected readonly ILocalizationService _localizationService;
     protected readonly IManufacturerService _manufacturerService;
     protected readonly IManufacturerTemplateService _manufacturerTemplateService;
+    protected readonly INewsLetterSubscriptionTypeService _newsLetterSubscriptionTypeService;
     protected readonly IPluginService _pluginService;
     protected readonly IProductTemplateService _productTemplateService;
     protected readonly ISpecificationAttributeService _specificationAttributeService;
@@ -78,6 +78,7 @@ public partial class BaseAdminModelFactory : IBaseAdminModelFactory
         ILocalizationService localizationService,
         IManufacturerService manufacturerService,
         IManufacturerTemplateService manufacturerTemplateService,
+        INewsLetterSubscriptionTypeService newsLetterSubscriptionTypeService,
         IPluginService pluginService,
         IProductTemplateService productTemplateService,
         ISpecificationAttributeService specificationAttributeService,
@@ -103,6 +104,7 @@ public partial class BaseAdminModelFactory : IBaseAdminModelFactory
         _localizationService = localizationService;
         _manufacturerService = manufacturerService;
         _manufacturerTemplateService = manufacturerTemplateService;
+        _newsLetterSubscriptionTypeService = newsLetterSubscriptionTypeService;
         _pluginService = pluginService;
         _productTemplateService = productTemplateService;
         _specificationAttributeService = specificationAttributeService;
@@ -442,6 +444,28 @@ public partial class BaseAdminModelFactory : IBaseAdminModelFactory
         foreach (var customerRole in availableCustomerRoles)
         {
             items.Add(new SelectListItem { Value = customerRole.Id.ToString(), Text = customerRole.Name });
+        }
+
+        //insert special item for the default value
+        await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText);
+    }
+
+    /// <summary>
+    /// Prepare available newsletter subscription types
+    /// </summary>
+    /// <param name="items">Newsletter subscription type items</param>
+    /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+    /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task PrepareSubscriptionTypesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+    {
+        ArgumentNullException.ThrowIfNull(items);
+
+        //prepare available newsletter subscription types
+        var availableSubscriptionTypes = await _newsLetterSubscriptionTypeService.GetAllNewsLetterSubscriptionTypesAsync();
+        foreach (var subscriptionType in availableSubscriptionTypes)
+        {
+            items.Add(new SelectListItem { Value = subscriptionType.Id.ToString(), Text = subscriptionType.Name });
         }
 
         //insert special item for the default value

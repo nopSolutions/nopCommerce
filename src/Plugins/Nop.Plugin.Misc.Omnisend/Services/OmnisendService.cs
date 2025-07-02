@@ -529,6 +529,7 @@ public class OmnisendService
         var subscriptions = (subscriber == null ? _newsLetterSubscriptionRepository.Table : _newsLetterSubscriptionRepository.Table.Where(nlsr => nlsr.Id.Equals(subscriber.Id)))
             .Where(subscription => subscription.StoreId == storeId)
             .OrderBy(subscription => subscription.Id)
+            .DistinctBy(x => x.Email)
             .Skip(pageIndex * pageSize)
             .Take(pageSize);
 

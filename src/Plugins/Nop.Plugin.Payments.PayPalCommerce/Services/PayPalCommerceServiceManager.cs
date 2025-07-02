@@ -1797,7 +1797,7 @@ public class PayPalCommerceServiceManager
             paymentRequest.CustomValues[placementKey] = placement.ToString();
             if (isRecurring && !string.IsNullOrEmpty(savedPaymentToken?.VaultId))
                 paymentRequest.CustomValues[PayPalCommerceDefaults.TokenIdAttributeName] = savedPaymentToken.Id.ToString();
-            await _orderProcessingService.SetProcessPaymentRequestAsync(paymentRequest);
+            await _orderProcessingService.SetProcessPaymentRequestAsync(paymentRequest, true);
 
             return order;
         });
@@ -2238,69 +2238,84 @@ public class PayPalCommerceServiceManager
             //check the authorization object or the capture object
             var purchaseUnit = order.PurchaseUnits.FirstOrDefault();
             var authorization = purchaseUnit.Payments?.Authorizations?.FirstOrDefault();
-            if (authorization is not null)
+            var capture = purchaseUnit.Payments?.Captures?.FirstOrDefault();
+            try
             {
-                if (authorization.Status?.ToUpper() == AuthorizationStatusType.DENIED.ToString())
-                    throw new NopException("Cannot authorize funds for this authorized payment");
-
-                if (authorization.Status?.ToUpper() == AuthorizationStatusType.PENDING.ToString())
+                if (authorization is not null)
                 {
-                    await _orderService.InsertOrderNoteAsync(new()
-                    {
-                        OrderId = nopOrder.Id,
-                        Note = $"Authorization is in {authorization.Status} status due to {authorization.StatusDetails?.Reason}",
-                        DisplayToCustomer = true,
-                        CreatedOnUtc = DateTime.UtcNow
-                    });
+                    if (authorization.Status?.ToUpper() == AuthorizationStatusType.DENIED.ToString())
+                        throw new NopException("Cannot authorize funds for this authorized payment");
 
-                    if (settings.PaymentType == Domain.PaymentType.Authorize && settings.ImmediatePaymentRequired)
-                        throw new NopException($"Immediate payment required but authorization is {authorization.Status}");
+                    if (authorization.Status?.ToUpper() == AuthorizationStatusType.PENDING.ToString())
+                    {
+                        await _orderService.InsertOrderNoteAsync(new()
+                        {
+                            OrderId = nopOrder.Id,
+                            Note = $"Authorization is in {authorization.Status} status due to {authorization.StatusDetails?.Reason}",
+                            DisplayToCustomer = true,
+                            CreatedOnUtc = DateTime.UtcNow
+                        });
+
+                        if (settings.PaymentType == Domain.PaymentType.Authorize && settings.ImmediatePaymentRequired)
+                            throw new NopException($"Immediate payment required but authorization is {authorization.Status}");
+                    }
+
+                    if (authorization.Status?.ToUpper() == AuthorizationStatusType.CREATED.ToString())
+                    {
+                        if (_orderProcessingService.CanMarkOrderAsAuthorized(nopOrder))
+                        {
+                            nopOrder.AuthorizationTransactionId = authorization.Id;
+                            nopOrder.AuthorizationTransactionResult = authorization.Status;
+                            nopOrder.AuthorizationTransactionCode = authorization.ProcessorResponse?.ResponseCode;
+                            await _orderProcessingService.MarkAsAuthorizedAsync(nopOrder);
+                        }
+                    }
                 }
 
-                if (authorization.Status?.ToUpper() == AuthorizationStatusType.CREATED.ToString())
+                if (capture is not null)
                 {
-                    if (_orderProcessingService.CanMarkOrderAsAuthorized(nopOrder))
+                    if (capture.Status?.ToUpper() == CaptureStatusType.DECLINED.ToString())
+                        throw new NopException("The funds could not be captured");
+
+                    if (capture.Status?.ToUpper() == CaptureStatusType.FAILED.ToString())
+                        throw new NopException("There was an error while capturing payment");
+
+                    if (capture.Status?.ToUpper() == CaptureStatusType.PENDING.ToString())
                     {
-                        nopOrder.AuthorizationTransactionId = authorization.Id;
-                        nopOrder.AuthorizationTransactionResult = authorization.Status;
-                        nopOrder.AuthorizationTransactionCode = authorization.ProcessorResponse?.ResponseCode;
-                        await _orderProcessingService.MarkAsAuthorizedAsync(nopOrder);
+                        await _orderService.InsertOrderNoteAsync(new()
+                        {
+                            OrderId = nopOrder.Id,
+                            Note = $"Capture is in {capture.Status} status due to {capture.StatusDetails?.Reason}",
+                            DisplayToCustomer = true,
+                            CreatedOnUtc = DateTime.UtcNow
+                        });
+
+                        if (settings.ImmediatePaymentRequired)
+                            throw new NopException($"Immediate payment required but capture is {capture.Status}");
+                    }
+
+                    if (capture.Status?.ToUpper() == CaptureStatusType.COMPLETED.ToString())
+                    {
+                        if (_orderProcessingService.CanMarkOrderAsPaid(nopOrder))
+                        {
+                            nopOrder.CaptureTransactionId = capture.Id;
+                            nopOrder.CaptureTransactionResult = capture.Status;
+                            await _orderProcessingService.MarkOrderAsPaidAsync(nopOrder);
+                        }
                     }
                 }
             }
-
-            var capture = purchaseUnit.Payments?.Captures?.FirstOrDefault();
-            if (capture is not null)
+            catch (NopException exception)
             {
-                if (capture.Status?.ToUpper() == CaptureStatusType.DECLINED.ToString())
-                    throw new NopException("The funds could not be captured");
-
-                if (capture.Status?.ToUpper() == CaptureStatusType.FAILED.ToString())
-                    throw new NopException("There was an error while capturing payment");
-
-                if (capture.Status?.ToUpper() == CaptureStatusType.PENDING.ToString())
+                await _orderService.InsertOrderNoteAsync(new()
                 {
-                    await _orderService.InsertOrderNoteAsync(new()
-                    {
-                        OrderId = nopOrder.Id,
-                        Note = $"Capture is in {capture.Status} status due to {capture.StatusDetails?.Reason}",
-                        DisplayToCustomer = true,
-                        CreatedOnUtc = DateTime.UtcNow
-                    });
+                    OrderId = nopOrder.Id,
+                    Note = $"Error: {exception.Message}",
+                    DisplayToCustomer = true,
+                    CreatedOnUtc = DateTime.UtcNow
+                });
 
-                    if (settings.ImmediatePaymentRequired)
-                        throw new NopException($"Immediate payment required but capture is {capture.Status}");
-                }
-
-                if (capture.Status?.ToUpper() == CaptureStatusType.COMPLETED.ToString())
-                {
-                    if (_orderProcessingService.CanMarkOrderAsPaid(nopOrder))
-                    {
-                        nopOrder.CaptureTransactionId = capture.Id;
-                        nopOrder.CaptureTransactionResult = capture.Status;
-                        await _orderProcessingService.MarkOrderAsPaidAsync(nopOrder);
-                    }
-                }
+                throw;
             }
 
             //try to get saved in vault payment token
@@ -2789,7 +2804,7 @@ public class PayPalCommerceServiceManager
             paymentRequest.CustomValues[placementKey] = ButtonPlacement.PaymentMethod.ToString();
             if (await _tokenService.GetTokenAsync(settings.ClientId, details.Customer.Id, paymentToken.Id) is PayPalToken token)
                 paymentRequest.CustomValues[PayPalCommerceDefaults.TokenIdAttributeName] = token.Id.ToString();
-            await _orderProcessingService.SetProcessPaymentRequestAsync(paymentRequest);
+            await _orderProcessingService.SetProcessPaymentRequestAsync(paymentRequest, true);
 
             return order;
         });

@@ -2,7 +2,9 @@
 using System.Text;
 using Newtonsoft.Json;
 using Nop.Core;
+using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Infrastructure;
 using Nop.Data;
@@ -188,6 +190,7 @@ public partial class InstallationService : IInstallationService
         await InstallProductAvailabilityRangesAsync();
         await InstallEmailAccountsAsync();
         await InstallMessageTemplatesAsync();
+        await InstallNewsLetterSubscriptionTypeAsync();
         await InstallTopicTemplatesAsync();
         await InstallSettingsAsync();
         await InstallCustomersAndUsersAsync();
@@ -202,6 +205,16 @@ public partial class InstallationService : IInstallationService
 
         if (!installationSettings.InstallSampleData)
             return;
+
+        //save setting to install plugin sample data
+        var setting = new Setting
+        {
+            Name = NopInstallationDefaults.InstallPluginSampleDataSettingName,
+            Value = "true",
+            StoreId = 0
+        };
+
+        await _dataProvider.InsertEntityAsync(setting);
 
         var sampleData = JsonConvert.DeserializeObject<SampleData.SampleData>(await _fileProvider.ReadAllTextAsync(_fileProvider.MapPath(NopInstallationDefaults.SampleDataPath), Encoding.UTF8));
 

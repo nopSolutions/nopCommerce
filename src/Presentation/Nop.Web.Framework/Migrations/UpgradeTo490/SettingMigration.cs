@@ -1,6 +1,7 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
@@ -113,6 +114,26 @@ public class SettingMigration : MigrationBase
             settingService.SaveSetting(pdfSettings, settings => pdfSettings.ImageTargetSize);
         }
 
+        //#7397
+        var richEditorAllowJavaScript = settingService.GetSetting("adminareasettings.richeditorallowjavascript");
+        if (richEditorAllowJavaScript is not null)
+            settingService.DeleteSetting(richEditorAllowJavaScript);
+
+        var richEditorAllowStyleTag = settingService.GetSetting("adminareasettings.richeditorallowstyletag");
+        if (richEditorAllowStyleTag is not null)
+            settingService.DeleteSetting(richEditorAllowStyleTag);
+
+        if (settingService.SettingExists(adminAreaSettings, settings => settings.RichEditorAdditionalSettings))
+        {
+            adminAreaSettings.RichEditorAdditionalSettings = string.Empty;
+            settingService.SaveSetting(adminAreaSettings, settings => settings.RichEditorAdditionalSettings);
+        }
+
+        //#6874
+        var newsletterTickedByDefault = settingService.GetSetting("customersettings.newslettertickedbydefault");
+        if (newsletterTickedByDefault is not null)
+            settingService.DeleteSetting(newsletterTickedByDefault);
+
         //#820
         var currencySettings = settingService.LoadSetting<CurrencySettings>();
         if (!settingService.SettingExists(currencySettings, settings => settings.DisplayCurrencySymbolInCurrencySelector))
@@ -156,6 +177,14 @@ public class SettingMigration : MigrationBase
         {
             orderSettings.CustomerOrdersPageSize = 10;
             settingService.SaveSetting(orderSettings, settings => settings.CustomerOrdersPageSize);
+        }
+
+        //#7625
+        var addressSetting = settingService.LoadSetting<AddressSettings>();
+        if (!settingService.SettingExists(addressSetting, settings => settings.PrePopulateCountryByCustomer))
+        {
+            addressSetting.PrePopulateCountryByCustomer = true;
+            settingService.SaveSetting(addressSetting, settings => settings.PrePopulateCountryByCustomer);
         }
     }
 

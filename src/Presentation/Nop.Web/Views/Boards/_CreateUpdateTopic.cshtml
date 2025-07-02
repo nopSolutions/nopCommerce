@@ -32,14 +32,21 @@
                     <input asp-for="Subject" class="forum-topic-title-text" />
                     <span asp-validation-for="Subject"></span>
                 </div>
-                <div class="inputs">
-                    @if (Model.ForumEditor == EditorType.BBCodeEditor)
-                    {
-                        <nop-bb-code-editor asp-for="Text" />
-                    }
-                    <textarea asp-for="Text" class="forum-post-text"></textarea>
-                    <span asp-validation-for="Text"></span>
-                </div>
+                @if (Model.ForumEditor == EditorType.MarkdownEditor)  
+                {
+                    @await Html.PartialAsync("_MarkdownEditor", new ForumPostTextModel { Text = Model.Text })
+                }  
+                @if (Model.ForumEditor != EditorType.MarkdownEditor)
+                {
+                    <div class="inputs">
+                        @if (Model.ForumEditor == EditorType.BBCodeEditor)
+                        {
+                            <nop-bb-code-editor asp-for="Text" />
+                        }
+                        <textarea asp-for="Text" class="forum-post-text"></textarea>
+                        <span asp-validation-for="Text"></span>
+                    </div>
+                }
                 @if (Model.IsCustomerAllowedToSetTopicPriority)
                 {
                     <div class="inputs">

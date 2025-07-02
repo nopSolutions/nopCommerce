@@ -29,4 +29,9 @@ public static partial class NopInstallationDefaults
     /// Gets a path to the installation sample images
     /// </summary>
     public static string SampleDataPath => "~/App_Data/Installation/SampleData.json";
+
+    /// <summary>
+    /// Gets a setting name for store flag to install sample data of plugins
+    /// </summary>
+    public static string InstallPluginSampleDataSettingName => "Install.Plugin.Sample.Data";
 }

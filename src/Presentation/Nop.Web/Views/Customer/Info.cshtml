@@ -81,11 +81,11 @@
                         <div class="inputs date-of-birth">
                             <label>@T("Account.Fields.DateOfBirth"):</label>
                             <nop-date-picker asp-day-name="@Html.NameFor(x => x.DateOfBirthDay)"
-                                             asp-month-name="@Html.NameFor(x => x.DateOfBirthMonth)"
-                                             asp-year-name="@Html.NameFor(x => x.DateOfBirthYear)"
-                                             asp-begin-year="@(DateTime.Now.AddYears(-110))"
-                                             asp-end-year="@(DateTime.UtcNow)"
-                                             asp-selected-date="@Model.ParseDateOfBirth()" />
+                            asp-month-name="@Html.NameFor(x => x.DateOfBirthMonth)"
+                            asp-year-name="@Html.NameFor(x => x.DateOfBirthYear)"
+                            asp-begin-year="@(DateTime.Now.AddYears(-110))"
+                            asp-end-year="@(DateTime.UtcNow)"
+                            asp-selected-date="@Model.ParseDateOfBirth()" />
 
                             @if (Model.DateOfBirthRequired)
                             {
@@ -252,10 +252,10 @@
                             <div class="inputs">
                                 <label asp-for="CountryId" asp-postfix=":"></label>
                                 <select asp-for="CountryId" asp-items="Model.AvailableCountries"
-                                        data-trigger="country-select"
-                                        data-url="@(Url.RouteUrl("GetStatesByCountryId"))"
-                                        data-stateprovince="#@Html.IdFor(model => model.StateProvinceId)"
-                                        data-loading="#states-loading-progress"></select>
+                                data-trigger="country-select"
+                                data-url="@(Url.RouteUrl("GetStatesByCountryId"))"
+                                data-stateprovince="#@Html.IdFor(model => model.StateProvinceId)"
+                                data-loading="#states-loading-progress"></select>
                                 @if (Model.CountryRequired)
                                 {
                                     <nop-required />
@@ -313,28 +313,43 @@
                     </div>
                 </div>
             }
-            @if (Model.NewsletterEnabled || Model.CustomerAttributes.Count > 0)
+
+            @if (Model.NewsletterEnabled &&  Model.NewsLetterSubscriptions.Count > 0)
+            {
+                <div class="fieldset">
+                    <div class="title">
+                        <strong>@T("Account.SubscribeToNewsletter")</strong>
+                    </div>
+                    <div class="form-fields">
+                        <div class="inputs">
+                            <div class="attributes">
+                                <ul>
+                                    @for (int i = 0; i < Model.NewsLetterSubscriptions.Count; i++)
+                                    {
+                                        <li>
+                                            <label>@Model.NewsLetterSubscriptions[i].Name</label>
+                                            <input type="hidden" asp-for="NewsLetterSubscriptions[i].TypeId" />
+                                            <input class="form-check-input" type="checkbox" asp-for="NewsLetterSubscriptions[i].IsActive" />
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            @if (Model.CustomerAttributes.Count > 0)
             {
                 <div class="fieldset">
                     <div class="title">
                         <strong>@T("Account.Options")</strong>
                     </div>
                     <div class="form-fields">
-                        @if (Model.NewsletterEnabled)
-                        {
-                            <div class="inputs">
-                                <label asp-for="Newsletter" asp-postfix=":"></label>
-                                <input asp-for="Newsletter" />
-                                <span asp-validation-for="Newsletter"></span>
-                            </div>
-                        }
-                        @if (Model.CustomerAttributes.Count > 0)
-                        {
-                            @await Html.PartialAsync("_CustomerAttributes", Model.CustomerAttributes)
-                        }
+                        @await Html.PartialAsync("_CustomerAttributes", Model.CustomerAttributes)
                     </div>
                 </div>
             }
+            
             @if (Model.AllowCustomersToSetTimeZone || Model.SignatureEnabled)
             {
                 <div class="fieldset">

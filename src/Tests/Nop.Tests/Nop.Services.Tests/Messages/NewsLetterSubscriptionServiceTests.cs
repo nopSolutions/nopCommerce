@@ -24,7 +24,12 @@ public class NewsLetterSubscriptionServiceTests : ServiceTest
     [Test]
     public async Task VerifyActiveInsertTriggersSubscribeEvent()
     {
-        var subscription = new NewsLetterSubscription { Active = true, Email = "test@test.com" };
+        var subscription = new NewsLetterSubscription
+        { 
+            Active = true, 
+            Email = "test@test.com",
+            TypeId = 1
+        };
         await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(subscription);
 
         var eventType = NewsLetterSubscriptionConsumer.LastEventType;
@@ -40,7 +45,12 @@ public class NewsLetterSubscriptionServiceTests : ServiceTest
     [Test]
     public async Task VerifyDeleteTriggersUnsubscribeEvent()
     {
-        var subscription = new NewsLetterSubscription { Active = true, Email = "test@test.com" };
+        var subscription = new NewsLetterSubscription
+        {
+            Active = true,
+            Email = "test@test.com",
+            TypeId = 1
+        };
         await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(subscription);
         await _newsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(subscription);
 
@@ -53,7 +63,11 @@ public class NewsLetterSubscriptionServiceTests : ServiceTest
     [Test]
     public async Task VerifyInsertEventIsFired()
     {
-        var subscription = new NewsLetterSubscription { Email = "test@test.com" };
+        var subscription = new NewsLetterSubscription
+        { 
+            Email = "test@test.com",
+            TypeId = 1
+        };
 
         await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(subscription);
 
@@ -73,7 +87,8 @@ public class NewsLetterSubscriptionServiceTests : ServiceTest
         {
             Active = true,
             Email = NopTestsDefaults.AdminEmail,
-            NewsLetterSubscriptionGuid = guid
+            NewsLetterSubscriptionGuid = guid,
+            TypeId = 1
         };
 
         await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(subscription);
@@ -82,20 +97,16 @@ public class NewsLetterSubscriptionServiceTests : ServiceTest
         subscription.Active.Should().BeTrue();
         subscription.Active = false;
         await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(subscription);
-        subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByGuidAsync(guid);
+        subscription = (await _newsLetterSubscriptionService.GetNewsLetterSubscriptionsByGuidAsync(guid)).FirstOrDefault();
         subscription.Active.Should().BeFalse();
 
-        subscription =
-            await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(
-                NopTestsDefaults.AdminEmail, 0);
+        subscription = (await _newsLetterSubscriptionService.GetNewsLetterSubscriptionsByEmailAsync(NopTestsDefaults.AdminEmail)).FirstOrDefault();
         subscription.Should().NotBeNull();
 
         await _newsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(subscription);
-        subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByGuidAsync(guid);
+        subscription = (await _newsLetterSubscriptionService.GetNewsLetterSubscriptionsByGuidAsync(guid)).FirstOrDefault();
         subscription.Should().BeNull();
-        subscription =
-            await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(
-                NopTestsDefaults.AdminEmail, 1);
+        subscription = (await _newsLetterSubscriptionService.GetNewsLetterSubscriptionsByEmailAsync(NopTestsDefaults.AdminEmail)).FirstOrDefault();
         subscription.Should().BeNull();
     }
 
@@ -108,7 +119,8 @@ public class NewsLetterSubscriptionServiceTests : ServiceTest
         {
             Active = true,
             Email = NopTestsDefaults.AdminEmail,
-            NewsLetterSubscriptionGuid = guid
+            NewsLetterSubscriptionGuid = guid,
+            TypeId = 1
         };
         await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(subscription);
 

@@ -352,6 +352,7 @@ public partial interface IOrderProcessingService
     /// Sets process payment request
     /// </summary>
     /// <param name="processPaymentRequest">Process payment request. Pass null for delete</param>
+    /// <param name="useNewOrderGuid">Whether to use new order GUID; pass false to set GUID according to PaymentSettings.RegenerateOrderGuidInterval value</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    Task SetProcessPaymentRequestAsync(ProcessPaymentRequest processPaymentRequest);
+    Task SetProcessPaymentRequestAsync(ProcessPaymentRequest processPaymentRequest, bool useNewOrderGuid = false);
 }

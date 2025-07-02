@@ -71,6 +71,32 @@ public partial class NopHttpClient
     }
 
     /// <summary>
+    /// Check the current store for any recommendations/warnings
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the asynchronous task whose result contains the result string
+    /// </returns>
+    public virtual async Task<string> GetRecommendationsAsync()
+    {
+        var isLocal = _webHelper.IsLocalRequest(_httpContextAccessor.HttpContext.Request);
+        var storeUrl = _webHelper.GetStoreLocation();
+        if (isLocal || storeUrl.Contains("localhost"))
+            return string.Empty;
+
+        var emailAccount = await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId)
+            ?? (await _emailAccountService.GetAllEmailAccountsAsync()).FirstOrDefault();
+        var language = _languageService.GetTwoLetterIsoLanguageName(await _workContext.GetWorkingLanguageAsync());
+        var url = string.Format(NopCommonDefaults.NopWarningPath,
+            storeUrl,
+            NopVersion.FULL_VERSION,
+            WebUtility.UrlEncode(emailAccount.Email),
+            language).ToLowerInvariant();
+
+        return await _httpClient.GetStringAsync(url);
+    }
+
+    /// <summary>
     /// Check the current store for license compliance
     /// </summary>
     /// <returns>
@@ -85,7 +111,7 @@ public partial class NopHttpClient
             return string.Empty;
 
         var emailAccount = await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId)
-                           ?? (await _emailAccountService.GetAllEmailAccountsAsync()).FirstOrDefault();
+            ?? (await _emailAccountService.GetAllEmailAccountsAsync()).FirstOrDefault();
         var language = _languageService.GetTwoLetterIsoLanguageName(await _workContext.GetWorkingLanguageAsync());
         var url = string.Format(NopCommonDefaults.NopLicenseCheckPath,
             storeUrl,
@@ -133,13 +159,12 @@ public partial class NopHttpClient
     {
         //prepare URL to request
         var url = string.Format(NopCommonDefaults.NopInstallationCompletedPath,
-                NopVersion.FULL_VERSION,
-                _webHelper.IsLocalRequest(_httpContextAccessor.HttpContext.Request),
-                WebUtility.UrlEncode(email),
-                _webHelper.GetStoreLocation(),
-                languageCode,
-                culture)
-            .ToLowerInvariant();
+            NopVersion.FULL_VERSION,
+            _webHelper.IsLocalRequest(_httpContextAccessor.HttpContext.Request),
+            WebUtility.UrlEncode(email),
+            _webHelper.GetStoreLocation(),
+            languageCode,
+            culture).ToLowerInvariant();
 
         //this request takes some more time
         try
@@ -160,10 +185,10 @@ public partial class NopHttpClient
     /// A task that represents the asynchronous operation
     /// The task result contains the asynchronous task whose result contains the result string
     /// </returns>
-    public virtual async Task<HttpResponseMessage> SubscribeNewslettersAsync(string email)
+    public virtual async Task<HttpResponseMessage> SubscribeNewsLettersAsync(string email)
     {
         //prepare URL to request
-        var url = string.Format(NopCommonDefaults.NopSubscribeNewslettersPath,
+        var url = string.Format(NopCommonDefaults.NopSubscribeNewsLettersPath,
                 WebUtility.UrlEncode(email))
             .ToLowerInvariant();
 

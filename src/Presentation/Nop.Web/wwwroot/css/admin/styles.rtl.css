@@ -1360,23 +1360,6 @@ input[type=file].form-control {
   padding-left: 20px;
 }
 
-/* TINY MCE */
-.mce-panel {
-  border-color: #d2d6de !important;
-}
-
-.mce-container {
-  max-width: 100%;
-}
-
-.mce-container label {
-  max-width: inherit;
-}
-
-.mce-fullscreen {
-  z-index: 10000 !important;
-}
-
 /* TABLES */
 table td .form-group {
   margin-bottom: 0;
@@ -1925,6 +1908,10 @@ div.dt-container .data-tables-refresh > div {
 
 .table-striped tbody tr:nth-of-type(odd) {
   background-color: white;
+}
+
+.table .preview img {
+    max-width: 100%;
 }
 
 tr.even {

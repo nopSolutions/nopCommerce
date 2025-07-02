@@ -337,6 +337,16 @@ public partial class ManufacturerService : IManufacturerService
     }
 
     /// <summary>
+    /// Deletes a list of product manufacturer mapping
+    /// </summary>
+    /// <param name="productManufacturers">Product manufacturer mappings</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task DeleteProductManufacturersAsync(IList<ProductManufacturer> productManufacturers)
+    {
+        await _productManufacturerRepository.DeleteAsync(productManufacturers);
+    }
+
+    /// <summary>
     /// Gets product manufacturer collection
     /// </summary>
     /// <param name="manufacturerId">Manufacturer identifier</param>

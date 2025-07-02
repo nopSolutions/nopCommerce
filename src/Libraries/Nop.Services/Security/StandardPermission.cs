@@ -81,6 +81,8 @@ public partial class StandardPermission
         public const string SUBSCRIBERS_VIEW = $"{nameof(Promotions)}.SubscribersView";
         public const string SUBSCRIBERS_CREATE_EDIT_DELETE = $"{nameof(Promotions)}.SubscribersCreateEditDelete";
         public const string SUBSCRIBERS_IMPORT_EXPORT = $"{nameof(Promotions)}.SubscribersImportExport";
+        public const string SUBSCRIPTION_TYPE_VIEW = $"{nameof(Promotions)}.SubscriptionTypeView";
+        public const string SUBSCRIPTION_TYPE_CREATE_EDIT_DELETE = $"{nameof(Promotions)}.SubscriptionTypeCreateEditDelete";
         public const string CAMPAIGNS_VIEW = $"{nameof(Promotions)}.CampaignsView";
         public const string CAMPAIGNS_CREATE_EDIT = $"{nameof(Promotions)}.CampaignsCreateEdit";
         public const string CAMPAIGNS_DELETE = $"{nameof(Promotions)}.CampaignsDelete";

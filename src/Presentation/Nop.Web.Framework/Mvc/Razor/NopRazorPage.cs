@@ -37,11 +37,3 @@ public abstract partial class NopRazorPage<TModel> : Microsoft.AspNetCore.Mvc.Ra
         }
     }
 }
-
-/// <summary>
-/// Web view page
-/// </summary>
-/// TODO: Doesn't seem to be used anywhere
-public abstract partial class NopRazorPage : NopRazorPage<dynamic>
-{
-}

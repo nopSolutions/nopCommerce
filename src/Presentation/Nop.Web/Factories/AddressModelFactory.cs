@@ -205,6 +205,7 @@ public partial class AddressModelFactory : IAddressModelFactory
         {
             if (customer == null)
                 throw new Exception("Customer cannot be null when prepopulating an address");
+
             model.Email = customer.Email;
             model.FirstName = customer.FirstName;
             model.LastName = customer.LastName;
@@ -216,6 +217,12 @@ public partial class AddressModelFactory : IAddressModelFactory
             model.County = customer.County;
             model.PhoneNumber = customer.Phone;
             model.FaxNumber = customer.Fax;
+
+            if (_addressSettings.PrePopulateCountryByCustomer)
+            {
+                model.CountryId = addressSettings.CountryEnabled && customer.CountryId != 0 ? customer.CountryId : null;
+                model.StateProvinceId = addressSettings.StateProvinceEnabled && customer.StateProvinceId != 0 ? customer.StateProvinceId : null;
+            }
         }
 
         //countries and states

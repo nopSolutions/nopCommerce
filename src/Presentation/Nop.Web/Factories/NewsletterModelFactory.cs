@@ -8,7 +8,7 @@ namespace Nop.Web.Factories;
 /// <summary>
 /// Represents the newsletter model factory
 /// </summary>
-public partial class NewsletterModelFactory : INewsletterModelFactory
+public partial class NewsLetterModelFactory : INewsLetterModelFactory
 {
     #region Fields
 
@@ -20,7 +20,7 @@ public partial class NewsletterModelFactory : INewsletterModelFactory
 
     #region Ctor
 
-    public NewsletterModelFactory(CaptchaSettings captchaSettings,
+    public NewsLetterModelFactory(CaptchaSettings captchaSettings,
         CustomerSettings customerSettings,
         ILocalizationService localizationService)
     {
@@ -40,9 +40,9 @@ public partial class NewsletterModelFactory : INewsletterModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the newsletter box model
     /// </returns>
-    public virtual Task<NewsletterBoxModel> PrepareNewsletterBoxModelAsync()
+    public virtual Task<NewsLetterBoxModel> PrepareNewsLetterBoxModelAsync()
     {
-        var model = new NewsletterBoxModel
+        var model = new NewsLetterBoxModel
         {
             AllowToUnsubscribe = _customerSettings.NewsletterBlockAllowToUnsubscribe,
             DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnNewsletterPage,

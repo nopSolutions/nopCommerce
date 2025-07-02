@@ -11,7 +11,7 @@
         <script>
             try {
                 var el = $(window.opener.document.getElementById('permission-applied-for-@Model.Id'));
-                el.text('@Model.PermissionAppliedFor');
+                el.html('@Html.Raw(Model.PermissionAppliedFor)');
             }
             catch (e) {
             }
@@ -58,6 +58,12 @@
                                         placeholder: '@T("Admin.Configuration.ACL.NoCustomerRolesAvailable")',
                                     </text>
                                 }
+                            });
+
+                            $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').on('select2:open', function (e) {
+                                const container = $(this).siblings('.select2-container');
+                                const availableHeight = $(window).height() - container.offset().top - container.outerHeight() - 1;
+                                $('ul.select2-results__options').css('max-height', Math.max(availableHeight, 50) + 'px');
                             });
                         });
                     </script>

@@ -76,7 +76,6 @@ public partial class ExportManager : IExportManager
     protected readonly ILocalizedEntityService _localizedEntityService;
     protected readonly IManufacturerService _manufacturerService;
     protected readonly IMeasureService _measureService;
-    protected readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
     protected readonly IOrderService _orderService;
     protected readonly IPictureService _pictureService;
     protected readonly IPriceFormatter _priceFormatter;
@@ -90,6 +89,7 @@ public partial class ExportManager : IExportManager
     protected readonly IStoreMappingService _storeMappingService;
     protected readonly IStoreService _storeService;
     protected readonly ITaxCategoryService _taxCategoryService;
+    protected readonly IThumbService _thumbService;
     protected readonly IUrlRecordService _urlRecordService;
     protected readonly IVendorService _vendorService;
     protected readonly IWorkContext _workContext;
@@ -124,7 +124,6 @@ public partial class ExportManager : IExportManager
         ILocalizedEntityService localizedEntityService,
         IManufacturerService manufacturerService,
         IMeasureService measureService,
-        INewsLetterSubscriptionService newsLetterSubscriptionService,
         IOrderService orderService,
         IPictureService pictureService,
         IPriceFormatter priceFormatter,
@@ -138,6 +137,7 @@ public partial class ExportManager : IExportManager
         IStoreMappingService storeMappingService,
         IStoreService storeService,
         ITaxCategoryService taxCategoryService,
+        IThumbService thumbService,
         IUrlRecordService urlRecordService,
         IVendorService vendorService,
         IWorkContext workContext,
@@ -168,7 +168,6 @@ public partial class ExportManager : IExportManager
         _localizedEntityService = localizedEntityService;
         _manufacturerService = manufacturerService;
         _measureService = measureService;
-        _newsLetterSubscriptionService = newsLetterSubscriptionService;
         _orderService = orderService;
         _pictureService = pictureService;
         _priceFormatter = priceFormatter;
@@ -182,6 +181,7 @@ public partial class ExportManager : IExportManager
         _storeMappingService = storeMappingService;
         _storeService = storeService;
         _taxCategoryService = taxCategoryService;
+        _thumbService = thumbService;
         _urlRecordService = urlRecordService;
         _vendorService = vendorService;
         _workContext = workContext;
@@ -274,7 +274,9 @@ public partial class ExportManager : IExportManager
     {
         var picture = await _pictureService.GetPictureByIdAsync(pictureId);
 
-        return await _pictureService.GetThumbLocalPathAsync(picture);
+        var (pictureUrl, _) = await _pictureService.GetPictureUrlAsync(picture);
+
+        return await _thumbService.GetThumbLocalPathAsync(pictureUrl);
     }
 
     /// <summary>
@@ -408,7 +410,12 @@ public partial class ExportManager : IExportManager
         var recordsToReturn = pictureIndex + 1;
         var pictures = await _pictureService.GetPicturesByProductIdAsync(product.Id, recordsToReturn);
 
-        return pictures.Count > pictureIndex ? await _pictureService.GetThumbLocalPathAsync(pictures[pictureIndex]) : null;
+        if (pictures.Count <= pictureIndex)
+            return null;
+
+        var (pictureUrl, _) = await _pictureService.GetPictureUrlAsync(pictures[pictureIndex]);
+
+        return await _thumbService.GetThumbLocalPathAsync(pictureUrl);
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
@@ -543,7 +550,7 @@ public partial class ExportManager : IExportManager
             },
             new PropertyByName<ExportSpecificationAttribute>("SpecificationAttribute", (p, _) => p.SpecificationAttributeId)
             {
-                DropDownElements = (await _specificationAttributeService.GetSpecificationAttributesAsync()).Select(sa => sa as BaseEntity).ToSelectList(p => (p as SpecificationAttribute)?.Name ?? string.Empty)
+                DropDownElements = (await _specificationAttributeService.GetAllSpecificationAttributesAsync()).Select(sa => sa as BaseEntity).ToSelectList(p => (p as SpecificationAttribute)?.Name ?? string.Empty)
             },
             new PropertyByName<ExportSpecificationAttribute>("CustomValue", (p, _) => p.CustomValue),
             new PropertyByName<ExportSpecificationAttribute>("SpecificationAttributeOptionId", (p, _) => p.SpecificationAttributeOptionId),
@@ -2194,13 +2201,6 @@ public partial class ExportManager : IExportManager
             await xmlWriter.WriteElementStringAsync("VatNumberStatusId", null, customer.VatNumberStatusId.ToString());
             await xmlWriter.WriteElementStringAsync("TimeZoneId", null, customer.TimeZoneId);
 
-            foreach (var store in await _storeService.GetAllStoresAsync())
-            {
-                var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id);
-                var subscribedToNewsletters = newsletter != null && newsletter.Active;
-                await xmlWriter.WriteElementStringAsync($"Newsletter-in-store-{store.Id}", null, subscribedToNewsletters.ToString());
-            }
-
             await xmlWriter.WriteElementStringAsync("AvatarPictureId", null, (await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute)).ToString());
             await xmlWriter.WriteElementStringAsync("ForumPostCount", null, (await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.ForumPostCountAttribute)).ToString());
             await xmlWriter.WriteElementStringAsync("Signature", null, await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SignatureAttribute));
@@ -2234,20 +2234,22 @@ public partial class ExportManager : IExportManager
     /// A task that represents the asynchronous operation
     /// The task result contains the result in TXT (string) format
     /// </returns>
-    public virtual async Task<string> ExportNewsletterSubscribersToTxtAsync(IList<NewsLetterSubscription> subscriptions)
+    public virtual async Task<string> ExportNewsLetterSubscribersToTxtAsync(IList<NewsLetterSubscription> subscriptions)
     {
         ArgumentNullException.ThrowIfNull(subscriptions);
 
         const char separator = ',';
         var sb = new StringBuilder();
 
-        sb.Append(await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptions.Fields.Email"));
+        sb.Append(await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscription.Fields.Email"));
         sb.Append(separator);
-        sb.Append(await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptions.Fields.Active"));
+        sb.Append(await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscription.Fields.Active"));
         sb.Append(separator);
-        sb.Append(await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptions.Fields.Store"));
+        sb.Append(await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscription.Fields.SubscriptionType"));
         sb.Append(separator);
-        sb.Append(await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptions.Fields.Language"));
+        sb.Append(await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscription.Fields.Store"));
+        sb.Append(separator);
+        sb.Append(await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscription.Fields.Language"));
         sb.Append(Environment.NewLine);
 
         foreach (var subscription in subscriptions)
@@ -2255,6 +2257,8 @@ public partial class ExportManager : IExportManager
             sb.Append(subscription.Email);
             sb.Append(separator);
             sb.Append(subscription.Active);
+            sb.Append(separator);
+            sb.Append(subscription.TypeId);
             sb.Append(separator);
             sb.Append(subscription.StoreId);
             sb.Append(separator);
