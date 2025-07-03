@@ -157,7 +157,7 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Catalog.ProductTags.TaggedProducts"] = "Used by products",
             ["Admin.Catalog.ProductTags.TaggedProducts.Product"] = "Product",
             ["Admin.Catalog.ProductTags.TaggedProducts.Published"] = "Published",
-            
+
             //#7405
             ["Admin.Configuration.Settings.Catalog.ExportImportCategoryUseLimitedToStores"] = "Export / Import categories with \"limited to stores\"",
             ["Admin.Configuration.Settings.Catalog.ExportImportCategoryUseLimitedToStores.Hint"] = "Check if categories should be exported / imported with \"limited to stores\" property.",
@@ -182,7 +182,7 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Promotions.NewsLetterSubscriptionType.AddNew"] = "Add a new subscription type",
             ["Admin.Promotions.NewsLetterSubscriptions.List.CustomerRoles"] = "Customer role",
             ["Admin.Promotions.NewsLetterSubscriptions.List.SubscriptionTypes"] = "Subscription type",
-            ["Admin.Promotions.NewsLetterSubscriptions.List.SubscriptionTypes.Hint"] = "Search by a specific subscription type.",            
+            ["Admin.Promotions.NewsLetterSubscriptions.List.SubscriptionTypes.Hint"] = "Search by a specific subscription type.",
             ["Admin.Promotions.Campaigns.Fields.NewsLetterSubscriptionType"] = "Limited to subscription types",
             ["Admin.Promotions.Campaigns.Fields.NewsLetterSubscriptionType.Hint"] = "Choose a subscription type to which this email will be sent.",
             ["Account.SubscribeToNewsletter"] = "Subscribe to newsletter",
@@ -192,7 +192,7 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Promotions.NewsLetterSubscription.EditSubscriptionDetails"] = "Edit subscription",
             ["Admin.Promotions.NewsLetterSubscription.BackToList"] = "back to subscriptions list",
             ["Admin.Promotions.NewsLetterSubscription.AddNew"] = "Add a new subscription",
-            ["Admin.Promotions.NewsLetterSubscription.Deleted"] = "The subscription has been deleted successfully.",            
+            ["Admin.Promotions.NewsLetterSubscription.Deleted"] = "The subscription has been deleted successfully.",
             ["Admin.Promotions.NewsLetterSubscription.Added"] = "The subscription has been added successfully.",
             ["Admin.Promotions.NewsLetterSubscription.Updated"] = "The subscription has been updated successfully.",
             ["Admin.Promotions.NewsLetterSubscription.Warning"] = "An entity with this subscription type cannot be added or already exists.",
@@ -207,7 +207,7 @@ public class LocalizationMigration : MigrationBase
 
             //#820
             ["Currency.Selector.Text.Pattern"] = "{0}, {1}",
-            
+
             //#5652
             ["Admin.System.SystemInfo.DatabaseCollation"] = "Database collation",
             ["Admin.System.SystemInfo.DatabaseCollation.Hint"] = "The collation defines the rules for sorting and comparing data.",
@@ -215,7 +215,7 @@ public class LocalizationMigration : MigrationBase
             //#2192
             ["Admin.System.QueuedEmails.RequeueSelected"] = "Requeue selected",
 
-			//#1779
+            //#1779
             ["ActivityLog.PublicStore.Login.Fail"] = "Public store. Customer has failed to log in: {0}",
             ["Admin.Configuration.Settings.CustomerUser.NotifyFailedLoginAttempt"] = "Notify customers about failed login attempts",
             ["Admin.Configuration.Settings.CustomerUser.NotifyFailedLoginAttempt.Hint"] = "Check to enable customer notifications on failed login attempts.",
@@ -265,7 +265,53 @@ public class LocalizationMigration : MigrationBase
             //#5199
             ["Enums.Nop.Core.Domain.Forums.EditorType.MarkdownEditor"] = "Markdown editor",
             ["MarkdownEditor.TabWrite"] = "Write",
-            ["MarkdownEditor.TabPreview"] = "Preview",            
+            ["MarkdownEditor.TabPreview"] = "Preview",
+
+            //#7730
+            ["Admin.Catalog.Products.AiGenerateFullDescription"] = "Generate product description with AI",
+            ["Admin.Catalog.Products.AiFullDescription.Generate"] = "Generate description with AI",
+            ["Admin.Catalog.Products.AiFullDescription.ProductName"] = "Product name",
+            ["Admin.Catalog.Products.AiFullDescription.ProductName.Placeholder"] = "Enter the product name",
+            ["Admin.Catalog.Products.AiFullDescription.Keywords"] = "Features and keywords",
+            ["Admin.Catalog.Products.AiFullDescription.Keywords.Placeholder"] = "Enter some features or keywords that will be used to generate description",
+            ["Admin.Catalog.Products.AiFullDescription.ToneOfVoice"] = "Tone of voice",
+            ["Admin.Catalog.Products.AiFullDescription.CustomToneOfVoice"] = "Custom tone of voice",
+            ["Admin.Catalog.Products.AiFullDescription.CustomToneOfVoice.Placeholder"] = "e.g. Smart and funny tone of voice",
+            ["Admin.Catalog.Products.AiFullDescription.Instructions"] = "Special instruction (optional)",
+            ["Admin.Catalog.Products.AiFullDescription.Instructions.Placeholder"] = "e.g. Add a laptop icon at the beginning of description",
+            ["Admin.Catalog.Products.AiFullDescription.GeneratedDescription"] = "Generated description",
+            ["Admin.Catalog.Products.AiFullDescription.CopyToClipboard"] = "Copy to clipboard",
+            ["Admin.Catalog.Products.AiFullDescription.Copied"] = "Generated description has been copied into the clipboard",
+            ["ArtificialIntelligence.ToneOfVoice.Expert"] = "strong expert tone of voice",
+            ["ArtificialIntelligence.ToneOfVoice.Supportive"] = "supportive and polite tone of voice",
+            ["ArtificialIntelligence.CreateProductFailed"] = "<p style='color:red'>The request to the artificial intelligence service ended with the \"<strong>{0}</strong>\" error, you can see the details in the <a href='/Admin/Log/List' target='_blank'>logs</a><p>",
+            ["Admin.Configuration.Settings.Catalog.BlockTitle.ArtificialIntelligence"] = "Artificial Intelligence",
+            ["Admin.Configuration.Settings.Catalog.ArtificialIntelligence.Enable"] = "Enable artificial intelligence",
+            ["Admin.Configuration.Settings.Catalog.ArtificialIntelligence.Enable.Hint"] = "Check to enable artificial intelligence services.",
+            ["Admin.Configuration.Settings.Catalog.ArtificialIntelligence.ProviderType"] = "Provider type",
+            ["Admin.Configuration.Settings.Catalog.ArtificialIntelligence.ProviderType.Hint"] = "Select artificial intelligence provider service.",
+            ["Admin.Configuration.Settings.Catalog.ArtificialIntelligence.GeminiApiKey"] = "API key",
+            ["Admin.Configuration.Settings.Catalog.ArtificialIntelligence.GeminiApiKey.Hint"] = "Set the Gemini API key.",
+            ["Admin.Configuration.Settings.Catalog.ArtificialIntelligence.ChatGptApiKey"] = "API key",
+            ["Admin.Configuration.Settings.Catalog.ArtificialIntelligence.ChatGptApiKey.Hint"] = "Set the ChatGPT API key.",
+            ["Admin.Configuration.Settings.Catalog.ArtificialIntelligence.DeepSeekApiKey"] = "API key",
+            ["Admin.Configuration.Settings.Catalog.ArtificialIntelligence.DeepSeekApiKey.Hint"] = "Set the DeepSeek API key.",
+            ["Admin.Configuration.Settings.Catalog.ArtificialIntelligence.Info"] = "<p>Artificial intelligence functionality allows you to use third-party AI services such as <a href='https://www.deepseek.com/' target='_blank'>DeepSeek</a>, <a href='https://gemini.google.com/' target='_blank'>Gemini</a> or <a href='https://chatgpt.com/' target='_blank'>ChatGPT</a> to automatically generate product descriptions.</p>",
+            ["Admin.Configuration.Settings.Catalog.ArtificialIntelligence.GeminiApiKey.Instruction"] = "<p>To use the Gemini API, you need an API key. You can create a key with a few clicks in <a href='https://aistudio.google.com/app/apikey' target='_blank'>Google AI Studio</a>.</p>",
+            ["Admin.Configuration.Settings.Catalog.ArtificialIntelligence.ChatGptApiKey.Instruction"] = "<p>Create, manage, and learn more about ChatGPT API keys in your <a href='https://platform.openai.com/settings/organization/api-keys' target='_blank'>organization settings</a>.</p>",
+            ["Admin.Configuration.Settings.Catalog.ArtificialIntelligence.DeepSeekApiKey.Instruction"] = "<p>To use the DeepSeek API, you need an API key. You can create a key <a href='https://platform.deepseek.com/api_keys' target='_blank'>here</a>.</p>",
+            ["Enums.Nop.Core.Domain.ArtificialIntelligence.ToneOfVoiceType.Expert"] = "Expert",
+            ["Enums.Nop.Core.Domain.ArtificialIntelligence.ToneOfVoiceType.Supportive"] = "Supportive",
+            ["Enums.Nop.Core.Domain.ArtificialIntelligence.ToneOfVoiceType.Custom"] = "Custom",
+            ["Enums.Nop.Core.Domain.ArtificialIntelligence.ArtificialIntelligenceProviderType.Gemini"] = "Gemini",
+            ["Enums.Nop.Core.Domain.ArtificialIntelligence.ArtificialIntelligenceProviderType.ChatGpt"] = "ChatGPT (OpenAI)",
+            ["Enums.Nop.Core.Domain.ArtificialIntelligence.ArtificialIntelligenceProviderType.DeepSeek"] = "DeepSeek",
+            ["Admin.Catalog.Products.AiFullDescription.ProductName.Required"] = "Please provide a product name.",
+            ["Admin.Catalog.Products.AiFullDescription.Keywords.Required"] = "Please provide a couple of features and keywords.",
+            ["Admin.Catalog.Products.AiFullDescription.CustomToneOfVoice.Required"] = "Please choose the tone of voice instructions.",
+            ["Admin.Catalog.Products.AiFullDescription.Language"] = "Target language",
+            ["Admin.Configuration.Settings.Catalog.ArtificialIntelligence.ProductDescriptionQuery"] = "Artificial intelligence query",
+            ["Admin.Configuration.Settings.Catalog.ArtificialIntelligence.ProductDescriptionQuery.Hint"] = "Set the query for create product description with artificial intelligence service.",
         }, languageId);
 
         #endregion

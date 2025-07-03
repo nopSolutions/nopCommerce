@@ -1,0 +1,35 @@
+@model FullDescriptionGeneratorModel
+
+<button onclick="javascript:openGenerator($('#@Model.ProductNameElementId').val(), @Model.LanguageId); return false;" style="width:100%" class="btn btn-default">
+    <i class="fa fa-cogs"></i>@T("Admin.Catalog.Products.AiFullDescription.Generate").Text
+</button>
+
+<script asp-location="Footer">
+
+    function openGenerator(productName, languageId){
+        productName = encodeURIComponent(productName);
+        var url = '@Url.Content("~/Admin/Product/FullDescriptionGeneratorPopup")';        
+        url = `${url}?languageId=${languageId}&productName=${productName}`;
+        OpenWindow(url, 1024, 768, true);
+        return false;
+    }
+
+    function update_description()
+    {
+        var text = $('<div>').html($('#ai-generated-description').val()).text();
+        var langId = $('#ai-lang-id').val();
+        
+        var el = null;
+
+        if (langId == '0')
+        {
+            el = $("#FullDescription");
+        }
+        else{
+            var itemId = $("#lang-" + langId).val();
+            el = $("#Locales_" + itemId + "__FullDescription");
+        }
+
+        el.summernote("code", text);
+    }    
+</script>

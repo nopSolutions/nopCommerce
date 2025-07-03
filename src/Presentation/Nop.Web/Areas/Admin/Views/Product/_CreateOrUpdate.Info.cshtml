@@ -193,9 +193,15 @@
             <div class="col-md-9">
                 <nop-editor asp-for="@Model.Locales[item].FullDescription" asp-template="RichEditor" />
                 <span asp-validation-for="@Model.Locales[item].FullDescription"></span>
+                @await Component.InvokeAsync(typeof(FullDescriptionGeneratorViewComponent), new FullDescriptionGeneratorModel
+                {
+                    LanguageId = Model.Locales[item].LanguageId,
+                    ProductNameElementId = Html.IdFor(p=>p.Locales[item].Name)
+                })
             </div>
         </div>
         <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+        <input type="hidden" id="lang-@Model.Locales[item].LanguageId" value="@item" />
     </div>
     ,
     @<div>
@@ -224,6 +230,13 @@
             <div class="col-md-9">
                 <nop-editor asp-for="FullDescription" asp-template="RichEditor" />
                 <span asp-validation-for="FullDescription"></span>
+                <input type="hidden" id="ai-generated-description" onclick="update_description()" />
+                <input type="hidden" id="ai-lang-id" />
+                @await Component.InvokeAsync(typeof(FullDescriptionGeneratorViewComponent), new FullDescriptionGeneratorModel
+                {
+                    LanguageId = 0,
+                    ProductNameElementId = Html.IdFor(p=>p.Name)
+                })
             </div>
         </div>
         </div>))

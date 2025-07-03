@@ -2742,6 +2742,60 @@
   <LocaleResource Name="Admin.Catalog.Products.AddNew">
     <Value>Add a new product</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AiFullDescription.Copied">
+    <Value>Generated description has been copied into the clipboard.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AiFullDescription.CopyToClipboard">
+    <Value>Copy to clipboard</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AiFullDescription.CustomToneOfVoice">
+    <Value>Custom tone of voice</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AiFullDescription.CustomToneOfVoice.Placeholder">
+    <Value>e.g. Smart and funny tone of voice</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AiFullDescription.CustomToneOfVoice.Required">
+    <Value>Please choose the tone of voice instructions.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AiFullDescription.Generate">
+    <Value>Generate description with AI</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AiFullDescription.GeneratedDescription">
+    <Value>Generated description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AiFullDescription.Instructions">
+    <Value>Special instruction (optional)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AiFullDescription.Instructions.Placeholder">
+    <Value>e.g. Add a laptop icon at the beginning of description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AiFullDescription.Keywords">
+    <Value>Features and keywords</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AiFullDescription.Keywords.Placeholder">
+    <Value>Enter some features or keywords that will be used to generate description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AiFullDescription.Keywords.Required">
+    <Value>Please provide a couple of features and keywords.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AiFullDescription.Language">
+    <Value>Target language</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AiFullDescription.ProductName">
+    <Value>Product name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AiFullDescription.ProductName.Placeholder">
+    <Value>Enter the product name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AiFullDescription.ProductName.Required">
+    <Value>Please provide a product name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AiFullDescription.ToneOfVoice">
+    <Value>Tone of voice</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AiGenerateFullDescription">
+    <Value>Generate product description with AI</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.AssociatedProducts">
     <Value>Associated products (variants)</Value>
   </LocaleResource>
@@ -4520,7 +4574,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings">
     <Value>App settings</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Cache">
     <Value>Cache configuration</Value>
   </LocaleResource>
@@ -4562,7 +4616,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.PermitLimit.Hint">
     <Value>Maximum number of permit counters that can be allowed in a window (1 minute). Must be set to a value > 0 by the time these options are passed to the constructor of FixedWindowRateLimiter. If set to 0 than limitation is off.</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.QueueCount">
     <Value>Queue count</Value>
   </LocaleResource>
@@ -5892,6 +5946,54 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.AllowViewUnpublishedProductPage.Hint">
     <Value>Check to allow viewing of unpublished product details page. This way SEO won't be affected by search crawlers when a product is temporary unpublished. Please note that a store owner always has access to unpublished products.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.ChatGptApiKey">
+    <Value>API key</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.ChatGptApiKey.Hint">
+    <Value>Set the ChatGPT API key.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.ChatGptApiKey.Instruction">
+    <Value><![CDATA[<p>Create, manage, and learn more about ChatGPT API keys in your <a href='https://platform.openai.com/settings/organization/api-keys' target='_blank'>organization settings</a>.</p>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.DeepSeekApiKey">
+    <Value>API key</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.DeepSeekApiKey.Hint">
+    <Value>Set the DeepSeek API key.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.DeepSeekApiKey.Instruction">
+    <Value><![CDATA[<p>To use the DeepSeek API, you need an API key. You can create a key <a href='https://platform.deepseek.com/api_keys' target='_blank'>here</a>.</p>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.Enable">
+    <Value>Enable artificial intelligence</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.Enable.Hint">
+    <Value>Check to enable artificial intelligence services.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.GeminiApiKey">
+    <Value>API key</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.GeminiApiKey.Hint">
+    <Value>Set the Gemini API key.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.GeminiApiKey.Instruction">
+    <Value><![CDATA[<p>To use the Gemini API, you need an API key. You can create a key with a few clicks in <a href='https://aistudio.google.com/app/apikey' target='_blank'>Google AI Studio</a>.</p>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.Info">
+    <Value><![CDATA[<p>Artificial intelligence functionality allows you to use third-party AI services such as <a href='https://www.deepseek.com/' target='_blank'>DeepSeek</a>, <a href='https://gemini.google.com/' target='_blank'>Gemini</a> or <a href='https://chatgpt.com/' target='_blank'>ChatGPT</a> to automatically generate product descriptions.</p>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.ProductDescriptionQuery">
+    <Value>Artificial intelligence query</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.ProductDescriptionQuery.Hint">
+    <Value>Set the query for create product description with artificial intelligence service.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.ProviderType">
+    <Value>Provider type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.ProviderType.Hint">
+    <Value>Select artificial intelligence provider service.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.AttributeValueOutOfStockDisplayType">
     <Value>Display type for attribute value when out of stock</Value>
   </LocaleResource>
@@ -5900,6 +6002,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.AdditionalSections">
     <Value>Additional sections</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.ArtificialIntelligence">
+    <Value>Artificial Intelligence</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.CatalogPages">
     <Value>Catalog pages</Value>
@@ -6893,7 +6998,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NewsletterEnabled.Hint">
     <Value>Set if 'Newsletter' is enabled.</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NotifyFailedLoginAttempt">
     <Value>Notify customers about failed login attempts</Value>
   </LocaleResource>
@@ -13073,7 +13178,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Address.County">
     <Value>County / region</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Address.CustomAttributes">
     <Value>Custom Attributes</Value>
   </LocaleResource>
@@ -14603,7 +14708,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Updated">
     <Value>The subscription has been updated successfully.</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Fields.Active">
     <Value>Active</Value>
   </LocaleResource>
@@ -16175,7 +16280,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.ASPNETInfo.Hint">
     <Value>ASP.NET info.</Value>
-  </LocaleResource> 
+  </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.CurrentStaticCacheManager">
     <Value>Static cache manager name</Value>
   </LocaleResource>
@@ -16782,6 +16887,15 @@
   <LocaleResource Name="AjaxCart.Failure">
     <Value>Failed to add the product. Please refresh the page and try one more time.</Value>
   </LocaleResource>
+  <LocaleResource Name="ArtificialIntelligence.CreateProductFailed">
+    <Value><![CDATA[<p style='color:red'>The request to the artificial intelligence service ended with the \"<strong>{0}</strong>\" error, you can see the details in the <a href='/Admin/Log/List' target='_blank'>logs</a><p>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="ArtificialIntelligence.ToneOfVoice.Expert">
+    <Value>strong expert tone of voice</Value>
+  </LocaleResource>
+  <LocaleResource Name="ArtificialIntelligence.ToneOfVoice.Supportive">
+    <Value>supportive and polite tone of voice</Value>
+  </LocaleResource>
   <LocaleResource Name="BackInStockSubscriptions.AlreadySubscribed">
     <Value>You're already subscribed for this product back in stock notification</Value>
   </LocaleResource>
@@ -17375,6 +17489,24 @@
   </LocaleResource>
   <LocaleResource Name="DownloadableProducts.UserAgreement">
     <Value>User agreement</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.ArtificialIntelligence.ArtificialIntelligenceProviderType.ChatGpt">
+    <Value>ChatGPT (OpenAI)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.ArtificialIntelligence.ArtificialIntelligenceProviderType.DeepSeek">
+    <Value>DeepSeek</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.ArtificialIntelligence.ArtificialIntelligenceProviderType.Gemini">
+    <Value>Gemini</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.ArtificialIntelligence.ToneOfVoiceType.Custom">
+    <Value>Custom</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.ArtificialIntelligence.ToneOfVoiceType.Expert">
+    <Value>Expert</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.ArtificialIntelligence.ToneOfVoiceType.Supportive">
+    <Value>Supportive</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.AttributeControlType.Checkboxes">
     <Value>Checkboxes</Value>

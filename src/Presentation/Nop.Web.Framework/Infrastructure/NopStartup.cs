@@ -9,6 +9,7 @@ using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Affiliates;
+using Nop.Services.ArtificialIntelligence;
 using Nop.Services.Attributes;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
@@ -154,6 +155,7 @@ public partial class NopStartup : INopStartup
         services.AddScoped<IProductTagService, ProductTagService>();
         services.AddScoped<IAddressService, AddressService>();
         services.AddScoped<IAffiliateService, AffiliateService>();
+        services.AddScoped<IArtificialIntelligenceService, ArtificialIntelligenceService>();
         services.AddScoped<IVendorService, VendorService>();
         services.AddScoped<ISearchTermService, SearchTermService>();
         services.AddScoped<IGenericAttributeService, GenericAttributeService>();

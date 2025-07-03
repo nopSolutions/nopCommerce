@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Domain;
+using Nop.Core.Domain.ArtificialIntelligence;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -201,7 +202,7 @@ public partial class SettingController : BaseAdminController
                 model.DataConfigModel.ToConfig(_appSettings.Get<DataConfig>()),
                 model.WebOptimizerConfigModel.ToConfig(_appSettings.Get<WebOptimizerConfig>())
             };
-            
+
             await _eventPublisher.PublishAsync(new AppSettingsSavingEvent(configurations));
 
             AppSettingsHelper.SaveAppSettings(configurations, _fileProvider);
@@ -746,6 +747,17 @@ public partial class SettingController : BaseAdminController
             await _settingService.SaveSettingAsync(catalogSettings, x => x.IgnoreAcl, 0, false);
             await _settingService.SaveSettingAsync(catalogSettings, x => x.IgnoreStoreLimitations, 0, false);
             await _settingService.SaveSettingAsync(catalogSettings, x => x.CacheProductPrices, 0, false);
+
+            var artificialIntelligenceSettings = await _settingService.LoadSettingAsync<ArtificialIntelligenceSettings>();
+
+            artificialIntelligenceSettings.Enabled = model.ArtificialIntelligenceSettingsModel.Enabled;
+            artificialIntelligenceSettings.ProviderType = (ArtificialIntelligenceProviderType)model.ArtificialIntelligenceSettingsModel.ProviderTypeId;
+            artificialIntelligenceSettings.ChatGptApiKey = model.ArtificialIntelligenceSettingsModel.ChatGptApiKey;
+            artificialIntelligenceSettings.DeepSeekApiKey = model.ArtificialIntelligenceSettingsModel.DeepSeekApiKey;
+            artificialIntelligenceSettings.GeminiApiKey = model.ArtificialIntelligenceSettingsModel.GeminiApiKey;
+            artificialIntelligenceSettings.ProductDescriptionQuery = model.ArtificialIntelligenceSettingsModel.ProductDescriptionQuery;
+
+            await _settingService.SaveSettingAsync(artificialIntelligenceSettings);
 
             //now clear settings cache
             await _settingService.ClearCacheAsync();
