@@ -8,9 +8,6 @@
 @using Nop.Services.Common
 @using Nop.Core
 
-@inject IGenericAttributeService genericAttributeService
-@inject IWorkContext workContext
-
 @inherits Nop.Web.Framework.Mvc.Razor.NopRazorPage<TModel>
 @addTagHelper *, Nop.Web.Framework
 
@@ -18,14 +15,9 @@
     //page title
     ViewBag.PageTitle = "Page Not Found Frequency";
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("AbcWarehouse.PageNotFound");
+    Html.SetActiveMenuItemSystemName("AbcWarehouse.PageNotFoundFreq");
 
     Layout = "_AdminLayout";
-}
-
-@{
-    const string hideSearchBlockAttributeName = "PageNotFoundPage.HideSearchBlock";
-    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
 <div class="content-header clearfix">

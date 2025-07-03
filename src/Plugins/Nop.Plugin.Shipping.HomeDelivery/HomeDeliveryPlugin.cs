@@ -79,17 +79,6 @@ namespace Nop.Plugin.Shipping.HomeDelivery
 
             if (getShippingOptionRequest.ShippingAddress == null)
             {
-                // additional information for debugging
-                var customer = getShippingOptionRequest.Customer;
-                var items = getShippingOptionRequest.Items;
-                var itemsString = string.Join(", ", items.Select(x => $"sci ID: {x.ShoppingCartItem?.Id}, product ID: {x.Product?.Id}"));
-                await _logger.InsertLogAsync(
-                    LogLevel.Information,
-                    "Debug information for Shipping Method",
-                    $"Items: {itemsString}",
-                    customer
-                );
-
                 response.AddError("Shipping address is not set");
                 return response;
             }
