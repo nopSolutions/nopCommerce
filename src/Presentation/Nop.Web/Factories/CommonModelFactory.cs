@@ -11,6 +11,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
@@ -71,6 +72,7 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected readonly IWorkContext _workContext;
     protected readonly LocalizationSettings _localizationSettings;
     protected readonly MediaSettings _mediaSettings;
+    protected readonly MessagesSettings _messagesSettings;
     protected readonly NewsSettings _newsSettings;
     protected readonly RobotsTxtSettings _robotsTxtSettings;
     protected readonly SitemapSettings _sitemapSettings;
@@ -112,6 +114,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         IWorkContext workContext,
         LocalizationSettings localizationSettings,
         MediaSettings mediaSettings,
+        MessagesSettings messagesSettings,
         NewsSettings newsSettings,
         RobotsTxtSettings robotsTxtSettings,
         SitemapSettings sitemapSettings,
@@ -148,6 +151,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         _webHelper = webHelper;
         _workContext = workContext;
         _mediaSettings = mediaSettings;
+        _messagesSettings = messagesSettings;
         _localizationSettings = localizationSettings;
         _newsSettings = newsSettings;
         _robotsTxtSettings = robotsTxtSettings;
@@ -363,6 +367,7 @@ public partial class CommonModelFactory : ICommonModelFactory
             IsAuthenticated = await _customerService.IsRegisteredAsync(customer),
             CustomerName = await _customerService.IsRegisteredAsync(customer) ? await _customerService.FormatUsernameAsync(customer) : string.Empty,
             ShoppingCartEnabled = await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_SHOPPING_CART),
+            UsePopupNotifications = _messagesSettings.UsePopupNotifications,
             WishlistEnabled = await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_WISHLIST),
             AllowPrivateMessages = await _customerService.IsRegisteredAsync(customer) && _forumSettings.AllowPrivateMessages,
             UnreadPrivateMessages = unreadMessage,

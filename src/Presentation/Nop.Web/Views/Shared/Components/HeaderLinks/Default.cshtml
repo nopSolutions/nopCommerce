@@ -72,6 +72,13 @@
                         $('#flyout-cart').removeClass('active');
                     }
                 }, '#topcartlink, #flyout-cart');
+
+
+                var localized_data = {
+                    AjaxCartFailure: "@T("AjaxCart.Failure")"
+                };
+
+                AjaxCart.init(@Model.UsePopupNotifications.ToString().ToLowerInvariant(), '.header-links .cart-qty', '.header-links .wishlist-qty', '#flyout-cart', localized_data);
             });
         </script>
     }
