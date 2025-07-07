@@ -16,11 +16,26 @@ public class NewsLetterSubscriptionMigration : ForwardOnlyMigration
         if (!Schema.Table(nameof(NewsLetterSubscriptionType)).Exists())
             Create.TableFor<NewsLetterSubscriptionType>();
 
+        // Ensure at least one type exists
+        Execute.Sql("INSERT INTO [NewsLetterSubscriptionType] ([Name],TickedByDefault,DisplayOrder,LimitedToStores) VALUES ('Default Type',1,1,0)");
+                
         if (!Schema.Table(nameof(NewsLetterSubscription)).Column(nameof(NewsLetterSubscription.TypeId)).Exists())
         {
-            //add new column
+            // Add the column as nullable first
             Alter.Table(nameof(NewsLetterSubscription))
-                .AddColumn(nameof(NewsLetterSubscription.TypeId)).AsInt32().ForeignKey<NewsLetterSubscriptionType>(onDelete: Rule.Cascade).NotNullable();
+                .AddColumn(nameof(NewsLetterSubscription.TypeId))
+                .AsInt32()
+                .Nullable();
+
+            // Set all existing rows to the default type (assuming Id=1 for the first record)
+            Execute.Sql("UPDATE [NewsLetterSubscription] SET [TypeId] = (SELECT TOP 1 [Id] FROM [NewsLetterSubscriptionType] ORDER BY [Id])");
+
+            // Alter the column to be not nullable and add the foreign key
+            Alter.Table(nameof(NewsLetterSubscription))
+                .AlterColumn(nameof(NewsLetterSubscription.TypeId))
+                .AsInt32()
+                .NotNullable()
+                .ForeignKey<NewsLetterSubscriptionType>(onDelete: Rule.Cascade);
         }
 
         if (!Schema.Table(nameof(Campaign)).Column(nameof(Campaign.NewsLetterSubscriptionTypeId)).Exists())
