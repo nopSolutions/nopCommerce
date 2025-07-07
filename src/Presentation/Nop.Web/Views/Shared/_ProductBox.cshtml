@@ -26,7 +26,7 @@
     var addtocomparelink = Url.RouteUrl("AddProductToCompare", new { productId = Model.Id });
 }
 <div class="product-item" data-productid="@Model.Id">
-    <div class="picture">
+    <div class="picture @(Model.InStock ? "" : "out-of-stock")">
         @if (Model.PictureModels.Count > 1)
         {
             <div class="swiper" id="swiper-@Model.Id" dir="@Html.GetUIDirection(!await Html.ShouldUseRtlThemeAsync())">

@@ -1289,7 +1289,8 @@ public partial class ProductModelFactory : IProductModelFactory
                 ProductType = product.ProductType,
                 MarkAsNew = product.MarkAsNew &&
                             (!product.MarkAsNewStartDateTimeUtc.HasValue || product.MarkAsNewStartDateTimeUtc.Value < DateTime.UtcNow) &&
-                            (!product.MarkAsNewEndDateTimeUtc.HasValue || product.MarkAsNewEndDateTimeUtc.Value > DateTime.UtcNow)
+                            (!product.MarkAsNewEndDateTimeUtc.HasValue || product.MarkAsNewEndDateTimeUtc.Value > DateTime.UtcNow),
+                InStock = product.ManageInventoryMethod == ManageInventoryMethod.ManageStock ? await _productService.GetTotalStockQuantityAsync(product) > 0 : true
             };
 
             //price
@@ -1390,33 +1391,7 @@ public partial class ProductModelFactory : IProductModelFactory
         ArgumentNullException.ThrowIfNull(product);
 
         //standard properties
-        var model = new ProductDetailsModel
-        {
-            Id = product.Id,
-            Name = await _localizationService.GetLocalizedAsync(product, x => x.Name),
-            ShortDescription = await _localizationService.GetLocalizedAsync(product, x => x.ShortDescription),
-            FullDescription = await _localizationService.GetLocalizedAsync(product, x => x.FullDescription),
-            MetaKeywords = await _localizationService.GetLocalizedAsync(product, x => x.MetaKeywords),
-            MetaDescription = await _localizationService.GetLocalizedAsync(product, x => x.MetaDescription),
-            MetaTitle = await _localizationService.GetLocalizedAsync(product, x => x.MetaTitle),
-            SeName = await _urlRecordService.GetSeNameAsync(product),
-            ProductType = product.ProductType,
-            ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage,
-            Sku = product.Sku,
-            ShowManufacturerPartNumber = _catalogSettings.ShowManufacturerPartNumber,
-            FreeShippingNotificationEnabled = _catalogSettings.ShowFreeShippingNotification,
-            ManufacturerPartNumber = product.ManufacturerPartNumber,
-            ShowGtin = _catalogSettings.ShowGtin,
-            Gtin = product.Gtin,
-            ManageInventoryMethod = product.ManageInventoryMethod,
-            StockAvailability = await _productService.FormatStockMessageAsync(product, string.Empty),
-            HasSampleDownload = product.IsDownload && product.HasSampleDownload,
-            DisplayDiscontinuedMessage = !product.Published && _catalogSettings.DisplayDiscontinuedMessageForUnpublishedProducts,
-            AvailableEndDate = product.AvailableEndDateTimeUtc,
-            VisibleIndividually = product.VisibleIndividually,
-            AllowAddingOnlyExistingAttributeCombinations = product.AllowAddingOnlyExistingAttributeCombinations,
-            DisplayAttributeCombinationImagesOnly = product.DisplayAttributeCombinationImagesOnly
-        };
+        var model = await GetModel(product);
 
         //automatically generate product description?
         if (_seoSettings.GenerateProductMetaDescription && string.IsNullOrEmpty(model.MetaDescription))
@@ -1627,6 +1602,38 @@ public partial class ProductModelFactory : IProductModelFactory
         }
 
         return model;
+    }
+
+    private async Task<ProductDetailsModel> GetModel(Product product)
+    {
+        return new ProductDetailsModel
+        {
+            Id = product.Id,
+            Name = await _localizationService.GetLocalizedAsync(product, x => x.Name),
+            ShortDescription = await _localizationService.GetLocalizedAsync(product, x => x.ShortDescription),
+            FullDescription = await _localizationService.GetLocalizedAsync(product, x => x.FullDescription),
+            MetaKeywords = await _localizationService.GetLocalizedAsync(product, x => x.MetaKeywords),
+            MetaDescription = await _localizationService.GetLocalizedAsync(product, x => x.MetaDescription),
+            MetaTitle = await _localizationService.GetLocalizedAsync(product, x => x.MetaTitle),
+            SeName = await _urlRecordService.GetSeNameAsync(product),
+            ProductType = product.ProductType,
+            ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage,
+            Sku = product.Sku,
+            ShowManufacturerPartNumber = _catalogSettings.ShowManufacturerPartNumber,
+            FreeShippingNotificationEnabled = _catalogSettings.ShowFreeShippingNotification,
+            ManufacturerPartNumber = product.ManufacturerPartNumber,
+            ShowGtin = _catalogSettings.ShowGtin,
+            Gtin = product.Gtin,
+            ManageInventoryMethod = product.ManageInventoryMethod,
+            StockAvailability = await _productService.FormatStockMessageAsync(product, string.Empty),
+            HasSampleDownload = product.IsDownload && product.HasSampleDownload,
+            DisplayDiscontinuedMessage = !product.Published && _catalogSettings.DisplayDiscontinuedMessageForUnpublishedProducts,
+            AvailableEndDate = product.AvailableEndDateTimeUtc,
+            VisibleIndividually = product.VisibleIndividually,
+            AllowAddingOnlyExistingAttributeCombinations = product.AllowAddingOnlyExistingAttributeCombinations,
+            DisplayAttributeCombinationImagesOnly = product.DisplayAttributeCombinationImagesOnly,
+            InStock = product.ManageInventoryMethod == ManageInventoryMethod.ManageStock ? await _productService.GetTotalStockQuantityAsync(product) > 0 : true
+        };
     }
 
     /// <summary>

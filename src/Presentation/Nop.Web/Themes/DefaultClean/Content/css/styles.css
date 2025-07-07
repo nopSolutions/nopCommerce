@@ -2106,6 +2106,23 @@ label, label + * {
   margin: auto;
 }
 
+.picture.out-of-stock::after {
+  content: "Out of Stock";
+  position: absolute;
+  bottom: 50%;
+  right: 0;
+  background: rgba(255, 0, 0, 0.8);
+  color: white;
+  padding: 5px 20px;
+  font-weight: bold;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  /*transform-origin: bottom right;*/
+  font-size: 12px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  pointer-events: none;
+  z-index: 2;
+}
+
 .picture-gallery .picture-thumbs {
   overflow: hidden;
   font-size: 0;

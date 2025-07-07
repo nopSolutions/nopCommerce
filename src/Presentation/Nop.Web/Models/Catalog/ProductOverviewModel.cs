@@ -33,4 +33,5 @@ public partial record ProductOverviewModel : BaseNopEntityModel
     public ProductSpecificationModel ProductSpecificationModel { get; set; }
     //price
     public ProductReviewOverviewModel ReviewOverviewModel { get; set; }
+    public bool InStock { get; set; }
 }
