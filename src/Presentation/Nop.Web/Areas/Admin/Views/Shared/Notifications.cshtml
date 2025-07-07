@@ -16,7 +16,7 @@
             <text>
                 <script asp-location="Footer">
                     var message = '@note.Encode' == 'True' ? '@note.Message' : "@Html.Raw(note.Message.Replace('"', '\''))";
-                    displayBarNotification(message, @((int)note.Type));
+                    displayBarNotification(message, @((int)note.Type), @(note.Timeout));
                 </script>
             </text>
         }

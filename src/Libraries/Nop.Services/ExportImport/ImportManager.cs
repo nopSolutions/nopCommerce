@@ -73,7 +73,6 @@ public partial class ImportManager : IImportManager
     protected readonly IProductTagService _productTagService;
     protected readonly IProductTemplateService _productTemplateService;
     protected readonly IServiceScopeFactory _serviceScopeFactory;
-    protected readonly IShippingService _shippingService;
     protected readonly ISpecificationAttributeService _specificationAttributeService;
     protected readonly IStateProvinceService _stateProvinceService;
     protected readonly IStoreContext _storeContext;
@@ -82,6 +81,7 @@ public partial class ImportManager : IImportManager
     protected readonly ITaxCategoryService _taxCategoryService;
     protected readonly IUrlRecordService _urlRecordService;
     protected readonly IVendorService _vendorService;
+    protected readonly IWarehouseService _warehouseService;
     protected readonly IWorkContext _workContext;
     protected readonly MediaSettings _mediaSettings;
     protected readonly SecuritySettings _securitySettings;
@@ -121,7 +121,6 @@ public partial class ImportManager : IImportManager
         IProductTagService productTagService,
         IProductTemplateService productTemplateService,
         IServiceScopeFactory serviceScopeFactory,
-        IShippingService shippingService,
         ISpecificationAttributeService specificationAttributeService,
         IStateProvinceService stateProvinceService,
         IStoreContext storeContext,
@@ -130,6 +129,7 @@ public partial class ImportManager : IImportManager
         ITaxCategoryService taxCategoryService,
         IUrlRecordService urlRecordService,
         IVendorService vendorService,
+        IWarehouseService warehouseService,
         IWorkContext workContext,
         MediaSettings mediaSettings,
         SecuritySettings securitySettings,
@@ -164,7 +164,6 @@ public partial class ImportManager : IImportManager
         _productTagService = productTagService;
         _productTemplateService = productTemplateService;
         _serviceScopeFactory = serviceScopeFactory;
-        _shippingService = shippingService;
         _specificationAttributeService = specificationAttributeService;
         _stateProvinceService = stateProvinceService;
         _storeContext = storeContext;
@@ -173,6 +172,7 @@ public partial class ImportManager : IImportManager
         _taxCategoryService = taxCategoryService;
         _urlRecordService = urlRecordService;
         _vendorService = vendorService;
+        _warehouseService = warehouseService;
         _workContext = workContext;
         _mediaSettings = mediaSettings;
         _securitySettings = securitySettings;
@@ -2485,7 +2485,7 @@ public partial class ImportManager : IImportManager
                 var oldWarehouseMessage = string.Empty;
                 if (previousWarehouseId > 0)
                 {
-                    var oldWarehouse = await _shippingService.GetWarehouseByIdAsync(previousWarehouseId);
+                    var oldWarehouse = await _warehouseService.GetWarehouseByIdAsync(previousWarehouseId);
                     if (oldWarehouse != null)
                         oldWarehouseMessage = string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.EditWarehouse.Old"), oldWarehouse.Name);
                 }
@@ -2493,7 +2493,7 @@ public partial class ImportManager : IImportManager
                 var newWarehouseMessage = string.Empty;
                 if (product.WarehouseId > 0)
                 {
-                    var newWarehouse = await _shippingService.GetWarehouseByIdAsync(product.WarehouseId);
+                    var newWarehouse = await _warehouseService.GetWarehouseByIdAsync(product.WarehouseId);
                     if (newWarehouse != null)
                         newWarehouseMessage = string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.EditWarehouse.New"), newWarehouse.Name);
                 }
@@ -2626,7 +2626,7 @@ public partial class ImportManager : IImportManager
                 //delete product manufacturers
                 var deletedProductsManufacturers = await manufacturers.Where(manufacturerId => !importedManufacturers.Contains(manufacturerId))
                     .SelectAwait(async manufacturerId => (await _manufacturerService.GetProductManufacturersByProductIdAsync(product.Id)).FirstOrDefault(pc => pc.ManufacturerId == manufacturerId)).ToListAsync();
-                
+
                 deletedProductsManufacturers = deletedProductsManufacturers.Where(m => m != null).ToList();
                 await _manufacturerService.DeleteProductManufacturersAsync(deletedProductsManufacturers);
             }

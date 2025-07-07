@@ -17,7 +17,6 @@ using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
-using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
 using Nop.Services.ExportImport;
@@ -46,13 +45,11 @@ public partial class ProductController : BaseAdminController
 
     protected readonly AdminAreaSettings _adminAreaSettings;
     protected readonly CustomerSettings _customerSettings;
-    protected readonly IAclService _aclService;
     protected readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
     protected readonly ICategoryService _categoryService;
     protected readonly ICopyProductService _copyProductService;
     protected readonly ICurrencyService _currencyService;
     protected readonly ICustomerActivityService _customerActivityService;
-    protected readonly ICustomerService _customerService;
     protected readonly IDiscountService _discountService;
     protected readonly IDownloadService _downloadService;
     protected readonly IEventPublisher _eventPublisher;
@@ -75,12 +72,12 @@ public partial class ProductController : BaseAdminController
     protected readonly IProductService _productService;
     protected readonly IProductTagService _productTagService;
     protected readonly ISettingService _settingService;
-    protected readonly IShippingService _shippingService;
     protected readonly IShoppingCartService _shoppingCartService;
     protected readonly ISpecificationAttributeService _specificationAttributeService;
     protected readonly IStoreContext _storeContext;
     protected readonly IUrlRecordService _urlRecordService;
     protected readonly IVideoService _videoService;
+    protected readonly IWarehouseService _warehouseService;
     protected readonly IWebHelper _webHelper;
     protected readonly IWorkContext _workContext;
     protected readonly CurrencySettings _currencySettings;
@@ -94,13 +91,11 @@ public partial class ProductController : BaseAdminController
 
     public ProductController(AdminAreaSettings adminAreaSettings,
         CustomerSettings customerSettings,
-        IAclService aclService,
         IBackInStockSubscriptionService backInStockSubscriptionService,
         ICategoryService categoryService,
         ICopyProductService copyProductService,
         ICurrencyService currencyService,
         ICustomerActivityService customerActivityService,
-        ICustomerService customerService,
         IDiscountService discountService,
         IDownloadService downloadService,
         IEventPublisher eventPublisher,
@@ -123,12 +118,12 @@ public partial class ProductController : BaseAdminController
         IProductService productService,
         IProductTagService productTagService,
         ISettingService settingService,
-        IShippingService shippingService,
         IShoppingCartService shoppingCartService,
         ISpecificationAttributeService specificationAttributeService,
         IStoreContext storeContext,
         IUrlRecordService urlRecordService,
         IVideoService videoService,
+        IWarehouseService warehouseService,
         IWebHelper webHelper,
         IWorkContext workContext,
         CurrencySettings currencySettings,
@@ -137,13 +132,11 @@ public partial class ProductController : BaseAdminController
     {
         _adminAreaSettings = adminAreaSettings;
         _customerSettings = customerSettings;
-        _aclService = aclService;
         _backInStockSubscriptionService = backInStockSubscriptionService;
         _categoryService = categoryService;
         _copyProductService = copyProductService;
         _currencyService = currencyService;
         _customerActivityService = customerActivityService;
-        _customerService = customerService;
         _discountService = discountService;
         _downloadService = downloadService;
         _eventPublisher = eventPublisher;
@@ -166,12 +159,12 @@ public partial class ProductController : BaseAdminController
         _productService = productService;
         _productTagService = productTagService;
         _settingService = settingService;
-        _shippingService = shippingService;
         _shoppingCartService = shoppingCartService;
         _specificationAttributeService = specificationAttributeService;
         _storeContext = storeContext;
         _urlRecordService = urlRecordService;
         _videoService = videoService;
+        _warehouseService = warehouseService;
         _webHelper = webHelper;
         _workContext = workContext;
         _currencySettings = currencySettings;
@@ -521,7 +514,7 @@ public partial class ProductController : BaseAdminController
         if (!model.UseMultipleWarehouses)
             return;
 
-        var warehouses = await _shippingService.GetAllWarehousesAsync();
+        var warehouses = await _warehouseService.GetAllWarehousesAsync();
 
         var form = await Request.ReadFormAsync();
         var formData = form.ToDictionary(x => x.Key, x => x.Value.ToString());
@@ -1226,7 +1219,7 @@ public partial class ProductController : BaseAdminController
                 var oldWarehouseMessage = string.Empty;
                 if (previousWarehouseId > 0)
                 {
-                    var oldWarehouse = await _shippingService.GetWarehouseByIdAsync(previousWarehouseId);
+                    var oldWarehouse = await _warehouseService.GetWarehouseByIdAsync(previousWarehouseId);
                     if (oldWarehouse != null)
                         oldWarehouseMessage = string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.EditWarehouse.Old"), oldWarehouse.Name);
                 }
@@ -1234,7 +1227,7 @@ public partial class ProductController : BaseAdminController
                 var newWarehouseMessage = string.Empty;
                 if (product.WarehouseId > 0)
                 {
-                    var newWarehouse = await _shippingService.GetWarehouseByIdAsync(product.WarehouseId);
+                    var newWarehouse = await _warehouseService.GetWarehouseByIdAsync(product.WarehouseId);
                     if (newWarehouse != null)
                         newWarehouseMessage = string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.EditWarehouse.New"), newWarehouse.Name);
                 }

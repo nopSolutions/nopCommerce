@@ -204,6 +204,8 @@ public partial class NopStartup : INopStartup
         services.AddScoped<IUrlRecordService, UrlRecordService>();
         services.AddScoped<IShipmentService, ShipmentService>();
         services.AddScoped<IShippingService, ShippingService>();
+        services.AddScoped<IWarehouseService, WarehouseService>();
+        services.AddScoped<IShippingMethodsService, ShippingMethodsService>();
         services.AddScoped<IDateRangeService, DateRangeService>();
         services.AddScoped<ITaxCategoryService, TaxCategoryService>();
         services.AddScoped<ICheckVatService, CheckVatService>();
