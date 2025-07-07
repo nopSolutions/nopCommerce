@@ -14,6 +14,7 @@ using Nop.Data;
 using Nop.Data.Migrations;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
+using Nop.Core.Domain.Forums;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo490;
 
@@ -185,6 +186,14 @@ public class SettingMigration : MigrationBase
         {
             addressSetting.PrePopulateCountryByCustomer = true;
             settingService.SaveSetting(addressSetting, settings => settings.PrePopulateCountryByCustomer);
+        }
+
+        //#7747
+        var forumSettings = settingService.LoadSetting<ForumSettings>();
+        if (!settingService.SettingExists(forumSettings, settings => settings.TopicMetaDescriptionLength))
+        {
+            forumSettings.TopicMetaDescriptionLength = 160;
+            settingService.SaveSetting(forumSettings, settings => settings.TopicMetaDescriptionLength);
         }
     }
 

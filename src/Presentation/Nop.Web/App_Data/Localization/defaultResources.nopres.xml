@@ -18216,6 +18216,9 @@
   <LocaleResource Name="Forum.TopicTitle">
     <Value>Topic Title</Value>
   </LocaleResource>
+  <LocaleResource Name="Forum.TruncatePostfix">
+    <Value>...</Value>
+  </LocaleResource>
   <LocaleResource Name="Forum.TotalPosts">
     <Value>Total Posts</Value>
   </LocaleResource>
