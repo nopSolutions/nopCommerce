@@ -1,55 +1,48 @@
-# create the build instance 
-FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS build
-
-WORKDIR /src                                                                    
-COPY ./src ./
-
-# build solution   
-RUN dotnet build NopCommerce.sln --no-incremental -c Release
-
-# publish project
-WORKDIR /src/Presentation/Nop.Web   
-RUN dotnet publish Nop.Web.csproj -c Release -o /app/published
-
-WORKDIR /app/published
-
-RUN mkdir logs bin
-
-RUN chmod 775 App_Data \
-              App_Data/DataProtectionKeys \
-              bin \
-              logs \
-              Plugins \
-              wwwroot/bundles \
-              wwwroot/db_backups \
-              wwwroot/files/exportimport \
-              wwwroot/icons \
-              wwwroot/images \
-              wwwroot/images/thumbs \
-              wwwroot/images/uploaded \
-			  wwwroot/sitemaps
-
-# create the runtime instance 
-FROM mcr.microsoft.com/dotnet/aspnet:9.0-alpine AS runtime 
-
-# add globalization support
-RUN apk add --no-cache icu-libs icu-data-full
-ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
-
-# installs required packages
-RUN apk add tiff --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/main/ --allow-untrusted
-RUN apk add libgdiplus --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/community/ --allow-untrusted
-RUN apk add libc-dev tzdata --no-cache
-
-# copy entrypoint script
-COPY ./entrypoint.sh /entrypoint.sh
-RUN chmod 755 /entrypoint.sh
+# create the test instance 
+FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS test
 
 WORKDIR /app
 
-COPY --from=build /app/published .
+# Copy solution file
+COPY ./src/NopCommerce.sln ./
 
-ENV ASPNETCORE_URLS=http://+:80
-EXPOSE 80
-                            
-ENTRYPOINT "/entrypoint.sh"
+# Copy all project files first (for better Docker layer caching)
+COPY ./src/Libraries/Nop.Core/*.csproj ./Libraries/Nop.Core/
+COPY ./src/Libraries/Nop.Data/*.csproj ./Libraries/Nop.Data/
+COPY ./src/Libraries/Nop.Services/*.csproj ./Libraries/Nop.Services/
+COPY ./src/Presentation/Nop.Web/*.csproj ./Presentation/Nop.Web/
+COPY ./src/Presentation/Nop.Web.Framework/*.csproj ./Presentation/Nop.Web.Framework/
+COPY ./src/Tests/Nop.Tests/*.csproj ./Tests/Nop.Tests/
+
+# Copy any other test projects if they exist
+COPY ./src/Tests/ ./Tests/
+
+# Restore dependencies
+RUN dotnet restore
+
+# Copy the rest of the source code
+COPY ./src/ ./
+
+# Install ReportGenerator tool for coverage reports
+RUN dotnet tool install -g dotnet-reportgenerator-globaltool
+
+# Add dotnet tools to PATH
+ENV PATH="${PATH}:/root/.dotnet/tools"
+
+# Install required packages for nopCommerce (similar to runtime stage)
+RUN apk add --no-cache icu-libs icu-data-full
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+
+# Install additional packages that might be needed for tests
+RUN apk add tiff --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/main/ --allow-untrusted || true
+RUN apk add libgdiplus --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/community/ --allow-untrusted || true
+RUN apk add libc-dev tzdata --no-cache
+
+# Create necessary directories
+RUN mkdir -p App_Data/DataProtectionKeys logs
+
+# Set permissions
+RUN chmod 775 App_Data App_Data/DataProtectionKeys logs
+
+# Run tests with coverage
+CMD ["bash", "-c", "echo .NET VERSION && dotnet --version && echo RUNNING TESTS && dotnet test --logger trx --collect:'XPlat Code Coverage' --results-directory ./TestResults"]

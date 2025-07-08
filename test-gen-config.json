@@ -1,0 +1,26 @@
+{
+  "enabled": "true",
+  "increase-coverage": {
+    "project-name": "dotnet-nopcommerce",
+    "target-branches": [
+      "master"
+    ],
+    "test-env-docker-stage": "test",
+    "build-test-env-docker-stage-script-path": "docker build --target test -t nopcommerce-test .",
+    "test-files-folders": [
+      "src/Tests/Nop.Tests/Nop.Services.Tests/Tax/TaxServiceTests.cs"
+    ],
+    "source-test-file-paths": [
+      {
+        "source-file-path": "src/Libraries/Nop.Services/Tax/TaxPluginManager.cs",
+        "test-file-path": "src/Tests/Nop.Tests/Nop.Services.Tests/Tax/TaxServiceTests.cs"
+      }
+    ],
+    "test-command": "dotnet test src/Tests/Nop.Tests/Nop.Tests.csproj --configuration Release --logger trx --collect:\"XPlat Code Coverage\" --results-directory TestResults/",
+    "coverage-type": "cobertura",
+    "code-coverage-report-path": "TestResults/*/coverage.cobertura.xml",
+    "desired-coverage": 85,
+    "max-iterations": 3,
+    "max-number-of-test-cases": 6
+  }
+}
