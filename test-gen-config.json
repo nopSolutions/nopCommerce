@@ -6,7 +6,7 @@
       "main"
     ],
     "test-env-docker-stage": "test",
-    "build-test-env-docker-stage-script-path": "docker build --target test -t nopcommerce-test .",
+    "build-test-env-docker-stage-script-path": "tool/build-test-env-docker-stage.sh",
     "test-files-folders": [
       "src/Tests/Nop.Tests/Nop.Services.Tests/Tax/TaxServiceTests.cs"
     ],
