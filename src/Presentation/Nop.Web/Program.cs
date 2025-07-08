@@ -12,6 +12,7 @@ public partial class Program
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Configuration.AddJsonFile(NopConfigurationDefaults.AppSettingsFilePath, true, true);
+
         if (!string.IsNullOrEmpty(builder.Environment?.EnvironmentName))
         {
             var path = string.Format(NopConfigurationDefaults.AppSettingsEnvironmentFilePath, builder.Environment.EnvironmentName);

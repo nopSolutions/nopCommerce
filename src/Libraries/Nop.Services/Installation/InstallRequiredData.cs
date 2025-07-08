@@ -1448,7 +1448,7 @@ public partial class InstallationService
             ExportImportRelatedEntitiesByName = true,
             ExportImportCategoryUseLimitedToStores = false,
             CountDisplayedYearsDatePicker = 1,
-            UseAjaxLoadMenu = false,
+          //  UseAjaxLoadMenu = false,
             UseAjaxCatalogProductsLoading = true,
             EnableManufacturerFiltering = true,
             EnablePriceRangeFiltering = true,
