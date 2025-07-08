@@ -3,7 +3,7 @@
   "increase-coverage": {
     "project-name": "dotnet-nopcommerce",
     "target-branches": [
-      "master"
+      "main"
     ],
     "test-env-docker-stage": "test",
     "build-test-env-docker-stage-script-path": "docker build --target test -t nopcommerce-test .",
