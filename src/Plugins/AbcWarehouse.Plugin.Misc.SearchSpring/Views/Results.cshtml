@@ -120,8 +120,7 @@ else
 
         <div class="products-container center-2">
             <div class="searchspring-top-bar">
-                <div class="search-query">Search for "@query" (@Model.TotalResults)</div>
-                <form method="get">
+                <form method="get" id="searchspring-sort-form">
                     <input type="hidden" name="q" value="@Model.Query" />
                     <select name="sort" id="searchspring-sort" onchange="this.form.submit()">
                         @foreach (var option in Model.SortOptions)
@@ -134,6 +133,7 @@ else
                         }
                     </select>
                 </form>
+                <div class="search-query">Search for "@query" (@Model.TotalResults)</div>
                 <button id="filterToggle" class="mobile-filter-btn">Filters</button>
             </div>
             <div class="products-wrapper">
