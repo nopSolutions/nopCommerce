@@ -197,7 +197,6 @@ public static class ServiceCollectionExtensions
     {
         var appSettings = Singleton<AppSettings>.Instance;
         var distributedCacheConfig = appSettings.Get<DistributedCacheConfig>();
-
         if (!distributedCacheConfig.Enabled)
             return;
 
@@ -237,12 +236,14 @@ public static class ServiceCollectionExtensions
                     options.Configuration = distributedCacheConfig.ConnectionString;
                     options.InstanceName = distributedCacheConfig.InstanceName ?? string.Empty;
                 });
+                var cacheConfig = appSettings.Get<CacheConfig>();
+
                 services.AddHybridRedisCaching(options =>
                 {//this is for distributed cache
                     options.AbortOnConnectFail = false;
                     options.InstancesSharedName = distributedCacheConfig.InstanceName ?? string.Empty;
-                    options.DefaultLocalExpirationTime = TimeSpan.FromMinutes(1440);        //24hrs for better performance
-                    options.DefaultDistributedExpirationTime = TimeSpan.FromMinutes(1440);  //24hrs for better performance
+                    options.DefaultLocalExpirationTime = TimeSpan.FromMinutes(cacheConfig.DefaultCacheTime);
+                    options.DefaultDistributedExpirationTime = TimeSpan.FromMinutes(cacheConfig.DefaultCacheTime);
                     options.ThrowIfDistributedCacheError = true;
                     options.RedisConnectionString = distributedCacheConfig.ConnectionString;
                     options.ConnectRetry = 10;
