@@ -1,6 +1,7 @@
 ﻿using System.Threading.RateLimiting;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using HybridRedisCache;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
@@ -229,6 +230,31 @@ public static class ServiceCollectionExtensions
                     options.Configuration = distributedCacheConfig.ConnectionString;
                     options.InstanceName = distributedCacheConfig.InstanceName ?? string.Empty;
                 });
+                break;
+            case DistributedCacheType.Hybrid:
+                services.AddStackExchangeRedisCache(options =>
+                {//this is for session
+                    options.Configuration = distributedCacheConfig.ConnectionString;
+                    options.InstanceName = distributedCacheConfig.InstanceName ?? string.Empty;
+                });
+                services.AddHybridRedisCaching(options =>
+                {//this is for distributed cache
+                    options.AbortOnConnectFail = false;
+                    options.InstancesSharedName = distributedCacheConfig.InstanceName ?? string.Empty;
+                    options.DefaultLocalExpirationTime = TimeSpan.FromMinutes(1440);        //24hrs for better performance
+                    options.DefaultDistributedExpirationTime = TimeSpan.FromMinutes(1440);  //24hrs for better performance
+                    options.ThrowIfDistributedCacheError = true;
+                    options.RedisConnectionString = distributedCacheConfig.ConnectionString;
+                    options.ConnectRetry = 10;
+                    options.EnableLogging = true;
+                    options.EnableTracing = false;
+                    options.ThreadPoolSocketManagerEnable = true;
+                    options.TracingActivitySourceName = nameof(HybridRedisCache);
+                    options.FlushLocalCacheOnBusReconnection = true;
+                    options.AllowAdmin = true; //we need this to ensure our statistics and flushdb commands work
+                    options.SupportOldInvalidateBus = false;
+                });
+
                 break;
         }
     }

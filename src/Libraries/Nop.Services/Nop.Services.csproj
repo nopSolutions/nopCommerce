@@ -16,6 +16,7 @@
     <PackageReference Include="Google.Apis.Auth" Version="1.68.0" />
     <!--Do not remove this reference. HarfBuzzSharp.NativeAssets.Linux library need for properly work SkiaSharp.HarfBuzz on the UNIX system-->
     <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="2.8.2.5" />
+    <PackageReference Include="HybridRedisCache" Version="3.0.4" />
     <PackageReference Include="MailKit" Version="4.5.0" />
     <PackageReference Include="MaxMind.GeoIP2" Version="5.2.0" />
     <PackageReference Include="PdfRpt.Core" Version="1.5.15" />

@@ -14,5 +14,7 @@ public enum DistributedCacheType
     [EnumMember(Value = "redis")]
     Redis,
     [EnumMember(Value = "redissynchronizedmemory")]
-    RedisSynchronizedMemory
+    RedisSynchronizedMemory,
+    [EnumMember(Value = "hybrid")]
+    Hybrid
 }

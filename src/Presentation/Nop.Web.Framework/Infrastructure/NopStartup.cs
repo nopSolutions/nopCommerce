@@ -117,6 +117,11 @@ public partial class NopStartup : INopStartup
                     services.AddSingleton<IStaticCacheManager, SynchronizedMemoryCacheManager>();
                     services.AddScoped<ICacheKeyService, SynchronizedMemoryCacheManager>();
                     break;
+                case DistributedCacheType.Hybrid:
+                    services.AddSingleton<IRedisConnectionWrapper, RedisConnectionWrapper>();
+                    services.AddSingleton<IStaticCacheManager, HybridCacheManager>();
+                    services.AddScoped<ICacheKeyService, HybridCacheManager>();
+                    break;
             }
 
             services.AddSingleton<ILocker, DistributedCacheLocker>();
