@@ -182,7 +182,7 @@ namespace AbcWarehouse.Plugin.Misc.SearchSpring.Controllers
                 }
 
                 var content = await response.Content.ReadAsStringAsync();
-                return Content(content, "application/json");
+                return Json(new { results = System.Net.WebUtility.HtmlEncode(content) });
             }
             catch (Exception ex)
             {

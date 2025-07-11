@@ -136,6 +136,21 @@ else
                 <div class="search-query">Search for "@query" (@Model.TotalResults)</div>
                 <button id="filterToggle" class="mobile-filter-btn">Filters</button>
             </div>
+
+            @{
+                List<string> headerBanners = null;
+            }
+
+            @if (Model.BannersByPosition != null && Model.BannersByPosition.TryGetValue("header", out headerBanners))
+            {
+                <div class="searchspring-banner header-banner">
+                    @foreach (var html in headerBanners)
+                    {
+                        @Html.Raw(html)
+                    }
+                </div>
+            }
+            
             <div class="products-wrapper">
                 <div class="product-grid">
                     <div class="item-grid">
@@ -239,6 +254,23 @@ else
     .standard-sidebar {
         display: none;
     }
+    .searchspring-banner.header-banner {
+        margin-bottom: 20px;
+    }
+
+    .searchspring-banner.main-banner {
+        margin: 20px 0;
+    }
+
+    .searchspring-banner.left-banner {
+        float: left;
+        margin-right: 20px;
+    }
+
+    .searchspring-banner.footer-banner {
+        margin-top: 30px;
+    }
+
 </style>
 
 <script>
@@ -292,5 +324,3 @@ else
     });
 
 </script>
-
-

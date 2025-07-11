@@ -75,6 +75,13 @@
     .autocomplete-item:hover {
         background-color: #f0f0f0;
     }
+    .suggestion-section ul {
+        padding: 7px 0px !important;
+    }
+    .suggestion-item {
+        display: inline;
+        padding: 10px;
+    }
 </style>
 
 <script>
@@ -109,6 +116,12 @@
         };
     }
 
+    const decodeHTML = (escapedStr) => {
+        const textarea = document.createElement('textarea');
+        textarea.innerHTML = escapedStr || '';
+        return textarea.value;
+    };
+
     input.addEventListener('input', debounce(async function () {
         const query = input.value.trim();
         if (query.length < 2) {
@@ -117,8 +130,8 @@
             return;
         }
 
-        let userId = window.searchspringTracking.userId;
-        let sessionId = window.searchspringTracking.sessionId;
+        const userId = window.searchspringTracking.userId;
+        const sessionId = window.searchspringTracking.sessionId;
 
         const suggestUrl = `/searchspring/suggest?q=${encodeURIComponent(query)}${userId && sessionId ? `&userId=${userId}&sessionId=${sessionId}` : ''}`;
         const autocompleteUrl = `/searchspring/autocomplete?q=${encodeURIComponent(query)}${userId && sessionId ? `&userId=${userId}&sessionId=${sessionId}` : ''}`;
@@ -129,17 +142,45 @@
                 fetch(autocompleteUrl)
             ]);
 
-            const suggestData = suggestRes.ok ? await suggestRes.json() : null;
+            // Parse Suggest Data
+            const suggestDataRaw = suggestRes.ok ? await suggestRes.json() : null;
+            let suggestData = null;
+            try {
+                const decoded = decodeHTML(suggestDataRaw?.results);
+                suggestData = JSON.parse(decoded);
+            } catch (err) {
+                console.error("❌ Failed to parse suggestData:", err);
+            }
+
+            // Parse Autocomplete
             const autocompleteData = autoRes.ok ? await autoRes.json() : null;
-
-            const decodeHTML = (escapedStr) => {
-                const textarea = document.createElement('textarea');
-                textarea.innerHTML = escapedStr || '';
-                return textarea.value;
-            };
-
-            const suggestHTML = decodeHTML(suggestData?.results);
             const autoHTML = decodeHTML(autocompleteData?.results);
+
+            // Build Suggest HTML
+            let suggestHTML = '';
+            if (suggestData) {
+                const suggestions = [];
+
+                if (Array.isArray(suggestData.suggested?.completed)) {
+                    suggestions.push(...suggestData.suggested.completed.map(item => item.token));
+                }
+
+                if (Array.isArray(suggestData.alternatives)) {
+                    suggestData.alternatives.forEach(alt => {
+                        if (Array.isArray(alt.completed)) {
+                            suggestions.push(...alt.completed.map(item => item.token));
+                        }
+                    });
+                }
+
+                if (suggestions.length > 0) {
+                    suggestHTML += '<ul style="list-style:none; padding:0; margin:0;">';
+                    suggestions.forEach(term => {
+                        suggestHTML += `<li class="suggestion-item"><a href="${baseUrl}${encodeURIComponent(term)}">${term}</a></li>`;
+                    });
+                    suggestHTML += '</ul>';
+                }
+            }
 
             const combinedHtml = `
                 ${suggestHTML ? `<div class="suggestion-section"><div class="section-title">Suggestions</div>${suggestHTML}</div>` : ''}
@@ -169,7 +210,7 @@
         }
     });
 
-    input.addEventListener('keydown', function(event) {
+    input.addEventListener('keydown', function (event) {
         if (event.key === 'Escape') {
             resultsContainer.style.display = 'none';
             input.blur();

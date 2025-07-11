@@ -6,6 +6,9 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using AbcWarehouse.Plugin.Misc.SearchSpring.Models;
 using System.Web;
+using System.Linq;
+using Nop.Services.Logging;
+using Nop.Core.Domain.Logging;
 
 namespace AbcWarehouse.Plugin.Misc.SearchSpring.Services
 {
@@ -13,10 +16,12 @@ namespace AbcWarehouse.Plugin.Misc.SearchSpring.Services
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly string _baseUrl = "https://4lt84w.a.searchspring.io";
+        private readonly ILogger _logger;
 
-        public SearchSpringService(IHttpClientFactory httpClientFactory)
+        public SearchSpringService(IHttpClientFactory httpClientFactory, ILogger logger)
         {
             _httpClientFactory = httpClientFactory;
+            _logger = logger;
         }
 
         public async Task<SearchResultModel> SearchAsync(string query, string sessionId = null,
@@ -206,6 +211,42 @@ namespace AbcWarehouse.Plugin.Misc.SearchSpring.Services
                     }
                 }
 
+                var bannersByPosition = new Dictionary<string, List<string>>();
+
+                if (root.TryGetProperty("merchandising", out var merchProp) &&
+                    merchProp.TryGetProperty("content", out var contentProp) &&
+                    contentProp.ValueKind == JsonValueKind.Object)
+                {
+                    foreach (var position in new[] { "header", "banner", "footer", "left" })
+                    {
+                        if (contentProp.TryGetProperty(position, out var bannerArray) &&
+                            bannerArray.ValueKind == JsonValueKind.Array)
+                        {
+                            var banners = bannerArray.EnumerateArray()
+                                .Where(b => b.ValueKind == JsonValueKind.String)
+                                .Select(b => b.GetString())
+                                .Where(html => !string.IsNullOrEmpty(html))
+                                .Select(html =>
+                                {
+                                    var split = html.Split(new[] { "</script>" }, StringSplitOptions.RemoveEmptyEntries);
+                                    return split.Length > 1 ? split[1].Trim() : html.Trim();
+                                })
+                                .Where(cleaned => !string.IsNullOrWhiteSpace(cleaned))
+                                .ToList();
+
+
+                            if (banners.Any())
+                            {
+                                bannersByPosition[position] = banners;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    await _logger.InsertLogAsync(LogLevel.Information, "[SearchSpring] No merchandising or content block found.");
+                }
+
                 return new SearchResultModel
                 {
                     Results = productList,
@@ -213,7 +254,8 @@ namespace AbcWarehouse.Plugin.Misc.SearchSpring.Services
                     PageSize = pageSize,
                     TotalResults = totalResults,
                     Facets = facets,
-                    SortOptions = sortOptions
+                    SortOptions = sortOptions,
+                    BannersByPosition = bannersByPosition
                 };
             }
             catch (Exception ex)
