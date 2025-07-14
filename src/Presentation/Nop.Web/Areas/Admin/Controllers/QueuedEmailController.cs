@@ -203,5 +203,22 @@ public partial class QueuedEmailController : BaseAdminController
         return RedirectToAction("List");
     }
 
+    [HttpPost]
+    [CheckPermission(StandardPermission.System.MANAGE_MESSAGE_QUEUE)]
+    public virtual async Task<IActionResult> RequeueSelected(int[] selectedIds)
+    {
+        if (selectedIds == null || selectedIds.Length == 0)
+            return NoContent();
+
+        var emailsToRequeue = await _queuedEmailService.GetQueuedEmailsByIdsAsync(selectedIds);
+
+        if (!emailsToRequeue.Any())
+            return NotFound();
+
+        await _queuedEmailService.RequeueQueuedEmailsAsync(emailsToRequeue);
+
+        return Json(new { Result = true });
+    }
+
     #endregion
 }

@@ -16,6 +16,7 @@ public partial record CampaignModel : BaseNopEntityModel
     {
         AvailableStores = new List<SelectListItem>();
         AvailableCustomerRoles = new List<SelectListItem>();
+        AvailableNewsLetterSubscriptionTypes = new List<SelectListItem>();
         AvailableEmailAccounts = new List<SelectListItem>();
         CopyCampaignModel = new CopyCampaignModel();
     }
@@ -40,6 +41,10 @@ public partial record CampaignModel : BaseNopEntityModel
     [NopResourceDisplayName("Admin.Promotions.Campaigns.Fields.CustomerRole")]
     public int CustomerRoleId { get; set; }
     public IList<SelectListItem> AvailableCustomerRoles { get; set; }
+
+    [NopResourceDisplayName("Admin.Promotions.Campaigns.Fields.NewsLetterSubscriptionType")]
+    public int NewsLetterSubscriptionTypeId { get; set; }
+    public IList<SelectListItem> AvailableNewsLetterSubscriptionTypes { get; set; }
 
     [NopResourceDisplayName("Admin.Promotions.Campaigns.Fields.CreatedOn")]
     public DateTime CreatedOn { get; set; }

@@ -1,11 +1,16 @@
-﻿@using Nop.Services.Localization
+﻿@using Nop.Core.Domain.Forums
+@using Nop.Services.Localization
 @model ForumTopicPageModel
 @inject ILocalizationService localizationService
 @{
     Layout = "_ColumnsOne";
 
     //title
-    NopHtml.AddTitleParts(Model.Subject);
+    NopHtml.AddTitleParts(Model.MetaTitle);
+
+    //meta
+    NopHtml.AddMetaDescriptionParts(Model.MetaDescription);
+
     //page class
     NopHtml.AppendPageCssClassParts("html-forum-topic-page");
 }
@@ -104,6 +109,20 @@
     </div>
 
     <div class="topic-posts">
+        @if (Model.ForumEditor == EditorType.MarkdownEditor)
+        {
+            <script asp-location="Footer" src="~/lib_npm/marked/marked.min.js"></script>
+            <script asp-location="Footer">
+                document.addEventListener('DOMContentLoaded', function() {
+                    @foreach (var post in @Model.ForumPostModels)
+                    {
+                        <Text>
+                            document.querySelector('[data-post-content="@post.Id"]').innerHTML = marked.parse(@Html.Raw(Json.Serialize(post.FormattedText)), { gfm: true, breaks: true });
+                        </Text>
+                    }                    
+                });
+            </script>            
+        }
         @foreach (var post in @Model.ForumPostModels)
         {
             await Html.RenderPartialAsync("_ForumPost", post);

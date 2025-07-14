@@ -336,6 +336,7 @@ public partial class BaseNopTest
         services.AddTransient<IMessageTemplateService, MessageTemplateService>();
         services.AddTransient<IQueuedEmailService, QueuedEmailService>();
         services.AddTransient<INewsLetterSubscriptionService, NewsLetterSubscriptionService>();
+        services.AddTransient<INewsLetterSubscriptionTypeService, NewsLetterSubscriptionTypeService>();
         services.AddTransient<INotificationService, NotificationService>();
         services.AddTransient<ICampaignService, CampaignService>();
         services.AddTransient<IEmailAccountService, EmailAccountService>();
@@ -360,6 +361,8 @@ public partial class BaseNopTest
         services.AddTransient<IUrlRecordService, UrlRecordService>();
         services.AddTransient<IShipmentService, ShipmentService>();
         services.AddTransient<IShippingService, ShippingService>();
+        services.AddTransient<IWarehouseService, WarehouseService>();
+        services.AddTransient<IShippingMethodsService, ShippingMethodsService>();
         services.AddTransient<IDateRangeService, DateRangeService>();
         services.AddTransient<ITaxCategoryService, TaxCategoryService>();
         services.AddTransient<ICheckVatService, CheckVatService>();
@@ -402,6 +405,9 @@ public partial class BaseNopTest
         services.AddTransient<IShippingPluginManager, ShippingPluginManager>();
         services.AddTransient<ITaxPluginManager, TaxPluginManager>();
         services.AddScoped<ISearchPluginManager, SearchPluginManager>();
+
+        //picture thumb service
+        services.AddScoped<IThumbService, ThumbService>();
 
         services.AddTransient<IPictureService, TestPictureService>();
         services.AddScoped<IVideoService, VideoService>();
@@ -494,7 +500,7 @@ public partial class BaseNopTest
         services.AddTransient<IManufacturerModelFactory, ManufacturerModelFactory>();
         services.AddTransient<IMeasureModelFactory, MeasureModelFactory>();
         services.AddTransient<IMessageTemplateModelFactory, MessageTemplateModelFactory>();
-        services.AddTransient<INewsletterSubscriptionModelFactory, NewsletterSubscriptionModelFactory>();
+        services.AddTransient<INewsLetterSubscriptionModelFactory, NewsLetterSubscriptionModelFactory>();
         services.AddTransient<INewsModelFactory, NewsModelFactory>();
         services.AddTransient<IOrderModelFactory, OrderModelFactory>();
         services.AddTransient<IPaymentModelFactory, PaymentModelFactory>();
@@ -537,7 +543,7 @@ public partial class BaseNopTest
                 Web.Factories.ExternalAuthenticationModelFactory>();
         services.AddTransient<Web.Factories.IJsonLdModelFactory, Web.Factories.JsonLdModelFactory>();
         services.AddTransient<Web.Factories.INewsModelFactory, Web.Factories.NewsModelFactory>();
-        services.AddTransient<Web.Factories.INewsletterModelFactory, Web.Factories.NewsletterModelFactory>();
+        services.AddTransient<Web.Factories.INewsLetterModelFactory, Web.Factories.NewsLetterModelFactory>();
         services.AddTransient<Web.Factories.IOrderModelFactory, Web.Factories.OrderModelFactory>();
         services.AddTransient<Web.Factories.IPollModelFactory, Web.Factories.PollModelFactory>();
         services

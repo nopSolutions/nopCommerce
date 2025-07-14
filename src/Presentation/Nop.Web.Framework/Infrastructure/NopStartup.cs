@@ -179,6 +179,7 @@ public partial class NopStartup : INopStartup
         services.AddScoped<IMessageTemplateService, MessageTemplateService>();
         services.AddScoped<IQueuedEmailService, QueuedEmailService>();
         services.AddScoped<INewsLetterSubscriptionService, NewsLetterSubscriptionService>();
+        services.AddScoped<INewsLetterSubscriptionTypeService, NewsLetterSubscriptionTypeService>();
         services.AddScoped<INotificationService, NotificationService>();
         services.AddScoped<ICampaignService, CampaignService>();
         services.AddScoped<IEmailAccountService, EmailAccountService>();
@@ -203,6 +204,8 @@ public partial class NopStartup : INopStartup
         services.AddScoped<IUrlRecordService, UrlRecordService>();
         services.AddScoped<IShipmentService, ShipmentService>();
         services.AddScoped<IShippingService, ShippingService>();
+        services.AddScoped<IWarehouseService, WarehouseService>();
+        services.AddScoped<IShippingMethodsService, ShippingMethodsService>();
         services.AddScoped<IDateRangeService, DateRangeService>();
         services.AddScoped<ITaxCategoryService, TaxCategoryService>();
         services.AddScoped<ICheckVatService, CheckVatService>();

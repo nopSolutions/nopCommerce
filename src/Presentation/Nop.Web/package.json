@@ -40,11 +40,11 @@
     "jquery-validation-unobtrusive": "^4.0.0",
     "jsrender": "^1.0.11",
     "magnific-popup": "^1.1.0",
+    "marked": "^15.0.11",
     "moment": "^2.30.1",
     "overlayscrollbars": "2.10.0",
+    "summernote": "^0.9.1",
     "swiper": "11.1.14",
-    "tinymce": "6.8.5",
-    "tinymce-langs": "1.0.0",
     "typeahead.js": "^0.11.1"
   }
 }

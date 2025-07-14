@@ -185,10 +185,12 @@ public partial class NopHttpClient
     /// A task that represents the asynchronous operation
     /// The task result contains the asynchronous task whose result contains the result string
     /// </returns>
-    public virtual async Task<HttpResponseMessage> SubscribeNewslettersAsync(string email)
+    public virtual async Task<HttpResponseMessage> SubscribeNewsLettersAsync(string email)
     {
         //prepare URL to request
-        var url = string.Format(NopCommonDefaults.NopSubscribeNewslettersPath, WebUtility.UrlEncode(email)).ToLowerInvariant();
+        var url = string.Format(NopCommonDefaults.NopSubscribeNewsLettersPath,
+                WebUtility.UrlEncode(email))
+            .ToLowerInvariant();
 
         return await _httpClient.GetAsync(url);
     }

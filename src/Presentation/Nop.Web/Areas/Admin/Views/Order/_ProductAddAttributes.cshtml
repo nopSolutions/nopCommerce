@@ -171,8 +171,7 @@
                                         <script asp-location="Footer">
                                             $(function () {
                                                 // Register the plugins
-                                                FilePond.registerPlugin(FilePondPluginFileValidateType);
-                                                FilePond.registerPlugin(FilePondPluginGetFile);
+                                                FilePond.registerPlugin(FilePondPluginFileValidateType, FilePondPluginGetFile);
 
                                                 // Create a FilePond instance
                                                 FilePond.create(document.querySelector('#@(controlId + "element")'), {
@@ -193,7 +192,6 @@
                                                     onprocessfiles: (error) => {
                                                         if (error) {
                                                             alert(error);
-                                                            return;
                                                         }
                                                     },
                                                     labelIdle: '@T("Common.FileUploader.DropFiles") / <span class="filepond--label-action">@T("Common.FileUploader.Browse")</span>',

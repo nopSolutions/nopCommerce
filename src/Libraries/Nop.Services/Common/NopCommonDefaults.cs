@@ -156,7 +156,7 @@ public static partial class NopCommonDefaults
     /// <remarks>
     /// {0} : subscriber email
     /// </remarks>
-    public static string NopSubscribeNewslettersPath => "subscribe-newsletters?&email={0}";
+    public static string NopSubscribeNewsLettersPath => "subscribe-newsletters?&email={0}";
 
     /// <summary>
     /// Gets a path to request the nopCommerce official site for available categories of marketplace extensions

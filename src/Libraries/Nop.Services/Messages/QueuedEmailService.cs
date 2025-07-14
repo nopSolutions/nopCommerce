@@ -93,6 +93,39 @@ public partial class QueuedEmailService : IQueuedEmailService
     }
 
     /// <summary>
+    /// Requeue a queued emails
+    /// </summary>
+    /// <param name="queuedEmails">Queued emails</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task RequeueQueuedEmailsAsync(IList<QueuedEmail> queuedEmails)
+    {
+        ArgumentNullException.ThrowIfNull(queuedEmails);
+
+        var newEmails = queuedEmails.Select(queuedEmail => new QueuedEmail
+        {
+            PriorityId = queuedEmail.PriorityId,
+            From = queuedEmail.From,
+            FromName = queuedEmail.FromName,
+            To = queuedEmail.To,
+            ToName = queuedEmail.ToName,
+            ReplyTo = queuedEmail.ReplyTo,
+            ReplyToName = queuedEmail.ReplyToName,
+            CC = queuedEmail.CC,
+            Bcc = queuedEmail.Bcc,
+            Subject = queuedEmail.Subject,
+            Body = queuedEmail.Body,
+            AttachmentFilePath = queuedEmail.AttachmentFilePath,
+            AttachmentFileName = queuedEmail.AttachmentFileName,
+            AttachedDownloadId = queuedEmail.AttachedDownloadId,
+            CreatedOnUtc = DateTime.UtcNow,
+            EmailAccountId = queuedEmail.EmailAccountId,
+            DontSendBeforeDateUtc = queuedEmail.DontSendBeforeDateUtc
+        }).ToList();
+
+        await _queuedEmailRepository.InsertAsync(newEmails);
+    }
+
+    /// <summary>
     /// Gets all queued emails
     /// </summary>
     /// <param name="fromEmail">From Email</param>

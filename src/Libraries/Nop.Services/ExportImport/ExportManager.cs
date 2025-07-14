@@ -76,7 +76,6 @@ public partial class ExportManager : IExportManager
     protected readonly ILocalizedEntityService _localizedEntityService;
     protected readonly IManufacturerService _manufacturerService;
     protected readonly IMeasureService _measureService;
-    protected readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
     protected readonly IOrderService _orderService;
     protected readonly IPictureService _pictureService;
     protected readonly IPriceFormatter _priceFormatter;
@@ -125,7 +124,6 @@ public partial class ExportManager : IExportManager
         ILocalizedEntityService localizedEntityService,
         IManufacturerService manufacturerService,
         IMeasureService measureService,
-        INewsLetterSubscriptionService newsLetterSubscriptionService,
         IOrderService orderService,
         IPictureService pictureService,
         IPriceFormatter priceFormatter,
@@ -170,7 +168,6 @@ public partial class ExportManager : IExportManager
         _localizedEntityService = localizedEntityService;
         _manufacturerService = manufacturerService;
         _measureService = measureService;
-        _newsLetterSubscriptionService = newsLetterSubscriptionService;
         _orderService = orderService;
         _pictureService = pictureService;
         _priceFormatter = priceFormatter;
@@ -2204,13 +2201,6 @@ public partial class ExportManager : IExportManager
             await xmlWriter.WriteElementStringAsync("VatNumberStatusId", null, customer.VatNumberStatusId.ToString());
             await xmlWriter.WriteElementStringAsync("TimeZoneId", null, customer.TimeZoneId);
 
-            foreach (var store in await _storeService.GetAllStoresAsync())
-            {
-                var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id);
-                var subscribedToNewsletters = newsletter != null && newsletter.Active;
-                await xmlWriter.WriteElementStringAsync($"Newsletter-in-store-{store.Id}", null, subscribedToNewsletters.ToString());
-            }
-
             await xmlWriter.WriteElementStringAsync("AvatarPictureId", null, (await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute)).ToString());
             await xmlWriter.WriteElementStringAsync("ForumPostCount", null, (await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.ForumPostCountAttribute)).ToString());
             await xmlWriter.WriteElementStringAsync("Signature", null, await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SignatureAttribute));
@@ -2244,20 +2234,22 @@ public partial class ExportManager : IExportManager
     /// A task that represents the asynchronous operation
     /// The task result contains the result in TXT (string) format
     /// </returns>
-    public virtual async Task<string> ExportNewsletterSubscribersToTxtAsync(IList<NewsLetterSubscription> subscriptions)
+    public virtual async Task<string> ExportNewsLetterSubscribersToTxtAsync(IList<NewsLetterSubscription> subscriptions)
     {
         ArgumentNullException.ThrowIfNull(subscriptions);
 
         const char separator = ',';
         var sb = new StringBuilder();
 
-        sb.Append(await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptions.Fields.Email"));
+        sb.Append(await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscription.Fields.Email"));
         sb.Append(separator);
-        sb.Append(await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptions.Fields.Active"));
+        sb.Append(await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscription.Fields.Active"));
         sb.Append(separator);
-        sb.Append(await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptions.Fields.Store"));
+        sb.Append(await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscription.Fields.SubscriptionType"));
         sb.Append(separator);
-        sb.Append(await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptions.Fields.Language"));
+        sb.Append(await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscription.Fields.Store"));
+        sb.Append(separator);
+        sb.Append(await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscription.Fields.Language"));
         sb.Append(Environment.NewLine);
 
         foreach (var subscription in subscriptions)
@@ -2265,6 +2257,8 @@ public partial class ExportManager : IExportManager
             sb.Append(subscription.Email);
             sb.Append(separator);
             sb.Append(subscription.Active);
+            sb.Append(separator);
+            sb.Append(subscription.TypeId);
             sb.Append(separator);
             sb.Append(subscription.StoreId);
             sb.Append(separator);

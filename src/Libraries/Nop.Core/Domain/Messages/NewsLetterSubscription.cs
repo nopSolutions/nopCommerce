@@ -34,4 +34,9 @@ public partial class NewsLetterSubscription : BaseEntity
     /// Gets or sets the language identifier in which a customer has subscribed to newsletter
     /// </summary>
     public int LanguageId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the subscription type identifier in which a customer has subscribed to newsletter
+    /// </summary>
+    public int TypeId { get; set; }
 }

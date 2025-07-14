@@ -326,6 +326,14 @@ public partial class AdminMenu : IAdminMenu
                         },
                         new()
                         {
+                            SystemName = "Newsletter subscription types",
+                            Title = await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptionType"),
+                            PermissionNames = new List<string> { StandardPermission.Promotions.SUBSCRIPTION_TYPE_VIEW },
+                            Url = GetMenuItemUrl("NewsLetterSubscriptionType", "List"),
+                            IconClass = "far fa-dot-circle"
+                        },
+                        new()
+                        {
                             SystemName = "Campaigns",
                             Title = await _localizationService.GetResourceAsync("Admin.Promotions.Campaigns"),
                             PermissionNames = new List<string> { StandardPermission.Promotions.CAMPAIGNS_VIEW },

@@ -599,7 +599,7 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             defaults: new { controller = "Boards", action = "PostEdit" });
 
         endpointRouteBuilder.MapControllerRoute(name: "PostDelete",
-            pattern: $"{lang}/boards/postdelete/{{id:min(0)}}",
+            pattern: $"{lang}/boards/postdelete/{{id:int?}}",
             defaults: new { controller = "Boards", action = "PostDelete" });
 
         endpointRouteBuilder.MapControllerRoute(name: "PostCreate",
@@ -615,7 +615,7 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             defaults: new { controller = "Boards", action = "TopicEdit" });
 
         endpointRouteBuilder.MapControllerRoute(name: "TopicDelete",
-            pattern: $"{lang}/boards/topicdelete/{{id:min(0)}}",
+            pattern: $"{lang}/boards/topicdelete/{{id:int?}}",
             defaults: new { controller = "Boards", action = "TopicDelete" });
 
         endpointRouteBuilder.MapControllerRoute(name: "TopicCreate",

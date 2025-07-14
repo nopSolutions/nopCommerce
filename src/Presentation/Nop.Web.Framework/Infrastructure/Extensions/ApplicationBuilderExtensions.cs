@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
 using System.Net;
-using System.Reflection;
 using System.Runtime.ExceptionServices;
 using iTextSharp.text;
 using Microsoft.AspNetCore.Builder;
@@ -17,21 +16,17 @@ using Microsoft.Net.Http.Headers;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Events;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Data;
-using Nop.Data.Migrations;
 using Nop.Services.Authentication;
 using Nop.Services.Common;
 using Nop.Services.Installation;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media.RoxyFileman;
-using Nop.Services.Plugins;
-using Nop.Services.ScheduleTasks;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Web.Framework.Globalization;
@@ -57,44 +52,16 @@ public static class ApplicationBuilderExtensions
         EngineContext.Current.ConfigureRequestPipeline(application);
     }
 
-    public static async Task StartEngineAsync(this IApplicationBuilder _)
+    /// <summary>
+    /// Publish AppStarted event
+    /// </summary>
+    /// <param name="_">Builder for configuring an application's request pipeline</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public static async Task PublishAppStartedEventAsync(this IApplicationBuilder _)
     {
-        var engine = EngineContext.Current;
-
-        //further actions are performed only when the database is installed
-        if (DataSettingsManager.IsDatabaseInstalled())
-        {
-            //log application start
-            await engine.Resolve<ILogger>().InformationAsync("Application started");
-
-            //install and update plugins
-            var pluginService = engine.Resolve<IPluginService>();
-            await pluginService.InstallPluginsAsync();
-            await pluginService.UpdatePluginsAsync();
-
-            //insert new ACL permission if exists
-            var permissionService = engine.Resolve<IPermissionService>();
-            await permissionService.InsertPermissionsAsync();
-
-            //update nopCommerce core and db
-            var migrationManager = engine.Resolve<IMigrationManager>();
-            var assembly = Assembly.GetAssembly(typeof(ApplicationBuilderExtensions));
-            migrationManager.ApplyUpMigrations(assembly, MigrationProcessType.Update);
-            assembly = Assembly.GetAssembly(typeof(IMigrationManager));
-            migrationManager.ApplyUpMigrations(assembly, MigrationProcessType.Update);
-
-            var taskScheduler = engine.Resolve<ITaskScheduler>();
-            await taskScheduler.InitializeAsync();
-            await taskScheduler.StartSchedulerAsync();
-
-            //clear payment info requests
-            var genericAttributeService = engine.Resolve<IGenericAttributeService>();
-            await genericAttributeService.DeleteAttributesAsync<Customer>(NopCustomerDefaults.ProcessPaymentRequestAttribute);
-
-            //publish AppStartedEvent
-            var eventPublisher = engine.Resolve<IEventPublisher>();
-            await eventPublisher.PublishAsync(new AppStartedEvent());
-        }
+        //publish AppStartedEvent
+        var eventPublisher = EngineContext.Current.Resolve<IEventPublisher>();
+        await eventPublisher.PublishAsync(new AppStartedEvent());
     }
 
     /// <summary>

@@ -1,0 +1,37 @@
+@model NewsLetterSubscriptionModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Promotions.NewsLetterSubscription.EditSubscriptionDetails").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Newsletter subscriptions");
+}
+
+<form asp-controller="NewsLetterSubscription" asp-action="Edit" method="post" id="subscription-form">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Promotions.NewsLetterSubscription.EditSubscriptionDetails") - @Model.Email
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="List">@T("Admin.Promotions.NewsLetterSubscription.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-floppy-disk"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn btn-primary">
+                <i class="far fa-floppy-disk"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <span id="subscription-delete" class="btn btn-danger">
+                <i class="far fa-trash-can"></i>
+                @T("Admin.Common.Delete")
+            </span>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.NewsLetterSubscriptionButtons, additionalData = Model })
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdate", Model)
+</form>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="subscription-delete" />

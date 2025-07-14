@@ -35,6 +35,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
+using Nop.Services.Messages;
 using Nop.Services.Seo;
 
 namespace Nop.Services.Installation;
@@ -1097,6 +1098,24 @@ public partial class InstallationService
     }
 
     /// <summary>
+    /// Installs a default type of newsletter subscription
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    protected virtual async Task InstallNewsLetterSubscriptionTypeAsync()
+    {
+        var newsLetterSubscriptionType = new List<NewsLetterSubscriptionType>
+        {
+            new() {
+                Name = NopMessageDefaults.DefaultSubscriptionType,
+                TickedByDefault = true,
+                DisplayOrder = 0
+            }
+        };
+
+        await _dataProvider.BulkInsertEntitiesAsync(newsLetterSubscriptionType);
+    }
+
+    /// <summary>
     /// Installs a default topic templates
     /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>
@@ -1303,8 +1322,6 @@ public partial class InstallationService
             PopupGridPageSize = 7,
             GridPageSizes = "7, 15, 20, 50, 100",
             RichEditorAdditionalSettings = null,
-            RichEditorAllowJavaScript = false,
-            RichEditorAllowStyleTag = false,
             UseRichEditorForCustomerEmails = false,
             UseRichEditorInMessageTemplates = false,
             CheckLicense = true,
@@ -1514,7 +1531,6 @@ public partial class InstallationService
             FaxEnabled = false,
             AcceptPrivacyPolicyEnabled = false,
             NewsletterEnabled = true,
-            NewsletterTickedByDefault = true,
             HideNewsletterBlock = false,
             NewsletterBlockAllowToUnsubscribe = false,
             OnlineCustomerMinutes = 20,
@@ -1854,7 +1870,7 @@ public partial class InstallationService
             ActiveDiscussionsPageSize = 50,
             LatestCustomerPostsPageSize = 10,
             ShowCustomersPostCount = true,
-            ForumEditor = EditorType.BBCodeEditor,
+            ForumEditor = EditorType.MarkdownEditor,
             SignaturesEnabled = true,
             AllowPrivateMessages = false,
             ShowAlertForPM = false,
@@ -1868,7 +1884,8 @@ public partial class InstallationService
             ActiveDiscussionsFeedCount = 25,
             ForumFeedsEnabled = false,
             ForumFeedCount = 10,
-            ForumSearchTermMinimumLength = 3
+            ForumSearchTermMinimumLength = 3,
+            TopicMetaDescriptionLength = 160
         });
 
         await SaveSettingAsync(dictionary, new VendorSettings
@@ -2580,6 +2597,11 @@ public partial class InstallationService
                     Name = "Add a new widget"
                 },
                 new() {
+                    SystemKeyword = "AddSubscriptionType",
+                    Enabled = true,
+                    Name = "Add a new subscription type"
+                },
+                new() {
                     SystemKeyword = "DeleteActivityLog",
                     Enabled = true,
                     Name = "Delete activity log"
@@ -2763,6 +2785,11 @@ public partial class InstallationService
                     SystemKeyword = "DeleteStore",
                     Enabled = true,
                     Name = "Delete a store"
+                },
+                new() {
+                    SystemKeyword = "DeleteSubscriptionType",
+                    Enabled = true,
+                    Name = "Delete a subscription type"
                 },
                 new() {
                     SystemKeyword = "DeleteSystemLog",
@@ -2968,6 +2995,11 @@ public partial class InstallationService
                     SystemKeyword = "EditStore",
                     Enabled = true,
                     Name = "Edit a store"
+                },
+                new() {
+                    SystemKeyword = "EditSubscriptionType",
+                    Enabled = true,
+                    Name = "Edit a subscription type"
                 },
                 new() {
                     SystemKeyword = "EditTask",

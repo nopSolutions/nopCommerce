@@ -18,6 +18,11 @@
             @T("Admin.System.QueuedEmails")
         </h1>
         <div class="float-right">
+            <button type="button" id="requeue-selected" class="btn btn-success">
+                <i class="far fa-clone"></i>
+                @T("Admin.System.QueuedEmails.RequeueSelected")
+            </button>
+            <nop-action-confirmation asp-button-id="requeue-selected" />
             <button type="button" id="delete-selected" class="btn btn-danger">
                 <i class="far fa-trash-can"></i>
                 @T("Admin.System.QueuedEmails.DeleteSelected")
@@ -245,6 +250,35 @@
                                     $('#delete-selected-action-confirmation').modal('toggle');
                                     return false;
                                 });
+
+                                //"requeue selected" button
+                                $("#requeue-selected-action-confirmation").bind("click", function () {
+                                    var postData = {
+                                        selectedIds: selectedIds
+                                    };
+                                    addAntiForgeryToken(postData);
+                                    $.ajax({
+                                        cache: false,
+                                        type: "POST",
+                                        url: "@Url.Action("RequeueSelected", "QueuedEmail")",
+                                        data: postData,
+                                        traditional: true,
+                                        error: function (jqXHR, textStatus, errorThrown) {
+                                            showAlert('requeueSelectedFailed', errorThrown);
+                                        },
+                                        complete: function (jqXHR, textStatus) {
+                                            if (jqXHR.status === 204 || jqXHR.status === 404)
+                                            {
+                                                showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                                                return;
+                                            }
+
+                                            updateTable('#queuedEmails-grid');
+                                        }
+                                    });
+                                    $('#requeue-selected-action-confirmation').modal('toggle');
+                                    return false;
+                                });
                             });
                         </script>
                     </div>
@@ -254,5 +288,6 @@
     </div>
     </section>
 </form>
+<nop-alert asp-alert-id="requeueSelectedFailed" />
 <nop-alert asp-alert-id="deleteSelectedFailed" />
 <nop-alert asp-alert-id="nothingSelectedAlert" />
