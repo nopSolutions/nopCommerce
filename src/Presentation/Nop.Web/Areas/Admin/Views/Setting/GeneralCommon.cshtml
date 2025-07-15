@@ -47,7 +47,10 @@
 
     const string hideLocalizationBlockAttributeName = "GeneralCommonSettingsPage.HideLocalizationBlock";
     var hideLocalizationBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideLocalizationBlockAttributeName);
-    
+
+    const string hideTranslationBlockAttributeName = "GeneralCommonSettingsPage.HideTranslationBlock";
+    var hideTranslationBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideTranslationBlockAttributeName);
+
     const string hideCustomHtmlBlockAttributeName = "GeneralCommonSettingsPage.HideCustomHtmlBlock";
     var hideCustomHtmlBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCustomHtmlBlockAttributeName);
 
@@ -90,6 +93,7 @@
                     <nop-card asp-name="generalcommon-captcha" asp-icon="fas fa-fingerprint" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Captcha")" asp-hide-block-attribute-name="@hideCaptchaBlockAttributeName" asp-hide="@hideCaptchaBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.Captcha", Model)</nop-card>
                     <nop-card asp-name="generalcommon-pdf" asp-icon="far fa-file-pdf" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Pdf")" asp-hide-block-attribute-name="@hidePDFBlockAttributeName" asp-hide="@hidePDFBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.Pdf", Model)</nop-card>
                     <nop-card asp-name="generalcommon-localization" asp-icon="fas fa-language" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Localization")" asp-hide-block-attribute-name="@hideLocalizationBlockAttributeName" asp-hide="@hideLocalizationBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.Localization", Model)</nop-card>
+                    <nop-card asp-name="generalcommon-translation" asp-icon="fas fa-globe" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Translation")" asp-hide-block-attribute-name="@hideTranslationBlockAttributeName" asp-hide="@hideTranslationBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.Translation", Model)</nop-card>
                     <nop-card asp-name="generalcommon-customhtml" asp-icon="fas fa-code" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.CustomHtml")" asp-hide-block-attribute-name="@hideCustomHtmlBlockAttributeName" asp-hide="@hideCustomHtmlBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.CustomHtml", Model)</nop-card>
                     <nop-card asp-name="generalcommon-adminarea" asp-icon="fas fa-clipboard" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.AdminArea")" asp-hide-block-attribute-name="@hideAdminAreaBlockAttributeName" asp-hide="@hideAdminAreaBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.AdminArea", Model)</nop-card>
 

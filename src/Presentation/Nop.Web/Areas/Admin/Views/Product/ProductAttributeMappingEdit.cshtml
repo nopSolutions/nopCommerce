@@ -17,6 +17,10 @@
             </small>
         </h1>
         <div class="float-right">
+            @if (Model.PreTranslationAvailable)
+            {
+                @await Html.PartialAsync("_PreTranslateButton", "PreTranslateProductAttribute")
+            }
             <button type="submit" name="save" class="btn btn-primary">
                 <i class="far fa-floppy-disk"></i>
                 @T("Admin.Common.Save")

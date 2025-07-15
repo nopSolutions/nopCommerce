@@ -18,6 +18,7 @@ using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Domain.Translation;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
 using Nop.Core.Infrastructure;
@@ -1575,6 +1576,16 @@ public partial class SettingController : BaseAdminController
             localizationSettings.LoadAllLocalizedPropertiesOnStartup = model.LocalizationSettings.LoadAllLocalizedPropertiesOnStartup;
             localizationSettings.LoadAllUrlRecordsOnStartup = model.LocalizationSettings.LoadAllUrlRecordsOnStartup;
             await _settingService.SaveSettingAsync(localizationSettings);
+
+            //translation settings
+            var translationSettings = await _settingService.LoadSettingAsync<TranslationSettings>(storeScope);
+            translationSettings.AllowPreTranslate = model.TranslationSettings.AllowPreTranslate;
+            translationSettings.TranslateFromLanguageId = model.TranslationSettings.TranslateFromLanguageId;
+            translationSettings.NotTranslateLanguages = model.TranslationSettings.NotTranslateLanguages?.ToList() ?? new List<int>();
+            translationSettings.GoogleApiKey = model.TranslationSettings.GoogleApiKey;
+            translationSettings.DeepLAuthKey = model.TranslationSettings.DeepLAuthKey;
+            translationSettings.TranslationServiceId = model.TranslationSettings.TranslationServiceId;
+            await _settingService.SaveSettingAsync(translationSettings);
 
             //display default menu item
             var displayDefaultMenuItemSettings = await _settingService.LoadSettingAsync<DisplayDefaultMenuItemSettings>(storeScope);
