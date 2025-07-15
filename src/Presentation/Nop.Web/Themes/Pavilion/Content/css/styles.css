@@ -326,6 +326,13 @@ h2#searchspring-no_results {
 	margin-bottom: 10px;
 }
 
+@media (max-width: 1024px) {
+.search-query {
+    display: flex;
+    justify-content: center;
+}
+}
+
 .mobile-filter-btn {
 	display: none;
 	bottom: 20px;
@@ -8227,3 +8234,20 @@ a.us-ap-button {
         color: #0066cc;
     }
 	
+
+	.desktop-version-search {
+        display: block;
+    }
+    .mobile-version-search {
+        display: none;
+    }
+
+    
+    @media (max-width: 1024px) {
+        .desktop-version-search {
+            display: none;
+        }
+        .mobile-version-search {
+            display: block;
+        }
+    }
