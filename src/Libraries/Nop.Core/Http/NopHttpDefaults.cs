@@ -19,4 +19,9 @@ public static partial class NopHttpDefaults
     /// Gets the name of a request item that stores the value that indicates whether the request is being redirected by the generic route transformer
     /// </summary>
     public static string GenericRouteInternalRedirect => "nop.RedirectFromGenericPathRoute";
+
+    /// <summary>
+    /// Gets the name of a request item that stores the value with default language for sitemap.xml
+    /// </summary>
+    public static string ForcedSitemapXmlLanguage => "nop.ForcedSitemapXmlLanguage";
 }
