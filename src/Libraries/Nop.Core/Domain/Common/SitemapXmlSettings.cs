@@ -71,4 +71,9 @@ public partial class SitemapXmlSettings : ISettings
     /// Gets or sets the wait time (in seconds) before the operation can be started again
     /// </summary>
     public int SitemapBuildOperationDelay { get; set; }
+
+    /// <summary>
+    /// Disallow languages
+    /// </summary>
+    public List<int> DisallowLanguages { get; set; } = new();
 }

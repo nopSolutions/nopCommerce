@@ -887,7 +887,8 @@ public partial class SitemapModelFactory : ISitemapModelFactory
 
         var updatedOn = dateTimeUpdatedOn ?? DateTime.UtcNow;
         var languages = _localizationSettings.SeoFriendlyUrlsForLanguagesEnabled
-            ? await _languageService.GetAllLanguagesAsync(storeId: store.Id)
+            ? (await _languageService.GetAllLanguagesAsync(storeId: store.Id))
+            .Where(lang => !_sitemapXmlSettings.DisallowLanguages.Contains(lang.Id)).ToList()
             : null;
 
         if (languages == null || languages.Count == 1)
