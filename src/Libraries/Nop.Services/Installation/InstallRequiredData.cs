@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 using Nop.Core;
 using Nop.Core.Configuration;
@@ -313,9 +314,13 @@ public partial class InstallationService
     protected virtual async Task InstallLanguagesAsync()
     {
         var defaultCulture = new CultureInfo(NopCommonDefaults.DefaultLanguageCulture);
+        var re = new Regex(" \\(.*\\)", RegexOptions.Compiled);
+        var languageName = re.Replace(defaultCulture.NativeName, string.Empty);
+        languageName = languageName[0].ToString().ToUpper() + languageName[1..];
+
         var defaultLanguage = new Language
         {
-            Name = defaultCulture.TwoLetterISOLanguageName.ToUpperInvariant(),
+            Name = languageName,
             LanguageCulture = defaultCulture.Name,
             UniqueSeoCode = defaultCulture.TwoLetterISOLanguageName,
             FlagImageFileName = $"{defaultCulture.Name.ToLowerInvariant()[^2..]}.png",
@@ -340,9 +345,12 @@ public partial class InstallationService
         if (cultureInfo == null || regionInfo == null || cultureInfo.Name == NopCommonDefaults.DefaultLanguageCulture)
             return;
 
+        languageName = re.Replace(cultureInfo.NativeName, string.Empty);
+        languageName = languageName[0].ToString().ToUpper() + languageName[1..];
+
         var language = new Language
         {
-            Name = cultureInfo.TwoLetterISOLanguageName.ToUpperInvariant(),
+            Name = languageName,
             LanguageCulture = cultureInfo.Name,
             UniqueSeoCode = cultureInfo.TwoLetterISOLanguageName,
             FlagImageFileName = $"{regionInfo.TwoLetterISORegionName.ToLowerInvariant()}.png",
