@@ -236,6 +236,16 @@ public class SettingMigration : MigrationBase
             translationSettings.TranslationServiceId = 0;
             settingService.SaveSetting(translationSettings, settings => settings.TranslationServiceId);
         }
+
+        //#7779
+        var robotsTxtSettings = settingService.LoadSetting<RobotsTxtSettings>();
+        var newDisallowPaths = new List<string> { "/*?*returnurl=", "/*?*ReturnUrl=" };
+
+        foreach (var newDisallowPath in newDisallowPaths.Where(newDisallowPath => !robotsTxtSettings.DisallowPaths.Contains(newDisallowPath)))
+            robotsTxtSettings.DisallowPaths.Add(newDisallowPath);
+
+        robotsTxtSettings.DisallowPaths.Sort();
+        settingService.SaveSetting(robotsTxtSettings, settings => settings.DisallowPaths);
     }
 
     public override void Down()
