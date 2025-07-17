@@ -13,10 +13,8 @@ using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Seo;
-using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Events;
-using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Services.Blogs;
 using Nop.Services.Catalog;
@@ -524,7 +522,7 @@ public partial class SitemapModelFactory : ISitemapModelFactory
     /// <param name="fullPath">The path and name of the sitemap file</param>
     /// <param name="id">Sitemap identifier</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    protected virtual async Task GenerateAsync(string fullPath, int id = 0) 
+    protected virtual async Task GenerateAsync(string fullPath, int id = 0)
     {
         //generate all URLs for the sitemap
         var sitemapUrls = await GenerateUrlsAsync();
@@ -605,22 +603,6 @@ public partial class SitemapModelFactory : ISitemapModelFactory
         return new Uri(new Uri(scheme), localizedPath).ToString();
     }
 
-    /// <summary>
-    /// Retrieves the list of languages for the given store that are not excluded in the sitemap XML settings,
-    /// if SEO-friendly URLs for languages are enabled.
-    /// </summary>
-    /// <param name="store">The store to retrieve allowed languages for.</param>
-    /// <returns>
-    /// A list of <see cref="Language"/> if SEO-friendly URLs are enabled; otherwise, <c>null</c>.
-    /// </returns>
-    protected async Task<List<Language>> GetAllowedLanguagesAsync(Store store)
-    {
-        return _localizationSettings.SeoFriendlyUrlsForLanguagesEnabled
-            ? (await _languageService.GetAllLanguagesAsync(storeId: store.Id))
-            .Where(lang => !_sitemapXmlSettings.DisallowLanguages.Contains(lang.Id))
-            .ToList()
-            : null;
-    }
     #endregion
 
     #region Methods
@@ -841,43 +823,27 @@ public partial class SitemapModelFactory : ISitemapModelFactory
     /// </returns>
     public virtual async Task<SitemapXmlModel> PrepareSitemapXmlModelAsync(int id = 0)
     {
-        var workingLanguage = await _workContext.GetWorkingLanguageAsync();
+        var language = await _workContext.GetWorkingLanguageAsync();
         var store = await _storeContext.GetCurrentStoreAsync();
-        
-        // get list of allowed languages (null if multilingual URLs are disabled)
-        var languages = await GetAllowedLanguagesAsync(store);
 
-        // select current language if allowed, fallback to first allowed if needed
-        var language = languages?.FirstOrDefault(lang => lang.Id == workingLanguage?.Id) ?? languages?.FirstOrDefault() ?? workingLanguage;
+        var fileName = string.Format(NopSeoDefaults.SitemapXmlFilePattern, store.Id, language.Id, id);
+        var fullPath = _nopFileProvider.GetAbsolutePath(NopSeoDefaults.SitemapXmlDirectory, fileName);
 
-        if (language.Id != workingLanguage.Id)
-            _actionContextAccessor.ActionContext.HttpContext.Items[NopHttpDefaults.ForcedSitemapXmlLanguage] = language.UniqueSeoCode.ToLowerInvariant();
-
-        try
+        if (_nopFileProvider.FileExists(fullPath) && _nopFileProvider.GetLastWriteTimeUtc(fullPath) > DateTime.UtcNow.AddHours(-_sitemapXmlSettings.RebuildSitemapXmlAfterHours))
         {
-            var fileName = string.Format(NopSeoDefaults.SitemapXmlFilePattern, store.Id, language.Id, id);
-            var fullPath = _nopFileProvider.GetAbsolutePath(NopSeoDefaults.SitemapXmlDirectory, fileName);
-
-            if (_nopFileProvider.FileExists(fullPath) && _nopFileProvider.GetLastWriteTimeUtc(fullPath) > DateTime.UtcNow.AddHours(-_sitemapXmlSettings.RebuildSitemapXmlAfterHours))
-            {
-                return new SitemapXmlModel { SitemapXmlPath = fullPath };
-            }
-
-            //execute task with lock
-            if (!await _locker.PerformActionWithLockAsync(
-                    fullPath,
-                    TimeSpan.FromSeconds(_sitemapXmlSettings.SitemapBuildOperationDelay),
-                    async () => await GenerateAsync(fullPath, id)))
-            {
-                throw new InvalidOperationException();
-            }
-
             return new SitemapXmlModel { SitemapXmlPath = fullPath };
         }
-        finally
+
+        //execute task with lock
+        if (!await _locker.PerformActionWithLockAsync(
+                fullPath,
+                TimeSpan.FromSeconds(_sitemapXmlSettings.SitemapBuildOperationDelay),
+                async () => await GenerateAsync(fullPath, id)))
         {
-            _actionContextAccessor.ActionContext.HttpContext.Items.Remove(NopHttpDefaults.ForcedSitemapXmlLanguage);
+            throw new InvalidOperationException();
         }
+
+        return new SitemapXmlModel { SitemapXmlPath = fullPath };
     }
 
     /// <summary>
@@ -912,16 +878,26 @@ public partial class SitemapModelFactory : ISitemapModelFactory
             _ => GetUrlHelper().RouteUrl(routeName, values, protocol)
         };
 
-        //url for current language
-        var url = await routeUrlAsync(routeName,
-            getRouteParamsAwait != null ? await getRouteParamsAwait(null) : null,
-            await GetHttpProtocolAsync());
-
         var store = await _storeContext.GetCurrentStoreAsync();
 
         var updatedOn = dateTimeUpdatedOn ?? DateTime.UtcNow;
-        var languages = await GetAllowedLanguagesAsync(store);
+        var languages = _localizationSettings.SeoFriendlyUrlsForLanguagesEnabled
+            ? (await _languageService.GetAllLanguagesAsync(storeId: store.Id))
+            .Where(lang => !_sitemapXmlSettings.DisallowLanguages.Contains(lang.Id)).ToList()
+            : null;
 
+        // select store default language if allowed, fallback to first allowed if needed
+        var workingLanguage = await _workContext.GetWorkingLanguageAsync();
+        var language = languages?.FirstOrDefault(lang => lang.Id == store.DefaultLanguageId) ?? languages?.FirstOrDefault() ?? workingLanguage;
+
+        //url for current language
+        var url = await routeUrlAsync(routeName,
+            getRouteParamsAwait != null ? await getRouteParamsAwait(language.Id) : null,
+            await GetHttpProtocolAsync());
+
+        if (language.Id != workingLanguage.Id)
+            url = GetLocalizedUrl(url, language);
+        
         if (languages == null || languages.Count == 1)
             return new SitemapUrlModel(url, new List<string>(), updateFreq, updatedOn);
 
@@ -933,7 +909,7 @@ public partial class SitemapModelFactory : ISitemapModelFactory
                     getRouteParamsAwait != null ? await getRouteParamsAwait(lang.Id) : null,
                     await GetHttpProtocolAsync());
 
-                return GetLocalizedUrl(currentUrl, lang);
+                return lang.Id != workingLanguage.Id ? GetLocalizedUrl(currentUrl, lang) : currentUrl;
             })
             .Where(value => !string.IsNullOrEmpty(value))
             .ToListAsync();

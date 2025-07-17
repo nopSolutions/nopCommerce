@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core;
-using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 
@@ -39,11 +38,7 @@ public partial class LanguageParameterTransformer : IOutboundParameterTransforme
     /// <returns>The transformed value</returns>
     public string TransformOutbound(object value)
     {
-        // first check if we have forced value for sitemap.xml
-        if (_httpContextAccessor.HttpContext?.Items[NopHttpDefaults.ForcedSitemapXmlLanguage] is string forcedLang && !string.IsNullOrEmpty(forcedLang))
-            return forcedLang;
-        
-        // then try to get a language code from the route values
+        //first try to get a language code from the route values
         var routeValues = _httpContextAccessor.HttpContext.Request.RouteValues;
         if (routeValues.TryGetValue(NopRoutingDefaults.RouteValue.Language, out var routeValue))
         {
