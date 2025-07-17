@@ -290,6 +290,14 @@ public class LocalizationMigration : MigrationBase
             ["Enums.Nop.Core.Domain.Translation.TranslationServiceType.DeepL"] = "DeepL",
             ["Admin.Translation.Translated.Success"] = "Pre-translation has been completed (all possible fields are pre-filled)",
             ["Admin.Translation.Translated.Warning"] = "Errors occurred during pre-translation, see details in the log",
+            
+            //#7739
+            ["Admin.System.Maintenance.DeleteThumbFiles.FilesCount"] = "Total files: {0}",
+            ["Admin.System.Maintenance.DeleteThumbFiles"] = "Delete image thumbs",
+            ["Admin.System.Maintenance.DeleteThumbFiles.FilesSize"] = "Total file size: {0} MB",
+            ["Admin.System.Maintenance.DeleteThumbFiles.Text"] = "Delete image thumbs from the thumbs directory. All files except the placeholder.txt file.",
+            ["Admin.System.Maintenance.DeleteThumbFiles.IsNotSupported"] = "Delete image thumbs is not supported by current picture thumb service.",
+            ["Admin.System.Maintenance.DeleteThumbFiles.Deleted"] = "All image thumbs were deleted."
         }, languageId);
 
         #endregion
