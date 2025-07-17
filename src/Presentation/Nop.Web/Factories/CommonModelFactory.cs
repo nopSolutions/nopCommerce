@@ -637,7 +637,7 @@ public partial class CommonModelFactory : ICommonModelFactory
                 foreach (var language in await _languageService.GetAllLanguagesAsync(storeId: store.Id))
                     if (_robotsTxtSettings.DisallowLanguages.Contains(language.Id))
                     {
-                        sb.AppendLine($"Disallow: /{language.UniqueSeoCode}");
+                        sb.AppendLine($"Disallow: /{language.UniqueSeoCode}$");
                         sb.AppendLine($"Disallow: /{language.UniqueSeoCode}/");
                     }
                     else
