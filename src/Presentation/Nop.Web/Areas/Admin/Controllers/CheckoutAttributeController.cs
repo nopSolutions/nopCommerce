@@ -216,7 +216,7 @@ public partial class CheckoutAttributeController : BaseAdminController
         //prepare model
         var model = await _checkoutAttributeModelFactory.PrepareCheckoutAttributeListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Catalog.CHECKOUT_ATTRIBUTES_CREATE_EDIT_DELETE)]
@@ -350,7 +350,7 @@ public partial class CheckoutAttributeController : BaseAdminController
         var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.DeleteCheckoutAttribute");
         await _customerActivityService.InsertActivitiesAsync("DeleteCheckoutAttribute", checkoutAttributes, checkoutAttribute => string.Format(activityLogFormat, checkoutAttribute.Name));
         
-        return Json(new { Result = true });
+        return await JsonAsync(new { Result = true });
     }
 
     #endregion
@@ -368,7 +368,7 @@ public partial class CheckoutAttributeController : BaseAdminController
         //prepare model
         var model = await _checkoutAttributeModelFactory.PrepareCheckoutAttributeValueListModelAsync(searchModel, checkoutAttribute);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Catalog.CHECKOUT_ATTRIBUTES_CREATE_EDIT_DELETE)]

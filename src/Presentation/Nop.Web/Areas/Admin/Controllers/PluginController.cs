@@ -146,7 +146,7 @@ public partial class PluginController : BaseAdminController
         //prepare model
         var model = await _pluginModelFactory.PreparePluginListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
@@ -162,7 +162,7 @@ public partial class PluginController : BaseAdminController
             rate = -50 //negative rate is set to move plugins to the end of list
         }).ToListAsync();
 
-        return Json(models);
+        return await JsonAsync(models);
     }
 
     [HttpPost]
@@ -580,7 +580,7 @@ public partial class PluginController : BaseAdminController
         //prepare model
         var model = await _pluginModelFactory.PrepareOfficialFeedPluginListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     #endregion

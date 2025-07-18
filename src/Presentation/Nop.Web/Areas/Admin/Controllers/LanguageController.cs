@@ -117,7 +117,7 @@ public partial class LanguageController : BaseAdminController
         //prepare model
         var model = await _languageModelFactory.PrepareLanguageListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_LANGUAGES)]
@@ -276,14 +276,14 @@ public partial class LanguageController : BaseAdminController
     {
         if (currentCulture != changedCulture)
         {
-            return Json(new
+            return await JsonAsync(new
             {
                 Result = string.Format(await _localizationService.GetResourceAsync("Admin.Configuration.Languages.CLDR.Warning"),
                     Url.Action("GeneralCommon", "Setting"))
             });
         }
 
-        return Json(new { Result = string.Empty });
+        return await JsonAsync(new { Result = string.Empty });
     }
 
     #endregion
@@ -302,7 +302,7 @@ public partial class LanguageController : BaseAdminController
         //prepare model
         var model = await _languageModelFactory.PrepareLocaleResourceListModelAsync(searchModel, language);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     //ValidateAttribute is used to force model validation
@@ -359,7 +359,7 @@ public partial class LanguageController : BaseAdminController
             return ErrorJson(string.Format(await _localizationService.GetResourceAsync("Admin.Configuration.Languages.Resources.NameAlreadyExists"), model.ResourceName));
         }
 
-        return Json(new { Result = true });
+        return await JsonAsync(new { Result = true });
     }
 
     [HttpPost]

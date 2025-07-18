@@ -103,7 +103,7 @@ public partial class AddressAttributeController : BaseAdminController
         //prepare model
         var model = await _addressAttributeModelFactory.PrepareAddressAttributeListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
@@ -234,7 +234,7 @@ public partial class AddressAttributeController : BaseAdminController
         //prepare model
         var model = await _addressAttributeModelFactory.PrepareAddressAttributeValueListModelAsync(searchModel, addressAttribute);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]

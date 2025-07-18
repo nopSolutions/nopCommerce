@@ -34,7 +34,7 @@ public partial class PreferencesController : BaseAdminController
 
         await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(), name, value);
 
-        return Json(new
+        return await JsonAsync(new
         {
             Result = true
         });

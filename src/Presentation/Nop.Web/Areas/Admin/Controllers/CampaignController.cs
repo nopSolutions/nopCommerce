@@ -102,7 +102,7 @@ public partial class CampaignController : BaseAdminController
         //prepare model
         var model = await _campaignModelFactory.PrepareCampaignListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Promotions.CAMPAIGNS_CREATE_EDIT)]

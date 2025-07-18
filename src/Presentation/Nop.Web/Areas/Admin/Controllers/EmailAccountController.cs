@@ -124,7 +124,7 @@ public partial class EmailAccountController : BaseAdminController
         //prepare model
         var model = await _emailAccountModelFactory.PrepareEmailAccountListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_EMAIL_ACCOUNTS)]

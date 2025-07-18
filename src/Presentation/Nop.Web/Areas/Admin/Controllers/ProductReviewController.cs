@@ -84,7 +84,7 @@ public partial class ProductReviewController : BaseAdminController
         //prepare model
         var model = await _productReviewModelFactory.PrepareProductReviewListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Catalog.PRODUCT_REVIEWS_VIEW)]
@@ -235,7 +235,7 @@ public partial class ProductReviewController : BaseAdminController
             await _eventPublisher.PublishAsync(new ProductReviewApprovedEvent(productReview));
         }
 
-        return Json(new { Result = true });
+        return await JsonAsync(new { Result = true });
     }
 
     [HttpPost]
@@ -263,7 +263,7 @@ public partial class ProductReviewController : BaseAdminController
             await _productService.UpdateProductReviewTotalsAsync(product);
         }
 
-        return Json(new { Result = true });
+        return await JsonAsync(new { Result = true });
     }
 
     [HttpPost]
@@ -292,7 +292,7 @@ public partial class ProductReviewController : BaseAdminController
             await _productService.UpdateProductReviewTotalsAsync(product);
         }
 
-        return Json(new { Result = true });
+        return await JsonAsync(new { Result = true });
     }
 
     [HttpPost]
@@ -305,7 +305,7 @@ public partial class ProductReviewController : BaseAdminController
         //prepare model
         var model = await _productReviewModelFactory.PrepareProductReviewReviewTypeMappingListModelAsync(searchModel, productReview);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     #endregion

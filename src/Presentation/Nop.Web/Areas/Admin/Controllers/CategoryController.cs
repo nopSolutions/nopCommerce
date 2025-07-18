@@ -7,6 +7,7 @@ using Nop.Core.Domain.Discounts;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
+using Nop.Services.Events;
 using Nop.Services.ExportImport;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -161,7 +162,7 @@ public partial class CategoryController : BaseAdminController
         //prepare model
         var model = await _categoryModelFactory.PrepareCategoryListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     #endregion
@@ -364,7 +365,7 @@ public partial class CategoryController : BaseAdminController
         var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.DeleteCategory");
         await _customerActivityService.InsertActivitiesAsync("DeleteCategory", categories, category => string.Format(activityLogFormat, category.Name));
 
-        return Json(new { Result = true });
+        return await JsonAsync(new { Result = true });
     }
 
     #endregion
@@ -450,7 +451,7 @@ public partial class CategoryController : BaseAdminController
         //prepare model
         var model = await _categoryModelFactory.PrepareCategoryProductListModelAsync(searchModel, category);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Catalog.CATEGORIES_CREATE_EDIT_DELETE)]
@@ -495,7 +496,7 @@ public partial class CategoryController : BaseAdminController
         //prepare model
         var model = await _categoryModelFactory.PrepareAddProductToCategoryListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]

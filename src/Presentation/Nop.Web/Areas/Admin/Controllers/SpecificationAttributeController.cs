@@ -106,7 +106,7 @@ public partial class SpecificationAttributeController : BaseAdminController
     {
         var model = await _specificationAttributeModelFactory.PrepareSpecificationAttributeGroupListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -123,7 +123,7 @@ public partial class SpecificationAttributeController : BaseAdminController
 
         var model = await _specificationAttributeModelFactory.PrepareSpecificationAttributeListModelAsync(searchModel, group);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Catalog.SPECIFICATION_ATTRIBUTES_CREATE_EDIT_DELETE)]
@@ -339,7 +339,7 @@ public partial class SpecificationAttributeController : BaseAdminController
         var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.DeleteSpecAttribute");
         await _customerActivityService.InsertActivitiesAsync("DeleteSpecAttribute", specificationAttributes, specificationAttribute => string.Format(activityLogFormat, specificationAttribute.Name));
 
-        return Json(new { Result = true });
+        return await JsonAsync(new { Result = true });
     }
 
     #endregion
@@ -357,7 +357,7 @@ public partial class SpecificationAttributeController : BaseAdminController
         //prepare model
         var model = await _specificationAttributeModelFactory.PrepareSpecificationAttributeOptionListModelAsync(searchModel, specificationAttribute);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Catalog.SPECIFICATION_ATTRIBUTES_CREATE_EDIT_DELETE)]
@@ -496,7 +496,7 @@ public partial class SpecificationAttributeController : BaseAdminController
         var options = await _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttributeAsync(Convert.ToInt32(attributeId));
         var result = (from o in options
             select new { id = o.Id, name = o.Name }).ToList();
-        return Json(result);
+        return await JsonAsync(result);
     }
 
     #endregion
@@ -514,7 +514,7 @@ public partial class SpecificationAttributeController : BaseAdminController
         //prepare model
         var model = await _specificationAttributeModelFactory.PrepareSpecificationAttributeProductListModelAsync(searchModel, specificationAttribute);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     #endregion

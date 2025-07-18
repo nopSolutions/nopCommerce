@@ -114,7 +114,7 @@ public partial class BlogController : BaseAdminController
         //prepare model
         var model = await _blogModelFactory.PrepareBlogPostListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.ContentManagement.BLOG_CREATE_EDIT_DELETE)]
@@ -261,7 +261,7 @@ public partial class BlogController : BaseAdminController
         //prepare model
         var model = await _blogModelFactory.PrepareBlogCommentListModelAsync(searchModel, searchModel.BlogPostId);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -321,7 +321,7 @@ public partial class BlogController : BaseAdminController
         var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.DeleteBlogPostComment");
         await _customerActivityService.InsertActivitiesAsync("DeleteBlogPostComment", comments, blogComment => string.Format(activityLogFormat, blogComment.Id));
         
-        return Json(new { Result = true });
+        return await JsonAsync(new { Result = true });
     }
 
     [HttpPost]
@@ -348,7 +348,7 @@ public partial class BlogController : BaseAdminController
         var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.EditBlogComment");
         await _customerActivityService.InsertActivitiesAsync("EditBlogComment", blogComments, blogComment => string.Format(activityLogFormat, blogComment.Id));
 
-        return Json(new { Result = true });
+        return await JsonAsync(new { Result = true });
     }
 
     [HttpPost]
@@ -372,7 +372,7 @@ public partial class BlogController : BaseAdminController
         var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.EditBlogComment");
         await _customerActivityService.InsertActivitiesAsync("EditBlogComment", blogComments, blogComment => string.Format(activityLogFormat, blogComment.Id));
         
-        return Json(new { Result = true });
+        return await JsonAsync(new { Result = true });
     }
 
     #endregion

@@ -69,7 +69,7 @@ public partial class TaxController : BaseAdminController
         //prepare model
         var model = await _taxModelFactory.PrepareTaxProviderListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
@@ -108,7 +108,7 @@ public partial class TaxController : BaseAdminController
         //prepare model
         var model = await _taxModelFactory.PrepareTaxCategoryListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -136,7 +136,7 @@ public partial class TaxController : BaseAdminController
         taxCategory = model.ToEntity(taxCategory);
         await _taxCategoryService.InsertTaxCategoryAsync(taxCategory);
 
-        return Json(new { Result = true });
+        return await JsonAsync(new { Result = true });
     }
 
     [HttpPost]

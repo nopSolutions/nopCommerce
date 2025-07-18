@@ -71,7 +71,7 @@ public partial class ScheduleTaskController : BaseAdminController
         //prepare model
         var model = await _scheduleTaskModelFactory.PrepareScheduleTaskListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]

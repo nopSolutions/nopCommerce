@@ -69,7 +69,7 @@ public partial class TemplateController : BaseAdminController
         //prepare model
         var model = await _templateModelFactory.PrepareCategoryTemplateListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -100,7 +100,7 @@ public partial class TemplateController : BaseAdminController
         template = model.ToEntity(template);
         await _categoryTemplateService.InsertCategoryTemplateAsync(template);
 
-        return Json(new { Result = true });
+        return await JsonAsync(new { Result = true });
     }
 
     [HttpPost]
@@ -130,7 +130,7 @@ public partial class TemplateController : BaseAdminController
         //prepare model
         var model = await _templateModelFactory.PrepareManufacturerTemplateListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -161,7 +161,7 @@ public partial class TemplateController : BaseAdminController
         template = model.ToEntity(template);
         await _manufacturerTemplateService.InsertManufacturerTemplateAsync(template);
 
-        return Json(new { Result = true });
+        return await JsonAsync(new { Result = true });
     }
 
     [HttpPost]
@@ -191,7 +191,7 @@ public partial class TemplateController : BaseAdminController
         //prepare model
         var model = await _templateModelFactory.PrepareProductTemplateListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -222,7 +222,7 @@ public partial class TemplateController : BaseAdminController
         template = model.ToEntity(template);
         await _productTemplateService.InsertProductTemplateAsync(template);
 
-        return Json(new { Result = true });
+        return await JsonAsync(new { Result = true });
     }
 
     [HttpPost]
@@ -252,7 +252,7 @@ public partial class TemplateController : BaseAdminController
         //prepare model
         var model = await _templateModelFactory.PrepareTopicTemplateListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -283,7 +283,7 @@ public partial class TemplateController : BaseAdminController
         template = model.ToEntity(template);
         await _topicTemplateService.InsertTopicTemplateAsync(template);
 
-        return Json(new { Result = true });
+        return await JsonAsync(new { Result = true });
     }
 
     [HttpPost]

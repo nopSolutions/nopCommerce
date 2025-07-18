@@ -98,7 +98,7 @@ public partial class CustomerAttributeController : BaseAdminController
         //prepare model
         var model = await _customerAttributeModelFactory.PrepareCustomerAttributeListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
@@ -219,7 +219,7 @@ public partial class CustomerAttributeController : BaseAdminController
         //prepare model
         var model = await _customerAttributeModelFactory.PrepareCustomerAttributeValueListModelAsync(searchModel, customerAttribute);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]

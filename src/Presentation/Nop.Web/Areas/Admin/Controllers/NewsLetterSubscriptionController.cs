@@ -79,7 +79,7 @@ public partial class NewsLetterSubscriptionController : BaseAdminController
         //prepare model
         var model = await _newsletterSubscriptionModelFactory.PrepareNewsLetterSubscriptionListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Promotions.SUBSCRIBERS_CREATE_EDIT_DELETE)]

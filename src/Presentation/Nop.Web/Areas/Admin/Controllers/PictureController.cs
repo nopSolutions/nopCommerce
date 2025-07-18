@@ -33,7 +33,7 @@ public partial class PictureController : BaseAdminController
 
         var httpPostedFile = await Request.GetFirstOrDefaultFileAsync();
         if (httpPostedFile == null)
-            return Json(new { success = false, message = "No file uploaded" });
+            return await JsonAsync(new { success = false, message = "No file uploaded" });
 
         var picture = await _pictureService.InsertPictureAsync(httpPostedFile);
 
@@ -41,9 +41,9 @@ public partial class PictureController : BaseAdminController
         //otherwise some browsers will pop-up a "Save As" dialog.
 
         if (picture == null)
-            return Json(new { success = false, message = "Wrong file format" });
+            return await JsonAsync(new { success = false, message = "Wrong file format" });
 
-        return Json(new
+        return await JsonAsync(new
         {
             success = true,
             pictureId = picture.Id,

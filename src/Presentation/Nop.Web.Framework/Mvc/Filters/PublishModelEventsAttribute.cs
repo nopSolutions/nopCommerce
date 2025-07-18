@@ -42,12 +42,12 @@ public sealed class PublishModelEventsAttribute : TypeFilterAttribute
     /// Represents filter that publish ModelReceived event before the action executes, after model binding is complete
     /// and publish ModelPrepared event after the action executes, before the action result
     /// </summary>
-    private class PublishModelEventsFilter : IAsyncActionFilter, IAsyncResultFilter
+    private class PublishModelEventsFilter : IAsyncActionFilter
     {
         #region Fields
 
-        protected readonly bool _ignoreFilter;
-        protected readonly IEventPublisher _eventPublisher;
+        private readonly bool _ignoreFilter;
+        private readonly IEventPublisher _eventPublisher;
 
         #endregion
 
@@ -80,18 +80,7 @@ public sealed class PublishModelEventsAttribute : TypeFilterAttribute
 
             return actionFilter?.IgnoreFilter ?? _ignoreFilter;
         }
-
-        /// <summary>
-        /// Publish model prepared event
-        /// </summary>
-        /// <param name="model">Model</param>
-        /// <returns>A task that represents the asynchronous operation</returns>
-        protected virtual async Task PublishModelPreparedEventAsync(object model)
-        {
-            if (model is BaseNopModel or IEnumerable<BaseNopModel>) 
-                await _eventPublisher.ModelPreparedAsync(model);
-        }
-
+        
         /// <summary>
         /// Called asynchronously before the action, after model binding is complete.
         /// </summary>
@@ -131,7 +120,12 @@ public sealed class PublishModelEventsAttribute : TypeFilterAttribute
 
             //model prepared event
             if (context.Controller is Controller controller)
-                await PublishModelPreparedEventAsync(controller.ViewData.Model);
+            {
+                var model = controller.ViewData.Model;
+
+                if (model is BaseNopModel or IEnumerable<BaseNopModel>)
+                    await _eventPublisher.ModelPreparedAsync(model);
+            }
         }
 
         #endregion
@@ -150,24 +144,6 @@ public sealed class PublishModelEventsAttribute : TypeFilterAttribute
             if (context.Result == null)
                 await next();
             await PublishModelPreparedEventAsync(context);
-        }
-
-        /// <summary>Called asynchronously before the action result.</summary>
-        /// <param name="context">A context for action filters</param>
-        /// <param name="next">A delegate invoked to execute the next action filter or the action itself</param>
-        /// <returns>A task that represents the asynchronous operation</returns>
-        public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
-        {
-            ArgumentNullException.ThrowIfNull(context);
-
-            if (IgnoreFilter(context))
-                return;
-
-            //model prepared event
-            if (context.Result is JsonResult result)
-                await PublishModelPreparedEventAsync(result.Value);
-
-            await next();
         }
 
         #endregion

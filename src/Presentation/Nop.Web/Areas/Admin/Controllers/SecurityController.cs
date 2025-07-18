@@ -98,7 +98,7 @@ public partial class SecurityController : BaseAdminController
     {
         var model = await _securityModelFactory.PreparePermissionItemListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_ACL)]
@@ -156,7 +156,7 @@ public partial class SecurityController : BaseAdminController
     {
         var model = await _securityModelFactory.PreparePermissionCategoryListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_ACL)]

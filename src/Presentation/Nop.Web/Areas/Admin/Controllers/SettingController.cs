@@ -772,7 +772,7 @@ public partial class SettingController : BaseAdminController
         //prepare model
         var model = await _settingModelFactory.PrepareSortOptionListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -1237,7 +1237,7 @@ public partial class SettingController : BaseAdminController
         //prepare model
         var model = await _settingModelFactory.PrepareGdprConsentListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
@@ -1843,7 +1843,7 @@ public partial class SettingController : BaseAdminController
         //prepare model
         var model = await _settingModelFactory.PrepareSettingListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -1886,7 +1886,7 @@ public partial class SettingController : BaseAdminController
             string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewSetting"), model.Name),
             await _settingService.GetSettingAsync(model.Name, storeId));
 
-        return Json(new { Result = true });
+        return await JsonAsync(new { Result = true });
     }
 
     [HttpPost]
@@ -1913,14 +1913,14 @@ public partial class SettingController : BaseAdminController
         //LoadAllLocaleRecordsOnStartup is set and distributed cache is used, so display warning
         if (_appSettings.Get<DistributedCacheConfig>().Enabled && _appSettings.Get<DistributedCacheConfig>().DistributedCacheType != DistributedCacheType.Memory && loadAllLocaleRecordsOnStartup)
         {
-            return Json(new
+            return await JsonAsync(new
             {
                 Result = await _localizationService
                     .GetResourceAsync("Admin.Configuration.Settings.GeneralCommon.LoadAllLocaleRecordsOnStartup.Warning")
             });
         }
 
-        return Json(new { Result = string.Empty });
+        return await JsonAsync(new { Result = string.Empty });
     }
 
     //Action that displays a notification (warning) to the store owner about the absence of active authentication providers
@@ -1929,14 +1929,14 @@ public partial class SettingController : BaseAdminController
         //ForceMultifactorAuthentication is set and the store haven't active Authentication provider , so display warning
         if (forceMultifactorAuthentication && !await _multiFactorAuthenticationPluginManager.HasActivePluginsAsync())
         {
-            return Json(new
+            return await JsonAsync(new
             {
                 Result = await _localizationService
                     .GetResourceAsync("Admin.Configuration.Settings.CustomerUser.ForceMultifactorAuthentication.Warning")
             });
         }
 
-        return Json(new { Result = string.Empty });
+        return await JsonAsync(new { Result = string.Empty });
     }
 
     //Action that displays a notification (warning) to the store owner about the need to restart the application after changing the setting
@@ -1948,14 +1948,14 @@ public partial class SettingController : BaseAdminController
 
         if (seoFriendlyUrlsForLanguagesEnabled != localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
         {
-            return Json(new
+            return await JsonAsync(new
             {
                 Result = await _localizationService
                     .GetResourceAsync("Admin.Configuration.Settings.GeneralCommon.SeoFriendlyUrlsForLanguagesEnabled.Warning")
             });
         }
 
-        return Json(new { Result = string.Empty });
+        return await JsonAsync(new { Result = string.Empty });
     }
 
     #endregion

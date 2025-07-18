@@ -76,7 +76,7 @@ public partial class CustomerRoleController : BaseAdminController
         //prepare model
         var model = await _customerRoleModelFactory.PrepareCustomerRoleListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Customers.CUSTOMER_ROLES_CREATE_EDIT_DELETE)]
@@ -226,7 +226,7 @@ public partial class CustomerRoleController : BaseAdminController
         //prepare model
         var model = await _customerRoleModelFactory.PrepareCustomerRoleProductListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]

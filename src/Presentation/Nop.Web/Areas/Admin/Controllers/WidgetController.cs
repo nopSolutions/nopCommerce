@@ -67,7 +67,7 @@ public partial class WidgetController : BaseAdminController
         //prepare model
         var model = await _widgetModelFactory.PrepareWidgetListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]

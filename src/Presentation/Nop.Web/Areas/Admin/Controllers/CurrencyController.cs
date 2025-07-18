@@ -144,7 +144,7 @@ public partial class CurrencyController : BaseAdminController
         //prepare model
         var model = await _currencyModelFactory.PrepareCurrencyListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -162,7 +162,7 @@ public partial class CurrencyController : BaseAdminController
             await _currencyService.UpdateCurrencyAsync(currency);
         }
 
-        return Json(new { result = true });
+        return await JsonAsync(new { result = true });
     }
 
     [HttpPost]
@@ -172,7 +172,7 @@ public partial class CurrencyController : BaseAdminController
         _currencySettings.PrimaryExchangeRateCurrencyId = id;
         await _settingService.SaveSettingAsync(_currencySettings);
 
-        return Json(new { result = true });
+        return await JsonAsync(new { result = true });
     }
 
     [HttpPost]
@@ -182,7 +182,7 @@ public partial class CurrencyController : BaseAdminController
         _currencySettings.PrimaryStoreCurrencyId = id;
         await _settingService.SaveSettingAsync(_currencySettings);
 
-        return Json(new { result = true });
+        return await JsonAsync(new { result = true });
     }
 
     #endregion

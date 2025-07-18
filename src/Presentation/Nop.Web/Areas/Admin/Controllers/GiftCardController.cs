@@ -98,7 +98,7 @@ public partial class GiftCardController : BaseAdminController
         //prepare model
         var model = await _giftCardModelFactory.PrepareGiftCardListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Orders.GIFT_CARDS_CREATE_EDIT_DELETE)]
@@ -286,7 +286,7 @@ public partial class GiftCardController : BaseAdminController
         //prepare model
         var model = await _giftCardModelFactory.PrepareGiftCardUsageHistoryListModelAsync(searchModel, giftCard);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     #endregion

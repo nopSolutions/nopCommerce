@@ -219,7 +219,7 @@ public partial class CommonController : BaseAdminController
         //prepare model
         var model = await _commonModelFactory.PrepareBackupFileListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost, ActionName("Maintenance")]
@@ -416,7 +416,7 @@ public partial class CommonController : BaseAdminController
         //prepare model
         var model = await _commonModelFactory.PrepareUrlRecordListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -428,7 +428,7 @@ public partial class CommonController : BaseAdminController
 
         await _urlRecordService.DeleteUrlRecordsAsync(await _urlRecordService.GetUrlRecordsByIdsAsync(selectedIds.ToArray()));
 
-        return Json(new { Result = true });
+        return await JsonAsync(new { Result = true });
     }
 
     [HttpPost]
@@ -438,22 +438,22 @@ public partial class CommonController : BaseAdminController
         //prepare model
         var model = await _commonModelFactory.PreparePopularSearchTermListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     //action displaying notification (warning) to a store owner that entered SE URL already exists
     public virtual async Task<IActionResult> UrlReservedWarning(string entityId, string entityName, string seName)
     {
         if (string.IsNullOrEmpty(seName))
-            return Json(new { Result = string.Empty });
+            return await JsonAsync(new { Result = string.Empty });
 
         _ = int.TryParse(entityId, out var parsedEntityId);
         var validatedSeName = await _urlRecordService.ValidateSeNameAsync(parsedEntityId, entityName, seName, null, false);
 
         if (seName.Equals(validatedSeName, StringComparison.InvariantCultureIgnoreCase))
-            return Json(new { Result = string.Empty });
+            return await JsonAsync(new { Result = string.Empty });
 
-        return Json(new { Result = string.Format(await _localizationService.GetResourceAsync("Admin.System.Warnings.URL.Reserved"), validatedSeName) });
+        return await JsonAsync(new { Result = string.Format(await _localizationService.GetResourceAsync("Admin.System.Warnings.URL.Reserved"), validatedSeName) });
     }
 
     #endregion

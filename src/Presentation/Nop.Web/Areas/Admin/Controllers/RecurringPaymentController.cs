@@ -66,7 +66,7 @@ public partial class RecurringPaymentController : BaseAdminController
         //prepare model
         var model = await _recurringPaymentModelFactory.PrepareRecurringPaymentListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Orders.RECURRING_PAYMENTS_VIEW)]
@@ -140,7 +140,7 @@ public partial class RecurringPaymentController : BaseAdminController
         //prepare model
         var model = await _recurringPaymentModelFactory.PrepareRecurringPaymentHistoryListModelAsync(searchModel, payment);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost, ActionName("Edit")]

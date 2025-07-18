@@ -67,7 +67,7 @@ public partial class DownloadController : BaseAdminController
         //don't allow to save empty download object
         if (string.IsNullOrEmpty(downloadUrl))
         {
-            return Json(new
+            return await JsonAsync(new
             {
                 success = false,
                 message = "Please enter URL"
@@ -84,7 +84,7 @@ public partial class DownloadController : BaseAdminController
         };
         await _downloadService.InsertDownloadAsync(download);
 
-        return Json(new { success = true, downloadId = download.Id });
+        return await JsonAsync(new { success = true, downloadId = download.Id });
     }
 
     [HttpPost]
@@ -95,7 +95,7 @@ public partial class DownloadController : BaseAdminController
         var httpPostedFile = await Request.GetFirstOrDefaultFileAsync();
         if (httpPostedFile == null)
         {
-            return Json(new
+            return await JsonAsync(new
             {
                 success = false,
                 message = "No file uploaded"
@@ -134,7 +134,7 @@ public partial class DownloadController : BaseAdminController
 
             //when returning JSON the mime-type must be set to text/plain
             //otherwise some browsers will pop-up a "Save As" dialog.
-            return Json(new
+            return await JsonAsync(new
             {
                 success = true,
                 downloadId = download.Id,
@@ -145,7 +145,7 @@ public partial class DownloadController : BaseAdminController
         {
             await _logger.ErrorAsync(exc.Message, exc, await _workContext.GetCurrentCustomerAsync());
 
-            return Json(new
+            return await JsonAsync(new
             {
                 success = false,
                 message = "File cannot be saved"

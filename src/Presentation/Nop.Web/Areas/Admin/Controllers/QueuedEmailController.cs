@@ -67,7 +67,7 @@ public partial class QueuedEmailController : BaseAdminController
         //prepare model
         var model = await _queuedEmailModelFactory.PrepareQueuedEmailListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost, ActionName("List")]
@@ -188,7 +188,7 @@ public partial class QueuedEmailController : BaseAdminController
 
         await _queuedEmailService.DeleteQueuedEmailsAsync(await _queuedEmailService.GetQueuedEmailsByIdsAsync(selectedIds.ToArray()));
 
-        return Json(new { Result = true });
+        return await JsonAsync(new { Result = true });
     }
 
     [HttpPost, ActionName("List")]
@@ -217,7 +217,7 @@ public partial class QueuedEmailController : BaseAdminController
 
         await _queuedEmailService.RequeueQueuedEmailsAsync(emailsToRequeue);
 
-        return Json(new { Result = true });
+        return await JsonAsync(new { Result = true });
     }
 
     #endregion

@@ -107,7 +107,7 @@ public partial class ReturnRequestController : BaseAdminController
         //prepare model
         var model = await _returnRequestModelFactory.PrepareReturnRequestListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Orders.RETURN_REQUESTS_VIEW)]
@@ -245,7 +245,7 @@ public partial class ReturnRequestController : BaseAdminController
         //prepare model
         var model = await _returnRequestModelFactory.PrepareReturnRequestReasonListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
@@ -365,7 +365,7 @@ public partial class ReturnRequestController : BaseAdminController
         //prepare model
         var model = await _returnRequestModelFactory.PrepareReturnRequestActionListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]

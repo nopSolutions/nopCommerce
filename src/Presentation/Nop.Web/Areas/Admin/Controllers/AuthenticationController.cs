@@ -74,7 +74,7 @@ public partial class AuthenticationController : BaseAdminController
         //prepare model
         var model = await _externalAuthenticationMethodModelFactory.PrepareExternalAuthenticationMethodListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -134,7 +134,7 @@ public partial class AuthenticationController : BaseAdminController
         //prepare model
         var model = await _multiFactorAuthenticationMethodModelFactory.PrepareMultiFactorAuthenticationMethodListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]

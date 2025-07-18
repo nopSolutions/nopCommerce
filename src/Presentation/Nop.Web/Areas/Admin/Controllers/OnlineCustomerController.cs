@@ -44,7 +44,7 @@ public partial class OnlineCustomerController : BaseAdminController
         //prepare model
         var model = await _customerModelFactory.PrepareOnlineCustomerListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     #endregion

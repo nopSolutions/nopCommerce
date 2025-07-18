@@ -153,7 +153,7 @@ public partial class TopicController : BaseAdminController
         //prepare model
         var model = await _topicModelFactory.PrepareTopicListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     #endregion

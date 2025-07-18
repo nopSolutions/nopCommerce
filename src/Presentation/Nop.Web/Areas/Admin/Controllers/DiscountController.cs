@@ -97,7 +97,7 @@ public partial class DiscountController : BaseAdminController
         //prepare model
         var model = await _discountModelFactory.PrepareDiscountListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Promotions.DISCOUNTS_CREATE_EDIT_DELETE)]
@@ -263,7 +263,7 @@ public partial class DiscountController : BaseAdminController
 
         var url = discountRequirementRule.GetConfigurationUrl(discount.Id, discountRequirementId);
 
-        return Json(new { url });
+        return await JsonAsync(new { url });
     }
 
     [CheckPermission(StandardPermission.Promotions.DISCOUNTS_VIEW)]
@@ -274,7 +274,7 @@ public partial class DiscountController : BaseAdminController
 
         var discount = await _discountService.GetDiscountByIdAsync(discountId);
         if (discount == null)
-            return Json(requirements);
+            return await JsonAsync(requirements);
 
         var discountRequirement = await _discountService.GetDiscountRequirementByIdAsync(discountRequirementId);
         if (discountRequirement != null)
@@ -350,7 +350,7 @@ public partial class DiscountController : BaseAdminController
         var availableRequirementGroups = requirementGroups.Select(requirement =>
             new SelectListItem { Value = requirement.Id.ToString(), Text = requirement.DiscountRequirementRuleSystemName }).ToList();
 
-        return Json(new { Requirements = requirements, AvailableGroups = availableRequirementGroups });
+        return await JsonAsync(new { Requirements = requirements, AvailableGroups = availableRequirementGroups });
     }
 
     [CheckPermission(StandardPermission.Promotions.DISCOUNTS_CREATE_EDIT_DELETE)]
@@ -384,7 +384,7 @@ public partial class DiscountController : BaseAdminController
         await _discountService.InsertDiscountRequirementAsync(discountRequirementGroup);
 
         if (!string.IsNullOrEmpty(name))
-            return Json(new { Result = true, NewRequirementId = discountRequirementGroup.Id });
+            return await JsonAsync(new { Result = true, NewRequirementId = discountRequirementGroup.Id });
 
         //set identifier as group name (if not specified)
         discountRequirementGroup.DiscountRequirementRuleSystemName = $"#{discountRequirementGroup.Id}";
@@ -392,23 +392,23 @@ public partial class DiscountController : BaseAdminController
 
         await _discountService.UpdateDiscountAsync(discount);
 
-        return Json(new { Result = true, NewRequirementId = discountRequirementGroup.Id });
+        return await JsonAsync(new { Result = true, NewRequirementId = discountRequirementGroup.Id });
     }
 
     //action displaying notification (warning) to a store owner that entered coupon code already exists
     public virtual async Task<IActionResult> CouponCodeReservedWarning(int discountId, string couponCode)
     {
         if (string.IsNullOrEmpty(couponCode))
-            return Json(new { Result = string.Empty });
+            return await JsonAsync(new { Result = string.Empty });
 
         //check whether discount with passed coupon code exists
         var discounts = (await _discountService.GetAllDiscountsAsync(couponCode: couponCode, showHidden: true))
             .Where(discount => discount.Id != discountId);
         if (!discounts.Any())
-            return Json(new { Result = string.Empty });
+            return await JsonAsync(new { Result = string.Empty });
 
         var message = string.Format(await _localizationService.GetResourceAsync("Admin.Promotions.Discounts.Fields.CouponCode.Reserved"), discounts.FirstOrDefault().Name);
-        return Json(new { Result = message });
+        return await JsonAsync(new { Result = message });
     }
 
     #endregion
@@ -426,7 +426,7 @@ public partial class DiscountController : BaseAdminController
         //prepare model
         var model = await _discountModelFactory.PrepareDiscountProductListModelAsync(searchModel, discount);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Promotions.DISCOUNTS_CREATE_EDIT_DELETE)]
@@ -465,7 +465,7 @@ public partial class DiscountController : BaseAdminController
         //prepare model
         var model = await _discountModelFactory.PrepareAddProductToDiscountListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -509,7 +509,7 @@ public partial class DiscountController : BaseAdminController
         //prepare model
         var model = await _discountModelFactory.PrepareDiscountCategoryListModelAsync(searchModel, discount);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Promotions.DISCOUNTS_CREATE_EDIT_DELETE)]
@@ -548,7 +548,7 @@ public partial class DiscountController : BaseAdminController
         //prepare model
         var model = await _discountModelFactory.PrepareAddCategoryToDiscountListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -592,7 +592,7 @@ public partial class DiscountController : BaseAdminController
         //prepare model
         var model = await _discountModelFactory.PrepareDiscountManufacturerListModelAsync(searchModel, discount);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Promotions.DISCOUNTS_CREATE_EDIT_DELETE)]
@@ -631,7 +631,7 @@ public partial class DiscountController : BaseAdminController
         //prepare model
         var model = await _discountModelFactory.PrepareAddManufacturerToDiscountListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -675,7 +675,7 @@ public partial class DiscountController : BaseAdminController
         //prepare model
         var model = await _discountModelFactory.PrepareDiscountUsageHistoryListModelAsync(searchModel, discount);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]

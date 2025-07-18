@@ -104,7 +104,7 @@ public partial class ProductAttributeController : BaseAdminController
         //prepare model
         var model = await _productAttributeModelFactory.PrepareProductAttributeListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Catalog.PRODUCT_ATTRIBUTES_CREATE_EDIT_DELETE)]
@@ -228,7 +228,7 @@ public partial class ProductAttributeController : BaseAdminController
         var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.DeleteProductAttribute");
         await _customerActivityService.InsertActivitiesAsync("DeleteProductAttribute", productAttributes, productAttribute => string.Format(activityLogFormat, productAttribute.Name));
 
-        return Json(new { Result = true });
+        return await JsonAsync(new { Result = true });
     }
 
     #endregion
@@ -246,7 +246,7 @@ public partial class ProductAttributeController : BaseAdminController
         //prepare model
         var model = await _productAttributeModelFactory.PrepareProductAttributeProductListModelAsync(searchModel, productAttribute);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     #endregion
@@ -264,7 +264,7 @@ public partial class ProductAttributeController : BaseAdminController
         //prepare model
         var model = await _productAttributeModelFactory.PreparePredefinedProductAttributeValueListModelAsync(searchModel, productAttribute);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Catalog.PRODUCT_ATTRIBUTES_CREATE_EDIT_DELETE)]

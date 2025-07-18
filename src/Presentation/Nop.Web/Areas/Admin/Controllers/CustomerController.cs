@@ -283,7 +283,7 @@ public partial class CustomerController : BaseAdminController
         //prepare model
         var model = await _customerModelFactory.PrepareCustomerListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Customers.CUSTOMERS_CREATE_EDIT_DELETE)]
@@ -1003,7 +1003,7 @@ public partial class CustomerController : BaseAdminController
         //prepare model
         var model = await _customerModelFactory.PrepareRewardPointsListModelAsync(searchModel, customer);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Customers.CUSTOMERS_CREATE_EDIT_DELETE)]
@@ -1040,7 +1040,7 @@ public partial class CustomerController : BaseAdminController
         await _rewardPointService.AddRewardPointsHistoryEntryAsync(customer, model.Points, model.StoreId, model.Message,
             activatingDate: activatingDate, endDate: endDate);
 
-        return Json(new { Result = true });
+        return await JsonAsync(new { Result = true });
     }
 
     #endregion
@@ -1058,7 +1058,7 @@ public partial class CustomerController : BaseAdminController
         //prepare model
         var model = await _customerModelFactory.PrepareCustomerAddressListModelAsync(searchModel, customer);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -1217,7 +1217,7 @@ public partial class CustomerController : BaseAdminController
         //prepare model
         var model = await _customerModelFactory.PrepareCustomerOrderListModelAsync(searchModel, customer);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     #endregion
@@ -1303,7 +1303,7 @@ public partial class CustomerController : BaseAdminController
                 break;
         }
 
-        return Json(result);
+        return await JsonAsync(result);
     }
 
     #endregion
@@ -1321,7 +1321,7 @@ public partial class CustomerController : BaseAdminController
         //prepare model
         var model = await _customerModelFactory.PrepareCustomerShoppingCartListModelAsync(searchModel, customer);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     #endregion
@@ -1340,7 +1340,7 @@ public partial class CustomerController : BaseAdminController
         //prepare model
         var model = await _customerModelFactory.PrepareCustomerActivityLogListModelAsync(searchModel, customer);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     #endregion
@@ -1358,7 +1358,7 @@ public partial class CustomerController : BaseAdminController
         //prepare model
         var model = await _customerModelFactory.PrepareCustomerBackInStockSubscriptionListModelAsync(searchModel, customer);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     #endregion
@@ -1383,7 +1383,7 @@ public partial class CustomerController : BaseAdminController
         //prepare model
         var model = await _customerModelFactory.PrepareGdprLogListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]

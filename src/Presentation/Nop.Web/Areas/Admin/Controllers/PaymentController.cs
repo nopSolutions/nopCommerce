@@ -81,7 +81,7 @@ public partial class PaymentController : BaseAdminController
         //prepare model
         var model = await _paymentModelFactory.PreparePaymentMethodListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]

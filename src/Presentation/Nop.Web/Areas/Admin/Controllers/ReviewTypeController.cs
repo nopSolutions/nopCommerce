@@ -94,7 +94,7 @@ public partial class ReviewTypeController : BaseAdminController
         //prepare model
         var model = await _reviewTypeModelFactory.PrepareReviewTypeListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]

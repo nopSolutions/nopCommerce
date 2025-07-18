@@ -185,7 +185,7 @@ public partial class ManufacturerController : BaseAdminController
         //prepare model
         var model = await _manufacturerModelFactory.PrepareManufacturerListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     #endregion
@@ -380,7 +380,7 @@ public partial class ManufacturerController : BaseAdminController
         var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.DeleteManufacturer");
         await _customerActivityService.InsertActivitiesAsync("DeleteManufacturer", manufacturers, manufacturer => string.Format(activityLogFormat, manufacturer.Name));
 
-        return Json(new { Result = true });
+        return await JsonAsync(new { Result = true });
     }
 
     #endregion
@@ -464,7 +464,7 @@ public partial class ManufacturerController : BaseAdminController
         //prepare model
         var model = await _manufacturerModelFactory.PrepareManufacturerProductListModelAsync(searchModel, manufacturer);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -512,7 +512,7 @@ public partial class ManufacturerController : BaseAdminController
         //prepare model
         var model = await _manufacturerModelFactory.PrepareAddProductToManufacturerListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]

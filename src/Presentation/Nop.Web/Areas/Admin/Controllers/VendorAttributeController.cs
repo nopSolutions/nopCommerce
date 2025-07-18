@@ -95,7 +95,7 @@ public partial class VendorAttributeController : BaseAdminController
         //prepare model
         var model = await _vendorAttributeModelFactory.PrepareVendorAttributeListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
@@ -222,7 +222,7 @@ public partial class VendorAttributeController : BaseAdminController
         //prepare model
         var model = await _vendorAttributeModelFactory.PrepareVendorAttributeValueListModelAsync(searchModel, vendorAttribute);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]

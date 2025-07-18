@@ -129,7 +129,7 @@ public partial class ShippingController : BaseAdminController
         //prepare model
         var model = await _shippingModelFactory.PrepareShippingProviderListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -190,7 +190,7 @@ public partial class ShippingController : BaseAdminController
         //prepare model
         var model = await _shippingModelFactory.PreparePickupPointProviderListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -249,7 +249,7 @@ public partial class ShippingController : BaseAdminController
         //prepare model
         var model = await _shippingModelFactory.PrepareShippingMethodListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_SHIPPING_SETTINGS)]
@@ -367,7 +367,7 @@ public partial class ShippingController : BaseAdminController
         //prepare model
         var model = await _shippingModelFactory.PrepareDeliveryDateListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_SHIPPING_SETTINGS)]
@@ -473,7 +473,7 @@ public partial class ShippingController : BaseAdminController
         //prepare model
         var model = await _shippingModelFactory.PrepareProductAvailabilityRangeListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_SHIPPING_SETTINGS)]
@@ -588,7 +588,7 @@ public partial class ShippingController : BaseAdminController
         //prepare model
         var model = await _shippingModelFactory.PrepareWarehouseListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_SHIPPING_SETTINGS)]

@@ -932,7 +932,7 @@ public partial class ProductController : BaseAdminController
         //prepare model
         var model = await _productModelFactory.PrepareProductListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -943,7 +943,7 @@ public partial class ProductController : BaseAdminController
         var model = await _productModelFactory.PrepareProductListModelAsync(searchModel);
         var html = await RenderPartialViewToStringAsync("_BulkEdit.Products", model.Data.ToList());
 
-        return Json(new Dictionary<string, object> { { "Html", html }, { "Products", model } });
+        return await JsonAsync(new Dictionary<string, object> { { "Html", html }, { "Products", model } });
     }
 
     [HttpPost]
@@ -962,7 +962,7 @@ public partial class ProductController : BaseAdminController
 
         var html = await RenderPartialViewToStringAsync("_BulkEdit.Products", model);
 
-        return Json(html);
+        return await JsonAsync(html);
     }
 
     [HttpPost, ActionName("List")]
@@ -1316,7 +1316,7 @@ public partial class ProductController : BaseAdminController
             await _customerActivityService.InsertActivityAsync("DeleteProduct",
                 string.Format(activityLogFormat, product.Name), product);
 
-        return Json(new { Result = true });
+        return await JsonAsync(new { Result = true });
     }
 
     [HttpPost]
@@ -1359,33 +1359,33 @@ public partial class ProductController : BaseAdminController
         if (productBySku != null)
         {
             if (productBySku.Id == productId)
-                return Json(new { Result = string.Empty });
+                return await JsonAsync(new { Result = string.Empty });
 
             message = string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Fields.Sku.Reserved"), productBySku.Name);
-            return Json(new { Result = message });
+            return await JsonAsync(new { Result = message });
         }
 
         //check whether combination with passed SKU already exists
         var combinationBySku = await _productAttributeService.GetProductAttributeCombinationBySkuAsync(sku);
         if (combinationBySku == null)
-            return Json(new { Result = string.Empty });
+            return await JsonAsync(new { Result = string.Empty });
 
         message = string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Sku.Reserved"),
             (await _productService.GetProductByIdAsync(combinationBySku.ProductId))?.Name);
 
-        return Json(new { Result = message });
+        return await JsonAsync(new { Result = message });
     }
 
     //action displaying notification (warning) to a store owner that 'Date of Birth' is disabled
     public virtual async Task<IActionResult> CustomersDateOfBirthDisabledWarning()
     {
         if (_customerSettings.DateOfBirthEnabled)
-            return Json(new { Result = string.Empty });
+            return await JsonAsync(new { Result = string.Empty });
 
         var warning = string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Fields.AgeVerification.DateOfBirthDisabled"),
             Url.Action("CustomerUser", "Setting"));
 
-        return Json(new { Result = warning });
+        return await JsonAsync(new { Result = warning });
     }
 
     #endregion
@@ -1399,7 +1399,7 @@ public partial class ProductController : BaseAdminController
         var result = string.Empty;
 
         if (string.IsNullOrWhiteSpace(productIds))
-            return Json(new { Text = result });
+            return await JsonAsync(new { Text = result });
 
         var ids = new List<int>();
         var rangeArray = productIds
@@ -1421,7 +1421,7 @@ public partial class ProductController : BaseAdminController
                 result += ", ";
         }
 
-        return Json(new { Text = result });
+        return await JsonAsync(new { Text = result });
     }
 
     [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
@@ -1440,7 +1440,7 @@ public partial class ProductController : BaseAdminController
         //prepare model
         var model = await _productModelFactory.PrepareAddRequiredProductListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     #endregion
@@ -1463,7 +1463,7 @@ public partial class ProductController : BaseAdminController
         //prepare model
         var model = await _productModelFactory.PrepareRelatedProductListModelAsync(searchModel, product);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -1529,7 +1529,7 @@ public partial class ProductController : BaseAdminController
         //prepare model
         var model = await _productModelFactory.PrepareAddRelatedProductListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -1585,7 +1585,7 @@ public partial class ProductController : BaseAdminController
         //prepare model
         var model = await _productModelFactory.PrepareCrossSellProductListModelAsync(searchModel, product);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -1626,7 +1626,7 @@ public partial class ProductController : BaseAdminController
         //prepare model
         var model = await _productModelFactory.PrepareAddCrossSellProductListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -1681,7 +1681,7 @@ public partial class ProductController : BaseAdminController
         //prepare model
         var model = await _productModelFactory.PrepareAssociatedProductListModelAsync(searchModel, product);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -1738,7 +1738,7 @@ public partial class ProductController : BaseAdminController
         //prepare model
         var model = await _productModelFactory.PrepareAddAssociatedProductListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -1807,7 +1807,7 @@ public partial class ProductController : BaseAdminController
 
         var files = form.Files.ToList();
         if (!files.Any())
-            return Json(new { success = false });
+            return await JsonAsync(new { success = false });
 
         //a vendor should have access only to his products
         var currentVendor = await _workContext.GetCurrentVendorAsync();
@@ -1819,7 +1819,7 @@ public partial class ProductController : BaseAdminController
             var existingPictures = await _pictureService.GetPicturesByProductIdAsync(product.Id);
             if (existingPictures.Count >= _vendorSettings.MaximumProductPicturesNumber)
             {
-                return Json(new
+                return await JsonAsync(new
                 {
                     success = false,
                     message = await _localizationService.GetResourceAsync("Admin.Catalog.Products.Multimedia.Pictures.Alert.VendorNumberPicturesLimit"),
@@ -1846,14 +1846,14 @@ public partial class ProductController : BaseAdminController
         }
         catch (Exception exc)
         {
-            return Json(new
+            return await JsonAsync(new
             {
                 success = false,
                 message = $"{await _localizationService.GetResourceAsync("Admin.Catalog.Products.Multimedia.Pictures.Alert.PictureAdd")} {exc.Message}",
             });
         }
 
-        return Json(new { success = true });
+        return await JsonAsync(new { success = true });
     }
 
     [HttpPost]
@@ -1872,7 +1872,7 @@ public partial class ProductController : BaseAdminController
         //prepare model
         var model = await _productModelFactory.PrepareProductPictureListModelAsync(searchModel, product);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -1968,7 +1968,7 @@ public partial class ProductController : BaseAdminController
         }
         catch (Exception exc)
         {
-            return Json(new
+            return await JsonAsync(new
             {
                 success = false,
                 error = $"{await _localizationService.GetResourceAsync("Admin.Catalog.Products.Multimedia.Videos.Alert.VideoAdd")} {exc.Message}",
@@ -1998,14 +1998,14 @@ public partial class ProductController : BaseAdminController
         }
         catch (Exception exc)
         {
-            return Json(new
+            return await JsonAsync(new
             {
                 success = false,
                 error = $"{await _localizationService.GetResourceAsync("Admin.Catalog.Products.Multimedia.Videos.Alert.VideoAdd")} {exc.Message}",
             });
         }
 
-        return Json(new { success = true });
+        return await JsonAsync(new { success = true });
     }
 
     [HttpPost]
@@ -2024,7 +2024,7 @@ public partial class ProductController : BaseAdminController
         //prepare model
         var model = await _productModelFactory.PrepareProductVideoListModelAsync(searchModel, product);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -2056,7 +2056,7 @@ public partial class ProductController : BaseAdminController
         }
         catch (Exception exc)
         {
-            return Json(new
+            return await JsonAsync(new
             {
                 success = false,
                 error = $"{await _localizationService.GetResourceAsync("Admin.Catalog.Products.Multimedia.Videos.Alert.VideoUpdate")} {exc.Message}",
@@ -2195,7 +2195,7 @@ public partial class ProductController : BaseAdminController
         //prepare model
         var model = await _productModelFactory.PrepareProductSpecificationAttributeListModelAsync(searchModel, product);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
@@ -2354,7 +2354,7 @@ public partial class ProductController : BaseAdminController
         //prepare model
         var model = await _productModelFactory.PrepareProductTagListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -2382,7 +2382,7 @@ public partial class ProductController : BaseAdminController
         var tags = await _productTagService.GetProductTagsByIdsAsync(selectedIds.ToArray());
         await _productTagService.DeleteProductTagsAsync(tags);
 
-        return Json(new { Result = true });
+        return await JsonAsync(new { Result = true });
     }
 
     [CheckPermission(StandardPermission.Catalog.PRODUCT_TAGS_VIEW)]
@@ -2438,7 +2438,7 @@ public partial class ProductController : BaseAdminController
         //prepare model
         var model = await _productModelFactory.PrepareTaggedProductListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     #endregion
@@ -2461,7 +2461,7 @@ public partial class ProductController : BaseAdminController
         //prepare model
         var model = await _productModelFactory.PrepareProductOrderListModelAsync(searchModel, product);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     #endregion
@@ -2742,7 +2742,7 @@ public partial class ProductController : BaseAdminController
         //prepare model
         var model = await _productModelFactory.PrepareTierPriceListModelAsync(searchModel, product);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
@@ -2895,7 +2895,7 @@ public partial class ProductController : BaseAdminController
         //prepare model
         var model = await _productModelFactory.PrepareProductAttributeMappingListModelAsync(searchModel, product);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
@@ -3138,7 +3138,7 @@ public partial class ProductController : BaseAdminController
         //prepare model
         var model = await _productModelFactory.PrepareProductAttributeValueListModelAsync(searchModel, productAttributeMapping);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
@@ -3381,7 +3381,7 @@ public partial class ProductController : BaseAdminController
         //prepare model
         var model = await _productModelFactory.PrepareAssociateProductToAttributeValueListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -3412,30 +3412,30 @@ public partial class ProductController : BaseAdminController
     {
         var associatedProduct = await _productService.GetProductByIdAsync(productId);
         if (associatedProduct == null)
-            return Json(new { Result = string.Empty });
+            return await JsonAsync(new { Result = string.Empty });
 
         //attributes
         if (await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(associatedProduct.Id) is IList<ProductAttributeMapping> mapping && mapping.Any())
         {
             if (mapping.Any(attribute => attribute.IsRequired))
-                return Json(new { Result = await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.HasRequiredAttributes") });
+                return await JsonAsync(new { Result = await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.HasRequiredAttributes") });
 
-            return Json(new { Result = await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.HasAttributes") });
+            return await JsonAsync(new { Result = await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.HasAttributes") });
         }
 
         //gift card
         if (associatedProduct.IsGiftCard)
         {
-            return Json(new { Result = await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.GiftCard") });
+            return await JsonAsync(new { Result = await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.GiftCard") });
         }
 
         //downloadable product
         if (associatedProduct.IsDownload)
         {
-            return Json(new { Result = await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.Downloadable") });
+            return await JsonAsync(new { Result = await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.Downloadable") });
         }
 
-        return Json(new { Result = string.Empty });
+        return await JsonAsync(new { Result = string.Empty });
     }
 
     #endregion
@@ -3458,7 +3458,7 @@ public partial class ProductController : BaseAdminController
         //prepare model
         var model = await _productModelFactory.PrepareProductAttributeCombinationListModelAsync(searchModel, product);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -3730,7 +3730,7 @@ public partial class ProductController : BaseAdminController
 
         await GenerateAttributeCombinationsAsync(product);
 
-        return Json(new { Success = true });
+        return await JsonAsync(new { Success = true });
     }
 
     #endregion
@@ -3779,7 +3779,7 @@ public partial class ProductController : BaseAdminController
         //prepare model
         var model = await _productModelFactory.PrepareStockQuantityHistoryListModelAsync(searchModel, product);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     #endregion

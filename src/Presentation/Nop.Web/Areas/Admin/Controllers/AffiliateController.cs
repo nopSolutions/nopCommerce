@@ -73,7 +73,7 @@ public partial class AffiliateController : BaseAdminController
         //prepare model
         var model = await _affiliateModelFactory.PrepareAffiliateListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Promotions.AFFILIATES_CREATE_EDIT_DELETE)]
@@ -225,7 +225,7 @@ public partial class AffiliateController : BaseAdminController
         //prepare model
         var model = await _affiliateModelFactory.PrepareAffiliatedOrderListModelAsync(searchModel, affiliate);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -239,7 +239,7 @@ public partial class AffiliateController : BaseAdminController
         //prepare model
         var model = await _affiliateModelFactory.PrepareAffiliatedCustomerListModelAsync(searchModel, affiliate);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     #endregion

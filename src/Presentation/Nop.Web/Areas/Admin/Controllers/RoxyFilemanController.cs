@@ -66,7 +66,7 @@ public partial class RoxyFilemanController : BaseAdminController
                 throw new Exception("You don't have required permission");
 
             var directories = _roxyFilemanService.GetDirectoryList(type);
-            return Json(directories);
+            return await JsonAsync(directories);
         }
         catch (Exception ex)
         {
@@ -84,7 +84,7 @@ public partial class RoxyFilemanController : BaseAdminController
 
             var directories = _roxyFilemanService.GetFiles(d, type);
 
-            return Json(directories);
+            return await JsonAsync(directories);
         }
         catch (Exception ex)
         {

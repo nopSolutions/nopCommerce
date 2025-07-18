@@ -100,7 +100,7 @@ public partial class PollController : BaseAdminController
         //prepare model
         var model = await _pollModelFactory.PreparePollListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.ContentManagement.POLLS_CREATE_EDIT_DELETE)]
@@ -216,7 +216,7 @@ public partial class PollController : BaseAdminController
         //prepare model
         var model = await _pollModelFactory.PreparePollAnswerListModelAsync(searchModel, poll);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     //ValidateAttribute is used to force model validation
@@ -249,7 +249,7 @@ public partial class PollController : BaseAdminController
         //fill entity from model
         await _pollService.InsertPollAnswerAsync(model.ToEntity<PollAnswer>());
 
-        return Json(new { Result = true });
+        return await JsonAsync(new { Result = true });
     }
 
     [HttpPost]

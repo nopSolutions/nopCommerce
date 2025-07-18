@@ -242,7 +242,7 @@ public partial class VendorController : BaseAdminController
         //prepare model
         var model = await _vendorModelFactory.PrepareVendorCustomerListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     public virtual IActionResult Index()
@@ -266,7 +266,7 @@ public partial class VendorController : BaseAdminController
         //prepare model
         var model = await _vendorModelFactory.PrepareVendorListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Customers.VENDORS_CREATE_EDIT_DELETE)]
@@ -504,7 +504,7 @@ public partial class VendorController : BaseAdminController
         //prepare model
         var model = await _vendorModelFactory.PrepareVendorNoteListModelAsync(searchModel, vendor);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Customers.VENDORS_CREATE_EDIT_DELETE)]
@@ -525,7 +525,7 @@ public partial class VendorController : BaseAdminController
             VendorId = vendor.Id
         });
 
-        return Json(new { Result = true });
+        return await JsonAsync(new { Result = true });
     }
 
     [HttpPost]

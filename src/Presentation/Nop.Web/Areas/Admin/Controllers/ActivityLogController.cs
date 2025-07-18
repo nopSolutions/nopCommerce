@@ -93,7 +93,7 @@ public partial class ActivityLogController : BaseAdminController
         //prepare model
         var model = await _activityLogModelFactory.PrepareActivityLogListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]

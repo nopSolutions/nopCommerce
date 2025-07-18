@@ -222,7 +222,7 @@ public partial class OrderController : BaseAdminController
         //prepare model
         var model = await _orderModelFactory.PrepareOrderListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -232,7 +232,7 @@ public partial class OrderController : BaseAdminController
         //prepare model
         var model = await _orderModelFactory.PrepareOrderAggregatorModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost, ActionName("List")]
@@ -1041,7 +1041,7 @@ public partial class OrderController : BaseAdminController
             }
         }
 
-        return Json(new
+        return await JsonAsync(new
         {
             enabledattributemappingids = enabledAttributeMappingIds.ToArray(),
             disabledattributemappingids = disabledAttributeMappingIds.ToArray(),
@@ -1532,7 +1532,7 @@ public partial class OrderController : BaseAdminController
         //prepare model
         var model = await _orderModelFactory.PrepareAddProductToOrderListModelAsync(searchModel, order);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Orders.ORDERS_CREATE_EDIT_DELETE)]
@@ -1796,7 +1796,7 @@ public partial class OrderController : BaseAdminController
         //prepare model
         var model = await _orderModelFactory.PrepareShipmentListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -1814,7 +1814,7 @@ public partial class OrderController : BaseAdminController
         //prepare model
         var model = await _orderModelFactory.PrepareOrderShipmentListModelAsync(searchModel, order);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -1842,7 +1842,7 @@ public partial class OrderController : BaseAdminController
         searchModel.SetGridPageSize();
         var model = await _orderModelFactory.PrepareShipmentItemListModelAsync(searchModel, shipment);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Orders.SHIPMENTS_CREATE_EDIT_DELETE)]
@@ -2437,7 +2437,7 @@ public partial class OrderController : BaseAdminController
             }
         }
 
-        return Json(new { Result = true });
+        return await JsonAsync(new { Result = true });
     }
 
     [HttpPost]
@@ -2467,7 +2467,7 @@ public partial class OrderController : BaseAdminController
             }
         }
 
-        return Json(new { Result = true });
+        return await JsonAsync(new { Result = true });
     }
 
     [HttpPost]
@@ -2497,7 +2497,7 @@ public partial class OrderController : BaseAdminController
             }
         }
 
-        return Json(new { Result = true });
+        return await JsonAsync(new { Result = true });
     }
 
     #endregion
@@ -2519,7 +2519,7 @@ public partial class OrderController : BaseAdminController
         //prepare model
         var model = await _orderModelFactory.PrepareOrderNoteListModelAsync(searchModel, order);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Orders.ORDERS_CREATE_EDIT_DELETE)]
@@ -2555,7 +2555,7 @@ public partial class OrderController : BaseAdminController
             await _workflowMessageService.SendNewOrderNoteAddedCustomerNotificationAsync(orderNote, (await _workContext.GetWorkingLanguageAsync()).Id);
         }
 
-        return Json(new { Result = true });
+        return await JsonAsync(new { Result = true });
     }
 
     [HttpPost]
@@ -2590,7 +2590,7 @@ public partial class OrderController : BaseAdminController
         //prepare model
         var model = await _orderModelFactory.PrepareBestsellerBriefListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -2600,7 +2600,7 @@ public partial class OrderController : BaseAdminController
         //prepare model
         var model = await _orderModelFactory.PrepareBestsellerBriefListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -2614,7 +2614,7 @@ public partial class OrderController : BaseAdminController
         //prepare model
         var model = await _orderModelFactory.PrepareOrderAverageReportListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -2628,7 +2628,7 @@ public partial class OrderController : BaseAdminController
         //prepare model
         var model = await _orderModelFactory.PrepareOrderIncompleteReportListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Orders.ORDERS_VIEW)]
@@ -2710,7 +2710,7 @@ public partial class OrderController : BaseAdminController
                 break;
         }
 
-        return Json(result);
+        return await JsonAsync(result);
     }
 
     #endregion

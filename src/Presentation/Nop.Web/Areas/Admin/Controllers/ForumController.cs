@@ -65,7 +65,7 @@ public partial class ForumController : BaseAdminController
         //prepare model
         var model = await _forumModelFactory.PrepareForumGroupListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -79,7 +79,7 @@ public partial class ForumController : BaseAdminController
         //prepare model
         var model = await _forumModelFactory.PrepareForumListModelAsync(searchModel, forumGroup);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     #endregion

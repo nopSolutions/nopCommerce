@@ -52,7 +52,7 @@ public partial class ShoppingCartController : BaseAdminController
         //prepare model
         var model = await _shoppingCartModelFactory.PrepareShoppingCartListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -66,7 +66,7 @@ public partial class ShoppingCartController : BaseAdminController
         //prepare model
         var model = await _shoppingCartModelFactory.PrepareShoppingCartItemListModelAsync(searchModel, customer);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]

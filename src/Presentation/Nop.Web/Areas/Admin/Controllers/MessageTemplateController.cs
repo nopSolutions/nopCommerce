@@ -135,7 +135,7 @@ public partial class MessageTemplateController : BaseAdminController
         //prepare model
         var model = await _messageTemplateModelFactory.PrepareMessageTemplateListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.ContentManagement.MESSAGE_TEMPLATES_VIEW)]

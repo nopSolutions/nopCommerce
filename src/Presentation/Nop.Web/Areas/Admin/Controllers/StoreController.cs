@@ -115,7 +115,7 @@ public partial class StoreController : BaseAdminController
         //prepare model
         var model = await _storeModelFactory.PrepareStoreListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_STORES)]

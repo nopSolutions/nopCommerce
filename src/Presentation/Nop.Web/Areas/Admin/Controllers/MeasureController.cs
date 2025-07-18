@@ -69,7 +69,7 @@ public partial class MeasureController : BaseAdminController
         //prepare model
         var model = await _measureModelFactory.PrepareMeasureWeightListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -105,7 +105,7 @@ public partial class MeasureController : BaseAdminController
         await _customerActivityService.InsertActivityAsync("AddNewMeasureWeight",
             string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewMeasureWeight"), weight.Id), weight);
 
-        return Json(new { Result = true });
+        return await JsonAsync(new { Result = true });
     }
 
     [HttpPost]
@@ -141,7 +141,7 @@ public partial class MeasureController : BaseAdminController
         _measureSettings.BaseWeightId = weight.Id;
         await _settingService.SaveSettingAsync(_measureSettings);
 
-        return Json(new { result = true });
+        return await JsonAsync(new { result = true });
     }
 
     #endregion
@@ -155,7 +155,7 @@ public partial class MeasureController : BaseAdminController
         //prepare model
         var model = await _measureModelFactory.PrepareMeasureDimensionListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -191,7 +191,7 @@ public partial class MeasureController : BaseAdminController
         await _customerActivityService.InsertActivityAsync("AddNewMeasureDimension",
             string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewMeasureDimension"), dimension.Id), dimension);
 
-        return Json(new { Result = true });
+        return await JsonAsync(new { Result = true });
     }
 
     [HttpPost]
@@ -227,7 +227,7 @@ public partial class MeasureController : BaseAdminController
         _measureSettings.BaseDimensionId = dimension.Id;
         await _settingService.SaveSettingAsync(_measureSettings);
 
-        return Json(new { result = true });
+        return await JsonAsync(new { result = true });
     }
 
     #endregion

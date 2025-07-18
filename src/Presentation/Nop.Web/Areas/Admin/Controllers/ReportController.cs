@@ -53,7 +53,7 @@ public partial class ReportController : BaseAdminController
         //prepare model
         var model = await _reportModelFactory.PrepareSalesSummaryListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
 
@@ -79,7 +79,7 @@ public partial class ReportController : BaseAdminController
         //prepare model
         var model = await _reportModelFactory.PrepareLowStockProductListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     #endregion
@@ -104,7 +104,7 @@ public partial class ReportController : BaseAdminController
         //prepare model
         var model = await _reportModelFactory.PrepareBestsellerListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -115,7 +115,7 @@ public partial class ReportController : BaseAdminController
         //prepare model
         var totalAmount = await _reportModelFactory.GetBestsellerTotalAmountAsync(searchModel);
 
-        return Json(new { aggregatortotal = totalAmount });
+        return await JsonAsync(new { aggregatortotal = totalAmount });
     }
 
     #endregion
@@ -140,7 +140,7 @@ public partial class ReportController : BaseAdminController
         //prepare model
         var model = await _reportModelFactory.PrepareNeverSoldListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     #endregion
@@ -165,7 +165,7 @@ public partial class ReportController : BaseAdminController
         //prepare model
         var model = await _reportModelFactory.PrepareCountrySalesListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     #endregion
@@ -210,7 +210,7 @@ public partial class ReportController : BaseAdminController
         //prepare model
         var model = await _reportModelFactory.PrepareBestCustomersReportListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -221,7 +221,7 @@ public partial class ReportController : BaseAdminController
         //prepare model
         var model = await _reportModelFactory.PrepareBestCustomersReportListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost]
@@ -232,7 +232,7 @@ public partial class ReportController : BaseAdminController
         //prepare model
         var model = await _reportModelFactory.PrepareRegisteredCustomersReportListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     #endregion

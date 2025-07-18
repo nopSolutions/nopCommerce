@@ -63,7 +63,7 @@ public partial class SearchCompleteController : BaseAdminController
                 productid = p.Id
             }).ToList();
 
-        return Json(result);
+        return await JsonAsync(result);
     }
 
     #endregion

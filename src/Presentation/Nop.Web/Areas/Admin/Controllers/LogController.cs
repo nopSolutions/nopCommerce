@@ -66,7 +66,7 @@ public partial class LogController : BaseAdminController
         //prepare model
         var model = await _logModelFactory.PrepareLogListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [HttpPost, ActionName("List")]
@@ -129,7 +129,7 @@ public partial class LogController : BaseAdminController
         //activity log
         await _customerActivityService.InsertActivityAsync("DeleteSystemLog", await _localizationService.GetResourceAsync("ActivityLog.DeleteSystemLog"));
 
-        return Json(new { Result = true });
+        return await JsonAsync(new { Result = true });
     }
 
     #endregion

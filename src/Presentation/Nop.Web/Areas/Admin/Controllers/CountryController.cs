@@ -145,7 +145,7 @@ public partial class CountryController : BaseAdminController
         //prepare model
         var model = await _countryModelFactory.PrepareCountryListModelAsync(searchModel);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_COUNTRIES)]
@@ -289,7 +289,7 @@ public partial class CountryController : BaseAdminController
             await _countryService.UpdateCountryAsync(country);
         }
 
-        return Json(new { Result = true });
+        return await JsonAsync(new { Result = true });
     }
 
     [HttpPost]
@@ -306,7 +306,7 @@ public partial class CountryController : BaseAdminController
             await _countryService.UpdateCountryAsync(country);
         }
 
-        return Json(new { Result = true });
+        return await JsonAsync(new { Result = true });
     }
 
     #endregion
@@ -324,7 +324,7 @@ public partial class CountryController : BaseAdminController
         //prepare model
         var model = await _countryModelFactory.PrepareStateProvinceListModelAsync(searchModel, country);
 
-        return Json(model);
+        return await JsonAsync(model);
     }
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_COUNTRIES)]
@@ -502,7 +502,7 @@ public partial class CountryController : BaseAdminController
             }
         }
 
-        return Json(result);
+        return await JsonAsync(result);
     }
 
     #endregion
