@@ -9094,6 +9094,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.AllowCartItemEditing.Hint">
     <Value>Check to allow customers to edit items already placed in the cart or wishlist. It could be useful when your products have attributes or any other fields entered by a customer.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.AllowMultipleWishlist">
+    <Value>Allow multiple wishlists</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.AllowMultipleWishlist.Hint">
+    <Value>A value indicating whether customers can use multiple wishlists.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.AllowOutOfStockItemsToBeAddedToWishlist">
     <Value>Allow 'out of stock' items to be added to wishlist</Value>
   </LocaleResource>
@@ -9144,6 +9150,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.GroupTierPricesForDistinctShoppingCartItems.Hint">
     <Value>Allows to offer special prices when customers buy bigger amounts of a particular product. For example, when a customer could have two shopping cart items for the same products (different product attributes).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.MaximumNumberOfCustomWishlist">
+    <Value>Maximum number of custom wishlists</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.MaximumNumberOfCustomWishlist.Hint">
+    <Value>Specify the maximum number of custom wishlists a customer can use.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.MaximumShoppingCartItems">
     <Value>Maximum shopping cart items</Value>
@@ -19462,6 +19474,12 @@
   <LocaleResource Name="Products.ProductHasBeenAddedToTheWishlist.Link">
     <Value><![CDATA[The product has been added to your <a href="{0}">wishlist</a>]]></Value>
   </LocaleResource>
+  <LocaleResource Name="Products.ProductHasBeenAddedToTheCustomWishlist.Link">
+    <Value><![CDATA[The product has been added to your <a href="{0}">{1}</a>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.ProductHasBeenAddedToTheWishlistAndMoved.Link">
+    <Value><![CDATA[The product has been added to your <a href="{0}">wishlist</a>. Want to move it to a <a href="#" onclick="{1}">custom wishlist</a>?]]></Value>
+  </LocaleResource>
   <LocaleResource Name="Products.Qty">
     <Value>Qty</Value>
   </LocaleResource>
@@ -20656,6 +20674,12 @@
   <LocaleResource Name="Wishlist">
     <Value>Wishlist</Value>
   </LocaleResource>
+  <LocaleResource Name="Wishlist.AddCustomWishlist">
+    <Value>Custom wishlist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.AddNewWishlist">
+    <Value>Add new wishlist</Value>
+  </LocaleResource>
   <LocaleResource Name="Wishlist.AddToCart.Error">
     <Value>Some product(s) from wishlist could not be moved to the cart for some reasons.</Value>
   </LocaleResource>
@@ -20664,6 +20688,12 @@
   </LocaleResource>
   <LocaleResource Name="Wishlist.CartIsEmpty">
     <Value>The wishlist is empty!</Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.Default">
+    <Value>Wishlist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.DeleteWishlist">
+    <Value>Delete wishlist</Value>
   </LocaleResource>
   <LocaleResource Name="Wishlist.EmailAFriend">
     <Value>Email a friend</Value>
@@ -20704,8 +20734,32 @@
   <LocaleResource Name="Wishlist.EmailAFriend.YourEmailAddress.Required">
     <Value>Enter your email</Value>
   </LocaleResource>
+  <LocaleResource Name="Wishlist.EnterWishlistName">
+    <Value>Enter wishlist name</Value>
+  </LocaleResource>
   <LocaleResource Name="Wishlist.HeaderQuantity">
     <Value>({0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.MaximumNumberReached">
+    <Value>You cannot create more than {0} custom wishlists.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.MoveToCustomWishlist">
+    <Value>Move to wishlist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.MultipleWishlistNotForGuest">
+    <Value>The multiple wishlist functionality is only available to registered customers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.NameRequired">
+    <Value>A wishlist name is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.NotAllowMultipleWishlist">
+    <Value>Multiple wishlist functionality is disabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.NotFound">
+    <Value>Wishlist not found.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.SelectWishlist">
+    <Value>Specify your wishlist</Value>
   </LocaleResource>
   <LocaleResource Name="Wishlist.TaxShipping.ExclTax">
     <Value><![CDATA[All prices are entered excluding tax. Excluding <a href="{0}">shipping</a>]]></Value>

@@ -43,11 +43,12 @@ public partial interface IShoppingCartModelFactory
     /// <param name="model">Wishlist model</param>
     /// <param name="cart">List of the shopping cart item</param>
     /// <param name="isEditable">Whether model is editable</param>
+    /// <param name="list">Custom wishlist identifier</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the wishlist model
     /// </returns>
-    Task<WishlistModel> PrepareWishlistModelAsync(WishlistModel model, IList<ShoppingCartItem> cart, bool isEditable = true);
+    Task<WishlistModel> PrepareWishlistModelAsync(WishlistModel model, IList<ShoppingCartItem> cart, bool isEditable = true, int? list = null);
 
     /// <summary>
     /// Prepare the mini shopping cart model
@@ -95,11 +96,12 @@ public partial interface IShoppingCartModelFactory
     /// </summary>
     /// <param name="model">Wishlist email a friend model</param>
     /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
+    /// <param name="wishlistId">Custom wishlist identifier</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the wishlist email a friend model
     /// </returns>
-    Task<WishlistEmailAFriendModel> PrepareWishlistEmailAFriendModelAsync(WishlistEmailAFriendModel model, bool excludeProperties);
+    Task<WishlistEmailAFriendModel> PrepareWishlistEmailAFriendModelAsync(WishlistEmailAFriendModel model, bool excludeProperties, int? wishlistId = null);
 
     /// <summary>
     /// Prepare the cart item picture model

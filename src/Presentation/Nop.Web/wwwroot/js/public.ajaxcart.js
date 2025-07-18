@@ -23,6 +23,65 @@ var AjaxCart = {
     setLoadWaiting: function (display) {
         displayAjaxLoading(display);
         this.loadWaiting = display;
+  },
+
+    //move a shopping cart item to the custom wishlist
+    moveToCustomWishlist: function (urlmove, itemId, wishlistId) {
+        if (this.loadWaiting !== false) {
+            return;
+        }
+        this.setLoadWaiting(true);
+
+        var postData = {
+          shoppingCartItemId: itemId,
+          customWishlistId: wishlistId
+        };
+        addAntiForgeryToken(postData);
+
+        this.send_ajax(urlmove, postData);
+    },
+
+    //create custom wishlist
+    createCustomWishlist: function (urlcreate, wishlistName, productId) {
+      if (this.loadWaiting !== false) {
+        return;
+      }
+      this.setLoadWaiting(true);
+
+      var postData = {
+        name: wishlistName,
+        productId: productId
+      };
+      addAntiForgeryToken(postData);
+
+      this.send_ajax(urlcreate, postData);
+    },
+
+    //delete custom wishlist
+    deleteCustomWishlist: function (urldelete) {
+        if (this.loadWaiting !== false) {
+          return;
+        }
+        this.setLoadWaiting(true);
+
+        var postData = {};
+        addAntiForgeryToken(postData);
+
+        this.send_ajax(urldelete, postData);
+    },
+
+    //move a product to the custom wishlist from the default wishlist
+    moveproducttowishlist: function (urlmove, wishlistid) {
+        if (this.loadWaiting !== false) {
+            return;
+        }
+        this.setLoadWaiting(true);
+        var postData = {
+            wishlistId: wishlistid 
+        };
+        addAntiForgeryToken(postData);
+
+        this.send_ajax(urlmove, postData);
     },
 
     //add a product to the cart/wishlist from the catalog pages
@@ -35,15 +94,7 @@ var AjaxCart = {
         var postData = {};
         addAntiForgeryToken(postData);
 
-        $.ajax({
-            cache: false,
-            url: urladd,
-            type: "POST",
-            data: postData,
-            success: this.success_process,
-            complete: this.resetLoadWaiting,
-            error: this.ajaxFailure
-        });
+        this.send_ajax(urladd, postData);
     },
 
     //add a product to the cart/wishlist from the product details page
@@ -53,15 +104,7 @@ var AjaxCart = {
         }
         this.setLoadWaiting(true);
 
-        $.ajax({
-            cache: false,
-            url: urladd,
-            data: $(formselector).serialize(),
-            type: "POST",
-            success: this.success_process,
-            complete: this.resetLoadWaiting,
-            error: this.ajaxFailure
-        });
+        this.send_ajax(urladd, $(formselector).serialize());
     },
 
     //add a product to compare list
@@ -74,15 +117,19 @@ var AjaxCart = {
         var postData = {};
         addAntiForgeryToken(postData);
 
-        $.ajax({
-            cache: false,
-            url: urladd,
-            type: "POST",
-            data: postData,
-            success: this.success_process,
-            complete: this.resetLoadWaiting,
-            error: this.ajaxFailure
-        });
+        this.send_ajax(urladd, postData);
+    },
+
+    send_ajax: function (requestUrl, postData) {
+      $.ajax({
+        cache: false,
+        url: requestUrl,
+        type: "POST",
+        data: postData,
+        success: this.success_process,
+        complete: this.resetLoadWaiting,
+        error: this.ajaxFailure
+      });
     },
 
     success_process: function (response) {
@@ -131,6 +178,6 @@ var AjaxCart = {
     },
 
     ajaxFailure: function () {
-        alert(this.localized_data.AjaxCartFailure);
+      alert(this.localized_data.AjaxCartFailure);
     }
 };

@@ -131,6 +131,8 @@
                 }
                 @if (!Model.ProductPrice.DisableWishlistButton)
                 {
+                    @await Html.PartialAsync("_MoveToWishlistModal", Model.ProductToWishlist)
+
                     <button type="button" class="button-2 add-to-wishlist-button" title="@T("ShoppingCart.AddToWishlist")" onclick="AjaxCart.addproducttocart_catalog('@addtowishlistlink');return false;">@T("ShoppingCart.AddToWishlist")</button>
                 }
             </div>

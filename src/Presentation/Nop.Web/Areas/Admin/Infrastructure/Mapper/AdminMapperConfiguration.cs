@@ -1415,6 +1415,8 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(model => model.AllowAnonymousUsersToEmailWishlist_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.AllowCartItemEditing_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.AllowOutOfStockItemsToBeAddedToWishlist_OverrideForStore, options => options.Ignore())
+            .ForMember(model => model.AllowMultipleWishlist_OverrideForStore, options => options.Ignore())
+            .ForMember(model => model.MaximumNumberOfCustomWishlist_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.CartsSharedBetweenStores_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.CrossSellsNumber_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.GroupTierPricesForDistinctShoppingCartItems_OverrideForStore, options => options.Ignore())
@@ -1437,6 +1439,7 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
 
         CreateMap<ShoppingCartItem, ShoppingCartItemModel>()
             .ForMember(model => model.Store, options => options.Ignore())
+            .ForMember(model => model.CustomWishlistName, options => options.Ignore())
             .ForMember(model => model.AttributeInfo, options => options.Ignore())
             .ForMember(model => model.UnitPrice, options => options.Ignore())
             .ForMember(model => model.UnitPriceValue, options => options.Ignore())

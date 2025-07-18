@@ -56,6 +56,7 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
     protected readonly ICountryService _countryService;
     protected readonly ICurrencyService _currencyService;
     protected readonly ICustomerService _customerService;
+    protected readonly ICustomWishlistService _customWishlistService;
     protected readonly IDateTimeHelper _dateTimeHelper;
     protected readonly IDiscountService _discountService;
     protected readonly IDownloadService _downloadService;
@@ -110,6 +111,7 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
         ICountryService countryService,
         ICurrencyService currencyService,
         ICustomerService customerService,
+        ICustomWishlistService customWishlistService,
         IDateTimeHelper dateTimeHelper,
         IDiscountService discountService,
         IDownloadService downloadService,
@@ -152,6 +154,7 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
         _catalogSettings = catalogSettings;
         _commonSettings = commonSettings;
         _customerSettings = customerSettings;
+        _customWishlistService = customWishlistService;
         _addressModelFactory = addressModelFactory;
         _checkoutAttributeParser = checkoutAttributeParser;
         _checkoutAttributeService = checkoutAttributeService;
@@ -962,20 +965,44 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
     /// <param name="model">Wishlist model</param>
     /// <param name="cart">List of the shopping cart item</param>
     /// <param name="isEditable">Whether model is editable</param>
+    /// <param name="list">Custom wishlist identifier</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the wishlist model
     /// </returns>
-    public virtual async Task<WishlistModel> PrepareWishlistModelAsync(WishlistModel model, IList<ShoppingCartItem> cart, bool isEditable = true)
+    public virtual async Task<WishlistModel> PrepareWishlistModelAsync(WishlistModel model, IList<ShoppingCartItem> cart, bool isEditable = true, int? list = null)
     {
         ArgumentNullException.ThrowIfNull(cart);
-
         ArgumentNullException.ThrowIfNull(model);
 
+        var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+        var isGuest = await _customerService.IsGuestAsync(currentCustomer);
+
         model.EmailWishlistEnabled = _shoppingCartSettings.EmailWishlistEnabled;
+        model.ListId = list;
+        model.AllowMultipleWishlist = _shoppingCartSettings.AllowMultipleWishlist && !isGuest;
         model.IsEditable = isEditable;
         model.DisplayAddToCart = await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_SHOPPING_CART);
         model.DisplayTaxShippingInfo = _catalogSettings.DisplayTaxShippingInfoWishlist;
+
+        //custom wishlist items
+        var currentWishlists = await _customWishlistService.GetAllCustomWishlistsAsync(currentCustomer.Id);
+        foreach (var wishlist in currentWishlists)
+        {
+            var customWishlistModel = new CustomWishlistModel
+            {
+                Id = wishlist.Id,
+                Name = wishlist.Name
+            };
+            model.CustomWishlistItems.Add(customWishlistModel);
+        }
+
+        if (list != null)
+        {
+            var customWishlist = await _customWishlistService.GetCustomWishlistByIdAsync(list.Value);
+            if (customWishlist != null)
+                model.CustomWishlistName = customWishlist.Name;
+        }
 
         if (!cart.Any())
             return model;
@@ -1457,11 +1484,12 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
     /// </summary>
     /// <param name="model">Wishlist email a friend model</param>
     /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
+    /// <param name="wishlistId">Custom wishlist identifier</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the wishlist email a friend model
     /// </returns>
-    public virtual async Task<WishlistEmailAFriendModel> PrepareWishlistEmailAFriendModelAsync(WishlistEmailAFriendModel model, bool excludeProperties)
+    public virtual async Task<WishlistEmailAFriendModel> PrepareWishlistEmailAFriendModelAsync(WishlistEmailAFriendModel model, bool excludeProperties, int? wishlistId = null)
     {
         ArgumentNullException.ThrowIfNull(model);
 
@@ -1471,6 +1499,8 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
             var customer = await _workContext.GetCurrentCustomerAsync();
             model.YourEmailAddress = customer.Email;
         }
+
+        model.ListId = wishlistId;
 
         return model;
     }

@@ -69,12 +69,13 @@ public partial interface IShoppingCartService
     /// <param name="productId">Product identifier; pass null to load all records</param>
     /// <param name="createdFromUtc">Created date from (UTC); pass null to load all records</param>
     /// <param name="createdToUtc">Created date to (UTC); pass null to load all records</param>
+    /// <param name="customWishlistId">Custom wishlist identifier; pass 0 to load all records from all wishlists, pass null to load records from the default wishlist</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the shopping Cart
     /// </returns>
     Task<IList<ShoppingCartItem>> GetShoppingCartAsync(Customer customer, ShoppingCartType? shoppingCartType = null,
-        int storeId = 0, int? productId = null, DateTime? createdFromUtc = null, DateTime? createdToUtc = null);
+        int storeId = 0, int? productId = null, DateTime? createdFromUtc = null, DateTime? createdToUtc = null, int? customWishlistId = null);
 
     /// <summary>
     /// Validates shopping cart item attributes
@@ -258,6 +259,7 @@ public partial interface IShoppingCartService
     /// <param name="rentalEndDate">Rental end date</param>
     /// <param name="quantity">Quantity</param>
     /// <param name="addRequiredProducts">Whether to add required products</param>
+    /// <param name="wishlistId">Wishlist identifier; pass null if it's default wishlist</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the warnings
@@ -266,7 +268,7 @@ public partial interface IShoppingCartService
         ShoppingCartType shoppingCartType, int storeId, string attributesXml = null,
         decimal customerEnteredPrice = decimal.Zero,
         DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
-        int quantity = 1, bool addRequiredProducts = true);
+        int quantity = 1, bool addRequiredProducts = true, int? wishlistId = null);
 
     /// <summary>
     /// Updates the shopping cart item
@@ -288,6 +290,14 @@ public partial interface IShoppingCartService
         decimal customerEnteredPrice,
         DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
         int quantity = 1, bool resetCheckoutData = true);
+
+    /// <summary>
+    /// Move shopping cart item to a custom wishlist
+    /// </summary>
+    /// <param name="shoppingCartItemId">Shopping cart item identifier</param>
+    /// <param name="wishlistId">Custom wishlist identifier</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task MoveItemToCustomWishlistAsync(int shoppingCartItemId, int? wishlistId = null);
 
     /// <summary>
     /// Migrate shopping cart
