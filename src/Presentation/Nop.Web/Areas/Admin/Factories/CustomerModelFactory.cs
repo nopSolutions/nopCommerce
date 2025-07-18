@@ -1133,7 +1133,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         var lastActivityFrom = DateTime.UtcNow.AddMinutes(-_customerSettings.OnlineCustomerMinutes);
 
         //get online customers
-        var customers = await _customerService.GetOnlineCustomersAsync(customerRoleIds: null,
+        var customers = await _customerService.GetOnlineCustomersAsync(customerRoleIds: searchModel.SelectedCustomerRoleIds.ToArray(),
             lastActivityFromUtc: lastActivityFrom,
             pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
