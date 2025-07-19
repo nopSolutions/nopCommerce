@@ -37,7 +37,7 @@ public abstract partial class BaseAdminController : BaseController
     {
         //use IsoDateFormat on writing JSON text to fix issue with dates in grid
         var useIsoDateFormat = EngineContext.Current.Resolve<AdminAreaSettings>()?.UseIsoDateFormatInJsonResult ?? false;
-        var serializerSettings = EngineContext.Current.Resolve<IOptions<MvcNewtonsoftJsonOptions>>()?.Value?.SerializerSettings
+        var serializerSettings = EngineContext.Current.Resolve<IOptions<MvcNewtonsoftJsonOptions>>()?.Value.SerializerSettings
             ?? new JsonSerializerSettings();
 
         if (!useIsoDateFormat)
@@ -58,9 +58,8 @@ public abstract partial class BaseAdminController : BaseController
     {
         if (data is not (BaseNopModel or IEnumerable<BaseNopModel>))
             return CreateJsonResult(data);
-
-        var eventPublisher = EngineContext.Current.Resolve<IEventPublisher>();
-        eventPublisher.ModelPreparedAsync(data).Wait();
+        
+        _eventPublisher.ModelPreparedAsync(data).Wait();
 
         return CreateJsonResult(data);
     }
@@ -75,8 +74,7 @@ public abstract partial class BaseAdminController : BaseController
         if (data is not (BaseNopModel or IEnumerable<BaseNopModel>))
             return CreateJsonResult(data);
 
-        var eventPublisher = EngineContext.Current.Resolve<IEventPublisher>();
-        await eventPublisher.ModelPreparedAsync(data);
+        await _eventPublisher.ModelPreparedAsync(data);
 
         return CreateJsonResult(data);
     }
