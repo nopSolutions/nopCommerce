@@ -636,7 +636,10 @@ public partial class CommonModelFactory : ICommonModelFactory
                 //URLs are localizable. Append SEO code
                 foreach (var language in await _languageService.GetAllLanguagesAsync(storeId: store.Id))
                     if (_robotsTxtSettings.DisallowLanguages.Contains(language.Id))
-                        sb.AppendLine($"Disallow: /{language.UniqueSeoCode}*");
+                    {
+                        sb.AppendLine($"Disallow: /{language.UniqueSeoCode}$");
+                        sb.AppendLine($"Disallow: /{language.UniqueSeoCode}/");
+                    }
                     else
                         foreach (var path in _robotsTxtSettings.LocalizableDisallowPaths)
                             sb.AppendLine($"Disallow: /{language.UniqueSeoCode}{path}");
