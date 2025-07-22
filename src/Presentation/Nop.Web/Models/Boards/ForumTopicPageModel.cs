@@ -29,4 +29,6 @@ public partial record ForumTopicPageModel : BaseNopModel
 
     public string MetaDescription { get; set; }
     public string MetaTitle { get; set; }
+
+    public string JsonLd { get; set; }
 }

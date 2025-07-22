@@ -1,4 +1,6 @@
-﻿using Nop.Web.Models.Catalog;
+﻿using Nop.Core.Domain.Forums;
+using Nop.Web.Models.Boards;
+using Nop.Web.Models.Catalog;
 using Nop.Web.Models.JsonLD;
 
 namespace Nop.Web.Factories;
@@ -35,4 +37,18 @@ public partial interface IJsonLdModelFactory
     /// The task result contains JSON-LD product model
     /// </returns>
     Task<JsonLdProductModel> PrepareJsonLdProductAsync(ProductDetailsModel model, string productUrl = null);
+
+    /// <summary>
+    /// Prepare JSON-LD forum topic model
+    /// </summary>
+    /// <param name="forumTopic">Forum topic</param>
+    /// <param name="firstPost">The first post on forum topic</param>
+    /// <param name="model">Forum topic page model</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains JSON-LD forum topic model
+    /// </returns>
+    Task<JsonLdForumTopicModel> PrepareJsonLdForumTopicAsync(ForumTopic forumTopic,
+        ForumPost firstPost,
+        ForumTopicPageModel model);
 }

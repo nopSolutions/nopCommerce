@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Security;
+using Nop.Core.Domain.Seo;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
@@ -35,10 +37,12 @@ public partial class ForumModelFactory : IForumModelFactory
     protected readonly IDateTimeHelper _dateTimeHelper;
     protected readonly IForumService _forumService;
     protected readonly IGenericAttributeService _genericAttributeService;
+    protected readonly IJsonLdModelFactory _jsonLdModelFactory;
     protected readonly ILocalizationService _localizationService;
     protected readonly IPictureService _pictureService;
     protected readonly IWorkContext _workContext;
     protected readonly MediaSettings _mediaSettings;
+    protected readonly SeoSettings _seoSettings;
 
     #endregion
 
@@ -53,10 +57,12 @@ public partial class ForumModelFactory : IForumModelFactory
         IDateTimeHelper dateTimeHelper,
         IForumService forumService,
         IGenericAttributeService genericAttributeService,
+        IJsonLdModelFactory jsonLdModelFactory,
         ILocalizationService localizationService,
         IPictureService pictureService,
         IWorkContext workContext,
-        MediaSettings mediaSettings)
+        MediaSettings mediaSettings,
+        SeoSettings seoSettings)
     {
         _captchaSettings = captchaSettings;
         _customerSettings = customerSettings;
@@ -67,10 +73,12 @@ public partial class ForumModelFactory : IForumModelFactory
         _dateTimeHelper = dateTimeHelper;
         _forumService = forumService;
         _genericAttributeService = genericAttributeService;
+        _jsonLdModelFactory = jsonLdModelFactory;
         _localizationService = localizationService;
         _pictureService = pictureService;
         _workContext = workContext;
         _mediaSettings = mediaSettings;
+        _seoSettings = seoSettings;
     }
 
     #endregion
@@ -314,6 +322,10 @@ public partial class ForumModelFactory : IForumModelFactory
     {
         ArgumentNullException.ThrowIfNull(forumTopic);
 
+        //load first post
+        var firstPost = (await _forumService.GetAllPostsAsync(forumTopic.Id, 0, string.Empty,
+            0, 1)).FirstOrDefault();
+
         //load posts
         var posts = await _forumService.GetAllPostsAsync(forumTopic.Id, 0, string.Empty,
             page - 1, _forumSettings.PostsPageSize);
@@ -379,16 +391,20 @@ public partial class ForumModelFactory : IForumModelFactory
                 SignaturesEnabled = _forumSettings.SignaturesEnabled,
                 FormattedSignature = _forumService.FormatForumSignatureText(await _genericAttributeService.GetAttributeAsync<Customer, string>(post.CustomerId, NopCustomerDefaults.SignatureAttribute)),
             };
+
             //created on string
-            var languageCode = (await _workContext.GetWorkingLanguageAsync()).LanguageCulture;
+            forumPostModel.PostCreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(post.CreatedOnUtc, DateTimeKind.Utc);
             if (_forumSettings.RelativeDateTimeFormattingEnabled)
             {
+                var languageCode = (await _workContext.GetWorkingLanguageAsync()).LanguageCulture;
                 var postCreatedAgo = post.CreatedOnUtc.RelativeFormat(languageCode);
                 forumPostModel.PostCreatedOnStr = string.Format(await _localizationService.GetResourceAsync("Common.RelativeDateTime.Past"), postCreatedAgo);
             }
             else
-                forumPostModel.PostCreatedOnStr =
-                    (await _dateTimeHelper.ConvertToUserTimeAsync(post.CreatedOnUtc, DateTimeKind.Utc)).ToString("f");
+            {
+                forumPostModel.PostCreatedOnStr = forumPostModel.PostCreatedOn.ToString("f");
+            }
+
             //avatar
             if (_customerSettings.AllowCustomersToUploadAvatars)
             {
@@ -419,6 +435,12 @@ public partial class ForumModelFactory : IForumModelFactory
             // page number is needed for creating post link in _ForumPost partial view
             forumPostModel.CurrentTopicPage = page;
             model.ForumPostModels.Add(forumPostModel);
+        }
+
+        if (_seoSettings.MicrodataEnabled)
+        {
+            var jsonLdModel = await _jsonLdModelFactory.PrepareJsonLdForumTopicAsync(forumTopic, firstPost, model);
+            model.JsonLd = JsonConvert.SerializeObject(jsonLdModel, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
         }
 
         return model;
