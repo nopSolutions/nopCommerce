@@ -32,34 +32,26 @@
                     <span>@Model.OldPrice</span>
                 </div>
             }
-            <div class="@if (string.IsNullOrWhiteSpace(Model.PriceWithDiscount))
-                        {
-                            <text>product-price</text>
-                        }
-                        else
-                        {
-                            <text>non-discounted-price</text>
-                        }">
-                @if (!string.IsNullOrWhiteSpace(Model.OldPrice) || !string.IsNullOrWhiteSpace(Model.PriceWithDiscount))
-                {
-                    @*display "Price:" label if we have old price or discounted one*@
-                    <label for="price-value-@(Model.ProductId)">@T("Products.Price"):</label>
-                }
-                @*render price*@
-                <span @if (string.IsNullOrWhiteSpace(Model.PriceWithDiscount)) { <text> id="price-value-@(Model.ProductId)" class="price-value-@(Model.ProductId)" </text> }>
-                    @Html.Raw(Model.Price)
-                </span>
-            </div>
-            if (!string.IsNullOrWhiteSpace(Model.PriceWithDiscount))
+            if (!string.IsNullOrWhiteSpace(Model.PriceWithoutDiscount))
             {
-                @*discounted price*@
-                <div class="product-price discounted-price">
-                    <span>@T("Products.Price.WithDiscount"):</span>
-                    <span class="price-value-@(Model.ProductId)">
-                        @Html.Raw(Model.PriceWithDiscount)
+                @*non-discounted price*@
+                <div class="non-discounted-price">
+                    <span>@T("Products.Price.WithoutDiscount"):</span>
+                    <span>
+                        @Html.Raw(Model.PriceWithoutDiscount)
                     </span>
                 </div>
             }
+            <div class="product-price">
+                @if (!string.IsNullOrWhiteSpace(Model.OldPrice) || !string.IsNullOrWhiteSpace(Model.PriceWithoutDiscount))
+                {
+                    <label for="price-value-@(Model.ProductId)">@T("Products.Price"):</label>
+                }
+                @*render price*@
+                <span id="price-value-@(Model.ProductId)" class="price-value-@(Model.ProductId)">
+                    @Html.Raw(Model.Price)
+                </span>
+            </div>
             if (!string.IsNullOrEmpty(Model.BasePricePAngV))
             {
                 <div class="base-price-pangv" id="base-price-pangv-@Model.ProductId">

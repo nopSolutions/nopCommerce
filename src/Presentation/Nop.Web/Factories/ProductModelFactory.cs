@@ -492,8 +492,9 @@ public partial class ProductModelFactory : IProductModelFactory
 
         if (finalPriceWithoutDiscountBase != finalPriceWithDiscountBase)
         {
-            model.PriceWithDiscount = await _priceFormatter.FormatPriceAsync(finalPriceWithDiscount);
-            model.PriceWithDiscountValue = finalPriceWithDiscount;
+            model.PriceWithoutDiscount = await _priceFormatter.FormatPriceAsync(finalPriceWithoutDiscountBase);
+            model.PriceWithoutDiscountValue = finalPriceWithoutDiscountBase;
+            model.Price = await _priceFormatter.FormatPriceAsync(finalPriceWithDiscount);
         }
 
         model.PriceValue = finalPriceWithDiscount;

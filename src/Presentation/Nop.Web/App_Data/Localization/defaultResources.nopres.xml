@@ -19409,7 +19409,7 @@
     <Value>This product is sold out</Value>
   </LocaleResource>
   <LocaleResource Name="Products.Price">
-    <Value>Price</Value>
+    <Value>Your price</Value>
   </LocaleResource>
   <LocaleResource Name="Products.Price.OldPrice">
     <Value>Old price</Value>
@@ -19435,8 +19435,8 @@
   <LocaleResource Name="Products.Price.TaxShipping.InclTax">
     <Value><![CDATA[excluding <a href="{0}">shipping</a>]]></Value>
   </LocaleResource>
-  <LocaleResource Name="Products.Price.WithDiscount">
-    <Value>Your price</Value>
+  <LocaleResource Name="Products.Price.WithoutDiscount">
+    <Value>Price without discount</Value>
   </LocaleResource>
   <LocaleResource Name="Products.PriceRangeFrom">
     <Value>From {0}</Value>
