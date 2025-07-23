@@ -368,13 +368,7 @@
         ["image"] = productImageUrl,
         ["description"] = Regex.Replace(Model.ShortDescription ?? "", "<.*?>", string.Empty),
         ["sku"] = Model.Sku,
-        ["brand"] = string.Join(" ", Model.ProductManufacturers.Select(m => m.Name)),
-        ["offers"] = new Dictionary<string, object>
-            {
-                ["@type"] = "Offer",
-                ["priceCurrency"] = "USD",
-                ["price"] = Model.ProductPrice.PriceValue.ToString()
-            }
+        ["brand"] = string.Join(" ", Model.ProductManufacturers.Select(m => m.Name))
     };
 
     var jsonLd = JsonConvert.SerializeObject(schema, Formatting.Indented);
