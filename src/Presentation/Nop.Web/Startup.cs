@@ -35,11 +35,6 @@ namespace Nop.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.ConfigureApplicationServices(_configuration, _webHostEnvironment);
-            services.AddSession(options =>
-            {
-                options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = true;
-            });
         }
 
         /// <summary>
