@@ -13,7 +13,7 @@ public record JsonLdInteractionStatisticModel : JsonLdModel
     public string InteractionType { get; set; }
 
     [JsonProperty("userInteractionCount")]
-    public int VoteCount { get; set; }
+    public int UserInteractionCount { get; set; }
 
     #endregion
 }

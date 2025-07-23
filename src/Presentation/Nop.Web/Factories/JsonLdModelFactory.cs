@@ -240,7 +240,7 @@ public partial class JsonLdModelFactory : IJsonLdModelFactory
                         _webHelper.GetCurrentRequestProtocol()),
             },
             DatePublished = createdOn.ToString("O"),
-            Subject = model.Subject,
+            Subject = JavaScriptEncoder.Default.Encode(model.Subject),
             Text = _forumService.FormatPostText(firstPost),
             Url = urlHelper.RouteUrl("TopicSlug", new { id = model.Id, slug = model.SeName },
                 _webHelper.GetCurrentRequestProtocol()),
@@ -286,7 +286,7 @@ public partial class JsonLdModelFactory : IJsonLdModelFactory
                             postModel.VoteCount >= 0
                                 ? "https://schema.org/LikeAction"
                                 : "https://schema.org/DislikeAction",
-                        VoteCount = Math.Abs(postModel.VoteCount)
+                        UserInteractionCount = Math.Abs(postModel.VoteCount)
                     };
                 }
 
@@ -296,14 +296,16 @@ public partial class JsonLdModelFactory : IJsonLdModelFactory
             {
                 new()
                 {
-                    InteractionType = "https://schema.org/CommentAction", VoteCount = Math.Max(forumTopic.NumPosts - 1, 0)
+                    InteractionType = "https://schema.org/CommentAction", UserInteractionCount = Math.Max(forumTopic.NumPosts - 1, 0)
                 },
                 new()
                 {
-                    InteractionType = "https://schema.org/ViewAction", VoteCount = forumTopic.Views
+                    InteractionType = "https://schema.org/ViewAction", UserInteractionCount = forumTopic.Views
                 }
             }
         };
+
+        await _eventPublisher.PublishAsync(new JsonLdCreatedEvent<JsonLdForumTopicModel>(forumTopicModel));
 
         return forumTopicModel;
     }
