@@ -359,6 +359,13 @@
     var productImageUrl = Model.DefaultPictureModel?.ImageUrl;
 }
 @{
+    string offerPrice = null;
+
+    if (Model?.ProductPrice != null)
+    {
+        offerPrice = Model.ProductPrice.PriceValue.ToString();
+    }
+
     var schema = new Dictionary<string, object>
     {
         ["@context"] = "https://schema.org",
@@ -368,14 +375,27 @@
         ["image"] = productImageUrl,
         ["description"] = Regex.Replace(Model.ShortDescription ?? "", "<.*?>", string.Empty),
         ["sku"] = Model.Sku,
-        ["brand"] = string.Join(" ", Model.ProductManufacturers.Select(m => m.Name))
+        ["brand"] = string.Join(" ", Model.ProductManufacturers.Select(m => m.Name)),
+        ["offers"] = offerPrice != null
+            ? new Dictionary<string, object>
+                {
+                    ["@type"] = "Offer",
+                    ["priceCurrency"] = "USD",
+                    ["price"] = offerPrice
+                }
+            : null
     };
 
-    var jsonLd = JsonConvert.SerializeObject(schema, Formatting.Indented);
+    // Remove null-valued keys (like "offers" if offerPrice is null)
+    var schemaFiltered = schema
+        .Where(kvp => kvp.Value != null)
+        .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+    var jsonLd = JsonConvert.SerializeObject(schemaFiltered, Formatting.Indented);
 }
-<script type="application/ld+json">
-@Html.Raw(jsonLd)
-</script>
+    <script type="application/ld+json">
+        @Html.Raw(jsonLd)
+    </script>
     <!--BV injected code-->
     <script>
         // Make sure that BV.configure is defined before running this script

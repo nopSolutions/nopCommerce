@@ -345,24 +345,42 @@
 
             <div class="product-box-review" data-bv-show="inline_rating" data-bv-product-id="@Model.Id"></div>
 
-            @{
-                var schema = new Dictionary<string, object>
-                {
-                    ["@context"] = "https://schema.org",
-                    ["@type"] = "Product",
-                    ["name"] = Model.Name,
-                    ["image"] = Model.DefaultPictureModel.ImageUrl,
-                    ["description"] = Model.ShortDescription,
-                    ["sku"] = Model.Sku
-                };
+    @{
+        string offerPrice = null;
 
-                // Remove null entries
-                var schemaFiltered = schema.Where(kvp => kvp.Value != null).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-                var jsonLd = JsonConvert.SerializeObject(schemaFiltered, Formatting.Indented);
-            }
-            <script type="application/ld+json">
-                @Html.Raw(jsonLd)
-            </script>
+        if (Model?.ProductPrice != null)
+        {
+            offerPrice = Model.ProductPrice.PriceValue.ToString();
+        }
+
+        var schema = new Dictionary<string, object>
+        {
+            ["@context"] = "https://schema.org",
+            ["@type"] = "Product",
+            ["name"] = Model.Name,
+            ["image"] = Model.DefaultPictureModel.ImageUrl,
+            ["description"] = Model.ShortDescription,
+            ["sku"] = Model.Sku,
+            ["offers"] = offerPrice != null
+                ? new Dictionary<string, object>
+                    {
+                        ["@type"] = "Offer",
+                        ["priceCurrency"] = "USD",
+                        ["price"] = offerPrice
+                    }
+                : null
+        };
+
+        // Remove null entries like "offers" if price is not available
+        var schemaFiltered = schema
+            .Where(kvp => kvp.Value != null)
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+        var jsonLd = JsonConvert.SerializeObject(schemaFiltered, Formatting.Indented);
+    }
+    <script type="application/ld+json">
+        @Html.Raw(jsonLd)
+    </script>
 
 
             <!-- ABC: custom - adds widget zone for reviews -->
