@@ -353,7 +353,13 @@
                     ["name"] = Model.Name,
                     ["image"] = Model.DefaultPictureModel.ImageUrl,
                     ["description"] = Model.ShortDescription,
-                    ["sku"] = Model.Sku
+                    ["sku"] = Model.Sku,
+                    ["offers"] = new Dictionary<string, object>
+                        {
+                            ["@type"] = "Offer",
+                            ["priceCurrency"] = "USD",
+                            ["price"] = Products.Price.TaxShipping.ExclTax.ToString()
+                        }
                 };
 
                 // Remove null entries
