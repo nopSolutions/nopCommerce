@@ -37,6 +37,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
+using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Seo;
 
@@ -1618,7 +1619,8 @@ public partial class InstallationService
             AutoOrientImage = false,
             VideoIframeAllow = "fullscreen",
             VideoIframeWidth = 300,
-            VideoIframeHeight = 150
+            VideoIframeHeight = 150,
+            PicturePath = NopMediaDefaults.DefaultImagesPath
         });
 
         await SaveSettingAsync(dictionary, new StoreInformationSettings

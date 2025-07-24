@@ -16,12 +16,20 @@ using Nop.Data.Migrations;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Core.Domain.Forums;
+using Nop.Services.Media;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo490;
 
 [NopUpdateMigration("2025-02-26 00:00:00", "4.90", UpdateMigrationType.Settings)]
 public class SettingMigration : MigrationBase
 {
+    protected readonly INopFileProvider _fileProvider;
+
+    public SettingMigration(INopFileProvider fileProvider)
+    {
+        _fileProvider = fileProvider;
+    }
+
     /// <summary>Collect the UP migration expressions</summary>
     public override void Up()
     {
@@ -258,6 +266,13 @@ public class SettingMigration : MigrationBase
         {
             shoppingCartSettings.MaximumNumberOfCustomWishlist = 10;
             settingService.SaveSetting(shoppingCartSettings, settings => settings.MaximumNumberOfCustomWishlist);
+        }
+
+        //#5986
+        if (!settingService.SettingExists(mediaSettings, settings => settings.PicturePath))
+        {
+            mediaSettings.PicturePath = NopMediaDefaults.DefaultImagesPath;
+            settingService.SaveSetting(mediaSettings, settings => settings.PicturePath);
         }
     }
 

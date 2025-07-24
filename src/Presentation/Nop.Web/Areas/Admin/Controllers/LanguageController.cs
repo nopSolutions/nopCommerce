@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Services.Stores;
@@ -22,7 +24,7 @@ public partial class LanguageController : BaseAdminController
 {
     #region Const
 
-    protected const string FLAGS_PATH = @"images\flags";
+    protected const string FLAGS_PATH = "flags";
 
     #endregion
 
@@ -37,6 +39,7 @@ public partial class LanguageController : BaseAdminController
     protected readonly IPermissionService _permissionService;
     protected readonly IStoreMappingService _storeMappingService;
     protected readonly IStoreService _storeService;
+    protected readonly MediaSettings _mediaSettings;
 
     #endregion
 
@@ -50,7 +53,8 @@ public partial class LanguageController : BaseAdminController
         INotificationService notificationService,
         IPermissionService permissionService,
         IStoreMappingService storeMappingService,
-        IStoreService storeService)
+        IStoreService storeService,
+        MediaSettings mediaSettings)
     {
         _customerActivityService = customerActivityService;
         _languageModelFactory = languageModelFactory;
@@ -61,6 +65,7 @@ public partial class LanguageController : BaseAdminController
         _permissionService = permissionService;
         _storeMappingService = storeMappingService;
         _storeService = storeService;
+        _mediaSettings = mediaSettings;
     }
 
     #endregion
@@ -258,7 +263,7 @@ public partial class LanguageController : BaseAdminController
     public virtual JsonResult GetAvailableFlagFileNames()
     {
         var flagNames = _fileProvider
-            .EnumerateFiles(_fileProvider.GetAbsolutePath(FLAGS_PATH), "*.png")
+            .EnumerateFiles(_fileProvider.Combine(_fileProvider.GetLocalImagesPath(_mediaSettings),FLAGS_PATH), "*.png")
             .Select(_fileProvider.GetFileName)
             .ToList();
 

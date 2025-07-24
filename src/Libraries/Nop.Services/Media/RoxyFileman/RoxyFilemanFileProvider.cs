@@ -22,14 +22,11 @@ using SkiaSharp;
 
      #region Ctor
 
-     public RoxyFilemanFileProvider(INopFileProvider nopFileProvider) : base(nopFileProvider.Combine(nopFileProvider.WebRootPath, NopRoxyFilemanDefaults.DefaultRootDirectory))
-     {
-         _nopFileProvider = nopFileProvider;
-     }
-
-     public RoxyFilemanFileProvider(INopFileProvider defaultFileProvider, MediaSettings mediaSettings) : this(defaultFileProvider)
+     public RoxyFilemanFileProvider(INopFileProvider nopFileProvider, 
+         MediaSettings mediaSettings) : base(nopFileProvider.Combine(nopFileProvider.GetLocalImagesPath(mediaSettings), NopRoxyFilemanDefaults.DefaultRootDirectory))
      {
          _mediaSettings = mediaSettings;
+         _nopFileProvider = nopFileProvider;
      }
 
      #endregion
@@ -109,7 +106,7 @@ using SkiaSharp;
 
          path = path.Trim(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 
-         if (Path.IsPathRooted(path))
+         if (_nopFileProvider.IsPathRooted(path))
              throw new RoxyFilemanException("NoFilesFound");
 
          var fullPath = Path.GetFullPath(Path.Combine(Root, path));
@@ -262,8 +259,8 @@ using SkiaSharp;
 
          subpath = subpath.TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 
-         // Absolute paths not permitted.
-         if (Path.IsPathRooted(subpath))
+         //absolute paths not permitted.
+         if (_nopFileProvider.IsPathRooted(subpath))
              return new NotFoundFileInfo(subpath);
 
          return base.GetFileInfo(subpath);

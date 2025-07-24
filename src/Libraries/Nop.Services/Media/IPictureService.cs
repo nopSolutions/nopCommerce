@@ -226,6 +226,13 @@ public partial interface IPictureService
     Task SetIsStoreInDbAsync(bool isStoreInDb);
 
     /// <summary>
+    /// Change path to store pictures
+    /// </summary>
+    /// <param name="path">New path</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task ChangePicturesPathAsync(string path);
+
+    /// <summary>
     /// Get product picture (for shopping cart and order details pages)
     /// </summary>
     /// <param name="product">Product</param>
