@@ -21,8 +21,11 @@ public record JsonLdOfferModel : JsonLdModel
     [JsonProperty("priceCurrency")]
     public string PriceCurrency { get; set; }
 
+    
     [JsonProperty("priceValidUntil")]
-    public DateTime? PriceValidUntil { get; set; }
+    public DateTimeOffset? PriceValidUntil { get; set; }
+
+    //public DateTime? PriceValidUntil { get; set; }
 
     #endregion
 }

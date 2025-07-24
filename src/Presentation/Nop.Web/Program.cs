@@ -2,6 +2,7 @@
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Web.Framework.Infrastructure.Extensions;
+using Nop.Web.Models.JsonLD;
 
 namespace Nop.Web;
 
@@ -18,6 +19,13 @@ public partial class Program
             builder.Configuration.AddJsonFile(path, true, true);
         }
         builder.Configuration.AddEnvironmentVariables();
+
+        builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonDateTimeOffsetConverter());
+    });
+
 
         //load application settings
         builder.Services.ConfigureApplicationSettings(builder);
