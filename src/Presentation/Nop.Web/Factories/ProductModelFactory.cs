@@ -1716,6 +1716,8 @@ public partial class ProductModelFactory : IProductModelFactory
         {
             var customer = await _customerService.GetCustomerByIdAsync(pr.CustomerId);
 
+            var writeOn = await _dateTimeHelper.ConvertToUserTimeAsync(pr.CreatedOnUtc, DateTimeKind.Utc);
+
             var productReviewModel = new ProductReviewModel
             {
                 Id = pr.Id,
@@ -1732,7 +1734,8 @@ public partial class ProductModelFactory : IProductModelFactory
                     HelpfulYesTotal = pr.HelpfulYesTotal,
                     HelpfulNoTotal = pr.HelpfulNoTotal,
                 },
-                WrittenOnStr = (await _dateTimeHelper.ConvertToUserTimeAsync(pr.CreatedOnUtc, DateTimeKind.Utc)).ToString("g"),
+                WrittenOnStr = writeOn.ToString("g"),
+                WrittenOn = writeOn
             };
 
             if (_customerSettings.AllowCustomersToUploadAvatars)

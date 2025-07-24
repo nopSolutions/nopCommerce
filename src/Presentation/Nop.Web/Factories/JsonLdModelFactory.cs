@@ -64,6 +64,16 @@ public partial class JsonLdModelFactory : IJsonLdModelFactory
     #region Utilities
 
     /// <summary>
+    /// Convert datetime to an ISO 8601 string
+    /// </summary>
+    /// <param name="dateTime">Datetime object to convert</param>
+    /// <returns>Datetime string in the ISO 8601 format</returns>
+    protected virtual string ConvertDateTimeToIso8601String(DateTime? dateTime)
+    {
+        return dateTime == null ? null : new DateTimeOffset(dateTime.Value).ToString("O", CultureInfo.InvariantCulture);
+    }
+
+    /// <summary>
     /// Prepare JSON-LD category breadcrumb model
     /// </summary>
     /// <param name="categoryModels">List of category models</param>
@@ -168,7 +178,7 @@ public partial class JsonLdModelFactory : IJsonLdModelFactory
                 Url = productUrl.ToLowerInvariant(),
                 Price = model.ProductPrice.CallForPrice ? null : productPrice?.ToString("0.00", CultureInfo.InvariantCulture),
                 PriceCurrency = model.ProductPrice.CurrencyCode,
-                PriceValidUntil = model.AvailableEndDate,
+                PriceValidUntil = ConvertDateTimeToIso8601String(model.AvailableEndDate),
                 Availability = @"https://schema.org/" + (model.InStock ? "InStock" : "OutOfStock")
             },
             Brand = model.ProductManufacturers?.Select(manufacturer => new JsonLdBrandModel { Name = manufacturer.Name }).ToList()
@@ -195,7 +205,7 @@ public partial class JsonLdModelFactory : IJsonLdModelFactory
                     RatingValue = review.Rating
                 },
                 Author = new JsonLdPersonModel { Name = JavaScriptEncoder.Default.Encode(review.CustomerName) },
-                DatePublished = review.WrittenOnStr
+                DatePublished = ConvertDateTimeToIso8601String(review.WrittenOn)
             }).ToList();
         }
 
@@ -239,7 +249,7 @@ public partial class JsonLdModelFactory : IJsonLdModelFactory
                     urlHelper.RouteUrl("CustomerProfile", new { id = forumTopic.CustomerId },
                         _webHelper.GetCurrentRequestProtocol()),
             },
-            DatePublished = createdOn.ToString("O"),
+            DatePublished = ConvertDateTimeToIso8601String(createdOn),
             Subject = JavaScriptEncoder.Default.Encode(model.Subject),
             Text = _forumService.FormatPostText(firstPost),
             Url = urlHelper.RouteUrl("TopicSlug", new { id = model.Id, slug = model.SeName },
@@ -254,7 +264,7 @@ public partial class JsonLdModelFactory : IJsonLdModelFactory
                         Url = urlHelper.RouteUrl("CustomerProfile", new { id = postModel.CustomerId },
                             _webHelper.GetCurrentRequestProtocol()),
                     },
-                    DatePublished = postModel.PostCreatedOn.ToString("O"),
+                    DatePublished = ConvertDateTimeToIso8601String(postModel.PostCreatedOn),
                     Url = postModel.CurrentTopicPage > 1
                         ? urlHelper.RouteUrl(new()
                         {
