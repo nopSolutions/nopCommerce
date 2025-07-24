@@ -101,6 +101,7 @@
 
   <ItemGroup>
     <PackageReference Include="Avalara.AvaTax" Version="23.5.0" />
+    <PackageReference Include="ZiggyCreatures.FusionCache" Version="2.3.0" />
   </ItemGroup>
 
   <ItemGroup>

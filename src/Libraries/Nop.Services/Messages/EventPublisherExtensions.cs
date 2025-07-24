@@ -53,8 +53,18 @@ public static class EventPublisherExtensions
     /// <param name="message">Message</param>
     /// <param name="tokens">Tokens</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public static async Task MessageTokensAddedAsync<U>(this IEventPublisher eventPublisher, MessageTemplate message, System.Collections.Generic.IList<U> tokens)
-    {
-        await eventPublisher.PublishAsync(new MessageTokensAddedEvent<U>(message, tokens));
-    }
+    //public static async Task MessageTokensAddedAsync<U>(this IEventPublisher eventPublisher, MessageTemplate message, System.Collections.Generic.IList<U> tokens)
+    //{
+    //    await eventPublisher.PublishAsync(new MessageTokensAddedEvent<U>(message, tokens));
+    //}
+
+
+    public static async Task MessageTokensAddedAsync(
+    this IEventPublisher eventPublisher,
+    MessageTemplate message,
+    IList<Token> tokens)
+{
+    await eventPublisher.PublishAsync(new MessageTokensAddedEvent(message, (IList<NuGet.Common.Token>)tokens));
+}
+
 }

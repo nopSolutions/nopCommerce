@@ -3,6 +3,7 @@ using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Web.Framework.Infrastructure.Extensions;
 using Nop.Web.Models.JsonLD;
+using ZiggyCreatures.Caching.Fusion;
 
 namespace Nop.Web;
 
@@ -20,8 +21,18 @@ public partial class Program
         }
         builder.Configuration.AddEnvironmentVariables();
 
+
+        // Add Redis cache (if hybrid required)
+        builder.Services.AddStackExchangeRedisCache(options =>
+        {
+            options.Configuration = builder.Configuration.GetConnectionString("Redis");
+        });
+
+      
+
+
         builder.Services.AddControllers()
-    .AddJsonOptions(options =>
+    .AddJsonOptions(static options =>
     {
         options.JsonSerializerOptions.Converters.Add(new JsonDateTimeOffsetConverter());
     });

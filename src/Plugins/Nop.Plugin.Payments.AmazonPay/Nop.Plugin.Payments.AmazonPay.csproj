@@ -82,6 +82,7 @@
     <PackageReference Include="Portable.BouncyCastle" Version="1.8.9">
       <Aliases>Crypto</Aliases>
     </PackageReference>
+    <PackageReference Include="ZiggyCreatures.FusionCache" Version="2.3.0" />
   </ItemGroup>
 
   <ItemGroup>

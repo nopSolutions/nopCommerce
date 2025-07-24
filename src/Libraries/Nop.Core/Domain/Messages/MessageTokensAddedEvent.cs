@@ -1,17 +1,20 @@
+﻿//using Nop.Services.Messages;
+using NuGet.Common;
+
 namespace Nop.Core.Domain.Messages;
 
 /// <summary>
 /// A container for tokens that are added.
 /// </summary>
 /// <typeparam name="U">Type</typeparam>
-public partial class MessageTokensAddedEvent<U>
+public partial class MessageTokensAddedEvent
 {
     /// <summary>
     /// Ctor
     /// </summary>
     /// <param name="message">Message</param>
     /// <param name="tokens">Tokens</param>
-    public MessageTokensAddedEvent(MessageTemplate message, IList<U> tokens)
+    public MessageTokensAddedEvent(MessageTemplate message, IList<Token> tokens)
     {
         Message = message;
         Tokens = tokens;
@@ -25,5 +28,5 @@ public partial class MessageTokensAddedEvent<U>
     /// <summary>
     /// Tokens
     /// </summary>
-    public IList<U> Tokens { get; }
+    public IList<Token> Tokens { get; }
 }

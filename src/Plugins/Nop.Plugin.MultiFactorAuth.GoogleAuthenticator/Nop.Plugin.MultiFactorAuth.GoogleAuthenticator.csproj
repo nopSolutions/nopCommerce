@@ -50,6 +50,7 @@
 
   <ItemGroup>
     <PackageReference Include="GoogleAuthenticator" Version="3.2.0" />
+    <PackageReference Include="ZiggyCreatures.FusionCache" Version="2.3.0" />
   </ItemGroup>
 
   <ItemGroup>

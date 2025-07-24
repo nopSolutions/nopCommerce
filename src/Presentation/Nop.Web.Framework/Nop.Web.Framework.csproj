@@ -16,6 +16,7 @@
     <PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.426" />
     <PackageReference Include="WebMarkupMin.AspNetCoreLatest" Version="2.18.0" />
     <PackageReference Include="WebMarkupMin.NUglify" Version="2.18.0" />
+    <PackageReference Include="ZiggyCreatures.FusionCache" Version="2.3.0" />
   </ItemGroup>
 
   <ItemGroup>
