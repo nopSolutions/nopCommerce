@@ -311,8 +311,8 @@ public class LocalizationMigration : MigrationBase
             ["Wishlist.MultipleWishlistNotForGuest"] = "The multiple wishlist functionality is only available to registered customers.",
             ["Wishlist.NotAllowMultipleWishlist"] = "Multiple wishlist functionality is disabled.",
             //#7654
-            ["Products.Price.WithoutDiscount"] ="Price without discount",
-            ["Products.Price"] = "Your price",
+            ["Products.YourPrice"] = "Your price",
+            ["Products.Price"] = "Price",
         }, languageId);
 
         #endregion

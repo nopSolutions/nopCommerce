@@ -19409,7 +19409,7 @@
     <Value>This product is sold out</Value>
   </LocaleResource>
   <LocaleResource Name="Products.Price">
-    <Value>Your price</Value>
+    <Value>Price</Value>
   </LocaleResource>
   <LocaleResource Name="Products.Price.OldPrice">
     <Value>Old price</Value>
@@ -19434,9 +19434,6 @@
   </LocaleResource>
   <LocaleResource Name="Products.Price.TaxShipping.InclTax">
     <Value><![CDATA[excluding <a href="{0}">shipping</a>]]></Value>
-  </LocaleResource>
-  <LocaleResource Name="Products.Price.WithoutDiscount">
-    <Value>Price without discount</Value>
   </LocaleResource>
   <LocaleResource Name="Products.PriceRangeFrom">
     <Value>From {0}</Value>
@@ -19548,6 +19545,9 @@
   </LocaleResource>
   <LocaleResource Name="Products.Wishlist.AddToWishlist.Update">
     <Value>Update</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.YourPrice">
+    <Value>Your price</Value>
   </LocaleResource>
   <LocaleResource Name="Profile.Country">
     <Value>Country</Value>

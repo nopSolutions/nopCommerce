@@ -36,16 +36,20 @@
             {
                 @*non-discounted price*@
                 <div class="non-discounted-price">
-                    <span>@T("Products.Price.WithoutDiscount"):</span>
+                    <span>@T("Products.Price"):</span>
                     <span>
                         @Html.Raw(Model.PriceWithoutDiscount)
                     </span>
                 </div>
             }
             <div class="product-price">
-                @if (!string.IsNullOrWhiteSpace(Model.OldPrice) || !string.IsNullOrWhiteSpace(Model.PriceWithoutDiscount))
+                @if (!string.IsNullOrWhiteSpace(Model.OldPrice) && string.IsNullOrWhiteSpace(Model.PriceWithoutDiscount))
                 {
                     <label for="price-value-@(Model.ProductId)">@T("Products.Price"):</label>
+                }
+                else if (!string.IsNullOrWhiteSpace(Model.PriceWithoutDiscount))
+                {
+                    <label for="price-value-@(Model.ProductId)">@T("Products.YourPrice"):</label>
                 }
                 @*render price*@
                 <span id="price-value-@(Model.ProductId)" class="price-value-@(Model.ProductId)">
