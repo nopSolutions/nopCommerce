@@ -32,7 +32,7 @@
                     <span>@Model.OldPrice</span>
                 </div>
             }
-            if (!string.IsNullOrWhiteSpace(Model.PriceWithoutDiscount))
+            if (Model.PriceValue != Model.PriceWithoutDiscountValue)
             {
                 @*non-discounted price*@
                 <div class="non-discounted-price">
@@ -43,11 +43,11 @@
                 </div>
             }
             <div class="product-price">
-                @if (!string.IsNullOrWhiteSpace(Model.OldPrice) && string.IsNullOrWhiteSpace(Model.PriceWithoutDiscount))
+                @if (!string.IsNullOrWhiteSpace(Model.OldPrice) && Model.PriceValue == Model.PriceWithoutDiscountValue)
                 {
                     <label for="price-value-@(Model.ProductId)">@T("Products.Price"):</label>
                 }
-                else if (!string.IsNullOrWhiteSpace(Model.PriceWithoutDiscount))
+                else if (Model.PriceValue != Model.PriceWithoutDiscountValue)
                 {
                     <label for="price-value-@(Model.ProductId)">@T("Products.YourPrice"):</label>
                 }

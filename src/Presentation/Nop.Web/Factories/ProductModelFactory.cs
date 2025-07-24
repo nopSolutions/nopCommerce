@@ -486,17 +486,11 @@ public partial class ProductModelFactory : IProductModelFactory
                 model.OldPrice = await _priceFormatter.FormatPriceAsync(strikeThroughPrice);
                 model.OldPriceValue = strikeThroughPrice;
             }
-
-            model.Price = await _priceFormatter.FormatPriceAsync(finalPriceWithDiscount);
         }
 
-        if (finalPriceWithoutDiscountBase != finalPriceWithDiscountBase)
-        {
-            model.PriceWithoutDiscount = await _priceFormatter.FormatPriceAsync(finalPriceWithoutDiscountBase);
-            model.PriceWithoutDiscountValue = finalPriceWithoutDiscountBase;
-            model.Price = await _priceFormatter.FormatPriceAsync(finalPriceWithDiscount);
-        }
-
+        model.PriceWithoutDiscount = await _priceFormatter.FormatPriceAsync(finalPriceWithoutDiscountBase);
+        model.PriceWithoutDiscountValue = finalPriceWithoutDiscountBase;
+        model.Price = await _priceFormatter.FormatPriceAsync(finalPriceWithDiscount);
         model.PriceValue = finalPriceWithDiscount;
 
         if (hasMultiplePrices)
