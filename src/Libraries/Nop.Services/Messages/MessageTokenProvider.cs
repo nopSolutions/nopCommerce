@@ -1603,11 +1603,11 @@ public partial class MessageTokenProvider : IMessageTokenProvider
     /// A task that represents the asynchronous operation
     /// The task result contains the collection of allowed message tokens
     /// </returns>
-    public virtual async Task<IEnumerable<string>>  GetListOfAllowedTokensAsync(IList<string> tokenGroups = null)
+    public virtual async Task<IEnumerable<string>> GetListOfAllowedTokensAsync(IList<string> tokenGroups = null)
     {
         var additionalTokens = new AdditionalTokensAddedEvent
         {
-            TokenGroups = tokenGroups
+            TokenGroups = tokenGroups ?? new List<string>()
         };
         await _eventPublisher.PublishAsync(additionalTokens);
 
