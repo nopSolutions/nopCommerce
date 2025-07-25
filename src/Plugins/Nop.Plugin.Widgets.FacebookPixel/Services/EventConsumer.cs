@@ -19,7 +19,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services;
 public class EventConsumer :
     IConsumer<CustomerRegisteredEvent>,
     IConsumer<EntityInsertedEvent<ShoppingCartItem>>,
-    IConsumer<MessageTokensAddedEvent<Token>>,
+    IConsumer<MessageTokensAddedEvent>,
     IConsumer<ModelPreparedEvent<BaseNopModel>>,
     IConsumer<OrderPlacedEvent>,
     IConsumer<PageRenderingEvent>,
@@ -109,7 +109,7 @@ public class EventConsumer :
     /// </summary>
     /// <param name="eventMessage">Event message</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(MessageTokensAddedEvent<Token> eventMessage)
+    public async Task HandleEventAsync(MessageTokensAddedEvent eventMessage)
     {
         if (eventMessage?.Message?.Name == MessageTemplateSystemNames.CONTACT_US_MESSAGE)
             await _facebookPixelService.SendContactEventAsync();

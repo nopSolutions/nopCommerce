@@ -53,6 +53,6 @@ public static class EventPublisherExtensions
     /// <returns>A task that represents the asynchronous operation</returns>
     public static async Task MessageTokensAddedAsync(this IEventPublisher eventPublisher, MessageTemplate message, IList<Token> tokens)
     {
-        await eventPublisher.PublishAsync(new MessageTokensAddedEvent<Token>(message, tokens));
+        await eventPublisher.PublishAsync(new MessageTokensAddedEvent(message, tokens));
     }
 }
