@@ -3869,12 +3869,20 @@ public partial class ProductController : BaseAdminController
             if (_updated)
                 return true;
 
-            return !Product.Name.Equals(Name) ||
-                !Product.Sku.Equals(Sku) ||
+            return isStringValueChanged(Product.Name, Name) ||
+                isStringValueChanged(Product.Sku, Sku) ||
                 !Product.Price.Equals(Price) ||
                 !Product.OldPrice.Equals(OldPrice) ||
                 !Product.StockQuantity.Equals(Quantity) ||
                 !Product.Published.Equals(IsPublished);
+
+            bool isStringValueChanged(string oldValue, string newValue)
+            {
+                if (string.IsNullOrEmpty(oldValue))
+                    return !string.IsNullOrEmpty(newValue);
+
+                return !oldValue.Equals(newValue);
+            }
         }
 
         public bool NeedToCreate(bool selected)
