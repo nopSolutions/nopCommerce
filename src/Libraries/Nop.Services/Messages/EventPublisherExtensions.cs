@@ -41,7 +41,7 @@ public static class EventPublisherExtensions
     /// <returns>A task that represents the asynchronous operation</returns>
     public static async Task EntityTokensAddedAsync<T>(this IEventPublisher eventPublisher, T entity, IList<Token> tokens) where T : BaseEntity
     {
-        await eventPublisher.PublishAsync(new EntityTokensAddedEvent<T, Token>(entity, tokens));
+        await eventPublisher.PublishAsync(new EntityTokensAddedEvent<T>(entity, tokens));
     }
 
     /// <summary>

@@ -19,8 +19,8 @@ public class EventConsumer :
     IConsumer<EntityDeletedEvent<ShoppingCartItem>>,
     IConsumer<OrderPaidEvent>,
     IConsumer<OrderPlacedEvent>,
-    IConsumer<EntityTokensAddedEvent<Store, Token>>,
-    IConsumer<EntityTokensAddedEvent<Customer, Token>>
+    IConsumer<EntityTokensAddedEvent<Store>>,
+    IConsumer<EntityTokensAddedEvent<Customer>>
 {
     #region Fields
 
@@ -149,7 +149,7 @@ public class EventConsumer :
     /// </summary>
     /// <param name="eventMessage">The event message.</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public Task HandleEventAsync(EntityTokensAddedEvent<Store, Token> eventMessage)
+    public Task HandleEventAsync(EntityTokensAddedEvent<Store> eventMessage)
     {
         if (!BrevoManager.IsConfigured(_brevoSettings))
             return Task.CompletedTask;
@@ -165,7 +165,7 @@ public class EventConsumer :
     /// </summary>
     /// <param name="eventMessage">The event message.</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public Task HandleEventAsync(EntityTokensAddedEvent<Customer, Token> eventMessage)
+    public Task HandleEventAsync(EntityTokensAddedEvent<Customer> eventMessage)
     {
         if (!BrevoManager.IsConfigured(_brevoSettings))
             return Task.CompletedTask;
