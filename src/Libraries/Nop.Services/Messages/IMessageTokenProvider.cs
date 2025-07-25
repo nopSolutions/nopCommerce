@@ -223,7 +223,7 @@ public partial interface IMessageTokenProvider
     /// A task that represents the asynchronous operation
     /// The task result contains the collection of allowed message tokens
     /// </returns>
-    Task<IEnumerable<string>> GetListOfAllowedTokensAsync(IEnumerable<string> tokenGroups = null);
+    Task<IEnumerable<string>> GetListOfAllowedTokensAsync(IList<string> tokenGroups = null);
 
     /// <summary>
     /// Get token groups of message template
