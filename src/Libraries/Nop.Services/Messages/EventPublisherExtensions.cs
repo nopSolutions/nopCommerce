@@ -35,14 +35,13 @@ public static class EventPublisherExtensions
     /// Entity tokens added
     /// </summary>
     /// <typeparam name="T">Type</typeparam>
-    /// <typeparam name="U">Type</typeparam>
     /// <param name="eventPublisher">Event publisher</param>
     /// <param name="entity">Entity</param>
     /// <param name="tokens">Tokens</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public static async Task EntityTokensAddedAsync<T, U>(this IEventPublisher eventPublisher, T entity, System.Collections.Generic.IList<U> tokens) where T : BaseEntity
+    public static async Task EntityTokensAddedAsync<T>(this IEventPublisher eventPublisher, T entity, IList<Token> tokens) where T : BaseEntity
     {
-        await eventPublisher.PublishAsync(new EntityTokensAddedEvent<T, U>(entity, tokens));
+        await eventPublisher.PublishAsync(new EntityTokensAddedEvent<T, Token>(entity, tokens));
     }
 
     /// <summary>
