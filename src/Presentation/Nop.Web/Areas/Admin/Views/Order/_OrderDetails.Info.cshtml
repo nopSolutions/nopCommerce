@@ -733,7 +733,7 @@
                     </div>
                 </div>
             }
-            @if (Model.CustomValues?.Any() ?? false)
+            @if (Model.CustomValues?.Any(cv => cv.DisplayToCustomer) ?? false)
             {
                 <div class="form-group row">
                     <div class="col-md-3">
@@ -741,11 +741,11 @@
                     </div>
                     <div class="col-md-9">
                         <div class="form-text-row">
-                            @foreach (var item in Model.CustomValues)
+                            @foreach (var item in Model.CustomValues.Where(cv => cv.DisplayToCustomer))
                             {
                                 <ul class="common-list">
                                     <li>
-                                        @item.Key: @(item.Value ?? string.Empty)
+                                        @item.Name: @(item.Value ?? string.Empty)
                                     </li>
                                 </ul>
                             }

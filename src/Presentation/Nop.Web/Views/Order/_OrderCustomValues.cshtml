@@ -1,0 +1,13 @@
+﻿@model IList<Nop.Services.Common.CustomValue>
+
+@foreach (var item in Model.Where(cv => cv.DisplayToCustomer))
+{
+    <li class="custom-value">
+        <span class="label">
+            @item.Name:
+        </span>
+        <span class="value">
+            @(item.Value ?? string.Empty)
+        </span>
+    </li>
+}

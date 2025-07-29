@@ -222,9 +222,8 @@ public partial class PdfService : IPdfService
             }
 
             //custom values
-            var customValues = CommonHelper.DeserializeCustomValuesFromXml(order.CustomValuesXml);
-            if (customValues != null)
-                addressResult.CustomValues = customValues;
+            if (!string.IsNullOrEmpty(order.CustomValuesXml))
+                addressResult.CustomValues.FillByXml(order.CustomValuesXml);
         }
 
         return addressResult;

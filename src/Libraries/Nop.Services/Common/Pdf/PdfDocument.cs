@@ -177,9 +177,9 @@ public abstract class PdfDocument<TItem>
 
         if (address?.CustomValues.Any() == true)
         {
-            foreach (var (key, value) in address.CustomValues)
+            foreach (var value in address.CustomValues)
             {
-                addressTable.AddCell(new PdfPCell(new Phrase { new Chunk(key), new Chunk(":"), new Chunk(value) }));
+                addressTable.AddCell(new PdfPCell(new Phrase { new Chunk(value.Name), new Chunk(":"), new Chunk(value.Value) }));
             }
         }
 

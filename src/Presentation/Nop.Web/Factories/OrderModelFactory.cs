@@ -398,7 +398,7 @@ public partial class OrderModelFactory : IOrderModelFactory
         model.PaymentMethodStatus = await _localizationService.GetLocalizedEnumAsync(order.PaymentStatus);
         model.CanRePostProcessPayment = await _paymentService.CanRePostProcessPaymentAsync(order);
         //custom values
-        model.CustomValues = CommonHelper.DeserializeCustomValuesFromXml(order.CustomValuesXml);
+        model.CustomValues.FillByXml(order.CustomValuesXml);
 
         //order subtotal
         if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal)
