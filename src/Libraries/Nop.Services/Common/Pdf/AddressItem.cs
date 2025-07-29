@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using Nop.Services.Orders;
 
 namespace Nop.Services.Common.Pdf;
 
@@ -102,7 +103,7 @@ public partial record AddressItem
     /// <summary>
     /// Gets or sets the deserialized CustomValues (values from ProcessPaymentRequest)
     /// </summary>
-    public Dictionary<string, string> CustomValues { get; set; } = new();
+    public CustomValues CustomValues { get; } = new();
 
     #endregion
 }

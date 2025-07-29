@@ -1100,14 +1100,13 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         tokens.Add(new Token("Order.PaymentMethod", paymentMethodName));
         tokens.Add(new Token("Order.VatNumber", order.VatNumber));
         var sbCustomValues = new StringBuilder();
-        var customValues = CommonHelper.DeserializeCustomValuesFromXml(order.CustomValuesXml);
-        if (customValues != null)
+        var customValues = new CustomValues();
+        customValues.FillByXml(order.CustomValuesXml, true);
+
+        foreach (var item in customValues)
         {
-            foreach (var item in customValues)
-            {
-                sbCustomValues.AppendFormat("{0}: {1}", WebUtility.HtmlEncode(item.Key), WebUtility.HtmlEncode(item.Value ?? string.Empty));
-                sbCustomValues.Append("<br />");
-            }
+            sbCustomValues.AppendFormat("{0}: {1}", WebUtility.HtmlEncode(item.Name), WebUtility.HtmlEncode(item.Value ?? string.Empty));
+            sbCustomValues.Append("<br />");
         }
 
         tokens.Add(new Token("Order.CustomValues", sbCustomValues.ToString(), true));
@@ -1313,7 +1312,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         var passwordRecoveryUrl = await RouteUrlAsync(routeName: "PasswordRecoveryConfirm", routeValues: new { token = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute), guid = customer.CustomerGuid });
         var accountActivationUrl = await RouteUrlAsync(routeName: "AccountActivation", routeValues: new { token = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.AccountActivationTokenAttribute), guid = customer.CustomerGuid });
         var emailRevalidationUrl = await RouteUrlAsync(routeName: "EmailRevalidation", routeValues: new { token = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.EmailRevalidationTokenAttribute), guid = customer.CustomerGuid });
-        
+
         tokens.Add(new Token("Customer.PasswordRecoveryURL", passwordRecoveryUrl, true));
         tokens.Add(new Token("Customer.AccountActivationURL", accountActivationUrl, true));
         tokens.Add(new Token("Customer.EmailRevalidationURL", emailRevalidationUrl, true));

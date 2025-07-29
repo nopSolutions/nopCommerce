@@ -1,4 +1,5 @@
-﻿using Nop.Web.Framework.Models;
+﻿using Nop.Services.Orders;
+using Nop.Web.Framework.Models;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Media;
 
@@ -18,7 +19,7 @@ public partial record OrderDetailsModel : BaseNopEntityModel
         ShippingAddress = new AddressModel();
         PickupAddress = new AddressModel();
 
-        CustomValues = new Dictionary<string, string>();
+        CustomValues = new CustomValues();
     }
 
     public bool PrintMode { get; set; }
@@ -49,7 +50,7 @@ public partial record OrderDetailsModel : BaseNopEntityModel
     public string PaymentMethod { get; set; }
     public string PaymentMethodStatus { get; set; }
     public bool CanRePostProcessPayment { get; set; }
-    public Dictionary<string, string> CustomValues { get; set; }
+    public CustomValues CustomValues { get; set; }
 
     public string OrderSubtotal { get; set; }
     public decimal OrderSubtotalValue { get; set; }

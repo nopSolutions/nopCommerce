@@ -175,12 +175,9 @@ public abstract class PdfDocument<TItem>
         if (!string.IsNullOrEmpty(address?.ShippingMethod))
             addressTable.AddCell(BuildTextCell<AddressItem>(address => address.ShippingMethod, address?.ShippingMethod));
 
-        if (address?.CustomValues.Any() == true)
+        foreach (var value in address.CustomValues)
         {
-            foreach (var (key, value) in address.CustomValues)
-            {
-                addressTable.AddCell(new PdfPCell(new Phrase { new Chunk(key), new Chunk(":"), new Chunk(value) }));
-            }
+            addressTable.AddCell(BuildPdfPCell($"{value.Name}: {value.Value}"));
         }
 
         return addressTable;

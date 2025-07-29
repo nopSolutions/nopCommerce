@@ -1,8 +1,7 @@
-@model OrderDetailsModel
-
 @using Nop.Core.Domain.Catalog
 @using Nop.Core.Domain.Media
-
+@using Nop.Services.Orders
+@model OrderDetailsModel
 @inject MediaSettings mediaSettings
 
 @{
@@ -110,6 +109,7 @@
                                 @Html.Raw(Model.BillingAddress.FormattedCustomAddressAttributes)
                             </li>
                         }
+                        @await Html.PartialAsync("_OrderCustomValues", Model.CustomValues?.GetValuesByDisplayLocation(CustomValueDisplayLocation.BillingAddress))
                         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderDetailsBillingAddress, additionalData = Model })
                     </ul>
                 </div>
@@ -151,20 +151,7 @@
                                     </form>
                                 </li>
                             }
-                            @if (Model.CustomValues != null)
-                            {
-                                foreach (var item in Model.CustomValues)
-                                {
-                                    <li class="custom-value">
-                                        <span class="label">
-                                            @item.Key:
-                                        </span>
-                                        <span class="value">
-                                            @(item.Value ?? string.Empty)
-                                        </span>
-                                    </li>
-                                }
-                            }
+                            @await Html.PartialAsync("_OrderCustomValues", Model.CustomValues?.GetValuesByDisplayLocation(CustomValueDisplayLocation.Payment))
                         </ul>
                     </div>
                 }
@@ -222,6 +209,7 @@
                                     <li class=@item.Key.ToString().ToLower()>@item.Value</li>
                                 }
                             }
+                            @await Html.PartialAsync("_OrderCustomValues", Model.CustomValues?.GetValuesByDisplayLocation(CustomValueDisplayLocation.ShippingAddress))
                         </ul>
                     </div>
                     <div class="shipping-method-info">
@@ -248,6 +236,7 @@
                                     </span>
                                 </li>
                             }
+                            @await Html.PartialAsync("_OrderCustomValues", Model.CustomValues?.GetValuesByDisplayLocation(CustomValueDisplayLocation.Shipping))
                         </ul>
                     </div>
                 </div>

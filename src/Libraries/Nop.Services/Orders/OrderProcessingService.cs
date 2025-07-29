@@ -758,7 +758,7 @@ public partial class OrderProcessingService : IOrderProcessingService
             ShippingStatus = details.ShippingStatus,
             ShippingMethod = details.ShippingMethodName,
             ShippingRateComputationMethodSystemName = details.ShippingRateComputationMethodSystemName,
-            CustomValuesXml = CommonHelper.SerializeCustomValuesToXml(processPaymentRequest.CustomValues),
+            CustomValuesXml = processPaymentRequest.CustomValues.SerializeToXml(),
             VatNumber = details.VatNumber,
             CreatedOnUtc = DateTime.UtcNow,
             CustomOrderNumber = string.Empty
@@ -1853,9 +1853,10 @@ public partial class OrderProcessingService : IOrderProcessingService
                 InitialOrder = initialOrder,
                 RecurringCycleLength = recurringPayment.CycleLength,
                 RecurringCyclePeriod = recurringPayment.CyclePeriod,
-                RecurringTotalCycles = recurringPayment.TotalCycles,
-                CustomValues = CommonHelper.DeserializeCustomValuesFromXml(initialOrder.CustomValuesXml)
+                RecurringTotalCycles = recurringPayment.TotalCycles
             };
+
+            processPaymentRequest.CustomValues.FillByXml(initialOrder.CustomValuesXml);
 
             //prepare order details
             var details = await PrepareRecurringOrderDetailsAsync(processPaymentRequest);
