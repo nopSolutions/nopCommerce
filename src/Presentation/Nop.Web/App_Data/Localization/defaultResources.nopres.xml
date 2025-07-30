@@ -8311,6 +8311,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Order.AllowAdminsToBuyCallForPriceProducts.Hint">
     <Value>Check to allow administrators (in impersonation mode) are allowed to buy products marked as "Call for price".</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AllowCustomersCancelOrders">
+    <Value>Allow customers to cancel orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AllowCustomersCancelOrders.Hint">
+    <Value>Check to allow customers to cancel orders</Value>
+  </LocaleResource>    
   <LocaleResource Name="Admin.Configuration.Settings.Order.AnonymousCheckoutAllowed">
     <Value>Anonymous checkout allowed</Value>
   </LocaleResource>
@@ -10866,6 +10872,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderCancelled.CustomerNotification">
     <Value>This message template is used to notify a customer that the certain order was cancelled. The order can be cancelled by a customer on the account page or by store owner in Customers - Customers in Orders tab or in Sales - Orders.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderCancelled.StoreOwnerNotification">
+    <Value>This message template is used to notify a store owner that the certain order was cancelled by customer.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.OrderCancelled.VendorNotification">
     <Value>This message template is used to notify a vendor that the certain order was cancelled. The order can be cancelled by a customer on the account page or by store owner in Customers - Customers in Orders tab or in Sales - Orders.</Value>
@@ -18576,6 +18585,15 @@
   </LocaleResource>
   <LocaleResource Name="Order.BillingAddress">
     <Value>Billing Address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Cancel">
+    <Value>Cancel order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Cancel.Failed">
+    <Value>Failed to cancel order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Cancelled">
+    <Value>Order has been cancelled</Value>
   </LocaleResource>
   <LocaleResource Name="Order.Email">
     <Value>Email</Value>

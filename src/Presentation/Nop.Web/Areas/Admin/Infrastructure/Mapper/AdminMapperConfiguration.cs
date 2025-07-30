@@ -1344,6 +1344,7 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
 
         CreateMap<OrderSettings, OrderSettingsModel>()
             .ForMember(model => model.AllowAdminsToBuyCallForPriceProducts_OverrideForStore, options => options.Ignore())
+            .ForMember(model => model.AllowCustomersCancelOrders_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.ShowProductThumbnailInOrderDetailsPage_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.AnonymousCheckoutAllowed_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.AttachPdfInvoiceToOrderProcessingEmail_OverrideForStore, options => options.Ignore())

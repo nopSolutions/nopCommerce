@@ -460,6 +460,11 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             pattern: $"{lang}/orderdetails/print/{{orderId}}",
             defaults: new { controller = "Order", action = "PrintOrderDetails" });
 
+        //cancel order
+        endpointRouteBuilder.MapControllerRoute(name: "CancelOrder",
+            pattern: $"{lang}/orderdetails/cancelorder/{{orderId}}",
+            defaults: new { controller = "Order", action = "CancelOrder" });
+
         //order downloads (file result)
         endpointRouteBuilder.MapControllerRoute(name: "GetDownload",
             pattern: $"download/getdownload/{{orderItemId:guid}}/{{agree?}}",

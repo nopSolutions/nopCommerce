@@ -1,4 +1,5 @@
 ﻿using FluentMigrator;
+using Nop.Core.Domain.Messages;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -310,6 +311,14 @@ public class LocalizationMigration : MigrationBase
             ["Products.ProductHasBeenAddedToTheWishlistAndMoved.Link"] = "The product has been added to your <a href=\"{0}\">wishlist</a>. Want to move it to a <a href=\"#\" onclick=\"{1}\">custom wishlist</a>?",
             ["Wishlist.MultipleWishlistNotForGuest"] = "The multiple wishlist functionality is only available to registered customers.",
             ["Wishlist.NotAllowMultipleWishlist"] = "Multiple wishlist functionality is disabled.",
+
+            //#7384
+            ["Order.Cancel"] = "Cancel order",
+            ["Order.Cancel.Failed"] = "Failed to cancel order",
+            ["Order.Cancelled"] = "Order has been cancelled",
+            ["Admin.Configuration.Settings.Order.AllowCustomersCancelOrders"] = "Allow customers to cancel orders",
+            ["Admin.Configuration.Settings.Order.AllowCustomersCancelOrders.Hint"] = "Check to allow customers to cancel orders",
+            [$"Admin.ContentManagement.MessageTemplates.Description.{MessageTemplateSystemNames.ORDER_CANCELLED_STORE_OWNER_NOTIFICATION}"] = "This message template is used to notify a store owner that the certain order was cancelled by customer.",
         }, languageId);
 
         #endregion
