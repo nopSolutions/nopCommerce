@@ -197,4 +197,9 @@ public partial class OrderSettings : ISettings
     /// Gets or sets the page size for customer orders
     /// </summary>
     public int CustomerOrdersPageSize { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to allow customers to cancel orders
+    /// </summary>
+    public bool AllowCustomersCancelOrders { get; set; }
 }

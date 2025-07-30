@@ -259,6 +259,13 @@ public class SettingMigration : MigrationBase
             shoppingCartSettings.MaximumNumberOfCustomWishlist = 10;
             settingService.SaveSetting(shoppingCartSettings, settings => settings.MaximumNumberOfCustomWishlist);
         }
+
+        //#7384
+        if (!settingService.SettingExists(orderSettings, settings => settings.AllowCustomersCancelOrders))
+        {
+            orderSettings.AllowCustomersCancelOrders = true;
+            settingService.SaveSetting(orderSettings, settings => settings.AllowCustomersCancelOrders);
+        }
     }
 
     public override void Down()

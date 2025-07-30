@@ -31,6 +31,7 @@ public partial class OrderController : BasePublicController
     protected readonly IShipmentService _shipmentService;
     protected readonly IWebHelper _webHelper;
     protected readonly IWorkContext _workContext;
+    protected readonly OrderSettings _orderSettings;
     protected readonly RewardPointsSettings _rewardPointsSettings;
 
     #endregion
@@ -48,6 +49,7 @@ public partial class OrderController : BasePublicController
         IShipmentService shipmentService,
         IWebHelper webHelper,
         IWorkContext workContext,
+        OrderSettings orderSettings,
         RewardPointsSettings rewardPointsSettings)
     {
         _customerService = customerService;
@@ -61,6 +63,7 @@ public partial class OrderController : BasePublicController
         _shipmentService = shipmentService;
         _webHelper = webHelper;
         _workContext = workContext;
+        _orderSettings = orderSettings;
         _rewardPointsSettings = rewardPointsSettings;
     }
 
@@ -209,6 +212,25 @@ public partial class OrderController : BasePublicController
             bytes = stream.ToArray();
         }
         return File(bytes, MimeTypes.ApplicationPdf, string.Format(await _localizationService.GetResourceAsync("PDFInvoice.FileName"), order.CustomOrderNumber) + ".pdf");
+    }
+
+    [CheckLanguageSeoCode(ignore: true)]
+    public async Task<IActionResult> CancelOrder(int orderId)
+    {
+        if(!_orderSettings.AllowCustomersCancelOrders)
+            return RedirectToAction("Details", new { orderId });
+
+        var order = await _orderService.GetOrderByIdAsync(orderId);
+        var customer = await _workContext.GetCurrentCustomerAsync();
+        if (order == null || customer.Id != order.CustomerId)
+            return Challenge();
+
+        if(_orderProcessingService.CanCancelOrder(order))
+            await _orderProcessingService.CancelOrderAsync(order, false);
+
+        await _orderService.UpdateOrderAsync(order);
+
+        return RedirectToAction("Details", new { orderId });
     }
 
     //My account / Order details page / re-order

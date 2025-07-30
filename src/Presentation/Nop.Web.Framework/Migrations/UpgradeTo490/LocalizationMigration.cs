@@ -310,6 +310,11 @@ public class LocalizationMigration : MigrationBase
             ["Products.ProductHasBeenAddedToTheWishlistAndMoved.Link"] = "The product has been added to your <a href=\"{0}\">wishlist</a>. Want to move it to a <a href=\"#\" onclick=\"{1}\">custom wishlist</a>?",
             ["Wishlist.MultipleWishlistNotForGuest"] = "The multiple wishlist functionality is only available to registered customers.",
             ["Wishlist.NotAllowMultipleWishlist"] = "Multiple wishlist functionality is disabled.",
+
+            //#7384
+            ["Order.Cancel"] = "Cancel order",
+            ["Admin.Configuration.Settings.Order.AllowCustomersCancelOrders"] = "Allow customers to cancel orders",
+            ["Admin.Configuration.Settings.Order.AllowCustomersCancelOrders.Hint"] = "Check to allow customers to cancel orders",
         }, languageId);
 
         #endregion

@@ -8311,6 +8311,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Order.AllowAdminsToBuyCallForPriceProducts.Hint">
     <Value>Check to allow administrators (in impersonation mode) are allowed to buy products marked as "Call for price".</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AllowCustomersCancelOrders">
+    <Value>Allow customers to cancel orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AllowCustomersCancelOrders.Hint">
+    <Value>Check to allow customers to cancel orders</Value>
+  </LocaleResource>    
   <LocaleResource Name="Admin.Configuration.Settings.Order.AnonymousCheckoutAllowed">
     <Value>Anonymous checkout allowed</Value>
   </LocaleResource>
@@ -18576,6 +18582,9 @@
   </LocaleResource>
   <LocaleResource Name="Order.BillingAddress">
     <Value>Billing Address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Cancel">
+    <Value>Cancel order</Value>
   </LocaleResource>
   <LocaleResource Name="Order.Email">
     <Value>Email</Value>

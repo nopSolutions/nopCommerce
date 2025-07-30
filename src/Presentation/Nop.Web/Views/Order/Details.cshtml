@@ -2,8 +2,11 @@
 
 @using Nop.Core.Domain.Catalog
 @using Nop.Core.Domain.Media
+@using Nop.Core.Domain.Orders
+@using Nop.Core.Domain.Payments
 
 @inject MediaSettings mediaSettings
+@inject OrderSettings orderSettings
 
 @{
     if (!Model.PrintMode)
@@ -37,6 +40,20 @@
             {
                 <a href="@Url.RouteUrl("GetOrderPdfInvoice", new { orderId = Model.Id })" class="button-2 pdf-invoice-button">@T("Order.GetPDFInvoice")</a>
             }
+            @if (Model.PaymentStatus == PaymentStatus.Pending 
+                 && Model.OrderStatus != OrderStatus.Cancelled
+                 && orderSettings.AllowCustomersCancelOrders)
+            {
+                <a id="cancel_order" href="@Url.RouteUrl("CancelOrder", new { orderId = Model.Id })" class="button-2 cancel-order-button">@T("Order.Cancel")</a>
+
+                <script asp-location="Footer">
+                    $(function() {
+                        $('#cancel_order').on('click', function() {
+                            return confirm('@T("Common.AreYouSure")');
+                        });
+                    });
+                </script>
+            }
         </div>
     }
     <div class="page-body">
@@ -50,7 +67,7 @@
                     @T("Order.OrderDate"): @Model.CreatedOn.ToString("D")
                 </li>
                 <li class="order-status">
-                    @T("Order.OrderStatus"): @Model.OrderStatus
+                    @T("Order.OrderStatus"): @Model.OrderStatusText
                 </li>
                 <li class="order-total">
                     @T("Order.OrderTotal"): <strong>@Model.OrderTotal</strong>

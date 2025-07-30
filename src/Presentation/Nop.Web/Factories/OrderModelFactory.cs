@@ -313,7 +313,8 @@ public partial class OrderModelFactory : IOrderModelFactory
         {
             Id = order.Id,
             CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(order.CreatedOnUtc, DateTimeKind.Utc),
-            OrderStatus = await _localizationService.GetLocalizedEnumAsync(order.OrderStatus),
+            OrderStatus = order.OrderStatus,
+            OrderStatusText = await _localizationService.GetLocalizedEnumAsync(order.OrderStatus),
             IsReOrderAllowed = _orderSettings.IsReOrderAllowed,
             IsReturnRequestAllowed = await _orderProcessingService.IsReturnRequestAllowedAsync(order),
             PdfInvoiceDisabled = _pdfSettings.DisablePdfInvoicesForPendingOrders && order.OrderStatus == OrderStatus.Pending,
@@ -395,6 +396,7 @@ public partial class OrderModelFactory : IOrderModelFactory
         var paymentMethod = await _paymentPluginManager
             .LoadPluginBySystemNameAsync(order.PaymentMethodSystemName, customer, order.StoreId);
         model.PaymentMethod = paymentMethod != null ? await _localizationService.GetLocalizedFriendlyNameAsync(paymentMethod, languageId) : order.PaymentMethodSystemName;
+        model.PaymentStatus = order.PaymentStatus;
         model.PaymentMethodStatus = await _localizationService.GetLocalizedEnumAsync(order.PaymentStatus);
         model.CanRePostProcessPayment = await _paymentService.CanRePostProcessPaymentAsync(order);
         //custom values
