@@ -1,12 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
 using Nop.Services.Plugins;
+using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Plugin.DiscountRules.CustomerRoles;
 
@@ -14,32 +12,29 @@ public class CustomerRoleDiscountRequirementRule : BasePlugin, IDiscountRequirem
 {
     #region Fields
 
-    protected readonly IActionContextAccessor _actionContextAccessor;
     protected readonly ICustomerService _customerService;
     protected readonly IDiscountService _discountService;
     protected readonly ILocalizationService _localizationService;
+    protected readonly INopUrlHelper _nopUrlHelper;
     protected readonly ISettingService _settingService;
-    protected readonly IUrlHelperFactory _urlHelperFactory;
     protected readonly IWebHelper _webHelper;
 
     #endregion
 
     #region Ctor
 
-    public CustomerRoleDiscountRequirementRule(IActionContextAccessor actionContextAccessor,
-        IDiscountService discountService,
+    public CustomerRoleDiscountRequirementRule(IDiscountService discountService,
         ICustomerService customerService,
         ILocalizationService localizationService,
+        INopUrlHelper nopUrlHelper,
         ISettingService settingService,
-        IUrlHelperFactory urlHelperFactory,
         IWebHelper webHelper)
     {
-        _actionContextAccessor = actionContextAccessor;
         _customerService = customerService;
         _discountService = discountService;
         _localizationService = localizationService;
+        _nopUrlHelper = nopUrlHelper;
         _settingService = settingService;
-        _urlHelperFactory = urlHelperFactory;
         _webHelper = webHelper;
     }
 
@@ -84,9 +79,7 @@ public class CustomerRoleDiscountRequirementRule : BasePlugin, IDiscountRequirem
     /// <returns>URL</returns>
     public string GetConfigurationUrl(int discountId, int? discountRequirementId)
     {
-        var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
-
-        return urlHelper.Action("Configure", "DiscountRulesCustomerRoles",
+        return _nopUrlHelper.RouteUrl(DiscountRequirementDefaults.ConfigurationRouteName,
             new { discountId = discountId, discountRequirementId = discountRequirementId }, _webHelper.GetCurrentRequestProtocol());
     }
 

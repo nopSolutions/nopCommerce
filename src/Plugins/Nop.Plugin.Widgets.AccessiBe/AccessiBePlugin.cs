@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Nop.Core.Domain.Cms;
+﻿using Nop.Core.Domain.Cms;
 using Nop.Plugin.Widgets.AccessiBe.Components;
 using Nop.Plugin.Widgets.AccessiBe.Domain;
 using Nop.Services.Cms;
@@ -10,6 +7,7 @@ using Nop.Services.Localization;
 using Nop.Services.Plugins;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Infrastructure;
+using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Plugin.Widgets.AccessiBe;
 
@@ -21,11 +19,10 @@ public class AccessiBePlugin : BasePlugin, IWidgetPlugin
     #region Fields
 
     private readonly AccessiBeSettings _accessiBeSettings;
-    private readonly IActionContextAccessor _actionContextAccessor;
     private readonly ILocalizationService _localizationService;
+    private readonly INopUrlHelper _nopUrlHelper;
     private readonly ISettingService _settingService;
     private readonly IStoreService _storeService;
-    private readonly IUrlHelperFactory _urlHelperFactory;
 
 
     #endregion
@@ -33,18 +30,16 @@ public class AccessiBePlugin : BasePlugin, IWidgetPlugin
     #region Ctor
 
     public AccessiBePlugin(AccessiBeSettings accessiBeSettings,
-        IActionContextAccessor actionContextAccessor,
         ILocalizationService localizationService,
+        INopUrlHelper nopUrlHelper,
         ISettingService settingService,
-        IStoreService storeService,
-        IUrlHelperFactory urlHelperFactory)
+        IStoreService storeService)
     {
         _accessiBeSettings = accessiBeSettings;
-        _actionContextAccessor = actionContextAccessor;
         _localizationService = localizationService;
+        _nopUrlHelper = nopUrlHelper;
         _settingService = settingService;
         _storeService = storeService;
-        _urlHelperFactory = urlHelperFactory;
     }
 
     #endregion
@@ -56,7 +51,7 @@ public class AccessiBePlugin : BasePlugin, IWidgetPlugin
     /// </summary>
     public override string GetConfigurationPageUrl()
     {
-        return _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext).RouteUrl(AccessiBeDefaults.ConfigurationRouteName);
+        return _nopUrlHelper.RouteUrl(AccessiBeDefaults.ConfigurationRouteName);
     }
 
     /// <summary>

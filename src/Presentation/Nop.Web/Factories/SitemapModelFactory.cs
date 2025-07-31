@@ -1,9 +1,6 @@
 ﻿using System.Globalization;
 using System.Text;
 using System.Xml;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Blogs;
@@ -37,11 +34,11 @@ public partial class SitemapModelFactory : ISitemapModelFactory
 
     protected readonly BlogSettings _blogSettings;
     protected readonly ForumSettings _forumSettings;
-    protected readonly IActionContextAccessor _actionContextAccessor;
     protected readonly IBlogService _blogService;
     protected readonly ICategoryService _categoryService;
     protected readonly ICustomerService _customerService;
     protected readonly IEventPublisher _eventPublisher;
+    protected readonly IHttpContextAccessor _httpContextAccessor;
     protected readonly ILanguageService _languageService;
     protected readonly ILocalizationService _localizationService;
     protected readonly ILocker _locker;
@@ -54,7 +51,6 @@ public partial class SitemapModelFactory : ISitemapModelFactory
     protected readonly IStaticCacheManager _staticCacheManager;
     protected readonly IStoreContext _storeContext;
     protected readonly ITopicService _topicService;
-    protected readonly IUrlHelperFactory _urlHelperFactory;
     protected readonly IWebHelper _webHelper;
     protected readonly IWorkContext _workContext;
     protected readonly LocalizationSettings _localizationSettings;
@@ -68,11 +64,11 @@ public partial class SitemapModelFactory : ISitemapModelFactory
 
     public SitemapModelFactory(BlogSettings blogSettings,
         ForumSettings forumSettings,
-        IActionContextAccessor actionContextAccessor,
         IBlogService blogService,
         ICategoryService categoryService,
         ICustomerService customerService,
         IEventPublisher eventPublisher,
+        IHttpContextAccessor httpContextAccessor,
         ILanguageService languageService,
         ILocalizationService localizationService,
         ILocker locker,
@@ -85,7 +81,6 @@ public partial class SitemapModelFactory : ISitemapModelFactory
         IStaticCacheManager staticCacheManager,
         IStoreContext storeContext,
         ITopicService topicService,
-        IUrlHelperFactory urlHelperFactory,
         IWebHelper webHelper,
         IWorkContext workContext,
         LocalizationSettings localizationSettings,
@@ -95,11 +90,11 @@ public partial class SitemapModelFactory : ISitemapModelFactory
     {
         _blogSettings = blogSettings;
         _forumSettings = forumSettings;
-        _actionContextAccessor = actionContextAccessor;
         _blogService = blogService;
         _categoryService = categoryService;
         _customerService = customerService;
         _eventPublisher = eventPublisher;
+        _httpContextAccessor = httpContextAccessor;
         _languageService = languageService;
         _localizationService = localizationService;
         _locker = locker;
@@ -112,7 +107,6 @@ public partial class SitemapModelFactory : ISitemapModelFactory
         _staticCacheManager = staticCacheManager;
         _storeContext = storeContext;
         _topicService = topicService;
-        _urlHelperFactory = urlHelperFactory;
         _webHelper = webHelper;
         _workContext = workContext;
         _localizationSettings = localizationSettings;
@@ -124,15 +118,6 @@ public partial class SitemapModelFactory : ISitemapModelFactory
     #endregion
 
     #region Utilities
-
-    /// <summary>
-    /// Get UrlHelper
-    /// </summary>
-    /// <returns>UrlHelper</returns>
-    protected virtual IUrlHelper GetUrlHelper()
-    {
-        return _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
-    }
 
     /// <summary>
     /// Get HTTP protocol
@@ -372,11 +357,9 @@ public partial class SitemapModelFactory : ISitemapModelFactory
         await writer.WriteStartElementAsync(prefix: null, localName: "sitemapindex", ns: "http://www.sitemaps.org/schemas/sitemap/0.9");
 
         //write URLs of all available sitemaps
-        var urlHelper = GetUrlHelper();
-
         for (var id = 1; id <= sitemapNumber; id++)
         {
-            var url = urlHelper.RouteUrl("sitemap-indexed.xml", new { Id = id }, await GetHttpProtocolAsync());
+            var url = _nopUrlHelper.RouteUrl("sitemap-indexed.xml", new { Id = id }, await GetHttpProtocolAsync());
             var location = await XmlHelper.XmlEncodeAsync(url);
 
             await writer.WriteStartElementAsync(null, "sitemap", null);
@@ -453,7 +436,7 @@ public partial class SitemapModelFactory : ISitemapModelFactory
             //extract seo code
             var altLoc = await XmlHelper.XmlEncodeAsync(alternate);
             var altLocPath = new Uri(altLoc).PathAndQuery;
-            var (_, lang) = await altLocPath.IsLocalizedUrlAsync(_actionContextAccessor.ActionContext.HttpContext.Request.PathBase, true);
+            var (_, lang) = await altLocPath.IsLocalizedUrlAsync(_httpContextAccessor.HttpContext.Request.PathBase, true);
 
             if (string.IsNullOrEmpty(lang?.UniqueSeoCode))
                 continue;
@@ -541,10 +524,7 @@ public partial class SitemapModelFactory : ISitemapModelFactory
         if (string.IsNullOrEmpty(currentUrl))
             return null;
 
-        if (_actionContextAccessor.ActionContext == null)
-            return null;
-
-        var pathBase = _actionContextAccessor.ActionContext.HttpContext.Request.PathBase;
+        var pathBase = _httpContextAccessor.HttpContext.Request.PathBase;
 
         //Extract server and path from url
         var scheme = new Uri(currentUrl).GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
@@ -619,8 +599,7 @@ public partial class SitemapModelFactory : ISitemapModelFactory
         DateTime? dateTimeUpdatedOn = null,
         UpdateFrequency updateFreq = UpdateFrequency.Weekly)
     {
-        var urlHelper = GetUrlHelper();
-        var url = urlHelper.RouteUrl(routeName, null, await GetHttpProtocolAsync());
+        var url = _nopUrlHelper.RouteUrl(routeName, null, await GetHttpProtocolAsync());
 
         var store = await _storeContext.GetCurrentStoreAsync();
 
@@ -666,9 +645,6 @@ public partial class SitemapModelFactory : ISitemapModelFactory
 
         var cachedModel = await _staticCacheManager.GetAsync(cacheKey, async () =>
         {
-            //get URL helper
-            var urlHelper = GetUrlHelper();
-
             var model = new SitemapModel();
 
             //prepare common items
@@ -679,7 +655,7 @@ public partial class SitemapModelFactory : ISitemapModelFactory
             {
                 GroupTitle = commonGroupTitle,
                 Name = await _localizationService.GetResourceAsync("Homepage"),
-                Url = urlHelper.RouteUrl("Homepage")
+                Url = _nopUrlHelper.RouteUrl("Homepage")
             });
 
             //search
@@ -687,7 +663,7 @@ public partial class SitemapModelFactory : ISitemapModelFactory
             {
                 GroupTitle = commonGroupTitle,
                 Name = await _localizationService.GetResourceAsync("Search"),
-                Url = urlHelper.RouteUrl("ProductSearch")
+                Url = _nopUrlHelper.RouteUrl("ProductSearch")
             });
 
             //news
@@ -697,7 +673,7 @@ public partial class SitemapModelFactory : ISitemapModelFactory
                 {
                     GroupTitle = commonGroupTitle,
                     Name = await _localizationService.GetResourceAsync("News"),
-                    Url = urlHelper.RouteUrl("NewsArchive")
+                    Url = _nopUrlHelper.RouteUrl("NewsArchive")
                 });
             }
 
@@ -708,7 +684,7 @@ public partial class SitemapModelFactory : ISitemapModelFactory
                 {
                     GroupTitle = commonGroupTitle,
                     Name = await _localizationService.GetResourceAsync("Blog"),
-                    Url = urlHelper.RouteUrl("Blog")
+                    Url = _nopUrlHelper.RouteUrl("Blog")
                 });
             }
 
@@ -719,7 +695,7 @@ public partial class SitemapModelFactory : ISitemapModelFactory
                 {
                     GroupTitle = commonGroupTitle,
                     Name = await _localizationService.GetResourceAsync("Forum.Forums"),
-                    Url = urlHelper.RouteUrl("Boards")
+                    Url = _nopUrlHelper.RouteUrl("Boards")
                 });
             }
 
@@ -728,7 +704,7 @@ public partial class SitemapModelFactory : ISitemapModelFactory
             {
                 GroupTitle = commonGroupTitle,
                 Name = await _localizationService.GetResourceAsync("ContactUs"),
-                Url = urlHelper.RouteUrl("ContactUs")
+                Url = _nopUrlHelper.RouteUrl("ContactUs")
             });
 
             //customer info
@@ -736,7 +712,7 @@ public partial class SitemapModelFactory : ISitemapModelFactory
             {
                 GroupTitle = commonGroupTitle,
                 Name = await _localizationService.GetResourceAsync("Account.MyAccount"),
-                Url = urlHelper.RouteUrl("CustomerInfo")
+                Url = _nopUrlHelper.RouteUrl("CustomerInfo")
             });
 
             //at the moment topics are in general category too

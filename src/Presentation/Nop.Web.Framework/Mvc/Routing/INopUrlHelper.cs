@@ -53,4 +53,17 @@ public partial interface INopUrlHelper
     /// The task result contains the generated URL
     /// </returns>
     Task<string> RouteTopicUrlAsync(string systemName, string protocol = null, string host = null, string fragment = null);
+
+    /// <summary>
+    /// Generate a URL for the specified route name
+    /// </summary>
+    /// <param name="routeName">The name of the route that is used to generate URL</param>
+    /// <param name="values">An object that contains route values</param>
+    /// <param name="protocol">The protocol for the URL, such as "http" or "https"</param>
+    /// <param name="host">The host name for the URL</param>
+    /// <param name="fragment">The fragment for the URL</param>
+    /// <returns>
+    /// The generated URL
+    /// </returns>
+    string RouteUrl(string routeName, object values = null, string protocol = null, string host = null, string fragment = null);
 }

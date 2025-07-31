@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Nop.Core.Domain.Cms;
+﻿using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Messages;
 using Nop.Plugin.Misc.RFQ.Components;
 using Nop.Plugin.Misc.RFQ.Services;
@@ -13,6 +10,7 @@ using Nop.Services.Messages;
 using Nop.Services.Plugins;
 using Nop.Services.Security;
 using Nop.Web.Framework.Infrastructure;
+using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Plugin.Misc.RFQ;
 
@@ -24,13 +22,12 @@ public class RfqPlugin : BasePlugin, IWidgetPlugin, IMiscPlugin
     #region Fields
 
     private readonly EmailAccountSettings _emailAccountSettings;
-    private readonly IActionContextAccessor _actionContextAccessor;
     private readonly IEmailAccountService _emailAccountService;
     private readonly ILocalizationService _localizationService;
     private readonly IMessageTemplateService _messageTemplateService;
+    private readonly INopUrlHelper _nopUrlHelper;
     private readonly IPermissionService _permissionService;
     private readonly ISettingService _settingService;
-    private readonly IUrlHelperFactory _urlHelperFactory;
     private readonly WidgetSettings _widgetSettings;
 
     #endregion
@@ -38,23 +35,21 @@ public class RfqPlugin : BasePlugin, IWidgetPlugin, IMiscPlugin
     #region Ctor
 
     public RfqPlugin(EmailAccountSettings emailAccountSettings,
-        IActionContextAccessor actionContextAccessor,
         IEmailAccountService emailAccountService,
         ILocalizationService localizationService,
         IMessageTemplateService messageTemplateService,
+        INopUrlHelper nopUrlHelper,
         IPermissionService permissionService,
         ISettingService settingService,
-        IUrlHelperFactory urlHelperFactory,
         WidgetSettings widgetSettings)
     {
         _emailAccountSettings = emailAccountSettings;
-        _actionContextAccessor = actionContextAccessor;
         _emailAccountService = emailAccountService;
         _localizationService = localizationService;
         _messageTemplateService = messageTemplateService;
+        _nopUrlHelper = nopUrlHelper;
         _permissionService = permissionService;
         _settingService = settingService;
-        _urlHelperFactory = urlHelperFactory;
         _widgetSettings = widgetSettings;
     }
 
@@ -67,13 +62,8 @@ public class RfqPlugin : BasePlugin, IWidgetPlugin, IMiscPlugin
     /// </summary>
     public override string GetConfigurationPageUrl()
     {
-        if (_actionContextAccessor.ActionContext != null)
-            return _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext)
-                .RouteUrl(RfqDefaults.ConfigurationRouteName);
-
-        return base.GetConfigurationPageUrl();
+        return _nopUrlHelper.RouteUrl(RfqDefaults.ConfigurationRouteName);
     }
-
 
     /// <summary>
     /// Gets widget zones where this widget should be rendered
