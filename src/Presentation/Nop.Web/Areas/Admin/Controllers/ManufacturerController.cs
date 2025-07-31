@@ -4,7 +4,6 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
 using Nop.Services.Catalog;
-using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.ExportImport;
 using Nop.Services.Localization;
@@ -29,9 +28,7 @@ public partial class ManufacturerController : BaseAdminController
 {
     #region Fields
 
-    protected readonly IAclService _aclService;
     protected readonly ICustomerActivityService _customerActivityService;
-    protected readonly ICustomerService _customerService;
     protected readonly IDiscountService _discountService;
     protected readonly IExportManager _exportManager;
     protected readonly IImportManager _importManager;
@@ -40,11 +37,9 @@ public partial class ManufacturerController : BaseAdminController
     protected readonly IManufacturerModelFactory _manufacturerModelFactory;
     protected readonly IManufacturerService _manufacturerService;
     protected readonly INotificationService _notificationService;
-    protected readonly IPermissionService _permissionService;
     protected readonly IPictureService _pictureService;
     protected readonly IProductService _productService;
     protected readonly IStoreMappingService _storeMappingService;
-    protected readonly IStoreService _storeService;
     protected readonly ITranslationModelFactory _translationModelFactory;
     protected readonly IUrlRecordService _urlRecordService;
     protected readonly IWorkContext _workContext;
@@ -53,9 +48,7 @@ public partial class ManufacturerController : BaseAdminController
 
     #region Ctor
 
-    public ManufacturerController(IAclService aclService,
-        ICustomerActivityService customerActivityService,
-        ICustomerService customerService,
+    public ManufacturerController(ICustomerActivityService customerActivityService,
         IDiscountService discountService,
         IExportManager exportManager,
         IImportManager importManager,
@@ -64,18 +57,14 @@ public partial class ManufacturerController : BaseAdminController
         IManufacturerModelFactory manufacturerModelFactory,
         IManufacturerService manufacturerService,
         INotificationService notificationService,
-        IPermissionService permissionService,
         IPictureService pictureService,
         IProductService productService,
         IStoreMappingService storeMappingService,
-        IStoreService storeService,
         ITranslationModelFactory translationModelFactory,
         IUrlRecordService urlRecordService,
         IWorkContext workContext)
     {
-        _aclService = aclService;
         _customerActivityService = customerActivityService;
-        _customerService = customerService;
         _discountService = discountService;
         _exportManager = exportManager;
         _importManager = importManager;
@@ -84,11 +73,9 @@ public partial class ManufacturerController : BaseAdminController
         _manufacturerModelFactory = manufacturerModelFactory;
         _manufacturerService = manufacturerService;
         _notificationService = notificationService;
-        _permissionService = permissionService;
         _pictureService = pictureService;
         _productService = productService;
         _storeMappingService = storeMappingService;
-        _storeService = storeService;
         _translationModelFactory = translationModelFactory;
         _urlRecordService = urlRecordService;
         _workContext = workContext;
@@ -138,31 +125,6 @@ public partial class ManufacturerController : BaseAdminController
         var picture = await _pictureService.GetPictureByIdAsync(manufacturer.PictureId);
         if (picture != null)
             await _pictureService.SetSeoFilenameAsync(picture.Id, await _pictureService.GetPictureSeNameAsync(manufacturer.Name));
-    }
-
-    protected virtual async Task SaveStoreMappingsAsync(Manufacturer manufacturer, ManufacturerModel model)
-    {
-        manufacturer.LimitedToStores = model.SelectedStoreIds.Any();
-        await _manufacturerService.UpdateManufacturerAsync(manufacturer);
-
-        var existingStoreMappings = await _storeMappingService.GetStoreMappingsAsync(manufacturer);
-        var allStores = await _storeService.GetAllStoresAsync();
-        foreach (var store in allStores)
-        {
-            if (model.SelectedStoreIds.Contains(store.Id))
-            {
-                //new store
-                if (!existingStoreMappings.Any(sm => sm.StoreId == store.Id))
-                    await _storeMappingService.InsertStoreMappingAsync(manufacturer, store.Id);
-            }
-            else
-            {
-                //remove store
-                var storeMappingToDelete = existingStoreMappings.FirstOrDefault(sm => sm.StoreId == store.Id);
-                if (storeMappingToDelete != null)
-                    await _storeMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
-            }
-        }
     }
 
     #endregion
@@ -240,7 +202,7 @@ public partial class ManufacturerController : BaseAdminController
             await UpdatePictureSeoNamesAsync(manufacturer);
 
             //stores
-            await SaveStoreMappingsAsync(manufacturer, model);
+            await _storeMappingService.SaveStoreMappingsAsync(manufacturer, model.SelectedStoreIds);
 
             //activity log
             await _customerActivityService.InsertActivityAsync("AddNewManufacturer",
@@ -330,7 +292,7 @@ public partial class ManufacturerController : BaseAdminController
             await UpdatePictureSeoNamesAsync(manufacturer);
 
             //stores
-            await SaveStoreMappingsAsync(manufacturer, model);
+            await _storeMappingService.SaveStoreMappingsAsync(manufacturer, model.SelectedStoreIds);
 
             //activity log
             await _customerActivityService.InsertActivityAsync("EditManufacturer",
@@ -361,7 +323,7 @@ public partial class ManufacturerController : BaseAdminController
         var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(itemId);
         if (manufacturer == null || manufacturer.Deleted)
             return Json(translationModel);
-        
+
         //prepare model
         var model = await _manufacturerModelFactory.PrepareManufacturerModelAsync(null, manufacturer);
 
@@ -401,7 +363,7 @@ public partial class ManufacturerController : BaseAdminController
 
         var manufacturers = await _manufacturerService.GetManufacturersByIdsAsync(selectedIds.ToArray());
         await _manufacturerService.DeleteManufacturersAsync(manufacturers);
-        
+
         //activity log
         var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.DeleteManufacturer");
         await _customerActivityService.InsertActivitiesAsync("DeleteManufacturer", manufacturers, manufacturer => string.Format(activityLogFormat, manufacturer.Name));

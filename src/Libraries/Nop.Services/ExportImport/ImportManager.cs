@@ -585,7 +585,7 @@ public partial class ImportManager : IImportManager
             var importedStores = category.LimitedToStores ? limitedToStoresList.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(x => allStores.FirstOrDefault(store => store.Name == x.Trim())?.Id ?? int.Parse(x.Trim())).ToList() : new List<int>();
 
-            await _categoryService.UpdateCategoryStoreMappingsAsync(category, importedStores);
+            await _storeMappingService.SaveStoreMappingsAsync(category, importedStores);
         }
 
         category.UpdatedOnUtc = DateTime.UtcNow;
@@ -2656,7 +2656,7 @@ public partial class ImportManager : IImportManager
                 var importedStores = product.LimitedToStores ? limitedToStoresList.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => allStores.FirstOrDefault(store => store.Name == x.Trim())?.Id ?? int.Parse(x.Trim())).ToList() : new List<int>();
 
-                await _productService.UpdateProductStoreMappingsAsync(product, importedStores);
+                await _storeMappingService.SaveStoreMappingsAsync(product, importedStores);
             }
 
             var pictureMetaData = new ProductPictureMetadata

@@ -14,23 +14,29 @@ public partial class StoreMappingService : IStoreMappingService
     #region Fields
 
     protected readonly CatalogSettings _catalogSettings;
+    protected readonly INopDataProvider _dataProvider;
     protected readonly IRepository<StoreMapping> _storeMappingRepository;
     protected readonly IStaticCacheManager _staticCacheManager;
     protected readonly IStoreContext _storeContext;
+    protected readonly IStoreService _storeService;
 
     #endregion
 
     #region Ctor
 
     public StoreMappingService(CatalogSettings catalogSettings,
+        INopDataProvider dataProvider,
         IRepository<StoreMapping> storeMappingRepository,
         IStaticCacheManager staticCacheManager,
-        IStoreContext storeContext)
+        IStoreContext storeContext,
+        IStoreService storeService)
     {
         _catalogSettings = catalogSettings;
+        _dataProvider = dataProvider;
         _storeMappingRepository = storeMappingRepository;
         _staticCacheManager = staticCacheManager;
         _storeContext = storeContext;
+        _storeService = storeService;
     }
 
     #endregion
@@ -292,6 +298,49 @@ public partial class StoreMappingService : IStoreMappingService
 
         //no permission found
         return false;
+    }
+
+    /// <summary>
+    /// Save store mappings for the passed entity
+    /// </summary>
+    /// <typeparam name="TEntity">Type of entity that supports store mapping</typeparam>
+    /// <param name="entity">Entity</param>
+    /// <param name="storeIds">Store identifiers</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// </returns>
+    public virtual async Task SaveStoreMappingsAsync<TEntity>(TEntity entity, IEnumerable<int> storeIds) where TEntity : BaseEntity, IStoreMappingSupported
+    {
+        ArgumentNullException.ThrowIfNull(entity);
+        ArgumentNullException.ThrowIfNull(storeIds);
+
+        ArgumentOutOfRangeException.ThrowIfZero(entity.Id);
+
+        var allStores = await _storeService.GetAllStoresAsync();
+        var existingStoreMappings = await GetStoreMappingsAsync(entity);
+
+        if (entity.LimitedToStores != storeIds.Any())
+        {
+            entity.LimitedToStores = storeIds.Any();
+            await _dataProvider.UpdateEntityAsync(entity);
+        }
+
+        foreach (var store in allStores)
+        {
+            if (storeIds.Contains(store.Id))
+            {
+                //new store
+                if (!existingStoreMappings.Any(sm => sm.StoreId == store.Id))
+                    await InsertStoreMappingAsync(entity, store.Id);
+            }
+            else
+            {
+                //remove store
+                var storeMappingToDelete = existingStoreMappings.FirstOrDefault(sm => sm.StoreId == store.Id);
+                if (storeMappingToDelete != null)
+                    await DeleteStoreMappingAsync(storeMappingToDelete);
+            }
+        }
     }
 
     #endregion
