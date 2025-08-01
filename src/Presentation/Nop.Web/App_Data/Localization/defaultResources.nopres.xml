@@ -15898,6 +15898,24 @@
   <LocaleResource Name="Admin.System.Maintenance.DeleteMinificationFiles.TotalDeleted">
     <Value>{0} files were deleted</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.DeleteThumbFiles">
+    <Value>Delete image thumbs</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.DeleteThumbFiles.Deleted">
+    <Value>All image thumbs were deleted.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.DeleteThumbFiles.FilesCount">
+    <Value>Total files: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.DeleteThumbFiles.FilesSize">
+     <Value>Total file size: {0} MB</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.DeleteThumbFiles.IsNotSupported">
+    <Value>Delete image thumbs is not supported by current picture thumb service.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.DeleteThumbFiles.Text">
+    <Value>Delete image thumbs from the thumbs directory. All files except the placeholder.txt file.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.Maintenance.ReIndexTables">
     <Value>Re-index database tables</Value>
   </LocaleResource>
