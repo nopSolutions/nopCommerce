@@ -7,12 +7,6 @@
 <div class="master-wrapper-page">
     @await Component.InvokeAsync(typeof(AdminHeaderLinksViewComponent))
     @{ await Html.RenderPartialAsync("_Header"); }
-    <script asp-location="Footer">
-        var localized_data = {
-            AjaxCartFailure: "@T("AjaxCart.Failure")"
-        };
-        AjaxCart.init(false, '.header-links .cart-qty', '.header-links .wishlist-qty', '#flyout-cart', localized_data);
-    </script>
     <div class="header-menu">
         @await Component.InvokeAsync(typeof(TopMenuViewComponent))
     </div>
