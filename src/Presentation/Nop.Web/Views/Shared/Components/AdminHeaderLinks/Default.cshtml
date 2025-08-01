@@ -6,7 +6,7 @@
         {
             <div class="impersonate">
                 <span>@string.Format(T("Account.ImpersonatedAs").Text, Model.ImpersonatedCustomerName)</span>
-                <a href="@Url.RouteUrl("Logout")" class="finish-impersonation" title="@T("Account.ImpersonatedAs.Finish.Hint")">@T("Account.ImpersonatedAs.Finish")</a>
+                <a href="@Url.RouteUrl(NopRouteNames.Standard.LOGOUT)" class="finish-impersonation" title="@T("Account.ImpersonatedAs.Finish.Hint")">@T("Account.ImpersonatedAs.Finish")</a>
             </div>
         }
         @if (Model.DisplayAdminLink)

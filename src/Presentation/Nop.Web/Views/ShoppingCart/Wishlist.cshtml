@@ -19,7 +19,7 @@
 }
 
 @{
-    var urlDeleteWishlist = Url.RouteUrl("DeleteCustomWishlist", new { wishlistId = Model.ListId });
+    var urlDeleteWishlist = Url.RouteUrl(NopRouteNames.Ajax.DELETE_CUSTOM_WISHLIST, new { wishlistId = Model.ListId });
 }
 
 <div class="page wishlist-page">
@@ -50,13 +50,13 @@
                 </button>
                 @if (Model.CustomWishlistItems.Any())
                 {
-                    <button type="button" class="button-2 custom-wishlist-button" onclick="setLocation('@(Url.RouteUrl("Wishlist"))')">
+                    <button type="button" class="button-2 custom-wishlist-button" onclick="setLocation('@(Url.RouteUrl(NopRouteNames.General.WISHLIST))')">
                         @T("Wishlist.Default")
                     </button>
                 }
                 @foreach (var customWishlist in Model.CustomWishlistItems)
                 {
-                    <button type="button" class="button-2 custom-wishlist-button" onclick="setLocation('@(Url.RouteUrl("Wishlist", new { list = customWishlist.Id }))')">@customWishlist.Name</button>
+                    <button type="button" class="button-2 custom-wishlist-button" onclick="setLocation('@(Url.RouteUrl(NopRouteNames.General.WISHLIST, new { list = customWishlist.Id }))')">@customWishlist.Name</button>
                 }
             </div>
 
@@ -77,7 +77,7 @@
                         </ul>
                     </div>
                 }
-                <form asp-route="Wishlist" method="post" id="wishlist-form" asp-route-list="@Model.ListId">
+                <form asp-route="@NopRouteNames.General.WISHLIST" method="post" id="wishlist-form" asp-route-list="@Model.ListId">
                     <div class="table-wrapper">
                         <table class="cart">
                             <colgroup>
@@ -213,7 +213,7 @@
                                                     <div class="td-title">@T("Wishlist.MoveToCustomWishlist"):</div>
                                                     <select name="moveToCustomWishlist@(item.Id)"
                                                             class="custom-wishlist-dropdown"
-                                                            onchange="AjaxCart.moveToCustomWishlist('@Url.RouteUrl("MoveToCustomWishlist")', @item.Id, this.value);return false;">
+                                                            onchange="AjaxCart.moveToCustomWishlist('@Url.RouteUrl(NopRouteNames.Ajax.MOVE_CART_TO_CUSTOM_WISHLIST)', @item.Id, this.value);return false;">
                                                         <option value="0">@T("Wishlist.Default")</option>
                                                         @foreach (var customWishlist in Model.CustomWishlistItems)
                                                         {
@@ -299,7 +299,7 @@
                         }
                         @if (Model.IsEditable && Model.EmailWishlistEnabled)
                         {
-                            <button type="button" class="button-2 email-a-friend-wishlist-button" onclick="setLocation('@Url.RouteUrl("EmailWishlist", new { wishlistId = Model.ListId })')">@T("Wishlist.EmailAFriend")</button>
+                            <button type="button" class="button-2 email-a-friend-wishlist-button" onclick="setLocation('@Url.RouteUrl(NopRouteNames.Standard.EMAIL_WISHLIST, new { wishlistId = Model.ListId })')">@T("Wishlist.EmailAFriend")</button>
                         }
                         @if (Model.IsEditable && Model.AllowMultipleWishlist && Model.ListId > 0)
                         {
@@ -339,7 +339,7 @@
         }
         @if (Model.IsEditable && Model.Items.Count > 0)
         {
-            var wishlistUrl = Url.RouteUrl("Wishlist", new { customerGuid = Model.CustomerGuid, list =  Model.ListId}, webHelper.GetCurrentRequestProtocol());
+            var wishlistUrl = Url.RouteUrl(NopRouteNames.General.WISHLIST, new { customerGuid = Model.CustomerGuid, list = Model.ListId }, webHelper.GetCurrentRequestProtocol());
             <div class="share-info">
                 <span class="share-label">@T("Wishlist.YourWishlistURL"):</span>
                 <a href="@wishlistUrl" class="share-link">@wishlistUrl</a>

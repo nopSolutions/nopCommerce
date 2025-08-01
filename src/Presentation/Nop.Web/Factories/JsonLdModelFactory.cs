@@ -7,6 +7,7 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Events;
+using Nop.Core.Http;
 using Nop.Services.Customers;
 using Nop.Services.Forums;
 using Nop.Services.Helpers;
@@ -246,13 +247,13 @@ public partial class JsonLdModelFactory : IJsonLdModelFactory
             {
                 Name = JavaScriptEncoder.Default.Encode(customerName),
                 Url =
-                    urlHelper.RouteUrl("CustomerProfile", new { id = forumTopic.CustomerId },
+                    urlHelper.RouteUrl(NopRouteNames.Standard.CUSTOMER_PROFILE, new { id = forumTopic.CustomerId },
                         _webHelper.GetCurrentRequestProtocol()),
             },
             DatePublished = ConvertDateTimeToIso8601String(createdOn),
             Subject = JavaScriptEncoder.Default.Encode(model.Subject),
             Text = _forumService.FormatPostText(firstPost),
-            Url = urlHelper.RouteUrl("TopicSlug", new { id = model.Id, slug = model.SeName },
+            Url = urlHelper.RouteUrl(NopRouteNames.Standard.TOPIC_SLUG, new { id = model.Id, slug = model.SeName },
                 _webHelper.GetCurrentRequestProtocol()),
             Comments = model.ForumPostModels.Where(pm => pm.Id != firstPost.Id).Select(postModel =>
             {
@@ -261,14 +262,14 @@ public partial class JsonLdModelFactory : IJsonLdModelFactory
                     Author = new()
                     {
                         Name = JavaScriptEncoder.Default.Encode(postModel.CustomerName),
-                        Url = urlHelper.RouteUrl("CustomerProfile", new { id = postModel.CustomerId },
+                        Url = urlHelper.RouteUrl(NopRouteNames.Standard.CUSTOMER_PROFILE, new { id = postModel.CustomerId },
                             _webHelper.GetCurrentRequestProtocol()),
                     },
                     DatePublished = ConvertDateTimeToIso8601String(postModel.PostCreatedOn),
                     Url = postModel.CurrentTopicPage > 1
                         ? urlHelper.RouteUrl(new()
                         {
-                            RouteName = "TopicSlugPaged",
+                            RouteName = NopRouteNames.Standard.TOPIC_SLUG_PAGED,
                             Values = new
                             {
                                 id = model.Id,
@@ -280,7 +281,7 @@ public partial class JsonLdModelFactory : IJsonLdModelFactory
                         })
                         : urlHelper.RouteUrl(new()
                         {
-                            RouteName = "TopicSlug",
+                            RouteName = NopRouteNames.Standard.TOPIC_SLUG,
                             Values = new { id = model.Id, slug = model.SeName },
                             Protocol = _webHelper.GetCurrentRequestProtocol(),
                             Fragment = postModel.Id.ToString()

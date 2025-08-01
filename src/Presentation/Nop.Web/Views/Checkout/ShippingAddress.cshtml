@@ -22,7 +22,7 @@
         <h1>@T("Checkout.ShippingAddress")</h1>
     </div>
     <div class="page-body checkout-data">
-        <form id="shipping-form" asp-route="CheckoutShippingAddress" method="post">
+        <form id="shipping-form" asp-route="@NopRouteNames.Standard.CHECKOUT_SHIPPING_ADDRESS" method="post">
 
             @if (Model.DisplayPickupInStore && Model.PickupPointsModel.AllowPickupInStore)
             {
@@ -166,7 +166,7 @@
                                             }
                                         </ul>
                                         <div class="select-button">
-                                            <button type="button" onclick="setLocation('@Url.RouteUrl("CheckoutSelectShippingAddress", new { addressid = item.Id })')" class="button-1 select-shipping-address-button">@T("Checkout.ShipToThisAddress")</button>
+                                            <button type="button" onclick="setLocation('@Url.RouteUrl(NopRouteNames.Standard.CHECKOUT_SELECT_SHIPPING_ADDRESS, new { addressid = item.Id })')" class="button-1 select-shipping-address-button">@T("Checkout.ShipToThisAddress")</button>
                                         </div>
                                     </div>
                                 }
@@ -201,7 +201,7 @@
             <div class="buttons">
                 <button id="shippingaddress-save-button" type="button" class="button-1" style="display: none" onclick="CheckoutShipping.saveEditAddress('@(storeLocation)checkout/SaveEditShippingAddress/'); return false;">@T("Common.Save")</button>
 
-                <button id="shippingaddress-cancel-button" type="button" class="button-1" style="display: none" onclick="setLocation('@Url.RouteUrl("CheckoutShippingAddress")')">@T("Common.Cancel")</button>
+                <button id="shippingaddress-cancel-button" type="button" class="button-1" style="display: none" onclick="setLocation('@Url.RouteUrl(NopRouteNames.Standard.CHECKOUT_SHIPPING_ADDRESS)')">@T("Common.Cancel")</button>
 
                 <button id="shippingaddress-next-button" type="submit" name="nextstep" class="button-1 new-address-next-step-button">@T("Checkout.NextButton")</button>
             </div>

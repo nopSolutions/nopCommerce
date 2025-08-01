@@ -19,7 +19,7 @@
     </div>
     <div class="page-body">
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.VendorInfoTop, additionalData = Model })
-        <form asp-route="CustomerVendorInfo" method="post" enctype="multipart/form-data">
+        <form asp-route="@NopRouteNames.Standard.CUSTOMER_VENDOR_INFO" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="message-error"></div>
             <div class="fieldset">
                 <div class="form-fields">

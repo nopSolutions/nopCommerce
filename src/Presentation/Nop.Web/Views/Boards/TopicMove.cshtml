@@ -13,7 +13,7 @@
         <h1>@T("Forum.MoveTopic")</h1>
     </div>
     <div class="page-body">
-        <form asp-route="TopicMove" method="post">
+        <form asp-route="@NopRouteNames.Standard.TOPIC_MOVE" method="post">
             <input type="hidden" asp-for="Id"/>
             <div class="fieldset">
                 <div class="form-fields">
@@ -25,7 +25,7 @@
             </div>
             <div class="buttons">
                 <button type="submit" class="button-1 submit-forum-topic-button">@T("Forum.Submit")</button>
-                <button type="button" class="button-2 cancel-forum-topic-button" onclick="setLocation('@Url.RouteUrl("TopicSlug", new {id = Model.Id, slug = Model.TopicSeName})')">@T("Forum.Cancel")</button>
+                <button type="button" class="button-2 cancel-forum-topic-button" onclick="setLocation('@Url.RouteUrl(NopRouteNames.Standard.TOPIC_SLUG, new { id = Model.Id, slug = Model.TopicSeName })')">@T("Forum.Cancel")</button>
             </div>
         </form>
     </div>

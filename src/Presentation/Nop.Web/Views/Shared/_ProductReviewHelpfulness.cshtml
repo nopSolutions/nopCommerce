@@ -29,7 +29,7 @@
             $.ajax({
                 cache: false,
                 type: "POST",
-                url: "@(Url.RouteUrl("SetProductReviewHelpfulness"))",
+                url: "@(Url.RouteUrl(NopRouteNames.Ajax.SET_PRODUCT_REVIEW_HELPFULNESS))",
                 data: postData,
                 success: function (data, textStatus, jqXHR) {
                     $("#helpfulness-vote-yes-@(Model.ProductReviewId)").html(data.TotalYes);

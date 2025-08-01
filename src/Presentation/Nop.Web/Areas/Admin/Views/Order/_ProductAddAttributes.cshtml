@@ -182,7 +182,7 @@
                                                     allowDownloadByUrl: true,
                                                     server: {
                                                         process: {
-                                                            url: '@(Url.RouteUrl("UploadFileProductAttribute", new {attributeId = attribute.Id}))',
+                                                            url: '@(Url.RouteUrl(NopRouteNames.Ajax.UPLOAD_FILE_PRODUCT_ATTRIBUTE, new {attributeId = attribute.Id}))',
                                                             onload: function(response) {
                                                                 $("#@(controlId)").val(JSON.parse(response).downloadGuid);
                                                             }

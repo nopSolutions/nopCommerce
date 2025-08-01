@@ -6,7 +6,7 @@
     <div class="forums-table-section-title">
         @if (Model.ActiveDiscussionsFeedEnabled)
         {
-            <a href="@Url.RouteUrl("ActiveDiscussionsRSS")" class="link-rss" title="@T("Forum.ActiveDiscussionsRSSLinkTitle")">@T("Forum.RSS")</a>
+            <a href="@Url.RouteUrl(NopRouteNames.Standard.ACTIVE_DISCUSSIONS_RSS)" class="link-rss" title="@T("Forum.ActiveDiscussionsRSSLinkTitle")">@T("Forum.RSS")</a>
         }
         <strong>@T("Forum.ActiveDiscussions")</strong>
     </div>
@@ -17,7 +17,7 @@
             TotalRecords = Model.TopicTotalRecords,
             PageIndex = Model.TopicPageIndex,
             ShowTotalSummary = false,
-            RouteActionName = "ActiveDiscussionsPaged",
+            RouteActionName = NopRouteNames.Standard.ACTIVE_DISCUSSIONS_PAGED,
             UseRouteLinks = true,
             RouteValues = new ForumModelFactory.ForumActiveDiscussionsRouteValues()
         });
@@ -71,7 +71,7 @@
                             <tr>
                                 <td class="topic-details">
                                     <div class="topic-title">
-                                        @Html.RouteLink(topic.Subject, "TopicSlug", new { id = topic.Id, slug = topic.SeName })
+                                        @Html.RouteLink(topic.Subject, NopRouteNames.Standard.TOPIC_SLUG, new { id = topic.Id, slug = topic.SeName })
                                     </div>
                                     @if (topic.NumPosts > Model.PostsPageSize)
                                     {
@@ -85,7 +85,7 @@
                                             <label>@T("Forum.Author"):</label>
                                             if (topic.AllowViewingProfiles)
                                             {
-                                                @Html.RouteLink(topic.CustomerName, "CustomerProfile", new { Id = topic.CustomerId })
+                                                @Html.RouteLink(topic.CustomerName, NopRouteNames.Standard.CUSTOMER_PROFILE, new { Id = topic.CustomerId })
                                             }
                                             else
                                             {
@@ -125,7 +125,7 @@
     @if (Model.ViewAllLinkEnabled)
     {
         <div class="view-all">
-            @Html.RouteLink(T("Forum.ActiveDiscussions.ViewAll").Text, "ActiveDiscussions", null)
+            @Html.RouteLink(T("Forum.ActiveDiscussions.ViewAll").Text, NopRouteNames.Standard.ACTIVE_DISCUSSIONS, null)
         </div>
     }
 </div>

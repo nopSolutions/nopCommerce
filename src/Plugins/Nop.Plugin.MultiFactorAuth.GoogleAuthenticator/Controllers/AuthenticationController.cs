@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Http;
 using Nop.Core.Http.Extensions;
 using Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Models;
 using Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Services;
@@ -71,10 +72,10 @@ public class AuthenticationController : BasePluginController
         else
         {
             _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Plugins.MultiFactorAuth.GoogleAuthenticator.Token.Unsuccessful"));
-            return RedirectToRoute("CustomerMultiFactorAuthenticationProviderConfig", new { providerSysName = GoogleAuthenticatorDefaults.SystemName });
+            return RedirectToRoute(NopRouteNames.Standard.CUSTOMER_MULTI_FACTOR_AUTHENTICATION_PROVIDER_CONFIG, new { providerSysName = GoogleAuthenticatorDefaults.SystemName });
         }
 
-        return RedirectToRoute("MultiFactorAuthenticationSettings");
+        return RedirectToRoute(NopRouteNames.Standard.MULTI_FACTOR_AUTHENTICATION_SETTINGS);
     }
 
     [HttpPost]
@@ -87,7 +88,7 @@ public class AuthenticationController : BasePluginController
 
         var customer = _customerSettings.UsernamesEnabled ? await _customerService.GetCustomerByUsernameAsync(username) : await _customerService.GetCustomerByEmailAsync(username);
         if (customer == null)
-            return RedirectToRoute("Login");
+            return RedirectToRoute(NopRouteNames.General.LOGIN);
 
         var record = _googleAuthenticatorService.GetConfigurationByCustomerEmail(customer.Email);
         if (record != null)
@@ -109,7 +110,7 @@ public class AuthenticationController : BasePluginController
             _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Plugins.MultiFactorAuth.GoogleAuthenticator.Record.Notfound"));
         }
 
-        return RedirectToRoute("MultiFactorVerification");
+        return RedirectToRoute(NopRouteNames.Standard.MULTIFACTOR_VERIFICATION);
     }
 
     #endregion

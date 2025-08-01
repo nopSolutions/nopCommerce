@@ -6,6 +6,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Http;
 using Nop.Plugin.Misc.Brevo.MarketingAutomation;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -190,7 +191,7 @@ public class MarketingAutomationManager
                     tax = cartTax,
                     discount = cartDiscount,
                     revenue = cartTotal ?? decimal.Zero,
-                    url = urlHelper.RouteUrl("ShoppingCart", null, _webHelper.GetCurrentRequestProtocol()),
+                    url = urlHelper.RouteUrl(NopRouteNames.General.CART, null, _webHelper.GetCurrentRequestProtocol()),
                     currency = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode,
                     //gift_wrapping = string.Empty, //currently we can't get this value
                     items = itemsData
@@ -329,7 +330,7 @@ public class MarketingAutomationManager
                 tax = order.OrderTax,
                 discount = order.OrderDiscount,
                 revenue = order.OrderTotal,
-                url = urlHelper.RouteUrl("OrderDetails", new { orderId = order.Id }, _webHelper.GetCurrentRequestProtocol()),
+                url = urlHelper.RouteUrl(NopRouteNames.Standard.ORDER_DETAILS, new { orderId = order.Id }, _webHelper.GetCurrentRequestProtocol()),
                 currency = order.CustomerCurrencyCode,
                 //gift_wrapping = string.Empty, //currently we can't get this value
                 items = itemsData,

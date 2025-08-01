@@ -38,7 +38,7 @@
                     City: address.city
                 });
 
-                return '@Html.Raw(Url.RouteUrl("EstimateShipping"))?' + params;
+                return '@Html.Raw(Url.RouteUrl(NopRouteNames.Ajax.ESTIMATE_SHIPPING))?' + params;
             },
             handlers: {
                 selectedOption: function (option) {
@@ -54,7 +54,7 @@
 
                     $.ajax({
                         cache: false,
-                        url: '@Html.Raw(Url.RouteUrl("SelectShippingOption"))' + (params ? '?' + params : ''),
+                        url: '@Html.Raw(Url.RouteUrl(NopRouteNames.Ajax.SELECT_SHIPPING_OPTION))' + (params ? '?' + params : ''),
                         data: $('#shopping-cart-form').serialize(),
                         type: 'POST',
                         beforeSend: function () {

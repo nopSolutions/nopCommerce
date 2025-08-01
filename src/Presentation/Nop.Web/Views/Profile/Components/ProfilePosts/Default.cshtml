@@ -8,7 +8,7 @@
             <div class="topic">
                 <div class="topic-title">
                     <label>@T("Profile.Topic"):</label>
-                    @Html.RouteLink(item.ForumTopicTitle, "TopicSlug", new { id = item.ForumTopicId, slug = item.ForumTopicSlug })
+                    @Html.RouteLink(item.ForumTopicTitle, NopRouteNames.Standard.TOPIC_SLUG, new { id = item.ForumTopicId, slug = item.ForumTopicSlug })
                 </div>
                 <div class="topic-body">
                     <p>@Html.Raw(item.ForumPostText)</p>

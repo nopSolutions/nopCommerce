@@ -6,6 +6,7 @@ using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
+using Nop.Core.Http;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
@@ -994,7 +995,7 @@ public partial class ForumModelFactory : IForumModelFactory
             TotalRecords = list.TotalCount,
             PageIndex = list.PageIndex,
             ShowTotalSummary = false,
-            RouteActionName = "CustomerForumSubscriptions",
+            RouteActionName = NopRouteNames.Standard.CUSTOMER_FORUM_SUBSCRIPTIONS,
             UseRouteLinks = true,
             RouteValues = new ForumSubscriptionsRouteValues { PageNumber = pageIndex }
         };

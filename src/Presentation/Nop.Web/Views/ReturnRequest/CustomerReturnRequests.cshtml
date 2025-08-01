@@ -52,7 +52,7 @@
                         <li class="uploaded-file">
                             <label>@T("Account.CustomerReturnRequests.UploadedFile")</label>
                             <span>
-                                <a href="@Url.RouteUrl("DownloadGetFileUpload", new {downloadId = item.UploadedFileGuid.ToString()})">
+                                <a href="@Url.RouteUrl(NopRouteNames.Standard.DOWNLOAD_GET_FILE_UPLOAD, new { downloadId = item.UploadedFileGuid.ToString() })">
                                     @T("Account.CustomerReturnRequests.UploadedFile.Download")
                                 </a>
                             </span>

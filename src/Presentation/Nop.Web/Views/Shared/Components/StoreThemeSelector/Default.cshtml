@@ -8,7 +8,7 @@
     var themes = await Model.AvailableStoreThemes.SelectAwait(async x => new SelectListItem
     {
         Text = x.Title,
-        Value = Url.RouteUrl("SetStoreTheme", new { themename = x.Name, returnUrl }, webHelper.GetCurrentRequestProtocol()),
+        Value = Url.RouteUrl(NopRouteNames.Standard.SET_STORE_THEME, new { themename = x.Name, returnUrl }, webHelper.GetCurrentRequestProtocol()),
         Selected = x.Name.Equals(Model.CurrentStoreTheme.Name, StringComparison.InvariantCultureIgnoreCase)
     }).ToListAsync();
     <div class="theme-selector">
