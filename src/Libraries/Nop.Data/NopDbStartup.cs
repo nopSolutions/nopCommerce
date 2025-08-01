@@ -39,7 +39,7 @@ public partial class NopDbStartup : INopStartup
             // set accessor for the connection string
             .AddScoped<IConnectionStringAccessor>(x => DataSettingsManager.LoadSettings())
             .AddScoped<IMigrationManager, MigrationManager>()
-            .AddSingleton<IConventionSet, NopConventionSet>()
+            .AddScoped<IConventionSet, NopConventionSet>()
             .ConfigureRunner(rb =>
                 rb.WithVersionTable(new MigrationVersionInfo())
                     .AddNopDbEngines()
