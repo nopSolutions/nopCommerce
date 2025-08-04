@@ -112,9 +112,17 @@ public partial class NopAssetHelper : INopAssetHelper
         ArgumentNullException.ThrowIfNull(asset);
 
         var httpContext = _actionContextAccessor.ActionContext.HttpContext;
-        var hash = asset.GenerateCacheKey(httpContext, _webOptimizerConfig);
 
-        return QueryHelpers.AddQueryString(asset.Route, "v", hash);
+        try
+        {
+            var hash = asset.GenerateCacheKey(httpContext, _webOptimizerConfig);
+            return QueryHelpers.AddQueryString(asset.Route, "v", hash);
+        }
+        catch
+        {
+            //in some cases WO can't handle assets (e.g. IIS sub-application with PathBase)
+            return asset.Route;
+        }
     }
 
     #endregion

@@ -78,6 +78,8 @@ public partial record ProductReviewModel : BaseNopEntityModel
 
     public string WrittenOnStr { get; set; }
 
+    public DateTime WrittenOn { get; set; }
+
     public ProductReviewHelpfulnessModel Helpfulness { get; set; }
 
     public IList<ProductReviewReviewTypeMappingModel> AdditionalProductReviewList { get; set; }

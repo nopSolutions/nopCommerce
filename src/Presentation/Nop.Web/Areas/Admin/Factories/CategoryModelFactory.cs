@@ -243,6 +243,8 @@ public partial class CategoryModelFactory : ICategoryModelFactory
         //prepare model stores
         await _storeMappingSupportedModelFactory.PrepareModelStoresAsync(model, category, excludeProperties);
 
+        await _baseAdminModelFactory.PreparePreTranslationSupportModelAsync(model);
+
         return model;
     }
 

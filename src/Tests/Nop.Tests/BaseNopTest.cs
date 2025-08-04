@@ -330,6 +330,7 @@ public partial class BaseNopTest
         services.AddTransient<ILocalizationService, LocalizationService>();
         services.AddTransient<ILocalizedEntityService, LocalizedEntityService>();
         services.AddTransient(typeof(Lazy<ILocalizationService>));
+        services.AddTransient<ITranslationModelFactory, TranslationModelFactory>();
         services.AddTransient<IInstallationLocalizationService, InstallationLocalizationService>();
         services.AddTransient<ILanguageService, LanguageService>();
         services.AddTransient<IDownloadService, DownloadService>();

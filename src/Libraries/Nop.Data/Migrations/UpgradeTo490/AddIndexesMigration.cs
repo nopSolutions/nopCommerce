@@ -27,6 +27,8 @@ public class AddIndexesMigration : ForwardOnlyMigration
                 .WithOptions().NonClustered();
 
         //#7676
+        const string databaseType = "sqlserver";
+
         var productTableName = nameof(Product);
         var nameColumnName = nameof(Product.Name);
         var skuColumnName = nameof(Product.Sku);
@@ -35,7 +37,7 @@ public class AddIndexesMigration : ForwardOnlyMigration
         var deletedColumnName = nameof(Product.Deleted);
         var productSearchIndexName = "IX_Product_Search";
         if (!Schema.Table(productTableName).Index(productSearchIndexName).Exists())
-            Create.Index(productSearchIndexName)
+            IfDatabase(databaseType).Create.Index(productSearchIndexName)
                 .OnTable(productTableName)
                 .OnColumn(nameColumnName).Ascending()
                 .OnColumn(skuColumnName).Ascending()

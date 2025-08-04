@@ -32,6 +32,8 @@ using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Translation;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Mvc.ModelBinding;
@@ -75,6 +77,7 @@ public partial class ProductController : BaseAdminController
     protected readonly IShoppingCartService _shoppingCartService;
     protected readonly ISpecificationAttributeService _specificationAttributeService;
     protected readonly IStoreContext _storeContext;
+    protected readonly ITranslationModelFactory _translationModelFactory;
     protected readonly IUrlRecordService _urlRecordService;
     protected readonly IVideoService _videoService;
     protected readonly IWarehouseService _warehouseService;
@@ -121,6 +124,7 @@ public partial class ProductController : BaseAdminController
         IShoppingCartService shoppingCartService,
         ISpecificationAttributeService specificationAttributeService,
         IStoreContext storeContext,
+        ITranslationModelFactory translationModelFactory,
         IUrlRecordService urlRecordService,
         IVideoService videoService,
         IWarehouseService warehouseService,
@@ -162,6 +166,7 @@ public partial class ProductController : BaseAdminController
         _shoppingCartService = shoppingCartService;
         _specificationAttributeService = specificationAttributeService;
         _storeContext = storeContext;
+        _translationModelFactory = translationModelFactory;
         _urlRecordService = urlRecordService;
         _videoService = videoService;
         _warehouseService = warehouseService;
@@ -1090,6 +1095,33 @@ public partial class ProductController : BaseAdminController
         var model = await _productModelFactory.PrepareProductModelAsync(null, product);
 
         return View(model);
+    }
+
+    [HttpPost]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
+    public virtual async Task<IActionResult> PreTranslate(int itemId)
+    {
+        var translationModel = new TranslationModel();
+
+        //try to get a product with the specified id
+        var product = await _productService.GetProductByIdAsync(itemId);
+        if (product == null || product.Deleted)
+            return Json(translationModel);
+
+        //a vendor should have access only to his products
+        var currentVendor = await _workContext.GetCurrentVendorAsync();
+        if (currentVendor != null && product.VendorId != currentVendor.Id)
+            return Json(translationModel);
+
+        //prepare model
+        var model = await _productModelFactory.PrepareProductModelAsync(null, product);
+
+        translationModel = await _translationModelFactory.PrepareTranslationModelAsync(model,
+            (nameof(ProductLocalizedModel.Name), false),
+            (nameof(ProductLocalizedModel.ShortDescription), false),
+            (nameof(ProductLocalizedModel.FullDescription), true));
+
+        return Json(translationModel);
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
@@ -3067,6 +3099,29 @@ public partial class ProductController : BaseAdminController
 
     [HttpPost]
     [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
+    public virtual async Task<IActionResult> PreTranslateProductAttribute(int itemId)
+    {
+        var translationModel = new TranslationModel();
+
+        //try to get a product attribute mapping with the specified id
+        var productAttributeMapping = await _productAttributeService.GetProductAttributeMappingByIdAsync(itemId);
+        if (productAttributeMapping == null)
+            return Json(translationModel);
+
+        var product = await _productService.GetProductByIdAsync(productAttributeMapping.ProductId);
+        
+        if (product == null)
+            return Json(translationModel);
+
+        var model = await _productModelFactory.PrepareProductAttributeMappingModelAsync(null, product, productAttributeMapping);
+
+        translationModel = await _translationModelFactory.PrepareTranslationModelAsync(model, nameof(ProductAttributeMappingModel.TextPrompt));
+
+        return Json(translationModel);
+    }
+
+    [HttpPost]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> ProductAttributeMappingDelete(int id)
     {
         //try to get a product attribute mapping with the specified id
@@ -3814,12 +3869,20 @@ public partial class ProductController : BaseAdminController
             if (_updated)
                 return true;
 
-            return !Product.Name.Equals(Name) ||
-                !Product.Sku.Equals(Sku) ||
+            return isStringValueChanged(Product.Name, Name) ||
+                isStringValueChanged(Product.Sku, Sku) ||
                 !Product.Price.Equals(Price) ||
                 !Product.OldPrice.Equals(OldPrice) ||
                 !Product.StockQuantity.Equals(Quantity) ||
                 !Product.Published.Equals(IsPublished);
+
+            bool isStringValueChanged(string oldValue, string newValue)
+            {
+                if (string.IsNullOrEmpty(oldValue))
+                    return !string.IsNullOrEmpty(newValue);
+
+                return !oldValue.Equals(newValue);
+            }
         }
 
         public bool NeedToCreate(bool selected)

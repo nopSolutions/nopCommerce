@@ -194,7 +194,7 @@ public partial class MessageTemplateModelFactory : IMessageTemplateModelFactory
         model.SendImmediately = !model.DelayBeforeSend.HasValue;
         model.HasAttachedDownload = model.AttachedDownloadId > 0;
 
-        var allowedTokens = string.Join(", ", await _messageTokenProvider.GetListOfAllowedTokensAsync(_messageTokenProvider.GetTokenGroups(messageTemplate)));
+        var allowedTokens = string.Join(", ", await _messageTokenProvider.GetListOfAllowedTokensAsync(_messageTokenProvider.GetTokenGroups(messageTemplate).ToList()));
         model.AllowedTokens = $"{allowedTokens}{Environment.NewLine}{Environment.NewLine}" +
                               $"{await _localizationService.GetResourceAsync("Admin.ContentManagement.MessageTemplates.Tokens.ConditionalStatement")}{Environment.NewLine}";
 

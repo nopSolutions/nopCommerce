@@ -1,4 +1,5 @@
 ﻿using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Models.Translation;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Catalog;
@@ -6,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog;
 /// <summary>
 /// Represents a product attribute model
 /// </summary>
-public partial record ProductAttributeModel : BaseNopEntityModel, ILocalizedModel<ProductAttributeLocalizedModel>
+public partial record ProductAttributeModel : BaseNopEntityModel, ITranslationSupportedModel, ILocalizedModel<ProductAttributeLocalizedModel>
 {
     #region Ctor
 
@@ -32,6 +33,8 @@ public partial record ProductAttributeModel : BaseNopEntityModel, ILocalizedMode
     public PredefinedProductAttributeValueSearchModel PredefinedProductAttributeValueSearchModel { get; set; }
 
     public ProductAttributeProductSearchModel ProductAttributeProductSearchModel { get; set; }
+
+    public bool PreTranslationAvailable { get; set; }
 
     #endregion
 }

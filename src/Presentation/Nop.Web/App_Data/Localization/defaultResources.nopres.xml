@@ -4440,6 +4440,9 @@
   <LocaleResource Name="Admin.Common.Ok">
     <Value>Ok</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Common.PreTranslate">
+    <Value>Pre-translate</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Common.Preview">
     <Value>Preview</Value>
   </LocaleResource>
@@ -7383,6 +7386,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.AllowCustomerToSelectTheme.Hint">
     <Value>Check to allow customers to select a store theme.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.AllowPreTranslate">
+    <Value>Allow to pre-translate</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.AllowPreTranslate.Hint">
+    <Value>Check to allow pre-translate functionality.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.AutomaticallyDetectLanguage">
     <Value>Automatically detect language</Value>
   </LocaleResource>
@@ -7433,6 +7442,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.TopMenuItems">
     <Value>Top menu items</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.Translation">
+    <Value>Translation</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CanonicalUrlsEnabled">
     <Value>Enable canonical URLs</Value>
@@ -7553,6 +7565,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CustomHeadTags.Hint">
     <Value><![CDATA[Enter a custom <head> tag(s) here. For example, some custom <meta> tag. Or leave empty if ignore this setting.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DeepLAuthKey">
+    <Value>Auth key</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DeepLAuthKey.Hint">
+    <Value>Set the DeepL auth key.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme">
     <Value>Default store theme</Value>
@@ -7761,6 +7779,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GenerateProductMetaDescription.Hint">
     <Value>When enabled, product META descriptions will be automatically generated (if not specified on the product details page) based on product short description.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GoogleTranslateApiKey">
+    <Value>API key</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GoogleTranslateApiKey.Hint">
+    <Value>Set the Google Translate API key.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HeaderCustomHtml">
     <Value>Header custom HTML</Value>
   </LocaleResource>
@@ -7832,6 +7856,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.Microdata.Hint">
     <Value>Check to generate Microdata tags on the product details page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.NotTranslateLanguages">
+    <Value>Languages to ignore</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.NotTranslateLanguages.Hint">
+    <Value>You may specify the languages that will be ignored when pre-translating content.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.OpenGraphMetaTags">
     <Value>Open Graph META tags</Value>
@@ -8000,6 +8030,22 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SubjectFieldOnContactUsForm.Hint">
     <Value>Check to allow a customer to type a subject on the contact us page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.TranslateFromLanguage">
+    <Value>Translate from the language</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.TranslateFromLanguage.Hint">
+    <Value>Set the base language to translate from.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.Translation.Info">
+    <Value>
+        <![CDATA[<p>Pre-translate functionality allows you to use third-party translation services such as <a href='https://cloud.google.com/translate' target='_blank'>Google's Cloud Translation</a> or <a href='https://www.deepl.com/products/api' target='_blank'>DeepL</a> to automatically translate localizable fields of entities such as products and their attributes, categories, manufacturers, etc.</p><p><strong>Note:</strong> This functionality will not change any translations that you have added, or edited, manually.</p>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.TranslationService">
+    <Value>Translation service</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.TranslationService.Hint">
+    <Value>Choose the translation service which will be used for pre-translate functionality.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.TwitterLink">
     <Value>Twitter page URL</Value>
@@ -9048,6 +9094,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.AllowCartItemEditing.Hint">
     <Value>Check to allow customers to edit items already placed in the cart or wishlist. It could be useful when your products have attributes or any other fields entered by a customer.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.AllowMultipleWishlist">
+    <Value>Allow multiple wishlists</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.AllowMultipleWishlist.Hint">
+    <Value>A value indicating whether customers can use multiple wishlists.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.AllowOutOfStockItemsToBeAddedToWishlist">
     <Value>Allow 'out of stock' items to be added to wishlist</Value>
   </LocaleResource>
@@ -9098,6 +9150,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.GroupTierPricesForDistinctShoppingCartItems.Hint">
     <Value>Allows to offer special prices when customers buy bigger amounts of a particular product. For example, when a customer could have two shopping cart items for the same products (different product attributes).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.MaximumNumberOfCustomWishlist">
+    <Value>Maximum number of custom wishlists</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.MaximumNumberOfCustomWishlist.Hint">
+    <Value>Specify the maximum number of custom wishlists a customer can use.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.MaximumShoppingCartItems">
     <Value>Maximum shopping cart items</Value>
@@ -15840,6 +15898,24 @@
   <LocaleResource Name="Admin.System.Maintenance.DeleteMinificationFiles.TotalDeleted">
     <Value>{0} files were deleted</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.DeleteThumbFiles">
+    <Value>Delete image thumbs</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.DeleteThumbFiles.Deleted">
+    <Value>All image thumbs were deleted.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.DeleteThumbFiles.FilesCount">
+    <Value>Total files: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.DeleteThumbFiles.FilesSize">
+     <Value>Total file size: {0} MB</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.DeleteThumbFiles.IsNotSupported">
+    <Value>Delete image thumbs is not supported by current picture thumb service.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.DeleteThumbFiles.Text">
+    <Value>Delete image thumbs from the thumbs directory. All files except the placeholder.txt file.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.Maintenance.ReIndexTables">
     <Value>Re-index database tables</Value>
   </LocaleResource>
@@ -16346,6 +16422,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.Templates.Topic.DisplayOrder">
     <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Translation.Translated.Success">
+    <Value>Pre-translation has been completed (all possible fields are pre-filled)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Translation.Translated.Warning">
+    <Value>Errors occurred during pre-translation, see details in the log</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Templates.Topic.DisplayOrder.Hint">
     <Value>The display order of this template. 1 represents the top of the list.</Value>
@@ -17861,6 +17943,12 @@
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Tax.VatNumberStatus.Valid">
     <Value>Valid</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Translation.TranslationServiceType.DeepL">
+    <Value>DeepL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Translation.TranslationServiceType.GoogleTranslate">
+    <Value>Google Cloud Translate</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Data.DataProviderType.MySql">
     <Value>MySQL</Value>
@@ -19404,6 +19492,12 @@
   <LocaleResource Name="Products.ProductHasBeenAddedToTheWishlist.Link">
     <Value><![CDATA[The product has been added to your <a href="{0}">wishlist</a>]]></Value>
   </LocaleResource>
+  <LocaleResource Name="Products.ProductHasBeenAddedToTheCustomWishlist.Link">
+    <Value><![CDATA[The product has been added to your <a href="{0}">{1}</a>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.ProductHasBeenAddedToTheWishlistAndMoved.Link">
+    <Value><![CDATA[The product has been added to your <a href="{0}">wishlist</a>. Want to move it to a <a href="#" onclick="{1}">custom wishlist</a>?]]></Value>
+  </LocaleResource>
   <LocaleResource Name="Products.Qty">
     <Value>Qty</Value>
   </LocaleResource>
@@ -20598,6 +20692,12 @@
   <LocaleResource Name="Wishlist">
     <Value>Wishlist</Value>
   </LocaleResource>
+  <LocaleResource Name="Wishlist.AddCustomWishlist">
+    <Value>Custom wishlist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.AddNewWishlist">
+    <Value>Add new wishlist</Value>
+  </LocaleResource>
   <LocaleResource Name="Wishlist.AddToCart.Error">
     <Value>Some product(s) from wishlist could not be moved to the cart for some reasons.</Value>
   </LocaleResource>
@@ -20606,6 +20706,12 @@
   </LocaleResource>
   <LocaleResource Name="Wishlist.CartIsEmpty">
     <Value>The wishlist is empty!</Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.Default">
+    <Value>Wishlist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.DeleteWishlist">
+    <Value>Delete wishlist</Value>
   </LocaleResource>
   <LocaleResource Name="Wishlist.EmailAFriend">
     <Value>Email a friend</Value>
@@ -20646,8 +20752,32 @@
   <LocaleResource Name="Wishlist.EmailAFriend.YourEmailAddress.Required">
     <Value>Enter your email</Value>
   </LocaleResource>
+  <LocaleResource Name="Wishlist.EnterWishlistName">
+    <Value>Enter wishlist name</Value>
+  </LocaleResource>
   <LocaleResource Name="Wishlist.HeaderQuantity">
     <Value>({0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.MaximumNumberReached">
+    <Value>You cannot create more than {0} custom wishlists.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.MoveToCustomWishlist">
+    <Value>Move to wishlist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.MultipleWishlistNotForGuest">
+    <Value>The multiple wishlist functionality is only available to registered customers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.NameRequired">
+    <Value>A wishlist name is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.NotAllowMultipleWishlist">
+    <Value>Multiple wishlist functionality is disabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.NotFound">
+    <Value>Wishlist not found.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.SelectWishlist">
+    <Value>Specify your wishlist</Value>
   </LocaleResource>
   <LocaleResource Name="Wishlist.TaxShipping.ExclTax">
     <Value><![CDATA[All prices are entered excluding tax. Excluding <a href="{0}">shipping</a>]]></Value>

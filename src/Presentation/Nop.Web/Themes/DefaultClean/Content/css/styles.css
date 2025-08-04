@@ -1,5 +1,3 @@
-
-
 /*********** CSS RESET **********/
 
 
@@ -3278,6 +3276,15 @@ label, label + * {
   background-color: #999;
 }
 
+.wishlist-content .delete-wishlist-button {
+    background-color: #b43c55;
+}
+
+.wishlist-content .delete-wishlist-button:hover,
+.wishlist-content .delete-wishlist-button:focus {
+    background-color: #e1133e;
+}
+
 .wishlist-page .share-info {
   text-align: center;
 }
@@ -3299,6 +3306,73 @@ label, label + * {
 
 .wishlist-page .no-data {
   margin: 25px 0 0;
+}
+
+.wishlist-buttons-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.add-wishlist-content {
+  display: inline-block;
+}
+
+.add-wishlist-content .wishlist-add-custom-button {
+  width: auto;
+  min-width: 64px;
+  min-height: 36px;
+  background-color: #4ab2f1;
+  border: none;
+  padding-block: 7px 9px;
+  padding-inline: 25px 23px;
+  text-align: center;
+  line-height: 20px;
+  font-size: 15px;
+  color: #fff;
+}
+
+.add-wishlist-content .wishlist-add-custom-button:hover,
+.add-wishlist-content .wishlist-add-custom-button:focus {
+  background-color: #248ece;
+}
+
+.button-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: nowrap;
+}
+
+.button-2.custom-wishlist-button {
+  width: 132px;
+  height: 36px;
+  background-color: #cfd6e1;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-inline: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1f2d3d;
+  text-align: center;
+  cursor: pointer;
+  margin-block: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.button-2.custom-wishlist-button.add-new {
+  background: url(../images/new.png) left center no-repeat;
+  padding: 0 0 0 18px;
+}
+
+.button-2.custom-wishlist-button:hover {
+  background-color: #e9eff6;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }
 
 .compare-products-page {

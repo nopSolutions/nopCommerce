@@ -122,6 +122,9 @@ public partial class AclEventConsumer : IConsumer<ModelPreparedEvent<BaseNopMode
             case CustomerSearchModel customerSearchModel:
                 await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(customerSearchModel);
                 break;
+            case OnlineCustomerSearchModel onlineCustomerSearchModel:
+                await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(onlineCustomerSearchModel);
+                break;
         }
     }
 

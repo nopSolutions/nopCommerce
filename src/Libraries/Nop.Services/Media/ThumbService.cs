@@ -159,5 +159,53 @@ public partial class ThumbService : IThumbService
         return Task.FromResult(imagesPathUrl);
     }
 
+    /// <summary>
+    /// Gets the information about thumbs
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the thumbs file count and size
+    /// </returns>
+    public virtual async Task<(int filesCount, long filesSize)> GetThumbsInfoAsync()
+    {
+        var filesCount = 0;
+        var filesSize = 0L;
+        var currentFiles = _fileProvider.GetFiles(_fileProvider.GetAbsolutePath(NopMediaDefaults.ImageThumbsPath), topDirectoryOnly: false);
+        
+        foreach (var currentFileName in currentFiles)
+        {
+            if (currentFileName.EndsWith("placeholder.txt"))
+                continue;
+
+            filesCount++;
+
+            var thumbFilePath = await GetThumbLocalPathByFileNameAsync(currentFileName);
+            filesSize += _fileProvider.FileLength(thumbFilePath);
+        }
+
+        return (filesCount, filesSize);
+    }
+
+    /// <summary>
+    /// Delete all thumbs
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task DeleteAllThumbsAsync()
+    {
+        var currentFiles = _fileProvider.GetFiles(_fileProvider.GetAbsolutePath(NopMediaDefaults.ImageThumbsPath), topDirectoryOnly: false);
+
+        foreach (var currentFileName in currentFiles)
+        {
+            if (currentFileName.EndsWith("placeholder.txt"))
+                continue;
+
+            var thumbFilePath = await GetThumbLocalPathByFileNameAsync(currentFileName);
+            _fileProvider.DeleteFile(thumbFilePath);
+        }
+
+        foreach (var directory in _fileProvider.GetDirectories(_fileProvider.GetAbsolutePath(NopMediaDefaults.ImageThumbsPath)))
+            _fileProvider.DeleteDirectory(directory);
+    }
+
     #endregion
 }

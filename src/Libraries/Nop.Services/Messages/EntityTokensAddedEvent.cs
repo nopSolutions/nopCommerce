@@ -1,18 +1,19 @@
-namespace Nop.Core.Domain.Messages;
+﻿using Nop.Core;
+
+namespace Nop.Services.Messages;
 
 /// <summary>
 /// A container for tokens that are added.
 /// </summary>
 /// <typeparam name="T">Entity type</typeparam>
-/// <typeparam name="U"></typeparam>
-public partial class EntityTokensAddedEvent<T, U> where T : BaseEntity
+public partial class EntityTokensAddedEvent<T> where T : BaseEntity
 {
     /// <summary>
     /// Ctor
     /// </summary>
     /// <param name="entity">Entity</param>
     /// <param name="tokens">Tokens</param>
-    public EntityTokensAddedEvent(T entity, IList<U> tokens)
+    public EntityTokensAddedEvent(T entity, IList<Token> tokens)
     {
         Entity = entity;
         Tokens = tokens;
@@ -26,5 +27,5 @@ public partial class EntityTokensAddedEvent<T, U> where T : BaseEntity
     /// <summary>
     /// Tokens
     /// </summary>
-    public IList<U> Tokens { get; }
+    public IList<Token> Tokens { get; }
 }

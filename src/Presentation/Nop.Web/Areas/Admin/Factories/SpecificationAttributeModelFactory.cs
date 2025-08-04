@@ -230,6 +230,8 @@ public partial class SpecificationAttributeModelFactory : ISpecificationAttribut
             {
                 locale.Name = await _localizationService.GetLocalizedAsync(specificationAttribute, entity => entity.Name, languageId, false, false);
             };
+
+            await _baseAdminModelFactory.PreparePreTranslationSupportModelAsync(model);
         }
 
         //prepare localized models

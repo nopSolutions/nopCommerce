@@ -56,6 +56,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
     protected readonly ICountryService _countryService;
     protected readonly ICustomerActivityService _customerActivityService;
     protected readonly ICustomerService _customerService;
+    protected readonly ICustomWishlistService _customWishlistService;
     protected readonly IDateTimeHelper _dateTimeHelper;
     protected readonly IExternalAuthenticationService _externalAuthenticationService;
     protected readonly IGdprService _gdprService;
@@ -99,6 +100,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         ICountryService countryService,
         ICustomerActivityService customerActivityService,
         ICustomerService customerService,
+        ICustomWishlistService customWishlistService,
         IDateTimeHelper dateTimeHelper,
         IExternalAuthenticationService externalAuthenticationService,
         IGdprService gdprService,
@@ -138,6 +140,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         _countryService = countryService;
         _customerActivityService = customerActivityService;
         _customerService = customerService;
+        _customWishlistService = customWishlistService;
         _dateTimeHelper = dateTimeHelper;
         _externalAuthenticationService = externalAuthenticationService;
         _gdprService = gdprService;
@@ -978,12 +981,15 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         Customer customer)
     {
         ArgumentNullException.ThrowIfNull(searchModel);
-
         ArgumentNullException.ThrowIfNull(customer);
 
         //get customer shopping cart
-        var shoppingCart = (await _shoppingCartService.GetShoppingCartAsync(customer, (ShoppingCartType)searchModel.ShoppingCartTypeId))
+        var shoppingCart = (await _shoppingCartService
+            .GetShoppingCartAsync(customer, (ShoppingCartType)searchModel.ShoppingCartTypeId, customWishlistId: 0))
             .ToPagedList(searchModel);
+        var customWishlists = shoppingCart.Any(item => item.ShoppingCartType == ShoppingCartType.Wishlist)
+            ? await _customWishlistService.GetAllCustomWishlistsAsync(customer.Id)
+            : new List<CustomWishlist>();
 
         //prepare list model
         var model = await new CustomerShoppingCartListModel().PrepareToGridAsync(searchModel, shoppingCart, () =>
@@ -1008,6 +1014,14 @@ public partial class CustomerModelFactory : ICustomerModelFactory
 
                 //convert dates to the user time
                 shoppingCartItemModel.UpdatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(item.UpdatedOnUtc, DateTimeKind.Utc);
+
+                if (item.ShoppingCartType == ShoppingCartType.Wishlist)
+                {
+                    shoppingCartItemModel.CustomWishlistName = customWishlists
+                        .FirstOrDefault(wishlist => wishlist.Id == item.CustomWishlistId) is CustomWishlist customWishlist
+                        ? customWishlist.Name
+                        : await _localizationService.GetResourceAsync("Wishlist.Default");
+                }
 
                 return shoppingCartItemModel;
             });
@@ -1133,7 +1147,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         var lastActivityFrom = DateTime.UtcNow.AddMinutes(-_customerSettings.OnlineCustomerMinutes);
 
         //get online customers
-        var customers = await _customerService.GetOnlineCustomersAsync(customerRoleIds: null,
+        var customers = await _customerService.GetOnlineCustomersAsync(customerRoleIds: searchModel.SelectedCustomerRoleIds.ToArray(),
             lastActivityFromUtc: lastActivityFrom,
             pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 

@@ -82,24 +82,6 @@ public sealed class PublishModelEventsAttribute : TypeFilterAttribute
         }
 
         /// <summary>
-        /// Publish model prepared event
-        /// </summary>
-        /// <param name="model">Model</param>
-        /// <returns>A task that represents the asynchronous operation</returns>
-        protected virtual async Task PublishModelPreparedEventAsync(object model)
-        {
-            //we publish the ModelPrepared event for all models as the BaseNopModel, 
-            //so you need to implement IConsumer<ModelPrepared<BaseNopModel>> interface to handle this event
-            if (model is BaseNopModel nopModel)
-                await _eventPublisher.ModelPreparedAsync(nopModel);
-
-            //we publish the ModelPrepared event for collection as the IEnumerable<BaseNopModel>, 
-            //so you need to implement IConsumer<ModelPrepared<IEnumerable<BaseNopModel>>> interface to handle this event
-            if (model is IEnumerable<BaseNopModel> nopModelCollection)
-                await _eventPublisher.ModelPreparedAsync(nopModelCollection);
-        }
-
-        /// <summary>
         /// Called asynchronously before the action, after model binding is complete.
         /// </summary>
         /// <param name="context">A context for action filters</param>
@@ -138,7 +120,7 @@ public sealed class PublishModelEventsAttribute : TypeFilterAttribute
 
             //model prepared event
             if (context.Controller is Controller controller)
-                await PublishModelPreparedEventAsync(controller.ViewData.Model);
+                await _eventPublisher.ModelPreparedAsync(controller.ViewData.Model);
         }
 
         #endregion
@@ -172,7 +154,7 @@ public sealed class PublishModelEventsAttribute : TypeFilterAttribute
 
             //model prepared event
             if (context.Result is JsonResult result)
-                await PublishModelPreparedEventAsync(result.Value);
+                await _eventPublisher.ModelPreparedAsync(result.Value);
 
             await next();
         }

@@ -535,7 +535,7 @@ public partial class ShoppingCartService : IShoppingCartService
         }
 
         if (product.AgeVerification && product.MinimumAgeToPurchase > 0)
-        { 
+        {
             if (!customer.DateOfBirth.HasValue)
                 warnings.Add(await _localizationService.GetResourceAsync("ShoppingCart.DateOfBirthRequired"));
             else if (CommonHelper.GetDifferenceInYears(customer.DateOfBirth.Value, DateTime.Today) < product.MinimumAgeToPurchase)
@@ -760,12 +760,13 @@ public partial class ShoppingCartService : IShoppingCartService
     /// <param name="productId">Product identifier; pass null to load all records</param>
     /// <param name="createdFromUtc">Created date from (UTC); pass null to load all records</param>
     /// <param name="createdToUtc">Created date to (UTC); pass null to load all records</param>
+    /// <param name="customWishlistId">Custom wishlist identifier; pass 0 to load all records from all wishlists, pass null to load records from the default wishlist</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the shopping Cart
     /// </returns>
     public virtual async Task<IList<ShoppingCartItem>> GetShoppingCartAsync(Customer customer, ShoppingCartType? shoppingCartType = null,
-        int storeId = 0, int? productId = null, DateTime? createdFromUtc = null, DateTime? createdToUtc = null)
+        int storeId = 0, int? productId = null, DateTime? createdFromUtc = null, DateTime? createdToUtc = null, int? customWishlistId = null)
     {
         ArgumentNullException.ThrowIfNull(customer);
 
@@ -774,6 +775,10 @@ public partial class ShoppingCartService : IShoppingCartService
         //filter by type
         if (shoppingCartType.HasValue)
             items = items.Where(item => item.ShoppingCartTypeId == (int)shoppingCartType.Value);
+
+        //filter by custom wishlist
+        if ((!shoppingCartType.HasValue || shoppingCartType == ShoppingCartType.Wishlist) && (customWishlistId is null || customWishlistId > 0))
+            items = items.Where(item => item.CustomWishlistId == customWishlistId);
 
         //filter shopping cart items by store
         if (storeId > 0 && !_shoppingCartSettings.CartsSharedBetweenStores)
@@ -985,7 +990,7 @@ public partial class ShoppingCartService : IShoppingCartService
 
             //associated product (bundle)
             var associatedProduct = await _productService.GetProductByIdAsync(attributeValue.AssociatedProductId);
-            
+
             if (associatedProduct != null)
             {
                 var store = await _storeContext.GetCurrentStoreAsync();
@@ -1548,7 +1553,6 @@ public partial class ShoppingCartService : IShoppingCartService
         DateTime? rentalEndDate = null)
     {
         ArgumentNullException.ThrowIfNull(shoppingCart);
-
         ArgumentNullException.ThrowIfNull(product);
 
         return await shoppingCart.Where(sci => sci.ShoppingCartType == shoppingCartType)
@@ -1568,6 +1572,7 @@ public partial class ShoppingCartService : IShoppingCartService
     /// <param name="rentalEndDate">Rental end date</param>
     /// <param name="quantity">Quantity</param>
     /// <param name="addRequiredProducts">Whether to add required products</param>
+    /// <param name="wishlistId">Wishlist identifier; pass null if it's default wishlist</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the warnings
@@ -1576,7 +1581,7 @@ public partial class ShoppingCartService : IShoppingCartService
         ShoppingCartType shoppingCartType, int storeId, string attributesXml = null,
         decimal customerEnteredPrice = decimal.Zero,
         DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
-        int quantity = 1, bool addRequiredProducts = true)
+        int quantity = 1, bool addRequiredProducts = true, int? wishlistId = null)
     {
         ArgumentNullException.ThrowIfNull(customer);
 
@@ -1621,7 +1626,7 @@ public partial class ShoppingCartService : IShoppingCartService
             //update existing shopping cart item
             var newQuantity = shoppingCartItem.Quantity + quantity;
 
-            await addRequiredProductsToCartAsync(newQuantity);
+            await addRequiredProductsToCartAsync(newQuantity, wishlistId);
 
             if (warnings.Any())
                 return warnings;
@@ -1651,7 +1656,7 @@ public partial class ShoppingCartService : IShoppingCartService
             if (warnings.Any())
                 return warnings;
 
-            await addRequiredProductsToCartAsync();
+            await addRequiredProductsToCartAsync(wishlistId: wishlistId);
 
             if (warnings.Any())
                 return warnings;
@@ -1685,6 +1690,7 @@ public partial class ShoppingCartService : IShoppingCartService
                 ShoppingCartType = shoppingCartType,
                 StoreId = storeId,
                 ProductId = product.Id,
+                CustomWishlistId = shoppingCartType == ShoppingCartType.Wishlist ? wishlistId : null,
                 AttributesXml = attributesXml,
                 CustomerEnteredPrice = customerEnteredPrice,
                 Quantity = quantity,
@@ -1708,7 +1714,7 @@ public partial class ShoppingCartService : IShoppingCartService
 
         return warnings;
 
-        async Task addRequiredProductsToCartAsync(int qty = 0)
+        async Task addRequiredProductsToCartAsync(int qty = 0, int? wishlistId = null)
         {
             if (!product.RequireOtherProducts)
                 return;
@@ -1740,7 +1746,7 @@ public partial class ShoppingCartService : IShoppingCartService
                 {
                     //do not add required products to prevent circular references
                     var addToCartWarnings = await AddToCartAsync(customer, requiredProduct.Product, shoppingCartType, storeId,
-                        quantity: quantityToAdd, addRequiredProducts: requiredProduct.Product.AutomaticallyAddRequiredProducts);
+                        quantity: quantityToAdd, addRequiredProducts: requiredProduct.Product.AutomaticallyAddRequiredProducts, wishlistId: wishlistId);
 
                     if (addToCartWarnings.Any())
                     {
@@ -1823,6 +1829,43 @@ public partial class ShoppingCartService : IShoppingCartService
         }
 
         return warnings;
+    }
+
+    /// <summary>
+    /// Move shopping cart item to a custom wishlist
+    /// </summary>
+    /// <param name="shoppingCartItemId">Shopping cart item identifier</param>
+    /// <param name="wishlistId">Custom wishlist identifier</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task MoveItemToCustomWishlistAsync(int shoppingCartItemId, int? wishlistId = null)
+    {
+        var shoppingCartItemFrom = await _sciRepository.GetByIdAsync(shoppingCartItemId, cache => default);
+        if (shoppingCartItemFrom == null)
+            return;
+
+        var customer = await _customerService.GetCustomerByIdAsync(shoppingCartItemFrom.CustomerId);
+        var product = await _productService.GetProductByIdAsync(shoppingCartItemFrom.ProductId);
+        var cart = await GetShoppingCartAsync(customer, shoppingCartItemFrom.ShoppingCartType, shoppingCartItemFrom.StoreId, product.Id, customWishlistId: wishlistId);
+
+        var shoppingCartItemTo = await cart.FirstOrDefaultAwaitAsync(async sci => await ShoppingCartItemIsEqualAsync(sci, product, shoppingCartItemFrom.AttributesXml, shoppingCartItemFrom.CustomerEnteredPrice, shoppingCartItemFrom.RentalStartDateUtc, shoppingCartItemFrom.RentalEndDateUtc));
+
+        if (shoppingCartItemTo != null)
+        {
+            //update existing shopping cart item
+            var newQuantity = shoppingCartItemTo.Quantity + shoppingCartItemFrom.Quantity;
+            shoppingCartItemTo.Quantity = newQuantity;
+            shoppingCartItemTo.UpdatedOnUtc = DateTime.UtcNow;
+
+            await _sciRepository.UpdateAsync(shoppingCartItemTo);
+            await _sciRepository.DeleteAsync(shoppingCartItemFrom);
+        }
+        else
+        {
+            //update custom wishlist id
+            shoppingCartItemFrom.CustomWishlistId = wishlistId;
+            shoppingCartItemFrom.UpdatedOnUtc = DateTime.UtcNow;
+            await _sciRepository.UpdateAsync(shoppingCartItemFrom);
+        }
     }
 
     /// <summary>

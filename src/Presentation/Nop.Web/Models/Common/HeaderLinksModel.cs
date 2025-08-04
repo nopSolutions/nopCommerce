@@ -9,6 +9,7 @@ public partial record HeaderLinksModel : BaseNopModel
     public string CustomerName { get; set; }
 
     public bool ShoppingCartEnabled { get; set; }
+    public bool UsePopupNotifications { get; set; }
     public int ShoppingCartItems { get; set; }
 
     public bool WishlistEnabled { get; set; }

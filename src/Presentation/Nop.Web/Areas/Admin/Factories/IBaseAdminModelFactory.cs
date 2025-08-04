@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Web.Framework.Models.Translation;
 
 namespace Nop.Web.Areas.Admin.Factories;
 
@@ -317,4 +318,11 @@ public partial interface IBaseAdminModelFactory
     /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     Task PrepareSpecificationAttributeGroupsAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null);
+
+    /// <summary>
+    /// Prepare translation supported model
+    /// </summary>
+    /// <param name="model">Translation supported model</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task PreparePreTranslationSupportModelAsync(ITranslationSupportedModel model);
 }

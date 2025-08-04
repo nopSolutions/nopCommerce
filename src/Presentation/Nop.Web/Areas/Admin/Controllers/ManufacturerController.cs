@@ -18,6 +18,8 @@ using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Translation;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
 
@@ -43,6 +45,7 @@ public partial class ManufacturerController : BaseAdminController
     protected readonly IProductService _productService;
     protected readonly IStoreMappingService _storeMappingService;
     protected readonly IStoreService _storeService;
+    protected readonly ITranslationModelFactory _translationModelFactory;
     protected readonly IUrlRecordService _urlRecordService;
     protected readonly IWorkContext _workContext;
 
@@ -66,6 +69,7 @@ public partial class ManufacturerController : BaseAdminController
         IProductService productService,
         IStoreMappingService storeMappingService,
         IStoreService storeService,
+        ITranslationModelFactory translationModelFactory,
         IUrlRecordService urlRecordService,
         IWorkContext workContext)
     {
@@ -85,6 +89,7 @@ public partial class ManufacturerController : BaseAdminController
         _productService = productService;
         _storeMappingService = storeMappingService;
         _storeService = storeService;
+        _translationModelFactory = translationModelFactory;
         _urlRecordService = urlRecordService;
         _workContext = workContext;
     }
@@ -344,6 +349,27 @@ public partial class ManufacturerController : BaseAdminController
 
         //if we got this far, something failed, redisplay form
         return View(model);
+    }
+
+    [HttpPost]
+    [CheckPermission(StandardPermission.Catalog.MANUFACTURER_CREATE_EDIT_DELETE)]
+    public virtual async Task<IActionResult> PreTranslate(int itemId)
+    {
+        var translationModel = new TranslationModel();
+
+        //try to get a manufacturer with the specified id
+        var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(itemId);
+        if (manufacturer == null || manufacturer.Deleted)
+            return Json(translationModel);
+        
+        //prepare model
+        var model = await _manufacturerModelFactory.PrepareManufacturerModelAsync(null, manufacturer);
+
+        translationModel = await _translationModelFactory.PrepareTranslationModelAsync(model,
+            (nameof(ManufacturerLocalizedModel.Name), false),
+            (nameof(ManufacturerLocalizedModel.Description), true));
+
+        return Json(translationModel);
     }
 
     [HttpPost]

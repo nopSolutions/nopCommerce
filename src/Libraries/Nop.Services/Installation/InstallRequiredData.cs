@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 using Nop.Core;
 using Nop.Core.Configuration;
@@ -28,6 +29,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
+using Nop.Core.Domain.Translation;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Http;
 using Nop.Core.Security;
@@ -312,9 +314,13 @@ public partial class InstallationService
     protected virtual async Task InstallLanguagesAsync()
     {
         var defaultCulture = new CultureInfo(NopCommonDefaults.DefaultLanguageCulture);
+        var re = new Regex(" \\(.*\\)", RegexOptions.Compiled);
+        var languageName = re.Replace(defaultCulture.NativeName, string.Empty);
+        languageName = languageName[0].ToString().ToUpper() + languageName[1..];
+
         var defaultLanguage = new Language
         {
-            Name = defaultCulture.TwoLetterISOLanguageName.ToUpperInvariant(),
+            Name = languageName,
             LanguageCulture = defaultCulture.Name,
             UniqueSeoCode = defaultCulture.TwoLetterISOLanguageName,
             FlagImageFileName = $"{defaultCulture.Name.ToLowerInvariant()[^2..]}.png",
@@ -339,9 +345,12 @@ public partial class InstallationService
         if (cultureInfo == null || regionInfo == null || cultureInfo.Name == NopCommonDefaults.DefaultLanguageCulture)
             return;
 
+        languageName = re.Replace(cultureInfo.NativeName, string.Empty);
+        languageName = languageName[0].ToString().ToUpper() + languageName[1..];
+
         var language = new Language
         {
-            Name = cultureInfo.TwoLetterISOLanguageName.ToUpperInvariant(),
+            Name = languageName,
             LanguageCulture = cultureInfo.Name,
             UniqueSeoCode = cultureInfo.TwoLetterISOLanguageName,
             FlagImageFileName = $"{regionInfo.TwoLetterISORegionName.ToLowerInvariant()}.png",
@@ -1475,6 +1484,16 @@ public partial class InstallationService
             IgnoreRtlPropertyForAdminArea = false
         });
 
+        await SaveSettingAsync(dictionary, new TranslationSettings
+        {
+            TranslateFromLanguageId = (await Table<Language>().FirstAsync()).Id,
+            AllowPreTranslate = false,
+            GoogleApiKey = string.Empty,
+            NotTranslateLanguages = new List<int>(),
+            DeepLAuthKey = string.Empty,
+            TranslationServiceId = (int)TranslationServiceType.GoogleTranslate
+        });
+
         await SaveSettingAsync(dictionary, new CustomerSettings
         {
             UsernamesEnabled = false,
@@ -1675,6 +1694,8 @@ public partial class InstallationService
             DisplayWishlistAfterAddingProduct = false,
             MaximumShoppingCartItems = 1000,
             MaximumWishlistItems = 1000,
+            AllowMultipleWishlist = true,
+            MaximumNumberOfCustomWishlist = 10,
             AllowOutOfStockItemsToBeAddedToWishlist = false,
             MoveItemsFromWishlistToCart = true,
             CartsSharedBetweenStores = false,
@@ -1996,6 +2017,8 @@ public partial class InstallationService
                 "/files/exportimport/",
                 "/install",
                 "/*?*returnUrl=",
+                "/*?*returnurl=", 
+                "/*?*ReturnUrl=",
                 //AJAX urls
                 "/cart/estimateshipping",
                 "/cart/selectshippingoption",

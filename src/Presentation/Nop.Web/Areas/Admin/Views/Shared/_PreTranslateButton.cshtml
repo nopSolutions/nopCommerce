@@ -1,0 +1,46 @@
+﻿@using Nop.Services.Messages
+@model string
+
+<button id="pre-translate" type="button" name="@Model" class="btn bg-olive">
+    <i class="fas fa-globe"></i>
+    @T("Admin.Common.PreTranslate")
+</button>
+
+
+<script asp-location="Footer">
+    $(function() {
+        $('#pre-translate').click(function () {
+            var itemId = $('#Id').val();
+
+            var postData = {
+                itemId
+            };
+            addAntiForgeryToken(postData);
+
+            $.ajax({
+                cache: false,
+                type: 'POST',
+                url: '@(Url.Action(Model))',
+                data: postData,
+                success: function (data, textStatus, jqXHR) {
+                    if (data.Translations && data.Translations.length > 0) {
+                        $.each(data.Translations, function(id, translation) {
+                            var input = $('#' + translation.Name);
+                            if (input[0].classList.contains('summernote')) {
+                                input.summernote('code', translation.Value);
+                            }
+                            else {
+                                input.val(translation.Value);
+                            }
+                        });
+                        displayBarNotification('@T("Admin.Translation.Translated.Success")', @((int)NotifyType.Success));
+                    }
+
+                    if (!data.Translations || data.Translations.length == 0 || data.HasErrors) {
+                        displayBarNotification('@T("Admin.Translation.Translated.Warning")', @((int)NotifyType.Warning));
+                    }
+                }
+            });
+        });
+    });
+</script>

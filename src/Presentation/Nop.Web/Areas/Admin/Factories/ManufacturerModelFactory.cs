@@ -239,6 +239,8 @@ public partial class ManufacturerModelFactory : IManufacturerModelFactory
         //prepare model stores
         await _storeMappingSupportedModelFactory.PrepareModelStoresAsync(model, manufacturer, excludeProperties);
 
+        await _baseAdminModelFactory.PreparePreTranslationSupportModelAsync(model);
+
         return model;
     }
 

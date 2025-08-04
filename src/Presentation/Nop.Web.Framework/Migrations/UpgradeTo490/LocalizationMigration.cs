@@ -157,7 +157,7 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Catalog.ProductTags.TaggedProducts"] = "Used by products",
             ["Admin.Catalog.ProductTags.TaggedProducts.Product"] = "Product",
             ["Admin.Catalog.ProductTags.TaggedProducts.Published"] = "Published",
-            
+
             //#7405
             ["Admin.Configuration.Settings.Catalog.ExportImportCategoryUseLimitedToStores"] = "Export / Import categories with \"limited to stores\"",
             ["Admin.Configuration.Settings.Catalog.ExportImportCategoryUseLimitedToStores.Hint"] = "Check if categories should be exported / imported with \"limited to stores\" property.",
@@ -182,7 +182,7 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Promotions.NewsLetterSubscriptionType.AddNew"] = "Add a new subscription type",
             ["Admin.Promotions.NewsLetterSubscriptions.List.CustomerRoles"] = "Customer role",
             ["Admin.Promotions.NewsLetterSubscriptions.List.SubscriptionTypes"] = "Subscription type",
-            ["Admin.Promotions.NewsLetterSubscriptions.List.SubscriptionTypes.Hint"] = "Search by a specific subscription type.",            
+            ["Admin.Promotions.NewsLetterSubscriptions.List.SubscriptionTypes.Hint"] = "Search by a specific subscription type.",
             ["Admin.Promotions.Campaigns.Fields.NewsLetterSubscriptionType"] = "Limited to subscription types",
             ["Admin.Promotions.Campaigns.Fields.NewsLetterSubscriptionType.Hint"] = "Choose a subscription type to which this email will be sent.",
             ["Account.SubscribeToNewsletter"] = "Subscribe to newsletter",
@@ -192,7 +192,7 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Promotions.NewsLetterSubscription.EditSubscriptionDetails"] = "Edit subscription",
             ["Admin.Promotions.NewsLetterSubscription.BackToList"] = "back to subscriptions list",
             ["Admin.Promotions.NewsLetterSubscription.AddNew"] = "Add a new subscription",
-            ["Admin.Promotions.NewsLetterSubscription.Deleted"] = "The subscription has been deleted successfully.",            
+            ["Admin.Promotions.NewsLetterSubscription.Deleted"] = "The subscription has been deleted successfully.",
             ["Admin.Promotions.NewsLetterSubscription.Added"] = "The subscription has been added successfully.",
             ["Admin.Promotions.NewsLetterSubscription.Updated"] = "The subscription has been updated successfully.",
             ["Admin.Promotions.NewsLetterSubscription.Warning"] = "An entity with this subscription type cannot be added or already exists.",
@@ -207,7 +207,7 @@ public class LocalizationMigration : MigrationBase
 
             //#820
             ["Currency.Selector.Text.Pattern"] = "{0}, {1}",
-            
+
             //#5652
             ["Admin.System.SystemInfo.DatabaseCollation"] = "Database collation",
             ["Admin.System.SystemInfo.DatabaseCollation.Hint"] = "The collation defines the rules for sorting and comparing data.",
@@ -215,7 +215,7 @@ public class LocalizationMigration : MigrationBase
             //#2192
             ["Admin.System.QueuedEmails.RequeueSelected"] = "Requeue selected",
 
-			//#1779
+            //#1779
             ["ActivityLog.PublicStore.Login.Fail"] = "Public store. Customer has failed to log in: {0}",
             ["Admin.Configuration.Settings.CustomerUser.NotifyFailedLoginAttempt"] = "Notify customers about failed login attempts",
             ["Admin.Configuration.Settings.CustomerUser.NotifyFailedLoginAttempt.Hint"] = "Check to enable customer notifications on failed login attempts.",
@@ -269,6 +269,55 @@ public class LocalizationMigration : MigrationBase
 
             //#7747
             ["Forum.TruncatePostfix"] = "...",
+
+            //#7388
+            ["Admin.Configuration.Settings.GeneralCommon.BlockTitle.Translation"] = "Translation",
+            ["Admin.Configuration.Settings.GeneralCommon.AllowPreTranslate"] = "Allow to pre-translate",
+            ["Admin.Configuration.Settings.GeneralCommon.AllowPreTranslate.Hint"] = "Check to allow pre-translate functionality.",
+            ["Admin.Configuration.Settings.GeneralCommon.TranslateFromLanguage"] = "Translate from the language",
+            ["Admin.Configuration.Settings.GeneralCommon.TranslateFromLanguage.Hint"] = "Set the base language to translate from.",
+            ["Admin.Configuration.Settings.GeneralCommon.NotTranslateLanguages"] = "Languages to ignore",
+            ["Admin.Configuration.Settings.GeneralCommon.NotTranslateLanguages.Hint"] = "You may specify the languages that will be ignored when pre-translating content.",
+            ["Admin.Configuration.Settings.GeneralCommon.GoogleTranslateApiKey"] = "API key",
+            ["Admin.Configuration.Settings.GeneralCommon.GoogleTranslateApiKey.Hint"] = "Set the Google Translate API key.",
+            ["Admin.Configuration.Settings.GeneralCommon.DeepLAuthKey"] = "Auth key",
+            ["Admin.Configuration.Settings.GeneralCommon.DeepLAuthKey.Hint"] = "Set the DeepL auth key.",
+            ["Admin.Configuration.Settings.GeneralCommon.TranslationService"] = "Translation service",
+            ["Admin.Configuration.Settings.GeneralCommon.TranslationService.Hint"] = "Choose the translation service which will be used for pre-translate functionality.",
+            ["Admin.Configuration.Settings.GeneralCommon.Translation.Info"] = "<p>Pre-translate functionality allows you to use third-party translation services such as <a href='https://cloud.google.com/translate' target='_blank'>Google's Cloud Translation</a> or <a href='https://www.deepl.com/products/api' target='_blank'>DeepL</a> to automatically translate localizable fields of entities such as products and their attributes, categories, manufacturers, etc.</p><p><strong>Note:</strong> This functionality will not change any translations that you have added, or edited, manually.</p>",
+            ["Admin.Common.PreTranslate"] = "Pre-translate",
+            ["Enums.Nop.Core.Domain.Translation.TranslationServiceType.GoogleTranslate"] = "Google Cloud Translate",
+            ["Enums.Nop.Core.Domain.Translation.TranslationServiceType.DeepL"] = "DeepL",
+            ["Admin.Translation.Translated.Success"] = "Pre-translation has been completed (all possible fields are pre-filled)",
+            ["Admin.Translation.Translated.Warning"] = "Errors occurred during pre-translation, see details in the log",
+
+            //#1921
+            ["Admin.Configuration.Settings.ShoppingCart.AllowMultipleWishlist"] = "Allow multiple wishlists",
+            ["Admin.Configuration.Settings.ShoppingCart.AllowMultipleWishlist.Hint"] = "A value indicating whether customers can use multiple wishlists.",
+            ["Admin.Configuration.Settings.ShoppingCart.MaximumNumberOfCustomWishlist"] = "Maximum number of custom wishlists",
+            ["Admin.Configuration.Settings.ShoppingCart.MaximumNumberOfCustomWishlist.Hint"] = "Specify the maximum number of custom wishlists a customer can use.",
+            ["Wishlist.AddNewWishlist"] = "Add new wishlist",
+            ["Wishlist.AddCustomWishlist"] = "Custom wishlist",
+            ["Wishlist.EnterWishlistName"] = "Enter wishlist name",
+            ["Wishlist.Default"] = "Wishlist",
+            ["Wishlist.MoveToCustomWishlist"] = "Move to wishlist",
+            ["Wishlist.NotFound"] = "Wishlist not found.",
+            ["Wishlist.DeleteWishlist"] = "Delete wishlist",
+            ["Wishlist.SelectWishlist"] = "Specify your wishlist",
+            ["Wishlist.MaximumNumberReached"] = "You cannot create more than {0} custom wishlists.", 
+            ["Wishlist.NameRequired"] = "A wishlist name is required.",
+            ["Products.ProductHasBeenAddedToTheCustomWishlist.Link"] = "The product has been added to your <a href=\"{0}\">{1}</a>",
+            ["Products.ProductHasBeenAddedToTheWishlistAndMoved.Link"] = "The product has been added to your <a href=\"{0}\">wishlist</a>. Want to move it to a <a href=\"#\" onclick=\"{1}\">custom wishlist</a>?",
+            ["Wishlist.MultipleWishlistNotForGuest"] = "The multiple wishlist functionality is only available to registered customers.",
+            ["Wishlist.NotAllowMultipleWishlist"] = "Multiple wishlist functionality is disabled.",
+ 
+            //#7739
+            ["Admin.System.Maintenance.DeleteThumbFiles.FilesCount"] = "Total files: {0}",
+            ["Admin.System.Maintenance.DeleteThumbFiles"] = "Delete image thumbs",
+            ["Admin.System.Maintenance.DeleteThumbFiles.FilesSize"] = "Total file size: {0} MB",
+            ["Admin.System.Maintenance.DeleteThumbFiles.Text"] = "Delete image thumbs from the thumbs directory. All files except the placeholder.txt file.",
+            ["Admin.System.Maintenance.DeleteThumbFiles.IsNotSupported"] = "Delete image thumbs is not supported by current picture thumb service.",
+            ["Admin.System.Maintenance.DeleteThumbFiles.Deleted"] = "All image thumbs were deleted.",
         }, languageId);
 
         #endregion

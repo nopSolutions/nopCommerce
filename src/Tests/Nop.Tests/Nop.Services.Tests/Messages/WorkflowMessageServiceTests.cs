@@ -367,7 +367,7 @@ public class WorkflowMessageServiceTests : ServiceTest
     public async Task CanSendWishlistEmailAFriendMessage()
     {
         await CheckData(async () =>
-            await _workflowMessageService.SendWishlistEmailAFriendMessageAsync(_customer, 1, NopTestsDefaults.AdminEmail, NopTestsDefaults.AdminEmail, string.Empty));
+            await _workflowMessageService.SendWishlistEmailAFriendMessageAsync(_customer, 1, NopTestsDefaults.AdminEmail, NopTestsDefaults.AdminEmail, string.Empty, string.Empty));
     }
 
     #endregion

@@ -319,7 +319,9 @@ public class Indexes : ForwardOnlyMigration
             .OnColumn(nameof(Topic.AvailableStartDateTimeUtc)).Descending()
             .WithOptions().NonClustered();
 
-        Create.Index("IX_Product_Search")
+        const string databaseType = "sqlserver";
+
+        IfDatabase(databaseType).Create.Index("IX_Product_Search")
             .OnTable(nameof(Product))
             .OnColumn(nameof(Product.Name)).Ascending()
             .OnColumn(nameof(Product.Sku)).Ascending()

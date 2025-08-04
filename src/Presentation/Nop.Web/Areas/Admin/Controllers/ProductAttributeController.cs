@@ -8,6 +8,8 @@ using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
+using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Translation;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
 
@@ -24,6 +26,7 @@ public partial class ProductAttributeController : BaseAdminController
     protected readonly IPermissionService _permissionService;
     protected readonly IProductAttributeModelFactory _productAttributeModelFactory;
     protected readonly IProductAttributeService _productAttributeService;
+    protected readonly ITranslationModelFactory _translationModelFactory;
 
     #endregion
 
@@ -35,7 +38,8 @@ public partial class ProductAttributeController : BaseAdminController
         INotificationService notificationService,
         IPermissionService permissionService,
         IProductAttributeModelFactory productAttributeModelFactory,
-        IProductAttributeService productAttributeService)
+        IProductAttributeService productAttributeService,
+        ITranslationModelFactory translationModelFactory)
     {
         _customerActivityService = customerActivityService;
         _localizationService = localizationService;
@@ -44,6 +48,7 @@ public partial class ProductAttributeController : BaseAdminController
         _permissionService = permissionService;
         _productAttributeModelFactory = productAttributeModelFactory;
         _productAttributeService = productAttributeService;
+        _translationModelFactory = translationModelFactory;
     }
 
     #endregion
@@ -192,6 +197,27 @@ public partial class ProductAttributeController : BaseAdminController
 
         //if we got this far, something failed, redisplay form
         return View(model);
+    }
+
+    [HttpPost]
+    [CheckPermission(StandardPermission.Catalog.PRODUCT_ATTRIBUTES_CREATE_EDIT_DELETE)]
+    public virtual async Task<IActionResult> PreTranslate(int itemId)
+    {
+        var translationModel = new TranslationModel();
+
+        //try to get a product attribute with the specified id
+        var productAttribute = await _productAttributeService.GetProductAttributeByIdAsync(itemId);
+        if (productAttribute == null)
+            return Json(translationModel);
+
+        //prepare model
+        var model = await _productAttributeModelFactory.PrepareProductAttributeModelAsync(null, productAttribute);
+
+        translationModel = await _translationModelFactory.PrepareTranslationModelAsync(model,
+            (nameof(ProductAttributeLocalizedModel.Name), false),
+            (nameof(ProductAttributeLocalizedModel.Description), true));
+
+        return Json(translationModel);
     }
 
     [HttpPost]

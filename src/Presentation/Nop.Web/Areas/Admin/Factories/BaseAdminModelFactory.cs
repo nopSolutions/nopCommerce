@@ -8,6 +8,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Domain.Translation;
 using Nop.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
@@ -24,6 +25,7 @@ using Nop.Services.Tax;
 using Nop.Services.Topics;
 using Nop.Services.Vendors;
 using Nop.Web.Areas.Admin.Infrastructure.Cache;
+using Nop.Web.Framework.Models.Translation;
 using LogLevel = Nop.Core.Domain.Logging.LogLevel;
 
 namespace Nop.Web.Areas.Admin.Factories;
@@ -60,6 +62,7 @@ public partial class BaseAdminModelFactory : IBaseAdminModelFactory
     protected readonly IVendorService _vendorService;
     protected readonly IWarehouseService _warehouseService;
     protected readonly IWorkContext _workContext;
+    protected readonly TranslationSettings _translationSettings;
 
     #endregion
 
@@ -88,7 +91,9 @@ public partial class BaseAdminModelFactory : IBaseAdminModelFactory
         ITaxCategoryService taxCategoryService,
         ITopicTemplateService topicTemplateService,
         IVendorService vendorService,
-        IWarehouseService warehouseService)
+        IWarehouseService warehouseService,
+        IWorkContext workContext,
+        TranslationSettings translationSettings)
     {
         _categoryService = categoryService;
         _categoryTemplateService = categoryTemplateService;
@@ -114,6 +119,8 @@ public partial class BaseAdminModelFactory : IBaseAdminModelFactory
         _topicTemplateService = topicTemplateService;
         _vendorService = vendorService;
         _warehouseService = warehouseService;
+        _workContext = workContext;
+        _translationSettings = translationSettings;
     }
 
     #endregion
@@ -1002,6 +1009,22 @@ public partial class BaseAdminModelFactory : IBaseAdminModelFactory
 
         //insert special item for the default value
         await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText, defaultItemValue);
+    }
+
+    /// <summary>
+    /// Prepare translation supported model
+    /// </summary>
+    /// <param name="model">Translation supported model</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task PreparePreTranslationSupportModelAsync(ITranslationSupportedModel model)
+    {
+        if (!_translationSettings.AllowPreTranslate)
+            return;
+
+        var allLanguages = await _languageService.GetAllLanguagesAsync(showHidden: true);
+        model.PreTranslationAvailable = allLanguages.Any(l =>
+            !_translationSettings.NotTranslateLanguages.Contains(l.Id) &&
+            l.Id != _translationSettings.TranslateFromLanguageId);
     }
 
     #endregion
