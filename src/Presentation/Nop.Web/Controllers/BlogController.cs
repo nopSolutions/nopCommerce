@@ -11,7 +11,6 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Security;
-using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Web.Factories;
 using Nop.Web.Framework;
@@ -39,7 +38,6 @@ public partial class BlogController : BasePublicController
     protected readonly IPermissionService _permissionService;
     protected readonly IStoreContext _storeContext;
     protected readonly IStoreMappingService _storeMappingService;
-    protected readonly IUrlRecordService _urlRecordService;
     protected readonly IWebHelper _webHelper;
     protected readonly IWorkContext _workContext;
     protected readonly IWorkflowMessageService _workflowMessageService;
@@ -61,7 +59,6 @@ public partial class BlogController : BasePublicController
         IPermissionService permissionService,
         IStoreContext storeContext,
         IStoreMappingService storeMappingService,
-        IUrlRecordService urlRecordService,
         IWebHelper webHelper,
         IWorkContext workContext,
         IWorkflowMessageService workflowMessageService,
@@ -79,7 +76,6 @@ public partial class BlogController : BasePublicController
         _permissionService = permissionService;
         _storeContext = storeContext;
         _storeMappingService = storeMappingService;
-        _urlRecordService = urlRecordService;
         _webHelper = webHelper;
         _workContext = workContext;
         _workflowMessageService = workflowMessageService;
@@ -134,8 +130,7 @@ public partial class BlogController : BasePublicController
         var blogPosts = await _blogService.GetAllBlogPostsAsync(store.Id, languageId);
         foreach (var blogPost in blogPosts)
         {
-            var seName = await _urlRecordService.GetSeNameAsync(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false);
-            var blogPostUrl = await _nopUrlHelper.RouteGenericUrlAsync<BlogPost>(new { SeName = seName }, _webHelper.GetCurrentRequestProtocol());
+            var blogPostUrl = await _nopUrlHelper.RouteGenericUrlAsync(blogPost, _webHelper.GetCurrentRequestProtocol(), languageId: blogPost.LanguageId, ensureTwoPublishedLanguages: false);
             items.Add(new RssItem(blogPost.Title, blogPost.Body, new Uri(blogPostUrl), $"urn:store:{store.Id}:blog:post:{blogPost.Id}", blogPost.CreatedOnUtc));
         }
         feed.Items = items;
@@ -228,8 +223,7 @@ public partial class BlogController : BasePublicController
                 ? await _localizationService.GetResourceAsync("Blog.Comments.SuccessfullyAdded")
                 : await _localizationService.GetResourceAsync("Blog.Comments.SeeAfterApproving");
 
-            var seName = await _urlRecordService.GetSeNameAsync(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false);
-            var blogPostUrl = await _nopUrlHelper.RouteGenericUrlAsync<BlogPost>(new { SeName = seName });
+            var blogPostUrl = await _nopUrlHelper.RouteGenericUrlAsync(blogPost, languageId: blogPost.LanguageId, ensureTwoPublishedLanguages: false);
             return LocalRedirect(blogPostUrl);
         }
 

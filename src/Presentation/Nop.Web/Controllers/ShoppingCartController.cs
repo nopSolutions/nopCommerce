@@ -25,7 +25,6 @@ using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Security;
-using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
@@ -76,7 +75,6 @@ public partial class ShoppingCartController : BasePublicController
     protected readonly IStoreContext _storeContext;
     protected readonly IStoreMappingService _storeMappingService;
     protected readonly ITaxService _taxService;
-    protected readonly IUrlRecordService _urlRecordService;
     protected readonly IWebHelper _webHelper;
     protected readonly IWorkContext _workContext;
     protected readonly IWorkflowMessageService _workflowMessageService;
@@ -120,7 +118,6 @@ public partial class ShoppingCartController : BasePublicController
         IStoreContext storeContext,
         IStoreMappingService storeMappingService,
         ITaxService taxService,
-        IUrlRecordService urlRecordService,
         IWebHelper webHelper,
         IWorkContext workContext,
         IWorkflowMessageService workflowMessageService,
@@ -159,7 +156,6 @@ public partial class ShoppingCartController : BasePublicController
         _storeContext = storeContext;
         _storeMappingService = storeMappingService;
         _taxService = taxService;
-        _urlRecordService = urlRecordService;
         _webHelper = webHelper;
         _workContext = workContext;
         _workflowMessageService = workflowMessageService;
@@ -567,7 +563,7 @@ public partial class ShoppingCartController : BasePublicController
                 message = "No product found with the specified ID"
             });
 
-        var redirectUrl = await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = await _urlRecordService.GetSeNameAsync(product) });
+        var redirectUrl = await _nopUrlHelper.RouteGenericUrlAsync(product);
 
         //we can add only simple products
         if (product.ProductType != ProductType.SimpleProduct)
