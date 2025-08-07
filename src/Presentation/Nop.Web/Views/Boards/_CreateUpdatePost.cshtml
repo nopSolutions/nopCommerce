@@ -28,7 +28,7 @@
                     <strong class="forum-subject">@Model.ForumName</strong>
                 </div>
                 <div class="inputs">
-                    <label>@T("Forum.TopicTitle"):</label>
+                    <label asp-for="Text">@T("Forum.TopicTitle"):</label>
                     <strong class="topic-subject">@Model.ForumTopicSubject</strong>
                 </div>
                 @if (Model.ForumEditor == EditorType.MarkdownEditor)
@@ -39,14 +39,14 @@
                 {
                     <div class="inputs">
                         <nop-bb-code-editor asp-for="Text" />
-                        <textarea asp-for="Text" class="forum-post-text"></textarea>
+                        <textarea aria-label="@T("Forum.Post.Text")" asp-for="Text" class="forum-post-text"></textarea>
                         <span asp-validation-for="Text"></span>
                     </div>
                 }
                 @if ((Model.ForumEditor == EditorType.SimpleTextBox))
                 {
                     <div class="inputs">
-                        <textarea asp-for="Text" class="forum-post-text"></textarea>
+                        <textarea aria-label="@T("Forum.Post.Text")" asp-for="Text" class="forum-post-text"></textarea>
                         <span asp-validation-for="Text"></span>
                     </div>
                 }

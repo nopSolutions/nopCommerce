@@ -15,8 +15,9 @@
             {
                 var controlId = $"{NopCatalogDefaults.ProductAttributePrefix}{attribute.Id}";
                 var textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
+                var textPromptId = $"{NopCatalogDefaults.ProductAttributePrefix}textprompt_{attribute.Id}";
                 <dt id="@($"{NopCatalogDefaults.ProductAttributePrefix}label_{attribute.Id}")" @(attribute.HasCondition ? Html.Raw("style = \"display: none\"") : null)>
-                    <label class="text-prompt">
+                    <label id="@textPromptId" class="text-prompt">
                         @textPrompt
                     </label>
                     @if (attribute.IsRequired)
@@ -35,7 +36,7 @@
                     {
                         case AttributeControlType.DropdownList:
                             {
-                                <select data-attr="@(attribute.Id)" name="@(controlId)" id="@(controlId)" @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw($"onchange=\"showHideDropdownQuantity('{controlId}')\"") : null)>
+                                <select data-attr="@(attribute.Id)" name="@(controlId)" id="@(controlId)" aria-labelledby="@textPromptId" @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw($"onchange=\"showHideDropdownQuantity('{controlId}')\"") : null)>
                                     <option value="0">@T("Products.ProductAttributes.DropdownList.DefaultItem")</option>
                                     @foreach (var attributeValue in attribute.Values)
                                     {

@@ -318,6 +318,9 @@ public class LocalizationMigration : MigrationBase
             ["Admin.System.Maintenance.DeleteThumbFiles.Text"] = "Delete image thumbs from the thumbs directory. All files except the placeholder.txt file.",
             ["Admin.System.Maintenance.DeleteThumbFiles.IsNotSupported"] = "Delete image thumbs is not supported by current picture thumb service.",
             ["Admin.System.Maintenance.DeleteThumbFiles.Deleted"] = "All image thumbs were deleted.",
+
+            //7807
+            ["Forum.Post.Text"] = "Post",
         }, languageId);
 
         #endregion
