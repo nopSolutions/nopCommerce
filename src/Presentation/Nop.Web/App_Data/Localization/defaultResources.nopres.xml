@@ -8092,10 +8092,10 @@
   <LocaleResource Name="Admin.Configuration.Settings.Media">
     <Value>Media settings</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Media.AllowSVGUploads">
+  <LocaleResource Name="Admin.Configuration.Settings.Media.AllowSvgUploads">
     <Value>Allow SVG uploads in admin area</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Media.AllowSVGUploads.Hint">
+  <LocaleResource Name="Admin.Configuration.Settings.Media.AllowSvgUploads.Hint">
     <Value>Check to allow uploading of SVG files in admin area.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.AssociatedProductPictureSize">

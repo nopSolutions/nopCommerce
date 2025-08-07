@@ -1610,7 +1610,7 @@ public partial class InstallationService
             ImageSquarePictureSize = 32,
             MaximumImageSize = 1980,
             DefaultPictureZoomEnabled = false,
-            AllowSVGUploads = false,
+            AllowSvgUploads = false,
             DefaultImageQuality = 80,
             MultipleThumbDirectories = false,
             ImportProductImagesUsingHash = true,

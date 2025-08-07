@@ -282,8 +282,8 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Promotions.Discounts.Fields.CouponCode.Reserved"] = "The entered coupon code is already reserved for the discount '{0}'",
 
             //#6378
-            ["Admin.Configuration.Settings.Media.AllowSVGUploads"] = "Allow SVG uploads in admin area",
-            ["Admin.Configuration.Settings.Media.AllowSVGUploads.Hint"] = "Check to allow uploading of SVG files in admin area.",
+            ["Admin.Configuration.Settings.Media.AllowSvgUploads"] = "Allow SVG uploads in admin area",
+            ["Admin.Configuration.Settings.Media.AllowSvgUploads.Hint"] = "Check to allow uploading of SVG files in admin area.",
 
             //#6396
             ["Admin.Catalog.Products.Fields.MinStockQuantity.Hint"] = "If you track inventory, you can perform a number of different actions when the current stock quantity falls below (reaches) your minimum stock quantity.",

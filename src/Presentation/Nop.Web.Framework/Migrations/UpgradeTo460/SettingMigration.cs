@@ -327,10 +327,10 @@ public class SettingMigration : MigrationBase
         }
 
         //#6378
-        if (!settingService.SettingExists(mediaSettings, settings => settings.AllowSVGUploads))
+        if (!settingService.SettingExists(mediaSettings, settings => settings.AllowSvgUploads))
         {
-            mediaSettings.AllowSVGUploads = false;
-            settingService.SaveSetting(mediaSettings, settings => settings.AllowSVGUploads);
+            mediaSettings.AllowSvgUploads = false;
+            settingService.SaveSetting(mediaSettings, settings => settings.AllowSvgUploads);
         }
 
         //#5599
