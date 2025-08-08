@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Localization;
+﻿using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Seo;
 
 namespace Nop.Core.Domain.Catalog;
@@ -6,7 +7,7 @@ namespace Nop.Core.Domain.Catalog;
 /// <summary>
 /// Represents a product tag
 /// </summary>
-public partial class ProductTag : BaseEntity, ILocalizedEntity, ISlugSupported
+public partial class ProductTag : BaseEntity, ILocalizedEntity, ISlugSupported, IMetaTagsSupported
 {
     /// <summary>
     /// Gets or sets the name

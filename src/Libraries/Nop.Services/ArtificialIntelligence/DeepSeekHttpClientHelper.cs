@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using Markdig;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using Nop.Core;
@@ -63,7 +62,7 @@ public partial class DeepSeekHttpClientHelper : IArtificialIntelligenceHttpClien
 
         var result = response.choices.FirstOrDefault()?.message?.content;
 
-        return Markdown.ToHtml(result ?? string.Empty);
+        return result ?? string.Empty;
     }
 
     #endregion

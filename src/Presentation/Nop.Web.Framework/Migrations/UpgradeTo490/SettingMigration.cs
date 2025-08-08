@@ -4,6 +4,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
@@ -17,7 +18,6 @@ using Nop.Data.Migrations;
 using Nop.Services.ArtificialIntelligence;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
-using Nop.Core.Domain.Forums;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo490;
 
@@ -305,6 +305,49 @@ public class SettingMigration : MigrationBase
         {
             aiSettings.ProductDescriptionQuery = ArtificialIntelligenceDefaults.ProductDescriptionQuery;
             settingService.SaveSetting(aiSettings, settings => settings.ProductDescriptionQuery);
+        }
+
+        //#7732
+        if (!settingService.SettingExists(aiSettings, settings => settings.AllowProductDescriptionGeneration))
+        {
+            aiSettings.AllowProductDescriptionGeneration = true;
+            settingService.SaveSetting(aiSettings, settings => settings.AllowProductDescriptionGeneration);
+        }
+
+        if (!settingService.SettingExists(aiSettings, settings => settings.AllowMetaTitleGeneration))
+        {
+            aiSettings.AllowMetaTitleGeneration = true;
+            settingService.SaveSetting(aiSettings, settings => settings.AllowMetaTitleGeneration);
+        }
+
+        if (!settingService.SettingExists(aiSettings, settings => settings.MetaTitleQuery))
+        {
+            aiSettings.MetaTitleQuery = ArtificialIntelligenceDefaults.MetaTitleQuery;
+            settingService.SaveSetting(aiSettings, settings => settings.MetaTitleQuery);
+        }
+
+        if (!settingService.SettingExists(aiSettings, settings => settings.AllowMetaKeywordsGeneration))
+        {
+            aiSettings.AllowMetaKeywordsGeneration = true;
+            settingService.SaveSetting(aiSettings, settings => settings.AllowMetaKeywordsGeneration);
+        }
+
+        if (!settingService.SettingExists(aiSettings, settings => settings.MetaKeywordsQuery))
+        {
+            aiSettings.MetaKeywordsQuery = ArtificialIntelligenceDefaults.MetaKeywordsQuery;
+            settingService.SaveSetting(aiSettings, settings => settings.MetaKeywordsQuery);
+        }
+
+        if (!settingService.SettingExists(aiSettings, settings => settings.AllowMetaDescriptionGeneration))
+        {
+            aiSettings.AllowMetaDescriptionGeneration = true;
+            settingService.SaveSetting(aiSettings, settings => settings.AllowMetaDescriptionGeneration);
+        }
+
+        if (!settingService.SettingExists(aiSettings, settings => settings.MetaDescriptionQuery))
+        {
+            aiSettings.MetaDescriptionQuery = ArtificialIntelligenceDefaults.MetaDescriptionQuery;
+            settingService.SaveSetting(aiSettings, settings => settings.MetaDescriptionQuery);
         }
     }
 

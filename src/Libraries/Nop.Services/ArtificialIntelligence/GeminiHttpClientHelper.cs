@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using Markdig;
 using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Domain.ArtificialIntelligence;
@@ -61,7 +60,7 @@ public partial class GeminiHttpClientHelper : IArtificialIntelligenceHttpClientH
 
         var result = response.candidates.Select(c => c.content.parts).FirstOrDefault();
 
-        return Markdown.ToHtml(result?[0].text.ToString() ?? string.Empty);
+        return result?[0].text ?? string.Empty;
     }
 
     #endregion
