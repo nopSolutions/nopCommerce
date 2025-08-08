@@ -63,7 +63,7 @@ public partial class ChatGptHttpClientHelper : IArtificialIntelligenceHttpClient
 
         var result = response.output.Select(o => o.content).FirstOrDefault();
 
-        return Markdown.ToHtml(result?[0].text ?? string.Empty);
+        return result?[0].text ?? string.Empty;
     }
 
     #endregion

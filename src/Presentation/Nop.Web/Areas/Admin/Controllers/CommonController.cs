@@ -4,6 +4,7 @@ using Nop.Core.Caching;
 using Nop.Core.Http.Extensions;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Services.ArtificialIntelligence;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
@@ -17,6 +18,7 @@ using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Models.ArtificialIntelligence;
 using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Areas.Admin.Controllers;
@@ -31,6 +33,7 @@ public partial class CommonController : BaseAdminController
 
     #region Fields
 
+    protected readonly IArtificialIntelligenceService _artificialIntelligenceService;
     protected readonly ICommonModelFactory _commonModelFactory;
     protected readonly ICustomerService _customerService;
     protected readonly INopDataProvider _dataProvider;
@@ -53,7 +56,8 @@ public partial class CommonController : BaseAdminController
 
     #region Ctor
 
-    public CommonController(ICommonModelFactory commonModelFactory,
+    public CommonController(IArtificialIntelligenceService artificialIntelligenceService,
+        ICommonModelFactory commonModelFactory,
         ICustomerService customerService,
         INopDataProvider dataProvider,
         IDateTimeHelper dateTimeHelper,
@@ -71,6 +75,7 @@ public partial class CommonController : BaseAdminController
         IWebHelper webHelper,
         IWorkContext workContext)
     {
+        _artificialIntelligenceService = artificialIntelligenceService;
         _commonModelFactory = commonModelFactory;
         _customerService = customerService;
         _dataProvider = dataProvider;
@@ -476,6 +481,31 @@ public partial class CommonController : BaseAdminController
             return Json(new { Result = string.Empty });
 
         return Json(new { Result = string.Format(await _localizationService.GetResourceAsync("Admin.System.Warnings.URL.Reserved"), validatedSeName) });
+    }
+
+    public async Task<IActionResult> GenerateMetaTags(MetaTagsGeneratorModel metaTagsGeneratorModel)
+    {
+        try
+        {
+            var rez = await _artificialIntelligenceService.CreateMetaTagsAsync(metaTagsGeneratorModel.EntityType, metaTagsGeneratorModel.EntityId, metaTagsGeneratorModel.LanguageId);
+
+            return Json(new MetaTagsModel
+            {
+                MetaTags = new GeneratedMetaTags
+                {
+                    Title = rez.MetaTitle,
+                    Keywords = rez.MetaKeywords,
+                    Description = rez.MetaDescription
+                }
+            });
+        }
+        catch (NopException e)
+        {
+            return Json(new MetaTagsModel
+            {
+                Error = e.Message
+            });
+        }
     }
 
     #endregion

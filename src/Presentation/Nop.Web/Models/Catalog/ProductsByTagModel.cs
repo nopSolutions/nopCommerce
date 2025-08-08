@@ -1,11 +1,12 @@
 ﻿using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Models.ArtificialIntelligence;
 
 namespace Nop.Web.Models.Catalog;
 
 /// <summary>
 /// Represents a Products by tag model
 /// </summary>
-public partial record ProductsByTagModel : BaseNopEntityModel
+public partial record ProductsByTagModel : BaseNopEntityModel, IMetaTagsSupportedModel
 {
     #region Properties
 

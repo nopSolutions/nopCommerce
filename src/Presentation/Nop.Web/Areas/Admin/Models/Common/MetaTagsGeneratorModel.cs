@@ -1,0 +1,18 @@
+﻿using Nop.Web.Framework.Models;
+
+namespace Nop.Web.Areas.Admin.Models.Common;
+
+/// <summary>
+/// Represents a meta tags generator model
+/// </summary>
+public partial record MetaTagsGeneratorModel : BaseNopModel
+{
+    public string TitleFieldId;
+    public string TextFieldId;
+    public string EntityType { get; set; }
+    public int EntityId { get; set; }
+    public int LanguageId { get; set; }
+    public string MetaKeywordsElementId { get; set; }
+    public string MetaDescriptionElementId { get; set; }
+    public string MetaTitleElementId { get; set; }
+}

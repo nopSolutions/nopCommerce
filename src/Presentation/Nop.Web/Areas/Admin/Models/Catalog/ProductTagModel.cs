@@ -1,4 +1,5 @@
 ﻿using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Models.ArtificialIntelligence;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Catalog;
@@ -6,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog;
 /// <summary>
 /// Represents a product tag model
 /// </summary>
-public partial record ProductTagModel : BaseNopEntityModel, ILocalizedModel<ProductTagLocalizedModel>
+public partial record ProductTagModel : BaseNopEntityModel, ILocalizedModel<ProductTagLocalizedModel>, IMetaTagsSupportedModel
 {
     #region Ctor
 
@@ -41,7 +42,7 @@ public partial record ProductTagModel : BaseNopEntityModel, ILocalizedModel<Prod
     #endregion
 }
 
-public partial record ProductTagLocalizedModel : ILocalizedLocaleModel
+public partial record ProductTagLocalizedModel : ILocalizedLocaleModel, IMetaTagsSupportedModel
 {
     public int LanguageId { get; set; }
 

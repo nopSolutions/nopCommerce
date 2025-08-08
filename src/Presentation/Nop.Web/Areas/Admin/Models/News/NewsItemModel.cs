@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Models.ArtificialIntelligence;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.News;
@@ -8,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Models.News;
 /// <summary>
 /// Represents a news item model
 /// </summary>
-public partial record NewsItemModel : BaseNopEntityModel, IStoreMappingSupportedModel
+public partial record NewsItemModel : BaseNopEntityModel, IStoreMappingSupportedModel, IMetaTagsSupportedModel
 {
     #region Ctor
 

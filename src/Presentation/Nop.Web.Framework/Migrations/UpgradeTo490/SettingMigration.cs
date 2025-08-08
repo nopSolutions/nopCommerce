@@ -306,6 +306,49 @@ public class SettingMigration : MigrationBase
             aiSettings.ProductDescriptionQuery = ArtificialIntelligenceDefaults.ProductDescriptionQuery;
             settingService.SaveSetting(aiSettings, settings => settings.ProductDescriptionQuery);
         }
+
+        //#7732
+        if (!settingService.SettingExists(aiSettings, settings => settings.AllowProductDescriptionGeneration))
+        {
+            aiSettings.AllowProductDescriptionGeneration = true;
+            settingService.SaveSetting(aiSettings, settings => settings.AllowProductDescriptionGeneration);
+        }
+
+        if (!settingService.SettingExists(aiSettings, settings => settings.AllowMetaTitleGeneration))
+        {
+            aiSettings.AllowMetaTitleGeneration = true;
+            settingService.SaveSetting(aiSettings, settings => settings.AllowMetaTitleGeneration);
+        }
+
+        if (!settingService.SettingExists(aiSettings, settings => settings.MetaTitleQuery))
+        {
+            aiSettings.MetaTitleQuery = ArtificialIntelligenceDefaults.MetaTitleQuery;
+            settingService.SaveSetting(aiSettings, settings => settings.MetaTitleQuery);
+        }
+
+        if (!settingService.SettingExists(aiSettings, settings => settings.AllowMetaKeywordGeneration))
+        {
+            aiSettings.AllowMetaKeywordGeneration = true;
+            settingService.SaveSetting(aiSettings, settings => settings.AllowMetaKeywordGeneration);
+        }
+
+        if (!settingService.SettingExists(aiSettings, settings => settings.MetaKeywordsQuery))
+        {
+            aiSettings.MetaKeywordsQuery = ArtificialIntelligenceDefaults.MetaKeywordsQuery;
+            settingService.SaveSetting(aiSettings, settings => settings.MetaKeywordsQuery);
+        }
+
+        if (!settingService.SettingExists(aiSettings, settings => settings.AllowMetaDescriptionGeneration))
+        {
+            aiSettings.AllowMetaDescriptionGeneration = true;
+            settingService.SaveSetting(aiSettings, settings => settings.AllowMetaDescriptionGeneration);
+        }
+
+        if (!settingService.SettingExists(aiSettings, settings => settings.MetaDescriptionQuery))
+        {
+            aiSettings.MetaDescriptionQuery = ArtificialIntelligenceDefaults.MetaDescriptionQuery;
+            settingService.SaveSetting(aiSettings, settings => settings.MetaDescriptionQuery);
+        }
     }
 
     public override void Down()

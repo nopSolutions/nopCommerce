@@ -3,13 +3,14 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Models.ArtificialIntelligence;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Models.Media;
 using Nop.Web.Models.ShoppingCart;
 
 namespace Nop.Web.Models.Catalog;
 
-public partial record ProductDetailsModel : BaseNopEntityModel
+public partial record ProductDetailsModel : BaseNopEntityModel, IMetaTagsSupportedModel
 {
     public ProductDetailsModel()
     {

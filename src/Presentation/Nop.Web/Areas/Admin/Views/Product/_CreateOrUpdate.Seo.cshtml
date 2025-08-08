@@ -1,3 +1,4 @@
+@using Nop.Core.Domain.Catalog
 @model ProductModel
 <div class="card-body">
     <div class="cards-group">
@@ -40,6 +41,19 @@
                             <span asp-validation-for="@Model.Locales[item].MetaDescription"></span>
                         </div>
                     </div>
+                    @await Component.InvokeAsync(typeof(MetaTagsGeneratorViewComponent), new MetaTagsGeneratorModel
+                    {
+                        TitleFieldId = Html.IdFor(model => model.Locales[item].Name),
+                        TextFieldId = Html.IdFor(model => model.Locales[item].FullDescription),
+
+                        LanguageId = Model.Locales[item].LanguageId,
+                        EntityType = nameof(Product),
+                        EntityId = Model.Id,
+
+                        MetaTitleElementId = Html.IdFor(model => model.Locales[item].MetaTitle),
+                        MetaKeywordsElementId = Html.IdFor(model => model.Locales[item].MetaKeywords),
+                        MetaDescriptionElementId = Html.IdFor(model => model.Locales[item].MetaDescription),
+                    })
                     <script>
                 $(function() {
                     $('#@Html.IdFor(model => model.Locales[item].SeName)').on('input change', function () {
@@ -94,6 +108,19 @@
                                     <span asp-validation-for="MetaDescription"></span>
                                 </div>
                             </div>
+                            @await Component.InvokeAsync(typeof(MetaTagsGeneratorViewComponent), new MetaTagsGeneratorModel
+                            {
+                                TitleFieldId = Html.IdFor(model => model.Name),
+                                TextFieldId = Html.IdFor(model => model.FullDescription),
+
+                                LanguageId = 0,
+                                EntityType = nameof(Product),
+                                EntityId = Model.Id,
+
+                                MetaTitleElementId = Html.IdFor(model => model.MetaTitle),
+                                MetaKeywordsElementId = Html.IdFor(model => model.MetaKeywords),
+                                MetaDescriptionElementId = Html.IdFor(model => model.MetaDescription),
+                            })
                             <script>
                 $(function() {
                     $('#@Html.IdFor(model => model.SeName)').on('input change', function () {

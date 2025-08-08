@@ -1,8 +1,9 @@
 ﻿using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Models.ArtificialIntelligence;
 
 namespace Nop.Web.Models.Blogs;
 
-public partial record BlogPostModel : BaseNopEntityModel
+public partial record BlogPostModel : BaseNopEntityModel, IMetaTagsSupportedModel
 {
     public BlogPostModel()
     {

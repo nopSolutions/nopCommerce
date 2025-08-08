@@ -5986,10 +5986,10 @@
     <Value><![CDATA[<p>Artificial intelligence functionality allows you to use third-party AI services such as <a href='https://www.deepseek.com/' target='_blank'>DeepSeek</a>, <a href='https://gemini.google.com/' target='_blank'>Gemini</a> or <a href='https://chatgpt.com/' target='_blank'>ChatGPT</a> to automatically generate product descriptions.</p>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.ProductDescriptionQuery">
-    <Value>Artificial intelligence query</Value>
+    <Value>AI query to generate product description</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.ProductDescriptionQuery.Hint">
-    <Value>Set the query for create product description with artificial intelligence service.</Value>
+    <Value>Set the query to generate product description with artificial intelligence.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.ProviderType">
     <Value>Provider type</Value>

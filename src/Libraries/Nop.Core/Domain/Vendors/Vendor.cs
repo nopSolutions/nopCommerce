@@ -7,7 +7,7 @@ namespace Nop.Core.Domain.Vendors;
 /// <summary>
 /// Represents a vendor
 /// </summary>
-public partial class Vendor : BaseEntity, ILocalizedEntity, ISlugSupported, ISoftDeletedEntity
+public partial class Vendor : BaseEntity, ILocalizedEntity, ISlugSupported, ISoftDeletedEntity, IMetaTagsSupported
 {
     /// <summary>
     /// Gets or sets the name
