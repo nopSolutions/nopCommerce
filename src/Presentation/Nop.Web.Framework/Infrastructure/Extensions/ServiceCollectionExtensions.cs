@@ -18,6 +18,7 @@ using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Core.Security;
 using Nop.Data;
+using Nop.Services.ArtificialIntelligence;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
 using Nop.Services.Common;
@@ -447,5 +448,8 @@ public static class ServiceCollectionExtensions
 
         //client to request reCAPTCHA service
         services.AddHttpClient<CaptchaHttpClient>().WithProxy();
+
+        //client to request artificial intelligence service
+        services.AddHttpClient<ArtificialIntelligenceHttpClient>().WithProxy();
     }
 }

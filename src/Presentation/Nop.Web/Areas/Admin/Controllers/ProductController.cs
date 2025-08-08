@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Nop.Core;
+using Nop.Core.Domain.ArtificialIntelligence;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -14,6 +15,7 @@ using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
+using Nop.Services.ArtificialIntelligence;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
@@ -47,7 +49,10 @@ public partial class ProductController : BaseAdminController
 
     protected readonly AdminAreaSettings _adminAreaSettings;
     protected readonly CustomerSettings _customerSettings;
+    protected readonly IAclService _aclService;
+    protected readonly IArtificialIntelligenceService _artificialIntelligenceService;
     protected readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
+    protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
     protected readonly ICategoryService _categoryService;
     protected readonly ICopyProductService _copyProductService;
     protected readonly ICurrencyService _currencyService;
@@ -94,7 +99,10 @@ public partial class ProductController : BaseAdminController
 
     public ProductController(AdminAreaSettings adminAreaSettings,
         CustomerSettings customerSettings,
+        IAclService aclService,
+        IArtificialIntelligenceService artificialIntelligenceService,
         IBackInStockSubscriptionService backInStockSubscriptionService,
+        IBaseAdminModelFactory baseAdminModelFactory,
         ICategoryService categoryService,
         ICopyProductService copyProductService,
         ICurrencyService currencyService,
@@ -136,7 +144,10 @@ public partial class ProductController : BaseAdminController
     {
         _adminAreaSettings = adminAreaSettings;
         _customerSettings = customerSettings;
+        _aclService = aclService;
+        _artificialIntelligenceService = artificialIntelligenceService;
         _backInStockSubscriptionService = backInStockSubscriptionService;
+        _baseAdminModelFactory = baseAdminModelFactory;
         _categoryService = categoryService;
         _copyProductService = copyProductService;
         _currencyService = currencyService;
@@ -1411,6 +1422,37 @@ public partial class ProductController : BaseAdminController
             Url.Action("CustomerUser", "Setting"));
 
         return Json(new { Result = warning });
+    }
+
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
+    public virtual async Task<IActionResult> FullDescriptionGeneratorPopup(int languageId, string productName)
+    {
+        var model = new ArtificialIntelligenceFullDescriptionModel
+        {
+            ProductName = productName,
+            LanguageId = languageId
+        };
+
+        await _baseAdminModelFactory.PrepareLanguagesAsync(model.AvailableLanguages, defaultItemText: await _localizationService.GetResourceAsync("Admin.Common.Standard"));
+
+        return View(model);
+    }
+
+    [HttpPost]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
+    public virtual async Task<IActionResult> FullDescriptionGeneratorPopup(ArtificialIntelligenceFullDescriptionModel model)
+    {
+        if (!ModelState.IsValid)
+            return View(model);
+
+        if (model.SaveButtonClicked)
+            ViewBag.SaveDescription = true;
+        else
+            model.GeneratedDescription = await _artificialIntelligenceService.CreateProductDescriptionAsync(model.ProductName, model.Keywords, (ToneOfVoiceType)model.ToneOfVoiceId, model.Instructions, model.CustomToneOfVoice, model.LanguageId);
+
+        await _baseAdminModelFactory.PrepareLanguagesAsync(model.AvailableLanguages, defaultItemText: await _localizationService.GetResourceAsync("Admin.Common.Standard"));
+
+        return View(model);
     }
 
     #endregion

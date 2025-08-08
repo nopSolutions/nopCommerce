@@ -38,6 +38,7 @@ using Nop.Data;
 using Nop.Data.Configuration;
 using Nop.Data.Migrations;
 using Nop.Services.Affiliates;
+using Nop.Services.ArtificialIntelligence;
 using Nop.Services.Attributes;
 using Nop.Services.Authentication.External;
 using Nop.Services.Authentication.MultiFactor;
@@ -299,6 +300,7 @@ public partial class BaseNopTest
         services.AddTransient<IProductTagService, ProductTagService>();
         services.AddTransient<IAddressService, AddressService>();
         services.AddTransient<IAffiliateService, AffiliateService>();
+        services.AddTransient<IArtificialIntelligenceService, ArtificialIntelligenceService>();
         services.AddTransient<IVendorService, VendorService>();
 
         //attribute services
