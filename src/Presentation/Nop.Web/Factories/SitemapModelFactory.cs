@@ -878,18 +878,26 @@ public partial class SitemapModelFactory : ISitemapModelFactory
             _ => GetUrlHelper().RouteUrl(routeName, values, protocol)
         };
 
-        //url for current language
-        var url = await routeUrlAsync(routeName,
-            getRouteParamsAwait != null ? await getRouteParamsAwait(null) : null,
-            await GetHttpProtocolAsync());
-
         var store = await _storeContext.GetCurrentStoreAsync();
 
         var updatedOn = dateTimeUpdatedOn ?? DateTime.UtcNow;
         var languages = _localizationSettings.SeoFriendlyUrlsForLanguagesEnabled
-            ? await _languageService.GetAllLanguagesAsync(storeId: store.Id)
+            ? (await _languageService.GetAllLanguagesAsync(storeId: store.Id))
+            .Where(lang => !_sitemapXmlSettings.DisallowLanguages.Contains(lang.Id)).ToList()
             : null;
 
+        // select store default language if allowed, fallback to first allowed if needed
+        var workingLanguage = await _workContext.GetWorkingLanguageAsync();
+        var language = languages?.FirstOrDefault(lang => lang.Id == store.DefaultLanguageId) ?? languages?.FirstOrDefault() ?? workingLanguage;
+
+        //url for current language
+        var url = await routeUrlAsync(routeName,
+            getRouteParamsAwait != null ? await getRouteParamsAwait(language.Id) : null,
+            await GetHttpProtocolAsync());
+
+        if (language.Id != workingLanguage.Id)
+            url = GetLocalizedUrl(url, language);
+        
         if (languages == null || languages.Count == 1)
             return new SitemapUrlModel(url, new List<string>(), updateFreq, updatedOn);
 
@@ -901,7 +909,7 @@ public partial class SitemapModelFactory : ISitemapModelFactory
                     getRouteParamsAwait != null ? await getRouteParamsAwait(lang.Id) : null,
                     await GetHttpProtocolAsync());
 
-                return GetLocalizedUrl(currentUrl, lang);
+                return lang.Id != workingLanguage.Id ? GetLocalizedUrl(currentUrl, lang) : currentUrl;
             })
             .Where(value => !string.IsNullOrEmpty(value))
             .ToListAsync();
