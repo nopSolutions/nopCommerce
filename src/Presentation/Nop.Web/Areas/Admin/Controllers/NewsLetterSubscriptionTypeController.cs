@@ -23,7 +23,6 @@ public partial class NewsLetterSubscriptionTypeController : BaseAdminController
     protected readonly INewsLetterSubscriptionTypeService _newsLetterSubscriptionTypeService;
     protected readonly INotificationService _notificationService;
     protected readonly IStoreMappingService _storeMappingService;
-    protected readonly IStoreService _storeService;
 
     #endregion
 
@@ -35,8 +34,7 @@ public partial class NewsLetterSubscriptionTypeController : BaseAdminController
         INewsLetterSubscriptionTypeModelFactory newsletterSubscriptionTypeModelFactory,
         INewsLetterSubscriptionTypeService newsLetterSubscriptionTypeService,
         INotificationService notificationService,
-        IStoreMappingService storeMappingService,
-        IStoreService storeService)
+        IStoreMappingService storeMappingService)
     {
         _customerActivityService = customerActivityService;
         _localizationService = localizationService;
@@ -45,37 +43,11 @@ public partial class NewsLetterSubscriptionTypeController : BaseAdminController
         _newsLetterSubscriptionTypeService = newsLetterSubscriptionTypeService;
         _notificationService = notificationService;
         _storeMappingService = storeMappingService;
-        _storeService = storeService;
     }
 
     #endregion
 
     #region Utilities
-
-    protected virtual async Task SaveStoreMappingsAsync(NewsLetterSubscriptionType subscriptionType, NewsLetterSubscriptionTypeModel model)
-    {
-        subscriptionType.LimitedToStores = model.SelectedStoreIds.Any();
-        await _newsLetterSubscriptionTypeService.UpdateNewsLetterSubscriptionTypeAsync(subscriptionType);
-
-        var existingStoreMappings = await _storeMappingService.GetStoreMappingsAsync(subscriptionType);
-        var allStores = await _storeService.GetAllStoresAsync();
-        foreach (var store in allStores)
-        {
-            if (model.SelectedStoreIds.Contains(store.Id))
-            {
-                //new store
-                if (!existingStoreMappings.Any(sm => sm.StoreId == store.Id))
-                    await _storeMappingService.InsertStoreMappingAsync(subscriptionType, store.Id);
-            }
-            else
-            {
-                //remove store
-                var storeMappingToDelete = existingStoreMappings.FirstOrDefault(sm => sm.StoreId == store.Id);
-                if (storeMappingToDelete != null)
-                    await _storeMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
-            }
-        }
-    }
 
     protected virtual async Task UpdateSubscriptionTypeLocalesAsync(NewsLetterSubscriptionType subscriptionType, NewsLetterSubscriptionTypeModel model)
     {
@@ -139,7 +111,7 @@ public partial class NewsLetterSubscriptionTypeController : BaseAdminController
                 string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddSubscriptionType"), subscriptionType.Id), subscriptionType);
 
             //Stores
-            await SaveStoreMappingsAsync(subscriptionType, model);
+            await _storeMappingService.SaveStoreMappingsAsync(subscriptionType, model.SelectedStoreIds);
 
             //locales                
             await UpdateSubscriptionTypeLocalesAsync(subscriptionType, model);
@@ -191,7 +163,7 @@ public partial class NewsLetterSubscriptionTypeController : BaseAdminController
                 subscriptionType);
 
             //Stores
-            await SaveStoreMappingsAsync(subscriptionType, model);
+            await _storeMappingService.SaveStoreMappingsAsync(subscriptionType, model.SelectedStoreIds);
 
             //locales                
             await UpdateSubscriptionTypeLocalesAsync(subscriptionType, model);
@@ -239,7 +211,7 @@ public partial class NewsLetterSubscriptionTypeController : BaseAdminController
 
             return RedirectToAction("List");
         }
-        catch (Exception exc) 
+        catch (Exception exc)
         {
             await _notificationService.ErrorNotificationAsync(exc);
             return RedirectToAction("Edit", new { id = subscriptionType.Id });

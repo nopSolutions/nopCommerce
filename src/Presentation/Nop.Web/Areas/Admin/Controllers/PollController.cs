@@ -21,11 +21,9 @@ public partial class PollController : BaseAdminController
 
     protected readonly ILocalizationService _localizationService;
     protected readonly INotificationService _notificationService;
-    protected readonly IPermissionService _permissionService;
     protected readonly IPollModelFactory _pollModelFactory;
     protected readonly IPollService _pollService;
     protected readonly IStoreMappingService _storeMappingService;
-    protected readonly IStoreService _storeService;
 
     #endregion
 
@@ -33,46 +31,15 @@ public partial class PollController : BaseAdminController
 
     public PollController(ILocalizationService localizationService,
         INotificationService notificationService,
-        IPermissionService permissionService,
         IPollModelFactory pollModelFactory,
         IPollService pollService,
-        IStoreMappingService storeMappingService,
-        IStoreService storeService)
+        IStoreMappingService storeMappingService)
     {
         _localizationService = localizationService;
         _notificationService = notificationService;
-        _permissionService = permissionService;
         _pollModelFactory = pollModelFactory;
         _pollService = pollService;
         _storeMappingService = storeMappingService;
-        _storeService = storeService;
-    }
-
-    #endregion
-
-    #region Utilities
-
-    protected virtual async Task SaveStoreMappingsAsync(Poll poll, PollModel model)
-    {
-        poll.LimitedToStores = model.SelectedStoreIds.Any();
-        await _pollService.UpdatePollAsync(poll);
-
-        //manage store mappings
-        var existingStoreMappings = await _storeMappingService.GetStoreMappingsAsync(poll);
-        foreach (var store in await _storeService.GetAllStoresAsync())
-        {
-            var existingStoreMapping = existingStoreMappings.FirstOrDefault(storeMapping => storeMapping.StoreId == store.Id);
-
-            //new store mapping
-            if (model.SelectedStoreIds.Contains(store.Id))
-            {
-                if (existingStoreMapping == null)
-                    await _storeMappingService.InsertStoreMappingAsync(poll, store.Id);
-            }
-            //or remove existing one
-            else if (existingStoreMapping != null)
-                await _storeMappingService.DeleteStoreMappingAsync(existingStoreMapping);
-        }
     }
 
     #endregion
@@ -122,7 +89,7 @@ public partial class PollController : BaseAdminController
             await _pollService.InsertPollAsync(poll);
 
             //save store mappings
-            await SaveStoreMappingsAsync(poll, model);
+            await _storeMappingService.SaveStoreMappingsAsync(poll, model.SelectedStoreIds);
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ContentManagement.Polls.Added"));
 
@@ -168,7 +135,7 @@ public partial class PollController : BaseAdminController
             await _pollService.UpdatePollAsync(poll);
 
             //save store mappings
-            await SaveStoreMappingsAsync(poll, model);
+            await _storeMappingService.SaveStoreMappingsAsync(poll, model.SelectedStoreIds);
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ContentManagement.Polls.Updated"));
 

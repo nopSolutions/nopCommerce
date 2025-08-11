@@ -27,10 +27,8 @@ public partial class CurrencyController : BaseAdminController
     protected readonly ILocalizationService _localizationService;
     protected readonly ILocalizedEntityService _localizedEntityService;
     protected readonly INotificationService _notificationService;
-    protected readonly IPermissionService _permissionService;
     protected readonly ISettingService _settingService;
     protected readonly IStoreMappingService _storeMappingService;
-    protected readonly IStoreService _storeService;
 
     #endregion
 
@@ -43,10 +41,8 @@ public partial class CurrencyController : BaseAdminController
         ILocalizationService localizationService,
         ILocalizedEntityService localizedEntityService,
         INotificationService notificationService,
-        IPermissionService permissionService,
         ISettingService settingService,
-        IStoreMappingService storeMappingService,
-        IStoreService storeService)
+        IStoreMappingService storeMappingService)
     {
         _currencySettings = currencySettings;
         _currencyModelFactory = currencyModelFactory;
@@ -55,10 +51,8 @@ public partial class CurrencyController : BaseAdminController
         _localizationService = localizationService;
         _localizedEntityService = localizedEntityService;
         _notificationService = notificationService;
-        _permissionService = permissionService;
         _settingService = settingService;
         _storeMappingService = storeMappingService;
-        _storeService = storeService;
     }
 
     #endregion
@@ -70,31 +64,6 @@ public partial class CurrencyController : BaseAdminController
         foreach (var localized in model.Locales)
         {
             await _localizedEntityService.SaveLocalizedValueAsync(currency, x => x.Name, localized.Name, localized.LanguageId);
-        }
-    }
-
-    protected virtual async Task SaveStoreMappingsAsync(Currency currency, CurrencyModel model)
-    {
-        currency.LimitedToStores = model.SelectedStoreIds.Any();
-        await _currencyService.UpdateCurrencyAsync(currency);
-
-        var existingStoreMappings = await _storeMappingService.GetStoreMappingsAsync(currency);
-        var allStores = await _storeService.GetAllStoresAsync();
-        foreach (var store in allStores)
-        {
-            if (model.SelectedStoreIds.Contains(store.Id))
-            {
-                //new store
-                if (!existingStoreMappings.Any(sm => sm.StoreId == store.Id))
-                    await _storeMappingService.InsertStoreMappingAsync(currency, store.Id);
-            }
-            else
-            {
-                //remove store
-                var storeMappingToDelete = existingStoreMappings.FirstOrDefault(sm => sm.StoreId == store.Id);
-                if (storeMappingToDelete != null)
-                    await _storeMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
-            }
         }
     }
 
@@ -217,7 +186,7 @@ public partial class CurrencyController : BaseAdminController
             await UpdateLocalesAsync(currency, model);
 
             //stores
-            await SaveStoreMappingsAsync(currency, model);
+            await _storeMappingService.SaveStoreMappingsAsync(currency, model.SelectedStoreIds);
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Currencies.Added"));
 
@@ -279,7 +248,7 @@ public partial class CurrencyController : BaseAdminController
             await UpdateLocalesAsync(currency, model);
 
             //stores
-            await SaveStoreMappingsAsync(currency, model);
+            await _storeMappingService.SaveStoreMappingsAsync(currency, model.SelectedStoreIds);
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Currencies.Updated"));
 

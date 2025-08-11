@@ -30,6 +30,7 @@ using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
+using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
@@ -82,6 +83,7 @@ public partial class ProductController : BaseAdminController
     protected readonly IShoppingCartService _shoppingCartService;
     protected readonly ISpecificationAttributeService _specificationAttributeService;
     protected readonly IStoreContext _storeContext;
+    protected readonly IStoreMappingService _storeMappingService;
     protected readonly ITranslationModelFactory _translationModelFactory;
     protected readonly IUrlRecordService _urlRecordService;
     protected readonly IVideoService _videoService;
@@ -132,6 +134,7 @@ public partial class ProductController : BaseAdminController
         IShoppingCartService shoppingCartService,
         ISpecificationAttributeService specificationAttributeService,
         IStoreContext storeContext,
+        IStoreMappingService storeMappingService,
         ITranslationModelFactory translationModelFactory,
         IUrlRecordService urlRecordService,
         IVideoService videoService,
@@ -177,6 +180,7 @@ public partial class ProductController : BaseAdminController
         _shoppingCartService = shoppingCartService;
         _specificationAttributeService = specificationAttributeService;
         _storeContext = storeContext;
+        _storeMappingService = storeMappingService;
         _translationModelFactory = translationModelFactory;
         _urlRecordService = urlRecordService;
         _videoService = videoService;
@@ -1055,7 +1059,7 @@ public partial class ProductController : BaseAdminController
             await SaveManufacturerMappingsAsync(product, model);
 
             //stores
-            await _productService.UpdateProductStoreMappingsAsync(product, model.SelectedStoreIds);
+            await _storeMappingService.SaveStoreMappingsAsync(product, model.SelectedStoreIds);
 
             //discounts
             await SaveDiscountMappingsAsync(product, model);
@@ -1218,7 +1222,7 @@ public partial class ProductController : BaseAdminController
             await SaveManufacturerMappingsAsync(product, model);
 
             //stores
-            await _productService.UpdateProductStoreMappingsAsync(product, model.SelectedStoreIds);
+            await _storeMappingService.SaveStoreMappingsAsync(product, model.SelectedStoreIds);
 
             //discounts
             await SaveDiscountMappingsAsync(product, model);
@@ -3151,7 +3155,7 @@ public partial class ProductController : BaseAdminController
             return Json(translationModel);
 
         var product = await _productService.GetProductByIdAsync(productAttributeMapping.ProductId);
-        
+
         if (product == null)
             return Json(translationModel);
 

@@ -31,10 +31,8 @@ public partial class CountryController : BaseAdminController
     protected readonly ILocalizationService _localizationService;
     protected readonly ILocalizedEntityService _localizedEntityService;
     protected readonly INotificationService _notificationService;
-    protected readonly IPermissionService _permissionService;
     protected readonly IStateProvinceService _stateProvinceService;
     protected readonly IStoreMappingService _storeMappingService;
-    protected readonly IStoreService _storeService;
 
     #endregion
 
@@ -49,10 +47,8 @@ public partial class CountryController : BaseAdminController
         ILocalizationService localizationService,
         ILocalizedEntityService localizedEntityService,
         INotificationService notificationService,
-        IPermissionService permissionService,
         IStateProvinceService stateProvinceService,
-        IStoreMappingService storeMappingService,
-        IStoreService storeService)
+        IStoreMappingService storeMappingService)
     {
         _addressService = addressService;
         _countryModelFactory = countryModelFactory;
@@ -63,10 +59,8 @@ public partial class CountryController : BaseAdminController
         _localizationService = localizationService;
         _localizedEntityService = localizedEntityService;
         _notificationService = notificationService;
-        _permissionService = permissionService;
         _stateProvinceService = stateProvinceService;
         _storeMappingService = storeMappingService;
-        _storeService = storeService;
     }
 
     #endregion
@@ -92,31 +86,6 @@ public partial class CountryController : BaseAdminController
                 x => x.Name,
                 localized.Name,
                 localized.LanguageId);
-        }
-    }
-
-    protected virtual async Task SaveStoreMappingsAsync(Country country, CountryModel model)
-    {
-        country.LimitedToStores = model.SelectedStoreIds.Any();
-        await _countryService.UpdateCountryAsync(country);
-
-        var existingStoreMappings = await _storeMappingService.GetStoreMappingsAsync(country);
-        var allStores = await _storeService.GetAllStoresAsync();
-        foreach (var store in allStores)
-        {
-            if (model.SelectedStoreIds.Contains(store.Id))
-            {
-                //new store
-                if (!existingStoreMappings.Any(sm => sm.StoreId == store.Id))
-                    await _storeMappingService.InsertStoreMappingAsync(country, store.Id);
-            }
-            else
-            {
-                //remove store
-                var storeMappingToDelete = existingStoreMappings.FirstOrDefault(sm => sm.StoreId == store.Id);
-                if (storeMappingToDelete != null)
-                    await _storeMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
-            }
         }
     }
 
@@ -174,7 +143,7 @@ public partial class CountryController : BaseAdminController
             await UpdateLocalesAsync(country, model);
 
             //Stores
-            await SaveStoreMappingsAsync(country, model);
+            await _storeMappingService.SaveStoreMappingsAsync(country, model.SelectedStoreIds);
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Countries.Added"));
 
@@ -227,7 +196,7 @@ public partial class CountryController : BaseAdminController
             await UpdateLocalesAsync(country, model);
 
             //stores
-            await SaveStoreMappingsAsync(country, model);
+            await _storeMappingService.SaveStoreMappingsAsync(country, model.SelectedStoreIds);
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Countries.Updated"));
 
