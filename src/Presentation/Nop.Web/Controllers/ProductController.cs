@@ -14,7 +14,6 @@ using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Security;
-using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Web.Factories;
 using Nop.Web.Framework;
@@ -52,7 +51,6 @@ public partial class ProductController : BasePublicController
     protected readonly IShoppingCartService _shoppingCartService;
     protected readonly IStoreContext _storeContext;
     protected readonly IStoreMappingService _storeMappingService;
-    protected readonly IUrlRecordService _urlRecordService;
     protected readonly IWorkContext _workContext;
     protected readonly IWorkflowMessageService _workflowMessageService;
     protected readonly LocalizationSettings _localizationSettings;
@@ -85,7 +83,6 @@ public partial class ProductController : BasePublicController
         IShoppingCartService shoppingCartService,
         IStoreContext storeContext,
         IStoreMappingService storeMappingService,
-        IUrlRecordService urlRecordService,
         IWorkContext workContext,
         IWorkflowMessageService workflowMessageService,
         LocalizationSettings localizationSettings,
@@ -114,7 +111,6 @@ public partial class ProductController : BasePublicController
         _shoppingCartService = shoppingCartService;
         _storeContext = storeContext;
         _storeMappingService = storeMappingService;
-        _urlRecordService = urlRecordService;
         _workContext = workContext;
         _workflowMessageService = workflowMessageService;
         _localizationSettings = localizationSettings;
@@ -185,8 +181,7 @@ public partial class ProductController : BasePublicController
             if (parentGroupedProduct == null)
                 return RedirectToRoute("Homepage");
 
-            var seName = await _urlRecordService.GetSeNameAsync(parentGroupedProduct);
-            var productUrl = await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = seName });
+            var productUrl = await _nopUrlHelper.RouteGenericUrlAsync(parentGroupedProduct);
             return LocalRedirectPermanent(productUrl);
         }
 
@@ -194,8 +189,7 @@ public partial class ProductController : BasePublicController
         ShoppingCartItem updatecartitem = null;
         if (_shoppingCartSettings.AllowCartItemEditing && updatecartitemid > 0)
         {
-            var seName = await _urlRecordService.GetSeNameAsync(product);
-            var productUrl = await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = seName });
+            var productUrl = await _nopUrlHelper.RouteGenericUrlAsync(product);
             var store = await _storeContext.GetCurrentStoreAsync();
             var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), storeId: store.Id);
             updatecartitem = cart.FirstOrDefault(x => x.Id == updatecartitemid);
@@ -417,8 +411,7 @@ public partial class ProductController : BasePublicController
             else
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Reviews.SuccessfullyAdded"));
 
-            var seName = await _urlRecordService.GetSeNameAsync(product);
-            var productUrl = await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = seName });
+            var productUrl = await _nopUrlHelper.RouteGenericUrlAsync(product);
             return LocalRedirect(productUrl);
         }
 

@@ -150,8 +150,7 @@ public partial class TopicModelFactory : ITopicModelFactory
                 model.SeName = await _urlRecordService.GetSeNameAsync(topic, 0, true, false);
             }
 
-            model.Url = await _nopUrlHelper
-                .RouteGenericUrlAsync<Topic>(new { SeName = await _urlRecordService.GetSeNameAsync(topic) }, _webHelper.GetCurrentRequestProtocol());
+            model.Url = await _nopUrlHelper.RouteGenericUrlAsync(topic, _webHelper.GetCurrentRequestProtocol());
 
             //define localized model configuration action
             localizedModelConfiguration = async (locale, languageId) =>
@@ -178,7 +177,7 @@ public partial class TopicModelFactory : ITopicModelFactory
 
         //prepare available topic templates
         await _baseAdminModelFactory.PrepareTopicTemplatesAsync(model.AvailableTopicTemplates, false);
-        
+
         //prepare model stores
         await _storeMappingSupportedModelFactory.PrepareModelStoresAsync(model, topic, excludeProperties);
 

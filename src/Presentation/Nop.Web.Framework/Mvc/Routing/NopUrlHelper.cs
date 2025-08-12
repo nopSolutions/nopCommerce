@@ -109,6 +109,31 @@ public partial class NopUrlHelper : INopUrlHelper
     #region Methods
 
     /// <summary>
+    /// Generate a generic URL for the specified entity which supports slug
+    /// </summary>
+    /// <typeparam name="TEntity">Entity type that supports slug</typeparam>
+    /// <param name="entity">An entity which supports slug</param>
+    /// <param name="protocol">The protocol for the URL, such as "http" or "https"</param>
+    /// <param name="host">The host name for the URL</param>
+    /// <param name="fragment">The fragment for the URL</param>
+    /// <param name="languageId">Language identifier; pass null to use the current language</param>
+    /// <param name="ensureTwoPublishedLanguages">A value indicating whether to ensure that we have at least two published languages; otherwise, load only default value</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the generated URL
+    /// </returns>
+    public virtual async Task<string> RouteGenericUrlAsync<TEntity>(TEntity entity,
+        string protocol = null, string host = null, string fragment = null, int? languageId = null, bool ensureTwoPublishedLanguages = true)
+        where TEntity : BaseEntity, ISlugSupported
+    {
+        if (entity is null)
+            return string.Empty;
+
+        var seName = await _urlRecordService.GetSeNameAsync(entity, languageId, true, ensureTwoPublishedLanguages);
+        return await RouteGenericUrlAsync<TEntity>(new { SeName = seName }, protocol, host, fragment);
+    }
+
+    /// <summary>
     /// Generate a generic URL for the specified entity type and route values
     /// </summary>
     /// <typeparam name="TEntity">Entity type that supports slug</typeparam>
@@ -161,11 +186,8 @@ public partial class NopUrlHelper : INopUrlHelper
     {
         var store = await _storeContext.GetCurrentStoreAsync();
         var topic = await _topicService.GetTopicBySystemNameAsync(systemName, store.Id);
-        if (topic is null)
-            return string.Empty;
 
-        var seName = await _urlRecordService.GetSeNameAsync(topic);
-        return await RouteGenericUrlAsync<Topic>(new { SeName = seName }, protocol, host, fragment);
+        return await RouteGenericUrlAsync(topic, protocol, host, fragment);
     }
 
     #endregion

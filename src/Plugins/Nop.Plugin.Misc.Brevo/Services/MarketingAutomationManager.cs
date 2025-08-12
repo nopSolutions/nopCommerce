@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
-using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
@@ -15,7 +14,6 @@ using Nop.Services.Directory;
 using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Orders;
-using Nop.Services.Seo;
 using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Plugin.Misc.Brevo.Services;
@@ -47,7 +45,6 @@ public class MarketingAutomationManager
     protected readonly IStateProvinceService _stateProvinceService;
     protected readonly IStoreContext _storeContext;
     protected readonly IUrlHelperFactory _urlHelperFactory;
-    protected readonly IUrlRecordService _urlRecordService;
     protected readonly IWebHelper _webHelper;
     protected readonly IWorkContext _workContext;
     protected readonly MarketingAutomationHttpClient _marketingAutomationHttpClient;
@@ -76,7 +73,6 @@ public class MarketingAutomationManager
         IStateProvinceService stateProvinceService,
         IStoreContext storeContext,
         IUrlHelperFactory urlHelperFactory,
-        IUrlRecordService urlRecordService,
         IWebHelper webHelper,
         IWorkContext workContext,
         MarketingAutomationHttpClient marketingAutomationHttpClient)
@@ -101,7 +97,6 @@ public class MarketingAutomationManager
         _stateProvinceService = stateProvinceService;
         _storeContext = storeContext;
         _urlHelperFactory = urlHelperFactory;
-        _urlRecordService = urlRecordService;
         _webHelper = webHelper;
         _workContext = workContext;
         _marketingAutomationHttpClient = marketingAutomationHttpClient;
@@ -164,9 +159,6 @@ public class MarketingAutomationManager
                     //get default product picture
                     var picture = await _pictureService.GetProductPictureAsync(product, item.AttributesXml);
 
-                    //get product SEO slug name
-                    var seName = await _urlRecordService.GetSeNameAsync(product);
-
                     //create product data
                     return new
                     {
@@ -181,7 +173,7 @@ public class MarketingAutomationManager
                             res = all == "," ? res : all + ", " + res;
                             return res;
                         }),
-                        url = await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = seName }, _webHelper.GetCurrentRequestProtocol()),
+                        url = await _nopUrlHelper.RouteGenericUrlAsync(product, _webHelper.GetCurrentRequestProtocol()),
                         image = (await _pictureService.GetPictureUrlAsync(picture)).Url,
                         quantity = item.Quantity,
                         price = (await _shoppingCartService.GetSubTotalAsync(item, true)).subTotal
@@ -274,9 +266,6 @@ public class MarketingAutomationManager
                 //get default product picture
                 var picture = await _pictureService.GetProductPictureAsync(product, item.AttributesXml);
 
-                //get product SEO slug name
-                var seName = await _urlRecordService.GetSeNameAsync(product);
-
                 //create product data
                 return new
                 {
@@ -291,7 +280,7 @@ public class MarketingAutomationManager
                         res = all == "," ? res : all + ", " + res;
                         return res;
                     }),
-                    url = await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = seName }, _webHelper.GetCurrentRequestProtocol()),
+                    url = await _nopUrlHelper.RouteGenericUrlAsync(product, _webHelper.GetCurrentRequestProtocol()),
                     image = (await _pictureService.GetPictureUrlAsync(picture)).Url,
                     quantity = item.Quantity,
                     price = item.PriceInclTax,

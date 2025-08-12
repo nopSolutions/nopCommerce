@@ -37,7 +37,6 @@ using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
-using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Pickup;
 using Nop.Services.Stores;
@@ -89,7 +88,6 @@ public class PayPalCommerceServiceManager
     private readonly IStoreService _storeService;
     private readonly ITaxService _taxService;
     private readonly IUrlHelperFactory _urlHelperFactory;
-    private readonly IUrlRecordService _urlRecordService;
     private readonly IWebHelper _webHelper;
     private readonly IWorkContext _workContext;
     private readonly OrderSettings _orderSettings;
@@ -132,7 +130,6 @@ public class PayPalCommerceServiceManager
         IStoreService storeService,
         ITaxService taxService,
         IUrlHelperFactory urlHelperFactory,
-        IUrlRecordService urlRecordService,
         IWebHelper webHelper,
         IWorkContext workContext,
         OrderSettings orderSettings,
@@ -171,7 +168,6 @@ public class PayPalCommerceServiceManager
         _storeService = storeService;
         _taxService = taxService;
         _urlHelperFactory = urlHelperFactory;
-        _urlRecordService = urlRecordService;
         _webHelper = webHelper;
         _workContext = workContext;
         _orderSettings = orderSettings;
@@ -493,8 +489,7 @@ public class PayPalCommerceServiceManager
                 return null;
 
             var sku = await _productService.FormatSkuAsync(product, item.AttributesXml);
-            var seName = await _urlRecordService.GetSeNameAsync(product);
-            var url = await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = seName }, _webHelper.GetCurrentRequestProtocol());
+            var url = await _nopUrlHelper.RouteGenericUrlAsync(product, _webHelper.GetCurrentRequestProtocol());
 
             var picture = await _pictureService.GetProductPictureAsync(product, item.AttributesXml);
             //PayPal doesn't currently support WebP images
@@ -2952,8 +2947,7 @@ public class PayPalCommerceServiceManager
                 var orderItem = await _orderService.GetOrderItemByIdAsync(shipmentItem.OrderItemId);
                 var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
                 var sku = await _productService.FormatSkuAsync(product, orderItem.AttributesXml);
-                var seName = await _urlRecordService.GetSeNameAsync(product);
-                var url = await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = seName }, _webHelper.GetCurrentRequestProtocol());
+                var url = await _nopUrlHelper.RouteGenericUrlAsync(product, _webHelper.GetCurrentRequestProtocol());
                 var picture = await _pictureService.GetProductPictureAsync(product, orderItem.AttributesXml);
                 var (imageUrl, _) = await _pictureService.GetPictureUrlAsync(picture);
 
