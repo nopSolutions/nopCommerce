@@ -37,6 +37,9 @@
     }
 </style>
 
+<!-- ✅ IntelliSuggest Library -->
+<script src="https://cdn.searchspring.net/intellisuggest/is.min.js" async defer></script>
+
 @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BodyStartHtmlTagAfter })
 @await Html.PartialAsync("_Notifications")
 @await Html.PartialAsync("_JavaScriptDisabledWarning")
@@ -143,9 +146,6 @@
         }
     });
 </script>
-
-<!-- ✅ IntelliSuggest Library -->
-<script src="https://cdn.searchspring.net/intellisuggest/is.min.js" async defer></script>
 
 <!-- ✅ Setup IntelliSuggest tracking -->
 <script>

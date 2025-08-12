@@ -384,6 +384,23 @@ function AddToCart()
             } else {
                 continueShoppingButton.style.display = "block";
             }
+
+            // ---- Listrak tracking ----
+            if (response && response.cartItems) {
+                _ltk.SCA.ClearCart();
+                response.cartItems.forEach(function(item) {
+                    _ltk.SCA.AddItemWithLinks(
+                        item.sku,
+                        item.quantity,
+                        item.price,
+                        item.name,
+                        item.imageUrl,
+                        item.productUrl
+                    );
+                });
+                _ltk.SCA.Total = response.cartTotal;
+                _ltk.SCA.Submit();
+            }
         },
         error: function() {
             alert('Error when adding item to cart.');
