@@ -1,8 +1,5 @@
 ﻿using System.Globalization;
 using System.Text.Encodings.Web;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Forums;
@@ -25,13 +22,11 @@ public partial class JsonLdModelFactory : IJsonLdModelFactory
     #region Fields
 
     protected readonly ForumSettings _forumSettings;
-    protected readonly IActionContextAccessor _actionContextAccessor;
     protected readonly ICustomerService _customerService;
     protected readonly IDateTimeHelper _dateTimeHelper;
     protected readonly IEventPublisher _eventPublisher;
     protected readonly IForumService _forumService;
     protected readonly INopUrlHelper _nopUrlHelper;
-    protected readonly IUrlHelperFactory _urlHelperFactory;
     protected readonly IWebHelper _webHelper;
 
     #endregion
@@ -39,23 +34,19 @@ public partial class JsonLdModelFactory : IJsonLdModelFactory
     #region Ctor
 
     public JsonLdModelFactory(ForumSettings forumSettings,
-        IActionContextAccessor actionContextAccessor,
         ICustomerService customerService,
         IDateTimeHelper dateTimeHelper,
         IEventPublisher eventPublisher,
         IForumService forumService,
         INopUrlHelper nopUrlHelper,
-        IUrlHelperFactory urlHelperFactory,
         IWebHelper webHelper)
     {
         _forumSettings = forumSettings;
-        _actionContextAccessor = actionContextAccessor;
         _customerService = customerService;
         _dateTimeHelper = dateTimeHelper;
         _eventPublisher = eventPublisher;
         _forumService = forumService;
         _nopUrlHelper = nopUrlHelper;
-        _urlHelperFactory = urlHelperFactory;
         _webHelper = webHelper;
     }
 
@@ -234,8 +225,6 @@ public partial class JsonLdModelFactory : IJsonLdModelFactory
         ForumPost firstPost,
         ForumTopicPageModel model)
     {
-        var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
-
         var forumTopicCustomer = await _customerService.GetCustomerByIdAsync(forumTopic.CustomerId);
         var customerName = await _customerService.FormatUsernameAsync(forumTopicCustomer);
         var createdOn = await _dateTimeHelper.ConvertToUserTimeAsync(forumTopic.CreatedOnUtc, DateTimeKind.Utc);
@@ -246,13 +235,13 @@ public partial class JsonLdModelFactory : IJsonLdModelFactory
             {
                 Name = JavaScriptEncoder.Default.Encode(customerName),
                 Url =
-                    urlHelper.RouteUrl("CustomerProfile", new { id = forumTopic.CustomerId },
+                    _nopUrlHelper.RouteUrl("CustomerProfile", new { id = forumTopic.CustomerId },
                         _webHelper.GetCurrentRequestProtocol()),
             },
             DatePublished = ConvertDateTimeToIso8601String(createdOn),
             Subject = JavaScriptEncoder.Default.Encode(model.Subject),
             Text = _forumService.FormatPostText(firstPost),
-            Url = urlHelper.RouteUrl("TopicSlug", new { id = model.Id, slug = model.SeName },
+            Url = _nopUrlHelper.RouteUrl("TopicSlug", new { id = model.Id, slug = model.SeName },
                 _webHelper.GetCurrentRequestProtocol()),
             Comments = model.ForumPostModels.Where(pm => pm.Id != firstPost.Id).Select(postModel =>
             {
@@ -261,30 +250,13 @@ public partial class JsonLdModelFactory : IJsonLdModelFactory
                     Author = new()
                     {
                         Name = JavaScriptEncoder.Default.Encode(postModel.CustomerName),
-                        Url = urlHelper.RouteUrl("CustomerProfile", new { id = postModel.CustomerId },
+                        Url = _nopUrlHelper.RouteUrl("CustomerProfile", new { id = postModel.CustomerId },
                             _webHelper.GetCurrentRequestProtocol()),
                     },
                     DatePublished = ConvertDateTimeToIso8601String(postModel.PostCreatedOn),
                     Url = postModel.CurrentTopicPage > 1
-                        ? urlHelper.RouteUrl(new()
-                        {
-                            RouteName = "TopicSlugPaged",
-                            Values = new
-                            {
-                                id = model.Id,
-                                slug = model.SeName,
-                                pageNumber = postModel.CurrentTopicPage
-                            },
-                            Protocol = _webHelper.GetCurrentRequestProtocol(),
-                            Fragment = postModel.Id.ToString()
-                        })
-                        : urlHelper.RouteUrl(new()
-                        {
-                            RouteName = "TopicSlug",
-                            Values = new { id = model.Id, slug = model.SeName },
-                            Protocol = _webHelper.GetCurrentRequestProtocol(),
-                            Fragment = postModel.Id.ToString()
-                        }),
+                        ? _nopUrlHelper.RouteUrl("TopicSlugPaged", new { id = model.Id, slug = model.SeName, pageNumber = postModel.CurrentTopicPage }, _webHelper.GetCurrentRequestProtocol(), null, postModel.Id.ToString())
+                        : _nopUrlHelper.RouteUrl("TopicSlug", new { id = model.Id, slug = model.SeName }, _webHelper.GetCurrentRequestProtocol(), null, postModel.Id.ToString()),
                     Text = postModel.FormattedText
                 };
 

@@ -1,13 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Nop.Core.Domain.Media;
+﻿using Nop.Core.Domain.Media;
 using Nop.Plugin.Misc.Zettle.Services;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Plugins;
 using Nop.Services.ScheduleTasks;
+using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Plugin.Misc.Zettle;
 
@@ -18,11 +16,10 @@ public class ZettlePlugin : BasePlugin, IMiscPlugin
 {
     #region Fields
 
-    protected readonly IActionContextAccessor _actionContextAccessor;
     protected readonly ILocalizationService _localizationService;
+    protected readonly INopUrlHelper _nopUrlHelper;
     protected readonly IScheduleTaskService _scheduleTaskService;
     protected readonly ISettingService _settingService;
-    protected readonly IUrlHelperFactory _urlHelperFactory;
     protected readonly MediaSettings _mediaSettings;
     protected readonly ZettleService _zettleService;
 
@@ -30,19 +27,17 @@ public class ZettlePlugin : BasePlugin, IMiscPlugin
 
     #region Ctor
 
-    public ZettlePlugin(IActionContextAccessor actionContextAccessor,
-        ILocalizationService localizationService,
+    public ZettlePlugin(ILocalizationService localizationService,
+        INopUrlHelper nopUrlHelper,
         IScheduleTaskService scheduleTaskService,
         ISettingService settingService,
-        IUrlHelperFactory urlHelperFactory,
         MediaSettings mediaSettings,
         ZettleService zettleService)
     {
-        _actionContextAccessor = actionContextAccessor;
         _localizationService = localizationService;
+        _nopUrlHelper = nopUrlHelper;
         _scheduleTaskService = scheduleTaskService;
         _settingService = settingService;
-        _urlHelperFactory = urlHelperFactory;
         _mediaSettings = mediaSettings;
         _zettleService = zettleService;
     }
@@ -56,7 +51,7 @@ public class ZettlePlugin : BasePlugin, IMiscPlugin
     /// </summary>
     public override string GetConfigurationPageUrl()
     {
-        return _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext).RouteUrl(ZettleDefaults.ConfigurationRouteName);
+        return _nopUrlHelper.RouteUrl(ZettleDefaults.ConfigurationRouteName);
     }
 
     /// <summary>

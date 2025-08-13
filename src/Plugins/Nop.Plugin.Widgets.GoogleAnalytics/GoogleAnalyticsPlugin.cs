@@ -1,14 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Nop.Core;
-using Nop.Core.Domain.Cms;
+﻿using Nop.Core.Domain.Cms;
 using Nop.Plugin.Widgets.GoogleAnalytics.Components;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Plugins;
 using Nop.Web.Framework.Infrastructure;
+using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Plugin.Widgets.GoogleAnalytics;
 
@@ -19,29 +16,23 @@ public class GoogleAnalyticsPlugin : BasePlugin, IWidgetPlugin
 {
     #region Fields
 
-    protected readonly IActionContextAccessor _actionContextAccessor;
     protected readonly ILocalizationService _localizationService;
-    protected readonly IWebHelper _webHelper;
+    protected readonly INopUrlHelper _nopUrlHelper;
     protected readonly ISettingService _settingService;
-    protected readonly IUrlHelperFactory _urlHelperFactory;
     protected readonly WidgetSettings _widgetSettings;
 
     #endregion
 
     #region Ctor
 
-    public GoogleAnalyticsPlugin(IActionContextAccessor actionContextAccessor,
-        ILocalizationService localizationService,
-        IWebHelper webHelper,
+    public GoogleAnalyticsPlugin(ILocalizationService localizationService,
+        INopUrlHelper nopUrlHelper,
         ISettingService settingService,
-        IUrlHelperFactory urlHelperFactory,
         WidgetSettings widgetSettings)
     {
-        _actionContextAccessor = actionContextAccessor;
         _localizationService = localizationService;
-        _webHelper = webHelper;
+        _nopUrlHelper = nopUrlHelper;
         _settingService = settingService;
-        _urlHelperFactory = urlHelperFactory;
         _widgetSettings = widgetSettings;
     }
 
@@ -69,7 +60,7 @@ public class GoogleAnalyticsPlugin : BasePlugin, IWidgetPlugin
     /// </summary>
     public override string GetConfigurationPageUrl()
     {
-        return _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext).RouteUrl(GoogleAnalyticsDefaults.ConfigurationRouteName);
+        return _nopUrlHelper.RouteUrl(GoogleAnalyticsDefaults.ConfigurationRouteName);
     }
 
     /// <summary>

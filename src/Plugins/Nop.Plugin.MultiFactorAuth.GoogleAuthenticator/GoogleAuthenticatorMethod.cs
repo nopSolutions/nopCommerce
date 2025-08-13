@@ -1,12 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Components;
 using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Plugins;
+using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator;
 
@@ -17,27 +15,24 @@ public class GoogleAuthenticatorMethod : BasePlugin, IMultiFactorAuthenticationM
 {
     #region Fields
 
-    protected readonly IActionContextAccessor _actionContextAccessor;
     protected readonly ILocalizationService _localizationService;
+    protected readonly INopUrlHelper _nopUrlHelper;
     protected readonly ISettingService _settingService;
     protected readonly IStoreContext _storeContext;
-    protected readonly IUrlHelperFactory _urlHelperFactory;
 
     #endregion
 
     #region Ctor
 
-    public GoogleAuthenticatorMethod(IActionContextAccessor actionContextAccessor,
-        ILocalizationService localizationService,
+    public GoogleAuthenticatorMethod(ILocalizationService localizationService,
+        INopUrlHelper nopUrlHelper,
         ISettingService settingService,
-        IStoreContext storeContext,
-        IUrlHelperFactory urlHelperFactory)
+        IStoreContext storeContext)
     {
-        _actionContextAccessor = actionContextAccessor;
         _localizationService = localizationService;
+        _nopUrlHelper = nopUrlHelper;
         _settingService = settingService;
         _storeContext = storeContext;
-        _urlHelperFactory = urlHelperFactory;
     }
 
     #endregion
@@ -49,7 +44,7 @@ public class GoogleAuthenticatorMethod : BasePlugin, IMultiFactorAuthenticationM
     /// </summary>
     public override string GetConfigurationPageUrl()
     {
-        return _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext).RouteUrl(GoogleAuthenticatorDefaults.ConfigurationRouteName);
+        return _nopUrlHelper.RouteUrl(GoogleAuthenticatorDefaults.ConfigurationRouteName);
     }
 
     /// <summary>
