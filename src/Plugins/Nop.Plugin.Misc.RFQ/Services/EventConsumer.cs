@@ -4,6 +4,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Events;
+using Nop.Core.Http;
 using Nop.Data;
 using Nop.Plugin.Misc.RFQ.Domains;
 using Nop.Services.Cms;
@@ -143,7 +144,7 @@ public class EventConsumer : IConsumer<AdminMenuCreatedEvent>,
         {
             var routeName = _httpContextAccessor.HttpContext?.GetEndpoint()?.Metadata.GetMetadata<RouteNameMetadata>()?.RouteName;
 
-            if (routeName is not "ShoppingCart")
+            if (routeName is not NopRouteNames.General.CART)
                 return;
 
             //is shopping cart created by quote

@@ -1,7 +1,7 @@
 ﻿@model ForumGroupModel
 <div class="forums-table-section forum-group">
     <div class="forums-table-section-title">
-        @Html.RouteLink(Model.Name, "ForumGroupSlug", new { id = Model.Id, slug = Model.SeName })
+        @Html.RouteLink(Model.Name, NopRouteNames.Standard.FORUM_GROUP_SLUG, new { id = Model.Id, slug = Model.SeName })
     </div>
     <div class="forums-table-section-body">
         <div class="table-wrapper">
@@ -38,7 +38,7 @@
                             </td>
                             <td class="forum-details">
                                 <div class="forum-title">
-                                    @Html.RouteLink(forum.Name, "ForumSlug", new { id = forum.Id, slug = forum.SeName })
+                                    @Html.RouteLink(forum.Name, NopRouteNames.Standard.FORUM_SLUG, new { id = forum.Id, slug = forum.SeName })
                                 </div>
                                 <div class="forum-description">
                                     @forum.Description

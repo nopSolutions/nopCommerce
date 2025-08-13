@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Http;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Services.Media;
@@ -91,7 +92,7 @@ public partial class DownloadController : BasePublicController
             return Content("Download is not available any more.");
 
         if (product.HasUserAgreement && !agree)
-            return RedirectToRoute("DownloadUserAgreement", new { orderItemId = orderItemId });
+            return RedirectToRoute(NopRouteNames.Standard.DOWNLOAD_USER_AGREEMENT, new { orderItemId = orderItemId });
 
 
         if (!product.UnlimitedDownloads && orderItem.DownloadCount >= product.MaxNumberOfDownloads)

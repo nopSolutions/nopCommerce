@@ -7,7 +7,7 @@
     <script asp-location="Footer">
             $(function() {
                 $("#back-in-stock-subscribe-@Model.Id").on('click', function() {
-                    displayPopupContentFromUrl('@Url.RouteUrl("BackInStockSubscribePopup", new { productId = Model.Id })', '@T("BackInStockSubscriptions.NotifyMeWhenAvailable")');
+                    displayPopupContentFromUrl('@Url.RouteUrl(NopRouteNames.Ajax.BACK_IN_STOCK_SUBSCRIBE_POPUP, new { productId = Model.Id })', '@T("BackInStockSubscriptions.NotifyMeWhenAvailable")');
                 });
             });
     </script>

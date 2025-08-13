@@ -4,6 +4,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Http;
 using Nop.Core.Rss;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -272,7 +273,7 @@ public partial class CatalogController : BasePublicController
     {
         //we don't allow viewing of vendors if "vendors" block is hidden
         if (_vendorSettings.VendorsBlockItemsToDisplay == 0)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var model = await _catalogModelFactory.PrepareVendorAllModelsAsync();
         return View(model);

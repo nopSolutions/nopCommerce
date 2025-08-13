@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Http;
 using Nop.Data;
 using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Common;
@@ -107,7 +108,7 @@ public sealed class ForceMultiFactorAuthenticationAttribute : TypeFilterAttribut
                 return;
 
             //redirect to MultiFactorAuthenticationSettings page if force is enabled
-            context.Result = new RedirectToRouteResult("MultiFactorAuthenticationSettings", null);
+            context.Result = new RedirectToRouteResult(NopRouteNames.Standard.MULTI_FACTOR_AUTHENTICATION_SETTINGS, null);
         }
 
         #endregion

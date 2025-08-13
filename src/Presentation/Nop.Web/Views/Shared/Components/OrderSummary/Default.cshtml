@@ -28,7 +28,7 @@
             </div>
         }
         @*we add enctype = "multipart/form-data" because "File upload" attribute control type requires it*@
-        <form asp-route="ShoppingCart" method="post" enctype="multipart/form-data" id="shopping-cart-form">
+        <form asp-route="@NopRouteNames.General.CART" method="post" enctype="multipart/form-data" id="shopping-cart-form">
             <div class="table-wrapper">
                 <table class="cart">
                     <colgroup>
@@ -314,7 +314,7 @@
                                                 function(e) {
                                                     e.preventDefault();
                                                     displayPopupContentFromUrl(
-                                                        '@Url.RouteUrl("TopicPopup", new { SystemName = "conditionsofuse" })',
+                                                        '@Url.RouteUrl(NopRouteNames.Ajax.TOPIC_POPUP, new { SystemName = "conditionsofuse" })',
                                                         '@T("Checkout.TermsOfService")');
                                                 });
                                         });

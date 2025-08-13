@@ -4,6 +4,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
+using Nop.Core.Http;
 using Nop.Plugin.Misc.Omnisend.DTO;
 using Nop.Plugin.Misc.Omnisend.DTO.Events;
 using Nop.Services.Catalog;
@@ -349,7 +350,7 @@ public class OmnisendEventsService
         property.Note = null;
         property.OrderId = order.CustomOrderNumber;
         property.OrderNumber = order.Id;
-        property.OrderStatusURL = _nopUrlHelper.RouteUrl("OrderDetails", new { orderId = order.Id }, _webHelper.GetCurrentRequestProtocol());
+        property.OrderStatusURL = _nopUrlHelper.RouteUrl(NopRouteNames.Standard.ORDER_DETAIL, new { orderId = order.Id }, _webHelper.GetCurrentRequestProtocol());
         property.PaymentMethod = paymentMethodName;
         property.PaymentStatus = order.PaymentStatus.ToString();
         property.ShippingAddress = await GetAddressItemDataAsync(order.ShippingAddressId);
@@ -557,8 +558,8 @@ public class OmnisendEventsService
     public async Task SendStartedCheckoutEventAsync(PageRenderingEvent eventMessage)
     {
         var routeName = eventMessage.GetRouteName();
-        if (!routeName.Equals("CheckoutOnePage", StringComparison.InvariantCultureIgnoreCase) &&
-            !routeName.Equals("CheckoutBillingAddress", StringComparison.InvariantCultureIgnoreCase))
+        if (!routeName.Equals(NopRouteNames.Standard.CHECKOUT_ONE_PAGE, StringComparison.InvariantCultureIgnoreCase) &&
+            !routeName.Equals(NopRouteNames.Standard.CHECKOUT_BILLING_ADDRESS, StringComparison.InvariantCultureIgnoreCase))
             return;
 
         await SendEventAsync(await CreateStartedCheckoutEventAsync());

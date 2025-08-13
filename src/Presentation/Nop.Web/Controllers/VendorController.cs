@@ -7,6 +7,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Http;
 using Nop.Services.Attributes;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -182,7 +183,7 @@ public partial class VendorController : BasePublicController
     public virtual async Task<IActionResult> ApplyVendor()
     {
         if (!_vendorSettings.AllowCustomersToApplyForVendorAccount)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
             return Challenge();
@@ -197,7 +198,7 @@ public partial class VendorController : BasePublicController
     public virtual async Task<IActionResult> ApplyVendorSubmit(ApplyVendorModel model, bool captchaValid, IFormFile uploadedFile, IFormCollection form)
     {
         if (!_vendorSettings.AllowCustomersToApplyForVendorAccount)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var customer = await _workContext.GetCurrentCustomerAsync();
         if (!await _customerService.IsRegisteredAsync(customer))
@@ -297,7 +298,7 @@ public partial class VendorController : BasePublicController
             return Challenge();
 
         if (await _workContext.GetCurrentVendorAsync() == null || !_vendorSettings.AllowVendorsToEditInfo)
-            return RedirectToRoute("CustomerInfo");
+            return RedirectToRoute(NopRouteNames.General.CUSTOMER_INFO);
 
         var model = new VendorInfoModel();
         model = await _vendorModelFactory.PrepareVendorInfoModelAsync(model, false);
@@ -313,7 +314,7 @@ public partial class VendorController : BasePublicController
 
         var vendor = await _workContext.GetCurrentVendorAsync();
         if (vendor == null || !_vendorSettings.AllowVendorsToEditInfo)
-            return RedirectToRoute("CustomerInfo");
+            return RedirectToRoute(NopRouteNames.General.CUSTOMER_INFO);
 
         Picture picture = null;
 
@@ -392,7 +393,7 @@ public partial class VendorController : BasePublicController
 
         var vendor = await _workContext.GetCurrentVendorAsync();
         if (vendor == null || !_vendorSettings.AllowVendorsToEditInfo)
-            return RedirectToRoute("CustomerInfo");
+            return RedirectToRoute(NopRouteNames.General.CUSTOMER_INFO);
 
         var picture = await _pictureService.GetPictureByIdAsync(vendor.PictureId);
 

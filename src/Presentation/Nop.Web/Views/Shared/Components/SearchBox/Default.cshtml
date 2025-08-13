@@ -6,7 +6,7 @@
     const string searchBoxId = "small-searchterms";
 }
 
-<form asp-route="ProductSearch" method="get" id="small-search-box-form">
+<form asp-route="@NopRouteNames.General.SEARCH" method="get" id="small-search-box-form">
     @if (Model.ShowSearchBox)
     {
         <input type="text" class="search-box-text" id="@searchBoxId" autocomplete="off" name="@termFormName" placeholder="@T("Search.SearchBox.Tooltip")" aria-label="@T("Search.SearchBox.Text.Label")" />
@@ -54,7 +54,7 @@
                     </text>
                 }
 
-                window.location.href = `@Url.RouteUrl("ProductSearch")?${new URLSearchParams(formData).toString()}`;
+                window.location.href = `@Url.RouteUrl(NopRouteNames.General.SEARCH)?${new URLSearchParams(formData).toString()}`;
             });
         </script>
 
@@ -82,7 +82,7 @@
                                 return;
                             }
 
-                            $.getJSON('@(Url.RouteUrl("ProductSearchAutoComplete"))', query, function (data, status, xhr) {
+                            $.getJSON('@(Url.RouteUrl(NopRouteNames.Ajax.PRODUCT_SEARCH_AUTOCOMPLETE))', query, function (data, status, xhr) {
                                 cache.set(cacheKey, data);
                                 response(data);
                             });

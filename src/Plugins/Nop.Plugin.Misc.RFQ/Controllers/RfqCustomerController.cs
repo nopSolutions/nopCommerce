@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Http;
 using Nop.Plugin.Misc.RFQ.Domains;
 using Nop.Plugin.Misc.RFQ.Factories;
 using Nop.Plugin.Misc.RFQ.Models.Customer;
@@ -57,13 +58,13 @@ public class RfqCustomerController : BasePublicController
     private async Task<IActionResult> CheckCustomerPermissionAsync(Customer customer)
     {
         if (!_rfqSettings.Enabled)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         if (await _customerService.IsGuestAsync(customer))
             return Challenge();
 
         if (!await _permissionService.AuthorizeAsync(RfqPermissionConfigManager.ACCESS_RFQ, customer))
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         return null;
     }
@@ -111,18 +112,18 @@ public class RfqCustomerController : BasePublicController
             }
             catch (ArgumentNullException)
             {
-                return RedirectToRoute("Homepage");
+                return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
             }
 
             if (model.CustomerId != customer.Id)
-                return RedirectToRoute("Homepage");
+                return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
         }
         else
         {
             var (request, items) = await _rfqService.CreateRequestQuoteByShoppingCartAsync();
 
             if (request == null)
-                return RedirectToRoute("Homepage");
+                return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
             model = await _modelFactory.PrepareRequestQuoteModelAsync(request, items);
         }
@@ -160,7 +161,7 @@ public class RfqCustomerController : BasePublicController
     [FormValueRequired("back-to-cart")]
     public IActionResult BackToCart(RequestQuoteModel model)
     {
-        return RedirectToRoute("ShoppingCart");
+        return RedirectToRoute(NopRouteNames.General.CART);
     }
 
     [HttpPost, ActionName("CustomerRequest")]
@@ -311,7 +312,7 @@ public class RfqCustomerController : BasePublicController
 
             await _rfqService.CreateShoppingCartAsync(model.Id);
 
-            return RedirectToRoute("ShoppingCart");
+            return RedirectToRoute(NopRouteNames.General.CART);
         }
 
         model = await _modelFactory.PrepareQuoteModelAsync(model.Id, model);
@@ -332,7 +333,7 @@ public class RfqCustomerController : BasePublicController
 
         await _shoppingCartService.ClearShoppingCartAsync(customer, store.Id);
 
-        return RedirectToRoute("Homepage");
+        return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
     }
 
     #endregion

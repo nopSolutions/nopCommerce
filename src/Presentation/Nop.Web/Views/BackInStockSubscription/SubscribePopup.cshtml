@@ -51,7 +51,7 @@
                             cache: false,
                             type: "POST",
                             data: postData,
-                            url: "@(Url.RouteUrl("BackInStockSubscribeSend", new { productId = Model.ProductId }))",
+                            url: "@(Url.RouteUrl(NopRouteNames.Ajax.BACK_IN_STOCK_SUBSCRIBE_SEND, new { productId = Model.ProductId }))",
                             success: function (data, textStatus, jqXHR) {
                                 $(subscribeButton).closest('.ui-dialog-content').dialog('destroy').remove();
                                 location.reload();

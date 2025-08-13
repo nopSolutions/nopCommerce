@@ -4,6 +4,7 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Events;
+using Nop.Core.Http;
 using Nop.Services.Customers;
 using Nop.Services.Forums;
 using Nop.Services.Helpers;
@@ -235,13 +236,13 @@ public partial class JsonLdModelFactory : IJsonLdModelFactory
             {
                 Name = JavaScriptEncoder.Default.Encode(customerName),
                 Url =
-                    _nopUrlHelper.RouteUrl("CustomerProfile", new { id = forumTopic.CustomerId },
+                    _nopUrlHelper.RouteUrl(NopRouteNames.Standard.CUSTOMER_PROFILE, new { id = forumTopic.CustomerId },
                         _webHelper.GetCurrentRequestProtocol()),
             },
             DatePublished = ConvertDateTimeToIso8601String(createdOn),
             Subject = JavaScriptEncoder.Default.Encode(model.Subject),
             Text = _forumService.FormatPostText(firstPost),
-            Url = _nopUrlHelper.RouteUrl("TopicSlug", new { id = model.Id, slug = model.SeName },
+            Url = _nopUrlHelper.RouteUrl(NopRouteNames.Standard.TOPIC_SLUG, new { id = model.Id, slug = model.SeName },
                 _webHelper.GetCurrentRequestProtocol()),
             Comments = model.ForumPostModels.Where(pm => pm.Id != firstPost.Id).Select(postModel =>
             {
@@ -250,13 +251,13 @@ public partial class JsonLdModelFactory : IJsonLdModelFactory
                     Author = new()
                     {
                         Name = JavaScriptEncoder.Default.Encode(postModel.CustomerName),
-                        Url = _nopUrlHelper.RouteUrl("CustomerProfile", new { id = postModel.CustomerId },
+                        Url = _nopUrlHelper.RouteUrl(NopRouteNames.Standard.CUSTOMER_PROFILE, new { id = postModel.CustomerId },
                             _webHelper.GetCurrentRequestProtocol()),
                     },
                     DatePublished = ConvertDateTimeToIso8601String(postModel.PostCreatedOn),
                     Url = postModel.CurrentTopicPage > 1
-                        ? _nopUrlHelper.RouteUrl("TopicSlugPaged", new { id = model.Id, slug = model.SeName, pageNumber = postModel.CurrentTopicPage }, _webHelper.GetCurrentRequestProtocol(), null, postModel.Id.ToString())
-                        : _nopUrlHelper.RouteUrl("TopicSlug", new { id = model.Id, slug = model.SeName }, _webHelper.GetCurrentRequestProtocol(), null, postModel.Id.ToString()),
+                        ? _nopUrlHelper.RouteUrl(NopRouteNames.Standard.TOPIC_SLUG_PAGED, new { id = model.Id, slug = model.SeName, pageNumber = postModel.CurrentTopicPage }, _webHelper.GetCurrentRequestProtocol(), null, postModel.Id.ToString())
+                        : _nopUrlHelper.RouteUrl( NopRouteNames.Standard.TOPIC_SLUG, new { id = model.Id, slug = model.SeName }, _webHelper.GetCurrentRequestProtocol(), null, postModel.Id.ToString()),
                     Text = postModel.FormattedText
                 };
 

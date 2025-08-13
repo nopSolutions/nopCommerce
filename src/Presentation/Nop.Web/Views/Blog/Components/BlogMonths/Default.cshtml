@@ -15,7 +15,7 @@
                             @foreach (var monthItem in yearItem.Months)
                             {
                                 <li class="month">
-                                    <a href="@Url.RouteUrl("BlogByMonth", new { month = yearItem.Year + "-" + monthItem.Month })">@(new DateTime(yearItem.Year, monthItem.Month, 1).ToString("MMMM"))
+                                    <a href="@Url.RouteUrl(NopRouteNames.Standard.BLOG_BY_MONTH, new { month = yearItem.Year + "-" + monthItem.Month })">@(new DateTime(yearItem.Year, monthItem.Month, 1).ToString("MMMM"))
                                     (@(monthItem.BlogPostCount))</a>
                                 </li>
                             }

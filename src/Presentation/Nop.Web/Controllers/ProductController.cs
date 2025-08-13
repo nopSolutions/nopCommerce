@@ -6,6 +6,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Events;
+using Nop.Core.Http;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Html;
@@ -179,7 +180,7 @@ public partial class ProductController : BasePublicController
             //is this one an associated products?
             var parentGroupedProduct = await _productService.GetProductByIdAsync(product.ParentGroupedProductId);
             if (parentGroupedProduct == null)
-                return RedirectToRoute("Homepage");
+                return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
             var productUrl = await _nopUrlHelper.RouteGenericUrlAsync(parentGroupedProduct);
             return LocalRedirectPermanent(productUrl);
@@ -339,7 +340,7 @@ public partial class ProductController : BasePublicController
 
         if (product == null || product.Deleted || !product.Published || !product.AllowCustomerReviews ||
             !await _productService.CanAddReviewAsync(product.Id, _catalogSettings.ShowProductReviewsPerStore ? currentStore.Id : 0))
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         //validate CAPTCHA
         if (_captchaSettings.Enabled && _captchaSettings.ShowOnProductReviewPage && !captchaValid)
@@ -473,7 +474,7 @@ public partial class ProductController : BasePublicController
 
         if (!_catalogSettings.ShowProductReviewsTabOnAccountPage)
         {
-            return RedirectToRoute("CustomerInfo");
+            return RedirectToRoute(NopRouteNames.General.CUSTOMER_INFO);
         }
 
         var model = await _productModelFactory.PrepareCustomerProductReviewsModelAsync(pageNumber);
@@ -489,7 +490,7 @@ public partial class ProductController : BasePublicController
     {
         var product = await _productService.GetProductByIdAsync(productId);
         if (product == null || product.Deleted || !product.Published || !_catalogSettings.EmailAFriendEnabled)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var model = new ProductEmailAFriendModel();
         model = await _productModelFactory.PrepareProductEmailAFriendModelAsync(model, product, false);
@@ -503,7 +504,7 @@ public partial class ProductController : BasePublicController
     {
         var product = await _productService.GetProductByIdAsync(model.ProductId);
         if (product == null || product.Deleted || !product.Published || !_catalogSettings.EmailAFriendEnabled)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         //validate CAPTCHA
         if (_captchaSettings.Enabled && _captchaSettings.ShowOnEmailProductToFriendPage && !captchaValid)
@@ -569,9 +570,9 @@ public partial class ProductController : BasePublicController
         return Json(new
         {
             success = true,
-            message = string.Format(await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToCompareList.Link"), Url.RouteUrl("CompareProducts"))
+            message = string.Format(await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToCompareList.Link"), Url.RouteUrl(NopRouteNames.General.COMPARE_PRODUCTS))
             //use the code below (commented) if you want a customer to be automatically redirected to the compare products page
-            //redirect = Url.RouteUrl("CompareProducts"),
+            //redirect = Url.RouteUrl(NopRouteNames.General.COMPARE_PRODUCTS),
         });
     }
 
@@ -579,20 +580,20 @@ public partial class ProductController : BasePublicController
     {
         var product = await _productService.GetProductByIdAsync(productId);
         if (product == null)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         if (!_catalogSettings.CompareProductsEnabled)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         await _compareProductsService.RemoveProductFromCompareListAsync(productId);
 
-        return RedirectToRoute("CompareProducts");
+        return RedirectToRoute(NopRouteNames.General.COMPARE_PRODUCTS);
     }
 
     public virtual async Task<IActionResult> CompareProducts()
     {
         if (!_catalogSettings.CompareProductsEnabled)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var model = new CompareProductsModel
         {
@@ -620,11 +621,11 @@ public partial class ProductController : BasePublicController
     public virtual IActionResult ClearCompareList()
     {
         if (!_catalogSettings.CompareProductsEnabled)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         _compareProductsService.ClearCompareProducts();
 
-        return RedirectToRoute("CompareProducts");
+        return RedirectToRoute(NopRouteNames.General.COMPARE_PRODUCTS);
     }
 
     #endregion

@@ -69,7 +69,7 @@
             $.ajax({
                 cache: false,
                 type: "POST",
-                url: "@(Url.RouteUrl("SubscribeNewsletter"))",
+                url: "@(Url.RouteUrl(NopRouteNames.Ajax.SUBSCRIBE_NEWSLETTER))",
                 data: postData,
                 success: function (data, textStatus, jqXHR) {
                     $("#newsletter-result-block").html(data.Result);

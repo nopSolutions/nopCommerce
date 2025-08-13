@@ -2,6 +2,7 @@
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Media;
+using Nop.Core.Http;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
@@ -253,7 +254,7 @@ public partial class ProfileModelFactory : IProfileModelFactory
             TotalRecords = list.TotalCount,
             PageIndex = list.PageIndex,
             ShowTotalSummary = false,
-            RouteActionName = "CustomerProfilePaged",
+            RouteActionName = NopRouteNames.Standard.CUSTOMER_PROFILE_PAGED,
             UseRouteLinks = true,
             RouteValues = new SlugRouteValues { PageNumber = page, Id = customer.Id }
         };

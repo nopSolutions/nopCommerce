@@ -5,6 +5,7 @@ using Nop.Plugin.Payments.PayPalCommerce.Domain;
 using Nop.Plugin.Payments.PayPalCommerce.Factories;
 using Nop.Plugin.Payments.PayPalCommerce.Models.Public;
 using Nop.Plugin.Payments.PayPalCommerce.Services;
+using Nop.Core.Http;
 using Nop.Services.Catalog;
 using Nop.Web.Framework.Components;
 using Nop.Web.Framework.Infrastructure;
@@ -74,7 +75,7 @@ public class ButtonsViewComponent : NopViewComponent
             if (_settings.DisplayButtonsOnShoppingCart)
             {
                 var routeName = HttpContext.GetEndpoint()?.Metadata.GetMetadata<RouteNameMetadata>()?.RouteName;
-                if (routeName == PayPalCommerceDefaults.Route.ShoppingCart)
+                if (routeName == NopRouteNames.General.CART)
                     model = await _modelFactory.PreparePaymentInfoModelAsync(ButtonPlacement.Cart);
             }
         }

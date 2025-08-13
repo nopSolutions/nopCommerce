@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Logging;
 using Nop.Core;
 using Nop.Core.Domain.Security;
+using Nop.Core.Http;
 
 namespace Nop.Web.Framework.Mvc.Routing;
 
@@ -67,7 +68,7 @@ public partial class NopLocalRedirectResultExecutor : LocalRedirectResultExecuto
             if ((uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps) && urlHelper.IsLocalUrl(uri.AbsolutePath))
                 result.Url = isLocalUrl ? uri.PathAndQuery : $"{uri.GetLeftPart(UriPartial.Query)}{uri.Fragment}";
             else
-                result.Url = urlHelper.RouteUrl("Homepage");
+                result.Url = urlHelper.RouteUrl(NopRouteNames.General.HOMEPAGE);
         }
 
         return base.ExecuteAsync(context, result);

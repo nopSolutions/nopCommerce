@@ -6,6 +6,7 @@ using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Events;
+using Nop.Core.Http;
 using Nop.Core.Http.Extensions;
 using Nop.Data;
 using Nop.Services.Common;
@@ -207,12 +208,12 @@ public partial class ExternalAuthenticationService : IExternalAuthenticationServ
             await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.AccountActivationTokenAttribute, Guid.NewGuid().ToString());
             await _workflowMessageService.SendCustomerEmailValidationMessageAsync(customer, currentLanguage.Id);
 
-            return new RedirectToRouteResult("RegisterResult", new { resultId = (int)UserRegistrationType.EmailValidation, returnUrl });
+            return new RedirectToRouteResult(NopRouteNames.Standard.REGISTER_RESULT, new { resultId = (int)UserRegistrationType.EmailValidation, returnUrl });
         }
 
         //registration is succeeded but isn't approved by admin
         if (_customerSettings.UserRegistrationType == UserRegistrationType.AdminApproval)
-            return new RedirectToRouteResult("RegisterResult", new { resultId = (int)UserRegistrationType.AdminApproval, returnUrl });
+            return new RedirectToRouteResult(NopRouteNames.Standard.REGISTER_RESULT, new { resultId = (int)UserRegistrationType.AdminApproval, returnUrl });
 
         return await ErrorAuthenticationAsync(new[] { "Error on registration" }, returnUrl);
     }
@@ -252,7 +253,7 @@ public partial class ExternalAuthenticationService : IExternalAuthenticationServ
         if (!string.IsNullOrEmpty(returnUrl) && urlHelper.IsLocalUrl(returnUrl))
             return new RedirectResult(returnUrl);
 
-        return new RedirectToRouteResult("Homepage", null);
+        return new RedirectToRouteResult(NopRouteNames.General.HOMEPAGE, null);
     }
 
     #endregion

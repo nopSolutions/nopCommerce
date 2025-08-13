@@ -37,7 +37,7 @@
     <div class="page-body">
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsSearchBeforeSearchform, additionalData = Model })
         <div class="search-input">
-            <form asp-route="Search" method="get">
+            <form asp-route="@NopRouteNames.Standard.BOARDS_SEARCH" method="get">
                 <div class="fieldset">
                     <div class="form-fields">
                         <div class="basic-search">
@@ -97,7 +97,7 @@
                     TotalRecords = Model.TopicTotalRecords,
                     PageIndex = Model.TopicPageIndex,
                     ShowTotalSummary = false,
-                    RouteActionName = "Search",
+                    RouteActionName = NopRouteNames.Standard.BOARDS_SEARCH,
                     RouteValues = new ForumModelFactory.ForumSearchRouteValues { Advs = advs, Searchterms = searchterms, ForumId = forumId, Within = within, LimitDays = limitDays },
                 });
             }
@@ -197,7 +197,7 @@
                                                     <label>@T("Forum.Author"):</label>
                                                     if (topic.AllowViewingProfiles)
                                                     {
-                                                        @Html.RouteLink(topic.CustomerName, "CustomerProfile", new { Id = topic.CustomerId })
+                                                        @Html.RouteLink(topic.CustomerName, NopRouteNames.Standard.CUSTOMER_PROFILE, new { Id = topic.CustomerId })
                                                     }
                                                     else
                                                     {

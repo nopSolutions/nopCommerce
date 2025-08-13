@@ -11,6 +11,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Events;
+using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Services.Blogs;
 using Nop.Services.Catalog;
@@ -145,26 +146,26 @@ public partial class SitemapModelFactory : ISitemapModelFactory
         var sitemapUrls = new List<SitemapUrlModel>
         {
             //home page
-            await PrepareLocalizedSitemapUrlAsync("Homepage"),
+            await PrepareLocalizedSitemapUrlAsync(NopRouteNames.General.HOMEPAGE),
 
             //search products
-            await PrepareLocalizedSitemapUrlAsync("ProductSearch"),
+            await PrepareLocalizedSitemapUrlAsync(NopRouteNames.General.SEARCH),
 
             //contact us
-            await PrepareLocalizedSitemapUrlAsync("ContactUs")
+            await PrepareLocalizedSitemapUrlAsync(NopRouteNames.General.CONTACT_US)
         };
 
         //news
         if (_newsSettings.Enabled)
-            sitemapUrls.Add(await PrepareLocalizedSitemapUrlAsync("NewsArchive"));
+            sitemapUrls.Add(await PrepareLocalizedSitemapUrlAsync(NopRouteNames.General.NEWS));
 
         //blog
         if (_blogSettings.Enabled)
-            sitemapUrls.Add(await PrepareLocalizedSitemapUrlAsync("Blog"));
+            sitemapUrls.Add(await PrepareLocalizedSitemapUrlAsync(NopRouteNames.General.BLOG));
 
         //forum
         if (_forumSettings.ForumsEnabled)
-            sitemapUrls.Add(await PrepareLocalizedSitemapUrlAsync("Boards"));
+            sitemapUrls.Add(await PrepareLocalizedSitemapUrlAsync(NopRouteNames.General.BOARDS));
 
         //categories
         if (_sitemapXmlSettings.SitemapXmlIncludeCategories)
@@ -359,7 +360,7 @@ public partial class SitemapModelFactory : ISitemapModelFactory
         //write URLs of all available sitemaps
         for (var id = 1; id <= sitemapNumber; id++)
         {
-            var url = _nopUrlHelper.RouteUrl("sitemap-indexed.xml", new { Id = id }, await GetHttpProtocolAsync());
+            var url = _nopUrlHelper.RouteUrl(NopRouteNames.Standard.SITEMAP_INDEXED_XML, new { Id = id }, await GetHttpProtocolAsync());
             var location = await XmlHelper.XmlEncodeAsync(url);
 
             await writer.WriteStartElementAsync(null, "sitemap", null);
@@ -655,7 +656,7 @@ public partial class SitemapModelFactory : ISitemapModelFactory
             {
                 GroupTitle = commonGroupTitle,
                 Name = await _localizationService.GetResourceAsync("Homepage"),
-                Url = _nopUrlHelper.RouteUrl("Homepage")
+                Url = _nopUrlHelper.RouteUrl((NopRouteNames.General.HOMEPAGE)
             });
 
             //search
@@ -663,7 +664,7 @@ public partial class SitemapModelFactory : ISitemapModelFactory
             {
                 GroupTitle = commonGroupTitle,
                 Name = await _localizationService.GetResourceAsync("Search"),
-                Url = _nopUrlHelper.RouteUrl("ProductSearch")
+                Url = _nopUrlHelper.RouteUrl(NopRouteNames.General.SEARCH)
             });
 
             //news
@@ -673,7 +674,7 @@ public partial class SitemapModelFactory : ISitemapModelFactory
                 {
                     GroupTitle = commonGroupTitle,
                     Name = await _localizationService.GetResourceAsync("News"),
-                    Url = _nopUrlHelper.RouteUrl("NewsArchive")
+                    Url = _nopUrlHelper.RouteUrl(NopRouteNames.General.NEWS)
                 });
             }
 
@@ -684,7 +685,7 @@ public partial class SitemapModelFactory : ISitemapModelFactory
                 {
                     GroupTitle = commonGroupTitle,
                     Name = await _localizationService.GetResourceAsync("Blog"),
-                    Url = _nopUrlHelper.RouteUrl("Blog")
+                    Url = _nopUrlHelper.RouteUrl(NopRouteNames.General.BLOG)
                 });
             }
 
@@ -695,7 +696,7 @@ public partial class SitemapModelFactory : ISitemapModelFactory
                 {
                     GroupTitle = commonGroupTitle,
                     Name = await _localizationService.GetResourceAsync("Forum.Forums"),
-                    Url = _nopUrlHelper.RouteUrl("Boards")
+                    Url = _nopUrlHelper.RouteUrl(NopRouteNames.General.BOARDS)
                 });
             }
 
@@ -704,7 +705,7 @@ public partial class SitemapModelFactory : ISitemapModelFactory
             {
                 GroupTitle = commonGroupTitle,
                 Name = await _localizationService.GetResourceAsync("ContactUs"),
-                Url = _nopUrlHelper.RouteUrl("ContactUs")
+                Url = _nopUrlHelper.RouteUrl(NopRouteNames.General.CONTACT_US)
             });
 
             //customer info
@@ -712,7 +713,7 @@ public partial class SitemapModelFactory : ISitemapModelFactory
             {
                 GroupTitle = commonGroupTitle,
                 Name = await _localizationService.GetResourceAsync("Account.MyAccount"),
-                Url = _nopUrlHelper.RouteUrl("CustomerInfo")
+                Url = _nopUrlHelper.RouteUrl(NopRouteNames.General.CUSTOMER_INFO)
             });
 
             //at the moment topics are in general category too

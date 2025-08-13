@@ -43,7 +43,7 @@
                             <div class="avatar">
                                 @if (review.AllowViewingProfiles)
                                 {
-                                    <a href="@Url.RouteUrl("CustomerProfile", new { id = review.CustomerId })" class="avatar-img-link">
+                                    <a href="@Url.RouteUrl(NopRouteNames.Standard.CUSTOMER_PROFILE, new { id = review.CustomerId })" class="avatar-img-link">
                                         <img src="@(review.CustomerAvatarUrl)" class="avatar-img" alt="Avatar" />
                                     </a>
                                 }
@@ -62,7 +62,7 @@
                             <label>@T("Reviews.From"):</label>
                             @if (review.AllowViewingProfiles)
                             {
-                                <a href="@Url.RouteUrl("CustomerProfile", new { id = review.CustomerId })">@(review.CustomerName)</a>
+                                <a href="@Url.RouteUrl(NopRouteNames.Standard.CUSTOMER_PROFILE, new { id = review.CustomerId })">@(review.CustomerName)</a>
                             }
                             else
                             {

@@ -12,7 +12,7 @@
 }
 <div class="page return-request-page">
     <div class="page-title">
-        <h1>@Html.Raw(string.Format(T("ReturnRequests.Title").Text, Url.RouteUrl("OrderDetails", new { orderId = Model.OrderId }), Model.CustomOrderNumber))</h1>
+        <h1>@Html.Raw(string.Format(T("ReturnRequests.Title").Text, Url.RouteUrl(NopRouteNames.Standard.ORDER_DETAILS, new { orderId = Model.OrderId }), Model.CustomOrderNumber))</h1>
     </div>
     <div class="page-body">
         @if (!string.IsNullOrEmpty(Model.Result))
@@ -23,7 +23,7 @@
         }
         else
         {
-            <form asp-route="ReturnRequest" method="post">
+            <form asp-route="@NopRouteNames.Standard.RETURN_REQUEST" method="post">
                 <div class="section">
                     <div class="title">
                         <strong>@T("ReturnRequests.SelectProduct(s)")</strong>
@@ -153,7 +153,7 @@
                                         maxFiles: 1,
                                         server: {
                                             process: {
-                                                url:'@(Url.RouteUrl("UploadFileReturnRequest"))',
+                                                url:'@(Url.RouteUrl(NopRouteNames.Ajax.UPLOAD_FILE_RETURN_REQUEST))',
                                                 onload: function(response) {
                                                     const r = JSON.parse(response);
 

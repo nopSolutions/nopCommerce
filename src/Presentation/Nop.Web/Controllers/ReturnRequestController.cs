@@ -3,6 +3,7 @@ using Nop.Core;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Http;
 using Nop.Core.Http.Extensions;
 using Nop.Core.Infrastructure;
 using Nop.Services.Customers;
@@ -91,7 +92,7 @@ public partial class ReturnRequestController : BasePublicController
             return Challenge();
 
         if (!await _orderProcessingService.IsReturnRequestAllowedAsync(order))
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var model = new SubmitReturnRequestModel();
         model = await _returnRequestModelFactory.PrepareSubmitReturnRequestModelAsync(model, order);
@@ -107,7 +108,7 @@ public partial class ReturnRequestController : BasePublicController
             return Challenge();
 
         if (!await _orderProcessingService.IsReturnRequestAllowedAsync(order))
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var count = 0;
 
@@ -251,7 +252,7 @@ public partial class ReturnRequestController : BasePublicController
         {
             success = true,
             message = await _localizationService.GetResourceAsync("ShoppingCart.FileUploaded"),
-            downloadUrl = Url.RouteUrl("DownloadGetFileUpload", new { downloadId = download.DownloadGuid }),
+            downloadUrl = Url.RouteUrl(NopRouteNames.Standard.DOWNLOAD_GET_FILE_UPLOAD, new { downloadId = download.DownloadGuid }),
             downloadGuid = download.DownloadGuid,
         });
     }
