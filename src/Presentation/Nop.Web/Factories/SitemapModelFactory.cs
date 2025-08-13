@@ -656,7 +656,7 @@ public partial class SitemapModelFactory : ISitemapModelFactory
             {
                 GroupTitle = commonGroupTitle,
                 Name = await _localizationService.GetResourceAsync("Homepage"),
-                Url = _nopUrlHelper.RouteUrl((NopRouteNames.General.HOMEPAGE)
+                Url = _nopUrlHelper.RouteUrl(NopRouteNames.General.HOMEPAGE)
             });
 
             //search

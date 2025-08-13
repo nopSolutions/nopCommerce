@@ -350,7 +350,7 @@ public class OmnisendEventsService
         property.Note = null;
         property.OrderId = order.CustomOrderNumber;
         property.OrderNumber = order.Id;
-        property.OrderStatusURL = _nopUrlHelper.RouteUrl(NopRouteNames.Standard.ORDER_DETAIL, new { orderId = order.Id }, _webHelper.GetCurrentRequestProtocol());
+        property.OrderStatusURL = _nopUrlHelper.RouteUrl(NopRouteNames.Standard.ORDER_DETAILS, new { orderId = order.Id }, _webHelper.GetCurrentRequestProtocol());
         property.PaymentMethod = paymentMethodName;
         property.PaymentStatus = order.PaymentStatus.ToString();
         property.ShippingAddress = await GetAddressItemDataAsync(order.ShippingAddressId);
