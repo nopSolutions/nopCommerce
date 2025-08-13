@@ -1,5 +1,8 @@
 ﻿@model ApplyVendorModel
 
+@using Nop.Web.Framework.Mvc.Routing
+@inject INopUrlHelper NopUrl
+
 @{
     Layout = "_ColumnsOne";
 
@@ -58,10 +61,8 @@
                                 $(function() {
                                     $('#apply-vendor').on('click', function() {
                                         if ($('#termsofservice').is(':checked')) {
-                                            //do some stuff
                                             return true;
                                         } else {
-                                            //just show validation errors, dont post
                                             alert('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Vendors.ApplyAccount.AcceptTermsOfService.Required").Text))');
                                             return false;
                                         }
@@ -87,7 +88,9 @@
                                 }
                                 else
                                 {
-                                    <a class="read" id="read-acceptterms" href="@Url.RouteTopicUrl("VendorTermsOfService")">@T("Vendors.ApplyAccount.AcceptTermsOfService.Read")</a>
+                                    <a class="read" id="read-acceptterms" href="@(await NopUrl.RouteTopicUrlAsync("VendorTermsOfService"))">
+                                        @T("Vendors.ApplyAccount.AcceptTermsOfService.Read")
+                                    </a>
                                 }
                             </div>
                         }

@@ -2,12 +2,15 @@
 
 @using Nop.Core.Domain.Catalog
 @using Nop.Core.Domain.Topics
+@using Nop.Web.Framework.Mvc.Routing
+@inject INopUrlHelper NopUrl
 
 @functions {
     async Task CategoryLine(TopMenuModel.CategoryLineModel lineModel)
     {
         <li>
-            <a href="@(Url.RouteUrl<Category>(new { SeName = lineModel.Category.SeName }))">@lineModel.Category.Name
+            <a href="@(await NopUrl.RouteGenericUrlAsync<Category>(new { SeName = lineModel.Category.SeName }))">
+                @lineModel.Category.Name
                 @if (lineModel.Category.NumberOfProducts.HasValue)
                 {
                     <text> </text>@T("Categories.TotalProducts", lineModel.Category.NumberOfProducts.Value)
@@ -21,11 +24,7 @@
                     //standard design (only categories with "IncludeInTopMenu")
                     lineModel.Category.SubCategories.Where(x => x.IncludeInTopMenu).ToList();
 
-                var levelClass = "";
-                if (lineModel.Level == 0)
-                {
-                    levelClass = "first-level";
-                }
+                var levelClass = lineModel.Level == 0 ? "first-level" : "";
                 if (subCategories.Count > 0)
                 {
                     <div class="sublist-toggle"></div>
@@ -58,17 +57,17 @@
         var rootCategories = Model.Categories.Where(x => x.IncludeInTopMenu).ToList();
         @foreach (var category in rootCategories)
         {
-            var categoryLineModel = new TopMenuModel.CategoryLineModel
-            {
-                Category = category
-            };
+            var categoryLineModel = new TopMenuModel.CategoryLineModel { Category = category };
             await CategoryLine(categoryLineModel);
         }
-
     }
     @foreach (var topic in Model.Topics)
     {
-        <li><a href="@(Url.RouteUrl<Topic>(new { SeName = topic.SeName }))">@topic.Name</a></li>
+        <li>
+            <a href="@(await NopUrl.RouteGenericUrlAsync<Topic>(new { SeName = topic.SeName }))">
+                @topic.Name
+            </a>
+        </li>
     }
     @if (Model.NewProductsEnabled && Model.DisplayNewProductsMenuItem)
     {
@@ -96,6 +95,7 @@
     }
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeaderMenuAfter, additionalData = Model })
 </ul>
+
 @{
     var rootCategoriesResponsive = Model.Categories.ToList();
     //name it "Categories" if we have only categories. Otherwise, "Menu"
@@ -122,7 +122,11 @@
         }
         @foreach (var topic in Model.Topics)
         {
-            <li><a href="@(Url.RouteUrl<Topic>(new { SeName = topic.SeName }))">@topic.Name</a></li>
+            <li>
+                <a href="@(await NopUrl.RouteGenericUrlAsync<Topic>(new { SeName = topic.SeName }))">
+                    @topic.Name
+                </a>
+            </li>
         }
         @if (Model.NewProductsEnabled && Model.DisplayNewProductsMenuItem)
         {

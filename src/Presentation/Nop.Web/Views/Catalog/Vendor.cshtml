@@ -3,10 +3,11 @@
 @using Nop.Core
 @using Nop.Core.Domain.Seo
 @using Nop.Core.Domain.Vendors
+@using Nop.Web.Framework.Mvc.Routing
 
 @inject IWebHelper webHelper
 @inject SeoSettings seoSettings
-
+@inject INopUrlHelper NopUrl
 @{
     Layout = "_ColumnsTwo";
 
@@ -20,7 +21,11 @@
 
     if (seoSettings.CanonicalUrlsEnabled)
     {
-        var vendorUrl = Url.RouteUrl<Vendor>(new { SeName = Model.SeName }, webHelper.GetCurrentRequestProtocol()).ToLowerInvariant();
+        var vendorUrl = (await NopUrl.RouteGenericUrlAsync<Vendor>(
+            new { SeName = Model.SeName },
+            webHelper.GetCurrentRequestProtocol()
+        )).ToLowerInvariant();
+
         NopHtml.AddCanonicalUrlParts(vendorUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
     }
 }

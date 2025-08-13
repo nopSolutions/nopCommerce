@@ -432,16 +432,14 @@ public partial class CatalogController : BasePublicController
         var showLinkToResultSearch = _catalogSettings.ShowLinkToAllResultInSearchAutoComplete && (products.TotalCount > productNumber);
 
         var models = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, false, _catalogSettings.ShowProductImagesInSearchAutoComplete, _mediaSettings.AutoCompleteSearchThumbPictureSize)).ToList();
-        var result = (from p in models
-                      select new
-                      {
-                          label = p.Name,
-                          producturl = Url.RouteUrl<Product>(new { SeName = p.SeName }),
-                          productpictureurl = p.PictureModels.FirstOrDefault()?.ImageUrl,
-                          showlinktoresultsearch = showLinkToResultSearch
-                      })
-            .ToList();
-        return Json(result);
+        var result = (await Task.WhenAll(models.Select(async p => new
+{
+    label = p.Name,
+    producturl = await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = p.SeName }),
+    productpictureurl = p.PictureModels.FirstOrDefault()?.ImageUrl,
+    showlinktoresultsearch = showLinkToResultSearch
+}))).ToList();
+    return Json(result);
     }
 
     [HttpPost]

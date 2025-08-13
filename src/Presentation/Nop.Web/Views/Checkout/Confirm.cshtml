@@ -1,5 +1,8 @@
 ﻿@model CheckoutConfirmModel
 
+@using Nop.Web.Framework.Mvc.Routing
+@inject INopUrlHelper NopUrl
+
 @{
     Layout = "_ColumnsOne";
 
@@ -33,8 +36,6 @@
                                 }
                             }
                             if (termOfServiceOk) {
-                                //$('#confirm-order-form').submit();
-                                //$('.confirm-order-next-step-button').prop('disabled', true);
                                 return true;
                             } else {
                                 return false;
@@ -71,7 +72,7 @@
                             }
                             else
                             {
-                                <a class="read" id="read-terms" href="@Url.RouteTopicUrl("conditionsofuse")">@T("Checkout.TermsOfService.Read")</a>
+                                <a class="read" id="read-terms" href="@(await NopUrl.RouteTopicUrlAsync("conditionsofuse"))">@T("Checkout.TermsOfService.Read")</a>
                             }
                         </div>
                     }

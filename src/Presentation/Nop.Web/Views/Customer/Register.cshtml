@@ -1,5 +1,8 @@
 ﻿@model RegisterModel
 
+@using Nop.Web.Framework.Mvc.Routing
+@inject INopUrlHelper NopUrl
+
 @{
     Layout = "_ColumnsOne";
 
@@ -411,9 +414,11 @@
                                     });
                                     </script>
                                 }
-                                else
-                                {
-                                    <a class="read" id="read-privacyinfo" href="@Url.RouteTopicUrl("privacyinfo")">@T("Account.Fields.AcceptPrivacyPolicy.Read")</a>
+                               else
+                               {
+                                    <a class="read" id="read-privacyinfo" href="@(await NopUrl.RouteTopicUrlAsync("privacyinfo"))">
+                                        @T("Account.Fields.AcceptPrivacyPolicy.Read")
+                                    </a>
                                 }
                             </div>
                         }

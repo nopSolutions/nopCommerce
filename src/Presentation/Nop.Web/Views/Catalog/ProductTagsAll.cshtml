@@ -1,6 +1,9 @@
 ﻿@model PopularProductTagsModel
 
 @using Nop.Core.Domain.Catalog
+@using Nop.Web.Framework.Mvc.Routing
+
+@inject INopUrlHelper NopUrl
 
 @{
     Layout = "_ColumnsTwo";
@@ -21,7 +24,7 @@
                 @foreach (var item in Model.Tags)
                 {
                     <li>
-                        <a href="@(Url.RouteUrl<ProductTag>(new { SeName = item.SeName }))" class="producttag" style="font-size:@(Model.GetFontSize(item))%;">
+                        <a href="@(await NopUrl.RouteGenericUrlAsync<ProductTag>(new { SeName = item.SeName }))" class="producttag" style="font-size:@(Model.GetFontSize(item))%;">
                             @item.Name
                         </a>
                     </li>

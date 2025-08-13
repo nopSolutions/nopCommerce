@@ -1,6 +1,8 @@
 ﻿@model CategoryNavigationModel
 
 @using Nop.Core.Domain.Catalog
+@using Nop.Web.Framework.Mvc.Routing
+@inject INopUrlHelper NopUrl
 
 @functions {
     bool BreadCrumbContainsCurrentCategoryId(CategorySimpleModel category)
@@ -14,26 +16,22 @@
         foreach (var subCategory in category.SubCategories)
         {
             if (BreadCrumbContainsCurrentCategoryId(subCategory))
-            {
                 return true;
-            }
         }
-
         return false;
     }
 
     async Task CategoryLine(CategoryNavigationModel.CategoryLineModel lineModel)
     {
-        var active = lineModel.Category.Id == lineModel.CurrentCategoryId || lineModel.Category.SubCategories.Count(BreadCrumbContainsCurrentCategoryId) > 0;
+        var active = lineModel.Category.Id == lineModel.CurrentCategoryId ||
+                     lineModel.Category.SubCategories.Count(BreadCrumbContainsCurrentCategoryId) > 0;
         var last = lineModel.Category.Id == lineModel.CurrentCategoryId;
         var liClass = active ? "active" : "inactive";
-        if (last)
-        {
-            liClass += " last";
-        }
+        if (last) liClass += " last";
 
         <li class="@liClass">
-            <a href="@(Url.RouteUrl<Category>(new { SeName = lineModel.Category.SeName }))">@lineModel.Category.Name
+            <a href="@(await NopUrl.RouteGenericUrlAsync<Category>(new { SeName = lineModel.Category.SeName }))">
+                @lineModel.Category.Name
                 @if (lineModel.Category.NumberOfProducts.HasValue)
                 {
                     <text> </text>@T("Categories.TotalProducts", lineModel.Category.NumberOfProducts.Value)
