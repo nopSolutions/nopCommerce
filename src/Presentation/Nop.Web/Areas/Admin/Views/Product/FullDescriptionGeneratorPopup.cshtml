@@ -33,6 +33,7 @@
 
 <form asp-controller="Product" asp-action="FullDescriptionGeneratorPopup" id="generatorForm">
     <input type="hidden" asp-for="SaveButtonClicked" />
+    <input type="hidden" asp-for="LanguageId" />
     <section class="content">
         <div class="container-fluid">
             <div class="content-header clearfix">
@@ -66,9 +67,9 @@
                         <span asp-validation-for="ProductName"></span>
                     </div>
                     <div class="form-group row">
-                        <nop-label asp-for="LanguageId" />
-                        <nop-select asp-for="LanguageId" asp-items="Model.AvailableLanguages" />
-                        <span asp-validation-for="LanguageId"></span>
+                        <nop-label asp-for="TargetLanguageId" />
+                        <nop-select asp-for="TargetLanguageId" asp-items="Model.AvailableLanguages" />
+                        <span asp-validation-for="TargetLanguageId"></span>
                     </div>
                     <div class="form-group row">
                         <nop-label asp-for="Keywords" />

@@ -8,6 +8,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
@@ -91,6 +92,7 @@ public partial class ProductController : BaseAdminController
     protected readonly IWebHelper _webHelper;
     protected readonly IWorkContext _workContext;
     protected readonly CurrencySettings _currencySettings;
+    protected readonly LocalizationSettings _localizationSettings;
     protected readonly TaxSettings _taxSettings;
     protected readonly VendorSettings _vendorSettings;
     private static readonly char[] _separator = [','];
@@ -142,6 +144,7 @@ public partial class ProductController : BaseAdminController
         IWebHelper webHelper,
         IWorkContext workContext,
         CurrencySettings currencySettings,
+        LocalizationSettings localizationSettings,
         TaxSettings taxSettings,
         VendorSettings vendorSettings)
     {
@@ -188,6 +191,7 @@ public partial class ProductController : BaseAdminController
         _webHelper = webHelper;
         _workContext = workContext;
         _currencySettings = currencySettings;
+        _localizationSettings = localizationSettings;
         _taxSettings = taxSettings;
         _vendorSettings = vendorSettings;
     }
@@ -1434,10 +1438,11 @@ public partial class ProductController : BaseAdminController
         var model = new ArtificialIntelligenceFullDescriptionModel
         {
             ProductName = productName,
-            LanguageId = languageId
+            LanguageId = languageId,
+            TargetLanguageId = languageId == 0 ? _localizationSettings.DefaultAdminLanguageId : languageId
         };
 
-        await _baseAdminModelFactory.PrepareLanguagesAsync(model.AvailableLanguages, defaultItemText: await _localizationService.GetResourceAsync("Admin.Common.Standard"));
+        await _baseAdminModelFactory.PrepareLanguagesAsync(model.AvailableLanguages, false);
 
         return View(model);
     }
@@ -1452,9 +1457,9 @@ public partial class ProductController : BaseAdminController
         if (model.SaveButtonClicked)
             ViewBag.SaveDescription = true;
         else
-            model.GeneratedDescription = await _artificialIntelligenceService.CreateProductDescriptionAsync(model.ProductName, model.Keywords, (ToneOfVoiceType)model.ToneOfVoiceId, model.Instructions, model.CustomToneOfVoice, model.LanguageId);
+            model.GeneratedDescription = await _artificialIntelligenceService.CreateProductDescriptionAsync(model.ProductName, model.Keywords, (ToneOfVoiceType)model.ToneOfVoiceId, model.Instructions, model.CustomToneOfVoice, model.TargetLanguageId);
 
-        await _baseAdminModelFactory.PrepareLanguagesAsync(model.AvailableLanguages, defaultItemText: await _localizationService.GetResourceAsync("Admin.Common.Standard"));
+        await _baseAdminModelFactory.PrepareLanguagesAsync(model.AvailableLanguages, false);
 
         return View(model);
     }

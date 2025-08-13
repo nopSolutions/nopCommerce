@@ -33,8 +33,10 @@ public partial record ArtificialIntelligenceFullDescriptionModel : BaseNopModel
     public string GeneratedDescription { get; set; }
 
     [NopResourceDisplayName("Admin.Catalog.Products.AiFullDescription.Language")]
-    public int LanguageId { get; set; }
+    public int TargetLanguageId { get; set; }
     public IList<SelectListItem> AvailableLanguages { get; set; }
+
+    public int LanguageId { get; set; }
 
     public bool SaveButtonClicked { get; set; }
 }
