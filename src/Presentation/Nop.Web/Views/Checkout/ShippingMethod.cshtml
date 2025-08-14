@@ -15,7 +15,7 @@
     </div>
     <div class="page-body checkout-data">
         <div class="section shipping-method">
-            <form asp-route="CheckoutShippingMethod" method="post">
+            <form asp-route="@NopRouteNames.Standard.CHECKOUT_SHIPPING_METHOD" method="post">
                 @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutShippingMethodTop, additionalData = Model })
 
                 @if (Model.DisplayPickupInStore && Model.PickupPointsModel.AllowPickupInStore)

@@ -33,7 +33,7 @@
     </div>
     <div class="page-body">
         <div class="search-input">
-            <form asp-route="ProductSearch" method="get">
+            <form asp-route="@NopRouteNames.General.SEARCH" method="get">
                 <div class="fieldset">
                     <div class="form-fields">
                         <div class="basic-search">
@@ -95,7 +95,7 @@
         <div class="search-results">
             @{
                 var catalogProductsViewData = new ViewDataDictionary(ViewData);
-                catalogProductsViewData["fetchUrl"] = Html.Raw(Url.RouteUrl("SearchProducts"));
+                catalogProductsViewData["fetchUrl"] = Html.Raw(Url.RouteUrl(NopRouteNames.Ajax.SEARCH_PRODUCTS));
             }
             @await Html.PartialAsync("_CatalogProducts", Model.CatalogProductsModel, catalogProductsViewData)
             <script asp-location="Footer">

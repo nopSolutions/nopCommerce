@@ -155,7 +155,7 @@
                                                             options: {
                                                                 type: 'local',
                                                                 metadata: {
-                                                                    url: '@(Url.RouteUrl("DownloadGetFileUpload", new { downloadId = download.DownloadGuid }))' 
+                                                                    url: '@(Url.RouteUrl(NopRouteNames.Standard.DOWNLOAD_GET_FILE_UPLOAD, new { downloadId = download.DownloadGuid }))'
                                                                 }
                                                             },
                                                         }
@@ -164,7 +164,7 @@
                                             }
                                             server: {
                                                 process: {
-                                                    url: '@(Url.RouteUrl("UploadFileCheckoutAttribute", new {attributeId = attribute.Id}))',
+                                                url: '@(Url.RouteUrl(NopRouteNames.Ajax.UPLOAD_FILE_CHECKOUT_ATTRIBUTE, new { attributeId = attribute.Id }))',
                                                     onload: function(response) {
                                                         $("#@(controlId)").val(JSON.parse(response).downloadGuid);
                                                     }
@@ -240,7 +240,7 @@
         function checkoutAttributeChange() {
             $.ajax({
                 cache: false,
-                url: "@Html.Raw(Url.RouteUrl("CheckoutAttributeChange", new { isEditable = Model.IsEditable }))",
+                url: "@Html.Raw(Url.RouteUrl(NopRouteNames.Ajax.CHECKOUT_ATTRIBUTE_CHANGE, new { isEditable = Model.IsEditable }))",
                 data: $('#shopping-cart-form').serialize(),
                 type: "POST",
                 success: function (data, textStatus, jqXHR) {

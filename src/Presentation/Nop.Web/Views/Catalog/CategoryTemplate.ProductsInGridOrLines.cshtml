@@ -36,7 +36,7 @@
         <div class="breadcrumb">
             <ul>
                 <li>
-                    <a href="@Url.RouteUrl("Homepage")" title="@T("Categories.Breadcrumb.Top")">@T("Categories.Breadcrumb.Top")</a>
+                    <a href="@Url.RouteUrl(NopRouteNames.General.HOMEPAGE)" title="@T("Categories.Breadcrumb.Top")">@T("Categories.Breadcrumb.Top")</a>
                     <span class="delimiter">@breadcrumbDelimiter</span>
                 </li>
                 @{ int position = 1; }
@@ -132,7 +132,7 @@
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CategoryDetailsBeforeProductList, additionalData = Model })
         @{
             var catalogProductsViewData = new ViewDataDictionary(ViewData);
-            catalogProductsViewData["fetchUrl"] = Html.Raw(Url.RouteUrl("GetCategoryProducts", new { categoryId = Model.Id }));
+            catalogProductsViewData["fetchUrl"] = Html.Raw(Url.RouteUrl(NopRouteNames.Ajax.GET_CATEGORY_PRODUCTS, new { categoryId = Model.Id }));
         }
         @await Html.PartialAsync("_CatalogProducts", Model.CatalogProductsModel, catalogProductsViewData)
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CategoryDetailsBottom, additionalData = Model })

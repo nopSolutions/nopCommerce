@@ -23,7 +23,7 @@
                 </div>
 
                 <div class="buttons">
-                    <button type="button" class="button-1 save-customer-info-button" onclick="location.href = '@(Url.RouteUrl("CustomerMultiFactorAuthenticationProviderConfig", new { providerSysName = provider.SystemName}))'">@T("Common.Config")</button>
+                    <button type="button" class="button-1 save-customer-info-button" onclick="location.href = '@(Url.RouteUrl(NopRouteNames.Standard.CUSTOMER_MULTI_FACTOR_AUTHENTICATION_PROVIDER_CONFIG, new { providerSysName = provider.SystemName }))'">@T("Common.Config")</button>
                 </div>
             </div>
         </li>  

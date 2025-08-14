@@ -22,7 +22,7 @@
         @if (Model.RecurringPayments.Count > 0)
         {
             <div class="section recurring-payments">
-                <form asp-route="CustomerRecurringPayments" method="post">
+                <form asp-route="@NopRouteNames.Standard.CUSTOMER_RECURRING_PAYMENTS" method="post">
                     <div class="table-wrapper">
                         <table class="data-table">
                             <colgroup>
@@ -89,7 +89,7 @@
                                             @item.CyclesRemaining
                                         </td>
                                         <td class="initial-order">
-                                            <a href="@Url.RouteUrl("OrderDetails", new { orderId = item.InitialOrderId })">@string.Format(T("Account.CustomerOrders.RecurringOrders.ViewInitialOrder").Text, item.InitialOrderNumber)</a>
+                                            <a href="@Url.RouteUrl(NopRouteNames.Standard.ORDER_DETAILS, new { orderId = item.InitialOrderId })">@string.Format(T("Account.CustomerOrders.RecurringOrders.ViewInitialOrder").Text, item.InitialOrderNumber)</a>
                                         </td>
                                         @if (canRetryRecurringOrders)
                                         {

@@ -22,6 +22,7 @@ using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
+using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Services.Attributes;
 using Nop.Services.Blogs;
@@ -588,7 +589,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
             //add download link
             if (await _orderService.IsDownloadAllowedAsync(orderItem))
             {
-                var downloadUrl = await RouteUrlAsync(order.StoreId, "GetDownload", new { orderItemId = orderItem.OrderItemGuid });
+                var downloadUrl = await RouteUrlAsync(order.StoreId, NopRouteNames.Standard.GET_DOWNLOAD, new { orderItemId = orderItem.OrderItemGuid });
                 var downloadLink = $"<a class=\"link\" href=\"{downloadUrl}\">{await _localizationService.GetResourceAsync("Messages.Order.Product(s).Download", languageId)}</a>";
                 sb.AppendLine("<br />");
                 sb.AppendLine(downloadLink);
@@ -596,7 +597,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
             //add download link
             if (await _orderService.IsLicenseDownloadAllowedAsync(orderItem))
             {
-                var licenseUrl = await RouteUrlAsync(order.StoreId, "GetLicense", new { orderItemId = orderItem.OrderItemGuid });
+                var licenseUrl = await RouteUrlAsync(order.StoreId, NopRouteNames.Standard.GET_LICENSE, new { orderItemId = orderItem.OrderItemGuid });
                 var licenseLink = $"<a class=\"link\" href=\"{licenseUrl}\">{await _localizationService.GetResourceAsync("Messages.Order.Product(s).License", languageId)}</a>";
                 sb.AppendLine("<br />");
                 sb.AppendLine(licenseLink);
@@ -1126,7 +1127,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
             tokens.Add(new Token("Order.CreatedOn", order.CreatedOnUtc.ToString("D")));
         }
 
-        var orderUrl = await RouteUrlAsync(order.StoreId, "OrderDetails", new { orderId = order.Id });
+        var orderUrl = await RouteUrlAsync(order.StoreId, NopRouteNames.Standard.ORDER_DETAILS, new { orderId = order.Id });
         tokens.Add(new Token("Order.OrderURLForCustomer", orderUrl, true));
 
         //event notification
@@ -1178,7 +1179,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         tokens.Add(new Token("Shipment.TrackingNumberURL", trackingNumberUrl, true));
         tokens.Add(new Token("Shipment.Product(s)", await ProductListToHtmlTableAsync(shipment, languageId), true));
 
-        var shipmentUrl = await RouteUrlAsync((await _orderService.GetOrderByIdAsync(shipment.OrderId)).StoreId, "ShipmentDetails", new { shipmentId = shipment.Id });
+        var shipmentUrl = await RouteUrlAsync((await _orderService.GetOrderByIdAsync(shipment.OrderId)).StoreId, NopRouteNames.Standard.SHIPMENT_DETAILS, new { shipmentId = shipment.Id });
         tokens.Add(new Token("Shipment.URLForCustomer", shipmentUrl, true));
 
         //event notification
@@ -1196,7 +1197,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         var order = await _orderService.GetOrderByIdAsync(orderNote.OrderId);
 
         tokens.Add(new Token("Order.NewNoteText", _orderService.FormatOrderNoteText(orderNote), true));
-        var orderNoteAttachmentUrl = await RouteUrlAsync(order.StoreId, "GetOrderNoteFile", new { ordernoteid = orderNote.Id });
+        var orderNoteAttachmentUrl = await RouteUrlAsync(order.StoreId, NopRouteNames.Standard.GET_ORDER_NOTE_FILE, new { ordernoteid = orderNote.Id });
         tokens.Add(new Token("Order.OrderNoteAttachmentUrl", orderNoteAttachmentUrl, true));
 
         //event notification
@@ -1310,9 +1311,9 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         tokens.Add(new Token("Customer.CustomAttributes", await _customerAttributeFormatter.FormatAttributesAsync(customAttributesXml), true));
 
         //note: we do not use SEO friendly URLS for these links because we can get errors caused by having .(dot) in the URL (from the email address)
-        var passwordRecoveryUrl = await RouteUrlAsync(routeName: "PasswordRecoveryConfirm", routeValues: new { token = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute), guid = customer.CustomerGuid });
-        var accountActivationUrl = await RouteUrlAsync(routeName: "AccountActivation", routeValues: new { token = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.AccountActivationTokenAttribute), guid = customer.CustomerGuid });
-        var emailRevalidationUrl = await RouteUrlAsync(routeName: "EmailRevalidation", routeValues: new { token = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.EmailRevalidationTokenAttribute), guid = customer.CustomerGuid });
+        var passwordRecoveryUrl = await RouteUrlAsync(routeName: NopRouteNames.Standard.PASSWORD_RECOVERY_CONFIRM, routeValues: new { token = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute), guid = customer.CustomerGuid });
+        var accountActivationUrl = await RouteUrlAsync(routeName: NopRouteNames.Standard.ACCOUNT_ACTIVATION, routeValues: new { token = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.AccountActivationTokenAttribute), guid = customer.CustomerGuid });
+        var emailRevalidationUrl = await RouteUrlAsync(routeName: NopRouteNames.Standard.EMAIL_REVALIDATION, routeValues: new { token = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.EmailRevalidationTokenAttribute), guid = customer.CustomerGuid });
         
         tokens.Add(new Token("Customer.PasswordRecoveryURL", passwordRecoveryUrl, true));
         tokens.Add(new Token("Customer.AccountActivationURL", accountActivationUrl, true));
@@ -1351,10 +1352,10 @@ public partial class MessageTokenProvider : IMessageTokenProvider
     {
         tokens.Add(new Token("NewsLetterSubscription.Email", subscription.Email));
 
-        var activationUrl = await RouteUrlAsync(routeName: "NewsletterActivation", routeValues: new { token = subscription.NewsLetterSubscriptionGuid, active = "true" });
+        var activationUrl = await RouteUrlAsync(routeName: NopRouteNames.Standard.NEWSLETTER_ACTIVATION, routeValues: new { token = subscription.NewsLetterSubscriptionGuid, active = "true" });
         tokens.Add(new Token("NewsLetterSubscription.ActivationUrl", activationUrl, true));
 
-        var deactivationUrl = await RouteUrlAsync(routeName: "NewsletterActivation", routeValues: new { token = subscription.NewsLetterSubscriptionGuid, active = "false" });
+        var deactivationUrl = await RouteUrlAsync(routeName: NopRouteNames.Standard.NEWSLETTER_ACTIVATION, routeValues: new { token = subscription.NewsLetterSubscriptionGuid, active = "false" });
         tokens.Add(new Token("NewsLetterSubscription.DeactivationUrl", deactivationUrl, true));
 
         //event notification
@@ -1484,9 +1485,9 @@ public partial class MessageTokenProvider : IMessageTokenProvider
 
         string topicUrl;
         if (friendlyForumTopicPageIndex.HasValue && friendlyForumTopicPageIndex.Value > 1)
-            topicUrl = await RouteUrlAsync(routeName: "TopicSlugPaged", routeValues: new { id = forumTopic.Id, slug = await forumService.GetTopicSeNameAsync(forumTopic), pageNumber = friendlyForumTopicPageIndex.Value });
+            topicUrl = await RouteUrlAsync(routeName: NopRouteNames.Standard.TOPIC_SLUG_PAGED, routeValues: new { id = forumTopic.Id, slug = await forumService.GetTopicSeNameAsync(forumTopic), pageNumber = friendlyForumTopicPageIndex.Value });
         else
-            topicUrl = await RouteUrlAsync(routeName: "TopicSlug", routeValues: new { id = forumTopic.Id, slug = await forumService.GetTopicSeNameAsync(forumTopic) });
+            topicUrl = await RouteUrlAsync(routeName: NopRouteNames.Standard.TOPIC_SLUG, routeValues: new { id = forumTopic.Id, slug = await forumService.GetTopicSeNameAsync(forumTopic) });
         if (appendedPostIdentifierAnchor.HasValue && appendedPostIdentifierAnchor.Value > 0)
             topicUrl = $"{topicUrl}#{appendedPostIdentifierAnchor.Value}";
         tokens.Add(new Token("Forums.TopicURL", topicUrl, true));
@@ -1531,7 +1532,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         //that's why we resolve it here this way
         var forumService = EngineContext.Current.Resolve<IForumService>();
 
-        var forumUrl = await RouteUrlAsync(routeName: "ForumSlug", routeValues: new { id = forum.Id, slug = await forumService.GetForumSeNameAsync(forum) });
+        var forumUrl = await RouteUrlAsync(routeName: NopRouteNames.Standard.FORUM_SLUG, routeValues: new { id = forum.Id, slug = await forumService.GetForumSeNameAsync(forum) });
         tokens.Add(new Token("Forums.ForumURL", forumUrl, true));
         tokens.Add(new Token("Forums.ForumName", forum.Name));
 

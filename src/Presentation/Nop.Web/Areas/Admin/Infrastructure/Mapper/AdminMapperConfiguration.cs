@@ -409,7 +409,8 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(model => model.DisplayAllPicturesOnCatalogPages_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.ProductUrlStructureTypeId_OverrideForStore, mo => mo.Ignore())
             .ForMember(model => model.ProductUrlStructureTypes, mo => mo.Ignore())
-            .ForMember(model => model.ShowSearchBoxCategories_OverrideForStore, mo => mo.Ignore());
+            .ForMember(model => model.ShowSearchBoxCategories_OverrideForStore, mo => mo.Ignore())
+            .ForMember(model => model.ArtificialIntelligenceSettingsModel, mo => mo.Ignore());
         CreateMap<CatalogSettingsModel, CatalogSettings>()
             .ForMember(settings => settings.AjaxProcessAttributeChange, options => options.Ignore())
             .ForMember(settings => settings.CompareProductsNumber, options => options.Ignore())
@@ -1158,7 +1159,7 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(model => model.ProductThumbPictureSize_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.VendorThumbPictureSize_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.ProductDefaultImageId_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AllowSVGUploads_OverrideForStore, options => options.Ignore());
+            .ForMember(model => model.AllowSvgUploads_OverrideForStore, options => options.Ignore());
         CreateMap<MediaSettingsModel, MediaSettings>()
             .ForMember(settings => settings.AutoCompleteSearchThumbPictureSize, options => options.Ignore())
             .ForMember(settings => settings.UseAbsoluteImagePath, options => options.Ignore())

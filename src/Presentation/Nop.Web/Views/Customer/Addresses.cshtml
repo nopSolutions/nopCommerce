@@ -66,7 +66,7 @@
                                 }
                             </ul>
                             <div class="buttons">
-                                <button type="button" class="button-2 edit-address-button" onclick="location.href = '@(Url.RouteUrl("CustomerAddressEdit", new {addressId = address.Id}))'">@T("Common.Edit")</button>
+                            <button type="button" class="button-2 edit-address-button" onclick="location.href = '@(Url.RouteUrl(NopRouteNames.Standard.CUSTOMER_ADDRESS_EDIT, new { addressId = address.Id }))'">@T("Common.Edit")</button>
 
                                 <button type="button" class="button-2 delete-address-button" onclick="deletecustomeraddress(@(address.Id))">@T("Common.Delete")</button>
                             </div>
@@ -84,7 +84,7 @@
                             $.ajax({
                                 cache: false,
                                 type: "POST",
-                                url: "@Url.RouteUrl("CustomerAddressDelete")",
+                                url: "@Url.RouteUrl(NopRouteNames.Ajax.CUSTOMER_ADDRESS_DELETE)",
                                 data: postData,
                                 dataType: "json",
                                 success: function (data, textStatus, jqXHR) {
@@ -105,7 +105,7 @@
             </div>
         }
         <div class="add-button">
-            <button type="button" class="button-1 add-address-button" onclick="location.href='@Url.RouteUrl("CustomerAddressAdd")'">@T("Common.AddNew")</button>
+            <button type="button" class="button-1 add-address-button" onclick="location.href='@Url.RouteUrl(NopRouteNames.Standard.CUSTOMER_ADDRESS_ADD)'">@T("Common.AddNew")</button>
         </div>
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerAddressesBottom, additionalData = Model })
     </div>

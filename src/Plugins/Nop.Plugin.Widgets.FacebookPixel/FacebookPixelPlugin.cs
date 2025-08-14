@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Nop.Core.Domain.Cms;
+﻿using Nop.Core.Domain.Cms;
 using Nop.Plugin.Widgets.FacebookPixel.Components;
 using Nop.Plugin.Widgets.FacebookPixel.Services;
 using Nop.Services.Cms;
@@ -9,6 +6,7 @@ using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Plugins;
 using Nop.Web.Framework.Infrastructure;
+using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Plugin.Widgets.FacebookPixel;
 
@@ -20,10 +18,9 @@ public class FacebookPixelPlugin : BasePlugin, IWidgetPlugin
     #region Fields
 
     protected readonly FacebookPixelService _facebookPixelService;
-    protected readonly IActionContextAccessor _actionContextAccessor;
     protected readonly ILocalizationService _localizationService;
+    protected readonly INopUrlHelper _nopUrlHelper;
     protected readonly ISettingService _settingService;
-    protected readonly IUrlHelperFactory _urlHelperFactory;
     protected readonly WidgetSettings _widgetSettings;
 
     #endregion
@@ -31,17 +28,15 @@ public class FacebookPixelPlugin : BasePlugin, IWidgetPlugin
     #region Ctor
 
     public FacebookPixelPlugin(FacebookPixelService facebookPixelService,
-        IActionContextAccessor actionContextAccessor,
         ILocalizationService localizationService,
+        INopUrlHelper nopUrlHelper,
         ISettingService settingService,
-        IUrlHelperFactory urlHelperFactory,
         WidgetSettings widgetSettings)
     {
         _facebookPixelService = facebookPixelService;
-        _actionContextAccessor = actionContextAccessor;
         _localizationService = localizationService;
+        _nopUrlHelper = nopUrlHelper;
         _settingService = settingService;
-        _urlHelperFactory = urlHelperFactory;
         _widgetSettings = widgetSettings;
     }
 
@@ -54,7 +49,7 @@ public class FacebookPixelPlugin : BasePlugin, IWidgetPlugin
     /// </summary>
     public override string GetConfigurationPageUrl()
     {
-        return _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext).RouteUrl(FacebookPixelDefaults.ConfigurationRouteName);
+        return _nopUrlHelper.RouteUrl(FacebookPixelDefaults.ConfigurationRouteName);
     }
 
     /// <summary>

@@ -23,7 +23,7 @@
             return;
         }
 
-        AjaxCart.createCustomWishlist('@Url.RouteUrl("AddWishlist")', wishlistName, productId);
+        AjaxCart.createCustomWishlist('@Url.RouteUrl(NopRouteNames.Ajax.ADD_WISHLIST)', wishlistName, productId);
         $('#addWishlistModal_' + productId).dialog('close');
     }
 </script>

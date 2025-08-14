@@ -5,7 +5,6 @@ using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
 using Nop.Services.Catalog;
-using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.ExportImport;
 using Nop.Services.Localization;
@@ -30,18 +29,15 @@ public partial class CategoryController : BaseAdminController
 {
     #region Fields
 
-    protected readonly IAclService _aclService;
     protected readonly ICategoryModelFactory _categoryModelFactory;
     protected readonly ICategoryService _categoryService;
     protected readonly ICustomerActivityService _customerActivityService;
-    protected readonly ICustomerService _customerService;
     protected readonly IDiscountService _discountService;
     protected readonly IExportManager _exportManager;
     protected readonly IImportManager _importManager;
     protected readonly ILocalizationService _localizationService;
     protected readonly ILocalizedEntityService _localizedEntityService;
     protected readonly INotificationService _notificationService;
-    protected readonly IPermissionService _permissionService;
     protected readonly IPictureService _pictureService;
     protected readonly IProductService _productService;
     protected readonly IStaticCacheManager _staticCacheManager;
@@ -54,18 +50,15 @@ public partial class CategoryController : BaseAdminController
 
     #region Ctor
 
-    public CategoryController(IAclService aclService,
-        ICategoryModelFactory categoryModelFactory,
+    public CategoryController(ICategoryModelFactory categoryModelFactory,
         ICategoryService categoryService,
         ICustomerActivityService customerActivityService,
-        ICustomerService customerService,
         IDiscountService discountService,
         IExportManager exportManager,
         IImportManager importManager,
         ILocalizationService localizationService,
         ILocalizedEntityService localizedEntityService,
         INotificationService notificationService,
-        IPermissionService permissionService,
         IPictureService pictureService,
         IProductService productService,
         IStaticCacheManager staticCacheManager,
@@ -74,18 +67,15 @@ public partial class CategoryController : BaseAdminController
         IUrlRecordService urlRecordService,
         IWorkContext workContext)
     {
-        _aclService = aclService;
         _categoryModelFactory = categoryModelFactory;
         _categoryService = categoryService;
         _customerActivityService = customerActivityService;
-        _customerService = customerService;
         _discountService = discountService;
         _exportManager = exportManager;
         _importManager = importManager;
         _localizationService = localizationService;
         _localizedEntityService = localizedEntityService;
         _notificationService = notificationService;
-        _permissionService = permissionService;
         _pictureService = pictureService;
         _productService = productService;
         _staticCacheManager = staticCacheManager;
@@ -214,7 +204,7 @@ public partial class CategoryController : BaseAdminController
             await UpdatePictureSeoNamesAsync(category);
 
             //stores
-            await _categoryService.UpdateCategoryStoreMappingsAsync(category, model.SelectedStoreIds);
+            await _storeMappingService.SaveStoreMappingsAsync(category, model.SelectedStoreIds);
 
             //activity log
             await _customerActivityService.InsertActivityAsync("AddNewCategory",
@@ -313,7 +303,7 @@ public partial class CategoryController : BaseAdminController
             await UpdatePictureSeoNamesAsync(category);
 
             //stores
-            await _categoryService.UpdateCategoryStoreMappingsAsync(category, model.SelectedStoreIds);
+            await _storeMappingService.SaveStoreMappingsAsync(category, model.SelectedStoreIds);
 
             //activity log
             await _customerActivityService.InsertActivityAsync("EditCategory",
@@ -344,7 +334,7 @@ public partial class CategoryController : BaseAdminController
         var category = await _categoryService.GetCategoryByIdAsync(itemId);
         if (category == null || category.Deleted)
             return Json(translationModel);
-        
+
         //prepare model
         var model = await _categoryModelFactory.PrepareCategoryModelAsync(null, category);
 

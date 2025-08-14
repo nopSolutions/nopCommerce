@@ -20,6 +20,11 @@ public static partial class NopLocalizationDefaults
     public static string EnumLocaleStringResourcesPrefix => "Enums.";
 
     /// <summary>
+    /// Gets a prefix of locale resources for static fields that are written at compile time
+    /// </summary>
+    public static string LiteralLocaleStringResourcesPrefix => "Literals.";
+
+    /// <summary>
     /// Gets a prefix of locale resources for permissions 
     /// </summary>
     public static string PermissionLocaleStringResourcesPrefix => "Security.Permission.";

@@ -15,7 +15,7 @@
             <ul class="list">
                 @if (Model.SitemapEnabled && Model.DisplaySitemapFooterItem)
                 {
-                    <li><a href="@Url.RouteUrl("Sitemap")">@T("Sitemap")</a></li>
+                    <li><a href="@Url.RouteUrl(NopRouteNames.General.SITEMAP)">@T("Sitemap")</a></li>
                 }
                 @foreach (var topic in Model.Topics.Where(x => x.IncludeInFooterColumn1).ToList())
                 {
@@ -23,7 +23,7 @@
                 }
                 @if (Model.DisplayContactUsFooterItem)
                 {
-                    <li><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>
+                    <li><a href="@Url.RouteUrl(NopRouteNames.General.CONTACT_US)">@T("ContactUs")</a></li>
                 }
             </ul>
         </div>
@@ -34,31 +34,31 @@
             <ul class="list">
                 @if (Model.SearchEnabled && Model.DisplayProductSearchFooterItem)
                 {
-                    <li><a href="@Url.RouteUrl("ProductSearch")">@T("Search")</a> </li>
+                    <li><a href="@Url.RouteUrl(NopRouteNames.General.SEARCH)">@T("Search")</a> </li>
                 }
                 @if (Model.NewsEnabled && Model.DisplayNewsFooterItem)
                 {
-                    <li><a href="@Url.RouteUrl("NewsArchive")">@T("News")</a></li>
+                    <li><a href="@Url.RouteUrl(NopRouteNames.General.NEWS)">@T("News")</a></li>
                 }
                 @if (Model.BlogEnabled && Model.DisplayBlogFooterItem)
                 {
-                    <li><a href="@Url.RouteUrl("Blog")">@T("Blog")</a></li>
+                    <li><a href="@Url.RouteUrl(NopRouteNames.General.BLOG)">@T("Blog")</a></li>
                 }
                 @if (Model.ForumEnabled && Model.DisplayForumsFooterItem)
                 {
-                    <li><a href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
+                    <li><a href="@Url.RouteUrl(NopRouteNames.General.BOARDS)">@T("Forum.Forums")</a></li>
                 }
                 @if (Model.RecentlyViewedProductsEnabled && Model.DisplayRecentlyViewedProductsFooterItem)
                 {
-                    <li><a href="@Url.RouteUrl("RecentlyViewedProducts")">@T("Products.RecentlyViewedProducts")</a></li>
+                    <li><a href="@Url.RouteUrl(NopRouteNames.General.RECENTLY_VIEWED_PRODUCTS)">@T("Products.RecentlyViewedProducts")</a></li>
                 }
                 @if (Model.CompareProductsEnabled && Model.DisplayCompareProductsFooterItem)
                 {
-                    <li><a href="@Url.RouteUrl("CompareProducts")">@T("Products.Compare.List")</a></li>
+                    <li><a href="@Url.RouteUrl(NopRouteNames.General.COMPARE_PRODUCTS)">@T("Products.Compare.List")</a></li>
                 }
                 @if (Model.NewProductsEnabled && Model.DisplayNewProductsFooterItem)
                 {
-                    <li><a href="@Url.RouteUrl("NewProducts")">@T("Products.NewProducts")</a></li>
+                    <li><a href="@Url.RouteUrl(NopRouteNames.General.NEW_PRODUCTS)">@T("Products.NewProducts")</a></li>
                 }
                 @foreach (var topic in Model.Topics.Where(x => x.IncludeInFooterColumn2).ToList())
                 {
@@ -66,7 +66,7 @@
                 }
                 @if (Model.AllowCustomersToCheckGiftCardBalance)
                 {
-                    <li><a href="@Url.RouteUrl("CheckGiftCardBalance")">@T("CheckGiftCardBalance")</a></li>
+                    <li><a href="@Url.RouteUrl(NopRouteNames.General.CHECK_GIFT_CARD_BALANCE)">@T("CheckGiftCardBalance")</a></li>
                 }
             </ul>
         </div>
@@ -77,27 +77,27 @@
             <ul class="list">
                 @if (Model.DisplayCustomerInfoFooterItem)
                 {
-                    <li><a href="@Url.RouteUrl("CustomerInfo")">@T("Account.MyAccount")</a></li>
+                    <li><a href="@Url.RouteUrl(NopRouteNames.General.CUSTOMER_INFO)">@T("Account.MyAccount")</a></li>
                 }
                 @if (Model.DisplayCustomerOrdersFooterItem)
                 {
-                    <li><a href="@Url.RouteUrl("CustomerOrders")">@T("Account.CustomerOrders")</a></li>
+                    <li><a href="@Url.RouteUrl(NopRouteNames.General.CUSTOMER_ORDERS)">@T("Account.CustomerOrders")</a></li>
                 }
                 @if (Model.DisplayCustomerAddressesFooterItem)
                 {
-                    <li><a href="@Url.RouteUrl("CustomerAddresses")">@T("Account.CustomerAddresses")</a></li>
+                    <li><a href="@Url.RouteUrl(NopRouteNames.General.CUSTOMER_ADDRESSES)">@T("Account.CustomerAddresses")</a></li>
                 }
                 @if (Model.ShoppingCartEnabled && Model.DisplayShoppingCartFooterItem)
                 {
-                    <li><a href="@Url.RouteUrl("ShoppingCart")">@T("ShoppingCart")</a></li>
+                    <li><a href="@Url.RouteUrl(NopRouteNames.General.CART)">@T("ShoppingCart")</a></li>
                 }
                 @if (Model.WishlistEnabled && Model.DisplayWishlistFooterItem)
                 {
-                    <li><a href="@Url.RouteUrl("Wishlist")">@T("Wishlist")</a></li>
+                    <li><a href="@Url.RouteUrl(NopRouteNames.General.WISHLIST)">@T("Wishlist")</a></li>
                 }
                 @if (Model.AllowCustomersToApplyForVendorAccount && Model.DisplayApplyVendorAccountFooterItem)
                 {
-                    <li><a href="@Url.RouteUrl("ApplyVendorAccount")">@T("Vendors.ApplyAccount")</a></li>
+                    <li><a href="@Url.RouteUrl(NopRouteNames.General.APPLY_VENDOR_ACCOUNT)">@T("Vendors.ApplyAccount")</a></li>
                 }
                 @foreach (var topic in Model.Topics.Where(x => x.IncludeInFooterColumn3).ToList())
                 {

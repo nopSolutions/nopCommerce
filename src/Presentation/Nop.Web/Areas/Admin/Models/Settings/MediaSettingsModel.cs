@@ -85,9 +85,9 @@ public partial record MediaSettingsModel : BaseNopModel, ISettingsModel
     public bool DefaultPictureZoomEnabled { get; set; }
     public bool DefaultPictureZoomEnabled_OverrideForStore { get; set; }
 
-    [NopResourceDisplayName("Admin.Configuration.Settings.Media.AllowSVGUploads")]
-    public bool AllowSVGUploads { get; set; }
-    public bool AllowSVGUploads_OverrideForStore { get; set; }
+    [NopResourceDisplayName("Admin.Configuration.Settings.Media.AllowSvgUploads")]
+    public bool AllowSvgUploads { get; set; }
+    public bool AllowSvgUploads_OverrideForStore { get; set; }
 
     #endregion
 }

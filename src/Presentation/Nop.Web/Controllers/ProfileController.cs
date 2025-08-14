@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Http;
 using Nop.Services.Customers;
 using Nop.Services.Security;
 using Nop.Web.Factories;
@@ -29,7 +30,7 @@ public partial class ProfileController : BasePublicController
     {
         if (!_customerSettings.AllowViewingProfiles)
         {
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
         }
 
         var customerId = 0;
@@ -41,7 +42,7 @@ public partial class ProfileController : BasePublicController
         var customer = await _customerService.GetCustomerByIdAsync(customerId);
         if (customer == null || await _customerService.IsGuestAsync(customer))
         {
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
         }
 
         //display "edit" (manage) link

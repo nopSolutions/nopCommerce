@@ -22,7 +22,7 @@
     </div>
     <div class="page-body">
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerInfoTop, additionalData = Model })
-        <form asp-route="CustomerInfo" method="post">
+        <form asp-route="@NopRouteNames.General.CUSTOMER_INFO" method="post">
             <div asp-validation-summary="ModelOnly" class="message-error"></div>
             <div class="fieldset">
                 <div class="title">
@@ -253,7 +253,7 @@
                                 <label asp-for="CountryId" asp-postfix=":"></label>
                                 <select asp-for="CountryId" asp-items="Model.AvailableCountries"
                                 data-trigger="country-select"
-                                data-url="@(Url.RouteUrl("GetStatesByCountryId"))"
+                                data-url="@(Url.RouteUrl(NopRouteNames.Ajax.GET_STATES_BY_COUNTRY_ID))"
                                 data-stateprovince="#@Html.IdFor(model => model.StateProvinceId)"
                                 data-loading="#states-loading-progress"></select>
                                 @if (Model.CountryRequired)
@@ -438,7 +438,7 @@
                     @if (Model.NumberOfExternalAuthenticationProviders > Model.AssociatedExternalAuthRecords.Count)
                     {
                         //we can add more external records
-                        var loginUrl = Url.RouteUrl("Login", null, webHelper.GetCurrentRequestProtocol());
+                        var loginUrl = Url.RouteUrl(NopRouteNames.General.LOGIN, null, webHelper.GetCurrentRequestProtocol());
                         <div class="form-fields add-more-external-records">
                             @T("Account.AssociatedExternalAuth.AddMoreRecords")
                             <a href="@loginUrl">@loginUrl</a>
@@ -499,7 +499,7 @@
             $.ajax({
                 cache: false,
                 type: "POST",
-                url: "@Url.RouteUrl("CustomerRemoveExternalAssociation")",
+                url: "@Url.RouteUrl(NopRouteNames.Ajax.CUSTOMER_REMOVE_EXTERNAL_ASSOCIATION)",
                 data: postData,
                 dataType: "json",
                 success: function (data, textStatus, jqXHR) {

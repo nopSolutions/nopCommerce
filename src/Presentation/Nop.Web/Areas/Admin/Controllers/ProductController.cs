@@ -2,11 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Nop.Core;
+using Nop.Core.Domain.ArtificialIntelligence;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
@@ -14,6 +16,7 @@ using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
+using Nop.Services.ArtificialIntelligence;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
@@ -28,6 +31,7 @@ using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
+using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
@@ -47,7 +51,10 @@ public partial class ProductController : BaseAdminController
 
     protected readonly AdminAreaSettings _adminAreaSettings;
     protected readonly CustomerSettings _customerSettings;
+    protected readonly IAclService _aclService;
+    protected readonly IArtificialIntelligenceService _artificialIntelligenceService;
     protected readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
+    protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
     protected readonly ICategoryService _categoryService;
     protected readonly ICopyProductService _copyProductService;
     protected readonly ICurrencyService _currencyService;
@@ -77,6 +84,7 @@ public partial class ProductController : BaseAdminController
     protected readonly IShoppingCartService _shoppingCartService;
     protected readonly ISpecificationAttributeService _specificationAttributeService;
     protected readonly IStoreContext _storeContext;
+    protected readonly IStoreMappingService _storeMappingService;
     protected readonly ITranslationModelFactory _translationModelFactory;
     protected readonly IUrlRecordService _urlRecordService;
     protected readonly IVideoService _videoService;
@@ -84,6 +92,7 @@ public partial class ProductController : BaseAdminController
     protected readonly IWebHelper _webHelper;
     protected readonly IWorkContext _workContext;
     protected readonly CurrencySettings _currencySettings;
+    protected readonly LocalizationSettings _localizationSettings;
     protected readonly TaxSettings _taxSettings;
     protected readonly VendorSettings _vendorSettings;
     private static readonly char[] _separator = [','];
@@ -94,7 +103,10 @@ public partial class ProductController : BaseAdminController
 
     public ProductController(AdminAreaSettings adminAreaSettings,
         CustomerSettings customerSettings,
+        IAclService aclService,
+        IArtificialIntelligenceService artificialIntelligenceService,
         IBackInStockSubscriptionService backInStockSubscriptionService,
+        IBaseAdminModelFactory baseAdminModelFactory,
         ICategoryService categoryService,
         ICopyProductService copyProductService,
         ICurrencyService currencyService,
@@ -124,6 +136,7 @@ public partial class ProductController : BaseAdminController
         IShoppingCartService shoppingCartService,
         ISpecificationAttributeService specificationAttributeService,
         IStoreContext storeContext,
+        IStoreMappingService storeMappingService,
         ITranslationModelFactory translationModelFactory,
         IUrlRecordService urlRecordService,
         IVideoService videoService,
@@ -131,12 +144,16 @@ public partial class ProductController : BaseAdminController
         IWebHelper webHelper,
         IWorkContext workContext,
         CurrencySettings currencySettings,
+        LocalizationSettings localizationSettings,
         TaxSettings taxSettings,
         VendorSettings vendorSettings)
     {
         _adminAreaSettings = adminAreaSettings;
         _customerSettings = customerSettings;
+        _aclService = aclService;
+        _artificialIntelligenceService = artificialIntelligenceService;
         _backInStockSubscriptionService = backInStockSubscriptionService;
+        _baseAdminModelFactory = baseAdminModelFactory;
         _categoryService = categoryService;
         _copyProductService = copyProductService;
         _currencyService = currencyService;
@@ -166,6 +183,7 @@ public partial class ProductController : BaseAdminController
         _shoppingCartService = shoppingCartService;
         _specificationAttributeService = specificationAttributeService;
         _storeContext = storeContext;
+        _storeMappingService = storeMappingService;
         _translationModelFactory = translationModelFactory;
         _urlRecordService = urlRecordService;
         _videoService = videoService;
@@ -173,6 +191,7 @@ public partial class ProductController : BaseAdminController
         _webHelper = webHelper;
         _workContext = workContext;
         _currencySettings = currencySettings;
+        _localizationSettings = localizationSettings;
         _taxSettings = taxSettings;
         _vendorSettings = vendorSettings;
     }
@@ -1044,7 +1063,7 @@ public partial class ProductController : BaseAdminController
             await SaveManufacturerMappingsAsync(product, model);
 
             //stores
-            await _productService.UpdateProductStoreMappingsAsync(product, model.SelectedStoreIds);
+            await _storeMappingService.SaveStoreMappingsAsync(product, model.SelectedStoreIds);
 
             //discounts
             await SaveDiscountMappingsAsync(product, model);
@@ -1207,7 +1226,7 @@ public partial class ProductController : BaseAdminController
             await SaveManufacturerMappingsAsync(product, model);
 
             //stores
-            await _productService.UpdateProductStoreMappingsAsync(product, model.SelectedStoreIds);
+            await _storeMappingService.SaveStoreMappingsAsync(product, model.SelectedStoreIds);
 
             //discounts
             await SaveDiscountMappingsAsync(product, model);
@@ -1411,6 +1430,38 @@ public partial class ProductController : BaseAdminController
             Url.Action("CustomerUser", "Setting"));
 
         return Json(new { Result = warning });
+    }
+
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
+    public virtual async Task<IActionResult> FullDescriptionGeneratorPopup(int languageId, string productName)
+    {
+        var model = new ArtificialIntelligenceFullDescriptionModel
+        {
+            ProductName = productName,
+            LanguageId = languageId,
+            TargetLanguageId = languageId == 0 ? _localizationSettings.DefaultAdminLanguageId : languageId
+        };
+
+        await _baseAdminModelFactory.PrepareLanguagesAsync(model.AvailableLanguages, false);
+
+        return View(model);
+    }
+
+    [HttpPost]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
+    public virtual async Task<IActionResult> FullDescriptionGeneratorPopup(ArtificialIntelligenceFullDescriptionModel model)
+    {
+        if (!ModelState.IsValid)
+            return View(model);
+
+        if (model.SaveButtonClicked)
+            ViewBag.SaveDescription = true;
+        else
+            model.GeneratedDescription = await _artificialIntelligenceService.CreateProductDescriptionAsync(model.ProductName, model.Keywords, (ToneOfVoiceType)model.ToneOfVoiceId, model.Instructions, model.CustomToneOfVoice, model.TargetLanguageId);
+
+        await _baseAdminModelFactory.PrepareLanguagesAsync(model.AvailableLanguages, false);
+
+        return View(model);
     }
 
     #endregion
@@ -3109,7 +3160,7 @@ public partial class ProductController : BaseAdminController
             return Json(translationModel);
 
         var product = await _productService.GetProductByIdAsync(productAttributeMapping.ProductId);
-        
+
         if (product == null)
             return Json(translationModel);
 

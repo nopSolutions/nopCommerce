@@ -387,14 +387,6 @@ public partial interface IProductService
     string FormatRentalDate(Product product, DateTime date);
 
     /// <summary>
-    /// Update product store mappings
-    /// </summary>
-    /// <param name="product">Product</param>
-    /// <param name="limitedToStoresIds">A list of store ids for mapping</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    Task UpdateProductStoreMappingsAsync(Product product, IList<int> limitedToStoresIds);
-
-    /// <summary>
     /// Gets the value whether the sequence contains downloadable products
     /// </summary>
     /// <param name="productIds">Product identifiers</param>

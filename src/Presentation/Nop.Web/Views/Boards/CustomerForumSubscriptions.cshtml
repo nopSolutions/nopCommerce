@@ -36,7 +36,7 @@
                     });
                 });
             </script>
-            <form asp-route="CustomerForumSubscriptions" method="post">
+            <form asp-route="@NopRouteNames.Standard.CUSTOMER_FORUM_SUBSCRIPTIONS" method="post">
                 <div class="subscription-list">
                     <div class="table-wrapper">
                         <table class="data-table">
@@ -65,11 +65,11 @@
                                     <td class="info">
                                         @if (item.TopicSubscription)
                                         {
-                                            @Html.RouteLink(item.Title, "TopicSlug", new { Id = item.ForumTopicId, slug = item.Slug })
+                                            @Html.RouteLink(item.Title, NopRouteNames.Standard.TOPIC_SLUG, new { Id = item.ForumTopicId, slug = item.Slug })
                                         }
                                         else
                                         {
-                                            @Html.RouteLink(item.Title, "ForumSlug", new { Id = item.ForumId, slug = item.Slug })
+                                                @Html.RouteLink(item.Title, NopRouteNames.Standard.FORUM_SLUG, new { Id = item.ForumId, slug = item.Slug })
                                         }
                                     </td>
                                 </tr>

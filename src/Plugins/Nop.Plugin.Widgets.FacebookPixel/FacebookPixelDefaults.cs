@@ -28,16 +28,6 @@ public class FacebookPixelDefaults
     public static string HideSearchBlockAttribute => "FacebookPixel.HideSearchBlock";
 
     /// <summary>
-    /// Gets the route name of checkout endpoint
-    /// </summary>
-    public static string CheckoutRouteName => "Checkout";
-
-    /// <summary>
-    /// Gets the route name of one page checkout endpoint
-    /// </summary>
-    public static string CheckoutOnePageRouteName => "CheckoutOnePage";
-
-    /// <summary>
     /// Gets the route name of area
     /// </summary>
     public static string AreaRouteName => "areaRoute";

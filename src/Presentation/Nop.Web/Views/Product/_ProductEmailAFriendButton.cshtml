@@ -2,6 +2,6 @@
 @if (Model.EmailAFriendEnabled)
 {
     <div class="email-a-friend">
-        <button type="button" class="button-2 email-a-friend-button" onclick="setLocation('@Url.RouteUrl("ProductEmailAFriend", new { productId = Model.Id })')">@T("Products.EmailAFriend")</button>
+        <button type="button" class="button-2 email-a-friend-button" onclick="setLocation('@Url.RouteUrl(NopRouteNames.Standard.PRODUCT_EMAIL_FRIEND, new { productId = Model.Id })')">@T("Products.EmailAFriend")</button>
     </div>
 }

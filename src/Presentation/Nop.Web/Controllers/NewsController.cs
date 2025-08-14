@@ -4,6 +4,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Security;
 using Nop.Core.Events;
+using Nop.Core.Http;
 using Nop.Core.Rss;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
@@ -11,7 +12,6 @@ using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.News;
 using Nop.Services.Security;
-using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Web.Factories;
 using Nop.Web.Framework;
@@ -38,7 +38,6 @@ public partial class NewsController : BasePublicController
     protected readonly IPermissionService _permissionService;
     protected readonly IStoreContext _storeContext;
     protected readonly IStoreMappingService _storeMappingService;
-    protected readonly IUrlRecordService _urlRecordService;
     protected readonly IWebHelper _webHelper;
     protected readonly IWorkContext _workContext;
     protected readonly IWorkflowMessageService _workflowMessageService;
@@ -60,7 +59,6 @@ public partial class NewsController : BasePublicController
         IPermissionService permissionService,
         IStoreContext storeContext,
         IStoreMappingService storeMappingService,
-        IUrlRecordService urlRecordService,
         IWebHelper webHelper,
         IWorkContext workContext,
         IWorkflowMessageService workflowMessageService,
@@ -78,7 +76,6 @@ public partial class NewsController : BasePublicController
         _permissionService = permissionService;
         _storeContext = storeContext;
         _storeMappingService = storeMappingService;
-        _urlRecordService = urlRecordService;
         _webHelper = webHelper;
         _workContext = workContext;
         _workflowMessageService = workflowMessageService;
@@ -93,7 +90,7 @@ public partial class NewsController : BasePublicController
     public virtual async Task<IActionResult> List(NewsPagingFilteringModel command)
     {
         if (!_newsSettings.Enabled)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var model = await _newsModelFactory.PrepareNewsItemListModelAsync(command);
         return View(model);
@@ -116,8 +113,7 @@ public partial class NewsController : BasePublicController
         var newsItems = await _newsService.GetAllNewsAsync(languageId, store.Id);
         foreach (var n in newsItems)
         {
-            var seName = await _urlRecordService.GetSeNameAsync(n, n.LanguageId, ensureTwoPublishedLanguages: false);
-            var newsUrl = await _nopUrlHelper.RouteGenericUrlAsync<NewsItem>(new { SeName = seName }, _webHelper.GetCurrentRequestProtocol());
+            var newsUrl = await _nopUrlHelper.RouteGenericUrlAsync(n, _webHelper.GetCurrentRequestProtocol(), languageId: n.LanguageId, ensureTwoPublishedLanguages: false);
             items.Add(new RssItem(n.Title, n.Short, new Uri(newsUrl), $"urn:store:{store.Id}:news:blog:{n.Id}", n.CreatedOnUtc));
         }
         feed.Items = items;
@@ -127,7 +123,7 @@ public partial class NewsController : BasePublicController
     public virtual async Task<IActionResult> NewsItem(int newsItemId)
     {
         if (!_newsSettings.Enabled)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var newsItem = await _newsService.GetNewsByIdAsync(newsItemId);
         if (newsItem == null)
@@ -161,11 +157,11 @@ public partial class NewsController : BasePublicController
     public virtual async Task<IActionResult> NewsCommentAdd(int newsItemId, NewsItemModel model, bool captchaValid)
     {
         if (!_newsSettings.Enabled)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var newsItem = await _newsService.GetNewsByIdAsync(newsItemId);
         if (newsItem == null || !newsItem.Published || !newsItem.AllowComments)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         //validate CAPTCHA
         if (_captchaSettings.Enabled && _captchaSettings.ShowOnNewsCommentPage && !captchaValid)
@@ -214,8 +210,7 @@ public partial class NewsController : BasePublicController
                 ? await _localizationService.GetResourceAsync("News.Comments.SuccessfullyAdded")
                 : await _localizationService.GetResourceAsync("News.Comments.SeeAfterApproving");
 
-            var seName = await _urlRecordService.GetSeNameAsync(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false);
-            var newsUrl = await _nopUrlHelper.RouteGenericUrlAsync<NewsItem>(new { SeName = seName });
+            var newsUrl = await _nopUrlHelper.RouteGenericUrlAsync(newsItem, languageId: newsItem.LanguageId, ensureTwoPublishedLanguages: false);
             return LocalRedirect(newsUrl);
         }
 

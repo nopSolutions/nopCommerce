@@ -334,7 +334,7 @@
                     redirectUrl = data.redirect;
                 } else {
                     displayBarNotification(data.error, 'error', 0);
-                    redirectUrl = '@Url.RouteUrl(PayPalCommerceDefaults.Route.ShoppingCart)';
+                    redirectUrl = '@Url.RouteUrl(NopRouteNames.General.CART)';
                 }
             },
             complete: function (jqXHR, textStatus) {

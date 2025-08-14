@@ -33,11 +33,11 @@
             </div>
         </div>
         <div class="buttons">
-            <button type="button" class="button-1 reply-pm-button" onclick="setLocation('@Url.RouteUrl("SendPMReply", new { toCustomerId = Model.FromCustomerId, replyToMessageId = Model.Id })')">@T("PrivateMessages.View.ReplyButton")</button>
+            <button type="button" class="button-1 reply-pm-button" onclick="setLocation('@Url.RouteUrl(NopRouteNames.Standard.SEND_PM_REPLY, new { toCustomerId = Model.FromCustomerId, replyToMessageId = Model.Id })')">@T("PrivateMessages.View.ReplyButton")</button>
 
-            <button type="button" class="button-2 delete-pm-button" onclick="setLocation('@Url.RouteUrl("DeletePM", new { privateMessageId = Model.Id })')">@T("PrivateMessages.View.DeleteButton")</button>
+            <button type="button" class="button-2 delete-pm-button" onclick="setLocation('@Url.RouteUrl(NopRouteNames.Standard.DELETE_PM, new { privateMessageId = Model.Id })')">@T("PrivateMessages.View.DeleteButton")</button>
 
-            <button type="button" class="button-2 back-pm-button" onclick="setLocation('@Url.RouteUrl("PrivateMessages")')">@T("PrivateMessages.View.BackButton")</button>
+            <button type="button" class="button-2 back-pm-button" onclick="setLocation('@Url.RouteUrl(NopRouteNames.Standard.PRIVATE_MESSAGES)')">@T("PrivateMessages.View.BackButton")</button>
         </div>
     </div>
 </div>

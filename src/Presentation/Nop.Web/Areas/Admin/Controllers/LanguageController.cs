@@ -34,9 +34,7 @@ public partial class LanguageController : BaseAdminController
     protected readonly ILocalizationService _localizationService;
     protected readonly INopFileProvider _fileProvider;
     protected readonly INotificationService _notificationService;
-    protected readonly IPermissionService _permissionService;
     protected readonly IStoreMappingService _storeMappingService;
-    protected readonly IStoreService _storeService;
 
     #endregion
 
@@ -48,9 +46,7 @@ public partial class LanguageController : BaseAdminController
         ILocalizationService localizationService,
         INopFileProvider fileProvider,
         INotificationService notificationService,
-        IPermissionService permissionService,
-        IStoreMappingService storeMappingService,
-        IStoreService storeService)
+        IStoreMappingService storeMappingService)
     {
         _customerActivityService = customerActivityService;
         _languageModelFactory = languageModelFactory;
@@ -58,38 +54,7 @@ public partial class LanguageController : BaseAdminController
         _localizationService = localizationService;
         _fileProvider = fileProvider;
         _notificationService = notificationService;
-        _permissionService = permissionService;
         _storeMappingService = storeMappingService;
-        _storeService = storeService;
-    }
-
-    #endregion
-
-    #region Utilities
-
-    protected virtual async Task SaveStoreMappingsAsync(Language language, LanguageModel model)
-    {
-        language.LimitedToStores = model.SelectedStoreIds.Any();
-        await _languageService.UpdateLanguageAsync(language);
-
-        var existingStoreMappings = await _storeMappingService.GetStoreMappingsAsync(language);
-        var allStores = await _storeService.GetAllStoresAsync();
-        foreach (var store in allStores)
-        {
-            if (model.SelectedStoreIds.Contains(store.Id))
-            {
-                //new store
-                if (!existingStoreMappings.Any(sm => sm.StoreId == store.Id))
-                    await _storeMappingService.InsertStoreMappingAsync(language, store.Id);
-            }
-            else
-            {
-                //remove store
-                var storeMappingToDelete = existingStoreMappings.FirstOrDefault(sm => sm.StoreId == store.Id);
-                if (storeMappingToDelete != null)
-                    await _storeMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
-            }
-        }
     }
 
     #endregion
@@ -143,7 +108,7 @@ public partial class LanguageController : BaseAdminController
                 string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewLanguage"), language.Id), language);
 
             //Stores
-            await SaveStoreMappingsAsync(language, model);
+            await _storeMappingService.SaveStoreMappingsAsync(language, model.SelectedStoreIds);
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Languages.Added"));
             _notificationService.WarningNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Languages.NeedRestart"));
@@ -203,7 +168,7 @@ public partial class LanguageController : BaseAdminController
                 string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditLanguage"), language.Id), language);
 
             //Stores
-            await SaveStoreMappingsAsync(language, model);
+            await _storeMappingService.SaveStoreMappingsAsync(language, model.SelectedStoreIds);
 
             //notification
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Languages.Updated"));

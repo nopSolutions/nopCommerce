@@ -4,6 +4,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Events;
+using Nop.Core.Http;
 using Nop.Services.Events;
 using Nop.Services.Messages;
 using Nop.Web.Framework;
@@ -86,7 +87,7 @@ public class EventConsumer :
     public async Task HandleEventAsync(PageRenderingEvent eventMessage)
     {
         var routeName = eventMessage.GetRouteName() ?? string.Empty;
-        if (routeName == FacebookPixelDefaults.CheckoutRouteName || routeName == FacebookPixelDefaults.CheckoutOnePageRouteName)
+        if (routeName == NopRouteNames.Standard.CHECKOUT || routeName == NopRouteNames.Standard.CHECKOUT_ONE_PAGE)
             await _facebookPixelService.SendInitiateCheckoutEventAsync();
 
         if (_httpContextAccessor.HttpContext.GetRouteValue("area") is not string area || area != AreaNames.ADMIN)

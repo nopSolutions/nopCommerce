@@ -10,6 +10,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Http;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -231,7 +232,7 @@ public partial class OrderModelFactory : IOrderModelFactory
                 TotalRecords = orders.TotalCount,
                 PageIndex = orders.PageIndex,
                 ShowTotalSummary = true,
-                RouteActionName = "CustomerOrdersPaged",
+                RouteActionName = NopRouteNames.Standard.CUSTOMER_ORDERS_PAGED,
                 UseRouteLinks = true,
                 RouteValues = new CustomerOrdersRouteValues { PageNumber = orders.PageIndex, Limit = limit.ToString().ToLower() }
             }
@@ -761,7 +762,7 @@ public partial class OrderModelFactory : IOrderModelFactory
                 TotalRecords = rewardPoints.TotalCount,
                 PageIndex = rewardPoints.PageIndex,
                 ShowTotalSummary = true,
-                RouteActionName = "CustomerRewardPointsPaged",
+                RouteActionName = NopRouteNames.Standard.CUSTOMER_REWARD_POINTS_PAGED,
                 UseRouteLinks = true,
                 RouteValues = new RewardPointsRouteValues { PageNumber = page ?? 0 }
             }

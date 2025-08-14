@@ -20,7 +20,7 @@
             @if (Model.TotalManufacturers > Model.Manufacturers.Count)
             {
                 <div class="view-all">
-                    <a href="@Url.RouteUrl("ManufacturerList")">@T("Manufacturers.ViewAll")</a>
+                    <a href="@Url.RouteUrl(NopRouteNames.General.MANUFACTURERS)">@T("Manufacturers.ViewAll")</a>
                 </div>
             }
         </div>

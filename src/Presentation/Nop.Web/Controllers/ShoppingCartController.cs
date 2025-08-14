@@ -10,6 +10,7 @@ using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Http;
 using Nop.Core.Http.Extensions;
 using Nop.Core.Infrastructure;
 using Nop.Services.Attributes;
@@ -25,7 +26,6 @@ using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Security;
-using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
@@ -76,7 +76,6 @@ public partial class ShoppingCartController : BasePublicController
     protected readonly IStoreContext _storeContext;
     protected readonly IStoreMappingService _storeMappingService;
     protected readonly ITaxService _taxService;
-    protected readonly IUrlRecordService _urlRecordService;
     protected readonly IWebHelper _webHelper;
     protected readonly IWorkContext _workContext;
     protected readonly IWorkflowMessageService _workflowMessageService;
@@ -120,7 +119,6 @@ public partial class ShoppingCartController : BasePublicController
         IStoreContext storeContext,
         IStoreMappingService storeMappingService,
         ITaxService taxService,
-        IUrlRecordService urlRecordService,
         IWebHelper webHelper,
         IWorkContext workContext,
         IWorkflowMessageService workflowMessageService,
@@ -159,7 +157,6 @@ public partial class ShoppingCartController : BasePublicController
         _storeContext = storeContext;
         _storeMappingService = storeMappingService;
         _taxService = taxService;
-        _urlRecordService = urlRecordService;
         _webHelper = webHelper;
         _workContext = workContext;
         _workflowMessageService = workflowMessageService;
@@ -358,7 +355,7 @@ public partial class ShoppingCartController : BasePublicController
         {
             case ShoppingCartType.Wishlist:
             {
-                var wishlistRouteUrl = Url.RouteUrl("Wishlist");
+                var wishlistRouteUrl = Url.RouteUrl(NopRouteNames.General.WISHLIST);
                 //activity log
                 await _customerActivityService.InsertActivityAsync("PublicStore.AddToWishlist",
                     string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.AddToWishlist"), product.Name), product);
@@ -415,7 +412,7 @@ public partial class ShoppingCartController : BasePublicController
                     //redirect to the shopping cart page
                     return Json(new
                     {
-                        redirect = Url.RouteUrl("ShoppingCart")
+                        redirect = Url.RouteUrl(NopRouteNames.General.CART)
                     });
                 }
 
@@ -434,7 +431,7 @@ public partial class ShoppingCartController : BasePublicController
                 {
                     success = true,
                     message = string.Format(await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToTheCart.Link"),
-                        Url.RouteUrl("ShoppingCart")),
+                        Url.RouteUrl(NopRouteNames.General.CART)),
                     updatetopcartsectionhtml = updateTopCartSectionHtml,
                     updateflyoutcartsectionhtml = updateFlyoutCartSectionHtml
                 });
@@ -567,7 +564,7 @@ public partial class ShoppingCartController : BasePublicController
                 message = "No product found with the specified ID"
             });
 
-        var redirectUrl = await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = await _urlRecordService.GetSeNameAsync(product) });
+        var redirectUrl = await _nopUrlHelper.RouteGenericUrlAsync(product);
 
         //we can add only simple products
         if (product.ProductType != ProductType.SimpleProduct)
@@ -667,7 +664,7 @@ public partial class ShoppingCartController : BasePublicController
             case ShoppingCartType.Wishlist:
             {
 
-                var wishlistRouteUrl = Url.RouteUrl("Wishlist");
+                var wishlistRouteUrl = Url.RouteUrl(NopRouteNames.General.WISHLIST);
                 //activity log
                 await _customerActivityService.InsertActivityAsync("PublicStore.AddToWishlist",
                     string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.AddToWishlist"), product.Name), product);
@@ -723,7 +720,7 @@ public partial class ShoppingCartController : BasePublicController
                     //redirect to the shopping cart page
                     return Json(new
                     {
-                        redirect = Url.RouteUrl("ShoppingCart")
+                        redirect = Url.RouteUrl(NopRouteNames.General.CART)
                     });
                 }
 
@@ -740,7 +737,7 @@ public partial class ShoppingCartController : BasePublicController
                 return Json(new
                 {
                     success = true,
-                    message = string.Format(await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToTheCart.Link"), Url.RouteUrl("ShoppingCart")),
+                    message = string.Format(await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToTheCart.Link"), Url.RouteUrl(NopRouteNames.General.CART)),
                     updatetopcartsectionhtml,
                     updateflyoutcartsectionhtml
                 });
@@ -758,7 +755,7 @@ public partial class ShoppingCartController : BasePublicController
         {
             return Json(new
             {
-                redirect = Url.RouteUrl("Homepage")
+                redirect = Url.RouteUrl(NopRouteNames.General.HOMEPAGE)
             });
         }
 
@@ -1118,7 +1115,7 @@ public partial class ShoppingCartController : BasePublicController
         {
             success = true,
             message = await _localizationService.GetResourceAsync("ShoppingCart.FileUploaded"),
-            downloadUrl = Url.RouteUrl("DownloadGetFileUpload", new { downloadId = download.DownloadGuid }),
+            downloadUrl = Url.RouteUrl(NopRouteNames.Standard.DOWNLOAD_GET_FILE_UPLOAD, new { downloadId = download.DownloadGuid }),
             downloadGuid = download.DownloadGuid
         });
     }
@@ -1198,7 +1195,7 @@ public partial class ShoppingCartController : BasePublicController
         {
             success = true,
             message = await _localizationService.GetResourceAsync("ShoppingCart.FileUploaded"),
-            downloadUrl = Url.RouteUrl("DownloadGetFileUpload", new { downloadId = download.DownloadGuid }),
+            downloadUrl = Url.RouteUrl(NopRouteNames.Standard.DOWNLOAD_GET_FILE_UPLOAD, new { downloadId = download.DownloadGuid }),
             downloadGuid = download.DownloadGuid
         });
     }
@@ -1206,7 +1203,7 @@ public partial class ShoppingCartController : BasePublicController
     public virtual async Task<IActionResult> Cart()
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_SHOPPING_CART))
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var store = await _storeContext.GetCurrentStoreAsync();
         var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.ShoppingCart, store.Id);
@@ -1220,7 +1217,7 @@ public partial class ShoppingCartController : BasePublicController
     public virtual async Task<IActionResult> UpdateCart(IFormCollection form)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_SHOPPING_CART))
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var customer = await _workContext.GetCurrentCustomerAsync();
         var store = await _storeContext.GetCurrentStoreAsync();
@@ -1295,7 +1292,7 @@ public partial class ShoppingCartController : BasePublicController
         if (!string.IsNullOrEmpty(returnUrl))
             return Redirect(returnUrl);
 
-        return RedirectToRoute("Homepage");
+        return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
     }
 
     [HttpPost, ActionName("Cart")]
@@ -1325,7 +1322,7 @@ public partial class ShoppingCartController : BasePublicController
                                  && _customerSettings.UserRegistrationType == UserRegistrationType.Disabled;
 
         if (anonymousPermissed || !await _customerService.IsGuestAsync(customer))
-            return RedirectToRoute("Checkout");
+            return RedirectToRoute(NopRouteNames.Standard.CHECKOUT);
 
         var cartProductIds = cart.Select(ci => ci.ProductId).ToArray();
         var downloadableProductsRequireRegistration =
@@ -1337,7 +1334,7 @@ public partial class ShoppingCartController : BasePublicController
             return Challenge();
         }
 
-        return RedirectToRoute("LoginCheckoutAsGuest", new { returnUrl = Url.RouteUrl("ShoppingCart") });
+        return RedirectToRoute(NopRouteNames.Standard.LOGIN_CHECKOUT_AS_GUEST, new { returnUrl = Url.RouteUrl(NopRouteNames.General.CART) });
     }
 
     [HttpPost, ActionName("Cart")]
@@ -1527,13 +1524,13 @@ public partial class ShoppingCartController : BasePublicController
     public virtual async Task<IActionResult> Wishlist(Guid? customerGuid, int? list)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_WISHLIST))
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var customer = customerGuid.HasValue
             ? await _customerService.GetCustomerByGuidAsync(customerGuid.Value)
             : await _workContext.GetCurrentCustomerAsync();
         if (customer == null)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var store = await _storeContext.GetCurrentStoreAsync();
         var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.Wishlist, store.Id, customWishlistId: list);
@@ -1548,7 +1545,7 @@ public partial class ShoppingCartController : BasePublicController
     public virtual async Task<IActionResult> UpdateWishlist(WishlistModel wishlistModel, IFormCollection form)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_WISHLIST))
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var customer = await _workContext.GetCurrentCustomerAsync();
         var store = await _storeContext.GetCurrentStoreAsync();
@@ -1612,17 +1609,17 @@ public partial class ShoppingCartController : BasePublicController
     public virtual async Task<IActionResult> AddItemsToCartFromWishlist(Guid? customerGuid, WishlistModel wishlistModel, IFormCollection form)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_SHOPPING_CART))
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         if (!await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_WISHLIST))
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var customer = await _workContext.GetCurrentCustomerAsync();
         var pageCustomer = customerGuid.HasValue
             ? await _customerService.GetCustomerByGuidAsync(customerGuid.Value)
             : customer;
         if (pageCustomer == null)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var store = await _storeContext.GetCurrentStoreAsync();
         var pageCart = await _shoppingCartService.GetShoppingCartAsync(pageCustomer, ShoppingCartType.Wishlist, store.Id, customWishlistId: wishlistModel.ListId);
@@ -1666,7 +1663,7 @@ public partial class ShoppingCartController : BasePublicController
                 _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Wishlist.AddToCart.Error"));
             }
 
-            return RedirectToRoute("ShoppingCart");
+            return RedirectToRoute(NopRouteNames.General.CART);
         }
         else
         {
@@ -1689,13 +1686,13 @@ public partial class ShoppingCartController : BasePublicController
     public virtual async Task<IActionResult> EmailWishlist(int? wishlistId = null)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_WISHLIST) || !_shoppingCartSettings.EmailWishlistEnabled)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var store = await _storeContext.GetCurrentStoreAsync();
         var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.Wishlist, store.Id, customWishlistId: wishlistId);
 
         if (!cart.Any())
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var model = new WishlistEmailAFriendModel();
         model = await _shoppingCartModelFactory.PrepareWishlistEmailAFriendModelAsync(model, false, wishlistId);
@@ -1708,14 +1705,14 @@ public partial class ShoppingCartController : BasePublicController
     public virtual async Task<IActionResult> EmailWishlistSend(WishlistEmailAFriendModel model, bool captchaValid)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_WISHLIST) || !_shoppingCartSettings.EmailWishlistEnabled)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var customer = await _workContext.GetCurrentCustomerAsync();
         var store = await _storeContext.GetCurrentStoreAsync();
         var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.Wishlist, store.Id, customWishlistId: model.ListId);
 
         if (!cart.Any())
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         //validate CAPTCHA
         if (_captchaSettings.Enabled && _captchaSettings.ShowOnEmailWishlistToFriendPage && !captchaValid)
@@ -1732,7 +1729,7 @@ public partial class ShoppingCartController : BasePublicController
         if (ModelState.IsValid)
         {
             //email
-            var wishlistUrl = Url.RouteUrl("Wishlist", new { customerGuid = customer.CustomerGuid, list = model.ListId }, _webHelper.GetCurrentRequestProtocol());
+            var wishlistUrl = Url.RouteUrl(NopRouteNames.General.WISHLIST, new { customerGuid = customer.CustomerGuid, list = model.ListId }, _webHelper.GetCurrentRequestProtocol());
 
             await _workflowMessageService.SendWishlistEmailAFriendMessageAsync(customer,
                 (await _workContext.GetWorkingLanguageAsync()).Id,
@@ -1808,7 +1805,7 @@ public partial class ShoppingCartController : BasePublicController
         return Json(new
         {
             success = true,
-            redirect = Url.RouteUrl("Wishlist", new { list = customWishlist.Id })
+            redirect = Url.RouteUrl(NopRouteNames.General.WISHLIST, new { list = customWishlist.Id })
         });
     }
 
@@ -1845,7 +1842,7 @@ public partial class ShoppingCartController : BasePublicController
             var shoppingCartItem = await _shoppingCartService.FindShoppingCartItemInTheCartAsync(shoppingCarts, ShoppingCartType.Wishlist, product);
             await MoveToCustomWishlist(shoppingCartItem.Id, wishlistId);
         }
-        var redirectUrl = Url.RouteUrl("Wishlist", new { list = wishlistId });
+        var redirectUrl = Url.RouteUrl(NopRouteNames.General.WISHLIST, new { list = wishlistId });
         var customWishlist = await _customWishlistService.GetCustomWishlistByIdAsync(wishlistId);
 
         return Json(new
@@ -1859,7 +1856,7 @@ public partial class ShoppingCartController : BasePublicController
     public virtual async Task<IActionResult> MoveToCustomWishlist(int shoppingCartItemId, int customWishlistId)
     {
         var customer = await _workContext.GetCurrentCustomerAsync();
-        var redirectUrl = Url.RouteUrl("Wishlist", new { list = customWishlistId });
+        var redirectUrl = Url.RouteUrl(NopRouteNames.General.WISHLIST, new { list = customWishlistId });
         if (customWishlistId > 0)
         {
             var wishlist = await _customWishlistService.GetCustomWishlistByIdAsync(customWishlistId);
@@ -1876,7 +1873,7 @@ public partial class ShoppingCartController : BasePublicController
         else
         {
             await _shoppingCartService.MoveItemToCustomWishlistAsync(shoppingCartItemId);
-            redirectUrl = Url.RouteUrl("Wishlist");
+            redirectUrl = Url.RouteUrl(NopRouteNames.General.WISHLIST);
         }
         return Json(new
         {
@@ -1912,7 +1909,7 @@ public partial class ShoppingCartController : BasePublicController
 
         return Json(new
         {
-            redirect = Url.RouteUrl("Wishlist")
+            redirect = Url.RouteUrl(NopRouteNames.General.WISHLIST)
         });
     }
 

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Logging;
 using Nop.Core;
 using Nop.Core.Domain.Security;
+using Nop.Core.Http;
 
 namespace Nop.Web.Framework.Mvc.Routing;
 
@@ -15,7 +16,6 @@ public partial class NopLocalRedirectResultExecutor : LocalRedirectResultExecuto
 {
     #region Fields
 
-    protected readonly IActionContextAccessor _actionContextAccessor;
     protected readonly IUrlHelperFactory _urlHelperFactory;
     protected readonly SecuritySettings _securitySettings;
     protected readonly IWebHelper _webHelper;
@@ -24,13 +24,11 @@ public partial class NopLocalRedirectResultExecutor : LocalRedirectResultExecuto
 
     #region Ctor
 
-    public NopLocalRedirectResultExecutor(IActionContextAccessor actionContextAccessor,
-        ILoggerFactory loggerFactory,
+    public NopLocalRedirectResultExecutor(ILoggerFactory loggerFactory,
         IUrlHelperFactory urlHelperFactory,
         SecuritySettings securitySettings,
         IWebHelper webHelper) : base(loggerFactory, urlHelperFactory)
     {
-        _actionContextAccessor = actionContextAccessor;
         _urlHelperFactory = urlHelperFactory;
         _securitySettings = securitySettings;
         _webHelper = webHelper;
@@ -55,7 +53,7 @@ public partial class NopLocalRedirectResultExecutor : LocalRedirectResultExecuto
             //passed redirect URL may contain non-ASCII characters, that are not allowed now (see https://github.com/aspnet/KestrelHttpServer/issues/1144)
             //so we force to encode this URL before processing
             var url = WebUtility.UrlDecode(result.Url);
-            var urlHelper = result.UrlHelper ?? _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+            var urlHelper = result.UrlHelper ?? _urlHelperFactory.GetUrlHelper(context);
             var isLocalUrl = urlHelper.IsLocalUrl(url);
 
             var uriStr = url;
@@ -70,7 +68,7 @@ public partial class NopLocalRedirectResultExecutor : LocalRedirectResultExecuto
             if ((uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps) && urlHelper.IsLocalUrl(uri.AbsolutePath))
                 result.Url = isLocalUrl ? uri.PathAndQuery : $"{uri.GetLeftPart(UriPartial.Query)}{uri.Fragment}";
             else
-                result.Url = urlHelper.RouteUrl("Homepage");
+                result.Url = urlHelper.RouteUrl(NopRouteNames.General.HOMEPAGE);
         }
 
         return base.ExecuteAsync(context, result);

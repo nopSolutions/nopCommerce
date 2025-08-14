@@ -16,7 +16,7 @@
     <div class="page-body checkout-data">
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutPaymentInfoTop, additionalData = Model })
         <div class="section payment-info">
-            <form asp-route="CheckoutPaymentInfo" method="post">
+            <form asp-route="@NopRouteNames.Standard.CHECKOUT_PAYMENT_INFO" method="post">
                 <div asp-validation-summary="ModelOnly" class="message-error"></div>
                 <div class="info">
                     @await Component.InvokeAsync(Model.PaymentViewComponent)

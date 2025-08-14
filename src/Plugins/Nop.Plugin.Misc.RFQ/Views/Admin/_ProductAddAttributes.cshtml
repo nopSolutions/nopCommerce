@@ -191,7 +191,7 @@
                                             $(function() {
                                                 $("#@(controlId)uploader").fineUploader({
                                                     request: {
-                                                        endpoint: '@(Url.RouteUrl("UploadFileProductAttribute", new {attributeId = attribute.Id}))'
+                                                        endpoint: '@(Url.RouteUrl(NopRouteNames.Ajax.UPLOAD_FILE_PRODUCT_ATTRIBUTE, new {attributeId = attribute.Id}))'
                                                     },
                                                     template: "@(controlId)-qq-template",
                                                     multiple: false,

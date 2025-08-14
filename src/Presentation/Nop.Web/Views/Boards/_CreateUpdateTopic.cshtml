@@ -69,7 +69,7 @@
         </div>
         <div class="buttons">
             <button type="submit" class="button-1 submit-topic-button">@T("Forum.Submit")</button>
-            <button type="button" class="button-2 cancel-topic-button" onclick="setLocation('@Url.RouteUrl("ForumSlug", new { id = Model.ForumId, slug = Model.ForumSeName })')">@T("Forum.Cancel")</button>
+            <button type="button" class="button-2 cancel-topic-button" onclick="setLocation('@Url.RouteUrl(NopRouteNames.Standard.FORUM_SLUG, new { id = Model.ForumId, slug = Model.ForumSeName })')">@T("Forum.Cancel")</button>
         </div>
     </div>
 </div>

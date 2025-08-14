@@ -39,7 +39,7 @@
                     @for (var i = 0; i < Model.Tags.Count; i++)
                     {
                         var tag = Model.Tags[i];
-                        <li><a href="@Url.RouteUrl("BlogByTag", new {tag = tag})">@tag</a></li>
+                        <li><a href="@Url.RouteUrl(NopRouteNames.Standard.BLOG_BY_TAG, new { tag = tag })">@tag</a></li>
                         if (i != Model.Tags.Count - 1)
                         {
                             <li class="separator">,</li>
@@ -105,7 +105,7 @@
                                     <div class="user-info">
                                         @if (comment.AllowViewingProfiles)
                                         {
-                                            <a href="@Url.RouteUrl("CustomerProfile", new {id = comment.CustomerId})" class="username">@(comment.CustomerName)</a>
+                                            <a href="@Url.RouteUrl(NopRouteNames.Standard.CUSTOMER_PROFILE, new { id = comment.CustomerId })" class="username">@(comment.CustomerName)</a>
                                         }
                                         else
                                         {
@@ -117,7 +117,7 @@
                                             <div class="avatar">
                                                 @if (comment.AllowViewingProfiles)
                                                 {
-                                                    <a href="@Url.RouteUrl("CustomerProfile", new {id = comment.CustomerId})" class="avatar-img-link">
+                                                    <a href="@Url.RouteUrl(NopRouteNames.Standard.CUSTOMER_PROFILE, new { id = comment.CustomerId })" class="avatar-img-link">
                                                         <img src="@(comment.CustomerAvatarUrl)" class="avatar-img" alt="avatar" />
                                                     </a>
                                                 }

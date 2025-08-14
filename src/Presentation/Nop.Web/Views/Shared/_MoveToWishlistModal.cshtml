@@ -1,7 +1,7 @@
 ﻿@model ProductToWishlistModel
 
 @{
-    var movetocustomwishlistlink = Url.RouteUrl("MoveProductToCustomWishList", new { productId = Model.ProductId });
+    var movetocustomwishlistlink = Url.RouteUrl(NopRouteNames.Ajax.MOVE_PRODUCT_TO_CUSTOM_WISHLIST, new { productId = Model.ProductId });
 }
 
 <!-- Modal for moved to custom wishlist -->

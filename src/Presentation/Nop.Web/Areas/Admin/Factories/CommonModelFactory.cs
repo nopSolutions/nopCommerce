@@ -565,7 +565,7 @@ public partial class CommonModelFactory : ICommonModelFactory
 
         model.IsDeleteThumbsSupported = true;
         model.FilesCountText = string.Format(await _localizationService.GetResourceAsync("Admin.System.Maintenance.DeleteThumbFiles.FilesCount"), filesCount);
-        model.FilesSizeText = string.Format(await _localizationService.GetResourceAsync("Admin.System.Maintenance.DeleteThumbFiles.FilesSize"), Math.Round(filesSize/1024M/1024M, 2));
+        model.FilesSizeText = string.Format(await _localizationService.GetResourceAsync("Admin.System.Maintenance.DeleteThumbFiles.FilesSize"), Math.Round(filesSize / 1024M / 1024M, 2));
     }
 
     /// <summary>
@@ -778,8 +778,6 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected virtual async Task<IList<MultistorePreviewModel>> PrepareMultistorePreviewModelsForEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity, ISlugSupported
     {
         var models = new List<MultistorePreviewModel>();
-
-        var seName = await _urlRecordService.GetSeNameAsync(entity, ensureTwoPublishedLanguages: false);
         var stores = await _storeService.GetAllStoresAsync();
 
         foreach (var store in stores)
@@ -791,7 +789,7 @@ public partial class CommonModelFactory : ICommonModelFactory
             {
                 StoreName = store.Name,
                 Url = await _nopUrlHelper
-                    .RouteGenericUrlAsync<TEntity>(new { SeName = seName }, url.Scheme, url.IsDefaultPort ? url.Host : $"{url.Host}:{url.Port}"),
+                    .RouteGenericUrlAsync(entity, url.Scheme, url.IsDefaultPort ? url.Host : $"{url.Host}:{url.Port}", null, null, false),
             });
         }
 

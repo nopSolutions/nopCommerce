@@ -11,7 +11,7 @@
             }
             else
             {
-                @Html.Raw(string.Format(T("ShoppingCart.Mini.ItemsText").Text, $"<a href=\"{Url.RouteUrl("ShoppingCart")}\">{string.Format(T("ShoppingCart.Mini.Items").Text, Model.TotalProducts)}</a>"))
+                @Html.Raw(string.Format(T("ShoppingCart.Mini.ItemsText").Text, $"<a href=\"{Url.RouteUrl(NopRouteNames.General.CART)}\">{string.Format(T("ShoppingCart.Mini.Items").Text, Model.TotalProducts)}</a>"))
             }
         </div>
         @if (Model.TotalProducts > 0)
@@ -49,18 +49,18 @@
             <div class="buttons">
                 @if (Model.DisplayShoppingCartButton)
                 {
-                    <button type="button" class="button-1 cart-button" onclick="setLocation('@(Url.RouteUrl("ShoppingCart"))')">@T("ShoppingCart.Mini.ViewCart")</button>
+                    <button type="button" class="button-1 cart-button" onclick="setLocation('@(Url.RouteUrl(NopRouteNames.General.CART))')">@T("ShoppingCart.Mini.ViewCart")</button>
                 }
                 @if (Model.DisplayCheckoutButton)
                 {
                     var checkoutUrl = "";
                     if (Model.AnonymousCheckoutAllowed && Model.CurrentCustomerIsGuest)
                     {
-                        checkoutUrl = Url.RouteUrl("LoginCheckoutAsGuest", new { returnUrl = Url.RouteUrl("ShoppingCart") });
+                        checkoutUrl = Url.RouteUrl(NopRouteNames.Standard.LOGIN_CHECKOUT_AS_GUEST, new { returnUrl = Url.RouteUrl(NopRouteNames.General.CART) });
                     }
                     else
                     {
-                        checkoutUrl = Url.RouteUrl("Checkout");
+                        checkoutUrl = Url.RouteUrl(NopRouteNames.Standard.CHECKOUT);
                     }
                     <button type="button" class="button-1 checkout-button" onclick="setLocation('@checkoutUrl')">@T("Checkout.Button")</button>
                 }

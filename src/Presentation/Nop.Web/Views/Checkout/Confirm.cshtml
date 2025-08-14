@@ -17,7 +17,7 @@
     <div class="page-body checkout-data">
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutConfirmTop, additionalData = Model })
         <div class="section confirm-order">
-            <form asp-route="CheckoutConfirm" method="post" id="confirm-order-form">
+            <form asp-route="@NopRouteNames.Standard.CHECKOUT_CONFIRM" method="post" id="confirm-order-form">
                 <script asp-location="Footer">
                     $(function() {
                         $('.confirm-order-next-step-button').on('click', function () {
@@ -64,7 +64,7 @@
                                         $('#read-terms').on('click',
                                             function(e) {
                                                 e.preventDefault();
-                                                displayPopupContentFromUrl('@Url.RouteUrl("TopicPopup", new {SystemName = "conditionsofuse"})', '@T("Checkout.TermsOfService")');
+                                                displayPopupContentFromUrl('@Url.RouteUrl(NopRouteNames.Ajax.TOPIC_POPUP, new { SystemName = "conditionsofuse" })', '@T("Checkout.TermsOfService")');
                                             });
                                     });
                                 </script>

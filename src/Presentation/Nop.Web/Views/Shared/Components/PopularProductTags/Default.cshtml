@@ -20,7 +20,7 @@
             @if (Model.TotalTags > Model.Tags.Count)
             {
                 <div class="view-all">
-                    <a href="@Url.RouteUrl("ProductTagsAll")">@T("Products.Tags.Popular.ViewAll")</a>
+                    <a href="@Url.RouteUrl(NopRouteNames.General.PRODUCT_TAGS)">@T("Products.Tags.Popular.ViewAll")</a>
                 </div>
             }
         </div>

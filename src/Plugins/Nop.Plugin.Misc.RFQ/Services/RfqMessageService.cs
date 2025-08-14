@@ -13,8 +13,7 @@ using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Stores;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Plugin.Misc.RFQ.Services;
 
@@ -25,8 +24,7 @@ public class RfqMessageService : WorkflowMessageService
 {
     #region Fields
 
-    private readonly IActionContextAccessor _actionContextAccessor;
-    private readonly IUrlHelperFactory _urlHelperFactory;
+    private readonly INopUrlHelper _nopUrlHelper;
     private readonly IWebHelper _webHelper;
     private readonly LocalizationSettings _localizationSettings;
 
@@ -36,7 +34,7 @@ public class RfqMessageService : WorkflowMessageService
 
     public RfqMessageService(CommonSettings commonSettings,
         EmailAccountSettings emailAccountSettings,
-        IActionContextAccessor actionContextAccessor,
+        INopUrlHelper nopUrlHelper,
         IAddressService addressService,
         IAffiliateService affiliateService,
         ICustomerService customerService,
@@ -52,7 +50,6 @@ public class RfqMessageService : WorkflowMessageService
         IStoreContext storeContext,
         IStoreService storeService,
         ITokenizer tokenizer,
-        IUrlHelperFactory urlHelperFactory,
         IWebHelper webHelper,
         LocalizationSettings localizationSettings,
         MessagesSettings messagesSettings)
@@ -75,8 +72,7 @@ public class RfqMessageService : WorkflowMessageService
             tokenizer,
             messagesSettings)
     {
-        _actionContextAccessor = actionContextAccessor;
-        _urlHelperFactory = urlHelperFactory;
+        _nopUrlHelper = nopUrlHelper;
         _webHelper = webHelper;
         _localizationSettings = localizationSettings;
     }
@@ -103,14 +99,7 @@ public class RfqMessageService : WorkflowMessageService
         tokens.Add(new Token("Quote.ExpirationOn", expirationDate));
         tokens.Add(new Token("Quote.ExpirationOnIsSet", !string.IsNullOrWhiteSpace(expirationDate)));
 
-        var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext!);
-
-        var url = urlHelper.RouteUrl(new UrlRouteContext
-        {
-            RouteName = RfqDefaults.CustomerQuoteRouteName,
-            Values = new { quoteId = quote.Id },
-            Protocol = _webHelper.GetCurrentRequestProtocol()
-        });
+        var url = _nopUrlHelper.RouteUrl(RfqDefaults.CustomerQuoteRouteName, new { quoteId = quote.Id }, _webHelper.GetCurrentRequestProtocol());
         tokens.Add(new Token("Quote.URL", url));
 
         //event notification
