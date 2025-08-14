@@ -794,44 +794,59 @@ public partial class CategoryService : ICategoryService
     /// The task result contains the category breadcrumb 
     /// </returns>
     public virtual async Task<IList<Category>> GetCategoryBreadCrumbAsync(Category category, IList<Category> allCategories = null, bool showHidden = false)
+{
+    ArgumentNullException.ThrowIfNull(category);
+
+    var breadcrumbCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryBreadcrumbCacheKey,
+        category,
+        await _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync()),
+        await _storeContext.GetCurrentStoreAsync(),
+        await _workContext.GetWorkingLanguageAsync(),
+        showHidden);
+
+    return await _staticCacheManager.GetAsync(breadcrumbCacheKey, async () =>
     {
-        ArgumentNullException.ThrowIfNull(category);
+        // Use a local variable so we don't mutate the parameter captured by the closure
+        var current = category;
 
-        var breadcrumbCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryBreadcrumbCacheKey,
-            category,
-            await _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync()),
-            await _storeContext.GetCurrentStoreAsync(),
-            await _workContext.GetWorkingLanguageAsync(),
-            showHidden);
+        var result = new List<Category>();
 
-        return await _staticCacheManager.GetAsync(breadcrumbCacheKey, async () =>
+        // prevent circular references (HashSet → O(1) lookups)
+        var processed = new HashSet<int>();
+
+        // If a list of categories is provided, pre-index by Id to avoid repeated FirstOrDefault scans
+        Dictionary<int, Category> byId = null;
+        if (allCategories != null)
         {
-            var result = new List<Category>();
+            // handle potential duplicates defensively
+            byId = allCategories
+                .GroupBy(c => c.Id)
+                .Select(g => g.First())
+                .ToDictionary(c => c.Id);
+        }
 
-            //used to prevent circular references
-            var alreadyProcessedCategoryIds = new List<int>();
+        while (current != null // not null
+               && !current.Deleted // not deleted
+               && (showHidden || current.Published) // published
+               && (showHidden || await _aclService.AuthorizeAsync(current)) //ACL
+               && (showHidden || await _storeMappingService.AuthorizeAsync(current)) //Store mapping
+               && !processed.Contains(current.Id)) // prevent circular references
+        {
+            result.Add(current);
+            processed.Add(current.Id);
 
-            while (category != null && //not null
-                   !category.Deleted && //not deleted
-                   (showHidden || category.Published) && //published
-                   (showHidden || await _aclService.AuthorizeAsync(category)) && //ACL
-                   (showHidden || await _storeMappingService.AuthorizeAsync(category)) && //Store mapping
-                   !alreadyProcessedCategoryIds.Contains(category.Id)) //prevent circular references
-            {
-                result.Add(category);
+            // Move to parent (fast path if we have a pre-indexed list)
+            if (byId != null)
+                byId.TryGetValue(current.ParentCategoryId, out current);
+            else
+                current = await GetCategoryByIdAsync(current.ParentCategoryId);
+        }
 
-                alreadyProcessedCategoryIds.Add(category.Id);
+        result.Reverse();
 
-                category = allCategories != null
-                    ? allCategories.FirstOrDefault(c => c.Id == category.ParentCategoryId)
-                    : await GetCategoryByIdAsync(category.ParentCategoryId);
-            }
-
-            result.Reverse();
-
-            return result;
-        });
-    }
+        return result;
+    });
+}
 
     #endregion
 }
