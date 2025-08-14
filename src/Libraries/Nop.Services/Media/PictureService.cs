@@ -850,7 +850,7 @@ public partial class PictureService : IPictureService
         if (string.IsNullOrEmpty(contentType))
             contentType = GetPictureContentTypeByFileExtension(fileExtension);
 
-        if (contentType == MimeTypes.ImageSvg && !_mediaSettings.AllowSVGUploads)
+        if (contentType == MimeTypes.ImageSvg && !_mediaSettings.AllowSvgUploads)
             return null;
 
         var picture = await InsertPictureAsync(await _downloadService.GetDownloadBitsAsync(formFile),

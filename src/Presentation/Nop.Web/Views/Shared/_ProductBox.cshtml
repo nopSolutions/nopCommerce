@@ -15,15 +15,15 @@
     var quantity = 1;
     if (Model.ProductPrice.ForceRedirectionAfterAddingToCart)
     {
-        addtocartlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = shoppingCartTypeId, quantity = quantity, forceredirection = Model.ProductPrice.ForceRedirectionAfterAddingToCart });
+        addtocartlink = Url.RouteUrl(NopRouteNames.Ajax.ADD_PRODUCT_TO_CART_CATALOG, new { productId = Model.Id, shoppingCartTypeId = shoppingCartTypeId, quantity = quantity, forceredirection = Model.ProductPrice.ForceRedirectionAfterAddingToCart });
     }
     else
     {
-        addtocartlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = shoppingCartTypeId, quantity = quantity });
+        addtocartlink = Url.RouteUrl(NopRouteNames.Ajax.ADD_PRODUCT_TO_CART_CATALOG, new { productId = Model.Id, shoppingCartTypeId = shoppingCartTypeId, quantity = quantity });
     }
 
-    var addtowishlistlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = (int)ShoppingCartType.Wishlist, quantity = quantity });
-    var addtocomparelink = Url.RouteUrl("AddProductToCompare", new { productId = Model.Id });
+    var addtowishlistlink = Url.RouteUrl(NopRouteNames.Ajax.ADD_PRODUCT_TO_CART_CATALOG, new { productId = Model.Id, shoppingCartTypeId = (int)ShoppingCartType.Wishlist, quantity = quantity });
+    var addtocomparelink = Url.RouteUrl(NopRouteNames.Ajax.ADD_PRODUCT_TO_COMPARE, new { productId = Model.Id });
 }
 <div class="product-item" data-productid="@Model.Id">
     <div class="picture @(Model.InStock ? "" : "out-of-stock")">

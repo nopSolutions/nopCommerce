@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
+using Nop.Core.Http;
 using Nop.Plugin.Misc.Omnisend.Services;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -42,15 +43,15 @@ public class OmnisendController : BasePluginController
     {
         var customer = await _workContext.GetCurrentCustomerAsync();
         if (await _customerService.IsGuestAsync(customer))
-            return RedirectToRoute("Login", new { ReturnUrl = _webHelper.GetRawUrl(Request) });
+            return RedirectToRoute(NopRouteNames.General.LOGIN, new { ReturnUrl = _webHelper.GetRawUrl(Request) });
 
         var customerEmail = await _genericAttributeService.GetAttributeAsync<string>(customer, OmnisendDefaults.CustomerEmailAttribute);
         if (!string.IsNullOrEmpty(customerEmail) && !customerEmail.Equals(customer.Email, StringComparison.InvariantCultureIgnoreCase))
-            return RedirectToRoute("Login", new { ReturnUrl = _webHelper.GetRawUrl(Request) });
+            return RedirectToRoute(NopRouteNames.General.LOGIN, new { ReturnUrl = _webHelper.GetRawUrl(Request) });
 
         await _omnisendService.RestoreShoppingCartAsync(cartId);
 
-        return RedirectToRoute("ShoppingCart");
+        return RedirectToRoute(NopRouteNames.General.CART);
     }
 
     #endregion

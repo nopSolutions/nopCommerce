@@ -18,7 +18,7 @@
         <h1>@T("Account.MyAccount") - @T("Account.CustomerOrders")</h1>
     </div>
     <div class="page-body">
-        <form asp-route="CustomerOrders" method="post">
+        <form asp-route="@NopRouteNames.General.CUSTOMER_ORDERS" method="post">
             <div class="order-filters">
                 <div class="order-filters__row">
                     <label class="order-filters__label">@T("Account.CustomerOrders.Period")</label>
@@ -44,9 +44,9 @@
                         <div class="buttons">
                             @if (order.IsReturnRequestAllowed)
                             {
-                                <button type="button" class="button-2 return-items-button" onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = order.Id })')">@T("Account.CustomerOrders.ReturnItems")</button>
+                                <button type="button" class="button-2 return-items-button" onclick="setLocation('@Url.RouteUrl(NopRouteNames.Standard.RETURN_REQUEST, new { orderId = order.Id })')">@T("Account.CustomerOrders.ReturnItems")</button>
                             }
-                            <button type="button" class="button-2 order-details-button" onclick="setLocation('@Url.RouteUrl("OrderDetails", new { orderId = order.Id })')">@T("Account.CustomerOrders.OrderDetails")</button>
+                            <button type="button" class="button-2 order-details-button" onclick="setLocation('@Url.RouteUrl(NopRouteNames.Standard.ORDER_DETAILS, new { orderId = order.Id })')">@T("Account.CustomerOrders.OrderDetails")</button>
                         </div>
                     </div>
                 }
@@ -73,7 +73,7 @@
 <script asp-location="Footer">
     $(function() {
         $('#periodSelector').on('change', function() {
-            window.location.href = '@Url.RouteUrl("CustomerOrders", new { limit = (object)null })/' + $(this).val();
+            window.location.href = '@Url.RouteUrl(NopRouteNames.General.CUSTOMER_ORDERS, new { limit = (object)null })/' + $(this).val();
         });
     })
 </script>

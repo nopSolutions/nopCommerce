@@ -3,6 +3,7 @@ using Nop.Core;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Security;
+using Nop.Core.Http;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
@@ -148,7 +149,7 @@ public partial class NewsletterController : BasePublicController
             .Where(subscription => subscription.StoreId == store.Id)
             .ToList();
         if (!subscriptions.Any())
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         foreach (var subscription in subscriptions)
         {

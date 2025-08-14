@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Infrastructure;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
@@ -16,8 +16,8 @@ public partial class NopAssetHelper : INopAssetHelper
 {
     #region Fields
 
-    private readonly IActionContextAccessor _actionContextAccessor;
     private readonly IAssetPipeline _assetPipeline;
+    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly WebOptimizerConfig _webOptimizerConfig;
 
     #endregion
@@ -25,10 +25,12 @@ public partial class NopAssetHelper : INopAssetHelper
     #region Ctor
 
 
-    public NopAssetHelper(AppSettings appSettings, IActionContextAccessor actionContextAccessor, IAssetPipeline assetPipeline)
+    public NopAssetHelper(AppSettings appSettings,
+        IAssetPipeline assetPipeline,
+        IHttpContextAccessor httpContextAccessor)
     {
-        _actionContextAccessor = actionContextAccessor;
         _assetPipeline = assetPipeline;
+        _httpContextAccessor = httpContextAccessor;
         _webOptimizerConfig = appSettings.Get<WebOptimizerConfig>();
     }
 
@@ -111,11 +113,9 @@ public partial class NopAssetHelper : INopAssetHelper
     {
         ArgumentNullException.ThrowIfNull(asset);
 
-        var httpContext = _actionContextAccessor.ActionContext.HttpContext;
-
         try
         {
-            var hash = asset.GenerateCacheKey(httpContext, _webOptimizerConfig);
+            var hash = asset.GenerateCacheKey(_httpContextAccessor.HttpContext, _webOptimizerConfig);
             return QueryHelpers.AddQueryString(asset.Route, "v", hash);
         }
         catch

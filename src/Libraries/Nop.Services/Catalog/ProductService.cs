@@ -2,7 +2,6 @@
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Localization;
@@ -29,7 +28,6 @@ public partial class ProductService : IProductService
     #region Fields
 
     protected readonly CatalogSettings _catalogSettings;
-    protected readonly CommonSettings _commonSettings;
     protected readonly IAclService _aclService;
     protected readonly ICustomerService _customerService;
     protected readonly IDateRangeService _dateRangeService;
@@ -62,7 +60,6 @@ public partial class ProductService : IProductService
     protected readonly ISearchPluginManager _searchPluginManager;
     protected readonly IStaticCacheManager _staticCacheManager;
     protected readonly IStoreMappingService _storeMappingService;
-    protected readonly IStoreService _storeService;
     protected readonly IVendorService _vendorService;
     protected readonly IWorkContext _workContext;
     protected readonly LocalizationSettings _localizationSettings;
@@ -73,7 +70,6 @@ public partial class ProductService : IProductService
     #region Ctor
 
     public ProductService(CatalogSettings catalogSettings,
-        CommonSettings commonSettings,
         IAclService aclService,
         ICustomerService customerService,
         IDateRangeService dateRangeService,
@@ -105,14 +101,12 @@ public partial class ProductService : IProductService
         IRepository<TierPrice> tierPriceRepository,
         ISearchPluginManager searchPluginManager,
         IStaticCacheManager staticCacheManager,
-        IStoreService storeService,
         IVendorService vendorService,
         IStoreMappingService storeMappingService,
         IWorkContext workContext,
         LocalizationSettings localizationSettings)
     {
         _catalogSettings = catalogSettings;
-        _commonSettings = commonSettings;
         _aclService = aclService;
         _customerService = customerService;
         _dateRangeService = dateRangeService;
@@ -145,7 +139,6 @@ public partial class ProductService : IProductService
         _searchPluginManager = searchPluginManager;
         _staticCacheManager = staticCacheManager;
         _storeMappingService = storeMappingService;
-        _storeService = storeService;
         _vendorService = vendorService;
         _workContext = workContext;
         _localizationSettings = localizationSettings;
@@ -1698,37 +1691,6 @@ public partial class ProductService : IProductService
             return null;
 
         return date.ToShortDateString();
-    }
-
-    /// <summary>
-    /// Update product store mappings
-    /// </summary>
-    /// <param name="product">Product</param>
-    /// <param name="limitedToStoresIds">A list of store ids for mapping</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task UpdateProductStoreMappingsAsync(Product product, IList<int> limitedToStoresIds)
-    {
-        product.LimitedToStores = limitedToStoresIds.Any();
-
-        var limitedToStoresIdsSet = limitedToStoresIds.ToHashSet();
-        var existingStoreMappingsByStoreId = (await _storeMappingService.GetStoreMappingsAsync(product))
-            .ToDictionary(sm => sm.StoreId);
-        var allStores = await _storeService.GetAllStoresAsync();
-        foreach (var store in allStores)
-        {
-            if (limitedToStoresIdsSet.Contains(store.Id))
-            {
-                //new store
-                if (!existingStoreMappingsByStoreId.ContainsKey(store.Id))
-                    await _storeMappingService.InsertStoreMappingAsync(product, store.Id);
-            }
-            else
-            {
-                //remove store
-                if (existingStoreMappingsByStoreId.TryGetValue(store.Id, out var storeMappingToDelete))
-                    await _storeMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
-            }
-        }
     }
 
     /// <summary>

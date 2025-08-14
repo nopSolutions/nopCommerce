@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Events;
+using Nop.Core.Http;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Common;
@@ -455,7 +456,7 @@ public partial class CustomerRegistrationService : ICustomerRegistrationService
         if (!string.IsNullOrEmpty(returnUrl) && urlHelper.IsLocalUrl(returnUrl))
             return new RedirectResult(returnUrl);
 
-        return new RedirectToRouteResult("Homepage", null);
+        return new RedirectToRouteResult(NopRouteNames.General.HOMEPAGE, null);
     }
 
     /// <summary>

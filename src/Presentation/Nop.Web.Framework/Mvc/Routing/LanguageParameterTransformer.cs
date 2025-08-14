@@ -58,7 +58,7 @@ public partial class LanguageParameterTransformer : IOutboundParameterTransforme
             return string.Empty;
 
         //or use the current language code
-        //we don't use the passed value, since it's always either the same as the current one or it's the default value (en)
+        //we don't use the passed value, since it's always either the same as the current one or it's the default value (empty)
         var workContext = EngineContext.Current.Resolve<IWorkContext>();
         var currentLanguage = workContext.GetWorkingLanguageAsync().Result;
         return currentLanguage.UniqueSeoCode.ToLowerInvariant();

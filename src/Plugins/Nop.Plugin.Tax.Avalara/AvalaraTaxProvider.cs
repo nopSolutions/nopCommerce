@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Routing;
+﻿using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Tax;
 using Nop.Plugin.Tax.Avalara.Components;
@@ -13,6 +11,7 @@ using Nop.Services.Plugins;
 using Nop.Services.ScheduleTasks;
 using Nop.Services.Tax;
 using Nop.Web.Framework.Infrastructure;
+using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Plugin.Tax.Avalara;
 
@@ -24,12 +23,12 @@ public class AvalaraTaxProvider : BasePlugin, ITaxProvider, IWidgetPlugin
     #region Fields
 
     protected readonly AvalaraTaxManager _avalaraTaxManager;
-    protected readonly IActionContextAccessor _actionContextAccessor;
+    protected readonly IHttpContextAccessor _httpContextAccessor;
     protected readonly ILocalizationService _localizationService;
+    protected readonly INopUrlHelper _nopUrlHelper;
     protected readonly IScheduleTaskService _scheduleTaskService;
     protected readonly ISettingService _settingService;
     protected readonly ITaxPluginManager _taxPluginManager;
-    protected readonly IUrlHelperFactory _urlHelperFactory;
     protected readonly TaxSettings _taxSettings;
     protected readonly WidgetSettings _widgetSettings;
 
@@ -38,22 +37,22 @@ public class AvalaraTaxProvider : BasePlugin, ITaxProvider, IWidgetPlugin
     #region Ctor
 
     public AvalaraTaxProvider(AvalaraTaxManager avalaraTaxManager,
-        IActionContextAccessor actionContextAccessor,
+        IHttpContextAccessor httpContextAccessor,
         ILocalizationService localizationService,
+        INopUrlHelper nopUrlHelper,
         IScheduleTaskService scheduleTaskService,
         ISettingService settingService,
         ITaxPluginManager taxPluginManager,
-        IUrlHelperFactory urlHelperFactory,
         TaxSettings taxSettings,
         WidgetSettings widgetSettings)
     {
         _avalaraTaxManager = avalaraTaxManager;
-        _actionContextAccessor = actionContextAccessor;
+        _httpContextAccessor = httpContextAccessor;
         _localizationService = localizationService;
+        _nopUrlHelper = nopUrlHelper;
         _scheduleTaskService = scheduleTaskService;
         _settingService = settingService;
         _taxPluginManager = taxPluginManager;
-        _urlHelperFactory = urlHelperFactory;
         _taxSettings = taxSettings;
         _widgetSettings = widgetSettings;
     }
@@ -93,12 +92,10 @@ public class AvalaraTaxProvider : BasePlugin, ITaxProvider, IWidgetPlugin
     /// </returns>
     public async Task<TaxTotalResult> GetTaxTotalAsync(TaxTotalRequest taxTotalRequest)
     {
-        ArgumentNullException.ThrowIfNull(_actionContextAccessor.ActionContext);
-
         //cache tax total within the request
         var key = $"nop.TaxTotal-{taxTotalRequest.UsePaymentMethodAdditionalFee}";
 
-        if (_actionContextAccessor.ActionContext.HttpContext.Items.TryGetValue(key, out var result) && result is TaxTotalResult taxTotalResult)
+        if (_httpContextAccessor.HttpContext.Items.TryGetValue(key, out var result) && result is TaxTotalResult taxTotalResult)
             return taxTotalResult;
 
         //create a transaction
@@ -122,9 +119,11 @@ public class AvalaraTaxProvider : BasePlugin, ITaxProvider, IWidgetPlugin
             }
         }
         else
+        {
             taxTotalResult.Errors.Add(error);
+        }
 
-        _actionContextAccessor.ActionContext.HttpContext.Items.TryAdd(key, taxTotalResult);
+        _httpContextAccessor.HttpContext.Items.TryAdd(key, taxTotalResult);
 
         return taxTotalResult;
     }
@@ -134,9 +133,7 @@ public class AvalaraTaxProvider : BasePlugin, ITaxProvider, IWidgetPlugin
     /// </summary>
     public override string GetConfigurationPageUrl()
     {
-        ArgumentNullException.ThrowIfNull(_actionContextAccessor.ActionContext);
-
-        return _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext).RouteUrl(AvalaraTaxDefaults.ConfigurationRouteName);
+        return _nopUrlHelper.RouteUrl(AvalaraTaxDefaults.ConfigurationRouteName);
     }
 
     /// <summary>

@@ -23,7 +23,7 @@
         }
         else
         {
-            <form asp-route="ApplyVendorAccount" method="post" enctype="multipart/form-data">
+            <form asp-route="@NopRouteNames.General.APPLY_VENDOR_ACCOUNT" method="post" enctype="multipart/form-data">
                 <div asp-validation-summary="ModelOnly" class="message-error"></div>
                 <div class="fieldset">
                     <div class="form-fields">
@@ -79,7 +79,7 @@
                                             $('#read-acceptterms').on('click',
                                                 function (e) {
                                                     displayPopupContentFromUrl(
-                                                        '@Url.RouteUrl("TopicPopup", new {SystemName = "VendorTermsOfService"})',
+                                                        '@Url.RouteUrl(NopRouteNames.Ajax.TOPIC_POPUP, new { SystemName = "VendorTermsOfService" })',
                                                         '@T("Vendors.ApplyAccount.AcceptTermsOfService")');
                                                 });
                                         });

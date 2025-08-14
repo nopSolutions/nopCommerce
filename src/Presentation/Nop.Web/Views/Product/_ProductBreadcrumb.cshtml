@@ -17,7 +17,7 @@
             @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductBreadcrumbBefore, additionalData = Model })
             <li>
                 <span>
-                    <a href="@Url.RouteUrl("Homepage")">
+                    <a href="@Url.RouteUrl(NopRouteNames.General.HOMEPAGE)">
                         <span>@T("Products.Breadcrumb.Top")</span>
                     </a>
                 </span>

@@ -80,7 +80,7 @@ public partial class MediaSettings : ISettings
     /// <summary>
     /// A value indicating whether to allow uploading of SVG files in admin area
     /// </summary>
-    public bool AllowSVGUploads { get; set; }
+    public bool AllowSvgUploads { get; set; }
 
     /// <summary>
     /// Maximum allowed picture size. If a larger picture is uploaded, then it'll be resized

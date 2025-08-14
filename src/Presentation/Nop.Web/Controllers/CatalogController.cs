@@ -4,13 +4,13 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Http;
 using Nop.Core.Rss;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
-using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Services.Vendors;
 using Nop.Web.Factories;
@@ -42,7 +42,6 @@ public partial class CatalogController : BasePublicController
     protected readonly IProductTagService _productTagService;
     protected readonly IStoreContext _storeContext;
     protected readonly IStoreMappingService _storeMappingService;
-    protected readonly IUrlRecordService _urlRecordService;
     protected readonly IVendorService _vendorService;
     protected readonly IWebHelper _webHelper;
     protected readonly IWorkContext _workContext;
@@ -68,7 +67,6 @@ public partial class CatalogController : BasePublicController
         IProductTagService productTagService,
         IStoreContext storeContext,
         IStoreMappingService storeMappingService,
-        IUrlRecordService urlRecordService,
         IVendorService vendorService,
         IWebHelper webHelper,
         IWorkContext workContext,
@@ -90,7 +88,6 @@ public partial class CatalogController : BasePublicController
         _productTagService = productTagService;
         _storeContext = storeContext;
         _storeMappingService = storeMappingService;
-        _urlRecordService = urlRecordService;
         _vendorService = vendorService;
         _webHelper = webHelper;
         _workContext = workContext;
@@ -276,7 +273,7 @@ public partial class CatalogController : BasePublicController
     {
         //we don't allow viewing of vendors if "vendors" block is hidden
         if (_vendorSettings.VendorsBlockItemsToDisplay == 0)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var model = await _catalogModelFactory.PrepareVendorAllModelsAsync();
         return View(model);
@@ -364,8 +361,7 @@ public partial class CatalogController : BasePublicController
 
         foreach (var product in products)
         {
-            var seName = await _urlRecordService.GetSeNameAsync(product);
-            var productUrl = await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = seName }, _webHelper.GetCurrentRequestProtocol());
+            var productUrl = await _nopUrlHelper.RouteGenericUrlAsync(product, _webHelper.GetCurrentRequestProtocol());
             var productName = await _localizationService.GetLocalizedAsync(product, x => x.Name);
             var productDescription = await _localizationService.GetLocalizedAsync(product, x => x.ShortDescription);
             var item = new RssItem(productName, productDescription, new Uri(productUrl), $"urn:store:{store.Id}:newProducts:product:{product.Id}", product.CreatedOnUtc);

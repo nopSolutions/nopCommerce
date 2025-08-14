@@ -51,7 +51,7 @@
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeaderMenuBefore, additionalData = Model })
     @if (Model.DisplayHomepageMenuItem)
     {
-        <li><a href="@Url.RouteUrl("Homepage")">@T("Homepage")</a></li>
+        <li><a href="@Url.RouteUrl(NopRouteNames.General.HOMEPAGE)">@T("Homepage")</a></li>
     }
     @if (!Model.UseAjaxMenu)
     {
@@ -72,27 +72,27 @@
     }
     @if (Model.NewProductsEnabled && Model.DisplayNewProductsMenuItem)
     {
-        <li><a href="@Url.RouteUrl("NewProducts")">@T("Products.NewProducts")</a></li>
+        <li><a href="@Url.RouteUrl(NopRouteNames.General.NEW_PRODUCTS)">@T("Products.NewProducts")</a></li>
     }
     @if (Model.DisplayProductSearchMenuItem)
     {
-        <li><a href="@Url.RouteUrl("ProductSearch")">@T("Search")</a></li>
+        <li><a href="@Url.RouteUrl(NopRouteNames.General.SEARCH)">@T("Search")</a></li>
     }
     @if (Model.DisplayCustomerInfoMenuItem)
     {
-        <li><a href="@Url.RouteUrl("CustomerInfo")">@T("Account.MyAccount")</a></li>
+        <li><a href="@Url.RouteUrl(NopRouteNames.General.CUSTOMER_INFO)">@T("Account.MyAccount")</a></li>
     }
     @if (Model.BlogEnabled && Model.DisplayBlogMenuItem)
     {
-        <li><a href="@Url.RouteUrl("Blog")">@T("Blog")</a></li>
+        <li><a href="@Url.RouteUrl(NopRouteNames.General.BLOG)">@T("Blog")</a></li>
     }
     @if (Model.ForumEnabled && Model.DisplayForumsMenuItem)
     {
-        <li><a href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
+        <li><a href="@Url.RouteUrl(NopRouteNames.General.BOARDS)">@T("Forum.Forums")</a></li>
     }
     @if (Model.DisplayContactUsMenuItem)
     {
-        <li><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>
+        <li><a href="@Url.RouteUrl(NopRouteNames.General.CONTACT_US)">@T("ContactUs")</a></li>
     }
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeaderMenuAfter, additionalData = Model })
 </ul>
@@ -105,7 +105,7 @@
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.MobHeaderMenuBefore, additionalData = Model })
         @if (Model.DisplayHomepageMenuItem)
         {
-            <li><a href="@Url.RouteUrl("Homepage")">@T("Homepage")</a></li>
+            <li><a href="@Url.RouteUrl(NopRouteNames.General.HOMEPAGE)">@T("Homepage")</a></li>
         }
         @if (!Model.UseAjaxMenu)
         {
@@ -126,27 +126,27 @@
         }
         @if (Model.NewProductsEnabled && Model.DisplayNewProductsMenuItem)
         {
-            <li><a href="@Url.RouteUrl("NewProducts")">@T("Products.NewProducts")</a></li>
+            <li><a href="@Url.RouteUrl(NopRouteNames.General.NEW_PRODUCTS)">@T("Products.NewProducts")</a></li>
         }
         @if (Model.DisplayProductSearchMenuItem)
         {
-            <li><a href="@Url.RouteUrl("ProductSearch")">@T("Search")</a></li>
+            <li><a href="@Url.RouteUrl(NopRouteNames.General.SEARCH)">@T("Search")</a></li>
         }
         @if (Model.DisplayCustomerInfoMenuItem)
         {
-            <li><a href="@Url.RouteUrl("CustomerInfo")">@T("Account.MyAccount")</a></li>
+            <li><a href="@Url.RouteUrl(NopRouteNames.General.CUSTOMER_INFO)">@T("Account.MyAccount")</a></li>
         }
         @if (Model.BlogEnabled && Model.DisplayBlogMenuItem)
         {
-            <li><a href="@Url.RouteUrl("Blog")">@T("Blog")</a></li>
+            <li><a href="@Url.RouteUrl(NopRouteNames.General.BLOG)">@T("Blog")</a></li>
         }
         @if (Model.ForumEnabled && Model.DisplayForumsMenuItem)
         {
-            <li><a href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
+            <li><a href="@Url.RouteUrl(NopRouteNames.General.BOARDS)">@T("Forum.Forums")</a></li>
         }
         @if (Model.DisplayContactUsMenuItem)
         {
-            <li><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>
+            <li><a href="@Url.RouteUrl(NopRouteNames.General.CONTACT_US)">@T("ContactUs")</a></li>
         }
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.MobHeaderMenuAfter, additionalData = Model })
     </ul>
@@ -167,7 +167,7 @@
             var localized_data = {
                 AjaxFailure: "@T("MainMenu.AjaxFailure")"
             };
-            mainMenu.init('@Url.RouteUrl("GetCatalogRoot")', '@Url.RouteUrl("GetCatalogSubCategories")', 'ul.top-menu.notmobile', 'ul.top-menu.mobile', localized_data);
+            mainMenu.init('@Url.RouteUrl(NopRouteNames.Ajax.GET_CATALOG_ROOT)', '@Url.RouteUrl(NopRouteNames.Ajax.GET_CATALOG_SUB_CATEGORIES)', 'ul.top-menu.notmobile', 'ul.top-menu.mobile', localized_data);
         });
         </script>
 

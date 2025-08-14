@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings;
 /// <summary>
 /// Represents the robots.txt settings model
 /// </summary>
-public partial record RobotsTxtSettingsModel : BaseNopModel
+public partial record RobotsTxtSettingsModel : BaseNopModel, ISettingsModel
 {
     #region Properties
 

@@ -1425,7 +1425,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         {
             VendorId = vendor.Id,
             VendorName = await _localizationService.GetLocalizedAsync(vendor, x => x.Name),
-            VendorUrl = await _nopUrlHelper.RouteGenericUrlAsync<Vendor>(new { SeName = await _urlRecordService.GetSeNameAsync(vendor) })
+            VendorUrl = await _nopUrlHelper.RouteGenericUrlAsync(vendor)
         };
 
         var currentStore = await _storeContext.GetCurrentStoreAsync();

@@ -28,20 +28,4 @@ public partial interface ISitemapModelFactory
     /// The task result contains the sitemap model with sitemap.xml as string
     /// </returns>
     Task<SitemapXmlModel> PrepareSitemapXmlModelAsync(int id = 0);
-
-    /// <summary>
-    /// Prepare localized sitemap URL model
-    /// </summary>
-    /// <param name="routeName">Route name</param>
-    /// <param name="getRouteParamsAwait">Lambda for route params object</param>
-    /// <param name="dateTimeUpdatedOn">A time when URL was updated last time</param>
-    /// <param name="updateFreq">How often to update url</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the sitemap URL model
-    /// </returns>
-    Task<SitemapUrlModel> PrepareLocalizedSitemapUrlAsync(string routeName,
-        Func<int?, Task<object>> getRouteParamsAwait = null,
-        DateTime? dateTimeUpdatedOn = null,
-        UpdateFrequency updateFreq = UpdateFrequency.Weekly);
 }

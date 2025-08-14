@@ -27,7 +27,7 @@
         <div class="actions">
             @if (Model.IsCustomerAllowedToEditTopic)
             {
-                @Html.RouteLink(T("Forum.EditTopic").Text, "TopicEdit", new { id = Model.Id }, new { @class = "edit-topic-button" })
+                @Html.RouteLink(T("Forum.EditTopic").Text, NopRouteNames.Standard.TOPIC_EDIT, new { id = Model.Id }, new { @class = "edit-topic-button" })
             }
             @if (Model.IsCustomerAllowedToDeleteTopic)
             {
@@ -42,7 +42,7 @@
                             $.ajax({
                                 cache: false,
                                 type: "POST",
-                                url: "@Url.RouteUrl("TopicDelete")",
+                                url: "@Url.RouteUrl(NopRouteNames.Standard.TOPIC_DELETE)",
                                 data: postData,
                                 dataType: "json",
                                 success: function (data, textStatus, jqXHR) {
@@ -59,9 +59,9 @@
             }
             @if (Model.IsCustomerAllowedToMoveTopic)
             {
-                @Html.RouteLink(T("Forum.MoveTopic").Text, "TopicMove", new { id = Model.Id }, new { @class = "move-topic-button" })
+                @Html.RouteLink(T("Forum.MoveTopic").Text, NopRouteNames.Standard.TOPIC_MOVE, new { id = Model.Id }, new { @class = "move-topic-button" })
             }
-            @Html.RouteLink(T("Forum.Reply").Text, "PostCreate", new { id = Model.Id }, new { @class = "reply-topic-button" })
+            @Html.RouteLink(T("Forum.Reply").Text, NopRouteNames.Standard.POST_CREATE, new { id = Model.Id }, new { @class = "reply-topic-button" })
             @if (Model.IsCustomerAllowedToSubscribe)
             {
                 <a class="watch-topic-button" href="#" id="watch-topic-top">@Model.WatchTopicText</a>
@@ -74,7 +74,7 @@
                                 cache: false,
                                 type: "POST",
                                 data: postData,
-                                url: "@Url.RouteUrl("TopicWatch", new { id = Model.Id })",
+                                url: "@Url.RouteUrl(NopRouteNames.Ajax.TOPIC_WATCH, new { id = Model.Id })",
                                 dataType: "json",
                                 success: function (data, textStatus, jqXHR) {
                                     $('#watch-topic-top').text(data.Text);
@@ -96,7 +96,7 @@
                 TotalRecords = Model.PostsTotalRecords,
                 PageIndex = Model.PostsPageIndex,
                 ShowTotalSummary = false,
-                RouteActionName = "TopicSlugPaged",
+                RouteActionName = NopRouteNames.Standard.TOPIC_SLUG_PAGED,
                 UseRouteLinks = true,
                 RouteValues = new SlugRouteValues { Id = Model.Id, Slug = Model.SeName }
             });
@@ -133,7 +133,7 @@
 
     <div class="topic-actions lower">
         <div class="actions">
-            @Html.RouteLink(T("Forum.Reply").Text, "PostCreate", new {id = Model.Id}, new {@class = "reply-topic-button"})
+            @Html.RouteLink(T("Forum.Reply").Text, NopRouteNames.Standard.POST_CREATE, new { id = Model.Id }, new { @class = "reply-topic-button" })
             @if (Model.IsCustomerAllowedToSubscribe)
             {
                 <a class="watch-topic-button" href="#" id="watch-topic-bottom">@Model.WatchTopicText</a>
@@ -146,7 +146,7 @@
                             $.ajax({
                                 cache: false,
                                 type: "POST",
-                                url: "@Url.RouteUrl("TopicWatch", new {id = Model.Id})",
+                                url: "@Url.RouteUrl(NopRouteNames.Ajax.TOPIC_WATCH, new { Model.Id })",
                                 data: postData,
                                 dataType: "json",
                                 success: function (data, textStatus, jqXHR) {
@@ -181,7 +181,7 @@
             $.ajax({
                 cache: false,
                 type: "POST",
-                url: "@Url.RouteUrl("PostDelete")",
+                url: "@Url.RouteUrl(NopRouteNames.Standard.POST_DELETE)",
                 data: postData,
                 dataType: "json",
                 success: function (data, textStatus, jqXHR) {

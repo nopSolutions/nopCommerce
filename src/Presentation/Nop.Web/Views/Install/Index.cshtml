@@ -128,7 +128,7 @@
                                 showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(ILS.GetResource("RestartProgress")))');
                                 $.ajax({
                                     type: "GET",
-                                    url: "@Url.RouteUrl("InstallationRestartApplication")",
+                                    url: "@Url.RouteUrl(NopRouteNames.Ajax.INSTALLATION_RESTART_APPLICATION)",
                                     complete: function() {
                                         window.setTimeout(function () {
                                             window.location.replace('@Model.RestartUrl');

@@ -144,26 +144,6 @@ public class PayPalCommerceDefaults
         public static string ApproveToken => "Plugin.Payments.PayPalCommerce.ApproveToken";
 
         /// <summary>
-        /// Gets the one page checkout route name
-        /// </summary>
-        public static string OnePageCheckout => "CheckoutOnePage";
-
-        /// <summary>
-        /// Gets the shopping cart route name
-        /// </summary>
-        public static string ShoppingCart => "ShoppingCart";
-
-        /// <summary>
-        /// Gets the checkout completed route name
-        /// </summary>
-        public static string CheckoutCompleted => "CheckoutCompleted";
-
-        /// <summary>
-        /// Gets the customer info route name
-        /// </summary>
-        public static string CustomerInfo => "CustomerInfo";
-
-        /// <summary>
         /// Gets the payment tokens route name
         /// </summary>
         public static string PaymentTokens => "Plugin.Payments.PayPalCommerce.PaymentTokens";

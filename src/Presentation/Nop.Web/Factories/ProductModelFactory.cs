@@ -13,6 +13,7 @@ using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Http;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -1885,7 +1886,7 @@ public partial class ProductModelFactory : IProductModelFactory
             TotalRecords = list.TotalCount,
             PageIndex = list.PageIndex,
             ShowTotalSummary = false,
-            RouteActionName = "CustomerProductReviewsPaged",
+            RouteActionName = NopRouteNames.Standard.CUSTOMER_PRODUCT_REVIEWS_PAGED,
             UseRouteLinks = true,
             RouteValues = new CustomerProductReviewsModel.CustomerProductReviewsRouteValues { PageNumber = pageIndex }
         };

@@ -195,7 +195,7 @@
                                                     options: {
                                                         type: 'local',
                                                         metadata: {
-                                                            url: '@(Url.RouteUrl("DownloadGetFileUpload", new { downloadId = download.DownloadGuid }))' 
+                                                            url: '@(Url.RouteUrl(NopRouteNames.Standard.DOWNLOAD_GET_FILE_UPLOAD, new { downloadId = download.DownloadGuid }))'
                                                         }
                                                     },
                                                 }
@@ -204,7 +204,7 @@
                                             }
                                             server: {
                                                 process: {
-                                                    url: '@(Url.RouteUrl("UploadFileProductAttribute", new { attributeId = attribute.Id }))',
+                                                url: '@(Url.RouteUrl(NopRouteNames.Ajax.UPLOAD_FILE_PRODUCT_ATTRIBUTE, new { attributeId = attribute.Id }))',
                                                     onload: (response) => {
                                                         $("#@(controlId)").val(JSON.parse(response).downloadGuid);
                                                     }
@@ -350,7 +350,7 @@
             $(function() {
                 combinationsBehavior_@(Model.Id) = createCombinationsBehavior({
                     contentEl: '[data-productid="@Model.Id"]',
-                    fetchUrl: '@Html.Raw(Url.RouteUrl("GetProductCombinations", new { productId = Model.Id }))'
+                    fetchUrl: '@Html.Raw(Url.RouteUrl(NopRouteNames.Ajax.GET_PRODUCT_COMBINATIONS, new { productId = Model.Id }))'
                 });
                 combinationsBehavior_@(Model.Id).init();
             });
@@ -427,7 +427,7 @@
             function @(attributeChangeHandlerFuncName)() {
                 $.ajax({
                     cache: false,
-                    url: "@Html.Raw(Url.RouteUrl("ProductDetailsAttributeChange", new { productId = Model.Id, validateAttributeConditions = attributesHaveConditions, loadPicture = attributesHaveAssociatedPictures }))",
+                    url: "@Html.Raw(Url.RouteUrl(NopRouteNames.Ajax.PRODUCT_DETAILS_ATTRIBUTE_CHANGE, new { productId = Model.Id, validateAttributeConditions = attributesHaveConditions, loadPicture = attributesHaveAssociatedPictures }))",
                     data: $('#product-details-form').serialize(),
                     type: "POST",
                     success: function (data, textStatus, jqXHR) {

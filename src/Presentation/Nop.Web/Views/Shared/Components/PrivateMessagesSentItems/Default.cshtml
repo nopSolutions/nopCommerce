@@ -16,7 +16,7 @@
     </script>
     @if (Model.Messages.Count > 0)
     {
-        <form asp-route="PrivateMessagesSent" method="post">
+        <form asp-route="@NopRouteNames.Standard.PRIVATE_MESSAGES_SENT" method="post">
             <div class="table-wrapper">
                 <table class="data-table" id="pm-sent-table">
                     <colgroup>
@@ -52,7 +52,7 @@
                                 <td class="to">
                                     @if (item.AllowViewingToProfile)
                                     {
-                                        @Html.RouteLink(item.CustomerToName, "CustomerProfile", new { Id = item.ToCustomerId })
+                                        @Html.RouteLink(item.CustomerToName, NopRouteNames.Standard.CUSTOMER_PROFILE, new { Id = item.ToCustomerId })
                                     }
                                     else
                                     {
@@ -60,7 +60,7 @@
                                     }
                                 </td>
                                 <td class="subject">
-                                    @Html.RouteLink(item.Subject, "ViewPM", new { privateMessageId = item.Id }, new { @class = "pm-read" })
+                                    @Html.RouteLink(item.Subject, NopRouteNames.Standard.VIEW_PM, new { privateMessageId = item.Id }, new { @class = "pm-read" })
                                 </td>
                                 <td class="date">
                                     @item.CreatedOn
