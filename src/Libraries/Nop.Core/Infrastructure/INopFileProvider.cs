@@ -334,6 +334,14 @@ public partial interface INopFileProvider : IFileProvider
     void WriteAllText(string path, string contents, Encoding encoding);
 
     /// <summary>
+    /// Tests if the given path contains a root. A path is considered rooted
+    /// if it starts with a backslash ("\") or a valid drive letter and a colon (":")
+    /// </summary>
+    /// <param name="path">Path to test</param>
+    /// <returns>true if path contains a root; otherwise, false</returns>
+    bool IsPathRooted(string path);
+
+    /// <summary>
     /// Gets or sets the absolute path to the directory that contains the web-servable application content files.
     /// </summary>
     string WebRootPath { get; }

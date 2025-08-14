@@ -1167,7 +1167,8 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(settings => settings.ImageSquarePictureSize, options => options.Ignore())
             .ForMember(settings => settings.VideoIframeAllow, options => options.Ignore())
             .ForMember(settings => settings.VideoIframeHeight, options => options.Ignore())
-            .ForMember(settings => settings.VideoIframeWidth, options => options.Ignore());
+            .ForMember(settings => settings.VideoIframeWidth, options => options.Ignore())
+            .ForMember(settings => settings.PicturePath, options => options.Ignore());
     }
 
     /// <summary>

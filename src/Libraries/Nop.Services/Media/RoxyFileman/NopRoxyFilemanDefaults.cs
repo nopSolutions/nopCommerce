@@ -8,7 +8,7 @@ public static partial class NopRoxyFilemanDefaults
     /// <summary>
     /// Default path to root directory of uploaded files (if appropriate settings are not specified)
     /// </summary>
-    public static string DefaultRootDirectory { get; } = "/images/uploaded";
+    public static string DefaultRootDirectory => "/uploaded";
 
     /// <summary>
     /// Path to configuration file

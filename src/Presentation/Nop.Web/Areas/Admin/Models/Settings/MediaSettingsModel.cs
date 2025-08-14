@@ -89,5 +89,8 @@ public partial record MediaSettingsModel : BaseNopModel, ISettingsModel
     public bool AllowSvgUploads { get; set; }
     public bool AllowSvgUploads_OverrideForStore { get; set; }
 
+    [NopResourceDisplayName("Admin.Configuration.Settings.Media.PicturePath")]
+    public string PicturePath { get; set; }
+
     #endregion
 }

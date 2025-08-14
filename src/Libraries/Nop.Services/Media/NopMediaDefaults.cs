@@ -13,7 +13,12 @@ public static partial class NopMediaDefaults
     /// <summary>
     /// Gets a path to the image thumbs files
     /// </summary>
-    public static string ImageThumbsPath => @"images\thumbs";
+    public static string ImageThumbsPath => "thumbs";
+
+    /// <summary>
+    /// Gets a default path to the image files
+    /// </summary>
+    public static string DefaultImagesPath => "images";
 
     /// <summary>
     /// Gets a default avatar file name
