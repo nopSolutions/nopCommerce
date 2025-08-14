@@ -1805,10 +1805,10 @@ END
 GO
 
 --new setting
-IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'catalogsettings.useajaxloadmenu')
+-- Obsolete setting cleanup: catalogsettings.useajaxloadmenu
+IF EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'catalogsettings.useajaxloadmenu')
 BEGIN
-    INSERT [Setting] ([Name], [Value], [StoreId])
-    VALUES (N'catalogsettings.useajaxloadmenu', N'False', 0)
+    DELETE FROM [Setting] WHERE [Name] = N'catalogsettings.useajaxloadmenu';
 END
 GO
 
