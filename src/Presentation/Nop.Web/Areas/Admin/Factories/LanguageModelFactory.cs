@@ -1,6 +1,8 @@
 ﻿using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
+using Nop.Services.Media;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Localization;
 using Nop.Web.Framework.Factories;
@@ -20,6 +22,7 @@ public partial class LanguageModelFactory : ILanguageModelFactory
     private readonly ILanguageService _languageService;
     private readonly ILocalizationService _localizationService;
     private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
+    private readonly MediaSettings _mediaSettings;
 
     #endregion
 
@@ -29,13 +32,15 @@ public partial class LanguageModelFactory : ILanguageModelFactory
         INopFileProvider fileProvider,
         ILanguageService languageService,
         ILocalizationService localizationService,
-        IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory)
+        IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
+        MediaSettings mediaSettings)
     {
         _baseAdminModelFactory = baseAdminModelFactory;
         _fileProvider = fileProvider;
         _languageService = languageService;
         _localizationService = localizationService;
         _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
+        _mediaSettings = mediaSettings;
     }
 
     #endregion
@@ -136,7 +141,7 @@ public partial class LanguageModelFactory : ILanguageModelFactory
             model.Published = true;
         }
         var flagNames = _fileProvider
-            .EnumerateFiles(_fileProvider.GetAbsolutePath(@"images\flags"), "*.png")
+            .EnumerateFiles(_fileProvider.Combine(_fileProvider.GetLocalImagesPath(_mediaSettings), "flags"), "*.png")
             .Select(_fileProvider.GetFileName)
             .ToList();
 

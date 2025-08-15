@@ -304,13 +304,13 @@ public class LocalizationMigration : MigrationBase
             ["Wishlist.NotFound"] = "Wishlist not found.",
             ["Wishlist.DeleteWishlist"] = "Delete wishlist",
             ["Wishlist.SelectWishlist"] = "Specify your wishlist",
-            ["Wishlist.MaximumNumberReached"] = "You cannot create more than {0} custom wishlists.", 
+            ["Wishlist.MaximumNumberReached"] = "You cannot create more than {0} custom wishlists.",
             ["Wishlist.NameRequired"] = "A wishlist name is required.",
             ["Products.ProductHasBeenAddedToTheCustomWishlist.Link"] = "The product has been added to your <a href=\"{0}\">{1}</a>",
             ["Products.ProductHasBeenAddedToTheWishlistAndMoved.Link"] = "The product has been added to your <a href=\"{0}\">wishlist</a>. Want to move it to a <a href=\"#\" onclick=\"{1}\">custom wishlist</a>?",
             ["Wishlist.MultipleWishlistNotForGuest"] = "The multiple wishlist functionality is only available to registered customers.",
             ["Wishlist.NotAllowMultipleWishlist"] = "Multiple wishlist functionality is disabled.",
- 
+
             //#7739
             ["Admin.System.Maintenance.DeleteThumbFiles.FilesCount"] = "Total files: {0}",
             ["Admin.System.Maintenance.DeleteThumbFiles"] = "Delete image thumbs",
@@ -364,6 +364,14 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Catalog.Products.AiFullDescription.Language"] = "Target language",
             ["Admin.Configuration.Settings.Catalog.ArtificialIntelligence.ProductDescriptionQuery"] = "Artificial intelligence query",
             ["Admin.Configuration.Settings.Catalog.ArtificialIntelligence.ProductDescriptionQuery.Hint"] = "Set the query for create product description with artificial intelligence service.",
+
+            //#5986
+            ["Admin.Configuration.Settings.Media.PicturePath"] = "Path to the picture files",
+            ["Admin.Configuration.Settings.Media.PicturePath.Hint"] = "Set up the path on the file system to store the picture files",
+            ["Admin.Configuration.Settings.Media.PicturePath.Move"] = "Move pictures",
+            ["Admin.Configuration.Settings.Media.PicturePath.NotGrantedPermission"] = "The '{0}' account is not granted with Modify permission on folder '{1}'. Please configure these permissions.",
+            ["Admin.Configuration.Settings.Media.ChangePicturePath.Note"] = "You can use either an absolute or a relative path to the directory. However, the relative path will always be inside the wwwroot directory.<br /> <strong>Attention!</strong> We strongly recommend that you create a backup copy of your site before changing this setting.<br /> Also, note that after changing the directory, the site will be restarted.",
+            ["Admin.Configuration.Settings.Media.ChangePicturePath.TryAgain"] = "If possible, please fix the problem and try again.",
         }, languageId);
 
         #endregion

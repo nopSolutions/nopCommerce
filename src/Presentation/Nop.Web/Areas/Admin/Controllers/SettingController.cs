@@ -47,6 +47,7 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Security;
 using Nop.Web.Framework.WebOptimizer;
 
 namespace Nop.Web.Areas.Admin.Controllers;
@@ -1092,6 +1093,49 @@ public partial class SettingController : BaseAdminController
         await _customerActivityService.InsertActivityAsync("EditSettings", await _localizationService.GetResourceAsync("ActivityLog.EditSettings"));
 
         _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Updated"));
+
+        return RedirectToAction("Media");
+    }
+
+    [HttpPost, ActionName("Media")]
+    [FormValueRequired("change-picture-path")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
+    public virtual async Task<IActionResult> ChangeImagePath(MediaSettingsModel model)
+    {
+        try
+        {
+            if (!_fileProvider.CheckPermissions(model.PicturePath, true, true, true, true))
+            {
+                _notificationService.ErrorNotification(string.Format(await _localizationService.GetResourceAsync("Admin.Configuration.Settings.Media.PicturePath.NotGrantedPermission"), CurrentOSUser.FullName, model.PicturePath));
+
+                return RedirectToAction("Media");
+            }
+
+            await _pictureService.ChangePicturesPathAsync(model.PicturePath);
+
+            //activity log
+            await _customerActivityService.InsertActivityAsync("EditSettings", await _localizationService.GetResourceAsync("ActivityLog.EditSettings"));
+
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Updated"));
+
+            var returnUrl = Url.Action("Media", "Setting", new { area = AreaNames.ADMIN });
+            return View("RestartApplication", returnUrl);
+        }
+        catch (Exception ex)
+        {
+            var exceptionMessage = ex.Message;
+            var mediaSettings = await _settingService.LoadSettingAsync<MediaSettings>();
+
+            if (_fileProvider.EnumerateFiles(mediaSettings.PicturePath, "*.*", false).Any())
+                exceptionMessage += $" {await _localizationService.GetResourceAsync("Admin.Configuration.Settings.Media.ChangePicturePath.TryAgain")}";
+            else
+            {
+                mediaSettings.PicturePath = model.PicturePath;
+                await _settingService.SaveSettingAsync(mediaSettings, settings => settings.PicturePath);
+            }
+
+            _notificationService.ErrorNotification(exceptionMessage);
+        }
 
         return RedirectToAction("Media");
     }

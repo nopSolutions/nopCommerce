@@ -18,6 +18,7 @@ using Nop.Services.ArtificialIntelligence;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Core.Domain.Forums;
+using Nop.Services.Media;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo490;
 
@@ -305,6 +306,13 @@ public class SettingMigration : MigrationBase
         {
             aiSettings.ProductDescriptionQuery = ArtificialIntelligenceDefaults.ProductDescriptionQuery;
             settingService.SaveSetting(aiSettings, settings => settings.ProductDescriptionQuery);
+        }
+
+        //#5986
+        if (!settingService.SettingExists(mediaSettings, settings => settings.PicturePath))
+        {
+            mediaSettings.PicturePath = NopMediaDefaults.DefaultImagesPath;
+            settingService.SaveSetting(mediaSettings, settings => settings.PicturePath);
         }
     }
 

@@ -93,7 +93,7 @@ public partial class MediaSettings : ISettings
     public int DefaultImageQuality { get; set; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether single (/content/images/thumbs/) or multiple (/content/images/thumbs/001/ and /content/images/thumbs/002/) directories will used for picture thumbs
+    /// Gets or sets a value indicating whether single (thumbs/) or multiple (thumbs/001/ and thumbs/002/) directories will be used for picture thumbs
     /// </summary>
     public bool MultipleThumbDirectories { get; set; }
 
@@ -101,9 +101,9 @@ public partial class MediaSettings : ISettings
     /// Gets or sets a value indicating whether we should use fast HASHBYTES (hash sum) database function to compare pictures when importing products
     /// </summary>
     public bool ImportProductImagesUsingHash { get; set; }
-    
+
     /// <summary>
-    /// Gets or sets a value indicating whether need to use absolute pictures path
+    /// Gets or sets a value indicating whether we need to use absolute pictures path
     /// </summary>
     public bool UseAbsoluteImagePath { get; set; }
 
@@ -123,7 +123,7 @@ public partial class MediaSettings : ISettings
     public int VideoIframeHeight { get; set; }
 
     /// <summary>
-    /// Gets or sets the product default image id. If 0, then wwwroot/images/default-image.png will be used
+    /// Gets or sets the product default image id. If 0, then default-image.png will be used
     /// </summary>
     public int ProductDefaultImageId { get; set; }
 
@@ -131,4 +131,9 @@ public partial class MediaSettings : ISettings
     /// Gets or sets a value indicating whether we need to reorient images automatically
     /// </summary>
     public bool AutoOrientImage { get; set; }
+
+    /// <summary>
+    /// Gets a path to the picture files
+    /// </summary>
+    public string PicturePath { get; set; }
 }

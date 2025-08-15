@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Services.Stores;
@@ -22,7 +24,7 @@ public partial class LanguageController : BaseAdminController
 {
     #region Const
 
-    protected const string FLAGS_PATH = @"images\flags";
+    protected const string FLAGS_PATH = "flags";
 
     #endregion
 
@@ -35,6 +37,7 @@ public partial class LanguageController : BaseAdminController
     protected readonly INopFileProvider _fileProvider;
     protected readonly INotificationService _notificationService;
     protected readonly IStoreMappingService _storeMappingService;
+    protected readonly MediaSettings _mediaSettings;
 
     #endregion
 
@@ -46,7 +49,8 @@ public partial class LanguageController : BaseAdminController
         ILocalizationService localizationService,
         INopFileProvider fileProvider,
         INotificationService notificationService,
-        IStoreMappingService storeMappingService)
+        IStoreMappingService storeMappingService,
+        MediaSettings mediaSettings)
     {
         _customerActivityService = customerActivityService;
         _languageModelFactory = languageModelFactory;
@@ -55,6 +59,7 @@ public partial class LanguageController : BaseAdminController
         _fileProvider = fileProvider;
         _notificationService = notificationService;
         _storeMappingService = storeMappingService;
+        _mediaSettings = mediaSettings;
     }
 
     #endregion
@@ -223,7 +228,7 @@ public partial class LanguageController : BaseAdminController
     public virtual JsonResult GetAvailableFlagFileNames()
     {
         var flagNames = _fileProvider
-            .EnumerateFiles(_fileProvider.GetAbsolutePath(FLAGS_PATH), "*.png")
+            .EnumerateFiles(_fileProvider.Combine(_fileProvider.GetLocalImagesPath(_mediaSettings), FLAGS_PATH), "*.png")
             .Select(_fileProvider.GetFileName)
             .ToList();
 

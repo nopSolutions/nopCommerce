@@ -17,6 +17,7 @@ using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Media;
 using Nop.Core.Events;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
@@ -26,6 +27,7 @@ using Nop.Services.Common;
 using Nop.Services.Installation;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Media;
 using Nop.Services.Media.RoxyFileman;
 using Nop.Services.Security;
 using Nop.Services.Seo;
@@ -293,6 +295,14 @@ public static class ApplicationBuilderExtensions
 
         //common static files
         application.UseStaticFiles(new StaticFileOptions { OnPrepareResponse = staticFileResponse });
+
+        //images
+        application.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = new PhysicalFileProvider(fileProvider.GetLocalImagesPath(EngineContext.Current.Resolve<MediaSettings>())),
+            RequestPath = new PathString("/images"),
+            OnPrepareResponse = staticFileResponse
+        });
 
         //themes static files
         application.UseStaticFiles(new StaticFileOptions

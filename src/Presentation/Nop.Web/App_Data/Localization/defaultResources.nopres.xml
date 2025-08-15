@@ -8236,6 +8236,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Media.CategoryThumbPictureSize.Hint">
     <Value>The default size (pixels) for category thumbnail images.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.ChangePicturePath.Note">
+    <Value><![CDATA[You can use either an absolute or a relative path to the directory. However, the relative path will always be inside the wwwroot directory.<br /> <strong>Attention!</strong> We strongly recommend that you create a backup copy of your site before changing this setting.<br /> Also, note that after changing the directory, the site will be restarted."]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.ChangePicturePath.TryAgain">
+    <Value>If possible, please fix the problem and try again.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.DefaultImageQuality">
     <Value>Default image quality (0 - 100)</Value>
   </LocaleResource>
@@ -8284,6 +8290,18 @@
   <LocaleResource Name="Admin.Configuration.Settings.Media.OrderThumbPictureSize.Hint">
     <Value>The default size (pixels) for product thumbnail images on the order details page.</Value>
   </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.Media.PicturePath">
+        <Value>Path to the picture files</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.Media.PicturePath.Hint">
+        <Value>Set up the path on the file system to store the picture files</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.Media.PicturePath.Move">
+        <Value>Move pictures</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.Media.PicturePath.NotGrantedPermission">
+        <Value>The '{0}' account is not granted with Modify permission on folder '{1}'. Please configure these permissions.</Value>
+    </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase">
     <Value>Pictures are stored into...</Value>
   </LocaleResource>
@@ -9656,7 +9674,8 @@
     <Value>Measures</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Measures.AdditionalConfirm">
-    <Value><![CDATA[<p>WARNING. It is not recommended to do this on live sites because: </p><ol><li>Other rates have to be updated manually</li><li>You have to ensure that each product has a valid measure (dimension and weights) - they are not adjusted automatically</li></ol>]]></Value>
+    <Value><![CDATA[<p>WARNING. It is not recommended to do this on live sites because: </p><ol><li>Other rates have to be updated manually</li><li>You have to ensure that each product has a valid measure (dimension and weights) - they are not adjusted automatically</li></ol>]]>
+        </Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions">
     <Value>Dimensions</Value>

@@ -24,11 +24,37 @@
             <nop-action-confirmation asp-button-id="change-picture-storage" />
         </div>
     </div>
-    <div class="form-group row">
-        <div class="col-md-9 offset-md-3">
-            <span>@T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Note")</span>
+    @if (!Model.PicturesStoredIntoDatabase)
+    {
+        <div class="form-group row advanced-setting">
+            <div class="col-md-3">
+                <nop-label asp-for="PicturePath" />
+            </div>
+            <div class="col-md-7">
+                <nop-editor asp-for="PicturePath" />
+                <span asp-validation-for="PicturePath"></span>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" id="change-picture-path" name="change-picture-path" class="btn btn-primary">
+                    @Html.Raw(@T("Admin.Configuration.Settings.Media.PicturePath.Move"))
+                </button>
+                <nop-action-confirmation asp-button-id="change-picture-path" />
+            </div>
         </div>
-    </div>
+        <div class="form-group row">
+            <div class="col-md-9 offset-md-3">
+                <span>@T("Admin.Configuration.Settings.Media.ChangePicturePath.Note")</span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="form-group row">
+            <div class="col-md-9 offset-md-3">
+                <span>@T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Note")</span>
+            </div>
+        </div>
+    }
     <div class="form-group row advanced-setting">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="MaximumImageSize_OverrideForStore" asp-input="MaximumImageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
