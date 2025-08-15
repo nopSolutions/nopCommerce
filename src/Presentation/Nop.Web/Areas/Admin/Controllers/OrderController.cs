@@ -1800,7 +1800,7 @@ public partial class OrderController : BaseAdminController
     }
 
     [HttpPost]
-    [CheckPermission(StandardPermission.Orders.SHIPMENTS_VIEW)]
+    [CheckPermission(StandardPermission.Orders.ORDERS_VIEW)]
     public virtual async Task<IActionResult> ShipmentsByOrder(OrderShipmentSearchModel searchModel)
     {
         //try to get an order with the specified id
