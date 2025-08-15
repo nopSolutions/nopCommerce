@@ -327,7 +327,7 @@
                                     @for (int i = 0; i < Model.NewsLetterSubscriptions.Count; i++)
                                     {
                                         <li>
-                                            <label>@Model.NewsLetterSubscriptions[i].Name</label>
+                                            <label for="@Html.IdFor(m => m.NewsLetterSubscriptions[i].IsActive)">@Model.NewsLetterSubscriptions[i].Name</label>
                                             <input type="hidden" asp-for="NewsLetterSubscriptions[i].TypeId" />
                                             <input class="form-check-input" type="checkbox" asp-for="NewsLetterSubscriptions[i].IsActive" />
                                         </li>

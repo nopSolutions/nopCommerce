@@ -372,6 +372,9 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Configuration.Settings.Media.PicturePath.NotGrantedPermission"] = "The '{0}' account is not granted with Modify permission on folder '{1}'. Please configure these permissions.",
             ["Admin.Configuration.Settings.Media.ChangePicturePath.Note"] = "You can use either an absolute or a relative path to the directory. However, the relative path will always be inside the wwwroot directory.<br /> <strong>Attention!</strong> We strongly recommend that you create a backup copy of your site before changing this setting.<br /> Also, note that after changing the directory, the site will be restarted.",
             ["Admin.Configuration.Settings.Media.ChangePicturePath.TryAgain"] = "If possible, please fix the problem and try again.",
+
+            //7807
+            ["Forum.Post.Text"] = "Post",
         }, languageId);
 
         #endregion
