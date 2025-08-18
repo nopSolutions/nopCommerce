@@ -794,59 +794,49 @@ public partial class CategoryService : ICategoryService
     /// The task result contains the category breadcrumb 
     /// </returns>
     public virtual async Task<IList<Category>> GetCategoryBreadCrumbAsync(Category category, IList<Category> allCategories = null, bool showHidden = false)
-{
-    ArgumentNullException.ThrowIfNull(category);
-
-    var breadcrumbCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryBreadcrumbCacheKey,
-        category,
-        await _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync()),
-        await _storeContext.GetCurrentStoreAsync(),
-        await _workContext.GetWorkingLanguageAsync(),
-        showHidden);
-
-    return await _staticCacheManager.GetAsync(breadcrumbCacheKey, async () =>
     {
-        // Use a local variable so we don't mutate the parameter captured by the closure
-        var current = category;
+        ArgumentNullException.ThrowIfNull(category);
 
-        var result = new List<Category>();
+        var breadcrumbCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryBreadcrumbCacheKey,
+            category,
+            await _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync()),
+            await _storeContext.GetCurrentStoreAsync(),
+            await _workContext.GetWorkingLanguageAsync(),
+            showHidden);
 
-        // prevent circular references (HashSet → O(1) lookups)
-        var processed = new HashSet<int>();
-
-        // If a list of categories is provided, pre-index by Id to avoid repeated FirstOrDefault scans
-        Dictionary<int, Category> byId = null;
-        if (allCategories != null)
+        return await _staticCacheManager.GetAsync(breadcrumbCacheKey, async () =>
         {
-            // handle potential duplicates defensively
-            byId = allCategories
-                .GroupBy(c => c.Id)
-                .Select(g => g.First())
+            //use a local variable so we don't mutate the parameter captured by the closure
+            var currentCategory = category;
+
+            //index all categories once (provided list or fetched), keep first per id
+            var allCategoriesById = (allCategories ?? await GetAllCategoriesAsync(showHidden: showHidden))
+                .DistinctBy(c => c.Id)
                 .ToDictionary(c => c.Id);
-        }
 
-        while (current != null // not null
-               && !current.Deleted // not deleted
-               && (showHidden || current.Published) // published
-               && (showHidden || await _aclService.AuthorizeAsync(current)) //ACL
-               && (showHidden || await _storeMappingService.AuthorizeAsync(current)) //Store mapping
-               && !processed.Contains(current.Id)) // prevent circular references
-        {
-            result.Add(current);
-            processed.Add(current.Id);
+            var result = new List<Category>();
 
-            // Move to parent (fast path if we have a pre-indexed list)
-            if (byId != null)
-                byId.TryGetValue(current.ParentCategoryId, out current);
-            else
-                current = await GetCategoryByIdAsync(current.ParentCategoryId);
-        }
+            //prevent circular references (HashSet → O(1) lookups)
+            var processed = new HashSet<int>();
 
-        result.Reverse();
+            while (currentCategory != null // not null
+                && !processed.Contains(currentCategory.Id) // cycle guard early (avoid extra awaits)
+                && !currentCategory.Deleted // not deleted
+                && (showHidden || currentCategory.Published) // published
+                && (showHidden || await _aclService.AuthorizeAsync(currentCategory)) // ACL
+                && (showHidden || await _storeMappingService.AuthorizeAsync(currentCategory))) // Store mapping
+            {
+                result.Add(currentCategory);
+                processed.Add(currentCategory.Id);
 
-        return result;
-    });
-}
+                //move to parent using the pre-indexed map; no async fetch in the loop
+                allCategoriesById.TryGetValue(currentCategory.ParentCategoryId, out currentCategory);
+            }
+
+            result.Reverse();
+            return result;
+        });
+    }
 
     #endregion
 }
