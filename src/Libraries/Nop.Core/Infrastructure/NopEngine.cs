@@ -1,10 +1,10 @@
 ﻿using System.Reflection;
-using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure.Mapper;
+using Mapster;
 
 namespace Nop.Core.Infrastructure;
 
@@ -53,9 +53,9 @@ public partial class NopEngine : IEngine
     }
 
     /// <summary>
-    /// Register and configure AutoMapper
+    /// Register and configure Mapster
     /// </summary>
-    protected virtual void AddAutoMapper()
+    protected virtual void AddMapster()
     {
         //find mapper configurations provided by other assemblies
         var typeFinder = Singleton<ITypeFinder>.Instance;
@@ -67,15 +67,15 @@ public partial class NopEngine : IEngine
             .Where(mapperConfiguration => mapperConfiguration != null)
             .OrderBy(mapperConfiguration => mapperConfiguration.Order);
 
-        //create AutoMapper configuration
-        var config = new MapperConfiguration(cfg =>
-        {
-            foreach (var instance in instances)
-                cfg.AddProfile(instance.GetType());
-        });
+        //create Mapster configuration
+        var config = new TypeAdapterConfig();
+        
+        foreach (var instance in instances)
+            instance.Configure(config);
+        config.Compile();
 
         //register
-        AutoMapperConfiguration.Init(config);
+        MapsterConfiguration.Init(config);
     }
 
     protected virtual Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
@@ -124,7 +124,7 @@ public partial class NopEngine : IEngine
         services.AddSingleton(services);
 
         //register mapper configurations
-        AddAutoMapper();
+        AddMapster();
 
         //run startup tasks
         RunStartupTasks();

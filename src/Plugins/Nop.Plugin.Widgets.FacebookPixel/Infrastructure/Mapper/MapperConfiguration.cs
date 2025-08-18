@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using Mapster;
 using Nop.Core.Infrastructure.Mapper;
 using Nop.Plugin.Widgets.FacebookPixel.Domain;
 using Nop.Plugin.Widgets.FacebookPixel.Models;
@@ -6,23 +6,27 @@ using Nop.Plugin.Widgets.FacebookPixel.Models;
 namespace Nop.Plugin.Widgets.FacebookPixel.Infrastructure.Mapper;
 
 /// <summary>
-/// Represents AutoMapper configuration for plugin models
+/// Represents Mapster configuration for plugin models
 /// </summary>
-public class MapperConfiguration : Profile, IOrderedMapperProfile
+public class MapperConfiguration : IOrderedMapperProfile
 {
-    #region Ctor
+     #region Methods
 
-    public MapperConfiguration()
+    /// <summary>
+    /// Configure mappings for Mapster
+    /// </summary>
+    /// <param name="config">Type adapter configuration</param>
+    public void Configure(TypeAdapterConfig config)
     {
-        CreateMap<FacebookPixelConfiguration, FacebookPixelModel>()
-            .ForMember(model => model.AvailableStores, options => options.Ignore())
-            .ForMember(model => model.CustomEventSearchModel, options => options.Ignore())
-            .ForMember(model => model.CustomProperties, options => options.Ignore())
-            .ForMember(model => model.HideCustomEventsSearch, options => options.Ignore())
-            .ForMember(model => model.HideStoresList, options => options.Ignore())
-            .ForMember(model => model.StoreName, options => options.Ignore());
-        CreateMap<FacebookPixelModel, FacebookPixelConfiguration>()
-            .ForMember(entity => entity.CustomEvents, options => options.Ignore());
+        config.NewConfig<FacebookPixelConfiguration, FacebookPixelModel>()
+              .Ignore(model => model.AvailableStores)
+              .Ignore(model => model.CustomEventSearchModel)
+              .Ignore(model => model.CustomProperties)
+              .Ignore(model => model.HideCustomEventsSearch)
+              .Ignore(model => model.HideStoresList)
+              .Ignore(model => model.StoreName);
+        config.NewConfig<FacebookPixelModel, FacebookPixelConfiguration>()
+              .Ignore(entity => entity.CustomEvents);
     }
 
     #endregion
