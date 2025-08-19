@@ -326,10 +326,10 @@ public class SettingMigration : MigrationBase
             settingService.SaveSetting(aiSettings, settings => settings.MetaTitleQuery);
         }
 
-        if (!settingService.SettingExists(aiSettings, settings => settings.AllowMetaKeywordGeneration))
+        if (!settingService.SettingExists(aiSettings, settings => settings.AllowMetaKeywordsGeneration))
         {
-            aiSettings.AllowMetaKeywordGeneration = true;
-            settingService.SaveSetting(aiSettings, settings => settings.AllowMetaKeywordGeneration);
+            aiSettings.AllowMetaKeywordsGeneration = true;
+            settingService.SaveSetting(aiSettings, settings => settings.AllowMetaKeywordsGeneration);
         }
 
         if (!settingService.SettingExists(aiSettings, settings => settings.MetaKeywordsQuery))

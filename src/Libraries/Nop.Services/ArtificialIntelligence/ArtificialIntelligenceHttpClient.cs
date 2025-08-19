@@ -1,5 +1,4 @@
-﻿using Markdig;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.ArtificialIntelligence;
 
 namespace Nop.Services.ArtificialIntelligence;
@@ -48,12 +47,11 @@ public partial class ArtificialIntelligenceHttpClient
     /// Send query to artificial intelligence host
     /// </summary>
     /// <param name="query">Query to artificial intelligence host</param>
-    /// <param name="convertToHtml">The value indicates whether we need to convert the response to HTML. If false - response will be returned as is</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the response from the artificial intelligence host
     /// </returns>
-    public virtual async Task<string> SendQueryAsync(string query, bool convertToHtml = true)
+    public virtual async Task<string> SendQueryAsync(string query)
     {
         var request = _artificialIntelligenceHttpClientHelper.CreateRequest(_artificialIntelligenceSettings, query);
 
@@ -64,8 +62,8 @@ public partial class ArtificialIntelligenceHttpClient
             throw new NopException(httpResponse.ReasonPhrase, innerException: new Exception(response));
         
         var result = _artificialIntelligenceHttpClientHelper.ParseResponse(response);
-        
-        return convertToHtml ? Markdown.ToHtml(result) : result;
+
+        return result;
     }
 
     #endregion

@@ -96,14 +96,14 @@
         
         <div class="form-group row">
             <div class="col-md-3">
-                <nop-label asp-for="ArtificialIntelligenceSettingsModel.AllowMetaKeywordGeneration"/>
+                <nop-label asp-for="ArtificialIntelligenceSettingsModel.AllowMetaKeywordsGeneration"/>
             </div>
             <div class="col-md-9">
-                <nop-editor asp-for="ArtificialIntelligenceSettingsModel.AllowMetaKeywordGeneration" />
-                <span asp-validation-for="ArtificialIntelligenceSettingsModel.AllowMetaKeywordGeneration"></span>
+                <nop-editor asp-for="ArtificialIntelligenceSettingsModel.AllowMetaKeywordsGeneration" />
+                <span asp-validation-for="ArtificialIntelligenceSettingsModel.AllowMetaKeywordsGeneration"></span>
             </div>
         </div>
-        <nop-nested-setting asp-for="ArtificialIntelligenceSettingsModel.AllowMetaKeywordGeneration">
+        <nop-nested-setting asp-for="ArtificialIntelligenceSettingsModel.AllowMetaKeywordsGeneration">
             <div class="form-group row">
                 <div class="col-md-3">
                     <nop-label asp-for="ArtificialIntelligenceSettingsModel.MetaKeywordsQuery"/>

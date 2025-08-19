@@ -40,7 +40,7 @@ public partial record ArtificialIntelligenceSettingsModel : BaseNopModel, ISetti
     public string ProductDescriptionQuery { get; set; }
 
     [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ArtificialIntelligence.AllowGenerateMetaKeywords")]
-    public bool AllowMetaKeywordGeneration { get; set; }
+    public bool AllowMetaKeywordsGeneration { get; set; }
 
     [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ArtificialIntelligence.MetaKeywordsQuery")]
     public string MetaKeywordsQuery { get; set; }

@@ -1,7 +1,6 @@
 @model MetaTagsGeneratorModel
 
 @using Nop.Services.Messages
-@using Nop.Web.Framework.TagHelpers.Shared
 
 
 <div class="form-group row">
@@ -51,15 +50,13 @@
                 url: '@(Url.Action("GenerateMetaTags","Common"))',
                 data: postData,
                 success: function (data, textStatus, jqXHR) { 
-                    if (data.HasError) {
-                        displayBarNotification(data.Error, @((int)NotifyType.Warning));
+                    if (data.error) {
+                        displayBarNotification(data.error, @((int)NotifyType.Warning));
                         $('#backTop').click();
                     }else{
-                        $('#@Model.MetaTitleElementId').val(data.MetaTags.Title);
-                        $('#@Model.MetaKeywordsElementId').val(data.MetaTags.Keywords);
-                        $('#@Model.MetaDescriptionElementId').val(data.MetaTags.Description);
-
-                        origForm = $form.serialize();
+                        $('#@Model.MetaTitleElementId').val(data.Title);
+                        $('#@Model.MetaKeywordsElementId').val(data.Keywords);
+                        $('#@Model.MetaDescriptionElementId').val(data.Description);
                     }                   
                 }
             });

@@ -50,7 +50,7 @@ public partial class ArtificialIntelligenceSettings : ISettings
     /// <summary>
     /// Gets or sets a value indicating whether generation of meta keywords with AI is allowed
     /// </summary>
-    public bool AllowMetaKeywordGeneration { get; set; }
+    public bool AllowMetaKeywordsGeneration { get; set; }
 
     /// <summary>
     /// Gets or sets a query format string to generate meta keywords with AI
@@ -68,7 +68,7 @@ public partial class ArtificialIntelligenceSettings : ISettings
     public string MetaDescriptionQuery { get; set; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether we should use AI to generate meta title
+    /// Gets or sets a value indicating whether generation of meta title with AI is allowed
     /// </summary>
     public bool AllowMetaTitleGeneration { get; set; }
 

@@ -760,7 +760,7 @@ public partial class SettingController : BaseAdminController
             artificialIntelligenceSettings.ProductDescriptionQuery = model.ArtificialIntelligenceSettingsModel.ProductDescriptionQuery;
             artificialIntelligenceSettings.AllowMetaTitleGeneration = model.ArtificialIntelligenceSettingsModel.AllowMetaTitleGeneration;
             artificialIntelligenceSettings.MetaTitleQuery = model.ArtificialIntelligenceSettingsModel.MetaTitleQuery;
-            artificialIntelligenceSettings.AllowMetaKeywordGeneration = model.ArtificialIntelligenceSettingsModel.AllowMetaKeywordGeneration;
+            artificialIntelligenceSettings.AllowMetaKeywordsGeneration = model.ArtificialIntelligenceSettingsModel.AllowMetaKeywordsGeneration;
             artificialIntelligenceSettings.MetaKeywordsQuery = model.ArtificialIntelligenceSettingsModel.MetaKeywordsQuery;
             artificialIntelligenceSettings.AllowMetaDescriptionGeneration = model.ArtificialIntelligenceSettingsModel.AllowMetaDescriptionGeneration;
             artificialIntelligenceSettings.MetaDescriptionQuery = model.ArtificialIntelligenceSettingsModel.MetaDescriptionQuery;

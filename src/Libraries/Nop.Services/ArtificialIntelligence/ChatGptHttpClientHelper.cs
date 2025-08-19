@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using Markdig;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using Nop.Core;

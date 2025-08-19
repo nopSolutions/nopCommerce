@@ -33,7 +33,7 @@ public partial class MetaTagsGeneratorViewComponent : NopViewComponent
             return Content(string.Empty);
 
         if (!_artificialIntelligenceSettings.AllowMetaTitleGeneration &&
-            !_artificialIntelligenceSettings.AllowMetaKeywordGeneration &&
+            !_artificialIntelligenceSettings.AllowMetaKeywordsGeneration &&
             !_artificialIntelligenceSettings.AllowMetaDescriptionGeneration)
             return Content(string.Empty);
 

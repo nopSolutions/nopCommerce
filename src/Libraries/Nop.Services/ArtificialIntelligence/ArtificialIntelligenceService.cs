@@ -1,11 +1,11 @@
 ﻿using System.Text.RegularExpressions;
+using Markdig;
 using Nop.Core;
 using Nop.Core.Domain.ArtificialIntelligence;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Localization;
 using Nop.Services.Catalog;
-using Nop.Services.Html;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 
@@ -23,7 +23,6 @@ public partial class ArtificialIntelligenceService : IArtificialIntelligenceServ
     protected readonly ILanguageService _languageService;
     protected readonly ILocalizationService _localizationService;
     protected readonly ILogger _logger;
-    protected readonly IHtmlFormatter _htmlFormatter;
     protected readonly IProductService _productService;
     protected readonly LocalizationSettings _localizationSettings;
 
@@ -36,7 +35,6 @@ public partial class ArtificialIntelligenceService : IArtificialIntelligenceServ
         ILanguageService languageService,
         ILocalizationService localizationService,
         ILogger logger,
-        IHtmlFormatter htmlFormatter,
         IProductService productService,
         LocalizationSettings localizationSettings)
     {
@@ -45,7 +43,6 @@ public partial class ArtificialIntelligenceService : IArtificialIntelligenceServ
         _languageService = languageService;
         _localizationService = localizationService;
         _logger = logger;
-        _htmlFormatter = htmlFormatter;
         _productService = productService;
         _localizationSettings = localizationSettings;
     }
@@ -89,9 +86,9 @@ public partial class ArtificialIntelligenceService : IArtificialIntelligenceServ
     /// </returns>
     protected virtual async Task FillLocalizedMetaDataAsync<T>(IMetaTagsSupported metaTags, T entity, int languageId) where T : BaseEntity, ILocalizedEntity, IMetaTagsSupported
     {
-        metaTags.MetaTitle = await _localizationService.GetLocalizedAsync(entity, mt => mt.MetaTitle, languageId);
-        metaTags.MetaKeywords = await _localizationService.GetLocalizedAsync(entity, mt => mt.MetaKeywords, languageId);
-        metaTags.MetaDescription = await _localizationService.GetLocalizedAsync(entity, mt => mt.MetaDescription, languageId);
+        metaTags.MetaTitle = await _localizationService.GetLocalizedAsync(entity, mt => mt.MetaTitle, languageId, false);
+        metaTags.MetaKeywords = await _localizationService.GetLocalizedAsync(entity, mt => mt.MetaKeywords, languageId, false);
+        metaTags.MetaDescription = await _localizationService.GetLocalizedAsync(entity, mt => mt.MetaDescription, languageId, false);
     }
 
     #endregion
@@ -124,89 +121,86 @@ public partial class ArtificialIntelligenceService : IArtificialIntelligenceServ
 
         try
         {
-            return await _httpClient.SendQueryAsync(query);
+            var result = await _httpClient.SendQueryAsync(query);
+            return Markdown.ToHtml(result);
         }
         catch (Exception e)
         {
             await _logger.ErrorAsync(e.Message, e);
 
-            return string.Format(await _localizationService.GetResourceAsync("ArtificialIntelligence.CreateProductFailed"), e.Message);
+            throw new NopException(string.Format(await _localizationService.GetResourceAsync("ArtificialIntelligence.CreateProductFailed"), e.Message));
         }
     }
 
     /// <summary>
     /// Create meta tags by artificial intelligence
     /// </summary>
-    /// <param name="entityType">The entity tape name</param>
-    /// <param name="entityId">The entity identifier</param>
+    /// <param name="entity">The entity to which need to generate meta tags</param>
     /// <param name="languageId">The language identifier</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the generated meta tags
     /// </returns>
-    public async Task<IMetaTagsSupported> CreateMetaTagsAsync(string entityType, int entityId, int languageId)
+    public virtual async Task<(string metaTitle, string metaKeywords, string metaDescription)> CreateMetaTagsAsync<T>(T entity, int languageId) where T: BaseEntity, IMetaTagsSupported
     {
-        var metaTitleQueryFormat = string.IsNullOrEmpty(_artificialIntelligenceSettings.MetaTitleQuery)
-            ? ArtificialIntelligenceDefaults.MetaTitleQuery
-            : _artificialIntelligenceSettings.MetaTitleQuery;
-
-        var metaKeywordsQueryFormat = string.IsNullOrEmpty(_artificialIntelligenceSettings.MetaKeywordsQuery)
-            ? ArtificialIntelligenceDefaults.MetaKeywordsQuery
-            : _artificialIntelligenceSettings.MetaKeywordsQuery;
-
-        var metaDescriptionQueryFormat = string.IsNullOrEmpty(_artificialIntelligenceSettings.MetaDescriptionQuery)
-            ? ArtificialIntelligenceDefaults.MetaDescriptionQuery
-            : _artificialIntelligenceSettings.MetaDescriptionQuery;
-
-        var entity = new BaseMetaTagsSupportedEntity();
         var title = string.Empty;
         var text = string.Empty;
+        var metaTitle = string.Empty;
+        var metaKeywords = string.Empty;
+        var metaDescription = string.Empty;
 
-        switch (entityType)
+        if (entity is Product product)
         {
-            case nameof(Product):
-                var product = await _productService.GetProductByIdAsync(entityId);
+            if (languageId == 0)
+            {
+                title = product.Name;
+                text = product.FullDescription;
+            }
+            else
+            {
+                await FillLocalizedMetaDataAsync(entity, product, languageId);
+                title = await _localizationService.GetLocalizedAsync(product, p => p.Name, languageId);
+                text = await _localizationService.GetLocalizedAsync(product, p => p.FullDescription, languageId);
+            }
 
-                if (languageId == 0)
-                {
-                    entity.CopyFrom(product);
-                    title = product.Name;
-                    text = product.FullDescription;
-                }
-                else
-                {
-                    await FillLocalizedMetaDataAsync(entity, product, languageId);
-                    title = await _localizationService.GetLocalizedAsync(product, p => p.Name, languageId);
-                    text = await _localizationService.GetLocalizedAsync(product, p => p.FullDescription, languageId);
-                }
+            text = Regex.Replace(text, "<.*?>", string.Empty);
 
-                break;
+            if (string.IsNullOrEmpty(text))
+                throw new NopException(await _localizationService.GetResourceAsync("Admin.ArtificialIntelligence.ProductDescriptionRequired"));
         }
-
-        text = Regex.Replace(text, "<.*?>", string.Empty);
 
         var currentLanguageId = languageId == 0 ? _localizationSettings.DefaultAdminLanguageId : languageId;
         var lang = await _languageService.GetLanguageByIdAsync(currentLanguageId);
 
-        var metaTitleQuery = string.Format(metaTitleQueryFormat, title, text, lang.Name);
-        var metaKeywordsQuery = string.Format(metaKeywordsQueryFormat, title, text, lang.Name);
-        var metaDescriptionQuery = string.Format(metaDescriptionQueryFormat, title, text, lang.Name);
-
         try
         {
-            if (string.IsNullOrEmpty(entity.MetaTitle))
+            if (_artificialIntelligenceSettings.AllowMetaTitleGeneration && string.IsNullOrEmpty(entity.MetaTitle))
             {
-                var result = await _httpClient.SendQueryAsync(metaTitleQuery, false);
-                entity.MetaTitle = result.Trim('"');
+                var metaTitleQueryFormat = string.IsNullOrEmpty(_artificialIntelligenceSettings.MetaTitleQuery)
+                    ? ArtificialIntelligenceDefaults.MetaTitleQuery
+                    : _artificialIntelligenceSettings.MetaTitleQuery;
+                var metaTitleQuery = string.Format(metaTitleQueryFormat, title, text, lang.Name);
+                var result = await _httpClient.SendQueryAsync(metaTitleQuery);
+                metaTitle = result.Trim('"');
             }
 
-            if (string.IsNullOrEmpty(entity.MetaKeywords))
-                entity.MetaKeywords = await _httpClient.SendQueryAsync(metaKeywordsQuery, false);
-
-            if (string.IsNullOrEmpty(entity.MetaDescription))
+            if (_artificialIntelligenceSettings.AllowMetaKeywordsGeneration && string.IsNullOrEmpty(entity.MetaKeywords))
             {
-                var result = await _httpClient.SendQueryAsync(metaDescriptionQuery, false);
-                entity.MetaDescription = result.Trim('"');
+                var metaKeywordsQueryFormat = string.IsNullOrEmpty(_artificialIntelligenceSettings.MetaKeywordsQuery)
+                    ? ArtificialIntelligenceDefaults.MetaKeywordsQuery
+                    : _artificialIntelligenceSettings.MetaKeywordsQuery;
+                var metaKeywordsQuery = string.Format(metaKeywordsQueryFormat, title, text, lang.Name);
+                metaKeywords = await _httpClient.SendQueryAsync(metaKeywordsQuery);
+            }
+
+            if (_artificialIntelligenceSettings.AllowMetaDescriptionGeneration && string.IsNullOrEmpty(entity.MetaDescription))
+            {
+                var metaDescriptionQueryFormat = string.IsNullOrEmpty(_artificialIntelligenceSettings.MetaDescriptionQuery)
+                    ? ArtificialIntelligenceDefaults.MetaDescriptionQuery
+                    : _artificialIntelligenceSettings.MetaDescriptionQuery;
+                var metaDescriptionQuery = string.Format(metaDescriptionQueryFormat, title, text, lang.Name);
+                var result = await _httpClient.SendQueryAsync(metaDescriptionQuery);
+                metaDescription = result.Trim('"');
             }
         }
         catch (Exception e)
@@ -216,7 +210,7 @@ public partial class ArtificialIntelligenceService : IArtificialIntelligenceServ
             throw new NopException(e.Message);
         }
 
-        return entity;
+        return (metaTitle, metaKeywords, metaDescription);
     }
 
     #endregion

@@ -1486,7 +1486,7 @@ public partial class InstallationService
             ProductDescriptionQuery = ArtificialIntelligenceDefaults.ProductDescriptionQuery,
             AllowMetaTitleGeneration = true,
             MetaTitleQuery = ArtificialIntelligenceDefaults.MetaTitleQuery,
-            AllowMetaKeywordGeneration = true,
+            AllowMetaKeywordsGeneration = true,
             MetaKeywordsQuery = ArtificialIntelligenceDefaults.MetaKeywordsQuery,
             AllowMetaDescriptionGeneration = true,
             MetaDescriptionQuery = ArtificialIntelligenceDefaults.MetaDescriptionQuery

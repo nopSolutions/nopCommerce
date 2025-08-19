@@ -206,7 +206,7 @@ public partial class SettingModelFactory : ISettingModelFactory
         model.ProductDescriptionQuery = artificialIntelligenceSettings.ProductDescriptionQuery;
         model.AllowMetaTitleGeneration = artificialIntelligenceSettings.AllowMetaTitleGeneration;
         model.MetaTitleQuery = artificialIntelligenceSettings.MetaTitleQuery;
-        model.AllowMetaKeywordGeneration = artificialIntelligenceSettings.AllowMetaKeywordGeneration;
+        model.AllowMetaKeywordsGeneration = artificialIntelligenceSettings.AllowMetaKeywordsGeneration;
         model.MetaKeywordsQuery = artificialIntelligenceSettings.MetaKeywordsQuery;
         model.AllowMetaDescriptionGeneration = artificialIntelligenceSettings.AllowMetaDescriptionGeneration;
         model.MetaDescriptionQuery = artificialIntelligenceSettings.MetaDescriptionQuery;

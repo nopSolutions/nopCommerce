@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Http.Extensions;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.ArtificialIntelligence;
+using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
@@ -18,7 +20,6 @@ using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework.Models.ArtificialIntelligence;
 using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Areas.Admin.Controllers;
@@ -44,6 +45,7 @@ public partial class CommonController : BaseAdminController
     protected readonly INopFileProvider _fileProvider;
     protected readonly INotificationService _notificationService;
     protected readonly IPermissionService _permissionService;
+    protected readonly IProductService _productService;
     protected readonly IQueuedEmailService _queuedEmailService;
     protected readonly IShoppingCartService _shoppingCartService;
     protected readonly IStaticCacheManager _staticCacheManager;
@@ -67,6 +69,7 @@ public partial class CommonController : BaseAdminController
         INopFileProvider fileProvider,
         INotificationService notificationService,
         IPermissionService permissionService,
+        IProductService productService,
         IQueuedEmailService queuedEmailService,
         IShoppingCartService shoppingCartService,
         IStaticCacheManager staticCacheManager,
@@ -86,6 +89,7 @@ public partial class CommonController : BaseAdminController
         _fileProvider = fileProvider;
         _notificationService = notificationService;
         _permissionService = permissionService;
+        _productService = productService;
         _queuedEmailService = queuedEmailService;
         _shoppingCartService = shoppingCartService;
         _staticCacheManager = staticCacheManager;
@@ -485,26 +489,31 @@ public partial class CommonController : BaseAdminController
 
     public async Task<IActionResult> GenerateMetaTags(MetaTagsGeneratorModel metaTagsGeneratorModel)
     {
+        var metaTitle = string.Empty;
+        var metaKeywords = string.Empty;
+        var metaDescription = string.Empty;
+
         try
         {
-            var rez = await _artificialIntelligenceService.CreateMetaTagsAsync(metaTagsGeneratorModel.EntityType, metaTagsGeneratorModel.EntityId, metaTagsGeneratorModel.LanguageId);
-
-            return Json(new MetaTagsModel
+            switch (metaTagsGeneratorModel.EntityType)
             {
-                MetaTags = new GeneratedMetaTags
+                case nameof(Product):
+                    var product = await _productService.GetProductByIdAsync(metaTagsGeneratorModel.EntityId);
+                    (metaTitle, metaKeywords, metaDescription) = await _artificialIntelligenceService.CreateMetaTagsAsync(product, metaTagsGeneratorModel.LanguageId);
+                    break;
+            }
+
+            return Json(new
                 {
-                    Title = rez.MetaTitle,
-                    Keywords = rez.MetaKeywords,
-                    Description = rez.MetaDescription
+                    Title = metaTitle,
+                    Keywords = metaKeywords,
+                    Description = metaDescription
                 }
-            });
+            );
         }
         catch (NopException e)
         {
-            return Json(new MetaTagsModel
-            {
-                Error = e.Message
-            });
+            return ErrorJson(e.Message);
         }
     }
 
