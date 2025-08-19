@@ -54,6 +54,16 @@ public static partial class NopCatalogDefaults
     public static CacheKey CategoriesByParentCategoryCacheKey => new("Nop.category.byparent.{0}-{1}-{2}-{3}");
 
     /// <summary>
+    /// Key for caching category lookup by parent category ID
+    /// </summary>
+    /// <remarks>
+    /// {0} : store ID
+    /// {1} : show hidden
+    /// {2} : customer role IDs
+    /// </remarks>
+    public static CacheKey ChildCategoryLookupCacheKey => new("Nop.category.lookup.byparent.{0}-{1}-{2}");
+
+    /// <summary>
     /// Gets a key pattern to clear cache
     /// </summary>
     /// <remarks>

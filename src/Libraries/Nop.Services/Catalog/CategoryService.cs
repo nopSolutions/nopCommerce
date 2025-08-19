@@ -155,6 +155,43 @@ public partial class CategoryService : ICategoryService
             yield return orphan;
     }
 
+    /// <summary>
+    /// Gets cached category lookup by parent category ID containing full category objects
+    /// </summary>
+    /// <param name="storeId">Store identifier</param>
+    /// <param name="showHidden">A value indicating whether to show hidden records</param>
+    /// <param name="customerRoleIds">Customer role identifiers</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the dictionary lookup of categories by parent ID
+    /// </returns>
+    protected virtual async Task<IReadOnlyDictionary<int, IReadOnlyList<Category>>> GetCachedCategoryLookupAsync(
+        int storeId, bool showHidden, IList<int> customerRoleIds)
+    {
+        var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(
+            NopCatalogDefaults.ChildCategoryLookupCacheKey,
+            storeId,
+            showHidden,
+            string.Join(",", customerRoleIds)
+        );
+
+        return await _staticCacheManager.GetAsync(cacheKey, async () =>
+        {
+            var allCategories = await GetAllCategoriesAsync(storeId: storeId, showHidden: showHidden);
+
+            //group children by parent, and presort each children list once
+            return allCategories
+                .GroupBy(c => c.ParentCategoryId)
+                .ToDictionary(
+                    g => g.Key,
+                    g => (IReadOnlyList<Category>)g
+                        .OrderBy(c => c.DisplayOrder)
+                        .ThenBy(c => c.Id)
+                        .ToList()
+                );
+        });
+    }
+
     #endregion
 
     #region Methods
@@ -317,26 +354,13 @@ public partial class CategoryService : ICategoryService
         var customer = await _workContext.GetCurrentCustomerAsync();
         var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
 
-        var categories = await _categoryRepository.GetAllAsync(async query =>
-        {
-            if (!showHidden)
-            {
-                query = query.Where(c => c.Published);
+        //use the optimized cached lookup instead of direct database query
+        var categoryLookup = await GetCachedCategoryLookupAsync(store.Id, showHidden, customerRoleIds);
+        
+        if (categoryLookup.TryGetValue(parentCategoryId, out var categories))
+            return categories.ToList();
 
-                //apply store mapping constraints
-                query = await _storeMappingService.ApplyStoreMapping(query, store.Id);
-
-                //apply ACL constraints
-                query = await _aclService.ApplyAcl(query, customerRoleIds);
-            }
-
-            query = query.Where(c => !c.Deleted && c.ParentCategoryId == parentCategoryId);
-
-            return query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id);
-        }, cache => cache.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoriesByParentCategoryCacheKey,
-            parentCategoryId, showHidden, customerRoleIds, store));
-
-        return categories;
+        return new List<Category>();
     }
 
     /// <summary>
@@ -426,32 +450,34 @@ public partial class CategoryService : ICategoryService
     /// </returns>
     public virtual async Task<IList<int>> GetChildCategoryIdsAsync(int parentCategoryId, int storeId = 0, bool showHidden = false)
     {
+        var roleIds = await _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync());
+
         var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoriesChildIdsCacheKey,
             parentCategoryId,
-            await _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync()),
+            roleIds,
             storeId,
             showHidden);
 
         return await _staticCacheManager.GetAsync(cacheKey, async () =>
         {
-            //little hack for performance optimization
-            //there's no need to invoke "GetAllCategoriesByParentCategoryId" multiple times (extra SQL commands) to load childs
-            //so we load all categories at once (we know they are cached) and process them server-side
-            var lookup = await _staticCacheManager.GetAsync(
-                _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ChildCategoryIdLookupCacheKey, storeId, showHidden),
-                async () => (await GetAllCategoriesAsync(storeId: storeId, showHidden: showHidden))
-                    .ToGroupedDictionary(c => c.ParentCategoryId, x => x.Id));
+            //use the optimized cached lookup that stores full Category objects
+            var categoryLookup = await GetCachedCategoryLookupAsync(storeId, showHidden, roleIds);
 
             var categoryIds = new List<int>();
-            if (lookup.TryGetValue(parentCategoryId, out var categories))
+            //recursive function to collect all child category IDs
+            void CollectChildIds(int parentId)
             {
-                categoryIds.AddRange(categories);
-                var childCategoryIds = categories.SelectAwait(async cId => await GetChildCategoryIdsAsync(cId, storeId, showHidden));
-                // avoid allocating a new list or blocking with ToEnumerable
-                await foreach (var cIds in childCategoryIds)
-                    categoryIds.AddRange(cIds);
+                if (categoryLookup.TryGetValue(parentId, out var children))
+                {
+                    foreach (var child in children)
+                    {
+                        categoryIds.Add(child.Id);
+                        //recursively collect children of this child
+                        CollectChildIds(child.Id);
+                    }
+                }
             }
-
+            CollectChildIds(parentCategoryId);
             return categoryIds;
         });
     }
