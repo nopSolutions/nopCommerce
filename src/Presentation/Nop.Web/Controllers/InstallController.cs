@@ -202,14 +202,16 @@ public partial class InstallController : Controller
             DataSettingsManager.SaveSettings(new DataConfig
             {
                 DataProvider = model.DataProvider,
-                ConnectionString = connectionString
+                ConnectionString = connectionString,
+                Collation = model.Collation,
+                CharacterSet = model.CharacterSet
             }, _fileProvider);
 
             if (model.CreateDatabaseIfNotExists && !await dataProvider.DatabaseExistsAsync())
             {
                 try
                 {
-                    dataProvider.CreateDatabase(model.Collation);
+                    dataProvider.CreateDatabase();
                 }
                 catch (Exception ex)
                 {

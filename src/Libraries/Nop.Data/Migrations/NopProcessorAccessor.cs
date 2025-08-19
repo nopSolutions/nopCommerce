@@ -5,7 +5,7 @@ using FluentMigrator.Runner.Processors;
 namespace Nop.Data.Migrations;
 
 /// <summary>
-/// An <see cref="IProcessorAccessor"/> implementation that selects one generator by data settings
+/// An <see cref="IProcessorAccessor"/> implementation that selects one processor by name
 /// </summary>
 public class NopProcessorAccessor : IProcessorAccessor
 {
@@ -31,17 +31,14 @@ public class NopProcessorAccessor : IProcessorAccessor
         if (!processors.Any())
             throw new ProcessorFactoryNotFoundException("No migration processor registered.");
 
-        if (dataSettings is null)
-            Processor = processors.FirstOrDefault();
-        else
-            Processor = dataSettings.DataProvider switch
-            {
-                DataProviderType.SqlServer => FindGenerator(processors, "SqlServer"),
-                DataProviderType.MySql => FindGenerator(processors, "MySQL"),
-                DataProviderType.PostgreSQL => FindGenerator(processors, "Postgres"),
-                _ => throw new ProcessorFactoryNotFoundException(
-                    $@"A migration generator for Data provider type {dataSettings.DataProvider} couldn't be found.")
-            };
+        Processor = dataSettings is null ? processors.FirstOrDefault() : dataSettings.DataProvider switch
+        {
+            DataProviderType.SqlServer => FindProcessor(processors, ProcessorIdConstants.SqlServer),
+            DataProviderType.MySql => FindProcessor(processors, ProcessorIdConstants.MySql5),
+            DataProviderType.PostgreSQL => FindProcessor(processors, ProcessorIdConstants.PostgreSQL92),
+            _ => throw new ProcessorFactoryNotFoundException(
+                $@"A migration processor for Data provider type {dataSettings.DataProvider} couldn't be found.")
+        };
     }
 
     /// <summary>
@@ -50,20 +47,22 @@ public class NopProcessorAccessor : IProcessorAccessor
     /// <param name="processors">Collection of migration processors</param>
     /// <param name="processorsId">DatabaseType or DatabaseTypeAlias</param>
     /// <returns></returns>
-    protected IMigrationProcessor FindGenerator(IList<IMigrationProcessor> processors,
+    protected IMigrationProcessor FindProcessor(IList<IMigrationProcessor> processors,
         string processorsId)
     {
         if (processors.FirstOrDefault(p =>
                 p.DatabaseType.Equals(processorsId, StringComparison.OrdinalIgnoreCase) ||
                 p.DatabaseTypeAliases.Any(a => a.Equals(processorsId, StringComparison.OrdinalIgnoreCase))) is
             IMigrationProcessor processor)
+        {
             return processor;
+        }
 
         var generatorNames = string.Join(", ",
             processors.Select(p => p.DatabaseType).Union(processors.SelectMany(p => p.DatabaseTypeAliases)));
 
         throw new ProcessorFactoryNotFoundException(
-            $@"A migration generator with the ID {processorsId} couldn't be found. Available generators are: {generatorNames}");
+            $@"A migration processor with the ID {processorsId} couldn't be found. Available generators are: {generatorNames}");
     }
 
     #endregion

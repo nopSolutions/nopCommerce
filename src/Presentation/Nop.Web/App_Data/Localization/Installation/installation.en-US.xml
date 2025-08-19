@@ -12,6 +12,15 @@
   <LocaleResource Name="AdminPasswordRequired">
     <Value>Enter admin password</Value>
   </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>Character set</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>Collation</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>Collation is required</Value>
+  </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>The '{0}' account is not granted with Modify permission on folder '{1}'. Please configure these permissions.</Value>
   </LocaleResource>

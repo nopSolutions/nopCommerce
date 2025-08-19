@@ -32,6 +32,16 @@ public partial class DataConfig : IConfig, IConnectionStringAccessor
     public bool WithNoLock { get; set; } = false;
 
     /// <summary>
+    /// Gets or sets a collation
+    /// </summary>
+    public string Collation { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets a character set
+    /// </summary>
+    public string CharacterSet { get; set; } = string.Empty;
+
+    /// <summary>
     /// Gets a section name to load configuration
     /// </summary>
     [JsonIgnore]

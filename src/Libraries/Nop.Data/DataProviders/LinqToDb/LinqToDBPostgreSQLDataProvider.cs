@@ -11,7 +11,7 @@ namespace Nop.Data.DataProviders.LinqToDB;
 /// </summary>
 public partial class LinqToDBPostgreSQLDataProvider : PostgreSQLDataProvider
 {
-    public LinqToDBPostgreSQLDataProvider() : base(ProviderName.PostgreSQL, PostgreSQLVersion.v95) { }
+    public LinqToDBPostgreSQLDataProvider() : base(ProviderName.PostgreSQL92, PostgreSQLVersion.v92) { }
 
     public override void SetParameter(DataConnection dataConnection, DbParameter parameter, string name, DbDataType dataType, object value)
     {
