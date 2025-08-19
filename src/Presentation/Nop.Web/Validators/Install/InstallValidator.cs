@@ -35,5 +35,9 @@ public partial class InstallValidator : BaseNopValidator<InstallModel>
             });
         });
 
+        RuleFor(x => x.Collation)
+            .NotEmpty()
+            .When(x => x.UseCustomCollation)
+            .WithMessage(locService.GetResource("CollationRequired"));
     }
 }

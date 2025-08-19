@@ -3,7 +3,7 @@
     <div id="sqlDatabaseInfo">
         <div class="credentials">
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label text-right font-weight-bold">
+                <label asp-for="ServerName" class="col-sm-3 col-form-label text-right font-weight-bold">
                     @ILS.GetResource("ServerName")
                 </label>
                 <div class="col-sm-8">
@@ -11,7 +11,7 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label text-right font-weight-bold">
+                <label asp-for="DatabaseName" class="col-sm-3 col-form-label text-right font-weight-bold">
                     @ILS.GetResource("DatabaseName")
                 </label>
                 <div class="col-sm-8">
@@ -23,7 +23,7 @@
             <div class="col-md-6 offset-md-3">
                 <div class="form-check">
                     <input class="form-check-input" asp-for="IntegratedSecurity" asp-value="@true" />
-                    <label class="form-check-label" for="@Html.IdFor(m => m.IntegratedSecurity)">
+                    <label asp-for="IntegratedSecurity" class="form-check-label">
                         @ILS.GetResource("IntegratedAuthentication")
                     </label>
                 </div>
@@ -31,7 +31,7 @@
         </div>
         <div class="credentials" id="pnlSqlServerCredentials">
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label text-right font-weight-bold">
+                <label asp-for="Username" class="col-sm-3 col-form-label text-right font-weight-bold">
                     @ILS.GetResource("SqlUsername")
                 </label>
                 <div class="col-sm-8">
@@ -39,7 +39,7 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label text-right font-weight-bold">
+                <label asp-for="Password" class="col-sm-3 col-form-label text-right font-weight-bold">
                     @ILS.GetResource("SqlPassword")
                 </label>
                 <div class="col-sm-8">

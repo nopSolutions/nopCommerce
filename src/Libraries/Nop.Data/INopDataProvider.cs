@@ -14,9 +14,8 @@ public partial interface INopDataProvider
     /// <summary>
     /// Create the database
     /// </summary>
-    /// <param name="collation">Collation</param>
     /// <param name="triesToConnect">Count of tries to connect to the database after creating; set 0 if no need to connect after creating</param>
-    void CreateDatabase(string collation, int triesToConnect = 10);
+    void CreateDatabase(int triesToConnect = 10);
 
     /// <summary>
     /// Creates a new temporary storage and populate it using data from provided query

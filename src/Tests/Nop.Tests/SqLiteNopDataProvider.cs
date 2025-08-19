@@ -30,7 +30,7 @@ public partial class SqLiteNopDataProvider : BaseDataProvider, INopDataProvider
 
     #region Methods
 
-    public void CreateDatabase(string collation, int triesToConnect = 10)
+    public void CreateDatabase(int triesToConnect = 10)
     {
         ExecuteNonQueryAsync("PRAGMA journal_mode=WAL;").Wait();
     }
