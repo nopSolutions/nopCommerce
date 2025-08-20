@@ -806,7 +806,7 @@ public partial class CategoryService : ICategoryService
 
         return await _staticCacheManager.GetAsync(breadcrumbCacheKey, async () =>
         {
-            //use a local variable so we don't mutate the parameter captured by the closure
+            //use a local variable, so we don't mutate the parameter captured by the closure
             var currentCategory = category;
 
             //index all categories once (provided list or fetched), keep first per id
@@ -816,24 +816,25 @@ public partial class CategoryService : ICategoryService
 
             var result = new List<Category>();
 
-            //prevent circular references (HashSet → O(1) lookups)
-            var processed = new HashSet<int>();
+            //used to prevent circular references (HashSet → O(1) lookups)
+            var alreadyProcessedCategoryIds = new HashSet<int>();
 
-            while (currentCategory != null // not null
-                && !processed.Contains(currentCategory.Id) // cycle guard early (avoid extra awaits)
-                && !currentCategory.Deleted // not deleted
-                && (showHidden || currentCategory.Published) // published
-                && (showHidden || await _aclService.AuthorizeAsync(currentCategory)) // ACL
-                && (showHidden || await _storeMappingService.AuthorizeAsync(currentCategory))) // Store mapping
+            while (currentCategory != null && //not null
+                   !currentCategory.Deleted && //not deleted
+                   (showHidden || currentCategory.Published) && //published
+                   !alreadyProcessedCategoryIds.Contains(currentCategory.Id) && //prevent circular references
+                   (showHidden || await _aclService.AuthorizeAsync(currentCategory)) && //ACL
+                   (showHidden || await _storeMappingService.AuthorizeAsync(currentCategory))) //store mapping
             {
                 result.Add(currentCategory);
-                processed.Add(currentCategory.Id);
+                alreadyProcessedCategoryIds.Add(currentCategory.Id);
 
-                //move to parent using the pre-indexed map; no async fetch in the loop
+                //move to parent using the pre-indexed map
                 allCategoriesById.TryGetValue(currentCategory.ParentCategoryId, out currentCategory);
             }
 
             result.Reverse();
+
             return result;
         });
     }
