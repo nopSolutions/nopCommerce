@@ -1,7 +1,14 @@
-﻿@using Nop.Core.Domain.Forums
+﻿@using Nop.Core
+@using Nop.Core.Domain.Forums
+@using Nop.Core.Domain.Seo
 @using Nop.Services.Localization
+
 @model ForumTopicPageModel
+
 @inject ILocalizationService localizationService
+@inject IWebHelper webHelper
+@inject SeoSettings seoSettings
+
 @{
     Layout = "_ColumnsOne";
 
@@ -13,6 +20,23 @@
 
     //page class
     NopHtml.AppendPageCssClassParts("html-forum-topic-page");
+
+    if (seoSettings.CanonicalUrlsEnabled)
+    {
+        var topicUrl = string.Empty;
+        if (Model.PostsPageIndex > 0)
+        {
+            topicUrl = Url.RouteUrl(NopRouteNames.Standard.TOPIC_SLUG_PAGED, 
+                new { id = Model.Id, slug = Model.SeName, pageNumber = Model.PostsPageIndex + 1 }, webHelper.GetCurrentRequestProtocol()).ToLowerInvariant();
+        }
+        else
+        {
+            topicUrl = Url.RouteUrl(NopRouteNames.Standard.TOPIC_SLUG, 
+                new { id = Model.Id, slug = Model.SeName }, webHelper.GetCurrentRequestProtocol()).ToLowerInvariant();
+        }
+
+        NopHtml.AddCanonicalUrlParts(topicUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
+    }
 
     NopHtml.AddJsonLdParts(Model.JsonLd);
 }
