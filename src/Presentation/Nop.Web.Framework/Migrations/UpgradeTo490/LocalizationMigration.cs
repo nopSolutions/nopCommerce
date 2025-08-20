@@ -383,7 +383,10 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Configuration.Settings.Catalog.ArtificialIntelligence.AllowGenerateMetaTitle"] = "Allow to generate meta title",
             ["Admin.Configuration.Settings.Catalog.ArtificialIntelligence.AllowGenerateMetaTitle.Hint"] = "Check to allow generation of meta title with artificial intelligence services. Please note that this functionality will not change any meta title that you have added, or edited, manually.",
             ["Admin.ArtificialIntelligence.GenerateMetaTags"] = "Generate meta tags with AI",
-            ["Admin.ArtificialIntelligence.ProductDescriptionRequired"] = "Product description is required for meta tags generation with artificial intelligence services.",
+            ["Admin.ArtificialIntelligence.ProductDescriptionRequired"] = "Product description (on {0} language) is required for meta tags generation with artificial intelligence services.",
+            ["Admin.ArtificialIntelligence.CategoryDescriptionRequired"] = "Category description (on {0} language) is required for meta tags generation with artificial intelligence services.",
+            ["Admin.ArtificialIntelligence.ProductNameRequired"] = "Product name (on {0} language) is required for meta tags generation with artificial intelligence services.",
+            ["Admin.ArtificialIntelligence.CategoryNameRequired"] = "Category name (on {0} language) is required for meta tags generation with artificial intelligence services.",
             ["Admin.ArtificialIntelligence.GenerateMetaTags.SaveBeforeGenerate"] = "You need to save the entity before you can generate meta tags.",
         }, languageId);
 

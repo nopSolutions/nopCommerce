@@ -41,18 +41,10 @@
                             <span asp-validation-for="@Model.Locales[item].MetaDescription"></span>
                         </div>
                     </div>
-                    @await Component.InvokeAsync(typeof(MetaTagsGeneratorViewComponent), new MetaTagsGeneratorModel
+                    @await Component.InvokeAsync(typeof(MetaTagsGeneratorViewComponent), new MetaTagsGeneratorModel(Model, nameof(Product), Model.Locales[item].LanguageId)
                     {
                         TitleFieldId = Html.IdFor(model => model.Locales[item].Name),
-                        TextFieldId = Html.IdFor(model => model.Locales[item].FullDescription),
-
-                        LanguageId = Model.Locales[item].LanguageId,
-                        EntityType = nameof(Product),
-                        EntityId = Model.Id,
-
-                        MetaTitleElementId = Html.IdFor(model => model.Locales[item].MetaTitle),
-                        MetaKeywordsElementId = Html.IdFor(model => model.Locales[item].MetaKeywords),
-                        MetaDescriptionElementId = Html.IdFor(model => model.Locales[item].MetaDescription),
+                        TextFieldId = Html.IdFor(model => model.Locales[item].FullDescription)
                     })
                     <script>
                 $(function() {
@@ -108,18 +100,10 @@
                                     <span asp-validation-for="MetaDescription"></span>
                                 </div>
                             </div>
-                            @await Component.InvokeAsync(typeof(MetaTagsGeneratorViewComponent), new MetaTagsGeneratorModel
+                            @await Component.InvokeAsync(typeof(MetaTagsGeneratorViewComponent), new MetaTagsGeneratorModel(Model, nameof(Product))
                             {
                                 TitleFieldId = Html.IdFor(model => model.Name),
-                                TextFieldId = Html.IdFor(model => model.FullDescription),
-
-                                LanguageId = 0,
-                                EntityType = nameof(Product),
-                                EntityId = Model.Id,
-
-                                MetaTitleElementId = Html.IdFor(model => model.MetaTitle),
-                                MetaKeywordsElementId = Html.IdFor(model => model.MetaKeywords),
-                                MetaDescriptionElementId = Html.IdFor(model => model.MetaDescription),
+                                TextFieldId = Html.IdFor(model => model.FullDescription)
                             })
                             <script>
                 $(function() {

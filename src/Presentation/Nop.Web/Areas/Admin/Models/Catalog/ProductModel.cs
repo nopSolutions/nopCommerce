@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Core.Domain.Catalog;
 using Nop.Web.Areas.Admin.Models.Settings;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Models.Translation;

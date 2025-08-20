@@ -35,6 +35,7 @@ public partial class CommonController : BaseAdminController
     #region Fields
 
     protected readonly IArtificialIntelligenceService _artificialIntelligenceService;
+    protected readonly ICategoryService _categoryService;
     protected readonly ICommonModelFactory _commonModelFactory;
     protected readonly ICustomerService _customerService;
     protected readonly INopDataProvider _dataProvider;
@@ -59,6 +60,7 @@ public partial class CommonController : BaseAdminController
     #region Ctor
 
     public CommonController(IArtificialIntelligenceService artificialIntelligenceService,
+        ICategoryService categoryService,
         ICommonModelFactory commonModelFactory,
         ICustomerService customerService,
         INopDataProvider dataProvider,
@@ -79,6 +81,7 @@ public partial class CommonController : BaseAdminController
         IWorkContext workContext)
     {
         _artificialIntelligenceService = artificialIntelligenceService;
+        _categoryService = categoryService;
         _commonModelFactory = commonModelFactory;
         _customerService = customerService;
         _dataProvider = dataProvider;
@@ -500,6 +503,10 @@ public partial class CommonController : BaseAdminController
                 case nameof(Product):
                     var product = await _productService.GetProductByIdAsync(metaTagsGeneratorModel.EntityId);
                     (metaTitle, metaKeywords, metaDescription) = await _artificialIntelligenceService.CreateMetaTagsAsync(product, metaTagsGeneratorModel.LanguageId);
+                    break;
+                case nameof(Category):
+                    var category = await _categoryService.GetCategoryByIdAsync(metaTagsGeneratorModel.EntityId);
+                    (metaTitle, metaKeywords, metaDescription) = await _artificialIntelligenceService.CreateMetaTagsAsync(category, metaTagsGeneratorModel.LanguageId);
                     break;
             }
 
