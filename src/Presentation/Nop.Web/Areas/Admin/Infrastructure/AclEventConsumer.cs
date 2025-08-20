@@ -22,7 +22,16 @@ namespace Nop.Web.Areas.Admin.Infrastructure;
 /// <summary>
 /// Represents ACL event consumer
 /// </summary>
-public partial class AclEventConsumer : IConsumer<ModelPreparedEvent<BaseNopModel>>,
+public partial class AclEventConsumer : 
+    //specific model type consumers
+    IConsumer<ModelPreparedEvent<CategoryModel>>,
+    IConsumer<ModelPreparedEvent<ManufacturerModel>>,
+    IConsumer<ModelPreparedEvent<PluginModel>>,
+    IConsumer<ModelPreparedEvent<ProductModel>>,
+    IConsumer<ModelPreparedEvent<TopicModel>>,
+    IConsumer<ModelPreparedEvent<CustomerSearchModel>>,
+    IConsumer<ModelPreparedEvent<OnlineCustomerSearchModel>>,
+    
     IConsumer<ModelReceivedEvent<BaseNopModel>>,
     IConsumer<EntityInsertedEvent<Manufacturer>>,
     IConsumer<EntityInsertedEvent<Product>>,
@@ -92,40 +101,74 @@ public partial class AclEventConsumer : IConsumer<ModelPreparedEvent<BaseNopMode
 
     #region Methods
     
-    /// <summary>
-    /// Handle model prepared event
+    // <summary>
+    /// Handle CategoryModel prepared event
     /// </summary>
-    /// <param name="eventMessage">Event message</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task HandleEventAsync(ModelPreparedEvent<BaseNopModel> eventMessage)
+    public virtual async Task HandleEventAsync(ModelPreparedEvent<CategoryModel> eventMessage)
     {
-        if (eventMessage.Model is not IAclSupportedModel)
-            return;
+        var categoryModel = eventMessage.Model;
+        
+        await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(categoryModel, nameof(Category));
+    }
 
-        switch (eventMessage.Model)
-        {
-            case CategoryModel categoryModel:
-                await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(categoryModel, nameof(Category));
-                break;
-            case ManufacturerModel manufacturerModel:
-                await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(manufacturerModel, nameof(Manufacturer));
-                break;
-            case PluginModel pluginModel:
-                await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(pluginModel);
-                break;
-            case ProductModel productModel:
-                await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(productModel, nameof(Product));
-                break;
-            case TopicModel topicModel:
-                await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(topicModel, nameof(Topic));
-                break;
-            case CustomerSearchModel customerSearchModel:
-                await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(customerSearchModel);
-                break;
-            case OnlineCustomerSearchModel onlineCustomerSearchModel:
-                await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(onlineCustomerSearchModel);
-                break;
-        }
+    /// <summary>
+    /// Handle ManufacturerModel prepared event
+    /// </summary>
+    public virtual async Task HandleEventAsync(ModelPreparedEvent<ManufacturerModel> eventMessage)
+    {
+        var manufacturerModel = eventMessage.Model;
+
+        await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(manufacturerModel, nameof(Manufacturer));
+    }
+
+    // <summary>
+    /// Handle PluginModel prepared event
+    /// </summary>
+    public virtual async Task HandleEventAsync(ModelPreparedEvent<PluginModel> eventMessage)
+    {
+        var pluginModel = eventMessage.Model;
+        
+        await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(pluginModel);
+    }
+
+    // <summary>
+    /// Handle ProductModel prepared event
+    /// </summary>
+    public virtual async Task HandleEventAsync(ModelPreparedEvent<ProductModel> eventMessage)
+    {
+        var productModel = eventMessage.Model;
+        
+        await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(productModel, nameof(Product));
+    }
+
+    /// <summary>
+    /// Handle TopicModel prepared event
+    /// </summary>
+    public virtual async Task HandleEventAsync(ModelPreparedEvent<TopicModel> eventMessage)
+    {
+        var topicModel = eventMessage.Model;
+        
+        await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(topicModel, nameof(Topic));
+    }
+
+    /// <summary>
+    /// Handle CustomerSearchModel prepared event
+    /// </summary>
+    public virtual async Task HandleEventAsync(ModelPreparedEvent<CustomerSearchModel> eventMessage)
+    {
+        var customerSearchModel = eventMessage.Model;
+        
+        await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(customerSearchModel);
+    }
+
+    /// <summary>
+    /// Handle OnlineCustomerSearchModel prepared event
+    /// </summary>
+    public virtual async Task HandleEventAsync(ModelPreparedEvent<OnlineCustomerSearchModel> eventMessage)
+    {
+        var onlineCustomerSearchModel = eventMessage.Model;
+        
+        await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(onlineCustomerSearchModel);
     }
 
     /// <summary>

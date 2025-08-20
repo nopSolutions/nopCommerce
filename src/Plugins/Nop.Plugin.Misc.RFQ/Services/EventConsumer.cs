@@ -23,7 +23,7 @@ namespace Nop.Plugin.Misc.RFQ.Services;
 /// </summary>
 public class EventConsumer : IConsumer<AdminMenuCreatedEvent>,
     IConsumer<GetShoppingCartItemUnitPriceEvent>,
-    IConsumer<ModelPreparedEvent<BaseNopModel>>,
+    IConsumer<ModelPreparedEvent<ShoppingCartModel>>,
     IConsumer<EntityInsertedEvent<ShoppingCartItem>>,
     IConsumer<EntityUpdatedEvent<ShoppingCartItem>>,
     IConsumer<ShoppingCartItemMovedToOrderItemEvent>
@@ -135,43 +135,42 @@ public class EventConsumer : IConsumer<AdminMenuCreatedEvent>,
     /// </summary>
     /// <param name="eventMessage">Event message</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(ModelPreparedEvent<BaseNopModel> eventMessage)
+    public async Task HandleEventAsync(ModelPreparedEvent<ShoppingCartModel> eventMessage)
     {
         if (!_rfqSettings.Enabled)
             return;
 
-        if (eventMessage.Model is ShoppingCartModel model)
+        var shoppingCartModel = eventMessage.Model;
+
+        var routeName = _httpContextAccessor.HttpContext?.GetEndpoint()?.Metadata.GetMetadata<RouteNameMetadata>()?.RouteName;
+
+        if (routeName is not NopRouteNames.General.CART)
+            return;
+
+        //is shopping cart created by quote
+        if (await shoppingCartModel.Items.AnyAwaitAsync(async shoppingCartItemModel => (await _rfqService.GetQuoteItemByShoppingCartItemIdAsync(shoppingCartItemModel.Id)) == null))
+            return;
+
+        var disableEdit = false;
+
+        foreach (var shoppingCartItemModel in shoppingCartModel.Items)
         {
-            var routeName = _httpContextAccessor.HttpContext?.GetEndpoint()?.Metadata.GetMetadata<RouteNameMetadata>()?.RouteName;
+            var quoteItem = await _rfqService.GetQuoteItemByShoppingCartItemIdAsync(shoppingCartItemModel.Id);
 
-            if (routeName is not NopRouteNames.General.CART)
+            if (quoteItem == null)
                 return;
 
-            //is shopping cart created by quote
-            if (await model.Items.AnyAwaitAsync(async shoppingCartItemModel => (await _rfqService.GetQuoteItemByShoppingCartItemIdAsync(shoppingCartItemModel.Id)) == null))
-                return;
+            shoppingCartItemModel.AllowItemEditing = false;
+            shoppingCartItemModel.DisableRemoval = true;
+            shoppingCartItemModel.Quantity = quoteItem.OfferedQty;
 
-            var disableEdit = false;
+            disableEdit = true;
+        }
 
-            foreach (var shoppingCartItemModel in model.Items)
-            {
-                var quoteItem = await _rfqService.GetQuoteItemByShoppingCartItemIdAsync(shoppingCartItemModel.Id);
-
-                if (quoteItem == null)
-                    return;
-
-                shoppingCartItemModel.AllowItemEditing = false;
-                shoppingCartItemModel.DisableRemoval = true;
-                shoppingCartItemModel.Quantity = quoteItem.OfferedQty;
-
-                disableEdit = true;
-            }
-
-            if (disableEdit)
-            {
-                model.IsEditable = false;
-                model.IsReadyToCheckout = true;
-            }
+        if (disableEdit)
+        {
+            shoppingCartModel.IsEditable = false;
+            shoppingCartModel.IsReadyToCheckout = true;
         }
     }
 
