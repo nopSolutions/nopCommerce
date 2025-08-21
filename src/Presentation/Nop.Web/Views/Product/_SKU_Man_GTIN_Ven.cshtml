@@ -2,6 +2,8 @@
 
 @using Nop.Core.Domain.Catalog
 @using Nop.Core.Domain.Vendors
+@using Nop.Web.Framework.Mvc.Routing
+@inject INopUrlHelper NopUrl
 
 <div class="additional-details">
     @*SKU*@
@@ -33,7 +35,11 @@
     {
         <div class="product-vendor">
             <span class="label">@T("Products.Vendor"):</span>
-            <span class="value"><a href="@(Url.RouteUrl<Vendor>(new { SeName = Model.VendorModel.SeName }))">@Model.VendorModel.Name</a></span>
+            <span class="value">
+                <a href="@(await NopUrl.RouteGenericUrlAsync<Vendor>(new { SeName = Model.VendorModel.SeName }))">
+                    @Model.VendorModel.Name
+                </a>
+            </span>
         </div>
     }
 </div>

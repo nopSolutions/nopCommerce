@@ -1,6 +1,8 @@
 ﻿@model ManufacturerNavigationModel
 
 @using Nop.Core.Domain.Catalog
+@using Nop.Web.Framework.Mvc.Routing
+@inject INopUrlHelper NopUrl
 
 @if (Model.Manufacturers.Count > 0)
 {
@@ -13,7 +15,9 @@
                 @foreach (var manufacturer in Model.Manufacturers)
                 {
                     <li class="@(manufacturer.IsActive ? "active" : "inactive")">
-                        <a href="@(Url.RouteUrl<Manufacturer>(new { SeName = manufacturer.SeName }))">@manufacturer.Name</a>
+                        <a href="@(await NopUrl.RouteGenericUrlAsync<Manufacturer>(new { SeName = manufacturer.SeName }))">
+                            @manufacturer.Name
+                        </a>
                     </li>
                 }
             </ul>

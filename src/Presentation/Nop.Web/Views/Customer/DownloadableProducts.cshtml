@@ -1,6 +1,8 @@
 ﻿@model CustomerDownloadableProductsModel
 
 @using Nop.Core.Domain.Catalog
+@using Nop.Web.Framework.Mvc.Routing
+@inject INopUrlHelper NopUrl
 
 @{
     Layout = "_ColumnsTwo";
@@ -59,7 +61,7 @@
                                     @item.CreatedOn.ToString("d")
                                 </td>
                                 <td class="product">
-                                    <a href="@(Url.RouteUrl<Product>(new { SeName = item.ProductSeName }))">@item.ProductName</a>
+                                    <a href="@(await NopUrl.RouteGenericUrlAsync<Product>(new { SeName = item.ProductSeName }))">@item.ProductName</a>
                                     @if (!string.IsNullOrEmpty(item.ProductAttributes))
                                     {
                                         <div class="attributes">

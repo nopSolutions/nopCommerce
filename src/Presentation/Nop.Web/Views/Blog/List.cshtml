@@ -1,6 +1,8 @@
 ﻿@model BlogPostListModel
 
 @using Nop.Core.Domain.Blogs
+@using Nop.Web.Framework.Mvc.Routing
+@inject INopUrlHelper NopUrl
 
 @{
     Layout = "_ColumnsTwo";
@@ -46,7 +48,7 @@
                 @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BlogListPageBeforePost, additionalData = item })
                 <div class="post">
                     <div class="post-head">
-                        <a class="post-title" href="@(Url.RouteUrl<BlogPost>(new { SeName = item.SeName }))">@item.Title</a>
+                        <a class="post-title" href="@(await NopUrl.RouteGenericUrlAsync<BlogPost>(new { SeName = item.SeName }))">@item.Title</a>
                         <span class="post-date">@item.CreatedOn.ToString("D")</span>
                     </div>
                     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BlogListPageBeforePostBody, additionalData = item })
@@ -75,9 +77,9 @@
                         <div class="buttons">
                             @if (item.AllowComments)
                             {
-                                <a href="@(Url.RouteUrl<BlogPost>(new { SeName = item.SeName }, fragment: "comments"))" class="read-comments">@string.Format(T("Blog.CommentsLink").Text, item.NumberOfComments)</a>
+                                <a href="@(await NopUrl.RouteGenericUrlAsync<BlogPost>(new { SeName = item.SeName }, fragment: "comments"))" class="read-comments">@string.Format(T("Blog.CommentsLink").Text, item.NumberOfComments)</a>
                             }
-                            <a href="@(Url.RouteUrl<BlogPost>(new { SeName = item.SeName }))" class="read-more">@T("Blog.MoreInfo")</a>
+                            <a href="@(await NopUrl.RouteGenericUrlAsync<BlogPost>(new { SeName = item.SeName }))" class="read-more">@T("Blog.MoreInfo")</a>
                         </div>
                     </div>
                     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BlogListPageInsidePost, additionalData = item })

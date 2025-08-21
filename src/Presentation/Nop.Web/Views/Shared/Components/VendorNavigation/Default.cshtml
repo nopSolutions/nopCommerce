@@ -1,6 +1,8 @@
 ﻿@model VendorNavigationModel
 
 @using Nop.Core.Domain.Vendors
+@using Nop.Web.Framework.Mvc.Routing
+@inject INopUrlHelper NopUrl
 
 @if (Model.Vendors.Count > 0)
 {
@@ -13,7 +15,7 @@
                 @foreach (var vendor in Model.Vendors)
                 {
                     <li>
-                        <a href="@(Url.RouteUrl<Vendor>(new { SeName = vendor.SeName }))">@vendor.Name</a>
+                        <a href="@(await NopUrl.RouteGenericUrlAsync<Vendor>(new { SeName = vendor.SeName }))">@vendor.Name</a>
                     </li>
                 }
             </ul>

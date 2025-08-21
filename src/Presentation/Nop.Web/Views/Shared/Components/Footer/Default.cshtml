@@ -3,6 +3,8 @@
 @using Nop.Core
 @using Nop.Core.Domain.Tax
 @using Nop.Core.Domain.Topics
+@using Nop.Web.Framework.Mvc.Routing
+@inject INopUrlHelper NopUrl
 
 @inject IWorkContext workContext
 
@@ -19,7 +21,7 @@
                 }
                 @foreach (var topic in Model.Topics.Where(x => x.IncludeInFooterColumn1).ToList())
                 {
-                    <li><a href="@(Url.RouteUrl<Topic>(new { SeName = topic.SeName }))">@topic.Name</a></li>
+                    <li><a href="@(await NopUrl.RouteGenericUrlAsync<Topic>(new { SeName = topic.SeName }))">@topic.Name</a></li>
                 }
                 @if (Model.DisplayContactUsFooterItem)
                 {
@@ -62,7 +64,7 @@
                 }
                 @foreach (var topic in Model.Topics.Where(x => x.IncludeInFooterColumn2).ToList())
                 {
-                    <li><a href="@(Url.RouteUrl<Topic>(new { SeName = topic.SeName }))">@topic.Name</a></li>
+                    <li><a href="@(await NopUrl.RouteGenericUrlAsync<Topic>(new { SeName = topic.SeName }))">@topic.Name</a></li>
                 }
                 @if (Model.AllowCustomersToCheckGiftCardBalance)
                 {
@@ -101,7 +103,7 @@
                 }
                 @foreach (var topic in Model.Topics.Where(x => x.IncludeInFooterColumn3).ToList())
                 {
-                    <li><a href="@(Url.RouteUrl<Topic>(new { SeName = topic.SeName }))">@topic.Name</a></li>
+                    <li><a href="@(await NopUrl.RouteGenericUrlAsync<Topic>(new { SeName = topic.SeName }))">@topic.Name</a></li>
                 }
             </ul>
         </div>
@@ -122,7 +124,8 @@
             {
                 var inclTax = await workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
                 <span class="footer-tax-shipping">
-                    @T(inclTax ? "Footer.TaxShipping.InclTax" : "Footer.TaxShipping.ExclTax", Url.RouteTopicUrl("shippinginfo"))
+                    @T(inclTax ? "Footer.TaxShipping.InclTax" : "Footer.TaxShipping.ExclTax",
+                      await NopUrl.RouteTopicUrlAsync("shippinginfo"))
                 </span>
             }
         </div>

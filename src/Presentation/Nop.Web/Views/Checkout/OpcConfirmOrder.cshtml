@@ -1,5 +1,8 @@
 ﻿@model CheckoutConfirmModel
 
+@using Nop.Web.Framework.Mvc.Routing
+@inject INopUrlHelper NopUrl
+
 <div class="checkout-data">
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OpCheckoutConfirmTop, additionalData = Model })
     @if (!string.IsNullOrEmpty(Model.MinOrderTotalWarning) || Model.Warnings.Count > 0)
@@ -50,7 +53,7 @@
             }
             else
             {
-                <a class="read" id="read-terms" href="@Url.RouteTopicUrl("conditionsofuse")">@T("Checkout.TermsOfService.Read")</a>
+                <a class="read" id="read-terms" href="@(await NopUrl.RouteTopicUrlAsync("conditionsofuse"))">@T("Checkout.TermsOfService.Read")</a>
             }
         </div>
     }

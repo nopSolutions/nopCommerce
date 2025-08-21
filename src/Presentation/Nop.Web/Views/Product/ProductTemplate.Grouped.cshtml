@@ -4,10 +4,12 @@
 @using Nop.Core.Domain.Catalog
 @using Nop.Core.Domain.Seo
 @using Nop.Services.Html
+@using Nop.Web.Framework.Mvc.Routing
 
 @inject IHtmlFormatter htmlFormatter
 @inject IWebHelper webHelper
 @inject SeoSettings seoSettings
+@inject INopUrlHelper NopUrl
 
 @{
     Layout = "_ColumnsOne";
@@ -23,7 +25,11 @@
     //canonical URL
     if (seoSettings.CanonicalUrlsEnabled)
     {
-        var productUrl = Url.RouteUrl<Product>(new { SeName = Model.SeName }, webHelper.GetCurrentRequestProtocol()).ToLowerInvariant();
+        var productUrl = (await NopUrl.RouteGenericUrlAsync<Product>(
+            new { SeName = Model.SeName },
+            protocol: webHelper.GetCurrentRequestProtocol()
+        )).ToLowerInvariant();
+
         NopHtml.AddCanonicalUrlParts(productUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
     }
 
