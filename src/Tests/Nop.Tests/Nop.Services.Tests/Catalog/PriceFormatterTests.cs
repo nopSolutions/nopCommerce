@@ -34,7 +34,8 @@ public class PriceFormatterTests : ServiceTest
 
         var languages = await languageService.GetAllLanguagesAsync();
 
-        _enLangId = languages.FirstOrDefault(p => p.Name == "EN")?.Id ?? 0;
+        _enLangId = languages.FirstOrDefault(p => p.LanguageCulture == "en-US")?.Id ??
+                   languages.FirstOrDefault()?.Id ?? 1;
 
         _euro = await currencyService.GetCurrencyByCodeAsync("EUR");
         _dollar = await currencyService.GetCurrencyByCodeAsync("USD");
