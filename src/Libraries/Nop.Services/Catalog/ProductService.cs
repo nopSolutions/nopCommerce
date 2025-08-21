@@ -1164,20 +1164,19 @@ public partial class ProductService : IProductService
             }
         }
 
-        var products = await productsQuery.OrderBy(_localizedPropertyRepository, await _workContext.GetWorkingLanguageAsync(), orderBy).ToPagedListAsync(pageIndex, pageSize);
-
         if (providerResults.Any() && orderBy == ProductSortingEnum.Position && !showHidden)
         {
-            var sortedProducts = products.OrderBy(p => 
-            {
-                var index = providerResults.IndexOf(p.Id);
-                return index == -1 ? products.TotalCount : index;
-            }).ToList();
+            var sortedProducts = from p in productsQuery
+                                 join pr in providerResults.Select((id, ind) => new { ind, id }) on p.Id equals pr.id into orderSeq
+                                 from os in orderSeq.DefaultIfEmpty()
+                                 orderby os == null ? int.MaxValue : os.ind
+                                 select p;
+                                 
 
-            return new PagedList<Product>(sortedProducts, pageIndex, pageSize, products.TotalCount);
+            return await sortedProducts.ToPagedListAsync(pageIndex, pageSize);
         }
 
-        return products;
+        return await productsQuery.OrderBy(_localizedPropertyRepository, await _workContext.GetWorkingLanguageAsync(), orderBy).ToPagedListAsync(pageIndex, pageSize);
     }
 
     /// <summary>

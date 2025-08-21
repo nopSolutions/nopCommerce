@@ -21,9 +21,8 @@ public partial class BaseRouteProvider
             var localizationSettings = EngineContext.Current.Resolve<LocalizationSettings>();
             if (localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
             {
-                //this pattern is set once at the application start, when we don't have the selected language yet
-                //so we use 'en' by default for the language value, later it'll be replaced with the working language code
-                var code = "en";
+                //by default we use empty for the language template, later it'll be specified with the working language code
+                var code = string.Empty;
                 return $"{{{NopRoutingDefaults.RouteValue.Language}:maxlength(2):{NopRoutingDefaults.LanguageParameterTransformer}={code}}}";
             }
         }

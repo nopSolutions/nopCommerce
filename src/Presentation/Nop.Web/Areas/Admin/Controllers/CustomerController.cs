@@ -1041,12 +1041,13 @@ public partial class CustomerController : BaseAdminController
                 throw new NopException(await _localizationService.GetResourceAsync("PrivateMessages.MessageCannotBeEmpty"));
 
             var store = await _storeContext.GetCurrentStoreAsync();
+            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
 
             var privateMessage = new PrivateMessage
             {
                 StoreId = store.Id,
                 ToCustomerId = customer.Id,
-                FromCustomerId = customer.Id,
+                FromCustomerId = currentCustomer.Id,
                 Subject = model.SendPm.Subject,
                 Text = model.SendPm.Message,
                 IsDeletedByAuthor = false,

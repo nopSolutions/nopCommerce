@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using System.Text.Encodings.Web;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
@@ -17,6 +18,7 @@ public partial class SecurityModelFactory : ISecurityModelFactory
 {
     #region Fields
 
+    protected readonly HtmlEncoder _htmlEncoder;
     protected readonly ICustomerService _customerService;
     protected readonly ILocalizationService _localizationService;
     protected readonly IPermissionService _permissionService;
@@ -25,10 +27,12 @@ public partial class SecurityModelFactory : ISecurityModelFactory
 
     #region Ctor
 
-    public SecurityModelFactory(ICustomerService customerService,
+    public SecurityModelFactory(HtmlEncoder htmlEncoder,
+        ICustomerService customerService,
         ILocalizationService localizationService,
         IPermissionService permissionService)
     {
+        _htmlEncoder = htmlEncoder;
         _customerService = customerService;
         _localizationService = localizationService;
         _permissionService = permissionService;
@@ -75,7 +79,7 @@ public partial class SecurityModelFactory : ISecurityModelFactory
 
         var names = await mapping
             .Select(m => availableRoles.FirstOrDefault(p => p.Id == m.CustomerRoleId))
-            .Where(r => r != null).Select(r => r.Name).ToListAsync();
+            .Where(r => r != null).Select(r => _htmlEncoder.Encode(r.Name)).ToListAsync();
 
         var (ids, appliedFor) = (mapping.Select(m => m.CustomerRoleId).ToList(), string.Join(", ", names));
 
