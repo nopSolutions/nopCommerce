@@ -357,6 +357,7 @@ public partial class BaseNopTest
         services.AddTransient<IReturnRequestService, ReturnRequestService>();
         services.AddTransient<IRewardPointService, RewardPointService>();
         services.AddTransient<IShoppingCartService, ShoppingCartService>();
+        services.AddTransient<ICustomWishlistService, CustomWishlistService>();
         services.AddTransient<ICustomNumberFormatter, CustomNumberFormatter>();
         services.AddTransient<IPaymentService, PaymentService>();
         services.AddTransient<IEncryptionService, EncryptionService>();
